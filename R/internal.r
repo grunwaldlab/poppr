@@ -152,12 +152,6 @@ extract.info <- function(x) {
 }
 
 #==============================================================================#
-# This function give you a list of vectors of non-zero alleles at each locus
-#==============================================================================#
-
-available.alleles <- function(pop) -as.vector(which(colSums(pop@tab, na.rm=TRUE)==0))
-
-#==============================================================================#
 # getloci will create a list of all the loci and their relative positions on the
 # matrix for easy subsetting.
 #==============================================================================#
@@ -524,7 +518,6 @@ final <- function(Iout, result){
     popx <- pop
     .Ia.Rd <- .PA.Ia.Rd
   }
-
   # if there are less than three individuals in the population, the calculation
   # does not proceed. 
   if (nInd(pop) < 3){
@@ -539,7 +532,6 @@ final <- function(Iout, result){
       return(IarD)
     }
   }
-
   IarD <- .Ia.Rd(popx, missing)
   # data vomit options.
   .quiet(quiet=quiet, IarD=IarD, pop=namelist$population)
@@ -559,18 +551,6 @@ final <- function(Iout, result){
     samp2 <- rbind(samp, IarD)
     p.val <- ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
-#     if(is.na(pval.Ia) | is.na(pval.rbarD) | pval.Ia != pval.rbarD){
-#       warning(paste("\np-values for population:",namelist$population,"in file:",namelist$File,"are not equal. Ia:",pval.Ia,"| rbarD:",pval.rbarD,"\n"))
-      #IarD[3] <- IarD[2]
-      #IarD[2] <- pval.Ia
-      #IarD[4] <- pval.rbarD
-      #names(IarD) <- c("Ia","P.value (Ia)","rbarD","P.value (rbarD)")
-#       IarD[3] <- pval.Ia
-#       names(IarD) <- c("Ia", "rbarD", "P.value")
-#       result <- IarD
-#     }
-
-    
     if(hist == TRUE){
       if(require(ggplot2)){
         poppr.plot(samp, observed=IarD, pop=namelist$population,
@@ -605,6 +585,9 @@ final <- function(Iout, result){
 # D.vector = a vector of the the pairwise distances over all loci. The length
 #			 of this vector will be the same as n(n-1)/2, where n is number of
 # 			isolates.
+#
+#
+# DEPRECIATED
 #==============================================================================#
 .pairwise.differences <- function(pop,numLoci,np, missing){  
   temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
@@ -624,7 +607,10 @@ final <- function(Iout, result){
 # pairwisematrix performs a pairwise comparison over all individuals per locus
 # and returns a vector that will make its way into the final matrix for d.
 # the conditional for this is that each locus must not be completely fixed for
-# one allele. In that case, the resulting pairwise differences will all be zero. 
+# one allele. In that case, the resulting pairwise differences will all be zero.
+#
+#
+# DEPRECIATED 
 #==============================================================================#
 pairwisematrix <- function(pop, np){
   temp.d.vector <- vector(mode="numeric", length=np)
@@ -635,6 +621,9 @@ pairwisematrix <- function(pop, np){
 #==============================================================================#
 # The original function pairwise.diffs can be found here
 # https://stat.ethz.ch/pipermail/r-help/2004-August/055324.html
+#
+#
+# DEPRECIATED
 #==============================================================================#
 .pairwise.diffs <- function(x){
   stopifnot(is.matrix(x))
@@ -651,6 +640,9 @@ pairwisematrix <- function(pop, np){
 #==============================================================================#
 # To calculate rbarD, the pairwise variances for each locus needs to be
 # caluclated. 
+#
+#
+# DEPRECIATED
 #==============================================================================#
 .pairwise.variances <- function(vard.vector, pair.alleles){  
   # Here the roots of the products of the variances are being produced and
@@ -684,6 +676,10 @@ pairwisematrix <- function(pop, np){
   return(c(Ia, rbarD))
 }
 
+#==============================================================================#
+# This creates a pairwise difference matrix via the C function pairdiffs in
+# src/poppr_distance.c
+#==============================================================================#
 pair_diffs <- function(pop, numLoci, np)
 {
   ploid <- ploidy(pop[[1]])
@@ -696,6 +692,9 @@ pair_diffs <- function(pop, numLoci, np)
   return(list(d.vector = d.vector, d2.vector = d2.vector, D.vector = D.vector))
 }
 
+#==============================================================================#
+# Internal counter...probably depreciated.
+#==============================================================================#
 .new_counter <- function() {
   i <- 0
   function() {
@@ -704,6 +703,10 @@ pair_diffs <- function(pop, numLoci, np)
   }
 }
 
+#==============================================================================#
+# Bruvo's distance calculation that takes in an SSR matrix. Note the conditions
+# below.
+#==============================================================================#
 phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
   # Preceeding functions should take care of this:
   # ssr.matrix <- genind2df(pop, sep="/", usepop=FALSE)
