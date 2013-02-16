@@ -1,0 +1,38 @@
+Package: poppr
+Type: Package
+Title: an R package for genetic analysis of populations with mixed
+    reproduction
+Version: 0.1
+Author: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>, Javier F. Tabima
+    <tabimaj@onid.orst.edu>, Niklaus J. Grunwald
+    <grunwaln@science.oregonstate.edu>
+Maintainer: Zhian Kamvar <kamvarz@science.oregonstate.edu>
+Description: Population genetic analyses for hierarchical analysis of partially
+    clonal populations built upon the architecture of the adegenet package.
+Depends:
+    R (>= 2.15.1),
+    adegenet,
+    pegas,
+    vegan,
+    ggplot2,
+    phangorn,
+    ape
+Imports:
+    adegenet,
+    pegas,
+    vegan,
+    ggplot2,
+    phangorn,
+    ape
+License: GPL-2
+Collate:
+    'Index_calculations.r'
+    'PA_utils.r'
+    'file_handling.r'
+    'in_testing.r'
+    'info_gathering.r'
+    'sample_schemes.r'
+    'visualizations.r'
+    'mlg.r'
+    'bruvo_new.r'
+Copyright: 
