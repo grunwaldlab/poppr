@@ -27,12 +27,12 @@ Imports:
 License: GPL-2
 Collate:
     'Index_calculations.r'
-    'PA_utils.r'
     'file_handling.r'
-    'in_testing.r'
-    'info_gathering.r'
     'sample_schemes.r'
     'visualizations.r'
     'mlg.r'
-    'bruvo_new.r'
+    'bruvo.r'
+    'data_subset.r'
+    'internal.r'
+    'sandbox.r'
 Copyright: 
