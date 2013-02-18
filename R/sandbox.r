@@ -504,7 +504,36 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
   }  
 }
 
+################################################################################
+# 
+# JAVIER,
+#
+# What do you think of this scheme: adding a flag in the function call for an
+# optional mlg vector. I say this because right now, the function calculates
+# mlgs based on the data set you give it. The problem is, that if you only want
+# to analyze part of your data set, the mlgs will not be inherited (... I have a
+# feeling that we might need to create a class of objects for MLGs to avoid them
+# being broken like this ...)
+#
+# Things we will need to do if we have the flag: 
+# 1. insert the vector into the @other slot if it's the right length
+# 2. rename the names of the elements in mlg.cp (because they will reflect the
+#   MLGs of the subsetted data set.
+#
+# In other news, I've been playing around with this function and found that you
+# can set where the vertex.labels should be with vertex.label.dist:
+#
+# bruvo.msn(popsub(nancycats, 8:9), replen=rep(1,9), 
+#   vertex.label=popsub(nancycats, 8:9)@ind.names, vertex.label.dist=0.5,
+#   vertex.label.color="grey25", palette=heat.colors)
+#
+# Here, I'm subsetting the population, but since there are no duplicate MLGs,
+# I can replace the vertex.label with the individual names. Cool, huh?
+#
+################################################################################
+
 bruvo.msn<- function (pop, replen=c(1), palette = topo.colors, ...){
+  stopifnot(require(igraph))
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop,mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
   
@@ -533,6 +562,8 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors, ...){
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   #print(mlg.color)
-  plot(mst, edge.color="black",edge.width=2,vertex.size=mlg.number*3,vertex.shape="pie",vertex.pie=mlg.cp,vertex.pie.color=mlg.color,...)
-  legend(-1.55, 1, bty = "n", cex=0.75, legend=pop$pop.names, title="Populations", fill=color, border=NULL)
+  plot(mst, edge.color="black", edge.width=2, vertex.size=mlg.number*3,
+        vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color, ...)
+  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+        fill=color, border=NULL)
 }
