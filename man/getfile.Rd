@@ -1,0 +1,43 @@
+\name{getfile}
+\alias{getfile}
+\title{Get a file name and path and store them in a list.}
+\usage{
+  getfile(multi = FALSE, pattern = NULL)
+}
+\arguments{
+  \item{multi}{this is an indicator to allow the user to
+  store the names of multiple files found in the directory.
+  This is useful in conjunction with
+  \code{\link{poppr.all}}.}
+
+  \item{pattern}{a \code{\link{regex}} pattern for use
+  while \code{multFile==TRUE}.}
+}
+\value{
+  \item{path}{a character string of the absolute path to
+  the chosen file or files} \item{files}{a character vector
+  containing the chosen file name or names.}
+}
+\description{
+  getfile is a convenience function that serves as a
+  wrapper for the functions \code{\link{file.choose},
+  \link{file.path},} and \code{\link{list.files}}. If the
+  user is working in a GUI environment, a window will pop
+  up, allowing the user to choose a specified file
+  regardless of path.
+}
+\examples{
+\dontrun{
+
+x <- getfile()
+setwd(x$path)
+poppr(x$files)
+
+y <- getfile(multFile=TRUE, pattern="^.+?dat$")
+#useful for reading in multiple FSTAT formatted files.
+
+setwd(y$path)
+poppr.all(y$files)
+}
+}
+
