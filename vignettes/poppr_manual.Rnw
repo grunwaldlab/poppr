@@ -92,7 +92,7 @@ Poppr provides open-source, cross-platform tools for quick analysis of populatio
 \end{figure}
 \newpage
 \begingroup
-\hypersetup{linkcolor=blue}
+\hypersetup{linkcolor=black}
 \tableofcontents
 \endgroup
 \section{Introduction}
