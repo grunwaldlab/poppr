@@ -531,6 +531,8 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
 # Here, I'm subsetting the population, but since there are no duplicate MLGs,
 # I can replace the vertex.label with the individual names. Cool, huh?
 #
+# This is a test.
+#
 ################################################################################
 
 bruvo.msn<- function (pop, replen=c(1), palette = topo.colors, ...){
