@@ -15,6 +15,7 @@ genind object and offers the following implementations:
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
+# Installation
 
 To install this package from github, make sure you have the following:
 
