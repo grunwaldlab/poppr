@@ -19,9 +19,7 @@ To install this package, make sure you have the following:
 Now you can use the `install_github()` function:
 
     library(devtools)
-
     install_github("poppr", "poppr")
-	
     library(poppr)
 
 You can view the manual by typing: `vignette("poppr_manual")`
