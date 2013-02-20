@@ -535,21 +535,26 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
 #
 ################################################################################
 
-bruvo.msn<- function (pop, replen=c(1), palette = topo.colors, ...){
+bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
+  sublist = "All", blacklist = NULL, ...){
   stopifnot(require(igraph))
-  # Obtaining population information for all MLGs
-  mlg.cp <- mlg.crosspop(pop,mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
-  
+
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
+
+  if(sublist[1] != "ALL" | !is.null(blacklist)){
+      pop <- popsub(pop, sublist, blacklist)
+  }
+  # Obtaining population information for all MLGs
+  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
+  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
   cpop <- pop[.clonecorrector(pop), ]
-  
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
-  mlg.number <- table(pop$other$mlg.vec)[cpop$other$mlg.vec]
-  mlg.cp <- mlg.cp[cpop$other$mlg.vec]
-  
+  # Note: rank is used to correctly subset the data
+  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
   bclone <- bruvo.dist(cpop, replen=replen)
   ###### Change names to MLG's #######
   attr(bclone, "Labels") <- paste("MLG.",cpop$other$mlg.vec, sep="")
@@ -570,3 +575,8 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors, ...){
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
         fill=color, border=NULL)
 }
+
+
+
+
+
