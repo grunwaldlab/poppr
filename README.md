@@ -1,16 +1,22 @@
+# Welcome!
+
 Poppr is an R package designed for analysis of populations with mixed modes of 
 sexual and clonal reproduction. It is built around the framework of adegenet's
 genind object and offers the following implementations:
 
-- Calculate the index of association and standardized index of association
-- Calculate Bruvo's distance (implemented in C for speed)
-- Automatically clone-censor data sets based on a population hierarchy.
-- Define multilocus genotypes
-- Create multilocus genotype tables for analysis with the package, vegan.
-- Quickly analyze what multilocus genotypes cross populations. 
-- Visualizing Bruvo's distance as a minimum spanning multilocus genotype network.
+- clone censoring of populations at any of multiple levels of a hierarchy
+- convenient counting of multilocus genotypes and sub-setting of populations with multiple levels of hierarchy
+- define multilocus genotypes
+- calculation of indices of genotypic diversity, evenness, richness, and rarefaction
+- drawing of dendrograms with bootstrap support for Bruvo's distance
+- drawing of minimum spanning networks for Bruvo's distance
+- calculation of the index of association (![equation](http://latex.codecogs.com/gif.latex?I_A)) or ![equation](http://latex.codecogs.com/gif.latex?\\bar{r}_D)
+- batch processing on any server that has R (>2.15.1) installed
+- calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
+- import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
-To install this package, make sure you have the following:
+
+To install this package from github, make sure you have the following:
 
 - devtools (to install, use: `install.packages("devtools")`)
 - Xcode (OSX)
@@ -25,6 +31,9 @@ Now you can use the `install_github()` function:
 You can view the manual by typing: `vignette("poppr_manual")`
 	
 Enjoy!
+
+
+### Legal Statement:
 
 This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
 students at Oregon State University; and Dr. Nik Grünwald, an employee of 
