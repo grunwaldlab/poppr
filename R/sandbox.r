@@ -515,6 +515,10 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
 # want something else, they add a vector into vertex.label and get whatever
 # value is in that vector. NA is a popular option. 
 #
+# Function for manual:
+# set.seed(2013)
+# bruvo.msn(nancycats, replen=rep(1, 9), vertex.label="inds", sublist=c(8:9), 
+#   vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors)
 ################################################################################
 
 bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
