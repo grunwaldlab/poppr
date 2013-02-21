@@ -539,7 +539,10 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
-    plot(mst, edge.color="black", edge.width=2, vertex.label = vertex.label, ...)
+    plot(mst, edge.color="black", edge.width=2, vertex.label = vertex.label,
+         vertex.size=mlg.number*3, vertex.color = palette(1), ...)
+    legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+           fill=palette(1), border=NULL)
     return(invisible(1))
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
@@ -591,8 +594,3 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
         fill=color, border=NULL)
 }
-
-
-
-
-
