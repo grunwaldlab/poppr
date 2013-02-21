@@ -507,36 +507,18 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
 
 ################################################################################
 # 
-# JAVIER,
-#
-# What do you think of this scheme: adding a flag in the function call for an
-# optional mlg vector. I say this because right now, the function calculates
-# mlgs based on the data set you give it. The problem is, that if you only want
-# to analyze part of your data set, the mlgs will not be inherited (... I have a
-# feeling that we might need to create a class of objects for MLGs to avoid them
-# being broken like this ...)
-#
-# Things we will need to do if we have the flag: 
-# 1. insert the vector into the @other slot if it's the right length
-# 2. rename the names of the elements in mlg.cp (because they will reflect the
-#   MLGs of the subsetted data set.
-#
-# In other news, I've been playing around with this function and found that you
-# can set where the vertex.labels should be with vertex.label.dist:
-#
-# bruvo.msn(popsub(nancycats, 8:9), replen=rep(1,9), 
-#   vertex.label=popsub(nancycats, 8:9)@ind.names, vertex.label.dist=0.5,
-#   vertex.label.color="grey25", palette=heat.colors)
-#
-# Here, I'm subsetting the population, but since there are no duplicate MLGs,
-# I can replace the vertex.label with the individual names. Cool, huh?
-#
-# This is a test.
+# Inserted methods for subsetting and dealing with null or single populations.
+# There was a little trickiness dealing with naming the nodes, but I made a hack
+# to fix it. It's not pretty, but it gets the job done. Currently the user has
+# a few choices, to label each node based on the MLGs, they select vertex.label
+# = "mlg", if they want individuals, they select vertex.label = "inds", if they
+# want something else, they add a vector into vertex.label and get whatever
+# value is in that vector. NA is a popular option. 
 #
 ################################################################################
 
 bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
-  sublist = "All", blacklist = NULL, ...){
+  sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
   stopifnot(require(igraph))
 
   # Storing the MLG vector into the genind object
@@ -546,8 +528,17 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
     bclone <- bruvo.dist(cpop, replen=replen)
+    attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
     g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
     mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+      if(toupper(vertex.label) == "MLG"){
+        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+      }
+      else if(toupper(vertex.label) == "INDS"){
+        vertex.label <- cpop$ind.names
+      }
+    }
     plot(mst, edge.color="black", edge.width=2, ...)
     return(invisible(1))
   }
@@ -571,11 +562,20 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
   mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
   mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
   bclone <- bruvo.dist(cpop, replen=replen)
-  ###### Change names to MLG's #######
-  attr(bclone, "Labels") <- paste("MLG.",cpop$other$mlg.vec, sep="")
+  ###### Change names to MLGs #######
+  #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
   ###### Create a graph #######
-  g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
+  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
   mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  
+  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if(toupper(vertex.label) == "MLG"){
+      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    }
+    else if(toupper(vertex.label) == "INDS"){
+      vertex.label <- cpop$ind.names
+    }
+  }
   ###### Color schemes #######  
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
@@ -586,7 +586,8 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   #print(mlg.color)
   plot(mst, edge.color="black", edge.width=2, vertex.size=mlg.number*3,
-        vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color, ...)
+        vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color,
+       vertex.label = vertex.label, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
         fill=color, border=NULL)
 }
