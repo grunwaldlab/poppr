@@ -524,11 +524,11 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
 
-  singlepop <- function(pop){
+  singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
     bclone <- bruvo.dist(cpop, replen=replen)
-    attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
     g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
     mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
     if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
@@ -539,17 +539,17 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
-    plot(mst, edge.color="black", edge.width=2, ...)
+    plot(mst, edge.color="black", edge.width=2, vertex.label = vertex.label, ...)
     return(invisible(1))
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop))
+    return(singlepop(pop, vertex.label))
   }
   if(sublist[1] != "ALL" | !is.null(blacklist)){
       pop <- popsub(pop, sublist, blacklist)
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop))
+    return(singlepop(pop, vertex.label))
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
