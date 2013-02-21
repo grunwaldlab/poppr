@@ -542,8 +542,23 @@ bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
 
+  singlepop <- function(pop){
+    cpop <- pop[.clonecorrector(pop), ]
+    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+    bclone <- bruvo.dist(cpop, replen=replen)
+    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
+    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+    plot(mst, edge.color="black", edge.width=2, ...)
+    return(invisible(1))
+  }
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop))
+  }
   if(sublist[1] != "ALL" | !is.null(blacklist)){
       pop <- popsub(pop, sublist, blacklist)
+  }
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop))
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
