@@ -521,7 +521,7 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
 #   vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors)
 ################################################################################
 
-bruvo.msn<- function (pop, replen=c(1), palette = topo.colors,
+test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
   stopifnot(require(igraph))
 
