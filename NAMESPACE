@@ -1,5 +1,6 @@
 export(bruvo.boot)
 export(bruvo.dist)
+export(bruvo.msn)
 export(clonecorrect)
 export(genind2genalex)
 export(getfile)
