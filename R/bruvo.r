@@ -282,4 +282,143 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
     axisPhylo(3)
   return(tre)
 }
+#==============================================================================#
+#
+#' Create minimum spanning network of selected populations using Brvuo's 
+#' distance.
+#'
+#' @param pop a \code{\link{genind}} object
+#'
+#' @param replen a \code{vector} of \code{integers} indicating the length of the
+#' nucleotide repeats for each microsatellite locus.
+#' 
+#' @param palette a \code{function} defining the color palette to be used to
+#' color the populations on the graph. It defaults to \code{\link{topo.colors}},
+#' but you can easily create new schemes by using \code{\link{colorRampPalette}}
+#' (see examples for details)
+#' 
+#' @param sublist a \code{vector} of population names or indexes that the user
+#' wishes to keep. Default to "ALL".
+#'
+#' @param blacklist a \code{vector} of population names or indexes that the user
+#' wishes to discard. Default to \code{NULL}
+#' 
+#' @param vertex.label a \code{vector} of characters to label each vertex. There
+#' are two defaults: \code{"MLG"} will label the nodes with the multilocus genotype
+#' from the original data set and \code{"inds"} will label the nodes with the 
+#' representative individual names.
+#' 
+#' @param ... any other arguments that could go into \code{\link{plot.igraph}}
+#'
+#' @return a minimum spanning network with nodes corresponding to MLGs within
+#' the data set. Colors of the nodes represent population membership, and length
+#' of edges represent Bruvo's distance.
+#' 
+#' @note The edges of these graphs may cross each other if the graph becomes too
+#' large. 
+#'
+#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
+#' \code{\link{boot.phylo}}, \code{\link{nodelabels}}, \code{\link{na.replace}},
+#' \code{\link{missingno}}, \code{\link{bruvo.boot}}.
+#' 
+#' @export
+#' @examples
+#' 
+#' # Load the data set.
+#' data(nancycats)
+#' 
+#' # View populations 8 and 9 with default colors. 
+#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' vertex.label.cex=0.7, vertex.label.dist=0.4)
+#' 
+#' # View heat colors.
+#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' palette=heat.colors, vertex.label.cex=0.7, vertex.label.dist=0.4)
+#' 
+#' # View custom colors. Here, we use black and orange.
+#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' vertex.label.dist=0.4)
+#' 
+#' # View the whole population, but without labels.
+#' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
+#==============================================================================#
+
+bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
+  sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
+  stopifnot(require(igraph))
+
+  # Storing the MLG vector into the genind object
+  pop$other$mlg.vec <- mlg.vector(pop)
+
+  singlepop <- function(pop, vertex.label){
+    cpop <- pop[.clonecorrector(pop), ]
+    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+    bclone <- bruvo.dist(cpop, replen=replen)
+    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
+    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+      if(toupper(vertex.label) == "MLG"){
+        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+      }
+      else if(toupper(vertex.label) == "INDS"){
+        vertex.label <- cpop$ind.names
+      }
+    }
+    plot(mst, edge.color="black", edge.width=2, vertex.label = vertex.label,
+         vertex.size=mlg.number*3, vertex.color = palette(1), ...)
+    legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+           fill=palette(1), border=NULL)
+    return(invisible(1))
+  }
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop, vertex.label))
+  }
+  if(sublist[1] != "ALL" | !is.null(blacklist)){
+      pop <- popsub(pop, sublist, blacklist)
+  }
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop, vertex.label))
+  }
+  # Obtaining population information for all MLGs
+  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
+  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
+  cpop <- pop[.clonecorrector(pop), ]
+  # This will determine the size of the nodes based on the number of individuals
+  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
+  # give us the numbers and the population information in the correct order.
+  # Note: rank is used to correctly subset the data
+  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
+  bclone <- bruvo.dist(cpop, replen=replen)
+  ###### Change names to MLGs #######
+  #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+  ###### Create a graph #######
+  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
+  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  
+  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if(toupper(vertex.label) == "MLG"){
+      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    }
+    else if(toupper(vertex.label) == "INDS"){
+      vertex.label <- cpop$ind.names
+    }
+  }
+  ###### Color schemes #######  
+  # The pallete is determined by what the user types in the argument. It can be 
+  # rainbow, topo.colors, heat.colors ...etc.
+  palette <- match.fun(palette)
+  color <- palette(length(pop@pop.names))
+  
+  # This creates a list of colors corresponding to populations.
+  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  #print(mlg.color)
+  plot(mst, edge.color="black", edge.width=2, vertex.size=mlg.number*3,
+        vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color,
+       vertex.label = vertex.label, ...)
+  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+        fill=color, border=NULL)
+}
 
