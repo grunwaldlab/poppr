@@ -1189,14 +1189,31 @@ set.seed(1001)
 nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, tree="upgma", quiet=TRUE, cutoff=50)
 @
 \end{figure}
+\subsubsection{Function: bruvo.msn}
 
-We can also use this distance matrix in order to construct a minimum spanning network (minimum spanning tree) using \textit{ape}'s \texttt{mst} function (for details, type \texttt{?ape:::mst}):
+\tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds.
+\begin{quote}
+Default Command:\\
+\texttt{bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", ...)}
+\end{quote}
+\begin{itemize}
+  \item \texttt{pop -} a \texttt{genind} object.
+  \item \texttt{replen -} see \texttt{bruvo.dist}, above.
+  \item \texttt{palette -} this is a \textbf{function} definining a color palette to use. The default is \texttt{topo.colors}. There are different palettes, which you can search by typing \texttt{?rainbow}. If you want a custom color palette, an easy way is to use the function \texttt{colorRampPalette}.
+  \item \texttt{sublist -} The populations you wish to analyze. This defaults to "All".
+  \item \texttt{blacklist -} Populations you do not want to include in the graph.
+  \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. Note that I say representative individual names because it will print the name of the first individual representative of that multilocus genotype. Anything else must b
+  \item \texttt{... -} This is a placeholder for any other arguments that you want to supply to \textit{igraph}. Useful arguments are \texttt{vertex.label.cex} to adjust the size of the labels, \texttt{vertex.label.dist} to adjust the position of the labels, and \texttt{vertex.label.color} to adjust the color of the labels.
+\end{itemize}
+
+Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. Unfortunately, software to create these minimum spanning networks is often quite burdensome to deal with. For a demonstration, let's revisit populations 8 and 9 of nancycats: 
 \begin{figure}[h!]
   \centering
   \caption{Minimum spanning network of Nancycat populations 8 and 9}
   \label{mst_bruvo}
 <<fig=TRUE, resolution=300>>=
-plot(ape:::mst(dist9to8), graph="nsca")
+bruvo.msn(nancycats, replen=rep(1, 9), vertex.label="inds", sublist=8:9, 
+          vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors)
 @
 \end{figure}
 %\subsubsection{Gory details} 
