@@ -621,3 +621,45 @@ discreet.dist <- function(pop){
   rownames(dist.vec) <- ind.names
   return(as.dist(dist.vec))
 }
+
+
+
+
+
+poppr.msn <- function (pop, distmat, palette = topo.colors,
+                            sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
+  stopifnot(require(igraph))
+  
+  # Storing the MLG vector into the genind object
+  pop$other$mlg.vec <- mlg.vector(pop)
+  mat <- as.matrix(distmat)[!duplicated(pop$other$mlg), !duplicated(pop$other$mlg)]
+  cpop <- pop[.clonecorrector(pop),]
+  rownames(mat) <- cpop$pop
+  colnames(mat) <- cpop$pop
+  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
+  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
+  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
+  g <- graph.adjacency(as.matrix(mat),weighted=TRUE,mode="undirected")
+  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if(toupper(vertex.label) == "MLG"){
+      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    }
+    else if(toupper(vertex.label) == "INDS"){
+      vertex.label <- cpop$ind.names
+    }
+  }
+  
+  palette <- match.fun(palette)
+  color <- palette(length(pop@pop.names))
+  
+  # This creates a list of colors corresponding to populations.
+  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  #print(mlg.color)
+  plot(mst, edge.color="black", edge.width=2, vertex.size=mlg.number*3,
+       vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color,
+       vertex.label = vertex.label, ...)
+  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+         fill=color, border=NULL)
+}
