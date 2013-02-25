@@ -598,3 +598,26 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
         fill=color, border=NULL)
 }
+
+
+discreet.dist <- function(pop){
+  ploid <- ploidy(pop)
+  ind.names <- pop@ind.names
+  inds <- nInd(pop)
+  np <- choose(inds, 2)
+  dist.vec <- matrix(data = 0, nrow=inds, ncol=inds)
+  if(pop@type == "PA"){
+    dist.vec[lower.tri(dist.vec)] <- .Call("pairdiffs",pop@tab*ploid)/ploid
+  }
+  else{
+    pop <- seploc(pop)
+    numLoci <- length(pop)
+    temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
+    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs",x@tab*ploid)/ploid, 
+                            temp.d.vector[, 1])
+    dist.vec[lower.tri(dist.vec)] <- rowSums(temp.d.vector)
+  }
+  colnames(dist.vec) <- ind.names
+  rownames(dist.vec) <- ind.names
+  return(as.dist(dist.vec))
+}
