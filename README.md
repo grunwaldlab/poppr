@@ -1,4 +1,4 @@
-# Welcome!
+# Welcome
 
 Poppr is an R package designed for analysis of populations with mixed modes of 
 sexual and clonal reproduction. It is built around the framework of adegenet's
