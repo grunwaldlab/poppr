@@ -543,9 +543,9 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
-    l <- layout.fruchterman.reingold(g, weights=E(mst)$weight)
+    l <- layout.drl
     plot(mst, edge.color="black", edge.width=2, vertex.label = vertex.label,
-         vertex.size=mlg.number*3, vertex.color = palette(1), layout=l, ...)
+         vertex.size=mlg.number*3, vertex.color = palette(1), layout=l, edge.label=E(mst)$weight, ...)
     legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
            fill=palette(1), border=NULL)
     return(invisible(1))
