@@ -522,12 +522,12 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
 ################################################################################
 
 test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
-  sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
+                            sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
   stopifnot(require(igraph))
-
+  
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
-
+  
   singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
@@ -543,8 +543,9 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
+    l <- layout.fruchterman.reingold(g, weights=E(mst)$weight)
     plot(mst, edge.color="black", edge.width=2, vertex.label = vertex.label,
-         vertex.size=mlg.number*3, vertex.color = palette(1), ...)
+         vertex.size=mlg.number*3, vertex.color = palette(1), layout=l, ...)
     legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
            fill=palette(1), border=NULL)
     return(invisible(1))
@@ -553,7 +554,7 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
     return(singlepop(pop, vertex.label))
   }
   if(sublist[1] != "ALL" | !is.null(blacklist)){
-      pop <- popsub(pop, sublist, blacklist)
+    pop <- popsub(pop, sublist, blacklist)
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop(pop, vertex.label))
@@ -593,11 +594,12 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   #print(mlg.color)
   plot(mst, edge.color="black", edge.width=2, vertex.size=mlg.number*3,
-        vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color,
-       vertex.label = vertex.label, ...)
+       vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color,
+       vertex.label = vertex.label, edge.label=E(mst)$weight, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
-        fill=color, border=NULL)
+         fill=color, border=NULL)
 }
+
 
 
 discreet.dist <- function(pop){
