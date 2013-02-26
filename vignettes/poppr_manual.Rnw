@@ -4,26 +4,27 @@
 %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 %
-% This software was authored by Zhian N. Kamvar, a graduate student at Oregon 
-% Statu University; and Dr. Nik Grunwald, an employee of ARS-USDA.
-%
+% This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
+% students at Oregon State University; and Dr. Nik Grünwald, an employee of 
+% USDA-ARS.
+% 
 % Permission to use, copy, modify, and distribute this software and its
 % documentation for educational, research and non-profit purposes, without fee, 
-% and without a written agreement is hereby granted, provided that the statemet
+% and without a written agreement is hereby granted, provided that the statement
 % above is incorporated into the material, giving appropriate attribution to the
 % authors.
-%
+% 
 % Permission to incorporate this software into commercial products may be
 % obtained by contacting USDA ARS and OREGON STATE UNIVERSITY Office for 
 % Commercialization and Corporate Development.
-%
+% 
 % The software program and documentation are supplied "as is", without any
 % accompanying services from the USDA or the University. USDA ARS or the 
 % University do not warrant that the operation of the program will be 
 % uninterrupted or error-free. The end-user understands that the program was 
 % developed for research purposes and is advised not to rely exclusively on the 
 % program for any reason.
-%
+% 
 % IN NO EVENT SHALL USDA ARS OR OREGON STATE UNIVERSITY BE LIABLE TO ANY PARTY 
 % FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING
 % LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, 
@@ -82,7 +83,7 @@
 % The first page will have the title, abstract, and then the Poppr logo at the bottom.
 \maketitle
 \begin{abstract}
-Poppr provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. \textit{Poppr}'s main advantage is the ease of use and integration with other packages such as \textit{adegenet} and \textit{vegan}, including support for novel methods such as clone correction, multilocus genotype analysis, and calculation of Bruvo's distance and the index of association. 
+Poppr provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. \textit{Poppr}'s main advantage is the ease of use and integration with other packages such as \textit{adegenet} and \textit{vegan}, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo's distance and the index of association. 
 \end{abstract}
 % Inserting the Poppr logo here
 \begin{figure}[b]
@@ -1184,7 +1185,7 @@ cat("|==========================================================================
   \centering
   \caption{UPGMA Tree of Bruvo's distance for population 9 of the data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent percentage of bootstrap replicates that contained that node.}
   \label{bruvo_upgma}
-<<fig=TRUE, echo=FALSE, resolution=300>>=
+<<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
 set.seed(1001)
 nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, tree="upgma", quiet=TRUE, cutoff=50)
 @
@@ -1211,7 +1212,8 @@ Often, minimum spanning networks are the preferred way to visualize Bruvo's dist
   \centering
   \caption{Minimum spanning network of Nancycat populations 8 and 9}
   \label{mst_bruvo}
-<<fig=TRUE, resolution=300>>=
+<<bruvo_msn, fig=TRUE, resolution=300>>=
+set.seed(9005)
 bruvo.msn(nancycats, replen=rep(1, 9), vertex.label="inds", sublist=8:9, 
           vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors)
 @
