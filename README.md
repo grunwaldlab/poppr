@@ -19,9 +19,9 @@ genind object and offers the following implementations:
 
 To install this package from github, make sure you have the following:
 
-- devtools (to install, use: `install.packages("devtools")`)
-- Xcode (OSX)
-- Rtools (Windows)
+- [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
+- [Xcode](https://developer.apple.com/xcode/) (OSX)
+- [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
 
 Now you can use the `install_github()` function:
 
