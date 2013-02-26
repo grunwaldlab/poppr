@@ -532,6 +532,7 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
     bclone <- bruvo.dist(cpop, replen=replen)
+    mclone<-as.dist(bclone)
     #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
     g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
     mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
@@ -543,9 +544,9 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
-    l <- layout.drl
+    l <- layout.mds(mst,dist=mclone)
     plot(mst, edge.color="black", edge.width=2, vertex.label = vertex.label,
-         vertex.size=mlg.number*3, vertex.color = palette(1), layout=l, edge.label=E(mst)$weight, ...)
+         vertex.size=mlg.number*3, vertex.color = palette(1), layout=l, ...)
     legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
            fill=palette(1), border=NULL)
     return(invisible(1))
