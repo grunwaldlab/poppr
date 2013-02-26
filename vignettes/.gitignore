@@ -26,3 +26,9 @@ poppr_manual.synctex.gz
 poppr_manual.tex
 poppr_manual.toc
 poppr_manual-bruvo.msn.pdf
+<<<<<<< HEAD
+=======
+poppr_manual-bruvo.tree.pdf
+poppr_manual-bruvo_msn.pdf
+poppr_manual-bruvo_tree.pdf
+>>>>>>> Corrected some grammar in vignette
