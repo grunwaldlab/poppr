@@ -1213,7 +1213,7 @@ Often, minimum spanning networks are the preferred way to visualize Bruvo's dist
   \caption{Minimum spanning network of Nancycat populations 8 and 9}
   \label{mst_bruvo}
 <<bruvo_msn, fig=TRUE, resolution=300>>=
-set.seed(9005)
+set.seed(2013)
 bruvo.msn(nancycats, replen=rep(1, 9), vertex.label="inds", sublist=8:9, 
           vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors)
 @
