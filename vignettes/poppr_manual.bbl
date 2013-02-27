@@ -1,0 +1,101 @@
+\begin{thebibliography}{10}
+
+\bibitem{Agapow:2001}
+Paul-Michael Agapow and Austin Burt.
+\newblock Indices of multilocus linkage disequilibrium.
+\newblock {\em Molecular Ecology Notes}, 1(1-2):101--102, 2001.
+
+\bibitem{Brown:1980}
+A.H.D. Brown, M.W. Feldman, and E.~Nevo.
+\newblock Multilocus structure of natural populations of hordeum spontaneum.
+\newblock {\em Genetics}, 96(2):523--536, 1980.
+
+\bibitem{Bruvo:2004}
+Ruzica Bruvo, Nicolaas~K. Michiels, Thomas~G. D’Souza, and Hinrich
+  Schulenburg.
+\newblock A simple method for the calculation of microsatellite genotype
+  distances irrespective of ploidy level.
+\newblock {\em Molecular Ecology}, 13(7):2101--2106, 2004.
+
+\bibitem{Grunwald:2003}
+Niklaus~J. Grünwald, Stephen~B. Goodwin, Michael~G. Milgroom, and William~E.
+  Fry.
+\newblock Analysis of genotypic diversity data for populations of
+  microorganisms.
+\newblock {\em Phytopathology}, 93(6):738--46, 2003.
+
+\bibitem{Grunwald:2006}
+N.J. Grünwald and G.~Hoheisel.
+\newblock Hierarchical analysis of diversity, selfing, and genetic
+  differentiation in populations of the oomycete aphanomyces euteiches.
+\newblock {\em Phytopathology}, 96(10):1134--1141, 2006.
+
+\bibitem{Haubold:2000}
+Bernhard Haubold and Richard~R. Hudson.
+\newblock Lian 3.0: detecting linkage disequilibrium in multilocus data.
+\newblock {\em Bioinformatics}, 16(9):847--849, 2000.
+
+\bibitem{Heck:1975}
+Kenneth~L.Jr. Heck, Gerald~van Belle, and Daniel Simberloff.
+\newblock Explicit calculation of the rarefaction diversity measurement and the
+  determination of sufficient sample size.
+\newblock {\em Ecology}, 56(6):pp. 1459--1461, 1975.
+
+\bibitem{Hurlbert:1971}
+S~H Hurlbert.
+\newblock The nonconcept of species diversity: a critique and alternative
+  parameters.
+\newblock {\em Ecology}, 52(4):577--586, 1971.
+
+\bibitem{Jombart:2008}
+Thibaut Jombart.
+\newblock adegenet: a r package for the multivariate analysis of genetic
+  markers.
+\newblock {\em Bioinformatics}, 24(11):1403--1405, 2008.
+
+\bibitem{Ludwig:1988}
+J.A. Ludwig and J.F. Reynolds.
+\newblock {\em Statistical Ecology. A Primer on Methods and Computing}.
+\newblock New York USA: John Wiley and Sons, 1988.
+
+\bibitem{Nei:1978}
+Masatoshi Nei.
+\newblock Estimation of average heterozygosity and genetic distance from a
+  small number of individuals.
+\newblock {\em Genetics}, 89(3):583--590, 1978.
+
+\bibitem{vegan}
+Jari Oksanen, F.~Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter~R.
+  Minchin, R.~B. O'Hara, Gavin~L. Simpson, Peter Solymos, M.~Henry~H. Stevens,
+  and Helene Wagner.
+\newblock {\em vegan: Community Ecology Package}, 2012.
+\newblock R package version 2.0-5.
+
+\bibitem{Peakall:2012}
+Rod Peakall and Peter~E. Smouse.
+\newblock Genalex 6.5: genetic analysis in excel. population genetic software
+  for teaching and research—an update.
+\newblock {\em Bioinformatics}, 28(19):2537--2539, 2012.
+
+\bibitem{Pielou:1975}
+E.C. Pielou.
+\newblock {\em Ecological Diversity}.
+\newblock Wiley, 1975.
+
+\bibitem{Shannon:1948}
+Claude~Elwood Shannon.
+\newblock A mathematical theory of communication.
+\newblock {\em Bell Systems Technical Journal}, 27:379--423,623--656, 1948.
+
+\bibitem{Smith:1993}
+J~M Smith, N~H Smith, M~O'Rourke, and B~G Spratt.
+\newblock How clonal are bacteria?
+\newblock {\em Proceedings of the National Academy of Sciences},
+  90(10):4384--4388, 1993.
+
+\bibitem{Stoddart:1988}
+J.A. Stoddart and J.F. Taylor.
+\newblock Genotypic diversity: estimation and prediction in samples.
+\newblock {\em Genetics}, 118(4):705--11, 1988.
+
+\end{thebibliography}
