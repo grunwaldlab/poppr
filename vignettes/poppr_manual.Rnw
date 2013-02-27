@@ -1160,11 +1160,11 @@ Default Command:\\
   \item \texttt{palette -} this is a \textbf{function} definining a color palette to use. The default is \texttt{topo.colors}. There are different palettes, which you can search by typing \texttt{?rainbow}. If you want a custom color palette, an easy way is to use the function \texttt{colorRampPalette}.
   \item \texttt{sublist -} The populations you wish to analyze. This defaults to "All".
   \item \texttt{blacklist -} Populations you do not want to include in the graph.
-  \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. If you wish to use another vector of names, you can choose
+  \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
   \item \texttt{... -} This is a placeholder for any other arguments that you want to supply to \textit{igraph}. Useful arguments are \texttt{vertex.label.cex} to adjust the size of the labels, \texttt{vertex.label.dist} to adjust the position of the labels, and \texttt{vertex.label.color} to adjust the color of the labels.
 \end{itemize}
 
-Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. Unfortunately, software to create these minimum spanning networks is often quite burdensome to deal with. For a demonstration, let's revisit populations 8 and 9 of nancycats: 
+Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. Unfortunately, software to create these minimum spanning networks is often quite burdensome to deal with. \textit{Poppr} offers an easy way to plot these. For a demonstration, let's revisit populations 8 and 9 of nancycats: 
 \begin{figure}[h!]
   \centering
   \caption{Minimum spanning network of Nancycat populations 8 and 9}
@@ -1175,6 +1175,8 @@ bruvo.msn(nancycats, replen=rep(1, 9), vertex.label="inds", sublist=8:9,
           vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors)
 @
 \end{figure}
+
+Note that the thickness of the edges (the lines that are connecting the dots) is representative of relatedness between individuals, but the lengths do not necessarily mean anything due to the fact that with a larger data sets, displaying lengths proportional to relatedness would be impossible to draw on a 2D surface. Node size is related to the number of individuals represented by each MLG. Since the number of MLGs in this data set is equal to the number of MLGs, all the nodes are the same size. 
 %\subsubsection{Gory details} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
