@@ -345,16 +345,17 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #==============================================================================#
 
 bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
-  sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
+                       sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
   stopifnot(require(igraph))
-
+  
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
-
+  
   singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
     bclone <- bruvo.dist(cpop, replen=replen)
+    mclone<-as.dist(bclone)
     #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
     g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
     mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
@@ -366,8 +367,12 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
-    plot(mst, edge.color="black", edge.width=2, vertex.label = vertex.label,
-         vertex.size=mlg.number*3, vertex.color = palette(1), ...)
+    
+    if(any(E(mst)$weight < 0.08)){
+      E(mst)$weight <- E(mst)$weight + 0.08
+    }
+    plot(mst, edge.color="black", edge.width=(1/E(mst)$weight), vertex.label = vertex.label,
+         vertex.size=mlg.number*3, vertex.color = palette(1),  ...)
     legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
            fill=palette(1), border=NULL)
     return(invisible(1))
@@ -376,7 +381,7 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
     return(singlepop(pop, vertex.label))
   }
   if(sublist[1] != "ALL" | !is.null(blacklist)){
-      pop <- popsub(pop, sublist, blacklist)
+    pop <- popsub(pop, sublist, blacklist)
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop(pop, vertex.label))
@@ -411,14 +416,16 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
-  
+  if(any(E(mst)$weight < 0.08)){
+    E(mst)$weight <- E(mst)$weight + 0.08
+  }
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   #print(mlg.color)
-  plot(mst, edge.color="black", edge.width=2, vertex.size=mlg.number*3,
-        vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color,
+  plot(mst, edge.color="black", edge.width=(1/(E(mst)$weight)), vertex.size=mlg.number*3,
+       vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color,
        vertex.label = vertex.label, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
-        fill=color, border=NULL)
+         fill=color, border=NULL)
 }
 
