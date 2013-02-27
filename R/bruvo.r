@@ -347,11 +347,11 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
   stopifnot(require(igraph))
-  
+  bcall <- match.call()
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   
-  singlepop <- function(pop, vertex.label){
+  singlepop <- function(pop, vertex.label, bcall){
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
     bclone <- bruvo.dist(cpop, replen=replen)
@@ -373,17 +373,17 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
     }
     plot(mst, edge.color="black", edge.width=(1/E(mst)$weight), vertex.label = vertex.label,
          vertex.size=mlg.number*3, vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), as.character(bcall[2]), pop$pop.names), title="Populations",
            fill=palette(1), border=NULL)
     return(invisible(1))
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label))
+    return(singlepop(pop, vertex.label, bcall))
   }
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
   }
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+  if(length(pop@pop.names) == 1){
     return(singlepop(pop, vertex.label))
   }
   # Obtaining population information for all MLGs
