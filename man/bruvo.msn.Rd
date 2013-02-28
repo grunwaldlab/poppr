@@ -5,8 +5,8 @@ distance.}
 \usage{
   bruvo.msn(pop, replen = c(1), palette = topo.colors,
     sublist = "All", blacklist = NULL,
-    vertex.label = "MLG", gscale = TRUE, wscale = TRUE,
-    ...)
+    vertex.label = "MLG", gscale = TRUE, glim = 0.8,
+    wscale = TRUE, ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -39,6 +39,10 @@ distance.}
   will scale the color of the edges proportional to Bruvo's
   distance, with the lines becoming darker for more related
   nodes.}
+
+  \item{glim}{"grey limit". This is a decimal greater than
+  zero up to one. It determines the upper limit for the
+  \code{\link{gray}} function.}
 
   \item{wscale}{"widthscale". If this is \code{TRUE}, the
   edge widths will be scaled proportional to Bruvo's

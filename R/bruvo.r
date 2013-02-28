@@ -312,6 +312,9 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' of the edges proportional to Bruvo's distance, with the lines becoming darker
 #' for more related nodes.
 #' 
+#' @param glim "grey limit". This is a decimal greater than zero up to one. It
+#' determines the upper limit for the \code{\link{gray}} function. 
+#' 
 #' @param wscale "widthscale". If this is \code{TRUE}, the edge widths will be
 #' scaled proportional to Bruvo's distance, with the lines becoming thicker for
 #' more related nodes.
@@ -354,7 +357,7 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 
 bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
-                       gscale=TRUE, wscale=TRUE, ...){
+                       gscale=TRUE, glim = 0.8, wscale=TRUE, ...){
   stopifnot(require(igraph))
   
   # Storing the MLG vector into the genind object
@@ -377,7 +380,7 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
       }
     }
     if(gscale == TRUE){
-      E(mst)$color <- gray(  1 - (1- E(mst)$weight)^3/1.2  )
+      E(mst)$color <- gray( (1 - (1-E(mst)$weight)^3 ) / (1/glim) )
     }
     else{
       E(mst)$color <- rep("black", length(E(mst)$weight))
@@ -393,7 +396,7 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
     plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
          vertex.label = vertex.label, vertex.size=mlg.number*3, 
          vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), NA, pop$pop.names), title="Populations",
            fill=palette(1), border=NULL)
     return(invisible(1))
   }
@@ -437,12 +440,12 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
-    E(mst)$color <- gray(  1 - (1- E(mst)$weight)^3/1.2  )
+    E(mst)$color <- gray( (1 - (1-E(mst)$weight)^3 ) / (1/glim) )
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
-
+  print(sum(E(mst)$weight < 0.1)/length(E(mst)$weight))
   edgewidth <- 2
   if(wscale==TRUE){
     edgewidth <- 1/(E(mst)$weight)
@@ -459,4 +462,3 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
          fill=color, border=NULL)
 }
-
