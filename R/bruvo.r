@@ -314,7 +314,7 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' 
 #' @param glim "grey limit". Two numbers between zero and one. They determine 
 #' the upper and lower limits for the \code{\link{gray}} function. Default is 0
-#' (black) and 0.8 (20% black). 
+#' (black) and 0.8 (20\% black). 
 #' 
 #' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be
 #' scaled proportional to Bruvo's distance, with the lines becoming thicker for

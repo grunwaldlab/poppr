@@ -43,7 +43,7 @@ distance.}
   \item{glim}{"grey limit". Two numbers between zero and
   one. They determine the upper and lower limits for the
   \code{\link{gray}} function. Default is 0 (black) and 0.8
-  (20% black).}
+  (20\% black).}
 
   \item{wscale}{"width scale". If this is \code{TRUE}, the
   edge widths will be scaled proportional to Bruvo's
