@@ -522,7 +522,8 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
 ################################################################################
 
 test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
-                            sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
+                            sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+                            gscale=TRUE, wscale=TRUE, ...){
   stopifnot(require(igraph))
   
   # Storing the MLG vector into the genind object
@@ -544,11 +545,21 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
-    
-    if(any(E(mst)$weight < 0.08)){
-      E(mst)$weight <- E(mst)$weight + 0.08
+    if(gscale == TRUE){
+      E(mst)$color <- gray(  1 - (1- E(mst)$weight)^3/1.2  )
     }
-    plot(mst, edge.color=grey(E(mst)$weight), edge.width=(1/E(mst)$weight), 
+    else{
+      E(mst)$color <- rep("black", length(E(mst)$weight))
+    }
+    print(sum(E(mst)$weight < 0.1)/length(E(mst)$weight))
+    edgewidth <- 2
+    if(wscale==TRUE){
+      edgewidth <- 1/(E(mst)$weight)
+      if(any(E(mst)$weight < 0.08)){
+        edgewidth <- 1/(E(mst)$weight + 0.08)
+      }
+    }
+    plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
          vertex.label = vertex.label, vertex.size=mlg.number*3, 
          vertex.color = palette(1),  ...)
     legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
@@ -594,13 +605,24 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
-  if(any(E(mst)$weight < 0.08)){
-    E(mst)$weight <- E(mst)$weight + 0.08
+  if(gscale == TRUE){
+    E(mst)$color <- gray(  1 - (1- E(mst)$weight)^3/1.2  )
+  }
+  else{
+    E(mst)$color <- rep("black", length(E(mst)$weight))
+  }
+  print(sum(E(mst)$weight < 0.1)/length(E(mst)$weight))
+  edgewidth <- 2
+  if(wscale==TRUE){
+    edgewidth <- 1/(E(mst)$weight)
+    if(any(E(mst)$weight < 0.08)){
+      edgewidth <- 1/(E(mst)$weight + 0.08)
+    }
   }
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   #print(mlg.color)
-  plot(mst, edge.width=(1/(E(mst)$weight)), edge.color=grey(E(mst)$weight), 
+  plot(mst, edge.width=edgewidth, edge.color=E(mst)$color, 
        vertex.size=mlg.number*3, vertex.shape="pie", vertex.pie=mlg.cp, 
        vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",

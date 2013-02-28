@@ -308,6 +308,14 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' from the original data set and \code{"inds"} will label the nodes with the 
 #' representative individual names.
 #' 
+#' @param gscale "greyscale". If this is \code{TRUE}, this will scale the color
+#' of the edges proportional to Bruvo's distance, with the lines becoming darker
+#' for more related nodes.
+#' 
+#' @param wscale "widthscale". If this is \code{TRUE}, the edge widths will be
+#' scaled proportional to Bruvo's distance, with the lines becoming thicker for
+#' more related nodes.
+#' 
 #' @param ... any other arguments that could go into \code{\link{plot.igraph}}
 #'
 #' @return a minimum spanning network with nodes corresponding to MLGs within
@@ -345,13 +353,14 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #==============================================================================#
 
 bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
-                       sublist = "All", blacklist = NULL, vertex.label = "MLG", ...){
+                       sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+                       gscale=TRUE, wscale=TRUE, ...){
   stopifnot(require(igraph))
-  bcall <- match.call()
+  
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   
-  singlepop <- function(pop, vertex.label, bcall){
+  singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
     bclone <- bruvo.dist(cpop, replen=replen)
@@ -367,23 +376,34 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
-    
-    if(any(E(mst)$weight < 0.08)){
-      E(mst)$weight <- E(mst)$weight + 0.08
+    if(gscale == TRUE){
+      E(mst)$color <- gray(  1 - (1- E(mst)$weight)^3/1.2  )
     }
-    plot(mst, edge.color="black", edge.width=(1/E(mst)$weight), vertex.label = vertex.label,
-         vertex.size=mlg.number*3, vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), as.character(bcall[2]), pop$pop.names), title="Populations",
+    else{
+      E(mst)$color <- rep("black", length(E(mst)$weight))
+    }
+    print(sum(E(mst)$weight < 0.1)/length(E(mst)$weight))
+    edgewidth <- 2
+    if(wscale==TRUE){
+      edgewidth <- 1/(E(mst)$weight)
+      if(any(E(mst)$weight < 0.08)){
+        edgewidth <- 1/(E(mst)$weight + 0.08)
+      }
+    }
+    plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
+         vertex.label = vertex.label, vertex.size=mlg.number*3, 
+         vertex.color = palette(1),  ...)
+    legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
            fill=palette(1), border=NULL)
     return(invisible(1))
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label, bcall))
+    return(singlepop(pop, vertex.label))
   }
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
   }
-  if(length(pop@pop.names) == 1){
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop(pop, vertex.label))
   }
   # Obtaining population information for all MLGs
@@ -416,15 +436,26 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
-  if(any(E(mst)$weight < 0.08)){
-    E(mst)$weight <- E(mst)$weight + 0.08
+  if(gscale == TRUE){
+    E(mst)$color <- gray(  1 - (1- E(mst)$weight)^3/1.2  )
+  }
+  else{
+    E(mst)$color <- rep("black", length(E(mst)$weight))
+  }
+
+  edgewidth <- 2
+  if(wscale==TRUE){
+    edgewidth <- 1/(E(mst)$weight)
+    if(any(E(mst)$weight < 0.08)){
+      edgewidth <- 1/(E(mst)$weight + 0.08)
+    }
   }
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   #print(mlg.color)
-  plot(mst, edge.color="black", edge.width=(1/(E(mst)$weight)), vertex.size=mlg.number*3,
-       vertex.shape="pie", vertex.pie=mlg.cp, vertex.pie.color=mlg.color,
-       vertex.label = vertex.label, ...)
+  plot(mst, edge.width=edgewidth, edge.color=E(mst)$color, 
+       vertex.size=mlg.number*3, vertex.shape="pie", vertex.pie=mlg.cp, 
+       vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
          fill=color, border=NULL)
 }

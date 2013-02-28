@@ -5,7 +5,8 @@ distance.}
 \usage{
   bruvo.msn(pop, replen = c(1), palette = topo.colors,
     sublist = "All", blacklist = NULL,
-    vertex.label = "MLG", ...)
+    vertex.label = "MLG", gscale = TRUE, wscale = TRUE,
+    ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -33,6 +34,16 @@ distance.}
   will label the nodes with the multilocus genotype from
   the original data set and \code{"inds"} will label the
   nodes with the representative individual names.}
+
+  \item{gscale}{"greyscale". If this is \code{TRUE}, this
+  will scale the color of the edges proportional to Bruvo's
+  distance, with the lines becoming darker for more related
+  nodes.}
+
+  \item{wscale}{"widthscale". If this is \code{TRUE}, the
+  edge widths will be scaled proportional to Bruvo's
+  distance, with the lines becoming thicker for more
+  related nodes.}
 
   \item{...}{any other arguments that could go into
   \code{\link{plot.igraph}}}
