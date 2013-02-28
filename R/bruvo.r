@@ -320,7 +320,7 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' scaled proportional to Bruvo's distance, with the lines becoming thicker for
 #' more related nodes.
 #' 
-#' @param ... any other arguments that could go into \code{\link{plot.igraph}}
+#' @param ... any other arguments that could go into \code{\link{igraph:::plot.igraph}}
 #'
 #' @return a minimum spanning network with nodes corresponding to MLGs within
 #' the data set. Colors of the nodes represent population membership, and length
