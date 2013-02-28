@@ -30,5 +30,7 @@ Now you can use the `install_github()` function:
     library(poppr)
 
 You can view the manual by typing: `vignette("poppr_manual")`
+
+Be sure to visit our [Webpage](http://grunwaldlab.cgrb.oregonstate.edu/poppr-r-package-population-genetics) with FAQs and tutorials coming soon.
 	
 Enjoy!
