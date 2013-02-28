@@ -1161,6 +1161,9 @@ Default Command:\\
   \item \texttt{sublist -} The populations you wish to analyze. This defaults to "All".
   \item \texttt{blacklist -} Populations you do not want to include in the graph.
   \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
+  \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will be converted to greyscale based on Bruvo's distance. If two nodes are closely related, the edge will appear darker. The limits of the scale can be set by the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors will be black. 
+  \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets you set the limits of the grey scaling based on R's internal \texttt{grey} function. For example, if you wanted a maximum of 50\% white saturation (for use if you have distantly related nodes) and a a minimum of 1\%, you would use \texttt{glim = c(0.01, 0.5)}. 
+  \item \texttt{wscale -} If this is set to \texttt{TRUE}, edge widths will be displayed corresponding to Bruvo's distance in that thicker edges will represent a smaller distance between nodes. If this is set to \texttt{FALSE}, all edges will be set to a width of 2. 
   \item \texttt{... -} This is a placeholder for any other arguments that you want to supply to \textit{igraph}. Useful arguments are \texttt{vertex.label.cex} to adjust the size of the labels, \texttt{vertex.label.dist} to adjust the position of the labels, and \texttt{vertex.label.color} to adjust the color of the labels.
 \end{itemize}
 
@@ -1172,7 +1175,7 @@ Often, minimum spanning networks are the preferred way to visualize Bruvo's dist
 <<bruvo_msn, fig=TRUE, resolution=300>>=
 set.seed(2013)
 bruvo.msn(nancycats, replen=rep(1, 9), vertex.label="inds", sublist=8:9, 
-          vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors)
+          vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors, glim=c(0,0.5))
 @
 \end{figure}
 
