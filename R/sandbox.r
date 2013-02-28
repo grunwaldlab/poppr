@@ -481,29 +481,6 @@ pop.sampler <- function(pop, method=1){
   return(pop)
 }
 
-# Creates Minimum spanning trees using Bruvo's distance an igraph minimun number 
-# spanning trees. In test, made by Javier "Oh, great master" Tabima. Hey Zhian,
-# do you like my new nickname??
-bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
-  library(igraph)
-  if (!is.genind(pop)) {
-    stop("This function requires a genind object.")
-  }
-  bd <- bruvo.dist(pop,replen=replen)  
-  g <- graph.adjacency(as.matrix(bd),weighted=TRUE,mode="undirected")
-  V(g)$pop <- as.character(pop$pop)
-  color.list <- colors()[1:500%%5 == 0]
-  fc <- factor(V(g)$pop)
-  levels(fc) <- color.list[1:length(levels(fc))]
-  V(g)$color <- as.character(fc)
-  if (interactive==TRUE){
-    derp <- tkplot(minimum.spanning.tree(g),edge.color="black",edge.width=E(g)$weight,vertex.size=vertex.size)
-    return(derp)
-  }
-  else{
-    plot.igraph(minimum.spanning.tree(g),edge.color="black",edge.width=E(g)$weight,vertex.size=vertex.size)
-  }  
-}
 
 ################################################################################
 # 
@@ -523,9 +500,10 @@ bruvo.mstree <- function (pop, replen=1, vertex.size=8, interactive=FALSE){
 
 test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
                             sublist = "All", blacklist = NULL, vertex.label = "MLG", 
-                            gscale=TRUE, glim = 0.8, wscale=TRUE, ...){
+                            gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
   stopifnot(require(igraph))
-  
+  maxg <- max(glim)
+  ming <- 1-(min(glim)/maxg)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   
@@ -545,13 +523,15 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
+    
     if(gscale == TRUE){
-      E(mst)$color <- gray( (1 - (1-E(mst)$weight)^3 ) / (1/glim) )
+      w <- E(mst)$weight
+      E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
     }
     else{
       E(mst)$color <- rep("black", length(E(mst)$weight))
     }
-    print(sum(E(mst)$weight < 0.1)/length(E(mst)$weight))
+
     edgewidth <- 2
     if(wscale==TRUE){
       edgewidth <- 1/(E(mst)$weight)
@@ -606,12 +586,13 @@ test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
-    E(mst)$color <- gray( (1 - (1-E(mst)$weight)^3 ) / (1/glim) )
+    w <- E(mst)$weight
+    E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
-  print(sum(E(mst)$weight < 0.1)/length(E(mst)$weight))
+
   edgewidth <- 2
   if(wscale==TRUE){
     edgewidth <- 1/(E(mst)$weight)
