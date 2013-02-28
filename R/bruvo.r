@@ -308,14 +308,15 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' from the original data set and \code{"inds"} will label the nodes with the 
 #' representative individual names.
 #' 
-#' @param gscale "greyscale". If this is \code{TRUE}, this will scale the color
+#' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
 #' of the edges proportional to Bruvo's distance, with the lines becoming darker
 #' for more related nodes.
 #' 
-#' @param glim "grey limit". This is a decimal greater than zero up to one. It
-#' determines the upper limit for the \code{\link{gray}} function. 
+#' @param glim "grey limit". Two numbers between zero and one. They determine 
+#' the upper and lower limits for the \code{\link{gray}} function. Default is 0
+#' (black) and 0.8 (20% black). 
 #' 
-#' @param wscale "widthscale". If this is \code{TRUE}, the edge widths will be
+#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be
 #' scaled proportional to Bruvo's distance, with the lines becoming thicker for
 #' more related nodes.
 #' 
@@ -341,7 +342,7 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' # View populations 8 and 9 with default colors. 
 #' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
 #' vertex.label.cex=0.7, vertex.label.dist=0.4)
-#' 
+#' \dontrun{
 #' # View heat colors.
 #' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
 #' palette=heat.colors, vertex.label.cex=0.7, vertex.label.dist=0.4)
@@ -351,15 +352,37 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4)
 #' 
+#' # View with darker shades of grey (setting the upper limit to 1/2 black 1/2 white).
+#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' vertex.label.dist=0.4, glim=c(0, 0.5))
+#' 
+#' # View with no grey scaling.
+#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' vertex.label.dist=0.4, gscale=FALSE)
+#' 
+#' # View with no line widths.
+#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' vertex.label.dist=0.4, wscale=FALSE)
+#' 
+#' # View with no scaling at all.
+#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
+#' 
 #' # View the whole population, but without labels.
 #' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
+#' }
 #==============================================================================#
 
 bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
-                       gscale=TRUE, glim = 0.8, wscale=TRUE, ...){
+                       gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
   stopifnot(require(igraph))
-  
+  maxg <- max(glim)
+  ming <- 1-(min(glim)/maxg)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   
@@ -379,13 +402,15 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
         vertex.label <- cpop$ind.names
       }
     }
+    
     if(gscale == TRUE){
-      E(mst)$color <- gray( (1 - (1-E(mst)$weight)^3 ) / (1/glim) )
+      w <- E(mst)$weight
+      E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
     }
     else{
       E(mst)$color <- rep("black", length(E(mst)$weight))
     }
-    print(sum(E(mst)$weight < 0.1)/length(E(mst)$weight))
+    
     edgewidth <- 2
     if(wscale==TRUE){
       edgewidth <- 1/(E(mst)$weight)
@@ -440,12 +465,13 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
-    E(mst)$color <- gray( (1 - (1-E(mst)$weight)^3 ) / (1/glim) )
+    w <- E(mst)$weight
+    E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
-  print(sum(E(mst)$weight < 0.1)/length(E(mst)$weight))
+  
   edgewidth <- 2
   if(wscale==TRUE){
     edgewidth <- 1/(E(mst)$weight)
