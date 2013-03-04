@@ -51,7 +51,7 @@ distance.}
   related nodes.}
 
   \item{...}{any other arguments that could go into
-  \code{\link{igraph:::plot.igraph}}}
+  plot.igraph}
 }
 \value{
   a minimum spanning network with nodes corresponding to

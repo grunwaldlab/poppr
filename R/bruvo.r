@@ -320,7 +320,7 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' scaled proportional to Bruvo's distance, with the lines becoming thicker for
 #' more related nodes.
 #' 
-#' @param ... any other arguments that could go into \code{\link{igraph:::plot.igraph}}
+#' @param ... any other arguments that could go into plot.igraph
 #'
 #' @return a minimum spanning network with nodes corresponding to MLGs within
 #' the data set. Colors of the nodes represent population membership, and length
@@ -376,7 +376,6 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
 #' }
 #==============================================================================#
-
 bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
