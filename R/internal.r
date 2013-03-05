@@ -48,7 +48,7 @@
 #' @docType data
 #' @usage data(Aeut)
 #' @description The Aeut dataset consists of 187 isolates of the Oomycete root
-#' rot pathogen, \emph{Aphenomyces euteiches} collected from two different
+#' rot pathogen, \emph{Aphanomyces euteiches} collected from two different
 #' fields in NW Oregon and W Washington, USA. 
 #' @format a \code{\link{genind}} object with two popualations containing a 
 #' data frame in the \code{other} slot called \code{population_hierarchy}.

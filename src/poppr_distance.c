@@ -88,8 +88,8 @@ SEXP pairdiffs(SEXP freq_mat)
     SEXP Rdim;
     SEXP pair_matrix;
     Rdim = getAttrib(freq_mat, R_DimSymbol);
-        I = INTEGER(Rdim)[0]; // Rows
-        J = INTEGER(Rdim)[1]; // Columns
+    I = INTEGER(Rdim)[0]; // Rows
+    J = INTEGER(Rdim)[1]; // Columns
     PROTECT(pair_matrix = allocVector(REALSXP, J*2));
     count = 0;
     PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
