@@ -64,6 +64,9 @@ ssr <- rep(1,9)
 
 bruvo.boot(popsub(nancycats, 1), replen=ssr)
 }
+\author{
+  Javier F. Tabima, Zhian N. Kamvar
+}
 \seealso{
   \code{\link{nancycats}}, \code{\link{upgma}},
   \code{\link{nj}}, \code{\link{boot.phylo}},

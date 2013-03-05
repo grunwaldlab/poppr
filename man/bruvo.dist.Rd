@@ -44,9 +44,10 @@ ssr <- rep(1,9)
 bruvo.dist(popsub(nancycats, 1), replen=ssr)
 
 # View each population as a heatmap.
-
+\dontrun{
 sapply(nancycats$pop.names, function(x)
 heatmap(as.matrix(bruvo.dist(popsub(nancycats, x))), symm=TRUE))
+}
 }
 \seealso{
   \code{\link{nancycats}}

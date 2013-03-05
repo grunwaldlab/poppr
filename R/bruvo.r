@@ -85,9 +85,10 @@
 #' bruvo.dist(popsub(nancycats, 1), replen=ssr)
 #'
 #' # View each population as a heatmap.
-#' 
+#' \dontrun{
 #' sapply(nancycats$pop.names, function(x) 
 #' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x))), symm=TRUE))
+#' }
 #==============================================================================#
 #' @useDynLib poppr
 bruvo.dist <- function(pop, replen=c(2)){
@@ -195,6 +196,7 @@ bruvo.dist <- function(pop, replen=c(2)){
 #' alleles at each locus. It is not recommended to rely on this estimation. 
 #'
 #' @export
+#' @author Javier F. Tabima, Zhian N. Kamvar
 #' @examples
 #' # Please note that the data presented is assuming that the nancycat dataset 
 #' # contains all dinucleotide repeats, it most likely is not an accurate
@@ -334,6 +336,7 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "nj", showtree=TRU
 #' \code{\link{missingno}}, \code{\link{bruvo.boot}}.
 #' 
 #' @export
+#' @author Javier F. Tabima, Zhian N. Kamvar
 #' @examples
 #' 
 #' # Load the data set.

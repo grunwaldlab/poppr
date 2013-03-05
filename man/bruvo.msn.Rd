@@ -108,6 +108,9 @@ vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
 bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
 }
 }
+\author{
+  Javier F. Tabima, Zhian N. Kamvar
+}
 \seealso{
   \code{\link{nancycats}}, \code{\link{upgma}},
   \code{\link{nj}}, \code{\link{boot.phylo}},
