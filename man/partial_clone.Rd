@@ -1,0 +1,21 @@
+\docType{data}
+\name{partial_clone}
+\alias{partial_clone}
+\title{Simulated data illustrating a Minimum Spanning Network based on Bruvo's
+Distance}
+\format{a \code{\link{genind}} object with 50 individuals, 10 loci, and four
+popualations.}
+\description{
+  These data were simulated using SimuPOP version 1.0.8
+  with 99.9\% clonal reproduction over 10,000 generations.
+  Populations were assigned post-hoc and are simply present
+  for the purposes of demonstrating a minimum spanning
+  network with Bruvo's distance.
+}
+\references{
+  Bo Peng and Christopher Amos (2008) Forward-time
+  simulations of nonrandom mating populations using
+  simuPOP. \emph{bioinformatics}, 24 (11): 1408-1409.
+}
+\keyword{datasets}
+

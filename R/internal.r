@@ -60,6 +60,24 @@
 #==============================================================================#
 NULL
 #==============================================================================#
+#' Simulated data illustrating a Minimum Spanning Network based on Bruvo's
+#' Distance
+#' 
+#' @name partial_clone
+#' @docType data
+#' @usage data(partial_clone)
+#' @description These data were simulated using SimuPOP version 1.0.8 with 
+#' 99.9\% clonal reproduction over 10,000 generations. Populations were assigned
+#' post-hoc and are simply present for the purposes of demonstrating a minimum
+#' spanning network with Bruvo's distance.  
+#' @format a \code{\link{genind}} object with 50 individuals, 10 loci, and four 
+#' popualations. 
+#' @references Bo Peng and Christopher Amos (2008) Forward-time simulations of 
+#' nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11): 
+#' 1408-1409. 
+#==============================================================================#
+NULL
+#==============================================================================#
 # This function will extract all relevant information from the files
 #==============================================================================#
 extract.info <- function(x) {

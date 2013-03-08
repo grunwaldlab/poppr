@@ -8,7 +8,7 @@ This data frame gives indices of the populations and subpopulations for the
 data set.}
 \description{
   The Aeut dataset consists of 187 isolates of the Oomycete
-  root rot pathogen, \emph{Aphenomyces euteiches} collected
+  root rot pathogen, \emph{Aphanomyces euteiches} collected
   from two different fields in NW Oregon and W Washington,
   USA.
 }
