@@ -226,7 +226,7 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
   if (length(replen) != length(pop@loc.names)){
     guesslengths <- function(vec){
       if(length(vec) > 1){
-        lens <- vapply(2:length(vec), function(x) abs(vec[x]-vec[x-1]), 1)
+        lens <- vapply(2:length(vec), function(x) abs(vec[x] - vec[x - 1]), 1)
         return(min(lens[lens > 1]))
       }
       else
@@ -237,8 +237,8 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
     warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
     cat(replen,"\n\n")
   }
-  if(any(!round(pop@tab,10) %in% c(0,(1/ploid),1, NA))){
-    pop@tab[!round(pop@tab,10) %in% c(0,(1/ploid),1, NA)] <- NA
+  if(any(!round(pop@tab,10) %in% c(0,( 1/ploid ),1, NA))){
+    pop@tab[!round(pop@tab,10) %in% c(0,( 1/ploid ),1, NA)] <- NA
   }
   # Converting the genind object into a matrix with each allele separated by "/"
   bar <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
@@ -271,14 +271,14 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
     }
   }
   cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
-  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen=replen, ploid=ploid)), B = sample, ...)
-  tre$node.labels <- round(((bp/sample)*100))
+  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid)), B = sample, ...)
+  tre$node.labels <- round(((bp / sample)*100))
   if (!is.null(cutoff)){
-    if (cutoff<1|cutoff>100){
+    if (cutoff < 1 | cutoff > 100){
       cat("Cutoff value must be between 0 and 100.\n")
-      cutoff<- as.numeric(readline(prompt="Choose a new cutoff value between 0 and 100:\n"))
+      cutoff<- as.numeric(readline(prompt = "Choose a new cutoff value between 0 and 100:\n"))
     }
-    tre$node.labels[tre$node.labels<cutoff]<-NA
+    tre$node.labels[tre$node.labels < cutoff]<-NA
   }
   tre$tip.label <- pop@ind.names
   if(showtree == TRUE){
