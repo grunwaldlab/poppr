@@ -248,9 +248,9 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
   if(tree == "upgma")
-    newfunk <- upgma
+    newfunk <- match.fun(upgma)
   else if(tree == "nj")
-    newfunk <- nj
+    newfunk <- match.fun(nj)
   tre<-newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid))
   if (any (tre$edge.length < 0)){
     warning("The branch lengths of the tree are negative.", immediate.=TRUE)
