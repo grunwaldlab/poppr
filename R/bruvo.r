@@ -247,11 +247,13 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
   stopifnot(require(phangorn))
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
-  if(tree == "upgma")
+  if(tree == "upgma"){
     newfunk <- match.fun(upgma)
-  else if(tree == "nj")
+  }
+  else if(tree == "nj"){
     newfunk <- match.fun(nj)
-  tre<-newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid))
+  }
+  tre <- newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid))
   if (any (tre$edge.length < 0)){
     warning("The branch lengths of the tree are negative.", immediate.=TRUE)
     us.promp<- as.numeric(readline(prompt="What do you want to do?, You can:\n1. Stop the analysis\n2. Convert negative branch values to Zero (Not biologically relevant)\nEnter your Selection:"))
@@ -268,6 +270,7 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
       return(tre)
     }
   }
+  cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
   bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen=replen, ploid=ploid)), B = sample, ...)
   tre$node.labels <- round(((bp/sample)*100))
   if (!is.null(cutoff)){
@@ -278,10 +281,12 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
     tre$node.labels[tre$node.labels<cutoff]<-NA
   }
   tre$tip.label <- pop@ind.names
-  if(showtree)
+  if(showtree == TRUE){
     plot(tre, show.node.label=TRUE)
-  if(tree=="upgma")
+  }
+  if(tree=="upgma"){
     axisPhylo(3)
+  }
   return(tre)
 }
 #==============================================================================#
