@@ -38,10 +38,10 @@
 \contentsline {subsubsection}{\numberline {4.2.1}Function: bruvo.dist}{37}{subsubsection.4.2.1}
 \contentsline {subsubsection}{\numberline {4.2.2}Function: bruvo.boot}{39}{subsubsection.4.2.2}
 \contentsline {subsubsection}{\numberline {4.2.3}Function: bruvo.msn}{40}{subsubsection.4.2.3}
-\contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{41}{section.5}
-\contentsline {subsection}{\numberline {5.1}poppr}{41}{subsection.5.1}
-\contentsline {section}{\numberline {6}Appendix}{45}{section.6}
-\contentsline {subsection}{\numberline {6.1}Algorithmic Details}{45}{subsection.6.1}
-\contentsline {subsubsection}{\numberline {6.1.1}$I_A$ and $\mathaccentV {bar}016r_d$}{45}{subsubsection.6.1.1}
-\contentsline {subsubsection}{\numberline {6.1.2}Bruvo's distance}{46}{subsubsection.6.1.2}
-\contentsline {subsection}{\numberline {6.2}Function calls}{47}{subsection.6.2}
+\contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{42}{section.5}
+\contentsline {subsection}{\numberline {5.1}poppr}{42}{subsection.5.1}
+\contentsline {section}{\numberline {6}Appendix}{46}{section.6}
+\contentsline {subsection}{\numberline {6.1}Algorithmic Details}{46}{subsection.6.1}
+\contentsline {subsubsection}{\numberline {6.1.1}$I_A$ and $\mathaccentV {bar}016r_d$}{46}{subsubsection.6.1.1}
+\contentsline {subsubsection}{\numberline {6.1.2}Bruvo's distance}{48}{subsubsection.6.1.2}
+\contentsline {subsection}{\numberline {6.2}Function calls}{49}{subsection.6.2}
