@@ -4,7 +4,7 @@
 \usage{
   poppr(pop, total = TRUE, sublist = c("ALL"),
     blacklist = c(NULL), sample = 0, method = 1,
-    missing = "ignore", quiet = "minimal",
+    missing = "ignore", cutoff = 0.05, quiet = "minimal",
     clonecorrect = FALSE, hier = c(1),
     dfname = "population_hierarchy", hist = TRUE,
     minsamp = 10)
