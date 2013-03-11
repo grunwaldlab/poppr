@@ -441,17 +441,18 @@ Notice how useful the \texttt{@other} slot can be. We now have population struct
 \tab\tab \texttt{missingno} is a function that serves partially as a wrapper for adegenet's \texttt{na.replace} to replace missing data and as a way to exclude specific areas that contain systematic missing data.  
 \begin{quote}
 Default Command:\\
-\texttt{missingno(pop, missing)}
+\texttt{missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{missing -} This could be one of four options:
+  \item \texttt{type -} This could be one of four options:
     \begin{description}
       \item[ ``mean"] This replaces missing data with the mean allele frequencies in the entire data set.
       \item[ ``zero" or ``0"] This replaces missing data with zero, signifying a new allele.
       \item[ ``loci"] This is to be used for a data set that has systematic problems with certain loci that contain null alleles or simply failed to amplify. This will remove loci with ANY missing data from the data set.
       \item[ ``geno"] This is to be used for genotypes (individuals) in your data set where many null alleles are present. Any individuals with missing data will be removed.
     \end{description}
+    \item \texttt{cutoff -} This is a numeric value from 0 to 1 indicating the percent allowable missing data for either loci or genotypes. If you have, for example, two loci containing missing 5\% and 10\% missing data, respectively and you set \texttt{cutoff = 0.05}, \texttt{missingno} will remove the second locus. 
     \item \texttt{quiet -} When this is set to \texttt{FALSE}, the number of missing values replaced will be printed to screen if the method is ``zero" or ``mean". It will print the number of loci or individuals removed if the method is ``loci" or ``geno".
 \end{itemize}
 
@@ -476,19 +477,19 @@ nancycats$tab[1:5, 8:13]
 
 When looking at this data set, recall how a \texttt{genind} object is formatted. You have a matrix of 0's, 1's and 0.5's. For diploids, if you see 0.5, that means it is heterozygous at that allele, and a 1 means it's homozygous. Here we see three heterozygotes and two individuals with missing data (indicated by NA). Now, there are more places with missing data in the data set, but I'm only showing a little bit at one locus so it's easier to digest. Let's first replace it by zero and mean, respectively.
 <<missingno_replace>>=
-nanzero <- missingno(nancycats, "zero")
-nanmean <- missingno(nancycats, "mean")
+nanzero <- missingno(nancycats, type = "zero")
+nanmean <- missingno(nancycats, type = "mean")
 nanzero$tab[1:5, 8:13]
 nanmean$tab[1:5, 8:13]
 @
-You notice how the values of NA changed, yet the basic structure stayed the same. These are the replacement options from adegenet. Let's look at the same example with the exclusion options.
+You notice how the values of NA changed, yet the basic structure stayed the same. These are the replacement options from adegenet. Let's look at the same example with the exclusion options (set to the default cutoff of 5\%.
 <<missingno_exclude>>=
 nanloci <-  missingno(nancycats, "loci")
 nangeno <-  missingno(nancycats, "geno")
 nanloci$tab[1:5, 8:13]
 @
 
-Notice how we now see columns named ``L2.01" and ``L2.02". This is showing us another locus because we have removed the first. Recall from the summary table that the first locus had 16 alleles, and the second had 11. Now that we've removed loci containing missing data, all others have shifted over. This is why you see column 4 has ``L1.11".\\
+Notice how we now see columns named ``L2.01" and ``L2.02". This is showing us another locus because we have removed the first. Recall from the summary table that the first locus had 16 alleles, and the second had 11. Now that we've removed loci containing missing data, all others have shifted over.\\
 
 Let's look at the loci names and number of individuals.
 <<missingno_loci>>=
@@ -1396,7 +1397,7 @@ This is calculated over all possible combinations of individuals and results in 
 \item getfile(multi = FALSE, pattern = NULL)
 \item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
 \item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE)
-\item missingno(pop, missing, quiet=FALSE)
+\item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
 \item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)
 \item clonecorrect(pop, hier=c(1), dfname="population\_hierarchy", combine=FALSE)
@@ -1407,9 +1408,10 @@ This is calculated over all possible combinations of individuals and results in 
 \item mlg.vector(pop)
 \item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE)
 \item bruvo.dist(pop, replen = c(2))
-\item bruvo.boot(pop, replen = c(2), B = 100, tree = "nj", showtree = TRUE, cutoff = NULL)
+\item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL)
+\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), wscale = TRUE, ...)
 \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", quiet = "minimal", clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
 \end{itemize}
-\bibliographystyle{plain}
+\bibliographystyle{apa}
 \bibliography{poppr_man}
 \end{document}
