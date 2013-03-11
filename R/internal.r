@@ -116,7 +116,7 @@ extract.info <- function(x) {
 # If quiet is set to false and you are importing non-genind or poppr objects,
 # you will see many warnings. 
 #==============================================================================#
-.file.type <- function(pop, quiet=TRUE, missing="ignore", 
+.file.type <- function(pop, quiet=TRUE, missing="ignore", cutoff=0.05,
                             clonecorrect=FALSE, hier=c(1), dfname="hier"){
   if (!is.genind(pop)){
     x <- pop
@@ -132,7 +132,7 @@ extract.info <- function(x) {
     stopifnot(is.genind(pop))
     pop@call[2] <- x
     popcall <- pop@call
-    pop <- missingno(pop, missing=missing, quiet=quiet)
+    pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
     pop@call <- popcall
     if (clonecorrect){
       poplist <- clonecorrect(pop, hier=hier, dfname=dfname)
@@ -144,7 +144,7 @@ extract.info <- function(x) {
   else if (is.genind(pop)) {
     x <- as.character(pop@call)[2]
     popcall <- pop@call
-    pop <- missingno(pop, missing=missing, quiet=quiet)
+    pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
     if (clonecorrect){
       poplist <- clonecorrect(pop, hier=hier, dfname=dfname)
       pop <- poplist
@@ -228,9 +228,9 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
     if(all(misslist > 0)){
       return(misslist)
     }
-    poplen <- length(pop@tab[1, ])
+    poplen <- nLoc(pop)
     filter <- vapply(-misslist, function(x)
-      length(which(is.na(pop@tab[x, ])))/poplen, 1) > cutoff
+      length(unique( pop@loc.fac[which(is.na(pop@tab[x, ]))] )) / poplen, 1) > cutoff
   }
   if(all(filter %in% FALSE)){
     filter <- 1:length(misslist)
