@@ -157,13 +157,14 @@
 #' }
 #==============================================================================#
 #' @import adegenet pegas vegan ggplot2
-poppr <- function(pop,total=TRUE,sublist=c("ALL"),blacklist=c(NULL), sample=0,
-                  method=1,missing="ignore", quiet="minimal",clonecorrect=FALSE,
-                  hier=c(1), dfname="population_hierarchy", hist=TRUE, minsamp=10){
+poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
+                  method=1, missing="ignore", cutoff=0.05, quiet="minimal",
+                  clonecorrect=FALSE, hier=c(1), dfname="population_hierarchy", 
+                  hist=TRUE, minsamp=10){
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
       "non-parametric bootstrap")
-	x <- .file.type(pop, missing=missing, clonecorrect=clonecorrect, hier=hier, 
-                  dfname=dfname, quiet=TRUE)	
+	x <- .file.type(pop, missing=missing, cutoff=cutoff, clonecorrect=clonecorrect, 
+                  hier=hier, dfname=dfname, quiet=TRUE)	
   # The namelist will contain information such as the filename and population
   # names so that they can easily be ported around.
   namelist <- NULL
