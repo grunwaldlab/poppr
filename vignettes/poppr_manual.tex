@@ -346,7 +346,7 @@ Navigate to the \textit{adegenet} folder in your R library.
 $files
  [1] "AFLP.txt"          "exampleSnpDat.snp" "mondata1.rda"      "mondata2.rda"     
  [5] "nancycats.dat"     "nancycats.gen"     "nancycats.gtx"     "nancycats.str"    
- [9] "pdH1N1-HA.fasta"   "pdH1N1-NA.fasta"   "pdH1N1-data.csv"   "usflu.fasta"      
+ [9] "pdH1N1-data.csv"   "pdH1N1-HA.fasta"   "pdH1N1-NA.fasta"   "usflu.fasta"      
 
 $path
 [1] "/path/to/R/adegenet/files"
@@ -808,17 +808,18 @@ Notice how useful the \texttt{@other} slot can be. We now have population struct
 \tab\tab \texttt{missingno} is a function that serves partially as a wrapper for adegenet's \texttt{na.replace} to replace missing data and as a way to exclude specific areas that contain systematic missing data.  
 \begin{quote}
 Default Command:\\
-\texttt{missingno(pop, missing)}
+\texttt{missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{missing -} This could be one of four options:
+  \item \texttt{type -} This could be one of four options:
     \begin{description}
       \item[ ``mean"] This replaces missing data with the mean allele frequencies in the entire data set.
       \item[ ``zero" or ``0"] This replaces missing data with zero, signifying a new allele.
       \item[ ``loci"] This is to be used for a data set that has systematic problems with certain loci that contain null alleles or simply failed to amplify. This will remove loci with ANY missing data from the data set.
       \item[ ``geno"] This is to be used for genotypes (individuals) in your data set where many null alleles are present. Any individuals with missing data will be removed.
     \end{description}
+    \item \texttt{cutoff -} This is a numeric value from 0 to 1 indicating the percent allowable missing data for either loci or genotypes. If you have, for example, two loci containing missing 5\% and 10\% missing data, respectively and you set \texttt{cutoff = 0.05}, \texttt{missingno} will remove the second locus. Percent missing data for genotypes is considered the percent missing loci over number of total loci. 
     \item \texttt{quiet -} When this is set to \texttt{FALSE}, the number of missing values replaced will be printed to screen if the method is ``zero" or ``mean". It will print the number of loci or individuals removed if the method is ``loci" or ``geno".
 \end{itemize}
 
@@ -892,13 +893,13 @@ We can see here a lot of summary statistics about nancycats. Here we can see tha
 When looking at this data set, recall how a \texttt{genind} object is formatted. You have a matrix of 0's, 1's and 0.5's. For diploids, if you see 0.5, that means it is heterozygous at that allele, and a 1 means it's homozygous. Here we see three heterozygotes and two individuals with missing data (indicated by NA). Now, there are more places with missing data in the data set, but I'm only showing a little bit at one locus so it's easier to digest. Let's first replace it by zero and mean, respectively.
 \begin{Schunk}
 \begin{Sinput}
-> nanzero <- missingno(nancycats, "zero")
+> nanzero <- missingno(nancycats, type = "zero")
 \end{Sinput}
 \begin{Soutput}
  Replaced 617 missing values 
 \end{Soutput}
 \begin{Sinput}
-> nanmean <- missingno(nancycats, "mean")
+> nanmean <- missingno(nancycats, type = "mean")
 \end{Sinput}
 \begin{Soutput}
  Replaced 617 missing values 
@@ -926,21 +927,23 @@ When looking at this data set, recall how a \texttt{genind} object is formatted.
 005 0.50000000 0.5000000 0.0000000 0.00000000 0.00000000 0.0000000
 \end{Soutput}
 \end{Schunk}
-You notice how the values of NA changed, yet the basic structure stayed the same. These are the replacement options from adegenet. Let's look at the same example with the exclusion options.
+You notice how the values of NA changed, yet the basic structure stayed the same. These are the replacement options from adegenet. Let's look at the same example with the exclusion options (set to the default cutoff of 5\%.
 \begin{Schunk}
 \begin{Sinput}
 > nanloci <-  missingno(nancycats, "loci")
 \end{Sinput}
 \begin{Soutput}
  Found 617 missing values.
- Removing 3 loci: fca8 fca45 fca96 
+ 2 loci contained missing values greater than 5%.
+ Removing 2 loci : fca8 fca45 
 \end{Soutput}
 \begin{Sinput}
 > nangeno <-  missingno(nancycats, "geno")
 \end{Sinput}
 \begin{Soutput}
  Found 617 missing values.
- Removing 38 genotypes
+ 38 genotypes contained missing values greater than 5%.
+ Removing 38 genotypes : N215 N216 N188 N189 N190 N191 N192 N302 N304 N310 N195 N197 N198 N199 N200 N201 N206 N182 N184 N186 N298 N299 N300 N301 N303 N282 N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290 
 \end{Soutput}
 \begin{Sinput}
 > nanloci$tab[1:5, 8:13]
@@ -955,7 +958,7 @@ You notice how the values of NA changed, yet the basic structure stayed the same
 \end{Soutput}
 \end{Schunk}
 
-Notice how we now see columns named ``L2.01" and ``L2.02". This is showing us another locus because we have removed the first. Recall from the summary table that the first locus had 16 alleles, and the second had 11. Now that we've removed loci containing missing data, all others have shifted over. This is why you see column 4 has ``L1.11".\\
+Notice how we now see columns named ``L2.01" and ``L2.02". This is showing us another locus because we have removed the first. Recall from the summary table that the first locus had 16 alleles, and the second had 11. Now that we've removed loci containing missing data, all others have shifted over.\\
 
 Let's look at the loci names and number of individuals.
 \begin{Schunk}
@@ -969,8 +972,8 @@ Let's look at the loci names and number of individuals.
 > nanloci$loc.names # Names of the loci
 \end{Sinput}
 \begin{Soutput}
-     L1      L2      L3      L4      L5      L6 
-"fca23" "fca43" "fca77" "fca78" "fca90" "fca37" 
+     L1      L2      L3      L4      L5      L6      L7 
+"fca23" "fca43" "fca77" "fca78" "fca90" "fca96" "fca37" 
 \end{Soutput}
 \end{Schunk}
 You can see that the number of individuals stayed the same but the loci ``fca8", ``fca45", and ``fca96" were removed.\\
@@ -2208,6 +2211,11 @@ For this example, let's set the cutoff to 50\%.
   \centering
   \caption{UPGMA Tree of Bruvo's distance for population 9 of the data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent percentage of bootstrap replicates that contained that node.}
   \label{bruvo_upgma}
+\begin{Schunk}
+\begin{Soutput}
+Bootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)
+\end{Soutput}
+\end{Schunk}
 \includegraphics{poppr_manual-bruvo_tree}
 \end{figure}
 \subsubsection{Function: bruvo.msn}
@@ -2230,7 +2238,7 @@ Default Command:\\
   \item \texttt{... -} This is a placeholder for any other arguments that you want to supply to \textit{igraph}. Useful arguments are \texttt{vertex.label.cex} to adjust the size of the labels, \texttt{vertex.label.dist} to adjust the position of the labels, and \texttt{vertex.label.color} to adjust the color of the labels.
 \end{itemize}
 
-Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. \textit{Poppr} offers an easy way to plot these. For a demonstration, let's analyze a simulated data set of 50 individuals from a population that reproduces at a 99.9\% rate of clonal reproduction: 
+Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. \textit{Poppr} offers an easy way to plot these. For a demonstration, let's analyze a simulated data set of 50 individuals from a population that reproduces at a 99.9\% rate of clonal reproduction.
 
 \setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[h!]
@@ -2281,7 +2289,11 @@ Default Command:\\
     \item[sample -] The number of samples you desire (eg., 999)
     \item[method -] Which sampling method? 1: multilocus, 2: permute, 3: parametric bootstrap, 4: non-parametric bootstrap.
   \end{description}
-  \item \texttt{missing -} How to deal with missing data. All analyses in this function ignore missing data by default. For other options, see section 2.1.
+  \item \emph{missingno functions:} See Section 2.1 \\ Note that all analyses in this function ignore/impute missing data by default.
+    \begin{description}
+      \item[missing -] How to deal with missing data. This feeds into the \texttt{type} flag of \texttt{missingno}.
+      \item[cutoff -] Allowable percentage of missing data per genotype or locus.
+    \end{description}
   \item \texttt{quiet -} This has three settings, \texttt{TRUE}, \texttt{FALSE}, and \texttt{"noisy"}. If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} and if there is sampling, a single dot for each sampling replicate will be printed to the screen to show the progress of the sampling. Choosing \texttt{"noisy"} is not recommended for the average user as it is meant for debugging. It will print the values of $I_A$ and $\bar r_d$ to the screen as they are produced. 
   \item \emph{clonecorrect functions:} See section 2.4
   \begin{description}
@@ -2529,7 +2541,7 @@ This is calculated over all possible combinations of individuals and results in 
 \item getfile(multi = FALSE, pattern = NULL)
 \item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
 \item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE)
-\item missingno(pop, missing, quiet=FALSE)
+\item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
 \item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)
 \item clonecorrect(pop, hier=c(1), dfname="population\_hierarchy", combine=FALSE)
@@ -2540,8 +2552,9 @@ This is calculated over all possible combinations of individuals and results in 
 \item mlg.vector(pop)
 \item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE)
 \item bruvo.dist(pop, replen = c(2))
-\item bruvo.boot(pop, replen = c(2), B = 100, tree = "nj", showtree = TRUE, cutoff = NULL)
-\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", quiet = "minimal", clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
+\item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL)
+\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), wscale = TRUE, ...)
+\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
 \end{itemize}
 \bibliographystyle{plain}
 \bibliography{poppr_man}

@@ -452,7 +452,7 @@ Default Command:\\
       \item[ ``loci"] This is to be used for a data set that has systematic problems with certain loci that contain null alleles or simply failed to amplify. This will remove loci with ANY missing data from the data set.
       \item[ ``geno"] This is to be used for genotypes (individuals) in your data set where many null alleles are present. Any individuals with missing data will be removed.
     \end{description}
-    \item \texttt{cutoff -} This is a numeric value from 0 to 1 indicating the percent allowable missing data for either loci or genotypes. If you have, for example, two loci containing missing 5\% and 10\% missing data, respectively and you set \texttt{cutoff = 0.05}, \texttt{missingno} will remove the second locus. 
+    \item \texttt{cutoff -} This is a numeric value from 0 to 1 indicating the percent allowable missing data for either loci or genotypes. If you have, for example, two loci containing missing 5\% and 10\% missing data, respectively and you set \texttt{cutoff = 0.05}, \texttt{missingno} will remove the second locus. Percent missing data for genotypes is considered the percent missing loci over number of total loci. 
     \item \texttt{quiet -} When this is set to \texttt{FALSE}, the number of missing values replaced will be printed to screen if the method is ``zero" or ``mean". It will print the number of loci or individuals removed if the method is ``loci" or ``geno".
 \end{itemize}
 
@@ -1220,7 +1220,11 @@ Default Command:\\
     \item[sample -] The number of samples you desire (eg., 999)
     \item[method -] Which sampling method? 1: multilocus, 2: permute, 3: parametric bootstrap, 4: non-parametric bootstrap.
   \end{description}
-  \item \texttt{missing -} How to deal with missing data. All analyses in this function ignore missing data by default. For other options, see section 2.1.
+  \item \emph{missingno functions:} See Section 2.1 \\ Note that all analyses in this function ignore/impute missing data by default.
+    \begin{description}
+      \item[missing -] How to deal with missing data. This feeds into the \texttt{type} flag of \texttt{missingno}.
+      \item[cutoff -] Allowable percentage of missing data per genotype or locus.
+    \end{description}
   \item \texttt{quiet -} This has three settings, \texttt{TRUE}, \texttt{FALSE}, and \texttt{"noisy"}. If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} and if there is sampling, a single dot for each sampling replicate will be printed to the screen to show the progress of the sampling. Choosing \texttt{"noisy"} is not recommended for the average user as it is meant for debugging. It will print the values of $I_A$ and $\bar r_d$ to the screen as they are produced. 
   \item \emph{clonecorrect functions:} See section 2.4
   \begin{description}
@@ -1410,8 +1414,8 @@ This is calculated over all possible combinations of individuals and results in 
 \item bruvo.dist(pop, replen = c(2))
 \item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL)
 \item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), wscale = TRUE, ...)
-\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", quiet = "minimal", clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
+\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
 \end{itemize}
-\bibliographystyle{apa}
+\bibliographystyle{plain}
 \bibliography{poppr_man}
 \end{document}

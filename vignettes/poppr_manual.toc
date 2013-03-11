@@ -24,20 +24,20 @@
 \contentsline {section}{\numberline {3}Multilocus Genotype Analysis}{26}{section.3}
 \contentsline {subsection}{\numberline {3.1}Just a peek \{How many multilocus genotypes are in our data set?\}}{26}{subsection.3.1}
 \contentsline {subsubsection}{\numberline {3.1.1}Function: mlg}{26}{subsubsection.3.1.1}
-\contentsline {subsection}{\numberline {3.2}Clone-ing around \{MLGs across populations\}}{26}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.2}Clone-ing around \{MLGs across populations\}}{27}{subsection.3.2}
 \contentsline {subsubsection}{\numberline {3.2.1}Function: mlg.crosspop}{27}{subsubsection.3.2.1}
 \contentsline {subsection}{\numberline {3.3}Bringing something to the table \{producing MLG tables and graphs\}}{28}{subsection.3.3}
 \contentsline {subsubsection}{\numberline {3.3.1}Function: mlg.table}{28}{subsubsection.3.3.1}
-\contentsline {subsection}{\numberline {3.4}Getting into the mix \{combining MLG functions\}}{30}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.4}Getting into the mix \{combining MLG functions\}}{31}{subsection.3.4}
 \contentsline {subsubsection}{\numberline {3.4.1}Function: mlg.vector}{31}{subsubsection.3.4.1}
 \contentsline {subsection}{\numberline {3.5}Do you see what I see? \{alternative data visualization\}}{33}{subsection.3.5}
 \contentsline {section}{\numberline {4}Index and Distance Calculations}{34}{section.4}
 \contentsline {subsection}{\numberline {4.1}The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\mathaccentV {bar}016r_d$\}}{34}{subsection.4.1}
 \contentsline {subsubsection}{\numberline {4.1.1}Function: ia}{34}{subsubsection.4.1.1}
-\contentsline {subsection}{\numberline {4.2}Going the distance \{Bruvo's distance\}}{36}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.2}Going the distance \{Bruvo's distance\}}{37}{subsection.4.2}
 \contentsline {subsubsection}{\numberline {4.2.1}Function: bruvo.dist}{37}{subsubsection.4.2.1}
-\contentsline {subsubsection}{\numberline {4.2.2}Function: bruvo.boot}{39}{subsubsection.4.2.2}
-\contentsline {subsubsection}{\numberline {4.2.3}Function: bruvo.msn}{40}{subsubsection.4.2.3}
+\contentsline {subsubsection}{\numberline {4.2.2}Function: bruvo.boot}{40}{subsubsection.4.2.2}
+\contentsline {subsubsection}{\numberline {4.2.3}Function: bruvo.msn}{41}{subsubsection.4.2.3}
 \contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{42}{section.5}
 \contentsline {subsection}{\numberline {5.1}poppr}{42}{subsection.5.1}
 \contentsline {section}{\numberline {6}Appendix}{46}{section.6}
