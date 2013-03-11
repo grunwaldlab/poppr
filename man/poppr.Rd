@@ -46,6 +46,11 @@
   genotypes with missing data, respectively (see
   \code{\link{missingno}} for more information.}
 
+  \item{cutoff}{\code{numeric} a number from 0 to 1
+  indicating the percent missing data allowed for analysis.
+  This is to be used in conjunction with the flag
+  \code{missing} (see \code{\link{missingno}} for details)}
+
   \item{quiet}{Should the function print anything to the
   screen while it is performing calculations? \code{TRUE}
   prints nothing, \code{"minimal"} (defualt) will print the
