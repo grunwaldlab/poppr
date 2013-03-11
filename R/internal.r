@@ -204,6 +204,42 @@ loci.na <- function(pop) {
 }
 
 #==============================================================================#
+# This will remove either loci or genotypes containing missing values above the
+# cutoff percent.
+# Functions utilizing this function:
+# # missingno
+#==============================================================================#
+
+percent_missing <- function(pop, type="loci", cutoff=0.05){
+  if(toupper(type) == "LOCI"){
+    misslist <- loci.na(pop)
+    if(all(misslist > 0)){
+      return(misslist)
+    }
+    poplen <- nInd(pop)
+    filter <- vapply(-misslist, function(x) 
+      length(which(is.na(pop@tab[, x])))/poplen, 1) > cutoff
+    if(is.na(filter[1])){
+      filter <- 1:length(misslist)
+    }
+  }
+  else{
+    misslist <- geno.na(pop)
+    if(all(misslist > 0)){
+      return(misslist)
+    }
+    poplen <- length(pop@tab[1, ])
+    filter <- vapply(-misslist, function(x)
+      length(which(is.na(pop@tab[x, ])))/poplen, 1) > cutoff
+  }
+  if(all(filter %in% FALSE)){
+    filter <- 1:length(misslist)
+    misslist <- 1:length(misslist)
+  }
+  return(misslist[filter])
+}
+
+#==============================================================================#
 # This implements rounding against the IEEE standard and rounds 0.5 up
 #==============================================================================#
 
