@@ -288,8 +288,12 @@ popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #'
 #' @param pop a \code{\link{genind}} object.
 #'
-#' @param missing a character string: can be "zero", "mean", "loci", or "geno"
+#' @param type a \code{character} string: can be "zero", "mean", "loci", or "geno"
 #' (see \code{Details} for definitions).]
+#' 
+#' @param cutoff \code{numeric}. A number from 0 to 1 indicating the allowable
+#' rate of missing data in either genotypes or loci. This will be ignored for
+#' \code{type} values of \code{"mean"} or \code{"zero"}.
 #' 
 #' @param quiet if \code{TRUE}, it will print to the screen the action performed.
 #'
@@ -298,15 +302,15 @@ popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #' systematic missing data and to give a wrapper for \code{adegenet}'s \code{
 #' \link{na.replace}} function. ALL OF THESE ARE TO BE USED WITH CAUTION.
 #'
-#' \code{"loci"} - removes all loci containing missing data in the entire data
+#' \strong{\code{"loci"}} - removes all loci containing missing data in the entire data
 #' set. 
 #'
-#' \code{"geno"} - removes any genotypes/isolates/individuals with missing data.
+#' \strong{\code{"geno"}} - removes any genotypes/isolates/individuals with missing data.
 #'
-#' \code{"mean"} - replaces all NA's with the mean of the alleles for the entire
+#' \strong{\code{"mean"}} - replaces all NA's with the mean of the alleles for the entire
 #' data set.
 #'
-#' \code{"zero"} or \code{"0"} - replaces all NA's with "0". 
+#' \strong{\code{"zero"}} or \strong{\code{"0"}} - replaces all NA's with "0". 
 #' Introduces more diversity.
 #'
 #' @return a \code{\link{genind}} object.
@@ -321,47 +325,74 @@ popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #'
 #' data(nancycats)
 #' 
-#' # Removing 3 loci with missing data.
-#' nancy.locina <- missingno(nancycats, "loci")
+#' nancy.locina <- missingno(nancycats, type = "loci")
+#' 
+#' ## Found 617 missing values.
+#' ## 2 loci contained missing values greater than 5%.
+#' ## Removing 2 loci : fca8 fca45 
+#' 
+#' nancy.genona <- missingno(nancycats, type = "geno")
 #'
-#' # Removing 38 individuals/isolates/genotypes with missing data.
-#' nancy.genona <- missingno(nancycats, "geno")
+#' ## Found 617 missing values.
+#' ## 38 genotypes contained missing values greater than 5%.
+#' ## Removing 38 genotypes : N215 N216 N188 N189 N190 N191 N192 N302 N304 N310 
+#' ## N195 N197 N198 N199 N200 N201 N206 N182 N184 N186 N298 N299 N300 N301 N303 
+#' ## N282 N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290  
 #'
 #' # Replacing all NA with "0" (see na.replace in the adegenet package).
-#' nancy.0 <- missingno(nancycats, "0")
+#' nancy.0 <- missingno(nancycats, type = "0")
 #'
+#' ## Replaced 617 missing values 
+#' 
 #' # Replacing all NA with the mean of each column (see na.replace in the
 #' # adegenet package).
-#' nancy.mean <- missingno(nancycats, "mean")
+#' nancy.mean <- missingno(nancycats, type = "mean")
+#' 
+#' ## Replaced 617 missing values 
 #==============================================================================#
 
-missingno <- function(pop, missing, quiet=FALSE){
+missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
   if(sum(is.na(pop@tab)) > 0){
     # removes any loci (columns) with missing values.
-    if (toupper(missing)=="LOCI"){
-      naloci <- loci.na(pop)
+    if (toupper(type)=="LOCI"){
+      naloci <- percent_missing(pop, type=type, cutoff=cutoff)
       if(quiet != TRUE){
-        remloc <- pop@loc.names[which(cumsum(pop@loc.nall) %in% -naloci)]
-        cat("\n Found", sum(is.na(pop@tab)),"missing values.")
-        cat("\n Removing",length(remloc),"loci:", remloc,"\n")
+        if(all(naloci < 0)){
+          remloc <- pop@loc.names[which(cumsum(pop@loc.nall) %in% -naloci)]
+          cat("\n Found", sum(is.na(pop@tab)),"missing values.")
+          loci <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", "loci"))
+          cat("\n",loci,"contained missing values greater than",paste(cutoff*100,"%.",sep=""))
+          cat("\n Removing",loci,":", remloc,"\n")
+        }
+        else{
+          cat("\n No loci with missing values above",paste(cutoff*100,"%",sep=""),"found.\n")
+        }
       }
       pop <- pop[, naloci]
     }  
     # removes any genotypes (rows) with missing values.
-    else if (!is.na(grep("GEN", toupper(missing), value=TRUE)[1])){
-      nageno <- geno.na(pop)
+    else if (!is.na(grep("GEN", toupper(type), value=TRUE)[1])){
+      nageno <- percent_missing(pop, type=type, cutoff=cutoff)
       if(quiet != TRUE){
-        cat("\n Found", sum(is.na(pop@tab)),"missing values.")
-        cat("\n Removing",length(nageno),"genotypes\n")
+        if(all(nageno < 0)){
+          remgeno <- pop@ind.names[-nageno]
+          cat("\n Found", sum(is.na(pop@tab)),"missing values.")
+          genotypes <- paste(length(remgeno), ifelse(length(remgeno) == 1, "genotype", "genotypes"))
+          cat("\n",genotypes,"contained missing values greater than",paste(cutoff*100,"%.",sep=""))
+          cat("\n Removing",genotypes,":",remgeno,"\n")
+        }
+        else{
+          cat("\n No genotypes with missing values above",paste(cutoff*100,"%",sep=""),"found.\n")
+        }
       }
-      pop <- pop[geno.na(pop),]
+      pop <- pop[nageno, ]
     }
     # changes all NA's to the mean of the column. NOT RECOMMENDED
-    else if (toupper(missing)=="MEAN"){
+    else if (toupper(type)=="MEAN"){
       pop <- na.replace(pop,"mean", quiet=quiet)
     }
     # changes all NA's to 0. NOT RECOMMENDED. INTRODUCES MORE DIVERSITY.
-    else if (toupper(missing)=="ZERO" | missing=="0"){
+    else if (toupper(type) %in% c("ZERO","0")){
       pop <- na.replace(pop,"0", quiet=quiet)
     }
   }
@@ -370,9 +401,8 @@ missingno <- function(pop, missing, quiet=FALSE){
       cat("\n No missing values detected.\n")
     }
   }
-  return (pop)
+  return(pop)
 }
-
 
 #==============================================================================#
 #' Split a or combine items within a data frame in \code{\link{genind}} objects.
