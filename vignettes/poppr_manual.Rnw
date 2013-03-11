@@ -1025,7 +1025,7 @@ set.seed(1001)
 nan5 <- ia(popsub(nancycats, 5), sample=999, quiet=TRUE)
 @
 \end{figure}
-\newpage
+%\newpage
 
 Note that both of the P-values are exactly the same. This is what you would obtain with the default sampling scheme because the variances within loci do not change. When you change the sampling scheme, however, the P-values can end up being different. That's why there are two fields for P-values. Let's look at what happens to the P-values once we change the sampling scheme to a parametric bootstrap.
 <<ch_pval>>=
@@ -1204,8 +1204,9 @@ Note that the thickness of the edges (the lines that are connecting the dots) is
 \begin{quote}
 Default Command:\\
 \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
-        \tab method = 1, missing = "ignore", quiet = "minimal", clonecorrect = FALSE,\\ 
-        \tab hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)}
+        \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = "minimal", \\
+        \tab clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", \\
+        \tab hist = TRUE, minsamp = 10)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} A \texttt{genind} object.
