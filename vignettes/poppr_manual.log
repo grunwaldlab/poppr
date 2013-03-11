@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  11 MAR 2013 10:50
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  11 MAR 2013 15:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1274,7 +1274,7 @@ s/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2012/texmf-dist/fonts/
 type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2012/texmf-dist/fonts/ty
 pe1/public/cm-super/sftt0800.pfb></usr/local/texlive/2012/texmf-dist/fonts/type
 1/public/cm-super/sftt1000.pfb>
-Output written on poppr_manual.pdf (50 pages, 697544 bytes).
+Output written on poppr_manual.pdf (50 pages, 696519 bytes).
 PDF statistics:
  835 PDF objects out of 1000 (max. 8388607)
  716 compressed objects within 8 object streams

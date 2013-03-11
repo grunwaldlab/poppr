@@ -179,8 +179,9 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 		    # Title of the plot.
 		    labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
 			    length(sample$Ia), "\nFile: ", file, sep="")) + 
+        theme_classic() %+replace%
       	theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-		    theme(panel.background = element_rect(fill="grey95")) +
+		    theme(panel.background = element_rect(fill="grey98")) +
 
 		    # Making the Index titles bigger. 
 		    theme(strip.text.x = element_text(size=rel(3), face="bold"))
@@ -215,8 +216,9 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 		  # Title of the plot.
 		  labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
 			  length(sample$Ia), "\nFile: ", file, sep="")) + 
+      theme_classic() %+replace%
     	theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-		  theme(panel.background = element_rect(fill="grey95")) +
+		  theme(panel.background = element_rect(fill="grey98")) +
 
 		  # Making the Index titles bigger. 
 		  theme(strip.text.x = element_text(size=rel(3), face="bold"))

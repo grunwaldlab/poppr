@@ -206,8 +206,8 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
       mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
 
       # plot it
-      return(ggplot(mlgt.df, aes(MLG)) + geom_bar(aes(fill=count), position="identity") + 
-      theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0)))
+      return(ggplot(mlgt.df, aes(MLG)) + geom_bar(aes(fill=count), position="identity"))
+      #theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0)))
     }
 
     # If there is a population structure
@@ -225,9 +225,11 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
 
         # controlling for the situation where the population size is 1.
         if (sum(mlgtab[n, ]) > 1){ 
-          print(plot1(mlgt) + 
-            labs(title=paste("Population:",n,"\nN =",sum(mlgtab[n, ]),
-            "MLG =",length(mlgt))))
+          print(plot1(mlgt) +
+                  theme_classic() %+replace%
+                  theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0, vjust=1)) + 
+                  labs(title=paste("Population:",n,"\nN =",sum(mlgtab[n, ]),
+                                   "MLG =",length(mlgt))))
         }
       }
       
@@ -238,9 +240,12 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
     # If there is no population structure detected.
     else {
       print(plot1(mlgtab) + 
-        labs(title=
-          paste("File:",as.character(pop@call[2]),"\nN =",sum(mlgtab),
-          "MLG =",length(mlgtab))))
+              theme_classic() %+replace%
+              theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0, 
+                                             vjust=1)) +
+              labs(title= paste("File:",as.character(pop@call[2]),
+                                "\nN =",sum(mlgtab),"MLG =",length(mlgtab))
+                   ))
     }
   }
   #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
