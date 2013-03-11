@@ -675,3 +675,95 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
          fill=color, border=NULL)
 }
+
+
+percent_missing <- function(pop, type="loci", cutoff=0.05){
+  if(toupper(type) == "LOCI"){
+    misslist <- loci.na(pop)
+    if(all(misslist > 0)){
+      return(misslist)
+    }
+    poplen <- nInd(pop)
+    filter <- vapply(-misslist, function(x) 
+      length(which(is.na(pop@tab[, x])))/poplen, 1) > cutoff
+    if(is.na(filter[1])){
+      filter <- 1:length(misslist)
+    }
+  }
+  else{
+    misslist <- geno.na(pop)
+    if(all(misslist > 0)){
+      return(misslist)
+    }
+    poplen <- length(pop@tab[1, ])
+    filter <- vapply(-misslist, function(x)
+      length(which(is.na(pop@tab[x, ])))/poplen, 1) > cutoff
+  }
+  if(all(filter %in% FALSE)){
+    filter <- 1:length(misslist)
+    misslist <- 1:length(misslist)
+  }
+  return(misslist[filter])
+}
+
+
+new.missingno <- function(pop, missing, cutoff=0.05, quiet=FALSE){
+  if(sum(is.na(pop@tab)) > 0){
+    # removes any loci (columns) with missing values.
+    if (toupper(missing)=="LOCI"){
+      naloci <- percent_missing(pop, type=missing, cutoff=cutoff)
+      if(quiet != TRUE){
+        if(all(naloci < 0)){
+          remloc <- pop@loc.names[which(cumsum(pop@loc.nall) %in% -naloci)]
+          cat("\n Found", sum(is.na(pop@tab)),"missing values.")
+          loci <- paste(length(naloci), ifelse(length(naloci) == 1, "locus", "loci"))
+          cat("\n",loci,"contained missing values greater than",paste(cutoff*100,"%.",sep=""))
+          cat("\n Removing",loci,":", remloc,"\n")
+        }
+        else{
+          cat("\n No loci with missing values above",paste(cutoff*100,"%",sep=""),"found.\n")
+        }
+      }
+      print(naloci)
+      pop <- pop[, naloci]
+    }  
+    # removes any genotypes (rows) with missing values.
+    else if (!is.na(grep("GEN", toupper(missing), value=TRUE)[1])){
+      nageno <- percent_missing(pop, type=missing, cutoff=cutoff)
+      if(quiet != TRUE){
+        if(all(nageno < 0)){
+          remgeno <- pop@ind.names[-nageno]
+          cat("\n Found", sum(is.na(pop@tab)),"missing values.")
+          genotypes <- paste(length(nageno), ifelse(length(nageno) == 1, "genotype", "genotypes"))
+          cat("\n",genotypes,"contained missing values greater than",paste(cutoff*100,"%.",sep=""))
+          cat("\n Removing",genotypes,":",remgeno,"\n")
+        }
+        else{
+          cat("\n No genotypes with missing values above",paste(cutoff*100,"%",sep=""),"found.\n")
+        }
+      }
+      pop <- pop[nageno, ]
+    }
+    # changes all NA's to the mean of the column. NOT RECOMMENDED
+    else if (toupper(missing)=="MEAN"){
+      pop <- na.replace(pop,"mean", quiet=quiet)
+    }
+    # changes all NA's to 0. NOT RECOMMENDED. INTRODUCES MORE DIVERSITY.
+    else if (toupper(missing)=="ZERO" | missing=="0"){
+      pop <- na.replace(pop,"0", quiet=quiet)
+    }
+  }
+  else{
+    if(quiet == FALSE){
+      cat("\n No missing values detected.\n")
+    }
+  }
+  return (pop)
+}
+
+
+
+
+
+
+
