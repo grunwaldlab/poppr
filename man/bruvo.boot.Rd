@@ -2,8 +2,8 @@
 \alias{bruvo.boot}
 \title{Create a tree using Bruvo's Distance with non-parametric bootstrapping.}
 \usage{
-  bruvo.boot(pop, replen = c(2), sample = 100, tree = "nj",
-    showtree = TRUE, cutoff = NULL, ...)
+  bruvo.boot(pop, replen = c(2), sample = 100,
+    tree = "upgma", showtree = TRUE, cutoff = NULL, ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
