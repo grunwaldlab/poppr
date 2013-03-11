@@ -134,7 +134,7 @@ extract.info <- function(x) {
     popcall <- pop@call
     pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
     pop@call <- popcall
-    if (clonecorrect){
+    if (clonecorrect == TRUE){
       poplist <- clonecorrect(pop, hier=hier, dfname=dfname)
       pop <- poplist
       pop@call <- popcall
@@ -145,7 +145,7 @@ extract.info <- function(x) {
     x <- as.character(pop@call)[2]
     popcall <- pop@call
     pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
-    if (clonecorrect){
+    if (clonecorrect == TRUE){
       poplist <- clonecorrect(pop, hier=hier, dfname=dfname)
       pop <- poplist
       pop@call <- popcall
