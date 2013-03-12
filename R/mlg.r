@@ -183,7 +183,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
     mlgtab <- mlgtab[unlist(vapply(pop@pop.names, 
                 function(x) which(rownames(mlgtab)==x), 1)), , drop=FALSE]
   }
-  if(total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)))){
+  if(total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
     mlgtab <- rbind(mlgtab, colSums(mlgtab))
     rownames(mlgtab)[nrow(mlgtab)] <- "Total"
   }
@@ -370,9 +370,9 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
                   function(x) which(rownames(mlgtab)==x), 1)), , drop=FALSE]
     }
     #mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
-    mlgs <- unlist(sapply(names(which(colSums(ifelse(mlgtab==0, 0, 1)) > 1)), 
-                          strsplit, "\\."))
-    mlgs <- as.numeric(mlgs[which(1:length(mlgs)%%2 == 0)])
+    mlgs <- unlist(strsplit(names(which(colSums(ifelse(mlgtab==0, 0, 1)) > 1)), 
+                          "\\."))
+    mlgs <- as.numeric(mlgs[!mlgs %in% "MLG"])
     if(length(mlgs) == 0){
       cat("No multilocus genotypes were detected across populations\n")
       return(0)
