@@ -1,7 +1,7 @@
 # Welcome
 
 Poppr is an R package designed for analysis of populations with mixed modes of 
-sexual and clonal reproduction. It is built around the framework of adegenet's
+sexual and clonal reproduction. It is built around the framework of [adegenet's](http://adegenet.r-forge.r-project.org/)
 genind object and offers the following implementations:
 
 - clone censoring of populations at any of multiple levels of a hierarchy
@@ -29,7 +29,7 @@ Now you can use the `install_github()` function:
     install_github("poppr", "poppr")
     library(poppr)
 
-You can view the manual by typing: `vignette("poppr_manual")`
+You can view the manual by typing: `vignette("poppr_manual")` after installation or by clicking [here](http://grunwaldlab.cgrb.oregonstate.edu/sites/default/files/u5/poppr_manual.pdf)
 
 Be sure to visit our [Webpage](http://grunwaldlab.cgrb.oregonstate.edu/poppr-r-package-population-genetics) with FAQs and tutorials coming soon.
 	
