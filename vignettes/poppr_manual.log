@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  11 MAR 2013 15:29
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  11 MAR 2013 15:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -980,43 +980,54 @@ File: poppr_manual-095.pdf Graphic file (type pdf)
 Package pdftex.def Info: poppr_manual-095.pdf used on input line 2046.
 (pdftex.def)             Requested size: 234.8775pt x 234.87692pt.
 
-[35] [36 <./poppr_manual-095.pdf>]
+[35]
 Underfull \hbox (badness 10000) in paragraph at lines 2089--2090
 
  []
 
-[37]
+[36 <./poppr_manual-095.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 2119--2120
 
  []
 
-<poppr_manual-100.pdf, id=552, 433.62pt x 433.62pt>
+<poppr_manual-100.pdf, id=546, 433.62pt x 433.62pt>
 File: poppr_manual-100.pdf Graphic file (type pdf)
  <use poppr_manual-100.pdf>
 Package pdftex.def Info: poppr_manual-100.pdf used on input line 2130.
 (pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
 
-[38 <./poppr_manual-100.pdf>]
-<poppr_manual-popcompare_bruvo2.pdf, id=563, 433.62pt x 433.62pt>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[37] <poppr_manual-popcompare_bruvo2.pdf, id=553, 433.62pt x 433.62pt>
 File: poppr_manual-popcompare_bruvo2.pdf Graphic file (type pdf)
 
 <use poppr_manual-popcompare_bruvo2.pdf>
 Package pdftex.def Info: poppr_manual-popcompare_bruvo2.pdf used on input line 
 2177.
 (pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
- [39 <./poppr_manual-popcompare_bruvo2.pdf>] <poppr_manual-bruvo_tree.pdf, id=5
-75, 433.62pt x 433.62pt>
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[38 <./poppr_manual-100.pdf>]
+<poppr_manual-bruvo_tree.pdf, id=564, 433.62pt x 433.62pt>
 File: poppr_manual-bruvo_tree.pdf Graphic file (type pdf)
 
 <use poppr_manual-bruvo_tree.pdf>
 Package pdftex.def Info: poppr_manual-bruvo_tree.pdf used on input line 2219.
 (pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
- [40 <./poppr_manual-bruvo_tree.pdf>]
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[39 <./poppr_manual-popcompare_bruvo2.pdf>]
 Overfull \hbox (4.68425pt too wide) in paragraph at lines 2225--2227
 \T1/aett/m/n/10 bruvo.msn(pop, re-plen = c(1), palette = topo.colors, sub-list 
 = "All", black-list =
  []
 
+[40 <./poppr_manual-bruvo_tree.pdf>]
 <poppr_manual-bruvo_msn.pdf, id=587, 433.62pt x 433.62pt>
 File: poppr_manual-bruvo_msn.pdf Graphic file (type pdf)
 
@@ -1274,7 +1285,7 @@ s/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2012/texmf-dist/fonts/
 type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2012/texmf-dist/fonts/ty
 pe1/public/cm-super/sftt0800.pfb></usr/local/texlive/2012/texmf-dist/fonts/type
 1/public/cm-super/sftt1000.pfb>
-Output written on poppr_manual.pdf (50 pages, 696519 bytes).
+Output written on poppr_manual.pdf (50 pages, 696864 bytes).
 PDF statistics:
  835 PDF objects out of 1000 (max. 8388607)
  716 compressed objects within 8 object streams
