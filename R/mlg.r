@@ -397,7 +397,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
   # Compiling the list.
   mlg.dup <- lapply(colnames(mlgtab), popop, quiet=quiet)
   names(mlg.dup) <- colnames(mlgtab)
-  if(df){
+  if(df == TRUE){
     mlg.dup <- as.data.frame(list(MLG = rep(names(mlg.dup), sapply(mlg.dup, length)), 
                              Population = unlist(lapply(mlg.dup, names)), 
                              Count = unlist(mlg.dup)))
