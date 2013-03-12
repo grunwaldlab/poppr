@@ -390,12 +390,15 @@ missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
         if(all(nageno < 0)){
           remgeno <- pop@ind.names[-nageno]
           cat("\n Found", sum(is.na(pop@tab)),"missing values.")
-          genotypes <- paste(length(remgeno), ifelse(length(remgeno) == 1, "genotype", "genotypes"))
-          cat("\n",genotypes,"contained missing values greater than",paste(cutoff*100,"%.",sep=""))
+          genotypes <- paste(length(remgeno), ifelse(length(remgeno) == 1, 
+                                                     "genotype", "genotypes"))
+          cat("\n",genotypes,"contained missing values greater than",
+              paste(cutoff*100,"%.",sep=""))
           cat("\n Removing",genotypes,":",remgeno,"\n")
         }
         else{
-          cat("\n No genotypes with missing values above",paste(cutoff*100,"%",sep=""),"found.\n")
+          cat("\n No genotypes with missing values above",
+              paste(cutoff*100,"%",sep=""),"found.\n")
         }
       }
       pop <- pop[nageno, ]
