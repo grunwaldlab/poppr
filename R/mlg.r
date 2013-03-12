@@ -167,7 +167,8 @@ mlg <- function(pop, quiet=FALSE){
 #
 #
 #==============================================================================#
-mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE, total=FALSE, quiet=FALSE){  
+mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE, 
+                      total=FALSE, quiet=FALSE){  
   if(!is.genind(pop)){
     stop("This function requires a genind object.")
   }
@@ -286,31 +287,46 @@ mlg.vector <- function(pop){
   # note that the genotype numbers will not match up with the original numbers,
   # but will be scattered as a byproduct of the sorting. This is inconsequential
   # as the naming of the MLGs is arbitrary.
+  
+  # Step 1: collapse genotypes into strings
+  # Step 2: sort strings and keep indices
+  # Step 3: create new vector in which to place sorted index number.
+  # Step 4: evaluate strings in sorted vector and increment to the respective 
+  # # index vector each time a unique string occurs.
+  # Step 4: Rearrange index vector with the indices from the original vector.
 
   xtab <- pop@tab
   # concatenating each genotype into one long string.
-  xsort <- sapply(seq(nrow(xtab)),function(x) paste(xtab[x, ]*2, collapse=""))
+  xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ]*pop@ploidy, 
+                                                    collapse=""), "string")
   # creating a new vector to store the counts of unique genotypes.
   countvec <- vector(length=length(xsort), mode="numeric")
-  # sorting the genotypes and preserving the index. 
+  # sorting the genotypes ($x) and preserving the index ($xi). 
   xsorted <- sort(xsort, index.return=TRUE)
   
   # simple function to count number of genotypes. Num is the index number, comp
   # is the vector of genotypes.
+  # This works by the "<<-" assignment operator, which is a global assignment.
+  # This will search in higher environments until it finds a corresponding
+  # object to modify. In this case it is countvec, which was declared above.
+  
   f1 <- function(num, comp){
     if(num-1 == 0){
       countvec[num] <<- 1
     }
+    # These have the exact same strings, thus they are the same MLG. Perpetuate
+    # The MLG index.
     else if(comp[num] == comp[num-1]){
       countvec[num] <<- countvec[num-1]
     }
+    # These have differnt strings, increment the MLG index by one.
     else{
       countvec[num] <<- countvec[num-1] + 1
     }
   }
 
   # applying this over all genotypes.
-  sapply(seq(length(xsorted$x)), f1, xsorted$x)
+  lapply(1:length(xsorted$x), f1, xsorted$x)
   
   # a new vector to take in the genotype indicators
   countvec2 <- 1:length(xsort)
