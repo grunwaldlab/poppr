@@ -109,6 +109,8 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", combine=
   if(!is.genind(pop)){
     stop("This only works for genind objects")
   }
+  # Checks for data frame in the @other slot. If it's not there, this loop is
+  # initiated.
   if(is.null(other(pop)[[dfname]])){
     if(length(hier) == 1 & hier[1] == 1){
       if(length(levels(pop(pop))) == 1 | is.null(pop(pop))){
@@ -126,22 +128,33 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", combine=
       stop(paste("There is no data frame in the 'other' slot called",dfname))
     }
   }
+  # Corrects the individual names of the object. This is fo the fact that the
+  # clone corrector relies on the unique individual names for it to work.
   if(all(pop@ind.names == "")){
     pop@ind.names <- as.character(1:nInd(pop))
   }
+  
   popcall <- pop@call
+  # Combining the population factor by the hierarchy
   pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier)
   cpop <- length(pop$pop.names)
+  
+  # Steps for correction:
+  # Subset by population factor.
+  # Run subsetted population by the .clonecorrector
+  # Profit!
   corWrecked <- function(x, pop){
     subbed <- popsub(pop, x) # population to be...corrected.
-    subbed <- subbed[.clonecorrector(subbed), ] # correcting.
-    # Return the indices base off of the individual names.
+    subbed <- subbed[.clonecorrector(subbed), ] 
+    # Return the indices based off of the individual names.
     return(which(pop@ind.names %in% subbed@ind.names))
   }
-  #cat(cpop)
+  
   ccpop <- unlist(lapply(1:cpop, corWrecked, pop))
-  #cat(ccpop)
   pop <- pop[ccpop, ]
+  
+  # If the user did not set the combine flag, then the function returns the
+  # first level of the hierarchy.
   if(!combine){
     pop(pop) <- pop$other[[dfname]][[hier[1]]]
     names(pop$pop.names) <- levels(pop$pop)
