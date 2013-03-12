@@ -482,136 +482,6 @@ pop.sampler <- function(pop, method=1){
 }
 
 
-################################################################################
-# 
-# Inserted methods for subsetting and dealing with null or single populations.
-# There was a little trickiness dealing with naming the nodes, but I made a hack
-# to fix it. It's not pretty, but it gets the job done. Currently the user has
-# a few choices, to label each node based on the MLGs, they select vertex.label
-# = "mlg", if they want individuals, they select vertex.label = "inds", if they
-# want something else, they add a vector into vertex.label and get whatever
-# value is in that vector. NA is a popular option. 
-#
-# Function for manual:
-# set.seed(2013)
-# bruvo.msn(nancycats, replen=rep(1, 9), vertex.label="inds", sublist=c(8:9), 
-#   vertex.label.cex=0.7, vertex.label.dist=0.4, palette=heat.colors)
-################################################################################
-
-test.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
-                            sublist = "All", blacklist = NULL, vertex.label = "MLG", 
-                            gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
-  stopifnot(require(igraph))
-  maxg <- max(glim)
-  ming <- 1-(min(glim)/maxg)
-  # Storing the MLG vector into the genind object
-  pop$other$mlg.vec <- mlg.vector(pop)
-  
-  singlepop <- function(pop, vertex.label){
-    cpop <- pop[.clonecorrector(pop), ]
-    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-    bclone <- bruvo.dist(cpop, replen=replen)
-    mclone<-as.dist(bclone)
-    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
-    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
-    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
-    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
-      if(toupper(vertex.label) == "MLG"){
-        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
-      }
-      else if(toupper(vertex.label) == "INDS"){
-        vertex.label <- cpop$ind.names
-      }
-    }
-    
-    if(gscale == TRUE){
-      w <- E(mst)$weight
-      E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
-    }
-    else{
-      E(mst)$color <- rep("black", length(E(mst)$weight))
-    }
-
-    edgewidth <- 2
-    if(wscale==TRUE){
-      edgewidth <- 1/(E(mst)$weight)
-      if(any(E(mst)$weight < 0.08)){
-        edgewidth <- 1/(E(mst)$weight + 0.08)
-      }
-    }
-    plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
-         vertex.label = vertex.label, vertex.size=mlg.number*3, 
-         vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), NA, pop$pop.names), title="Populations",
-           fill=palette(1), border=NULL)
-    return(invisible(1))
-  }
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label))
-  }
-  if(sublist[1] != "ALL" | !is.null(blacklist)){
-    pop <- popsub(pop, sublist, blacklist)
-  }
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label))
-  }
-  # Obtaining population information for all MLGs
-  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
-  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
-  cpop <- pop[.clonecorrector(pop), ]
-  # This will determine the size of the nodes based on the number of individuals
-  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
-  # give us the numbers and the population information in the correct order.
-  # Note: rank is used to correctly subset the data
-  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
-  bclone <- bruvo.dist(cpop, replen=replen)
-  ###### Change names to MLGs #######
-  #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
-  ###### Create a graph #######
-  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
-  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
-  
-  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
-    if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
-    }
-    else if(toupper(vertex.label) == "INDS"){
-      vertex.label <- cpop$ind.names
-    }
-  }
-  ###### Color schemes #######  
-  # The pallete is determined by what the user types in the argument. It can be 
-  # rainbow, topo.colors, heat.colors ...etc.
-  palette <- match.fun(palette)
-  color <- palette(length(pop@pop.names))
-  if(gscale == TRUE){
-    w <- E(mst)$weight
-    E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
-  }
-  else{
-    E(mst)$color <- rep("black", length(E(mst)$weight))
-  }
-
-  edgewidth <- 2
-  if(wscale==TRUE){
-    edgewidth <- 1/(E(mst)$weight)
-    if(any(E(mst)$weight < 0.08)){
-      edgewidth <- 1/(E(mst)$weight + 0.08)
-    }
-  }
-  # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
-  #print(mlg.color)
-  plot(mst, edge.width=edgewidth, edge.color=E(mst)$color, 
-       vertex.size=mlg.number*3, vertex.shape="pie", vertex.pie=mlg.cp, 
-       vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
-  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
-         fill=color, border=NULL)
-}
-
-
-
 discreet.dist <- function(pop){
   ploid <- ploidy(pop)
   ind.names <- pop@ind.names
@@ -674,4 +544,67 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
        vertex.label = vertex.label, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
          fill=color, border=NULL)
+}
+
+
+
+
+
+
+new.clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", combine=FALSE){
+  if(!is.genind(pop)){
+    stop("This only works for genind objects")
+  }
+  # Checks for data frame in the @other slot. If it's not there, this loop is
+  # initiated.
+  if(is.null(other(pop)[[dfname]])){
+    if(length(hier) == 1 & hier[1] == 1){
+      if(length(levels(pop(pop))) == 1 | is.null(pop(pop))){
+        pop <- pop[.clonecorrector(pop), ]
+        return(pop)
+      }
+      else if(length(levels(pop(pop))) > 1){
+        other(pop)[[dfname]] <- as.data.frame(list(Pop = as.character(pop(pop))))
+        warning(paste("There was no data frame in the 'other' slot called ",
+                      dfname,". One is being created from the population factor.", 
+                      sep=""))
+      }
+    }
+    else{
+      stop(paste("There is no data frame in the 'other' slot called",dfname))
+    }
+  }
+  # Corrects the individual names of the object. This is fo the fact that the
+  # clone corrector relies on the unique individual names for it to work.
+  if(all(pop@ind.names == "")){
+    pop@ind.names <- as.character(1:nInd(pop))
+  }
+  
+  popcall <- pop@call
+  # Combining the population factor by the hierarchy
+  pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier)
+  cpop <- length(pop$pop.names)
+  
+  # Steps for correction:
+  # Subset by population factor.
+  # Run subsetted population by the .clonecorrector
+  # Profit!
+  corWrecked <- function(x, pop){
+    subbed <- popsub(pop, x) # population to be...corrected.
+    subbed <- subbed[.clonecorrector(subbed), ] 
+    # Return the indices based off of the individual names.
+    return(which(pop@ind.names %in% subbed@ind.names))
+  }
+  
+  ccpop <- unlist(lapply(1:cpop, corWrecked, pop))
+  pop <- pop[ccpop, ]
+  
+  # If the user did not set the combine flag, then the function returns the
+  # first level of the hierarchy.
+  if(!combine){
+    pop(pop) <- pop$other[[dfname]][[hier[1]]]
+    names(pop$pop.names) <- levels(pop$pop)
+  }
+  pop@call <- popcall
+  return(pop)
 }
