@@ -79,6 +79,12 @@ NULL
 NULL
 #==============================================================================#
 # This function will extract all relevant information from the files
+# 
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # new.poppr (in testing)
 #==============================================================================#
 extract.info <- function(x) {
 	if (length(grep("^clone.+?dat$", x$File)) != 0){
@@ -115,6 +121,12 @@ extract.info <- function(x) {
 # correction is also possible.
 # If quiet is set to false and you are importing non-genind or poppr objects,
 # you will see many warnings. 
+#
+# Public functions utilizing this function:
+# # poppr
+#
+# Internal functions utilizing this function:
+# # new.poppr (in testing)
 #==============================================================================#
 .file.type <- function(pop, quiet=TRUE, missing="ignore", cutoff=0.05,
                             clonecorrect=FALSE, hier=c(1), dfname="hier"){
@@ -159,6 +171,12 @@ extract.info <- function(x) {
 # .clonecorrector will simply give a list of individuals (rows) that are
 # duplicated within a genind object. This can be used for clone correcting a
 # single genind object.
+#
+# Public functions utilizing this function:
+# # clonecorrect, bruvo.msn
+#
+# Internal functions utilizing this function:
+# # none
 #==============================================================================#
 
 .clonecorrector <- function(x){
@@ -171,15 +189,14 @@ extract.info <- function(x) {
 }
 
 #==============================================================================#
-# getloci will create a list of all the loci and their relative positions on the
-# matrix for easy subsetting.
-#==============================================================================#
-
-getloci <- function(pop) sapply(names(pop@loc.nall), function(x) grep(x, pop@loc.fac))
-
-#==============================================================================#
 # geno.na will find the genotypes in the population that contain na's and 
 # remove them.
+#
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # percent_missing
 #==============================================================================#
 
 geno.na <- function(pop){
@@ -193,6 +210,11 @@ geno.na <- function(pop){
 #==============================================================================#
 # loci.na will find the loci in the population that contain na's and remove
 # them.
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # percent_missing
 #==============================================================================#
 
 loci.na <- function(pop) {
@@ -206,8 +228,12 @@ loci.na <- function(pop) {
 #==============================================================================#
 # This will remove either loci or genotypes containing missing values above the
 # cutoff percent.
-# Functions utilizing this function:
+# 
+# Public functions utilizing this function:
 # # missingno
+#
+# Internal functions utilizing this function:
+# # none.
 #==============================================================================#
 
 percent_missing <- function(pop, type="loci", cutoff=0.05){
@@ -241,6 +267,11 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
 
 #==============================================================================#
 # This implements rounding against the IEEE standard and rounds 0.5 up
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # .PA.pairwise.differences, .pairwise.differences
 #==============================================================================#
 
 round.poppr <- function(x){
@@ -255,6 +286,11 @@ round.poppr <- function(x){
 
 #==============================================================================#
 # This will caluclulate p-values for permutation tests. 
+# Public functions utilizing this function:
+# # ia
+#
+# Internal functions utilizing this function:
+# # .ia
 #==============================================================================#
 
 ia.pval <- function(index="index", sampled, observed){
@@ -268,6 +304,11 @@ ia.pval <- function(index="index", sampled, observed){
 #==============================================================================#
 # this is simply a function to print out information to the screen depending on
 # what the user decides.
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # .ia
 #==============================================================================#
 
 .quiet <- function(quiet="minimal", IarD=NULL, pop=pop, N=NULL){
@@ -299,6 +340,11 @@ ia.pval <- function(index="index", sampled, observed){
 # population structure after clone correction. The input data is a data frame
 # where the first column is a character vector of the combined population
 # heirarchy. 
+# Public functions utilizing this function:
+# # splitcombine
+#
+# Internal functions utilizing this function:
+# # none
 #==============================================================================#
 
 pop.splitter <- function(df, sep="_"){
@@ -321,6 +367,11 @@ pop.splitter <- function(df, sep="_"){
 #==============================================================================#
 # This will be used to join heirarchical population vectors for the purposes of
 # maintaining hierarchy. 
+# Public functions utilizing this function:
+# # splitcombine
+#
+# Internal functions utilizing this function:
+# # none
 #==============================================================================#
 
 pop.combiner <- function(df, hier=c(1), sep="_"){
@@ -342,6 +393,11 @@ pop.combiner <- function(df, hier=c(1), sep="_"){
 }
 #==============================================================================#
 # Subsetting the population. 
+# Public functions utilizing this function:
+# # mlg.crosspop
+#
+# Internal functions utilizing this function:
+# # none
 #==============================================================================#
 sub_index <- function(pop, sublist="ALL", blacklist=NULL){
   if (!is.genind(pop)){
@@ -418,6 +474,11 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 
 #==============================================================================#
 # Internal function to create mlg.table.
+# Public functions utilizing this function:
+# # mlg.table, mlg.crosspop
+#
+# Internal functions utilizing this function:
+# # none
 #==============================================================================#
 
 mlg.matrix <- function(pop){
@@ -466,6 +527,12 @@ mlg.matrix <- function(pop){
 # so the calculations must be different as implemented in these mostly identical
 # functions.
 #
+# Public functions utilizing this function:
+# # ia
+#
+# Internal functions utilizing this function:
+# # .ia
+#
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
 #==============================================================================#
 
@@ -512,6 +579,12 @@ mlg.matrix <- function(pop){
 # D.vector = a vector of the the pairwise distances over all loci. The length
 #			 of this vector will be the same as n(n-1)/2, where n is number of
 # 			isolates.
+# Public functions utilizing this function:
+# # ia
+#
+# Internal functions utilizing this function:
+# # .ia
+#
 #==============================================================================#
 
 .PA.pairwise.differences <- function(pop,numLoci,np, missing){  
@@ -545,6 +618,13 @@ mlg.matrix <- function(pop){
 
 #==============================================================================#
 # Function for parsing output of poppr function.
+#
+# Public functions utilizing this function:
+# # poppr, poppr.all
+#
+# Internal functions utilizing this function:
+# # none
+#
 #==============================================================================#
 
 final <- function(Iout, result){
@@ -558,6 +638,12 @@ final <- function(Iout, result){
 
 #==============================================================================#
 # The internal version of ia. 
+# Public functions utilizing this function:
+# # ia, poppr
+#
+# Internal functions utilizing this function:
+# # none
+# 
 #==============================================================================#
 
 .ia <- function(pop,sample=0,method=1,quiet="minimal",namelist=NULL,missing="ignore",
@@ -710,6 +796,12 @@ pairwisematrix <- function(pop, np){
 # The actual calculation of Ia and rbarD. This allows for multiple populations
 # to be calculated.
 # pop: A list of genind objects consisting of one locus each over a population.
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # .ia
+#
 #==============================================================================#
 .Ia.Rd <- function (pop, missing = NULL) 
 {
@@ -734,6 +826,13 @@ pairwisematrix <- function(pop, np){
 #==============================================================================#
 # This creates a pairwise difference matrix via the C function pairdiffs in
 # src/poppr_distance.c
+# 
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # .Ia.Rd
+#
 #==============================================================================#
 pair_diffs <- function(pop, numLoci, np)
 {
@@ -761,6 +860,13 @@ pair_diffs <- function(pop, numLoci, np)
 #==============================================================================#
 # Bruvo's distance calculation that takes in an SSR matrix. Note the conditions
 # below.
+#
+# Public functions utilizing this function:
+# # bruvo.boot
+#
+# Internal functions utilizing this function:
+# # none
+#
 #==============================================================================#
 phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
   # Preceeding functions should take care of this:
