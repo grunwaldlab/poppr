@@ -169,11 +169,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #==============================================================================#
 # pop = a list of genind objects with one locus each.
 # 
-# This function shuffles alleles at each locus over all loci. It is important to
-# make sure that all of the available alleles are valid by running 
-# available.alleles for a list that allow you to subset the population as such 
-# pop[,list] and then getloci(pop) will give you a list of loci with their 
-# respective alleles.
+# This function shuffles alleles at each locus over all loci. 
 #==============================================================================#
 
 .all.shuffler <- function(pop, type=type, method=1){
