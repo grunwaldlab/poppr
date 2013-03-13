@@ -6,7 +6,7 @@
     blacklist = c(NULL), sample = 0, method = 1,
     missing = "ignore", cutoff = 0.05, quiet = "minimal",
     clonecorrect = FALSE, hier = c(1),
-    dfname = "population_hierarchy", hist = TRUE,
+    dfname = "population_hierarchy", keep = 1, hist = TRUE,
     minsamp = 10)
 }
 \arguments{
@@ -74,6 +74,12 @@
   of the data frame or list containing the vectors of the
   population hierarchy within the \code{other} slot of the
   \code{\link{genind}} object.}
+
+  \item{keep}{an \code{integer}. This indicates the levels
+  of the population hierarchy you wish to keep after clone
+  correcting your data sets. To combine the hierarchy, just
+  set keep from 1 to the length of your hierarchy. see
+  \code{\link{clonecorrect}} for details.}
 
   \item{hist}{\code{logical} if \code{TRUE} a histogram
   will be produced for each population.}
