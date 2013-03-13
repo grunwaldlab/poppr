@@ -128,7 +128,7 @@ extract.info <- function(x) {
 # Internal functions utilizing this function:
 # # new.poppr (in testing)
 #==============================================================================#
-.file.type <- function(pop, quiet=TRUE, missing="ignore", cutoff=0.05,
+.file.type <- function(pop, quiet=TRUE, missing="ignore", cutoff=0.05, keep=1,
                             clonecorrect=FALSE, hier=c(1), dfname="hier"){
   if (!is.genind(pop)){
     x <- pop
@@ -147,7 +147,7 @@ extract.info <- function(x) {
     pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
     pop@call <- popcall
     if (clonecorrect == TRUE){
-      poplist <- clonecorrect(pop, hier=hier, dfname=dfname)
+      poplist <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
       pop <- poplist
       pop@call <- popcall
       #poplist <- .pop.divide(pop)
@@ -158,7 +158,7 @@ extract.info <- function(x) {
     popcall <- pop@call
     pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
     if (clonecorrect == TRUE){
-      poplist <- clonecorrect(pop, hier=hier, dfname=dfname)
+      poplist <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
       pop <- poplist
       pop@call <- popcall
       #poplist <- .pop.divide(pop)
