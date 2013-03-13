@@ -568,9 +568,10 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
       
     }
     pop$other[[dfname]][[paste(hier, collapse=sep)]] <- newdf
-    if(setpopulation)
+    if(setpopulation){
       pop(pop) <- newdf
       names(pop$pop.names) <- levels(pop$pop)
+    }
     return(pop)
   }
 }
