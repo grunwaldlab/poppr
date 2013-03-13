@@ -109,6 +109,11 @@
 #' or list containing the vectors of the population hierarchy within the
 #' \code{other} slot of the \code{\link{genind}} object.
 #' 
+#' @param keep an \code{integer}. This indicates the levels of the population
+#' hierarchy you wish to keep after clone correcting your data sets. To combine
+#' the hierarchy, just set keep from 1 to the length of your hierarchy. see
+#' \code{\link{clonecorrect}} for details. 
+#' 
 #' @param hist \code{logical} if \code{TRUE} a histogram will be produced for
 #' each population. 
 #' 
@@ -164,11 +169,11 @@
 poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet="minimal",
                   clonecorrect=FALSE, hier=c(1), dfname="population_hierarchy", 
-                  hist=TRUE, minsamp=10){
+                  keep = 1, hist=TRUE, minsamp=10){
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
-	x <- .file.type(pop, missing=missing, cutoff=cutoff, clonecorrect=clonecorrect, 
-                  hier=hier, dfname=dfname, quiet=TRUE)	
+              "non-parametric bootstrap")
+  x <- .file.type(pop, missing=missing, cutoff=cutoff, clonecorrect=clonecorrect, 
+                  hier=hier, dfname=dfname, keep=keep, quiet=TRUE)  
   # The namelist will contain information such as the filename and population
   # names so that they can easily be ported around.
   namelist <- NULL
@@ -214,17 +219,17 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
   else{
     MPI <- 1
   }
-
+  
   #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
   # ANALYSIS OF MULTIPLE POPULATIONS.
   #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,# 
- 
-	if (!is.null(MPI)){
+  
+  if (!is.null(MPI)){
     
     #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
     # Calculations start here.
     #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-
+    
     MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
     N.vec <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)
     # Shannon-Weiner vegan:::diversity index.
@@ -245,31 +250,31 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
     N.rare <- rarefy(pop.mat, raremax, se=TRUE)
     IaList <- NULL
     invisible(lapply(sublist, function(x) 
-                              IaList <<- rbind(IaList, 
-                                               .ia(poplist[[x]], 
-                                                       sample=sample, 
-                                                       method=method, 
-                                                       quiet=quiet, 
-                                                       missing=missing, 
-                                                       namelist=list(File=namelist$File, population = x),
-                                                       hist=hist
-              ))))
-
+      IaList <<- rbind(IaList, 
+                       .ia(poplist[[x]], 
+                           sample=sample, 
+                           method=method, 
+                           quiet=quiet, 
+                           missing=missing, 
+                           namelist=list(File=namelist$File, population = x),
+                           hist=hist
+                       ))))
+    
     #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
     # Making the data look pretty.
     #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
-                                eMLG=round(N.rare[1, ], 3), 
-                                SE=round(N.rare[2, ], 3), 
-                                H=round(H, 3), 
-                                G=round(G,3),
-                                Hexp=round(Hexp, 3),
-                                E.5=round(E.5,3),
-                                round(IaList, 3),
-                                File=namelist$File))
+                               eMLG=round(N.rare[1, ], 3), 
+                               SE=round(N.rare[2, ], 3), 
+                               H=round(H, 3), 
+                               G=round(G,3),
+                               Hexp=round(Hexp, 3),
+                               E.5=round(E.5,3),
+                               round(IaList, 3),
+                               File=namelist$File))
     rownames(Iout) <- NULL
     return(final(Iout, result))
-	}
+  }
   #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
   # ANALYSIS OF SINGLE POPULATION. This is for if there are no subpopulations to
   # be analyzed. For details of the functions utilized, see the notes above.
@@ -290,17 +295,17 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
     # the sample is equal to the number of individuals.
     N.rare <- rarefy(pop.mat, sum(pop.mat), se=TRUE)
     IaList <- .ia(pop, sample=sample, method=method, quiet=quiet, missing=missing,
-                      namelist=(list(File=namelist$File, population="Total")),
-                      hist=hist)
+                  namelist=(list(File=namelist$File, population="Total")),
+                  hist=hist)
     Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
-                          eMLG=round(N.rare[1, ], 3), 
-                          SE=round(N.rare[2, ], 3),
-                          H=round(H, 3), 
-                          G=round(G,3), 
-                          Hexp=round(Hexp, 3), 
-                          E.5=round(E.5,3), 
-                          round(as.data.frame(t(IaList)), 3),
-                          File=namelist$File))
+                               eMLG=round(N.rare[1, ], 3), 
+                               SE=round(N.rare[2, ], 3),
+                               H=round(H, 3), 
+                               G=round(G,3), 
+                               Hexp=round(Hexp, 3), 
+                               E.5=round(E.5,3), 
+                               round(as.data.frame(t(IaList)), 3),
+                               File=namelist$File))
     rownames(Iout) <- NULL
     return(final(Iout, result))
   }
