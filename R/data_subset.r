@@ -463,21 +463,7 @@ missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
 #'
 #' @export
 #' @examples
-#' data(H3N2)
-#' # Create a new data set combining the population factors of year and country
-#' H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
-#'
-#' # Checking to make sure they were actually combined.
-#' head(H.comb$other$x$year_country)
-#'
-#' # Creating new data frame in the object to mess around with. 
-#' H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
-#' 
-#' # Splitting those factors into their original components and setting the
-#' # population to year.
-#' H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
-#'
-#' # A situation with real data. 
+#' # Method 1: Splitting.
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 #' 
 #' # We have 19 different "populations", but really, there is a hierarchy.
@@ -489,6 +475,22 @@ missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
 #'
 #' # Much better!
 #' Aeut$pop.names
+#' 
+#' Method 2: Combining.
+#' data(H3N2)
+#' # Create a new data set combining the population factors of year and country
+#' H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
+#' 
+#' # Checking to make sure they were actually combined.
+#' head(H.comb$other$x$year_country)
+#' \dontrun{
+#' # Creating new data frame in the object to mess around with. 
+#' H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
+#' 
+#' # Splitting those factors into their original components and setting the
+#' # population to year.
+#' H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
+#' }
 #==============================================================================#
 splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=c(1), setpopulation=TRUE, fixed=TRUE){
   stopifnot(is.genind(pop))
@@ -505,7 +507,7 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
   if(method == 1){
     # Remember, this acts on the first column of the data frame.
     # It will split the population factors in that data frame by sep. 
-    df <- pop.splitter(pop$other[[dfname]], sep=sep)
+    df <- pop_splitter(pop$other[[dfname]], sep=sep)
     
     # This makes sure that the length of the given hierarchy is the same as the
     # hierarchy in the original population factor. It's renaming the original
@@ -560,12 +562,11 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
   
   # Combining !
   else if(method == 2){
-    newdf <- pop.combiner(pop$other[[dfname]], hier=hier, sep=sep)
+    newdf <- pop_combiner(pop$other[[dfname]], hier=hier, sep=sep)
     if(all(is.na(newdf))){
       stop(paste("\n\nError in combining population factors.\nCheck your hier flag and make sure that the columns",paste(hier, collapse=" and "),
                  "exist within the data frame called",dfname,
                  "in the @other slot of your genind object.\n\n"))
-      
     }
     pop$other[[dfname]][[paste(hier, collapse=sep)]] <- newdf
     if(setpopulation){
