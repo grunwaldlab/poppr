@@ -1234,6 +1234,7 @@ Default Command:\\
     \item[clonecorrect -] if this is set to \texttt{TRUE}, then you will need to set the next two parameters.
     \item[hier -] A list of the population hierarchy, or names of columns in the data frame noted below.
     \item[dfname -] A data frame in the \texttt{@other} slot of the \texttt{genind} object containing all of the population factors in different columns. For an example, see sections 2.2 and 2.4.
+    \item[keep -] A vector of integers as indexes for the \texttt{hier} flag indicating which levels of the hierarchy you want to analyze. See section 2.4 for details. 
   \end{description}
   \item \texttt{hist -} if \texttt{TRUE}, a histogram of distributions of $I_A$ and $\bar r_d$ will be displayed with each population if there is sampling.
   \item \texttt{minsamp -} The minimum number of individuals you want to use to calculate the expected number of MLGs. The default is set to 10.
@@ -1407,7 +1408,7 @@ This is calculated over all possible combinations of individuals and results in 
 \item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
 \item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)
-\item clonecorrect(pop, hier=c(1), dfname="population\_hierarchy", combine=FALSE)
+\item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)
 \item shufflepop(pop, method = 1)
 \item mlg(pop, quiet = FALSE)
 \item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -1417,7 +1418,7 @@ This is calculated over all possible combinations of individuals and results in 
 \item bruvo.dist(pop, replen = c(2))
 \item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL)
 \item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), wscale = TRUE, ...)
-\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
+\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
 \end{itemize}
 \bibliographystyle{plain}
 \bibliography{poppr_man}
