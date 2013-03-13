@@ -558,7 +558,8 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     }
     
     # Set the population to the highest level of the hierarchy.
-    if(setpopulation){
+    if(setpopulation == TRUE){
+      hier <- ifelse(is.numeric(hier), as.character(hier), hier)
       pop(pop) <- pop$other[[dfname]][[hier[1]]]
       names(pop$pop.names) <- levels(pop$pop)
     }
@@ -576,7 +577,7 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     # Combining the hierarchy. This will no longer give you numbers as names,
     # rather it will return the names.
     pop$other[[dfname]][[paste(names(pop$other[[dfname]][hier]), collapse=sep)]] <- newdf
-    if(setpopulation){
+    if(setpopulation == TRUE){
       pop(pop) <- newdf
       names(pop$pop.names) <- levels(pop$pop)
     }
