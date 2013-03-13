@@ -551,68 +551,147 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
 
 
-new.clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", 
-                             combine = FALSE, keep = 1){
-  
-  if(!is.genind(pop)){
-    stop("This only works for genind objects")
+new.poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
+                      method=1, missing="ignore", cutoff=0.05, quiet="minimal",
+                      clonecorrect=FALSE, hier=c(1), dfname="population_hierarchy", 
+                      keep = 1, hist=TRUE, minsamp=10){
+  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap")
+  x <- .file.type(pop, missing=missing, cutoff=cutoff, clonecorrect=clonecorrect, 
+                  hier=hier, dfname=dfname, keep=keep, quiet=TRUE)	
+  # The namelist will contain information such as the filename and population
+  # names so that they can easily be ported around.
+  namelist <- NULL
+  callpop <- match.call()
+  if(!is.na(grep("system.file", callpop)[1])){
+    popsplt <- unlist(strsplit(pop, "/"))
+    namelist$File <- popsplt[length(popsplt)]
   }
-  # Checks for data frame in the @other slot. If it's not there, this loop is
-  # initiated.
-  if(is.null(other(pop)[[dfname]])){
-    if(length(hier) == 1 & hier[1] == 1){
-      if(length(levels(pop(pop))) == 1 | is.null(pop(pop))){
-        pop <- pop[.clonecorrector(pop), ]
-        return(pop)
-      }
-      else if(length(levels(pop(pop))) > 1){
-        other(pop)[[dfname]] <- as.data.frame(list(Pop = as.character(pop(pop))))
-        warning(paste("There was no data frame in the 'other' slot called ",
-                      dfname,". One is being created from the population factor.", 
-                      sep=""))
-      }
-    }
-    else{
-      stop(paste("There is no data frame in the 'other' slot called",dfname))
-    }
+  else if(is.genind(pop)){
+    namelist$File <- x$X
   }
-  # Corrects the individual names of the object. This is fo the fact that the
-  # clone corrector relies on the unique individual names for it to work.
-  if(all(pop@ind.names == "")){
-    pop@ind.names <- as.character(1:nInd(pop))
+  else{
+    namelist$File <- basename(x$X)
   }
-  
-  popcall <- pop@call
-  # Combining the population factor by the hierarchy
-  pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier)
-  cpop <- length(pop$pop.names)
-  
-  # Steps for correction:
-  # Subset by population factor.
-  # Run subsetted population by the .clonecorrector
-  # Profit!
-  corWrecked <- function(x, pop){
-    subbed <- popsub(pop, x) # population to be...corrected.
-    subbed <- subbed[.clonecorrector(subbed), ] 
-    # Return the indices based off of the individual names.
-    return(which(pop@ind.names %in% subbed@ind.names))
+  #poplist <- x$POPLIST
+  pop <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
+  poplist <- .pop.divide(pop)
+  # Creating the genotype matrix for vegan's diversity analysis.
+  pop.mat <- mlg.matrix(pop)
+  if (total==TRUE & !is.null(poplist)){
+    poplist$Total <- pop
+    pop.mat <- rbind(pop.mat, colSums(pop.mat))
+  }
+  sublist <- names(poplist)
+  Iout <- NULL
+  result <- NULL
+  origpop <- x$GENIND
+  rm(x)
+  total <- toupper(total)
+  missing <- toupper(missing)
+  type <- pop@type
+  # For presence/absences markers, a different algorithm is applied. 
+  if(type=="PA"){
+    .Ia.Rd <- .PA.Ia.Rd
+  }
+  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
+  # Creating an indicator for multiple subpopulations.
+  # MPI = Multiple Population Indicator
+  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
+  if (is.null(poplist)){
+    MPI <- NULL
+  }
+  else{
+    MPI <- 1
   }
   
-  ccpop <- unlist(lapply(1:cpop, corWrecked, pop))
-  pop <- pop[ccpop, ]
+  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
+  # ANALYSIS OF MULTIPLE POPULATIONS.
+  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,# 
   
-  if(!combine){
-    # When the combine flag is not true, the default is to keep the first level
-    # of the hierarchy. The keep flag is a numeric vector corresponding to the
-    # hier flag indicating which levels the user wants to keep.
-    if(length(keep) > 1){
-      pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
-    }
-    else{
-      pop(pop) <- pop$other[[dfname]][[hier[keep]]]
-    }
-    names(pop$pop.names) <- levels(pop$pop)
+  if (!is.null(MPI)){
+    
+    #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
+    # Calculations start here.
+    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
+    
+    MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
+    N.vec <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)
+    # Shannon-Weiner vegan:::diversity index.
+    H <- vegan:::diversity(pop.mat)
+    # E_1, Pielou's evenness.
+    # J <- H / log(rowSums(pop.mat > 0))
+    # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
+    G <- vegan:::diversity(pop.mat, "inv")
+    Hexp <- (N.vec/(N.vec-1))*vegan:::diversity(pop.mat, "simp")
+    # E_5
+    E.5 <- (G-1)/(exp(H)-1)
+    # rarefaction giving the standard errors. This will use the minimum pop size
+    # above a user-defined threshold.
+    raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
+                      ifelse(min(rowSums(pop.mat)) > minsamp, 
+                             min(rowSums(pop.mat)), minsamp))
+    
+    N.rare <- rarefy(pop.mat, raremax, se=TRUE)
+    IaList <- NULL
+    invisible(lapply(sublist, function(x) 
+      IaList <<- rbind(IaList, 
+                       .ia(poplist[[x]], 
+                           sample=sample, 
+                           method=method, 
+                           quiet=quiet, 
+                           missing=missing, 
+                           namelist=list(File=namelist$File, population = x),
+                           hist=hist
+                       ))))
+    
+    #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
+    # Making the data look pretty.
+    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
+    Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
+                               eMLG=round(N.rare[1, ], 3), 
+                               SE=round(N.rare[2, ], 3), 
+                               H=round(H, 3), 
+                               G=round(G,3),
+                               Hexp=round(Hexp, 3),
+                               E.5=round(E.5,3),
+                               round(IaList, 3),
+                               File=namelist$File))
+    rownames(Iout) <- NULL
+    return(final(Iout, result))
   }
-  pop@call <- popcall
-  return(pop)
+  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
+  # ANALYSIS OF SINGLE POPULATION. This is for if there are no subpopulations to
+  # be analyzed. For details of the functions utilized, see the notes above.
+  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
+  else { 
+    MLG.vec <- mlg(pop, quiet=TRUE)
+    N.vec <- length(pop@ind.names)
+    # Shannon-Weiner vegan:::diversity index.
+    H <- vegan:::diversity(pop.mat)
+    # E_1, Pielou's evenness.
+    # J <- H / log(rowSums(pop.mat > 0))
+    # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
+    G <- vegan:::diversity(pop.mat, "inv")
+    Hexp <- (N.vec/(N.vec-1))*vegan:::diversity(pop.mat, "simp")
+    # E_5
+    E.5 <- (G-1)/(exp(H)-1)
+    # rarefaction giving the standard errors. No population structure means that
+    # the sample is equal to the number of individuals.
+    N.rare <- rarefy(pop.mat, sum(pop.mat), se=TRUE)
+    IaList <- .ia(pop, sample=sample, method=method, quiet=quiet, missing=missing,
+                  namelist=(list(File=namelist$File, population="Total")),
+                  hist=hist)
+    Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
+                               eMLG=round(N.rare[1, ], 3), 
+                               SE=round(N.rare[2, ], 3),
+                               H=round(H, 3), 
+                               G=round(G,3), 
+                               Hexp=round(Hexp, 3), 
+                               E.5=round(E.5,3), 
+                               round(as.data.frame(t(IaList)), 3),
+                               File=namelist$File))
+    rownames(Iout) <- NULL
+    return(final(Iout, result))
+  }
 }
