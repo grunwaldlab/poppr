@@ -503,27 +503,54 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
   if (all((1:2)!=method)) (stop ("Non convenient method number"))
   # Splitting !
   if(method == 1){
+    # Remember, this acts on the first column of the data frame.
+    # It will split the population factors in that data frame by sep. 
     df <- pop.splitter(pop$other[[dfname]], sep=sep)
-    if(length(df)-1 == length(hier)){
+    
+    # This makes sure that the length of the given hierarchy is the same as the
+    # hierarchy in the original population factor. It's renaming the original
+    # factor the population hierarchy separated by sep.
+    # eg. df: Pop_Subpop_Year, Pop, Subpop, Year
+    if(length(df) - 1 == length(hier)){
       names(df) <- c(paste(hier, collapse=sep), hier)
     }
+    
+    # Checking to see if there was only one column in the original data frame
+    # This is necessary to avoid overwriting data.
     if(length(pop$other[[dfname]] == 1)){
       pop$other[[dfname]] <- df
     }
+    
+    # If there are other columns in the data frame, we check to see if any of
+    # the names in the new data frame are the same. 
     else if(any(names(pop$other[[dfname]]) %in% names(df[-1]))){
+      # Removing the combined column. It will remain the same.
       df <- df[-1]
+      # Gathering the index of names that are the same as the split hierarchy.
       dfcols <- which(names(pop$other[[dfname]]) %in% names(df))
+      
+      # All the names are equal, so we replace those columns with the newly
+      # subsetted columns.
       if(length(names(df)) == length(dfcols))
         pop$other[[dfname]][dfcols] <- df
+      
+      # Not all columns match, so you replace the ones that do and then bind
+      # the new ones.
       else{
         popothernames <- which(names(df) %in% names(pop$other[[dfname]][dfcols]))
         pop$other[[dfname]][dfcols] <- df[popothernames]
         pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-dfcols])
       }
     }
+    
+    # If there are no names in the new data frame that match the original,
+    # simply tack the new data frame on to the end. These will have the names
+    # h1, h2, h3, etc.
     else{
       pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-1])
     }
+    
+    # Set the population to the highest level of the hierarchy.
     if(setpopulation){
       pop(pop) <- pop$other[[dfname]][[hier[1]]]
       names(pop$pop.names) <- levels(pop$pop)
@@ -534,6 +561,12 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
   # Combining !
   else if(method == 2){
     newdf <- pop.combiner(pop$other[[dfname]], hier=hier, sep=sep)
+    if(all(is.na(newdf))){
+      stop(paste("\n\nError in combining population factors.\nCheck your hier flag and make sure that the columns",paste(hier, collapse=" and "),
+                 "exist within the data frame called",dfname,
+                 "in the @other slot of your genind object.\n\n"))
+      
+    }
     pop$other[[dfname]][[paste(hier, collapse=sep)]] <- newdf
     if(setpopulation)
       pop(pop) <- newdf
