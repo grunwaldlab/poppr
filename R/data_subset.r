@@ -66,6 +66,12 @@
 #' @param combine \code{logical}. When set to TRUE, the heirarchy will be
 #' combined to create a new population for the genind object.
 #'
+#' @param keep \code{integer}. When \code{combine} is set to \code{FALSE}, you
+#' can use this flag to choose the levels of your population hierarchy. For
+#' example: if your clone correction hierarchy is set to "Pop", "Subpop", and 
+#' "Year", and you want to analyze your populations with respect to year, you 
+#' can set \code{keep = c(1,3)}.
+#' 
 #' @return a clone corrected \code{\link{genind}} object. 
 #' 
 #' @note 
@@ -78,6 +84,30 @@
 #'
 #' @export
 #' @examples
+#' # LOAD A. euteiches data set
+#' data(Aeut)
+#' 
+#' # Check the number of multilocus genotypes
+#' mlg(Aeut)
+#' Aeut$pop.names
+#' 
+#' # Clone correct at the population level.
+#' Aeut.pop <- clonecorrect(Aeut, hier="Pop")
+#' mlg(Aeut.pop)
+#' Aeut.pop$pop.names
+#' 
+#' # Clone correct at the subpopulation level with respect to population and
+#' # combine.
+#' Aeut.subpop <- clonecorrect(Aeut, hier=c("Pop", "Subpop"), combine=TRUE)
+#' mlg(Aeut.subpop)
+#' Aeut.subpop$pop.names
+#' 
+#' # Do the same, but set to the population level.
+#' Aeut.subpop2 <- clonecorrect(Aeut, hier=c("Pop", "Subpop"), keep=1)
+#' mlg(Aeut.subpop2)
+#' Aeut.subpop2$pop.names
+#' 
+#' \dontrun{
 #' # LOAD H3N2 dataset
 #' data(H3N2)
 #'
@@ -90,7 +120,6 @@
 #' # How many unique isolates from China after clone correction?
 #' length(which(other(country)$x$country=="China")) # 79
 #' 
-#' \dontrun{
 #' # Something a little more complicated. (This could take a few minutes on
 #' # slower computers)
 #'
@@ -105,7 +134,9 @@
 #' }
 #==============================================================================#
 
-clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", combine=FALSE){
+clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", 
+                         combine = FALSE, keep = 1){
+  
   if(!is.genind(pop)){
     stop("This only works for genind objects")
   }
@@ -153,10 +184,16 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", combine=
   ccpop <- unlist(lapply(1:cpop, corWrecked, pop))
   pop <- pop[ccpop, ]
   
-  # If the user did not set the combine flag, then the function returns the
-  # first level of the hierarchy.
   if(!combine){
-    pop(pop) <- pop$other[[dfname]][[hier[1]]]
+    # When the combine flag is not true, the default is to keep the first level
+    # of the hierarchy. The keep flag is a numeric vector corresponding to the
+    # hier flag indicating which levels the user wants to keep.
+    if(length(keep) > 1){
+      pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
+    }
+    else{
+      pop(pop) <- pop$other[[dfname]][[hier[keep]]]
+    }
     names(pop$pop.names) <- levels(pop$pop)
   }
   pop@call <- popcall
