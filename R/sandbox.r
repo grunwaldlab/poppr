@@ -601,10 +601,16 @@ new.clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
   ccpop <- unlist(lapply(1:cpop, corWrecked, pop))
   pop <- pop[ccpop, ]
   
-  # If the user did not set the combine flag, then the function returns the
-  # first level of the hierarchy.
   if(!combine){
-    pop(pop) <- pop$other[[dfname]][[hier[1]]]
+    # When the combine flag is not true, the default is to keep the first level
+    # of the hierarchy. The keep flag is a numeric vector corresponding to the
+    # hier flag indicating which levels the user wants to keep.
+    if(length(keep) > 1){
+      pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
+    }
+    else{
+      pop(pop) <- pop$other[[dfname]][[hier[keep]]]
+    }
     names(pop$pop.names) <- levels(pop$pop)
   }
   pop@call <- popcall
