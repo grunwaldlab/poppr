@@ -516,7 +516,12 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     if(length(df) - 1 == length(hier)){
       names(df) <- c(paste(hier, collapse=sep), hier)
     }
-    
+    # In the case that the number of columns added to the new df is the same
+    # as the number of hierarchies specified.
+    else if(length(df) - length(hier) == length(pop$other[[dfname]]) ){
+      names(df)[(length(df) - length(hier) + 1):length(df)] <- hier
+    }
+
     # Checking to see if there was only one column in the original data frame
     # This is necessary to avoid overwriting data.
     if(length(pop$other[[dfname]] == 1)){
@@ -548,7 +553,7 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     # If there are no names in the new data frame that match the original,
     # simply tack the new data frame on to the end. These will have the names
     # h1, h2, h3, etc.
-    else{
+    else{  
       pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-1])
     }
     
