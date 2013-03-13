@@ -58,21 +58,7 @@
   first column of your data frame.
 }
 \examples{
-data(H3N2)
-# Create a new data set combining the population factors of year and country
-H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
-
-# Checking to make sure they were actually combined.
-head(H.comb$other$x$year_country)
-
-# Creating new data frame in the object to mess around with.
-H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
-
-# Splitting those factors into their original components and setting the
-# population to year.
-H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
-
-# A situation with real data.
+# Method 1: Splitting.
 Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 
 # We have 19 different "populations", but really, there is a hierarchy.
@@ -84,5 +70,22 @@ Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
 
 # Much better!
 Aeut$pop.names
+
+# Method 2: Combining.
+
+data(H3N2)
+# Create a new data set combining the population factors of year and country
+H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
+
+# Checking to make sure they were actually combined.
+head(H.comb$other$x$year_country)
+\dontrun{
+# Creating new data frame in the object to mess around with.
+H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
+
+# Splitting those factors into their original components and setting the
+# population to year.
+H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
+}
 }
 

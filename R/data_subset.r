@@ -476,7 +476,8 @@ missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
 #' # Much better!
 #' Aeut$pop.names
 #' 
-#' Method 2: Combining.
+#' # Method 2: Combining.
+#' 
 #' data(H3N2)
 #' # Create a new data set combining the population factors of year and country
 #' H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
