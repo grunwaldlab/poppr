@@ -347,7 +347,7 @@ ia.pval <- function(index="index", sampled, observed){
 # # none
 #==============================================================================#
 
-pop.splitter <- function(df, sep="_"){
+pop_splitter <- function(df, sep="_"){
   if(is.vector(df))
     df <- as.data.frame(list(comb=df), stringsAsFactors=FALSE)
   if(is.factor(df[[1]]))
@@ -374,7 +374,7 @@ pop.splitter <- function(df, sep="_"){
 # # none
 #==============================================================================#
 
-pop.combiner <- function(df, hier=c(1), sep="_"){
+pop_combiner <- function(df, hier=c(1), sep="_"){
   if(!is.list(df)){
     warning("df must be a data frame or a list")
     return(df)
@@ -386,7 +386,7 @@ pop.combiner <- function(df, hier=c(1), sep="_"){
     else{
       comb <- vector(length=length(df[[hier[1]]]))
       comb <- df[[hier[1]]]
-      sapply(hier[-1], function(x) comb <<- paste(comb, df[[x]], sep=sep))
+      lapply(hier[-1], function(x) comb <<- paste(comb, df[[x]], sep=sep))
       return(comb)
     }
   }
