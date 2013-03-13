@@ -659,19 +659,20 @@ And that, is how you subset your data with poppr!
 \tab\tab This function will return a clone corrected data set corrected for the lowest population level. Population levels are specified with the \texttt{hier} flag. You can choose to combine the population hierarchy to analyze at the lowest population level by choosing \texttt{combine = TRUE}.
 \begin{quote}
 Default Command:\\
-\texttt{clonecorrect(pop, hier=c(1), dfname="population\_hierarchy", combine=FALSE)}
+\texttt{clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object that has a population hierarchy data frame in the \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily require a population factor to begin with. 
   \item \texttt{hier -} This can be a vector of words or numbers referring to specific column names in your data frame in the \texttt{@other} slot.
   \item \texttt{dfname -} The name of a data frame you have in the \texttt{@other} slot with the population factors.
-  \item \texttt{combine -} Do you want to combine the population hierarchy? If it's set to \texttt{FALSE}, you will be returned a genind object with the top most hierarchical level as a population factor. 
+  \item \texttt{combine -} Do you want to combine the population hierarchy? If it's set to \texttt{FALSE} (default), you will be returned a genind object with the top most hierarchical level as a population factor. 
+  \item \texttt{keep -} This flag is to be used if you set \texttt{combine = FALSE}. This will tell clone correct to return a specific combination of your hierarchy. For example, imagine a hierarchy that needs to be clone corrected at three levels: \textit{Population} by \textit{Year} by \textit{Month}. If you wanted to only run an analysis on the \textit{Population} level, you would set \texttt{keep = 1} since \textit{Population} is the first level of the hierarchy. On the other hand, if you wanted to run analysis on \textit{Year} by \textit{Month}, you would set \texttt{keep = 2:3} since those are the second and third levels of the hierarchy. Notice that I am not including the options \texttt{dfname} and \texttt{combine} because the default arguments suit my needs.
 \end{itemize}
 
-Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} data since that data set is known to include clonal populations. \cite{Grunwald:2006}
+Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} data since that data set is known to include clonal populations \cite{Grunwald:2006}.
 <<clonecorrect>>=
 data(Aeut)
-A.cc <- clonecorrect(Aeut,  hier=c("Pop", "Subpop"), dfname="population_hierarchy", combine=FALSE)
+A.cc <- clonecorrect(Aeut,  hier=c("Pop", "Subpop"), keep=1)
 poppr(A.cc, quiet=TRUE)
 @
 Now let's compare the clone corrected analysis to the uncorrected data set:
@@ -680,6 +681,7 @@ poppr(Aeut, quiet=TRUE)
 @
 
 As you can see from the summary tables, everything all sub-populations have been clone censored to the sub population level with respect to the population hierarchy. Notice how the observed number of individuals \texttt{(N)} decreases in the clone corrected data set.
+
 \subsection{Every day I'm shuffling (data sets)  \{permutations and bootstrap resampling\}}
 
 \tab\tab A common null hypothesis for populations with mixed reproductive modes is panmixia, or to put it simply: lots of sex. A handy way to test for that is permutation analysis to assess random linkage among loci whereupon you randomly shuffle your data. \textit{Poppr} uses randomly shuffled data sets in order to calculate P-values for the index of association ($I_A$ and $\bar r_d$) \cite{Agapow:2001}. Since there might be other tests where a permutation analysis would be pertinent, a shuffler for \texttt{genind} objects was created with four shuffling schemes: two schemes shuffling without replacement and two shuffling with replacement. Details below.
