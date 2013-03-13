@@ -551,7 +551,9 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
 
 
-new.clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", combine=FALSE){
+new.clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", 
+                             combine = FALSE, keep = 1){
+  
   if(!is.genind(pop)){
     stop("This only works for genind objects")
   }
