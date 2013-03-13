@@ -568,7 +568,9 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
                  "exist within the data frame called",dfname,
                  "in the @other slot of your genind object.\n\n"))
     }
-    pop$other[[dfname]][[paste(hier, collapse=sep)]] <- newdf
+    # Combining the hierarchy. This will no longer give you numbers as names,
+    # rather it will return the names.
+    pop$other[[dfname]][[paste(names(pop$other[[dfname]][hier]), collapse=sep)]] <- newdf
     if(setpopulation){
       pop(pop) <- newdf
       names(pop$pop.names) <- levels(pop$pop)
