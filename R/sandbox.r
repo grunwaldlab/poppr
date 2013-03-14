@@ -574,11 +574,18 @@ new.poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sampl
     namelist$File <- basename(x$X)
   }
   #poplist <- x$POPLIST
-  pop <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
-  poplist <- .pop.divide(pop)
+  if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
+    pop(pop) <- NULL
+    poplist <- NULL
+    poplist$Total <- pop
+  }
+  else{
+    pop <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
+    poplist <- .pop.divide(pop)
+  }
   # Creating the genotype matrix for vegan's diversity analysis.
   pop.mat <- mlg.matrix(pop)
-  if (total==TRUE & !is.null(poplist)){
+  if (total==TRUE & !is.null(poplist) & length(poplist) > 1){
     poplist$Total <- pop
     pop.mat <- rbind(pop.mat, colSums(pop.mat))
   }
