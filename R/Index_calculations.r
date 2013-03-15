@@ -190,6 +190,7 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
   }
   #poplist <- x$POPLIST
   if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
+    pop <- x$GENIND
     pop(pop) <- NULL
     poplist <- NULL
     poplist$Total <- pop
