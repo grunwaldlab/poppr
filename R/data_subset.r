@@ -138,8 +138,14 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
                          combine = FALSE, keep = 1){
   
   if(!is.genind(pop)){
-    stop("This only works for genind objects")
+    stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
   }
+  
+  popcall <- pop@call
+  if (is.na(hier[1])){
+    return(pop[.clonecorrector(pop), ])
+  }
+  
   # Checks for data frame in the @other slot. If it's not there, this loop is
   # initiated.
   if(is.null(other(pop)[[dfname]])){
@@ -150,13 +156,15 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
       }
       else if(length(levels(pop(pop))) > 1){
         other(pop)[[dfname]] <- as.data.frame(list(Pop = as.character(pop(pop))))
-        warning(paste("There was no data frame in the 'other' slot called ",
-                      dfname,". One is being created from the population factor.", 
-                      sep=""))
+        warning(paste("There is no data frame in ",
+                      paste(substitute(pop), collapse=""), 
+                      "@other called ",dfname,
+                      ".\nOne is being created from the population factor.", sep=""))
       }
     }
     else{
-      stop(paste("There is no data frame in the 'other' slot called",dfname))
+      stop(paste("There is no data frame in ",paste(substitute(pop), collapse=""), 
+                 "@other called ",dfname,".\n", sep=""))
     }
   }
   # Corrects the individual names of the object. This is fo the fact that the
@@ -165,7 +173,6 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
     pop@ind.names <- as.character(1:nInd(pop))
   }
   
-  popcall <- pop@call
   # Combining the population factor by the hierarchy
   pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier)
   cpop <- length(pop$pop.names)
@@ -531,8 +538,12 @@ missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
 #' }
 #==============================================================================#
 splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=c(1), setpopulation=TRUE, fixed=TRUE){
-  stopifnot(is.genind(pop))
-  stopifnot(is.data.frame(pop$other[[dfname]]))
+  if (!is.genind(pop)){
+    stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
+  }
+  if (!is.data.frame(pop$other[[dfname]])){
+    stop(paste("There is no data frame in ",paste(substitute(pop), collapse=""), "@other called ",dfname,".\n", sep=""))
+  }
   METHODS = c("Split", "Combine")
   if (all((1:2)!=method)) {
     cat("1 = Split\n")
