@@ -92,19 +92,19 @@ permut.histogram <- function(sampled, observed, pval, pop="pop", file="file"){
   permut.histogram.maker(index="rbarD",sampled,observed[2],pop)
 }
 
-poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
-                    observed = observed, file="file", N=NA){
-#   if (!is.na(pval[1])){
-#     pval[1] <- ifelse(pval[1]==0, sprintf("< %g", 1/length(sample[["Ia"]])), pval[1])
-#   }
-#   if (!is.na(pval[2])){
-#     pval[2] <- ifelse(pval[2]==0, sprintf("< %g", 1/length(sample[["rbarD"]])), pval[2])
-#   }
+.poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
+                        observed = observed, file="file", N=NA){
+  #   if (!is.na(pval[1])){
+  #     pval[1] <- ifelse(pval[1]==0, sprintf("< %g", 1/length(sample[["Ia"]])), pval[1])
+  #   }
+  #   if (!is.na(pval[2])){
+  #     pval[2] <- ifelse(pval[2]==0, sprintf("< %g", 1/length(sample[["rbarD"]])), pval[2])
+  #   }
   #````````````````````````````````````````````````````````````````````````````#
   # In the case that the sample contains all NaNs, a graph cannot be displayed.
   # In place of the graph will be an orange box with a warning message.
   #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-
+  
   if (all(is.nan(sample$rbarD))){
     warning(paste("The data from ",file,", population: ",pop," contains only missing values and cannot be displayed graphically", sep=""))
     background_stuff <- theme(panel.grid.major.y = element_line(size=0)) +
@@ -122,10 +122,10 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
       geom_histogram(binwidth=1, fill="orange") + 
       geom_text(aes(label="Warning:", x=0, y=0.8), color="black", size=rel(15)) + 
       geom_text(aes(label="Data contains only NaNs and\ncannot be displayed graphically", 
-        x=0, y=0.5, hjust=0.5), color="black", size=rel(10)) +
+                    x=0, y=0.5, hjust=0.5), color="black", size=rel(10)) +
       labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-			  length(sample$Ia), "\nFile: ", file, sep="")) + 
-  	  theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
+                       length(sample$Ia), "\nFile: ", file, sep="")) + 
+      theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
       background_stuff
     print(oops)
   }
@@ -137,93 +137,92 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
       sample$rbarD[which(is.nan(sample$rbarD))] <- mean(sample$rbarD, na.rm=TRUE)
     if(any(is.nan(sample$Ia)))
       sample$Ia[which(is.nan(sample$Ia))] <- mean(sample$Ia, na.rm=TRUE)
-
-	  # Transforming the data into a data frame that ggplot can understand and put
-	  # into facets. It will have the following rows: Value, Index, and Quant.
-
-	  infodata <- as.data.frame(list(Value=c(sample$Ia, sample$rbarD), 
-		  Index=rep(c("Ia","rbarD"), each=length(sample$Ia))))
-
-	  # Setting up the observed values for formatting the overlaying lines.
-	  # It will have the following rows: Observed, Index, Quant, Sam, P, min, max
-
-	  obsdata <- data.frame(list(Observed=observed[1:2], Index=c("Ia","rbarD")))
-	  obsdata$P <- pval
-	  obsdata$median <- c(median(unlist(subset(infodata,Index="Ia",select=Value))), 
-      median(unlist(subset(infodata,Index="rbarD",select=Value))))
+    
+    # Transforming the data into a data frame that ggplot can understand and put
+    # into facets. It will have the following rows: Value, Index, and Quant.
+    Indexfac <- factor(1:2, levels=1:2, labels=c("I[A]","bar(r)[D]"))
+    infodata <- as.data.frame(list(Value=c(sample$Ia, sample$rbarD), 
+                                   Index=rep(Indexfac, each=length(sample$Ia))))
+    
+    # Setting up the observed values for formatting the overlaying lines.
+    # It will have the following rows: Observed, Index, Quant, Sam, P, min, max
+    
+    obsdata <- data.frame(list(Observed=observed[1:2], Index=Indexfac))
+    obsdata$P <- pval
+    obsdata$median <- c(median(unlist(subset(infodata,Index=Indexfac[1],select=Value))), 
+                        median(unlist(subset(infodata,Index=Indexfac[2],select=Value))))
     if(any(is.na(observed))){
       warning(paste("The Index of Association values from ",file,", population: ",pop," contain missing values and cannot be displayed graphically", sep=""))
-	    derp <- ggplot(infodata, aes(Value)) + 
-		    # Giving the data over to the histogram creating function and removing
-		    # all of the lines from each bar, so it's displayed as a solid area.
-		    geom_histogram(linetype="blank", alpha=0.8, 
-          data=subset(infodata, Index=="Ia"), 
-          position="identity",
-          binwidth=diff(range(subset(infodata, Index=="Ia", select=Value)))/30) + 
+      derp <- ggplot(infodata, aes(Value)) + 
+        # Giving the data over to the histogram creating function and removing
+        # all of the lines from each bar, so it's displayed as a solid area.
         geom_histogram(linetype="blank", alpha=0.8, 
-          data=subset(infodata, Index=="rbarD"), 
-          position="identity",
-          binwidth=diff(range(subset(infodata,Index=="rbarD",select=Value)))/30) + 
-
-		    # The label for the observed line is a bit more difficult to code as
-		    # it has the ability to appear anywhere on the chart. Here, I'm
-		    # forcing it to flip to one side or the other based on which side of
-		    # the mean that the observed value falls on.
-		    geom_text(aes(label=paste("Observed: ",Observed,sep=""), 
-			    x=0,y=Inf,vjust=1.5),
-          data=obsdata, angle=0, color="red") + 
-
-		    # Splitting the data into separate plots with free x-axes.
-		    facet_grid(.~Index, scales="free_x") +
-
-		    # Title of the plot.
-		    labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-			    length(sample$Ia), "\nFile: ", file, sep="")) + 
+                       data=subset(infodata, Index==Indexfac[1]), 
+                       position="identity",
+                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
+        geom_histogram(linetype="blank", alpha=0.8, 
+                       data=subset(infodata, Index==Indexfac[2]), 
+                       position="identity",
+                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
+        
+        # The label for the observed line is a bit more difficult to code as
+        # it has the ability to appear anywhere on the chart. Here, I'm
+        # forcing it to flip to one side or the other based on which side of
+        # the mean that the observed value falls on.
+        geom_text(aes(label=paste("Observed: ",Observed,sep=""), 
+                      x=0,y=Inf,vjust=1.5),
+                  data=obsdata, angle=0, color="red") + 
+        
+        # Splitting the data into separate plots with free x-axes.
+        facet_grid(.~Index, scales="free_x", labeller=label_parsed) +
+        
+        # Title of the plot.
+        labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
+                         length(sample$Ia), "\nFile: ", file, sep="")) + 
         theme_classic() %+replace%
-      	theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-		    theme(panel.background = element_rect(fill="grey98")) +
-
-		    # Making the Index titles bigger. 
-		    theme(strip.text.x = element_text(size=rel(3), face="bold"))
+        theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
+        theme(panel.background = element_rect(fill="grey98")) +
+        
+        # Making the Index titles bigger. 
+        theme(strip.text.x = element_text(size=rel(3), face="bold"))
     }
     else{
       derp <- ggplot(infodata, aes(Value)) + 
-		  # Giving the data over to the histogram creating function and removing
-		  # all of the lines from each bar, so it's displayed as a solid area.
-		  geom_histogram(linetype="blank", alpha=0.8, 
-        data=subset(infodata, Index=="Ia"), 
-        position="identity",
-        binwidth=diff(range(subset(infodata, Index=="Ia", select=Value)))/30) + 
-      geom_histogram(linetype="blank", alpha=0.8, 
-        data=subset(infodata, Index=="rbarD"), 
-        position="identity",
-        binwidth=diff(range(subset(infodata,Index=="rbarD",select=Value)))/30) + 
-		  # Positioning the observed line and labeling it.
-		  geom_vline(aes(xintercept=Observed), data=obsdata, color="blue", 
-			  show_guide=TRUE, linetype="dashed") +
-
-		  # The label for the observed line is a bit more difficult to code as
-		  # it has the ability to appear anywhere on the chart. Here, I'm
-		  # forcing it to flip to one side or the other based on which side of
-		  # the mean that the observed value falls on.
-		  geom_text(aes(label=paste("Observed \n(p-value: ", P,")",sep=""), 
-			  x=Observed,y=Inf,vjust=2,hjust=ifelse(Observed > median, 1.01, -0.01)),
-        data=obsdata, angle=0, color="blue") + 
-
-		  # Splitting the data into separate plots with free x-axes.
-		  facet_grid(.~Index, scales="free_x") +
-
-		  # Title of the plot.
-		  labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-			  length(sample$Ia), "\nFile: ", file, sep="")) + 
-      theme_classic() %+replace%
-    	theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-		  theme(panel.background = element_rect(fill="grey98")) +
-
-		  # Making the Index titles bigger. 
-		  theme(strip.text.x = element_text(size=rel(3), face="bold"))
+        # Giving the data over to the histogram creating function and removing
+        # all of the lines from each bar, so it's displayed as a solid area.
+        geom_histogram(linetype="blank", alpha=0.8, 
+                       data=subset(infodata, Index==Indexfac[1]), 
+                       position="identity",
+                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
+        geom_histogram(linetype="blank", alpha=0.8, 
+                       data=subset(infodata, Index==Indexfac[2]), 
+                       position="identity",
+                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
+        # Positioning the observed line and labeling it.
+        geom_vline(aes(xintercept=Observed), data=obsdata, color="blue", 
+                   show_guide=TRUE, linetype="dashed") +
+        
+        # The label for the observed line is a bit more difficult to code as
+        # it has the ability to appear anywhere on the chart. Here, I'm
+        # forcing it to flip to one side or the other based on which side of
+        # the mean that the observed value falls on.
+        geom_text(aes(label=paste("Observed \n(p-value: ", P,")",sep=""), 
+                      x=Observed,y=Inf,vjust=2,hjust=ifelse(Observed > median, 1.01, -0.01)),
+                  data=obsdata, angle=0, color="blue") + 
+        
+        # Splitting the data into separate plots with free x-axes.
+        facet_grid(.~Index, scales="free_x", labeller=label_parsed) +
+        
+        # Title of the plot.
+        labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
+                         length(sample$Ia), "\nFile: ", file, sep="")) + 
+        theme_classic() %+replace%
+        theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
+        theme(panel.background = element_rect(fill="grey98")) +
+        
+        # Making the Index titles bigger. 
+        theme(strip.text.x = element_text(size=rel(3), face="bold"))
     }
-	  print(derp)
+    print(derp)
   }
 } 
-

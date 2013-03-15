@@ -551,154 +551,138 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
 
 
-new.poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
-                      method=1, missing="ignore", cutoff=0.05, quiet="minimal",
-                      clonecorrect=FALSE, hier=c(1), dfname="population_hierarchy", 
-                      keep = 1, hist=TRUE, minsamp=10){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-              "non-parametric bootstrap")
-  x <- .file.type(pop, missing=missing, cutoff=cutoff, clonecorrect=clonecorrect, 
-                  hier=hier, dfname=dfname, keep=keep, quiet=TRUE)	
-  # The namelist will contain information such as the filename and population
-  # names so that they can easily be ported around.
-  namelist <- NULL
-  callpop <- match.call()
-  if(!is.na(grep("system.file", callpop)[1])){
-    popsplt <- unlist(strsplit(pop, "/"))
-    namelist$File <- popsplt[length(popsplt)]
-  }
-  else if(is.genind(pop)){
-    namelist$File <- x$X
-  }
-  else{
-    namelist$File <- basename(x$X)
-  }
-  #poplist <- x$POPLIST
-  if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
-    pop(pop) <- NULL
-    poplist <- NULL
-    poplist$Total <- pop
-  }
-  else{
-    pop <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
-    poplist <- .pop.divide(pop)
-  }
-  # Creating the genotype matrix for vegan's diversity analysis.
-  pop.mat <- mlg.matrix(pop)
-  if (total==TRUE & !is.null(poplist) & length(poplist) > 1){
-    poplist$Total <- pop
-    pop.mat <- rbind(pop.mat, colSums(pop.mat))
-  }
-  sublist <- names(poplist)
-  Iout <- NULL
-  result <- NULL
-  origpop <- x$GENIND
-  rm(x)
-  total <- toupper(total)
-  missing <- toupper(missing)
-  type <- pop@type
-  # For presence/absences markers, a different algorithm is applied. 
-  if(type=="PA"){
-    .Ia.Rd <- .PA.Ia.Rd
-  }
-  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-  # Creating an indicator for multiple subpopulations.
-  # MPI = Multiple Population Indicator
+new.poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
+                       observed = observed, file="file", N=NA){
+  #   if (!is.na(pval[1])){
+  #     pval[1] <- ifelse(pval[1]==0, sprintf("< %g", 1/length(sample[["Ia"]])), pval[1])
+  #   }
+  #   if (!is.na(pval[2])){
+  #     pval[2] <- ifelse(pval[2]==0, sprintf("< %g", 1/length(sample[["rbarD"]])), pval[2])
+  #   }
+  #````````````````````````````````````````````````````````````````````````````#
+  # In the case that the sample contains all NaNs, a graph cannot be displayed.
+  # In place of the graph will be an orange box with a warning message.
   #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-  if (is.null(poplist)){
-    MPI <- NULL
-  }
-  else{
-    MPI <- 1
-  }
   
-  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-  # ANALYSIS OF MULTIPLE POPULATIONS.
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,# 
-  
-  if (!is.null(MPI)){
-    
-    #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-    # Calculations start here.
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-    
-    MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
-    N.vec <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)
-    # Shannon-Weiner vegan:::diversity index.
-    H <- vegan:::diversity(pop.mat)
-    # E_1, Pielou's evenness.
-    # J <- H / log(rowSums(pop.mat > 0))
-    # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-    G <- vegan:::diversity(pop.mat, "inv")
-    Hexp <- (N.vec/(N.vec-1))*vegan:::diversity(pop.mat, "simp")
-    # E_5
-    E.5 <- (G-1)/(exp(H)-1)
-    # rarefaction giving the standard errors. This will use the minimum pop size
-    # above a user-defined threshold.
-    raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
-                      ifelse(min(rowSums(pop.mat)) > minsamp, 
-                             min(rowSums(pop.mat)), minsamp))
-    
-    N.rare <- rarefy(pop.mat, raremax, se=TRUE)
-    IaList <- NULL
-    invisible(lapply(sublist, function(x) 
-      IaList <<- rbind(IaList, 
-                       .ia(poplist[[x]], 
-                           sample=sample, 
-                           method=method, 
-                           quiet=quiet, 
-                           missing=missing, 
-                           namelist=list(File=namelist$File, population = x),
-                           hist=hist
-                       ))))
-    
-    #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-    # Making the data look pretty.
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-    Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
-                               eMLG=round(N.rare[1, ], 3), 
-                               SE=round(N.rare[2, ], 3), 
-                               H=round(H, 3), 
-                               G=round(G,3),
-                               Hexp=round(Hexp, 3),
-                               E.5=round(E.5,3),
-                               round(IaList, 3),
-                               File=namelist$File))
-    rownames(Iout) <- NULL
-    return(final(Iout, result))
+  if (all(is.nan(sample$rbarD))){
+    warning(paste("The data from ",file,", population: ",pop," contains only missing values and cannot be displayed graphically", sep=""))
+    background_stuff <- theme(panel.grid.major.y = element_line(size=0)) +
+      theme(panel.grid.minor.y = element_line(size=0)) +
+      theme(panel.grid.major.x = element_line(size=0)) +
+      theme(panel.background = element_rect(fill="grey95")) +
+      #theme(plot.background = element_rect(size=1, color="black")) +
+      theme(axis.ticks.y = element_line(size=0)) +
+      theme(axis.text.y = element_text(size=0)) +
+      theme(axis.ticks.x = element_line(size=0)) +
+      theme(axis.text.x = element_text(size=0)) +
+      theme(axis.title.y = element_text(size=rel(0)))+
+      theme(axis.title.x = element_text(size=rel(0)))
+    oops <- ggplot(as.data.frame(list(x=-10:9)), aes(x)) + 
+      geom_histogram(binwidth=1, fill="orange") + 
+      geom_text(aes(label="Warning:", x=0, y=0.8), color="black", size=rel(15)) + 
+      geom_text(aes(label="Data contains only NaNs and\ncannot be displayed graphically", 
+                    x=0, y=0.5, hjust=0.5), color="black", size=rel(10)) +
+      labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
+                       length(sample$Ia), "\nFile: ", file, sep="")) + 
+      theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
+      background_stuff
+    print(oops)
   }
-  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-  # ANALYSIS OF SINGLE POPULATION. This is for if there are no subpopulations to
-  # be analyzed. For details of the functions utilized, see the notes above.
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-  else { 
-    MLG.vec <- mlg(pop, quiet=TRUE)
-    N.vec <- length(pop@ind.names)
-    # Shannon-Weiner vegan:::diversity index.
-    H <- vegan:::diversity(pop.mat)
-    # E_1, Pielou's evenness.
-    # J <- H / log(rowSums(pop.mat > 0))
-    # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-    G <- vegan:::diversity(pop.mat, "inv")
-    Hexp <- (N.vec/(N.vec-1))*vegan:::diversity(pop.mat, "simp")
-    # E_5
-    E.5 <- (G-1)/(exp(H)-1)
-    # rarefaction giving the standard errors. No population structure means that
-    # the sample is equal to the number of individuals.
-    N.rare <- rarefy(pop.mat, sum(pop.mat), se=TRUE)
-    IaList <- .ia(pop, sample=sample, method=method, quiet=quiet, missing=missing,
-                  namelist=(list(File=namelist$File, population="Total")),
-                  hist=hist)
-    Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
-                               eMLG=round(N.rare[1, ], 3), 
-                               SE=round(N.rare[2, ], 3),
-                               H=round(H, 3), 
-                               G=round(G,3), 
-                               Hexp=round(Hexp, 3), 
-                               E.5=round(E.5,3), 
-                               round(as.data.frame(t(IaList)), 3),
-                               File=namelist$File))
-    rownames(Iout) <- NULL
-    return(final(Iout, result))
+  else {
+    #``````````````````````````````````````````````````````````````````````````#
+    # Normal Cases
+    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
+    if(any(is.nan(sample$rbarD)))
+      sample$rbarD[which(is.nan(sample$rbarD))] <- mean(sample$rbarD, na.rm=TRUE)
+    if(any(is.nan(sample$Ia)))
+      sample$Ia[which(is.nan(sample$Ia))] <- mean(sample$Ia, na.rm=TRUE)
+    
+    # Transforming the data into a data frame that ggplot can understand and put
+    # into facets. It will have the following rows: Value, Index, and Quant.
+    Indexfac <- factor(1:2, levels=1:2, labels=c("I[A]","bar(r)[D]"))
+    infodata <- as.data.frame(list(Value=c(sample$Ia, sample$rbarD), 
+                                   Index=rep(Indexfac, each=length(sample$Ia))))
+    
+    # Setting up the observed values for formatting the overlaying lines.
+    # It will have the following rows: Observed, Index, Quant, Sam, P, min, max
+    
+    obsdata <- data.frame(list(Observed=observed[1:2], Index=Indexfac))
+    obsdata$P <- pval
+    obsdata$median <- c(median(unlist(subset(infodata,Index=Indexfac[1],select=Value))), 
+                        median(unlist(subset(infodata,Index=Indexfac[2],select=Value))))
+    if(any(is.na(observed))){
+      warning(paste("The Index of Association values from ",file,", population: ",pop," contain missing values and cannot be displayed graphically", sep=""))
+      derp <- ggplot(infodata, aes(Value)) + 
+        # Giving the data over to the histogram creating function and removing
+        # all of the lines from each bar, so it's displayed as a solid area.
+        geom_histogram(linetype="blank", alpha=0.8, 
+                       data=subset(infodata, Index==Indexfac[1]), 
+                       position="identity",
+                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
+        geom_histogram(linetype="blank", alpha=0.8, 
+                       data=subset(infodata, Index==Indexfac[2]), 
+                       position="identity",
+                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
+        
+        # The label for the observed line is a bit more difficult to code as
+        # it has the ability to appear anywhere on the chart. Here, I'm
+        # forcing it to flip to one side or the other based on which side of
+        # the mean that the observed value falls on.
+        geom_text(aes(label=paste("Observed: ",Observed,sep=""), 
+                      x=0,y=Inf,vjust=1.5),
+                  data=obsdata, angle=0, color="red") + 
+        
+        # Splitting the data into separate plots with free x-axes.
+        facet_grid(.~Index, scales="free_x", labeller=label_parsed) +
+        
+        # Title of the plot.
+        labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
+                         length(sample$Ia), "\nFile: ", file, sep="")) + 
+        theme_classic() %+replace%
+        theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
+        theme(panel.background = element_rect(fill="grey98")) +
+        
+        # Making the Index titles bigger. 
+        theme(strip.text.x = element_text(size=rel(3), face="bold"))
+    }
+    else{
+      derp <- ggplot(infodata, aes(Value)) + 
+        # Giving the data over to the histogram creating function and removing
+        # all of the lines from each bar, so it's displayed as a solid area.
+        geom_histogram(linetype="blank", alpha=0.8, 
+                       data=subset(infodata, Index==Indexfac[1]), 
+                       position="identity",
+                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
+        geom_histogram(linetype="blank", alpha=0.8, 
+                       data=subset(infodata, Index==Indexfac[2]), 
+                       position="identity",
+                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
+        # Positioning the observed line and labeling it.
+        geom_vline(aes(xintercept=Observed), data=obsdata, color="blue", 
+                   show_guide=TRUE, linetype="dashed") +
+        
+        # The label for the observed line is a bit more difficult to code as
+        # it has the ability to appear anywhere on the chart. Here, I'm
+        # forcing it to flip to one side or the other based on which side of
+        # the mean that the observed value falls on.
+        geom_text(aes(label=paste("Observed \n(p-value: ", P,")",sep=""), 
+                      x=Observed,y=Inf,vjust=2,hjust=ifelse(Observed > median, 1.01, -0.01)),
+                  data=obsdata, angle=0, color="blue") + 
+        
+        # Splitting the data into separate plots with free x-axes.
+        facet_grid(.~Index, scales="free_x", labeller=label_parsed) +
+        
+        # Title of the plot.
+        labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
+                         length(sample$Ia), "\nFile: ", file, sep="")) + 
+        theme_classic() %+replace%
+        theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
+        theme(panel.background = element_rect(fill="grey98")) +
+        
+        # Making the Index titles bigger. 
+        theme(strip.text.x = element_text(size=rel(3), face="bold"))
+    }
+    print(derp)
   }
-}
+  return(derp)
+} 
