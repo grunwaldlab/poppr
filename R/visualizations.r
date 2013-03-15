@@ -92,7 +92,7 @@ permut.histogram <- function(sampled, observed, pval, pop="pop", file="file"){
   permut.histogram.maker(index="rbarD",sampled,observed[2],pop)
 }
 
-.poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
+poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
                         observed = observed, file="file", N=NA){
   #   if (!is.na(pval[1])){
   #     pval[1] <- ifelse(pval[1]==0, sprintf("< %g", 1/length(sample[["Ia"]])), pval[1])
