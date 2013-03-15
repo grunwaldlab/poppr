@@ -33,7 +33,7 @@
 \contentsline {subsection}{\numberline {3.5}Do you see what I see? \{alternative data visualization\}}{33}{subsection.3.5}
 \contentsline {section}{\numberline {4}Index and Distance Calculations}{34}{section.4}
 \contentsline {subsection}{\numberline {4.1}The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\mathaccentV {bar}016r_d$\}}{34}{subsection.4.1}
-\contentsline {subsubsection}{\numberline {4.1.1}Function: ia}{34}{subsubsection.4.1.1}
+\contentsline {subsubsection}{\numberline {4.1.1}Function: ia}{35}{subsubsection.4.1.1}
 \contentsline {subsection}{\numberline {4.2}Going the distance \{Bruvo's distance\}}{37}{subsection.4.2}
 \contentsline {subsubsection}{\numberline {4.2.1}Function: bruvo.dist}{37}{subsubsection.4.2.1}
 \contentsline {subsubsection}{\numberline {4.2.2}Function: bruvo.boot}{39}{subsubsection.4.2.2}

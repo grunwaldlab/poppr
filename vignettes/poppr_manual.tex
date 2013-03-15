@@ -1148,13 +1148,13 @@ Notice that I'm not writing in many of the options? This is because they have de
 > head(Aeut.subpop$other$population_hierarchy)
 \end{Sinput}
 \begin{Soutput}
-  Pop_Subpop    Pop Subpop      2_3
-1   Athena_1 Athena      1 Athena_1
-2   Athena_1 Athena      1 Athena_1
-3   Athena_1 Athena      1 Athena_1
-4   Athena_1 Athena      1 Athena_1
-5   Athena_1 Athena      1 Athena_1
-6   Athena_1 Athena      1 Athena_1
+  Pop_Subpop    Pop Subpop
+1   Athena_1 Athena      1
+2   Athena_1 Athena      1
+3   Athena_1 Athena      1
+4   Athena_1 Athena      1
+5   Athena_1 Athena      1
+6   Athena_1 Athena      1
 \end{Soutput}
 \begin{Sinput}
 > summary(Aeut.subpop)
@@ -1349,20 +1349,21 @@ And that, is how you subset your data with poppr!
 \tab\tab This function will return a clone corrected data set corrected for the lowest population level. Population levels are specified with the \texttt{hier} flag. You can choose to combine the population hierarchy to analyze at the lowest population level by choosing \texttt{combine = TRUE}.
 \begin{quote}
 Default Command:\\
-\texttt{clonecorrect(pop, hier=c(1), dfname="population\_hierarchy", combine=FALSE)}
+\texttt{clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object that has a population hierarchy data frame in the \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily require a population factor to begin with. 
   \item \texttt{hier -} This can be a vector of words or numbers referring to specific column names in your data frame in the \texttt{@other} slot.
   \item \texttt{dfname -} The name of a data frame you have in the \texttt{@other} slot with the population factors.
-  \item \texttt{combine -} Do you want to combine the population hierarchy? If it's set to \texttt{FALSE}, you will be returned a genind object with the top most hierarchical level as a population factor. 
+  \item \texttt{combine -} Do you want to combine the population hierarchy? If it's set to \texttt{FALSE} (default), you will be returned a genind object with the top most hierarchical level as a population factor. 
+  \item \texttt{keep -} This flag is to be used if you set \texttt{combine = FALSE}. This will tell clone correct to return a specific combination of your hierarchy. For example, imagine a hierarchy that needs to be clone corrected at three levels: \textit{Population} by \textit{Year} by \textit{Month}. If you wanted to only run an analysis on the \textit{Population} level, you would set \texttt{keep = 1} since \textit{Population} is the first level of the hierarchy. On the other hand, if you wanted to run analysis on \textit{Year} by \textit{Month}, you would set \texttt{keep = 2:3} since those are the second and third levels of the hierarchy. Notice that I am not including the options \texttt{dfname} and \texttt{combine} because the default arguments suit my needs.
 \end{itemize}
 
-Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} data since that data set is known to include clonal populations. \cite{Grunwald:2006}
+Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} data since that data set is known to include clonal populations \cite{Grunwald:2006}.
 \begin{Schunk}
 \begin{Sinput}
 > data(Aeut)
-> A.cc <- clonecorrect(Aeut,  hier=c("Pop", "Subpop"), dfname="population_hierarchy", combine=FALSE)
+> A.cc <- clonecorrect(Aeut,  hier=c("Pop", "Subpop"), keep=1)
 > poppr(A.cc, quiet=TRUE)
 \end{Sinput}
 \begin{Soutput}
@@ -1386,6 +1387,7 @@ Now let's compare the clone corrected analysis to the uncorrected data set:
 \end{Schunk}
 
 As you can see from the summary tables, everything all sub-populations have been clone censored to the sub population level with respect to the population hierarchy. Notice how the observed number of individuals \texttt{(N)} decreases in the clone corrected data set.
+
 \subsection{Every day I'm shuffling (data sets)  \{permutations and bootstrap resampling\}}
 
 \tab\tab A common null hypothesis for populations with mixed reproductive modes is panmixia, or to put it simply: lots of sex. A handy way to test for that is permutation analysis to assess random linkage among loci whereupon you randomly shuffle your data. \textit{Poppr} uses randomly shuffled data sets in order to calculate P-values for the index of association ($I_A$ and $\bar r_d$) \cite{Agapow:2001}. Since there might be other tests where a permutation analysis would be pertinent, a shuffler for \texttt{genind} objects was created with four shuffling schemes: two schemes shuffling without replacement and two shuffling with replacement. Details below.
@@ -2273,8 +2275,9 @@ Note that the thickness of the edges (the lines that are connecting the dots) is
 \begin{quote}
 Default Command:\\
 \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
-        \tab method = 1, missing = "ignore", quiet = "minimal", clonecorrect = FALSE,\\ 
-        \tab hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)}
+        \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = "minimal", \\
+        \tab clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", \\
+        \tab hist = TRUE, minsamp = 10)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} A \texttt{genind} object.
@@ -2300,6 +2303,7 @@ Default Command:\\
     \item[clonecorrect -] if this is set to \texttt{TRUE}, then you will need to set the next two parameters.
     \item[hier -] A list of the population hierarchy, or names of columns in the data frame noted below.
     \item[dfname -] A data frame in the \texttt{@other} slot of the \texttt{genind} object containing all of the population factors in different columns. For an example, see sections 2.2 and 2.4.
+    \item[keep -] A vector of integers as indexes for the \texttt{hier} flag indicating which levels of the hierarchy you want to analyze. See section 2.4 for details. 
   \end{description}
   \item \texttt{hist -} if \texttt{TRUE}, a histogram of distributions of $I_A$ and $\bar r_d$ will be displayed with each population if there is sampling.
   \item \texttt{minsamp -} The minimum number of individuals you want to use to calculate the expected number of MLGs. The default is set to 10.
@@ -2544,7 +2548,7 @@ This is calculated over all possible combinations of individuals and results in 
 \item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
 \item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)
-\item clonecorrect(pop, hier=c(1), dfname="population\_hierarchy", combine=FALSE)
+\item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)
 \item shufflepop(pop, method = 1)
 \item mlg(pop, quiet = FALSE)
 \item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -2554,7 +2558,7 @@ This is calculated over all possible combinations of individuals and results in 
 \item bruvo.dist(pop, replen = c(2))
 \item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL)
 \item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), wscale = TRUE, ...)
-\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
+\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
 \end{itemize}
 \bibliographystyle{plain}
 \bibliography{poppr_man}
