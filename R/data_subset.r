@@ -136,7 +136,7 @@
 
 clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", 
                          combine = FALSE, keep = 1){
-  
+  clonecall <- match.call()$pop
   if(!is.genind(pop)){
     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
   }
@@ -157,13 +157,13 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
       else if(length(levels(pop(pop))) > 1){
         other(pop)[[dfname]] <- as.data.frame(list(Pop = as.character(pop(pop))))
         warning(paste("There is no data frame in ",
-                      paste(substitute(pop), collapse=""), 
+                      paste(substitute(clonecall), collapse=""), 
                       "@other called ",dfname,
                       ".\nOne is being created from the population factor.", sep=""))
       }
     }
     else{
-      stop(paste("There is no data frame in ",paste(substitute(pop), collapse=""), 
+      stop(paste("There is no data frame in ",paste(substitute(clonecall), collapse=""), 
                  "@other called ",dfname,".\n", sep=""))
     }
   }
