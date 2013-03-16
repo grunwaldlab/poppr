@@ -548,141 +548,114 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
 
 
-
-
-
-new.poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
-                       observed = observed, file="file", N=NA){
-  #   if (!is.na(pval[1])){
-  #     pval[1] <- ifelse(pval[1]==0, sprintf("< %g", 1/length(sample[["Ia"]])), pval[1])
-  #   }
-  #   if (!is.na(pval[2])){
-  #     pval[2] <- ifelse(pval[2]==0, sprintf("< %g", 1/length(sample[["rbarD"]])), pval[2])
-  #   }
-  #````````````````````````````````````````````````````````````````````````````#
-  # In the case that the sample contains all NaNs, a graph cannot be displayed.
-  # In place of the graph will be an orange box with a warning message.
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
+new.poppr.msn <- function (pop, replen=c(1), palette = topo.colors,
+                                    sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+                                    gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
+  stopifnot(require(igraph))
+  maxg <- max(glim)
+  ming <- 1-(min(glim)/maxg)
+  # Storing the MLG vector into the genind object
+  pop$other$mlg.vec <- mlg.vector(pop)
   
-  if (all(is.nan(sample$rbarD))){
-    warning(paste("The data from ",file,", population: ",pop," contains only missing values and cannot be displayed graphically", sep=""))
-    background_stuff <- theme(panel.grid.major.y = element_line(size=0)) +
-      theme(panel.grid.minor.y = element_line(size=0)) +
-      theme(panel.grid.major.x = element_line(size=0)) +
-      theme(panel.background = element_rect(fill="grey95")) +
-      #theme(plot.background = element_rect(size=1, color="black")) +
-      theme(axis.ticks.y = element_line(size=0)) +
-      theme(axis.text.y = element_text(size=0)) +
-      theme(axis.ticks.x = element_line(size=0)) +
-      theme(axis.text.x = element_text(size=0)) +
-      theme(axis.title.y = element_text(size=rel(0)))+
-      theme(axis.title.x = element_text(size=rel(0)))
-    oops <- ggplot(as.data.frame(list(x=-10:9)), aes(x)) + 
-      geom_histogram(binwidth=1, fill="orange") + 
-      geom_text(aes(label="Warning:", x=0, y=0.8), color="black", size=rel(15)) + 
-      geom_text(aes(label="Data contains only NaNs and\ncannot be displayed graphically", 
-                    x=0, y=0.5, hjust=0.5), color="black", size=rel(10)) +
-      labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-                       length(sample$Ia), "\nFile: ", file, sep="")) + 
-      theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-      background_stuff
-    print(oops)
-  }
-  else {
-    #``````````````````````````````````````````````````````````````````````````#
-    # Normal Cases
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-    if(any(is.nan(sample$rbarD)))
-      sample$rbarD[which(is.nan(sample$rbarD))] <- mean(sample$rbarD, na.rm=TRUE)
-    if(any(is.nan(sample$Ia)))
-      sample$Ia[which(is.nan(sample$Ia))] <- mean(sample$Ia, na.rm=TRUE)
+  singlepop <- function(pop, vertex.label){
+    cpop <- pop[.clonecorrector(pop), ]
+    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+    bclone <- discreet.dist(cpop)
+    mclone<-as.dist(bclone)
+    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
+    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+      if(toupper(vertex.label) == "MLG"){
+        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+      }
+      else if(toupper(vertex.label) == "INDS"){
+        vertex.label <- cpop$ind.names
+      }
+    }
     
-    # Transforming the data into a data frame that ggplot can understand and put
-    # into facets. It will have the following rows: Value, Index, and Quant.
-    Indexfac <- factor(1:2, levels=1:2, labels=c("I[A]","bar(r)[D]"))
-    infodata <- as.data.frame(list(Value=c(sample$Ia, sample$rbarD), 
-                                   Index=rep(Indexfac, each=length(sample$Ia))))
-    
-    # Setting up the observed values for formatting the overlaying lines.
-    # It will have the following rows: Observed, Index, Quant, Sam, P, min, max
-    
-    obsdata <- data.frame(list(Observed=observed[1:2], Index=Indexfac))
-    obsdata$P <- pval
-    obsdata$median <- c(median(unlist(subset(infodata,Index=Indexfac[1],select=Value))), 
-                        median(unlist(subset(infodata,Index=Indexfac[2],select=Value))))
-    if(any(is.na(observed))){
-      warning(paste("The Index of Association values from ",file,", population: ",pop," contain missing values and cannot be displayed graphically", sep=""))
-      derp <- ggplot(infodata, aes(Value)) + 
-        # Giving the data over to the histogram creating function and removing
-        # all of the lines from each bar, so it's displayed as a solid area.
-        geom_histogram(linetype="blank", alpha=0.8, 
-                       data=subset(infodata, Index==Indexfac[1]), 
-                       position="identity",
-                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
-        geom_histogram(linetype="blank", alpha=0.8, 
-                       data=subset(infodata, Index==Indexfac[2]), 
-                       position="identity",
-                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
-        
-        # The label for the observed line is a bit more difficult to code as
-        # it has the ability to appear anywhere on the chart. Here, I'm
-        # forcing it to flip to one side or the other based on which side of
-        # the mean that the observed value falls on.
-        geom_text(aes(label=paste("Observed: ",Observed,sep=""), 
-                      x=0,y=Inf,vjust=1.5),
-                  data=obsdata, angle=0, color="red") + 
-        
-        # Splitting the data into separate plots with free x-axes.
-        facet_grid(.~Index, scales="free_x", labeller=label_parsed) +
-        
-        # Title of the plot.
-        labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-                         length(sample$Ia), "\nFile: ", file, sep="")) + 
-        theme_classic() %+replace%
-        theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-        theme(panel.background = element_rect(fill="grey98")) +
-        
-        # Making the Index titles bigger. 
-        theme(strip.text.x = element_text(size=rel(3), face="bold"))
+    if(gscale == TRUE){
+      w <- E(mst)$weight
+      E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
     }
     else{
-      derp <- ggplot(infodata, aes(Value)) + 
-        # Giving the data over to the histogram creating function and removing
-        # all of the lines from each bar, so it's displayed as a solid area.
-        geom_histogram(linetype="blank", alpha=0.8, 
-                       data=subset(infodata, Index==Indexfac[1]), 
-                       position="identity",
-                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
-        geom_histogram(linetype="blank", alpha=0.8, 
-                       data=subset(infodata, Index==Indexfac[2]), 
-                       position="identity",
-                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
-        # Positioning the observed line and labeling it.
-        geom_vline(aes(xintercept=Observed), data=obsdata, color="blue", 
-                   show_guide=TRUE, linetype="dashed") +
-        
-        # The label for the observed line is a bit more difficult to code as
-        # it has the ability to appear anywhere on the chart. Here, I'm
-        # forcing it to flip to one side or the other based on which side of
-        # the mean that the observed value falls on.
-        geom_text(aes(label=paste("Observed \n(p-value: ", P,")",sep=""), 
-                      x=Observed,y=Inf,vjust=2,hjust=ifelse(Observed > median, 1.01, -0.01)),
-                  data=obsdata, angle=0, color="blue") + 
-        
-        # Splitting the data into separate plots with free x-axes.
-        facet_grid(.~Index, scales="free_x", labeller=label_parsed) +
-        
-        # Title of the plot.
-        labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-                         length(sample$Ia), "\nFile: ", file, sep="")) + 
-        theme_classic() %+replace%
-        theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-        theme(panel.background = element_rect(fill="grey98")) +
-        
-        # Making the Index titles bigger. 
-        theme(strip.text.x = element_text(size=rel(3), face="bold"))
+      E(mst)$color <- rep("black", length(E(mst)$weight))
     }
-    print(derp)
+    
+    edgewidth <- 2
+    if(wscale==TRUE){
+      edgewidth <- 1/(E(mst)$weight)
+      if(any(E(mst)$weight < 0.08)){
+        edgewidth <- 1/(E(mst)$weight + 0.08)
+      }
+    }
+    plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
+         vertex.label = vertex.label, vertex.size=mlg.number*3, 
+         vertex.color = palette(1),  ...)
+    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), NA, pop$pop.names), title="Populations",
+           fill=palette(1), border=NULL)
+    return(invisible(1))
   }
-  return(derp)
-} 
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop, vertex.label))
+  }
+  if(sublist[1] != "ALL" | !is.null(blacklist)){
+    pop <- popsub(pop, sublist, blacklist)
+  }
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop, vertex.label))
+  }
+  # Obtaining population information for all MLGs
+  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
+  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
+  cpop <- pop[.clonecorrector(pop), ]
+  # This will determine the size of the nodes based on the number of individuals
+  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
+  # give us the numbers and the population information in the correct order.
+  # Note: rank is used to correctly subset the data
+  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
+  bclone <- discreet.dist(cpop)
+  ###### Change names to MLGs #######
+  #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+  ###### Create a graph #######
+  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
+  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  
+  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if(toupper(vertex.label) == "MLG"){
+      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    }
+    else if(toupper(vertex.label) == "INDS"){
+      vertex.label <- cpop$ind.names
+    }
+  }
+  ###### Color schemes #######  
+  # The pallete is determined by what the user types in the argument. It can be 
+  # rainbow, topo.colors, heat.colors ...etc.
+  palette <- match.fun(palette)
+  color <- palette(length(pop@pop.names))
+  if(gscale == TRUE){
+    w <- E(mst)$weight
+    E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+  }
+  else{
+    E(mst)$color <- rep("black", length(E(mst)$weight))
+  }
+  
+  edgewidth <- 2
+  if(wscale==TRUE){
+    edgewidth <- 1/(E(mst)$weight)
+    if(any(E(mst)$weight < 0.08)){
+      edgewidth <- 1/(E(mst)$weight + 0.08)
+    }
+  }
+  # This creates a list of colors corresponding to populations.
+  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  #print(mlg.color)
+  plot(mst, edge.width=edgewidth, edge.color=E(mst)$color, 
+       vertex.size=mlg.number*3, vertex.shape="pie", vertex.pie=mlg.cp, 
+       vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
+  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+         fill=color, border=NULL)
+}
