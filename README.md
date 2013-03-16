@@ -23,6 +23,10 @@ To install this package from github, make sure you have the following:
 - [Xcode](https://developer.apple.com/xcode/) (OSX)
 - [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
 
+First, install the required dependencies:
+
+    install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape"), dependencies=TRUE)
+
 Now you can use the `install_github()` function:
 
     library(devtools)
