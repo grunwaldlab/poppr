@@ -548,7 +548,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
 
 
-new.poppr.msn <- function (pop, replen=c(1), palette = topo.colors,
+new.poppr.msn <- function (pop, distmat, palette = topo.colors,
                                     sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                                     gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
   stopifnot(require(igraph))
@@ -556,12 +556,14 @@ new.poppr.msn <- function (pop, replen=c(1), palette = topo.colors,
   ming <- 1-(min(glim)/maxg)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
-  
+  bclone <- as.matrix(distmat)[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
   singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-    bclone <- discreet.dist(cpop)
-    mclone<-as.dist(bclone)
+    rownames(bclone) <- cpop$pop
+    colnames(bclone) <- cpop$pop
+    #bclone <- discreet.dist(cpop)
+    mclone <- as.dist(bclone)
     #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
     g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
     mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
@@ -615,7 +617,9 @@ new.poppr.msn <- function (pop, replen=c(1), palette = topo.colors,
   # Note: rank is used to correctly subset the data
   mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
   mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
-  bclone <- discreet.dist(cpop)
+  #bclone <- discreet.dist(cpop)
+  rownames(bclone) <- cpop$pop
+  colnames(bclone) <- cpop$pop
   ###### Change names to MLGs #######
   #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
   ###### Create a graph #######
@@ -636,8 +640,12 @@ new.poppr.msn <- function (pop, replen=c(1), palette = topo.colors,
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
+    E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
+    #E(mst)$weight <- E(mst)$weight / ifelse(any(E(mst)$weight > 1), ifelse(any(E(mst)$weight > 10), 100, 10), 1)
     w <- E(mst)$weight
-    E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+    print(w)
+    #E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+    E(mst)$color <- gray(w)
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
