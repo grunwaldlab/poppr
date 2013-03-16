@@ -577,8 +577,10 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
     }
     
     if(gscale == TRUE){
+      E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
       w <- E(mst)$weight
-      E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+      E(mst)$color <- gray(w)
+      #E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
     }
     else{
       E(mst)$color <- rep("black", length(E(mst)$weight))
