@@ -501,7 +501,8 @@ discreet.dist <- function(pop){
   }
   colnames(dist.vec) <- ind.names
   rownames(dist.vec) <- ind.names
-  return(as.dist(dist.vec/(length(pop)*ploidy(pop[[1]]))))
+  loci <- ifelse(is.list(pop), length(pop), nLoc(pop))
+  return(as.dist(dist.vec/(loci*ploid)))
 }
 
 
@@ -645,9 +646,161 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
     #E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
     #E(mst)$weight <- E(mst)$weight / ifelse(any(E(mst)$weight > 1), ifelse(any(E(mst)$weight > 10), 100, 10), 1)
     w <- E(mst)$weight
-    print(w)
     #E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
     E(mst)$color <- gray(w)
+  }
+  else{
+    E(mst)$color <- rep("black", length(E(mst)$weight))
+  }
+  
+  edgewidth <- 2
+  if(wscale==TRUE){
+    edgewidth <- 1/(E(mst)$weight)
+    if(any(E(mst)$weight < 0.08)){
+      edgewidth <- 1/(E(mst)$weight + 0.08)
+    }
+  }
+  # This creates a list of colors corresponding to populations.
+  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  #print(mlg.color)
+  plot(mst, edge.width=edgewidth, edge.color=E(mst)$color, 
+       vertex.size=mlg.number*3, vertex.shape="pie", vertex.pie=mlg.cp, 
+       vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
+  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
+         fill=color, border=NULL)
+}
+
+adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
+  w <- weights
+  maxg <- max(glim)
+  ming <- 1-(min(glim)/maxg)
+  if (correction < 0){
+    adj <-  (w^abs(correction))/(1/ming) 
+    adj <- (adj + 1-ming) / ((1 / maxg))
+  }
+  else{
+    adj <-  (1 - (((1-w)^abs(correction))/(1/ming)) )
+    adj <- adj / (1/maxg)
+  }
+  if (show == FALSE){
+    return(adj)
+  }
+  else{
+    cols <- grey(adj)
+    hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
+         ylab="Grey Adjusted", 
+         main=paste("Grey adjustment\n min:", min(glim), "max:", max(glim), 
+                    "adjust:",abs(correction)))
+    points(x=w, y=adj, col=grey(rev(adj)), pch=20)
+    if (correction < 0){
+      text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
+                                       (1/.(ming))) + .(1-ming),")"), 
+                       1/.(maxg))) , 
+           x=0.25,y=0.75, col="red")
+    }
+    else{
+      text(bquote(frac(bgroup("(",1-frac((1-scriptstyle(x))^.(abs(correction)),
+                                         (1/.(ming))),")"), 
+                       1/.(maxg))) , 
+           x=0.15,y=0.75, col="red")
+    }
+    lines(x=0:1, y=c(min(glim),min(glim)), col="yellow")
+    lines(x=0:1, y=c(max(glim),max(glim)), col="yellow")    
+  }
+}
+
+
+
+new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
+                           sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+                           gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
+  stopifnot(require(igraph))
+  maxg <- max(glim)
+  ming <- 1-(min(glim)/maxg)
+  # Storing the MLG vector into the genind object
+  pop$other$mlg.vec <- mlg.vector(pop)
+  
+  singlepop <- function(pop, vertex.label){
+    cpop <- pop[.clonecorrector(pop), ]
+    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+    bclone <- bruvo.dist(cpop, replen=replen)
+    mclone<-as.dist(bclone)
+    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
+    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+      if(toupper(vertex.label) == "MLG"){
+        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+      }
+      else if(toupper(vertex.label) == "INDS"){
+        vertex.label <- cpop$ind.names
+      }
+    }
+    
+    if(gscale == TRUE){
+      w <- E(mst)$weight
+      E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+    }
+    else{
+      E(mst)$color <- rep("black", length(E(mst)$weight))
+    }
+    
+    edgewidth <- 2
+    if(wscale==TRUE){
+      edgewidth <- 1/(E(mst)$weight)
+      if(any(E(mst)$weight < 0.08)){
+        edgewidth <- 1/(E(mst)$weight + 0.08)
+      }
+    }
+    plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
+         vertex.label = vertex.label, vertex.size=mlg.number*3, 
+         vertex.color = palette(1),  ...)
+    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), NA, pop$pop.names), title="Populations",
+           fill=palette(1), border=NULL)
+    return(invisible(1))
+  }
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop, vertex.label))
+  }
+  if(sublist[1] != "ALL" | !is.null(blacklist)){
+    pop <- popsub(pop, sublist, blacklist)
+  }
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop, vertex.label))
+  }
+  # Obtaining population information for all MLGs
+  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
+  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
+  cpop <- pop[.clonecorrector(pop), ]
+  # This will determine the size of the nodes based on the number of individuals
+  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
+  # give us the numbers and the population information in the correct order.
+  # Note: rank is used to correctly subset the data
+  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
+  bclone <- bruvo.dist(cpop, replen=replen)
+  ###### Change names to MLGs #######
+  #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+  ###### Create a graph #######
+  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
+  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  
+  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if(toupper(vertex.label) == "MLG"){
+      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    }
+    else if(toupper(vertex.label) == "INDS"){
+      vertex.label <- cpop$ind.names
+    }
+  }
+  ###### Color schemes #######  
+  # The pallete is determined by what the user types in the argument. It can be 
+  # rainbow, topo.colors, heat.colors ...etc.
+  palette <- match.fun(palette)
+  color <- palette(length(pop@pop.names))
+  if(gscale == TRUE){
+    w <- E(mst)$weight
+    E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
