@@ -501,7 +501,7 @@ discreet.dist <- function(pop){
   }
   colnames(dist.vec) <- ind.names
   rownames(dist.vec) <- ind.names
-  return(as.dist(dist.vec))
+  return(as.dist(dist.vec/(length(pop)*ploidy(pop[[1]]))))
 }
 
 
@@ -577,7 +577,7 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
     }
     
     if(gscale == TRUE){
-      E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
+      #E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
       w <- E(mst)$weight
       E(mst)$color <- gray(w)
       #E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
@@ -642,7 +642,7 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
-    E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
+    #E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
     #E(mst)$weight <- E(mst)$weight / ifelse(any(E(mst)$weight > 1), ifelse(any(E(mst)$weight > 10), 100, 10), 1)
     w <- E(mst)$weight
     print(w)
