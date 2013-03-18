@@ -891,3 +891,57 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
   return(dist.mat)
 }
 
+#==============================================================================#
+# This will adjust the grey scale with respect to the edge weights for igraph.
+# This is needed because the length of the edges do not correspond to weights.
+# If show is set to TRUE, it will show a graph giving the equation used for con-
+# version from the original scale to the grey scale, the grey scale itself in 
+# the background, and the curve.
+#
+# Public functions utilizing this function:
+# # bruvo.msn (soon)
+#
+# Internal functions utilizing this function:
+# # new.bruvo.msn
+# # new.poppr.msn
+#
+#==============================================================================#
+
+adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
+  w <- weights
+  maxg <- max(glim)
+  ming <- 1-(min(glim)/maxg)
+  if (correction < 0){
+    adj <-  (w^abs(correction))/(1/ming) 
+    adj <- (adj + 1-ming) / ((1 / maxg))
+  }
+  else{
+    adj <-  (1 - (((1-w)^abs(correction))/(1/ming)) )
+    adj <- adj / (1/maxg)
+  }
+  if (show == FALSE){
+    return(adj)
+  }
+  else{
+    cols <- grey(adj)
+    hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
+         ylab="Grey Adjusted", 
+         main=paste("Grey adjustment\n min:", min(glim), "max:", max(glim), 
+                    "adjust:",abs(correction)))
+    points(x=w, y=adj, col=grey(rev(adj)), pch=20)
+    if (correction < 0){
+      text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
+                                       (1/.(ming))) + .(1-ming),")"), 
+                       1/.(maxg))) , 
+           x=0.25,y=0.75, col="red")
+    }
+    else{
+      text(bquote(frac(bgroup("(",1-frac((1-scriptstyle(x))^.(abs(correction)),
+                                         (1/.(ming))),")"), 
+                       1/.(maxg))) , 
+           x=0.15,y=0.75, col="red")
+    }
+    lines(x=0:1, y=c(min(glim),min(glim)), col="yellow")
+    lines(x=0:1, y=c(max(glim),max(glim)), col="yellow")    
+  }
+}
