@@ -923,7 +923,7 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
     return(adj)
   }
   else{
-    cols <- grey(adj)
+    cols <- grey(sort(adj))
     hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
          ylab="Grey Adjusted", 
          main=paste("Grey adjustment\n min:", min(glim), "max:", max(glim), 
