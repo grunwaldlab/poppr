@@ -549,12 +549,11 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
 
 
-new.poppr.msn <- function (pop, distmat, palette = topo.colors,
-                                    sublist = "All", blacklist = NULL, vertex.label = "MLG", 
-                                    gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
+new.poppr.msn <- function (pop, distmat, palette = topo.colors, 
+                           sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+                           gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, wscale=TRUE, ...){
   stopifnot(require(igraph))
-  maxg <- max(glim)
-  ming <- 1-(min(glim)/maxg)
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   bclone <- as.matrix(distmat)[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
@@ -580,7 +579,7 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
     if(gscale == TRUE){
       #E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
       w <- E(mst)$weight
-      E(mst)$color <- gray(w)
+      E(mst)$color <- gray(adjustcurve(w, glim=glim, correct=gadj, show=FALSE))
       #E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
     }
     else{
@@ -647,7 +646,7 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
     #E(mst)$weight <- E(mst)$weight / ifelse(any(E(mst)$weight > 1), ifelse(any(E(mst)$weight > 10), 100, 10), 1)
     w <- E(mst)$weight
     #E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
-    E(mst)$color <- gray(w)
+    E(mst)$color <- gray(adjustcurve(w, glim=glim, correct=gadj, show=FALSE))
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
@@ -668,6 +667,12 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
        vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
          fill=color, border=NULL)
+  return(list(MSN=mst, Widths=edgewidth, pies=mlg.cp, sizes=mlg.number*3, color=mlg.color, label=vertex.label, pops=pop$pop.names))
+}
+
+greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1, show=FALSE){
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
+  adjustcurve(seq(0.001, 1, 0.001), glim, correction=gadj, show=TRUE)
 }
 
 adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
