@@ -713,10 +713,9 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
 
 new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
                            sublist = "All", blacklist = NULL, vertex.label = "MLG", 
-                           gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
+                           gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, wscale=TRUE, ...){
   stopifnot(require(igraph))
-  maxg <- max(glim)
-  ming <- 1-(min(glim)/maxg)
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   
@@ -739,7 +738,7 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
     
     if(gscale == TRUE){
       w <- E(mst)$weight
-      E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+      E(mst)$color <- gray(adjustcurve(w, glim=glim, correct=gadj, show=FALSE))
     }
     else{
       E(mst)$color <- rep("black", length(E(mst)$weight))
@@ -800,7 +799,7 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
     w <- E(mst)$weight
-    E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+    E(mst)$color <- gray(adjustcurve(w, glim=glim, correct=gadj, show=FALSE))
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
