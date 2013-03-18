@@ -931,14 +931,14 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
     points(x=w, y=adj, col=grey(rev(adj)), pch=20)
     if (correction < 0){
       text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
-                                       (1/.(ming))) + .(1-ming),")"), 
-                       1/.(maxg))) , 
+                                       .(ming)^-1),")") + .(1-ming), 
+                       .(maxg)^-1)) , 
            x=0.25,y=0.75, col="red")
     }
     else{
-      text(bquote(frac(bgroup("(",1-frac((1-scriptstyle(x))^.(abs(correction)),
-                                         (1/.(ming))),")"), 
-                       1/.(maxg))) , 
+      text(bquote(frac(1-bgroup("(",frac((1-scriptstyle(x))^.(abs(correction)),
+                                         .(ming)^-1),")"), 
+                       .(maxg)^-1)) , 
            x=0.15,y=0.75, col="red")
     }
     lines(x=0:1, y=c(min(glim),min(glim)), col="yellow")
