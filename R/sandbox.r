@@ -667,7 +667,13 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
        vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
          fill=color, border=NULL)
-  return(list(MSN=mst, Widths=edgewidth, pies=mlg.cp, sizes=mlg.number*3, color=mlg.color, label=vertex.label, pops=pop$pop.names))
+  E(mst)$edge.width <- edgewidth
+  E(mst)$vertex.size <- mlg.number
+  E(mst)$vertex.pie <- mlg.cp
+  E(mst)$vertex.pie.color <- mlg.color
+  E(mst)$vertex.label <- vertex.label
+  return(mst)
+  #return(list(MSN=mst, Widths=edgewidth, pies=mlg.cp, sizes=mlg.number*3, color=mlg.color, label=vertex.label, pops=pop$pop.names))
 }
 
 greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1, show=FALSE){
@@ -680,11 +686,11 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
   maxg <- max(glim)
   ming <- 1-(min(glim)/maxg)
   if (correction < 0){
-    adj <-  (w^abs(correction))/(1/ming) 
+    adj <- (w^abs(correction))/(1/ming) 
     adj <- (adj + 1-ming) / ((1 / maxg))
   }
   else{
-    adj <-  (1 - (((1-w)^abs(correction))/(1/ming)) )
+    adj <- (1 - (((1-w)^abs(correction))/(1/ming)) )
     adj <- adj / (1/maxg)
   }
   if (show == FALSE){
@@ -825,4 +831,10 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
        vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
          fill=color, border=NULL)
+  E(mst)$edge.width <- edgewidth
+  E(mst)$vertex.size <- mlg.number
+  E(mst)$vertex.pie <- mlg.cp
+  E(mst)$vertex.pie.color <- mlg.color
+  E(mst)$vertex.label <- vertex.label
+  return(mst)
 }
