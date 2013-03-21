@@ -1,3 +1,10 @@
+poppr 0.2.2
+===========
+NEW FEATURES
+* index of association distributions will now feature a rug plot at the bottom
+  as a better way to visualize the distribution of the index of association from
+  the shuffled data sets.
+
 poppr 0.2.1
 ===========
 NEW FUNCTIONS
