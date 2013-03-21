@@ -1,3 +1,21 @@
+poppr 0.2.1
+===========
+NEW FUNCTIONS
+* diss.dist will produce a distance matrix based on discreet distances.
+* greycurve will produce a grey scale adjusted to user-supplied parameters. This
+  will be useful for future minimum spanning network functions. 
+
+NEW FEATURES
+* bruvo.msn can now adjust the edge grey level to be weighted toward either
+  closely or distantly weighted individuals.
+* bruvo.msn will now return a list giving the user the graph with all of the
+  color, label, and weight properties so that they can plot it themselves. The
+  legend arguments are also returned.
+
+BUG FIXES
+* fixed shufflepop so that it will now shuffle PA markers with a specific method
+* fixed warning message mistakes in clonecorrect function. 
+
 poppr 0.2
 =========
 NEW FEATURES
