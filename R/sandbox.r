@@ -482,7 +482,7 @@ pop.sampler <- function(pop, method=1){
 }
 
 
-discreet.dist <- function(pop){
+new.diss.dist <- function(pop){
   ploid <- ploidy(pop)
   ind.names <- pop@ind.names
   inds <- nInd(pop)
