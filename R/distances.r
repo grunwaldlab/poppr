@@ -88,3 +88,53 @@ greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1){
   adjustcurve(seq(0.001, 1, 0.001), glim, correction=gadj, show=TRUE)
 }
 
+#==============================================================================#
+#' Calculate a distance matrix based on relative dissimilarity
+#' 
+#' diss.dist uses the same discreet dissimilarity matrix utilized by the index
+#' of association (see \code{\link{ia}} for details). It returns a distance
+#' reflecting a ratio of the number of observed differences by the number of
+#' possible differences. Eg. two individuals who share half of the same alleles
+#' will have a distance of 0.5. This function can analyze distances for any
+#' marker system.
+#' 
+#' @param pop a \code{\link{genind}} object. 
+#' 
+#' @return A distance object.
+#'
+#' @examples
+#' 
+#' # A simple example. Let's analyze the mean distance among populations of A.
+#' euteiches.
+#' 
+#' data(Aeut)
+#' mean(diss.dist(popsub(Aeut, 1)))
+#' mean(diss.dist(popsub(Aeut, 2)))
+#' mean(diss.dist(Aeut))
+#'
+#' @export
+#==============================================================================#
+
+diss.dist <- function(pop){
+  ploid <- ploidy(pop)
+  ind.names <- pop@ind.names
+  inds <- nInd(pop)
+  np <- choose(inds, 2)
+  dist.vec <- matrix(data = 0, nrow=inds, ncol=inds)
+  if(pop@type == "PA"){
+    dist.vec[lower.tri(dist.vec)] <- .Call("pairdiffs",pop@tab*ploid)/ploid
+  }
+  else{
+    pop <- seploc(pop)
+    numLoci <- length(pop)
+    temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
+    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs",x@tab*ploid)/ploid, 
+                            temp.d.vector[, 1])
+    dist.vec[lower.tri(dist.vec)] <- rowSums(temp.d.vector)
+  }
+  colnames(dist.vec) <- ind.names
+  rownames(dist.vec) <- ind.names
+  loci <- ifelse(is.list(pop), length(pop), nLoc(pop))
+  return(as.dist(dist.vec/(loci*ploid)))
+}
+
