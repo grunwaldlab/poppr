@@ -6,7 +6,7 @@ distance.}
   bruvo.msn(pop, replen = c(1), palette = topo.colors,
     sublist = "All", blacklist = NULL,
     vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),
-    wscale = TRUE, ...)
+    gadj = 3, gweight = 1, wscale = TRUE, ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -38,26 +38,41 @@ distance.}
   \item{gscale}{"grey scale". If this is \code{TRUE}, this
   will scale the color of the edges proportional to Bruvo's
   distance, with the lines becoming darker for more related
-  nodes.}
+  nodes. See \code{\link{greycurve}} for details.}
 
   \item{glim}{"grey limit". Two numbers between zero and
   one. They determine the upper and lower limits for the
   \code{\link{gray}} function. Default is 0 (black) and 0.8
-  (20\% black).}
+  (20\% black). See \code{\link{greycurve}} for details.}
+
+  \item{gadj}{"grey adjust". a positive \code{integer}
+  greater than zero that will serve as the exponent to the
+  edge weight to scale the grey value to represent that
+  weight. See \code{\link{greycurve}} for details.}
+
+  \item{gweight}{"grey weight". an \code{integer}. If it's
+  1, the grey scale will be weighted to emphasize the
+  differences between closely related nodes. If it is 2,
+  the grey scale will be weighted to emphasize the
+  differences between more distantly related nodes. See
+  \code{\link{greycurve}} for details.}
 
   \item{wscale}{"width scale". If this is \code{TRUE}, the
-  edge widths will be scaled proportional to Bruvo's
-  distance, with the lines becoming thicker for more
-  related nodes.}
+  edge widths will be scaled proportional to the inverse of
+  Bruvo's distance , with the lines becoming thicker for
+  more related nodes.}
 
   \item{...}{any other arguments that could go into
   plot.igraph}
 }
 \value{
-  a minimum spanning network with nodes corresponding to
-  MLGs within the data set. Colors of the nodes represent
-  population membership, and length of edges represent
-  Bruvo's distance.
+  \item{graph}{a minimum spanning network with nodes
+  corresponding to MLGs within the data set. Colors of the
+  nodes represent population membership. Width and color of
+  the edges represent distance.} \item{populations}{a
+  vector of the population names corresponding to the
+  vertex colors} \item{colors}{a vector of the hexadecimal
+  representations of the colors used in the vertex colors}
 }
 \description{
   Create minimum spanning network of selected populations
@@ -115,6 +130,7 @@ bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
   \code{\link{nancycats}}, \code{\link{upgma}},
   \code{\link{nj}}, \code{\link{boot.phylo}},
   \code{\link{nodelabels}}, \code{\link{na.replace}},
-  \code{\link{missingno}}, \code{\link{bruvo.boot}}.
+  \code{\link{missingno}}, \code{\link{bruvo.boot}},
+  \code{\link{greycurve}}.
 }
 
