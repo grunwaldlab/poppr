@@ -511,11 +511,27 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
                            sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                            gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                            wscale=TRUE, ...){
-  stopifnot(require(igraph))
+  if(!require(igraph)){
+    stop("You must have the igraph library installed to use this function.\n")
+  }
+  if(class(distmat) != "dist"){
+    if(is.matrix(distmat)){
+      if(any(nInd(pop) != dim(distmat))){
+        stop("The size of the distance matrix does not match the size of the data.\n")
+      }
+      distmat <- as.dist(distmat)
+    }
+    else{
+      stop("The distance matrix is neither a dist object nor a matrix.\n")
+    }
+  }
+  if(nInd(pop) != attr(distmat, "Size")){
+    stop("The size of the distance matrix does not match the size of the data.\n")
+  }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
-  bclone <- as.matrix(distmat)[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+  #bclone <- as.matrix(distmat)[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
   
   singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
@@ -564,13 +580,23 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
     V(mst)$label <- vertex.label
     return(list(graph = mst, populations = populations, colors = palette(1)))
   }
-  
+  bclone <- as.matrix(distmat)
+  # The clone correction of the matrix needs to be done at this step if there
+  # is only one or no populations. 
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
     return(singlepop(pop, vertex.label))
   }
+  # This will subset both the population and the matrix. 
   if(sublist[1] != "ALL" | !is.null(blacklist)){
+    sublist_blacklist <- sub_index(pop, sublist, blacklist)
+    bclone <- bclone[sublist_blacklist, sublist_blacklist]
     pop <- popsub(pop, sublist, blacklist)
   }
+  
+  # This will clone correct the incoming matrix. 
+  bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+  
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop(pop, vertex.label))
   }
@@ -641,50 +667,6 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
   V(mst)$pie.color <- mlg.color
   V(mst)$label <- vertex.label
   return(list(graph = mst, populations = pop$pop.names, colors = color))
-}
-
-greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1, show=FALSE){
-  gadj <- ifelse(gweight == 1, gadj, -gadj)
-  adjustcurve(seq(0.001, 1, 0.001), glim, correction=gadj, show=TRUE)
-}
-
-adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
-  w <- weights
-  maxg <- max(glim)
-  ming <- 1-(min(glim)/maxg)
-  if (correction < 0){
-    adj <- (w^abs(correction))/(1/ming) 
-    adj <- (adj + 1-ming) / ((1 / maxg))
-  }
-  else{
-    adj <- (1 - (((1-w)^abs(correction))/(1/ming)) )
-    adj <- adj / (1/maxg)
-  }
-  if (show == FALSE){
-    return(adj)
-  }
-  else{
-    cols <- grey(adj)
-    hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
-         ylab="Grey Adjusted", 
-         main=paste("Grey adjustment\n min:", min(glim), "max:", max(glim), 
-                    "adjust:",abs(correction)))
-    points(x=w, y=adj, col=grey(rev(adj)), pch=20)
-    if (correction < 0){
-      text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
-                                       (1/.(ming))) + .(1-ming),")"), 
-                       1/.(maxg))) , 
-           x=0.25,y=0.75, col="red")
-    }
-    else{
-      text(bquote(frac(bgroup("(",1-frac((1-scriptstyle(x))^.(abs(correction)),
-                                         (1/.(ming))),")"), 
-                       1/.(maxg))) , 
-           x=0.15,y=0.75, col="red")
-    }
-    lines(x=0:1, y=c(min(glim),min(glim)), col="yellow")
-    lines(x=0:1, y=c(max(glim),max(glim)), col="yellow")    
-  }
 }
 
 
