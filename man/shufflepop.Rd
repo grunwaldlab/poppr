@@ -35,9 +35,8 @@ locus.}
   frequencies. This means that both the allelic state and
   heterozygosity will vary. The resulting data set will not
   have missing data.  \item \strong{Non-Parametric
-  Bootstrap for Alleles} This will shuffle the allelic
-  state for each individual. Missing data is fixed in
-  place. }
+  Bootstrap} This will shuffle the allelic state for each
+  individual. Missing data is fixed in place. }
 }
 \examples{
 # load the microbov dataset
