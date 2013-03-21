@@ -317,28 +317,42 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
 #' 
 #' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
 #' of the edges proportional to Bruvo's distance, with the lines becoming darker
-#' for more related nodes.
+#' for more related nodes. See \code{\link{greycurve}} for details.
 #' 
 #' @param glim "grey limit". Two numbers between zero and one. They determine 
 #' the upper and lower limits for the \code{\link{gray}} function. Default is 0
-#' (black) and 0.8 (20\% black). 
+#' (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
+#' 
+#' @param gadj "grey adjust". a positive \code{integer} greater than zero that
+#' will serve as the exponent to the edge weight to scale the grey value to
+#' represent that weight. See \code{\link{greycurve}} for details.
+#' 
+#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale
+#' will be weighted to emphasize the differences between closely related nodes.
+#' If it is 2, the grey scale will be weighted to emphasize the differences
+#' between more distantly related nodes. See \code{\link{greycurve}} for details.
 #' 
 #' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be
-#' scaled proportional to Bruvo's distance, with the lines becoming thicker for
-#' more related nodes.
+#' scaled proportional to the inverse of Bruvo's distance , with the lines 
+#' becoming thicker for more related nodes.
 #' 
 #' @param ... any other arguments that could go into plot.igraph
 #'
-#' @return a minimum spanning network with nodes corresponding to MLGs within
-#' the data set. Colors of the nodes represent population membership, and length
-#' of edges represent Bruvo's distance.
+#' @return 
+#' \item{graph}{a minimum spanning network with nodes corresponding to MLGs within
+#' the data set. Colors of the nodes represent population membership. Width and
+#' color of the edges represent distance.}
+#' \item{populations}{a vector of the population names corresponding to the 
+#' vertex colors}
+#' \item{colors}{a vector of the hexadecimal representations of the colors used
+#' in the vertex colors}
 #' 
 #' @note The edges of these graphs may cross each other if the graph becomes too
 #' large. 
 #'
 #' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
 #' \code{\link{boot.phylo}}, \code{\link{nodelabels}}, \code{\link{na.replace}},
-#' \code{\link{missingno}}, \code{\link{bruvo.boot}}.
+#' \code{\link{missingno}}, \code{\link{bruvo.boot}}, \code{\link{greycurve}}.
 #' 
 #' @export
 #' @author Javier F. Tabima, Zhian N. Kamvar
@@ -384,12 +398,12 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
 #' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
 #' }
 #==============================================================================#
-bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
+bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
-                       gscale=TRUE, glim = c(0,0.8), wscale=TRUE, ...){
+                       gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
+                       wscale = TRUE, ...){
   stopifnot(require(igraph))
-  maxg <- max(glim)
-  ming <- 1-(min(glim)/maxg)
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   
@@ -411,26 +425,32 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
     }
     
     if(gscale == TRUE){
-      w <- E(mst)$weight
-      E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+                                       show=FALSE))
     }
     else{
       E(mst)$color <- rep("black", length(E(mst)$weight))
     }
     
     edgewidth <- 2
-    if(wscale==TRUE){
+    if(wscale == TRUE){
       edgewidth <- 1/(E(mst)$weight)
       if(any(E(mst)$weight < 0.08)){
         edgewidth <- 1/(E(mst)$weight + 0.08)
       }
     }
-    plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
-         vertex.label = vertex.label, vertex.size=mlg.number*3, 
+    populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
+    plot(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+         vertex.label = vertex.label, vertex.size = mlg.number*3, 
          vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), NA, pop$pop.names), title="Populations",
-           fill=palette(1), border=NULL)
-    return(invisible(1))
+    legend(-1.55,1,bty = "n", cex = 0.75, 
+           legend = populations, title = "Populations", fill = palette(1), 
+           border = NULL)
+    E(mst)$width <- edgewidth
+    V(mst)$size <- mlg.number
+    V(mst)$color <- palette(1)
+    V(mst)$label <- vertex.label
+    return(list(graph = mst, populations = populations, colors = palette(1)))
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop(pop, vertex.label))
@@ -452,11 +472,10 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
   mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
   bclone <- bruvo.dist(cpop, replen=replen)
-  ###### Change names to MLGs #######
-  #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+  
   ###### Create a graph #######
-  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
-  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  g <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
+  mst <- (minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight))
   
   if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
@@ -472,15 +491,15 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
-    w <- E(mst)$weight
-    E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+                                     show=FALSE))
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
   
   edgewidth <- 2
-  if(wscale==TRUE){
+  if(wscale == TRUE){
     edgewidth <- 1/(E(mst)$weight)
     if(any(E(mst)$weight < 0.08)){
       edgewidth <- 1/(E(mst)$weight + 0.08)
@@ -488,10 +507,17 @@ bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   }
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
-  #print(mlg.color)
-  plot(mst, edge.width=edgewidth, edge.color=E(mst)$color, 
-       vertex.size=mlg.number*3, vertex.shape="pie", vertex.pie=mlg.cp, 
-       vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
-  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
-         fill=color, border=NULL)
+  
+  plot(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+       vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
+       vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
+  legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
+         title = "Populations", fill = color, border = NULL)
+  E(mst)$width <- edgewidth
+  V(mst)$size <- mlg.number
+  V(mst)$shape <- "pie"
+  V(mst)$pie <- mlg.cp
+  V(mst)$pie.color <- mlg.color
+  V(mst)$label <- vertex.label
+  return(list(graph = mst, populations = pop$pop.names, colors = color))
 }
