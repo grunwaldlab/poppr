@@ -629,13 +629,13 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
        vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
          title = "Populations", fill=color, border=NULL)
-  E(mst)$edge.width <- edgewidth
-  E(mst)$vertex.size <- mlg.number
-  E(mst)$vertex.pie <- mlg.cp
-  E(mst)$vertex.pie.color <- mlg.color
-  E(mst)$vertex.label <- vertex.label
-  return(mst)
-  #return(list(MSN=mst, Widths=edgewidth, pies=mlg.cp, sizes=mlg.number*3, color=mlg.color, label=vertex.label, pops=pop$pop.names))
+  E(mst)$width <- edgewidth
+  V(mst)$size <- mlg.number
+  V(mst)$shape <- "pie"
+  V(mst)$pie <- mlg.cp
+  V(mst)$pie.color <- mlg.color
+  V(mst)$label <- vertex.label
+  return(list(graph = mst, populations = pop$pop.names, colors = color))
 }
 
 greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1, show=FALSE){
@@ -799,5 +799,5 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   V(mst)$pie <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label <- vertex.label
-  return(mst)
+  return(list(graph = mst, populations = pop$pop.names, colors = color))
 }
