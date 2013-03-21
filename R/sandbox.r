@@ -792,11 +792,12 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
        vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
        vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
-         title = "Populations", fill=color, border=NULL)
-  E(mst)$edge.width <- edgewidth
-  E(mst)$vertex.size <- mlg.number
-  E(mst)$vertex.pie <- mlg.cp
-  E(mst)$vertex.pie.color <- mlg.color
-  E(mst)$vertex.label <- vertex.label
+         title = "Populations", fill = color, border = NULL)
+  E(mst)$width <- edgewidth
+  V(mst)$size <- mlg.number
+  V(mst)$shape <- "pie"
+  V(mst)$pie <- mlg.cp
+  V(mst)$pie.color <- mlg.color
+  V(mst)$label <- vertex.label
   return(mst)
 }
