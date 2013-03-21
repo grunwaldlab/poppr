@@ -509,12 +509,14 @@ discreet.dist <- function(pop){
 
 new.poppr.msn <- function (pop, distmat, palette = topo.colors, 
                            sublist = "All", blacklist = NULL, vertex.label = "MLG", 
-                           gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, wscale=TRUE, ...){
+                           gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
+                           wscale=TRUE, ...){
   stopifnot(require(igraph))
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   bclone <- as.matrix(distmat)[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+  
   singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
@@ -535,10 +537,8 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
     }
     
     if(gscale == TRUE){
-      #E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
-      w <- E(mst)$weight
-      E(mst)$color <- gray(adjustcurve(w, glim=glim, correct=gadj, show=FALSE))
-      #E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
+      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+                                       show=FALSE))
     }
     else{
       E(mst)$color <- rep("black", length(E(mst)$weight))
@@ -551,13 +551,15 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
         edgewidth <- 1/(E(mst)$weight + 0.08)
       }
     }
-    plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
-         vertex.label = vertex.label, vertex.size=mlg.number*3, 
+    plot(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+         vertex.label = vertex.label, vertex.size = mlg.number*3, 
          vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), NA, pop$pop.names), title="Populations",
-           fill=palette(1), border=NULL)
+    legend(-1.55,1,bty = "n", cex=0.75, 
+           legend = ifelse(is.null(pop(pop)), NA, pop$pop.names),
+           title = "Populations", fill = palette(1), border=NULL)
     return(invisible(1))
   }
+  
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop(pop, vertex.label))
   }
@@ -571,6 +573,7 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
   names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
   cpop <- pop[.clonecorrector(pop), ]
+  
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
@@ -580,9 +583,7 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
   #bclone <- discreet.dist(cpop)
   rownames(bclone) <- cpop$pop
   colnames(bclone) <- cpop$pop
-  ###### Change names to MLGs #######
-  #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
-  ###### Create a graph #######
+
   g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
   mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
   
@@ -599,17 +600,19 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
+  
+  ###### Edge adjustments ######
+  # Grey Scale Adjustment weighting towards more diverse or similar populations.
   if(gscale == TRUE){
-    #E(mst)$weight <- E(mst)$weight/(nLoc(pop)*ploidy(Aeut))
-    #E(mst)$weight <- E(mst)$weight / ifelse(any(E(mst)$weight > 1), ifelse(any(E(mst)$weight > 10), 100, 10), 1)
-    w <- E(mst)$weight
-    #E(mst)$color <- gray( (1 - (((1-w)^3)/(1/ming)) ) / (1/maxg) )
-    E(mst)$color <- gray(adjustcurve(w, glim=glim, correct=gadj, show=FALSE))
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+                                     show=FALSE))
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
   
+  # Width scale adjustment to avoid extremely large widths.
+  # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
   edgewidth <- 2
   if(wscale==TRUE){
     edgewidth <- 1/(E(mst)$weight)
@@ -617,14 +620,15 @@ new.poppr.msn <- function (pop, distmat, palette = topo.colors,
       edgewidth <- 1/(E(mst)$weight + 0.08)
     }
   }
+  
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
-  #print(mlg.color)
-  plot(mst, edge.width=edgewidth, edge.color=E(mst)$color, 
-       vertex.size=mlg.number*3, vertex.shape="pie", vertex.pie=mlg.cp, 
-       vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
-  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
-         fill=color, border=NULL)
+
+  plot(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+       vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
+       vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
+  legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
+         title = "Populations", fill=color, border=NULL)
   E(mst)$edge.width <- edgewidth
   E(mst)$vertex.size <- mlg.number
   E(mst)$vertex.pie <- mlg.cp
@@ -706,25 +710,26 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
     }
     
     if(gscale == TRUE){
-      w <- E(mst)$weight
-      E(mst)$color <- gray(adjustcurve(w, glim=glim, correct=gadj, show=FALSE))
+      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+                                       show=FALSE))
     }
     else{
       E(mst)$color <- rep("black", length(E(mst)$weight))
     }
     
     edgewidth <- 2
-    if(wscale==TRUE){
+    if(wscale == TRUE){
       edgewidth <- 1/(E(mst)$weight)
       if(any(E(mst)$weight < 0.08)){
         edgewidth <- 1/(E(mst)$weight + 0.08)
       }
     }
-    plot(mst, edge.width=edgewidth, edge.color=E(mst)$color,  
-         vertex.label = vertex.label, vertex.size=mlg.number*3, 
+    plot(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+         vertex.label = vertex.label, vertex.size = mlg.number*3, 
          vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex=0.75, legend=ifelse(is.null(pop(pop)), NA, pop$pop.names), title="Populations",
-           fill=palette(1), border=NULL)
+    legend(-1.55,1,bty = "n", cex = 0.75, 
+           legend = ifelse(is.null(pop(pop)), NA, pop$pop.names), 
+           title = "Populations", fill = palette(1), border = NULL)
     return(invisible(1))
   }
   if(is.null(pop(pop)) | length(pop@pop.names) == 1){
@@ -747,11 +752,10 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
   mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
   bclone <- bruvo.dist(cpop, replen=replen)
-  ###### Change names to MLGs #######
-  #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+
   ###### Create a graph #######
-  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
-  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  g <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
+  mst <- (minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight))
   
   if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
@@ -767,15 +771,15 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
-    w <- E(mst)$weight
-    E(mst)$color <- gray(adjustcurve(w, glim=glim, correct=gadj, show=FALSE))
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+                                     show=FALSE))
   }
   else{
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
   
   edgewidth <- 2
-  if(wscale==TRUE){
+  if(wscale == TRUE){
     edgewidth <- 1/(E(mst)$weight)
     if(any(E(mst)$weight < 0.08)){
       edgewidth <- 1/(E(mst)$weight + 0.08)
@@ -783,12 +787,12 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   }
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
-  #print(mlg.color)
-  plot(mst, edge.width=edgewidth, edge.color=E(mst)$color, 
-       vertex.size=mlg.number*3, vertex.shape="pie", vertex.pie=mlg.cp, 
-       vertex.pie.color=mlg.color, vertex.label = vertex.label, ...)
-  legend(-1.55,1,bty = "n", cex=0.75, legend=pop$pop.names, title="Populations",
-         fill=color, border=NULL)
+  
+  plot(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+       vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
+       vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
+  legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
+         title = "Populations", fill=color, border=NULL)
   E(mst)$edge.width <- edgewidth
   E(mst)$vertex.size <- mlg.number
   E(mst)$vertex.pie <- mlg.cp
