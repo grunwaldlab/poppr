@@ -64,7 +64,7 @@
 #' within the locus based on their allelic frequencies. This means that both the
 #' allelic state and heterozygosity will vary. The resulting data set will not
 #' have missing data.
-#'  \item \strong{Non-Parametric Bootstrap for Alleles} This will shuffle the
+#'  \item \strong{Non-Parametric Bootstrap} This will shuffle the
 #' allelic state for each individual. Missing data is fixed in place.
 #' } 
 #'
@@ -95,19 +95,35 @@
 shufflepop <- function(pop, method=1){
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
       "non-parametric bootstrap")
-  if(pop@type=="PA"){
-    pop@tab <- vapply(1:ncol(pop@tab),
-                      function(x) sample(pop@tab[, x]), pop@tab[, 1])
-  } else {
-    if (all((1:4)!=method)) {
-      cat("1 = Multilocus style (maintain heterozygosity and allelic structure)\n")
-      cat("2 = Permute Alleles (maintain allelic structure)\n")
-      cat("3 = Parametric Bootstrap (shuffle population based on allelic frequency)\n")
-      cat("4 = Non-Parametric Bootstrap of Alleles\n")
-      cat("Select an integer (1, 2, 3, or 4): ")
-      method <- as.integer(readLines(n = 1))
+  if (all((1:4)!=method)) {
+    cat("1 = Multilocus style (maintain heterozygosity and allelic structure)\n")
+    cat("2 = Permute Alleles (maintain allelic structure)\n")
+    cat("3 = Parametric Bootstrap (simulate new population based on allelic frequency)\n")
+    cat("4 = Non-Parametric Bootstrap (simulate new population)\n")
+    cat("Select an integer (1, 2, 3, or 4): ")
+    method <- as.integer(readLines(n = 1))
+  }
+  if (all((1:4)!=method)){
+    stop ("Non convenient method number")
+  }
+  if(pop@type == "PA"){
+    if(method == 1 | method == 2){
+      pop@tab <- vapply(1:ncol(pop@tab),
+                        function(x) sample(pop@tab[, x]), pop@tab[, 1])
     }
-    if (all((1:4)!=method)) (stop ("Non convenient method number"))
+    else if(method == 3){
+      paramboot <- function(x){
+        one <- mean(pop@tab[, x], na.rm=TRUE)
+        zero <- 1-one
+        return(sample(c(1,0), length(pop@tab[, x]), prob=c(one, zero), replace=TRUE))
+      }
+      pop@tab <- vapply(1:ncol(pop@tab), paramboot, pop@tab[, 1])
+    }
+    else if(method == 4){
+      pop@tab <- vapply(1:ncol(pop@tab),
+                        function(x) sample(pop@tab[, x], replace=TRUE), pop@tab[, 1])
+    }
+  } else {
     addpop <- function(locus="L1", pop, method=method){
       pop@tab[, pop@loc.fac %in% locus] <<- .locus.shuffler(pop[, loc=locus], method=method)@tab
     }
