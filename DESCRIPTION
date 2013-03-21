@@ -36,3 +36,4 @@ Collate:
     'data_subset.r'
     'internal.r'
     'sandbox.r'
+    'distances.r'
