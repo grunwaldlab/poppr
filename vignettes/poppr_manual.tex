@@ -112,7 +112,7 @@ After that, you can use \texttt{getfile()}
 At this point, a pop up window will appear like this\footnote{This window sometimes appears behind your current session of R, depending on the GUI and you will have to toggle to this window}:
 \begin{figure}[h!]
   \centering
-  \caption{A popup window as it appears in OSX (Mountain Lion).}
+  \caption{\footnotesize \footnotesize A popup window as it appears in OSX (Mountain Lion).}
   \label{getfile window}
 \includegraphics{getfile}
 \end{figure}
@@ -1672,7 +1672,7 @@ Netherlands     0     0     0     0     0     0     0     0     0      0
 \end{Schunk}
 \begin{figure}[h!]
   \centering
-  \caption{An example of a bar-chart produced by \texttt{mlg.table}. Note that this data set would produce several such charts.}
+  \caption{\footnotesize An example of a bar-chart produced by \texttt{mlg.table}. Note that this data set would produce several such charts.}
   \label{nortable}
 \includegraphics{poppr_manual-mlgbarplot}
 \end{figure}
@@ -1732,7 +1732,7 @@ L109 L110 L111 L112 L113 L114 L115 L116 L117 L118 L119 L120 L121 L122 L123 L124 
 \end{Schunk}
 \begin{figure}[h!]
   \centering
-  \caption{An example of a rarefaction curve produced using a MLG table.}
+  \caption{\footnotesize An example of a rarefaction curve produced using a MLG table.}
   \label{rarecurve}
 \includegraphics{poppr_manual-mlgrareplot}
 \end{figure}
@@ -1827,7 +1827,7 @@ Greece               0       0       1
 And we can see where exactly these three MLGs fall within our data set.
 \begin{figure}[h!]
   \centering
-  \caption{An example of the same bar-chart as \textit{Figure 1}, but focusing on three MLGs.}
+  \caption{\footnotesize An example of the same bar-chart as \textit{Figure 1}, but focusing on three MLGs.}
   \label{nortable2}
 \includegraphics{poppr_manual-subnor}
 \end{figure}
@@ -1954,7 +1954,7 @@ Now that we have our data frame, we can do a couple of things. We can first see 
 And now we can visualize the largest ten MLG complexes using ggplot2's qplot function.
 \begin{figure}[h]
   \centering
-  \caption{An example of the versatility of the MLG information.}
+  \caption{\footnotesize An example of the versatility of the MLG information.}
   \label{mlgtable2}
 \begin{Schunk}
 \begin{Sinput}
@@ -1986,7 +1986,7 @@ Default Command:\\
   \item \texttt{sample -} You should use this flag whenever you want to reshuffle your data set. Indicate how many times you want to reshuffle your data set to obtain a P-value. 
   \item \texttt{method -} a number from 1 to 4 indicating the sampling method:
   \begin{enumerate}
-    \item \textit{multilocus} style permutation. \cite{Agapow:2001}
+    \item \textit{multilocus} style permutation \cite{Agapow:2001}.
     \item permutation over alleles.
     \item parametric bootstrap.
     \item non-parametric bootstrap.
@@ -2040,10 +2040,10 @@ We can use \texttt{popsub} to subset for specific populations. Here, we'll also 
 \end{Soutput}
 \end{Schunk}
 
-This analysis produced the histograms you see below. What these histograms represent are 999 resamplings of the data under the null hypothesis ($H_0$) of sexual reproduction. The way that $H_0$ is created is determined by the sampling method chosen. In this case, the method was to shuffle genotypes at each locus to simulate unlinked loci. Since the P = 0.589, we would fail to reject $H_0$ and we therefore would conclude that this population is sexually reproducing. \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}
+This analysis produced the histograms you see below. What these histograms represent are 999 resamplings of the data under the null hypothesis ($H_0$) of sexual reproduction. The way that $H_0$ is created is determined by the sampling method chosen. In this case, the method was to shuffle genotypes at each locus to simulate unlinked loci. Since the P = 0.589, we would fail to reject $H_0$ and we therefore might conclude that this population is sexually reproducing \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
 \begin{figure}[h!]
   \centering
-  \caption{Histograms of 999 values of $I_A$ (Ia) and $\bar{r}_D$ (rbarD) calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions.}
+  \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_D$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
   \label{ia_demo_fig}
 \includegraphics{poppr_manual-095}
 \end{figure}
@@ -2075,7 +2075,7 @@ There, is, of course one little caveat that needs to be mentioned. The P-values 
 \end{Schunk}
 % \begin{figure}[h!]
 %   \centering
-%   \caption{Output for population 1 of the data set ``Aeut"}
+%   \caption{\footnotesize Output for population 1 of the data set ``Aeut"}
 %   \label{ia_demo_fig2}
 % <<fig=TRUE, echo=FALSE, eval=TRUE, figs.only=TRUE, resolution=300>>=
 % set.seed(1001)
@@ -2086,9 +2086,9 @@ There, is, of course one little caveat that needs to be mentioned. The P-values 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Going the distance \{Bruvo's distance\}}
+\subsection{Step by stepwise mutation \{Bruvo's distance\}}
 
-\tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers that allows for differing ploidy levels \cite{Bruvo:2004}. As adegenet's genind object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.  It is important to note that this is a distance between individuals, not populations, unlike Nei \cite{Nei:1978}. For distances between populations, see the adegenet function \texttt{dist.genpop}\\
+\tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As adegenet's genind object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.  It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the adegenet function \texttt{dist.genpop}\\
 \subsubsection{Function: bruvo.dist}
 
 \tab\tab Bruvo's distance requires knowledge of the repeat lengths of each locus, so take care to read the description below.
@@ -2122,7 +2122,7 @@ You can visualize this better with a simple heatmap:\\
 
 \begin{figure}[h!]
   \centering
-  \caption{Heatmap representation of Bruvo's distance for population 9 of the data set ``nancycats"}
+  \caption{\footnotesize Heatmap representation of Bruvo's distance for population 9 of the data set ``nancycats"}
   \label{bruvo_heat_map}
 \begin{Schunk}
 \begin{Sinput}
@@ -2174,19 +2174,22 @@ Now we can see that all of the labels are corresponding to population 9. Let's c
 \end{Schunk}
 \begin{figure}[h!]
   \centering
-  \caption{Heatmap representation of Bruvo's distance for populations 8 and 9 of the data set ``nancycats"}
+  \caption{\footnotesize Heatmap representation of Bruvo's distance for populations 8 and 9 of the data set ``nancycats"}
   \label{bruvo_heat_map_8to9}
 \includegraphics{poppr_manual-popcompare_bruvo2}
 \end{figure}
 
 Remember N113 and N111? Take a look at where they fall on the heatmap. They don't cluster together with population 9 anymore, but somewhere in population 8.
 % \newpage
+
+\subsection{See the forest for the trees \{visualizing distances with dendrograms and networks\}}
+
 \subsubsection{Function: bruvo.boot}
 
 \tab\tab This function provides the ability to draw a dendrogram based on Bruvo's distance including bootstrap support. 
 \begin{quote}
 Default Command:\\
-\texttt{bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE)}
+\texttt{bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -2195,29 +2198,28 @@ Default Command:\\
   \item \texttt{tree -} Two trees are available, Neighbor-Joining \texttt{"nj"} or UPGMA \texttt{"upgma"}.
   \item \texttt{showtree -} if \texttt{TRUE}, a tree will be plotted automatically.
   \item \texttt{cutoff -} This is a number between 0 and 100 indicating the cutoff value for the bootstrap nodelables. If you only wanted to see the the boostrap values for nodes that were present more than 75\% of the time, you would use \texttt{cutoff = 75}. If you don't put anything for this parameter, all values will be shown.
+  \item \texttt{quiet -} if \texttt{quiet = TRUE}, no standard messages will be printed to screen. If \texttt{quiet = FALSE} (default), then a progress bar and standard message will be printed to the screen.
 \end{itemize}
 
 For this example, let's set the cutoff to 50\%.
 \begin{Schunk}
 \begin{Sinput}
 > set.seed(1001)
-> nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, tree="upgma", cutoff=50)
+> nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, cutoff=50)
 \end{Sinput}
 \end{Schunk}
 \begin{Schunk}
 \begin{Soutput}
 |================================================================================| 100%
 \end{Soutput}
-\end{Schunk}
-\begin{figure}[h!]
-  \centering
-  \caption{UPGMA Tree of Bruvo's distance for population 9 of the data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent percentage of bootstrap replicates that contained that node.}
-  \label{bruvo_upgma}
-\begin{Schunk}
 \begin{Soutput}
 Bootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)
 \end{Soutput}
 \end{Schunk}
+\begin{figure}[h!]
+  \centering
+  \caption{\footnotesize UPGMA Tree of Bruvo's distance for population 9 of the data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent percentage of bootstrap replicates that contained that node.}
+  \label{bruvo_upgma}
 \includegraphics{poppr_manual-bruvo_tree}
 \end{figure}
 \subsubsection{Function: bruvo.msn}
@@ -2225,7 +2227,10 @@ Bootstrapping... (note: calculation of node labels can take a while even after t
 \tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds.
 \begin{quote}
 Default Command:\\
-\texttt{bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", ...)}
+\texttt{bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All",\\ 
+  \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
+  \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
+}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -2236,29 +2241,31 @@ Default Command:\\
   \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
   \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will be converted to greyscale based on Bruvo's distance. If two nodes are closely related, the edge will appear darker. The limits of the scale can be set by the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors will be black. 
   \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets you set the limits of the grey scaling based on R's internal \texttt{grey} function. For example, if you wanted a maximum of 50\% white saturation (for use if you have distantly related nodes) and a minimum of 1\%, you would use \texttt{glim = c(0.01, 0.5)}. 
+  \item \texttt{gadj -} This is an integer greater than zero used to adjust the scaling factor for the grey curve. Since very small changes in the grey scale are not easily precieved, it's useful to be able to adjust the grey scale to be able to show you the weights of each edge. For example, a population with most weights less than 0.2, you might want to set \texttt{gadj = 10} to exaggerate the grey scale. 
+  \item \texttt{gweight -} If \texttt{gweight = 1}, the grey scale adjustment will be weighted towards separating out smaller values of Bruvo's distance. If \texttt{gweight = 2}, the grey scale ajustment will be weighted towards separating out larger values of Bruvo's distance.
   \item \texttt{wscale -} If this is set to \texttt{TRUE}, edge widths will be displayed corresponding to Bruvo's distance in that thicker edges will represent a smaller distance between nodes. If this is set to \texttt{FALSE}, all edges will be set to a width of 2. 
   \item \texttt{... -} This is a placeholder for any other arguments that you want to supply to \textit{igraph}. Useful arguments are \texttt{vertex.label.cex} to adjust the size of the labels, \texttt{vertex.label.dist} to adjust the position of the labels, and \texttt{vertex.label.color} to adjust the color of the labels.
 \end{itemize}
 
-Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. \textit{Poppr} offers an easy way to plot these. For a demonstration, let's analyze a simulated data set of 50 individuals from a population that reproduces at a 99.9\% rate of clonal reproduction.
+Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. \textit{Poppr} offers an easy way to plot these. For a demonstration, let's analyze a simulated data set of 50 individuals from populations that reproduce at a 99.9\% rate of clonal reproduction.
 
-\setkeys{Gin}{width=0.8\textwidth}
-\begin{figure}[h!]
-  \centering
-  \caption{Minimum Spanning Network representing 4 simulated populations. Each node represents a different multi locus genotype (MLG). Node sizes and colors correspond to the number of individuals and population membership, respectively. Edge thickness and color are proportional to Bruvo's distance. Edge lengths are arbitrary.}
-  \label{mst_bruvo}
 \begin{Schunk}
 \begin{Sinput}
 > data(partial_clone)
 > set.seed(9005)
-> bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
+> pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
 +           vertex.label.dist=-0.5, palette=colorRampPalette(c("blue", "yellow")))
 \end{Sinput}
 \end{Schunk}
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}[ht!]
+  \centering
+  \caption{\footnotesize Minimum Spanning Network representing 4 simulated populations. Each node represents a different multi locus genotype (MLG). Node sizes and colors correspond to the number of individuals and population membership, respectively. Edge thickness and color are proportional to Bruvo's distance. Edge lengths are arbitrary.}
+  \label{mst_bruvo}
 \includegraphics{poppr_manual-bruvo_msn}
 \end{figure}
 \setkeys{Gin}{width=0.5\textwidth}
-
+\newpage
 Note that the thickness of the edges (the lines that are connecting the dots) is representative of relatedness between individuals, but the lengths do not necessarily mean anything due to the fact that with a larger data sets, displaying lengths proportional to relatedness would be impossible to draw on a 2D surface. Interpreting these data would show that MLG 9 has 5 individuals from all four populations and that it is most closely related to MLG 7, wheras the most distantly related connection exists between MLG 25 and MLG 26.
 
 \newpage
@@ -2412,18 +2419,18 @@ The reason why the P-values would be different is described at the end of sectio
 \end{Schunk}
 \begin{figure}[h!]
   \centering
-  \caption{Output of multilocus-style sampling.}
+  \caption{\footnotesize Output of multilocus-style sampling.}
   \label{simulated_dist_fig}
-\includegraphics{poppr_manual-119}
+\includegraphics{poppr_manual-120}
 \end{figure}
 \newpage
 
 Take a look a these two histograms. The number of ways you can recombine the data with the default sampling method is very small. Other sampling methods could give a more theoretical distribution. Let's try the parametric bootstrap.
 \begin{figure}[h!]
   \centering
-  \caption{Output for parametric bootstrap sampling.}
+  \caption{\footnotesize Output for parametric bootstrap sampling.}
   \label{simulated_param_fig}
-\includegraphics{poppr_manual-120}
+\includegraphics{poppr_manual-121}
 \end{figure}
 
 As you can see, the distribution is much closer to a distribution we would expect if this were a small sample of a larger population. 
@@ -2555,9 +2562,11 @@ This is calculated over all possible combinations of individuals and results in 
 \item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE)
 \item mlg.vector(pop)
 \item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE)
+\item diss.dist(pop)
 \item bruvo.dist(pop, replen = c(2))
 \item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL)
 \item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), wscale = TRUE, ...)
+\item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
 \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
 \end{itemize}
 \bibliographystyle{plain}
