@@ -3,7 +3,8 @@
 \title{Create a tree using Bruvo's Distance with non-parametric bootstrapping.}
 \usage{
   bruvo.boot(pop, replen = c(2), sample = 100,
-    tree = "upgma", showtree = TRUE, cutoff = NULL, ...)
+    tree = "upgma", showtree = TRUE, cutoff = NULL,
+    quiet = FALSE, ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -23,6 +24,10 @@
 
   \item{cutoff}{\code{integer} the cutoff value for
   bootstrap node label values (between 0 and 100).}
+
+  \item{quiet}{\code{logical} defaults to \code{FALSE}. If
+  \code{TRUE}, a progress bar and messages will be
+  supressed.}
 
   \item{...}{any argument to be passed on to
   \code{\link{boot.phylo}}. eg. \code{quiet = TRUE}.}
