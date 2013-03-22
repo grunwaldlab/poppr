@@ -172,7 +172,11 @@ bruvo.dist <- function(pop, replen=c(2)){
 #' @param showtree \code{logical} if \code{TRUE}, a tree will be plotted with
 #' nodelabels.
 #' 
-#' @param cutoff \code{integer} the cutoff value for bootstrap node label values (between 0 and 100).
+#' @param cutoff \code{integer} the cutoff value for bootstrap node label values 
+#' (between 0 and 100).
+#' 
+#' @param quiet \code{logical} defaults to \code{FALSE}. If \code{TRUE}, a
+#' progress bar and messages will be supressed.
 #' 
 #' @param ... any argument to be passed on to \code{\link{boot.phylo}}. eg.
 #' \code{quiet = TRUE}.
@@ -213,7 +217,8 @@ bruvo.dist <- function(pop, replen=c(2)){
 #==============================================================================#
 #' @importFrom phangorn upgma
 #' @importFrom ape nodelabels nj boot.phylo
-bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=TRUE, cutoff=NULL, ...) {
+bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", 
+                       showtree=TRUE, cutoff=NULL, quiet=FALSE, ...) {
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
@@ -270,8 +275,10 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", showtree=
       return(tre)
     }
   }
-  cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
-  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid)), B = sample, ...)
+  if(quiet == FALSE){
+    cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
+  }
+  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid)), B = sample, quiet=quiet, ...)
   tre$node.labels <- round(((bp / sample)*100))
   if (!is.null(cutoff)){
     if (cutoff < 1 | cutoff > 100){
