@@ -227,3 +227,253 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
     print(derp)
   }
 } 
+
+#==============================================================================#
+#
+#' Create a minimum spanning network of selected populations using a distance
+#' matrix.
+#'
+#' @param pop a \code{\link{genind}} object
+#'
+#' @param distmat a distance matrix that has been derived from your data set.
+#' 
+#' @param palette a \code{function} defining the color palette to be used to
+#' color the populations on the graph. It defaults to \code{\link{topo.colors}},
+#' but you can easily create new schemes by using \code{\link{colorRampPalette}}
+#' (see examples for details)
+#' 
+#' @param sublist a \code{vector} of population names or indexes that the user
+#' wishes to keep. Default to "ALL".
+#'
+#' @param blacklist a \code{vector} of population names or indexes that the user
+#' wishes to discard. Default to \code{NULL}
+#' 
+#' @param vertex.label a \code{vector} of characters to label each vertex. There
+#' are two defaults: \code{"MLG"} will label the nodes with the multilocus genotype
+#' from the original data set and \code{"inds"} will label the nodes with the 
+#' representative individual names.
+#' 
+#' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
+#' of the edges proportional to the observed distance, with the lines becoming 
+#' darker for more related nodes. See \code{\link{greycurve}} for details.
+#' 
+#' @param glim "grey limit". Two numbers between zero and one. They determine 
+#' the upper and lower limits for the \code{\link{gray}} function. Default is 0
+#' (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
+#' 
+#' @param gadj "grey adjust". a positive \code{integer} greater than zero that
+#' will serve as the exponent to the edge weight to scale the grey value to
+#' represent that weight. See \code{\link{greycurve}} for details.
+#' 
+#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale
+#' will be weighted to emphasize the differences between closely related nodes.
+#' If it is 2, the grey scale will be weighted to emphasize the differences
+#' between more distantly related nodes. See \code{\link{greycurve}} for details.
+#' 
+#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be
+#' scaled proportional to the inverse of the observed distance , with the lines 
+#' becoming thicker for more related nodes.
+#' 
+#' @param ... any other arguments that could go into plot.igraph
+#'
+#' @return 
+#' \item{graph}{a minimum spanning network with nodes corresponding to MLGs within
+#' the data set. Colors of the nodes represent population membership. Width and
+#' color of the edges represent distance.}
+#' \item{populations}{a vector of the population names corresponding to the 
+#' vertex colors}
+#' \item{colors}{a vector of the hexadecimal representations of the colors used
+#' in the vertex colors}
+#' 
+#' @note The edges of these graphs may cross each other if the graph becomes too
+#' large. 
+#'
+#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
+#' \code{\link{nodelabels}}, \code{\link{na.replace}}, \code{\link{missingno}}, 
+#' \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
+#' 
+#' @export
+#' @author Javier F. Tabima, Zhian N. Kamvar
+#' @examples
+#' 
+#' # Load the data set and calculate the distance matrix for all individuals.
+#' data(Aeut)
+#' A.dist <- diss.dist(Aeut)
+#' 
+#' # Graph it.
+#' A.msn <- poppr.msn(Aeut, A.dist, gadj=15, vertex.label=NA)
+#' 
+#' \dontrun{
+#' # Set subpopulation structure.
+#' Aeut.sub <- splitcombine(Aeut, method=2, hier=c("Pop", "Subpop"))
+#' 
+#' # Plot respective to the subpopulation structure
+#' As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA)
+#' 
+#' # Show only the structure of the Athena population.
+#' As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA, sublist=1:10)
+#' 
+#' }
+#' 
+#==============================================================================#
+poppr.msn <- function (pop, distmat, palette = topo.colors, 
+                       sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+                       gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
+                       wscale=TRUE, ...){
+  if(!require(igraph)){
+    stop("You must have the igraph library installed to use this function.\n")
+  }
+  if(class(distmat) != "dist"){
+    if(is.matrix(distmat)){
+      if(any(nInd(pop) != dim(distmat))){
+        stop("The size of the distance matrix does not match the size of the data.\n")
+      }
+      distmat <- as.dist(distmat)
+    }
+    else{
+      stop("The distance matrix is neither a dist object nor a matrix.\n")
+    }
+  }
+  if(nInd(pop) != attr(distmat, "Size")){
+    stop("The size of the distance matrix does not match the size of the data.\n")
+  }
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
+  # Storing the MLG vector into the genind object
+  pop$other$mlg.vec <- mlg.vector(pop)
+  #bclone <- as.matrix(distmat)[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+  
+  singlepop <- function(pop, vertex.label){
+    cpop <- pop[.clonecorrector(pop), ]
+    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+    rownames(bclone) <- cpop$pop
+    colnames(bclone) <- cpop$pop
+    #bclone <- discreet.dist(cpop)
+    mclone <- as.dist(bclone)
+    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
+    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+      if(toupper(vertex.label) == "MLG"){
+        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+      }
+      else if(toupper(vertex.label) == "INDS"){
+        vertex.label <- cpop$ind.names
+      }
+    }
+    
+    if(gscale == TRUE){
+      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+                                       show=FALSE))
+    }
+    else{
+      E(mst)$color <- rep("black", length(E(mst)$weight))
+    }
+    
+    edgewidth <- 2
+    if(wscale==TRUE){
+      edgewidth <- 1/(E(mst)$weight)
+      if(any(E(mst)$weight < 0.08)){
+        edgewidth <- 1/(E(mst)$weight + 0.08)
+      }
+    }
+    populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
+    plot(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+         vertex.label = vertex.label, vertex.size = mlg.number*3, 
+         vertex.color = palette(1),  ...)
+    legend(-1.55,1,bty = "n", cex = 0.75, 
+           legend = populations, title = "Populations", fill = palette(1), 
+           border = NULL)
+    E(mst)$width <- edgewidth
+    V(mst)$size <- mlg.number
+    V(mst)$color <- palette(1)
+    V(mst)$label <- vertex.label
+    return(list(graph = mst, populations = populations, colors = palette(1)))
+  }
+  bclone <- as.matrix(distmat)
+  # The clone correction of the matrix needs to be done at this step if there
+  # is only one or no populations. 
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+    return(singlepop(pop, vertex.label))
+  }
+  # This will subset both the population and the matrix. 
+  if(sublist[1] != "ALL" | !is.null(blacklist)){
+    sublist_blacklist <- sub_index(pop, sublist, blacklist)
+    bclone <- bclone[sublist_blacklist, sublist_blacklist]
+    pop <- popsub(pop, sublist, blacklist)
+  }
+  
+  # This will clone correct the incoming matrix. 
+  bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+  
+  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop(pop, vertex.label))
+  }
+  # Obtaining population information for all MLGs
+  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
+  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
+  cpop <- pop[.clonecorrector(pop), ]
+  
+  # This will determine the size of the nodes based on the number of individuals
+  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
+  # give us the numbers and the population information in the correct order.
+  # Note: rank is used to correctly subset the data
+  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
+  #bclone <- discreet.dist(cpop)
+  rownames(bclone) <- cpop$pop
+  colnames(bclone) <- cpop$pop
+  
+  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
+  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  
+  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if(toupper(vertex.label) == "MLG"){
+      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+    }
+    else if(toupper(vertex.label) == "INDS"){
+      vertex.label <- cpop$ind.names
+    }
+  }
+  ###### Color schemes #######  
+  # The pallete is determined by what the user types in the argument. It can be 
+  # rainbow, topo.colors, heat.colors ...etc.
+  palette <- match.fun(palette)
+  color <- palette(length(pop@pop.names))
+  
+  ###### Edge adjustments ######
+  # Grey Scale Adjustment weighting towards more diverse or similar populations.
+  if(gscale == TRUE){
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+                                     show=FALSE))
+  }
+  else{
+    E(mst)$color <- rep("black", length(E(mst)$weight))
+  }
+  
+  # Width scale adjustment to avoid extremely large widths.
+  # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
+  edgewidth <- 2
+  if(wscale==TRUE){
+    edgewidth <- 1/(E(mst)$weight)
+    if(any(E(mst)$weight < 0.08)){
+      edgewidth <- 1/(E(mst)$weight + 0.08)
+    }
+  }
+  
+  # This creates a list of colors corresponding to populations.
+  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  
+  plot(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+       vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
+       vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
+  legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
+         title = "Populations", fill=color, border=NULL)
+  E(mst)$width <- edgewidth
+  V(mst)$size <- mlg.number
+  V(mst)$shape <- "pie"
+  V(mst)$pie <- mlg.cp
+  V(mst)$pie.color <- mlg.color
+  V(mst)$label <- vertex.label
+  return(list(graph = mst, populations = pop$pop.names, colors = color))
+}
