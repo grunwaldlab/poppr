@@ -65,7 +65,7 @@ The real power of \textit{poppr} is in the data manipulation and analytic tools.
 \subsection{Installation}
 
 \tab\tab This manual assumes that you have already installed R. If you do not, please refer to The CRAN home page at \url{http://cran.r-project.org/}. The author also recommends utilizing an R gui such as Rstudio (\url{http://www.rstudio.com/}) for a better R experience. 
-To install \textit{poppr} from CRAN is as simple as selecting "Package Installer" from the menu "Packages \& Data" in the gui or by typing in your command line:
+To install \textit{poppr} from CRAN is as simple as selecting ``Package Installer" from the menu ``Packages \& Data" in the gui or by typing in your command line:
 \begin{Schunk}
 \begin{Sinput}
 > install.packages("poppr", dependencies=TRUE)
@@ -2043,7 +2043,7 @@ We can use \texttt{popsub} to subset for specific populations. Here, we'll also 
 This analysis produced the histograms you see below. What these histograms represent are 999 resamplings of the data under the null hypothesis ($H_0$) of sexual reproduction. The way that $H_0$ is created is determined by the sampling method chosen. In this case, the method was to shuffle genotypes at each locus to simulate unlinked loci. Since the P = 0.589, we would fail to reject $H_0$ and we therefore might conclude that this population is sexually reproducing \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
 \begin{figure}[h!]
   \centering
-  \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_D$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
+  \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
   \label{ia_demo_fig}
 \includegraphics{poppr_manual-095}
 \end{figure}
@@ -2073,19 +2073,40 @@ There, is, of course one little caveat that needs to be mentioned. The P-values 
 2.90602921 0.00100000 0.07237008 0.00100000 
 \end{Soutput}
 \end{Schunk}
-% \begin{figure}[h!]
-%   \centering
-%   \caption{\footnotesize Output for population 1 of the data set ``Aeut"}
-%   \label{ia_demo_fig2}
-% <<fig=TRUE, echo=FALSE, eval=TRUE, figs.only=TRUE, resolution=300>>=
-% set.seed(1001)
-% ia(popsub(Aeut.pop, 1), sample=999, method=3, quiet=TRUE, hist=TRUE)
-% @
-% \end{figure}
-%\subsubsection{Gory details}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Going the distance \{dissimilarity distance\}}
+\tab\tab Since \textit{poppr} is still in its infancy, the number of distance measures it can offer are few. Bruvo's distance is well supported and allows you to quickly visualize your data, but it only allows for microsatellites. The index of association, above utilizes a discreet dissimilarity distance matrix. It is with this matrix that we have constructed a relative dissimilarity distance where the distance is the ratio of the number of dissimilarities to the number of dissimilarities possible. The number of dissimilarities possible is the number of loci multiplied by the ploidy, so if you have 10 loci from a diploid population, then there are 20 dissimilarities possible. For details, see equations (2) and (3) in section 6.1.1. 
+
+\subsubsection{Function: diss.dist}
+
+\tab\tab Use this function to calculate relative dissimilarity between individuals and return a distance matrix for use in creating cladograms or minimum spanning networks.
+
+\begin{quote}
+Default Command:\\
+\texttt{diss.dist(pop)}
+\end{quote}
+
+\begin{itemize}
+  \item \texttt{pop -} a \texttt{genind} object. 
+\end{itemize}
+Since we have a data set that we know is very clonal, let's analyze the \textit{A. euteiches} data set \cite{Grunwald:2006} and create a heatmap to visualize the degree of difference between populations.
+\begin{Schunk}
+\begin{Sinput}
+> data(Aeut)
+> A.dist <- diss.dist(Aeut)
+> heatmap(as.matrix(A.dist), symm=TRUE)
+\end{Sinput}
+\end{Schunk}
+\begin{figure}[h!]
+  \centering
+  \caption{\footnotesize Heatmap representation of a dissimilarity distance for the data set ``Aeut"}
+  \label{bruvo_heat_map}
+\includegraphics{poppr_manual-099}
+\end{figure}
+
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}
 
 \tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As adegenet's genind object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.  It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the adegenet function \texttt{dist.genpop}\\
@@ -2129,7 +2150,7 @@ You can visualize this better with a simple heatmap:\\
 > heatmap(as.matrix(dist9), symm=TRUE)
 \end{Sinput}
 \end{Schunk}
-\includegraphics{poppr_manual-100}
+\includegraphics{poppr_manual-102}
 \end{figure}
 \newpage
 
@@ -2184,6 +2205,8 @@ Remember N113 and N111? Take a look at where they fall on the heatmap. They don'
 
 \subsection{See the forest for the trees \{visualizing distances with dendrograms and networks\}}
 
+\tab\tab Staring at a raw distance matrix might be able to tell you something about your data, but it also might be able to ruin your eyesight. In this section, we present functions to display this data in trees and networks. 
+
 \subsubsection{Function: bruvo.boot}
 
 \tab\tab This function provides the ability to draw a dendrogram based on Bruvo's distance including bootstrap support. 
@@ -2222,9 +2245,76 @@ Bootstrapping... (note: calculation of node labels can take a while even after t
   \label{bruvo_upgma}
 \includegraphics{poppr_manual-bruvo_tree}
 \end{figure}
-\subsubsection{Function: bruvo.msn}
 
-\tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds.
+\subsubsection{Function: greycurve}
+\tab\tab Use this function to display a gradient of grey values based on user-defined parameters. The following functions will display a minimum spanning network that utilize a grey scale to display the weight of the lines (referred to as ``edges") that connect two or more individuals. The darker the line the closer the distance. Since this is based off of a linear grey scale, what happens when you have a distance matrix comprised of values all below 0.2 or all above 0.8? 
+
+With linear grey scaling, it becomes very difficult to detect the differences in these ranges. The following function allows you to visualize and manipulate a gradient from black to white so that you can use it in \textit{poppr}'s msn functions below to maximize the visual differences in your data.
+
+\begin{quote}
+Default Command:\\
+\texttt{greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)}
+\end{quote}
+
+
+This function does not return any values. It will print a visual gradient from black to white horizontally. On this gradient, it will plot the adjustment curve (in opposing grey values), yellow horizontal lines bounding the maximum and minimum values, and the equation used to calculate the correction in red. Keep in mind that this is plotting values from zero to one.
+
+\newpage
+First, we'll see what happens when we change the weight parameter.
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[h!]
+\begin{minipage}[b]{0.45\linewidth}
+\centering
+\caption{\footnotesize Default for \texttt{greywidth()}, weighted for small values.}
+\begin{Schunk}
+\begin{Sinput}
+> greycurve()
+\end{Sinput}
+\end{Schunk}
+\includegraphics{poppr_manual-greycurve_normal}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\centering
+\caption{\footnotesize weighting for large values.}
+\begin{Schunk}
+\begin{Sinput}
+> greycurve(gweight = 2)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{poppr_manual-greywidth_inverse}
+\end{minipage}
+\end{figure}
+
+Now, we'll see what happens when we change the adjustment parameter (affects the shape of the curve) and the upper and lower limits of the grey scale.
+
+\begin{figure}[h!]
+\begin{minipage}[b]{0.45\linewidth}
+\centering
+\caption{\footnotesize Setting the lower and upper limits and weighting the curve heavily toward smaller values.}
+\begin{Schunk}
+\begin{Sinput}
+> greycurve(glim = c(0.2, 0.9), gadj=15)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{poppr_manual-greycurve_small_heavy}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\centering
+\caption{\footnotesize Same as the figure on the left, but weighting heavily toward larger values.}
+\begin{Schunk}
+\begin{Sinput}
+> greycurve(glim = c(0.2, 0.9), gadj=15, gweight=2)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{poppr_manual-greywidth_large_heavy}
+\end{minipage}
+\end{figure}
+
+
+\subsubsection{Function: bruvo.msn}
+\tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to.
 \begin{quote}
 Default Command:\\
 \texttt{bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All",\\ 
@@ -2236,12 +2326,12 @@ Default Command:\\
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
   \item \texttt{palette -} this is a \textbf{function} definining a color palette to use. The default is \texttt{topo.colors}. There are different palettes, which you can search by typing \texttt{?rainbow}. If you want a custom color palette, an easy way is to use the function \texttt{colorRampPalette}.
-  \item \texttt{sublist -} The populations you wish to analyze. This defaults to "All".
+  \item \texttt{sublist -} The populations you wish to analyze. This defaults to ``All".
   \item \texttt{blacklist -} Populations you do not want to include in the graph.
   \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
   \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will be converted to greyscale based on Bruvo's distance. If two nodes are closely related, the edge will appear darker. The limits of the scale can be set by the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors will be black. 
   \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets you set the limits of the grey scaling based on R's internal \texttt{grey} function. For example, if you wanted a maximum of 50\% white saturation (for use if you have distantly related nodes) and a minimum of 1\%, you would use \texttt{glim = c(0.01, 0.5)}. 
-  \item \texttt{gadj -} This is an integer greater than zero used to adjust the scaling factor for the grey curve. Since very small changes in the grey scale are not easily precieved, it's useful to be able to adjust the grey scale to be able to show you the weights of each edge. For example, a population with most weights less than 0.2, you might want to set \texttt{gadj = 10} to exaggerate the grey scale. 
+  \item \texttt{gadj -} This is an integer greater than zero used to adjust the scaling factor for the grey curve. Since very small changes in the grey scale are not easily precieved, it's useful to be able to adjust the grey scale to be able to show you the weights of each edge. For example, a population with most weights less than 0.3, you might want to set \texttt{gadj = 10} to exaggerate the grey scale. 
   \item \texttt{gweight -} If \texttt{gweight = 1}, the grey scale adjustment will be weighted towards separating out smaller values of Bruvo's distance. If \texttt{gweight = 2}, the grey scale ajustment will be weighted towards separating out larger values of Bruvo's distance.
   \item \texttt{wscale -} If this is set to \texttt{TRUE}, edge widths will be displayed corresponding to Bruvo's distance in that thicker edges will represent a smaller distance between nodes. If this is set to \texttt{FALSE}, all edges will be set to a width of 2. 
   \item \texttt{... -} This is a placeholder for any other arguments that you want to supply to \textit{igraph}. Useful arguments are \texttt{vertex.label.cex} to adjust the size of the labels, \texttt{vertex.label.dist} to adjust the position of the labels, and \texttt{vertex.label.color} to adjust the color of the labels.
@@ -2265,9 +2355,61 @@ Often, minimum spanning networks are the preferred way to visualize Bruvo's dist
 \includegraphics{poppr_manual-bruvo_msn}
 \end{figure}
 \setkeys{Gin}{width=0.5\textwidth}
-\newpage
-Note that the thickness of the edges (the lines that are connecting the dots) is representative of relatedness between individuals, but the lengths do not necessarily mean anything due to the fact that with a larger data sets, displaying lengths proportional to relatedness would be impossible to draw on a 2D surface. Interpreting these data would show that MLG 9 has 5 individuals from all four populations and that it is most closely related to MLG 7, wheras the most distantly related connection exists between MLG 25 and MLG 26.
 
+Note that the thickness of the edges (the lines that are connecting the dots) is representative of relatedness between individuals, but the lengths do not necessarily mean anything due to the fact that with a larger data sets, displaying lengths proportional to relatedness would be impossible to draw on a 2D surface. Interpreting these data would show that MLG 9 has 5 individuals from all four populations and that it is most closely related to MLG 7, whereas the most distantly related connection exists between MLG 25 and MLG 26.
+
+\subsubsection{Function: poppr.msn}
+
+\tab\tab Use this function to draw a minimum spanning network from your data set and a distance matrix derived from your data set. Since there are hundreds of distances that can be calculated for genetic data, and since I want to be able to graduate at some point in this decade, functions to automatically calculate distances and draw the minimum spanning networks will be few and far between.
+
+This function is an attempt to meet the user halfway and draw a minimum spanning network provided that the user has supplied two things:
+\begin{enumerate}
+  \item A distance matrix over all individuals.
+  \item The original data set containing demographic information.
+\end{enumerate}
+
+That's it. For the most part, this function is functionally the same as \texttt{bruvo.msn}, except that instead of being exclusive to microsatellite markers, you can now visualize distances in any marker type provided that you have the two items listed above.
+
+\begin{quote}
+Default Command:\\
+\texttt{poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",\\ 
+  \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
+  \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
+}
+\end{quote}
+\begin{itemize}
+  \item \texttt{pop -} a \texttt{genind} object.
+  \item \texttt{distmat -} a dissimilarity distance matrix derived from your data with distances between zero and one.
+  \item \texttt{palette -} this is a \textbf{function} definining a color palette to use. The default is \texttt{topo.colors}. There are different palettes, which you can search by typing \texttt{?rainbow}. If you want a custom color palette, an easy way is to use the function \texttt{colorRampPalette}.
+  \item \texttt{sublist -} The populations you wish to analyze. This defaults to ``All".
+  \item \texttt{blacklist -} Populations you do not want to include in the graph.
+  \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
+  \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will be converted to greyscale based on the distance. If two nodes are closely related, the edge will appear darker. The limits of the scale can be set by the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors will be black. 
+  \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets you set the limits of the grey scaling based on R's internal \texttt{grey} function. For example, if you wanted a maximum of 50\% white saturation (for use if you have distantly related nodes) and a minimum of 1\%, you would use \texttt{glim = c(0.01, 0.5)}. 
+  \item \texttt{gadj -} This is an integer greater than zero used to adjust the scaling factor for the grey curve. Since very small changes in the grey scale are not easily precieved, it's useful to be able to adjust the grey scale to be able to show you the weights of each edge. For example, a population with most weights less than 0.3, you might want to set \texttt{gadj = 10} to exaggerate the grey scale. 
+  \item \texttt{gweight -} If \texttt{gweight = 1}, the grey scale adjustment will be weighted towards separating out smaller values of the distance. If \texttt{gweight = 2}, the grey scale ajustment will be weighted towards separating out larger values of Bruvo's distance.
+  \item \texttt{wscale -} If this is set to \texttt{TRUE}, edge widths will be displayed corresponding to Bruvo's distance in that thicker edges will represent a smaller distance between nodes. If this is set to \texttt{FALSE}, all edges will be set to a width of 2. 
+  \item \texttt{... -} This is a placeholder for any other arguments that you want to supply to \textit{igraph}. Useful arguments are \texttt{vertex.label.cex} to adjust the size of the labels, \texttt{vertex.label.dist} to adjust the position of the labels, and \texttt{vertex.label.color} to adjust the color of the labels.
+\end{itemize}
+
+Since we have the ability, let's visualize the \textit{A. euteiches} data set \cite{Grunwald:2006}.
+\begin{Schunk}
+\begin{Sinput}
+> data(Aeut)
+> A.dist <- diss.dist(Aeut)
+> set.seed(9005)
+> A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
+\end{Sinput}
+\end{Schunk}
+
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}[ht!]
+  \centering
+  \caption{\footnotesize Minimum Spanning Network representing 4 simulated populations. Each node represents a different multi locus genotype (MLG). Node sizes and colors correspond to the number of individuals and population membership, respectively. Edge thickness and color are proportional to Bruvo's distance. Edge lengths are arbitrary.}
+  \label{mst_bruvo}
+\includegraphics{poppr_manual-poppr_msn_fig}
+\end{figure}
+\setkeys{Gin}{width=0.5\textwidth}
 \newpage
 %\subsubsection{Gory details} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2421,7 +2563,7 @@ The reason why the P-values would be different is described at the end of sectio
   \centering
   \caption{\footnotesize Output of multilocus-style sampling.}
   \label{simulated_dist_fig}
-\includegraphics{poppr_manual-120}
+\includegraphics{poppr_manual-128}
 \end{figure}
 \newpage
 
@@ -2430,7 +2572,7 @@ Take a look a these two histograms. The number of ways you can recombine the dat
   \centering
   \caption{\footnotesize Output for parametric bootstrap sampling.}
   \label{simulated_param_fig}
-\includegraphics{poppr_manual-121}
+\includegraphics{poppr_manual-129}
 \end{figure}
 
 As you can see, the distribution is much closer to a distribution we would expect if this were a small sample of a larger population. 

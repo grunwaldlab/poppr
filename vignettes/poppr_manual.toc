@@ -1,7 +1,7 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}
 \contentsline {subsection}{\numberline {1.1}Purpose}{3}{subsection.1.1}
 \contentsline {subsection}{\numberline {1.2}Installation}{3}{subsection.1.2}
-\contentsline {subsection}{\numberline {1.3}Quick start}{3}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.3}Quick start}{4}{subsection.1.3}
 \contentsline {subsection}{\numberline {1.4}Get out of my dreams and into my R \{importing data into poppr\}}{6}{subsection.1.4}
 \contentsline {subsubsection}{\numberline {1.4.1}Function: getfile}{6}{subsubsection.1.4.1}
 \contentsline {subsubsection}{\numberline {1.4.2}Function: read.genalex}{9}{subsubsection.1.4.2}
@@ -34,15 +34,19 @@
 \contentsline {section}{\numberline {4}Index and Distance Calculations}{34}{section.4}
 \contentsline {subsection}{\numberline {4.1}The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\mathaccentV {bar}016r_d$\}}{34}{subsection.4.1}
 \contentsline {subsubsection}{\numberline {4.1.1}Function: ia}{35}{subsubsection.4.1.1}
-\contentsline {subsection}{\numberline {4.2}Step by stepwise mutation \{Bruvo's distance\}}{37}{subsection.4.2}
-\contentsline {subsubsection}{\numberline {4.2.1}Function: bruvo.dist}{37}{subsubsection.4.2.1}
-\contentsline {subsection}{\numberline {4.3}See the forest for the trees \{visualizing distances with dendrograms and networks\}}{39}{subsection.4.3}
-\contentsline {subsubsection}{\numberline {4.3.1}Function: bruvo.boot}{39}{subsubsection.4.3.1}
-\contentsline {subsubsection}{\numberline {4.3.2}Function: bruvo.msn}{40}{subsubsection.4.3.2}
-\contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{43}{section.5}
-\contentsline {subsection}{\numberline {5.1}poppr}{43}{subsection.5.1}
-\contentsline {section}{\numberline {6}Appendix}{46}{section.6}
-\contentsline {subsection}{\numberline {6.1}Algorithmic Details}{46}{subsection.6.1}
-\contentsline {subsubsection}{\numberline {6.1.1}$I_A$ and $\mathaccentV {bar}016r_d$}{46}{subsubsection.6.1.1}
-\contentsline {subsubsection}{\numberline {6.1.2}Bruvo's distance}{48}{subsubsection.6.1.2}
-\contentsline {subsection}{\numberline {6.2}Function calls}{49}{subsection.6.2}
+\contentsline {subsection}{\numberline {4.2}Going the distance \{dissimilarity distance\}}{37}{subsection.4.2}
+\contentsline {subsubsection}{\numberline {4.2.1}Function: diss.dist}{37}{subsubsection.4.2.1}
+\contentsline {subsection}{\numberline {4.3}Step by stepwise mutation \{Bruvo's distance\}}{38}{subsection.4.3}
+\contentsline {subsubsection}{\numberline {4.3.1}Function: bruvo.dist}{38}{subsubsection.4.3.1}
+\contentsline {subsection}{\numberline {4.4}See the forest for the trees \{visualizing distances with dendrograms and networks\}}{40}{subsection.4.4}
+\contentsline {subsubsection}{\numberline {4.4.1}Function: bruvo.boot}{40}{subsubsection.4.4.1}
+\contentsline {subsubsection}{\numberline {4.4.2}Function: greycurve}{41}{subsubsection.4.4.2}
+\contentsline {subsubsection}{\numberline {4.4.3}Function: bruvo.msn}{43}{subsubsection.4.4.3}
+\contentsline {subsubsection}{\numberline {4.4.4}Function: poppr.msn}{45}{subsubsection.4.4.4}
+\contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{47}{section.5}
+\contentsline {subsection}{\numberline {5.1}poppr}{47}{subsection.5.1}
+\contentsline {section}{\numberline {6}Appendix}{50}{section.6}
+\contentsline {subsection}{\numberline {6.1}Algorithmic Details}{50}{subsection.6.1}
+\contentsline {subsubsection}{\numberline {6.1.1}$I_A$ and $\mathaccentV {bar}016r_d$}{50}{subsubsection.6.1.1}
+\contentsline {subsubsection}{\numberline {6.1.2}Bruvo's distance}{52}{subsubsection.6.1.2}
+\contentsline {subsection}{\numberline {6.2}Function calls}{53}{subsection.6.2}
