@@ -22,7 +22,7 @@
 }
 \examples{
 # A simple example. Let's analyze the mean distance among populations of A.
-euteiches.
+# euteiches.
 
 data(Aeut)
 mean(diss.dist(popsub(Aeut, 1)))
