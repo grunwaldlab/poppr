@@ -25,7 +25,7 @@ To install this package from github, make sure you have the following:
 
 First, install the required dependencies:
 
-    install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape"), dependencies=TRUE)
+    install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"), dependencies=TRUE)
 
 Now you can use the `install_github()` function:
 
