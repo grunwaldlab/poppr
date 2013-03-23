@@ -100,6 +100,17 @@ As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA)
 # Show only the structure of the Athena population.
 As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA, sublist=1:10)
 
+# Let's look at the structure of the microbov data set
+data(microbov)
+micro.dist <- diss.dist(microbov)
+micro.msn <- poppr.msn(microbov, diss.dist(microbov), vertex.label=NA)
+
+Let's plot it and show where individuals have < 15\% of their genotypes
+different.
+
+plot(micro.msn$graph, edge.label = ifelse(E(micro.msn$graph)$weight < 0.15,
+round(E(micro.msn$graph)$weight, 3), NA), vertex.size=2, edge.label.color="red")
+
 }
 }
 \author{
