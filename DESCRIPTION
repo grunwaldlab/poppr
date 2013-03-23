@@ -17,14 +17,16 @@ Depends:
     vegan,
     ggplot2,
     phangorn,
-    ape
+    ape,
+    igraph
 Imports:
     adegenet,
     pegas,
     vegan,
     ggplot2,
     phangorn,
-    ape
+    ape,
+    igraph
 License: GPL-2
 Collate:
     'Index_calculations.r'
