@@ -140,7 +140,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
     
     # Transforming the data into a data frame that ggplot can understand and put
     # into facets. It will have the following rows: Value, Index, and Quant.
-    Indexfac <- factor(1:2, levels=1:2, labels=c("I[A]","bar(r)[D]"))
+    Indexfac <- factor(1:2, levels=1:2, labels=c("I[A]","bar(r)[d]"))
     infodata <- as.data.frame(list(Value=c(sample$Ia, sample$rbarD), 
                                    Index=rep(Indexfac, each=length(sample$Ia))))
     
