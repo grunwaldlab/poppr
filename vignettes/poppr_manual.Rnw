@@ -1472,7 +1472,7 @@ As you can see, the distribution is much closer to a distribution we would expec
 \subsection{Algorithmic Details}
 \subsubsection{$I_A$ and $\bar r_d$}
 
-\tab \tab The index of association was originally developed by A.D.H. Brown analyzing population structure of wheat. \cite{Brown:1980} It has been widely used as a tool to detect high levels of clonal reproduction within populations. \cite{Smith:1993} Populations whose members are undergoing sexual reproduction, whether it be selfing or out-crossing, will produce gametes via mitosis, and thus have a chance to shuffle alleles in the next generation. Populations whose members are undergoing clonal reproduction, however, generally do so via mitosis. This means that the only chance for a change in genotype is via mutation. The rate of mutation varies from species to species, but it is rarely sufficiently high to mimic a random shuffling of alleles. The index of association is a calculation based on the ratio of the variance of the raw number of differences between individuals and the sum of those variances over each locus. \cite{Smith:1993} You can also think of it as the observed variance over the expected variance. If they  are the same, then the index is zero after subtracting one (from Maynard-Smith, 1993) \cite{Smith:1993}:
+\tab \tab The index of association was originally developed by A.H.D. Brown analyzing population structure of wheat \cite{Brown:1980}. It has been widely used as a tool to detect clonal reproduction within populations \cite{Smith:1993}. Populations whose members are undergoing sexual reproduction, whether it be selfing or out-crossing, will produce gametes via mitosis, and thus have a chance to shuffle alleles in the next generation. Populations whose members are undergoing clonal reproduction, however, generally do so via mitosis. This means that the most likely mechanism for a change in genotype is via mutation. The rate of mutation varies from species to species, but it is rarely sufficiently high to approximate a random shuffling of alleles. The index of association is a calculation based on the ratio of the variance of the raw number of differences between individuals and the sum of those variances over each locus \cite{Smith:1993}. You can also think of it as the observed variance over the expected variance. If they  are the same, then the index is zero after subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
 \beq
 I_A = \frac{V_O}{V_E}-1
 \eeq
@@ -1509,16 +1509,16 @@ Calculating the observed variances is fairly straightforward (modified from Agap
 \beq
 V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n \choose 2}}
 \eeq
-Calculating the expected variance is the sum of each of the variances of the individual loci. The calculation at a single locus, $j$ is the same as the previous equation, substituting values of $D$ for $d$ (modified from Agapow and Burt, 2001) \cite{Agapow:2001}:
+Calculating the expected variance is the sum of each of the variances of the individual loci. The calculation at a single locus, $j$ is the same as the previous equation, substituting values of $D$ for $d$ \cite{Agapow:2001}:
 \beq
 var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n \choose 2}}
 \eeq
-The expected variance is then the sum of all the variances over all $m$ loci (modified from Agapow and Burt, 2001) \cite{Agapow:2001}:
+The expected variance is then the sum of all the variances over all $m$ loci \cite{Agapow:2001}:
 \beq
 V_E = \displaystyle \sum_{j=1}^{m} var_j
 \eeq
 Now you can plug the sums of equations (4) and (6) into equation (1) to get the index of association.
-Of course, Agapow and Burt showed that this index increases steadily with the number of loci, so they came up with an approximation that is widely used, $\bar r_d$. \cite{Agapow:2001} For the derivation, see the manual for \textit{multilocus}. The equation is as follows, utilizing equations (4), (5), and (6) (modified from Agapow and Burt, 2001) \cite{Agapow:2001}:
+Of course, Agapow and Burt showed that this index increases steadily with the number of loci, so they came up with an approximation that is widely used, $\bar r_d$ \cite{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}. The equation is as follows, utilizing equations (4), (5), and (6) \cite{Agapow:2001}:
 \beq
 \bar{r_d} = \frac{V_O - V_E}
 {2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{\substack{k=1\\ j<k}}^{m}\sqrt{var_j\cdot{}var_k}}
@@ -1526,20 +1526,19 @@ Of course, Agapow and Burt showed that this index increases steadily with the nu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Bruvo's distance}
 
-\tab \tab Bruvo's distance between two individuals works by calculating the minimum distance across all combinations of possible pairs of alleles at a single locus and then averaging that distance across all loci. \cite{Bruvo:2004} The distance between each pair of alleles is calculated as (Bruvo et al., 2004) \cite{Bruvo:2004}:
+\tab \tab Bruvo's distance between two individuals calculates the minimum distance across all combinations of possible pairs of alleles at a single locus and then averaging that distance across all loci. \cite{Bruvo:2004} The distance between each pair of alleles is calculated as (Bruvo et al., 2004) \cite{Bruvo:2004}:
 \beq
 m_x = 2^{-\mid x \mid}
 \eeq
 \beq
 d_a = 1 - m_x
 \eeq
-Where $x$ is the number of steps between each allele. So, let's say we were comparing two haploid $(k = 1)$ individuals with alleles 228 and 244 at a locus that had a tetranucleotide repeat pattern (CATG$)^n$. The number of steps for each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance at this locus between these two individuals is then $1-2^{-4} = 0.9375$.\\
-For samples with higher ploidy ($k$), there would be $k$ such distances of which we would need to take the sum. (Bruvo et al., 2004) \cite{Bruvo:2004}
+Where $x$ is the number of steps between each allele. So, let's say we were comparing two haploid $(k = 1)$ individuals with alleles 228 and 244 at a locus that had a tetranucleotide repeat pattern (CATG$)^n$. The number of steps for each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For samples with higher ploidy ($k$), there would be $k$ such distances of which we would need to take the sum. (Bruvo et al., 2004) \cite{Bruvo:2004}
 \beq
 s_i = \displaystyle \sum_{a=1}^{k} d_a
 \eeq
 
-Unfortunately, it's not as simple as that since we do not know phase. Because of this, we need to take all possible combinations of alleles. This means that we will have $k^2$ values of $d_a$, when we only want $k$. How do we know which $k$ distances we want? We will have to invoke parsimony for this and attempt to take the minimum sum of the alleles, of which there are $k!$ possibilities (Bruvo et al., 2004) \cite{Bruvo:2004}:
+Unfortunately, it's not as simple as that since we do not assume to know phase. Because of this, we need to take all possible combinations of alleles into account. This means that we will have $k^2$ values of $d_a$, when we only want $k$. How do we know which $k$ distances we want? We will have to invoke parsimony for this and attempt to take the minimum sum of the alleles, of which there are $k!$ possibilities (Bruvo et al., 2004) \cite{Bruvo:2004}:
 \beq
 d_l = \frac{\left(\displaystyle \min_{i \dotsc k!} s_i\right)}{k}
 \eeq
@@ -1548,6 +1547,49 @@ Finally, after all of this, we can get the average distance over all loci (Bruvo
 D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
 \eeq
 This is calculated over all possible combinations of individuals and results in a lower triangle distance matrix over all individuals. 
+
+\subsection{Exporting Graphics}
+\tab\tab R has the ability to produce nice graphics from most any type of data, but to get these graphics into a report, presentation, or manuscript can be a bit challenging. It's no secret that the R Documentation pages are a little difficult to interpret, so I will give the reader here a short example on how to export graphics from R. Note that I will only present code here and will refer you to other places in the vignette for the images. 
+
+I strongly encourage the user to use the GUI Rstudio \url{http://www.rstudio.com/}
+
+\subsubsection{Basics}
+\tab\tab Before you export graphics, you have to ask yourself what they will be used for. Many people do not realize that there is a large difference between what is appropriate to display on a website, what is appropriate for a presentation, and what is appropriate to print in a publication or poster. Here, I will give some general guidelines for graphics (note that these are merely suggestions, not defined rules).
+\begin{enumerate}
+  \item \textbf{What you see is not always what you get} I will reiterate this because I feel it is important. I have often seen presentations where the colors were too light or posters with painfully pixellated graphs. Think about what you are going to be using a graphic for and how it will appear to the intended audience given the media type.
+  \item \textbf{$\geq$ 300 dpi or die} For any sort of printed material that requires a raster based image, 300dpi (dots per inch) is the absolute minimum resolution you should use. For simple black and white line images, 1200dpi is better. This will leave you with crisp, professional looking images.
+  \item \textbf{Save as SVG, then rasterize} Raster images (bmp, png, jpg, etc...) are based off of the number of pixels or dots per inch it takes to render the image. This means that the raster image is more or less a very fine mosaic. Vector images (svg) are built upon several interconnected polygons, arcs, and lines that scale relative to one another to create your graphic. With vector graphics, you can produce a plot and scale it to the size of a building if you wanted to. When you save to an SVG first, you can also manipulate it in programs such as Adobe Illustrator or Inkscape. 
+  \item \textbf{Before saving, make sure the units and dimensions are correct} Unless you really wanted to save a graph that's over 6 feet wide.
+\end{enumerate}
+
+\subsubsection{Image Editors}
+\tab\tab Here is a short list of image editors (both free and for a price) that you can use to edit your graphics.
+\begin{itemize}
+  \item Bitmap based editors
+  \begin{itemize}
+    \item[ The GIMP ] Free, cross-platform. \url{http://www.gimp.org}
+    \item[ Paint.net ] Free, Windows only. \url{http://www.getpaint.net}
+    \item[ Adobe Photoshop ] Pricey, Windows and Mac. \url{http://www.adobe.com/products/photoshop.html}
+  \end{itemize}
+  \item Scalable Vector Graphics based editors
+  \begin{itemize}
+    \item[ Inkscape ] Free, cross-platform \url{http://inkscape.org}
+    \item[ Adobe Illustrator ] Pricey, Windows and Mac. \url{http://www.adobe.com/products/illustrator.html}
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Exporting ggplot2 graphics}
+\tab\tab \textit{ggplot2} is a fantastic package that \textit{poppr} uses to produce graphs for the \texttt{mlg.table}, \texttt{poppr}, and \texttt{ia} functions. Saving a plot with \textit{ggplot2} is performed with one command after your plot has rendered:
+<<ggsave1, eval=FALSE>>=
+data(nancycats)
+poppr(nancycats, sublist=5, sample=999)
+ggsave("nancy5.pdf")
+@
+Note that you can name the file anything, and \texttt{ggsave} will save it in that format for you. The details are in the documentation and you can access it by typing \texttt{help("ggsave")} in your R console. The important things to note are that you can set a width, height, and scale. The only downside to this function is that you can only save one plot at a time. If you want to be able to save multiple plots,read on to the next section.
+
+\subsubsection{Exporting any graphics}
+\tab\tab Some of the functions that \textit{poppr} offers will give you multiple plots, and if you want to save them all, using \texttt{ggsave} will require a lot of tedious typing and clicking. Luckily, R has Functions that will save any plot you generate in nearly any image format you want. You can save in raster images such as png, bpm, and jpeg. You can also save in vector based images such as svg, pdf, and postscript. The important thing to remember is that when you are saving in a raster format, the default units of measurement are ``pixels"
+
 \subsection{Function calls}
 
 \tab\tab Here is a list of all the default function calls for \textit{poppr}. Details can be found in the above sections.\\
@@ -1568,9 +1610,10 @@ This is calculated over all possible combinations of individuals and results in 
 \item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE)
 \item diss.dist(pop)
 \item bruvo.dist(pop, replen = c(2))
-\item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL)
-\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), wscale = TRUE, ...)
+\item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)
 \item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
+\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
+poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
 \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
 \end{itemize}
 \bibliographystyle{plain}

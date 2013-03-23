@@ -49,4 +49,9 @@
 \contentsline {subsection}{\numberline {6.1}Algorithmic Details}{50}{subsection.6.1}
 \contentsline {subsubsection}{\numberline {6.1.1}$I_A$ and $\mathaccentV {bar}016r_d$}{50}{subsubsection.6.1.1}
 \contentsline {subsubsection}{\numberline {6.1.2}Bruvo's distance}{52}{subsubsection.6.1.2}
-\contentsline {subsection}{\numberline {6.2}Function calls}{53}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.2}Exporting Graphics}{53}{subsection.6.2}
+\contentsline {subsubsection}{\numberline {6.2.1}Basics}{53}{subsubsection.6.2.1}
+\contentsline {subsubsection}{\numberline {6.2.2}Image Editors}{53}{subsubsection.6.2.2}
+\contentsline {subsubsection}{\numberline {6.2.3}Exporting ggplot2 graphics}{53}{subsubsection.6.2.3}
+\contentsline {subsubsection}{\numberline {6.2.4}Exporting any graphics}{54}{subsubsection.6.2.4}
+\contentsline {subsection}{\numberline {6.3}Function calls}{54}{subsection.6.3}
