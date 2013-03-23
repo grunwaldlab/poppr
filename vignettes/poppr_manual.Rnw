@@ -1549,46 +1549,70 @@ D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
 This is calculated over all possible combinations of individuals and results in a lower triangle distance matrix over all individuals. 
 
 \subsection{Exporting Graphics}
-\tab\tab R has the ability to produce nice graphics from most any type of data, but to get these graphics into a report, presentation, or manuscript can be a bit challenging. It's no secret that the R Documentation pages are a little difficult to interpret, so I will give the reader here a short example on how to export graphics from R. Note that I will only present code here and will refer you to other places in the vignette for the images. 
-
-I strongly encourage the user to use the GUI Rstudio \url{http://www.rstudio.com/}
+\tab\tab R has the ability to produce nice graphics from most any type of data, but to get these graphics into a report, presentation, or manuscript can be a bit challenging. It's no secret that the R Documentation pages are a little difficult to interpret, so I will give the reader here a short example on how to export graphics from R. Note that any code here that will produce images will also be present in other places in this vignette. The default installation of the R GUI is quite minimal, and for an easy way to manage your plots and code, I strongly encourage the user to use Rstudio \url{http://www.rstudio.com/}.
 
 \subsubsection{Basics}
-\tab\tab Before you export graphics, you have to ask yourself what they will be used for. Many people do not realize that there is a large difference between what is appropriate to display on a website, what is appropriate for a presentation, and what is appropriate to print in a publication or poster. Here, I will give some general guidelines for graphics (note that these are merely suggestions, not defined rules).
-\begin{enumerate}
-  \item \textbf{What you see is not always what you get} I will reiterate this because I feel it is important. I have often seen presentations where the colors were too light or posters with painfully pixellated graphs. Think about what you are going to be using a graphic for and how it will appear to the intended audience given the media type.
-  \item \textbf{$\geq$ 300 dpi or die} For any sort of printed material that requires a raster based image, 300dpi (dots per inch) is the absolute minimum resolution you should use. For simple black and white line images, 1200dpi is better. This will leave you with crisp, professional looking images.
-  \item \textbf{Save as SVG, then rasterize} Raster images (bmp, png, jpg, etc...) are based off of the number of pixels or dots per inch it takes to render the image. This means that the raster image is more or less a very fine mosaic. Vector images (svg) are built upon several interconnected polygons, arcs, and lines that scale relative to one another to create your graphic. With vector graphics, you can produce a plot and scale it to the size of a building if you wanted to. When you save to an SVG first, you can also manipulate it in programs such as Adobe Illustrator or Inkscape. 
+\tab\tab Before you export graphics, you have to ask yourself what they will be used for. If you want to use the graphic for a website, you might want to opt for a low-resolution image so that it can load quickly. With printing, you'll want to make sure that you have a scalable or at least a very high resolution image. Here, I will give some general guidelines for graphics (note that these are merely suggestions, not defined rules).
+\begin{itemize}
+  \item \textbf{What you see is not always what you get} I have often seen presentations where the colors were too light or posters with painfully pixellated graphs. Think about what you are going to be using a graphic for and how it will appear to the intended audience given the media type.
+  \item \textbf{$\geq$ 300 dpi unless its for a web page} For any sort of printed material that requires a raster based image, 300dpi (dots per inch) is the absolute minimum resolution you should use. For simple black and white line images, 1200dpi is better. This will leave you with crisp, professional looking images.
+  \item \textbf{If possible, save to SVG, then rasterize} Raster images (bmp, png, jpg, etc...) are based off of the number of pixels or dots per inch it takes to render the image. This means that the raster image is more or less a very fine mosaic. Vector images (SVG) are built upon several interconnected polygons, arcs, and lines that scale relative to one another to create your graphic. With vector graphics, you can produce a plot and scale it to the size of a building if you wanted to. When you save to an SVG file first, you can also manipulate it in programs such as Adobe Illustrator or Inkscape. 
   \item \textbf{Before saving, make sure the units and dimensions are correct} Unless you really wanted to save a graph that's over 6 feet wide.
-\end{enumerate}
+\end{itemize}
 
 \subsubsection{Image Editors}
-\tab\tab Here is a short list of image editors (both free and for a price) that you can use to edit your graphics.
+\tab\tab Often times, fine details such as labels on networks need to be tweaked by hand. Luckily, there are a wide variety of programs that can help you do that. Here is a short list of image editors (both free and for a price) that you can use to edit your graphics.
 \begin{itemize}
-  \item Bitmap based editors
+  \item Bitmap based editors (for jpeg, bmp, png, etc...)
+  \begin{quote}
   \begin{itemize}
-    \item[ The GIMP ] Free, cross-platform. \url{http://www.gimp.org}
-    \item[ Paint.net ] Free, Windows only. \url{http://www.getpaint.net}
-    \item[ Adobe Photoshop ] Pricey, Windows and Mac. \url{http://www.adobe.com/products/photoshop.html}
+    \item[ \scshape The GIMP ] Free, cross-platform. \url{http://www.gimp.org}
+    \item[ \scshape Paint.net ] Free, Windows only. \url{http://www.getpaint.net}
+    \item[ \scshape Adobe Photoshop ] Pricey, Windows and Mac. \url{http://www.adobe.com/products/photoshop.html}
   \end{itemize}
-  \item Scalable Vector Graphics based editors
+  \end{quote}
+  \item Scalable Vector Graphics based editors (for svg, pdf)
+  \begin{quote}
   \begin{itemize}
-    \item[ Inkscape ] Free, cross-platform \url{http://inkscape.org}
-    \item[ Adobe Illustrator ] Pricey, Windows and Mac. \url{http://www.adobe.com/products/illustrator.html}
+    \item[ \scshape Inkscape ] Free, cross-platform \url{http://inkscape.org}
+    \item[ \scshape Adobe Illustrator ] Pricey, Windows and Mac. \url{http://www.adobe.com/products/illustrator.html}
   \end{itemize}
+  \end{quote}
 \end{itemize}
 
 \subsubsection{Exporting ggplot2 graphics}
 \tab\tab \textit{ggplot2} is a fantastic package that \textit{poppr} uses to produce graphs for the \texttt{mlg.table}, \texttt{poppr}, and \texttt{ia} functions. Saving a plot with \textit{ggplot2} is performed with one command after your plot has rendered:
 <<ggsave1, eval=FALSE>>=
-data(nancycats)
-poppr(nancycats, sublist=5, sample=999)
+data(nancycats) # Load the data set.
+poppr(nancycats, sublist=5, sample=999) # Produce a single plot.
 ggsave("nancy5.pdf")
 @
-Note that you can name the file anything, and \texttt{ggsave} will save it in that format for you. The details are in the documentation and you can access it by typing \texttt{help("ggsave")} in your R console. The important things to note are that you can set a width, height, and scale. The only downside to this function is that you can only save one plot at a time. If you want to be able to save multiple plots,read on to the next section.
+Note that you can name the file anything, and \texttt{ggsave} will save it in that format for you. The details are in the documentation and you can access it by typing \texttt{help("ggsave")} in your R console. The important things to note are that you can set a \texttt{width}, \texttt{height}, and \texttt{unit}. The only downside to this function is that you can only save one plot at a time. If you want to be able to save multiple plots, read on to the next section.
 
 \subsubsection{Exporting any graphics}
-\tab\tab Some of the functions that \textit{poppr} offers will give you multiple plots, and if you want to save them all, using \texttt{ggsave} will require a lot of tedious typing and clicking. Luckily, R has Functions that will save any plot you generate in nearly any image format you want. You can save in raster images such as png, bpm, and jpeg. You can also save in vector based images such as svg, pdf, and postscript. The important thing to remember is that when you are saving in a raster format, the default units of measurement are ``pixels"
+\tab\tab Some of the functions that \textit{poppr} offers will give you multiple plots, and if you want to save them all, using \texttt{ggsave} will require a lot of tedious typing and clicking. Luckily, R has Functions that will save any plot you generate in nearly any image format you want. You can save in raster images such as png, bpm, and jpeg. You can also save in vector based images such as svg, pdf, and postscript. The important thing to remember is that when you are saving in a raster format, the default units of measurement are ``pixels", but you can change that by specifying your unit of choice and a resolution.
+
+For raster images and svg files, you can only save your plots in multiple files, but pdf and postscript plots can be saved in one file as multiple pages. All of these functions have the same basic form. You call the function to specify the file type you want (eg. \texttt{pdf("myfile.pdf")}), create any graphs that you want to create, and then make sure to close the session with the function \texttt{dev.off()}. Let's give an example saving to pdf and png files. 
+
+<<png_save, eval=FALSE>>=
+data(H3N2)
+pop(H3N2) <- H3N2$other$x$country
+####
+png("H3N2_barchart%02d.png", width = 14, height = 14, units = "in", res = 300)
+H.tab <- mlg.table(H3N2)
+dev.off()
+####
+@
+
+Since this data set is made up of 30 populations with more than 1 individual, this will save 30 files to your working directory named ``H3N2\_barchart01.png...H3N2\_barchart30.png". The way R knows how to number these files is because of the \texttt{\%02d} part of the command. That's telling R to use a number that is two digits long in place of that expression. All of these files will be 14x14" and will have a resolution of 300 dots per inch. If you wanted to do the same thing, but place them all in one file, you should use the pdf option.
+
+<<pdf_save, eval=FALSE>>=
+pdf("H3N2_barcharts.png", width = 14, height = 14, compress = FALSE)
+H.tab <- mlg.table(H3N2)
+dev.off()
+@
+
+Remember, it is important not to forget to type \texttt{dev.off()} when you are done making graphs. Note that I did not have to specify a resolution for this image since it is based off of vector graphics.
 
 \subsection{Function calls}
 

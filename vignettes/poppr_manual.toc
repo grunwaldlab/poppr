@@ -52,6 +52,6 @@
 \contentsline {subsection}{\numberline {6.2}Exporting Graphics}{53}{subsection.6.2}
 \contentsline {subsubsection}{\numberline {6.2.1}Basics}{53}{subsubsection.6.2.1}
 \contentsline {subsubsection}{\numberline {6.2.2}Image Editors}{53}{subsubsection.6.2.2}
-\contentsline {subsubsection}{\numberline {6.2.3}Exporting ggplot2 graphics}{53}{subsubsection.6.2.3}
+\contentsline {subsubsection}{\numberline {6.2.3}Exporting ggplot2 graphics}{54}{subsubsection.6.2.3}
 \contentsline {subsubsection}{\numberline {6.2.4}Exporting any graphics}{54}{subsubsection.6.2.4}
 \contentsline {subsection}{\numberline {6.3}Function calls}{54}{subsection.6.3}
