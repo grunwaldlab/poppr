@@ -1,3 +1,15 @@
+poppr 0.3
+===========
+NEW FUNCTIONS
+* `poppr.msn` will draw a minimum spanning network for any distance matrix derived from your data set.
+
+NEW FEATURES
+* vignette now has sections describing `poppr.msn`, `diss.dist`, `greycurve`, and a section discussing how to export graphics.
+
+BUG FIXES
+* The graphs output by `poppr` and `ia` will now display \bar{r}_d instead of \bar{r}_D.
+* `bruvo.boot` now has a dedicated `quiet` argument.
+
 poppr 0.2.2
 ===========
 NEW FEATURES
