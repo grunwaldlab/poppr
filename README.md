@@ -1,4 +1,4 @@
-# Welcome
+## Welcome
 
 Poppr is an R package designed for analysis of populations with mixed modes of 
 sexual and clonal reproduction. It is built around the framework of [adegenet's](http://adegenet.r-forge.r-project.org/)
@@ -9,19 +9,24 @@ genind object and offers the following implementations:
 - define multilocus genotypes
 - calculation of indices of genotypic diversity, evenness, richness, and rarefaction
 - drawing of dendrograms with bootstrap support for Bruvo's distance
-- drawing of minimum spanning networks for Bruvo's distance
-- calculation of the index of association (![equation](http://latex.codecogs.com/gif.latex?I_A)) or ![equation](http://latex.codecogs.com/gif.latex?\\bar{r}_D)
-- batch processing on any server that has R (>2.15.1) installed
+- drawing of minimum spanning networks for genetic distances
+- calculation of the index of association (![equation](http://latex.codecogs.com/gif.latex?I_A)) or ![equation](http://latex.codecogs.com/gif.latex?\\bar{r}_d)
+- batch processing on any server that has R (>2.15.0) installed
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
-# Installation
+## Installation
+### From CRAN
+
+- This package is not currently available on CRAN, see about installing the development version below.
+
+### Development version
 
 To install this package from github, make sure you have the following:
 
-- [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
 - [Xcode](https://developer.apple.com/xcode/) (OSX)
-- [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
+    OR [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
+- [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
 
 First, install the required dependencies:
 
