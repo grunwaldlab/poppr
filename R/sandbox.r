@@ -44,6 +44,16 @@
 
 
 
+
+
+
+
+
+testing_funk <- function(){
+  cat("This test worked!\n")
+}
+
+
 # Randomly inserts NA's into alleles. So far this is one allele per locus. I could
 # possibly write a function that would simulate systematic missing data later.
 # This function would take a list of loci from a single population and return it
