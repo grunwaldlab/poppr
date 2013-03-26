@@ -102,14 +102,6 @@ bruvo.dist <- function(pop, replen=c(2)){
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(pop@loc.names)){
-    guesslengths <- function(vec){
-      if(length(vec) > 1){
-        lens <- vapply(2:length(vec), function(x) abs(vec[x]-vec[x-1]), 1)
-        return(min(lens[lens > 1]))
-      }
-      else
-        return(1)
-    }
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
     #		replen <- rep(replen[1], numLoci)
     warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
@@ -117,10 +109,13 @@ bruvo.dist <- function(pop, replen=c(2)){
   }
   popcols <- length(pop@loc.names)*ploid
   indnames <- pop@ind.names
-  if(any(!round(pop@tab,10) %in% c(0,(1/ploid),1, NA))){
-    pop@tab[!round(pop@tab,10) %in% c(0,(1/ploid),1, NA)] <- NA
+  
+  # This controlls for the user correcting missing data using "mean". 
+  if(any(!pop@tab %in% c(0,((1:ploid)/ploid),1, NA))){
+    pop@tab[!pop@tab,10 %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
   }
   if(any(rowSums(pop@tab, na.rm=TRUE) < nLoc(pop))){
+    
     pop <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
     pop[pop %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
     return(phylo.bruvo.dist(pop, replen=replen, ploid=ploid))
@@ -129,9 +124,11 @@ bruvo.dist <- function(pop, replen=c(2)){
     pop <- matrix(as.numeric(as.matrix(genind2df(
   	  pop, oneColPerAll=TRUE, usepop=F))), ncol=popcols)
   }
+
   # Setting all missing data to 0.
   pop[is.na(pop)] <- 0
   # Dividing the data by the repeat length of each locus.
+
   pop <- pop / rep(replen, each=ploid*nrow(pop))
   pop <- matrix(as.integer(pop), ncol=popcols)
   # Getting the permutation vector.
@@ -229,21 +226,14 @@ bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma",
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(pop@loc.names)){
-    guesslengths <- function(vec){
-      if(length(vec) > 1){
-        lens <- vapply(2:length(vec), function(x) abs(vec[x] - vec[x - 1]), 1)
-        return(min(lens[lens > 1]))
-      }
-      else
-        return(1)
-    }
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
     #    replen <- rep(replen[1], numLoci)
     warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
     cat(replen,"\n\n")
   }
-  if(any(!round(pop@tab,10) %in% c(0,( 1/ploid ),1, NA))){
-    pop@tab[!round(pop@tab,10) %in% c(0,( 1/ploid ),1, NA)] <- NA
+  # This controlls for the user correcting missing data using "mean". 
+  if(any(!round(pop@tab,10) %in% c(0,((1:ploid)/ploid),1, NA))){
+    pop@tab[!round(pop@tab,10) %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
   }
   # Converting the genind object into a matrix with each allele separated by "/"
   bar <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
