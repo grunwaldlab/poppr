@@ -197,6 +197,9 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 
   # glob.info is for the number of loci, individuals, and populations.
   glob.info <- num.info[1:3]
+  if(any(is.na(glob.info))){
+    stop("Something is wrong with your csv file. Perhaps it is not comma delimited?\n")
+  }
 #   cat("Global Information:",glob.info,"\n")
 #   cat("Populations:",pop.info,"\n")
 #   cat("num.info:",num.info,"\n")
@@ -227,7 +230,7 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     gena <- gena[, c(-1,-2,-ncol(gena))]
     xy <- NULL
   }
-  else if (geo==TRUE & length(pop.info)==glob.info[3]){
+  else if (geo == TRUE & length(pop.info) == glob.info[3]){
     reg.vec <- NULL
     pop.vec <- gena[, 2]
     ind.vec <- gena[, 1]
