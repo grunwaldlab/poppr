@@ -945,3 +945,29 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
     lines(x=0:1, y=c(max(glim),max(glim)), col="yellow")    
   }
 }
+
+#==============================================================================#
+# This will guess the repeat lengths of the microsatellites for Bruvo's distance
+# 
+# Public functions utilizing this function:
+# # bruvo.boot bruvo.dist
+#
+# Internal functions utilizing this function:
+# # none
+#
+#==============================================================================#
+
+guesslengths <- function(vec){
+  if(length(vec) > 1){
+    lens <- vapply(2:length(vec), function(x) abs(vec[x] - vec[x - 1]), 1)
+    if(all(lens == 1)){
+      return(1)
+    }
+    else{
+      return(min(lens[lens > 1]))
+    }
+  }
+  else{
+    return(1)
+  }
+}
