@@ -794,5 +794,5 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   return(list(graph = mst, populations = pop$pop.names, colors = color))
 }
 javier<-function(x){
-  cat ("hello")
+  cat ("hello dawg")
 }
