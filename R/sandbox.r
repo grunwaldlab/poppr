@@ -50,7 +50,7 @@
 
 
 testing_funk <- function(){
-  cat("This test worked!\n")
+  cat("This test worked...maybe.\n")
 }
 
 
