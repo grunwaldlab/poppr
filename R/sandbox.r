@@ -803,3 +803,6 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
   V(mst)$label <- vertex.label
   return(list(graph = mst, populations = pop$pop.names, colors = color))
 }
+javier<-function(x){
+  cat ("hello")
+}
