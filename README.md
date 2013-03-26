@@ -35,7 +35,7 @@ First, install the required dependencies:
 Now you can use the `install_github()` function:
 
     library(devtools)
-    install_github("poppr", "poppr", rev="v.0.3.1")
+    install_github("poppr", "poppr", ref="v.0.3.1")
     library(poppr)
 
 You can view the manual by typing: `vignette("poppr_manual")` after installation or by clicking [here](http://grunwaldlab.cgrb.oregonstate.edu/sites/default/files/u5/poppr_manual.pdf)
