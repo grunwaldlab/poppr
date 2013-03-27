@@ -805,10 +805,11 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
 }
 
 
-new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE){
+new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FALSE, geodf="xy"){
   if(!is.genind(pop)) stop("A genind object is needed.")
-  if(is.null(pop@pop)) 
+  if(is.null(pop@pop)){
     pop(pop) <- rep("Pop", nInd(pop))
+  }
   #topline is for the number of loci, individuals, and populations.
   topline <- c(nLoc(pop), nInd(pop), length(pop@pop.names))
   popsizes <- table(pop@pop)
@@ -827,12 +828,12 @@ new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE){
   else{
     locnames <- pop@loc.names
   }
-  thirdline <- c("Ind","Pop",locnames)
+  thirdline <- c("Ind","Pop", locnames)
   
   # This makes sure that you don't get into a stacking error when stacking the
   # first three rows.
   if(length(thirdline) > length(topline)){
-    lenfac <- length(thirdline)-length(topline)
+    lenfac <- length(thirdline) - length(topline)
     topline <- c(topline, rep("", lenfac))
     secondline <- c(secondline, rep("", lenfac))
   }
@@ -843,21 +844,35 @@ new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE){
   infolines <- rbind(topline, secondline, thirdline)
   
   # converting to a data frame
-  if(any(!round(pop@tab,10) %in% c(0,(1/ploid),1, NA))){
-    pop@tab[!round(pop@tab,10) %in% c(0,(1/ploid),1, NA)] <- NA
+  if(any(!pop@tab %in% c(0, ((1:ploid)/ploid), 1, NA))){
+    pop@tab[!pop@tab %in% c(0, ((1:ploid)/ploid), 1, NA)] <- NA
   }
   if(!quiet) cat("Extracting the table ... ")
   df <- genind2df(pop, oneColPerAll=TRUE)
-  write.table(infolines, file=filename, quote=TRUE, row.names=FALSE, 
-              col.names=FALSE, sep=",")
   
   # making sure that the individual names are included.
-  if(all(pop@ind.names == "") | is.null(pop@ind.names))
+  if(all(pop@ind.names == "") | is.null(pop@ind.names)){
     pop@ind.names <- paste("ind", 1:nInd(pop), sep="")
+  }
   df <- cbind(pop@ind.names, df)
   # setting the NA replacement. This doesn't work too well. 
   replacement <- ifelse(pop@type =="PA","-1","0")
   if(!quiet) cat("Writing the table to",filename,"... ")
+  
+  if(geo == TRUE){
+    replacemat <- matrix("", 3, 3)
+    replacemat[3, 2:3] <- c("X", "Y")
+    infolines <- cbind(infolines, replacemat)
+    df2 <- data.frame(list("Space" = rep("", nInd(pop))))
+    gdf <- as.matrix(pop@other[[geodf]])
+    if(nrow(gdf) < nInd(pop)){
+      gdf <- rbind(gdf, matrix("", nInd(pop) - nrow(gdf), 2))
+    }
+    df <- cbind(df, df2, gdf)
+  }
+  
+  write.table(infolines, file=filename, quote=TRUE, row.names=FALSE, 
+              col.names=FALSE, sep=",")
   write.table(df, file=filename, quote=TRUE, na=replacement, append=TRUE, 
               row.names=FALSE, col.names=FALSE, sep=",")
   if(!quiet) cat("Done.\n")
