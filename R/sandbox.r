@@ -805,6 +805,68 @@ new.bruvo.msn <- function (pop, replen=c(1), palette = topo.colors,
 }
 
 
+new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE){
+  if(!is.genind(pop)) stop("A genind object is needed.")
+  if(is.null(pop@pop)) 
+    pop(pop) <- rep("Pop", nInd(pop))
+  #topline is for the number of loci, individuals, and populations.
+  topline <- c(nLoc(pop), nInd(pop), length(pop@pop.names))
+  popsizes <- table(pop@pop)
+  # The sizes of the populations correspond to the second line, which is the pop
+  # names. 
+  topline <- c(topline, popsizes)
+  secondline <- c("", "", "", pop@pop.names)
+  ploid <- ploidy(pop)
+  # Constructing the locus names. GenAlEx separates the alleles of the loci, so
+  # There is one locus name for every p ploidy columns you have.
+  if(ploid > 1 & pop@type == "codom"){
+    locnames <- unlist(strsplit(paste(pop@loc.names, 
+                                      paste(rep(" ", ploidy(pop)-1), 
+                                            collapse="/"), sep="/"),"/"))
+  }
+  else{
+    locnames <- pop@loc.names
+  }
+  thirdline <- c("Ind","Pop",locnames)
+  
+  # This makes sure that you don't get into a stacking error when stacking the
+  # first three rows.
+  if(length(thirdline) > length(topline)){
+    lenfac <- length(thirdline)-length(topline)
+    topline <- c(topline, rep("", lenfac))
+    secondline <- c(secondline, rep("", lenfac))
+  }
+  else if(length(thirdline) < length(topline)){
+    lenfac <- length(topline) - length(thirdline)
+    thirdline <- c(thirdline, rep("", lenfac))
+  }
+  infolines <- rbind(topline, secondline, thirdline)
+  
+  # converting to a data frame
+  if(any(!round(pop@tab,10) %in% c(0,(1/ploid),1, NA))){
+    pop@tab[!round(pop@tab,10) %in% c(0,(1/ploid),1, NA)] <- NA
+  }
+  if(!quiet) cat("Extracting the table ... ")
+  df <- genind2df(pop, oneColPerAll=TRUE)
+  write.table(infolines, file=filename, quote=TRUE, row.names=FALSE, 
+              col.names=FALSE, sep=",")
+  
+  # making sure that the individual names are included.
+  if(all(pop@ind.names == "") | is.null(pop@ind.names))
+    pop@ind.names <- paste("ind", 1:nInd(pop), sep="")
+  df <- cbind(pop@ind.names, df)
+  # setting the NA replacement. This doesn't work too well. 
+  replacement <- ifelse(pop@type =="PA","-1","0")
+  if(!quiet) cat("Writing the table to",filename,"... ")
+  write.table(df, file=filename, quote=TRUE, na=replacement, append=TRUE, 
+              row.names=FALSE, col.names=FALSE, sep=",")
+  if(!quiet) cat("Done.\n")
+}
+
+
+
+
+
 ################################################################################
 #################### Zhian's Functions above ###################################
 ################################################################################
