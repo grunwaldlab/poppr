@@ -810,6 +810,7 @@ new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FAL
   if(is.null(pop@pop)){
     pop(pop) <- rep("Pop", nInd(pop))
   }
+  popcall <- match.call()
   #topline is for the number of loci, individuals, and populations.
   topline <- c(nLoc(pop), nInd(pop), length(pop@pop.names))
   popsizes <- table(pop@pop)
@@ -859,7 +860,7 @@ new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FAL
   replacement <- ifelse(pop@type =="PA","-1","0")
   if(!quiet) cat("Writing the table to",filename,"... ")
   
-  if(geo == TRUE){
+  if(geo == TRUE & !is.null(pop$other[[geodf]])){
     replacemat <- matrix("", 3, 3)
     replacemat[3, 2:3] <- c("X", "Y")
     infolines <- cbind(infolines, replacemat)
@@ -869,6 +870,13 @@ new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FAL
       gdf <- rbind(gdf, matrix("", nInd(pop) - nrow(gdf), 2))
     }
     df <- cbind(df, df2, gdf)
+  }
+  else{
+    popcall <- popcall[2]
+    warning(paste("There is no data frame or matrix in ",
+                  paste(substitute(popcall), collapse=""), 
+                  "@other called ",geodf,
+                  ".\nThe xy coordinates will not be represented in the resulting file.", sep=""))
   }
   
   write.table(infolines, file=filename, quote=TRUE, row.names=FALSE, 
