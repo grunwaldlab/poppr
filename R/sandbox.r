@@ -886,6 +886,149 @@ new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FAL
   if(!quiet) cat("Done.\n")
 }
 
+new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
+  # The first two lines from a genalex file contain all of the information about
+  # the structure of the file (except for ploidy and geographic info)
+  gencall <- match.call()
+  all.info <- strsplit(readLines(genalex, n=2), ",")
+  if (any(all.info[[1]]=="")){
+    num.info <- as.numeric(all.info[[1]][-which(all.info[[1]]=="")])
+  }
+  else {
+    num.info <- as.numeric(all.info[[1]])
+  }
+  if (any(all.info[[2]]=="")){
+    pop.info <- all.info[[2]][c(-1,-2,-3,-which(all.info[[2]]==""))]  
+  }
+  else {
+    pop.info <- all.info[[2]][c(-1,-2,-3)]
+  }
+  
+  # glob.info is for the number of loci, individuals, and populations.
+  glob.info <- num.info[1:3]
+  if(any(is.na(glob.info))){
+    stop("Something is wrong with your csv file. Perhaps it is not comma delimited?\n")
+  }
+  #   cat("Global Information:",glob.info,"\n")
+  #   cat("Populations:",pop.info,"\n")
+  #   cat("num.info:",num.info,"\n")
+  
+  gena <- read.csv(genalex, header=TRUE, skip=2)
+  if(!is.na(which(is.na(gena[1, ]))[1])){
+    gena <- gena[, -which(is.na(gena[1,]))]
+  }
+  
+  #   print(gena[1:10, ])
+  # Creating vectors that correspond to the different information fields.
+  # If the regions are true, then the length of the pop.info should be equal to
+  # the number of populations "npop"(glob.info[3]) plus the number of regions
+  # which is the npop+4th entry in the vector. 
+  # Note that this strategy will only work if the name of the first region does
+  # not match any of the populations. 
+  if (region==TRUE & length(pop.info) == glob.info[3]+num.info[glob.info[3]+4]){
+    reg.vec <- ifelse(any(gena[, 1]==pop.info[glob.info[3]+1]), 1, 2)
+    pop.vec <- ifelse(any(gena[, 1]==pop.info[1]), 1, 2)
+    orig.ind.vec <- NULL
+    # Regional Vector    
+    reg.vec <- gena[, reg.vec]
+    # Population Vector
+    pop.vec <- gena[, pop.vec]    
+    # Individual Vector
+    ind.vec <- gena[, ncol(gena)]
+    # removing the non-genotypic columns from the data frame
+    gena <- gena[, c(-1,-2,-ncol(gena))]
+    xy <- NULL
+  }
+  else if (geo == TRUE & length(pop.info) == glob.info[3]){
+    reg.vec <- NULL
+    pop.vec <- gena[, 2]
+    ind.vec <- gena[, 1]
+    xy <- gena[, c((ncol(gena)-1), ncol(gena))]
+    gena <- gena[, c(-1,-2,-(ncol(gena)-1),-ncol(gena))]
+  }
+  else{
+    reg.vec <- NULL
+    pop.vec <- gena[, 2]
+    ind.vec <- gena[, 1]
+    xy <- NULL
+    gena <- gena[, c(-1,-2)]
+  }
+  clm <- ncol(gena)
+  # Checking for diploid data.
+  if (glob.info[1] == clm/2){
+    # Missing data in genalex is coded as "0" for non-presence/absence data.
+    # this converts it to "NA" for adegenet.
+    #gena <- as.data.frame(gsub("  0", "NA", as.matrix(gena)))
+    if(any(gena =="0")){
+      gena.mat <- as.matrix(gena)
+      gena.mat[which(gena=="0")] <- NA
+      gena <- as.data.frame(gena.mat)
+    }
+    type='codom'
+    gena2 <- gena[, which((1:clm)%%2==1)]
+    loci <- which((1:clm)%%2==1)
+    lapply(loci, function(x) gena2[, ((x-1)/2)+1] <<-
+             paste(gena[, x],"/",gena[, x+1], sep=""))
+    res <- list(Gena=gena2, Glob.info=glob.info, Ploid=ploidy)
+    res.gid <- df2genind(res$Gena, sep="/", ind.names=ind.vec, pop=pop.vec,
+                         ploidy=res$Ploid, type=type)
+  }
+  # Checking for AFLP data.
+  else if (glob.info[1] == clm & any(gena == 1)) {
+    # Missing data in genalex is coded as "-1" for presence/absence data.
+    # this converts it to "NA" for adegenet.
+    if(any(gena==-1)){
+      gena.mat <- as.matrix(gena)
+      gena.mat[which(gena==-1)] <- NA
+      gena <- as.data.frame(gena.mat)
+    }
+    type='PA'
+    res <- list(Gena=gena, Glob.info=glob.info, Ploid=ploidy)
+    res.gid <- df2genind(res$Gena, ind.names=ind.vec, pop=pop.vec,
+                         ploidy=res$Ploid, type=type)
+  }
+  # Checking for haploid microsattellite data.
+  else if (glob.info[1] == clm & all(!gena %in% c(1,-1))) {
+    if(any(gena =="0")){
+      gena.mat <- as.matrix(gena)
+      gena.mat[which(gena=="0")] <- NA
+      gena <- as.data.frame(gena.mat)
+    }
+    type = 'codom'
+    res <- list(Gena=gena, Glob.info=glob.info, Ploid=1)
+    res.gid <- df2genind(res$Gena, ind.names=ind.vec, pop=pop.vec,
+                         ploidy=res$Ploid, type=type)
+  }
+  else {
+    stop("Did you forget to set the geo or region flags?")
+  }
+  if (any(duplicated(ind.vec))){
+    # preserving the names
+    orig.ind.vec <- ind.vec
+    # ensuring that all names are unique
+    ind.vec <- 1:length(ind.vec)
+    res.gid@other[["original.names"]] <- orig.ind.vec
+  }
+  else
+    res.gid@other[["population_hierarchy"]] <- as.data.frame(list(Pop=pop.vec))
+  res.gid@call <- gencall
+  #if(is.na(grep("system.file", gencall)[1]))
+  res.gid@call[2] <- basename(genalex)
+  if(region==TRUE){
+    res.gid@other[["population_hierarchy"]]$Region <- reg.vec
+    return(res.gid)
+  }
+  else if(geo==TRUE){
+    res.gid@other[["xy"]] <- xy
+    return(res.gid)
+  }
+  else {
+    return(res.gid)
+  }
+}
+
+
+
 
 ################################################################################
 #################### Zhian's Functions above ###################################
