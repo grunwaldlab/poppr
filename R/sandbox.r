@@ -918,7 +918,6 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     gena <- gena[, -which(is.na(gena[1,]))]
   }
   
-  #   print(gena[1:10, ])
   # Creating vectors that correspond to the different information fields.
   # If the regions are true, then the length of the pop.info should be equal to
   # the number of populations "npop"(glob.info[3]) plus the number of regions
@@ -1015,10 +1014,10 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     orig.ind.vec <- ind.vec
     # ensuring that all names are unique
     ind.vec <- 1:length(ind.vec)
-    res.gid@other[["original.names"]] <- orig.ind.vec
+    res.gid@other[["original_names"]] <- orig.ind.vec
   }
-  else
-    res.gid@other[["population_hierarchy"]] <- as.data.frame(list(Pop=pop.vec))
+
+  res.gid@other[["population_hierarchy"]] <- as.data.frame(list(Pop=pop.vec))
   res.gid@call <- gencall
   res.gid@call[2] <- basename(genalex)
   if(region==TRUE){
