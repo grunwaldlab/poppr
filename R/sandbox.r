@@ -871,21 +871,21 @@ new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FAL
     }
     df <- cbind(df, df2, gdf)
   }
-  else{
+  else if (geo == TRUE){
     popcall <- popcall[2]
     warning(paste("There is no data frame or matrix in ",
                   paste(substitute(popcall), collapse=""), 
                   "@other called ",geodf,
                   ".\nThe xy coordinates will not be represented in the resulting file.", sep=""))
   }
-  
+
+  df[df == "NA" | is.na(df)] <- replacement
   write.table(infolines, file=filename, quote=TRUE, row.names=FALSE, 
               col.names=FALSE, sep=",")
   write.table(df, file=filename, quote=TRUE, na=replacement, append=TRUE, 
               row.names=FALSE, col.names=FALSE, sep=",")
   if(!quiet) cat("Done.\n")
 }
-
 
 
 
