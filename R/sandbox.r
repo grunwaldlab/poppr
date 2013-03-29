@@ -914,8 +914,10 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   #   cat("num.info:",num.info,"\n")
   
   gena <- read.csv(genalex, header=TRUE, skip=2)
+  
+  # Removing all null columns 
   if(!is.na(which(is.na(gena[1, ]))[1])){
-    gena <- gena[, -which(is.na(gena[1,]))]
+    gena <- gena[, -which(is.na(gena[1, ]))]
   }
   
   # Creating vectors that correspond to the different information fields.
@@ -924,27 +926,53 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   # which is the npop+4th entry in the vector. 
   # Note that this strategy will only work if the name of the first region does
   # not match any of the populations. 
+  
   if (region==TRUE & length(pop.info) == glob.info[3] + num.info[glob.info[3]+4]){
     #reg.vec <- ifelse(any(gena[, 1]==pop.info[glob.info[3]+1]), 1, 2)
-    pop.vec <- ifelse(any(gena[, 1]==pop.info[1]), 1, 2)
-    reg.vec <- ifelse(pop.vec == 2, 1, 2)
-    orig.ind.vec <- NULL
-    # Regional Vector    
-    reg.vec <- gena[, reg.vec]
-    # Population Vector
-    pop.vec <- gena[, pop.vec]    
-    if(geo == TRUE){
-      geoinds <- c((ncol(gena)-1), ncol(gena))
-      xy <- gena[, geoinds]
-      gena <- gena[, -geoinds]
+    loci.adj <- c(glob.info[1], glob.info[1]*ploidy)
+    if((ncol(gena) %in% loci.adj + 4 & geo == TRUE) | (ncol(gena) %in% loci.adj + 2)){
+      pop.vec <- gena[, 2]
+      ind.vec <- gena[, 1]
+      xy <- gena[, c((ncol(gena)-1), ncol(gena))]
+      region.inds <- ( (glob.info[3]+5): length(num.info))
+      #print((glob.info[3]+5): length(num.info))
+      reg.inds <- num.info[region.inds]
+
+      reg.names <- all.info[[2]][region.inds]
+      reg.vec <- rep(reg.names, reg.inds)
+
+      if(geo == TRUE){
+        geoinds <- c((ncol(gena)-1), ncol(gena))
+        xy <- gena[, geoinds]
+        gena <- gena[, -geoinds]
+      }
+      else{
+        xy <- NULL
+      }
+      gena <- gena[, c(-1,-2)]
+      print(head(gena))
     }
     else{
-      xy <- NULL
+      pop.vec <- ifelse(any(gena[, 1]==pop.info[1]), 1, 2)
+      reg.vec <- ifelse(pop.vec == 2, 1, 2)
+      orig.ind.vec <- NULL
+      # Regional Vector    
+      reg.vec <- gena[, reg.vec]
+      # Population Vector
+      pop.vec <- gena[, pop.vec]    
+      if(geo == TRUE){
+        geoinds <- c((ncol(gena)-1), ncol(gena))
+        xy <- gena[, geoinds]
+        gena <- gena[, -geoinds]
+      }
+      else{
+        xy <- NULL
+      }
+      # Individual Vector
+      ind.vec <- gena[, ncol(gena)]
+      # removing the non-genotypic columns from the data frame
+      gena <- gena[, c(-1,-2,-ncol(gena))]
     }
-    # Individual Vector
-    ind.vec <- gena[, ncol(gena)]
-    # removing the non-genotypic columns from the data frame
-    gena <- gena[, c(-1,-2,-ncol(gena))]
   }
   else if (geo == TRUE & length(pop.info) == glob.info[3]){
     reg.vec <- NULL
