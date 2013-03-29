@@ -930,7 +930,7 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   if (region==TRUE & length(pop.info) == glob.info[3] + num.info[glob.info[3]+4]){
     #reg.vec <- ifelse(any(gena[, 1]==pop.info[glob.info[3]+1]), 1, 2)
     loci.adj <- c(glob.info[1], glob.info[1]*ploidy)
-    if((ncol(gena) %in% loci.adj + 4 & geo == TRUE) | (ncol(gena) %in% loci.adj + 2)){
+    if(((ncol(gena) %in% (loci.adj + 4)) & (geo == TRUE)) | (ncol(gena) %in% (loci.adj + 2))){
       pop.vec <- gena[, 2]
       ind.vec <- gena[, 1]
       xy <- gena[, c((ncol(gena)-1), ncol(gena))]
@@ -950,7 +950,6 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
         xy <- NULL
       }
       gena <- gena[, c(-1,-2)]
-      print(head(gena))
     }
     else{
       pop.vec <- ifelse(any(gena[, 1]==pop.info[1]), 1, 2)
