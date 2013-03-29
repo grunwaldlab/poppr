@@ -886,6 +886,9 @@ new.genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FAL
   if(!quiet) cat("Done.\n")
 }
 
+
+
+
 new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   # The first two lines from a genalex file contain all of the information about
   # the structure of the file (except for ploidy and geographic info)
@@ -1041,7 +1044,7 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
                          ploidy=res$Ploid, type=type)
   }
   else {
-    stop("Did you forget to set the geo or region flags?")
+    stop("Something went wrong. Check your geo and region flags to make sure they are set correctly. Otherwise, the problem may lie within the data structure itself.")
   }
   if (any(duplicated(ind.vec))){
     # preserving the names
