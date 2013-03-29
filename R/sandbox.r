@@ -928,19 +928,26 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   # not match any of the populations. 
   
   if (region==TRUE & length(pop.info) == glob.info[3] + num.info[glob.info[3]+4]){
-    #reg.vec <- ifelse(any(gena[, 1]==pop.info[glob.info[3]+1]), 1, 2)
+    # Info for the number of columns the loci can take on.
     loci.adj <- c(glob.info[1], glob.info[1]*ploidy)
+    
+    # First question, do you have two or four extra columns? Two extra would
+    # indicate no geographic data. Four extra would indicate geographic data.
+    # Both of these indicate that, while a regional specification exists, a 
+    # column indicating the regions was not specified, so it needs to be created
     if(((ncol(gena) %in% (loci.adj + 4)) & (geo == TRUE)) | (ncol(gena) %in% (loci.adj + 2))){
       pop.vec <- gena[, 2]
       ind.vec <- gena[, 1]
       xy <- gena[, c((ncol(gena)-1), ncol(gena))]
-      region.inds <- ( (glob.info[3]+5): length(num.info))
-      #print((glob.info[3]+5): length(num.info))
+      
+      # Get the indices for the regions
+      region.inds <- ((glob.info[3]+5):length(num.info))
+      # Get the number of individuals per region
       reg.inds <- num.info[region.inds]
-
+      # Get the names of the regions
       reg.names <- all.info[[2]][region.inds]
+      # Paste them all into a single vector.
       reg.vec <- rep(reg.names, reg.inds)
-
       if(geo == TRUE){
         geoinds <- c((ncol(gena)-1), ncol(gena))
         xy <- gena[, geoinds]
