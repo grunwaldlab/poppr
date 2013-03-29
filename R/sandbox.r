@@ -923,6 +923,10 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     gena <- gena[, -which(is.na(gena[1, ]))]
   }
   
+  #----------------------------------------------------------------------------#
+  # Checking for extra information such as Regions or XY coordinates
+  #----------------------------------------------------------------------------#
+  
   # Creating vectors that correspond to the different information fields.
   # If the regions are true, then the length of the pop.info should be equal to
   # the number of populations "npop"(glob.info[3]) plus the number of regions
@@ -961,8 +965,11 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
       }
       gena <- gena[, c(-1,-2)]
     }
+    #
+    # The Regions are specified in one of the first two columns.
+    #
     else{
-      pop.vec <- ifelse(any(gena[, 1]==pop.info[1]), 1, 2)
+      pop.vec <- ifelse(any(gena[, 1] == pop.info[1]), 1, 2)
       reg.vec <- ifelse(pop.vec == 2, 1, 2)
       orig.ind.vec <- NULL
       # Regional Vector    
@@ -983,6 +990,10 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
       gena <- gena[, c(-1,-2,-ncol(gena))]
     }
   }
+  
+  #
+  # There are no Regions specified, but there are geographic coordinates
+  #
   else if (geo == TRUE & length(pop.info) == glob.info[3]){
     reg.vec <- NULL
     pop.vec <- gena[, 2]
@@ -990,6 +1001,9 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     xy <- gena[, c((ncol(gena)-1), ncol(gena))]
     gena <- gena[, c(-1,-2,-(ncol(gena)-1),-ncol(gena))]
   }
+  #
+  # There are no Regions or geographic coordinates
+  #
   else{
     reg.vec <- NULL
     pop.vec <- gena[, 2]
@@ -997,25 +1011,30 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     xy <- NULL
     gena <- gena[, c(-1,-2)]
   }
+
+  #----------------------------------------------------------------------------#
+  # The genotype matrix has been isolated at this point. Now this will
+  # reconstruct the matrix in a way that adegenet likes it.
+  #----------------------------------------------------------------------------#
+  
   clm <- ncol(gena)
   # Checking for diploid data.
   if (glob.info[1] == clm/2){
     # Missing data in genalex is coded as "0" for non-presence/absence data.
     # this converts it to "NA" for adegenet.
-    #gena <- as.data.frame(gsub("  0", "NA", as.matrix(gena)))
     if(any(gena =="0")){
       gena.mat <- as.matrix(gena)
       gena.mat[which(gena=="0")] <- NA
       gena <- as.data.frame(gena.mat)
     }
-    type='codom'
-    gena2 <- gena[, which((1:clm)%%2==1)]
+    type <- 'codom'
     loci <- which((1:clm)%%2==1)
+    gena2 <- gena[, loci]
     lapply(loci, function(x) gena2[, ((x-1)/2)+1] <<-
              paste(gena[, x],"/",gena[, x+1], sep=""))
-    res <- list(Gena=gena2, Glob.info=glob.info, Ploid=ploidy)
-    res.gid <- df2genind(res$Gena, sep="/", ind.names=ind.vec, pop=pop.vec,
-                         ploidy=res$Ploid, type=type)
+    #res <- list(Gena=gena2, Glob.info=glob.info, Ploid=ploidy)
+    res.gid <- df2genind(gena2, sep="/", ind.names=ind.vec, pop=pop.vec,
+                         ploidy=ploidy, type=type)
   }
   # Checking for AFLP data.
   else if (glob.info[1] == clm & any(gena == 1)) {
@@ -1026,22 +1045,22 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
       gena.mat[which(gena==-1)] <- NA
       gena <- as.data.frame(gena.mat)
     }
-    type='PA'
-    res <- list(Gena=gena, Glob.info=glob.info, Ploid=ploidy)
-    res.gid <- df2genind(res$Gena, ind.names=ind.vec, pop=pop.vec,
-                         ploidy=res$Ploid, type=type)
+    type <- 'PA'
+    #res <- list(Gena=gena, Glob.info=glob.info, Ploid=ploidy)
+    res.gid <- df2genind(gena, ind.names=ind.vec, pop=pop.vec,
+                         ploidy=ploidy, type=type)
   }
   # Checking for haploid microsattellite data.
   else if (glob.info[1] == clm & all(!gena %in% c(1,-1))) {
     if(any(gena =="0")){
       gena.mat <- as.matrix(gena)
-      gena.mat[which(gena=="0")] <- NA
+      gena.mat[which(gena == "0")] <- NA
       gena <- as.data.frame(gena.mat)
     }
-    type = 'codom'
-    res <- list(Gena=gena, Glob.info=glob.info, Ploid=1)
-    res.gid <- df2genind(res$Gena, ind.names=ind.vec, pop=pop.vec,
-                         ploidy=res$Ploid, type=type)
+    type <- 'codom'
+    #res <- list(Gena=gena, Glob.info=glob.info, Ploid=1)
+    res.gid <- df2genind(gena, ind.names=ind.vec, pop=pop.vec,
+                         ploidy=ploidy, type=type)
   }
   else {
     stop("Something went wrong. Check your geo and region flags to make sure they are set correctly. Otherwise, the problem may lie within the data structure itself.")
