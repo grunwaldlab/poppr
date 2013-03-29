@@ -71,6 +71,12 @@ Jari Oksanen, F.~Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter~R.
 \newblock {\em vegan: Community Ecology Package}, 2012.
 \newblock R package version 2.0-5.
 
+\bibitem{Peakall:2006}
+R.~Peakall and P.~E. Smouse.
+\newblock {GENALEX} 6: genetic analysis in excel. population genetic software
+  for teaching and research.
+\newblock {\em Molecular Ecology Notes}, 6(1):288--295+, 2006.
+
 \bibitem{Peakall:2012}
 Rod Peakall and Peter~E. Smouse.
 \newblock Genalex 6.5: genetic analysis in excel. population genetic software

@@ -273,7 +273,7 @@ list(
 Now we have our FSTAT file!
 \subsubsection{Function: read.genalex}
 
-\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}). \cite{Peakall:2012} Genalex runs within the Excel environment and can be very powerful in its analyses. Poppr has added the ability to read CSV files\footnote{CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object (more information on that below).
+\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. Genalex runs within the Excel environment and can be very powerful in its analyses. Poppr has added the ability to read CSV files\footnote{CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
 \begin{quote}
 Default Command:\\
 \texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)}
@@ -281,10 +281,10 @@ Default Command:\\
 \begin{itemize}
   \item \texttt{genalex -} a *.CSV file exported from GenAlEx on your disk (For example: ``my\_genalex\_file.csv").
   \item \texttt{ploidy -} a number indicating the ploidy for the data set (eg 2 for diploids, 1 for haploids).
-  \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. See the GenAlEx Manual for details. If you have geographic information in your file,
-  set this to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later).
-  \item \texttt{region -} To format your GenAlEx file to include regions along with your populations, see the GenAlEx manual (\url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}). If you have your file organized in this manner, select this option and the regional information will be stored in the resulting genind object in the \texttt{@other} slot.
+  \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later).
+  \item \texttt{region -} To format your GenAlEx file to include regions along with your populations, You can choose to include a separate column for regional data, or, since regional data must be in contiguous blocks, you can simply format it in the same way you would any other data (see the GenAlEx manual for details). If you have your file organized in this manner, select this option and the regional information will be stored in the resulting genind object in the \texttt{@other} slot.
 \end{itemize}
+
 \begin{center}
    \fcolorbox{black}{light-gray}{
          \begin{minipage}[t]{0.8\textwidth}
@@ -297,23 +297,66 @@ Default Command:\\
         \end{minipage}
       }
 \end{center}
-Check our data:
-<<check_data>>=
-x
+
+Note that regional data and geographic data are not mutually exclusive. You can have both in one file, just make sure that they are on the same sheet and that the geographic data is always placed after all genetic and demographic data.
+
+We have a short example of genalex formatted data with no geographic or regional formatting. We will first see where the data is using the command \texttt{system.file()}
+<<system_file_genalex, eval=FALSE>>=
+system.file("files/rootrot.csv", package="poppr")
+@
+<<system_file_echo, echo=FALSE>>=
+paste("/path/to/R/library/poppr/files/rootrot.csv")
 @
 Now import the data into \textit{poppr} like so:
-<<read.genalex_ex, eval=FALSE>>=
-rootrot <- read.genalex(x$files[1])
+<<read.genalex_ex>>=
+rootrot <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 @
 Executing rootrot shows that this file is now in genind format (ie. the format required by \textit{poppr} and \textit{adegenet}).
-<<read.genalex_ex2, eval=FALSE>>==
+<<read.genalex_ex2>>==
 rootrot
 @
-<<read.genalex_ex_show, echo=FALSE>>=
-rootrot <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
-rootrot@call[2] <- "rootrot.csv"
-rootrot
+
+\subsubsection{Genalex formatting shortcuts}
+
+\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see section 2.2 of this manual). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \textit{adegenet}. It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in section 1.5.1). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
+
+<<microsave, eval=FALSE>>=
+library(poppr)
+data(microbov)
+microbov@other$population_hierarchy <- data.frame(list(Country = microbov@other$coun, 
+  Species = microbov@other$spe, Breed = microbov@other$breed))
+microbov <- splitcombine(microbov, method=2, hier=c("Country", "Species", "Breed"))
+genind2genalex(microbov, file="~/Desktop/microbov.csv")
 @
+<<microsave_message, echo=FALSE>>=
+cat("Extracting the table ... Writing the table to ~/Desktop/microbov.csv ... Done.")
+@
+After we do this, we can open the file in our favorite spreadsheet editor and see the following image.
+
+\setkeys{Gin}{width=\textwidth}
+
+\begin{figure}[h!]
+  \centering
+  \caption{\footnotesize \footnotesize The first 15 individuals and 4 loci of the microbov data set. The first column contains the individual names, the second column contains the population names, and each subsequent column represents microsatellite genetic data. Highlighted in red is a list of populations and their relative sizes.}
+  \label{microbov unmodified}
+\includegraphics{unmod_dat}
+\end{figure}
+
+\newpage
+All that \textit{poppr} needs from the first header row are the first three numbers (unless you are including regional data, but it's not terribly necessary with the hierarchical support \textit{poppr} provides.), which represent the number of loci, individuals, and populations, respectively. After that, you have counts of individuals per population in each subsequent cell. For \textit{poppr}, These cells don't matter because we already have that information in column 2.
+
+If you have a large population hierarchy that would result in many many populations if you combined them all, consider the following hack. 
+
+\begin{figure}[h!]
+  \centering
+  \caption{\footnotesize \footnotesize The first 15 individuals and 4 loci of the microbov data set. This is the same figure as above, however the populations and counts have been removed from the header row and the third number in the header has been replaced by 1.}
+\includegraphics{mod_dat}
+\end{figure}
+
+\setkeys{Gin}{width=0.5\textwidth}
+
+Change the third number to 1 and replace all the population counts with the total number of individuals in your data set. It will import the same way with \texttt{read.genalex}
+
 \subsubsection{Other ways of importing data}
 
 \tab\tab \textit{Adegenet} already supports the import of FSTAT, Structure, Genpop, and Gentix formatted files, so if you have those formats, you can import them using the function \texttt{import2genind}. If you don't have any of these formats handy, you can still import your data using R's \texttt{read.table} along with \texttt{df2genind} from \textit{adegenet}. For more information, see \textit{adegenet}'s ``Getting Started" vignette.
