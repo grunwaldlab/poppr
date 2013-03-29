@@ -925,19 +925,27 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   # which is the npop+4th entry in the vector. 
   # Note that this strategy will only work if the name of the first region does
   # not match any of the populations. 
-  if (region==TRUE & length(pop.info) == glob.info[3]+num.info[glob.info[3]+4]){
-    reg.vec <- ifelse(any(gena[, 1]==pop.info[glob.info[3]+1]), 1, 2)
+  if (region==TRUE & length(pop.info) == glob.info[3] + num.info[glob.info[3]+4]){
+    #reg.vec <- ifelse(any(gena[, 1]==pop.info[glob.info[3]+1]), 1, 2)
     pop.vec <- ifelse(any(gena[, 1]==pop.info[1]), 1, 2)
+    reg.vec <- ifelse(pop.vec == 2, 1, 2)
     orig.ind.vec <- NULL
     # Regional Vector    
     reg.vec <- gena[, reg.vec]
     # Population Vector
     pop.vec <- gena[, pop.vec]    
+    if(geo == TRUE){
+      geoinds <- c((ncol(gena)-1), ncol(gena))
+      xy <- gena[, geoinds]
+      gena <- gena[, -geoinds]
+    }
+    else{
+      xy <- NULL
+    }
     # Individual Vector
     ind.vec <- gena[, ncol(gena)]
     # removing the non-genotypic columns from the data frame
     gena <- gena[, c(-1,-2,-ncol(gena))]
-    xy <- NULL
   }
   else if (geo == TRUE & length(pop.info) == glob.info[3]){
     reg.vec <- NULL
@@ -1012,19 +1020,16 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   else
     res.gid@other[["population_hierarchy"]] <- as.data.frame(list(Pop=pop.vec))
   res.gid@call <- gencall
-  #if(is.na(grep("system.file", gencall)[1]))
   res.gid@call[2] <- basename(genalex)
   if(region==TRUE){
     res.gid@other[["population_hierarchy"]]$Region <- reg.vec
-    return(res.gid)
+    #return(res.gid)
   }
-  else if(geo==TRUE){
+  if(geo==TRUE){
     res.gid@other[["xy"]] <- xy
-    return(res.gid)
+    #return(res.gid)
   }
-  else {
-    return(res.gid)
-  }
+  return(res.gid)
 }
 
 
