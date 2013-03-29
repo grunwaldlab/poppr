@@ -147,17 +147,17 @@ getfile <- function(multi=FALSE, pattern=NULL){
 #'
 #' @note This function cannot handle raw allele frequency data. 
 #' 
-#' The resulting genind object will have a data frame in the @other slot called
+#' The resulting genind object will have a data frame in the \code{other} slot called
 #' population_hierarchy. This will contain a column for your population data and
 #' a column for your Regional data if you have set the flag. 
 #' 
 #' If there is geographic data, it will be included in a data frame called xy in
-#' the @other slot. 
+#' the \code{other} slot. 
 #' 
 #' In the case that there are duplicated names within the file, this function 
 #' will assume separate individuals and rename each one to a sequence of 
 #' integers from 1 to the number of individuals. A vector of the original names
-#' will be saved in the \code{other} slot under \code{original.names}.
+#' will be saved in the \code{other} slot under \code{original_names}.
 #'
 #' @seealso \code{\link{clonecorrect}}, \code{\link{genind}}
 #'
@@ -393,9 +393,9 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 #' @param geo \code{logical} Default is \code{FALSE}. If it is set to 
 #' \code{TRUE}, the resulting file will have two columns for geographic data.
 #' 
-#' @param geodf \code{character} Since the @other slot in the adegenet object
+#' @param geodf \code{character} Since the \code{other} slot in the adegenet object
 #' can contain many different items, you must specify the name of the data frame
-#' in the @other slot containing your geographic coordinates. It defaults to
+#' in the \code{other} slot containing your geographic coordinates. It defaults to
 #' "xy". 
 #' 
 #' @note If you enter a file name that exists, that file will be overwritten.

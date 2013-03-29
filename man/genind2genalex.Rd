@@ -3,7 +3,7 @@
 \title{Exporting data from genind objects to genalex formatted *.csv files.}
 \usage{
   genind2genalex(pop, filename = "genalex.csv",
-    quiet = FALSE)
+    quiet = FALSE, geo = FALSE, geodf = "xy")
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object.}
@@ -13,6 +13,16 @@
 
   \item{quiet}{\code{logical} If \code{FALSE} a message
   will be printed to the screen.}
+
+  \item{geo}{\code{logical} Default is \code{FALSE}. If it
+  is set to \code{TRUE}, the resulting file will have two
+  columns for geographic data.}
+
+  \item{geodf}{\code{character} Since the \code{other} slot
+  in the adegenet object can contain many different items,
+  you must specify the name of the data frame in the
+  \code{other} slot containing your geographic coordinates.
+  It defaults to "xy".}
 }
 \description{
   genind2genalex will export a genind object to a *.csv
@@ -30,7 +40,7 @@
 \examples{
 \dontrun{
 data(nancycats)
-genind2genalex(nancycats, "~/Documents/nancycats.csv")
+genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 }
 }
 \seealso{
