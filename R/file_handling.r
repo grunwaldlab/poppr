@@ -330,9 +330,9 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   else if (glob.info[1] == clm & all(gena.mat %in% as.integer(-1:1))) {
     # Missing data in genalex is coded as "-1" for presence/absence data.
     # this converts it to "NA" for adegenet.
-    if(any(gena.mat == -1)){
+    if(any(gena.mat == -1L)){
       #gena.mat <- as.matrix(gena)
-      gena[gena.mat == -1] <- NA
+      gena[gena.mat == -1L] <- NA
       #gena <- as.data.frame(gena.mat)
     }
     type <- 'PA'
