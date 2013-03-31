@@ -346,7 +346,7 @@ Navigate to the \textit{adegenet} folder in your R library.
 $files
  [1] "AFLP.txt"          "exampleSnpDat.snp" "mondata1.rda"      "mondata2.rda"     
  [5] "nancycats.dat"     "nancycats.gen"     "nancycats.gtx"     "nancycats.str"    
- [9] "pdH1N1-HA.fasta"   "pdH1N1-NA.fasta"   "pdH1N1-data.csv"   "usflu.fasta"      
+ [9] "pdH1N1-data.csv"   "pdH1N1-HA.fasta"   "pdH1N1-NA.fasta"   "usflu.fasta"      
 
 $path
 [1] "/path/to/R/adegenet/files"
@@ -495,7 +495,7 @@ Optionnal contents:
 
 \subsubsection{Genalex formatting shortcuts}
 
-\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see section 2.2 of this manual). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \textit{adegenet}. It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in section 1.5.1). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
+\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see section 2.2 of this manual). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \textit{adegenet} (for details, type \texttt{help("microbov")} into your R console). It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in section 1.5.1). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
 
 \begin{Schunk}
 \begin{Sinput}
@@ -526,7 +526,7 @@ After we do this, we can open the file in our favorite spreadsheet editor and se
 \newpage
 All that \textit{poppr} needs from the first header row are the first three numbers (unless you are including regional data, but it's not terribly necessary with the hierarchical support \textit{poppr} provides.), which represent the number of loci, individuals, and populations, respectively. After that, you have counts of individuals per population in each subsequent cell. For \textit{poppr}, These cells don't matter because we already have that information in column 2.
 
-If you have a large population hierarchy that would result in many many populations if you combined them all, consider the following hack. 
+If you have a large data set with many population levels, you can use the following shortcut by setting the number in the third cell to 1. The number in cell 4 is arbitrary (but must be there). In the following figure, it is set to the number of individuals in your data set, but can easily be replaced with any other number (perhaps your favorite number?). 
 
 \begin{figure}[h!]
   \centering
@@ -536,11 +536,10 @@ If you have a large population hierarchy that would result in many many populati
 
 \setkeys{Gin}{width=0.5\textwidth}
 
-Change the third number to 1 and replace all the population counts with the total number of individuals in your data set. It will import the same way with \texttt{read.genalex}
-
 \subsubsection{Other ways of importing data}
 
-\tab\tab \textit{Adegenet} already supports the import of FSTAT, Structure, Genpop, and Gentix formatted files, so if you have those formats, you can import them using the function \texttt{import2genind}. If you don't have any of these formats handy, you can still import your data using R's \texttt{read.table} along with \texttt{df2genind} from \textit{adegenet}. For more information, see \textit{adegenet}'s ``Getting Started" vignette.
+\tab\tab \textit{Adegenet} already supports the import of FSTAT, Structure, Genpop, and Gentix formatted files, so if you have those formats, you can import them using the function \texttt{import2genind}. For sequence data, check if you can use \texttt{read.dna} from the \textit{ape} package to import your data. If you can, then you can use the \textit{adegenet} function \texttt{DNAbin2genind}. If you don't have any of these formats handy, you can still import your data using R's \texttt{read.table} along with \texttt{df2genind} from \textit{adegenet}. For more information, see \textit{adegenet}'s ``Getting Started" vignette.
+
 \subsubsection{Function: genind2genalex}
 
 \tab\tab Of course, being able to export data is just as useful as being able to import it, so we have this handy little function that will write a GenAlEx formatted file to wherever you desire.\\ 
@@ -552,10 +551,12 @@ Default Command:\\
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{filename -} This is where you specify where you want the file to go. If you simply type the file name, it will deposit the file in the directory R is currently in. If you don't know what directory you are in, you can type \texttt{getwd()} to find out.
-  \item \texttt{quiet -} If this is set to FALSE, a message will be printed to the screen.
+  \item \texttt{quiet -} If this is set to \texttt{FALSE}, a message will be printed to the screen.
+  \item \texttt{geo -} This is set to \texttt{FALSE} by default. If it is set to \texttt{TRUE}, then that means you have a data frame or matrix in the \texttt{@other} slot of your genind object that contains geographic coordinates for all individuals or all populations. Setting this to \texttt{TRUE} means that you want the resulting file to have two extra columns at the end of your file with geographic coordinates.
+  \item \texttt{geodf -} The name of the data frame or matrix containing the geographic coordinates. The default is \texttt{geodf = "xy"}.
 \end{itemize}
 
-Note that since missing values are coded in GenAlEx as 0 for co-dominant data and -1 for dominant data, this function attempts to do so, but occasionally will simply print``NA" in the corresponding cell. If this happens, use your favorite text editor or spreadsheet program to replace all ``NA"s with the appropriate missing indicators. Make sure to save the file in the appropriate format. 
+First, a simple example for the rootrot data we demonstrated in section 1.4.2:
 \begin{Schunk}
 \begin{Sinput}
 > genind2genalex(rootrot, "~/Desktop/rootrot.csv")
@@ -564,6 +565,73 @@ Note that since missing values are coded in GenAlEx as 0 for co-dominant data an
 \begin{Schunk}
 \begin{Soutput}
 Extracting the table ... Writing the table to ~/Desktop/rootrot.csv ... Done.
+\end{Soutput}
+\end{Schunk}
+
+Now here's an example of exporting the nancycats data set into GenAlEx format with geographic information. If we look at the nancycats geographic information, we can see it's coordinates for each population, but not each individual:
+\begin{Schunk}
+\begin{Sinput}
+> data(nancycats)
+> nancycats@other$xy
+\end{Sinput}
+\begin{Soutput}
+           x         y
+P01 263.3498 171.10939
+P02 183.5028 122.40790
+P03 391.1050 254.70148
+P04 458.6121  41.72336
+P05 182.7769 219.08398
+P06 335.2121 344.83557
+P07 359.1662 375.36486
+P08 271.3345  67.89132
+P09 256.8169 150.02964
+P10 270.6086  17.00917
+P11 493.4544 237.25618
+P12 305.4510  85.33663
+P13 462.9674  86.79040
+P14 429.5768 291.04587
+P15 531.2003 115.13903
+P16 407.8003  99.87438
+P17 345.3745 251.79393
+\end{Soutput}
+\end{Schunk}
+And we can export it easily:
+\begin{Schunk}
+\begin{Sinput}
+> genind2genalex(nancycats, "~/Desktop/nancycats_pop_xy.csv")
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Soutput}
+Extracting the table ... Writing the table to ~/Desktop/nancycats_pop_xy.csv ... Done.
+\end{Soutput}
+\end{Schunk}
+If we wanted to assign a geographic coordinate to each individual, we can simply use this little repetition trick knowing that there are 17 populations in the data set:
+\begin{Schunk}
+\begin{Sinput}
+> nan2 <- nancycats
+> nan2@other$xy <- nan2@other$xy[rep(1:17, table(nan2@pop)), ]
+> head(nan2@other$xy)
+\end{Sinput}
+\begin{Soutput}
+           x        y
+P01 263.3498 171.1094
+P01 263.3498 171.1094
+P01 263.3498 171.1094
+P01 263.3498 171.1094
+P01 263.3498 171.1094
+P01 263.3498 171.1094
+\end{Soutput}
+\end{Schunk}
+Now we can export it to a different file.
+\begin{Schunk}
+\begin{Sinput}
+> genind2genalex(nan2, "~/Desktop/nancycats_inds_xy.csv")
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Soutput}
+Extracting the table ... Writing the table to ~/Desktop/nancycats_inds_xy.csv ... Done.
 \end{Soutput}
 \end{Schunk}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2090,7 +2158,7 @@ This analysis produced the histograms you see below. What these histograms repre
   \centering
   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
   \label{ia_demo_fig}
-\includegraphics{poppr_manual-097}
+\includegraphics{poppr_manual-103}
 \end{figure}
 %\newpage
 
@@ -2149,7 +2217,7 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
   \centering
   \caption{\footnotesize Heatmap representation of a dissimilarity distance for the data set ``Aeut"}
   \label{bruvo_heat_map}
-\includegraphics{poppr_manual-101}
+\includegraphics{poppr_manual-107}
 \end{figure}
 
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}
@@ -2195,7 +2263,7 @@ You can visualize this better with a simple heatmap:\\
 > heatmap(as.matrix(dist9), symm=TRUE)
 \end{Sinput}
 \end{Schunk}
-\includegraphics{poppr_manual-104}
+\includegraphics{poppr_manual-110}
 \end{figure}
 \newpage
 
@@ -2608,7 +2676,7 @@ The reason why the P-values would be different is described at the end of sectio
   \centering
   \caption{\footnotesize Output of multilocus-style sampling.}
   \label{simulated_dist_fig}
-\includegraphics{poppr_manual-130}
+\includegraphics{poppr_manual-136}
 \end{figure}
 \newpage
 
@@ -2617,7 +2685,7 @@ Take a look a these two histograms. The number of ways you can recombine the dat
   \centering
   \caption{\footnotesize Output for parametric bootstrap sampling.}
   \label{simulated_param_fig}
-\includegraphics{poppr_manual-131}
+\includegraphics{poppr_manual-137}
 \end{figure}
 
 As you can see, the distribution is much closer to a distribution we would expect if this were a small sample of a larger population. 
