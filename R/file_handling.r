@@ -307,14 +307,15 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   #----------------------------------------------------------------------------#
   
   clm <- ncol(gena)
+  gena.mat <- as.matrix(gena)
   # Checking for diploid data.
   if (glob.info[1] == clm/2){
     # Missing data in genalex is coded as "0" for non-presence/absence data.
     # this converts it to "NA" for adegenet.
-    if(any(gena =="0")){
-      gena.mat <- as.matrix(gena)
-      gena.mat[which(gena=="0")] <- NA
-      gena <- as.data.frame(gena.mat)
+    if(any(gena.mat =="0")){
+      #gena.mat <- as.matrix(gena)
+      gena[gena == "0"] <- NA
+      #gena <- as.data.frame(gena.mat)
     }
     type <- 'codom'
     loci <- which((1:clm)%%2==1)
@@ -326,30 +327,30 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
                          ploidy=ploidy, type=type)
   }
   # Checking for AFLP data.
-  else if (glob.info[1] == clm & any(gena == 1)) {
+  else if (glob.info[1] == clm & all(gena.mat %in% as.integer(-1:1))) {
     # Missing data in genalex is coded as "-1" for presence/absence data.
     # this converts it to "NA" for adegenet.
-    if(any(gena==-1)){
-      gena.mat <- as.matrix(gena)
-      gena.mat[which(gena==-1)] <- NA
-      gena <- as.data.frame(gena.mat)
+    if(any(gena.mat == -1)){
+      #gena.mat <- as.matrix(gena)
+      gena[gena.mat == -1] <- NA
+      #gena <- as.data.frame(gena.mat)
     }
     type <- 'PA'
     #res <- list(Gena=gena, Glob.info=glob.info, Ploid=ploidy)
     res.gid <- df2genind(gena, ind.names=ind.vec, pop=pop.vec,
                          ploidy=ploidy, type=type)
   }
-  # Checking for haploid microsattellite data.
-  else if (glob.info[1] == clm & all(!gena %in% c(1,-1))) {
-    if(any(gena =="0")){
-      gena.mat <- as.matrix(gena)
-      gena.mat[which(gena == "0")] <- NA
-      gena <- as.data.frame(gena.mat)
+  # Checking for haploid microsattellite data or SNP data
+  else if (glob.info[1] == clm & !all(gena.mat %in% as.integer(-1:1))) {
+    if(any(gena.mat == "0")){
+      #gena.mat <- as.matrix(gena)
+      gena[gena.mat == "0"] <- NA
+      #gena <- as.data.frame(gena.mat)
     }
     type <- 'codom'
     #res <- list(Gena=gena, Glob.info=glob.info, Ploid=1)
     res.gid <- df2genind(gena, ind.names=ind.vec, pop=pop.vec,
-                         ploidy=ploidy, type=type)
+                         ploidy= 1, type=type)
   }
   else {
     stop("Something went wrong. Check your geo and region flags to make sure they are set correctly. Otherwise, the problem may lie within the data structure itself.")
