@@ -71,7 +71,7 @@ install.packages("poppr", dependencies=TRUE)
 If everything is working perfectly, all the dependencies (\textit{adegenet, pegas, vegan, ggplot2, phangorn,} and \textit{ape}) should be installed. In the unfortunate case this does not work, consult \url{http://cran.r-project.org/doc/manuals/R-admin.html#Installing-packages}.
 If you choose to install \textit{poppr} from a source file, you should first make sure to install all of the dependencies with the following command:
 <<install_depend, eval=FALSE>>=
-install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape"), dependencies=TRUE)
+install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
 @
 After that, you can install the package with:
 <<install_source, eval=FALSE>>=
@@ -644,27 +644,55 @@ Now we can see that we have a data frame with all of our population factors sepa
 <<splitcombine_poppr>>=
 poppr(Aeut.pop, quiet=TRUE)
 @
-It's as simple as that. We can reverse it by simply changing the method.
+\newpage
+It's as simple as that. Now, let's take a look at the same data set, except the input file is a GenAlEx file that has been formatted with Regional data (See section 1.4.2 for details). First, let's see how the data set is laid out:
+
+\setkeys{Gin}{width=0.9\textwidth}
+
+\begin{figure}[h!]
+  \centering
+  \caption{\footnotesize \footnotesize Part of the rootrot2.csv data set. Note the last two columns denoting the Regions and the number of individuals per region.}
+  \label{rootrot2_csv}
+\includegraphics{rootrot2}
+\end{figure}
+\setkeys{Gin}{width=0.5\textwidth}
+
+% We can reverse it by simply changing the method.
 \begin{center}
    \fcolorbox{black}{light-gray}{
          \begin{minipage}[t]{0.8\textwidth}
 {\large \textsc{The amazing disappearing options!}}\\
-Notice that I'm not writing in many of the options? This is because they have defaults. Since the data frame in my \texttt{@other} slot is called ``population hierarchy", I don't have to specify that every time I do the function call, and that saves a lot of typing! Also, since the hierarchy has already been split into its components, I can now index the data frame by column number. So, since I want to combine the ``Pop" and ``Subpop" components, I will tell the function to use columns 2 through 3.
+Notice that I'm not writing in many of the options? This is because they have defaults. Since the data frame in my \texttt{@other} slot is called ``population hierarchy", I don't have to specify that every time I do the function call, and that saves a lot of typing! 
+% Also, since the hierarchy has already been split into its components, I can now index the data frame by column number. So, since I want to combine the ``Pop" and ``Subpop" components, I will tell the function to use columns 2 through 3.
         \end{minipage}
       }
 \end{center}
-<<splitcombine_combine>>=
-Aeut.subpop <- splitcombine(Aeut.pop, method=2, hier=2:3)
-head(Aeut.subpop$other$population_hierarchy)
-summary(Aeut.subpop)
-@
 
-Let's imagine for a second that these ``hierarchies" are not actually hierarchical, but rather they represent independent observations (For example: the ``Subpop" factor could represent months of the year). In this case, we would want to only analyze the ``Subpop" factor. We can do this by using \texttt{splitcombine} with only one hierarchical level.
-<<splitcombine_subpop>>=
-Aeut.subpop <- splitcombine(Aeut.pop, method=2, hier="Subpop")
-summary(Aeut.subpop)
-poppr(Aeut.subpop)
+We'll import our data using \texttt{read.genalex} and take a look at the population hierarchy.
+<<read_rootrot2>>=
+Aeut2 <- read.genalex(system.file("files/rootrot2.csv", package="poppr"), region=TRUE)
+head(Aeut2@other$population_hierarchy)
+summary(Aeut2)
 @
+What we see is that we have both of the population factors, but the names have changed and they are not combined. Note that since we specified ``Athena" and ``Mt. Vernon" as regions, the other level of the hierarchy was set as the population factor. We'll use \texttt{splitcombine} to combine both of these in the proper order. Note that we can use the indexes of the data frame columns to index these.
+
+<<splitcombine_combine>>=
+Aeut2.combine <- splitcombine(Aeut2, method=2, hier=2:1)
+head(Aeut2.combine@other$population_hierarchy)
+summary(Aeut2.combine)
+@
+% <<splitcombine_combine>>=
+% Aeut.combine <- splitcombine(Aeut.pop, method=2, hier=2:3)
+% head(Aeut.combine$other$population_hierarchy)
+% summary(Aeut.combine)
+% @
+% 
+% Let's imagine for a second that these ``hierarchies" are not actually hierarchical, but rather they represent independent variables (For example: the ``Subpop" factor could represent months of the year). In this case, we would want to only analyze the ``Subpop" factor. We can do this by using \texttt{splitcombine} with only one hierarchical level.
+% <<splitcombine_subpop>>=
+% Aeut.subpop <- splitcombine(Aeut.pop, method=2, hier="Subpop")
+% summary(Aeut.subpop)
+% poppr(Aeut.subpop, quiet=TRUE)
+% @
 Having these hierarchies in your data set is important when it comes to clone-censoring your data set (see section 2.4 \textit{Attack of the Clone Correction}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1691,7 +1719,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \begin{itemize}
 \item getfile(multi = FALSE, pattern = NULL)
 \item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
-\item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE)
+\item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, geodf = "xy")
 \item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
 \item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)

@@ -75,7 +75,7 @@ If everything is working perfectly, all the dependencies (\textit{adegenet, pega
 If you choose to install \textit{poppr} from a source file, you should first make sure to install all of the dependencies with the following command:
 \begin{Schunk}
 \begin{Sinput}
-> install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape"), dependencies=TRUE)
+> install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
 \end{Sinput}
 \end{Schunk}
 After that, you can install the package with:
@@ -266,7 +266,7 @@ A window would pop up again, and you should navigate to the same directory as yo
 \begin{Schunk}
 \begin{Soutput}
 $files
-[1] "rootrot.csv"   "simulated.dat"
+[1] "rootrot.csv"   "rootrot2.csv"  "simulated.dat"
 
 $path
 [1] "/path/to/R/poppr/files"
@@ -417,7 +417,7 @@ $path
 Now we have our FSTAT file!
 \subsubsection{Function: read.genalex}
 
-\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. Genalex runs within the Excel environment and can be very powerful in its analyses. Poppr has added the ability to read CSV files\footnote{CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
+\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and can be very powerful in its analyses. \textit{Poppr} has added the ability to read *.CSV files\footnote{*.CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
 \begin{quote}
 Default Command:\\
 \texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)}
@@ -1246,31 +1246,77 @@ Now we can see that we have a data frame with all of our population factors sepa
 3      Total 187 119 68.453 2.989 4.558 68.972 0.991 0.720 14.371 0.271 rootrot.csv
 \end{Soutput}
 \end{Schunk}
-It's as simple as that. We can reverse it by simply changing the method.
+\newpage
+It's as simple as that. Now, let's take a look at the same data set, except the input file is a GenAlEx file that has been formatted with Regional data (See section 1.4.2 for details). First, let's see how the data set is laid out:
+
+\setkeys{Gin}{width=0.9\textwidth}
+
+\begin{figure}[h!]
+  \centering
+  \caption{\footnotesize \footnotesize Part of the rootrot2.csv data set. Note the last two columns denoting the Regions and the number of individuals per region.}
+  \label{rootrot2_csv}
+\includegraphics{rootrot2}
+\end{figure}
+\setkeys{Gin}{width=0.5\textwidth}
+
+% We can reverse it by simply changing the method.
 \begin{center}
    \fcolorbox{black}{light-gray}{
          \begin{minipage}[t]{0.8\textwidth}
 {\large \textsc{The amazing disappearing options!}}\\
-Notice that I'm not writing in many of the options? This is because they have defaults. Since the data frame in my \texttt{@other} slot is called ``population hierarchy", I don't have to specify that every time I do the function call, and that saves a lot of typing! Also, since the hierarchy has already been split into its components, I can now index the data frame by column number. So, since I want to combine the ``Pop" and ``Subpop" components, I will tell the function to use columns 2 through 3.
+Notice that I'm not writing in many of the options? This is because they have defaults. Since the data frame in my \texttt{@other} slot is called ``population hierarchy", I don't have to specify that every time I do the function call, and that saves a lot of typing! 
+% Also, since the hierarchy has already been split into its components, I can now index the data frame by column number. So, since I want to combine the ``Pop" and ``Subpop" components, I will tell the function to use columns 2 through 3.
         \end{minipage}
       }
 \end{center}
+
+We'll import our data using \texttt{read.genalex} and take a look at the population hierarchy.
 \begin{Schunk}
 \begin{Sinput}
-> Aeut.subpop <- splitcombine(Aeut.pop, method=2, hier=2:3)
-> head(Aeut.subpop$other$population_hierarchy)
+> Aeut2 <- read.genalex(system.file("files/rootrot2.csv", package="poppr"), region=TRUE)
+> head(Aeut2@other$population_hierarchy)
 \end{Sinput}
 \begin{Soutput}
-  Pop_Subpop    Pop Subpop
-1   Athena_1 Athena      1
-2   Athena_1 Athena      1
-3   Athena_1 Athena      1
-4   Athena_1 Athena      1
-5   Athena_1 Athena      1
-6   Athena_1 Athena      1
+  Pop Region
+1   1 Athena
+2   1 Athena
+3   1 Athena
+4   1 Athena
+5   1 Athena
+6   1 Athena
 \end{Soutput}
 \begin{Sinput}
-> summary(Aeut.subpop)
+> summary(Aeut2)
+\end{Sinput}
+\begin{Soutput}
+ # Total number of genotypes:  187 
+
+ # Population sample sizes:  
+ 1  2  3  4  5  6  7  8  9 10 
+19 18 18 25 27 17 23 21 10  9 
+
+ # Percentage of missing data:  
+[1] 0
+\end{Soutput}
+\end{Schunk}
+What we see is that we have both of the population factors, but the names have changed and they are not combined. Note that since we specified ``Athena" and ``Mt. Vernon" as regions, the other level of the hierarchy was set as the population factor. We'll use \texttt{splitcombine} to combine both of these in the proper order. Note that we can use the indexes of the data frame columns to index these.
+
+\begin{Schunk}
+\begin{Sinput}
+> Aeut2.combine <- splitcombine(Aeut2, method=2, hier=2:1)
+> head(Aeut2.combine@other$population_hierarchy)
+\end{Sinput}
+\begin{Soutput}
+  Pop Region Region_Pop
+1   1 Athena   Athena_1
+2   1 Athena   Athena_1
+3   1 Athena   Athena_1
+4   1 Athena   Athena_1
+5   1 Athena   Athena_1
+6   1 Athena   Athena_1
+\end{Soutput}
+\begin{Sinput}
+> summary(Aeut2.combine)
 \end{Sinput}
 \begin{Soutput}
  # Total number of genotypes:  187 
@@ -1287,52 +1333,18 @@ Mt. Vernon_3 Mt. Vernon_4 Mt. Vernon_5 Mt. Vernon_6 Mt. Vernon_7 Mt. Vernon_8
 [1] 0
 \end{Soutput}
 \end{Schunk}
-
-Let's imagine for a second that these ``hierarchies" are not actually hierarchical, but rather they represent independent observations (For example: the ``Subpop" factor could represent months of the year). In this case, we would want to only analyze the ``Subpop" factor. We can do this by using \texttt{splitcombine} with only one hierarchical level.
-\begin{Schunk}
-\begin{Sinput}
-> Aeut.subpop <- splitcombine(Aeut.pop, method=2, hier="Subpop")
-> summary(Aeut.subpop)
-\end{Sinput}
-\begin{Soutput}
- # Total number of genotypes:  187 
-
- # Population sample sizes:  
- 1  2  3  4  5  6  7  8  9 10 
-19 18 18 25 27 17 23 21 10  9 
-
- # Percentage of missing data:  
-[1] 0
-\end{Soutput}
-\begin{Sinput}
-> poppr(Aeut.subpop)
-\end{Sinput}
-\begin{Soutput}
-| 1 
-| 2 
-| 3 
-| 4 
-| 5 
-| 6 
-| 7 
-| 8 
-| 9 
-| 10 
-| Total 
-     Pop   N MLG   eMLG    SE     H      G  Hexp   E.5     Ia rbarD        File
-1      1  19  16  9.211 0.701 2.726 14.440 0.982 0.942 14.229 0.313 rootrot.csv
-2      2  18  18 10.000 0.000 2.890 18.000 1.000 1.000  9.143 0.194 rootrot.csv
-3      3  18   8  5.265 1.009 1.609  3.375 0.745 0.594 22.843 0.573 rootrot.csv
-4      4  25  17  7.887 1.124 2.575  9.615 0.933 0.710 18.488 0.415 rootrot.csv
-5      5  27  14  7.511 1.057 2.446  9.720 0.932 0.828 23.002 0.520 rootrot.csv
-6      6  17  15  9.338 0.633 2.670 13.762 0.985 0.949 17.778 0.410 rootrot.csv
-7      7  23  19  9.178 0.764 2.872 16.030 0.980 0.902 19.162 0.405 rootrot.csv
-8      8  21  15  8.273 0.981 2.558 10.756 0.952 0.820 24.313 0.543 rootrot.csv
-9      9  10  10 10.000 0.000 2.303 10.000 1.000 1.000  2.815 0.118 rootrot.csv
-10    10   9   8  8.000 0.000 2.043  7.364 0.972 0.948  2.849 0.137 rootrot.csv
-11 Total 187 119  9.612 0.612 4.558 68.972 0.991 0.720 14.371 0.271 rootrot.csv
-\end{Soutput}
-\end{Schunk}
+% <<splitcombine_combine>>=
+% Aeut.combine <- splitcombine(Aeut.pop, method=2, hier=2:3)
+% head(Aeut.combine$other$population_hierarchy)
+% summary(Aeut.combine)
+% @
+% 
+% Let's imagine for a second that these ``hierarchies" are not actually hierarchical, but rather they represent independent variables (For example: the ``Subpop" factor could represent months of the year). In this case, we would want to only analyze the ``Subpop" factor. We can do this by using \texttt{splitcombine} with only one hierarchical level.
+% <<splitcombine_subpop>>=
+% Aeut.subpop <- splitcombine(Aeut.pop, method=2, hier="Subpop")
+% summary(Aeut.subpop)
+% poppr(Aeut.subpop, quiet=TRUE)
+% @
 Having these hierarchies in your data set is important when it comes to clone-censoring your data set (see section 2.4 \textit{Attack of the Clone Correction}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2878,7 +2890,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \begin{itemize}
 \item getfile(multi = FALSE, pattern = NULL)
 \item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
-\item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE)
+\item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, geodf = "xy")
 \item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
 \item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)
