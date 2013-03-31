@@ -314,7 +314,7 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     # this converts it to "NA" for adegenet.
     if(any(gena.mat =="0")){
       #gena.mat <- as.matrix(gena)
-      gena[gena == "0"] <- NA
+      gena[gena.mat == "0"] <- NA
       #gena <- as.data.frame(gena.mat)
     }
     type <- 'codom'
