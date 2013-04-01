@@ -375,9 +375,9 @@ $files
  [6] "/path/to/R/adegenet/files/nancycats.gen"    
  [7] "/path/to/R/adegenet/files/nancycats.gtx"    
  [8] "/path/to/R/adegenet/files/nancycats.str"    
- [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
-[10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
-[11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+ [9] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+[10] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+[11] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
 [12] "/path/to/R/adegenet/files/usflu.fasta"      
 
 $path
@@ -1839,7 +1839,7 @@ Netherlands     0     0     0     0     0     0     0     0     0      0
   \label{nortable}
 \includegraphics{poppr_manual-mlgbarplot}
 \end{figure}
-%\newpage
+\newpage
 
 The MLG table is not restricted for use with just \textit{Poppr}. One of the main advantages of the function \texttt{mlg.table} is that it allows easy access to diversity functions present in the package \textit{vegan}. \cite{vegan} One very simple example is to create a rarefaction curve for each population in your data set giving the number of expected MLGs for a given sample size. For more information, see \texttt{diversity} in the \textit{vegan} package.
 
@@ -1995,7 +1995,7 @@ And we can see where exactly these three MLGs fall within our data set.
 \includegraphics{poppr_manual-subnor}
 \end{figure}
 \\
-
+\newpage
 Now, you might notice that the MLG vector no longer matches up with our data after we subset it.
 \begin{Schunk}
 \begin{Sinput}
@@ -2269,7 +2269,7 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
   \label{bruvo_heat_map}
 \includegraphics{poppr_manual-106}
 \end{figure}
-
+\newpage
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}
 
 \tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As adegenet's genind object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.  It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the adegenet function \texttt{dist.genpop}\\
@@ -2315,7 +2315,7 @@ You can visualize this better with a simple heatmap:\\
 \end{Schunk}
 \includegraphics{poppr_manual-109}
 \end{figure}
-\newpage
+%\newpage
 
 Let's take a closer look at the two individuals, N113 and N111. They seem to have large distances between everyone else and themselves. The names and columns of the matrix contain the names of individuals, but not the population information. We can make a comparison of Bruvo's distance across populations easier by editing the ``Labels" attribute of the distance object. Let's take a look at the labels attribute using the \texttt{attr()} command. 
 \begin{Schunk}

@@ -1,16 +1,12 @@
 poppr 0.4.1
 ===========
 NEW FEATURES
-* `getfile` has a new argument, "combine", which will automatically add the path 
-to the list of files, so they can be read without switching working directory.
-* information printed to screen from `missingno` and `mlg.crosspop` will now be 
-wrapped to 80 characters.
+* `getfile` has a new argument, "combine", which will automatically add the path to the list of files, so they can be read without switching working directory.
+* information printed to screen from `missingno` and `mlg.crosspop` will now be wrapped to 80 characters.
 
 BUG FIXES
-* `poppr` will now be able to correctly recognise GenAlEx files with both
-geographic and regional data.
-* calculation of the index of association on P/A data with missing values will
-no longer return an error. 
+* `poppr` will now be able to correctly recognise GenAlEx files with both geographic and regional data.
+* calculation of the index of association on P/A data with missing values will no longer return an error. 
 
 poppr 0.4
 ===========
