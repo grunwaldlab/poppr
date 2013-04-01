@@ -1,3 +1,23 @@
+poppr 0.4
+==========
+BUG FIXES
+* mistake in Bruvo's distance where it did not correctly check for ploidy level was fixed.
+* `read.genalex` will be able to correctly distinguish between SNP and AFLP data.
+* `read.genalex` can now correctly recognize regional formatting without an extra column.
+
+NEW FEATURES
+* `read.genalex` will now be able to take in a file that is formatted with both regional and geographic data.
+* `genind2genalex` can now export xy coordinates into the GenAlEx format. 
+* `poppr_manual` vignette now contains images of example GenAlEx files.
+
+NEW FILES
+* `rootrot2.csv` is an example of a GenAlEx file formatted with regional data.
+
+OTHER UPDATES
+* function for guessing repeat lengths for Bruvo's distance moved into internal file. 
+* redundancy in `read.genalex` was removed.
+* changed instructions in README
+
 poppr 0.3.1
 ===========
 BUG FIXES
@@ -25,14 +45,14 @@ NEW FEATURES
 poppr 0.2.1
 ===========
 NEW FUNCTIONS
-* diss.dist will produce a distance matrix based on discreet distances.
-* greycurve will produce a grey scale adjusted to user-supplied parameters. This
+* `diss.dist` will produce a distance matrix based on discreet distances.
+* `greycurve` will produce a grey scale adjusted to user-supplied parameters. This
   will be useful for future minimum spanning network functions. 
 
 NEW FEATURES
-* bruvo.msn can now adjust the edge grey level to be weighted toward either
+* `bruvo.msn` can now adjust the edge grey level to be weighted toward either
   closely or distantly weighted individuals.
-* bruvo.msn will now return a list giving the user the graph with all of the
+* `bruvo.msn` will now return a list giving the user the graph with all of the
   color, label, and weight properties so that they can plot it themselves. The
   legend arguments are also returned.
 

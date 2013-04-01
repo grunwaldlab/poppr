@@ -30,12 +30,20 @@ To install this package from github, make sure you have the following:
 
 First, install the required dependencies:
 
-    install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"), dependencies=TRUE)
+    install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
 
 Now you can use the `install_github()` function:
 
+- For the latest stable release:
+
     library(devtools)
-    install_github("poppr", "poppr", ref="v.0.3.1")
+    install_github("poppr", "poppr", ref="v.0.4")
+    library(poppr)
+    
+- For the bleeding edge development version:
+
+    library(devtools)
+    install_github("poppr", "poppr")
     library(poppr)
 
 You can view the manual by typing: `vignette("poppr_manual")` after installation or by clicking [here](http://grunwaldlab.cgrb.oregonstate.edu/sites/default/files/u5/poppr_manual.pdf)
