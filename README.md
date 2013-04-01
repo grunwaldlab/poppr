@@ -37,7 +37,7 @@ Now you can use the `install_github()` function:
 #### For the latest stable release:    
 
     library(devtools)    
-    install_github("poppr", "poppr", ref="v.0.4")    
+    install_github("poppr", "poppr", ref="v.0.4.1")    
     library(poppr)   
     
 #### For the bleeding edge development version:
