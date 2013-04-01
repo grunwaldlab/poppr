@@ -373,7 +373,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     }
     
     if(gscale == TRUE){
-      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
                                        show=FALSE))
     }
     else{
@@ -455,7 +455,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   ###### Edge adjustments ######
   # Grey Scale Adjustment weighting towards more diverse or similar populations.
   if(gscale == TRUE){
-    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
                                      show=FALSE))
   }
   else{

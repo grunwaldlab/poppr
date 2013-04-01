@@ -422,7 +422,7 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
     }
     
     if(gscale == TRUE){
-      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
                                        show=FALSE))
     }
     else{
@@ -488,7 +488,7 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   palette <- match.fun(palette)
   color <- palette(length(pop@pop.names))
   if(gscale == TRUE){
-    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correct=gadj, 
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
                                      show=FALSE))
   }
   else{
