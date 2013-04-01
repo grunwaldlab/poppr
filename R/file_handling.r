@@ -55,7 +55,12 @@
 #' multiple files found in the directory. This is useful in conjunction with
 #' \code{\link{poppr.all}}. 
 #'
-#' @param pattern a \code{\link{regex}} pattern for use while \code{multFile==TRUE}.
+#' @param pattern a \code{\link{regex}} pattern for use while 
+#' \code{multFile==TRUE}.
+#' 
+#' @param combine \code{logical}. When this is set to \code{TRUE}, the
+#' \code{\$files} vector will have the path appended to them. When it is set to
+#' \code{FALSE}, it will have the basename. 
 #'
 #' @return \item{path}{a character string of the absolute path to the
 #' chosen file or files}
@@ -66,43 +71,50 @@
 #' \dontrun{
 #'
 #' x <- getfile()
-#' setwd(x$path)
 #' poppr(x$files)
+#' 
+#' 
 #'
 #' y <- getfile(multFile=TRUE, pattern="^.+?dat$") 
 #' #useful for reading in multiple FSTAT formatted files.
 #'
+#' yfiles <- poppr.all(y$files)
+#' 
+#' # Write results to a file in that directory.
 #' setwd(y$path)
-#' poppr.all(y$files)
+#' write.csv(yfiles)
 #' }  
 #' @export
 #==============================================================================#
-getfile <- function(multi=FALSE, pattern=NULL){
-# the default option is to grab a single file in the directory. If multFile is 
-# set to TRUE, it will grab all the files in the directory corresponding to any
-# pattern that is set. If there is no pattern, all files will be grabbed.
-	if (multi==TRUE){
-		# this sets the path variable that the user can use to set the path
-		# to the files with setwd(x$path), where x is the datastructure 
-		# this function dumped into.
-		pathandfile <- file.path(file.choose())
+getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
+  # the default option is to grab a single file in the directory. If multFile is 
+  # set to TRUE, it will grab all the files in the directory corresponding to any
+  # pattern that is set. If there is no pattern, all files will be grabbed.
+  if (multi==TRUE){
+    # this sets the path variable that the user can use to set the path
+    # to the files with setwd(x$path), where x is the datastructure 
+    # this function dumped into.
+    pathandfile <- file.path(file.choose())
     path <- dirname(pathandfile)
-		if (!is.null(pattern)){
-			pat <- pattern
-			x <- list.files(path, pattern=pat)
-		}
-		else {
-			x <- list.files(path)
-		}
-	}
-	else {
-		# if the user chooses to analyze only one file, a pattern is not needed
-		pathandfile <- file.path(file.choose())
-		path <- dirname(pathandfile)
-		x <- basename(pathandfile)
-	}
-	filepath <- list(files=x, path=path)
-	return(filepath)
+    if (!is.null(pattern)){
+      pat <- pattern
+      x <- list.files(path, pattern=pat)
+    }
+    else {
+      x <- list.files(path)
+    }
+  }
+  else {
+    # if the user chooses to analyze only one file, a pattern is not needed
+    pathandfile <- file.path(file.choose())
+    path <- dirname(pathandfile)
+    x <- basename(pathandfile)
+  }
+  if(combine == TRUE){
+    x <- paste(path, x, sep="/")
+  }
+  filepath <- list(files=x, path=path)
+  return(filepath)
 }
 #==============================================================================#
 # A way of dealing with the different types of data that adegenet can take in.
