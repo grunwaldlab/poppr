@@ -242,7 +242,7 @@ There are several ways of reading data into R.
 \tab\tab \texttt{getfile} gives the user an easy way to point R to the directory in which your data is stored. It is only meant for R GUIs such as Rstudio. Using this on the command line has very little advantage over setting the working directory manually. 
 \begin{quote}
 Default Command:\\
-\texttt{getfile(multi = FALSE, pattern = NULL)}
+\texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{multi -} This is normally set to \texttt{FALSE}, meaning that it will only grab the file you selected. If it's \texttt{TRUE}, it will grab all files within the directory, constrained only by what you type into the \texttt{pattern} field.
@@ -2926,7 +2926,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \tab\tab Here is a list of all the default function calls for \textit{poppr}. Details can be found in the above sections.\\
 \tt
 \begin{itemize}
-\item getfile(multi = FALSE, pattern = NULL)
+\item getfile(multi = FALSE, pattern = NULL, combine = TRUE)
 \item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
 \item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, geodf = "xy")
 \item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
