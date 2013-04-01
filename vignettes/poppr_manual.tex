@@ -134,7 +134,7 @@ Once we select a file, the file name and its path will be stored in the variable
 \end{Sinput}
 \begin{Soutput}
 $files
-[1] "rootrot.csv"
+[1] "/path/to/R/poppr/files/rootrot.csv"
 
 $path
 [1] "/path/to/R/poppr/files"
@@ -157,13 +157,11 @@ For more information, see Quick R at \url{http://www.statmethods.net}.
       }
 \end{center}
 
-Now we can set our working directory. That is, we can tell R to go to the folder that contains all of our data with the \texttt{setwd} command.
-\begin{Schunk}
-\begin{Sinput}
-> setwd(x$path)
-\end{Sinput}
-\end{Schunk}
-We can now use \texttt{x\$files} to access the file. The \texttt{poppr()} function provides a quick and convenient first analysis of your data directly from the file on the your disk (For information on importing your data into R, see the section \textit{Get out of my dreams and into my R}).
+% Now we can set our working directory. That is, we can tell R to go to the folder that contains all of our data with the \texttt{setwd} command.
+% <<setwd, eval=FALSE>>=
+% setwd(x$path)
+% @
+We will use \texttt{x\$files} to access the file. The \texttt{poppr()} function provides a quick and convenient first analysis of your data directly from the file on the your disk (For information on importing your data into R, see the section \textit{Get out of my dreams and into my R}).
 \begin{Schunk}
 \begin{Sinput}
 > popdata <- poppr(x$files)
@@ -249,6 +247,7 @@ Default Command:\\
 \begin{itemize}
   \item \texttt{multi -} This is normally set to \texttt{FALSE}, meaning that it will only grab the file you selected. If it's \texttt{TRUE}, it will grab all files within the directory, constrained only by what you type into the \texttt{pattern} field.
   \item \texttt{pattern -} A pattern that you want to filter the files you get. This accepts regular expressions, so you must be careful with anything that is not an alphanumeric character.
+  \item \texttt{combine -} This tells \texttt{getfile} to combine the path and all the files. This is set to \texttt{TRUE} by default so that you can access your files no matter what working directory you are in. 
 \end{itemize}
 
 This method works for a single file, but let's say you had a lot of data sets you wanted to import. You would have to do all of these one by one, right? Not so. \texttt{getfile} has a nice little flag called \texttt{multi} telling the computer that you want to grab multiple files in the folder. You would use this with \texttt{poppr.all} to produce a summary table for all of your files\footnote{These files do not need to be similar in any way to do this analysis}:
@@ -266,7 +265,8 @@ A window would pop up again, and you should navigate to the same directory as yo
 \begin{Schunk}
 \begin{Soutput}
 $files
-[1] "rootrot.csv"   "rootrot2.csv"  "simulated.dat"
+[1] "/path/to/R/poppr/files/rootrot.csv"   "/path/to/R/poppr/files/rootrot2.csv" 
+[3] "/path/to/R/poppr/files/simulated.dat"
 
 $path
 [1] "/path/to/R/poppr/files"
@@ -300,6 +300,18 @@ As you can see, now all of the files that existed in that directory are there! N
 | Mt. Vernon_7 
 | Mt. Vernon_8 
 | Total 
+| File:  rootrot2.csv 
+| 1 
+| 2 
+| 3 
+| 4 
+| 5 
+| 6 
+| 7 
+| 8 
+| 9 
+| 10 
+| Total 
 | File:  simulated.dat 
 | Total 
             Pop   N MLG   eMLG    SE     H      G  Hexp   E.5     Ia rbarD          File
@@ -322,7 +334,18 @@ As you can see, now all of the files that existed in that directory are there! N
 17 Mt. Vernon_7  12   9  7.818 0.649 2.095  7.200 0.939 0.870  1.208 0.153   rootrot.csv
 18 Mt. Vernon_8  13   9  7.346 0.764 2.032  6.259 0.910 0.794  1.153 0.169   rootrot.csv
 19        Total 187 119  9.612 0.612 4.558 68.972 0.991 0.720 14.371 0.271   rootrot.csv
-20        Total 100   6  6.000 0.000 1.235  2.790 0.648 0.735  0.050 0.061 simulated.dat
+20            1  19  16  9.211 0.701 2.726 14.440 0.982 0.942 14.229 0.313  rootrot2.csv
+21            2  18  18 10.000 0.000 2.890 18.000 1.000 1.000  9.143 0.194  rootrot2.csv
+22            3  18   8  5.265 1.009 1.609  3.375 0.745 0.594 22.843 0.573  rootrot2.csv
+23            4  25  17  7.887 1.124 2.575  9.615 0.933 0.710 18.488 0.415  rootrot2.csv
+24            5  27  14  7.511 1.057 2.446  9.720 0.932 0.828 23.002 0.520  rootrot2.csv
+25            6  17  15  9.338 0.633 2.670 13.762 0.985 0.949 17.778 0.410  rootrot2.csv
+26            7  23  19  9.178 0.764 2.872 16.030 0.980 0.902 19.162 0.405  rootrot2.csv
+27            8  21  15  8.273 0.981 2.558 10.756 0.952 0.820 24.313 0.543  rootrot2.csv
+28            9  10  10 10.000 0.000 2.303 10.000 1.000 1.000  2.815 0.118  rootrot2.csv
+29           10   9   8  8.000 0.000 2.043  7.364 0.972 0.948  2.849 0.137  rootrot2.csv
+30        Total 187 119  9.612 0.612 4.558 68.972 0.991 0.720 14.371 0.271  rootrot2.csv
+31        Total 100   6  6.000 0.000 1.235  2.790 0.648 0.735  0.050 0.061 simulated.dat
 \end{Soutput}
 \end{Schunk}
 
@@ -344,9 +367,18 @@ Navigate to the \textit{adegenet} folder in your R library.
 \begin{Schunk}
 \begin{Soutput}
 $files
- [1] "AFLP.txt"          "exampleSnpDat.snp" "mondata1.rda"      "mondata2.rda"     
- [5] "nancycats.dat"     "nancycats.gen"     "nancycats.gtx"     "nancycats.str"    
- [9] "pdH1N1-data.csv"   "pdH1N1-HA.fasta"   "pdH1N1-NA.fasta"   "usflu.fasta"      
+ [1] "/path/to/R/adegenet/files/AFLP.txt"         
+ [2] "/path/to/R/adegenet/files/exampleSnpDat.snp"
+ [3] "/path/to/R/adegenet/files/mondata1.rda"     
+ [4] "/path/to/R/adegenet/files/mondata2.rda"     
+ [5] "/path/to/R/adegenet/files/nancycats.dat"    
+ [6] "/path/to/R/adegenet/files/nancycats.gen"    
+ [7] "/path/to/R/adegenet/files/nancycats.gtx"    
+ [8] "/path/to/R/adegenet/files/nancycats.str"    
+ [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+[10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
+[11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+[12] "/path/to/R/adegenet/files/usflu.fasta"      
 
 $path
 [1] "/path/to/R/adegenet/files"
@@ -362,7 +394,8 @@ We can see that we have a mix of files with different formats. If we tried to ru
 \begin{Schunk}
 \begin{Soutput}
 $files
-[1] "nancycats.dat" "nancycats.gen" "nancycats.gtx" "nancycats.str"
+[1] "/path/to/R/adegenet/files/nancycats.dat" "/path/to/R/adegenet/files/nancycats.gen"
+[3] "/path/to/R/adegenet/files/nancycats.gtx" "/path/to/R/adegenet/files/nancycats.str"
 
 $path
 [1] "/path/to/R/adegenet/files"
@@ -377,7 +410,7 @@ Now, let's exclude everything but gentix files (*.gtx).
 \begin{Schunk}
 \begin{Soutput}
 $files
-[1] "nancycats.gtx"
+[1] "/path/to/R/adegenet/files/nancycats.gtx"
 
 $path
 [1] "/path/to/R/adegenet/files"
@@ -392,7 +425,10 @@ Now, let's only get FSTAT files (*.dat)
 \begin{Schunk}
 \begin{Soutput}
 $files
-[1] "mondata1.rda"    "mondata2.rda"    "nancycats.dat"   "pdH1N1-data.csv"
+[1] "/path/to/R/adegenet/files/mondata1.rda"   
+[2] "/path/to/R/adegenet/files/mondata2.rda"   
+[3] "/path/to/R/adegenet/files/nancycats.dat"  
+[4] "/path/to/R/adegenet/files/pdH1N1-data.csv"
 
 $path
 [1] "/path/to/R/adegenet/files"
@@ -408,7 +444,7 @@ Uh-oh. We've run into a problem. Three out of our four files are not FSTAT files
 \begin{Schunk}
 \begin{Soutput}
 $files
-[1] "nancycats.dat"
+[1] "/path/to/R/adegenet/files/nancycats.dat"
 
 $path
 [1] "/path/to/R/adegenet/files"
@@ -1056,7 +1092,9 @@ You notice how the values of NA changed, yet the basic structure stayed the same
 \begin{Soutput}
  Found 617 missing values.
  38 genotypes contained missing values greater than 5%.
- Removing 38 genotypes : N215 N216 N188 N189 N190 N191 N192 N302 N304 N310 N195 N197 N198 N199 N200 N201 N206 N182 N184 N186 N298 N299 N300 N301 N303 N282 N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290 
+ Removing 38 genotypes : N215 N216 N188 N189 N190 N191 N192 N302 N304 N310 
+N195 N197 N198 N199 N200 N201 N206 N182 N184 N186 N298 N299 N300 N301 N303 N282 
+N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290 
 \end{Soutput}
 \begin{Sinput}
 > nanloci$tab[1:5, 8:13]
@@ -1246,7 +1284,7 @@ Now we can see that we have a data frame with all of our population factors sepa
 3      Total 187 119 68.453 2.989 4.558 68.972 0.991 0.720 14.371 0.271 rootrot.csv
 \end{Soutput}
 \end{Schunk}
-\newpage
+%\newpage
 It's as simple as that. Now, let's take a look at the same data set, except the input file is a GenAlEx file that has been formatted with Regional data (See section 1.4.2 for details). First, let's see how the data set is laid out:
 
 \setkeys{Gin}{width=0.9\textwidth}
@@ -1691,16 +1729,16 @@ We can see what Multilocus Genotypes cross different populations and then give a
 Here is a snippet of what the output looks like when \texttt{quiet} is \texttt{FALSE}. It will print out the MLG name, the total number of individuals that make up that MLG, and the populations where that MLG can be found.
 \begin{Schunk}
 \begin{Soutput}
-MLG.3: (12 inds) USA Denmark 
-MLG.9: (16 inds) Japan USA Finland Denmark 
-MLG.31: (9 inds) Japan Canada 
-MLG.75: (23 inds) Japan USA Finland Norway Denmark Austria Russia Ireland 
-MLG.80: (2 inds) USA Denmark 
-MLG.86: (7 inds) Denmark Austria 
-MLG.95: (2 inds) USA Bangladesh 
-MLG.97: (8 inds) USA Austria Bangladesh Romania 
-MLG.104: (3 inds) USA France 
-MLG.110: (16 inds) Japan USA China 
+MLG.3: (12 inds) USA Denmark
+MLG.9: (16 inds) Japan USA Finland Denmark
+MLG.31: (9 inds) Japan Canada
+MLG.75: (23 inds) Japan USA Finland Norway Denmark Austria Russia Ireland
+MLG.80: (2 inds) USA Denmark
+MLG.86: (7 inds) Denmark Austria
+MLG.95: (2 inds) USA Bangladesh
+MLG.97: (8 inds) USA Austria Bangladesh Romania
+MLG.104: (3 inds) USA France
+MLG.110: (16 inds) Japan USA China
 \end{Soutput}
 \end{Schunk}
 The output of this function is a list of MLGs, each containing a vector indicating the number of copies in each population. We'll count the number of populations each MLG crosses using the function \texttt{sapply} with \texttt{length}.
@@ -2170,7 +2208,7 @@ This analysis produced the histograms you see below. What these histograms repre
   \centering
   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
   \label{ia_demo_fig}
-\includegraphics{poppr_manual-103}
+\includegraphics{poppr_manual-102}
 \end{figure}
 %\newpage
 
@@ -2229,7 +2267,7 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
   \centering
   \caption{\footnotesize Heatmap representation of a dissimilarity distance for the data set ``Aeut"}
   \label{bruvo_heat_map}
-\includegraphics{poppr_manual-107}
+\includegraphics{poppr_manual-106}
 \end{figure}
 
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}
@@ -2275,7 +2313,7 @@ You can visualize this better with a simple heatmap:\\
 > heatmap(as.matrix(dist9), symm=TRUE)
 \end{Sinput}
 \end{Schunk}
-\includegraphics{poppr_manual-110}
+\includegraphics{poppr_manual-109}
 \end{figure}
 \newpage
 
@@ -2688,7 +2726,7 @@ The reason why the P-values would be different is described at the end of sectio
   \centering
   \caption{\footnotesize Output of multilocus-style sampling.}
   \label{simulated_dist_fig}
-\includegraphics{poppr_manual-136}
+\includegraphics{poppr_manual-135}
 \end{figure}
 \newpage
 
@@ -2697,7 +2735,7 @@ Take a look a these two histograms. The number of ways you can recombine the dat
   \centering
   \caption{\footnotesize Output for parametric bootstrap sampling.}
   \label{simulated_param_fig}
-\includegraphics{poppr_manual-137}
+\includegraphics{poppr_manual-136}
 \end{figure}
 
 As you can see, the distribution is much closer to a distribution we would expect if this were a small sample of a larger population. 
