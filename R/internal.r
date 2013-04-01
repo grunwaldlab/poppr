@@ -284,6 +284,7 @@ round.poppr <- function(x){
   return(x)
 }
 
+
 #==============================================================================#
 # This will caluclulate p-values for permutation tests. 
 # Public functions utilizing this function:
@@ -589,16 +590,26 @@ mlg.matrix <- function(pop){
 
 .PA.pairwise.differences <- function(pop,numLoci,np, missing){  
   temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
-  if( missing == "MEAN" )
-    # this will round all of the values if the missing indicator is "mean"
-    temp.d.vector <- matrix(nrow=np, ncol=numLoci,
-                            data=vapply(vapply(seq(numLoci), function(x)
-                                        .PA.pairwise.diffs(pop@tab[,x]), 
-                                         temp.d.vector[,1]),round.poppr,1))  
-  else    
+  if( missing == "MEAN" ){
+    # this will round all of the values if the missing indicator is "mean"  
+    temp.d.vector <- vapply(seq(numLoci), 
+                            function(x) as.vector(dist(pop@tab[,x])), 
+                            temp.d.vector[,1])
+    # since the replacement was with "mean", the missing data will not produce
+    # a binary distance. The way we will handle this is to replace numbers that
+    # are not one or zero with a rounded value. 
+    tempz <- !temp.d.vector %in% 0:1
+    temp.d.vector[tempz] <- vapply(temp.d.vector[tempz], round.poppr, 1)
+  }
+  else{    
     temp.d.vector <- vapply(seq(numLoci), 
                           function(x) as.vector(dist(pop@tab[,x])), 
                           temp.d.vector[,1])
+    # checking for missing data and imputing the comparison to zero.
+    if(any(is.na(temp.d.vector))){
+      temp.d.vector[which(is.na(temp.d.vector))] <- 0
+    }
+  }
   if(ploidy(pop) > 1){
     # multiplying by two is the proper way to evaluate P/A diploid data because
     # one cannot detect heterozygous loci (eg, a difference of 1).
