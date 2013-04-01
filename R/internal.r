@@ -136,6 +136,7 @@ extract.info <- function(x) {
       try(pop <- read.genalex(x), silent=quiet)
       try(pop <- read.genalex(x, region=TRUE), silent=quiet)
       try(pop <- read.genalex(x, geo=TRUE), silent=quiet)
+      try(pop <- read.genalex(x, geo=TRUE, region=TRUE), silent=quiet)
       # try(pop <- read.aflp(x), silent=quiet)
     }
     else{
