@@ -419,7 +419,7 @@ missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
           cat("\n Found", sum(is.na(pop@tab)),"missing values.")
           loci <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", "loci"))
           cat("\n",loci,"contained missing values greater than",paste(cutoff*100,"%.",sep=""))
-          cat("\n Removing",loci,":", remloc,"\n")
+          cat("\n Removing",loci,":", remloc,"\n", fill = 80)
         }
         else{
           cat("\n No loci with missing values above",paste(cutoff*100,"%",sep=""),"found.\n")
@@ -438,7 +438,7 @@ missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
                                                      "genotype", "genotypes"))
           cat("\n",genotypes,"contained missing values greater than",
               paste(cutoff*100,"%.",sep=""))
-          cat("\n Removing",genotypes,":",remgeno,"\n")
+          cat("\n Removing",genotypes,":",remgeno,"\n", fill = 80)
         }
         else{
           cat("\n No genotypes with missing values above",

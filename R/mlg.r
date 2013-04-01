@@ -389,7 +389,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     }
     if(!quiet)
       cat(paste(x, ":", sep=""),paste("(",sum(popnames)," inds)", sep=""),
-          names(popnames), "\n")
+          names(popnames), fill=80)
     return(popnames)
   }
   # Removing any populations that are not represented by the MLGs.
