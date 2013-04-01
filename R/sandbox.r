@@ -491,7 +491,7 @@ pop.sampler <- function(pop, method=1){
   return(pop)
 }
 
-new.getfile <- function(multi=FALSE, pattern=NULL){
+new.getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
   # the default option is to grab a single file in the directory. If multFile is 
   # set to TRUE, it will grab all the files in the directory corresponding to any
   # pattern that is set. If there is no pattern, all files will be grabbed.
@@ -514,6 +514,9 @@ new.getfile <- function(multi=FALSE, pattern=NULL){
     pathandfile <- file.path(file.choose())
     path <- dirname(pathandfile)
     x <- basename(pathandfile)
+  }
+  if(combine == TRUE){
+    x <- paste(path, x, sep="/")
   }
   filepath <- list(files=x, path=path)
   return(filepath)
