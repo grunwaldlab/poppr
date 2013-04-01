@@ -2,7 +2,7 @@
 \alias{getfile}
 \title{Get a file name and path and store them in a list.}
 \usage{
-  getfile(multi = FALSE, pattern = NULL)
+  getfile(multi = FALSE, pattern = NULL, combine = TRUE)
 }
 \arguments{
   \item{multi}{this is an indicator to allow the user to
@@ -12,6 +12,11 @@
 
   \item{pattern}{a \code{\link{regex}} pattern for use
   while \code{multFile==TRUE}.}
+
+  \item{combine}{\code{logical}. When this is set to
+  \code{TRUE}, the \code{\$files} vector will have the path
+  appended to them. When it is set to \code{FALSE}, it will
+  have the basename.}
 }
 \value{
   \item{path}{a character string of the absolute path to
@@ -30,14 +35,18 @@
 \dontrun{
 
 x <- getfile()
-setwd(x$path)
 poppr(x$files)
+
+
 
 y <- getfile(multFile=TRUE, pattern="^.+?dat$")
 #useful for reading in multiple FSTAT formatted files.
 
+yfiles <- poppr.all(y$files)
+
+# Write results to a file in that directory.
 setwd(y$path)
-poppr.all(y$files)
+write.csv(yfiles)
 }
 }
 
