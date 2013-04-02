@@ -195,7 +195,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 	PROTECT(pair_matrix = allocVector(INTSXP, 2*A));
 	
 	/*	First step, loop over each set of columns defined by the number of
-		alleles, so for a diploid, it will loop over the first two columns. */
+		alleles. So for a diploid, it will loop over the first two columns. */
 	for(a = 0; a < J; a += A)
 	{
 	//	Looping over n-1 individuals. 
@@ -320,7 +320,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	// reconstruct the genotype table.
 	for(i=0; i < n; i++)
 	{
-		for(j=0; j < p; j++)
+		for(j = 0; j < p; j++)
 		{
 			// Missing data will return with distance of 100
 			if(in[counter] == 0)
@@ -337,7 +337,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	}
 
 	// Construct distance matrix of 1 - 2^{-|x|}
-	for(j=0; j < p; j++)
+	for(j = 0; j < p; j++)
 	{
 		for(i=0; i < p; i++)
 		{
@@ -347,9 +347,9 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	}
 
 	//	Calculate the smallest s, which is the minimum distance among alleles.
-	for(i=0; i < w; i += p)
+	for(i = 0; i < w; i += p)
 	{
-		for(j=0; j < p; j++)
+		for(j = 0; j < p; j++)
 		{
 			if (j == 0)
 			{
