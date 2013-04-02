@@ -501,7 +501,7 @@ genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FALSE, 
   }
   
   df[df == "NA" | is.na(df)] <- replacement
-  write.table(infolines, file=filename, quote=TRUE, row.names=FALSE, 
+  write.table(infolines, file=filename, quote=FALSE, row.names=FALSE, 
               col.names=FALSE, sep=",")
   write.table(df, file=filename, quote=TRUE, na=replacement, append=TRUE, 
               row.names=FALSE, col.names=FALSE, sep=",")
