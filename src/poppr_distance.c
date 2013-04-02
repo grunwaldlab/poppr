@@ -162,6 +162,25 @@ distance algorithm in turn will return a distance of 100 for any individuals
 with missing data. In the wrapping R function, 100s will be converted to NAs
 and then the average over all loci will be taken. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles)
+{
+    int A, P, *pA, *pP;
+    SEXP Rval;
+    SEXP Rdim;
+    P = length(permutations);
+    alleles = coerceVector(alleles, INTSXP);
+	A = INTEGER(alleles)[0];
+	pA = &A;
+	pP = &P;
+    b_mat = coerceVector(b_mat, INTSXP);
+    permutations = coerceVector(permutations, INTSXP);
+    PROTECT(Rval = allocVector(REALSXP, 1));
+    REAL(Rval)[0] = bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations), pP);
+    UNPROTECT(1);
+    return Rval;
+    
+}
 SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 {
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
