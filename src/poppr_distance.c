@@ -54,21 +54,21 @@ Output: A vector of length n*(n-1)/2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP pairwise_covar(SEXP pair_vec)
 {
-    int I, i, j, count;
-    SEXP Rout;
-    I = length(pair_vec);
-    pair_vec = coerceVector(pair_vec, REALSXP);
-    PROTECT(Rout = allocVector(REALSXP, (I*(I-1)/2) ));
-    count = 0;
-    for(i = 0; i < I-1; i++)
-    {
-        for(j = i+1; j < I; j++)
-        {
-            REAL(Rout)[count++] = sqrt(REAL(pair_vec)[i] * REAL(pair_vec)[j]);
-        }
-    }
-    UNPROTECT(1);
-    return Rout;
+	int I, i, j, count;
+	SEXP Rout;
+	I = length(pair_vec);
+	pair_vec = coerceVector(pair_vec, REALSXP);
+	PROTECT(Rout = allocVector(REALSXP, (I*(I-1)/2) ));
+	count = 0;
+	for(i = 0; i < I-1; i++)
+	{
+		for(j = i+1; j < I; j++)
+		{
+			REAL(Rout)[count++] = sqrt(REAL(pair_vec)[i] * REAL(pair_vec)[j]);
+		}
+	}
+	UNPROTECT(1);
+	return Rout;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the absolute yes or no distance of the alleles at a locus. Note
@@ -83,39 +83,39 @@ Output: A vector of length n*(n-1)/2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP pairdiffs(SEXP freq_mat)
 {
-    int I, J, i, j, z, count, P;
-    SEXP Rout;
-    SEXP Rdim;
-    SEXP pair_matrix;
-    Rdim = getAttrib(freq_mat, R_DimSymbol);
-    I = INTEGER(Rdim)[0]; // Rows
-    J = INTEGER(Rdim)[1]; // Columns
-    PROTECT(pair_matrix = allocVector(REALSXP, J*2));
-    count = 0;
-    PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
-    for(i = 0; i < I-1; i++)
-    {
-        for(z = 0; z < J; z++)
-        {
-            REAL(pair_matrix)[z] = REAL(freq_mat)[i+(I)*z];
-        }
-        for(j = i+1; j < I; j++)
-        {
-            P = 0;
-            for(z = 0; z < J; z++)
-            {
-                if(ISNA(REAL(pair_matrix)[0]) || ISNA(REAL(freq_mat)[j+(I)*z]))
-                {
-                    P = 0;
-                    break;
-                }
-                P += abs(REAL(pair_matrix)[z] - REAL(freq_mat)[j+(I)*z]);
-            }
-            INTEGER(Rout)[count++] = P;
-        }
-    }
-    UNPROTECT(2);
-    return Rout;
+	int I, J, i, j, z, count, P;
+	SEXP Rout;
+	SEXP Rdim;
+	SEXP pair_matrix;
+	Rdim = getAttrib(freq_mat, R_DimSymbol);
+	I = INTEGER(Rdim)[0]; // Rows
+	J = INTEGER(Rdim)[1]; // Columns
+	PROTECT(pair_matrix = allocVector(REALSXP, J*2));
+	count = 0;
+	PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
+	for(i = 0; i < I-1; i++)
+	{
+		for(z = 0; z < J; z++)
+		{
+			REAL(pair_matrix)[z] = REAL(freq_mat)[i+(I)*z];
+		}
+		for(j = i+1; j < I; j++)
+		{
+			P = 0;
+			for(z = 0; z < J; z++)
+			{
+				if(ISNA(REAL(pair_matrix)[0]) || ISNA(REAL(freq_mat)[j+(I)*z]))
+				{
+					P = 0;
+					break;
+				}
+				P += abs(REAL(pair_matrix)[z] - REAL(freq_mat)[j+(I)*z]);
+			}
+			INTEGER(Rout)[count++] = P;
+		}
+	}
+	UNPROTECT(2);
+	return Rout;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 permuto will return a vector of all permutations needed for bruvo's distance.
@@ -193,22 +193,33 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 	PROTECT(Rval = allocMatrix(REALSXP, I*(I-1)/2, J/A ));
 	// pair_matrix is the input for individual bruvo distances. 
 	PROTECT(pair_matrix = allocVector(INTSXP, 2*A));
+	
+	/*	First step, loop over each set of columns defined by the number of
+		alleles, so for a diploid, it will loop over the first two columns. */
 	for(a = 0; a < J; a += A)
 	{
+	//	Looping over n-1 individuals. 
 		for(i = 0; i < I; i++)
 		{
 			int z;
-			// Populating the array for pairwise comparisons.
-			for(z=0; z < A; z++) 
+			//	Populating the allele array from the reference individual.
+			for(z = 0; z < A; z++) 
 			{
+			/*	i = reference individual, a = the locus, z = the allele
+				(a+z)*I = The combination of locus, allele and total number
+				of individuals to move across the matrix. 
+				This will supply the reference genotype. */
 				INTEGER(pair_matrix)[z] = INTEGER(bruvo_mat)[i+(a+z)*I];
 			}
+			//	Looping over individuals for pairwise comparison.
 			for(j = i+1; j < I; j++)
 			{
-				for(z=A; z < A*2 ; z++)
+				//	Populating allele array from the comparison individual.
+				for(z = A; z < A*2 ; z++)
 				{
-					INTEGER(pair_matrix)[z] = INTEGER(bruvo_mat)[j+(a+z-A)*I];       
+					INTEGER(pair_matrix)[z] = INTEGER(bruvo_mat)[j+(a+z-A)*I];
 				}
+				// Calculating Bruvo's distance over these two. 
 				REAL(Rval)[count++] = bruvo_dist(INTEGER(pair_matrix), pA, INTEGER(permutations), pP);
 			}
 		}
@@ -216,6 +227,11 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 	UNPROTECT(2);
 	return Rval;
 }
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Internal C Functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 /* 
 	The algorithm for the permutation function is modified from:
 	http://www.geeksforgeeks.org/archives/767 */
@@ -223,60 +239,60 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 /* Function to swap values at two pointers */
 void swap (int *x, int *y)
 {
-    int temp;
-    temp = *x;
-    *x = *y;
-    *y = temp;
+	int temp;
+	temp = *x;
+	*x = *y;
+	*y = temp;
 }
-  
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 	Function to print permutations of string
-   	This function takes four parameters:
-   	1. String
-   	2. Starting index of the string
-   	3. Ending index of the string. 
-   	4. pointer to array of size n*n! 
+		This function takes four parameters:
+		1. String
+		2. Starting index of the string
+		3. Ending index of the string. 
+		4. pointer to array of size n*n! 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 void permute(int *a, int i, int n, int *c) 
 {
 	int j;
-    if (i == n)
-    {
-    	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    		'a' will be the array containing the numeric sequence to be
-    		permuted. It will be reshuffled into a new pattern each
-    		time it reaches this control structure. To place the value
-    		into the array 'c', the pointer for a needs to be incremented
-    		over all its elements.
-    	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    	count += n+1;
-    	int ind = count;
+	if (i == n)
+	{
+		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			'a' will be the array containing the numeric sequence to be
+			permuted. It will be reshuffled into a new pattern each
+			time it reaches this control structure. To place the value
+			into the array 'c', the pointer for a needs to be incremented
+			over all its elements.
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+		count += n+1;
+		int ind = count;
 		for(j=0; j<=n; j++)
 		{
 			c[--ind] = *(a+j);
 		}
 	}
-    else
-    {
-        for (j = i; j <= n; j++)
-        {
-          	swap((a+i), (a+j));
- 			permute(a, i+1, n, c);
+	else
+	{
+		for (j = i; j <= n; j++)
+		{
+			swap((a+i), (a+j));
+			permute(a, i+1, n, c);
 			swap((a+i), (a+j)); //backtrack
-       	}
-   	}
-} 
+		}
+	}
+}
 
 /* A factorial function for calculating permutations */
 int fact(int x)
 {
-    int f=1;
-    int u;
-    for (u=x; u>1; u--)
-    {
-        f*=u;
-    }
-    return f;
+	int f=1;
+	int u;
+	for (u=x; u>1; u--)
+	{
+		f*=u;
+	}
+	return f;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -285,8 +301,8 @@ int fact(int x)
 	All that needs to be done from here is to have it do the pairwise
 	calculations. 
 
-    NOTE: The input needs to be divided by the repeat length beforehand for this
-    to work. 
+	NOTE: The input needs to be divided by the repeat length beforehand for this
+	to work. 
 
 	in: a matrix of two individuals
 	out: a double value that will be the output from bruvo's distance.
@@ -300,24 +316,27 @@ int fact(int x)
 double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
 	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
-	double dist[p][p], da, res, minn=100;	
-	/* reconstruct the genotype table */
-	for(i=0; i < n; i++){
-		for(j=0; j < p; j++){
-            
-            /* Missing data will return with distance of 100 */
-            if(in[counter] == 0)
-            {
-               	return minn;
-            }
-            else
-            {
-    			genos[i][j] = in[counter++];
-            }        
+	double dist[p][p], da, res, minn=100;
+	// reconstruct the genotype table.
+	for(i=0; i < n; i++)
+	{
+		for(j=0; j < p; j++)
+		{
+			// Missing data will return with distance of 100
+			if(in[counter] == 0)
+			{
+			/*	THIS WILL BE THE PLACE TO PUT A NEW FUNCTION FOR SPECIAL
+				CASES OF BRUVO'S DISTANCE */
+				return minn;
+			}
+			else
+			{
+				genos[i][j] = in[counter++];
+			}
 		}
 	}
 
-    /* Construct distance matrix ((THIS WORKS)) */
+	// Construct distance matrix of 1 - 2^{-|x|}
 	for(j=0; j < p; j++)
 	{
 		for(i=0; i < p; i++)
@@ -327,26 +346,26 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		}
 	}
 
-	/* Calculate the smallest s, which is the minimum distance among alleles */
+	//	Calculate the smallest s, which is the minimum distance among alleles.
 	for(i=0; i < w; i += p)
-  	{
-	  	for(j=0; j < p; j++)
-	  	{
+	{
+		for(j=0; j < p; j++)
+		{
 			if (j == 0)
-			{	
+			{
 				res = dist[*perm++][j];
-            }
+			}
 			else
 			{
 				res += dist[*perm++][j];
 			}
 		}
-        /* Checking if the new calculated distance is smaller than the smallest
-           distance seen. */
+		/*	Checking if the new calculated distance is smaller than the smallest
+			distance seen. */
 		if ( res < minn )
 		{
 			minn = res;
-        }
+		}
 	}
 	return minn/p;
 }
