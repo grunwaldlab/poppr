@@ -395,12 +395,12 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
-	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p], 
+	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p+1], 
 	zerocatch[2];
 	double dist[p][p], da, res, minn=100;
 	// reconstruct the genotype table.
-	zerocatch[0] = p+1;
-	zerocatch[1] = p+1;
+	zerocatch[0] = p;
+	zerocatch[1] = p;
 	for(i=0; i < n; i++)
 	{
 		for(j = 0; j < p; j++)
@@ -417,6 +417,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			genos[i][j] = in[counter++];
 		}
 	}
+	
 	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
 	// Construct distance matrix of 1 - 2^{-|x|}
 	for(j = 0; j < p; j++)
