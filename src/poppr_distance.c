@@ -43,6 +43,7 @@
 #include <stdlib.h>
 int count;
 double bruvo_dist(int *in, int *nall, int *perm, int *woo);
+double test_bruvo_dist(int *in, int *nall, int *perm, int *woo);
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -165,20 +166,20 @@ and then the average over all loci will be taken.
 
 SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles)
 {
-    int A, P, *pA, *pP;
-    SEXP Rval;
-    SEXP Rdim;
-    P = length(permutations);
-    alleles = coerceVector(alleles, INTSXP);
+	int A, P, *pA, *pP;
+	SEXP Rval;
+	SEXP Rdim;
+	P = length(permutations);
+	alleles = coerceVector(alleles, INTSXP);
 	A = INTEGER(alleles)[0];
 	pA = &A;
 	pP = &P;
-    b_mat = coerceVector(b_mat, INTSXP);
-    permutations = coerceVector(permutations, INTSXP);
-    PROTECT(Rval = allocVector(REALSXP, 1));
-    REAL(Rval)[0] = bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations), pP);
-    UNPROTECT(1);
-    return Rval;
+	b_mat = coerceVector(b_mat, INTSXP);
+	permutations = coerceVector(permutations, INTSXP);
+	PROTECT(Rval = allocVector(REALSXP, 1));
+	REAL(Rval)[0] = test_bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations), pP);
+	UNPROTECT(1);
+	return Rval;
     
 }
 SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
@@ -333,6 +334,66 @@ int fact(int x)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 double bruvo_dist(int *in, int *nall, int *perm, int *woo)
+{
+	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
+	double dist[p][p], da, res, minn=100;
+	// reconstruct the genotype table.
+	for(i=0; i < n; i++)
+	{
+		for(j = 0; j < p; j++)
+		{
+			// Missing data will return with distance of 100
+			if(in[counter] == 0)
+			{
+			/*	THIS WILL BE THE PLACE TO PUT A NEW FUNCTION FOR SPECIAL
+				CASES OF BRUVO'S DISTANCE */
+				return minn;
+			}
+			else
+			{
+				genos[i][j] = in[counter++];
+			}
+		}
+	}
+
+	// Construct distance matrix of 1 - 2^{-|x|}
+	for(j = 0; j < p; j++)
+	{
+		for(i=0; i < p; i++)
+		{
+			da = 1- pow(2 ,-abs(genos[0][i]-genos[1][j]));
+			dist[i][j] = da;
+		}
+	}
+
+	//	Calculate the smallest s, which is the minimum distance among alleles.
+	for(i = 0; i < w; i += p)
+	{
+		for(j = 0; j < p; j++)
+		{
+			if (j == 0)
+			{
+				res = dist[*perm++][j];
+			}
+			else
+			{
+				res += dist[*perm++][j];
+			}
+		}
+		/*	Checking if the new calculated distance is smaller than the smallest
+			distance seen. */
+		if ( res < minn )
+		{
+			minn = res;
+		}
+	}
+	return minn/p;
+}
+
+
+
+
+double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
 	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
 	double dist[p][p], da, res, minn=100;
