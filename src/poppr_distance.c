@@ -345,7 +345,8 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			if(in[counter] == 0)
 			{
 			/*	THIS WILL BE THE PLACE TO PUT A NEW FUNCTION FOR SPECIAL
-				CASES OF BRUVO'S DISTANCE */
+				CASES OF BRUVO'S DISTANCE 
+                TESTING!!!!! */
 				return minn;
 			}
 			else
