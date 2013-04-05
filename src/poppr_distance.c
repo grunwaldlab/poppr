@@ -430,7 +430,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			extraperm[i] = *(perm + i);
 			printf("Extra Perm: %d\n", extraperm[i]);
 		}
-		//pass_vector(perm, w);
+		pass_vector(extraperm, woo);
 		return minn;
 	}
 	// Construct distance matrix of 1 - 2^{-|x|}
@@ -473,9 +473,11 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 void pass_vector(int *pointy, int *pointynumber)
 {
 	int i, pn = *pointynumber;
+	printf("pointers: %d, %d\n", *(pointy), pn);
+
 	for (i = 0; i < pn; i++)
 	{
-		printf("I'm in another function!\t%d", *(pointy++));
+		printf("I'm in another function!\t%d\n", *(pointy + i));
 	}
 	//return 1;
 }
