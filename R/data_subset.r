@@ -407,8 +407,17 @@ popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #' 
 #' ## Replaced 617 missing values 
 #==============================================================================#
-
-missingno <- function(pop, type="loci", cutoff=0.05, quiet=FALSE){
+  #####
+  #####
+  #####
+  #####
+#######
+#######
+#######
+#######
+#######
+#######
+missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
   if(sum(is.na(pop@tab)) > 0){
     # removes any loci (columns) with missing values.
     if (toupper(type)=="LOCI"){
