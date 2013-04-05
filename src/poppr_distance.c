@@ -46,6 +46,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo);
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo);
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
+void pass_vector(int *pointy, int *pointynumber);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the root product of pairwise comparisons of each of the variances of
 each locus.
@@ -419,6 +420,19 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	}
 	
 	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
+
+	if(zerocatch[0] < p)
+	{
+		int extraperm[w];
+		for (i = 0; i < w; i++)
+		{
+			printf("Permutation number: %d\n", *perm);
+			extraperm[i] = *(perm + i);
+			printf("Extra Perm: %d\n", extraperm[i]);
+		}
+		//pass_vector(perm, w);
+		return minn;
+	}
 	// Construct distance matrix of 1 - 2^{-|x|}
 	for(j = 0; j < p; j++)
 	{
@@ -429,6 +443,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		}
 	}
 
+	counter = 0;
 	//	Calculate the smallest s, which is the minimum distance among alleles.
 	for(i = 0; i < w; i += p)
 	{
@@ -436,11 +451,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		{
 			if (j == 0)
 			{
-				res = dist[*perm++][j];
+				printf("Permutation number: %d\n", *(perm + counter));
+				res = dist[*(perm + counter++)][j];
 			}
 			else
 			{
-				res += dist[*perm++][j];
+				printf("Permutation number: %d\n", *(perm + counter));
+				res += dist[*(perm + counter++)][j];
 			}
 		}
 		/*	Checking if the new calculated distance is smaller than the smallest
@@ -451,4 +468,14 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		}
 	}
 	return minn/p;
+}
+
+void pass_vector(int *pointy, int *pointynumber)
+{
+	int i, pn = *pointynumber;
+	for (i = 0; i < pn; i++)
+	{
+		printf("I'm in another function!\t%d", *(pointy++));
+	}
+	//return 1;
 }
