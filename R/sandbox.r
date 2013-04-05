@@ -545,5 +545,5 @@ new.getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 
 
 javier<-function(x){
-  cat ("hello dawg")
+  cat ("http://www.youtube.com/watch?v=1-ctsxVXvO0")
 }
