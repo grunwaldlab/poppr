@@ -479,5 +479,4 @@ void pass_vector(int *pointy, int *pointynumber)
 	{
 		printf("I'm in another function!\t%d\n", *(pointy + i));
 	}
-	//return 1;
 }
