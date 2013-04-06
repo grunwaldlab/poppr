@@ -401,7 +401,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
 	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p+1], 
 	zerocatch[2];
-	double dist[p][p], da, res, minn=100;
+	double dist[p][p], da, res, minn=100, *distp;
 	// reconstruct the genotype table.
 	zerocatch[0] = p;
 	zerocatch[1] = p;
@@ -422,21 +422,9 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		}
 	}
 	
-	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
 
-	if(zerocatch[0] < p)
-	{
-		int extraperm[w];
-		for (i = 0; i < w; i++)
-		{
-			printf("Permutation number: %d\n", *perm);
-			extraperm[i] = *(perm + i);
-			printf("Extra Perm: %d\n", extraperm[i]);
-		}
-		pass_vector(extraperm, woo);
-		return minn;
-	}
 	// Construct distance matrix of 1 - 2^{-|x|}
+	// This is constructed row by row.
 	for(j = 0; j < p; j++)
 	{
 		for(i=0; i < p; i++)
@@ -445,8 +433,41 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			dist[i][j] = da;
 		}
 	}
+	distp = &dist;
+	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
 	
-	return mindist(w, p, perm, dist);
+	if(zerocatch[0] < p || zerocatch[1] < p)
+	{
+		int ind;
+		if (zerocatch[0] < p)
+		{
+			ind = zerocatch[0];
+		}
+		else
+		{
+			ind = zerocatch[1];
+		}
+		printf("IND: %d\n", ind);
+		//return mindist(w, p, perm, distp);
+		//pass_vector(extraperm, woo);
+		for (j = 0; j < p; j++)
+		{
+			if (j == ind)
+			{
+				goto derp;
+			}
+			printf("AGAIN!\n");
+			for (i = 0; i < p; i++)
+			{
+				printf("Rep: %9f\t", dist[i][j]);
+				dist[ind][j] = dist[i][j];
+			}
+			printf("estimate %d: %9f\n", i, mindist(w, p, perm, distp));
+		derp: printf("");
+		}
+		return minn;
+	}
+	return mindist(w, p, perm, distp);
 	
 	/*
 	counter = 0;
@@ -495,19 +516,19 @@ void pass_vector(int *pointy, int *pointynumber)
  {
 	 int i, j, w = perms, p = alleles, counter = 0;
 	 double res, minn = 100;
-	 printf("IN THE FUNK\n");
+	 //printf("IN THE FUNK\n");
 	 for(i = 0; i < w; i += p)
 	 {
 		 for(j = 0; j < p; j++)
 		 {
 			 if (j == 0)
 			 {
-				 printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
+				 //printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
 				 res = dist[*(perm + counter++) + p*j];
 			 }
 			 else
 			 {
-				 printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
+				 //printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
 				 res += dist[*(perm + counter++) + p*j];
 			 }
 		 }
