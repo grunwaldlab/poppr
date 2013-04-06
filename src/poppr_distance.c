@@ -47,6 +47,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo);
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
 void pass_vector(int *pointy, int *pointynumber);
+double mindist(int perms, int alleles, int *perm, double *dist);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the root product of pairwise comparisons of each of the variances of
 each locus.
@@ -444,7 +445,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			dist[i][j] = da;
 		}
 	}
-
+	
+	return mindist(w, p, perm, dist);
+	
+	/*
 	counter = 0;
 	//	Calculate the smallest s, which is the minimum distance among alleles.
 	for(i = 0; i < w; i += p)
@@ -462,14 +466,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				res += dist[*(perm + counter++)][j];
 			}
 		}
-		/*	Checking if the new calculated distance is smaller than the smallest
-			distance seen. */
+		//	Checking if the new calculated distance is smaller than the smallest
+		//	distance seen.
 		if ( res < minn )
 		{
 			minn = res;
 		}
 	}
 	return minn/p;
+	*/
 }
 
 
@@ -485,9 +490,33 @@ void pass_vector(int *pointy, int *pointynumber)
 }
 
 
-/*
- double mindist(int perms, int alleles, double *dist)
+
+ double mindist(int perms, int alleles, int *perm, double *dist)
  {
- int i, j, ;
+	 int i, j, w = perms, p = alleles, counter = 0;
+	 double res, minn = 100;
+	 printf("IN THE FUNK\n");
+	 for(i = 0; i < w; i += p)
+	 {
+		 for(j = 0; j < p; j++)
+		 {
+			 if (j == 0)
+			 {
+				 printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
+				 res = dist[*(perm + counter++) + p*j];
+			 }
+			 else
+			 {
+				 printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
+				 res += dist[*(perm + counter++) + p*j];
+			 }
+		 }
+		 /*	Checking if the new calculated distance is smaller than the smallest
+		  distance seen. */
+		 if ( res < minn )
+		 {
+			 minn = res;
+		 }
+	 }
+	 return minn/p;
  }
-*/
