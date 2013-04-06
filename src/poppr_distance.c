@@ -178,7 +178,8 @@ SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles)
 	b_mat = coerceVector(b_mat, INTSXP);
 	permutations = coerceVector(permutations, INTSXP);
 	PROTECT(Rval = allocVector(REALSXP, 1));
-	REAL(Rval)[0] = test_bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations), pP);
+	REAL(Rval)[0] = test_bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations),
+                                    pP);
 	UNPROTECT(1);
 	return Rval;
     
@@ -241,7 +242,8 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 					INTEGER(pair_matrix)[z] = INTEGER(bruvo_mat)[j+(a+z-A)*I];
 				}
 				// Calculating Bruvo's distance over these two. 
-				REAL(Rval)[count++] = bruvo_dist(INTEGER(pair_matrix), pA, INTEGER(permutations), pP);
+				REAL(Rval)[count++] = bruvo_dist(INTEGER(pair_matrix), pA,
+                                                 INTEGER(permutations), pP);
 			}
 		}
 	}
@@ -451,12 +453,12 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		{
 			if (j == 0)
 			{
-				printf("Permutation number: %d\n", *(perm + counter));
+				printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
 				res = dist[*(perm + counter++)][j];
 			}
 			else
 			{
-				printf("Permutation number: %d\n", *(perm + counter));
+				printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
 				res += dist[*(perm + counter++)][j];
 			}
 		}
@@ -470,6 +472,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	return minn/p;
 }
 
+
 void pass_vector(int *pointy, int *pointynumber)
 {
 	int i, pn = *pointynumber;
@@ -480,3 +483,11 @@ void pass_vector(int *pointy, int *pointynumber)
 		printf("I'm in another function!\t%d\n", *(pointy + i));
 	}
 }
+
+
+/*
+ double mindist(int perms, int alleles, double *dist)
+ {
+ int i, j, ;
+ }
+*/
