@@ -434,7 +434,9 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			dist[i][j] = da;
 		}
 	}
-	distp = &dist;
+	
+	// This avoids warning: assignment from incompatible pointer type
+	distp = (double *)&dist;
 	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
 	
 	if(zerocatch[0] < p || zerocatch[1] < p)
@@ -457,7 +459,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 					dist[ind][j] = dist[i][j];
 				}
 				printf("|\n\nEstimate %d: %9f\n\n", i, mindist(w, p, perm, distp));
-				next: printf("");
+				next:;
 			}
 			return minn;
 		}
