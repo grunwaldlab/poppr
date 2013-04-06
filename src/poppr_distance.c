@@ -424,7 +424,8 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	
 
 	// Construct distance matrix of 1 - 2^{-|x|}
-	// This is constructed row by row.
+	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
+	// in the columns.
 	for(j = 0; j < p; j++)
 	{
 		for(i=0; i < p; i++)
@@ -439,17 +440,43 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
 		int ind;
-		if (zerocatch[0] < p)
+		if (zerocatch[0] < p) // The rows contain the zero value
 		{
 			ind = zerocatch[0];
+			for (i = 0; i < p; i++)
+			{
+				if (i == ind)
+				{
+					printf("NEXT!\n");
+					goto next;
+				}
+				printf("Geno 1, Allele %d:\t%d\tReplacement:\n", i, genos[0][i]);
+				for (j = 0; j < p; j++)
+				{
+					printf("|\t%9f\t", dist[i][j]);
+					dist[ind][j] = dist[i][j];
+				}
+				printf("|\n\nEstimate %d: %9f\n\n", i, mindist(w, p, perm, distp));
+				next: printf("");
+			}
+			return minn;
 		}
-		else
+		else // The columns contain the zero value. 
 		{
 			ind = zerocatch[1];
 		}
 		printf("IND: %d\n", ind);
 		//return mindist(w, p, perm, distp);
 		//pass_vector(extraperm, woo);
+		
+		
+		
+		/*
+		
+		herp <- sample(1:20, 8, rep=TRUE); herp[sample(1:4, 1)] <- 0; herp
+		.Call("single_bruvo", herp, .Call("permuto", 4), 4)
+		
+		
 		for (j = 0; j < p; j++)
 		{
 			if (j == ind)
@@ -466,7 +493,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		derp: printf("");
 		}
 		return minn;
+		
+		*/
 	}
+	
 	return mindist(w, p, perm, distp);
 	
 	/*
