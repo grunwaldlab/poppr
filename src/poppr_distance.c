@@ -438,9 +438,31 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	distp = (double *)&dist;
 	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
 	
+	
+	
+	
+	/*
+	*	Below is a mess. This mess is representative  of attempting to deal with
+	*	Missing data in Bruvo's Distance by using the average of a genome loss
+	*	and genome addition model.
+	*	
+	*	A couple of notes:
+	*	- The names are actually switched....my bad.
+	*	- The genome addition model (named gene_loss by accident) WORKS
+	*	- The genome loss model (named genome_add by addicent) Sort of works.
+	*		This means that the calculation is made, but the values do not work
+	*		reciprocally.
+	*
+	*	Test code:
+	*	test <- sample(1:20, 8, rep=TRUE); test[sample(1:4, 1)] <- 0; test
+	*	.Call("single_bruvo", test, .Call("permuto", 4), 4)
+	*	
+	*/
+	
+	
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
-		int ind, *genop;
+		int ind, *genop; // Need to initiate a pointer for the genotypes.
 		double gene_loss[p-1];
 		double gene_loss_sum = 0;
 		double genome_add[p];
@@ -527,11 +549,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		
 		
 		/*
-		
-		herp <- sample(1:20, 8, rep=TRUE); herp[sample(1:4, 1)] <- 0; herp
-		.Call("single_bruvo", herp, .Call("permuto", 4), 4)
-		
-		
 		for (j = 0; j < p; j++)
 		{
 			if (j == ind)
