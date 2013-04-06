@@ -434,14 +434,19 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			dist[i][j] = da;
 		}
 	}
-	
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *)&dist;
 	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
 	
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
-		int ind;
+		int ind, *genop;
+		double gene_loss[p-1];
+		double gene_loss_sum = 0;
+		double genome_add[p];
+		double genome_add_sum = 0;
+		counter = 0;
+		genop = (int *)&genos;
 		if (zerocatch[0] < p) // The rows contain the zero value
 		{
 			ind = zerocatch[0];
@@ -449,25 +454,73 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			{
 				if (i == ind)
 				{
-					printf("NEXT!\n");
-					goto next;
+					//printf("NEXT!\n");
+					goto next1;
 				}
-				printf("Geno 1, Allele %d:\t%d\tReplacement:\n", i, genos[0][i]);
+				printf("\n");
+				//printf("Geno 1, Allele %d:\t%d\tReplacement:\n", i, genos[0][i]);
 				for (j = 0; j < p; j++)
 				{
 					printf("|\t%9f\t", dist[i][j]);
 					dist[ind][j] = dist[i][j];
 				}
-				printf("|\n\nEstimate %d: %9f\n\n", i, mindist(w, p, perm, distp));
-				next:;
+				gene_loss[counter] = mindist(w, p, perm, distp);
+				gene_loss_sum += gene_loss[counter];
+				//printf("|\n\nEstimate %d: %9f\n\n", i, gene_loss[counter++]);
+				next1:;	
 			}
-			return minn;
+			printf("\n");
+			// Genome loss model
+			for (i = 0; i < p; i++)
+			{
+				genos[0][ind] = genos[1][i];
+				//printf("New Geno 1: %d\n", genos[0][ind]);
+				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
+				genome_add_sum += genome_add[i];
+				printf("\nResult:\t%9f\n", genome_add[i]);
+				//genome_add_sum += genome_add[i];
+			}
 		}
 		else // The columns contain the zero value. 
 		{
 			ind = zerocatch[1];
+			for (i = 0; i < p; i++)
+			{
+				if (i == ind)
+				{
+					//printf("NEXT!\n");
+					goto next2;
+				}
+				//printf("Geno 1, Allele %d:\t%d\tReplacement:\n", i, genos[1][i]);
+				printf("\n");
+				for (j = 0; j < p; j++)
+				{
+					printf("|\t%9f\t", dist[j][i]);
+					dist[j][ind] = dist[j][i];
+				}
+				gene_loss[counter] = mindist(w, p, perm, distp);
+				gene_loss_sum += gene_loss[counter];
+				//printf("|\n\nEstimate %d: %9f\n\n", i, gene_loss[counter++]);
+				next2:;
+			}
+			
+			printf("\n");
+			// Genome loss model
+			for (i = 0; i < p; i++)
+			{
+				genos[1][ind] = genos[0][i];
+				printf("New Geno 1: %d\n", genos[1][ind]);
+				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
+				genome_add_sum += genome_add[i];
+				printf("\nResult:\t%9f\n", genome_add[i]);
+				genome_add_sum += genome_add[i];
+			}
 		}
-		printf("IND: %d\n", ind);
+		printf("\n");
+		genome_add_sum = genome_add_sum/p;
+		gene_loss_sum = gene_loss_sum/(p-1);
+		
+		return (gene_loss_sum + genome_add_sum)/(p*2);
 		//return mindist(w, p, perm, distp);
 		//pass_vector(extraperm, woo);
 		
