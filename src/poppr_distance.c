@@ -412,6 +412,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			// Catch missing data here.
 			if(in[counter] == 0)
 			{
+				if (zerocatch[i] < p)
+				{
+					return minn;
+				}
 				zerocatch[i] = j;
 			}
 			genos[i][j] = in[counter++];
