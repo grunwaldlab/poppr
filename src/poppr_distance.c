@@ -293,16 +293,16 @@ void permute(int *a, int i, int n, int *c)
 		int ind = count;
 		for(j=0; j<=n; j++)
 		{
-			c[--ind] = *(a+j);
+			c[--ind] = *(a + j);
 		}
 	}
 	else
 	{
 		for (j = i; j <= n; j++)
 		{
-			swap((a+i), (a+j));
-			permute(a, i+1, n, c);
-			swap((a+i), (a+j)); //backtrack
+			swap((a + i), (a + j));
+			permute(a, i + 1, n, c);
+			swap((a + i), (a + j)); //backtrack
 		}
 	}
 }
@@ -310,11 +310,11 @@ void permute(int *a, int i, int n, int *c)
 /* A factorial function for calculating permutations */
 int fact(int x)
 {
-	int f=1;
+	int f = 1;
 	int u;
-	for (u=x; u>1; u--)
+	for (u = x; u > 1; u--)
 	{
-		f*=u;
+		f *= u;
 	}
 	return f;
 }
@@ -365,7 +365,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	{
 		for(i=0; i < p; i++)
 		{
-			da = 1- pow(2 ,-abs(genos[0][i]-genos[1][j]));
+			da = 1- pow(2 , -abs(genos[0][i] - genos[1][j]));
 			dist[i][j] = da;
 		}
 	}
@@ -428,12 +428,12 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	{
 		for(i=0; i < p; i++)
 		{
-			da = 1- pow(2 ,-abs(genos[0][i]-genos[1][j]));
+			da = 1- pow(2 ,-abs(genos[0][i] - genos[1][j]));
 			dist[i][j] = da;
 		}
 	}
 	// This avoids warning: assignment from incompatible pointer type
-	distp = (double *)&dist;
+	distp = (double *) &dist;
 	/*
 	*	Test code:
 	*	test <- sample(1:20, 8, rep=TRUE); test[sample(1:4, 1)] <- 0; test
