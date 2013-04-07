@@ -399,7 +399,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
-	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p+1], 
+	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p], 
 	zerocatch[2];
 	double dist[p][p], da, res, minn=100, *distp;
 	// reconstruct the genotype table.
@@ -407,26 +407,17 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	zerocatch[1] = p;
 	for(i=0; i < n; i++)
 	{
-		printf("Genotype %d:\t", i);
 		for(j = 0; j < p; j++)
 		{
-			// Missing data will return with distance of 100
+			// Catch missing data here.
 			if(in[counter] == 0)
 			{
-			/*	THIS WILL BE THE PLACE TO PUT A NEW FUNCTION FOR SPECIAL
-				CASES OF BRUVO'S DISTANCE 
-                TESTING!!!!! */
 				zerocatch[i] = j;
-				//return minn;
 			}
-			printf("%d\t", in[counter]);
 			genos[i][j] = in[counter++];
 		}
-		printf("\n");
 	}
-	
-
-	// Construct distance matrix of 1 - 2^{-|x|}
+	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
 	// in the columns.
 	for(j = 0; j < p; j++)
@@ -439,81 +430,57 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	}
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *)&dist;
-	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
-	
-	
-	
-	
 	/*
-	*	Below is a mess. This mess is representative  of attempting to deal with
-	*	Missing data in Bruvo's Distance by using the average of a genome loss
-	*	and genome addition model.
-	*	
-	*	A couple of notes:
-	*	- The names are actually switched....my bad.
-	*	- The genome addition model (named gene_loss by accident) WORKS
-	*	- The genome loss model (named genome_add by addicent) Sort of works.
-	*		This means that the calculation is made, but the values do not work
-	*		reciprocally.
-	*
 	*	Test code:
 	*	test <- sample(1:20, 8, rep=TRUE); test[sample(1:4, 1)] <- 0; test
 	*	.Call("single_bruvo", test, .Call("permuto", 4), 4)
 	*	
 	*/
-	
-	
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
-		int ind, *genop; // Need to initiate a pointer for the genotypes.
-		double gene_loss[p-1];
-		double gene_loss_sum = 0;
-		double genome_add[p];
+		int ind, *genop; 
+		double genome_add[p-1];
 		double genome_add_sum = 0;
+		double genome_loss[p];
+		double genome_loss_sum = 0;
 		counter = 0;
 		
 		if (zerocatch[0] < p) // The rows contain the zero value
 		{
 			ind = zerocatch[0];
-			printf("Zero in Ind 1: %d\n", ind);
-			
+			/*	
+			*	Genome Addition model uses the observed values of the short
+			*	genotype for the replacement allele. This is achieved by simply
+			*	shifting the columns or rows of the distance matrix and 
+			*	recalculating the minimum distance. 
+			*/
 			for (i = 0; i < p; i++)
 			{
 				if (i == ind)
 				{
-					//printf("NEXT!\n");
 					goto next1;
 				}
-				printf("\n");
-				//printf("Geno 1, Allele %d:\t%d\tReplacement:\n", i, genos[0][i]);
 				for (j = 0; j < p; j++)
 				{
-					printf("|\t%9f\t", dist[i][j]);
 					dist[ind][j] = dist[i][j];
 				}
-				gene_loss[counter] = mindist(w, p, perm, distp);
-				gene_loss_sum += gene_loss[counter];
-				//printf("|\n\nEstimate %d: %9f\n\n", i, gene_loss[counter++]);
+				//genome_add[counter] = mindist(w, p, perm, distp);
+				//genome_add_sum += genome_add[counter];
+				genome_add_sum += mindist(w, p, perm, distp);
 				next1:;	
 			}
-			printf("\nGENOME ADDITION:\t%9f\n", gene_loss_sum);
-			// Genome loss model
-			printf("\t\tOld Geno 1: %d\n", genos[0][ind]);
-			int in2[p*2];
-			for (i = 0; i < p*2; i++)
-			{
-				in2[i] = in[i];
-			}
+			/*	
+			*	Genome Loss model uses the alleles from the larger genotype to
+			*	reconstruct the allelic state of the smaller. This means that
+			*	they need to be replaced and passed through the function again. 
+			*/
 			for (i = 0; i < p; i++)
 			{
-				in2[ind] = genos[1][i];
-				printf("\t\tGENO 2, 1: %d\n", genos[1][0]);
-				printf("\t\tNew Geno 1: %d\n", in2[ind]);
-				genop = (int *) &in2;
-				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
-				genome_add_sum += genome_add[i];
-				printf("GENOME LOSS RESULT:\t%9f\n", genome_add[i]);
-				//genome_add_sum += genome_add[i];
+				genos[0][ind] = genos[1][i];
+				genop = (int *) &genos;
+				//genome_loss[i] = test_bruvo_dist(genop, &p, perm, &w);
+				//genome_loss_sum += genome_loss[i];
+				genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w);
 			}
 		}
 		else // The columns contain the zero value. 
@@ -523,101 +490,37 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			{
 				if (i == ind)
 				{
-					//printf("NEXT!\n");
 					goto next2;
 				}
-				//printf("Geno 1, Allele %d:\t%d\tReplacement:\n", i, genos[1][i]);
-				printf("\n");
 				for (j = 0; j < p; j++)
 				{
-					printf("|\t%9f\t", dist[j][i]);
 					dist[j][ind] = dist[j][i];
 				}
-				gene_loss[counter] = mindist(w, p, perm, distp);
-				gene_loss_sum += gene_loss[counter];
-				//printf("|\n\nEstimate %d: %9f\n\n", i, gene_loss[counter++]);
+				//genome_add[counter] = mindist(w, p, perm, distp);
+				//genome_add_sum += genome_add[counter];
+				genome_add_sum += mindist(w, p, perm, distp);
 				next2:;
 			}
-			
-			printf("\nGENOME ADD: %9f\n", gene_loss_sum);
+
 			// Genome loss model
-			
-			int in2[p*2];
-			for (i = 0; i < p*2; i++)
-			{
-				in2[i] = in[i];
-			}
+
 			for (i = 0; i < p; i++)
 			{
-				in2[ind+p] = genos[0][i];
-				printf("\t\tGENO 2, 1: %d\n", genos[0][0]);
-				printf("\t\tNew Geno 1: %d\n", in2[ind+p]);
-				genop = (int *) &in2;
-				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
-				genome_add_sum += genome_add[i];
-				printf("GENOME LOSS RESULT:\t%9f\n", genome_add[i]);
+				genos[1][ind] = genos[0][i];
+				genop = (int *) &genos;
+				//genome_loss[i] = test_bruvo_dist(genop, &p, perm, &w);
+				//genome_loss_sum += genome_loss[i];
+				genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w);
 			}
 		}
-		printf("\n");
-		genome_add_sum = genome_add_sum/p;
-		gene_loss_sum = gene_loss_sum/(p-1);
+		genome_loss_sum = genome_loss_sum/p;
+		genome_add_sum = genome_add_sum/(p-1);
 		
-		return (gene_loss_sum + genome_add_sum)/(p*2);
+		return (genome_add_sum + genome_loss_sum)/(p*2);
 		//return mindist(w, p, perm, distp);
 		//pass_vector(extraperm, woo);
-		
-		
-		
-		/*
-		for (j = 0; j < p; j++)
-		{
-			if (j == ind)
-			{
-				goto derp;
-			}
-			printf("AGAIN!\n");
-			for (i = 0; i < p; i++)
-			{
-				printf("Rep: %9f\t", dist[i][j]);
-				dist[ind][j] = dist[i][j];
-			}
-			printf("estimate %d: %9f\n", i, mindist(w, p, perm, distp));
-		derp: printf("");
-		}
-		return minn;
-		
-		*/
 	}
-	
 	return mindist(w, p, perm, distp);
-	
-	/*
-	counter = 0;
-	//	Calculate the smallest s, which is the minimum distance among alleles.
-	for(i = 0; i < w; i += p)
-	{
-		for(j = 0; j < p; j++)
-		{
-			if (j == 0)
-			{
-				printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
-				res = dist[*(perm + counter++)][j];
-			}
-			else
-			{
-				printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
-				res += dist[*(perm + counter++)][j];
-			}
-		}
-		//	Checking if the new calculated distance is smaller than the smallest
-		//	distance seen.
-		if ( res < minn )
-		{
-			minn = res;
-		}
-	}
-	return minn/p;
-	*/
 }
 
 
@@ -638,19 +541,16 @@ void pass_vector(int *pointy, int *pointynumber)
  {
 	 int i, j, w = perms, p = alleles, counter = 0;
 	 double res, minn = 100;
-	 //printf("IN THE FUNK\n");
 	 for(i = 0; i < w; i += p)
 	 {
 		 for(j = 0; j < p; j++)
 		 {
 			 if (j == 0)
 			 {
-				 //printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
 				 res = dist[*(perm + counter++) + p*j];
 			 }
 			 else
 			 {
-				 //printf("[%d][%d] = [%d]\n", *(perm + counter), j, *(perm + counter) + p*j);
 				 res += dist[*(perm + counter++) + p*j];
 			 }
 		 }
