@@ -434,26 +434,23 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	*	Test code:
 	*	test <- sample(1:20, 8, rep=TRUE); test[sample(1:4, 1)] <- 0; test
 	*	.Call("single_bruvo", test, .Call("permuto", 4), 4)
-	*	
 	*/
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
-		int ind, *genop; 
-		double genome_add[p-1];
-		double genome_add_sum = 0;
-		double genome_loss[p];
-		double genome_loss_sum = 0;
-		counter = 0;
-		
+		int ind, *genop, miss_ind, full_ind; 
+		double genome_add_sum = 0, genome_loss_sum = 0;
+		genop = (int *) &genos;		
 		if (zerocatch[0] < p) // The rows contain the zero value
 		{
-			ind = zerocatch[0];
 			/*	
 			*	Genome Addition model uses the observed values of the short
 			*	genotype for the replacement allele. This is achieved by simply
 			*	shifting the columns or rows of the distance matrix and 
 			*	recalculating the minimum distance. 
 			*/
+			ind = zerocatch[0];
+			miss_ind = 0;
+			full_ind = 1;
 			for (i = 0; i < p; i++)
 			{
 				if (i == ind)
@@ -464,28 +461,16 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				{
 					dist[ind][j] = dist[i][j];
 				}
-				//genome_add[counter] = mindist(w, p, perm, distp);
-				//genome_add_sum += genome_add[counter];
 				genome_add_sum += mindist(w, p, perm, distp);
 				next1:;	
 			}
-			/*	
-			*	Genome Loss model uses the alleles from the larger genotype to
-			*	reconstruct the allelic state of the smaller. This means that
-			*	they need to be replaced and passed through the function again. 
-			*/
-			for (i = 0; i < p; i++)
-			{
-				genos[0][ind] = genos[1][i];
-				genop = (int *) &genos;
-				//genome_loss[i] = test_bruvo_dist(genop, &p, perm, &w);
-				//genome_loss_sum += genome_loss[i];
-				genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w);
-			}
+
 		}
 		else // The columns contain the zero value. 
 		{
 			ind = zerocatch[1];
+			miss_ind = 1;
+			full_ind = 0;
 			for (i = 0; i < p; i++)
 			{
 				if (i == ind)
@@ -496,29 +481,25 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				{
 					dist[j][ind] = dist[j][i];
 				}
-				//genome_add[counter] = mindist(w, p, perm, distp);
-				//genome_add_sum += genome_add[counter];
 				genome_add_sum += mindist(w, p, perm, distp);
 				next2:;
 			}
-
-			// Genome loss model
-
-			for (i = 0; i < p; i++)
-			{
-				genos[1][ind] = genos[0][i];
-				genop = (int *) &genos;
-				//genome_loss[i] = test_bruvo_dist(genop, &p, perm, &w);
-				//genome_loss_sum += genome_loss[i];
-				genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w);
-			}
+		}
+		
+		/*	
+		*	Genome Loss model uses the alleles from the larger genotype to
+		*	reconstruct the allelic state of the smaller. This means that
+		*	they need to be replaced and passed through the function again. 
+		*/
+		for (i = 0; i < p; i++)
+		{
+			genos[miss_ind][ind] = genos[full_ind][i];
+			genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w);
 		}
 		genome_loss_sum = genome_loss_sum/p;
 		genome_add_sum = genome_add_sum/(p-1);
 		
 		return (genome_add_sum + genome_loss_sum)/(p*2);
-		//return mindist(w, p, perm, distp);
-		//pass_vector(extraperm, woo);
 	}
 	return mindist(w, p, perm, distp);
 }
