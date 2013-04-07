@@ -436,7 +436,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	}
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *)&dist;
-	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
+	//printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
 	
 	
 	
@@ -491,15 +491,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				//printf("|\n\nEstimate %d: %9f\n\n", i, gene_loss[counter++]);
 				next1:;	
 			}
-			printf("\n");
+			printf("\nGENOME ADDITION:\t%9f\n", gene_loss_sum);
 			// Genome loss model
 			for (i = 0; i < p; i++)
 			{
 				genos[0][ind] = genos[1][i];
-				//printf("New Geno 1: %d\n", genos[0][ind]);
+				printf("\t\tNew Geno 1: %d\n", genos[0][ind]);
 				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
 				genome_add_sum += genome_add[i];
-				printf("\nResult:\t%9f\n", genome_add[i]);
+				printf("Result:\t%9f\n", genome_add[i]);
 				//genome_add_sum += genome_add[i];
 			}
 		}
@@ -526,15 +526,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				next2:;
 			}
 			
-			printf("\n");
+			printf("\nGENOME ADD: %9f\n", gene_loss_sum);
 			// Genome loss model
 			for (i = 0; i < p; i++)
 			{
 				genos[1][ind] = genos[0][i];
-				printf("New Geno 1: %d\n", genos[1][ind]);
+				printf("\t\tNew Geno 1: %d\n", genos[1][ind]);
 				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
 				genome_add_sum += genome_add[i];
-				printf("\nResult:\t%9f\n", genome_add[i]);
+				printf("Result:\t%9f\n", genome_add[i]);
 				genome_add_sum += genome_add[i];
 			}
 		}
