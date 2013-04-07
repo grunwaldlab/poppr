@@ -512,7 +512,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				genop = (int *) &in2;
 				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
 				genome_add_sum += genome_add[i];
-				printf("Result:\t%9f\n", genome_add[i]);
+				printf("GENOME LOSS RESULT:\t%9f\n", genome_add[i]);
 				//genome_add_sum += genome_add[i];
 			}
 		}
@@ -555,8 +555,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				genop = (int *) &in2;
 				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
 				genome_add_sum += genome_add[i];
-				printf("Result:\t%9f\n", genome_add[i]);
-				genome_add_sum += genome_add[i];
+				printf("GENOME LOSS RESULT:\t%9f\n", genome_add[i]);
 			}
 		}
 		printf("\n");
