@@ -407,6 +407,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	zerocatch[1] = p;
 	for(i=0; i < n; i++)
 	{
+		printf("Genotype %d:\t", i);
 		for(j = 0; j < p; j++)
 		{
 			// Missing data will return with distance of 100
@@ -418,8 +419,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				zerocatch[i] = j;
 				//return minn;
 			}
+			printf("%d\t", in[counter]);
 			genos[i][j] = in[counter++];
 		}
+		printf("\n");
 	}
 	
 
@@ -436,7 +439,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	}
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *)&dist;
-	//printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
+	printf("\nZero Counter: %d %d\n", zerocatch[0], zerocatch[1]);
 	
 	
 	
@@ -468,10 +471,12 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		double genome_add[p];
 		double genome_add_sum = 0;
 		counter = 0;
-		genop = (int *)&genos;
+		
 		if (zerocatch[0] < p) // The rows contain the zero value
 		{
 			ind = zerocatch[0];
+			printf("Zero in Ind 1: %d\n", ind);
+			
 			for (i = 0; i < p; i++)
 			{
 				if (i == ind)
@@ -493,10 +498,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			}
 			printf("\nGENOME ADDITION:\t%9f\n", gene_loss_sum);
 			// Genome loss model
+			printf("\t\tOld Geno 1: %d\n", genos[0][ind]);
 			for (i = 0; i < p; i++)
 			{
 				genos[0][ind] = genos[1][i];
+				printf("\t\tGENO 2, 1: %d\n", genos[1][0]);
 				printf("\t\tNew Geno 1: %d\n", genos[0][ind]);
+				genop = (int *) &genos;
 				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
 				genome_add_sum += genome_add[i];
 				printf("Result:\t%9f\n", genome_add[i]);
@@ -532,6 +540,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			{
 				genos[1][ind] = genos[0][i];
 				printf("\t\tNew Geno 1: %d\n", genos[1][ind]);
+				genop = (int *)&genos;
 				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
 				genome_add_sum += genome_add[i];
 				printf("Result:\t%9f\n", genome_add[i]);
