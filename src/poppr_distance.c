@@ -499,12 +499,17 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			printf("\nGENOME ADDITION:\t%9f\n", gene_loss_sum);
 			// Genome loss model
 			printf("\t\tOld Geno 1: %d\n", genos[0][ind]);
+			int in2[p*2];
+			for (i = 0; i < p*2; i++)
+			{
+				in2[i] = in[i];
+			}
 			for (i = 0; i < p; i++)
 			{
-				genos[0][ind] = genos[1][i];
+				in2[ind] = genos[1][i];
 				printf("\t\tGENO 2, 1: %d\n", genos[1][0]);
-				printf("\t\tNew Geno 1: %d\n", genos[0][ind]);
-				genop = (int *) &genos;
+				printf("\t\tNew Geno 1: %d\n", in2[ind]);
+				genop = (int *) &in2;
 				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
 				genome_add_sum += genome_add[i];
 				printf("Result:\t%9f\n", genome_add[i]);
@@ -536,11 +541,18 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			
 			printf("\nGENOME ADD: %9f\n", gene_loss_sum);
 			// Genome loss model
+			
+			int in2[p*2];
+			for (i = 0; i < p*2; i++)
+			{
+				in2[i] = in[i];
+			}
 			for (i = 0; i < p; i++)
 			{
-				genos[1][ind] = genos[0][i];
-				printf("\t\tNew Geno 1: %d\n", genos[1][ind]);
-				genop = (int *)&genos;
+				in2[ind+p] = genos[0][i];
+				printf("\t\tGENO 2, 1: %d\n", genos[0][0]);
+				printf("\t\tNew Geno 1: %d\n", in2[ind+p]);
+				genop = (int *) &in2;
 				genome_add[i] = test_bruvo_dist(genop, &p, perm, &w);
 				genome_add_sum += genome_add[i];
 				printf("Result:\t%9f\n", genome_add[i]);
