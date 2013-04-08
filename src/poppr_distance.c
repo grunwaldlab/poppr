@@ -522,29 +522,29 @@ void pass_vector(int *pointy, int *pointynumber)
 
 
 
- double mindist(int perms, int alleles, int *perm, double *dist)
- {
-	 int i, j, w = perms, p = alleles, counter = 0;
-	 double res, minn = 100;
-	 for(i = 0; i < w; i += p)
-	 {
-		 for(j = 0; j < p; j++)
-		 {
-			 if (j == 0)
-			 {
-				 res = dist[*(perm + counter++) + p*j];
-			 }
-			 else
-			 {
-				 res += dist[*(perm + counter++) + p*j];
-			 }
-		 }
-		 /*	Checking if the new calculated distance is smaller than the smallest
-		  distance seen. */
-		 if ( res < minn )
-		 {
-			 minn = res;
-		 }
-	 }
-	 return minn/p;
- }
+double mindist(int perms, int alleles, int *perm, double *dist)
+{
+	int i, j, w = perms, p = alleles, counter = 0;
+	double res, minn = 100;
+	for(i = 0; i < w; i += p)
+	{
+		for(j = 0; j < p; j++)
+		{
+			if (j == 0)
+			{
+				res = dist[*(perm + counter++) + p*j];
+			}
+			else
+			{
+				res += dist[*(perm + counter++) + p*j];
+			}
+		}
+		/*	Checking if the new calculated distance is smaller than the smallest
+		 distance seen. */
+		if ( res < minn )
+		{
+			minn = res;
+		}
+	}
+	return minn/p;
+}
