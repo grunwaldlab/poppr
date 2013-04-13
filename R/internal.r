@@ -538,7 +538,7 @@ mlg.matrix <- function(pop){
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
 #==============================================================================#
 
-.PA.Ia.Rd <- function(pop, missing=NULL){
+.PA.Ia.Rd <- function(pop, missing=NULL, ploid){
 	vard.vector <- NULL
 	numLoci <- ncol(pop@tab)
 	numIsolates <- nrow(pop@tab)
@@ -551,7 +551,7 @@ mlg.matrix <- function(pop){
   #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
   # Starting the actual calculations. 
   #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-	V <- .PA.pairwise.differences(pop,numLoci,np, missing=missing)
+	V <- .PA.pairwise.differences(pop, numLoci, np, missing=missing)
 	# First, set the variance of D	
 	varD <- ((sum(V$D.vector^2)-((sum(V$D.vector))^2)/np))/np
 	# Next is to create a vector containing all of the variances of d (there
@@ -651,7 +651,7 @@ final <- function(Iout, result){
 #==============================================================================#
 # The internal version of ia. 
 # Public functions utilizing this function:
-# # ia, poppr
+# # poppr
 #
 # Internal functions utilizing this function:
 # # none
@@ -685,7 +685,7 @@ final <- function(Iout, result){
       return(IarD)
     }
   }
-  IarD <- .Ia.Rd(popx, missing)
+  IarD <- .Ia.Rd(popx, missing, ploidy(pop))
   # data vomit options.
   .quiet(quiet=quiet, IarD=IarD, pop=namelist$population)
   names(IarD) <- c("Ia", "rbarD")
@@ -809,13 +809,13 @@ pairwisematrix <- function(pop, np){
 # to be calculated.
 # pop: A list of genind objects consisting of one locus each over a population.
 # Public functions utilizing this function:
-# # none
+# # ia
 #
 # Internal functions utilizing this function:
 # # .ia
 #
 #==============================================================================#
-.Ia.Rd <- function (pop, missing = NULL) 
+.Ia.Rd <- function (pop, missing = NULL, ploid) 
 {
   vard.vector <- NULL
   numLoci <- length(pop)
@@ -824,7 +824,7 @@ pairwisematrix <- function(pop, np){
   if (np < 2) {
     return(as.numeric(c(NaN, NaN)))
   }
-  V <- pair_diffs(pop, numLoci, np)
+  V <- pair_diffs(pop, numLoci, np, ploid)
   varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
   vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
   vardpair.vector <- .Call("pairwise_covar", vard.vector)
@@ -846,9 +846,9 @@ pairwisematrix <- function(pop, np){
 # # .Ia.Rd
 #
 #==============================================================================#
-pair_diffs <- function(pop, numLoci, np)
+pair_diffs <- function(pop, numLoci, np, ploid)
 {
-  ploid <- ploidy(pop[[1]])
+  #ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
   temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs",x@tab*ploid)/ploid, 
                           temp.d.vector[, 1])

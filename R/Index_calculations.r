@@ -458,7 +458,7 @@ ia <- function(pop, sample=0, method=1, quiet="minimal", missing="ignore",
       return(IarD)
     }
   }
-  IarD <- .Ia.Rd(popx, missing)
+  IarD <- .Ia.Rd(popx, missing, ploidy(pop))
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
   if (sample==0){
