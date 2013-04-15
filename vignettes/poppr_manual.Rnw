@@ -1174,7 +1174,7 @@ heatmap(as.matrix(A.dist), symm=TRUE)
 \begin{figure}[h!]
   \centering
   \caption{\footnotesize Heatmap representation of a dissimilarity distance for the data set ``Aeut"}
-  \label{bruvo_heat_map}
+  \label{diss_heat_map}
 <<fig=TRUE, echo=FALSE, resolution=300>>=
 data(Aeut)
 A.dist <- diss.dist(Aeut)
@@ -1439,7 +1439,7 @@ A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
 \begin{figure}[ht!]
   \centering
   \caption{\footnotesize Minimum Spanning Network representing 4 simulated populations. Each node represents a different multi locus genotype (MLG). Node sizes and colors correspond to the number of individuals and population membership, respectively. Edge thickness and color are proportional to Bruvo's distance. Edge lengths are arbitrary.}
-  \label{mst_bruvo}
+  \label{mst_diss}
 <<poppr_msn_fig, fig=TRUE, resolution=300, echo=FALSE>>=
 data(Aeut)
 A.dist <- diss.dist(Aeut)
