@@ -55,4 +55,4 @@
 \contentsline {subsubsection}{\numberline {6.2.2}Image Editors}{57}{subsubsection.6.2.2}
 \contentsline {subsubsection}{\numberline {6.2.3}Exporting ggplot2 graphics}{58}{subsubsection.6.2.3}
 \contentsline {subsubsection}{\numberline {6.2.4}Exporting any graphics}{58}{subsubsection.6.2.4}
-\contentsline {subsection}{\numberline {6.3}Function calls}{58}{subsection.6.3}
+\contentsline {subsection}{\numberline {6.3}Function calls}{59}{subsection.6.3}

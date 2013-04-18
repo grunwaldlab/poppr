@@ -1,24 +1,14 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  1 APR 2013 15:54
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.12.13)  18 APR 2013 10:30
 entering extended mode
- restricted \write18 enabled.
  %&-line parsing enabled.
 **poppr_manual.tex
 (./poppr_manual.tex
-LaTeX2e <2011/06/27>
-Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, ge
-rman-x-2012-05-30, ngerman-x-2012-05-30, afrikaans, ancientgreek, ibycus, arabi
-c, armenian, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danis
-h, dutch, ukenglish, usenglishmax, esperanto, estonian, ethiopic, farsi, finnis
-h, french, friulan, galician, german, ngerman, swissgerman, monogreek, greek, h
-ungarian, icelandic, assamese, bengali, gujarati, hindi, kannada, malayalam, ma
-rathi, oriya, panjabi, tamil, telugu, indonesian, interlingua, irish, italian, 
-kurmanji, latin, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk,
- polish, portuguese, romanian, romansh, russian, sanskrit, serbian, serbianc, s
-lovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, uppersorbian, 
-welsh, loaded.
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/article.cls
+LaTeX2e <2009/09/24>
+Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, loaded.
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/size10.clo
+(/usr/share/texmf-texlive/tex/latex/base/size10.clo
 File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
@@ -33,182 +23,176 @@ File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/keyval.sty
+(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks14
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/trig.sty
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/graphics.cfg
-File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
 )
 Package graphics Info: Driver file: pdftex.def on input line 91.
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
-
-(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/infwarerr.sty
-Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
-)
-(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
-Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
-)
+(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2009/08/25 v0.04m Graphics/color for pdfTeX
 \Gread@gobject=\count87
 ))
 \Gin@req@height=\dimen103
 \Gin@req@width=\dimen104
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/hyperref.sty
-Package: hyperref 2012/05/13 v6.82q Hypertext links for LaTeX
+(/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2009/10/09 v6.79a Hypertext links for LaTeX
 
-(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
-Package: hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
-
-
-(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
-Package: hobsub-generic 2012/05/28 v1.13 Bundle oberdiek, subset generic (HO)
-Package: hobsub 2012/05/28 v1.13 Construct package bundles (HO)
-Package hobsub Info: Skipping package `infwarerr' (already loaded).
-Package hobsub Info: Skipping package `ltxcmds' (already loaded).
-Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
-Package ifluatex Info: LuaTeX not detected.
-Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2009/04/10 v2.0 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in pdf mode detected.
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2008/11/04 v1.4 Switches for detecting VTeX and its modes (HO)
 Package ifvtex Info: VTeX not detected.
-Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
-Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
-Package etexcmds Info: Could not find \expanded.
-(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
-(etexcmds)             that some package has redefined \expanded.
-(etexcmds)             In the latter case, load this package earlier.
-Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
-Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
-Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
-Package pdftexcmds Info: LuaTeX not detected.
-Package pdftexcmds Info: \pdf@primitive is available.
-Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode found.
-Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
-Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+(/usr/share/texmf-texlive/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2009/01/23 v0.5 Provides ifxetex conditional
 )
-Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
-Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
-)
-Package hobsub Info: Skipping package `hobsub' (already loaded).
-Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
-Package: hopatch 2012/05/28 v1.2 Wrapper for package hooks (HO)
-Package: xcolor-patch 2011/01/30 xcolor patch
-Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
-Package atveryend Info: \enddocument detected (standard20110627).
-Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
-Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
-Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
-)
-(/usr/local/texlive/2012/texmf-dist/tex/generic/ifxetex/ifxetex.sty
-Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
-)
-(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/kvoptions.sty
-Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
-)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/hycolor.sty
+Package: hycolor 2009/10/02 v1.5 Code for color options of hyperref/bookmark (H
+O)
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/xcolor-patch.sty
+Package: xcolor-patch 2009/10/02 xcolor patch
+))
 \@linkdim=\dimen105
 \Hy@linkcounter=\count88
 \Hy@pagecounter=\count89
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/pd1enc.def
-File: pd1enc.def 2012/05/13 v6.82q Hyperref: PDFDocEncoding definition (HO)
+(/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
 )
-\Hy@SavedSpaceFactor=\count90
+(/usr/share/texmf-texlive/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2007/12/12 v1.2 Prefix for e-TeX command names (HO)
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+(/usr/share/texmf-texlive/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2007/09/09 v1.2 Providing info/warning/message (HO)
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)
+(/usr/share/texmf-texlive/tex/latex/latexconfig/hyperref.cfg
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 3941.
-Package hyperref Info: Hyper figures OFF on input line 4062.
-Package hyperref Info: Link nesting OFF on input line 4067.
-Package hyperref Info: Hyper index ON on input line 4070.
-Package hyperref Info: Plain pages OFF on input line 4077.
-Package hyperref Info: Backreferencing OFF on input line 4082.
-Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
-Package hyperref Info: Bookmarks ON on input line 4300.
-\c@Hy@tempcnt=\count91
+(/usr/share/texmf-texlive/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2009/08/13 v3.4 Keyval support for LaTeX options (HO)
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/url/url.sty
+(/usr/share/texmf-texlive/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2009/07/30 v1.5 Key value parser with default handler suppor
+t (HO)
+))
+Package hyperref Info: Option `colorlinks' set `true' on input line 2864.
+Package hyperref Info: Hyper figures OFF on input line 2975.
+Package hyperref Info: Link nesting OFF on input line 2980.
+Package hyperref Info: Hyper index ON on input line 2983.
+Package hyperref Info: Plain pages OFF on input line 2990.
+Package hyperref Info: Backreferencing OFF on input line 2995.
+
+Implicit mode ON; LaTeX internals redefined
+Package hyperref Info: Bookmarks ON on input line 3191.
+(/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
 \Urlmuskip=\muskip10
 Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
 )
-LaTeX Info: Redefining \url on input line 4653.
-\Fld@menulength=\count92
+LaTeX Info: Redefining \url on input line 3428.
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/bitset.sty
+Package: bitset 2007/09/28 v1.0 Data type bit set (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/intcalc.sty
+Package: intcalc 2007/09/27 v1.1 Expandable integer calculations (HO)
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/bigintcalc.sty
+Package: bigintcalc 2007/11/11 v1.1 Expandable big integer calculations (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2009/09/23 v0.6 LuaTeX support for pdfTeX utility functions
+ (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2009/04/17 v1.2 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2009/08/05 v1.0 Some LaTeX kernel commands for general use (HO
+)
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+)))
+\Fld@menulength=\count90
 \Field@Width=\dimen106
 \Fld@charsize=\dimen107
-Package hyperref Info: Hyper figures OFF on input line 5773.
-Package hyperref Info: Link nesting OFF on input line 5778.
-Package hyperref Info: Hyper index ON on input line 5781.
-Package hyperref Info: backreferencing OFF on input line 5788.
-Package hyperref Info: Link coloring ON on input line 5791.
-Package hyperref Info: Link coloring with OCG OFF on input line 5798.
-Package hyperref Info: PDF/A mode OFF on input line 5803.
-LaTeX Info: Redefining \ref on input line 5843.
-LaTeX Info: Redefining \pageref on input line 5847.
-\Hy@abspage=\count93
-\c@Item=\count94
-\c@Hfootnote=\count95
-)
+\Field@toks=\toks15
+Package hyperref Info: Hyper figures OFF on input line 4377.
+Package hyperref Info: Link nesting OFF on input line 4382.
+Package hyperref Info: Hyper index ON on input line 4385.
+Package hyperref Info: backreferencing OFF on input line 4392.
+Package hyperref Info: Link coloring ON on input line 4395.
+Package hyperref Info: Link coloring with OCG OFF on input line 4402.
+Package hyperref Info: PDF/A mode OFF on input line 4407.
 
-Package hyperref Message: Driver (autodetected): hpdftex.
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/hpdftex.def
-File: hpdftex.def 2012/05/13 v6.82q Hyperref driver for pdfTeX
-\Fld@listcount=\count96
-\c@bookmark@seq@number=\count97
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
-Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
-Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
-82.
+(/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
+Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
 )
-\Hy@SectionHShift=\skip43
+\Hy@abspage=\count91
+\c@Item=\count92
+\c@Hfootnote=\count93
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/array.sty
+*hyperref using default driver hpdftex*
+(/usr/share/texmf-texlive/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
+\Fld@listcount=\count94
+)
+(/usr/share/texmf-texlive/tex/latex/tools/array.sty
 Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 \col@sep=\dimen108
 \extrarowheight=\dimen109
-\NC@list=\toks15
-\extratabsurround=\skip44
-\backup@length=\skip45
+\NC@list=\toks16
+\extratabsurround=\skip43
+\backup@length=\skip44
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/color.sty
+(/usr/share/texmf-texlive/tex/latex/graphics/color.sty
 Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/color.cfg
+(/etc/texmf/tex/latex/config/color.cfg
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 130.
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/share/texmf/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/color.cfg
+(/etc/texmf/tex/latex/config/color.cfg
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package xcolor Info: Package option `usenames' ignored on input line 216.
 Package xcolor Info: Driver file: pdftex.def on input line 225.
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/colortbl/colortbl.sty
-Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
-\everycr=\toks16
-\minrowclearance=\skip46
+(/usr/share/texmf-texlive/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2001/02/13 v0.1j Color table columns (DPC)
+\everycr=\toks17
+\minrowclearance=\skip45
 )
 LaTeX Info: Redefining \color on input line 702.
-\rownum=\count98
+\rownum=\count95
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
 Package xcolor Info: Model `RGB' extended on input line 1353.
@@ -219,25 +203,25 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/dvipsnam.def
+(/usr/share/texmf-texlive/tex/latex/graphics/dvipsnam.def
 File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/xcolor/svgnam.def
+(/usr/share/texmf/tex/latex/xcolor/svgnam.def
 File: svgnam.def 2007/01/21 v2.11 Predefined colors according to SVG 1.1 (UK)
 ))
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
 Package: inputenc 2008/03/30 v1.1d Input encoding file
-\inpenc@prehook=\toks17
-\inpenc@posthook=\toks18
+\inpenc@prehook=\toks18
+\inpenc@posthook=\toks19
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def
+(/usr/share/texmf-texlive/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 Now handling font encoding OML ...
 ... no UTF-8 mapping file for font encoding OML
 Now handling font encoding T1 ...
 ... processing UTF-8 mapping file for font encoding T1
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.dfu
+(/usr/share/texmf-texlive/tex/latex/base/t1enc.dfu
 File: t1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
    defining Unicode char U+00A1 (decimal 161)
    defining Unicode char U+00A3 (decimal 163)
@@ -387,7 +371,7 @@ File: t1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
 Now handling font encoding OT1 ...
 ... processing UTF-8 mapping file for font encoding OT1
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ot1enc.dfu
+(/usr/share/texmf-texlive/tex/latex/base/ot1enc.dfu
 File: ot1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
    defining Unicode char U+00A1 (decimal 161)
    defining Unicode char U+00A3 (decimal 163)
@@ -418,7 +402,7 @@ File: ot1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
 Now handling font encoding OMS ...
 ... processing UTF-8 mapping file for font encoding OMS
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omsenc.dfu
+(/usr/share/texmf-texlive/tex/latex/base/omsenc.dfu
 File: omsenc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
    defining Unicode char U+00A7 (decimal 167)
    defining Unicode char U+00B6 (decimal 182)
@@ -444,56 +428,56 @@ Now handling font encoding PD1 ...
    defining Unicode char U+2122 (decimal 8482)
    defining Unicode char U+2423 (decimal 9251)
 ))
-(/usr/local/texlive/2012/texmf-dist/tex/latex/preprint/fullpage.sty
+(/usr/share/texmf-texlive/tex/latex/preprint/fullpage.sty
 Package: fullpage 1999/02/23 1.1 (PWD)
-\FP@margin=\skip47
+\FP@margin=\skip46
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/mh/mathtools.sty
-Package: mathtools 2012/04/24 v1.12 mathematical typesetting tools
+(/usr/share/texmf-texlive/tex/latex/mh/mathtools.sty
+Package: mathtools 2008/08/01 v1.06 mathematical typesetting tools (MH)
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/calc.sty
+(/usr/share/texmf-texlive/tex/latex/tools/calc.sty
 Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count99
-\calc@Bcount=\count100
+\calc@Acount=\count96
+\calc@Bcount=\count97
 \calc@Adimen=\dimen110
 \calc@Bdimen=\dimen111
-\calc@Askip=\skip48
-\calc@Bskip=\skip49
+\calc@Askip=\skip47
+\calc@Bskip=\skip48
 LaTeX Info: Redefining \setlength on input line 76.
 LaTeX Info: Redefining \addtolength on input line 77.
-\calc@Ccount=\count101
-\calc@Cskip=\skip50
+\calc@Ccount=\count98
+\calc@Cskip=\skip49
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/mh/mhsetup.sty
-Package: mhsetup 2010/01/21 v1.2a programming setup (MH)
+(/usr/share/texmf-texlive/tex/latex/mh/mhsetup.sty
+Package: mhsetup 2007/12/03 v1.2 programming setup (MH)
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsmath.sty
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2000/07/18 v2.13 AMS math features
-\@mathmargin=\skip51
+\@mathmargin=\skip50
 
 For additional information on amsmath, use the `?' option.
-(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/share/texmf-texlive/tex/latex/amsmath/amstext.sty
 Package: amstext 2000/06/29 v2.01
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsgen.sty
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0
-\@emptytoks=\toks19
+\@emptytoks=\toks20
 \ex@=\dimen112
 ))
-(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsbsy.sty
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d
 \pmbraise@=\dimen113
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsopn.sty
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsopn.sty
 Package: amsopn 1999/12/14 v2.01 operator names
 )
-\inf@bad=\count102
+\inf@bad=\count99
 LaTeX Info: Redefining \frac on input line 211.
-\uproot@=\count103
-\leftroot@=\count104
+\uproot@=\count100
+\leftroot@=\count101
 LaTeX Info: Redefining \overline on input line 307.
-\classnum@=\count105
-\DOTSCASE@=\count106
+\classnum@=\count102
+\DOTSCASE@=\count103
 LaTeX Info: Redefining \ldots on input line 379.
 LaTeX Info: Redefining \dots on input line 382.
 LaTeX Info: Redefining \cdots on input line 467.
@@ -502,43 +486,36 @@ LaTeX Info: Redefining \cdots on input line 467.
 \big@size=\dimen114
 LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
-\macc@depth=\count107
-\c@MaxMatrixCols=\count108
+\macc@depth=\count104
+\c@MaxMatrixCols=\count105
 \dotsspace@=\muskip11
-\c@parentequation=\count109
-\dspbrk@lvl=\count110
-\tag@help=\toks20
-\row@=\count111
-\column@=\count112
-\maxfields@=\count113
-\andhelp@=\toks21
+\c@parentequation=\count106
+\dspbrk@lvl=\count107
+\tag@help=\toks21
+\row@=\count108
+\column@=\count109
+\maxfields@=\count110
+\andhelp@=\toks22
 \eqnshift@=\dimen115
 \alignsep@=\dimen116
 \tagshift@=\dimen117
 \tagwidth@=\dimen118
 \totwidth@=\dimen119
 \lineht@=\dimen120
-\@envbody=\toks22
-\multlinegap=\skip52
-\multlinetaggap=\skip53
-\mathdisplay@stack=\toks23
+\@envbody=\toks23
+\multlinegap=\skip51
+\multlinetaggap=\skip52
+\mathdisplay@stack=\toks24
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
 )
-\g_MT_multlinerow_int=\count114
+\g_MT_multlinerow_int=\count111
 \l_MT_multwidth_dim=\dimen121
-\origjot=\skip54
-\l_MT_shortvdotswithinadjustabove_dim=\dimen122
-\l_MT_shortvdotswithinadjustbelow_dim=\dimen123
-\l_MT_above_intertext_dim=\dimen124
-\l_MT_below_intertext_dim=\dimen125
-\l_MT_above_shortintertext_dim=\dimen126
-\l_MT_below_shortintertext_dim=\dimen127
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/makeidx.sty
+(/usr/share/texmf-texlive/tex/latex/base/makeidx.sty
 Package: makeidx 2000/03/29 v1.0m Standard LaTeX package
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/bm.sty
+(/usr/share/texmf-texlive/tex/latex/tools/bm.sty
 Package: bm 2004/02/26 v1.1c Bold Symbol Support (DPC/FMi)
 \symboldoperators=\mathgroup4
 \symboldletters=\mathgroup5
@@ -546,29 +523,28 @@ Package: bm 2004/02/26 v1.1c Bold Symbol Support (DPC/FMi)
 LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 138.
 LaTeX Info: Redefining \bm on input line 204.
 )
-(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Sweave.sty
+(/usr/share/R/share/texmf/tex/latex/Sweave.sty
 Package: Sweave 
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ifthen.sty
+(/usr/share/texmf-texlive/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+(/usr/share/texmf-texlive/tex/latex/fancyvrb/fancyvrb.sty
 Package: fancyvrb 2008/02/07
 
 Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
 <2008/02/07> (tvz)
-\FV@CodeLineNo=\count115
+\FV@CodeLineNo=\count112
 \FV@InFile=\read1
 \FV@TabBox=\box28
-\c@FancyVerbLine=\count116
-\FV@StepNumber=\count117
+\c@FancyVerbLine=\count113
+\FV@StepNumber=\count114
 \FV@OutFile=\write3
-)
-(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/upquote.sty
+) (/usr/share/R/share/texmf/tex/latex/upquote.sty
 Package: upquote 2003/08/11 v1.1 Covington's upright-quote modification to verb
 atim and verb
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/share/texmf-texlive/tex/latex/base/textcomp.sty
 Package: textcomp 2005/09/27 v1.99g Standard LaTeX package
 Package textcomp Info: Sub-encoding information:
 (textcomp)               5 = only ISO-Adobe without \textcurrency
@@ -583,12 +559,12 @@ Package textcomp Info: Sub-encoding information:
 (textcomp)             See the documentation for details.
 Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 71.
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1enc.def
+(/usr/share/texmf-texlive/tex/latex/base/ts1enc.def
 File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
 Now handling font encoding TS1 ...
 ... processing UTF-8 mapping file for font encoding TS1
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1enc.dfu
+(/usr/share/texmf-texlive/tex/latex/base/ts1enc.dfu
 File: ts1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
    defining Unicode char U+00A2 (decimal 162)
    defining Unicode char U+00A3 (decimal 163)
@@ -692,67 +668,45 @@ Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 307.
 Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 308.
 Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 309.
 Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 310.
-Package textcomp Info: Setting lmr sub-encoding to TS1/0 on input line 311.
-Package textcomp Info: Setting lmdh sub-encoding to TS1/0 on input line 312.
-Package textcomp Info: Setting lmss sub-encoding to TS1/0 on input line 313.
-Package textcomp Info: Setting lmssq sub-encoding to TS1/0 on input line 314.
-Package textcomp Info: Setting lmvtt sub-encoding to TS1/0 on input line 315.
-Package textcomp Info: Setting qhv sub-encoding to TS1/0 on input line 316.
-Package textcomp Info: Setting qag sub-encoding to TS1/0 on input line 317.
-Package textcomp Info: Setting qbk sub-encoding to TS1/0 on input line 318.
-Package textcomp Info: Setting qcr sub-encoding to TS1/0 on input line 319.
-Package textcomp Info: Setting qcs sub-encoding to TS1/0 on input line 320.
-Package textcomp Info: Setting qpl sub-encoding to TS1/0 on input line 321.
-Package textcomp Info: Setting qtm sub-encoding to TS1/0 on input line 322.
-Package textcomp Info: Setting qzc sub-encoding to TS1/0 on input line 323.
-Package textcomp Info: Setting qhvc sub-encoding to TS1/0 on input line 324.
-Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 325.
-Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 326.
-Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 327.
-Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 328.
-Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 329.
-Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 330.
-Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 331.
-Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 332.
-Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 333.
-Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 334.
-Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 335.
-Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 336.
-Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 337.
-Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 338.
-Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 339.
-Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 340.
+Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 311.
+Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 312.
+Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 313.
+Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 314.
+Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 315.
+Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 316.
+Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 317.
+Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 318.
+Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 319.
+Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 320.
+Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 321.
+Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 322.
+Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 323.
+Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 324.
+Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 325.
+Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 326.
 ))
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/share/texmf-texlive/tex/latex/base/fontenc.sty
 Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.def
+(/usr/share/texmf-texlive/tex/latex/base/t1enc.def
 File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
 ))
-(/usr/local/texlive/2012/texmf-dist/tex/latex/ae/ae.sty
+(/usr/share/texmf-texlive/tex/latex/ae/ae.sty
 Package: ae 2001/02/12 1.3 Almost European Computer Modern
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/share/texmf-texlive/tex/latex/base/fontenc.sty
 Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.def
+(/usr/share/texmf-texlive/tex/latex/base/t1enc.def
 File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
 )
 LaTeX Font Info:    Try loading font information for T1+aer on input line 100.
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/ae/t1aer.fd
+(/usr/share/texmf-texlive/tex/latex/ae/t1aer.fd
 File: t1aer.fd 1997/11/16 Font definitions for T1/aer.
-))))
-(./poppr_manual.aux
-
-LaTeX Warning: Label `bruvo_heat_map' multiply defined.
-
-
-LaTeX Warning: Label `mst_bruvo' multiply defined.
-
-)
+)))) (./poppr_manual.aux)
 \openout1 = `poppr_manual.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
@@ -771,82 +725,58 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
 LaTeX Font Info:    ... okay on input line 28.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 28.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 28.
- (/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1cmr.fd
+
+(/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 28.
 
-(/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
+(/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count118
-\scratchdimen=\dimen128
+\scratchcounter=\count115
+\scratchdimen=\dimen122
 \scratchbox=\box29
-\nofMPsegments=\count119
-\nofMParguments=\count120
-\everyMPshowfont=\toks24
-\MPscratchCnt=\count121
-\MPscratchDim=\dimen129
-\MPnumerator=\count122
-\makeMPintoPDFobject=\count123
-\everyMPtoPDFconversion=\toks25
-) (/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
-Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/grfext.sty
-Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+\nofMPsegments=\count116
+\nofMParguments=\count117
+\everyMPshowfont=\toks25
+\MPscratchCnt=\count118
+\MPscratchDim=\dimen123
+\MPnumerator=\count119
+\everyMPtoPDFconversion=\toks26
 )
-Package grfext Info: Graphics extension search list:
-(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
-G,.JBIG2,.JB2,.eps]
-(grfext)             \AppendGraphicsExtensions on input line 452.
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
-))
-\AtBeginShipoutBox=\box30
 Package hyperref Info: Link coloring ON on input line 28.
+ (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
+Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/nameref.sty
-Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
-
-(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
-Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
+Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count124
+\c@section@level=\count120
 )
 LaTeX Info: Redefining \ref on input line 28.
 LaTeX Info: Redefining \pageref on input line 28.
-LaTeX Info: Redefining \nameref on input line 28.
-
-(./poppr_manual.out) (./poppr_manual.out)
+ (./poppr_manual.out) (./poppr_manual.out)
 \@outlinefile=\write4
 \openout4 = `poppr_manual.out'.
 
+\AtBeginShipoutBox=\box30
  (./poppr_manual-concordance.tex)
-<popprlogo.png, id=238, 340.8735pt x 123.8226pt>
+<popprlogo.png, id=236, 340.8735pt x 123.8226pt>
 File: popprlogo.png Graphic file (type png)
- <use popprlogo.png>
-Package pdftex.def Info: popprlogo.png used on input line 50.
-(pdftex.def)             Requested size: 234.8775pt x 85.32242pt.
- [1
+ <use popprlogo.png> [1
 
-{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./poppr
-logo.png>] (./poppr_manual.toc [2])
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./popprlogo.png>]
+(./poppr_manual.toc [2])
 \tf@toc=\write5
 \openout5 = `poppr_manual.toc'.
 
 LaTeX Font Info:    Try loading font information for T1+aett on input line 67.
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/ae/t1aett.fd
+ (/usr/share/texmf-texlive/tex/latex/ae/t1aett.fd
 File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
-) [3]
-<getfile.png, id=336, 676.5275pt x 564.1075pt>
+)
+[3] <getfile.png, id=334, 676.5275pt x 564.1075pt>
 File: getfile.png Graphic file (type png)
- <use getfile.png>
-Package pdftex.def Info: getfile.png used on input line 117.
-(pdftex.def)             Requested size: 234.8775pt x 195.84818pt.
- [4 <./getfile.png>]
+ <use getfile.png> [4 <./getfile.png>]
 Underfull \hbox (badness 2042) in paragraph at lines 157--157
 \T1/aer/m/n/10 or \T1/aett/m/n/10 "/Li-brary/Frameworks/R.framework/Versions/2.
 15/Resources/library" \T1/aer/m/n/10 on
@@ -860,105 +790,87 @@ Underfull \hbox (badness 10000) in paragraph at lines 157--157
 [5]
 LaTeX Font Info:    Try loading font information for TS1+aer on input line 225.
 
- (/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/ts1aer.fd
+ (/usr/share/R/share/texmf/tex/latex/ts1aer.fd
 File: ts1aer.fd 
 )
 LaTeX Font Info:    Font shape `TS1/aer/m/n' in size <10> not available
 (Font)              Font shape `TS1/cmr/m/n' tried instead on input line 225.
-[6] [7] [8] [9]
+ [6] [7] [8] [9]
 Underfull \hbox (badness 10000) in paragraph at lines 478--478
 
  []
 
-[10] <unmod_dat.png, id=412, 1012.78375pt x 308.15125pt>
+[10] <unmod_dat.png, id=413, 1012.78375pt x 308.15125pt>
 File: unmod_dat.png Graphic file (type png)
  <use unmod_dat.png>
-Package pdftex.def Info: unmod_dat.png used on input line 559.
-(pdftex.def)             Requested size: 469.75502pt x 142.92679pt.
-
-[11 <./unmod_dat.png>] <mod_dat.png, id=418, 800.9925pt x 311.1625pt>
+[11 <./unmod_dat.png (PNG copy)>]
+<mod_dat.png, id=419, 800.9925pt x 311.1625pt>
 File: mod_dat.png Graphic file (type png)
-
-<use mod_dat.png>
-Package pdftex.def Info: mod_dat.png used on input line 570.
-(pdftex.def)             Requested size: 469.75502pt x 182.4875pt.
- [12 <./mod_dat.png>] [13] [14] [15] [16] [17] [18] [19]
-Underfull \hbox (badness 10000) in paragraph at lines 1112--1113
+ <use mod_dat.png> [12 <./mod_dat.png (PNG copy)>] [13] [14] [15] [16] [17] [18
+] [19]
+Underfull \hbox (badness 10000) in paragraph at lines 1119--1120
 
  []
 
 [20]
-Overfull \hbox (30.8842pt too wide) in paragraph at lines 1175--1177
+Overfull \hbox (30.8842pt too wide) in paragraph at lines 1182--1184
 \T1/aett/m/n/10 splitcombine(pop, method = 1, df-name = "pop-u-la-tion_hierarch
 y", sep = "_", hier = c(1),
  []
 
-[21] [22] <rootrot2.png, id=480, 644.4075pt x 173.64874pt>
+[21] [22] <rootrot2.png, id=481, 644.4075pt x 173.64874pt>
 File: rootrot2.png Graphic file (type png)
  <use rootrot2.png>
-Package pdftex.def Info: rootrot2.png used on input line 1296.
-(pdftex.def)             Requested size: 422.77664pt x 113.9302pt.
-
-[23 <./rootrot2.png>] [24] [25]
-Overfull \hbox (25.64421pt too wide) in paragraph at lines 1514--1516
+[23 <./rootrot2.png (PNG copy)>] [24] [25]
+Overfull \hbox (25.64421pt too wide) in paragraph at lines 1521--1523
 \T1/aett/m/n/10 clonecorrect(pop, hier = c(1), df-name = "pop-u-la-tion_hierarc
 hy", com-bine = FALSE, keep
  []
 
 [26] [27] [28] [29]
-Overfull \hbox (4.68425pt too wide) in paragraph at lines 1709--1711
+Overfull \hbox (4.68425pt too wide) in paragraph at lines 1716--1718
 \T1/aett/m/n/10 mlg.crosspop(pop, sub-list = "ALL", black-list = NULL, ml-gsub 
 = NULL, in-dexre-turn =
  []
 
 [30] [31]
-Overfull \hbox (9.92424pt too wide) in paragraph at lines 1803--1805
+Overfull \hbox (9.92424pt too wide) in paragraph at lines 1810--1812
 \T1/aett/m/n/10 mlg.table(pop, sub-list = "ALL", black-list = NULL, ml-gsub = N
 ULL, bar = TRUE, to-tal
  []
 
-<poppr_manual-mlgbarplot.pdf, id=527, 433.62pt x 433.62pt>
+<poppr_manual-mlgbarplot.pdf, id=531, 433.62pt x 433.62pt>
 File: poppr_manual-mlgbarplot.pdf Graphic file (type pdf)
 
 <use poppr_manual-mlgbarplot.pdf>
-Package pdftex.def Info: poppr_manual-mlgbarplot.pdf used on input line 1840.
-(pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
-
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [32]
 LaTeX Font Info:    Try loading font information for TS1+aett on input line 185
-1.
-
-(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/ts1aett.fd
+8.
+ (/usr/share/R/share/texmf/tex/latex/ts1aett.fd
 File: ts1aett.fd 
 )
 LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 185
-1.
+8.
 
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1cmtt.fd
+(/usr/share/texmf-texlive/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <8> not available
-(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 1851.
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 1858.
 
- [33 <./poppr_manual-mlgbarplot.pdf>]
-<poppr_manual-mlgrareplot.pdf, id=547, 433.62pt x 433.62pt>
+ [33 <./poppr_manual-mlgbarplot.pdf>] <poppr_manual-mlgrareplot.pdf, id=551, 43
+3.62pt x 433.62pt>
 File: poppr_manual-mlgrareplot.pdf Graphic file (type pdf)
 
-<use poppr_manual-mlgrareplot.pdf>
-Package pdftex.def Info: poppr_manual-mlgrareplot.pdf used on input line 1900.
-(pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
- [34 <./poppr_manual-mlgrareplot.pdf>]
-<poppr_manual-subnor.pdf, id=558, 433.62pt x 433.62pt>
+<use poppr_manual-mlgrareplot.pdf> [34 <./poppr_manual-mlgrareplot.pdf>]
+<poppr_manual-subnor.pdf, id=562, 433.62pt x 433.62pt>
 File: poppr_manual-subnor.pdf Graphic file (type pdf)
 
 <use poppr_manual-subnor.pdf>
-Package pdftex.def Info: poppr_manual-subnor.pdf used on input line 1995.
-(pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 1990--1998
+Underfull \hbox (badness 10000) in paragraph at lines 1997--2005
 
  []
 
@@ -966,286 +878,205 @@ Underfull \hbox (badness 10000) in paragraph at lines 1990--1998
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [35]
-Underfull \hbox (badness 10000) in paragraph at lines 2028--2030
+Underfull \hbox (badness 10000) in paragraph at lines 2035--2037
 
  []
 
 [36 <./poppr_manual-subnor.pdf>]
-<poppr_manual-ggplotchart.pdf, id=576, 433.62pt x 433.62pt>
+<poppr_manual-ggplotchart.pdf, id=580, 433.62pt x 433.62pt>
 File: poppr_manual-ggplotchart.pdf Graphic file (type pdf)
 
 <use poppr_manual-ggplotchart.pdf>
-Package pdftex.def Info: poppr_manual-ggplotchart.pdf used on input line 2130.
-(pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2137.
+(hyperref)                removing `math shift' on input line 2144.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 2137.
+(hyperref)                removing `subscript' on input line 2144.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2137.
+(hyperref)                removing `math shift' on input line 2144.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2137.
+(hyperref)                removing `math shift' on input line 2144.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 2137.
+(hyperref)                removing `subscript' on input line 2144.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2137.
+(hyperref)                removing `math shift' on input line 2144.
 
 [37]
-Overfull \hbox (15.16423pt too wide) in paragraph at lines 2144--2146
+Overfull \hbox (15.16423pt too wide) in paragraph at lines 2151--2153
 \T1/aett/m/n/10 ia(pop, sam-ple = 0, method = 1, quiet = "min-i-mal", miss-ing 
 = "ig-nore", hist = TRUE) 
  []
 
 [38 <./poppr_manual-ggplotchart.pdf>]
-<poppr_manual-102.pdf, id=605, 578.16pt x 578.16pt>
+<poppr_manual-102.pdf, id=609, 578.16pt x 578.16pt>
 File: poppr_manual-102.pdf Graphic file (type pdf)
  <use poppr_manual-102.pdf>
-Package pdftex.def Info: poppr_manual-102.pdf used on input line 2211.
-(pdftex.def)             Requested size: 234.8775pt x 234.87692pt.
-
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [39] [40 <./poppr_manual-102.pdf>]
-<poppr_manual-106.pdf, id=628, 433.62pt x 433.62pt>
+<poppr_manual-106.pdf, id=637, 433.62pt x 433.62pt>
 File: poppr_manual-106.pdf Graphic file (type pdf)
  <use poppr_manual-106.pdf>
-Package pdftex.def Info: poppr_manual-106.pdf used on input line 2270.
-(pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
-
 [41 <./poppr_manual-106.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 2275--2276
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2305--2306
-
- []
-
-<poppr_manual-109.pdf, id=642, 433.62pt x 433.62pt>
+<poppr_manual-109.pdf, id=651, 433.62pt x 433.62pt>
 File: poppr_manual-109.pdf Graphic file (type pdf)
  <use poppr_manual-109.pdf>
-Package pdftex.def Info: poppr_manual-109.pdf used on input line 2316.
-(pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
-
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[42] <poppr_manual-popcompare_bruvo2.pdf, id=648, 433.62pt x 433.62pt>
+[42] <poppr_manual-popcompare_bruvo2.pdf, id=657, 433.62pt x 433.62pt>
 File: poppr_manual-popcompare_bruvo2.pdf Graphic file (type pdf)
 
 <use poppr_manual-popcompare_bruvo2.pdf>
-Package pdftex.def Info: poppr_manual-popcompare_bruvo2.pdf used on input line 
-2363.
-(pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
-
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Overfull \hbox (4.68425pt too wide) in paragraph at lines 2377--2379
+Overfull \hbox (4.68425pt too wide) in paragraph at lines 2385--2387
 \T1/aett/m/n/10 bruvo.boot(pop, re-plen = c(2), B = 100, tree = "up-gma", showt
 ree = TRUE, cut-off =
  []
 
 [43 <./poppr_manual-109.pdf>]
-<poppr_manual-bruvo_tree.pdf, id=660, 433.62pt x 433.62pt>
+<poppr_manual-bruvo_tree.pdf, id=669, 433.62pt x 433.62pt>
 File: poppr_manual-bruvo_tree.pdf Graphic file (type pdf)
 
 <use poppr_manual-bruvo_tree.pdf>
-Package pdftex.def Info: poppr_manual-bruvo_tree.pdf used on input line 2409.
-(pdftex.def)             Requested size: 234.8775pt x 234.87912pt.
-
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [44 <./poppr_manual-popcompare_bruvo2.pdf>] [45 <./poppr_manual-bruvo_tree.pdf>
-] <poppr_manual-greycurve_normal.pdf, id=682, 433.62pt x 433.62pt>
+] <poppr_manual-greycurve_normal.pdf, id=691, 433.62pt x 433.62pt>
 File: poppr_manual-greycurve_normal.pdf Graphic file (type pdf)
 
 <use poppr_manual-greycurve_normal.pdf>
-Package pdftex.def Info: poppr_manual-greycurve_normal.pdf used on input line 2
-437.
-(pdftex.def)             Requested size: 211.38832pt x 211.39055pt.
-
-<poppr_manual-greywidth_inverse.pdf, id=683, 433.62pt x 433.62pt>
+<poppr_manual-greywidth_inverse.pdf, id=692, 433.62pt x 433.62pt>
 File: poppr_manual-greywidth_inverse.pdf Graphic file (type pdf)
 
 <use poppr_manual-greywidth_inverse.pdf>
-Package pdftex.def Info: poppr_manual-greywidth_inverse.pdf used on input line 
-2448.
-(pdftex.def)             Requested size: 211.38832pt x 211.39055pt.
-
-<poppr_manual-greycurve_small_heavy.pdf, id=684, 433.62pt x 433.62pt>
+<poppr_manual-greycurve_small_heavy.pdf, id=693, 433.62pt x 433.62pt>
 File: poppr_manual-greycurve_small_heavy.pdf Graphic file (type pdf)
 
 <use poppr_manual-greycurve_small_heavy.pdf>
-Package pdftex.def Info: poppr_manual-greycurve_small_heavy.pdf used on input l
-ine 2463.
-(pdftex.def)             Requested size: 211.38832pt x 211.39055pt.
-
-<poppr_manual-greywidth_large_heavy.pdf, id=685, 433.62pt x 433.62pt>
+<poppr_manual-greywidth_large_heavy.pdf, id=694, 433.62pt x 433.62pt>
 File: poppr_manual-greywidth_large_heavy.pdf Graphic file (type pdf)
 
-<use poppr_manual-greywidth_large_heavy.pdf>
-Package pdftex.def Info: poppr_manual-greywidth_large_heavy.pdf used on input l
-ine 2474.
-(pdftex.def)             Requested size: 211.38832pt x 211.39055pt.
- [46 <./poppr_manual-greycurve_normal.pdf> <./poppr_manual-greywidth_inverse.pd
-f> <./poppr_manual-greycurve_small_heavy.pdf> <./poppr_manual-greywidth_large_h
-eavy.pdf>] [47]
-<poppr_manual-bruvo_msn.pdf, id=727, 433.62pt x 433.62pt>
+<use poppr_manual-greywidth_large_heavy.pdf> [46 <./poppr_manual-greycurve_norm
+al.pdf> <./poppr_manual-greywidth_inverse.pdf> <./poppr_manual-greycurve_small_
+heavy.pdf> <./poppr_manual-greywidth_large_heavy.pdf>] [47]
+<poppr_manual-bruvo_msn.pdf, id=735, 433.62pt x 433.62pt>
 File: poppr_manual-bruvo_msn.pdf Graphic file (type pdf)
 
-<use poppr_manual-bruvo_msn.pdf>
-Package pdftex.def Info: poppr_manual-bruvo_msn.pdf used on input line 2518.
-(pdftex.def)             Requested size: 375.80544pt x 375.8238pt.
- [48 <./poppr_manual-bruvo_msn.pdf>] [49]
-<poppr_manual-poppr_msn_fig.pdf, id=747, 433.62pt x 433.62pt>
+<use poppr_manual-bruvo_msn.pdf> [48 <./poppr_manual-bruvo_msn.pdf>] [49]
+<poppr_manual-poppr_msn_fig.pdf, id=755, 433.62pt x 433.62pt>
 File: poppr_manual-poppr_msn_fig.pdf Graphic file (type pdf)
 
-<use poppr_manual-poppr_msn_fig.pdf>
-Package pdftex.def Info: poppr_manual-poppr_msn_fig.pdf used on input line 2573
-.
-(pdftex.def)             Requested size: 375.80544pt x 375.8238pt.
- [50 <./poppr_manual-poppr_msn_fig.pdf>]
-[51] [52] <poppr_manual-135.pdf, id=779, 578.16pt x 578.16pt>
+<use poppr_manual-poppr_msn_fig.pdf> [50 <./poppr_manual-poppr_msn_fig.pdf>]
+[51] [52] <poppr_manual-135.pdf, id=797, 578.16pt x 578.16pt>
 File: poppr_manual-135.pdf Graphic file (type pdf)
 
-<use poppr_manual-135.pdf>
-Package pdftex.def Info: poppr_manual-135.pdf used on input line 2729.
-(pdftex.def)             Requested size: 234.8775pt x 234.87692pt.
- [53 <./poppr_manual-135.pdf>]
-<poppr_manual-136.pdf, id=794, 578.16pt x 578.16pt>
+<use poppr_manual-135.pdf> [53 <./poppr_manual-135.pdf>]
+<poppr_manual-136.pdf, id=812, 578.16pt x 578.16pt>
 File: poppr_manual-136.pdf Graphic file (type pdf)
  <use poppr_manual-136.pdf>
-Package pdftex.def Info: poppr_manual-136.pdf used on input line 2738.
-(pdftex.def)             Requested size: 234.8775pt x 234.87692pt.
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 2757.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2749.
+(hyperref)                removing `subscript' on input line 2757.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 2749.
+(hyperref)                removing `math shift' on input line 2757.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2749.
+(hyperref)                removing `math shift' on input line 2757.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2749.
+(hyperref)                removing `subscript' on input line 2757.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 2749.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2749.
+(hyperref)                removing `math shift' on input line 2757.
 
 [54 <./poppr_manual-136.pdf>]
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 2808.
+(amsmath)                 on input line 2821.
 
 [55] [56] [57]
-Underfull \hbox (badness 10000) in paragraph at lines 2926--2928
+Underfull \hbox (badness 10000) in paragraph at lines 2964--2966
 
  []
 
-LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <10> not available
-(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 2929.
-
-
-Overfull \hbox (11.12416pt too wide) in paragraph at lines 2931--2932
-[]\T1/aett/m/n/10 genind2genalex(pop, file-name = "genalex.csv", quiet = FALSE,
- geo = FALSE, geodf = "xy") 
- []
-
-
-Overfull \hbox (5.88417pt too wide) in paragraph at lines 2933--2934
-[]\T1/aett/m/n/10 splitcombine(pop, method = 1, df-name = "pop-u-la-tion_hierar
-chy", sep = "_", hier = c(1),
- []
+LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <9> not available
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 2967.
 
 [58]
-Overfull \hbox (0.64418pt too wide) in paragraph at lines 2935--2936
-[]\T1/aett/m/n/10 clonecorrect(pop, hier = c(1), df-name = "pop-u-la-tion_hiera
-rchy", com-bine = FALSE, keep
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2971--2972
+[]\T1/aett/m/n/9 splitcombine(pop, method = 1, df-name = "pop-u-la-tion_hierarc
+hy", sep = "_", hier = c(1), set-pop-u-
  []
 
 
-Overfull \hbox (16.36415pt too wide) in paragraph at lines 2938--2939
-[]\T1/aett/m/n/10 mlg.crosspop(pop, sub-list = "ALL", black-list = NULL, ml-gsu
-b = NULL, in-dexre-turn = FALSE,
+Overfull \hbox (26.83772pt too wide) in paragraph at lines 2976--2977
+[]\T1/aett/m/n/9 mlg.crosspop(pop, sub-list = "ALL", black-list = NULL, ml-gsub
+ = NULL, in-dexre-turn = FALSE, df = FALSE,
  []
 
 
-Overfull \hbox (32.08412pt too wide) in paragraph at lines 2939--2940
-[]\T1/aett/m/n/10 mlg.table(pop, sub-list = "ALL", black-list = NULL, ml-gsub =
- NULL, bar = TRUE, to-tal = FALSE,
+Overfull \hbox (12.68994pt too wide) in paragraph at lines 2977--2978
+[]\T1/aett/m/n/9 mlg.table(pop, sub-list = "ALL", black-list = NULL, ml-gsub = 
+NULL, bar = TRUE, to-tal = FALSE, quiet
  []
 
 
-Overfull \hbox (11.12416pt too wide) in paragraph at lines 2944--2945
-[]\T1/aett/m/n/10 bruvo.boot(pop, re-plen = c(2), B = 100, tree = "up-gma", sho
-wtree = TRUE, cut-off = NULL,
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2982--2983
+[]\T1/aett/m/n/9 bruvo.boot(pop, re-plen = c(2), B = 100, tree = "up-gma", show
+tree = TRUE, cut-off = NULL, quiet =
  []
 
 
-Overfull \hbox (11.12416pt too wide) in paragraph at lines 2946--2948
-[]\T1/aett/m/n/10 bruvo.msn(pop, re-plen = c(1), palette = topo.colors, sub-lis
-t = "All", black-list = NULL,
+Overfull \hbox (26.83772pt too wide) in paragraph at lines 2984--2985
+[]\T1/aett/m/n/9 bruvo.msn(pop, re-plen = c(1), palette = topo.colors, sub-list
+ = "All", black-list = NULL, ver-tex.label
  []
 
 
-Overfull \hbox (5.88417pt too wide) in paragraph at lines 2946--2948
-\T1/aett/m/n/10 ver-tex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 
-3, gweight = 1, ws-cale =
+Overfull \hbox (7.97401pt too wide) in paragraph at lines 2985--2986
+[]\T1/aett/m/n/9 poppr.msn(pop, dist-mat, palette = topo.colors, sub-list = "Al
+l", black-list = NULL, ver-tex.label =
  []
 
 
-Overfull \hbox (0.64418pt too wide) in paragraph at lines 2946--2948
-\T1/aett/m/n/10 TRUE, ...) poppr.msn(pop, dist-mat, palette = topo.colors, sub-
-list = "All", black-list
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2986--2987
+[]\T1/aett/m/n/9 poppr(pop, to-tal = TRUE, sub-list = c("ALL"), black-list = c(
+NULL), sam-ple = 0, method = 1, miss-
  []
 
 
-Overfull \hbox (0.64418pt too wide) in paragraph at lines 2946--2948
-\T1/aett/m/n/10 = NULL, ver-tex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),
- gadj = 3, gweight = 1,
- []
-
-
-Overfull \hbox (5.88417pt too wide) in paragraph at lines 2948--2949
-[]\T1/aett/m/n/10 poppr(pop, to-tal = TRUE, sub-list = c("ALL"), black-list = c
-(NULL), sam-ple = 0, method =
- []
-
-
-Overfull \hbox (21.60414pt too wide) in paragraph at lines 2948--2949
-\T1/aett/m/n/10 1, miss-ing = "ig-nore", cut-off=0.05, quiet = "min-i-mal", clo
-necor-rect = FALSE, hier = c(1),
+Overfull \hbox (7.97401pt too wide) in paragraph at lines 2986--2987
+\T1/aett/m/n/9 ing = "ig-nore", cut-off=0.05, quiet = "min-i-mal", clonecor-rec
+t = FALSE, hier = c(1), keep = 1, df-
  []
 
 (./poppr_manual.bbl
@@ -1284,13 +1115,13 @@ Underfull \hbox (badness 5245) in paragraph at lines 28--32
  aphanomyces eu-te-iches.  \T1/aett/m/it/10 Phy-
  []
 
-[59]
+
 Underfull \hbox (badness 1107) in paragraph at lines 34--37
 []\T1/aett/m/n/10 Bernhard Haubold and Richard R. Hud-son.  Lian 3.0: de-tect-i
 ng link-age dis-e-qui-lib-rium
  []
 
-
+[59]
 Underfull \hbox (badness 10000) in paragraph at lines 39--43
 []\T1/aett/m/n/10 Kenneth L.Jr. Heck, Ger-ald van Belle, and Daniel Sim-berloff
 .  Ex-plicit cal-cu-la-tion
@@ -1362,66 +1193,47 @@ Underfull \hbox (badness 10000) in paragraph at lines 103--106
 ti-ma-tion and pre-dic-tion in
  []
 
-)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2952.
- [60]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 2952.
- (./poppr_manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2952.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2952.
-
-Package rerunfilecheck Info: File `poppr_manual.out' has not changed.
-(rerunfilecheck)             Checksum: 2B2A19E30DFDADDACECE82FCBD47E308;4987.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2952.
- ) 
+) [60] (./poppr_manual.aux) ) 
 Here is how much of TeX's memory you used:
- 8840 strings out of 493488
- 128277 string characters out of 3141326
- 230314 words of memory out of 3000000
- 11702 multiletter control sequences out of 15000+200000
- 58071 words of font info for 119 fonts, out of 3000000 for 9000
- 957 hyphenation exceptions out of 8191
- 41i,9n,35p,1277b,538s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
-}</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb
-></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
-</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><
-/usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></u
-sr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></u
-sr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></us
-r/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></us
-r/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr
-/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/
-local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/lo
-cal/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/loca
-l/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/
-texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/te
-xlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texl
-ive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texliv
-e/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/
-2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/201
-2/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2012/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2012/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2012/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2012/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2012/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2012/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2012/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2012/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2012/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2012/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2012/texmf-dist/fonts/type
-1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/
-public/cm-super/sftt0800.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/pu
-blic/cm-super/sftt1000.pfb>
-Output written on poppr_manual.pdf (60 pages, 1408885 bytes).
+ 7972 strings out of 495061
+ 112614 string characters out of 1182620
+ 204615 words of memory out of 3000000
+ 10685 multiletter control sequences out of 15000+50000
+ 58559 words of font info for 121 fonts, out of 3000000 for 9000
+ 28 hyphenation exceptions out of 8191
+ 41i,9n,40p,1277b,516s stack positions out of 5000i,500n,10000p,200000b,50000s
+ </home/likewise-open/USDA-ARS/kamvarz/.texmf-var/
+fonts/pk/ljfour/jknappen/ec/tctt0900.600pk> </home/likewise-open/USDA-ARS/kamva
+rz/.texmf-var/fonts/pk/ljfour/jknappen/ec/tctt0800.600pk> </home/likewise-open/
+USDA-ARS/kamvarz/.texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></usr/sh
+are/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmbx9.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
+s/cm/cmcsc10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex1
+0.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmitt10.pfb></us
+r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/tex
+mf-texlive/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/
+fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texmf-texlive/fonts/type1/
+public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfo
+nts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8
+.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/s
+hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-t
+exlive/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-texlive/fonts
+/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/type1/public
+/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
+cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></us
+r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf
+-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fo
+nts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmti10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
+ts/cm/cmti8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti9.
+pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/s
+hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/share/texmf-t
+exlive/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on poppr_manual.pdf (60 pages, 1524352 bytes).
 PDF statistics:
- 1015 PDF objects out of 1200 (max. 8388607)
- 868 compressed objects within 9 object streams
+ 1039 PDF objects out of 1200 (max. 8388607)
  192 named destinations out of 1000 (max. 500000)
  579 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -214,8 +214,11 @@ bruvo.dist <- function(pop, replen=c(2)){
 #==============================================================================#
 #' @importFrom phangorn upgma
 #' @importFrom ape nodelabels nj boot.phylo
-bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", 
-                       showtree=TRUE, cutoff=NULL, quiet=FALSE, ...) {
+#   /     \
+#   |=(o)=|
+#   \     /
+bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma", 
+                       showtree = TRUE, cutoff = NULL, quiet = FALSE, ...) {
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){

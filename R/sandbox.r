@@ -535,6 +535,65 @@ new.getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #################### Javier's Functions below ##################################
 ################################################################################
 
+genoid.bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma", 
+                       showtree=TRUE, cutoff=NULL, quiet=FALSE, ...) {
+  # This attempts to make sure the data is true microsatellite data. It will
+  # reject snp and aflp data. 
+  if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
+    stop("\nThis dataset does not appear to be microsatellite data. Bruvo's Distance can only be applied for true microsatellites.")
+  }
+  ploid <- ploidy(pop)
+  # Bruvo's distance depends on the knowledge of the repeat length. If the user
+  # does not provide the repeat length, it can be estimated by the smallest
+  # repeat difference greater than 1. This is not a preferred method. 
+  if (length(replen) != length(pop@loc.names)){
+    replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
+    #    replen <- rep(replen[1], numLoci)
+    warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
+    cat(replen,"\n\n")
+  }
+  # This controlls for the user correcting missing data using "mean". 
+  if(any(!round(pop@tab,10) %in% c(0,((1:ploid)/ploid),1, NA))){
+    pop@tab[!round(pop@tab,10) %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
+  }
+  # Converting the genind object into a matrix with each allele separated by "/"
+  bar <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
+  # The bruvo algorithm will ignore missing data, coded as 0.
+  bar[bar %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
+  stopifnot(require(phangorn))
+  # Steps: Create initial tree and then use boot.phylo to perform bootstrap
+  # analysis, and then place the support labels on the tree.
+  if(tree == "upgma"){
+    newfunk <- match.fun(upgma)
+  }
+  else if(tree == "nj"){
+    newfunk <- match.fun(nj)
+  }
+  tre <- newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid))
+  if (any (tre$edge.length < 0)){
+      tre$edge.length[tre$edge.length < 0] <- 0
+    }
+  if(quiet == FALSE){
+    cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
+  }
+  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid)), B = sample, quiet=quiet, ...)
+  tre$node.labels <- round(((bp / sample)*100))
+  if (!is.null(cutoff)){
+    if (cutoff < 1 | cutoff > 100){
+      cat("Cutoff value must be between 0 and 100.\n")
+      cutoff<- as.numeric(readline(prompt = "Choose a new cutoff value between 0 and 100:\n"))
+    }
+    tre$node.labels[tre$node.labels < cutoff]<-NA
+  }
+  tre$tip.label <- pop@ind.names
+  if(showtree == TRUE){
+    plot(tre, show.node.label=TRUE)
+  }
+  if(tree=="upgma"){
+    axisPhylo(3)
+  }
+  return(tre)
+}
 
 
 
@@ -545,5 +604,5 @@ new.getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 
 
 javier<-function(x){
-  cat ("hello dawg")
+  cat ("http://www.youtube.com/watch?v=1-ctsxVXvO0")
 }

@@ -16,6 +16,16 @@ genind object and offers the following implementations:
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
 ## Installation
+
+
+
+
+
+# !!! Attention !!!
+
+**Due to dependency issues, we do not recommend upgrading to R 3.0 at this time.**
+
+
 ### From CRAN
 
 - This package is not currently available on CRAN, see about installing the development version below.
