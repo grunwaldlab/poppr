@@ -1760,7 +1760,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \subsection{Function calls}\label{appendix:funk}
 
 \tab\tab Here is a list of all the default function calls for \textit{poppr}. Details can be found in the above sections.\\
-\tt
+\tt \small
 \begin{itemize}
 \item getfile(multi = FALSE, pattern = NULL, combine = TRUE)
 \item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
@@ -1783,6 +1783,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
 \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
 \end{itemize}
+\normalsize
 \bibliographystyle{plain}
 \bibliography{poppr_man}
 \end{document}

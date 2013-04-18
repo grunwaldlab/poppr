@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.12.13)  18 APR 2013 10:14
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.12.13)  18 APR 2013 10:30
 entering extended mode
  %&-line parsing enabled.
 **poppr_manual.tex
@@ -1028,79 +1028,55 @@ Underfull \hbox (badness 10000) in paragraph at lines 2964--2966
 
  []
 
-LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <10> not available
+LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <9> not available
 (Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 2967.
 
 [58]
-Overfull \hbox (11.12416pt too wide) in paragraph at lines 2969--2970
-[]\T1/aett/m/n/10 genind2genalex(pop, file-name = "genalex.csv", quiet = FALSE,
- geo = FALSE, geodf = "xy") 
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2971--2972
+[]\T1/aett/m/n/9 splitcombine(pop, method = 1, df-name = "pop-u-la-tion_hierarc
+hy", sep = "_", hier = c(1), set-pop-u-
  []
 
 
-Overfull \hbox (5.88417pt too wide) in paragraph at lines 2971--2972
-[]\T1/aett/m/n/10 splitcombine(pop, method = 1, df-name = "pop-u-la-tion_hierar
-chy", sep = "_", hier = c(1),
+Overfull \hbox (26.83772pt too wide) in paragraph at lines 2976--2977
+[]\T1/aett/m/n/9 mlg.crosspop(pop, sub-list = "ALL", black-list = NULL, ml-gsub
+ = NULL, in-dexre-turn = FALSE, df = FALSE,
  []
 
 
-Overfull \hbox (0.64418pt too wide) in paragraph at lines 2973--2974
-[]\T1/aett/m/n/10 clonecorrect(pop, hier = c(1), df-name = "pop-u-la-tion_hiera
-rchy", com-bine = FALSE, keep
+Overfull \hbox (12.68994pt too wide) in paragraph at lines 2977--2978
+[]\T1/aett/m/n/9 mlg.table(pop, sub-list = "ALL", black-list = NULL, ml-gsub = 
+NULL, bar = TRUE, to-tal = FALSE, quiet
  []
 
 
-Overfull \hbox (16.36415pt too wide) in paragraph at lines 2976--2977
-[]\T1/aett/m/n/10 mlg.crosspop(pop, sub-list = "ALL", black-list = NULL, ml-gsu
-b = NULL, in-dexre-turn = FALSE,
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2982--2983
+[]\T1/aett/m/n/9 bruvo.boot(pop, re-plen = c(2), B = 100, tree = "up-gma", show
+tree = TRUE, cut-off = NULL, quiet =
  []
 
 
-Overfull \hbox (32.08412pt too wide) in paragraph at lines 2977--2978
-[]\T1/aett/m/n/10 mlg.table(pop, sub-list = "ALL", black-list = NULL, ml-gsub =
- NULL, bar = TRUE, to-tal = FALSE,
+Overfull \hbox (26.83772pt too wide) in paragraph at lines 2984--2985
+[]\T1/aett/m/n/9 bruvo.msn(pop, re-plen = c(1), palette = topo.colors, sub-list
+ = "All", black-list = NULL, ver-tex.label
  []
 
 
-Overfull \hbox (11.12416pt too wide) in paragraph at lines 2982--2983
-[]\T1/aett/m/n/10 bruvo.boot(pop, re-plen = c(2), B = 100, tree = "up-gma", sho
-wtree = TRUE, cut-off = NULL,
+Overfull \hbox (7.97401pt too wide) in paragraph at lines 2985--2986
+[]\T1/aett/m/n/9 poppr.msn(pop, dist-mat, palette = topo.colors, sub-list = "Al
+l", black-list = NULL, ver-tex.label =
  []
 
 
-Overfull \hbox (11.12416pt too wide) in paragraph at lines 2984--2985
-[]\T1/aett/m/n/10 bruvo.msn(pop, re-plen = c(1), palette = topo.colors, sub-lis
-t = "All", black-list = NULL,
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2986--2987
+[]\T1/aett/m/n/9 poppr(pop, to-tal = TRUE, sub-list = c("ALL"), black-list = c(
+NULL), sam-ple = 0, method = 1, miss-
  []
 
 
-Overfull \hbox (5.88417pt too wide) in paragraph at lines 2984--2985
-\T1/aett/m/n/10 ver-tex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 
-3, gweight = 1, ws-cale =
- []
-
-
-Overfull \hbox (5.88417pt too wide) in paragraph at lines 2985--2986
-[]\T1/aett/m/n/10 poppr.msn(pop, dist-mat, palette = topo.colors, sub-list = "A
-ll", black-list = NULL, ver-
- []
-
-
-Overfull \hbox (21.60414pt too wide) in paragraph at lines 2985--2986
-\T1/aett/m/n/10 tex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, g
-weight = 1, ws-cale = TRUE,
- []
-
-
-Overfull \hbox (5.88417pt too wide) in paragraph at lines 2986--2987
-[]\T1/aett/m/n/10 poppr(pop, to-tal = TRUE, sub-list = c("ALL"), black-list = c
-(NULL), sam-ple = 0, method =
- []
-
-
-Overfull \hbox (21.60414pt too wide) in paragraph at lines 2986--2987
-\T1/aett/m/n/10 1, miss-ing = "ig-nore", cut-off=0.05, quiet = "min-i-mal", clo
-necor-rect = FALSE, hier = c(1),
+Overfull \hbox (7.97401pt too wide) in paragraph at lines 2986--2987
+\T1/aett/m/n/9 ing = "ig-nore", cut-off=0.05, quiet = "min-i-mal", clonecor-rec
+t = FALSE, hier = c(1), keep = 1, df-
  []
 
 (./poppr_manual.bbl
@@ -1109,7 +1085,7 @@ Underfull \hbox (badness 5245) in paragraph at lines 4--7
 us link-age dis-e-qui-lib-rium.
  []
 
-[59]
+
 Underfull \hbox (badness 10000) in paragraph at lines 14--19
 []\T1/aett/m/n/10 Ruzica Bruvo, Nico-laas K. Michiels, Thomas G. D'Souza, and H
 in-rich Schu-len-burg.  A
@@ -1145,7 +1121,7 @@ Underfull \hbox (badness 1107) in paragraph at lines 34--37
 ng link-age dis-e-qui-lib-rium
  []
 
-
+[59]
 Underfull \hbox (badness 10000) in paragraph at lines 39--43
 []\T1/aett/m/n/10 Kenneth L.Jr. Heck, Ger-ald van Belle, and Daniel Sim-berloff
 .  Ex-plicit cal-cu-la-tion
@@ -1217,46 +1193,47 @@ Underfull \hbox (badness 10000) in paragraph at lines 103--106
 ti-ma-tion and pre-dic-tion in
  []
 
-[60]) [61] (./poppr_manual.aux) ) 
+) [60] (./poppr_manual.aux) ) 
 Here is how much of TeX's memory you used:
- 7970 strings out of 495061
- 112600 string characters out of 1182620
+ 7972 strings out of 495061
+ 112614 string characters out of 1182620
  204615 words of memory out of 3000000
- 10684 multiletter control sequences out of 15000+50000
- 58071 words of font info for 119 fonts, out of 3000000 for 9000
+ 10685 multiletter control sequences out of 15000+50000
+ 58559 words of font info for 121 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  41i,9n,40p,1277b,516s stack positions out of 5000i,500n,10000p,200000b,50000s
- </home/likewise-open/USDA-ARS/kamvarz/.texmf-
-var/fonts/pk/ljfour/jknappen/ec/tctt1000.600pk> </home/likewise-open/USDA-ARS/k
-amvarz/.texmf-var/fonts/pk/ljfour/jknappen/ec/tctt0800.600pk> </home/likewise-o
-pen/USDA-ARS/kamvarz/.texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></us
-r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></usr/share/te
-xmf-texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-texlive
-/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type
-1/public/amsfonts/cm/cmbx9.pfb></usr/share/texmf-texlive/fonts/type1/public/ams
-fonts/cm/cmcsc10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
-mex10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmitt10.pfb>
-</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share
-/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texl
-ive/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/a
-msfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
-mmi8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
-sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/tex
-mf-texlive/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-texlive/f
-onts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/type1/pu
-blic/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts
-/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb>
-</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/t
-exmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texliv
-e/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts/type
-1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf-texlive/fonts/type1/public/am
-sfonts/cm/cmti8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cm
-ti9.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb></u
-sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on poppr_manual.pdf (61 pages, 1509322 bytes).
+ </home/likewise-open/USDA-ARS/kamvarz/.texmf-var/
+fonts/pk/ljfour/jknappen/ec/tctt0900.600pk> </home/likewise-open/USDA-ARS/kamva
+rz/.texmf-var/fonts/pk/ljfour/jknappen/ec/tctt0800.600pk> </home/likewise-open/
+USDA-ARS/kamvarz/.texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></usr/sh
+are/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmbx9.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
+s/cm/cmcsc10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex1
+0.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmitt10.pfb></us
+r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/tex
+mf-texlive/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/
+fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texmf-texlive/fonts/type1/
+public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfo
+nts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8
+.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/s
+hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-t
+exlive/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-texlive/fonts
+/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/type1/public
+/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
+cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></us
+r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf
+-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fo
+nts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmti10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
+ts/cm/cmti8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti9.
+pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/s
+hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/share/texmf-t
+exlive/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on poppr_manual.pdf (60 pages, 1524352 bytes).
 PDF statistics:
- 1041 PDF objects out of 1200 (max. 8388607)
- 193 named destinations out of 1000 (max. 500000)
+ 1039 PDF objects out of 1200 (max. 8388607)
+ 192 named destinations out of 1000 (max. 500000)
  579 words of extra memory for PDF output out of 10000 (max. 10000000)
 
