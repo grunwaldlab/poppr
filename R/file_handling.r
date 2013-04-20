@@ -66,6 +66,7 @@
 #' chosen file or files}
 #' \item{files}{a character vector containing the chosen file
 #' name or names.}
+#' @author Zhian N. Kamvar
 #'
 #' @examples
 #' \dontrun{
@@ -174,6 +175,7 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' @seealso \code{\link{clonecorrect}}, \code{\link{genind}}
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #'
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
@@ -420,6 +422,7 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 #' @seealso \code{\link{clonecorrect}}, \code{\link{genind}}
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' \dontrun{
 #' data(nancycats)
