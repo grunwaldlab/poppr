@@ -75,6 +75,7 @@
 #' represented MLGs is appended to the matrix produced by mlg.table.
 #'
 #' @seealso \code{\link{diversity}} \code{\link{popsub}}
+#' @author Zhian N. Kamvar
 #' @examples
 #'
 #' data(H3N2)
