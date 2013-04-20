@@ -22,7 +22,7 @@
 \examples{
 \dontrun{
 # Obtain a list of fstat files from a directory.
-x <- getfile(multFile=TRUE, pattern="^.+?dat$")
+x <- getfile(multi=TRUE, pattern="^.+?dat$")
 
 # set the working directory to that directory.
 setwd(x$path)
