@@ -57,6 +57,9 @@ genalex4 <- read.genalex("genalex4.csv", region=TRUE, geo=TRUE)
 # A genalex file with both regional and geographic information.
 }
 }
+\author{
+  Zhian N. Kamvar
+}
 \seealso{
   \code{\link{clonecorrect}}, \code{\link{genind}}
 }

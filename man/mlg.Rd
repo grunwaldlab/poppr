@@ -124,6 +124,9 @@ mlg(mat.gid)
 mlg.vector(mat.gid)
 mlg.table(mat.gid)
 }
+\author{
+  Zhian N. Kamvar
+}
 \seealso{
   \code{\link{diversity}} \code{\link{popsub}}
 }

@@ -49,6 +49,9 @@ sapply(nancycats$pop.names, function(x)
 heatmap(as.matrix(bruvo.dist(popsub(nancycats, x))), symm=TRUE))
 }
 }
+\author{
+  Zhian N. Kamvar
+}
 \seealso{
   \code{\link{nancycats}}
 }
