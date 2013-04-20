@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.12.13)  18 APR 2013 10:30
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.12.13)  20 APR 2013 13:06
 entering extended mode
  %&-line parsing enabled.
 **poppr_manual.tex
@@ -709,27 +709,27 @@ File: t1aer.fd 1997/11/16 Font definitions for T1/aer.
 )))) (./poppr_manual.aux)
 \openout1 = `poppr_manual.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 28.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 28.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 29.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 29.
 
 (/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    ... okay on input line 29.
 
 (/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -744,7 +744,7 @@ LaTeX Font Info:    ... okay on input line 28.
 \MPnumerator=\count119
 \everyMPtoPDFconversion=\toks26
 )
-Package hyperref Info: Link coloring ON on input line 28.
+Package hyperref Info: Link coloring ON on input line 29.
  (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
@@ -753,8 +753,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 \c@section@level=\count120
 )
-LaTeX Info: Redefining \ref on input line 28.
-LaTeX Info: Redefining \pageref on input line 28.
+LaTeX Info: Redefining \ref on input line 29.
+LaTeX Info: Redefining \pageref on input line 29.
  (./poppr_manual.out) (./poppr_manual.out)
 \@outlinefile=\write4
 \openout4 = `poppr_manual.out'.
@@ -770,33 +770,33 @@ File: popprlogo.png Graphic file (type png)
 \tf@toc=\write5
 \openout5 = `poppr_manual.toc'.
 
-LaTeX Font Info:    Try loading font information for T1+aett on input line 67.
+LaTeX Font Info:    Try loading font information for T1+aett on input line 70.
  (/usr/share/texmf-texlive/tex/latex/ae/t1aett.fd
 File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
 )
 [3] <getfile.png, id=334, 676.5275pt x 564.1075pt>
 File: getfile.png Graphic file (type png)
  <use getfile.png> [4 <./getfile.png>]
-Underfull \hbox (badness 2042) in paragraph at lines 157--157
+Underfull \hbox (badness 2042) in paragraph at lines 160--160
 \T1/aer/m/n/10 or \T1/aett/m/n/10 "/Li-brary/Frameworks/R.framework/Versions/2.
 15/Resources/library" \T1/aer/m/n/10 on
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 157--157
+Underfull \hbox (badness 10000) in paragraph at lines 160--160
 
  []
 
 [5]
-LaTeX Font Info:    Try loading font information for TS1+aer on input line 225.
+LaTeX Font Info:    Try loading font information for TS1+aer on input line 228.
 
  (/usr/share/R/share/texmf/tex/latex/ts1aer.fd
 File: ts1aer.fd 
 )
 LaTeX Font Info:    Font shape `TS1/aer/m/n' in size <10> not available
-(Font)              Font shape `TS1/cmr/m/n' tried instead on input line 225.
+(Font)              Font shape `TS1/cmr/m/n' tried instead on input line 228.
  [6] [7] [8] [9]
-Underfull \hbox (badness 10000) in paragraph at lines 478--478
+Underfull \hbox (badness 10000) in paragraph at lines 481--481
 
  []
 
@@ -808,12 +808,12 @@ File: unmod_dat.png Graphic file (type png)
 File: mod_dat.png Graphic file (type png)
  <use mod_dat.png> [12 <./mod_dat.png (PNG copy)>] [13] [14] [15] [16] [17] [18
 ] [19]
-Underfull \hbox (badness 10000) in paragraph at lines 1119--1120
+Underfull \hbox (badness 10000) in paragraph at lines 1122--1123
 
  []
 
 [20]
-Overfull \hbox (30.8842pt too wide) in paragraph at lines 1182--1184
+Overfull \hbox (30.8842pt too wide) in paragraph at lines 1185--1187
 \T1/aett/m/n/10 splitcombine(pop, method = 1, df-name = "pop-u-la-tion_hierarch
 y", sep = "_", hier = c(1),
  []
@@ -822,19 +822,19 @@ y", sep = "_", hier = c(1),
 File: rootrot2.png Graphic file (type png)
  <use rootrot2.png>
 [23 <./rootrot2.png (PNG copy)>] [24] [25]
-Overfull \hbox (25.64421pt too wide) in paragraph at lines 1521--1523
+Overfull \hbox (25.64421pt too wide) in paragraph at lines 1524--1526
 \T1/aett/m/n/10 clonecorrect(pop, hier = c(1), df-name = "pop-u-la-tion_hierarc
 hy", com-bine = FALSE, keep
  []
 
 [26] [27] [28] [29]
-Overfull \hbox (4.68425pt too wide) in paragraph at lines 1716--1718
+Overfull \hbox (4.68425pt too wide) in paragraph at lines 1719--1721
 \T1/aett/m/n/10 mlg.crosspop(pop, sub-list = "ALL", black-list = NULL, ml-gsub 
 = NULL, in-dexre-turn =
  []
 
 [30] [31]
-Overfull \hbox (9.92424pt too wide) in paragraph at lines 1810--1812
+Overfull \hbox (9.92424pt too wide) in paragraph at lines 1813--1815
 \T1/aett/m/n/10 mlg.table(pop, sub-list = "ALL", black-list = NULL, ml-gsub = N
 ULL, bar = TRUE, to-tal
  []
@@ -847,19 +847,19 @@ File: poppr_manual-mlgbarplot.pdf Graphic file (type pdf)
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [32]
-LaTeX Font Info:    Try loading font information for TS1+aett on input line 185
-8.
+LaTeX Font Info:    Try loading font information for TS1+aett on input line 186
+1.
  (/usr/share/R/share/texmf/tex/latex/ts1aett.fd
 File: ts1aett.fd 
 )
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 185
-8.
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 186
+1.
 
 (/usr/share/texmf-texlive/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <8> not available
-(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 1858.
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 1861.
 
  [33 <./poppr_manual-mlgbarplot.pdf>] <poppr_manual-mlgrareplot.pdf, id=551, 43
 3.62pt x 433.62pt>
@@ -870,7 +870,7 @@ File: poppr_manual-mlgrareplot.pdf Graphic file (type pdf)
 File: poppr_manual-subnor.pdf Graphic file (type pdf)
 
 <use poppr_manual-subnor.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 1997--2005
+Underfull \hbox (badness 10000) in paragraph at lines 2000--2008
 
  []
 
@@ -878,7 +878,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1997--2005
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [35]
-Underfull \hbox (badness 10000) in paragraph at lines 2035--2037
+Underfull \hbox (badness 10000) in paragraph at lines 2038--2040
 
  []
 
@@ -892,30 +892,30 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2144.
+(hyperref)                removing `math shift' on input line 2147.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 2144.
+(hyperref)                removing `subscript' on input line 2147.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2144.
+(hyperref)                removing `math shift' on input line 2147.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2144.
+(hyperref)                removing `math shift' on input line 2147.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 2144.
+(hyperref)                removing `subscript' on input line 2147.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2144.
+(hyperref)                removing `math shift' on input line 2147.
 
 [37]
-Overfull \hbox (15.16423pt too wide) in paragraph at lines 2151--2153
+Overfull \hbox (15.16423pt too wide) in paragraph at lines 2154--2156
 \T1/aett/m/n/10 ia(pop, sam-ple = 0, method = 1, quiet = "min-i-mal", miss-ing 
 = "ig-nore", hist = TRUE) 
  []
@@ -946,7 +946,7 @@ File: poppr_manual-popcompare_bruvo2.pdf Graphic file (type pdf)
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Overfull \hbox (4.68425pt too wide) in paragraph at lines 2385--2387
+Overfull \hbox (4.68425pt too wide) in paragraph at lines 2388--2390
 \T1/aett/m/n/10 bruvo.boot(pop, re-plen = c(2), B = 100, tree = "up-gma", showt
 ree = TRUE, cut-off =
  []
@@ -995,86 +995,116 @@ File: poppr_manual-136.pdf Graphic file (type pdf)
  <use poppr_manual-136.pdf>
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2757.
+(hyperref)                removing `math shift' on input line 2760.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 2757.
+(hyperref)                removing `subscript' on input line 2760.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2757.
+(hyperref)                removing `math shift' on input line 2760.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2757.
+(hyperref)                removing `math shift' on input line 2760.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 2757.
+(hyperref)                removing `subscript' on input line 2760.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 2757.
+(hyperref)                removing `math shift' on input line 2760.
 
 [54 <./poppr_manual-136.pdf>]
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 2821.
+(amsmath)                 on input line 2824.
 
 [55] [56] [57]
-Underfull \hbox (badness 10000) in paragraph at lines 2964--2966
+Underfull \hbox (badness 10000) in paragraph at lines 2967--2969
 
  []
 
 LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <9> not available
-(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 2967.
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 2970.
+
+
+Overfull \hbox (7.97401pt too wide) in paragraph at lines 2972--2973
+[]\T1/aett/m/n/9 genind2genalex(pop, file-name = "genalex.csv", quiet = FALSE, 
+geo = FALSE, geodf = "xy") (Sec-tion
+ []
 
 [58]
-Overfull \hbox (3.25809pt too wide) in paragraph at lines 2971--2972
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2974--2975
 []\T1/aett/m/n/9 splitcombine(pop, method = 1, df-name = "pop-u-la-tion_hierarc
 hy", sep = "_", hier = c(1), set-pop-u-
  []
 
 
-Overfull \hbox (26.83772pt too wide) in paragraph at lines 2976--2977
+Overfull \hbox (7.97401pt too wide) in paragraph at lines 2976--2977
+[]\T1/aett/m/n/9 clonecorrect(pop, hier = c(1), df-name = "pop-u-la-tion_hierar
+chy", com-bine = FALSE, keep = 1) (Sec-
+ []
+
+
+Overfull \hbox (26.83772pt too wide) in paragraph at lines 2979--2980
 []\T1/aett/m/n/9 mlg.crosspop(pop, sub-list = "ALL", black-list = NULL, ml-gsub
  = NULL, in-dexre-turn = FALSE, df = FALSE,
  []
 
 
-Overfull \hbox (12.68994pt too wide) in paragraph at lines 2977--2978
+Overfull \hbox (12.68994pt too wide) in paragraph at lines 2980--2981
 []\T1/aett/m/n/9 mlg.table(pop, sub-list = "ALL", black-list = NULL, ml-gsub = 
 NULL, bar = TRUE, to-tal = FALSE, quiet
  []
 
 
-Overfull \hbox (3.25809pt too wide) in paragraph at lines 2982--2983
+Overfull \hbox (22.1218pt too wide) in paragraph at lines 2982--2983
+[]\T1/aett/m/n/9 ia(pop, sam-ple = 0, method = 1, quiet = "min-i-mal", miss-ing
+ = "ig-nore", hist = TRUE) (Sec-tion [][]4.1.1[][]) 
+ []
+
+
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2985--2986
 []\T1/aett/m/n/9 bruvo.boot(pop, re-plen = c(2), B = 100, tree = "up-gma", show
 tree = TRUE, cut-off = NULL, quiet =
  []
 
 
-Overfull \hbox (26.83772pt too wide) in paragraph at lines 2984--2985
+Overfull \hbox (26.83772pt too wide) in paragraph at lines 2987--2988
 []\T1/aett/m/n/9 bruvo.msn(pop, re-plen = c(1), palette = topo.colors, sub-list
  = "All", black-list = NULL, ver-tex.label
  []
 
 
-Overfull \hbox (7.97401pt too wide) in paragraph at lines 2985--2986
+Overfull \hbox (31.55365pt too wide) in paragraph at lines 2987--2988
+\T1/aett/m/n/9 = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1,
+ ws-cale = TRUE, ...) (Sec-tion [][]4.4.3[][]) 
+ []
+
+
+Overfull \hbox (7.97401pt too wide) in paragraph at lines 2988--2989
 []\T1/aett/m/n/9 poppr.msn(pop, dist-mat, palette = topo.colors, sub-list = "Al
 l", black-list = NULL, ver-tex.label =
  []
 
 
-Overfull \hbox (3.25809pt too wide) in paragraph at lines 2986--2987
+Overfull \hbox (22.1218pt too wide) in paragraph at lines 2988--2989
+\T1/aett/m/n/9 "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, w
+s-cale = TRUE, ...) (Sec-tion [][]4.4.4[][]) 
+ []
+
+
+Overfull \hbox (3.25809pt too wide) in paragraph at lines 2989--2990
 []\T1/aett/m/n/9 poppr(pop, to-tal = TRUE, sub-list = c("ALL"), black-list = c(
 NULL), sam-ple = 0, method = 1, miss-
  []
 
 
-Overfull \hbox (7.97401pt too wide) in paragraph at lines 2986--2987
+Overfull \hbox (7.97401pt too wide) in paragraph at lines 2989--2990
 \T1/aett/m/n/9 ing = "ig-nore", cut-off=0.05, quiet = "min-i-mal", clonecor-rec
 t = FALSE, hier = c(1), keep = 1, df-
  []
@@ -1115,13 +1145,13 @@ Underfull \hbox (badness 5245) in paragraph at lines 28--32
  aphanomyces eu-te-iches.  \T1/aett/m/it/10 Phy-
  []
 
-
+[59]
 Underfull \hbox (badness 1107) in paragraph at lines 34--37
 []\T1/aett/m/n/10 Bernhard Haubold and Richard R. Hud-son.  Lian 3.0: de-tect-i
 ng link-age dis-e-qui-lib-rium
  []
 
-[59]
+
 Underfull \hbox (badness 10000) in paragraph at lines 39--43
 []\T1/aett/m/n/10 Kenneth L.Jr. Heck, Ger-ald van Belle, and Daniel Sim-berloff
 .  Ex-plicit cal-cu-la-tion
@@ -1195,10 +1225,10 @@ ti-ma-tion and pre-dic-tion in
 
 ) [60] (./poppr_manual.aux) ) 
 Here is how much of TeX's memory you used:
- 7972 strings out of 495061
- 112614 string characters out of 1182620
- 204615 words of memory out of 3000000
- 10685 multiletter control sequences out of 15000+50000
+ 7974 strings out of 495061
+ 112663 string characters out of 1182620
+ 204755 words of memory out of 3000000
+ 10687 multiletter control sequences out of 15000+50000
  58559 words of font info for 121 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  41i,9n,40p,1277b,516s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1231,9 +1261,9 @@ ts/cm/cmti8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti9.
 pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/s
 hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/share/texmf-t
 exlive/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on poppr_manual.pdf (60 pages, 1524352 bytes).
+Output written on poppr_manual.pdf (60 pages, 1528719 bytes).
 PDF statistics:
- 1039 PDF objects out of 1200 (max. 8388607)
+ 1061 PDF objects out of 1200 (max. 8388607)
  192 named destinations out of 1000 (max. 500000)
  579 words of extra memory for PDF output out of 10000 (max. 10000000)
 

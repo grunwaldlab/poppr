@@ -1,5 +1,5 @@
 \documentclass[letterpaper]{article}
-%\VignetteIndexEntry{Poppr User Manual}
+%\VignetteIndexEntry{\textit{Poppr} User Manual}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,urlcolor=blue]{hyperref}
 \usepackage{array}
@@ -9,6 +9,7 @@
 \usepackage{fullpage}
 \usepackage{mathtools}
 \usepackage{makeidx}
+% \usepackage{lineno}
 % Doublespacing.
 % \usepackage{setspace}
 % \setstretch{2}
@@ -37,12 +38,12 @@
 {formatcom={\color{Sinput}},fontsize=\footnotesize, baselinestretch=0.75}
 \DefineVerbatimEnvironment{Soutput}{Verbatim}
 {formatcom={\color{Soutput}},fontsize=\footnotesize, baselinestretch=0.75}
-% The first page will have the title, abstract, and then the Poppr logo at the bottom.
+% The first page will have the title, abstract, and then the \textit{Poppr} logo at the bottom.
 \maketitle
 \begin{abstract}
-Poppr provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. \textit{Poppr}'s main advantage is the ease of use and integration with other packages such as \textit{adegenet} and \textit{vegan}, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo's distance and the index of association. 
+\textit{Poppr} provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. \textit{Poppr}'s main advantage is the ease of use and integration with other packages such as \textit{adegenet} and \textit{vegan}, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo's distance and the index of association. 
 \end{abstract}
-% Inserting the Poppr logo here
+% Inserting the \textit{Poppr} logo here
 \begin{figure}[b]
   \centering
   \label{logo}
@@ -53,12 +54,14 @@ Poppr provides open-source, cross-platform tools for quick analysis of populatio
 \hypersetup{linkcolor=black}
 \tableofcontents
 \endgroup
+
+%\linenumbers
 \section{Introduction}\label{intro}
 \subsection{Purpose}\label{intro:purpose}
 
 \tab\tab\textit{Poppr} is an R package with convenient functions for analysis of genetic data with mixed modes of reproduction including sexual and clonal reproduction. While there are many R packages in CRAN and other repositories with tools for population genetic analyses, few are appropriate for populations with mixed modes of reproduction. There are several stand alone programs that can handle these types of data sets, but they are often platform specific and often only accept specific data types. Furthermore, a typical analysis often involves switching between many programs, and converting data to each specific format.
 
-\textit{Poppr} is designed to make analysis of populations with mixed reproductive modes more streamlined and user friendly so that the researcher using it can focus on data analysis and interpretation. \textit{Poppr} allows analysis of haploid and diploid dominant/co-dominant marker data including microsattelites, Single Nucleotide Polymorphisms (SNP), and Amplified Fragment Length Polymorphisms (AFLP). To avoid creating yet another file format that is specific to a program, poppr was created on the backbone of the popular R package \textit{adegenet} and can take all the file formats that adegenet can take (Genpop, Gentix, Fstat, and Structure) and newly introduces compatibility with GenAlEx formatted files (exported to CSV). This means that anything you can analyze in \textit{adegenet} can be further analyzed with \textit{poppr}.
+\textit{Poppr} is designed to make analysis of populations with mixed reproductive modes more streamlined and user friendly so that the researcher using it can focus on data analysis and interpretation. \textit{Poppr} allows analysis of haploid and diploid dominant/co-dominant marker data including microsattelites, Single Nucleotide Polymorphisms (SNP), and Amplified Fragment Length Polymorphisms (AFLP). To avoid creating yet another file format that is specific to a program, \textit{poppr} was created on the backbone of the popular R package \textit{adegenet} and can take all the file formats that \textit{adegenet} can take (Genpop, Gentix, Fstat, and Structure) and newly introduces compatibility with GenAlEx formatted files (exported to CSV). This means that anything you can analyze in \textit{adegenet} can be further analyzed with \textit{poppr}.
 
 The real power of \textit{poppr} is in the data manipulation and analytic tools. \textit{Poppr} has the ability to define multiple population hierarchies, clone-censor, and subset data sets. With \textit{poppr} you can also quickly calculate Bruvo's distance, the index of association, and easily determine which multilocus genotypes are shared across populations.
 \subsection{Installation}\label{intro:install}
@@ -362,11 +365,11 @@ If you have a large data set with many population levels, you can use the follow
 
 \setkeys{Gin}{width=0.5\textwidth}
 
-\subsubsection{Other ways of importing data}label{intro:import:other}
+\subsubsection{Other ways of importing data}\label{intro:import:other}
 
 \tab\tab \textit{Adegenet} already supports the import of FSTAT, Structure, Genpop, and Gentix formatted files, so if you have those formats, you can import them using the function \texttt{import2genind}. For sequence data, check if you can use \texttt{read.dna} from the \textit{ape} package to import your data. If you can, then you can use the \textit{adegenet} function \texttt{DNAbin2genind}. If you don't have any of these formats handy, you can still import your data using R's \texttt{read.table} along with \texttt{df2genind} from \textit{adegenet}. For more information, see \textit{adegenet}'s ``Getting Started" vignette.
 
-\subsubsection{Function: genind2genalex}label{intro:import:genind2genalex}
+\subsubsection{Function: genind2genalex}\label{intro:import:genind2genalex}
 
 \tab\tab Of course, being able to export data is just as useful as being able to import it, so we have this handy little function that will write a GenAlEx formatted file to wherever you desire.\\ 
 WARNING: This will overwrite any file that exists with the same name.
@@ -420,7 +423,7 @@ cat("Extracting the table ... Writing the table to ~/Desktop/nancycats_inds_xy.c
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Getting to know adegenet's genind object}\label{intro:genind}
 
-\tab\tab Since poppr was built around adegenet's framework, it is important to know how \textit{adegenet} stores data in the genind object, as that is the object used by \textit{poppr}. To create a genind object, adegenet takes a data frame of genotypes (rows) across multiple loci (columns) and converts them into a matrix of individual allelic frequencies at each locus. \cite{Jombart:2008}\\
+\tab\tab Since \textit{poppr} was built around adegenet's framework, it is important to know how \textit{adegenet} stores data in the genind object, as that is the object used by \textit{poppr}. To create a genind object, \textit{adegenet} takes a data frame of genotypes (rows) across multiple loci (columns) and converts them into a matrix of individual allelic frequencies at each locus. \cite{Jombart:2008}\\
 For example, if you had a data frame with 3 diploid individuals each with 3 loci that had 3, 4, and 5 allelic states respectively, the resulting \texttt{genind} object would contain a matrix that has 3 rows and 12 columns. 
 \noindent Here's the example data frame:
 <<ex_data, echo=FALSE>>=
@@ -435,10 +438,10 @@ And the resulting matrix after importing to genind.
 df2genind(df, sep="/")$tab
 @
 The first three columns represent the alleles of locus 1, the next four represent locus 2, and the last five represent locus 3.\\
-Do you see what I mean when I say individual allele frequencies at each locus? For a diploid individual, you only have three possible allele frequencies at each locus: 1, 0.5, or 0. Now, this is not the entire genind object, but it is the main feature. The object also has various elements associated with it that give you information about the population membership, the names of loci, individuals, and alleles among other things that poppr uses to work. \cite{Jombart:2008} If you wish to know more, see the \textit{adegenet} ``Getting Started" manual. 
+Do you see what I mean when I say individual allele frequencies at each locus? For a diploid individual, you only have three possible allele frequencies at each locus: 1, 0.5, or 0. Now, this is not the entire genind object, but it is the main feature. The object also has various elements associated with it that give you information about the population membership, the names of loci, individuals, and alleles among other things that \textit{poppr} uses to work. \cite{Jombart:2008} If you wish to know more, see the \textit{adegenet} ``Getting Started" manual. 
 \subsubsection{The other slot}\label{intro:genind:other}
 
-\tab\tab The element that you as a poppr user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an adegenet object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
+\tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
 <<example_data_frame>>=
 df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
                       locus2=c("201/201", "202/203", "203/204"), 
@@ -519,7 +522,7 @@ Notice how useful the \texttt{@other} slot can be. We now have population struct
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Inside the golden days of missing data \{replace or remove missing data\}}\label{data.manip:missing}
 
-\tab\tab A data set without missing data is always ideal, but often not achievable. Many functions in \textit{adegenet} cannot handle missing data and thus the function \texttt{na.replace} exists. \cite{Jombart:2008} It will replace missing data with with either ``0" representing a mysterious extra allele in the data set resulting in more diversity or the mean of allelic frequencies at the locus. There is no set method, however, for simply removing missing data from analyses, which is why the poppr function \texttt{missingno} (see below) exists. If the name makes you uneasy it's because it should. Missing data can mean different things based on your data type. For microsatellites, missing data might represent any source of error that could cause a PCR product to not amplify in gel electrophoresis, which may or may not be biologically relevant. For a DNA alignment, missing data could mean something as simple as an insertion or deletion, which is biologically relevant. The choice to exclude or estimate data has very different implications for the type of data you have.
+\tab\tab A data set without missing data is always ideal, but often not achievable. Many functions in \textit{adegenet} cannot handle missing data and thus the function \texttt{na.replace} exists. \cite{Jombart:2008} It will replace missing data with with either ``0" representing a mysterious extra allele in the data set resulting in more diversity or the mean of allelic frequencies at the locus. There is no set method, however, for simply removing missing data from analyses, which is why the \textit{poppr} function \texttt{missingno} (see below) exists. If the name makes you uneasy it's because it should. Missing data can mean different things based on your data type. For microsatellites, missing data might represent any source of error that could cause a PCR product to not amplify in gel electrophoresis, which may or may not be biologically relevant. For a DNA alignment, missing data could mean something as simple as an insertion or deletion, which is biologically relevant. The choice to exclude or estimate data has very different implications for the type of data you have.
 \subsubsection{Function: missingno}\label{data.manip:missing:missingno}
 
 \tab\tab \texttt{missingno} is a function that serves partially as a wrapper for adegenet's \texttt{na.replace} to replace missing data and as a way to exclude specific areas that contain systematic missing data.  
@@ -1062,7 +1065,7 @@ We have the MLGs 315, 317, and 620, and the result of the sub-setting shows us t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Do you see what I see? \{alternative data visualization\}}\label{mlg:alt.vis}
 
-\tab\tab The graphs that are output by poppr are simply aids for the user to make data analysis easier. We want to better visualize how these MLGs cross populations by MLG or population. We also want to see exactly what MLGs are in which populations, and how prevalent they are. As ggplot is based on data frames, we have to give ourselves a data frame to work with. We can do this using the \texttt{df = TRUE} flag.
+\tab\tab The graphs that are output by \textit{poppr} are simply aids for the user to make data analysis easier. We want to better visualize how these MLGs cross populations by MLG or population. We also want to see exactly what MLGs are in which populations, and how prevalent they are. As ggplot is based on data frames, we have to give ourselves a data frame to work with. We can do this using the \texttt{df = TRUE} flag.
 <<mlg_chart>>=
 df <- mlg.crosspop(H3N2, df=TRUE, quiet=TRUE)
 names(df)
@@ -1191,7 +1194,7 @@ heatmap(as.matrix(A.dist), symm=TRUE)
 \newpage
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}\label{index:bruvo}
 
-\tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As adegenet's genind object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.  It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the adegenet function \texttt{dist.genpop}
+\tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As adegenet's genind object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.  It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the \textit{adegenet} function \texttt{dist.genpop}
 
 \subsubsection{Function: bruvo.dist}\label{index:bruvo:bruvo.dist}
 
@@ -1463,8 +1466,8 @@ A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{I know what you did last summary table \{diversity table\}}\label{summary}
 
-\tab\tab Remember the summary function that you used to get all the diversity statistics in section \ref{intro:qstart}? In this section, we will flesh out all that you can do with this function. This was the very first function that was written for poppr to make it easy for the user to manipulate and summarize the data in one function.
-\subsection{poppr}\label{summary:poppr}
+\tab\tab Remember the summary function that you used to get all the diversity statistics in section \ref{intro:qstart}? In this section, we will flesh out all that you can do with this function. This was the very first function that was written for \textit{poppr} to make it easy for the user to manipulate and summarize the data in one function.
+\subsection{Function: poppr}\label{summary:poppr}
 
 \tab\tab This function is quite daunting with all its possibilities. You have the option to subset your data for specific populations, correct for missing data, and clone correct. With each of these possibilities, comes the need to provide all the arguments for their various functions.
 \begin{quote}
@@ -1601,7 +1604,7 @@ Now, consider the first locus represented in the genind object:
 <<echo=FALSE>>=
 dfg@tab[, 1:3]
 @
-Remember that each column represents a different allele and that each entry in the table represents the fraction of the genotype made up by that allele at that locus. Notice also that the sum of the rows all equal 1. Poppr uses this to calculate distances by simply taking the sum of the absolute values of the differences between rows.
+Remember that each column represents a different allele and that each entry in the table represents the fraction of the genotype made up by that allele at that locus. Notice also that the sum of the rows all equal 1. \textit{Poppr} uses this to calculate distances by simply taking the sum of the absolute values of the differences between rows.
 
 The calculation for the distance between two individuals at a single locus with $a$ allelic states is as follows:
 \beq
@@ -1762,26 +1765,27 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \tab\tab Here is a list of all the default function calls for \textit{poppr}. Details can be found in the above sections.\\
 \tt \small
 \begin{itemize}
-\item getfile(multi = FALSE, pattern = NULL, combine = TRUE)
-\item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
-\item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, geodf = "xy")
-\item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
-\item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)
-\item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)
-\item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)
-\item shufflepop(pop, method = 1)
-\item mlg(pop, quiet = FALSE)
-\item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)
-\item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE)
-\item mlg.vector(pop)
-\item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE)
-\item diss.dist(pop)
-\item bruvo.dist(pop, replen = c(2))
-\item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)
-\item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
-\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
-\item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
-\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10)
+\item getfile(multi = FALSE, pattern = NULL, combine = TRUE) (Section \ref{intro:import:getfile})
+\item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE) (Section \ref{intro:import:read.genalex}) 
+\item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, geodf = "xy") (Section \ref{intro:import:genind2genalex})
+\item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE) (Section \ref{data.manip:missing:missingno})
+\item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE) (Section \ref{data.manip:hier:splitcombine})
+\item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL) (Section \ref{data.manip:divide:popsub})
+\item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1) (Section \ref{data.manip:cc:clonecorrect})
+\item shufflepop(pop, method = 1) (Section \ref{data.manip:shuffle:shufflepop})
+\item mlg(pop, quiet = FALSE) (Section \ref{mlg:mlg:mlg})
+\item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE) (Section \ref{mlg:cross:mlg.crosspop})
+\item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE) (Section \ref{mlg:table:mlg.table})
+\item mlg.vector(pop) (Section \ref{mlg:mix:mlg.vector})
+\item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE) (Section \ref{index:iard:ia})
+\item diss.dist(pop) (Section \ref{index:dist:diss.dist})
+\item bruvo.dist(pop, replen = c(2)) (Section \ref{index:bruvo:bruvo.dist})
+\item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE) (Section \ref{index:trees:bruvo.boot})
+\item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1) (Section \ref{index:trees:greycurve})
+\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
+\item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:poppr.msn})
+\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
+\item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
 \end{itemize}
 \normalsize
 \bibliographystyle{plain}
