@@ -1,5 +1,5 @@
 \documentclass[letterpaper]{article}
-%\VignetteIndexEntry{\textit{Poppr} User Manual}
+%\VignetteIndexEntry{Poppr User Manual}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,urlcolor=blue]{hyperref}
 \usepackage{array}
