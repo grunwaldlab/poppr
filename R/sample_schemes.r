@@ -70,6 +70,7 @@
 #'
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' # load the microbov dataset
 #' data(microbov)
