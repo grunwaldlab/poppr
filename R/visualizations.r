@@ -156,11 +156,11 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
       derp <- ggplot(infodata, aes(Value)) + 
         # Giving the data over to the histogram creating function and removing
         # all of the lines from each bar, so it's displayed as a solid area.
-        geom_histogram(linetype="blank", alpha=0.8, 
+        geom_histogram(linetype="blank", #alpha=0.8, 
                        data=subset(infodata, Index==Indexfac[1]), 
                        position="identity",
                        binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
-        geom_histogram(linetype="blank", alpha=0.8, 
+        geom_histogram(linetype="blank", #alpha=0.8, 
                        data=subset(infodata, Index==Indexfac[2]), 
                        position="identity",
                        binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
@@ -190,11 +190,11 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
       derp <- ggplot(infodata, aes(Value)) + 
         # Giving the data over to the histogram creating function and removing
         # all of the lines from each bar, so it's displayed as a solid area.
-        geom_histogram(linetype="blank", alpha=0.8, 
+        geom_histogram(linetype="blank", #alpha=0.8, 
                        data=subset(infodata, Index==Indexfac[1]), 
                        position="identity",
                        binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
-        geom_histogram(linetype="blank", alpha=0.8, 
+        geom_histogram(linetype="blank", #alpha=0.8, 
                        data=subset(infodata, Index==Indexfac[2]), 
                        position="identity",
                        binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
