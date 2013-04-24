@@ -22,7 +22,7 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 
-\title{Poppr: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
+\title{Poppr 1.0.0: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
 
 \begin{document}
