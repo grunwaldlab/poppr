@@ -60,4 +60,7 @@ summary(shufflepop(Zebu, method=3))
 # Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.
 summary(shufflepop(Zebu, method=4))
 }
+\author{
+  Zhian N. Kamvar
+}
 

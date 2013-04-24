@@ -96,4 +96,7 @@ length(other(H3N2)$x$country) # 1903
 length(other(c.y.m)$x$country) # 1190
 }
 }
+\author{
+  Zhian N. Kamvar
+}
 

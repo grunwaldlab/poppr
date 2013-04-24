@@ -63,6 +63,8 @@
 #' @return A plot displaying a grey gradient from 0.001 to 1 with minimum and 
 #' maximum values displayed as yellow lines, and an equation for the correction 
 #' displayed in red. 
+#' 
+#' @author Zhian N. Kamvar
 #'
 #' @examples
 #' # Normal grey curve with an adjustment of 3, an upper limit of 0.8, and
@@ -101,6 +103,7 @@ greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1){
 #' @param pop a \code{\link{genind}} object. 
 #' 
 #' @return A distance object.
+#' @author Zhian N. Kamvar
 #'
 #' @examples
 #' 

@@ -17,18 +17,9 @@ genind object and offers the following implementations:
 
 ## Installation
 
-
-
-
-
-# !!! Attention !!!
-
-**Due to dependency issues, we do not recommend upgrading to R 3.0 at this time.**
-
-
 ### From CRAN
 
-- This package is not currently available on CRAN, see about installing the development version below.
+- This package has been submitted to CRAN, if it is not avialable, see about installing the development version below.
 
 ### Development version
 
@@ -47,7 +38,7 @@ Now you can use the `install_github()` function:
 #### For the latest stable release:    
 
     library(devtools)    
-    install_github("poppr", "poppr", ref="v.0.4.1")    
+    install_github("poppr", "poppr", ref="v.1.0.0")    
     library(poppr)   
     
 #### For the bleeding edge development version:

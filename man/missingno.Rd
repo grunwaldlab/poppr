@@ -78,6 +78,9 @@ nancy.mean <- missingno(nancycats, type = "mean")
 
 ## Replaced 617 missing values
 }
+\author{
+  Zhian N. Kamvar
+}
 \seealso{
   \code{\link{na.replace}}, \code{\link{poppr}}
 }

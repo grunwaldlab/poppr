@@ -48,4 +48,7 @@ greycurve(glim=1:0)
 # Setting the lower limit to 0.1 and weighting towards larger values.
 greycurve(glim=c(0.1,0.8), gweight=2)
 }
+\author{
+  Zhian N. Kamvar
+}
 

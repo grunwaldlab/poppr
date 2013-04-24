@@ -88,4 +88,7 @@ H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
 H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
 }
 }
+\author{
+  Zhian N. Kamvar
+}
 

@@ -83,6 +83,7 @@
 #' 
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' # LOAD A. euteiches data set
 #' data(Aeut)
@@ -378,6 +379,7 @@ popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #' @seealso \code{\link{na.replace}}, \code{\link{poppr}}
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #'
 #' data(nancycats)
@@ -515,6 +517,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' method, your data frame will return the first column of your data frame.
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' # Method 1: Splitting.
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))

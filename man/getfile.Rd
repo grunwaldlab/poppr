@@ -49,4 +49,7 @@ setwd(y$path)
 write.csv(yfiles)
 }
 }
+\author{
+  Zhian N. Kamvar
+}
 

@@ -14,7 +14,7 @@ LaTeX: pdfLaTeX
 
 BuildType: Package
 PackageInstallArgs: --no-multiarch
-PackageBuildArgs: --resave-data
+PackageBuildArgs: --resave-data --compact-vignettes=gs+qpdf
 PackageBuildBinaryArgs: --html, --latex, --build
-PackageCheckArgs: --as-cran
+PackageCheckArgs: --as-cran --no-build-vignettes
 PackageRoxygenize: rd,collate,namespace

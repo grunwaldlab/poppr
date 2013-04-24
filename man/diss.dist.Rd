@@ -29,4 +29,7 @@ mean(diss.dist(popsub(Aeut, 1)))
 mean(diss.dist(popsub(Aeut, 2)))
 mean(diss.dist(Aeut))
 }
+\author{
+  Zhian N. Kamvar
+}
 

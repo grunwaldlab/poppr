@@ -151,6 +151,7 @@
 #' \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' data(nancycats)
 #' poppr(nancycats)
@@ -335,10 +336,11 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
 #'
 #' @seealso \code{\link{poppr}}, \code{\link{getfile}}
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' \dontrun{
 #' # Obtain a list of fstat files from a directory.
-#' x <- getfile(multFile=TRUE, pattern="^.+?dat$")
+#' x <- getfile(multi=TRUE, pattern="^.+?dat$")
 #'
 #' # set the working directory to that directory.
 #' setwd(x$path)
@@ -414,6 +416,7 @@ poppr.all <- function(filelist, ...) {
 #' \code{\link{read.genalex}}, \code{\link{clonecorrect}}
 #' 
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' data(nancycats)
 #' ia(nancycats)
