@@ -378,9 +378,9 @@ $files
  [6] "/path/to/R/adegenet/files/nancycats.gen"    
  [7] "/path/to/R/adegenet/files/nancycats.gtx"    
  [8] "/path/to/R/adegenet/files/nancycats.str"    
- [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
-[10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
-[11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+ [9] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+[10] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+[11] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
 [12] "/path/to/R/adegenet/files/usflu.fasta"      
 
 $path
@@ -2612,7 +2612,7 @@ Default Command:\\
   \end{description}
   \item \emph{shufflepop functions:} See section \ref{data.manip:shuffle} \\ Note that this only affects the calculation for $I_A$ and $\bar r_d$.
   \begin{description}
-    \item[sample -] The number of samples you desire (eg., 999)
+    \item[sample -] The number of samples you desire (eg. 999)
     \item[method -] Which sampling method? 1: multilocus, 2: permute, 3: parametric bootstrap, 4: non-parametric bootstrap.
   \end{description}
   \item \emph{missingno functions:} See Section \ref{data.manip:missing} \\ Note that all analyses in this function ignore/impute missing data by default.
@@ -2632,9 +2632,9 @@ Default Command:\\
   \item \texttt{minsamp -} The minimum number of individuals you want to use to calculate the expected number of MLGs. The default is set to 10.
 \end{itemize}
 
-This function produces a table that contains the population name, number of individuals observed, number of MLGs observed, number of MLGs expected at the lowest common sampling size within the data set \cite{Hurlbert:1971} \cite{Heck:1975}, the Shannon-Wiener index \cite{Shannon:1948}, Stoddart and Taylor's index for expected MLGs \cite{Stoddart:1988}, Nei's 1987 genotypic diversity \cite{Nei:1978}, evenness \cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}, the index of association \cite{Brown:1980}\cite{Smith:1993}, the standardized index of association \cite{Agapow:2001}, and the file name. Most of these indices are calculated by converting the population into an MLG table with \texttt{mlg.table} (see section \ref{mlg:table}) and using the \textit{vegan} package's \texttt{diversity} function (To see details, type \texttt{?vegan:::diversity} into the R console).
+This function produces a table that contains the population name, number of individuals observed, number of MLGs observed, number of MLGs expected at the lowest common sampling size within the data set \cite{Hurlbert:1971} \cite{Heck:1975}, the Shannon-Wiener index \cite{Shannon:1948}, Stoddart and Taylor's index for expected MLGs \cite{Stoddart:1988}, Nei's 1987 genotypic diversity \cite{Nei:1978}, evenness \cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}, the index of association \cite{Brown:1980}\cite{Smith:1993}, the standardized index of association \cite{Agapow:2001}, and the file name. Most of these indices are calculated by converting the population into an MLG table with \texttt{mlg.table} (see section \ref{mlg:table}) and using the \textit{vegan} package's \texttt{diversity} function (To see details, type \texttt{?vegan::diversity} into the R console).
 
-To begin, let's revisit our example data set of \textit{Aphanomyces euteiches}. \cite{Grunwald:2006}
+To begin, let's revisit our example data set of \textit{Aphanomyces euteiches} \cite{Grunwald:2006}.
 \begin{Schunk}
 \begin{Sinput}
 > data(Aeut)
@@ -2706,9 +2706,9 @@ And at the population level.
 3 rootrot.csv
 \end{Soutput}
 \end{Schunk}
-Clone correction doesn't always have to involve creation of new data sets!
+As you can see, clone correction doesn't always have to involve creation of new data sets!
 
-You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal to each other. This is due to the default sampling method.\cite{Agapow:2001} Let's take a look at examples where they are not equal.
+You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal to each other. This is due to the default sampling method \cite{Agapow:2001}. Here, we show examples where they are not equal.
 \begin{Schunk}
 \begin{Sinput}
 > set.seed(2001)
@@ -2720,7 +2720,7 @@ You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal
 2   6 11  11   11  0 2.398 11    1   1  0.334 0.064  0.043 0.065 truenames(nancycats)$tab
 \end{Soutput}
 \end{Schunk}
-The reason why the P-values would be different is described at the end of section \ref{index:iard:ia}. The differences in P-values are normally not very far off, and will always be represented in the warning messages and histograms. It's important to note this because of what can happen in extremely clonal populations. You can end up with a large enough sample size consisting of very few MLGs. Upon shuffling, you find that there are very few values of $I_A$ and $\bar r_d$ that can be obtained. Observe with this simulated data set:
+The reason why the P-values would be different is described at the end of section \ref{index:iard:ia}. The differences in P-values are normally not very far off. It's important to note this because of what can happen in extremely clonal populations. You can end up with a large enough sample size consisting of very few MLGs. Upon shuffling, you find that there are very few values of $I_A$ and $\bar r_d$ that can be obtained. Observe with this simulated data set:
 \begin{Schunk}
 \begin{Sinput}
 > set.seed(2004)
@@ -2735,13 +2735,13 @@ The reason why the P-values would be different is described at the end of sectio
 \end{Schunk}
 \begin{figure}[h!]
   \centering
-  \caption{\footnotesize Output of multilocus-style sampling.}
+  \caption{\footnotesize Output of multilocus-style sampling. Note the multi-modal distribution.}
   \label{simulated_dist_fig}
 \includegraphics{poppr_manual-135}
 \end{figure}
 \newpage
 
-Take a look a these two histograms. The number of ways you can recombine the data with the default sampling method is very small. Other sampling methods could give a more theoretical distribution. Let's try the parametric bootstrap.
+Take a look a these two histograms. The number of ways you can recombine the data with the default sampling method is very small. Other sampling methods could give a more theoretical distribution. Let's try the parametric bootstrap (For details, see section \ref{data.manip:shuffle}).
 \begin{figure}[h!]
   \centering
   \caption{\footnotesize Output for parametric bootstrap sampling.}
@@ -2759,7 +2759,7 @@ As you can see, the distribution is much closer to a distribution we would expec
 \subsection{Algorithmic Details}\label{appendix:algorithm}
 \subsubsection{$I_A$ and $\bar r_d$}\label{appendix:algorithm:iard}
 
-\tab \tab The index of association was originally developed by A.H.D. Brown analyzing population structure of wheat \cite{Brown:1980}. It has been widely used as a tool to detect clonal reproduction within populations \cite{Smith:1993}. Populations whose members are undergoing sexual reproduction, whether it be selfing or out-crossing, will produce gametes via mitosis, and thus have a chance to shuffle alleles in the next generation. Populations whose members are undergoing clonal reproduction, however, generally do so via mitosis. This means that the most likely mechanism for a change in genotype is via mutation. The rate of mutation varies from species to species, but it is rarely sufficiently high to approximate a random shuffling of alleles. The index of association is a calculation based on the ratio of the variance of the raw number of differences between individuals and the sum of those variances over each locus \cite{Smith:1993}. You can also think of it as the observed variance over the expected variance. If they  are the same, then the index is zero after subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
+\tab \tab The index of association was originally developed by A.H.D. Brown analyzing population structure of wheat \cite{Brown:1980}. It has been widely used as a tool to detect clonal reproduction within populations \cite{Smith:1993}. Populations whose members are undergoing sexual reproduction, whether it be selfing or out-crossing, will produce gametes via meiosis, and thus have a chance to shuffle alleles in the next generation. Populations whose members are undergoing clonal reproduction, however, generally do so via mitosis. This means that the most likely mechanism for a change in genotype is via mutation. The rate of mutation varies from species to species, but it is rarely sufficiently high to approximate a random shuffling of alleles. The index of association is a calculation based on the ratio of the variance of the raw number of differences between individuals and the sum of those variances over each locus \cite{Smith:1993}. You can also think of it as the observed variance over the expected variance. If they  are the same, then the index is zero after subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
 \beq
 \label{eq:I_A}
 I_A = \frac{V_O}{V_E}-1
@@ -2782,9 +2782,9 @@ Now, consider the first locus represented in the genind object:
 3    0  1.0  0.0
 \end{Soutput}
 \end{Schunk}
-Remember that each column represents a different allele and that each entry in the table represents the fraction of the genotype made up by that allele at that locus. Notice also that the sum of the rows all equal 1. \textit{Poppr} uses this to calculate distances by simply taking the sum of the absolute values of the differences between rows.
+Remember that each column represents a different allele and that each entry in the table represents the fraction of the genotype made up by that allele at that locus. Notice also that the sum of the rows all equal one. \textit{Poppr} uses this to calculate distances by simply taking the sum of the absolute values of the differences between rows.
 
-The calculation for the distance between two individuals at a single locus with $a$ allelic states is as follows:
+The calculation for the distance between two individuals at a single locus with $a$ allelic states is as follows \footnote{Haploid individuals under this construct will have $d == (0 | 2)$, but the ratio of the variance is the same as if $d == (0 | 1)$}:
 \beq
 \label{eq:ia_d}
 d = \displaystyle \sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid
@@ -2855,7 +2855,7 @@ Of course, Agapow and Burt showed that this index increases steadily with the nu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Bruvo's distance}\label{appendix:algorithm:bruvo}
 
-\tab \tab Bruvo's distance between two individuals calculates the minimum distance across all combinations of possible pairs of alleles at a single locus and then averaging that distance across all loci. \cite{Bruvo:2004} The distance between each pair of alleles is calculated as (Bruvo et al., 2004) \cite{Bruvo:2004}:
+\tab \tab Bruvo's distance between two individuals calculates the minimum distance across all combinations of possible pairs of alleles at a single locus and then averaging that distance across all loci \cite{Bruvo:2004}. The distance between each pair of alleles is calculated as \cite{Bruvo:2004}:
 
 \beq
 \label{eq:m_x}
@@ -2867,21 +2867,21 @@ m_x = 2^{-\mid x \mid}
 d_a = 1 - m_x
 \eeq
 
-Where $x$ is the number of steps between each allele. So, let's say we were comparing two haploid $(k = 1)$ individuals with alleles 228 and 244 at a locus that had a tetranucleotide repeat pattern (CATG$)^n$. The number of steps for each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For samples with higher ploidy ($k$), there would be $k$ such distances of which we would need to take the sum. (Bruvo et al., 2004) \cite{Bruvo:2004}
+Where $x$ is the number of steps between each allele. So, let's say we were comparing two haploid $(k = 1)$ individuals with alleles 228 and 244 at a locus that had a tetranucleotide repeat pattern (CATG$)^n$. The number of steps for each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For samples with higher ploidy ($k$), there would be $k$ such distances of which we would need to take the sum \cite{Bruvo:2004}.
 
 \beq
 \label{eq:s_i}
 s_i = \displaystyle \sum_{a=1}^{k} d_a
 \eeq
 
-Unfortunately, it's not as simple as that since we do not assume to know phase. Because of this, we need to take all possible combinations of alleles into account. This means that we will have $k^2$ values of $d_a$, when we only want $k$. How do we know which $k$ distances we want? We will have to invoke parsimony for this and attempt to take the minimum sum of the alleles, of which there are $k!$ possibilities (Bruvo et al., 2004) \cite{Bruvo:2004}:
+Unfortunately, it's not as simple as that since we do not assume to know phase. Because of this, we need to take all possible combinations of alleles into account. This means that we will have $k^2$ values of $d_a$, when we only want $k$. How do we know which $k$ distances we want? We will have to invoke parsimony for this and attempt to take the minimum sum of the alleles, of which there are $k!$ possibilities \cite{Bruvo:2004}:
 
 \beq
 \label{eq:d_l}
 d_l = \frac{\left(\displaystyle \min_{i \dotsc k!} s_i\right)}{k}
 \eeq
 
-Finally, after all of this, we can get the average distance over all loci (Bruvo et al., 2004). 
+Finally, after all of this, we can get the average distance over all loci \cite{Bruvo:2004}. 
 
 \beq
 \label{eq:D}
