@@ -5,7 +5,7 @@ Title: an R package for genetic analysis of populations with mixed
 Version: 1.0.0
 Date: 2013-04-24
 Author: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>, Javier F. Tabima
-    <tabimaj@onid.orst.edu>, Niklaus J. Grünwald
+    <tabimaj@onid.orst.edu>, Niklaus J. Grunwald
     <grunwaln@science.oregonstate.edu>
 Maintainer: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>
 Description: Population genetic analyses for hierarchical analysis of partially
