@@ -2,7 +2,8 @@ poppr 1.0.0
 ===========
 MISC
 * Poppr has been confirmed to work on Linux, Mac, and Windows systems with R 3.0.0.
-* Vignette `poppr_manual` now has cross-references to different sections. 
+* Vignette `poppr_manual` now has cross-references to different sections.
+* Vignette `poppr_manual` is quicker loading. 
 
 BUG FIXES
 * removed alpha channel from plot for resampled values of I_A and \bar{r}_d due to warnings.
