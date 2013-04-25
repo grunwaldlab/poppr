@@ -32,11 +32,11 @@
 \contentsline {subsection}{\numberline {3.4}Getting into the mix \{combining MLG functions\}}{34}{subsection.3.4}
 \contentsline {subsubsection}{\numberline {3.4.1}Function: mlg.vector}{35}{subsubsection.3.4.1}
 \contentsline {subsection}{\numberline {3.5}Do you see what I see? \{alternative data visualization\}}{37}{subsection.3.5}
-\contentsline {section}{\numberline {4}Index and Distance Calculations}{38}{section.4}
-\contentsline {subsection}{\numberline {4.1}The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\mathaccentV {bar}016r_d$\}}{38}{subsection.4.1}
+\contentsline {section}{\numberline {4}Index and Distance Calculations}{37}{section.4}
+\contentsline {subsection}{\numberline {4.1}The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\mathaccentV {bar}016r_d$\}}{37}{subsection.4.1}
 \contentsline {subsubsection}{\numberline {4.1.1}Function: ia}{38}{subsubsection.4.1.1}
 \contentsline {subsection}{\numberline {4.2}Going the distance \{dissimilarity distance\}}{40}{subsection.4.2}
-\contentsline {subsubsection}{\numberline {4.2.1}Function: diss.dist}{41}{subsubsection.4.2.1}
+\contentsline {subsubsection}{\numberline {4.2.1}Function: diss.dist}{40}{subsubsection.4.2.1}
 \contentsline {subsection}{\numberline {4.3}Step by stepwise mutation \{Bruvo's distance\}}{42}{subsection.4.3}
 \contentsline {subsubsection}{\numberline {4.3.1}Function: bruvo.dist}{42}{subsubsection.4.3.1}
 \contentsline {subsection}{\numberline {4.4}See the forest for the trees \{visualizing distances with dendrograms and networks\}}{44}{subsection.4.4}

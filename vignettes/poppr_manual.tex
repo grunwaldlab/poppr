@@ -2045,31 +2045,12 @@ So, we've gotten this far, yet we haven't actually seen what the genotypes look 
 > H.df <- genind2df(H3N2)
 > H.df[H.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
 \end{Sinput}
-\begin{Soutput}
-                    pop 6 17 39 42 45 51 60 72 73 90 108 123 129 134
-CY026119        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
-CY026120        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
-CY026121        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
-CY026122        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
-CY026131        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
-CY026132        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
-CY026135        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
-EU502462        Germany a  a  g  c  g  c  g  g  c  g   a   g   t   g
-EU502463         Greece a  a  g  c  g  c  g  g  c  g   a   g   t   g
-EU502464         Norway a  a  g  c  g  c  g  g  c  g   a   g   t   g
-EU501513          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
-AB243868          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
-DQ883618         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
-DQ883619         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
-DQ883620         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
-DQ883628         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
-EU501609        Germany a  a  g  c  t  c  a  g  a  g   t   g   t   g
-EU501642          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
-EU501643          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
-EU501735 United Kingdom a  a  g  c  t  c  a  g  a  g   t   g   t   g
-EU501742          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
-EU502513         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
-\end{Soutput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> H.df <- genind2df(H3N2[, loc=names(H3N2@loc.names)[1:15]])
+> H.df[H.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
+\end{Sinput}
 \end{Schunk}
 Notice that there seems to be a clear separation between the SNPs of the first 10 isolates and the rest? This is no coincidence. Take a look at the output of our sub-setting.
 \begin{Schunk}
@@ -2209,6 +2190,8 @@ We can use \texttt{popsub} to subset for specific populations. Here, we'll also 
 ..................................................
 ..................................................
 .................................................
+\end{Soutput}
+\begin{Soutput}
           Ia         p.Ia        rbarD         p.rD 
 -0.047539953  0.589000000 -0.006004254  0.589000000 
 \end{Soutput}
@@ -2219,7 +2202,7 @@ This analysis produced the histograms you see below. What these histograms repre
   \centering
   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
   \label{ia_demo_fig}
-\includegraphics{poppr_manual-102}
+\includegraphics{poppr_manual-103}
 \end{figure}
 %\newpage
 
@@ -2228,13 +2211,15 @@ Note that both of the P-values are exactly the same. This is what you would obta
 \begin{Sinput}
 > set.seed(1001)
 > ia(popsub(nancycats, 5), sample=999, method=3, quiet=TRUE, hist=FALSE)
+> c(simplenan[1], p.Ia = 0.589, simplenan[2], p.rD = 0.589)
 \end{Sinput}
+\end{Schunk}
+\begin{Schunk}
 \begin{Soutput}
           Ia         p.Ia        rbarD         p.rD 
--0.047539953  0.598000000 -0.006004254  0.596000000 
+-0.047539953  0.589000000 -0.006004254  0.596000000 
 \end{Soutput}
 \end{Schunk}
-
 There, is, of course one little caveat that needs to be mentioned. The P-values are calculated by comparing how many permuted values are greater than or equal to the observed value. This includes the observed value (which is why setting the randomizations to 999 will give you a round P-value) which means that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number of permutations you select. Take for example this population of a clonal root rot pathogen, \textit{Aphanomyces euteiches}:
 \begin{Schunk}
 \begin{Sinput}
@@ -2242,12 +2227,13 @@ There, is, of course one little caveat that needs to be mentioned. The P-values 
 > set.seed(1001)
 > ia(popsub(Aeut, 1), sample=999, method=3, quiet=TRUE, hist=FALSE)
 \end{Sinput}
+\end{Schunk}
+\begin{Schunk}
 \begin{Soutput}
         Ia       p.Ia      rbarD       p.rD 
 2.90602921 0.00100000 0.07237008 0.00100000 
 \end{Soutput}
 \end{Schunk}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2278,7 +2264,7 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
   \centering
   \caption{\footnotesize Heatmap representation of a dissimilarity distance for the data set ``Aeut"}
   \label{diss_heat_map}
-\includegraphics{poppr_manual-106}
+\includegraphics{poppr_manual-109}
 \end{figure}
 \newpage
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}\label{index:bruvo}
@@ -2326,7 +2312,7 @@ You can visualize this better with a simple heatmap:
 > heatmap(as.matrix(dist9), symm=TRUE)
 \end{Sinput}
 \end{Schunk}
-\includegraphics{poppr_manual-109}
+\includegraphics{poppr_manual-112}
 \end{figure}
 %\newpage
 
@@ -2419,7 +2405,13 @@ Bootstrapping... (note: calculation of node labels can take a while even after t
   \centering
   \caption{\footnotesize UPGMA Tree of Bruvo's distance for population 9 of the data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent percentage of bootstrap replicates that contained that node.}
   \label{bruvo_upgma}
-\includegraphics{poppr_manual-bruvo_tree}
+  \includegraphics{bruvo_upgma.png}
+
+%<<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
+% set.seed(1001)
+% nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, quiet=TRUE, cutoff=50)
+%@
+
 \end{figure}
 
 \subsubsection{Function: greycurve}\label{index:trees:greycurve}

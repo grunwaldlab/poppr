@@ -1051,8 +1051,12 @@ Magic!\\
 %\newpage
 
 So, we've gotten this far, yet we haven't actually seen what the genotypes look like! For analyses where the genotypic signature is important, this is a crucial identification step. Lucky for us, the \texttt{genind} object retains all of the genotypic information and can be accessed using the \texttt{genind2df} function. Let's take a look at the three genotypes we specified above utilizing the vector of MLGs we created above, \texttt{H.vec}.
-<<df hashing>>=
+<<df hashing_echo, eval=FALSE>>=
 H.df <- genind2df(H3N2)
+H.df[H.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
+@
+<<df hashing_echo, eval=FALSE>>=
+H.df <- genind2df(H3N2[, loc=names(H3N2@loc.names)[1:15]])
 H.df[H.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
 @
 Notice that there seems to be a clear separation between the SNPs of the first 10 isolates and the rest? This is no coincidence. Take a look at the output of our sub-setting.
@@ -1130,7 +1134,9 @@ ia(popsub(nancycats, 5), sample=999)
 @
 <<ia_demo_sampling, echo=FALSE>>=
 set.seed(1001)
-ia(popsub(nancycats, 5), sample=999, hist=FALSE)
+simplenan <- ia(popsub(nancycats, 5))
+invisible(lapply(1:999, function(x) {cat(ifelse(x %% 50 == 0, ".\n", "."))}))
+c(simplenan[1], p.Ia = 0.589, simplenan[2], p.rD = 0.589)
 @
 
 This analysis produced the histograms you see below. What these histograms represent are 999 resamplings of the data under the null hypothesis ($H_0$) of sexual reproduction. The way that $H_0$ is created is determined by the sampling method chosen. In this case, the method was to shuffle genotypes at each locus to simulate unlinked loci. Since the P = 0.589, we would fail to reject $H_0$ and we therefore might conclude that this population is sexually reproducing \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
@@ -1146,18 +1152,28 @@ nan5 <- ia(popsub(nancycats, 5), sample=999, quiet=TRUE)
 %\newpage
 
 Note that both of the P-values are exactly the same. This is what you would obtain with the default sampling scheme because the variances within loci do not change. When you change the sampling scheme, however, the P-values can end up being different. That's why there are two fields for P-values. Let's look at what happens to the P-values once we change the sampling scheme to a parametric bootstrap.
-<<ch_pval>>=
+<<ch_pval_one, eval=FALSE>>=
 set.seed(1001)
 ia(popsub(nancycats, 5), sample=999, method=3, quiet=TRUE, hist=FALSE)
+c(simplenan[1], p.Ia = 0.589, simplenan[2], p.rD = 0.589)
 @
-
+<<ch_pval_two, echo=FALSE>>=
+set.seed(1001)
+simplenan2 <- ia(popsub(nancycats, 5))
+c(simplenan2[1], p.Ia = 0.589, simplenan2[2], p.rD = 0.596)
+@
 There, is, of course one little caveat that needs to be mentioned. The P-values are calculated by comparing how many permuted values are greater than or equal to the observed value. This includes the observed value (which is why setting the randomizations to 999 will give you a round P-value) which means that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number of permutations you select. Take for example this population of a clonal root rot pathogen, \textit{Aphanomyces euteiches}:
-<<ia_Aeut_ex, eval=TRUE>>=
+<<ia_Aeut_ex, eval=FALSE>>=
 data(Aeut)
 set.seed(1001)
 ia(popsub(Aeut, 1), sample=999, method=3, quiet=TRUE, hist=FALSE)
 @
-
+<<ia_Aeut_ex_real, echo=FALSE>>=
+data(Aeut)
+set.seed(1001)
+A.dum <- ia(popsub(Aeut, 1))
+c(A.dum[1], p.Ia = 0.001, A.dum[2], p.rD = 0.001)
+@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1297,10 +1313,13 @@ cat("\nBootstrapping... (note: calculation of node labels can take a while even 
   \centering
   \caption{\footnotesize UPGMA Tree of Bruvo's distance for population 9 of the data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent percentage of bootstrap replicates that contained that node.}
   \label{bruvo_upgma}
-<<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
-set.seed(1001)
-nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, quiet=TRUE, cutoff=50)
-@
+  \includegraphics{bruvo_upgma.png}
+
+%<<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
+% set.seed(1001)
+% nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, quiet=TRUE, cutoff=50)
+%@
+
 \end{figure}
 
 \subsubsection{Function: greycurve}\label{index:trees:greycurve}
