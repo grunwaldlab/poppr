@@ -118,7 +118,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
       theme(axis.text.x = element_text(size=0)) +
       theme(axis.title.y = element_text(size=rel(0)))+
       theme(axis.title.x = element_text(size=rel(0)))
-    oops <- ggplot(as.data.frame(list(x=-10:9)), aes(x)) + 
+    oops <- ggplot(as.data.frame(list(x=-10:9)), aes_string(x = "x")) + 
       geom_histogram(binwidth=1, fill="orange") + 
       geom_text(aes(label="Warning:", x=0, y=0.8), color="black", size=rel(15)) + 
       geom_text(aes(label="Data contains only NaNs and\ncannot be displayed graphically", 
@@ -133,48 +133,48 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
     #``````````````````````````````````````````````````````````````````````````#
     # Normal Cases
     #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-    if(any(is.nan(sample$rbarD)))
-      sample$rbarD[which(is.nan(sample$rbarD))] <- mean(sample$rbarD, na.rm=TRUE)
-    if(any(is.nan(sample$Ia)))
-      sample$Ia[which(is.nan(sample$Ia))] <- mean(sample$Ia, na.rm=TRUE)
+    if(any(is.nan(sample[["rbarD"]])))
+      sample[["rbarD"]][which(is.nan(sample[["rbarD"]]))] <- mean(sample[["rbarD"]], na.rm=TRUE)
+    if(any(is.nan(sample[["Ia"]])))
+      sample[["Ia"]][which(is.nan(sample[["Ia"]]))] <- mean(sample[["Ia"]], na.rm=TRUE)
     
     # Transforming the data into a data frame that ggplot can understand and put
     # into facets. It will have the following rows: Value, Index, and Quant.
     Indexfac <- factor(1:2, levels=1:2, labels=c("I[A]","bar(r)[d]"))
-    infodata <- as.data.frame(list(Value=c(sample$Ia, sample$rbarD), 
-                                   Index=rep(Indexfac, each=length(sample$Ia))))
+    infodata <- as.data.frame(list(Value=c(sample[["Ia"]], sample[["rbarD"]]), 
+                                   Index=rep(Indexfac, each=length(sample[["Ia"]]))))
     
     # Setting up the observed values for formatting the overlaying lines.
     # It will have the following rows: Observed, Index, Quant, Sam, P, min, max
     
     obsdata <- data.frame(list(Observed=observed[1:2], Index=Indexfac))
-    obsdata$P <- pval
-    obsdata$median <- c(median(unlist(subset(infodata,Index=Indexfac[1],select=Value))), 
-                        median(unlist(subset(infodata,Index=Indexfac[2],select=Value))))
+    obsdata[["P"]] <- paste("Observed \n(p-value: ", pval,")",sep="")
+    obsdata[["median"]] <- c(median(unlist(subset(infodata,Index=Indexfac[1],select="Value"))), 
+                        median(unlist(subset(infodata,Index=Indexfac[2],select="Value"))))
+    obsdata[["label"]] <- paste("Observed: ",obsdata[["Observed"]], sep="")
     if(any(is.na(observed))){
       warning(paste("The Index of Association values from ",file,", population: ",pop," contain missing values and cannot be displayed graphically", sep=""))
-      derp <- ggplot(infodata, aes(Value)) + 
+      iard_plot <- ggplot(infodata, aes_string(x = "Value")) + 
         # Giving the data over to the histogram creating function and removing
         # all of the lines from each bar, so it's displayed as a solid area.
         geom_histogram(linetype="blank", #alpha=0.8, 
                        data=subset(infodata, Index==Indexfac[1]), 
                        position="identity",
-                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
+                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select="Value")))/30) + 
         geom_histogram(linetype="blank", #alpha=0.8, 
                        data=subset(infodata, Index==Indexfac[2]), 
                        position="identity",
-                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
+                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select="Value")))/30) + 
         geom_rug() + 
         # The label for the observed line is a bit more difficult to code as
         # it has the ability to appear anywhere on the chart. Here, I'm
         # forcing it to flip to one side or the other based on which side of
         # the mean that the observed value falls on.
-        geom_text(aes(label=paste("Observed: ",Observed,sep=""), 
-                      x=0,y=Inf,vjust=1.5),
+        geom_text(aes_string(label="label", x=0, y=Inf, vjust=1.5),
                   data=obsdata, angle=0, color="red") + 
         
         # Splitting the data into separate plots with free x-axes.
-        facet_grid(.~Index, scales="free_x", labeller=label_parsed) +
+        facet_grid(". ~ Index", scales="free_x", labeller=label_parsed) +
         
         # Title of the plot.
         labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
@@ -187,32 +187,33 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
         theme(strip.text.x = element_text(size=rel(3), face="bold"))
     }
     else{
-      derp <- ggplot(infodata, aes(Value)) + 
+      iard_plot <- ggplot(infodata, aes_string(x = "Value")) + 
         # Giving the data over to the histogram creating function and removing
         # all of the lines from each bar, so it's displayed as a solid area.
         geom_histogram(linetype="blank", #alpha=0.8, 
                        data=subset(infodata, Index==Indexfac[1]), 
                        position="identity",
-                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select=Value)))/30) + 
+                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select="Value")))/30) + 
         geom_histogram(linetype="blank", #alpha=0.8, 
                        data=subset(infodata, Index==Indexfac[2]), 
                        position="identity",
-                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select=Value)))/30) + 
+                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select="Value")))/30) + 
         geom_rug() + 
         # Positioning the observed line and labeling it.
-        geom_vline(aes(xintercept=Observed), data=obsdata, color="blue", 
+        geom_vline(aes_string(xintercept = "Observed"), data = obsdata, color="blue", 
                    show_guide=TRUE, linetype="dashed") +
         
         # The label for the observed line is a bit more difficult to code as
         # it has the ability to appear anywhere on the chart. Here, I'm
         # forcing it to flip to one side or the other based on which side of
         # the mean that the observed value falls on.
-        geom_text(aes(label=paste("Observed \n(p-value: ", P,")",sep=""), 
-                      x=Observed,y=Inf,vjust=2,hjust=ifelse(Observed > median, 1.01, -0.01)),
+        #geom_text(aes_string(label=paste("Observed \n(p-value: ", P,")",sep=""),
+        geom_text(aes_string(label="P", 
+                      x="Observed",y=Inf,vjust=2,hjust="ifelse(Observed > median, 1.01, -0.01)"),
                   data=obsdata, angle=0, color="blue") + 
         
         # Splitting the data into separate plots with free x-axes.
-        facet_grid(.~Index, scales="free_x", labeller=label_parsed) +
+        facet_grid(". ~ Index", scales="free_x", labeller=label_parsed) +
         
         # Title of the plot.
         labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
@@ -224,7 +225,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
         # Making the Index titles bigger. 
         theme(strip.text.x = element_text(size=rel(3), face="bold"))
     }
-    print(derp)
+    print(iard_plot)
   }
 } 
 
