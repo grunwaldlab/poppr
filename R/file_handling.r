@@ -177,10 +177,10 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
-#'
-#' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 #' 
 #' \dontrun{
+#' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
+#'
 #' genalex2 <- read.genalex("genalex2.csv", geo=TRUE)
 #' # A genalex file with geographic coordinate data.
 #'

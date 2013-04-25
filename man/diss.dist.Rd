@@ -26,8 +26,10 @@
 
 data(Aeut)
 mean(diss.dist(popsub(Aeut, 1)))
+\dontrun{
 mean(diss.dist(popsub(Aeut, 2)))
 mean(diss.dist(Aeut))
+}
 }
 \author{
   Zhian N. Kamvar

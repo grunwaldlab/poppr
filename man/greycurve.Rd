@@ -35,7 +35,7 @@
 # Normal grey curve with an adjustment of 3, an upper limit of 0.8, and
 # weighted towards smaller values.
 greycurve()
-
+\dontrun{
 # 1:1 relationship grey curve.
 greycurve(gadj=1, glim=1:0)
 
@@ -47,6 +47,7 @@ greycurve(glim=1:0)
 
 # Setting the lower limit to 0.1 and weighting towards larger values.
 greycurve(glim=c(0.1,0.8), gweight=2)
+}
 }
 \author{
   Zhian N. Kamvar

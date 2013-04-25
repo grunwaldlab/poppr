@@ -70,7 +70,7 @@
 #' # Normal grey curve with an adjustment of 3, an upper limit of 0.8, and
 #' # weighted towards smaller values.
 #' greycurve()
-#' 
+#' \dontrun{
 #' # 1:1 relationship grey curve.
 #' greycurve(gadj=1, glim=1:0)
 #' 
@@ -82,7 +82,7 @@
 #' 
 #' # Setting the lower limit to 0.1 and weighting towards larger values.
 #' greycurve(glim=c(0.1,0.8), gweight=2)
-#'
+#' }
 #' @export
 #==============================================================================#
 greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1){
@@ -112,9 +112,10 @@ greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1){
 #' 
 #' data(Aeut)
 #' mean(diss.dist(popsub(Aeut, 1)))
+#' \dontrun{
 #' mean(diss.dist(popsub(Aeut, 2)))
 #' mean(diss.dist(Aeut))
-#'
+#' }
 #' @export
 #==============================================================================#
 

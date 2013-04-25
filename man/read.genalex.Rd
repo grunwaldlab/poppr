@@ -44,9 +44,9 @@
   \code{original_names}.
 }
 \examples{
+\dontrun{
 Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 
-\dontrun{
 genalex2 <- read.genalex("genalex2.csv", geo=TRUE)
 # A genalex file with geographic coordinate data.
 

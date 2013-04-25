@@ -97,6 +97,7 @@
 #' mlg(Aeut.pop)
 #' Aeut.pop$pop.names
 #' 
+#' \dontrun{
 #' # Clone correct at the subpopulation level with respect to population and
 #' # combine.
 #' Aeut.subpop <- clonecorrect(Aeut, hier=c("Pop", "Subpop"), combine=TRUE)
@@ -108,7 +109,6 @@
 #' mlg(Aeut.subpop2)
 #' Aeut.subpop2$pop.names
 #' 
-#' \dontrun{
 #' # LOAD H3N2 dataset
 #' data(H3N2)
 #'

@@ -50,7 +50,7 @@ summary(Zebu)
 
 # Multilocus Style: maintain allelic state and heterozygosity.
 summary(shufflepop(Zebu, method=1))
-
+\dontrun{
 # Permute Alleles: maintain allelic state; heterozygosity varies.
 summary(shufflepop(Zebu, method=2))
 
@@ -59,6 +59,7 @@ summary(shufflepop(Zebu, method=3))
 
 # Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.
 summary(shufflepop(Zebu, method=4))
+}
 }
 \author{
   Zhian N. Kamvar
