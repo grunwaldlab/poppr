@@ -204,7 +204,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
             count = rep(mlgt, mlgt)))
 
       # Organize the data frame by count in descending order.
-      mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
+      mlgt.df[["MLG"]] <- reorder(mlgt.df[["MLG"]], -mlgt.df[["count"]])
 
       # plot it
       return(ggplot(mlgt.df, aes_string(x = "MLG")) + geom_bar(aes_string(fill = "count"), position="identity"))
