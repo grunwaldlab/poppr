@@ -149,9 +149,6 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
     
     obsdata <- data.frame(list(Observed=observed[1:2], Index=Indexfac))
     obsdata[["P"]] <- paste("Observed \n(p-value: ", pval,")",sep="")
-    #obsdata[["median"]] <- c(median(unlist(subset(infodata,Index=Indexfac[1],select="Value"))), 
-    #                    median(unlist(subset(infodata,Index=Indexfac[2],select="Value"))))
-
     obsdata[["median"]] <- c(median(infodata[infodata[["Index"]] == Indexfac[1], "Value"]),
                         median(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))
 
@@ -163,13 +160,13 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
         # Giving the data over to the histogram creating function and removing
         # all of the lines from each bar, so it's displayed as a solid area.
         geom_histogram(linetype="blank", #alpha=0.8, 
-                       data=subset(infodata, Index==Indexfac[1]), 
+                       data = infodata[infodata[["Index"]] == Indexfac[1], ], 
                        position="identity",
-                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select="Value")))/30) + 
+                       binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[1], "Value"]))/30) + 
         geom_histogram(linetype="blank", #alpha=0.8, 
-                       data=subset(infodata, Index==Indexfac[2]), 
+                       data = infodata[infodata[["Index"]] == Indexfac[2], ], 
                        position="identity",
-                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select="Value")))/30) + 
+                       binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))/30) + 
         geom_rug() + 
         # The label for the observed line is a bit more difficult to code as
         # it has the ability to appear anywhere on the chart. Here, I'm
@@ -196,13 +193,13 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
         # Giving the data over to the histogram creating function and removing
         # all of the lines from each bar, so it's displayed as a solid area.
         geom_histogram(linetype="blank", #alpha=0.8, 
-                       data=subset(infodata, Index==Indexfac[1]), 
+                       data = infodata[infodata[["Index"]] == Indexfac[1], ], 
                        position="identity",
-                       binwidth=diff(range(subset(infodata, Index==Indexfac[1], select="Value")))/30) + 
+                       binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[1], "Value"]))/30) + 
         geom_histogram(linetype="blank", #alpha=0.8, 
-                       data=subset(infodata, Index==Indexfac[2]), 
+                       data = infodata[infodata[["Index"]] == Indexfac[2], ], 
                        position="identity",
-                       binwidth=diff(range(subset(infodata,Index==Indexfac[2],select="Value")))/30) + 
+                       binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))/30) + 
         geom_rug() + 
         # Positioning the observed line and labeling it.
         geom_vline(aes_string(xintercept = "Observed"), data = obsdata, color="blue", 
