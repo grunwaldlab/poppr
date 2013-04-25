@@ -117,7 +117,7 @@ At this point, a pop up window will appear like this\footnote{This window someti
   \centering
   \caption{\footnotesize \footnotesize A popup window as it appears in OSX (Mountain Lion).}
   \label{getfile window}
-\includegraphics{getfile}
+\includegraphics{getfile.png}
 \end{figure}
 \begin{center}
    \fcolorbox{black}{light-gray}{
@@ -2714,6 +2714,8 @@ You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal
 > set.seed(2001)
 > poppr(nancycats, sublist=5:6, total=FALSE, sample=999, method=3, quiet=TRUE, hist=FALSE)
 \end{Sinput}
+\end{Schunk}
+\begin{Schunk}
 \begin{Soutput}
   Pop  N MLG eMLG SE     H  G Hexp E.5     Ia  p.Ia  rbarD  p.rD                     File
 1   5 15  15   11  0 2.708 15    1   1 -0.048 0.599 -0.006 0.599 truenames(nancycats)$tab
@@ -2737,7 +2739,11 @@ The reason why the P-values would be different is described at the end of sectio
   \centering
   \caption{\footnotesize Output of multilocus-style sampling. Note the multi-modal distribution.}
   \label{simulated_dist_fig}
-\includegraphics{poppr_manual-135}
+  \includegraphics{simulated_dist_fig.png}
+% <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
+% set.seed(2004)
+% der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE, hist=TRUE)
+% @
 \end{figure}
 \newpage
 
@@ -2746,7 +2752,11 @@ Take a look a these two histograms. The number of ways you can recombine the dat
   \centering
   \caption{\footnotesize Output for parametric bootstrap sampling.}
   \label{simulated_param_fig}
-\includegraphics{poppr_manual-136}
+  \includegraphics{simulated_param_fig.png}
+% <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
+% set.seed(2004)
+% der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=3, quiet=TRUE)
+% @
 \end{figure}
 
 As you can see, the distribution is much closer to a distribution we would expect if this were a small sample of a larger population. 

@@ -110,7 +110,7 @@ At this point, a pop up window will appear like this\footnote{This window someti
   \centering
   \caption{\footnotesize \footnotesize A popup window as it appears in OSX (Mountain Lion).}
   \label{getfile window}
-\includegraphics{getfile}
+\includegraphics{getfile.png}
 \end{figure}
 \begin{center}
    \fcolorbox{black}{light-gray}{
@@ -1543,9 +1543,14 @@ cbind(pop1[1:10],list(p.Ia = rep(0.001, 3)), pop1[11], list(p.rD = rep(0.001, 3)
 As you can see, clone correction doesn't always have to involve creation of new data sets!
 
 You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal to each other. This is due to the default sampling method \cite{Agapow:2001}. Here, we show examples where they are not equal.
-<<nancy_example>>=
+<<nancy_example_show, eval=FALSE>>=
 set.seed(2001)
 poppr(nancycats, sublist=5:6, total=FALSE, sample=999, method=3, quiet=TRUE, hist=FALSE)
+@
+<<nancy_example_show, echo=FALSE>>=
+set.seed(2001)
+nan_ex <- poppr(nancycats, sublist=5:6, total=FALSE, sample=0, method=3, quiet=TRUE, hist=FALSE)
+cbind(nan_ex[1:10],list(p.Ia = c(0.599, 0.064), nan_ex[11], list(p.rD = c(0.599, 0.065), nan_ex[12])))
 @
 The reason why the P-values would be different is described at the end of section \ref{index:iard:ia}. The differences in P-values are normally not very far off. It's important to note this because of what can happen in extremely clonal populations. You can end up with a large enough sample size consisting of very few MLGs. Upon shuffling, you find that there are very few values of $I_A$ and $\bar r_d$ that can be obtained. Observe with this simulated data set:
 <<simulated_dist, eval=FALSE>>=
@@ -1554,16 +1559,18 @@ poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1,
 @
 <<simulated_dist_out, echo=FALSE>>=
 set.seed(2004)
-poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE, hist=FALSE)
+sim_ex <- poppr(system.file("files/simulated.dat", package="poppr"), sample=0, method=1, quiet=TRUE, hist=FALSE)
+cbind(sim_ex[1:10],list(p.Ia = c(0.09), sim_ex[11], list(p.rD = c(0.09), sim_ex[12])))
 @
 \begin{figure}[h!]
   \centering
   \caption{\footnotesize Output of multilocus-style sampling. Note the multi-modal distribution.}
   \label{simulated_dist_fig}
-<<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
-set.seed(2004)
-der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE, hist=TRUE)
-@
+  \includegraphics{simulated_dist_fig.png}
+% <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
+% set.seed(2004)
+% der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE, hist=TRUE)
+% @
 \end{figure}
 \newpage
 
@@ -1572,10 +1579,11 @@ Take a look a these two histograms. The number of ways you can recombine the dat
   \centering
   \caption{\footnotesize Output for parametric bootstrap sampling.}
   \label{simulated_param_fig}
-<<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
-set.seed(2004)
-der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=3, quiet=TRUE)
-@
+  \includegraphics{simulated_param_fig.png}
+% <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
+% set.seed(2004)
+% der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=3, quiet=TRUE)
+% @
 \end{figure}
 
 As you can see, the distribution is much closer to a distribution we would expect if this were a small sample of a larger population. 
