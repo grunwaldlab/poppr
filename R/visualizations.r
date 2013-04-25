@@ -149,8 +149,13 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
     
     obsdata <- data.frame(list(Observed=observed[1:2], Index=Indexfac))
     obsdata[["P"]] <- paste("Observed \n(p-value: ", pval,")",sep="")
-    obsdata[["median"]] <- c(median(unlist(subset(infodata,Index=Indexfac[1],select="Value"))), 
-                        median(unlist(subset(infodata,Index=Indexfac[2],select="Value"))))
+    #obsdata[["median"]] <- c(median(unlist(subset(infodata,Index=Indexfac[1],select="Value"))), 
+    #                    median(unlist(subset(infodata,Index=Indexfac[2],select="Value"))))
+
+    obsdata[["median"]] <- c(median(infodata[infodata[["Index"]] == Indexfac[1], "Value"]),
+                        median(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))
+
+
     obsdata[["label"]] <- paste("Observed: ",obsdata[["Observed"]], sep="")
     if(any(is.na(observed))){
       warning(paste("The Index of Association values from ",file,", population: ",pop," contain missing values and cannot be displayed graphically", sep=""))
