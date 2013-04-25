@@ -164,7 +164,6 @@ mlg <- function(pop, quiet=FALSE){
 #' dataset, you can use \code{mlg.bar(popsub(pop, ...))}.
 #' 
 #' @export
-# @examples
 #
 #
 #==============================================================================#
@@ -208,7 +207,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
       mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
 
       # plot it
-      return(ggplot(mlgt.df, aes(MLG)) + geom_bar(aes(fill=count), position="identity"))
+      return(ggplot(mlgt.df, aes_string(x = "MLG")) + geom_bar(aes_string(fill = "count"), position="identity"))
       #theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0)))
     }
 
