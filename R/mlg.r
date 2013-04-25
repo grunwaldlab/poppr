@@ -86,13 +86,15 @@
 #' # Changing the population vector to indicate the years of each epidemic.
 #' pop(H3N2) <- other(H3N2)$x$country
 #' H.tab <- mlg.table(H3N2, bar=FALSE, total=TRUE)
+#'
+#' # Show which genotypes exist accross populations in the entire dataset.
+#' res <- mlg.crosspop(H3N2, quiet=FALSE)
+#'
+#' \dontrun{
 #' # Let's say we want to visualize the multilocus genotype distribution for the
 #' # USA and Russia
 #' mlg.table(H3N2, sublist=c("USA", "Russia"), bar=TRUE)
 #' 
-#' # Show which genotypes exist accross populations in the entire dataset.
-#' res <- mlg.crosspop(H3N2, quiet=FALSE)
-#'
 #' # An exercise in subsetting the output of mlg.table and mlg.vector.
 #' # First, get the indices of each MLG duplicated across populations.
 #' inds <- mlg.crosspop(H3N2, quiet=FALSE, indexreturn=TRUE)
@@ -116,6 +118,7 @@
 #' mlg(mat.gid)
 #' mlg.vector(mat.gid)
 #' mlg.table(mat.gid)
+#' }
 NULL
 #==============================================================================#
 #' @rdname mlg
