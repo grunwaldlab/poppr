@@ -245,6 +245,7 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
 #' # Analyze only the populations with exactly 50 individuals
 #' mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), blacklist=c(3,4,13,14))
 #'
+#' \dontrun{
 #' # Analyze the first 10 populations, except for "Bazadais"
 #' mic.10 <- popsub(microbov, sublist=1:10, blacklist="Bazadais")
 #' 
@@ -253,7 +254,7 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
 #' 
 #' # Analyze the two largest populations
 #' miclrg <- popsub(microbov, sublist=c("BlondeAquitaine", "Charolais"))
-#'
+#' }
 #' @export
 #==============================================================================#
 
@@ -519,6 +520,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
+#' \dontrun{
 #' # Method 1: Splitting.
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 #' 
@@ -528,10 +530,11 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' # Let's split them up. The default data frame from read.genalex is the same
 #' # as the default for this function. 
 #' Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
-#'
+#' 
 #' # Much better!
 #' Aeut$pop.names
-#' 
+#' }
+#'
 #' # Method 2: Combining.
 #' 
 #' data(H3N2)
