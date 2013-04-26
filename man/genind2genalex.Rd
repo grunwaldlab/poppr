@@ -43,6 +43,9 @@ data(nancycats)
 genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 }
 }
+\author{
+  Zhian N. Kamvar
+}
 \seealso{
   \code{\link{clonecorrect}}, \code{\link{genind}}
 }

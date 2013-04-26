@@ -144,6 +144,9 @@ poppr(H3N2, total=FALSE, sublist=c("Austria", "China", "USA"),
 				clonecorrect=TRUE, hier="country", dfname="x")
 }
 }
+\author{
+  Zhian N. Kamvar
+}
 \seealso{
   \code{\link{clonecorrect}}, \code{\link{poppr.all}},
   \code{\link{ia}}, \code{\link{missingno}},

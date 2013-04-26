@@ -75,6 +75,7 @@
 #' represented MLGs is appended to the matrix produced by mlg.table.
 #'
 #' @seealso \code{\link{diversity}} \code{\link{popsub}}
+#' @author Zhian N. Kamvar
 #' @examples
 #'
 #' data(H3N2)
@@ -85,13 +86,15 @@
 #' # Changing the population vector to indicate the years of each epidemic.
 #' pop(H3N2) <- other(H3N2)$x$country
 #' H.tab <- mlg.table(H3N2, bar=FALSE, total=TRUE)
+#'
+#' # Show which genotypes exist accross populations in the entire dataset.
+#' res <- mlg.crosspop(H3N2, quiet=FALSE)
+#'
+#' \dontrun{
 #' # Let's say we want to visualize the multilocus genotype distribution for the
 #' # USA and Russia
 #' mlg.table(H3N2, sublist=c("USA", "Russia"), bar=TRUE)
 #' 
-#' # Show which genotypes exist accross populations in the entire dataset.
-#' res <- mlg.crosspop(H3N2, quiet=FALSE)
-#'
 #' # An exercise in subsetting the output of mlg.table and mlg.vector.
 #' # First, get the indices of each MLG duplicated across populations.
 #' inds <- mlg.crosspop(H3N2, quiet=FALSE, indexreturn=TRUE)
@@ -115,6 +118,7 @@
 #' mlg(mat.gid)
 #' mlg.vector(mat.gid)
 #' mlg.table(mat.gid)
+#' }
 NULL
 #==============================================================================#
 #' @rdname mlg
@@ -163,7 +167,6 @@ mlg <- function(pop, quiet=FALSE){
 #' dataset, you can use \code{mlg.bar(popsub(pop, ...))}.
 #' 
 #' @export
-# @examples
 #
 #
 #==============================================================================#
@@ -204,10 +207,10 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
             count = rep(mlgt, mlgt)))
 
       # Organize the data frame by count in descending order.
-      mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
+      mlgt.df[["MLG"]] <- reorder(mlgt.df[["MLG"]], -mlgt.df[["count"]])
 
       # plot it
-      return(ggplot(mlgt.df, aes(MLG)) + geom_bar(aes(fill=count), position="identity"))
+      return(ggplot(mlgt.df, aes_string(x = "MLG")) + geom_bar(aes_string(fill = "count"), position="identity"))
       #theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0)))
     }
 

@@ -58,6 +58,7 @@
   first column of your data frame.
 }
 \examples{
+\dontrun{
 # Method 1: Splitting.
 Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 
@@ -70,6 +71,7 @@ Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
 
 # Much better!
 Aeut$pop.names
+}
 
 # Method 2: Combining.
 
@@ -87,5 +89,8 @@ H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
 # population to year.
 H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
 }
+}
+\author{
+  Zhian N. Kamvar
 }
 

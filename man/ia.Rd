@@ -71,6 +71,9 @@ lapply(seppop(nancycats), ia)
 lapply(seppop(nancycats), ia, sample=999)
 }
 }
+\author{
+  Zhian N. Kamvar
+}
 \seealso{
   \code{\link{poppr}}, \code{\link{missingno}},
   \code{\link{import2genind}}, \code{\link{read.genalex}},

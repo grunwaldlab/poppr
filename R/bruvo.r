@@ -71,6 +71,7 @@
 #' alleles at each locus. It is not recommended to rely on this estimation. 
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' # Please note that the data presented is assuming that the nancycat dataset 
 #' # contains all dinucleotide repeats, it most likely is not an accurate

@@ -70,6 +70,7 @@
 #'
 #'
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' # load the microbov dataset
 #' data(microbov)
@@ -82,7 +83,7 @@
 #' 
 #' # Multilocus Style: maintain allelic state and heterozygosity.
 #' summary(shufflepop(Zebu, method=1))
-#'
+#' \dontrun{
 #' # Permute Alleles: maintain allelic state; heterozygosity varies.
 #' summary(shufflepop(Zebu, method=2))
 #'
@@ -91,6 +92,7 @@
 #' 
 #' # Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.
 #' summary(shufflepop(Zebu, method=4))
+#' }
 #==============================================================================#
 shufflepop <- function(pop, method=1){
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",

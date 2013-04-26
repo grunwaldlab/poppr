@@ -44,9 +44,9 @@
   \code{original_names}.
 }
 \examples{
+\dontrun{
 Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 
-\dontrun{
 genalex2 <- read.genalex("genalex2.csv", geo=TRUE)
 # A genalex file with geographic coordinate data.
 
@@ -56,6 +56,9 @@ genalex3 <- read.genalex("genalex3.csv", region=TRUE)
 genalex4 <- read.genalex("genalex4.csv", region=TRUE, geo=TRUE)
 # A genalex file with both regional and geographic information.
 }
+}
+\author{
+  Zhian N. Kamvar
 }
 \seealso{
   \code{\link{clonecorrect}}, \code{\link{genind}}

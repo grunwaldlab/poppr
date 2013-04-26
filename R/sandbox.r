@@ -44,113 +44,10 @@
 
 
 
-
-
-
-
-
 testing_funk <- function(){
   cat("This test worked...maybe.\n")
 }
 
-
-# Randomly inserts NA's into alleles. So far this is one allele per locus. I could
-# possibly write a function that would simulate systematic missing data later.
-# This function would take a list of loci from a single population and return it
-# with missing data.
-missing_randomizer <- function(pop){
-  loci_pos <- sample(length(pop), 1)
-  allele_pos <- sample(nrow(pop[[1]]@tab), 1)
-  pop[[loci_pos]]@tab[allele_pos,] <- NA
-  return(pop)
-}
-# This repeats missing randomizer to create a dataset with any number of missing
-# datapoints.
-sprinkle_missing <- function(pop, reps=1){
-  vapply(1:reps, function(x) pop <<- missing_randomizer(pop), pop)
-  print(lapply(pop, function(x) which(is.na(x@tab))))
-  return(pop)
-}
-
-
-# This is their pairwisefst function. It demonstrates what to do with separate
-# population structures.
-new_pairwise.fst <- function (x, pop = NULL, res.type = c("dist", "matrix"), truenames = TRUE) 
-{
-    if (!is.genind(x)) 
-        stop("x is not a valid genind object")
-    #``````````````````````````````````````````````````````````````````````````#
-    # Replacing the population with another selected population vector, allowing
-    # for popsubulations. 
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#    
-    if (!is.null(pop)) {
-        pop(x) <- pop
-    }
-    temp <- pop(x)
-    if (is.null(temp)) 
-        stop("no grouping factor (pop) provided")
-    if (length(levels(temp)) < 2) {
-        warning("There is only one pop - returning NULL")
-        return(NULL)
-    }
-    res.type <- match.arg(res.type)
-    f1 <- function(pop1, pop2) {
-        #``````````````````````````````````````````````````````````````````````#
-        # Lining up the individuals of the populations and repooling them for
-        # Pairwise comparison
-        #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-        n1 <- nrow(pop1@tab)
-        n2 <- nrow(pop2@tab)
-        temp <- repool(pop1, pop2)
-        #``````````````````````````````````````````````````````````````````````#
-        # This returns a single mean value of the heterozygosities of these
-        # populations. This represents the "expected" value. 
-        #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-        b <- weighted.mean(Hs(temp), c(n1, n2))
-        pop(temp) <- NULL
-        #``````````````````````````````````````````````````````````````````````#
-        # returning the means of both populations. and then the f-statistic
-        #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-        a <- Hs(temp)
-        return((a - b)/a)
-    }
-    #``````````````````````````````````````````````````````````````````````````#
-    # Separating out the popsubulations. temp <- pop(x) is not necessary
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#    
-    lx <- seppop(x, treatOther = FALSE)
-    temp <- pop(x)
-    levPop <- levels(temp)
-    #``````````````````````````````````````````````````````````````````````````#
-    # getting all possible combinations using combn. This might be where I can
-    # Modify it.
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#    
-    allPairs <- combn(1:length(levPop), 2)
-    if (!is.matrix(allPairs)) {
-        allPairs <- matrix(allPairs, nrow = 2)
-    }
-    vecRes <- numeric()
-    for (i in 1:ncol(allPairs)) {
-        vecRes[i] <- f1(lx[[allPairs[1, i]]], lx[[allPairs[2, 
-            i]]])
-    }
-    squelres <- dist(1:length(levPop))
-    res <- vecRes
-    #``````````````````````````````````````````````````````````````````````````#
-    # Converting this into a distance triangle. dis
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-    attributes(res) <- attributes(squelres)
-    if (res.type == "matrix") {
-        res <- as.matrix(res)
-        if (truenames) {
-            lab <- x@pop.names
-        }
-        else {
-            lab <- names(x@pop.names)
-        }
-        colnames(res) <- rownames(res) <- lab
-    }
-    return(res)
-}
 
 
 .new.sampling <- function(pop,iterations,quiet="noisy",missing="ignore",type=type, method=1){ 
@@ -339,11 +236,6 @@ new.poppr <- function(pop,total=TRUE,sublist=c("ALL"),blacklist=c(NULL), sample=
 }
 
 
-
-
-
-
-
 new.poppr.all <- function(filelist, ...) {
 	result <- NULL
 	for(a in filelist){
@@ -491,36 +383,8 @@ pop.sampler <- function(pop, method=1){
   return(pop)
 }
 
-new.getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
-  # the default option is to grab a single file in the directory. If multFile is 
-  # set to TRUE, it will grab all the files in the directory corresponding to any
-  # pattern that is set. If there is no pattern, all files will be grabbed.
-  if (multi==TRUE){
-    # this sets the path variable that the user can use to set the path
-    # to the files with setwd(x$path), where x is the datastructure 
-    # this function dumped into.
-    pathandfile <- file.path(file.choose())
-    path <- dirname(pathandfile)
-    if (!is.null(pattern)){
-      pat <- pattern
-      x <- list.files(path, pattern=pat)
-    }
-    else {
-      x <- list.files(path)
-    }
-  }
-  else {
-    # if the user chooses to analyze only one file, a pattern is not needed
-    pathandfile <- file.path(file.choose())
-    path <- dirname(pathandfile)
-    x <- basename(pathandfile)
-  }
-  if(combine == TRUE){
-    x <- paste(path, x, sep="/")
-  }
-  filepath <- list(files=x, path=path)
-  return(filepath)
-}
+
+
 
 
 ################################################################################
