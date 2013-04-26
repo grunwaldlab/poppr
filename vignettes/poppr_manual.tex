@@ -378,9 +378,9 @@ $files
  [6] "/path/to/R/adegenet/files/nancycats.gen"    
  [7] "/path/to/R/adegenet/files/nancycats.gtx"    
  [8] "/path/to/R/adegenet/files/nancycats.str"    
- [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
-[10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
-[11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+ [9] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+[10] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+[11] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
 [12] "/path/to/R/adegenet/files/usflu.fasta"      
 
 $path
@@ -2211,7 +2211,6 @@ Note that both of the P-values are exactly the same. This is what you would obta
 \begin{Sinput}
 > set.seed(1001)
 > ia(popsub(nancycats, 5), sample=999, method=3, quiet=TRUE, hist=FALSE)
-> c(simplenan[1], p.Ia = 0.589, simplenan[2], p.rD = 0.589)
 \end{Sinput}
 \end{Schunk}
 \begin{Schunk}

@@ -1155,7 +1155,6 @@ Note that both of the P-values are exactly the same. This is what you would obta
 <<ch_pval_one, eval=FALSE>>=
 set.seed(1001)
 ia(popsub(nancycats, 5), sample=999, method=3, quiet=TRUE, hist=FALSE)
-c(simplenan[1], p.Ia = 0.589, simplenan[2], p.rD = 0.589)
 @
 <<ch_pval_two, echo=FALSE>>=
 set.seed(1001)
