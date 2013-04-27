@@ -15,13 +15,22 @@ genind object and offers the following implementations:
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
+
 ## Installation
 
 ### From CRAN
 
-- This package has been submitted to CRAN, if it is not avialable, see about installing the development version below.
+Binary versions for mac and windows are available for R 3.0 [**here**](http://cran.r-project.org/web/packages/poppr/index.html).
 
-### Development version
+To install, make sure R is updated to the latest version, and in your console, type:
+
+    install.packages("poppr")
+    
+If you do not want to upgrade to R 3.0 just yet, see about installing from github below.
+
+***
+
+### Stable and Development versions
 
 To install this package from github, make sure you have the following:
 
