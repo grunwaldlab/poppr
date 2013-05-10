@@ -441,19 +441,21 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	*
 	*	This one reflects the example presented in the original paper.
 	*	.Call("single_bruvo", c(20,23,24,30,20,24,26,43), .Call("permuto", 4), 4)
-	*	# Should be 0.4687195
+	*	# 0.4687195
 	*
 	*	.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4)
-	*	# Should be 0.424
+	*	# 0.4010415
+	*
+	*	Note that the initial values of the genome addition
 	*/
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
 		int ind, *genop, miss_ind, full_ind; 
-		double genome_add_sum = 0, genome_loss_sum = 0;
+		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;		
 		if (zerocatch[0] < p) // The rows contain the zero value
 		{
-			/*	
+			/*
 			*	Genome Addition model uses the observed values of the short
 			*	genotype for the replacement allele. This is achieved by simply
 			*	shifting the columns or rows of the distance matrix and 
@@ -472,6 +474,11 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 				{
 					dist[ind][j] = dist[i][j];
 				}
+				/*
+				derp = mindist(w, p, perm, distp)*p;
+				genome_add_sum += derp;
+				printf("Genome Addition Distance: %11f\n", derp);
+				*/
 				genome_add_sum += mindist(w, p, perm, distp);
 				next1:;	
 			}
@@ -504,15 +511,22 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 		*/
 		for (i = 0; i < p; i++)
 		{
+			//printf("Origininal: %d\tReplacement: %d\n", genos[miss_ind][ind], genos[full_ind][i]);
 			genos[miss_ind][ind] = genos[full_ind][i];
-			genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w);
+			/*
+			derp = test_bruvo_dist(genop, &p, perm, &w)*p;
+			genome_loss_sum += derp;
+			printf("Genome Loss Distance: %11f\n", derp);
+			*/
+			//	Note: These need to be multiplied by p since the result has been
+			//	divided by p previously.
+			genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w)*p;
 		}
 		genome_loss_sum = genome_loss_sum/p;
 		genome_add_sum = genome_add_sum/(p-1);
-		
 		return (genome_add_sum + genome_loss_sum)/(p*2);
 	}
-	return mindist(w, p, perm, distp);
+	return mindist(w, p, perm, distp)/p;
 }
 
 
@@ -553,5 +567,5 @@ double mindist(int perms, int alleles, int *perm, double *dist)
 			minn = res;
 		}
 	}
-	return minn/p;
+	return minn;
 }
