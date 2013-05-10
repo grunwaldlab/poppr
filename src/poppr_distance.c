@@ -170,7 +170,7 @@ SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles)
 {
 	int A, P, *pA, *pP;
 	SEXP Rval;
-	SEXP Rdim;
+	//SEXP Rdim;
 	P = length(permutations);
 	alleles = coerceVector(alleles, INTSXP);
 	A = INTEGER(alleles)[0];
@@ -339,7 +339,7 @@ int fact(int x)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
-	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
+	int i, j, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
 	double dist[p][p], da, res, minn=100;
 	// reconstruct the genotype table.
 	for(i=0; i < n; i++)
@@ -399,9 +399,9 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
-	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p], 
+	int i, j, counter=0, n = 2, p = *nall, w = *woo, genos[2][p], 
 	zerocatch[2];
-	double dist[p][p], da, res, minn=100, *distp;
+	double dist[p][p], da, minn=100, *distp;
 	// reconstruct the genotype table.
 	zerocatch[0] = p;
 	zerocatch[1] = p;
