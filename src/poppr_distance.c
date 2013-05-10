@@ -340,7 +340,7 @@ int fact(int x)
 double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
 	int i, j, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
-	double dist[p][p], da, res, minn=100;
+	double dist[p][p], da, res = 0, minn=100;
 	// reconstruct the genotype table.
 	for(i=0; i < n; i++)
 	{
@@ -438,6 +438,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	*	Test code:
 	*	test <- sample(1:20, 8, rep=TRUE); test[sample(1:4, 1)] <- 0; test
 	*	.Call("single_bruvo", test, .Call("permuto", 4), 4)
+	*
+	*	This one reflects the example presented in the original paper.
+	*	.Call("single_bruvo", c(20,23,24,30,20,24,26,43), .Call("permuto", 4), 4)
+	*	# Should be 0.4687195
+	*
+	*	.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4)
+	*	# Should be 0.424
 	*/
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
@@ -525,7 +532,7 @@ void pass_vector(int *pointy, int *pointynumber)
 double mindist(int perms, int alleles, int *perm, double *dist)
 {
 	int i, j, w = perms, p = alleles, counter = 0;
-	double res, minn = 100;
+	double res = 0, minn = 100;
 	for(i = 0; i < w; i += p)
 	{
 		for(j = 0; j < p; j++)
