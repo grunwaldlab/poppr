@@ -452,7 +452,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	{
 		int ind, *genop, miss_ind, full_ind; 
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
-		genop = (int *) &genos;		
+		genop = (int *) &genos;
 		if (zerocatch[0] < p) // The rows contain the zero value
 		{
 			/*
@@ -519,11 +519,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			printf("Genome Loss Distance: %11f\n", derp);
 			*/
 			//	Note: These need to be multiplied by p since the result has been
-			//	divided by p previously.
+			//	divided by p 
 			genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w)*p;
 		}
 		genome_loss_sum = genome_loss_sum/p;
 		genome_add_sum = genome_add_sum/(p-1);
+		//printf("Genome Loss Model: %11f\tGenome Addition Model: %11f\n", 
+		//genome_loss_sum/p, genome_add_sum/p);
 		return (genome_add_sum + genome_loss_sum)/(p*2);
 	}
 	return mindist(w, p, perm, distp)/p;
