@@ -466,10 +466,16 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 	*/
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
-		int ind, *genop, miss_ind, full_ind; 
+		int ind = zerocatch[1], *genop, miss_ind = 1, full_ind = 0; 
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;
 
+		if (zerocatch[0] < p) // The rows contain the zero value
+		{
+			ind = zerocatch[0];
+			miss_ind = 0;
+			full_ind = 1;
+		}
 		/*======================================================================
 		*	INFINITE MODEL...IGNORE THE FACT THAT IT IS A COPY OF GENOME_ADD
 		*	Infinite model will simply replace the distance of the comparisons
@@ -477,49 +483,33 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 		======================================================================*/
 		if(loss_indicator != 1 && add_indicator != 1)
 		{
-			if (zerocatch[0] < p) // The rows contain the zero value
+			for (i = 0; i < p; i++)
 			{
-				ind = zerocatch[0];
-				miss_ind = 0;
-				full_ind = 1;
-				for (i = 0; i < p; i++)
+				if (i == ind)
 				{
-					if (i == ind)
-					{
-						goto inf1;
-					}
+					goto inf1;
+				}
+				if (zerocatch[0] < p)
+				{
 					for (j = 0; j < p; j++)
 					{
 						dist[ind][j] = 1;
 					}
-					/*
-					derp = mindist(w, p, perm, distp)*p;
-					genome_add_sum += derp;
-					printf("Genome Addition Distance: %11f\n", derp);
-					*/
-					genome_add_sum += mindist(w, p, perm, distp);
-					inf1:;	
 				}
-
-			}
-			else // The columns contain the zero value. 
-			{
-				ind = zerocatch[1];
-				miss_ind = 1;
-				full_ind = 0;
-				for (i = 0; i < p; i++)
+				else
 				{
-					if (i == ind)
-					{
-						goto inf2;
-					}
 					for (j = 0; j < p; j++)
 					{
 						dist[j][ind] = 1;
-					}
-					genome_add_sum += mindist(w, p, perm, distp);
-					inf2:;
+					}						
 				}
+				/*
+				derp = mindist(w, p, perm, distp)*p;
+				genome_add_sum += derp;
+				printf("Genome Addition Distance: %11f\n", derp);
+				*/
+				genome_add_sum += mindist(w, p, perm, distp);
+				inf1:;	
 			}
 			return (genome_add_sum/(p-1))/p;
 		}
@@ -533,49 +523,33 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 		======================================================================*/
 		if (add_indicator == 1)
 		{
-			if (zerocatch[0] < p) // The rows contain the zero value
+			for (i = 0; i < p; i++)
 			{
-				ind = zerocatch[0];
-				miss_ind = 0;
-				full_ind = 1;
-				for (i = 0; i < p; i++)
+				if (i == ind)
 				{
-					if (i == ind)
-					{
-						goto next1;
-					}
+					goto next1;
+				}
+				if (zerocatch[0] < p)
+				{
 					for (j = 0; j < p; j++)
 					{
 						dist[ind][j] = dist[i][j];
 					}
-					/*
-					derp = mindist(w, p, perm, distp)*p;
-					genome_add_sum += derp;
-					printf("Genome Addition Distance: %11f\n", derp);
-					*/
-					genome_add_sum += mindist(w, p, perm, distp);
-					next1:;	
 				}
-
-			}
-			else // The columns contain the zero value. 
-			{
-				ind = zerocatch[1];
-				miss_ind = 1;
-				full_ind = 0;
-				for (i = 0; i < p; i++)
+				else
 				{
-					if (i == ind)
-					{
-						goto next2;
-					}
 					for (j = 0; j < p; j++)
 					{
-						dist[j][ind] = dist[j][i];
-					}
-					genome_add_sum += mindist(w, p, perm, distp);
-					next2:;
+						dist[j][ind] = dist[i][j];
+					}						
 				}
+				/*
+				derp = mindist(w, p, perm, distp)*p;
+				genome_add_sum += derp;
+				printf("Genome Addition Distance: %11f\n", derp);
+				*/
+				genome_add_sum += mindist(w, p, perm, distp);
+				next1:;	
 			}
 		}
 
@@ -588,18 +562,6 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 		======================================================================*/
 		if (loss_indicator == 1)
 		{
-			if (zerocatch[0] < p) // The rows contain the zero value
-			{
-				ind = zerocatch[0];
-				miss_ind = 0;
-				full_ind = 1;
-			}			
-			else
-			{
-				ind = zerocatch[1];
-				miss_ind = 1;
-				full_ind = 0;
-			}
 			for (i = 0; i < p; i++)
 			{
 				//printf("Origininal: %d\tReplacement: %d\n", genos[miss_ind][ind], genos[full_ind][i]);
