@@ -450,29 +450,35 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	*	.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
 	*	# 0.4010415
 	*
-	*	Note that the initial values of the genome addition
+	*	Test code comparing current status to polysat's Bruvo2.distance:
+	****
+================================================================================
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0)
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=FALSE)
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 0)
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=FALSE)
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 1)
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=F, add=T)
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
+================================================================================
+	****
 	*/
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
-		
 		int ind, *genop, miss_ind, full_ind; 
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;
 
-		if(loss_indicator == 1 || add_indicator == 1)
-		{
-			printf("Addition: %d\tLoss: %d\n", add_indicator, loss_indicator);
-		}
-		else
+		/*======================================================================
+		*	INFINITE MODEL...IGNORE THE FACT THAT IT IS A COPY OF GENOME_ADD
+		*	Infinite model will simply replace the distance of the comparisons
+		*	containing the missing allele to 1.
+		======================================================================*/
+		if(loss_indicator != 1 && add_indicator != 1)
 		{
 			if (zerocatch[0] < p) // The rows contain the zero value
 			{
-				/*
-				*	Genome Addition model uses the observed values of the short
-				*	genotype for the replacement allele. This is achieved by simply
-				*	shifting the columns or rows of the distance matrix and 
-				*	recalculating the minimum distance. 
-				*/
 				ind = zerocatch[0];
 				miss_ind = 0;
 				full_ind = 1;
@@ -516,81 +522,105 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 				}
 			}
 			return (genome_add_sum/(p-1))/p;
-		}	
-		if (zerocatch[0] < p) // The rows contain the zero value
-		{
-			/*
-			*	Genome Addition model uses the observed values of the short
-			*	genotype for the replacement allele. This is achieved by simply
-			*	shifting the columns or rows of the distance matrix and 
-			*	recalculating the minimum distance. 
-			*/
-			ind = zerocatch[0];
-			miss_ind = 0;
-			full_ind = 1;
-			for (i = 0; i < p; i++)
-			{
-				if (i == ind)
-				{
-					goto next1;
-				}
-				for (j = 0; j < p; j++)
-				{
-					dist[ind][j] = dist[i][j];
-				}
-				/*
-				derp = mindist(w, p, perm, distp)*p;
-				genome_add_sum += derp;
-				printf("Genome Addition Distance: %11f\n", derp);
-				*/
-				genome_add_sum += mindist(w, p, perm, distp);
-				next1:;	
-			}
+		}
 
-		}
-		else // The columns contain the zero value. 
+		/*======================================================================
+		*	GENOME ADDITION MODEL
+		*	Genome Addition model uses the observed values of the short
+		*	genotype for the replacement allele. This is achieved by simply
+		*	shifting the columns or rows of the distance matrix and 
+		*	recalculating the minimum distance. 
+		======================================================================*/
+		if (add_indicator == 1)
 		{
-			ind = zerocatch[1];
-			miss_ind = 1;
-			full_ind = 0;
-			for (i = 0; i < p; i++)
+			if (zerocatch[0] < p) // The rows contain the zero value
 			{
-				if (i == ind)
+				ind = zerocatch[0];
+				miss_ind = 0;
+				full_ind = 1;
+				for (i = 0; i < p; i++)
 				{
-					goto next2;
+					if (i == ind)
+					{
+						goto next1;
+					}
+					for (j = 0; j < p; j++)
+					{
+						dist[ind][j] = dist[i][j];
+					}
+					/*
+					derp = mindist(w, p, perm, distp)*p;
+					genome_add_sum += derp;
+					printf("Genome Addition Distance: %11f\n", derp);
+					*/
+					genome_add_sum += mindist(w, p, perm, distp);
+					next1:;	
 				}
-				for (j = 0; j < p; j++)
+
+			}
+			else // The columns contain the zero value. 
+			{
+				ind = zerocatch[1];
+				miss_ind = 1;
+				full_ind = 0;
+				for (i = 0; i < p; i++)
 				{
-					dist[j][ind] = dist[j][i];
+					if (i == ind)
+					{
+						goto next2;
+					}
+					for (j = 0; j < p; j++)
+					{
+						dist[j][ind] = dist[j][i];
+					}
+					genome_add_sum += mindist(w, p, perm, distp);
+					next2:;
 				}
-				genome_add_sum += mindist(w, p, perm, distp);
-				next2:;
 			}
 		}
+
 		
-		/*	
+		/*======================================================================
+		*	GENOME LOSS MODEL
 		*	Genome Loss model uses the alleles from the larger genotype to
 		*	reconstruct the allelic state of the smaller. This means that
-		*	they need to be replaced and passed through the function again. 
-		*/
-		for (i = 0; i < p; i++)
+		*	they need to be replaced and passed through the function again.
+		======================================================================*/
+		if (loss_indicator == 1)
 		{
-			//printf("Origininal: %d\tReplacement: %d\n", genos[miss_ind][ind], genos[full_ind][i]);
-			genos[miss_ind][ind] = genos[full_ind][i];
-			/*
-			derp = test_bruvo_dist(genop, &p, perm, &w)*p;
-			genome_loss_sum += derp;
-			printf("Genome Loss Distance: %11f\n", derp);
-			*/
-			//	Note: These need to be multiplied by p since the result has been
-			//	divided by p 
-			genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w, &loss_indicator, &add_indicator)*p;
+			if (zerocatch[0] < p) // The rows contain the zero value
+			{
+				ind = zerocatch[0];
+				miss_ind = 0;
+				full_ind = 1;
+			}			
+			else
+			{
+				ind = zerocatch[1];
+				miss_ind = 1;
+				full_ind = 0;
+			}
+			for (i = 0; i < p; i++)
+			{
+				//printf("Origininal: %d\tReplacement: %d\n", genos[miss_ind][ind], genos[full_ind][i]);
+				genos[miss_ind][ind] = genos[full_ind][i];
+				/*
+				derp = test_bruvo_dist(genop, &p, perm, &w)*p;
+				genome_loss_sum += derp;
+				printf("Genome Loss Distance: %11f\n", derp);
+				*/
+				//	Note: These need to be multiplied by p since the result has been
+				//	divided by p 
+				genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w, 
+										&loss_indicator, &add_indicator)*p;
+			}
 		}
 		genome_loss_sum = genome_loss_sum/p;
 		genome_add_sum = genome_add_sum/(p-1);
+		int comparison_factor = loss_indicator + add_indicator;
 		//printf("Genome Loss Model: %11f\tGenome Addition Model: %11f\n", 
 		//genome_loss_sum/p, genome_add_sum/p);
-		return (genome_add_sum + genome_loss_sum)/(p*2);
+		return (genome_add_sum + genome_loss_sum)/(p*comparison_factor);
 	}
 	return mindist(w, p, perm, distp)/p;
 }
