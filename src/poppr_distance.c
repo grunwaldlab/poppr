@@ -437,10 +437,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	}
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *) &dist;
-	if(loss_indicator == 0 || add_indicator == 0)
-	{
-		printf("Addition: %d\tLoss: %d\n", add_indicator, loss_indicator);
-	}
+	
 	/*
 	*	Test code:
 	*	test <- sample(1:20, 8, rep=TRUE); test[sample(1:4, 1)] <- 0; test
@@ -457,9 +454,69 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	*/
 	if(zerocatch[0] < p || zerocatch[1] < p)
 	{
+		
 		int ind, *genop, miss_ind, full_ind; 
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;
+
+		if(loss_indicator == 1 || add_indicator == 1)
+		{
+			printf("Addition: %d\tLoss: %d\n", add_indicator, loss_indicator);
+		}
+		else
+		{
+			if (zerocatch[0] < p) // The rows contain the zero value
+			{
+				/*
+				*	Genome Addition model uses the observed values of the short
+				*	genotype for the replacement allele. This is achieved by simply
+				*	shifting the columns or rows of the distance matrix and 
+				*	recalculating the minimum distance. 
+				*/
+				ind = zerocatch[0];
+				miss_ind = 0;
+				full_ind = 1;
+				for (i = 0; i < p; i++)
+				{
+					if (i == ind)
+					{
+						goto inf1;
+					}
+					for (j = 0; j < p; j++)
+					{
+						dist[ind][j] = 1;
+					}
+					/*
+					derp = mindist(w, p, perm, distp)*p;
+					genome_add_sum += derp;
+					printf("Genome Addition Distance: %11f\n", derp);
+					*/
+					genome_add_sum += mindist(w, p, perm, distp);
+					inf1:;	
+				}
+
+			}
+			else // The columns contain the zero value. 
+			{
+				ind = zerocatch[1];
+				miss_ind = 1;
+				full_ind = 0;
+				for (i = 0; i < p; i++)
+				{
+					if (i == ind)
+					{
+						goto inf2;
+					}
+					for (j = 0; j < p; j++)
+					{
+						dist[j][ind] = 1;
+					}
+					genome_add_sum += mindist(w, p, perm, distp);
+					inf2:;
+				}
+			}
+			return (genome_add_sum/(p-1))/p;
+		}	
 		if (zerocatch[0] < p) // The rows contain the zero value
 		{
 			/*
