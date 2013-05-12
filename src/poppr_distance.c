@@ -43,7 +43,7 @@
 #include <stdlib.h>
 int count;
 double bruvo_dist(int *in, int *nall, int *perm, int *woo);
-double test_bruvo_dist(int *in, int *nall, int *perm, int *woo);
+double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
 void pass_vector(int *pointy, int *pointynumber);
@@ -166,13 +166,15 @@ with missing data. In the wrapping R function, 100s will be converted to NAs
 and then the average over all loci will be taken. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles)
+SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP loss, SEXP add)
 {
 	int A, P, *pA, *pP;
 	SEXP Rval;
 	//SEXP Rdim;
 	P = length(permutations);
 	alleles = coerceVector(alleles, INTSXP);
+	loss = coerceVector(loss, INTSXP);
+	add = coerceVector(add, INTSXP);
 	A = INTEGER(alleles)[0];
 	pA = &A;
 	pP = &P;
@@ -180,7 +182,7 @@ SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles)
 	permutations = coerceVector(permutations, INTSXP);
 	PROTECT(Rval = allocVector(REALSXP, 1));
 	REAL(Rval)[0] = test_bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations),
-                                    pP);
+                                    pP, INTEGER(loss), INTEGER(add));
 	UNPROTECT(1);
 	return Rval;
     
@@ -397,9 +399,10 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 
 
 
-double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
+double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
-	int i, j, counter=0, n = 2, p = *nall, w = *woo, genos[2][p], 
+	int i, j, counter=0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
+		add_indicator = *add, genos[2][p], 
 	zerocatch[2];
 	double dist[p][p], da, minn=100, *distp;
 	// reconstruct the genotype table.
@@ -434,16 +437,20 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	}
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *) &dist;
+	if(loss_indicator == 0 || add_indicator == 0)
+	{
+		printf("Addition: %d\tLoss: %d\n", add_indicator, loss_indicator);
+	}
 	/*
 	*	Test code:
 	*	test <- sample(1:20, 8, rep=TRUE); test[sample(1:4, 1)] <- 0; test
 	*	.Call("single_bruvo", test, .Call("permuto", 4), 4)
 	*
 	*	This one reflects the example presented in the original paper.
-	*	.Call("single_bruvo", c(20,23,24,30,20,24,26,43), .Call("permuto", 4), 4)
+	*	.Call("single_bruvo", c(20,23,24,30,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
 	*	# 0.4687195
 	*
-	*	.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4)
+	*	.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
 	*	# 0.4010415
 	*
 	*	Note that the initial values of the genome addition
@@ -520,7 +527,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			*/
 			//	Note: These need to be multiplied by p since the result has been
 			//	divided by p 
-			genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w)*p;
+			genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w, &loss_indicator, &add_indicator)*p;
 		}
 		genome_loss_sum = genome_loss_sum/p;
 		genome_add_sum = genome_add_sum/(p-1);
