@@ -423,6 +423,27 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			genos[i][j] = in[counter++];
 		}
 	}
+
+	/*==========================================================================
+	*	This would be a good place to test the missing data to see whether the
+	*	incoming matrix needs to be rebuilt with the minimum number of zeroes.
+	*	Note that this will mean changing the strategy of how to use zerocatch.
+	*	It will be used as an indicator for how many zeroes there are. Another
+	*	array, possibly one that is two dimensional as well, will store the
+	*	indices of the zeroes. 
+	*
+	*	- Check zerocatch for missing.
+	*	- If both contain missing data, take the absolute difference between the 
+	*	  two and subtract that from the larger to get your reduction in permut-
+	*	  ations.
+	*	- Rebuild the vector, run the permutation algorithm again, and recall
+	*	  the function.
+	*	
+	*	What to do with doubly missing data seems to be a matter of recursively
+	*	calling the function at the addition model, and adding an extra loop for
+	*	the loss and infinity models. 
+	==========================================================================*/
+
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
 	// in the columns.
