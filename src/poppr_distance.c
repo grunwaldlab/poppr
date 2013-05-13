@@ -447,11 +447,11 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 
 	if (zerocatch[0] > 0 && zerocatch[1] > 0)
 	{
-		int zerodiff, larger = 0 smaller = 1, reduction = 0, i, *perm_array;
+		int zerodiff, larger = 0, smaller = 1, reduction = 0, i, *perm_array;
 		zerodiff = abs(zerocatch[0] - zerocatch[1]);
+		perm_count = 0;
 		if (zerodiff == 0)
 		{
-			perm_count = 0;
 			reduction = p - zerocatch[0];
 		}
 		else
@@ -461,7 +461,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 				larger = 1;
 				smaller = 0;
 			}
-			reduction = p - zerocatch[larger] - zerodiff;
+			reduction = p - (zerocatch[larger] - zerodiff);
 		}
 		int new_alleles[reduction];
 		for (i = 0; i < reduction; i++)
@@ -471,6 +471,14 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		w = fact(reduction) * reduction;
 		perm_array = (int *) malloc(w * sizeof(int));
 		permute(new_alleles, 0, p - 1, perm_array);
+		for (i = 0; i < w; i++)
+		{
+			printf("%d\t", perm_array[i]);
+			if (i % reduction == 0)
+			{
+				printf("\n");
+			}
+		}
 		// rebuild the array and make a pointer.
 		// pass through the funciton.
 		free(perm_array);
