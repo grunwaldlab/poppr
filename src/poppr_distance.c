@@ -41,7 +41,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
-int count;
+int perm_count;
 double bruvo_dist(int *in, int *nall, int *perm, int *woo);
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
 void permute(int *a, int i, int n, int *c);
@@ -131,7 +131,7 @@ SEXP permuto(SEXP perm)
 		IMPORTANT: INITIALIZE THE COUNTER. THE POINTER IS NOT RELEASED FROM
 		MEMORY OTHERWISE.
 	*/
-	count = 0;
+	perm_count = 0;
 	perm = coerceVector(perm, INTSXP);
 	per = INTEGER(perm)[0];
 	int allele_array[per];
@@ -291,8 +291,8 @@ void permute(int *a, int i, int n, int *c)
 			into the array 'c', the pointer for a needs to be incremented
 			over all its elements.
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-		count += n+1;
-		int ind = count;
+		perm_count += n+1;
+		int ind = perm_count;
 		for(j=0; j<=n; j++)
 		{
 			c[--ind] = *(a + j);
