@@ -402,8 +402,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
 	int i, j, counter=0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
-		add_indicator = *add, genos[2][p], 
-	zerocatch[2];
+		add_indicator = *add, genos[2][p], zerocatch[2];
 	double dist[p][p], da, minn=100, *distp;
 	// reconstruct the genotype table.
 	zerocatch[0] = p;
@@ -431,26 +430,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	{
 		for(i=0; i < p; i++)
 		{
-			da = 1- pow(2 ,-abs(genos[0][i] - genos[1][j]));
+			da = 1 - pow(2, -abs(genos[0][i] - genos[1][j]));
 			dist[i][j] = da;
 		}
 	}
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *) &dist;
-	
-	/*
-	*	Test code:
-	*	test <- sample(1:20, 8, rep=TRUE); test[sample(1:4, 1)] <- 0; test
-	*	.Call("single_bruvo", test, .Call("permuto", 4), 4)
-	*
-	*	This one reflects the example presented in the original paper.
-	*	.Call("single_bruvo", c(20,23,24,30,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
-	*	# 0.4687195
-	*
-	*	.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
-	*	# 0.4010415
-	*
-	*	Test code comparing current status to polysat's Bruvo2.distance:
+	/*	Test code comparing current status to polysat's Bruvo2.distance:
 	****
 ================================================================================
 .Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0)
@@ -469,7 +455,6 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 		int ind = zerocatch[1], *genop, miss_ind = 1, full_ind = 0; 
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;
-
 		if (zerocatch[0] < p) // The rows contain the zero value
 		{
 			ind = zerocatch[0];
@@ -513,7 +498,6 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 			}
 			return (genome_add_sum/(p-1))/p;
 		}
-
 		/*======================================================================
 		*	GENOME ADDITION MODEL
 		*	Genome Addition model uses the observed values of the short
@@ -552,8 +536,6 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 				next1:;	
 			}
 		}
-
-		
 		/*======================================================================
 		*	GENOME LOSS MODEL
 		*	Genome Loss model uses the alleles from the larger genotype to
