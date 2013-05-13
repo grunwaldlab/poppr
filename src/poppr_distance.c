@@ -402,11 +402,11 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
 	int i, j, counter=0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
-		add_indicator = *add, genos[2][p], zerocatch[2];
+		add_indicator = *add, genos[2][p], zerocatch[2], zero_ind[2][p];
 	double dist[p][p], da, minn=100, *distp;
 	// reconstruct the genotype table.
-	zerocatch[0] = p;
-	zerocatch[1] = p;
+	zerocatch[0] = 0;
+	zerocatch[1] = 0;
 	for(i=0; i < n; i++)
 	{
 		for(j = 0; j < p; j++)
@@ -414,11 +414,12 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			// Catch missing data here.
 			if(in[counter] == 0)
 			{
-				if (zerocatch[i] < p)
+				if (zerocatch[i] == p - 1)
 				{
 					return minn;
 				}
-				zerocatch[i] = j;
+				zerocatch[i] += 1;
+				zero_ind[i][zerocatch[i] - 1] = j;
 			}
 			genos[i][j] = in[counter++];
 		}
@@ -442,7 +443,24 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	*	What to do with doubly missing data seems to be a matter of recursively
 	*	calling the function at the addition model, and adding an extra loop for
 	*	the loss and infinity models. 
+
+
+	if (zerocatch[0] > 0 && zerocatch[1] > 0)
+	{
+		int zerodiff, larger = 0 smaller = 1, reduction = 0;
+		zerodiff = abs(zerocatch[0] - zerocatch[1]);
+		if (zerodiff == 0)
+		{
+			perm_count = 0;
+			p = p - zerocatch[0];
+			// remake the permutations
+			// rebuild the array and make a pointer.
+			// pass through the funciton.
+		}
+	}
 	==========================================================================*/
+
+
 
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
@@ -471,17 +489,17 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 ================================================================================
 	****
 	*/
-	if(zerocatch[0] < p || zerocatch[1] < p)
+	if(zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
-		int ind = zerocatch[1], *genop, miss_ind = 1, full_ind = 0; 
+		int *genop, ind, miss_ind = 1, full_ind = 0;
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;
-		if (zerocatch[0] < p) // The rows contain the zero value
+		if (zerocatch[0] > 0) // The rows contain the zero value
 		{
-			ind = zerocatch[0];
 			miss_ind = 0;
-			full_ind = 1;
+			full_ind = 1; 
 		}
+		ind = zero_ind[miss_ind][0];
 		/*======================================================================
 		*	INFINITE MODEL...IGNORE THE FACT THAT IT IS A COPY OF GENOME_ADD
 		*	Infinite model will simply replace the distance of the comparisons
@@ -495,7 +513,7 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 				{
 					goto inf1;
 				}
-				if (zerocatch[0] < p)
+				if (zerocatch[0] > 0)
 				{
 					for (j = 0; j < p; j++)
 					{
@@ -534,7 +552,7 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 				{
 					goto next1;
 				}
-				if (zerocatch[0] < p)
+				if (zerocatch[0] > 0)
 				{
 					for (j = 0; j < p; j++)
 					{
