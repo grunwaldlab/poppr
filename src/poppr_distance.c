@@ -452,10 +452,22 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		if (zerodiff == 0)
 		{
 			perm_count = 0;
-			p = p - zerocatch[0];
+			reduction = p - zerocatch[0];
 			// remake the permutations
 			// rebuild the array and make a pointer.
 			// pass through the funciton.
+		}
+		else
+		{
+			if(zerocatch[0] < zerocatch[1])
+			{
+				larger = 1;
+				smaller = 0;
+			}
+			reduction = p - zerocatch[larger] - zerodiff;
+			// remake the permutations
+			// rebuild the array and make a pointer.
+			// pass through the function.
 		}
 	}
 	==========================================================================*/
