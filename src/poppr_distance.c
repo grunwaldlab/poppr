@@ -469,24 +469,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			new_alleles[i] = i;
 		}
 		w = fact(reduction) * reduction;
-		printf("%d * %d! = %d\n", reduction, reduction, w);
 		perm_array = (int *) malloc(w * sizeof(int));
 		perm_count = 0;
 		permute(new_alleles, 0, reduction - 1, perm_array);
-		for (i = 0; i < w; i++)
-		{
-			printf("%d\t", perm_array[i]);
-			if ((i+1) % reduction == 0)
-			{
-				printf("\n");
-			}
-		}
 		// rebuild the array and make a pointer.
-		zero_counter = reduction;
 		int new_geno[reduction*2];
 		counter = 0;
 		for(i=0; i < 2; i++)
 		{
+			zero_counter = zerocatch[smaller];
 			for(j = 0; j < p; j++)
 			{
 				if (genos[i][j] == 0 && zero_counter > 0)
