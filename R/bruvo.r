@@ -113,7 +113,7 @@ bruvo.dist <- function(pop, replen=c(2)){
   
   # This controlls for the user correcting missing data using "mean". 
   if(any(!pop@tab %in% c(0,((1:ploid)/ploid),1, NA))){
-    pop@tab[!pop@tab,10 %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
+    pop@tab[!pop@tab %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
   }
   if(any(rowSums(pop@tab, na.rm=TRUE) < nLoc(pop))){
     
@@ -236,8 +236,8 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
     cat(replen,"\n\n")
   }
   # This controlls for the user correcting missing data using "mean". 
-  if(any(!round(pop@tab,10) %in% c(0,((1:ploid)/ploid),1, NA))){
-    pop@tab[!round(pop@tab,10) %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
+  if(any(!pop@tab %in% c(0,((1:ploid)/ploid),1, NA))){
+    pop@tab[!pop@tab %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
   }
   # Converting the genind object into a matrix with each allele separated by "/"
   bar <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
