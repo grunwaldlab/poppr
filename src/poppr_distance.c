@@ -447,7 +447,8 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	==========================================================================*/
 	if (zerocatch[0] > 0 && zerocatch[1] > 0)
 	{
-		int zerodiff, larger = 0, smaller = 1, reduction = 0, i, *perm_array;
+		int zerodiff, larger = 0, smaller = 1, reduction = 0, i, j, 
+			zero_counter, *perm_array, *new_genop;
 		zerodiff = abs(zerocatch[0] - zerocatch[1]);
 		if (zerodiff == 0)
 		{
@@ -467,7 +468,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		{
 			new_alleles[i] = i;
 		}
-
 		w = fact(reduction) * reduction;
 		printf("%d * %d! = %d\n", reduction, reduction, w);
 		perm_array = (int *) malloc(w * sizeof(int));
@@ -482,9 +482,28 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			}
 		}
 		// rebuild the array and make a pointer.
-		// pass through the funciton.
+		zero_counter = reduction;
+		int new_geno[reduction*2];
+		counter = 0;
+		for(i=0; i < 2; i++)
+		{
+			for(j = 0; j < p; j++)
+			{
+				if (genos[i][j] == 0 && zero_counter > 0)
+				{
+					zero_counter--;
+				}
+				else
+				{
+					new_geno[counter++] = genos[i][j];
+				}
+			}
+		}
+		new_genop = (int *) &new_geno;
+		
+		return test_bruvo_dist(new_genop, &reduction, perm_array, &w, 
+										&loss_indicator, &add_indicator);
 		free(perm_array);
-		return minn;
 	}
 
 
