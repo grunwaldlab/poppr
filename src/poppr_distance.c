@@ -492,9 +492,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		}
 		new_genop = (int *) &new_geno;
 		
-		return test_bruvo_dist(new_genop, &reduction, perm_array, &w, 
+		minn = test_bruvo_dist(new_genop, &reduction, perm_array, &w, 
 										&loss_indicator, &add_indicator);
 		free(perm_array);
+		return minn;
 	}
 
 
