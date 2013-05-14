@@ -199,7 +199,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 	
 	A matrix in R is built row by row. That's why there is a triple 'for' loop.
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-	int I, J, A, P, i, j, a, count = 0, *pA, *pP;
+	int I, J, A, P, i, j, a, count = 0, *pA, *pP;//, add, loss, *padd, *ploss;
 	//Initialization of R vectors.
 	SEXP Rdim;
 	SEXP Rval;
@@ -212,6 +212,10 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 	A = INTEGER(alleles)[0];
 	pA = &A;
 	pP = &P;
+	//add = 1;
+	//loss = 1;
+	//padd = &add;
+	//ploss = &loss;
 	bruvo_mat = coerceVector(bruvo_mat, INTSXP);
 	permutations = coerceVector(permutations, INTSXP);
 	// Protecting the vectors that will be modified. Rval is the output
@@ -246,7 +250,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 				}
 				// Calculating Bruvo's distance over these two. 
 				REAL(Rval)[count++] = bruvo_dist(INTEGER(pair_matrix), pA,
-                                                 INTEGER(permutations), pP);
+                                                 INTEGER(permutations), pP);//, padd, ploss);
 			}
 		}
 	}
@@ -401,9 +405,10 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
-	int i, j, counter=0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
-		add_indicator = *add, genos[2][p], zerocatch[2], zero_ind[2][p];
-	double dist[p][p], da, minn=100, *distp;
+	int i, j, counter = 0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
+		add_indicator = *add, genos[2][p], zerocatch[2], zero_ind[2][p],
+		zerodiff;
+	double dist[p][p], da, minn = 100, *distp;
 	// reconstruct the genotype table.
 	zerocatch[0] = 0;
 	zerocatch[1] = 0;
@@ -424,32 +429,16 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			genos[i][j] = in[counter++];
 		}
 	}
-
+	zerodiff = abs(zerocatch[0] - zerocatch[1]);
 	/*==========================================================================
-	*	This would be a good place to test the missing data to see whether the
-	*	incoming matrix needs to be rebuilt with the minimum number of zeroes.
-	*	Note that this will mean changing the strategy of how to use zerocatch.
-	*	It will be used as an indicator for how many zeroes there are. Another
-	*	array, possibly one that is two dimensional as well, will store the
-	*	indices of the zeroes. 
-	*
-	*	- Check zerocatch for missing.
-	*	- If both contain missing data, take the absolute difference between the 
-	*	  two and subtract that from the larger to get your reduction in permut-
-	*	  ations.
-	*	- Rebuild the vector, run the permutation algorithm again, and recall
-	*	  the function.
-	*	
-	*	What to do with doubly missing data seems to be a matter of recursively
-	*	calling the function at the addition model, and adding an extra loop for
-	*	the loss and infinity models. 
-
+	* Removing superfluous zeroes from the data. This is in the case that both
+	* of the genotypes contain one or more zeroes.
 	==========================================================================*/
 	if (zerocatch[0] > 0 && zerocatch[1] > 0)
 	{
-		int zerodiff, larger = 0, smaller = 1, reduction = 0, i, j, 
+		int larger = 0, smaller = 1, reduction = 0, i, j, 
 			zero_counter, *perm_array, *new_genop;
-		zerodiff = abs(zerocatch[0] - zerocatch[1]);
+
 		if (zerodiff == 0)
 		{
 			reduction = p - zerocatch[0];
@@ -473,9 +462,9 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		perm_count = 0;
 		permute(new_alleles, 0, reduction - 1, perm_array);
 		// rebuild the array and make a pointer.
-		int new_geno[reduction*2];
+		int new_geno[reduction*n];
 		counter = 0;
-		for(i=0; i < 2; i++)
+		for(i=0; i < n; i++)
 		{
 			zero_counter = zerocatch[smaller];
 			for(j = 0; j < p; j++)
@@ -498,15 +487,12 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		return minn;
 	}
 
-
-
-
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
 	// in the columns.
 	for(j = 0; j < p; j++)
 	{
-		for(i=0; i < p; i++)
+		for(i = 0; i < p; i++)
 		{
 			da = 1 - pow(2, -abs(genos[0][i] - genos[1][j]));
 			dist[i][j] = da;
