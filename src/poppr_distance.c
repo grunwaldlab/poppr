@@ -664,7 +664,7 @@ void pass_vector(int *pointy, int *pointynumber)
 *	curr_ind - the index of the current replacement genotype.
 *
 *	*genome_add_sum - pointer to the total number of the genome addition model. 
-
+==============================================================================*/
 void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
 	int inds, int curr_ind, double *genome_add_sum)
@@ -673,6 +673,9 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 
 	//==========================================================================
 	// Part 1: fill one row/column of the matrix.
+	// Note that we don't have the format of the 2D array here, so we are
+	// cheating a little bit. Instead of indexing by dist[i][j] over p columns,
+	// we use dist[i + p*j]. It works. 
 	//==========================================================================
 	if(miss_ind == 0)
 	{
@@ -714,7 +717,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		}
 	}
 }
-==============================================================================*/
+
 
 double mindist(int perms, int alleles, int *perm, double *dist)
 {
