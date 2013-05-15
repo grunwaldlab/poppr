@@ -554,7 +554,7 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 		}
 		/*======================================================================
 		*	GENOME ADDITION MODEL
-		*	Genome Addition model uses the observed values of the short
+		*	Genome Addition model uses the observed values of the short 
 		*	genotype for the replacement allele. This is achieved by simply
 		*	shifting the columns or rows of the distance matrix and 
 		*	recalculating the minimum distance. 
@@ -634,35 +634,83 @@ void pass_vector(int *pointy, int *pointynumber)
 		printf("I'm in another function!\t%d\n", *(pointy + i));
 	}
 }
-/*
-void fill_dist(double *dist, int rep_int, int alleles, int *zero_ind, int inz, int zerocatch, int first)
+/*==============================================================================
+* A function for dealing with the genome addition model. This will replace the
+* portions of the distance matrix generated via the missing values with columns
+* (or rows) of observed values in a combinatorial way. This will involve 
+* recursion.
+* For safe keeping:
+* dist[zero_ind[z] + alleles*j] = dist[rep_int + alleles*j];
+* dist[j + alleles*zero_ind[z]] = dist[j + alleles*rep_int];
+* 
+* Arguments:
+*	perms - number of permutations (passed to mindist)
+*	alleles - number of maximum alleles (also passed to mindist)
+*	*perm - permutation array (passed to mindist)
+*	*dist - distance matrix to be manipulated (also passed to mindist)
+*	
+*	zeroes - number of zeroes present in the shorter genotype.
+*	*zero_ind - array containing indices of the zero values of the short geno
+*	curr_zero - the index of the current zero index for zero_ind
+*	miss_ind - the index for the genotype with missing data. Necessary for
+*				determining rows or columns
+*	*replacement - array containing indices of replacement genotypes.
+*	inds - number of replacement genotypes.
+*	curr_ind - the index of the current replacement genotype.
+*
+*	*genome_add_sum - pointer to the total number of the genome addition model. 
+
+void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
+	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
+	int inds, int curr_ind, double *genome_add_sum)
 {
-	int j, z;
-	if (z == zerocatch - 1)
+	int i,z,j;
+
+	//==========================================================================
+	// Part 1: fill one row/column of the matrix.
+	//==========================================================================
+	if(miss_ind == 0)
 	{
-		return;
-	}
-	
-	for (z = inz; z++; z <= zerocatch)
-	{
-		if (first > 0)
+		for (j = 0; j < alleles; j++)
 		{
-			for (j = 0; j < alleles; j++)
-			{
-				dist[zero_ind[z] + alleles*j] = dist[rep_int + alleles*j];
-			}
+			dist[zero_ind[curr_zero] + alleles*j] = 
+				dist[replacement[curr_ind] + alleles*j];
+		}
+	}
+	else
+	{
+		for (j = 0; j < alleles; j++)
+		{
+			dist[j + alleles*zero_ind[curr_zero]] = 
+				dist[j + alleles*replacement[curr_ind]];		
+		}
+	}
+	//==========================================================================
+	// Part 2: Iterate through the rest of the possible combinations.
+	//
+	// The first for loop iterates through all possible individuals.
+	// The first if loop will check if there are any more slots to be filled.
+	// if there aren't, then the minimum distance will be calculated on the
+	// matrix as it stands and then the sum will be returned. 
+	//==========================================================================
+	for (i = curr_ind; curr_ind < inds; curr_ind++)
+	{
+		if (curr_zero < zeroes)
+		{
+			// Note: curr_zero is incremented here. 
+			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
+				curr_zero++, miss_ind, replacement, inds, curr_ind, 
+				genome_add_sum);
 		}
 		else
 		{
-			for (j = 0; j < alleles; j++)
-			{
-				dist[j + alleles*zero_ind[z]] = dist[j + alleles*rep_int];
-			}						
+			*genome_add_sum += mindist(perms, alleles, perm, dist);
+			return;
 		}
-		fill_dist(dist, rep_int, alleles, zero_ind, z++, zerocatch, first);
 	}
 }
-*/
+==============================================================================*/
+
 double mindist(int perms, int alleles, int *perm, double *dist)
 {
 	int i, j, w = perms, p = alleles, counter = 0;
