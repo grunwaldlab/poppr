@@ -588,7 +588,7 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 				{
 					for (j = 0; j < p; j++)
 					{
-						dist[j][ind] = dist[i][j];
+						dist[j][ind] = dist[j][i];
 					}						
 				}
 				/*
@@ -644,9 +644,35 @@ void pass_vector(int *pointy, int *pointynumber)
 		printf("I'm in another function!\t%d\n", *(pointy + i));
 	}
 }
-
-
-
+/*
+void fill_dist(double *dist, int rep_int, int alleles, int *zero_ind, int inz, int zerocatch, int first)
+{
+	int j, z;
+	if (z == zerocatch - 1)
+	{
+		return;
+	}
+	
+	for (z = inz; z++; z <= zerocatch)
+	{
+		if (first > 0)
+		{
+			for (j = 0; j < alleles; j++)
+			{
+				dist[zero_ind[z] + alleles*j] = dist[i + alleles*j];
+			}
+		}
+		else
+		{
+			for (j = 0; j < alleles; j++)
+			{
+				dist[j][zero_ind[z]] = dist[i][j];
+			}						
+		}
+		fill_dist(dist, rep_int, alleles, zero_ind, z++, zerocatch, first);
+	}
+}
+*/
 double mindist(int perms, int alleles, int *perm, double *dist)
 {
 	int i, j, w = perms, p = alleles, counter = 0;
