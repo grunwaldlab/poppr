@@ -659,14 +659,14 @@ void fill_dist(double *dist, int rep_int, int alleles, int *zero_ind, int inz, i
 		{
 			for (j = 0; j < alleles; j++)
 			{
-				dist[zero_ind[z] + alleles*j] = dist[i + alleles*j];
+				dist[zero_ind[z] + alleles*j] = dist[rep_int + alleles*j];
 			}
 		}
 		else
 		{
 			for (j = 0; j < alleles; j++)
 			{
-				dist[j][zero_ind[z]] = dist[i][j];
+				dist[j + alleles*zero_ind[z]] = dist[j + alleles*rep_int];
 			}						
 		}
 		fill_dist(dist, rep_int, alleles, zero_ind, z++, zerocatch, first);
