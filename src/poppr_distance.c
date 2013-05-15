@@ -48,6 +48,9 @@ void permute(int *a, int i, int n, int *c);
 int fact(int x);
 void pass_vector(int *pointy, int *pointynumber);
 double mindist(int perms, int alleles, int *perm, double *dist);
+void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
+	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
+	int inds, int curr_ind, double *genome_add_sum);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the root product of pairwise comparisons of each of the variances of
 each locus.
