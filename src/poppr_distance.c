@@ -516,7 +516,7 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 	*/
 	if(zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
-		int *genop, ind, miss_ind = 1, full_ind = 0;
+		int *genop, ind, miss_ind = 1, full_ind = 0, z;
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;
 		if (zerocatch[0] > 0) // The rows contain the zero value
@@ -526,18 +526,15 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 		}
 		ind = zero_ind[miss_ind][0];
 		/*======================================================================
-		*	INFINITE MODEL...IGNORE THE FACT THAT IT IS A COPY OF GENOME_ADD
+		*	INFINITE MODEL
 		*	Infinite model will simply replace the distance of the comparisons
 		*	containing the missing allele to 1.
 		======================================================================*/
 		if(loss_indicator != 1 && add_indicator != 1)
 		{
-			for (i = 0; i < p; i++)
+			for (z = 0; z < zerocatch[miss_ind]; z++)
 			{
-				if (i == ind)
-				{
-					goto inf1;
-				}
+				ind = zero_ind[miss_ind][z];
 				if (zerocatch[0] > 0)
 				{
 					for (j = 0; j < p; j++)
@@ -552,15 +549,8 @@ Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
 						dist[j][ind] = 1;
 					}						
 				}
-				/*
-				derp = mindist(w, p, perm, distp)*p;
-				genome_add_sum += derp;
-				printf("Genome Addition Distance: %11f\n", derp);
-				*/
-				genome_add_sum += mindist(w, p, perm, distp);
-				inf1:;	
 			}
-			return (genome_add_sum/(p-1))/p;
+			return mindist(w, p, perm, distp)/p;
 		}
 		/*======================================================================
 		*	GENOME ADDITION MODEL
