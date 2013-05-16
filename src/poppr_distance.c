@@ -708,10 +708,9 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 	{
 		if (curr_zero < zeroes-1)
 		{
-			// Note: curr_zero is incremented here. 
+			// Note: curr_zero is incremented here and curr_ind is replaced with i. 
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
-				curr_zero++, miss_ind, replacement, inds, curr_ind, 
-				genome_add_sum);
+				curr_zero++, miss_ind, replacement, inds, i, genome_add_sum);
 		}
 		else
 		{
