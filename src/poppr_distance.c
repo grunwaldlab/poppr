@@ -410,7 +410,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 {
 	int i, j, counter = 0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
 		add_indicator = *add, genos[2][p], zerocatch[2], zero_ind[2][p],
-		zerodiff, full_ind[2][p], full_count = 0;
+		zerodiff;//, tom[2][p], fullery[2];
 	double dist[p][p], da, minn = 100, *distp;
 	// reconstruct the genotype table.
 	zerocatch[0] = 0;
@@ -429,10 +429,11 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 				zerocatch[i] += 1;
 				zero_ind[i][zerocatch[i] - 1] = j;
 			}
-			else
-			{
-				full_ind[i][full_count++] = j;
-			}
+			//else
+			//{
+      //  fullery[i] += 1;
+			//	tom[i][fullery[i] - 1] = j;
+			//}
 			genos[i][j] = in[counter++];
 			
 		}
