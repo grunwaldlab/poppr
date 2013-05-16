@@ -50,7 +50,7 @@ void pass_vector(int *pointy, int *pointynumber);
 double mindist(int perms, int alleles, int *perm, double *dist);
 void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
-	int inds, int curr_ind, double *genome_add_sum);
+	int inds, int curr_ind, double *genome_add_sum, int *tracker);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the root product of pairwise comparisons of each of the variances of
 each locus.
@@ -532,7 +532,7 @@ polysat_bruvo() == poppr_bruvo()
 	*/
 	if(zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
-		int *genop, ind, miss_ind = 1, full_ind = 0, z;
+		int *genop, ind, miss_ind = 1, full_ind = 0, z, tracker = 0;
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;
 		if (zerocatch[0] > 0) // The rows contain the zero value
@@ -585,8 +585,15 @@ polysat_bruvo() == poppr_bruvo()
 		======================================================================*/
 		if (add_indicator == 1)
 		{
-			for (i = 0; i < p; i++)
+			int *pzero_ind, *pshort_inds;
+			pzero_ind = (int *) &zero_ind[miss_ind];
+			pshort_inds = (int *) &short_inds;
+			printf("\n\n\nzerocatch[miss_inds] = %d\tp = %d\n\n\n", zerocatch[miss_ind], p);
+			for (i = 0; i < p - zerocatch[miss_ind]; i++)
 			{
+				genome_add_calc(w, p, perm, distp, zerocatch[miss_ind], pzero_ind, 
+					0, miss_ind, pshort_inds, p - zerocatch[miss_ind], i, &genome_add_sum, &tracker);
+				/*
 				if (i == ind)
 				{
 					goto next1;
@@ -605,13 +612,9 @@ polysat_bruvo() == poppr_bruvo()
 						dist[j][ind] = dist[j][i];
 					}						
 				}
-				/*
-				derp = mindist(w, p, perm, distp)*p;
-				genome_add_sum += derp;
-				printf("Genome Addition Distance: %11f\n", derp);
-				*/
 				genome_add_sum += mindist(w, p, perm, distp);
 				next1:;	
+				*/
 			}
 		}
 		/*======================================================================
@@ -637,8 +640,12 @@ polysat_bruvo() == poppr_bruvo()
 										&loss_indicator, &add_indicator)*p;
 			}
 		}
+		if (tracker == 0)
+		{
+			tracker = 1;
+		}
 		genome_loss_sum = genome_loss_sum/p;
-		genome_add_sum = genome_add_sum/(p-1);
+		genome_add_sum = genome_add_sum/tracker;
 		int comparison_factor = loss_indicator + add_indicator;
 		//printf("Genome Loss Model: %11f\tGenome Addition Model: %11f\n", 
 		//genome_loss_sum/p, genome_add_sum/p);
@@ -686,22 +693,25 @@ void pass_vector(int *pointy, int *pointynumber)
 ==============================================================================*/
 void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
-	int inds, int curr_ind, double *genome_add_sum)
+	int inds, int curr_ind, double *genome_add_sum, int *tracker)
 {
 	int i,j;
-
+	printf("I'm in! replacement[%d]: %d\t", curr_ind, replacement[curr_ind]);
+	printf("zero_ind[%d]: %d\n", curr_zero, zero_ind[curr_zero]);
 	//==========================================================================
 	// Part 1: fill one row/column of the matrix.
 	// Note that we don't have the format of the 2D array here, so we are
 	// cheating a little bit. Instead of indexing by dist[i][j] over p columns,
 	// we use dist[i + p*j]. It works. 
 	//==========================================================================
-	if(miss_ind == 0)
+	//printf("Distance:\t");
+	if(miss_ind > 0)
 	{
 		for (j = 0; j < alleles; j++)
 		{
 			dist[zero_ind[curr_zero] + alleles*j] = 
 				dist[replacement[curr_ind] + alleles*j];
+			//printf("%11f\t", dist[replacement[curr_ind] + alleles*j]);
 		}
 	}
 	else
@@ -709,9 +719,11 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		for (j = 0; j < alleles; j++)
 		{
 			dist[j + alleles*zero_ind[curr_zero]] = 
-				dist[j + alleles*replacement[curr_ind]];		
+				dist[j + alleles*replacement[curr_ind]];	
+			//printf("%11f\t", dist[j + alleles*replacement[curr_ind]]);	
 		}
 	}
+	//printf("\n");
 	//==========================================================================
 	// Part 2: Iterate through the rest of the possible combinations.
 	//
@@ -720,20 +732,29 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 	// if there aren't, then the minimum distance will be calculated on the
 	// matrix as it stands and then the sum will be returned. 
 	//==========================================================================
-	for (i = curr_ind; curr_ind < inds; curr_ind++)
+	for (i = curr_ind; i < inds; i++)
 	{
-		if (curr_zero < zeroes-1)
+		if (curr_zero < zeroes - 1)
 		{
+			curr_zero += 1;
+			printf("Looping Through...\n");
+			
 			// Note: curr_zero is incremented here and curr_ind is replaced with i. 
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
-				curr_zero++, miss_ind, replacement, inds, i, genome_add_sum);
+				curr_zero, miss_ind, replacement, inds, i, genome_add_sum, tracker);
 		}
 		else
 		{
+			printf("Adding!\tDistance: %11f\n", mindist(perms, alleles, perm, dist));
 			*genome_add_sum += mindist(perms, alleles, perm, dist);
+			*tracker += 1;
 			return;
+			//curr_zero = zeroes - curr_zero;
+			//printf("counts: %d\n", *tracker);
 		}
+		
 	}
+	
 }
 
 
