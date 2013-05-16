@@ -511,14 +511,26 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	/*	Test code comparing current status to polysat's Bruvo2.distance:
 	****
 ================================================================================
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0)
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=FALSE)
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 0)
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=FALSE)
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 1)
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=F, add=T)
+poppr_bruvo <- function(){ 
+  return(c(.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0),
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 0),
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 1),
 .Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
+))
+}
+
+polysat_bruvo <- function(){
+  return(c(Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=FALSE),
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=FALSE),
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=F, add=T),
 Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
+))
+}
+
+library(polysat)
+polysat_bruvo()
+poppr_bruvo()
+polysat_bruvo() == poppr_bruvo()
 ================================================================================
 	****
 	*/
