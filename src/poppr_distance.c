@@ -545,6 +545,14 @@ polysat_bruvo() == poppr_bruvo()
 			full_ind = 1; 
 		}
 		ind = zero_ind[miss_ind][0];
+		int short_inds[zerocatch[miss_ind]], short_counter = 0;
+		for (i = 0; i < p; i++)
+		{
+			if (genos[miss_ind][i] > 0)
+			{
+				short_inds[short_counter++] = i;
+			}
+		}
 		/*======================================================================
 		*	INFINITE MODEL
 		*	Infinite model will simply replace the distance of the comparisons
