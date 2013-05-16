@@ -748,13 +748,19 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 			printf("Adding!\tDistance: %11f\n", mindist(perms, alleles, perm, dist));
 			*genome_add_sum += mindist(perms, alleles, perm, dist);
 			*tracker += 1;
-			return;
+			if(inds >= zeroes)
+			{
+				if (zeroes == 1)
+				{
+					return;
+				}
+				curr_zero -= 1;
+			}
 			//curr_zero = zeroes - curr_zero;
 			//printf("counts: %d\n", *tracker);
 		}
-		
 	}
-	
+	return;
 }
 
 
