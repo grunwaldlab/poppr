@@ -591,6 +591,7 @@ polysat_bruvo() == poppr_bruvo()
 			printf("\n\n\nzerocatch[miss_inds] = %d\tp = %d\n\n\n", zerocatch[miss_ind], p);
 			for (i = 0; i < p - zerocatch[miss_ind]; i++)
 			{
+				printf("\n######\t#\nFirst:\t%d\n######\t#\n", i);
 				genome_add_calc(w, p, perm, distp, zerocatch[miss_ind], pzero_ind, 
 					0, miss_ind, pshort_inds, p - zerocatch[miss_ind], i, &genome_add_sum, &tracker);
 				/*
@@ -742,25 +743,26 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 			// Note: curr_zero is incremented here and curr_ind is replaced with i. 
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
 				curr_zero, miss_ind, replacement, inds, i, genome_add_sum, tracker);
+			goto reunited;
 		}
 		else
 		{
-			printf("Adding!\tDistance: %11f\n", mindist(perms, alleles, perm, dist));
+			printf("\n=====\t=============\ni = %d\tcurr_zero = %d\n=====\t=============\n", i, curr_zero);
+			printf("Adding!\tDistance: %11f\t", mindist(perms, alleles, perm, dist));
 			*genome_add_sum += mindist(perms, alleles, perm, dist);
+			printf("Genome Add Sum: %11f\n", (*genome_add_sum));
 			*tracker += 1;
-			if(inds >= zeroes)
+			if (zeroes == 1 || i == inds - 1)
 			{
-				if (zeroes == 1)
-				{
-					return;
-				}
-				curr_zero -= 1;
+				goto reunited;
 			}
 			//curr_zero = zeroes - curr_zero;
 			//printf("counts: %d\n", *tracker);
 		}
+		if (i < inds - 1)
+			curr_zero--;
 	}
-	return;
+	reunited:;
 }
 
 
