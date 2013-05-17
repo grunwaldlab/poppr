@@ -754,6 +754,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 			*tracker += 1;
 			if (zeroes == 1 || i == inds - 1)
 			{
+				printf("...and it feels so good.\n");
 				goto reunited;
 			}
 			//curr_zero = zeroes - curr_zero;
@@ -761,8 +762,9 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		}
 		if (i < inds - 1)
 			curr_zero--;
+		
 	}
-	reunited:;
+	reunited:printf("Done!\n");
 }
 
 
