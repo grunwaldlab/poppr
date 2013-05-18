@@ -739,13 +739,13 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		{
 			//curr_zero += 1;
 			printf("Looping Through...\n");
-			
+			j = curr_zero;
 			// Note: curr_zero is incremented here and curr_ind is replaced with i. 
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
 				++curr_zero, miss_ind, replacement, inds, i, genome_add_sum, tracker);
-			printf("curr_ind = %d\n", i);
-			//if (i == inds - 1)
-			goto reunited;
+			printf("curr_ind = %d\t entering zero = %d\t current zero = %d\n", i, j, curr_zero);
+			if (curr_zero == zeroes - 1)
+			  goto reunited;
 		}
 		else
 		{
