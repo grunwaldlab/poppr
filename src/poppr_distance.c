@@ -739,7 +739,6 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		{
 			//curr_zero += 1;
 			//printf("Looping Through...\n");
-			j = curr_zero;
 			// Note: curr_zero is incremented here and curr_ind is replaced with i. 
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
 				++curr_zero, miss_ind, replacement, inds, i, genome_add_sum, tracker);
@@ -768,6 +767,22 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 	reunited:;
 }
 
+
+/*==============================================================================
+*	Genome Loss Model
+*	
+void genome_loss_calc(int *genos, int *nalleles, int *perm_array, int *woo, 
+		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
+		int miss_ind, curr_ind, double *genome_loss_sum, int *loss_tracker)
+{
+		for (i = 0; i < p; i++)
+		{
+			genos[miss_ind*zero_ind[curr_zero] + zero_ind[curr_zero]] = genos[i*full_ind + i];
+			genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w, 
+									&loss_indicator, &add_indicator)*p;
+		}
+}
+==============================================================================*/
 
 double mindist(int perms, int alleles, int *perm, double *dist)
 {
