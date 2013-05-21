@@ -588,10 +588,10 @@ polysat_bruvo() == poppr_bruvo()
 			int *pzero_ind, *pshort_inds;
 			pzero_ind = (int *) &zero_ind[miss_ind];
 			pshort_inds = (int *) &short_inds;
-			printf("\n\n\nzerocatch[miss_inds] = %d\tp = %d\n\n\n", zerocatch[miss_ind], p);
+			//printf("\n\n\nzerocatch[miss_inds] = %d\tp = %d\n\n\n", zerocatch[miss_ind], p);
 			for (i = 0; i < p - zerocatch[miss_ind]; i++)
 			{
-				printf("\n######\t#\nFirst:\t%d\n######\t#\n", i);
+				//printf("\n######\t#\nFirst:\t%d\n######\t#\n", i);
 				genome_add_calc(w, p, perm, distp, zerocatch[miss_ind], pzero_ind, 
 					0, miss_ind, pshort_inds, p - zerocatch[miss_ind], i, &genome_add_sum, &tracker);
 				/*
@@ -697,8 +697,8 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 	int inds, int curr_ind, double *genome_add_sum, int *tracker)
 {
 	int i,j;
-	printf("I'm in! replacement[%d]: %d\t", curr_ind, replacement[curr_ind]);
-	printf("zero_ind[%d]: %d\n", curr_zero, zero_ind[curr_zero]);
+	//printf("I'm in! replacement[%d]: %d\t", curr_ind, replacement[curr_ind]);
+	//printf("zero_ind[%d]: %d\n", curr_zero, zero_ind[curr_zero]);
 	//==========================================================================
 	// Part 1: fill one row/column of the matrix.
 	// Note that we don't have the format of the 2D array here, so we are
@@ -738,25 +738,25 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		if (curr_zero < zeroes - 1)
 		{
 			//curr_zero += 1;
-			printf("Looping Through...\n");
+			//printf("Looping Through...\n");
 			j = curr_zero;
 			// Note: curr_zero is incremented here and curr_ind is replaced with i. 
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
 				++curr_zero, miss_ind, replacement, inds, i, genome_add_sum, tracker);
-			printf("curr_ind = %d\t entering zero = %d\t current zero = %d\n", i, j, curr_zero);
+			//printf("curr_ind = %d\t entering zero = %d\t current zero = %d\n", i, j, curr_zero);
 			if (curr_zero == zeroes - 1)
 			  goto reunited;
 		}
 		else
 		{
-			printf("\n=====\t=============\ni = %d\tcurr_zero = %d\n=====\t=============\n", i, curr_zero);
-			printf("Adding!\tDistance: %11f\t", mindist(perms, alleles, perm, dist));
+			//printf("\n=====\t=============\ni = %d\tcurr_zero = %d\n=====\t=============\n", i, curr_zero);
+			//printf("Adding!\tDistance: %11f\t", mindist(perms, alleles, perm, dist));
 			*genome_add_sum += mindist(perms, alleles, perm, dist);
-			printf("Genome Add Sum: %11f\n", (*genome_add_sum));
+			//printf("Genome Add Sum: %11f\n", (*genome_add_sum));
 			*tracker += 1;
 			if (zeroes == 1 || i == inds - 1)
 			{
-				printf("...and it feels so good.\n");
+				//printf("...and it feels so good.\n");
 				goto reunited;
 			}
 			//curr_zero = zeroes - curr_zero;
@@ -765,7 +765,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		curr_zero--;
 		
 	}
-	reunited:printf("Done!\n");
+	reunited:;
 }
 
 
