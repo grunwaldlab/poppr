@@ -51,6 +51,9 @@ double mindist(int perms, int alleles, int *perm, double *dist);
 void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
 	int inds, int curr_ind, double *genome_add_sum, int *tracker);
+void genome_loss_calc(int *genos, int nalleles, int *perm_array, int *woo, 
+		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
+		int miss_ind, int curr_allele, double *genome_loss_sum, int *loss_tracker);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the root product of pairwise comparisons of each of the variances of
 each locus.
@@ -532,7 +535,7 @@ polysat_bruvo() == poppr_bruvo()
 	*/
 	if(zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
-		int *genop, ind, miss_ind = 1, full_ind = 0, z, tracker = 0;
+		int *genop, ind, miss_ind = 1, full_ind = 0, z, tracker = 0, loss_tracker = 0;
 		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
 		genop = (int *) &genos;
 		if (zerocatch[0] > 0) // The rows contain the zero value
@@ -594,28 +597,6 @@ polysat_bruvo() == poppr_bruvo()
 				//printf("\n######\t#\nFirst:\t%d\n######\t#\n", i);
 				genome_add_calc(w, p, perm, distp, zerocatch[miss_ind], pzero_ind, 
 					0, miss_ind, pshort_inds, p - zerocatch[miss_ind], i, &genome_add_sum, &tracker);
-				/*
-				if (i == ind)
-				{
-					goto next1;
-				}
-				if (zerocatch[0] > 0)
-				{
-					for (j = 0; j < p; j++)
-					{
-						dist[ind][j] = dist[i][j];
-					}
-				}
-				else
-				{
-					for (j = 0; j < p; j++)
-					{
-						dist[j][ind] = dist[j][i];
-					}						
-				}
-				genome_add_sum += mindist(w, p, perm, distp);
-				next1:;	
-				*/
 			}
 		}
 		/*======================================================================
@@ -626,6 +607,8 @@ polysat_bruvo() == poppr_bruvo()
 		======================================================================*/
 		if (loss_indicator == 1)
 		{
+			int *pzero_ind;
+			pzero_ind = (int *) &zero_ind[miss_ind];
 			// Need to initialize and transpose array because I'm dum
 /*			int tgenos[p][2];
 			for (i = 0; i < 2; i++)
@@ -637,27 +620,38 @@ polysat_bruvo() == poppr_bruvo()
 			}
 			genop = (int *) &tgenos;
 */
-			genop = (int *) &genos;
+			//genop = (int *) &genos;
+
 			for (i = 0; i < p; i++)
 			{
+			/*
+				genome_loss_calc(genos, nalleles, perm_array, woo, loss, add, 
+				zero_ind, ++curr_zero, zeroes, miss_ind, i, genome_loss_sum, 
+				loss_tracker)
+			*/
+
+
+				genome_loss_calc(genop, p, perm, &w, &loss_indicator, 
+					&add_indicator, pzero_ind, 0, p - zerocatch[miss_ind], 
+					miss_ind, i, &genome_loss_sum, &loss_tracker);
 				//printf("Origininal: %d\tReplacement: %d\n", genos[miss_ind][ind], genos[full_ind][i]);
-				genos[miss_ind][ind] = genos[full_ind][i];
-				/*
-				derp = test_bruvo_dist(genop, &p, perm, &w)*p;
-				genome_loss_sum += derp;
-				printf("Genome Loss Distance: %11f\n", derp);
-				*/
+				//genos[miss_ind][ind] = genos[full_ind][i];
+
 				//	Note: These need to be multiplied by p since the result has been
 				//	divided by p 
-				genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w, 
-										&loss_indicator, &add_indicator)*p;
+				//genome_loss_sum += test_bruvo_dist(genop, &p, perm, &w, 
+				//						&loss_indicator, &add_indicator)*p;
 			}
 		}
 		if (tracker == 0)
 		{
 			tracker = 1;
 		}
-		genome_loss_sum = genome_loss_sum/p;
+		if (loss_tracker == 0)
+		{
+			loss_tracker = 1;
+		}
+		genome_loss_sum = genome_loss_sum/loss_tracker;
 		genome_add_sum = genome_add_sum/tracker;
 		int comparison_factor = loss_indicator + add_indicator;
 		//printf("Genome Loss Model: %11f\tGenome Addition Model: %11f\n", 
@@ -781,29 +775,42 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 /*==============================================================================
 *	Genome Loss Model
 *	
-void genome_loss_calc(int *genos, int *nalleles, int *perm_array, int *woo, 
+==============================================================================*/
+void genome_loss_calc(int *genos, int nalleles, int *perm_array, int *woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
-		int miss_ind, double *genome_loss_sum, int *loss_tracker)
+		int miss_ind, int curr_allele, double *genome_loss_sum, int *loss_tracker)
 {
 	int i, full_ind = 1 + (0 - miss_ind);
-	for (i = 0; i < nalleles; i++)
+	genos[miss_ind + zero_ind[curr_zero]*2] = genos[full_ind + curr_allele*2];
+	printf("Replacement: %d\n", genos[full_ind + curr_allele*2]);
+	for (i = curr_allele; i < nalleles; i++)
 	{
-		//genos[miss_ind][ind] = genos[full_ind][i];
 		// 2dvector[row + column*ROWS] to traverse row by row.
-		genos[miss_ind + zero_ind[curr_zero]*2] = genos[full_ind + i*2];
+		
 		if (curr_zero < zeroes - 1)
 		{
 			genome_loss_calc(genos, nalleles, perm_array, woo, loss, add, 
-				zero_ind, curr_zero, zeroes, miss_ind, curr_ind, 
-				genome_loss_sum, loss_tracker)
+				zero_ind, ++curr_zero, zeroes, miss_ind, i, genome_loss_sum, 
+				loss_tracker);
 			if (curr_zero == zeroes - 1)
 				return;
 		}
-		*genome_loss_sum += test_bruvo_dist(genop, nalleles, perm_array, woo, 
-								loss, add)*nalleles;
+		else
+		{
+			*genome_loss_sum += test_bruvo_dist(genos, &nalleles, perm_array, woo, 
+									loss, add)*nalleles;
+			printf("\nGenome Loss! %11f\n", (*genome_loss_sum));
+			*loss_tracker += 1;
+			if (zeroes == 1 || i == nalleles - 1)
+			{
+				return;
+			}
+		}
+		curr_zero--;
 	}
+	return;
 }
-==============================================================================*/
+
 
 double mindist(int perms, int alleles, int *perm, double *dist)
 {
