@@ -749,14 +749,13 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 	{
 		if (curr_zero < zeroes - 1)
 		{
-			//curr_zero += 1;
 			//printf("Looping Through...\n");
 			// Note: curr_zero is incremented here and curr_ind is replaced with i. 
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
 				++curr_zero, miss_ind, replacement, inds, i, genome_add_sum, tracker);
 			//printf("curr_ind = %d\t entering zero = %d\t current zero = %d\n", i, j, curr_zero);
 			if (curr_zero == zeroes - 1)
-			  goto reunited;
+				return;
 		}
 		else
 		{
@@ -768,7 +767,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 			if (zeroes == 1 || i == inds - 1)
 			{
 				//printf("...and it feels so good.\n");
-				goto reunited;
+				return;
 			}
 			//curr_zero = zeroes - curr_zero;
 			//printf("counts: %d\n", *tracker);
@@ -776,7 +775,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		curr_zero--;
 		
 	}
-	reunited:;
+	return;
 }
 
 /*==============================================================================
@@ -784,15 +783,25 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 *	
 void genome_loss_calc(int *genos, int *nalleles, int *perm_array, int *woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
-		int miss_ind, curr_ind, double *genome_loss_sum, int *loss_tracker)
+		int miss_ind, double *genome_loss_sum, int *loss_tracker)
 {
-	int i;
-		for (i = 0; i < nalleles; i++)
+	int i, full_ind = 1 + (0 - miss_ind);
+	for (i = 0; i < nalleles; i++)
+	{
+		//genos[miss_ind][ind] = genos[full_ind][i];
+		// 2dvector[row + column*ROWS] to traverse row by row.
+		genos[miss_ind + zero_ind[curr_zero]*2] = genos[full_ind + i*2];
+		if (curr_zero < zeroes - 1)
 		{
-			genos[miss_ind + nalleles*zero_ind[curr_zero]] = genos[full_ind + nalleles*i];
-			*genome_loss_sum += test_bruvo_dist(genop, nalleles, perm_array, woo, 
-									loss, add)*nalleles;
+			genome_loss_calc(genos, nalleles, perm_array, woo, loss, add, 
+				zero_ind, curr_zero, zeroes, miss_ind, curr_ind, 
+				genome_loss_sum, loss_tracker)
+			if (curr_zero == zeroes - 1)
+				return;
 		}
+		*genome_loss_sum += test_bruvo_dist(genop, nalleles, perm_array, woo, 
+								loss, add)*nalleles;
+	}
 }
 ==============================================================================*/
 
