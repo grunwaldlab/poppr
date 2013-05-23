@@ -626,8 +626,6 @@ polysat_bruvo() == poppr_bruvo()
 		genome_loss_sum = genome_loss_sum/loss_tracker;
 		genome_add_sum = genome_add_sum/tracker;
 		int comparison_factor = loss_indicator + add_indicator;
-		//printf("Genome Loss Model: %11f\tGenome Addition Model: %11f\n", 
-		//genome_loss_sum/p, genome_add_sum/p);
 		return (genome_add_sum + genome_loss_sum)/(p*comparison_factor);
 	}
 	return mindist(w, p, perm, distp)/p;
@@ -639,9 +637,6 @@ polysat_bruvo() == poppr_bruvo()
 * portions of the distance matrix generated via the missing values with columns
 * (or rows) of observed values in a combinatorial way. This will involve 
 * recursion.
-* For safe keeping:
-* dist[zero_ind[z] + alleles*j] = dist[rep_int + alleles*j];
-* dist[j + alleles*zero_ind[z]] = dist[j + alleles*rep_int];
 * 
 * Arguments:
 *	perms - number of permutations (passed to mindist)
@@ -658,29 +653,26 @@ polysat_bruvo() == poppr_bruvo()
 *	inds - number of replacement genotypes.
 *	curr_ind - the index of the current replacement genotype.
 *
-*	*genome_add_sum - pointer to the total number of the genome addition model. 
+*	*genome_add_sum - pointer to the total number of the genome addition model.
+*	*tracker - pointer to counter for the number of calculations for addition. 
 ==============================================================================*/
 void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
 	int inds, int curr_ind, double *genome_add_sum, int *tracker)
 {
 	int i,j;
-	//printf("I'm in! replacement[%d]: %d\t", curr_ind, replacement[curr_ind]);
-	//printf("zero_ind[%d]: %d\n", curr_zero, zero_ind[curr_zero]);
 	//==========================================================================
 	// Part 1: fill one row/column of the matrix.
 	// Note that we don't have the format of the 2D array here, so we are
 	// cheating a little bit. Instead of indexing by dist[i][j] over p columns,
 	// we use dist[i + p*j]. It works. 
 	//==========================================================================
-	//printf("Distance:\t");
 	if(miss_ind > 0)
 	{
 		for (j = 0; j < alleles; j++)
 		{
 			dist[zero_ind[curr_zero] + alleles*j] = 
 				dist[replacement[curr_ind] + alleles*j];
-			//printf("%11f\t", dist[replacement[curr_ind] + alleles*j]);
 		}
 	}
 	else
@@ -689,10 +681,8 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		{
 			dist[j + alleles*zero_ind[curr_zero]] = 
 				dist[j + alleles*replacement[curr_ind]];	
-			//printf("%11f\t", dist[j + alleles*replacement[curr_ind]]);	
 		}
 	}
-	//printf("\n");
 	//==========================================================================
 	// Part 2: Iterate through the rest of the possible combinations.
 	//
@@ -705,28 +695,20 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 	{
 		if (curr_zero < zeroes - 1)
 		{
-			//printf("Looping Through...\n");
-			// Note: curr_zero is incremented here and curr_ind is replaced with i. 
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
-				++curr_zero, miss_ind, replacement, inds, i, genome_add_sum, tracker);
-			//printf("curr_ind = %d\t entering zero = %d\t current zero = %d\n", i, j, curr_zero);
+				++curr_zero, miss_ind, replacement, inds, i, genome_add_sum, 
+				tracker);
 			if (curr_zero == zeroes - 1)
 				return;
 		}
 		else
 		{
-			//printf("\n=====\t=============\ni = %d\tcurr_zero = %d\n=====\t=============\n", i, curr_zero);
-			//printf("Adding!\tDistance: %11f\t", mindist(perms, alleles, perm, dist));
 			*genome_add_sum += mindist(perms, alleles, perm, dist);
-			//printf("Genome Add Sum: %11f\n", (*genome_add_sum));
 			*tracker += 1;
 			if (zeroes == 1 || i == inds - 1)
 			{
-				//printf("...and it feels so good.\n");
 				return;
 			}
-			//curr_zero = zeroes - curr_zero;
-			//printf("counts: %d\n", *tracker);
 		}
 		curr_zero--;
 		
@@ -736,23 +718,30 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 
 /*==============================================================================
 *	Genome Loss Model
+*	Replace missing alleles in the shorter genotype with all possible
+*	combinations of alleles in the larger genotype and recall bruvo_dist. There
+*	are choose((n+k-1), k) possible combinations where n is the number of
+*	alleles in the larger genotype and k is the number of missing alleles in the
+*	shorter genotype. 
 *	
 * Arguments:
-*	perms - number of permutations (passed to mindist)
-*	alleles - number of maximum alleles (also passed to mindist)
-*	*perm - permutation array (passed to mindist)
-*	*dist - distance matrix to be manipulated (also passed to mindist)
-*	
-*	zeroes - number of zeroes present in the shorter genotype.
+*	PASSED TO BRUVO_DIST:
+*	*genos - genotype array
+*	nalleles - number of maximum alleles.
+*	*perm_array - permutation array.
+*	*woo - nalleles * nalleles!
+*	*loss - genome loss model indicator.
+*	*add - genome addition indicator.
+*
+*	UNIQUE TO THIS FUNCTION:
 *	*zero_ind - array containing indices of the zero values of the short geno
 *	curr_zero - the index of the current zero index for zero_ind
-*	miss_ind - the index for the genotype with missing data. Necessary for
-*				determining rows or columns
-*	*replacement - array containing indices of replacement genotypes.
-*	inds - number of replacement genotypes.
-*	curr_ind - the index of the current replacement genotype.
+*	zeroes - number of zeroes present in the shorter genotype.
+*	miss_ind - the index for the genotype with missing data.
+*	curr_allele - the current index for the replacement alleles of the full geno
 *
-*	*genome_add_sum - pointer to the total number of the genome addition model.
+*	*genome_loss_sum - pointer to the total number of the genome loss model.
+*	*loss_tracker - pointer to counter for the number of calculations for loss.
 ==============================================================================*/
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
@@ -761,7 +750,8 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 {
 	int i, full_ind;
 	full_ind = 1 + (0 - miss_ind);
-	genos[miss_ind*nalleles + zero_ind[curr_zero]] = genos[full_ind*nalleles + curr_allele];
+	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
+		genos[full_ind*nalleles + curr_allele];
 	for (i = curr_allele; i < nalleles; i++)
 	{
 		if (curr_zero < zeroes - 1)
@@ -777,7 +767,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		else
 		{
 			*genome_loss_sum += test_bruvo_dist(genos, &nalleles, perm_array, 
-			&woo, loss, add)*nalleles;
+				&woo, loss, add)*nalleles;
 			*loss_tracker += 1;
 			if (zeroes == 1 || i == nalleles - 1)
 			{
