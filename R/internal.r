@@ -893,7 +893,7 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
   # Dividing each column by the repeat length and changing the values to integers.
   ssr.matrix <- apply(ssr.matrix / rep(replen, each=ploid*nrow(ssr.matrix)), 2, as.integer)
   perms <- .Call("permuto", ploid)
-  distmat <- .Call("bruvo_distance", ssr.matrix, perms, ploid)
+  distmat <- .Call("bruvo_distance", ssr.matrix, perms, ploid, 1, 1)
   distmat[distmat == 100] <- NA
   avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
   # presenting the information in a lower triangle distance matrix.

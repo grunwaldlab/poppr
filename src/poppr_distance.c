@@ -193,7 +193,8 @@ SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP loss, SEXP a
 	return Rval;
     
 }
-SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
+
+SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_loss, SEXP m_add)
 {
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	I = number of rows in bruvo_mat
@@ -205,7 +206,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 	
 	A matrix in R is built row by row. That's why there is a triple 'for' loop.
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-	int I, J, A, P, i, j, a, count = 0, *pA, *pP, add, loss, *padd, *ploss;
+	int I, J, A, P, i, j, a, count = 0, *pA, *pP;//, add, loss, *padd, *ploss;
 	//Initialization of R vectors.
 	SEXP Rdim;
 	SEXP Rval;
@@ -218,10 +219,12 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 	A = INTEGER(alleles)[0];
 	pA = &A;
 	pP = &P;
-	add = 1;
-	loss = 1;
-	padd = &add;
-	ploss = &loss;
+	m_loss = coerceVector(m_loss, INTSXP);
+	//add = INTEGER(m_loss)[0];
+	m_add = coerceVector(m_add, INTSXP);
+	//loss = INTEGER(m_add)[0];
+	//padd = &add;
+	//ploss = &loss;
 	bruvo_mat = coerceVector(bruvo_mat, INTSXP);
 	permutations = coerceVector(permutations, INTSXP);
 	// Protecting the vectors that will be modified. Rval is the output
@@ -256,7 +259,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles)
 				}
 				// Calculating Bruvo's distance over these two. 
 				REAL(Rval)[count++] = test_bruvo_dist(INTEGER(pair_matrix), pA,
-                                                 INTEGER(permutations), pP, padd, ploss);
+					INTEGER(permutations), pP, INTEGER(m_loss), INTEGER(m_add));
 			}
 		}
 	}

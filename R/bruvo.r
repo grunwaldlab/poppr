@@ -135,7 +135,7 @@ bruvo.dist <- function(pop, replen=c(2)){
   # Getting the permutation vector.
   perms <- .Call("permuto", ploid)
   # Calculating bruvo's distance over each locus. 
-  distmat <- .Call("bruvo_distance", pop, perms, ploid)
+  distmat <- .Call("bruvo_distance", pop, perms, ploid, 1, 1)
   # If there are missing values, the distance returns 100, which means that the
   # comparison is not made. These are changed to NA.
   distmat[distmat == 100] <- NA
