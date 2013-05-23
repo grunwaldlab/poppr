@@ -2,7 +2,7 @@
 \alias{bruvo.dist}
 \title{Calculate the average Bruvo's Distance over all loci in a population.}
 \usage{
-  bruvo.dist(pop, replen = c(2))
+  bruvo.dist(pop, replen = c(2), add = TRUE, loss = TRUE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -10,6 +10,14 @@
   \item{replen}{a \code{vector} of \code{integers}
   indicating the length of the nucleotide repeats for each
   microsatellite locus.}
+
+  \item{add}{if \code{TRUE}, genotypes with zero values
+  will be treated under the genome addition model presented
+  in Bruvo et al. 2004.}
+
+  \item{loss}{if \code{TRUE}, genotypes with zero values
+  will be treated under the genome loss model presented in
+  Bruvo et al. 2004.}
 }
 \value{
   a \code{distance matrix}
@@ -19,11 +27,11 @@
   population.
 }
 \note{
-  This function calculates bruvo's distance for non-special
-  cases (ie. the ploidy and all alleles are known).
-  Currently there is no way to import polyploid partial
-  heterozygote data into adegenet. For Bruvo's Distance
-  concerning special cases, see the package \code{polysat}.
+  The result of both \code{add = TRUE} and \code{loss =
+  TRUE} is that the distance is averaged over both values.
+  If both are set to \code{FALSE}, then the infinite
+  alleles model is used. For genotypes with all missing
+  values, the result will be NA.
 
   If the user does not provide a vector of appropriate
   length for \code{replen} , it will be estimated by taking

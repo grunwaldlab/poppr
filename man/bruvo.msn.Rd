@@ -3,10 +3,11 @@
 \title{Create minimum spanning network of selected populations using Brvuo's
 distance.}
 \usage{
-  bruvo.msn(pop, replen = c(1), palette = topo.colors,
-    sublist = "All", blacklist = NULL,
-    vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),
-    gadj = 3, gweight = 1, wscale = TRUE, ...)
+  bruvo.msn(pop, replen = c(1), add = TRUE, loss = TRUE,
+    palette = topo.colors, sublist = "All",
+    blacklist = NULL, vertex.label = "MLG", gscale = TRUE,
+    glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE,
+    ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -14,6 +15,14 @@ distance.}
   \item{replen}{a \code{vector} of \code{integers}
   indicating the length of the nucleotide repeats for each
   microsatellite locus.}
+
+  \item{add}{if \code{TRUE}, genotypes with zero values
+  will be treated under the genome addition model presented
+  in Bruvo et al. 2004.}
+
+  \item{loss}{if \code{TRUE}, genotypes with zero values
+  will be treated under the genome loss model presented in
+  Bruvo et al. 2004.}
 
   \item{palette}{a \code{function} defining the color
   palette to be used to color the populations on the graph.

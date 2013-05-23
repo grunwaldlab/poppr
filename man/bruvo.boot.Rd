@@ -2,9 +2,9 @@
 \alias{bruvo.boot}
 \title{Create a tree using Bruvo's Distance with non-parametric bootstrapping.}
 \usage{
-  bruvo.boot(pop, replen = c(2), sample = 100,
-    tree = "upgma", showtree = TRUE, cutoff = NULL,
-    quiet = FALSE, ...)
+  bruvo.boot(pop, replen = c(2), add = TRUE, loss = TRUE,
+    sample = 100, tree = "upgma", showtree = TRUE,
+    cutoff = NULL, quiet = FALSE, ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -12,6 +12,14 @@
   \item{replen}{a \code{vector} of \code{integers}
   indicating the length of the nucleotide repeats for each
   microsatellite locus.}
+
+  \item{add}{if \code{TRUE}, genotypes with zero values
+  will be treated under the genome addition model presented
+  in Bruvo et al. 2004.}
+
+  \item{loss}{if \code{TRUE}, genotypes with zero values
+  will be treated under the genome loss model presented in
+  Bruvo et al. 2004.}
 
   \item{sample}{an \code{integer} indicated the number of
   bootstrap replicates desired.}

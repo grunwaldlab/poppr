@@ -56,15 +56,21 @@
 #'
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #' nucleotide repeats for each microsatellite locus.
+#' 
+#' @param add if \code{TRUE}, genotypes with zero values will be treated under
+#' the genome addition model presented in Bruvo et al. 2004.
+#' 
+#' @param loss if \code{TRUE}, genotypes with zero values will be treated under
+#' the genome loss model presented in Bruvo et al. 2004.
 #'
 #' @return a \code{distance matrix}
 #'
 #' @seealso \code{\link{nancycats}}
 #'
-#' @note This function calculates bruvo's distance for non-special cases (ie.
-#' the ploidy and all alleles are known). Currently there is no way to import
-#' polyploid partial heterozygote data into adegenet. For Bruvo's Distance 
-#' concerning special cases, see the package \code{polysat}.
+#' @note The result of both \code{add = TRUE} and \code{loss = TRUE} is that
+#' the distance is averaged over both values. If both are set to \code{FALSE},
+#' then the infinite alleles model is used. For genotypes with all missing
+#' values, the result will be NA. 
 #'
 #' If the user does not provide a vector of appropriate length for \code{replen}
 #' , it will be estimated by taking the minimum difference among represented
@@ -92,7 +98,7 @@
 #' }
 #==============================================================================#
 #' @useDynLib poppr
-bruvo.dist <- function(pop, replen=c(2)){
+bruvo.dist <- function(pop, replen=c(2), add = TRUE, loss = TRUE){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
@@ -135,7 +141,7 @@ bruvo.dist <- function(pop, replen=c(2)){
   # Getting the permutation vector.
   perms <- .Call("permuto", ploid)
   # Calculating bruvo's distance over each locus. 
-  distmat <- .Call("bruvo_distance", pop, perms, ploid, 1, 1)
+  distmat <- .Call("bruvo_distance", pop, perms, ploid, add, loss)
   # If there are missing values, the distance returns 100, which means that the
   # comparison is not made. These are changed to NA.
   distmat[distmat == 100] <- NA
@@ -160,6 +166,12 @@ bruvo.dist <- function(pop, replen=c(2)){
 #'
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #' nucleotide repeats for each microsatellite locus.
+#' 
+#' @param add if \code{TRUE}, genotypes with zero values will be treated under
+#' the genome addition model presented in Bruvo et al. 2004.
+#' 
+#' @param loss if \code{TRUE}, genotypes with zero values will be treated under
+#' the genome loss model presented in Bruvo et al. 2004.
 #'
 #' @param sample an \code{integer} indicated the number of bootstrap replicates
 #' desired.
@@ -218,7 +230,7 @@ bruvo.dist <- function(pop, replen=c(2)){
 #   /     \
 #   |=(o)=|
 #   \     /
-bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma", 
+bruvo.boot <- function(pop, replen = c(2), add = TRUE, loss = TRUE, sample = 100, tree = "upgma", 
                        showtree = TRUE, cutoff = NULL, quiet = FALSE, ...) {
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
@@ -252,7 +264,7 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
   else if(tree == "nj"){
     newfunk <- match.fun(nj)
   }
-  tre <- newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid))
+  tre <- newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid, add = add, loss = loss))
   if (any (tre$edge.length < 0)){
     warning("The branch lengths of the tree are negative.", immediate.=TRUE)
     us.promp<- as.numeric(readline(prompt="What do you want to do?, You can:\n1. Stop the analysis\n2. Convert negative branch values to Zero (Not biologically relevant)\nEnter your Selection:"))
@@ -272,7 +284,7 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
   if(quiet == FALSE){
     cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
   }
-  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid)), B = sample, quiet=quiet, ...)
+  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid, add = add, loss = loss)), B = sample, quiet=quiet, ...)
   tre$node.labels <- round(((bp / sample)*100))
   if (!is.null(cutoff)){
     if (cutoff < 1 | cutoff > 100){
@@ -299,7 +311,13 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
 #'
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #' nucleotide repeats for each microsatellite locus.
+#'
+#' @param add if \code{TRUE}, genotypes with zero values will be treated under
+#' the genome addition model presented in Bruvo et al. 2004.
 #' 
+#' @param loss if \code{TRUE}, genotypes with zero values will be treated under
+#' the genome loss model presented in Bruvo et al. 2004.
+#'  
 #' @param palette a \code{function} defining the color palette to be used to
 #' color the populations on the graph. It defaults to \code{\link{topo.colors}},
 #' but you can easily create new schemes by using \code{\link{colorRampPalette}}
@@ -399,7 +417,7 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
 #' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
 #' }
 #==============================================================================#
-bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
+bruvo.msn <- function (pop, replen = c(1), add = TRUE, loss = TRUE, palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, ...){
@@ -411,7 +429,7 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-    bclone <- bruvo.dist(cpop, replen=replen)
+    bclone <- bruvo.dist(cpop, replen=replen, add = add, loss = loss)
     mclone<-as.dist(bclone)
     #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
     g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
@@ -472,7 +490,7 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   # Note: rank is used to correctly subset the data
   mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
   mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
-  bclone <- bruvo.dist(cpop, replen=replen)
+  bclone <- bruvo.dist(cpop, replen=replen, add = add, loss = loss)
   
   ###### Create a graph #######
   g <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
