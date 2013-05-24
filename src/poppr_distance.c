@@ -780,6 +780,12 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 }
 
 
+
+
+/*
+// Multiset coefficient: fact(n+k-1)/(fact(k)*fact(n-1))
+*/
+
 double mindist(int perms, int alleles, int *perm, double *dist)
 {
 	int i, j, w = perms, p = alleles, counter = 0;
