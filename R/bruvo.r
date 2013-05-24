@@ -98,7 +98,7 @@
 #' }
 #==============================================================================#
 #' @useDynLib poppr
-bruvo.dist <- function(pop, replen=c(2), add = TRUE, loss = TRUE){
+bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
@@ -230,8 +230,9 @@ bruvo.dist <- function(pop, replen=c(2), add = TRUE, loss = TRUE){
 #   /     \
 #   |=(o)=|
 #   \     /
-bruvo.boot <- function(pop, replen = c(2), add = TRUE, loss = TRUE, sample = 100, tree = "upgma", 
-                       showtree = TRUE, cutoff = NULL, quiet = FALSE, ...) {
+bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, 
+                        tree = "upgma", showtree = TRUE, cutoff = NULL, 
+                        quiet = FALSE, ...){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
@@ -295,7 +296,9 @@ bruvo.boot <- function(pop, replen = c(2), add = TRUE, loss = TRUE, sample = 100
   }
   tre$tip.label <- pop@ind.names
   if(showtree == TRUE){
-    plot(tre, show.node.label=TRUE)
+    plot(tre, show.tip.label=FALSE)
+    tiplabels(pop@ind.names, adj= c(-0.25, 0.5), frame="n", cex=0.8, font=2)
+    nodelabels(tre$node.label, adj = c(1.3, -0.5), frame="n", cex=0.9, font=3)
   }
   if(tree=="upgma"){
     axisPhylo(3)
@@ -417,7 +420,7 @@ bruvo.boot <- function(pop, replen = c(2), add = TRUE, loss = TRUE, sample = 100
 #' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
 #' }
 #==============================================================================#
-bruvo.msn <- function (pop, replen = c(1), add = TRUE, loss = TRUE, palette = topo.colors,
+bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, ...){

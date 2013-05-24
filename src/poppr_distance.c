@@ -409,9 +409,32 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 	return minn/p;
 }
 
+/*	Test code comparing current status to polysat's Bruvo2.distance:
+****
+================================================================================
+poppr_bruvo <- function(){ 
+  return(c(.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0),
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 0),
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 1),
+.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
+))
+}
 
+polysat_bruvo <- function(){
+  return(c(Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=FALSE),
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=FALSE),
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=F, add=T),
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
+))
+}
 
-
+library(polysat)
+polysat_bruvo()
+poppr_bruvo()
+polysat_bruvo() == poppr_bruvo()
+================================================================================
+****
+*/
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
 	int i, j, counter = 0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
@@ -510,32 +533,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	}
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *) &dist;
-	/*	Test code comparing current status to polysat's Bruvo2.distance:
-	****
-================================================================================
-poppr_bruvo <- function(){ 
-  return(c(.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0),
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 0),
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 1),
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
-))
-}
-
-polysat_bruvo <- function(){
-  return(c(Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=FALSE),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=FALSE),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=F, add=T),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
-))
-}
-
-library(polysat)
-polysat_bruvo()
-poppr_bruvo()
-polysat_bruvo() == poppr_bruvo()
-================================================================================
-	****
-	*/
 	if(zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
 		int *genop, ind, miss_ind = 1, full_ind = 0, z, tracker = 0, loss_tracker = 0;
