@@ -125,7 +125,7 @@ bruvo.dist <- function(pop, replen=c(2), add = TRUE, loss = TRUE){
     
     pop <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
     pop[pop %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
-    return(phylo.bruvo.dist(pop, replen=replen, ploid=ploid))
+    return(phylo.bruvo.dist(pop, replen=replen, ploid=ploid, add = add, loss = loss))
   }
   else{
     pop <- matrix(as.numeric(as.matrix(genind2df(
