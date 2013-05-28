@@ -370,11 +370,9 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     stop("Something went wrong. Check your geo and region flags to make sure they are set correctly. Otherwise, the problem may lie within the data structure itself.")
   }
   if (any(duplicated(ind.vec))){
-    # preserving the names
-    orig.ind.vec <- ind.vec
     # ensuring that all names are unique
-    ind.vec <- 1:length(ind.vec)
-    res.gid@other[["original_names"]] <- orig.ind.vec
+    res.gid@ind.names <- paste("ind",1:length(ind.vec))
+    res.gid@other[["original_names"]] <- ind.vec
   }
   
   res.gid@other[["population_hierarchy"]] <- as.data.frame(list(Pop=pop.vec))
