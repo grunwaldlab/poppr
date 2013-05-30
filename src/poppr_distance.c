@@ -54,7 +54,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
 		int *loss_tracker);
-void fill_short_geno(int *genos, int nalleles, int *perm_array, int woo, 
+void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo, 
 		int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
 		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
 		int *tracker);
@@ -525,10 +525,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 											&loss_indicator, &add_indicator);
 			free(perm_array);
 		}
-/*
+
 		else
 		{
-			int fill_tracker = 0, *pzero_ind, short_inds[reduction], 
+			int fill_tracker = 0, *pzero_ind, short_inds[p - zerocatch[smaller]], 
 				short_counter = 0, *pshort_inds;
 			double res = 0;
 			pzero_ind = (int *) &zero_ind[smaller];
@@ -548,7 +548,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			}
 			minn = res/fill_tracker;
 		}
-*/
+
 		return minn;
 	}
 
@@ -825,7 +825,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 * - *tracker will count the number of iterations this goes through in order
 *   to get an average. 
 ==============================================================================*/
-void fill_short_geno(int *genos, int nalleles, int *perm_array, int woo, 
+void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo, 
 		int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
 		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
 		int *tracker)
@@ -848,7 +848,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int woo,
 		}
 		else
 		{
-			*res += test_bruvo_dist(genos, &nalleles, perm_array, &woo, loss, 
+			*res += test_bruvo_dist(genos, &nalleles, perm_array, woo, loss, 
 						add);
 			*tracker += 1;
 			if (zeroes == 1 || i == nalleles - 1)
