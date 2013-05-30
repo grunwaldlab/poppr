@@ -779,7 +779,55 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 	return;
 }
 
+/*
+* Notes for fill_short_geno: This will act much in the same way as
+* genome_loss_calc, except it will fill the shorter genotype with all possible
+* combinations of that genotype before sending it through test_bruvo_dist with
+* one full genotype. 
+*
+* Things that need to be set before running this:
+* - replacement is an array of the non-missing alleles from the shorter 
+*   genotype.
+* - inds is the number of non-missing alleles.
+* - *res will be minn
+* - *tracker will count the number of iterations this goes through in order
+*   to get an average. 
 
+void fill_short_geno(int *genos, int nalleles, int *perm_array, int woo, 
+        int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
+        int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
+        int *tracker)
+{
+  int i, full_ind;
+  full_ind = 1 + (0 - miss_ind);
+  genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
+  	genos[miss_ind*nalleles + replacement[curr_ind]];
+  for (i = curr_ind; i < inds; i++)
+  {
+		if (curr_zero < zeroes - 1)
+		{
+			fill_short_geno(genos, nalleles, perm_array, woo, loss, add, zeroes, 
+        zero_ind, ++curr_zero, miss_ind, replacement, inds, i);
+			if (curr_zero == zeroes - 1)
+			{
+				return;
+			}
+		}
+		else
+		{
+			*res += test_bruvo_dist(genos, &nalleles, perm_array, 
+				&woo, loss, add)*nalleles;
+      *tracker += 1;
+			if (zeroes == 1 || i == nalleles - 1)
+			{
+				return;
+			}
+		}
+		curr_zero--;
+	}
+	return;
+}
+*/
 
 
 /*
