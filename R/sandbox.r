@@ -174,7 +174,7 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   clm <- ncol(gena)
   gena.mat <- as.matrix(gena)
   # Checking for greater than haploid data.
-  if (glob.info[1] == clm/ploid){
+  if (glob.info[1] == clm/ploidy){
     # Missing data in genalex is coded as "0" for non-presence/absence data.
     # this converts it to "NA" for adegenet.
 #     if(any(gena.mat =="0")){
@@ -183,11 +183,11 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 #       #gena <- as.data.frame(gena.mat)
 #     }
     type <- 'codom'
-    loci <- which((1:clm)%%ploid==1)
+    loci <- which((1:clm) %% ploidy==1)
     gena2 <- gena[, loci]
-    lapply(loci, function(x) gena2[, ((x-1)/ploid)+1] <<-
-             pop_combiner(gena, hier = x:(x+ploid-1), sep = "/"))
-    #res <- list(Gena=gena2, Glob.info=glob.info, Ploid=ploidy)
+    lapply(loci, function(x) gena2[, ((x-1)/ploidy)+1] <<-
+             pop_combiner(gena, hier = x:(x+ploidy-1), sep = "/"))
+    #res <- list(Gena=gena2, Glob.info=glob.info, ploidy=ploidyy)
     res.gid <- df2genind(gena2, sep="/", ind.names=ind.vec, pop=pop.vec,
                          ploidy=ploidy, type=type)
   }

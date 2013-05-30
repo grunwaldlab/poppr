@@ -54,6 +54,10 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
 		int *loss_tracker);
+void fill_short_geno(int *genos, int nalleles, int *perm_array, int woo, 
+		int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
+		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
+		int *tracker);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the root product of pairwise comparisons of each of the variances of
 each locus.
@@ -485,38 +489,66 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			}
 			reduction = p - (zerocatch[larger] - zerodiff);
 		}
-		int new_alleles[reduction];
-		for (i = 0; i < reduction; i++)
-		{
-			new_alleles[i] = i;
-		}
-		w = fact(reduction) * reduction;
-		perm_array = (int *) malloc(w * sizeof(int));
-		perm_count = 0;
-		permute(new_alleles, 0, reduction - 1, perm_array);
-		// rebuild the array and make a pointer.
-		int new_geno[reduction*n];
-		counter = 0;
-		for(i=0; i < n; i++)
-		{
-			zero_counter = zerocatch[smaller];
-			for(j = 0; j < p; j++)
+		int del = 1;
+		if ( del > 0)
+		{		
+			int new_alleles[reduction];
+			for (i = 0; i < reduction; i++)
 			{
-				if (genos[i][j] == 0 && zero_counter > 0)
+				new_alleles[i] = i;
+			}
+			w = fact(reduction) * reduction;
+			perm_array = (int *) malloc(w * sizeof(int));
+			perm_count = 0;
+			permute(new_alleles, 0, reduction - 1, perm_array);
+			// rebuild the array and make a pointer.
+			int new_geno[reduction*n];
+			counter = 0;
+			for (i=0; i < n; i++)
+			{
+				zero_counter = zerocatch[smaller];
+				for (j = 0; j < p; j++)
 				{
-					zero_counter--;
-				}
-				else
-				{
-					new_geno[counter++] = genos[i][j];
+					if (genos[i][j] == 0 && zero_counter > 0)
+					{
+						zero_counter--;
+					}
+					else
+					{
+						new_geno[counter++] = genos[i][j];
+					}
 				}
 			}
-		}
-		new_genop = (int *) &new_geno;
+			new_genop = (int *) &new_geno;
 		
-		minn = test_bruvo_dist(new_genop, &reduction, perm_array, &w, 
-										&loss_indicator, &add_indicator);
-		free(perm_array);
+			minn = test_bruvo_dist(new_genop, &reduction, perm_array, &w, 
+											&loss_indicator, &add_indicator);
+			free(perm_array);
+		}
+/*
+		else
+		{
+			int fill_tracker = 0, *pzero_ind, short_inds[reduction], 
+				short_counter = 0, *pshort_inds;
+			double res = 0;
+			pzero_ind = (int *) &zero_ind[smaller];
+			pshort_inds = (int *) &short_inds;
+			for (i = 0; i < p; i++)
+			{
+				if (genos[smaller][i] > 0)
+				{
+					short_inds[short_counter++] = i;
+				}
+			}
+			for (i = 0; i < reduction; i++)
+			{
+				fill_short_geno(in, p, perm, woo, loss, add, zerocatch[smaller], 
+					pzero_ind, 0, smaller, pshort_inds, reduction, i, &res, 
+					&fill_tracker);
+			}
+			minn = res/fill_tracker;
+		}
+*/
 		return minn;
 	}
 
@@ -779,7 +811,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 	return;
 }
 
-/*
+/*==============================================================================
 * Notes for fill_short_geno: This will act much in the same way as
 * genome_loss_calc, except it will fill the shorter genotype with all possible
 * combinations of that genotype before sending it through test_bruvo_dist with
@@ -792,22 +824,23 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 * - *res will be minn
 * - *tracker will count the number of iterations this goes through in order
 *   to get an average. 
-
+==============================================================================*/
 void fill_short_geno(int *genos, int nalleles, int *perm_array, int woo, 
-        int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
-        int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
-        int *tracker)
+		int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
+		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
+		int *tracker)
 {
-  int i, full_ind;
-  full_ind = 1 + (0 - miss_ind);
-  genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
-  	genos[miss_ind*nalleles + replacement[curr_ind]];
-  for (i = curr_ind; i < inds; i++)
-  {
+	int i, full_ind;
+	full_ind = 1 + (0 - miss_ind);
+	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
+	genos[miss_ind*nalleles + replacement[curr_ind]];
+	for (i = curr_ind; i < inds; i++)
+	{
 		if (curr_zero < zeroes - 1)
 		{
 			fill_short_geno(genos, nalleles, perm_array, woo, loss, add, zeroes, 
-        zero_ind, ++curr_zero, miss_ind, replacement, inds, i);
+				zero_ind, ++curr_zero, miss_ind, replacement, inds, i, res, 
+				tracker);
 			if (curr_zero == zeroes - 1)
 			{
 				return;
@@ -815,9 +848,9 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int woo,
 		}
 		else
 		{
-			*res += test_bruvo_dist(genos, &nalleles, perm_array, 
-				&woo, loss, add)*nalleles;
-      *tracker += 1;
+			*res += test_bruvo_dist(genos, &nalleles, perm_array, &woo, loss, 
+						add);
+			*tracker += 1;
 			if (zeroes == 1 || i == nalleles - 1)
 			{
 				return;
@@ -827,7 +860,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int woo,
 	}
 	return;
 }
-*/
+
 
 
 /*
