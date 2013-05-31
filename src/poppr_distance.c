@@ -460,16 +460,22 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 					return minn;
 				}
 				zerocatch[i] += 1;
+        //printf("#");
 				zero_ind[i][zerocatch[i] - 1] = j;
 			}
 			genos[i][j] = in[counter++];
-			
+      //printf("%d\t", genos[i][j]);
 		}
+    //printf("\n");
 	}
+  //printf("\n");
 	zerodiff = abs(zerocatch[0] - zerocatch[1]);
 	/*==========================================================================
 	* Removing superfluous zeroes from the data. This is in the case that both
 	* of the genotypes contain one or more zeroes.
+  * 
+  * Important Note: larger and smaller refer to the number of zeroes, NOT the
+  * size of the genotypes. 
 	==========================================================================*/
 	if (zerocatch[0] > 0 && zerocatch[1] > 0)
 	{
@@ -489,6 +495,8 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			}
 			reduction = p - (zerocatch[larger] - zerodiff);
 		}
+    //printf("zerocatch[%d]: %d, zerocatch[%d]: %d, Reduction: %d\n", larger, zerocatch[larger], smaller, zerocatch[smaller], reduction);
+    //printf("\np - zerocatch[larger] = %d\n", p - zerocatch[larger]);
 		int del = 1;
 		if ( del > 0)
 		{		
@@ -528,21 +536,21 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 
 		else
 		{
-			int fill_tracker = 0, *pzero_ind, short_inds[p - zerocatch[smaller]], 
+			int fill_tracker = 0, *pzero_ind, short_inds[p - zerocatch[larger]], 
 				short_counter = 0, *pshort_inds;
 			double res = 0;
-			pzero_ind = (int *) &zero_ind[smaller];
+			pzero_ind = (int *) &zero_ind[larger];
 			pshort_inds = (int *) &short_inds;
 			for (i = 0; i < p; i++)
 			{
-				if (genos[smaller][i] > 0)
+				if (genos[larger][i] > 0)
 				{
 					short_inds[short_counter++] = i;
 				}
 			}
 			for (i = 0; i < reduction; i++)
 			{
-				fill_short_geno(in, p, perm, woo, loss, add, zerocatch[smaller], 
+				fill_short_geno(in, p, perm, woo, loss, add, zerocatch[larger], 
 					pzero_ind, 0, smaller, pshort_inds, reduction, i, &res, 
 					&fill_tracker);
 			}
