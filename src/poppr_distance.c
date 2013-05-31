@@ -163,6 +163,8 @@ Parameters:
 bruvo_mat - a matrix of individuals by loci, one column per allele.
 permutations - a vector of indeces for permuting the number of alleles. 
 alleles - the ploidy of the population. 
+m_loss - an indicator for the genome loss model
+m_add - an indicator for the genome addition model
 
 Returns:
 
@@ -224,11 +226,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_loss
 	pA = &A;
 	pP = &P;
 	m_loss = coerceVector(m_loss, INTSXP);
-	//add = INTEGER(m_loss)[0];
 	m_add = coerceVector(m_add, INTSXP);
-	//loss = INTEGER(m_add)[0];
-	//padd = &add;
-	//ploss = &loss;
 	bruvo_mat = coerceVector(bruvo_mat, INTSXP);
 	permutations = coerceVector(permutations, INTSXP);
 	// Protecting the vectors that will be modified. Rval is the output
@@ -271,13 +269,14 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_loss
 	return Rval;
 }
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	Internal C Functions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*==============================================================================
+================================================================================
+*	Internal C Functions
+================================================================================
+==============================================================================*/
 
-/* 
-	The algorithm for the permutation function is modified from:
-	http://www.geeksforgeeks.org/archives/767 */
+/*	The algorithm for the permutation function is modified from:
+*	http://www.geeksforgeeks.org/archives/767 */
 
 /* Function to swap values at two pointers */
 void swap (int *x, int *y)
@@ -289,12 +288,12 @@ void swap (int *x, int *y)
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-	Function to print permutations of string
-		This function takes four parameters:
-		1. String
-		2. Starting index of the string
-		3. Ending index of the string. 
-		4. pointer to array of size n*n! 
+*	Function to print permutations of string
+*		This function takes four parameters:
+*		1. String
+*		2. Starting index of the string
+*		3. Ending index of the string. 
+*		4. pointer to array of size n*n! 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 void permute(int *a, int i, int n, int *c) 
 {
@@ -302,11 +301,11 @@ void permute(int *a, int i, int n, int *c)
 	if (i == n)
 	{
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-			'a' will be the array containing the numeric sequence to be
-			permuted. It will be reshuffled into a new pattern each
-			time it reaches this control structure. To place the value
-			into the array 'c', the pointer for a needs to be incremented
-			over all its elements.
+		*	'a' will be the array containing the numeric sequence to be
+		*	permuted. It will be reshuffled into a new pattern each
+		*	time it reaches this control structure. To place the value
+		*	into the array 'c', the pointer for a needs to be incremented
+		*	over all its elements.
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 		perm_count += n+1;
 		int ind = perm_count;
@@ -340,6 +339,8 @@ int fact(int x)
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+	DEPRECIATED
+
 	This will calculate bruvo's distance between two individuals. 
 	All that needs to be done from here is to have it do the pairwise
 	calculations. 
@@ -368,8 +369,6 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 			// Missing data will return with distance of 100
 			if(in[counter] == 0)
 			{
-			/*	THIS WILL BE THE PLACE TO PUT A NEW FUNCTION FOR SPECIAL
-				CASES OF BRUVO'S DISTANCE */
 				return minn;
 			}
 			else
@@ -414,7 +413,6 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 }
 
 /*	Test code comparing current status to polysat's Bruvo2.distance:
-****
 ================================================================================
 poppr_bruvo <- function(){ 
   return(c(.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0),
@@ -436,9 +434,7 @@ library(polysat)
 polysat_bruvo()
 poppr_bruvo()
 polysat_bruvo() == poppr_bruvo()
-================================================================================
-****
-*/
+==============================================================================*/
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
 	int i, j, counter = 0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
@@ -460,15 +456,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 					return minn;
 				}
 				zerocatch[i] += 1;
-				printf("#");
+				//printf("#");
 				zero_ind[i][zerocatch[i] - 1] = j;
 			}
 			genos[i][j] = in[counter++];
-			printf("%d\t", genos[i][j]);
+			//printf("%d\t", genos[i][j]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
-	printf("\n");
+	//printf("\n");
 	zerodiff = abs(zerocatch[0] - zerocatch[1]);
 	/*==========================================================================
 	* Removing superfluous zeroes from the data. This is in the case that both
@@ -494,10 +490,8 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			}
 			reduction = p - (zerocatch[smaller] - zerodiff);
 		}
-		printf("zerocatch[%d]: %d, zerocatch[%d]: %d, Reduction: %d\n", smaller, zerocatch[smaller], larger, zerocatch[larger], reduction);
-		printf("\np - zerocatch[smaller] = %d\n", p - zerocatch[smaller]);
 		int del = 1;
-		if ( del > 0)
+		if (del > 0)
 		{		
 			int new_alleles[reduction];
 			for (i = 0; i < reduction; i++)
@@ -533,24 +527,34 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			free(perm_array);
 		}
 
+		/*	Questions of the proper way of permuting this arise: 
+		*	1.	If both of the genotypes are of equal length, but the user wants
+		*		a non genome - addition model, how do we undertake that?
+		*		should we simply run all combinations of both genotypes
+		*		separately?
+		*	2.	If one genotype is longer than the other, should we fill the
+		*		larger or smaller genotype, or possibly, should we fill both and
+		* 		do a similar procedure as I described above? */
+
+
 		else
 		{
-			int fill_tracker = 0, *pzero_ind, short_inds[p - zerocatch[smaller]], 
-				short_counter = 0, *pshort_inds;
+			int fill_tracker = 0, *pzero_ind, large_inds[p - zerocatch[larger]], 
+				large_counter = 0, *plarge_inds;
 			double res = 0;
-			pzero_ind = (int *) &zero_ind[smaller];
-			pshort_inds = (int *) &short_inds;
+			pzero_ind = (int *) &zero_ind[larger];
+			plarge_inds = (int *) &large_inds;
 			for (i = 0; i < p; i++)
 			{
-				if (genos[smaller][i] > 0)
+				if (genos[larger][i] > 0)
 				{
-					short_inds[short_counter++] = i;
+					large_inds[large_counter++] = i;
 				}
 			}
 			for (i = 0; i < reduction; i++)
 			{
-				fill_short_geno(in, p, perm, woo, loss, add, zerocatch[smaller], 
-					pzero_ind, 0, larger, pshort_inds, reduction, i, &res, 
+				fill_short_geno(in, p, perm, woo, loss, add, zerocatch[larger], 
+					pzero_ind, 0, larger, plarge_inds, reduction, i, &res, 
 					&fill_tracker);
 			}
 			minn = res/fill_tracker;
@@ -575,7 +579,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	if(zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
 		int *genop, ind, miss_ind = 1, full_ind = 0, z, tracker = 0, loss_tracker = 0;
-		double genome_add_sum = 0, genome_loss_sum = 0;//, derp = 0;
+		double genome_add_sum = 0, genome_loss_sum = 0;
 		genop = (int *) &genos;
 		if (zerocatch[0] > 0) // The rows contain the zero value
 		{
@@ -672,12 +676,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 
 
 /*==============================================================================
-* A function for dealing with the genome addition model. This will replace the
-* portions of the distance matrix generated via the missing values with columns
-* (or rows) of observed values in a combinatorial way. This will involve 
-* recursion.
+* 	GENOME ADDITION MODEL
+*	This will replace the portions of the distance matrix generated via the 
+*	missing values with columns (or rows) of observed values in a combinatorial 
+*	way. This will involve recursion.
 * 
-* Arguments:
+*	Arguments:
+*	---------
 *	perms - number of permutations (passed to mindist)
 *	alleles - number of maximum alleles (also passed to mindist)
 *	*perm - permutation array (passed to mindist)
@@ -738,7 +743,9 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 				++curr_zero, miss_ind, replacement, inds, i, genome_add_sum, 
 				tracker);
 			if (curr_zero == zeroes - 1)
+			{
 				return;
+			}
 		}
 		else
 		{
@@ -763,7 +770,8 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 *	alleles in the larger genotype and k is the number of missing alleles in the
 *	shorter genotype. 
 *	
-* Arguments:
+*	Arguments:
+*	---------
 *	PASSED TO BRUVO_DIST:
 *	*genos - genotype array
 *	nalleles - number of maximum alleles.
@@ -840,7 +848,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 	int i, full_ind;
 	full_ind = 1 + (0 - miss_ind);
 	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
-	genos[miss_ind*nalleles + replacement[curr_ind]];
+		genos[miss_ind*nalleles + replacement[curr_ind]];
 	for (i = curr_ind; i < inds; i++)
 	{
 		if (curr_zero < zeroes - 1)
@@ -855,7 +863,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		}
 		else
 		{
-			*res += test_bruvo_dist(genos, &nalleles, perm_array, woo, loss, 
+			*res += = test_bruvo_dist(genos, &nalleles, perm_array, woo, loss, 
 						add);
 			*tracker += 1;
 			if (zeroes == 1 || i == nalleles - 1)
