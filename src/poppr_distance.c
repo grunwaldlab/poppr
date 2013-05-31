@@ -460,26 +460,25 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 					return minn;
 				}
 				zerocatch[i] += 1;
-        //printf("#");
+				printf("#");
 				zero_ind[i][zerocatch[i] - 1] = j;
 			}
 			genos[i][j] = in[counter++];
-      //printf("%d\t", genos[i][j]);
+			printf("%d\t", genos[i][j]);
 		}
-    //printf("\n");
+		printf("\n");
 	}
-  //printf("\n");
+	printf("\n");
 	zerodiff = abs(zerocatch[0] - zerocatch[1]);
 	/*==========================================================================
 	* Removing superfluous zeroes from the data. This is in the case that both
 	* of the genotypes contain one or more zeroes.
-  * 
-  * Important Note: larger and smaller refer to the number of zeroes, NOT the
-  * size of the genotypes. 
+	*
+	* smaller and larger refer to the size of the genotypes.
 	==========================================================================*/
 	if (zerocatch[0] > 0 && zerocatch[1] > 0)
 	{
-		int larger = 0, smaller = 1, reduction = 0, i, j, 
+		int smaller = 0, larger = 1, reduction = 0, i, j,
 			zero_counter, *perm_array, *new_genop;
 
 		if (zerodiff == 0)
@@ -490,13 +489,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		{
 			if(zerocatch[0] < zerocatch[1])
 			{
-				larger = 1;
-				smaller = 0;
+				smaller = 1;
+				larger = 0;
 			}
-			reduction = p - (zerocatch[larger] - zerodiff);
+			reduction = p - (zerocatch[smaller] - zerodiff);
 		}
-    //printf("zerocatch[%d]: %d, zerocatch[%d]: %d, Reduction: %d\n", larger, zerocatch[larger], smaller, zerocatch[smaller], reduction);
-    //printf("\np - zerocatch[larger] = %d\n", p - zerocatch[larger]);
+		printf("zerocatch[%d]: %d, zerocatch[%d]: %d, Reduction: %d\n", smaller, zerocatch[smaller], larger, zerocatch[larger], reduction);
+		printf("\np - zerocatch[smaller] = %d\n", p - zerocatch[smaller]);
 		int del = 1;
 		if ( del > 0)
 		{		
@@ -514,7 +513,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			counter = 0;
 			for (i=0; i < n; i++)
 			{
-				zero_counter = zerocatch[smaller];
+				zero_counter = zerocatch[larger];
 				for (j = 0; j < p; j++)
 				{
 					if (genos[i][j] == 0 && zero_counter > 0)
@@ -536,22 +535,22 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 
 		else
 		{
-			int fill_tracker = 0, *pzero_ind, short_inds[p - zerocatch[larger]], 
+			int fill_tracker = 0, *pzero_ind, short_inds[p - zerocatch[smaller]], 
 				short_counter = 0, *pshort_inds;
 			double res = 0;
-			pzero_ind = (int *) &zero_ind[larger];
+			pzero_ind = (int *) &zero_ind[smaller];
 			pshort_inds = (int *) &short_inds;
 			for (i = 0; i < p; i++)
 			{
-				if (genos[larger][i] > 0)
+				if (genos[smaller][i] > 0)
 				{
 					short_inds[short_counter++] = i;
 				}
 			}
 			for (i = 0; i < reduction; i++)
 			{
-				fill_short_geno(in, p, perm, woo, loss, add, zerocatch[larger], 
-					pzero_ind, 0, smaller, pshort_inds, reduction, i, &res, 
+				fill_short_geno(in, p, perm, woo, loss, add, zerocatch[smaller], 
+					pzero_ind, 0, larger, pshort_inds, reduction, i, &res, 
 					&fill_tracker);
 			}
 			minn = res/fill_tracker;
