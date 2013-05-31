@@ -863,7 +863,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		}
 		else
 		{
-			*res += = test_bruvo_dist(genos, &nalleles, perm_array, woo, loss, 
+			*res += test_bruvo_dist(genos, &nalleles, perm_array, woo, loss, 
 						add);
 			*tracker += 1;
 			if (zeroes == 1 || i == nalleles - 1)
