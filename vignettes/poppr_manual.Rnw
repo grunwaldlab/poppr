@@ -1217,11 +1217,13 @@ heatmap(as.matrix(A.dist), symm=TRUE)
 \tab\tab Bruvo's distance requires knowledge of the repeat lengths of each locus, so take care to read the description below.
 \begin{quote}
 Default Command:\\
-\texttt{bruvo.dist(pop, replen = c(2))}
+\texttt{bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{replen -} This is a vector of numbers indicating the repeat length for each locus in your sample. If you have two dinucleotide repeats and five tetranucleotide repeats, you would put \texttt{c(2,2,4,4,4,4,4)} in this field. If you have imported data where that represents the raw number of steps, all you would have to type is \texttt{rep(1, n)}, replacing $n$ with the number of loci in your sample. It is important that you place something in this field because this function will attempt to estimate the repeat length based on the minimum difference of the alleles represented; with variability of position calls, relying on this estimation is NOT recommended. 
+  \item \texttt{add -} For missing data: use the genome addition model (see section \ref{appendix:algorithm:bruvo})
+  \item \texttt{loss -} For missing data: use the genome loss model (see section \ref{appendix:algorithm:bruvo})
 \end{itemize}
 This function will return a distance matrix (displaying the smallest population in the data set ``nancycats"):
 <<bruvo_matrix>>=
@@ -1229,7 +1231,7 @@ dist9 <- bruvo.dist(popsub(nancycats, 9), replen=rep(1,9))
 dist9
 @
 You can visualize this better with a simple heatmap:
-\newpage
+%\newpage
 
 <<bruvo_heat, echo=FALSE>>=
 heatmap(as.matrix(dist9), symm=TRUE)
@@ -1287,11 +1289,13 @@ Remember N113 and N111? Take a look at where they fall on the heatmap. They don'
 \tab\tab This function provides the ability to draw a dendrogram based on Bruvo's distance including bootstrap support. 
 \begin{quote}
 Default Command:\\
-\texttt{bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
+\texttt{bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
+  \item \texttt{add -} For missing data: use the genome addition model (see section \ref{appendix:algorithm:bruvo})
+  \item \texttt{loss -} For missing data: use the genome loss model (see section \ref{appendix:algorithm:bruvo})
   \item \texttt{sample -} How many bootstraps do you want to perform? 
   \item \texttt{tree -} Two trees are available, Neighbor-Joining \texttt{"nj"} or UPGMA \texttt{"upgma"}.
   \item \texttt{showtree -} if \texttt{TRUE}, a tree will be plotted automatically.
@@ -1305,8 +1309,8 @@ set.seed(1001)
 nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, cutoff=50)
 @
 <<progbar, echo=FALSE>>=
-cat("|================================================================================| 100%\n")
 cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
+cat("|================================================================================| 100%\n")
 @
 \begin{figure}[h!]
   \centering
@@ -1380,14 +1384,16 @@ greycurve(glim = c(0.2, 0.9), gadj=15, gweight=2)
 \tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to.
 \begin{quote}
 Default Command:\\
-\texttt{bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All",\\ 
-  \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
-  \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
+\texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\ 
+  \tab sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, \\
+  \tab glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
 }
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
+  \item \texttt{add -} For missing data: use the genome addition model (see section \ref{appendix:algorithm:bruvo})
+  \item \texttt{loss -} For missing data: use the genome loss model (see section \ref{appendix:algorithm:bruvo})
   \item \texttt{palette -} this is a \textbf{function} definining a color palette to use. The default is \texttt{topo.colors}. There are different palettes, which you can search by typing \texttt{?rainbow}. If you want a custom color palette, an easy way is to use the function \texttt{colorRampPalette}.
   \item \texttt{sublist -} The populations you wish to analyze. This defaults to ``All". See section \ref{data.manip:divide:popsub} for details.
   \item \texttt{blacklist -} Populations you do not want to include in the graph. See section \ref{data.manip:divide:popsub} for details.
@@ -1720,6 +1726,21 @@ D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
 
 This is calculated over all possible combinations of individuals and results in a lower triangle distance matrix over all individuals. 
 
+\subsubsection{Special Cases of Bruvo's distance}\label{appendix:algorithm:bruvospecial}
+\tab\tab As shown in the above section, ploidy is irrelevant with respect to calculation of Bruvo's distance. However, since it makes a comparison between all alleles at a locus, it only makes sense that the two loci need to have the same ploidy level. Unfortunately for polyploids, it's often difficult to fully separate distinct alleles at each locus, so you end up with genotypes that appear to have a lower ploidy level than the organism \cite{Bruvo:2004}. 
+
+To help deal with these situatons, Bruvo has suggested three methods for dealing with these differences in ploidy levels \cite{Bruvo:2004}:
+\begin{itemize}
+  \item{Infinite Model -} The simplest way to deal with it is to count all missing alleles as infinitely large so that the distance between it and anything else is 1. Aside from this being computationally simple, it will tend to inflate distances between individuals. 
+  \item{Genome Addition Model -} If it is suspected that the organism has gone through a recent genome expansion, the missing alleles will be replace with all possible combinations of the observed alleles in the shorter genotype. For example, if there is a genotype of [69, 70, 0, 0] where 0 is a missing allele, the possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69, 70, 70, 70]. The resulting distances are then averaged over the number of comparisons. 
+  \item{Genome Loss Model -} This is similar to the genome addition model, except that it assumes that there was a recent genome reduction event and uses the observed values in the full genotype to fill the missing values in the short genotype. As with the Genome Addition Model, the resulting distances are averaged over the number of comparisons.
+  \item{Combination Model -} Combine and average the genome addition and loss models.
+\end{itemize}
+
+As mentioned above, the infinite model is biased, but it is not nearly as computationally intensive as either of the other models. The reason for this is that both of the addition and loss models requires replacement of alleles and recalculation of Bruvo's distance. The number of replacements required is equal to the multiset coefficient: $\left({n \choose k}\right) == {(n-k+1) \choose k}$ where $n$ is the number of potential replacements and $k$ is the number of alleles to be replaced. So, for the example given above, The genome addition model would require $\left({2 \choose 2}\right) = 3$ calculations of Bruvo's distance, whereas the genome loss model would require $\left({4 \choose 2}\right) = 10$ calculations. 
+
+To reduce the number of calcuations and assumptions otherwise, Bruvo's distance will be calculated using the largest observed ploidy. This means that when comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
+
 \subsection{Exporting Graphics}\label{appendix:graphics}
 \tab\tab R has the ability to produce nice graphics from most any type of data, but to get these graphics into a report, presentation, or manuscript can be a bit challenging. It's no secret that the R Documentation pages are a little difficult to interpret, so I will give the reader here a short example on how to export graphics from R. Note that any code here that will produce images will also be present in other places in this vignette. The default installation of the R GUI is quite minimal, and for an easy way to manage your plots and code, I strongly encourage the user to use Rstudio \url{http://www.rstudio.com/}.
 
@@ -1805,12 +1826,12 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item mlg.vector(pop) (Section \ref{mlg:mix:mlg.vector})
 \item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE) (Section \ref{index:iard:ia})
 \item diss.dist(pop) (Section \ref{index:dist:diss.dist})
-\item bruvo.dist(pop, replen = c(2)) (Section \ref{index:bruvo:bruvo.dist})
-\item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE) (Section \ref{index:trees:bruvo.boot})
+\item bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE) (Section \ref{index:bruvo:bruvo.dist})
+\item bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE) (Section \ref{index:trees:bruvo.boot})
 \item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1) (Section \ref{index:trees:greycurve})
-\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
+\item bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
 \item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:poppr.msn})
-\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
+\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff = 0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
 \item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
 \end{itemize}
 \normalsize

@@ -2,7 +2,7 @@
 \alias{bruvo.dist}
 \title{Calculate the average Bruvo's Distance over all loci in a population.}
 \usage{
-  bruvo.dist(pop, replen = c(2), add = TRUE, loss = TRUE)
+  bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}

@@ -3,7 +3,7 @@
 \title{Create minimum spanning network of selected populations using Brvuo's
 distance.}
 \usage{
-  bruvo.msn(pop, replen = c(1), add = TRUE, loss = TRUE,
+  bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
     palette = topo.colors, sublist = "All",
     blacklist = NULL, vertex.label = "MLG", gscale = TRUE,
     glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE,

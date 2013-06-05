@@ -2,7 +2,7 @@
 \alias{bruvo.boot}
 \title{Create a tree using Bruvo's Distance with non-parametric bootstrapping.}
 \usage{
-  bruvo.boot(pop, replen = c(2), add = TRUE, loss = TRUE,
+  bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE,
     sample = 100, tree = "upgma", showtree = TRUE,
     cutoff = NULL, quiet = FALSE, ...)
 }
