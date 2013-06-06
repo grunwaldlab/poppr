@@ -80,6 +80,12 @@ bruvo.boot(popsub(nancycats, 1), replen=ssr)
 \author{
   Javier F. Tabima, Zhian N. Kamvar
 }
+\references{
+  Bruvo, R., Michiels, N. K., D'Sousa, T. G., and
+  Schulenberg, H. (2004) A simple method for calculation of
+  microsatellite genotypes irrespective of ploidy level.
+  \emph{Molecular Ecology} \strong{13}, 2101–2106.
+}
 \seealso{
   \code{\link{nancycats}}, \code{\link{upgma}},
   \code{\link{nj}}, \code{\link{boot.phylo}},

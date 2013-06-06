@@ -78,6 +78,7 @@
 #'
 #' @export
 #' @author Zhian N. Kamvar
+#' @references Bruvo, R., Michiels, N. K., D'Sousa, T. G., and Schulenberg, H. (2004) A simple method for calculation of microsatellite genotypes irrespective of ploidy level. \emph{Molecular Ecology} \strong{13}, 2101–2106.
 #' @examples
 #' # Please note that the data presented is assuming that the nancycat dataset 
 #' # contains all dinucleotide repeats, it most likely is not an accurate
@@ -211,6 +212,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #'
 #' @export
 #' @author Javier F. Tabima, Zhian N. Kamvar
+#' @references Bruvo, R., Michiels, N. K., D'Sousa, T. G., and Schulenberg, H. (2004) A simple method for calculation of microsatellite genotypes irrespective of ploidy level. \emph{Molecular Ecology} \strong{13}, 2101–2106.
 #' @examples
 #' # Please note that the data presented is assuming that the nancycat dataset 
 #' # contains all dinucleotide repeats, it most likely is not an accurate
@@ -384,6 +386,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' 
 #' @export
 #' @author Javier F. Tabima, Zhian N. Kamvar
+#' @references Bruvo, R., Michiels, N. K., D'Sousa, T. G., and Schulenberg, H. (2004) A simple method for calculation of microsatellite genotypes irrespective of ploidy level. \emph{Molecular Ecology} \strong{13}, 2101–2106.
 #' @examples
 #' 
 #' # Load the data set.

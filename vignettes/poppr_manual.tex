@@ -2791,10 +2791,10 @@ Now, consider the first locus represented in the genind object:
 \end{Schunk}
 Remember that each column represents a different allele and that each entry in the table represents the fraction of the genotype made up by that allele at that locus. Notice also that the sum of the rows all equal one. \textit{Poppr} uses this to calculate distances by simply taking the sum of the absolute values of the differences between rows.
 
-The calculation for the distance between two individuals at a single locus with $a$ allelic states is as follows \footnote{Haploid individuals under this construct will have $d == (0 | 2)$, but the ratio of the variance is the same as if $d == (0 | 1)$}:
+The calculation for the distance between two individuals at a single locus with $a$ allelic states and a ploidy of $k$ is as follows\footnote{Individuals with Presence / Absence data will have the $k/2$ term dropped.}:
 \beq
 \label{eq:ia_d}
-d = \displaystyle \sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid
+d = \displaystyle \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid
 \eeq
 \begin{Schunk}
 \begin{Sinput}
