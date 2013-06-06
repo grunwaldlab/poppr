@@ -1210,7 +1210,21 @@ heatmap(as.matrix(A.dist), symm=TRUE)
 \newpage
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}\label{index:bruvo}
 
-\tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As adegenet's genind object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.  It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the \textit{adegenet} function \texttt{dist.genpop}
+\tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As \textit{adegenet's} \texttt{genind} object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.
+
+This is true only if missing data is treated as missing when importing to \textit{adegenet}. If missing data in the initial data frame has missing microsatellite alleles coded as 0, then the genind object will not treat them as missing (unless the genotype has no alleles in it). An example adapted from the \textit{adegenet} "Getting Started" vignette shows how this can be done:
+
+<<cheating>>=
+set.seed(5001)
+temp <- lapply(1:30, function(i) sample(0:9, 4, replace=TRUE))
+temp <- sapply(temp, paste, collapse = "/")
+temp <- matrix(temp, nrow=10, dimnames=list(paste("ind",1:10), paste("loc",1:3)))
+temp 
+obj <- df2genind(temp, ploidy=4, sep="/")
+pop(obj) <- paste("ind", 1:10)
+@
+
+We will save this object for a later demonstration of the addition and loss models of Bruvo's distance. It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the \textit{adegenet} function \texttt{dist.genpop}
 
 \subsubsection{Function: bruvo.dist}\label{index:bruvo:bruvo.dist}
 

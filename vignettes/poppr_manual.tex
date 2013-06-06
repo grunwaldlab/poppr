@@ -22,7 +22,7 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 
-\title{Poppr 1.0.0: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
+\title{Poppr 1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
 
 \usepackage{/usr/share/R/share/texmf/tex/latex/Sweave}
@@ -2268,7 +2268,38 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
 \newpage
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}\label{index:bruvo}
 
-\tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As adegenet's genind object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.  It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the \textit{adegenet} function \texttt{dist.genpop}
+\tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As \textit{adegenet's} \texttt{genind} object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.
+
+This is true only if missing data is treated as missing when importing to \textit{adegenet}. If missing data in the initial data frame has missing microsatellite alleles coded as 0, then the genind object will not treat them as missing (unless the genotype has no alleles in it). An example adapted from the \textit{adegenet} "Getting Started" vignette shows how this can be done:
+
+\begin{Schunk}
+\begin{Sinput}
+> set.seed(5001)
+> temp <- lapply(1:30, function(i) sample(0:9, 4, replace=TRUE))
+> temp <- sapply(temp, paste, collapse = "/")
+> temp <- matrix(temp, nrow=10, dimnames=list(paste("ind",1:10), paste("loc",1:3)))
+> temp 
+\end{Sinput}
+\begin{Soutput}
+       loc 1     loc 2     loc 3    
+ind 1  "9/7/7/1" "5/6/8/7" "1/3/9/6"
+ind 2  "5/6/7/0" "1/8/1/8" "2/7/6/1"
+ind 3  "0/7/7/9" "2/4/4/0" "8/8/9/2"
+ind 4  "4/8/6/4" "8/1/0/2" "6/2/5/4"
+ind 5  "2/0/3/1" "6/9/1/8" "1/0/0/1"
+ind 6  "5/3/0/5" "5/5/0/0" "8/2/6/2"
+ind 7  "0/7/4/7" "8/5/8/5" "1/3/8/0"
+ind 8  "7/0/7/5" "2/1/5/4" "9/5/2/8"
+ind 9  "4/8/0/1" "8/8/8/4" "9/0/3/4"
+ind 10 "4/4/3/3" "2/0/5/6" "8/7/1/5"
+\end{Soutput}
+\begin{Sinput}
+> obj <- df2genind(temp, ploidy=4, sep="/")
+> pop(obj) <- paste("ind", 1:10)
+\end{Sinput}
+\end{Schunk}
+
+We will save this object for a later demonstration of the addition and loss models of Bruvo's distance. It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the \textit{adegenet} function \texttt{dist.genpop}
 
 \subsubsection{Function: bruvo.dist}\label{index:bruvo:bruvo.dist}
 
@@ -2313,7 +2344,7 @@ You can visualize this better with a simple heatmap:
 > heatmap(as.matrix(dist9), symm=TRUE)
 \end{Sinput}
 \end{Schunk}
-\includegraphics{poppr_manual-112}
+\includegraphics{poppr_manual-113}
 \end{figure}
 %\newpage
 
