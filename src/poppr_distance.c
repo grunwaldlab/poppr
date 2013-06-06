@@ -96,7 +96,8 @@ Output: A vector of length n*(n-1)/2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP pairdiffs(SEXP freq_mat)
 {
-	int I, J, i, j, z, count, P;
+	int I, J, i, j, z, count;//, P;
+  double P;
 	SEXP Rout;
 	SEXP Rdim;
 	SEXP pair_matrix;
@@ -105,7 +106,7 @@ SEXP pairdiffs(SEXP freq_mat)
 	J = INTEGER(Rdim)[1]; // Columns
 	PROTECT(pair_matrix = allocVector(REALSXP, J*2));
 	count = 0;
-	PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
+	PROTECT(Rout = allocVector(REALSXP, I*(I-1)/2));
 	for(i = 0; i < I-1; i++)
 	{
 		for(z = 0; z < J; z++)
@@ -122,9 +123,9 @@ SEXP pairdiffs(SEXP freq_mat)
 					P = 0;
 					break;
 				}
-				P += abs(REAL(pair_matrix)[z] - REAL(freq_mat)[j+(I)*z]);
+				P += fabs(REAL(pair_matrix)[z] - REAL(freq_mat)[j+(I)*z]);
 			}
-			INTEGER(Rout)[count++] = P;
+			REAL(Rout)[count++] = P;
 		}
 	}
 	UNPROTECT(2);

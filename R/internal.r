@@ -551,7 +551,7 @@ mlg.matrix <- function(pop){
   #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
   # Starting the actual calculations. 
   #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-	V <- .PA.pairwise.differences(pop,numLoci,np, missing=missing)
+	V <- .PA.pairwise.differences(pop,numLoci, np, missing=missing)
 	# First, set the variance of D	
 	varD <- ((sum(V$D.vector^2)-((sum(V$D.vector))^2)/np))/np
 	# Next is to create a vector containing all of the variances of d (there
@@ -850,7 +850,7 @@ pair_diffs <- function(pop, numLoci, np)
 {
   ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs",x@tab*ploid)/ploid, 
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), 
                           temp.d.vector[, 1])
   d.vector <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
