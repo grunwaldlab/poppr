@@ -245,12 +245,10 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 .new.permut.shuff <- function(mat, ploidy = 2){
   # gathering the counts of allelic states (represented as column numbers)
   bucket <- as.vector(colSums(mat, na.rm=T) * ploidy)
-  cat("\nAllele Counts:",bucket,"\n")
   bucketlist <- rep(1:length(bucket), bucket)
-  cat("\nBucketlist: ",bucketlist,"\n")
-  # reshuffling the allelic states
+  # reshuffling the allelic states and making a matrix with rows for each
+  # allele and columns for each individual.
   samplist <- sample(bucketlist)
-  cat("\nSampled Bucketlist: ",samplist,"\n")
   newmat <- mat  
   newmat[!is.na(mat)] <- 0
   
@@ -267,19 +265,17 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     miss <- which(is.na(mat[, 1]))
     temp[c(-miss * ploidy, -((miss * ploidy)-1))] <- samplist
     samplist <- temp
+    #return(samplist)
   }
-  matidx <- rep(1:nrow(mat), each = ploidy)
-  cat("\n", matidx, "\n\n")
-  #return(samplist)
+  samplist <- matrix(samplist, nrow = ploidy)
   # A function that will repopulate the new matrix with the shuffled alleles
   # x is a list of even numbers, newmat is an empty matrix, and samplist is 
   # a list of shuffled alleleic states.
-  populate.mat <- function(x, newmat, samplist, matidx, ploidy){
-    cat("matidx:",matidx[x],"\tsamplist:", samplist[x],"\n")
-    newmat[matidx[x], samplist[x]] <<- newmat[matidx[x], samplist[x]] + (1/ploidy)
+  populate.mat <- function(x, newmat, samplist, ploidy){
+    samps <- table(samplist[, x])/ploidy
+    newmat[x, as.numeric(names(samps))] <<- samps
   }
-  #cat("\n",1:(nrow(mat)*ploidy),"\n")
-  lapply(1:(nrow(mat)*ploidy), populate.mat, newmat, samplist, matidx, ploidy)
+  lapply(1:nrow(mat), populate.mat, newmat, samplist, ploidy)
   return(newmat)
 }
 
