@@ -240,6 +240,49 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(res.gid)
 }
 
+
+
+.new.permut.shuff <- function(mat, ploidy = 2){
+  # gathering the counts of allelic states (represented as column numbers)
+  bucket <- as.vector(colSums(mat, na.rm=T) * ploidy)
+  cat("\nAllele Counts:",bucket,"\n")
+  bucketlist <- rep(1:length(bucket), bucket)
+  cat("\nBucketlist: ",bucketlist,"\n")
+  # reshuffling the allelic states
+  samplist <- sample(bucketlist)
+  cat("\nSampled Bucketlist: ",samplist,"\n")
+  newmat <- mat  
+  newmat[!is.na(mat)] <- 0
+  
+  # Treating Missing Data
+  #
+  # go on to the next locus if all are NA
+  if(all(is.na(mat))){
+    next
+  }
+  # placing the individuals with missing data in the sample list so that it is
+  # the same length as the number of rows * 2 to avoid errors.
+  if(any(is.na(mat))){
+    temp <- vector(mode="numeric", length=nrow(mat) * ploidy)
+    miss <- which(is.na(mat[, 1]))
+    temp[c(-miss * ploidy, -((miss * ploidy)-1))] <- samplist
+    samplist <- temp
+  }
+  matidx <- rep(1:nrow(mat), each = ploidy)
+  cat("\n", matidx, "\n\n")
+  #return(samplist)
+  # A function that will repopulate the new matrix with the shuffled alleles
+  # x is a list of even numbers, newmat is an empty matrix, and samplist is 
+  # a list of shuffled alleleic states.
+  populate.mat <- function(x, newmat, samplist, matidx, ploidy){
+    cat("matidx:",matidx[x],"\tsamplist:", samplist[x],"\n")
+    newmat[matidx[x], samplist[x]] <<- newmat[matidx[x], samplist[x]] + (1/ploidy)
+  }
+  #cat("\n",1:(nrow(mat)*ploidy),"\n")
+  lapply(1:(nrow(mat)*ploidy), populate.mat, newmat, samplist, matidx, ploidy)
+  return(newmat)
+}
+
 testing_funk <- function(){
   cat("This test worked...maybe.\n")
 }
