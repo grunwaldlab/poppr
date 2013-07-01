@@ -535,7 +535,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		*		separately?
 		*	2.	If one genotype is longer than the other, should we fill the
 		*		larger or smaller genotype, or possibly, should we fill both and
-		* 		do a similar procedure as I described above? */
+		* 		do a similar procedure as I described above? 
 
 
 		else
@@ -560,7 +560,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			}
 			minn = res/fill_tracker;
 		}
-
+    */
 		return minn;
 	}
 
