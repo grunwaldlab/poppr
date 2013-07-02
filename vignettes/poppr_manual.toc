@@ -39,13 +39,13 @@
 \contentsline {subsubsection}{\numberline {4.2.1}Function: diss.dist}{40}{subsubsection.4.2.1}
 \contentsline {subsection}{\numberline {4.3}Step by stepwise mutation \{Bruvo's distance\}}{41}{subsection.4.3}
 \contentsline {subsubsection}{\numberline {4.3.1}Function: bruvo.dist}{41}{subsubsection.4.3.1}
-\contentsline {subsection}{\numberline {4.4}See the forest for the trees \{visualizing distances with dendrograms and networks\}}{44}{subsection.4.4}
-\contentsline {subsubsection}{\numberline {4.4.1}Function: bruvo.boot}{44}{subsubsection.4.4.1}
-\contentsline {subsubsection}{\numberline {4.4.2}Function: greycurve}{45}{subsubsection.4.4.2}
-\contentsline {subsubsection}{\numberline {4.4.3}Function: bruvo.msn}{47}{subsubsection.4.4.3}
-\contentsline {subsubsection}{\numberline {4.4.4}Function: poppr.msn}{49}{subsubsection.4.4.4}
-\contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{51}{section.5}
-\contentsline {subsection}{\numberline {5.1}Function: poppr}{51}{subsection.5.1}
+\contentsline {subsection}{\numberline {4.4}See the forest for the trees \{visualizing distances with dendrograms and networks\}}{43}{subsection.4.4}
+\contentsline {subsubsection}{\numberline {4.4.1}Function: bruvo.boot}{43}{subsubsection.4.4.1}
+\contentsline {subsubsection}{\numberline {4.4.2}Function: greycurve}{44}{subsubsection.4.4.2}
+\contentsline {subsubsection}{\numberline {4.4.3}Function: bruvo.msn}{46}{subsubsection.4.4.3}
+\contentsline {subsubsection}{\numberline {4.4.4}Function: poppr.msn}{48}{subsubsection.4.4.4}
+\contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{50}{section.5}
+\contentsline {subsection}{\numberline {5.1}Function: poppr}{50}{subsection.5.1}
 \contentsline {section}{\numberline {6}Appendix}{54}{section.6}
 \contentsline {subsection}{\numberline {6.1}Algorithmic Details}{54}{subsection.6.1}
 \contentsline {subsubsection}{\numberline {6.1.1}$I_A$ and $\mathaccentV {bar}016r_d$}{54}{subsubsection.6.1.1}
