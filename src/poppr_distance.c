@@ -83,7 +83,8 @@ Output: A vector of length n*(n-1)/2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP pairdiffs(SEXP freq_mat)
 {
-	int I, J, i, j, z, count, P;
+	int I, J, i, j, z, count;
+	double P;
 	SEXP Rout;
 	SEXP Rdim;
 	SEXP pair_matrix;
@@ -92,7 +93,7 @@ SEXP pairdiffs(SEXP freq_mat)
 	J = INTEGER(Rdim)[1]; // Columns
 	PROTECT(pair_matrix = allocVector(REALSXP, J*2));
 	count = 0;
-	PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
+	PROTECT(Rout = allocVector(REALSXP, I*(I-1)/2));
 	for(i = 0; i < I-1; i++)
 	{
 		for(z = 0; z < J; z++)
@@ -109,9 +110,9 @@ SEXP pairdiffs(SEXP freq_mat)
 					P = 0;
 					break;
 				}
-				P += abs(REAL(pair_matrix)[z] - REAL(freq_mat)[j+(I)*z]);
+				P += fabs(REAL(pair_matrix)[z] - REAL(freq_mat)[j+(I)*z]);
 			}
-			INTEGER(Rout)[count++] = P;
+			REAL(Rout)[count++] = P;
 		}
 	}
 	UNPROTECT(2);
@@ -167,7 +168,7 @@ SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles)
 {
     int A, P, *pA, *pP;
     SEXP Rval;
-    SEXP Rdim;
+
     P = length(permutations);
     alleles = coerceVector(alleles, INTSXP);
 	A = INTEGER(alleles)[0];
@@ -334,7 +335,7 @@ int fact(int x)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 double bruvo_dist(int *in, int *nall, int *perm, int *woo)
 {
-	int i, j, k, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
+	int i, j, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
 	double dist[p][p], da, res, minn=100;
 	// reconstruct the genotype table.
 	for(i=0; i < n; i++)
