@@ -37,16 +37,16 @@
 
 # Load the nancycats dataset and construct the repeat vector.
 data(nancycats)
-ssr <- rep(1,9)
+ssr <- rep(2, 9)
 
 # Analyze the 1st population in nancycats
 
-bruvo.dist(popsub(nancycats, 1), replen=ssr)
+bruvo.dist(popsub(nancycats, 1), replen = ssr)
 
 # View each population as a heatmap.
 \dontrun{
 sapply(nancycats$pop.names, function(x)
-heatmap(as.matrix(bruvo.dist(popsub(nancycats, x))), symm=TRUE))
+heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 }
 }
 \author{
