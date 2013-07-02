@@ -86,16 +86,16 @@
 #'
 #' # Load the nancycats dataset and construct the repeat vector.
 #' data(nancycats)
-#' ssr <- rep(1,9)
+#' ssr <- rep(2, 9)
 #' 
 #' # Analyze the 1st population in nancycats
 #'
-#' bruvo.dist(popsub(nancycats, 1), replen=ssr)
+#' bruvo.dist(popsub(nancycats, 1), replen = ssr)
 #'
 #' # View each population as a heatmap.
 #' \dontrun{
 #' sapply(nancycats$pop.names, function(x) 
-#' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x))), symm=TRUE))
+#' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 #' }
 #==============================================================================#
 #' @useDynLib poppr
@@ -138,7 +138,8 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   # Dividing the data by the repeat length of each locus.
 
   pop <- pop / rep(replen, each=ploid*nrow(pop))
-  pop <- matrix(as.integer(pop), ncol=popcols)
+  pop <- matrix(round(pop), ncol=popcols)
+  print(pop)
   # Getting the permutation vector.
   perms <- .Call("permuto", ploid)
   # Calculating bruvo's distance over each locus. 
@@ -442,7 +443,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     cpop <- pop[.clonecorrector(pop), ]
     mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
     bclone <- bruvo.dist(cpop, replen=replen, add = add, loss = loss)
-    mclone<-as.dist(bclone)
+    mclone <- as.dist(bclone)
     #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
     g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
     mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))

@@ -96,8 +96,9 @@ Output: A vector of length n*(n-1)/2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP pairdiffs(SEXP freq_mat)
 {
-	int I, J, i, j, z, count;//, P;
-  double P;
+
+	int I, J, i, j, z, count;
+	double P;
 	SEXP Rout;
 	SEXP Rdim;
 	SEXP pair_matrix;

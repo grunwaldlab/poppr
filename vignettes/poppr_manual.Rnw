@@ -22,6 +22,7 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 
+
 \title{Poppr 1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
 
@@ -1352,13 +1353,13 @@ Default Command:\\
 
 This function does not return any values. It will print a visual gradient from black to white horizontally. On this gradient, it will plot the adjustment curve (in opposing grey values), yellow horizontal lines bounding the maximum and minimum values, and the equation used to calculate the correction in red. Keep in mind that this is plotting values from zero to one.
 
-\newpage
+%\newpage
 First, we'll see what happens when we change the weight parameter.
 \setkeys{Gin}{width=\textwidth}
 \begin{figure}[h!]
 \begin{minipage}[b]{0.45\linewidth}
 \centering
-\caption{\footnotesize Default for \texttt{greywidth()}, weighted for small values.}
+\caption{\footnotesize Default for \texttt{greycurve()}, weighted for small values.}
 <<greycurve_normal, fig=TRUE>>=
 greycurve()
 @
@@ -1392,7 +1393,7 @@ greycurve(glim = c(0.2, 0.9), gadj=15, gweight=2)
 @
 \end{minipage}
 \end{figure}
-
+\newpage
 
 \subsubsection{Function: bruvo.msn}\label{index:trees:bruvo.msn}
 \tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to.
@@ -1443,7 +1444,7 @@ pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7,
 \setkeys{Gin}{width=0.5\textwidth}
 
 Note that the thickness of the edges (the lines that are connecting the dots) is representative of relatedness between individuals, but the lengths do not necessarily mean anything due to the fact that with a larger data sets, displaying lengths proportional to relatedness would be impossible to draw on a 2D surface. Interpreting these data would show that MLG 9 has 5 individuals from all four populations and that it is most closely related to MLG 7, whereas the most distantly related connection exists between MLG 25 and MLG 26.
-
+\newpage
 \subsubsection{Function: poppr.msn}\label{index:trees:poppr.msn}
 
 \tab\tab Use this function to draw a minimum spanning network from your data set and a distance matrix derived from your data set. Since there are hundreds of distances that can be calculated for genetic data, and since I want to be able to graduate at some point in this decade, functions to automatically calculate distances and draw the minimum spanning networks will be few and far between. This function is an attempt to meet the user halfway and draw a minimum spanning network provided that the user has supplied two things:

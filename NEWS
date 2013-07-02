@@ -1,3 +1,16 @@
+poppr 1.0.1
+===========
+IMPROVEMENTS
+* Rlgorithm for the index of association was updated to increase speed.
+
+BUG FIXES
+* Removed unnecessary rounding factor for missing data in `bruvo.dist`.
+* Corrected handling of duplicate entries for `read.genind`.
+* Input values that are not multiples of the specified repeat length for Bruvo's distance are now rounded (as opposed to being forced as integers).
+
+MISC
+* Vignette updated for aesthetics and to reflect algorithmic changes.
+
 poppr 1.0.0
 ===========
 MISC
