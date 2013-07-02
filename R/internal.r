@@ -891,7 +891,7 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
   # Getting the values into numeric form.
   ssr.matrix <- apply(as.matrix(t(sapply(ssr.matrix, unlist))), 2, as.numeric)
   # Dividing each column by the repeat length and changing the values to integers.
-  ssr.matrix <- apply(ssr.matrix / rep(replen, each=ploid*nrow(ssr.matrix)), 2, as.integer)
+  ssr.matrix <- apply(ssr.matrix / rep(replen, each=ploid*nrow(ssr.matrix)), 2, round)
   perms <- .Call("permuto", ploid)
   distmat <- .Call("bruvo_distance", ssr.matrix, perms, ploid)
   distmat[distmat == 100] <- NA
