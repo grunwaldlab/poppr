@@ -1,3 +1,15 @@
+poppr 1.0.2
+===========
+BUG FIXES
+* Fixed bug in diss.dist function that would return an inflated distance for haploids.
+
+DOCUMENTATION
+* Added explaination for the index of association in poppr_manual.
+* Expanded installation section to include installation instructions from github.
+
+MISC
+* internal permutation algorithm no longer lists permutations in reverse order
+
 poppr 1.0.1
 ===========
 IMPROVEMENTS
