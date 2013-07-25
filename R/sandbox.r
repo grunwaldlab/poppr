@@ -509,8 +509,7 @@ new.poppr.all <- function(filelist, ...) {
       return(IarD)
     }
   }
-
-  IarD <- .Ia.Rd(popx, missing)
+	IarD <- .Ia.Rd(popx, missing)
   # data vomit options.
   .quiet(quiet=quiet, IarD=IarD, pop=namelist$population)
   names(IarD) <- c("Ia", "rbarD")
@@ -552,7 +551,48 @@ new.poppr.all <- function(filelist, ...) {
   return(final(Iout, result))
 }
 
+.new.Ia.Rd <- function (pop, missing = NULL) 
+{
+  vard.vector <- NULL
+  numLoci <- length(pop)
+  numIsolates <- length(pop[[1]]@ind.names)
+  np <- choose(numIsolates, 2)
+  if (np < 2) {
+    return(as.numeric(c(NaN, NaN)))
+  }
+  V <- new.pair_diffs(pop, numLoci, np)
+  varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
+  vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector)
+  sigVarj <- sum(vard.vector)
+  rm(vard.vector)
+  Ia <- (varD/sigVarj) - 1
+  rbarD <- (varD - sigVarj)/(2 * sum(vardpair.vector))
+  return(c(Ia, rbarD))
+}
 
+#==============================================================================#
+# This creates a pairwise difference matrix via the C function pairdiffs in
+# src/poppr_distance.c
+# 
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # .Ia.Rd
+#
+#==============================================================================#
+new.pair_diffs <- function(pop, numLoci, np)
+{
+  ploid <- ploidy(pop[[1]])
+  temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
+  temp.d.vector <- mclapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2))
+  return(temp.d.vector)
+  d.vector <- colSums(temp.d.vector)
+  d2.vector <- colSums(temp.d.vector^2)
+  D.vector <- rowSums(temp.d.vector)
+  return(list(d.vector = d.vector, d2.vector = d2.vector, D.vector = D.vector))
+}
 
 getinds <- function(x){
   # x is a vector indicating the size of loci in a data set (must be continuous).
