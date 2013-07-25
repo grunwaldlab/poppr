@@ -1,59 +1,62 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}
 \contentsline {subsection}{\numberline {1.1}Purpose}{3}{subsection.1.1}
 \contentsline {subsection}{\numberline {1.2}Installation}{3}{subsection.1.2}
-\contentsline {subsection}{\numberline {1.3}Quick start}{4}{subsection.1.3}
-\contentsline {subsection}{\numberline {1.4}Get out of my dreams and into my R \{importing data into poppr\}}{6}{subsection.1.4}
-\contentsline {subsubsection}{\numberline {1.4.1}Function: getfile}{6}{subsubsection.1.4.1}
-\contentsline {subsubsection}{\numberline {1.4.2}Function: read.genalex}{9}{subsubsection.1.4.2}
-\contentsline {subsubsection}{\numberline {1.4.3}Genalex formatting shortcuts}{11}{subsubsection.1.4.3}
-\contentsline {subsubsection}{\numberline {1.4.4}Other ways of importing data}{12}{subsubsection.1.4.4}
-\contentsline {subsubsection}{\numberline {1.4.5}Function: genind2genalex}{12}{subsubsection.1.4.5}
-\contentsline {subsection}{\numberline {1.5}Getting to know adegenet's genind object}{14}{subsection.1.5}
-\contentsline {subsubsection}{\numberline {1.5.1}The other slot}{14}{subsubsection.1.5.1}
-\contentsline {subsubsection}{\numberline {1.5.2}Setting the population factor \{adegenet's function: pop\}}{16}{subsubsection.1.5.2}
-\contentsline {section}{\numberline {2}Data Manipulation}{17}{section.2}
-\contentsline {subsection}{\numberline {2.1}Inside the golden days of missing data \{replace or remove missing data\}}{18}{subsection.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}Function: missingno}{18}{subsubsection.2.1.1}
-\contentsline {subsection}{\numberline {2.2}Can you take me hier(archy)? \{population hierarchy construction\}}{21}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Function: splitcombine}{21}{subsubsection.2.2.1}
-\contentsline {subsection}{\numberline {2.3}Divide (populations) and conquer (your analysis) \{extract populations\}}{24}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Function: popsub}{25}{subsubsection.2.3.1}
-\contentsline {subsection}{\numberline {2.4}Attack of the clone correction \{clone-censor data sets\}}{26}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}Function: clonecorrect}{27}{subsubsection.2.4.1}
-\contentsline {subsection}{\numberline {2.5}Every day I'm shuffling (data sets) \{permutations and bootstrap resampling\}}{27}{subsection.2.5}
-\contentsline {subsubsection}{\numberline {2.5.1}Function: shufflepop}{28}{subsubsection.2.5.1}
-\contentsline {section}{\numberline {3}Multilocus Genotype Analysis}{29}{section.3}
-\contentsline {subsection}{\numberline {3.1}Just a peek \{How many multilocus genotypes are in our data set?\}}{29}{subsection.3.1}
-\contentsline {subsubsection}{\numberline {3.1.1}Function: mlg}{30}{subsubsection.3.1.1}
-\contentsline {subsection}{\numberline {3.2}Clone-ing around \{MLGs across populations\}}{30}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}Function: mlg.crosspop}{30}{subsubsection.3.2.1}
-\contentsline {subsection}{\numberline {3.3}Bringing something to the table \{producing MLG tables and graphs\}}{31}{subsection.3.3}
-\contentsline {subsubsection}{\numberline {3.3.1}Function: mlg.table}{32}{subsubsection.3.3.1}
-\contentsline {subsection}{\numberline {3.4}Getting into the mix \{combining MLG functions\}}{34}{subsection.3.4}
-\contentsline {subsubsection}{\numberline {3.4.1}Function: mlg.vector}{35}{subsubsection.3.4.1}
-\contentsline {subsection}{\numberline {3.5}Do you see what I see? \{alternative data visualization\}}{37}{subsection.3.5}
-\contentsline {section}{\numberline {4}Index and Distance Calculations}{37}{section.4}
-\contentsline {subsection}{\numberline {4.1}The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\mathaccentV {bar}016r_d$\}}{37}{subsection.4.1}
-\contentsline {subsubsection}{\numberline {4.1.1}Function: ia}{38}{subsubsection.4.1.1}
-\contentsline {subsection}{\numberline {4.2}Going the distance \{dissimilarity distance\}}{40}{subsection.4.2}
-\contentsline {subsubsection}{\numberline {4.2.1}Function: diss.dist}{40}{subsubsection.4.2.1}
-\contentsline {subsection}{\numberline {4.3}Step by stepwise mutation \{Bruvo's distance\}}{41}{subsection.4.3}
-\contentsline {subsubsection}{\numberline {4.3.1}Function: bruvo.dist}{42}{subsubsection.4.3.1}
-\contentsline {subsection}{\numberline {4.4}See the forest for the trees \{visualizing distances with dendrograms and networks\}}{43}{subsection.4.4}
-\contentsline {subsubsection}{\numberline {4.4.1}Function: bruvo.boot}{43}{subsubsection.4.4.1}
-\contentsline {subsubsection}{\numberline {4.4.2}Function: greycurve}{45}{subsubsection.4.4.2}
-\contentsline {subsubsection}{\numberline {4.4.3}Function: bruvo.msn}{46}{subsubsection.4.4.3}
-\contentsline {subsubsection}{\numberline {4.4.4}Function: poppr.msn}{49}{subsubsection.4.4.4}
-\contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{51}{section.5}
-\contentsline {subsection}{\numberline {5.1}Function: poppr}{51}{subsection.5.1}
-\contentsline {section}{\numberline {6}Appendix}{54}{section.6}
-\contentsline {subsection}{\numberline {6.1}Algorithmic Details}{54}{subsection.6.1}
-\contentsline {subsubsection}{\numberline {6.1.1}$I_A$ and $\mathaccentV {bar}016r_d$}{54}{subsubsection.6.1.1}
-\contentsline {subsubsection}{\numberline {6.1.2}Bruvo's distance}{56}{subsubsection.6.1.2}
-\contentsline {subsubsection}{\numberline {6.1.3}Special Cases of Bruvo's distance}{57}{subsubsection.6.1.3}
-\contentsline {subsection}{\numberline {6.2}Exporting Graphics}{57}{subsection.6.2}
-\contentsline {subsubsection}{\numberline {6.2.1}Basics}{58}{subsubsection.6.2.1}
-\contentsline {subsubsection}{\numberline {6.2.2}Image Editors}{58}{subsubsection.6.2.2}
-\contentsline {subsubsection}{\numberline {6.2.3}Exporting ggplot2 graphics}{58}{subsubsection.6.2.3}
-\contentsline {subsubsection}{\numberline {6.2.4}Exporting any graphics}{59}{subsubsection.6.2.4}
-\contentsline {subsection}{\numberline {6.3}Function calls}{59}{subsection.6.3}
+\contentsline {subsubsection}{\numberline {1.2.1}From CRAN}{3}{subsubsection.1.2.1}
+\contentsline {subsubsection}{\numberline {1.2.2}From Source}{4}{subsubsection.1.2.2}
+\contentsline {subsubsection}{\numberline {1.2.3}From github}{4}{subsubsection.1.2.3}
+\contentsline {subsection}{\numberline {1.3}Quick start}{5}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}Get out of my dreams and into my R \{importing data into poppr\}}{7}{subsection.1.4}
+\contentsline {subsubsection}{\numberline {1.4.1}Function: getfile}{7}{subsubsection.1.4.1}
+\contentsline {subsubsection}{\numberline {1.4.2}Function: read.genalex}{10}{subsubsection.1.4.2}
+\contentsline {subsubsection}{\numberline {1.4.3}Genalex formatting shortcuts}{12}{subsubsection.1.4.3}
+\contentsline {subsubsection}{\numberline {1.4.4}Other ways of importing data}{13}{subsubsection.1.4.4}
+\contentsline {subsubsection}{\numberline {1.4.5}Function: genind2genalex}{13}{subsubsection.1.4.5}
+\contentsline {subsection}{\numberline {1.5}Getting to know adegenet's genind object}{15}{subsection.1.5}
+\contentsline {subsubsection}{\numberline {1.5.1}The other slot}{15}{subsubsection.1.5.1}
+\contentsline {subsubsection}{\numberline {1.5.2}Setting the population factor \{adegenet's function: pop\}}{17}{subsubsection.1.5.2}
+\contentsline {section}{\numberline {2}Data Manipulation}{18}{section.2}
+\contentsline {subsection}{\numberline {2.1}Inside the golden days of missing data \{replace or remove missing data\}}{19}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Function: missingno}{19}{subsubsection.2.1.1}
+\contentsline {subsection}{\numberline {2.2}Can you take me hier(archy)? \{population hierarchy construction\}}{22}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Function: splitcombine}{22}{subsubsection.2.2.1}
+\contentsline {subsection}{\numberline {2.3}Divide (populations) and conquer (your analysis) \{extract populations\}}{25}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Function: popsub}{26}{subsubsection.2.3.1}
+\contentsline {subsection}{\numberline {2.4}Attack of the clone correction \{clone-censor data sets\}}{27}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Function: clonecorrect}{28}{subsubsection.2.4.1}
+\contentsline {subsection}{\numberline {2.5}Every day I'm shuffling (data sets) \{permutations and bootstrap resampling\}}{28}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Function: shufflepop}{29}{subsubsection.2.5.1}
+\contentsline {section}{\numberline {3}Multilocus Genotype Analysis}{30}{section.3}
+\contentsline {subsection}{\numberline {3.1}Just a peek \{How many multilocus genotypes are in our data set?\}}{30}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Function: mlg}{31}{subsubsection.3.1.1}
+\contentsline {subsection}{\numberline {3.2}Clone-ing around \{MLGs across populations\}}{31}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Function: mlg.crosspop}{31}{subsubsection.3.2.1}
+\contentsline {subsection}{\numberline {3.3}Bringing something to the table \{producing MLG tables and graphs\}}{32}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {3.3.1}Function: mlg.table}{33}{subsubsection.3.3.1}
+\contentsline {subsection}{\numberline {3.4}Getting into the mix \{combining MLG functions\}}{35}{subsection.3.4}
+\contentsline {subsubsection}{\numberline {3.4.1}Function: mlg.vector}{36}{subsubsection.3.4.1}
+\contentsline {subsection}{\numberline {3.5}Do you see what I see? \{alternative data visualization\}}{38}{subsection.3.5}
+\contentsline {section}{\numberline {4}Index and Distance Calculations}{39}{section.4}
+\contentsline {subsection}{\numberline {4.1}The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\mathaccentV {bar}016r_d$\}}{39}{subsection.4.1}
+\contentsline {subsubsection}{\numberline {4.1.1}Function: ia}{39}{subsubsection.4.1.1}
+\contentsline {subsection}{\numberline {4.2}Going the distance \{dissimilarity distance\}}{42}{subsection.4.2}
+\contentsline {subsubsection}{\numberline {4.2.1}Function: diss.dist}{42}{subsubsection.4.2.1}
+\contentsline {subsection}{\numberline {4.3}Step by stepwise mutation \{Bruvo's distance\}}{43}{subsection.4.3}
+\contentsline {subsubsection}{\numberline {4.3.1}Function: bruvo.dist}{43}{subsubsection.4.3.1}
+\contentsline {subsection}{\numberline {4.4}See the forest for the trees \{visualizing distances with dendrograms and networks\}}{45}{subsection.4.4}
+\contentsline {subsubsection}{\numberline {4.4.1}Function: bruvo.boot}{45}{subsubsection.4.4.1}
+\contentsline {subsubsection}{\numberline {4.4.2}Function: greycurve}{46}{subsubsection.4.4.2}
+\contentsline {subsubsection}{\numberline {4.4.3}Function: bruvo.msn}{48}{subsubsection.4.4.3}
+\contentsline {subsubsection}{\numberline {4.4.4}Function: poppr.msn}{50}{subsubsection.4.4.4}
+\contentsline {section}{\numberline {5}I know what you did last summary table \{diversity table\}}{52}{section.5}
+\contentsline {subsection}{\numberline {5.1}Function: poppr}{52}{subsection.5.1}
+\contentsline {section}{\numberline {6}Appendix}{56}{section.6}
+\contentsline {subsection}{\numberline {6.1}Algorithmic Details}{56}{subsection.6.1}
+\contentsline {subsubsection}{\numberline {6.1.1}$I_A$ and $\mathaccentV {bar}016r_d$}{56}{subsubsection.6.1.1}
+\contentsline {subsubsection}{\numberline {6.1.2}Bruvo's distance}{58}{subsubsection.6.1.2}
+\contentsline {subsubsection}{\numberline {6.1.3}Special Cases of Bruvo's distance}{59}{subsubsection.6.1.3}
+\contentsline {subsection}{\numberline {6.2}Exporting Graphics}{59}{subsection.6.2}
+\contentsline {subsubsection}{\numberline {6.2.1}Basics}{60}{subsubsection.6.2.1}
+\contentsline {subsubsection}{\numberline {6.2.2}Image Editors}{60}{subsubsection.6.2.2}
+\contentsline {subsubsection}{\numberline {6.2.3}Exporting ggplot2 graphics}{60}{subsubsection.6.2.3}
+\contentsline {subsubsection}{\numberline {6.2.4}Exporting any graphics}{61}{subsubsection.6.2.4}
+\contentsline {subsection}{\numberline {6.3}Function calls}{61}{subsection.6.3}

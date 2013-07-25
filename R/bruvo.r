@@ -139,7 +139,6 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 
   pop <- pop / rep(replen, each=ploid*nrow(pop))
   pop <- matrix(round(pop), ncol=popcols)
-  print(pop)
   # Getting the permutation vector.
   perms <- .Call("permuto", ploid)
   # Calculating bruvo's distance over each locus. 

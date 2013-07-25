@@ -311,7 +311,7 @@ void permute(int *a, int i, int n, int *c)
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 		perm_count += n+1;
 		int ind = perm_count;
-		for(j=0; j<=n; j++)
+		for(j = n; j >= 0; j--)
 		{
 			c[--ind] = *(a + j);
 		}
