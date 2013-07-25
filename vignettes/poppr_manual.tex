@@ -22,7 +22,7 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 
-\title{Poppr 1.0.1: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
+\title{Poppr 1.0.2: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
 
 \usepackage{Sweave}
@@ -279,7 +279,7 @@ The fields you see in the output include:
   \item \texttt{Ia -} The index of association, $I_A$. \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}
   \item \texttt{rbarD -} The standardized index of association, $\bar r_d$. \cite{Agapow:2001}
 \end{itemize}
-These fields are further described in section \ref{summary}, \textit{I know what you did last summary table} at the end of this vignette.
+These fields are further described in section \ref{summary}, \textit{I know what you did last summary table} at the end of this vignette. 
 
 \subsection{Get out of my dreams and into my R \{importing data into poppr\}}\label{intro:import}
 There are several ways of reading data into R. 
@@ -506,7 +506,7 @@ Default Command:\\
 \begin{itemize}
   \item \texttt{genalex -} a *.CSV file exported from GenAlEx on your disk (For example: \texttt{"my\_genalex\_file.csv"}).
   \item \texttt{ploidy -} a number indicating the ploidy for the data set (eg 2 for diploids, 1 for haploids).
-  \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in section \ref{intro:import:other}).
+  \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in section \ref{intro:genind:other}).
   \item \texttt{region -} To format your GenAlEx file to include regions along with your populations, You can choose to include a separate column for regional data, or, since regional data must be in contiguous blocks, you can simply format it in the same way you would any other data (see the GenAlEx manual for details). If you have your file organized in this manner, select this option and the regional information will be stored in the resulting genind object in the \texttt{@other} slot.
 \end{itemize}
 
@@ -744,6 +744,7 @@ And the resulting matrix after importing to genind.
 The first three columns represent the alleles of locus 1, the next four represent locus 2, and the last five represent locus 3.
 
 Do you see what I mean when I say individual allele frequencies at each locus? For a diploid individual, you only have three possible allele frequencies at each locus: 1, 0.5, or 0. Now, this is not the entire genind object, but it is the main feature. The object also has various elements associated with it that give you information about the population membership, the names of loci, individuals, and alleles among other things that \textit{poppr} uses to work \cite{Jombart:2008}. If you wish to know more, see the \textit{adegenet} ``Getting Started" manual. 
+
 \subsubsection{The other slot}\label{intro:genind:other}
 
 \tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
@@ -1215,7 +1216,7 @@ We can see here that the number of individuals decreased, yet we have the same n
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Can you take me hier(archy)? \{population hierarchy construction\}}\label{data.manip:hier}
 
-\tab\tab Remember all that fuss we made about the \texttt{@other} slot above in section \ref{intro:import:other}? The way you can achieve hierarchical analysis in \textit{poppr} is through a data frame in that slot. Many of the file formats that \textit{adegenet} and \textit{poppr} can import do not allow for more than two hierarchies. If you need more levels, you have a couple of choices: 
+\tab\tab Remember all that fuss we made about the \texttt{@other} slot above in section \ref{intro:genind:other}? The way you can achieve hierarchical analysis in \textit{poppr} is through a data frame in that slot. Many of the file formats that \textit{adegenet} and \textit{poppr} can import do not allow for more than two hierarchies. If you need more levels, you have a couple of choices: 
 \begin{enumerate}
   \item Import them into R as a data frame with each column being a separate hierarchical element.
   \item Collapse them into a single population factor so that you can trick these file formats into taking multiple population hierarchies (eg. instead of ``Pop1", ``Subpop1", ``Subsubpop1", you would have ``Pop1\_Subpop1\_Subsubpop1"). 
@@ -2170,13 +2171,16 @@ And now we can visualize the largest ten MLG complexes using \textit{ggplot2}'s 
 \section{Index and Distance Calculations}\label{index}
 \subsection{The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\bar r_d$\}}\label{index:iard}
 
-\tab\tab The index of association has previously been implemented in a couple of programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN} \cite{Haubold:2000}, but these are programs that are no longer well supported, can be difficult to install and do not run in batch mode.
+\tab\tab The index of association was originally developed as a measure of multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to detect signatures of sexual reproduction and population structure \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with the number of loci, and was not suitable to comparisons across studies \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for this scaling and forces the index to lie between 0 (linkage equilibrium) and 1 (full disequilibrium). $I_A$ has previously been implemented in a couple of programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN} \cite{Haubold:2000}, but these are programs that are no longer well supported, can be difficult to install and do not run in batch mode. 
+
+It is important to note that for this algorithm, all missing values are treated in the same way as \textit{multilocus} in that all missing alleles are imputed to be the same as the alleles they are being compared to. Depending on the percent missing data in your data set, this might influence the statistic. If you have a lot of missing data, consider using the \texttt{missing} flag in this function.
 \subsubsection{Function: ia}\label{index:iard:ia}
 
 \tab\tab This function is a quick look at a single data set. It can do almost everything that \texttt{poppr} can do except for sorting through populations.
 \begin{quote}
 Default Command:\\
-\texttt{ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE)}
+\texttt{ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", 
+    hist = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -2275,6 +2279,7 @@ There, is, of course one little caveat that needs to be mentioned. The P-values 
 2.90602921 0.00100000 0.07237008 0.00100000 
 \end{Soutput}
 \end{Schunk}
+If you want to be able to report $P < 0.001$ in this situation, then you can simply increase the number in sample: \texttt{sample = 1999}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2283,7 +2288,7 @@ There, is, of course one little caveat that needs to be mentioned. The P-values 
 
 \subsubsection{Function: diss.dist}\label{index:dist:diss.dist}
 
-\tab\tab Use this function to calculate relative dissimilarity between individuals and return a distance matrix for use in creating cladograms or minimum spanning networks.
+\tab\tab Use this function to calculate relative dissimilarity between individuals and return a distance matrix for use in creating cladograms or minimum spanning networks. A note: missing alleles will be imputed to be the same as the challenging allele, decreasing the distance between some individuals. If you want to consider all missing data as special alleles, treat your data with \texttt{missingno(pop, type = "zero")} beforehand. 
 
 \begin{quote}
 Default Command:\\
@@ -3025,7 +3030,8 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE) (Section \ref{index:iard:ia})
 \item diss.dist(pop) (Section \ref{index:dist:diss.dist})
 \item bruvo.dist(pop, replen = c(2)) (Section \ref{index:bruvo:bruvo.dist})
-\item bruvo.boot(pop, replen = c(2), B = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE) (Section \ref{index:trees:bruvo.boot})
+\item bruvo.boot(pop, replen = c(2), sample = 100, tree = "upgma", showtree = TRUE, 
+cutoff = NULL, quiet = FALSE, ...)  (Section \ref{index:trees:bruvo.boot})
 \item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1) (Section \ref{index:trees:greycurve})
 \item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
 \item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:poppr.msn})
