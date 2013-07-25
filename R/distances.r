@@ -126,13 +126,13 @@ diss.dist <- function(pop){
   np <- choose(inds, 2)
   dist.vec <- matrix(data = 0, nrow=inds, ncol=inds)
   if(pop@type == "PA"){
-    dist.vec[lower.tri(dist.vec)] <- .Call("pairdiffs",pop@tab*ploid)/ploid
+    dist.vec[lower.tri(dist.vec)] <- .Call("pairdiffs",pop@tab)
   }
   else{
     pop <- seploc(pop)
     numLoci <- length(pop)
     temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs",x@tab*ploid)/ploid, 
+    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs",x@tab)*(ploid/2),
                             temp.d.vector[, 1])
     dist.vec[lower.tri(dist.vec)] <- rowSums(temp.d.vector)
   }
