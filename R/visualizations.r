@@ -167,7 +167,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
                        data = infodata[infodata[["Index"]] == Indexfac[2], ], 
                        position="identity",
                        binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))/30) + 
-        geom_rug() + 
+        geom_rug(alpha = 0.5) + #theme(legend.position = "none") + 
         # The label for the observed line is a bit more difficult to code as
         # it has the ability to appear anywhere on the chart. Here, I'm
         # forcing it to flip to one side or the other based on which side of
@@ -200,7 +200,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
                        data = infodata[infodata[["Index"]] == Indexfac[2], ], 
                        position="identity",
                        binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))/30) + 
-        geom_rug() + 
+        geom_rug(alpha = 0.5) + #theme(legend.position = "none") + 
         # Positioning the observed line and labeling it.
         geom_vline(aes_string(xintercept = "Observed"), data = obsdata, color="blue", 
                    show_guide=TRUE, linetype="dashed") +
