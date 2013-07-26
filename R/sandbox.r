@@ -604,6 +604,85 @@ getinds <- function(x){
   return(indices)
 }
 
+
+brian.ia <- function(pop, sample=0, valuereturn = FALSE, method=1, 
+                     quiet="minimal", missing="ignore",hist=TRUE){
+  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
+      "non-parametric bootstrap")
+  namelist <- NULL
+  namelist$population <- ifelse(length(levels(pop@pop)) > 1 | 
+                                is.null(pop@pop), "Total", pop@pop.names)
+  namelist$File <- as.character(pop@call[2])
+  popx <- pop
+  missing <- toupper(missing)
+  type <- pop@type
+  if(type=="PA"){
+    .Ia.Rd <- .PA.Ia.Rd
+  }
+  else {
+    popx <- seploc(popx)
+  }
+
+  # if there are less than three individuals in the population, the calculation
+  # does not proceed. 
+  if (nInd(pop) < 3){
+    IarD <- as.numeric(c(NA,NA))
+    names(IarD) <- c("Ia", "rbarD")
+    if(sample==0){
+      return(IarD)
+    }
+    else{
+      IarD <- as.numeric(rep(NA,4))
+      names(IarD) <- c("Ia","p.Ia","rbarD","p.rD")
+      return(IarD)
+    }
+  }
+  IarD <- .Ia.Rd(popx, missing)
+  names(IarD) <- c("Ia", "rbarD")
+  # no sampling, it will simply return two named numbers.
+  if (sample==0){
+    Iout <- IarD
+    result <- NULL
+  }
+  # sampling will perform the iterations and then return a data frame indicating
+  # the population, index, observed value, and p-value. It will also produce a 
+  # histogram.
+  else{
+    Iout <- NULL 
+    idx <- as.data.frame(list(Index=names(IarD)))
+    samp <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
+    samp2 <- rbind(samp, IarD)
+    p.val <- ia.pval(index="Ia", samp2, IarD[1])
+    p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
+    if(hist == TRUE){
+      if(require(ggplot2)){
+        poppr.plot(samp, observed=IarD, pop=namelist$population,
+                          file=namelist$File, pval=p.val, N=nrow(pop@tab))
+      }
+      else{      
+        permut.histogram(samp, IarD, p.val[1], pop=namelist$population, 
+                        file=namelist$File)
+      }
+    }
+    result <- 1:4
+    result[c(1,3)] <- IarD
+    result[c(2,4)] <- p.val
+    names(result) <- c("Ia","p.Ia","rbarD","p.rD")
+    if (valuereturn == TRUE){
+      return(list(index = final(Iout, result), samples = samp))
+    }
+  }  
+  return(final(Iout, result))
+}
+
+
+
+
+
+
+
+
+
 total.shuffler <- function(pop, method){
   return(lapply(pop, pop.sampler, method))
 }
