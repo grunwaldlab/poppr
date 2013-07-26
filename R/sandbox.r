@@ -677,7 +677,25 @@ brian.ia <- function(pop, sample=0, valuereturn = FALSE, method=1,
 
 
 
-
+jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
+  inds <- nInd(pop)
+  half <- round(inds/divisor)
+  cat("Creating Null Distribution...\t")
+  null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
+    hist = FALSE, method = method)
+  cat("Alternative Distribution...\t")
+  alt <- vapply(1:sample, function(x) .ia(pop[sample(inds, half), ], quiet = TRUE), c(pi, pi))
+  library(reshape)
+  mnull <- melt(null$sample)
+  malt <- melt(data.frame(t(alt)))
+  mnull$Distribution <- "null"
+  malt$Distribution <- "alternative"
+  dat <- rbind(mnull, malt)
+  cat("Creating Plots\n")
+  distplot <- ggplot(dat, aes_string(x = "value", fill = "Distribution")) + geom_histogram(alpha = 0.5, position = "identity") + geom_rug(alpha = 0.5, aes_string(color = "Distribution")) + facet_grid(" ~ variable", scales = "free_x") + theme_classic() + ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, "Individuals,", half, "Sampled for Alt."))
+  #print(distplot)
+  return(list(observed = null$index, null_samples = null$samples, alt_samples = data.frame(t(alt)), plot = distplot))
+}
 
 
 
