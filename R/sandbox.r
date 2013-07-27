@@ -677,6 +677,12 @@ brian.ia <- function(pop, sample=0, valuereturn = FALSE, method=1,
 
 
 
+# Function jackcomp is not fully thought out yet. Right now, it is unclear what 
+# the application for this could be. The idea behind it is that if you randomly
+# sampled half of the individuals from your population, how does that affect the
+# index of association? This
+#
+#
 jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
   inds <- nInd(pop)
   half <- round(inds/divisor)
