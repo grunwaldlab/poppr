@@ -895,10 +895,21 @@ double mindist(int perms, int alleles, int *perm, double *dist)
 			if (j == 0)
 			{
 				res = dist[*(perm + counter++) + p*j];
+				if(res > minn)
+				{
+					j = p;
+					counter = i + w/p;
+					i = counter;
+				}				
 			}
 			else
 			{
 				res += dist[*(perm + counter++) + p*j];
+				if(j < p-1 && res > minn)
+				{				
+					counter += (p-j-1);
+					j = p;
+				}
 			}
 		}
 		/*	Checking if the new calculated distance is smaller than the smallest
