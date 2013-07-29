@@ -698,13 +698,37 @@ jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
   malt$Distribution <- "alternative"
   dat <- rbind(mnull, malt)
   cat("Creating Plots\n")
-  distplot <- ggplot(dat, aes_string(x = "value", fill = "Distribution")) + geom_histogram(alpha = 0.5, position = "identity") + geom_rug(alpha = 0.5, aes_string(color = "Distribution")) + facet_grid(" ~ variable", scales = "free_x") + theme_classic() + ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, "Individuals,", half, "Sampled for Alt."))
+  obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
+  distplot <- ggplot(dat, aes_string(x = "value", fill = "Distribution")) + geom_histogram(alpha = 0.5, position = "identity") + geom_rug(alpha = 0.5, aes_string(color = "Distribution")) + facet_grid(" ~ variable", scales = "free_x") + theme_classic() + ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, "Individuals,", half, "Sampled for Alt.")) + geom_vline(data = obs.df, aes_string(xintercept = "value", group = "variable"), linetype = "dashed")
   #print(distplot)
   return(list(observed = null$index, null_samples = null$samples, alt_samples = data.frame(t(alt)), plot = distplot))
 }
 
+bootia <- function(pop, inds, quiet = TRUE, method = 1){
+  pop <- pop[sample(inds, replace = TRUE), ]
+  pop@ind.names <- paste("ind", 1:inds)
+  return(.ia(pop, quiet = quiet))
+}
 
-
+bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
+  inds <- nInd(pop)
+  cat("Creating Null Distribution...\t")
+  null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
+    hist = FALSE, method = method)
+  cat("Alternative Distribution...\t")
+  alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
+  library(reshape)
+  mnull <- melt(null$sample)
+  malt <- melt(data.frame(t(alt)))
+  mnull$Distribution <- "null"
+  malt$Distribution <- "alternative"
+  dat <- rbind(mnull, malt)
+  cat("Creating Plots\n")
+  obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
+  distplot <- ggplot(dat, aes_string(x = "value", fill = "Distribution")) + geom_histogram(alpha = 0.5, position = "identity") + geom_rug(alpha = 0.5, aes_string(color = "Distribution")) + facet_grid(" ~ variable", scales = "free_x") + theme_classic() + ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, "Individuals,", inds, "Sampled for Alt.")) + geom_vline(data = obs.df, aes_string(xintercept = "value", group = "variable"), linetype = "dashed")
+  #print(distplot)
+  return(list(observed = null$index, null_samples = null$samples, alt_samples = data.frame(t(alt)), plot = distplot))
+}
 
 
 total.shuffler <- function(pop, method){
