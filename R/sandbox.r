@@ -638,7 +638,7 @@ brian.ia <- function(pop, sample=0, valuereturn = FALSE, method=1,
 
 
 
-new.jack.ia <- function(pop, iterations, type = type, divisor = 2){ 
+jack.ia <- function(pop, iterations, type = type, divisor = 2){ 
   if(!is.list(pop)){
     if(type=="PA"){
       .Ia.Rd <- .PA.Ia.Rd
@@ -646,20 +646,21 @@ new.jack.ia <- function(pop, iterations, type = type, divisor = 2){
   }
   inds <- nInd(pop[[1]])
   half <- round(inds/divisor)
-  np <- choose(half, 2)
-	funrun <- function(pop, inds = 10, half = 5, np = 10){
+  np <- choose(half, 2)    
+  V <- jack.Ia.Rd(pop)
+	funrun <- function(V, inds = 10, half = 5, np = 10){
 	
 	  samp <- sample(inds, half)
     comb <- combn(inds, 2) # pairwise vector
     jackvec <- colSums(matrix(comb %in% samp, nrow = 2)) > 1
-    V <- jack.Ia.Rd(pop)
+
     V <- list(d.vector = colSums(V[jackvec, ]), 
               d2.vector = colSums(V[jackvec, ]^2), 
               D.vector = rowSums(V[jackvec, ])
               )
     IarD <- jack.calc(V, np)
 	}
-	sample.data <- vapply(1:iterations, function(x) funrun(pop, inds = inds, half = half, np = np), c(pi, pi))
+	sample.data <- vapply(1:iterations, function(x) funrun(V, inds = inds, half = half, np = np), c(pi, pi))
 	rownames(sample.data) <- c("Ia", "rbarD")
 	return(data.frame(t(sample.data)))
 }
@@ -703,14 +704,14 @@ jack.pair_diffs <- function(pop, numLoci, np)
 #
 #
 
-jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
+jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.587302){
   inds <- nInd(pop)
   half <- round(inds/divisor)
   cat("Creating Null Distribution...\t")
   null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
     hist = FALSE, method = method)
   cat("Alternative Distribution...\t")
-  alt <- new.jack.ia(seploc(pop), sample, type = pop@type, divisor)
+  alt <- jack.ia(seploc(pop), sample, type = pop@type, divisor)
   library(reshape)
   mnull <- melt(null$sample)
   malt <- melt(alt)
@@ -719,13 +720,47 @@ jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
   dat <- rbind(mnull, malt)
   cat("Creating Plots\n")
   obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
-  distplot <- ggplot(dat, aes_string(x = "value", fill = "Distribution")) + geom_histogram(alpha = 0.5, position = "identity") + geom_rug(alpha = 0.5, aes_string(color = "Distribution")) + facet_grid(" ~ variable", scales = "free_x") + theme_classic() + ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, "Individuals,", half, "Sampled for Alt.")) + geom_vline(data = obs.df, aes_string(xintercept = "value", group = "variable"), linetype = "dashed")
+  distplot <- jackbootplot(dat, obs.df) + 
+              ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, 
+                            "Individuals,", half, "Sampled for Alt.")
+                     ) +
+              theme(strip.text = element_text(size = rel(2)))
   #print(distplot)
   return(list(observed = null$index, null_samples = null$samples, alt_samples = alt, plot = distplot))
 }
 
+jackbootplot <- function(df, obs.df){
+  Indexfac <- c("I[A]","bar(r)[d]")
+  levels(df$variable) <- Indexfac
+  obs.df$variable <- Indexfac
+  dfIanull <- df[df$variable == Indexfac[1] & df$Distribution == "null", ]
+  dfrbarDnull <- df[df$variable == Indexfac[2] & df$Distribution == "null", ]
+  dfIaalt <- df[df$variable == Indexfac[1] & df$Distribution != "null", ]
+  dfrbarDalt <- df[df$variable == Indexfac[2] & df$Distribution != "null", ]
+  distplot <- ggplot(df, aes_string(x = "value", fill = "Distribution")) +
+              geom_histogram(alpha = 0.5, position = "identity", 
+                             data = dfIanull,
+                             binwidth=diff(range(dfIanull$value))/30) +
+              geom_histogram(alpha = 0.5, position = "identity", 
+                             data = dfrbarDnull,
+                             binwidth=diff(range(dfrbarDnull$value))/30) +
+              geom_histogram(alpha = 0.5, position = "identity", 
+                             data = dfIaalt,
+                             binwidth=diff(range(dfIaalt$value))/30) +
+              geom_histogram(alpha = 0.5, position = "identity", 
+                             data = dfrbarDalt,
+                             binwidth=diff(range(dfrbarDalt$value))/30) +
 
-new.bootia <- function(pop, inds, iterations){
+              geom_rug(alpha = 0.5, aes_string(color = "Distribution")) +
+              facet_grid(" ~ variable", scale = "free_x", labeller = label_parsed) + theme_classic() +
+              geom_vline(data = obs.df, aes_string(xintercept = "value", 
+                                                   group = "variable"), 
+                         linetype = "dashed") 
+  return(distplot)      
+}
+
+
+bootia <- function(pop, inds, iterations){
   V <- jack.Ia.Rd(pop)
   
   bootit <- function(V, inds){
@@ -751,11 +786,6 @@ new.bootia <- function(pop, inds, iterations){
 	return(data.frame(t(sample.data)))
 }
 
-bootia <- function(pop, inds, quiet = TRUE, method = 1){
-  pop <- pop[sample(inds, replace = TRUE), ]
-  pop@ind.names <- paste("ind", 1:inds)
-  return(.ia(pop, quiet = quiet))
-}
 
 bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
   inds <- nInd(pop)
@@ -764,7 +794,7 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
     hist = FALSE, method = method)
   cat("Alternative Distribution...\t")
   #alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
-  alt <- new.bootia(seploc(pop), inds, sample)
+  alt <- bootia(seploc(pop), inds, sample)
   library(reshape)
   mnull <- melt(null$sample)
   malt <- melt(alt)
@@ -773,10 +803,47 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
   dat <- rbind(mnull, malt)
   cat("Creating Plots\n")
   obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
-  distplot <- ggplot(dat, aes_string(x = "value", fill = "Distribution")) + geom_histogram(alpha = 0.5, position = "identity") + geom_rug(alpha = 0.5, aes_string(color = "Distribution")) + facet_grid(" ~ variable", scales = "free_x") + theme_classic() + ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, "Individuals,", inds, "Sampled for Alt.")) + geom_vline(data = obs.df, aes_string(xintercept = "value", group = "variable"), linetype = "dashed")
+  distplot <-distplot <- jackbootplot(dat, obs.df) + 
+              ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, 
+                            "Individuals, Method: Bootstrap")
+                     ) +
+              theme(strip.text = element_text(size = rel(2)))
   #print(distplot)
   return(list(observed = null$index, null_samples = null$samples, alt_samples = alt, plot = distplot))
 }
+
+jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.587302){
+  inds <- nInd(pop)
+  cat("Creating Null Distribution...\t")
+  null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
+    hist = FALSE, method = method)
+  cat("Alternative Distribution (Bootstrap)...\t")
+  #alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
+  altboot <- new.bootia(seploc(pop), inds, sample)
+  cat("Alternative Distribution (Jack Knife)...\t")
+  half <- round(inds/divisor)
+  altjack <- jack.ia(seploc(pop), sample, type = pop@type, divisor)  
+  library(reshape)
+  mnull <- melt(null$sample)
+  bmalt <- melt(altboot)
+  jmalt <- melt(altjack)
+  mnull$Distribution <- "null"
+  bmalt$Distribution <- "bootstrap"
+  jmalt$Distribution <- "jack knife"
+  dat <- rbind(mnull, bmalt, jmalt)
+  cat("Creating Plots\n")
+  obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
+  distplot <-distplot <- jackbootplot(dat, obs.df) + 
+              ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, 
+                            "Individuals,", half, "Sampled for Jack knife")
+                     ) +
+              theme(strip.text = element_text(size = rel(2)))
+  #print(distplot)
+  return(list(observed = null$index, null_samples = null$samples, 
+              alt_samples_boot = altboot, alt_samples_jack = altjack, 
+              plot = distplot)
+        )
+} 
 
 
 total.shuffler <- function(pop, method){
