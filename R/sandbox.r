@@ -285,132 +285,7 @@ testing_funk <- function(){
 
 
 
-#==============================================================================#
-# .sampling will reshuffle the alleles per individual, per locus via the 
-# .single.sampler function, which is described below. It will then calculate the
-# Index of Association for the resampled population for the number of times
-# indicated in "iterations".
-#==============================================================================#
-.new.sampling <- function(pop,iterations,quiet="noisy",missing="ignore",type=type, method=1){ 
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
-  if(!is.list(pop)){
-    if(type=="PA"){
-      .Ia.Rd <- .PA.Ia.Rd
-    }
-  }
-	sample.data <- data.frame(list(Ia = vector(mode = "numeric", 
-                                             length = iterations),
-                                 rbarD = vector(mode = "numeric", 
-                                                length = iterations)
-                                 )
-                            )
-	for (c in 1:iterations){
-    IarD <- .Ia.Rd(.new.all.shuffler(pop, type, method=method), missing=missing)
-    sample.data$Ia[c] <- IarD[1]
-    sample.data$rbarD[c] <- IarD[2]
-    if (quiet != TRUE){
-      if(quiet == "noisy"){
-        cat("Sample: ",c,"\n")
-        cat("Index of Association: ", IarD[1],"\n")
-        cat("Standardized Index of Association (rbarD): ", IarD[2],"\n")
-      }
-      else{
-        if(c%%50 != 0){
-          cat(".")
-          if (c == iterations){
-            cat("\n")
-          }
-#          else if( c == 666 ){
-#            cat("\\m/")
-#          }
-        }
-        else{
-          cat(".")
-          cat("\n")
-        }      
-      }
-    }
-	}
-	return(sample.data)
-}
 
-#==============================================================================#
-# pop = a list of genind objects with one locus each.
-# 
-# This function shuffles alleles at each locus over all loci. 
-#==============================================================================#
-
-.new.all.shuffler <- function(pop, type=type, method=1){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
-  if(type=="PA"){
-    if(method == 1 | method == 2){
-      pop@tab <- vapply(1:ncol(pop@tab),
-                        function(x) sample(pop@tab[, x]), pop@tab[, 1])
-    }
-    else if(method == 3){
-      paramboot <- function(x){
-        one <- mean(pop@tab[, x], na.rm=TRUE)
-        zero <- 1-one
-        return(sample(c(1,0), length(pop@tab[, x]), prob=c(one, zero), replace=TRUE))
-      }
-      pop@tab <- vapply(1:ncol(pop@tab), paramboot, pop@tab[, 1])
-    }
-    else if(method == 4){
-      pop@tab <- vapply(1:ncol(pop@tab),
-                        function(x) sample(pop@tab[, x], replace=TRUE), pop@tab[, 1])
-    }
-  } 
-  else {
-    samp <- ifelse(method == 5, sample(nrow(pop[[1]]@tab), replace = TRUE), 1)
-    pop <- lapply(pop, .new.locus.shuffler, method = method, sample = samp)
-  }
-  return(pop)
-}
-
-#==============================================================================#
-# This function shuffles the alleles at each locus per individual.
-#==============================================================================# 
-
-.new.locus.shuffler <- function(pop, method = 1, sample = 1){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
-  # if the locus is homozygous for all individuals, shuffling will not occur.
-  if( ncol(pop@tab) > 1 ){
-
-# Maintenence of the heterozygotic and allelic structure.
-    if(method == 1)
-      pop@tab <- .both.shuff(pop@tab)
-
-# Maintenece of only the allelic structure. Heterozygosity can fluctuate.
-    else if(method == 2)
-      pop@tab <- .new.permut.shuff(pop@tab)
-
-# Parametric Bootstraping where both heterozygosity and allelic structure can
-# change based on allelic frequency. 
-    else if(method == 3){
-    weights <- vapply(1:ncol(pop@tab), function(x) mean(pop@tab[, x], na.rm=TRUE), 1)
-    pop@tab  <- t(vapply(1:nrow(pop@tab), 
-                  function(x) .diploid.shuff(pop@tab[x, ], weights), pop@tab[1,]))
-    }
-# Non-Parametric Bootstrap.
-    else if(method == 4){
-    weights <- rep(1, ncol(pop@tab))
-    pop@tab  <- t(vapply(1:nrow(pop@tab), 
-                  function(x) .diploid.shuff(pop@tab[x, ], weights), pop@tab[1,]))
-    }
-# Maintaining heterozygosity.    
-#    if(method == 5){
-#      temp <- vapply(1:nrow(pop@tab), function(x) sample(pop@tab[x,]), pop@tab[1,])
-#      pop@tab <- t(temp)
-#    }
-    else if(method == 5){
-      
-    }
-  }
-  return(pop)
-}
 
 new.poppr <- function(pop,total=TRUE,sublist=c("ALL"),blacklist=c(NULL), sample=0,
   method=1,missing="ignore", quiet="minimal",clonecorrect=FALSE,hier=c(1),dfname="hier",
@@ -763,12 +638,71 @@ brian.ia <- function(pop, sample=0, valuereturn = FALSE, method=1,
 
 
 
+new.jack.ia <- function(pop, iterations, type = type, divisor = 2){ 
+  if(!is.list(pop)){
+    if(type=="PA"){
+      .Ia.Rd <- .PA.Ia.Rd
+    }
+  }
+  inds <- nInd(pop[[1]])
+  half <- round(inds/divisor)
+  np <- choose(half, 2)
+	funrun <- function(pop, inds = 10, half = 5, np = 10){
+	
+	  samp <- sample(inds, half)
+    comb <- combn(inds, 2) # pairwise vector
+    jackvec <- colSums(matrix(comb %in% samp, nrow = 2)) > 1
+    V <- jack.Ia.Rd(pop)
+    V <- list(d.vector = colSums(V[jackvec, ]), 
+              d2.vector = colSums(V[jackvec, ]^2), 
+              D.vector = rowSums(V[jackvec, ])
+              )
+    IarD <- jack.calc(V, np)
+	}
+	sample.data <- vapply(1:iterations, function(x) funrun(pop, inds = inds, half = half, np = np), c(pi, pi))
+	rownames(sample.data) <- c("Ia", "rbarD")
+	return(data.frame(t(sample.data)))
+}
+
+jack.Ia.Rd <- function (pop){
+  vard.vector <- NULL
+  numLoci <- length(pop)
+  numIsolates <- length(pop[[1]]@ind.names)
+  np <- choose(numIsolates, 2)
+  if (np < 2) {
+    return(as.numeric(c(NaN, NaN)))
+  }
+  V <- jack.pair_diffs(pop, numLoci, np)
+  return(V)
+}
+
+jack.calc <- function(V, np){
+  varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
+  vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector)
+  sigVarj <- sum(vard.vector)
+  rm(vard.vector)
+  Ia <- (varD/sigVarj) - 1
+  rbarD <- (varD - sigVarj)/(2 * sum(vardpair.vector))
+  return(c(Ia, rbarD))
+}
+
+jack.pair_diffs <- function(pop, numLoci, np)
+{
+  ploid <- ploidy(pop[[1]])
+  temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), 
+                          temp.d.vector[, 1])
+  return(temp.d.vector)
+}
+
 # Function jackcomp is not fully thought out yet. Right now, it is unclear what 
 # the application for this could be. The idea behind it is that if you randomly
 # sampled half of the individuals from your population, how does that affect the
 # index of association? This
 #
 #
+
 jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
   inds <- nInd(pop)
   half <- round(inds/divisor)
@@ -776,10 +710,10 @@ jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
   null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
     hist = FALSE, method = method)
   cat("Alternative Distribution...\t")
-  alt <- vapply(1:sample, function(x) .ia(pop[sample(inds, half), ], quiet = TRUE), c(pi, pi))
+  alt <- new.jack.ia(seploc(pop), sample, type = pop@type, divisor)
   library(reshape)
   mnull <- melt(null$sample)
-  malt <- melt(data.frame(t(alt)))
+  malt <- melt(alt)
   mnull$Distribution <- "null"
   malt$Distribution <- "alternative"
   dat <- rbind(mnull, malt)
@@ -787,7 +721,12 @@ jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
   obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
   distplot <- ggplot(dat, aes_string(x = "value", fill = "Distribution")) + geom_histogram(alpha = 0.5, position = "identity") + geom_rug(alpha = 0.5, aes_string(color = "Distribution")) + facet_grid(" ~ variable", scales = "free_x") + theme_classic() + ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, "Individuals,", half, "Sampled for Alt.")) + geom_vline(data = obs.df, aes_string(xintercept = "value", group = "variable"), linetype = "dashed")
   #print(distplot)
-  return(list(observed = null$index, null_samples = null$samples, alt_samples = data.frame(t(alt)), plot = distplot))
+  return(list(observed = null$index, null_samples = null$samples, alt_samples = alt, plot = distplot))
+}
+
+
+new.bootia <- function(pop, inds){
+  print("heyy!")
 }
 
 bootia <- function(pop, inds, quiet = TRUE, method = 1){
