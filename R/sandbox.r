@@ -285,6 +285,12 @@ testing_funk <- function(){
 
 
 
+#==============================================================================#
+# .sampling will reshuffle the alleles per individual, per locus via the 
+# .single.sampler function, which is described below. It will then calculate the
+# Index of Association for the resampled population for the number of times
+# indicated in "iterations".
+#==============================================================================#
 .new.sampling <- function(pop,iterations,quiet="noisy",missing="ignore",type=type, method=1){ 
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
       "non-parametric bootstrap")
@@ -293,13 +299,16 @@ testing_funk <- function(){
       .Ia.Rd <- .PA.Ia.Rd
     }
   }
-	sample.data <- NULL
+	sample.data <- data.frame(list(Ia = vector(mode = "numeric", 
+                                             length = iterations),
+                                 rbarD = vector(mode = "numeric", 
+                                                length = iterations)
+                                 )
+                            )
 	for (c in 1:iterations){
-    IarD <- .Ia.Rd(total.shuffler(pop, method=method), missing=missing)
-		sample.data <- rbind(sample.data, as.data.frame(list( 
-                                      Ia=IarD[1],
-                                      rbarD=IarD[2]
-                                      )))
+    IarD <- .Ia.Rd(.new.all.shuffler(pop, type, method=method), missing=missing)
+    sample.data$Ia[c] <- IarD[1]
+    sample.data$rbarD[c] <- IarD[2]
     if (quiet != TRUE){
       if(quiet == "noisy"){
         cat("Sample: ",c,"\n")
@@ -324,6 +333,79 @@ testing_funk <- function(){
     }
 	}
 	return(sample.data)
+}
+
+#==============================================================================#
+# pop = a list of genind objects with one locus each.
+# 
+# This function shuffles alleles at each locus over all loci. 
+#==============================================================================#
+
+.new.all.shuffler <- function(pop, type=type, method=1){
+  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
+      "non-parametric bootstrap")
+  if(type=="PA"){
+    if(method == 1 | method == 2){
+      pop@tab <- vapply(1:ncol(pop@tab),
+                        function(x) sample(pop@tab[, x]), pop@tab[, 1])
+    }
+    else if(method == 3){
+      paramboot <- function(x){
+        one <- mean(pop@tab[, x], na.rm=TRUE)
+        zero <- 1-one
+        return(sample(c(1,0), length(pop@tab[, x]), prob=c(one, zero), replace=TRUE))
+      }
+      pop@tab <- vapply(1:ncol(pop@tab), paramboot, pop@tab[, 1])
+    }
+    else if(method == 4){
+      pop@tab <- vapply(1:ncol(pop@tab),
+                        function(x) sample(pop@tab[, x], replace=TRUE), pop@tab[, 1])
+    }
+  } 
+  else {
+    pop <- lapply(pop, .new.locus.shuffler, method=method)
+  }
+  return(pop)
+}
+
+#==============================================================================#
+# This function shuffles the alleles at each locus per individual.
+#==============================================================================# 
+
+.new.locus.shuffler <- function(pop, method = 1, sample = 1){
+  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
+      "non-parametric bootstrap")
+  # if the locus is homozygous for all individuals, shuffling will not occur.
+  if( ncol(pop@tab) > 1 ){
+
+# Maintenence of the heterozygotic and allelic structure.
+    if(method == 1)
+      pop@tab <- .both.shuff(pop@tab)
+
+# Maintenece of only the allelic structure. Heterozygosity can fluctuate.
+    else if(method == 2)
+      pop@tab <- .new.permut.shuff(pop@tab)
+
+# Parametric Bootstraping where both heterozygosity and allelic structure can
+# change based on allelic frequency. 
+    else if(method == 3){
+    weights <- vapply(1:ncol(pop@tab), function(x) mean(pop@tab[, x], na.rm=TRUE), 1)
+    pop@tab  <- t(vapply(1:nrow(pop@tab), 
+                  function(x) .diploid.shuff(pop@tab[x, ], weights), pop@tab[1,]))
+    }
+# Non-Parametric Bootstrap.
+    else if(method == 4){
+    weights <- rep(1, ncol(pop@tab))
+    pop@tab  <- t(vapply(1:nrow(pop@tab), 
+                  function(x) .diploid.shuff(pop@tab[x, ], weights), pop@tab[1,]))
+    }
+# Maintaining heterozygosity.    
+#    if(method == 5){
+#      temp <- vapply(1:nrow(pop@tab), function(x) sample(pop@tab[x,]), pop@tab[1,])
+#      pop@tab <- t(temp)
+#    }
+  }
+  return(pop)
 }
 
 new.poppr <- function(pop,total=TRUE,sublist=c("ALL"),blacklist=c(NULL), sample=0,
