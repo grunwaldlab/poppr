@@ -725,8 +725,30 @@ jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 2){
 }
 
 
-new.bootia <- function(pop, inds){
-  print("heyy!")
+new.bootia <- function(pop, inds, iterations){
+  V <- jack.Ia.Rd(pop)
+  
+  bootit <- function(V, inds){
+    sam <- sample(inds, replace = TRUE)
+    comb <- combn(inds, 2)
+    colnames(comb) <- 1:ncol(comb)
+    uneak <- colSums(matrix(comb %in% sam, nrow = 2)) > 1
+    samcomb <- comb[, uneak, drop = FALSE]
+    choice <- as.integer(sqrt(ncol(samcomb)*2))
+    dup <- vapply(sam[duplicated(sam)], function(x) which(samcomb == x, arr.ind = TRUE)[, 2], 1:choice)
+    saminds <- as.numeric(colnames(samcomb))
+    samdup <- c(saminds, saminds[dup])
+    V[1:length(samdup), ] <- V[samdup, ]
+    V[-(1:length(samdup)), ] <- 0
+    V <- list(d.vector = colSums(V), 
+          d2.vector = colSums(V^2), 
+          D.vector = rowSums(V)
+          )
+    return(jack.calc(V, ncol(comb)))
+  }
+	sample.data <- vapply(1:iterations, function(x) bootit(V, inds), c(pi, pi))
+	rownames(sample.data) <- c("Ia", "rbarD")
+	return(data.frame(t(sample.data)))
 }
 
 bootia <- function(pop, inds, quiet = TRUE, method = 1){
@@ -741,10 +763,11 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
   null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
     hist = FALSE, method = method)
   cat("Alternative Distribution...\t")
-  alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
+  #alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
+  alt <- new.bootia(seploc(pop), inds, sample)
   library(reshape)
   mnull <- melt(null$sample)
-  malt <- melt(data.frame(t(alt)))
+  malt <- melt(alt)
   mnull$Distribution <- "null"
   malt$Distribution <- "alternative"
   dat <- rbind(mnull, malt)
@@ -752,7 +775,7 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
   obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
   distplot <- ggplot(dat, aes_string(x = "value", fill = "Distribution")) + geom_histogram(alpha = 0.5, position = "identity") + geom_rug(alpha = 0.5, aes_string(color = "Distribution")) + facet_grid(" ~ variable", scales = "free_x") + theme_classic() + ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, "Individuals,", inds, "Sampled for Alt.")) + geom_vline(data = obs.df, aes_string(xintercept = "value", group = "variable"), linetype = "dashed")
   #print(distplot)
-  return(list(observed = null$index, null_samples = null$samples, alt_samples = data.frame(t(alt)), plot = distplot))
+  return(list(observed = null$index, null_samples = null$samples, alt_samples = alt, plot = distplot))
 }
 
 
