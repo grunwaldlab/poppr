@@ -363,7 +363,8 @@ testing_funk <- function(){
     }
   } 
   else {
-    pop <- lapply(pop, .new.locus.shuffler, method=method)
+    samp <- ifelse(method == 5, sample(nrow(pop[[1]]@tab), replace = TRUE), 1)
+    pop <- lapply(pop, .new.locus.shuffler, method = method, sample = samp)
   }
   return(pop)
 }
@@ -404,6 +405,9 @@ testing_funk <- function(){
 #      temp <- vapply(1:nrow(pop@tab), function(x) sample(pop@tab[x,]), pop@tab[1,])
 #      pop@tab <- t(temp)
 #    }
+    else if(method == 5){
+      
+    }
   }
   return(pop)
 }
