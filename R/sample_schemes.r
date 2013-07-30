@@ -151,13 +151,16 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
       .Ia.Rd <- .PA.Ia.Rd
     }
   }
-	sample.data <- NULL
+	sample.data <- data.frame(list(Ia = vector(mode = "numeric", 
+                                             length = iterations),
+                                 rbarD = vector(mode = "numeric", 
+                                                length = iterations)
+                                 )
+                            )
 	for (c in 1:iterations){
     IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)
-		sample.data <- rbind(sample.data, as.data.frame(list( 
-                                      Ia=IarD[1],
-                                      rbarD=IarD[2]
-                                      )))
+    sample.data$Ia[c] <- IarD[1]
+    sample.data$rbarD[c] <- IarD[2]
     if (quiet != TRUE){
       if(quiet == "noisy"){
         cat("Sample: ",c,"\n")
@@ -180,7 +183,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
         }      
       }
     }
-	}
+  }
 	return(sample.data)
 }
 
