@@ -788,29 +788,24 @@ jackbootplot <- function(df, obs.df){
 # produced from pair_diffs(). Since the matrix is values of pairwise comparisons,
 # the method of bootstrapping involves a few steps in order to resort the matrix.
 #==============================================================================#
-bootia <- function(pop, inds, iterations){
+old.bootia <- function(pop, inds, iterations, comb){
   V <- jack.Ia.Rd(pop) # calculate matrix. rows = inds, cols = loci
   
-  bootit <- function(V, inds){
+  bootit <- function(V, inds, comb){
+    #set.seed(9000)
     sam <- sample(inds, replace = TRUE) 
-    comb <- combn(inds, 2) # matrix of pairwise indexes.
+    #print(head(sam))
     
-    # Labelling the columns of this matrix provides tractability. When we subset
-    # it, we will know where those subsetted columns came from. 
-    colnames(comb) <- 1:ncol(comb)
     
     # Indicating which columns contain ONLY values included in `sam`.
     uneak <- colSums(matrix(comb %in% sam, nrow = 2)) > 1
     samcomb <- comb[, uneak, drop = FALSE]
     
-    # How many comparisons does each sample undergo?
-    choice <- as.integer(sqrt(ncol(samcomb)*2))
-    
-    # In which columns do the duplicated individuals live?
-    dup <- vapply(sam[duplicated(sam)], function(x) 
-                  which(samcomb == x, arr.ind = TRUE)[, 2], 1:choice)
-    saminds <- as.numeric(colnames(samcomb))
-    samdup <- c(saminds, saminds[dup]) # appending the duplicates to indices.
+    comsam <- combn(sam, 2)
+    compast <- vapply(1:ncol(comsam), function(x) paste(sort(comsam[, x]), collapse = ""), "a")
+    sampast <- vapply(1:ncol(samcomb), function(x) paste(sort(samcomb[, x]), collapse = ""), "a")
+    inds <- vapply(sampast, function(x) sum(compast %in% x), 1)
+    samdump <- rep(as.numeric(names(inds)), inds)  
     
     # Now we have to subset the vector. Adding the duplicated comparisons will
     # not complete the entire data set, so the rest has to be filled in with 
@@ -825,11 +820,22 @@ bootia <- function(pop, inds, iterations){
           )
     return(jack.calc(V, ncol(comb)))
   }
-	sample.data <- vapply(1:iterations, function(x) bootit(V, inds), c(pi, pi))
+  comb <- combn(inds, 2) # matrix of pairwise indexes.
+  
+  # Labelling the columns of this matrix provides tractability. When we subset
+  # it, we will know where those subsetted columns came from. 
+  colnames(comb) <- 1:ncol(comb)
+	sample.data <- vapply(1:iterations, function(x) bootit(V, inds, comb), c(pi, pi))
 	rownames(sample.data) <- c("Ia", "rbarD")
 	return(data.frame(t(sample.data)))
 }
 
+
+bootia <- function(pop, inds, quiet = TRUE, method = 1){
+  pop <- pop[sample(inds, replace = TRUE), ]
+  pop@ind.names <- paste("ind", 1:inds)
+  return(.ia(pop, quiet = quiet))
+} 
 
 bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
   inds <- nInd(pop)
@@ -837,14 +843,15 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
   null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
     hist = FALSE, method = method)
   cat("Alternative Distribution...\t")
-  #alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
-  if(pop@type == "codom"){
-    popx <- seploc(pop)
-  }
-  else{
-    popx <- pop
-  }
-  alt <- bootia(popx, inds, sample)
+  alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
+  #if(pop@type == "codom"){
+  #  popx <- seploc(pop)
+  #}
+  #else{
+  #  popx <- pop
+  #}
+  #alt <- bootia(popx, inds, sample)
+  alt <- data.frame(t(alt))
   library(reshape)
   mnull <- melt(null$sample)
   malt <- melt(alt)
@@ -874,8 +881,9 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
     popx <- pop
   }
   cat("Alternative Distribution (Bootstrap)...\t")
-  #alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
-  altboot <- bootia(popx, inds, sample)
+  altboot <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
+  altboot <- data.frame(t(altboot))
+  #altboot <- bootia(popx, inds, sample)
   cat("Alternative Distribution (Jack Knife)...\t")
   half <- round(inds/divisor)
   altjack <- jack.ia(popx, sample, type = pop@type, divisor)  
