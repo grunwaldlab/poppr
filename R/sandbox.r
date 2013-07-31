@@ -640,11 +640,11 @@ brian.ia <- function(pop, sample=0, valuereturn = FALSE, method=1,
 
 jack.ia <- function(pop, iterations, type = type, divisor = 2){ 
   if(!is.list(pop)){
-    if(type=="PA"){
-      .Ia.Rd <- .PA.Ia.Rd
-    }
+    inds <- nInd(pop)
   }
-  inds <- nInd(pop[[1]])
+  else{
+    inds <- nInd(pop[[1]])
+  }
   half <- round(inds/divisor)
   np <- choose(half, 2)    
   V <- jack.Ia.Rd(pop)
@@ -666,9 +666,15 @@ jack.ia <- function(pop, iterations, type = type, divisor = 2){
 }
 
 jack.Ia.Rd <- function (pop){
+
   vard.vector <- NULL
-  numLoci <- length(pop)
-  numIsolates <- length(pop[[1]]@ind.names)
+  if(!is.list(pop)){
+    numLoci <- nLoc(pop)
+    numIsolates <- nInd(pop)
+  } else {
+    numLoci <- length(pop)
+    numIsolates <- length(pop[[1]]@ind.names)
+  }
   np <- choose(numIsolates, 2)
   if (np < 2) {
     return(as.numeric(c(NaN, NaN)))
@@ -690,10 +696,22 @@ jack.calc <- function(V, np){
 
 jack.pair_diffs <- function(pop, numLoci, np)
 {
-  ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), 
-                          temp.d.vector[, 1])
+  if(!is.list(pop)){
+    ploid <- 2
+    temp.d.vector <- vapply(seq(numLoci), 
+                      function(x) as.vector(dist(pop@tab[,x])), 
+                      temp.d.vector[,1])
+    # checking for missing data and imputing the comparison to zero.
+    if(any(is.na(temp.d.vector))){
+      temp.d.vector[which(is.na(temp.d.vector))] <- 0
+    }
+  } 
+  else {
+    ploid <- ploidy(pop[[1]])
+    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), 
+                            temp.d.vector[, 1])
+  }
   return(temp.d.vector)
 }
 
@@ -711,7 +729,13 @@ jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.58
   null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
     hist = FALSE, method = method)
   cat("Alternative Distribution...\t")
-  alt <- jack.ia(seploc(pop), sample, type = pop@type, divisor)
+  if(pop@type == "codom"){
+    popx <- seploc(pop)
+  }
+  else{
+    popx <- pop
+  }
+  alt <- jack.ia(popx, sample, type = pop@type, divisor)
   library(reshape)
   mnull <- melt(null$sample)
   malt <- melt(alt)
@@ -759,22 +783,42 @@ jackbootplot <- function(df, obs.df){
   return(distplot)      
 }
 
-
+#==============================================================================#
+# This will perform a bootstrap analysis using the resulting distance matrix
+# produced from pair_diffs(). Since the matrix is values of pairwise comparisons,
+# the method of bootstrapping involves a few steps in order to resort the matrix.
+#==============================================================================#
 bootia <- function(pop, inds, iterations){
-  V <- jack.Ia.Rd(pop)
+  V <- jack.Ia.Rd(pop) # calculate matrix. rows = inds, cols = loci
   
   bootit <- function(V, inds){
-    sam <- sample(inds, replace = TRUE)
-    comb <- combn(inds, 2)
+    sam <- sample(inds, replace = TRUE) 
+    comb <- combn(inds, 2) # matrix of pairwise indexes.
+    
+    # Labelling the columns of this matrix provides tractability. When we subset
+    # it, we will know where those subsetted columns came from. 
     colnames(comb) <- 1:ncol(comb)
+    
+    # Indicating which columns contain ONLY values included in `sam`.
     uneak <- colSums(matrix(comb %in% sam, nrow = 2)) > 1
     samcomb <- comb[, uneak, drop = FALSE]
+    
+    # How many comparisons does each sample undergo?
     choice <- as.integer(sqrt(ncol(samcomb)*2))
-    dup <- vapply(sam[duplicated(sam)], function(x) which(samcomb == x, arr.ind = TRUE)[, 2], 1:choice)
+    
+    # In which columns do the duplicated individuals live?
+    dup <- vapply(sam[duplicated(sam)], function(x) 
+                  which(samcomb == x, arr.ind = TRUE)[, 2], 1:choice)
     saminds <- as.numeric(colnames(samcomb))
-    samdup <- c(saminds, saminds[dup])
+    samdup <- c(saminds, saminds[dup]) # appending the duplicates to indices.
+    
+    # Now we have to subset the vector. Adding the duplicated comparisons will
+    # not complete the entire data set, so the rest has to be filled in with 
+    # zeroes, since that's the value one would obtain from comparisons to self.
     V[1:length(samdup), ] <- V[samdup, ]
     V[-(1:length(samdup)), ] <- 0
+    
+    # Calculate necessary vectors and send them to be calculated into Ia and rd.
     V <- list(d.vector = colSums(V), 
           d2.vector = colSums(V^2), 
           D.vector = rowSums(V)
@@ -794,7 +838,13 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
     hist = FALSE, method = method)
   cat("Alternative Distribution...\t")
   #alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
-  alt <- bootia(seploc(pop), inds, sample)
+  if(pop@type == "codom"){
+    popx <- seploc(pop)
+  }
+  else{
+    popx <- pop
+  }
+  alt <- bootia(popx, inds, sample)
   library(reshape)
   mnull <- melt(null$sample)
   malt <- melt(alt)
@@ -817,12 +867,18 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
   cat("Creating Null Distribution...\t")
   null <- brian.ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
     hist = FALSE, method = method)
+  if(pop@type == "codom"){
+    popx <- seploc(pop)
+  }
+  else{
+    popx <- pop
+  }
   cat("Alternative Distribution (Bootstrap)...\t")
   #alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
-  altboot <- new.bootia(seploc(pop), inds, sample)
+  altboot <- bootia(popx, inds, sample)
   cat("Alternative Distribution (Jack Knife)...\t")
   half <- round(inds/divisor)
-  altjack <- jack.ia(seploc(pop), sample, type = pop@type, divisor)  
+  altjack <- jack.ia(popx, sample, type = pop@type, divisor)  
   library(reshape)
   mnull <- melt(null$sample)
   bmalt <- melt(altboot)
