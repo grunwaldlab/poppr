@@ -58,6 +58,49 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
 		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
 		int *tracker);
+		
+		
+		
+SEXP raw_pairdiffs(SEXP mat, SEXP ploidy)
+{
+	char binary_diffs, homozygote;
+	int count, row, col, bitcount, derp, hz, a1, a2, ht;
+	//SEXP Rout;
+	SEXP Rdim;
+	Rdim = getAttrib(mat, R_DimSymbol);
+	row = INTEGER(Rdim)[0];
+	col = INTEGER(Rdim)[1];
+	//mat = coerceVector(mat, RAWSXP);
+	for(count = 0; count < row*col; count++)
+	{
+		if(count < (row*col)-1 && count % 2 == 0)
+		{
+			binary_diffs = RAW(mat)[count] ^ RAW(mat)[count+1];
+			homozygote = RAW(mat)[count] & RAW(mat)[count+1];
+		}
+		else
+		{
+			goto out;
+		}
+		for(bitcount = 0; bitcount < 8; bitcount++)
+		{
+			//printf("Genotype:\t\t%d\n", (RAW(mat)[count] >> bitcount) & 0x01);
+			if(count < (row*col)-1)
+			{
+				hz = (homozygote >> bitcount) & 0x01;
+				a1 = (RAW(mat)[count] >> bitcount) & 0x01;
+				a2 = (RAW(mat)[count + 1] >> bitcount) & 0x01;
+				ht = (binary_diffs >> bitcount) & 0x01;
+				printf("%d AND %d:\t%d\t\t", a1, a2, hz+hz);
+				printf("%d XOR %d:\t%d\t\t", a1, a2, ht);
+				printf("RESULT:\t%d\n", hz+hz+ht);								
+			}
+		}
+		out:
+		printf("\n");
+	}
+	return R_NilValue;
+}
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the root product of pairwise comparisons of each of the variances of
 each locus.
