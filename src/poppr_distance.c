@@ -64,13 +64,37 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 SEXP raw_pairdiffs(SEXP mat, SEXP ploidy)
 {
 	char binary_diffs, homozygote;
-	int count, row, col, bitcount, derp, hz, a1, a2, ht;
+	int count, row, col, bitcount, derp, hz, a1, a2, ht;//, i, j, k;
 	//SEXP Rout;
 	SEXP Rdim;
+	//SEXP dvector;
+	//SEXP Dvector;
 	Rdim = getAttrib(mat, R_DimSymbol);
 	row = INTEGER(Rdim)[0];
 	col = INTEGER(Rdim)[1];
+	/*
+	ploidy = coerceVector(ploidy, INTSXP);
+	PROTECT(dvector = allocVector(dvector, col));
+	PROTECT(Dvector = allocVector(Dvector, ((row*(row-1)/2))));
 	//mat = coerceVector(mat, RAWSXP);
+	for(i = 0; i < row - 1; i+ploidy)
+	{
+		for(j = i+ploidy; j < row; j+ploidy)
+		{
+			count = 0;
+			for(k = 0; k < col; k++)
+			{
+				binary_diffs = RAW(mat)[i+col*ploidy+k] ^ RAW(mat)[j+col*ploidy+k];
+				for(bitcount = 7; bitcount >= 0; bitcount--)
+				{
+					dvector[count] += (binary_diffs >> bitcount) & 0x01;
+				}
+				count++;
+			}
+		}
+	}
+*/
+
 	for(count = 0; count < row*col; count++)
 	{
 		if(count < (row*col)-1 && count % 2 == 0)
@@ -82,7 +106,7 @@ SEXP raw_pairdiffs(SEXP mat, SEXP ploidy)
 		{
 			goto out;
 		}
-		for(bitcount = 0; bitcount < 8; bitcount++)
+		for(bitcount = 7; bitcount >= 0; bitcount--)
 		{
 			//printf("Genotype:\t\t%d\n", (RAW(mat)[count] >> bitcount) & 0x01);
 			if(count < (row*col)-1)
@@ -91,9 +115,9 @@ SEXP raw_pairdiffs(SEXP mat, SEXP ploidy)
 				a1 = (RAW(mat)[count] >> bitcount) & 0x01;
 				a2 = (RAW(mat)[count + 1] >> bitcount) & 0x01;
 				ht = (binary_diffs >> bitcount) & 0x01;
-				printf("%d AND %d:\t%d\t\t", a1, a2, hz+hz);
+				printf("%d AND %d:\t%d\t\t", a1, a2, hz);
 				printf("%d XOR %d:\t%d\t\t", a1, a2, ht);
-				printf("RESULT:\t%d\n", hz+hz+ht);								
+				printf("RESULT:\t%d\n", hz+ht);						
 			}
 		}
 		out:
