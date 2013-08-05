@@ -1,5 +1,8 @@
 poppr 1.0.2
 ===========
+IMPROVEMENTS
+* Optimized internal sampling function to run up to 2x faster. 
+
 BUG FIXES
 * Fixed bug in diss.dist function that would return an inflated distance for haploids.
 
