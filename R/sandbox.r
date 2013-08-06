@@ -50,27 +50,31 @@ informloci <- function(pop, min_ind = 2, quiet = FALSE){
   if(pop@type == "PA"){
     
     locivals <- apply(pop@tab, 2, sum) %in% min_ind:(nInd(pop) - min_ind)
-    if(all(locivals == TRUE)){
-      cat("No sites found with fewer than", min_ind, 
-          "different individuals.\n", fill = 80)
-    }
-    else{
-      cat(sum(!locivals), "uninformative", 
-          ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
-          pop@loc.names[!locivals],"\n", fill = 80)
+    if(!isTRUE(quiet)){
+      if(all(locivals == TRUE)){
+        cat("No sites found with fewer than", min_ind, 
+            "different individuals.\n", fill = 80)
+      }
+      else{
+        cat(sum(!locivals), "uninformative", 
+            ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
+            pop@loc.names[!locivals],"\n", fill = 80)
+      }
     }
     return(pop[, locivals])
   }
   else{
-    locivals <- apply(as.loci(pop)[-1], 2, testable, min_ind)
-    if(all(locivals == TRUE)){
-      cat("No sites found with fewer than", min_ind, 
-          "different individuals.\n", fill = 80)
-    }
-    else{
-      cat(sum(!locivals), "uninformative", 
-          ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
-          pop@loc.names[!locivals],"\n", fill = 80)
+    locivals <- apply(as.loci(pop), 2, testable, min_ind)
+    if(!isTRUE(quiet)){
+      if(all(locivals == TRUE)){
+        cat("No sites found with fewer than", min_ind, 
+            "different individuals.\n", fill = 80)
+      }
+      else{
+        cat(sum(!locivals), "uninformative", 
+            ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
+            pop@loc.names[!locivals],"\n", fill = 80)
+      }
     }
     return(pop[, loc = names(pop@loc.names[locivals])])
   }
