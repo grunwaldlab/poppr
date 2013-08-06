@@ -47,6 +47,10 @@ informloci <- function(pop, min_ind = 2, quiet = FALSE){
   if(!is.genind(pop)){
     stop("This function only works on genind objects.")
   }
+  if(mlg(pop, quiet = TRUE) < 3){
+    cat("Not enough multilocus genotypes to be meaningful.\n")
+    return(pop)
+  }
   if(pop@type == "PA"){
     
     locivals <- apply(pop@tab, 2, sum) %in% min_ind:(nInd(pop) - min_ind)
@@ -64,7 +68,7 @@ informloci <- function(pop, min_ind = 2, quiet = FALSE){
     return(pop[, locivals])
   }
   else{
-    locivals <- apply(as.loci(pop), 2, testable, min_ind)
+    locivals <- apply(as.loci(pop)[-1], 2, testable, min_ind)
     if(!isTRUE(quiet)){
       if(all(locivals == TRUE)){
         cat("No sites found with fewer than", min_ind, 
