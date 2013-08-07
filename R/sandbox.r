@@ -74,7 +74,12 @@ informloci <- function(pop, cutoff = 0.05, quiet = FALSE){
     return(pop[, locivals])
   }
   else{
-    locivals <- apply(as.loci(pop)[-1], 2, test_table, min_ind, nInd(pop))
+    if(is.null(pop@pop)){
+      locivals <- apply(as.loci(pop), 2, test_table, min_ind, nInd(pop))
+    }
+    else{
+      locivals <- apply(as.loci(pop)[-1], 2, test_table, min_ind, nInd(pop))
+    }
     if(!isTRUE(quiet)){
       if(all(locivals == TRUE)){
         cat("No sites found with fewer than", min_ind, 
