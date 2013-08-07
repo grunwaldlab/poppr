@@ -43,14 +43,19 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 
-informloci <- function(pop, min_ind = 2, quiet = FALSE){
+informloci <- function(pop, cutoff = 0.05, quiet = FALSE){
   if(!is.genind(pop)){
     stop("This function only works on genind objects.")
   }
   MLG <- mlg(pop, quiet = TRUE)
-  if(MLG < 3 | MLG <= min_ind){
+  if(MLG < 3){
     cat("Not enough multilocus genotypes to be meaningful.\n")
     return(pop)
+  }
+  cutoff <- ifelse(cutoff > 0.5, 1 - cutoff, cutoff)
+  min_ind = round(cutoff*nInd(pop))
+  if(!isTRUE(quiet)){
+    cat("cutoff value:", cutoff*100, "percent (",min_ind,"individuals ).\n")
   }
   if(pop@type == "PA"){
     
@@ -69,11 +74,16 @@ informloci <- function(pop, min_ind = 2, quiet = FALSE){
     return(pop[, locivals])
   }
   else{
-    locivals <- apply(as.loci(pop)[-1], 2, testable, min_ind)
+    locivals <- apply(as.loci(pop)[-1], 2, test_table, min_ind, nInd(pop))
     if(!isTRUE(quiet)){
       if(all(locivals == TRUE)){
         cat("No sites found with fewer than", min_ind, 
             "different individuals.\n", fill = 80)
+      }
+      else if(sum(locivals) < 2){
+        cat("Fewer than 2 loci found informative. Perhaps you should choose a",
+             "lower cutoff value?\nReturning with no changes.\n")
+            return(pop)
       }
       else{
         cat(sum(!locivals), "uninformative", 
@@ -85,19 +95,9 @@ informloci <- function(pop, min_ind = 2, quiet = FALSE){
   }
 }
 
-testable <- function(loc, min_ind){
+test_table <- function(loc, min_ind, n){
   tab <- table(loc)
-  if(length(tab) > 2){
-    return(TRUE)
-  }
-  else{
-    if(length(tab) < 2){
-      return(FALSE)
-    }
-    else{
-      return(ifelse(any(tab < min_ind), FALSE, TRUE))        
-    }
-  }
+  return(ifelse(any(tab > n - min_ind), FALSE, TRUE))
 }
 
 
