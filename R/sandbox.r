@@ -47,7 +47,8 @@ informloci <- function(pop, min_ind = 2, quiet = FALSE){
   if(!is.genind(pop)){
     stop("This function only works on genind objects.")
   }
-  if(mlg(pop, quiet = TRUE) < 3){
+  MLG <- mlg(pop, quiet = TRUE)
+  if(MLG < 3 | MLG <= min_ind){
     cat("Not enough multilocus genotypes to be meaningful.\n")
     return(pop)
   }
