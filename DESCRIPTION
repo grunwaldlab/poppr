@@ -14,11 +14,7 @@ Depends:
     R (>= 2.15.1),
     adegenet,
     pegas,
-    vegan,
-    ggplot2,
-    phangorn,
-    ape,
-    igraph
+    vegan
 Imports:
     adegenet,
     pegas,

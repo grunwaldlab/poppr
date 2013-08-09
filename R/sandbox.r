@@ -549,14 +549,8 @@ new.poppr.all <- function(filelist, ...) {
     p.val <- ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
-      if(require(ggplot2)){
-        poppr.plot(samp, observed=IarD, pop=namelist$population,
-                          file=namelist$File, pval=p.val, N=nrow(pop@tab))
-      }
-      else{      
-        permut.histogram(samp, IarD, p.val[1], pop=namelist$population, 
-                        file=namelist$File)
-      }
+      poppr.plot(samp, observed=IarD, pop=namelist$population,
+                        file=namelist$File, pval=p.val, N=nrow(pop@tab))
     }
     result <- 1:4
     result[c(1,3)] <- IarD
@@ -1061,7 +1055,7 @@ genoid.bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE,
   bar <- as.matrix(genind2df(pop, sep="/", usepop = FALSE))
   # The bruvo algorithm will ignore missing data, coded as 0.
   bar[bar %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
-  stopifnot(require(phangorn))
+  # stopifnot(require(phangorn))
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
   if(tree == "upgma"){

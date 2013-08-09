@@ -242,11 +242,11 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
     MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
     N.vec <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)
     # Shannon-Weiner vegan:::diversity index.
-    H <- vegan:::diversity(pop.mat)
+    H <- vegan::diversity(pop.mat)
     # E_1, Pielou's evenness.
     # J <- H / log(rowSums(pop.mat > 0))
     # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-    G <- vegan:::diversity(pop.mat, "inv")
+    G <- vegan::diversity(pop.mat, "inv")
     Hexp <- (N.vec/(N.vec-1))*vegan:::diversity(pop.mat, "simp")
     # E_5
     E.5 <- (G-1)/(exp(H)-1)
@@ -479,14 +479,8 @@ ia <- function(pop, sample=0, method=1, quiet="minimal", missing="ignore",
     p.val <- ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
-      if(require(ggplot2)){
-        poppr.plot(samp, observed=IarD, pop=namelist$population,
-                          file=namelist$File, pval=p.val, N=nrow(pop@tab))
-      }
-      else{      
-        permut.histogram(samp, IarD, p.val[1], pop=namelist$population, 
-                        file=namelist$File)
-      }
+      poppr.plot(samp, observed=IarD, pop=namelist$population,
+                        file=namelist$File, pval=p.val, N=nrow(pop@tab))
     }
     result <- 1:4
     result[c(1,3)] <- IarD
