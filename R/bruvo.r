@@ -214,7 +214,7 @@ bruvo.dist <- function(pop, replen=c(2)){
 #'
 #==============================================================================#
 #' @importFrom phangorn upgma
-#' @importFrom ape nodelabels nj boot.phylo plot.phylo
+#' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo
 #   /     \
 #   |=(o)=|
 #   \     /
