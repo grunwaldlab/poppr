@@ -214,7 +214,7 @@ bruvo.dist <- function(pop, replen=c(2)){
 #'
 #==============================================================================#
 #' @importFrom phangorn upgma
-#' @importFrom ape nodelabels nj boot.phylo
+#' @importFrom ape nodelabels nj boot.phylo plot.phylo
 #   /     \
 #   |=(o)=|
 #   \     /
@@ -243,10 +243,11 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
   bar <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
   # The bruvo algorithm will ignore missing data, coded as 0.
   bar[bar %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
-  stopifnot(require(phangorn))
+  #stopifnot(require(phangorn))
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
   if(tree == "upgma"){
+    # require(phangorn)
     newfunk <- match.fun(upgma)
   }
   else if(tree == "nj"){
@@ -399,11 +400,12 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
 #' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
 #' }
 #==============================================================================#
+#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<-
 bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, ...){
-  stopifnot(require(igraph))
+  # require(igraph)
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
