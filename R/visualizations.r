@@ -1,3 +1,4 @@
+
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
@@ -324,7 +325,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' Let's plot it and show where individuals have < 15% of their genotypes 
 #' different.
 #' 
-#' plot(micro.msn$graph, edge.label = ifelse(E(micro.msn$graph)$weight < 0.15, 
+#' plot.igraph(micro.msn$graph, edge.label = ifelse(E(micro.msn$graph)$weight < 0.15, 
 #' round(E(micro.msn$graph)$weight, 3), NA), vertex.size=2, edge.label.color="red")
 #' 
 #' }
@@ -334,9 +335,10 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale=TRUE, ...){
-  if(!require(igraph)){
-    stop("You must have the igraph library installed to use this function.\n")
-  }
+  # require(igraph)
+  # if(!require(igraph)){
+  #   stop("You must have the igraph library installed to use this function.\n")
+  # }
   if(class(distmat) != "dist"){
     if(is.matrix(distmat)){
       if(any(nInd(pop) != dim(distmat))){
@@ -391,7 +393,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
       }
     }
     populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
-    plot(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
          vertex.label = vertex.label, vertex.size = mlg.number*3, 
          vertex.color = palette(1),  ...)
     legend(-1.55,1,bty = "n", cex = 0.75, 
@@ -478,7 +480,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   
-  plot(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
        vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
        vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
