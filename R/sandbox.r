@@ -329,6 +329,11 @@ testable <- function(loc, min_ind){
 }
 
 
+.new.diploid.shuff <- function(n, ploidy = 2, weights){
+  return(t(rmultinom(n, size = ploidy, prob = weights))/ ploidy)
+}
+
+
 testing_funk <- function(){
   cat("This test worked...maybe.\n")
 }
@@ -812,18 +817,18 @@ jackbootplot <- function(df, obs.df){
   dfIaalt <- df[df$variable == Indexfac[1] & df$Distribution != "null", ]
   dfrbarDalt <- df[df$variable == Indexfac[2] & df$Distribution != "null", ]
   distplot <- ggplot(df, aes_string(x = "value", fill = "Distribution")) +
-              geom_histogram(alpha = 0.5, position = "identity", 
-                             data = dfIanull,
-                             binwidth=diff(range(dfIanull$value))/30) +
-              geom_histogram(alpha = 0.5, position = "identity", 
-                             data = dfrbarDnull,
-                             binwidth=diff(range(dfrbarDnull$value))/30) +
-              geom_histogram(alpha = 0.5, position = "identity", 
-                             data = dfIaalt,
-                             binwidth=diff(range(dfIaalt$value))/30) +
-              geom_histogram(alpha = 0.5, position = "identity", 
-                             data = dfrbarDalt,
-                             binwidth=diff(range(dfrbarDalt$value))/30) +
+              geom_density(alpha = 0.5, position = "identity", 
+                             data = dfIanull)+#,
+                             # binwidth=diff(range(dfIanull$value))/30) +
+              geom_density(alpha = 0.5, position = "identity", 
+                             data = dfrbarDnull)+#,
+                             # binwidth=diff(range(dfrbarDnull$value))/30) +
+              geom_density(alpha = 0.5, position = "identity", 
+                             data = dfIaalt)+#,
+                             # binwidth=diff(range(dfIaalt$value))/30) +
+              geom_density(alpha = 0.5, position = "identity", 
+                             data = dfrbarDalt)+#,
+                             # binwidth=diff(range(dfrbarDalt$value))/30) +
 
               geom_rug(alpha = 0.5, aes_string(color = "Distribution")) +
               facet_grid(" ~ variable", scale = "free_x", labeller = label_parsed) + theme_classic() +
