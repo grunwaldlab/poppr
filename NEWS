@@ -1,8 +1,14 @@
-poppr 1.0.2
+poppr 1.0.3
 ===========
 IMPROVEMENTS
 * Optimized internal sampling function to run up to 2x faster. 
 
+NAMESPACE
+* Now importing specific functions from igraph and ape due to dependency issues.
+* Removed igraph, ape, ggplot2, and phangorn form "Dependencies", but keeping them in "Imports"
+
+poppr 1.0.2
+===========
 BUG FIXES
 * Fixed bug in diss.dist function that would return an inflated distance for haploids.
 

@@ -3,11 +3,13 @@ Type: Package
 Title: an R package for genetic analysis of populations with mixed
     reproduction
 Version: 1.0.99
-Date: 2013-07-25
+Date: 2013-08-09
 Author: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>, Javier F. Tabima
     <tabimaj@onid.orst.edu>, Niklaus J. Grunwald
     <grunwaln@science.oregonstate.edu>
 Maintainer: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>
+URL: http://cran.r-project.org/package=poppr,
+    http://grunwaldlab.cgrb.oregonstate.edu/poppr-r-package-population-genetics
 Description: Population genetic analyses for hierarchical analysis of partially
     clonal populations built upon the architecture of the adegenet package.
 Depends:
