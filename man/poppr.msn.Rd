@@ -108,7 +108,7 @@ micro.msn <- poppr.msn(microbov, diss.dist(microbov), vertex.label=NA)
 Let's plot it and show where individuals have < 15\% of their genotypes
 different.
 
-plot(micro.msn$graph, edge.label = ifelse(E(micro.msn$graph)$weight < 0.15,
+plot.igraph(micro.msn$graph, edge.label = ifelse(E(micro.msn$graph)$weight < 0.15,
 round(E(micro.msn$graph)$weight, 3), NA), vertex.size=2, edge.label.color="red")
 
 }

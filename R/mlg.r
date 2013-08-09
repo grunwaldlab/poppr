@@ -193,11 +193,11 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   #````````````````````````````````````````````````````````````````````````````#
   # Dealing with the visualizations.
   if(bar){
-    if(!require(ggplot2)){
-      warning("ggplot2 must be installed to visualize the MLG distributions.")
-      mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
-      return(mlgtab)
-    }
+    # if(!require(ggplot2)){
+    #   warning("ggplot2 must be installed to visualize the MLG distributions.")
+    #   mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
+    #   return(mlgtab)
+    # }
     
     # Function for setting up and organizing data frame to produce ggplot2 graphs
     plot1 <- function(mlgt){
