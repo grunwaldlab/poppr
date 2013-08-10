@@ -242,14 +242,14 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 # change based on allelic frequency. 
     else if(method == 3){
       weights <- colMeans(pop@tab, na.rm = TRUE)
-      pop@tab  <- t(apply(pop@tab, 1, .diploid.shuff, weights))
-      # pop@tab <- .new.diploid.shuff(nrow(pop@tab), ploidy(pop), weights)
+      #pop@tab  <- t(apply(pop@tab, 1, .diploid.shuff, weights))
+      pop@tab <- t(rmultinom(nrow(pop@tab), size = ploidy(pop), prob = weights))/ ploidy(pop)
     }
 # Non-Parametric Bootstrap.
     else if(method == 4){
       weights <- rep(1, ncol(pop@tab))
-      pop@tab  <- t(apply(pop@tab, 1, .diploid.shuff, weights))
-      # pop@tab <- .new.diploid.shuff(nrow(pop@tab), ploidy(pop), weights)
+#       pop@tab  <- t(apply(pop@tab, 1, .diploid.shuff, weights))
+      pop@tab <- t(rmultinom(nrow(pop@tab), size = ploidy(pop), prob = weights))/ ploidy(pop)
     }
 # Maintaining heterozygosity.    
 #    if(method == 5){

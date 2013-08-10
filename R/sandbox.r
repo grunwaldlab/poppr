@@ -811,16 +811,16 @@ jackbootplot <- function(df, obs.df){
   dfIaalt <- df[df$variable == Indexfac[1] & df$Distribution != "null", ]
   dfrbarDalt <- df[df$variable == Indexfac[2] & df$Distribution != "null", ]
   distplot <- ggplot(df, aes_string(x = "value", fill = "Distribution")) +
-              geom_density(alpha = 0.5, position = "identity", 
+              geom_histogram(alpha = 0.5, position = "identity", 
                              data = dfIanull)+#,
                              # binwidth=diff(range(dfIanull$value))/30) +
-              geom_density(alpha = 0.5, position = "identity", 
+              geom_histogram(alpha = 0.5, position = "identity", 
                              data = dfrbarDnull)+#,
                              # binwidth=diff(range(dfrbarDnull$value))/30) +
-              geom_density(alpha = 0.5, position = "identity", 
+              geom_histogram(alpha = 0.5, position = "identity", 
                              data = dfIaalt)+#,
                              # binwidth=diff(range(dfIaalt$value))/30) +
-              geom_density(alpha = 0.5, position = "identity", 
+              geom_histogram(alpha = 0.5, position = "identity", 
                              data = dfrbarDalt)+#,
                              # binwidth=diff(range(dfrbarDalt$value))/30) +
 
