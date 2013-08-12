@@ -219,7 +219,7 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   #   cat("Populations:",pop.info,"\n")
   #   cat("num.info:",num.info,"\n")
   
-  gena <- read.csv(genalex, header=TRUE, skip=2)
+  gena <- read.csv(genalex, header=TRUE, skip=2, check.names = FALSE)
   
   # Removing all null columns 
   if(!is.na(which(is.na(gena[1, ]))[1])){

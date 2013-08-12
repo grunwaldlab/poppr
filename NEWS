@@ -3,9 +3,15 @@ poppr 1.0.3
 IMPROVEMENTS
 * Optimized internal sampling function to run up to 2x faster. 
 
+NEW FEATURES
+* Function `informloci` will remove phylogenetically uninformative loci.
+
 NAMESPACE
 * Now importing specific functions from igraph and ape due to dependency issues.
-* Removed igraph, ape, ggplot2, and phangorn form "Dependencies", but keeping them in "Imports"
+* Removed igraph, ape, ggplot2, and phangorn form "Dependencies", but keeping them in "Imports".
+
+BUG FIXES
+* `read.genalex` will no longer insert an "X" in front of loci with numeric names. 
 
 poppr 1.0.2
 ===========

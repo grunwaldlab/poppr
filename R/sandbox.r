@@ -42,8 +42,6 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
-
-
 new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   # The first two lines from a genalex file contain all of the information about
   # the structure of the file (except for ploidy and geographic info)
@@ -241,53 +239,6 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(res.gid)
 }
 
-informloci <- function(pop, min_ind = 2, quiet = FALSE){
-  if(!is.genind(pop)){
-    stop("This function only works on genind objects.")
-  }
-  if(pop@type == "PA"){
-    
-    locivals <- apply(pop@tab, 2, sum) %in% min_ind:(nInd(pop) - min_ind)
-    if(all(locivals == TRUE)){
-      cat("No sites found with fewer than", min_ind, 
-          "different individuals.\n", fill = 80)
-    }
-    else{
-      cat(sum(!locivals), "uninformative", 
-          ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
-          pop@loc.names[!locivals],"\n", fill = 80)
-    }
-    return(pop[, locivals])
-  }
-  else{
-    locivals <- apply(as.loci(pop)[-1], 2, testable, min_ind)
-    if(all(locivals == TRUE)){
-      cat("No sites found with fewer than", min_ind, 
-          "different individuals.\n", fill = 80)
-    }
-    else{
-      cat(sum(!locivals), "uninformative", 
-          ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
-          pop@loc.names[!locivals],"\n", fill = 80)
-    }
-    return(pop[, loc = names(pop@loc.names[locivals])])
-  }
-}
-
-testable <- function(loc, min_ind){
-  tab <- table(loc)
-  if(length(tab) > 2){
-    return(TRUE)
-  }
-  else{
-    if(length(tab) < 2){
-      return(FALSE)
-    }
-    else{
-      return(ifelse(any(tab < min_ind), FALSE, TRUE))        
-    }
-  }
-}
 
 
 
