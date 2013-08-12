@@ -896,6 +896,35 @@ ia(nan1)
 replicate(10, ia(shufflepop(nan1, method = 3), quiet=TRUE))
 @
 You could use this method to replicate the resampling 999 times and then create a histogram to visualize a distribution of what would happen under different assumptions of panmixia.
+
+\subsection{Cut It Out!  \{removing uninformative loci\}}\label{data.manip:informloci}
+ \tab\tab Phylogenetically uninformative loci are those that have only one sample differentiating from the rest. This can lead to biased results when using multilocus analyses such as the index of association (See \ref{index:iard} and \ref{summary}). These nuisance loci can be removed with the following function.
+\subsubsection{Function: informloci}\label{data.manip:informloci:informloci}
+\begin{quote}
+Default Command:\\
+\texttt{informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)}
+\end{quote}
+  \begin{itemize}
+    \item \texttt{pop -} a \texttt{genind} object.
+    \item \texttt{cutoff -} this represents the minimum fraction of individuals needed for a locus to be considered informative. The default is set to $2/n$ with $n$ being the number of individuals in the data set (represented by the \textit{adegenet} function \texttt{nInd}). Essentially, this means that any locus with fewer than 2 observations differing will be removed. The user can also specify a fraction of observations for the cutoff (eg. 0.05).
+    \item \texttt{quiet -} if \texttt{TRUE}, nothing will be printed to the screen, if \texttt{FALSE}, the cutoff value in percentage and number of individuals will be printed as well as the names of the uninfomrative loci found. 
+  \end{itemize}
+
+Here's a quick example.
+<<inform.H3N2.1, eval = FALSE>>=
+data(H3N2)
+H.five <- informloci(H3N2, cutoff = 0.05)
+@
+<<inform.H3N2.2, echo = FALSE>>=
+res <- c(157,177,233,243,262,267,280,303,313,327,357,382,384,399,412,418,424,425,429,433,451,470,529,546,555,557,564,576,592,595,597,602,612,627,642,647,648,654,658,663,667,681,717,806,824,837,882)
+cat("cutoff value: 5 percent ( 95 individuals ).\n","47 uninfomative loci found:", res, fill = 80)
+@
+Now what happens when you have all informative loci:
+<<inform.nancy>>=
+data(nancycats)
+naninform <- informloci(nancycats, cutoff = 0.05)
+@
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1418,7 +1447,7 @@ greycurve(glim = c(0.2, 0.9), gadj=15, gweight=2)
 \newpage
 
 \subsubsection{Function: bruvo.msn}\label{index:trees:bruvo.msn}
-\tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to.
+\tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to using the package \textit{igraph} (type \texttt{help("plot.igraph")} for details).
 \begin{quote}
 Default Command:\\
 \texttt{bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All",\\ 
@@ -1840,6 +1869,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL) (Section \ref{data.manip:divide:popsub})
 \item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1) (Section \ref{data.manip:cc:clonecorrect})
 \item shufflepop(pop, method = 1) (Section \ref{data.manip:shuffle:shufflepop})
+\item informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE) (Section \ref{data.mainp:informloci:informloci})
 \item mlg(pop, quiet = FALSE) (Section \ref{mlg:mlg:mlg})
 \item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE) (Section \ref{mlg:cross:mlg.crosspop})
 \item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE) (Section \ref{mlg:table:mlg.table})
