@@ -977,3 +977,16 @@ guesslengths <- function(vec){
     return(1)
   }
 }
+#==============================================================================#
+# Specifically used to find loci with an excessive number of the same genotype.
+#
+# Public functions utilizing this function:
+# # informloci
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+test_table <- function(loc, min_ind, n){
+  tab <- table(loc)
+  return(ifelse(any(tab > n - min_ind), FALSE, TRUE))
+}
