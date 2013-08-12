@@ -213,8 +213,8 @@ bruvo.dist <- function(pop, replen=c(2)){
 #' bruvo.boot(popsub(nancycats, 1), replen=ssr)
 #'
 #==============================================================================#
-#' @importFrom phangorn upgma
-#' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo
+#' @importFrom phangorn upgma  midpoint
+#' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize nodelabels tiplabels
 #   /     \
 #   |=(o)=|
 #   \     /
@@ -400,7 +400,7 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
 #' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
 #' }
 #==============================================================================#
-#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<-
+#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph
 bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
