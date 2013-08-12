@@ -1513,8 +1513,24 @@ pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7,
 \end{figure}
 \setkeys{Gin}{width=0.5\textwidth}
 
+The output, as mentioned earlier, is a list containing the graph constructed via the \textit{igraph} package, a vector of the population names and a vector of colors representing the populations.
+<<bruvo_msn_igraph>>=
+library(igraph)
+pc.msn
+@
+
 Note that the thickness of the edges (the lines that are connecting the dots) is representative of relatedness between individuals, but the lengths do not necessarily mean anything due to the fact that with a larger data sets, displaying lengths proportional to relatedness would be impossible to draw on a 2D surface. Interpreting these data would show that MLG 9 has 5 individuals from all four populations and that it is most closely related to MLG 7, whereas the most distantly related connection exists between MLG 25 and MLG 26.
 \newpage
+Since a graph can be represented in many ways, you might want to play around with different layouts using the \texttt{layout()} function in \textit{igraph}. Type \texttt{help("layout", package = igraph)} for details. Below is the code for reconstructing the previous graph using the output:
+<<bruvo_msn_reconstruct, eval=FALSE>>=
+set.seed(9005)
+library(igraph)
+plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3, vertex.label.cex=0.7, 
+     vertex.label.dist=-0.5,)
+legend(-1.55, 1, bty = "n", cex = 0.75, legend = pc.msn$populations, 
+       title = "Populations", fill = pc.msn$colors, border = NULL)
+@
+
 \subsubsection{Function: poppr.msn}\label{index:trees:poppr.msn}
 
 \tab\tab Use this function to draw a minimum spanning network from your data set and a distance matrix derived from your data set. Since there are hundreds of distances that can be calculated for genetic data, and since I want to be able to graduate at some point in this decade, functions to automatically calculate distances and draw the minimum spanning networks will be few and far between. This function is an attempt to meet the user halfway and draw a minimum spanning network provided that the user has supplied two things:
@@ -1905,7 +1921,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL) (Section \ref{data.manip:divide:popsub})
 \item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1) (Section \ref{data.manip:cc:clonecorrect})
 \item shufflepop(pop, method = 1) (Section \ref{data.manip:shuffle:shufflepop})
-\item informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE) (Section \ref{data.mainp:informloci:informloci})
+\item informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE) (Section \ref{data.manip:informloci})
 \item mlg(pop, quiet = FALSE) (Section \ref{mlg:mlg:mlg})
 \item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE) (Section \ref{mlg:cross:mlg.crosspop})
 \item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE) (Section \ref{mlg:table:mlg.table})
