@@ -1,7 +1,8 @@
 poppr 1.0.3
 ===========
 IMPROVEMENTS
-* Optimized internal sampling function to run up to 2x faster. 
+* Optimized internal sampling function to run up to 2x faster.
+* Utilized rmultinom function to increase speed of bootstrap sampling methods for shufflepop and ia. 
 
 NEW FEATURES
 * Function `informloci` will remove phylogenetically uninformative loci.
