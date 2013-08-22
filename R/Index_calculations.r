@@ -166,7 +166,7 @@
 #' 				clonecorrect=TRUE, hier="country", dfname="x")
 #' }
 #==============================================================================#
-#' @import adegenet pegas vegan ggplot2
+#' @import adegenet pegas ggplot2 vegan
 poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet="minimal",
                   clonecorrect=FALSE, hier=c(1), dfname="population_hierarchy", 
@@ -241,13 +241,13 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
     
     MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
     N.vec <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)
-    # Shannon-Weiner vegan:::diversity index.
+    # Shannon-Weiner diversity index.
     H <- vegan::diversity(pop.mat)
     # E_1, Pielou's evenness.
     # J <- H / log(rowSums(pop.mat > 0))
     # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
     G <- vegan::diversity(pop.mat, "inv")
-    Hexp <- (N.vec/(N.vec-1))*vegan:::diversity(pop.mat, "simp")
+    Hexp <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
     # E_5
     E.5 <- (G-1)/(exp(H)-1)
     # rarefaction giving the standard errors. This will use the minimum pop size
@@ -291,13 +291,13 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
   else { 
     MLG.vec <- mlg(pop, quiet=TRUE)
     N.vec <- length(pop@ind.names)
-    # Shannon-Weiner vegan:::diversity index.
-    H <- vegan:::diversity(pop.mat)
+    # Shannon-Weiner diversity index.
+    H <- vegan::diversity(pop.mat)
     # E_1, Pielou's evenness.
     # J <- H / log(rowSums(pop.mat > 0))
     # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-    G <- vegan:::diversity(pop.mat, "inv")
-    Hexp <- (N.vec/(N.vec-1))*vegan:::diversity(pop.mat, "simp")
+    G <- vegan::diversity(pop.mat, "inv")
+    Hexp <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
     # E_5
     E.5 <- (G-1)/(exp(H)-1)
     # rarefaction giving the standard errors. No population structure means that
