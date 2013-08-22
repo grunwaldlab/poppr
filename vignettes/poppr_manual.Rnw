@@ -1034,6 +1034,7 @@ pop(H.year) <- H.year$other$x$year
 summary(H.year) # Check the data to make sure it's correct.
 @
 <<mlgrare2, eval=FALSE>>=
+library(vegan)
 H.year <- mlg.table(H.year, bar=FALSE)
 rarecurve(H.year, ylab="Multilocus genotypes expected", sample=min(rowSums(H.year)))
 @
@@ -1042,11 +1043,12 @@ rarecurve(H.year, ylab="Multilocus genotypes expected", sample=min(rowSums(H.yea
   \caption{\footnotesize An example of a rarefaction curve produced using a MLG table.}
   \label{rarecurve}
 <<mlgrareplot, fig=TRUE, echo=FALSE, results=hide>>=
+library(vegan)
 H.year <- mlg.table(H.year, bar=FALSE)
 rarecurve(H.year, ylab="Multilocus Genotypes Expected", sample=min(rowSums(H.year)))
 @
 \end{figure}
-%\newpage
+\newpage
 
 The minimum value from the \textit{base} function \texttt{rowSums()} of the table represents the minimum common sample size of all populations. Setting the ``sample" flag draws the horizontal and vertical lines you see on the graph. The intersections of these lines correspond to the numbers you would find if you ran the function \texttt{poppr} on this data set (under the column ``\texttt{eMLG}").
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

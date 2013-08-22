@@ -421,9 +421,9 @@ $files
  [6] "/path/to/R/adegenet/files/nancycats.gen"    
  [7] "/path/to/R/adegenet/files/nancycats.gtx"    
  [8] "/path/to/R/adegenet/files/nancycats.str"    
- [9] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
-[10] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
-[11] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
+ [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+[10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
+[11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
 [12] "/path/to/R/adegenet/files/usflu.fasta"      
 
 $path
@@ -1711,12 +1711,12 @@ These shuffling schemes have been implemented for the index of association, but 
 > replicate(10, ia(shufflepop(nan1, method = 3), quiet=TRUE))
 \end{Sinput}
 \begin{Soutput}
-             [,1]         [,2]        [,3]       [,4]       [,5]       [,6]        [,7]
-Ia    -0.29112163 -0.053843659 -0.17996769 0.14010641 0.30063966 0.21221103 -0.22694841
-rbarD -0.03681503 -0.006945724 -0.02273945 0.01789136 0.03811873 0.02683328 -0.02906914
-            [,8]        [,9]       [,10]
-Ia    0.40814607 -0.24815362 -0.40796307
-rbarD 0.05292946 -0.03176451 -0.05222284
+             [,1]        [,2]        [,3]        [,4]        [,5]        [,6]       [,7]
+Ia    0.015572859 0.078727506 -0.10168980 -0.30046022 -0.26021576 -0.25668449 0.25675321
+rbarD 0.001964457 0.009966246 -0.01284299 -0.03823542 -0.03314723 -0.03298552 0.03244442
+             [,8]        [,9]        [,10]
+Ia    -0.28757799 -0.10313192 -0.071845794
+rbarD -0.03681791 -0.01306466 -0.009271283
 \end{Soutput}
 \end{Schunk}
 You could use this method to replicate the resampling 999 times and then create a histogram to visualize a distribution of what would happen under different assumptions of panmixia.
@@ -1986,6 +1986,7 @@ L109 L110 L111 L112 L113 L114 L115 L116 L117 L118 L119 L120 L121 L122 L123 L124 
 \end{Schunk}
 \begin{Schunk}
 \begin{Sinput}
+> library(vegan)
 > H.year <- mlg.table(H.year, bar=FALSE)
 > rarecurve(H.year, ylab="Multilocus genotypes expected", sample=min(rowSums(H.year)))
 \end{Sinput}
@@ -1996,7 +1997,7 @@ L109 L110 L111 L112 L113 L114 L115 L116 L117 L118 L119 L120 L121 L122 L123 L124 
   \label{rarecurve}
 \includegraphics{poppr_manual-mlgrareplot}
 \end{figure}
-%\newpage
+\newpage
 
 The minimum value from the \textit{base} function \texttt{rowSums()} of the table represents the minimum common sample size of all populations. Setting the ``sample" flag draws the horizontal and vertical lines you see on the graph. The intersections of these lines correspond to the numbers you would find if you ran the function \texttt{poppr} on this data set (under the column ``\texttt{eMLG}").
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2650,8 +2651,40 @@ Often, minimum spanning networks are the preferred way to visualize Bruvo's dist
 \end{figure}
 \setkeys{Gin}{width=0.5\textwidth}
 
+The output, as mentioned earlier, is a list containing the graph constructed via the \textit{igraph} package, a vector of the population names and a vector of colors representing the populations.
+\begin{Schunk}
+\begin{Sinput}
+> library(igraph)
+> pc.msn
+\end{Sinput}
+\begin{Soutput}
+$graph
+IGRAPH UNW- 26 25 -- 
++ attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color (v/x), label
+  (v/c), weight (e/n), color (e/c), width (e/n)
+
+$populations
+[1] "1" "2" "3" "4"
+
+$colors
+[1] "#0000FF" "#5555AA" "#AAAA55" "#FFFF00"
+\end{Soutput}
+\end{Schunk}
+
 Note that the thickness of the edges (the lines that are connecting the dots) is representative of relatedness between individuals, but the lengths do not necessarily mean anything due to the fact that with a larger data sets, displaying lengths proportional to relatedness would be impossible to draw on a 2D surface. Interpreting these data would show that MLG 9 has 5 individuals from all four populations and that it is most closely related to MLG 7, whereas the most distantly related connection exists between MLG 25 and MLG 26.
 \newpage
+Since a graph can be represented in many ways, you might want to play around with different layouts using the \texttt{layout()} function in \textit{igraph}. Type \texttt{help("layout", package = igraph)} for details. Below is the code for reconstructing the previous graph using the output:
+\begin{Schunk}
+\begin{Sinput}
+> set.seed(9005)
+> library(igraph)
+> plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3, vertex.label.cex=0.7, 
++      vertex.label.dist=-0.5,)
+> legend(-1.55, 1, bty = "n", cex = 0.75, legend = pc.msn$populations, 
++        title = "Populations", fill = pc.msn$colors, border = NULL)
+\end{Sinput}
+\end{Schunk}
+
 \subsubsection{Function: poppr.msn}\label{index:trees:poppr.msn}
 
 \tab\tab Use this function to draw a minimum spanning network from your data set and a distance matrix derived from your data set. Since there are hundreds of distances that can be calculated for genetic data, and since I want to be able to graduate at some point in this decade, functions to automatically calculate distances and draw the minimum spanning networks will be few and far between. This function is an attempt to meet the user halfway and draw a minimum spanning network provided that the user has supplied two things:
@@ -3118,7 +3151,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL) (Section \ref{data.manip:divide:popsub})
 \item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1) (Section \ref{data.manip:cc:clonecorrect})
 \item shufflepop(pop, method = 1) (Section \ref{data.manip:shuffle:shufflepop})
-\item informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE) (Section \ref{data.mainp:informloci:informloci})
+\item informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE) (Section \ref{data.manip:informloci})
 \item mlg(pop, quiet = FALSE) (Section \ref{mlg:mlg:mlg})
 \item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE) (Section \ref{mlg:cross:mlg.crosspop})
 \item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE) (Section \ref{mlg:table:mlg.table})
