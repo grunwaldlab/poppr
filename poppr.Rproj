@@ -13,7 +13,7 @@ RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 BuildType: Package
-PackageInstallArgs: --no-multiarch
+PackageInstallArgs: --no-multiarch --with-keep.source
 PackageBuildArgs: --resave-data --compact-vignettes=gs+qpdf
 PackageBuildBinaryArgs: --html, --latex, --build
 PackageCheckArgs: --as-cran --no-build-vignettes
