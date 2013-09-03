@@ -11,7 +11,7 @@ genind object and offers the following implementations:
 - drawing of dendrograms with bootstrap support for Bruvo's distance
 - drawing of minimum spanning networks for genetic distances
 - calculation of the index of association (![equation](http://latex.codecogs.com/gif.latex?I_A)) or ![equation](http://latex.codecogs.com/gif.latex?\\bar{r}_d)
-- batch processing on any server that has R ( &ge; 2.15.0) installed
+- batch processing on any server that has R ( &ge; 2.15.1) installed
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
