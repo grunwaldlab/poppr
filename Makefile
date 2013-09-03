@@ -8,11 +8,11 @@ all: check clean
 
 build:
 	cd ..;\
-	R CMD build $(PKGSRC)
+	R CMD build $(PKGSRC) --resave-data --compact-vignettes=gs+qpdf
 
 install: build
 	cd ..;\
-	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz --resave-data --compact-vignettes=gs+qpdf
+	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz 
 
 check: build
 	cd ..;\
