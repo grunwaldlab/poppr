@@ -4,7 +4,7 @@ PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename `pwd`)
 
-all: news check clean
+all: check clean
 
 build:
 	cd ..;\
@@ -12,7 +12,7 @@ build:
 
 install: build
 	cd ..;\
-	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
+	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz --resave-data --compact-vignettes=gs+qpdf
 
 check: build
 	cd ..;\
