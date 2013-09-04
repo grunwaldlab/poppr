@@ -72,6 +72,12 @@
 #'
 #' @export
 #' @author Zhian N. Kamvar
+#'
+#' @references
+#' Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
+#' simple method for the calculation of microsatellite genotype distances irrespective
+#' of ploidy level. Molecular Ecology, 13(7):2101-2106, 2004.
+#'
 #' @examples
 #' # Please note that the data presented is assuming that the nancycat dataset 
 #' # contains all dinucleotide repeats, it most likely is not an accurate
@@ -199,6 +205,12 @@ bruvo.dist <- function(pop, replen=c(2)){
 #'
 #' @export
 #' @author Javier F. Tabima, Zhian N. Kamvar
+#'
+#' @references
+#' Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
+#' simple method for the calculation of microsatellite genotype distances irrespective
+#' of ploidy level. Molecular Ecology, 13(7):2101-2106, 2004.
+#'
 #' @examples
 #' # Please note that the data presented is assuming that the nancycat dataset 
 #' # contains all dinucleotide repeats, it most likely is not an accurate
@@ -358,6 +370,12 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
 #' 
 #' @export
 #' @author Javier F. Tabima, Zhian N. Kamvar
+#'
+#' @references
+#' Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
+#' simple method for the calculation of microsatellite genotype distances irrespective
+#' of ploidy level. Molecular Ecology, 13(7):2101-2106, 2004.
+#'
 #' @examples
 #' 
 #' # Load the data set.
