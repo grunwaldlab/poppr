@@ -528,12 +528,21 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   }
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
-  
+  # def.par <- par(no.readonly = TRUE)
+  # layout(matrix(1:3,ncol=3), width = c(1,3,1))
+  # gcol <- gray(adjustcurve(sort(E(mst)$weight), glim=glim, correction=gadj, 
+  #                                    show=FALSE))
+  # plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'GREY')
+  legend(-1.55, 1, bty = "n", cex = 0.75, legend = pop$pop.names, 
+         title = "Populations", fill = color, border = NULL)
   plot(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
        vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
        vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-  legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
-         title = "Populations", fill = color, border = NULL)
+  # legend_image <- as.raster(matrix(gcol, ncol=1))
+  # plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'GREY')
+  # text(x= 1.5, y = seq(0,1,l=5), labels = round(quantile(E(mst)$weight), 3))
+  # rasterImage(legend_image, 0, 0, 1,1)
+  # par(def.par)
   E(mst)$width <- edgewidth
   V(mst)$size <- mlg.number
   V(mst)$shape <- "pie"
