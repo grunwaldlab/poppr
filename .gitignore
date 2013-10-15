@@ -9,3 +9,6 @@ poppr.Rproj
 src-x86_64
 src-i386
 README.html
+vignettes/*.gz
+vignettes/poppr_manual-*.pdf
+vignettes/*.log

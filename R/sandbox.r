@@ -240,6 +240,22 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 }
 
 
+pair_ia <- function(pop){
+
+  if(pop@type == "codom"){
+    pop_loci <- seploc(pop)
+    loci_pairs <- combn(pop@loc.names, 2)
+    pair_ia_vector <- apply(loci_pairs, 2, function(x) .Ia.Rd(pop_loci[x]))
+    colnames(pair_ia_vector) <- apply(loci_pairs, 2, paste, collapse = ":")
+  }
+  else{
+    loci_pairs <- combn(1:nLoc(pop), 2)
+    pair_ia_vector <- apply(loci_pairs, 2, function(x) .PA.Ia.Rd(pop[, x], missing = "ignore"))
+    colnames(pair_ia_vector) <- apply(combn(pop@loc.names, 2), 2, paste, collapse = ":")
+  }
+  rownames(pair_ia_vector) <- c("Ia", "rbarD")    
+  return(pair_ia_vector)
+}
 
 
 .new.permut.shuff <- function(mat, ploidy = 2){
@@ -279,6 +295,16 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(newmat)
 }
 
+poppr_pair_ia <- function(pop){
+  if(is.null(pop(pop))){
+    return(pair_ia(pop))
+  }
+  pops <- seppop(pop, drop = FALSE)
+  loci_pairs <- choose(nLoc(pop), 2)
+  res_mat <- matrix(0.5, 2, loci_pairs)
+  pops_array <- vapply(pops, pair_ia, res_mat)
+  return(pops_array)
+}
 
 .new.diploid.shuff <- function(n, ploidy = 2, weights){
   return(t(rmultinom(n, size = ploidy, prob = weights))/ ploidy)

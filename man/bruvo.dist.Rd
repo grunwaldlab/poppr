@@ -61,10 +61,11 @@ heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
   Zhian N. Kamvar
 }
 \references{
-  Bruvo, R., Michiels, N. K., D'Sousa, T. G., and
-  Schulenberg, H. (2004) A simple method for calculation of
-  microsatellite genotypes irrespective of ploidy level.
-  \emph{Molecular Ecology} \strong{13}, 2101–2106.
+  Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza,
+  and Hinrich Schulenburg. A simple method for the
+  calculation of microsatellite genotype distances
+  irrespective of ploidy level. Molecular Ecology,
+  13(7):2101-2106, 2004.
 }
 \seealso{
   \code{\link{nancycats}}

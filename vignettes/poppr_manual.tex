@@ -421,9 +421,9 @@ $files
  [6] "/path/to/R/adegenet/files/nancycats.gen"    
  [7] "/path/to/R/adegenet/files/nancycats.gtx"    
  [8] "/path/to/R/adegenet/files/nancycats.str"    
- [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
-[10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
-[11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+ [9] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+[10] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+[11] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
 [12] "/path/to/R/adegenet/files/usflu.fasta"      
 
 $path
@@ -2134,10 +2134,31 @@ So, we've gotten this far, yet we haven't actually seen what the genotypes look 
 \end{Sinput}
 \end{Schunk}
 \begin{Schunk}
-\begin{Sinput}
-> H.df <- genind2df(H3N2[, loc=names(H3N2@loc.names)[1:15]])
-> H.df[H.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
-\end{Sinput}
+\begin{Soutput}
+                    pop 6 17 39 42 45 51 60 72 73 90 108 123 129 134
+CY026119        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
+CY026120        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
+CY026121        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
+CY026122        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
+CY026131        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
+CY026132        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
+CY026135        Austria a  a  g  c  g  c  g  g  c  g   a   g   t   g
+EU502462        Germany a  a  g  c  g  c  g  g  c  g   a   g   t   g
+EU502463         Greece a  a  g  c  g  c  g  g  c  g   a   g   t   g
+EU502464         Norway a  a  g  c  g  c  g  g  c  g   a   g   t   g
+EU501513          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
+AB243868          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
+DQ883618         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
+DQ883619         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
+DQ883620         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
+DQ883628         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
+EU501609        Germany a  a  g  c  t  c  a  g  a  g   t   g   t   g
+EU501642          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
+EU501643          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
+EU501735 United Kingdom a  a  g  c  t  c  a  g  a  g   t   g   t   g
+EU501742          Japan a  a  g  c  t  c  a  g  a  g   t   g   t   g
+EU502513         Norway a  a  g  c  t  c  a  g  a  g   t   g   t   g
+\end{Soutput}
 \end{Schunk}
 Notice that there seems to be a clear separation between the SNPs of the first 10 isolates and the rest? This is no coincidence. Take a look at the output of our sub-setting.
 \begin{Schunk}
@@ -2215,7 +2236,7 @@ And now we can visualize the largest ten MLG complexes using \textit{ggplot2}'s 
 \section{Index and Distance Calculations}\label{index}
 \subsection{The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\bar r_d$\}}\label{index:iard}
 
-\tab\tab The index of association was originally developed as a measure of multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to detect signatures of sexual reproduction and population structure \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with the number of loci, and was not suitable to comparisons across studies \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for this scaling and forces the index to lie between 0 (linkage equilibrium) and 1 (full disequilibrium). $I_A$ has previously been implemented in a couple of programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN} \cite{Haubold:2000}, but these are programs that are no longer well supported, can be difficult to install and do not run in batch mode. 
+\tab\tab The index of association was originally developed as a measure of multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to detect signatures of sexual reproduction and population structure \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with the number of loci, and was not suitable to comparisons across studies \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for this scaling and forces the index to lie between 0 (linkage equilibrium) and 1 (full disequilibrium). $I_A$ has previously been implemented in a couple of programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN} \cite{Haubold:2000}. While both of these programs are still available for download, \textit{multilocus} is no longer actively supported, and \textit{LIAN}, despite its speed, is only appropriate for haplotypic data. Both of these programs each require one specific file format, and, until recently\footnote{LIAN 3.6 allows the user to run multiple contiguous data sets within a single file or across multiple files. It is impossible to run MULTILOCUS in batch.}, neither of these programs had an internal ability to run in batch across multiple populations within a file or multiple files within a directory in the same way that poppr can (see footnote).
 
 It is important to note that for this algorithm, all missing values are treated in the same way as \textit{multilocus} in that all missing alleles are imputed to be the same as the alleles they are being compared to. Depending on the percent missing data in your data set, this might influence the statistic. If you have a lot of missing data, consider using the \texttt{missing} flag in this function.
 \subsubsection{Function: ia}\label{index:iard:ia}
@@ -3010,7 +3031,7 @@ Of course, Agapow and Burt showed that this index increases steadily with the nu
 \beq
 \label{eq:r_d}
 \bar{r_d} = \frac{V_O - V_E}
-{2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{\substack{k=1\\ j<k}}^{m}\sqrt{var_j\cdot{}var_k}}
+{2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
 \eeq
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

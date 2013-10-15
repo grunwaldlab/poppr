@@ -74,6 +74,19 @@ lapply(seppop(nancycats), ia, sample=999)
 \author{
   Zhian N. Kamvar
 }
+\references{
+  Paul-Michael Agapow and Austin Burt. Indices of
+  multilocus linkage disequilibrium. \emph{Molecular
+  Ecology Notes}, 1(1-2):101-102, 2001
+
+  A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus
+  structure of natural populations of hordeum spontaneum.
+  \emph{Genetics}, 96(2):523-536, 1980.
+
+  J M Smith, N H Smith, M O'Rourke, and B G Spratt. How
+  clonal are bacteria? Proceedings of the National Academy
+  of Sciences, 90(10):4384-4388, 1993.
+}
 \seealso{
   \code{\link{poppr}}, \code{\link{missingno}},
   \code{\link{import2genind}}, \code{\link{read.genalex}},
