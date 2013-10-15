@@ -72,6 +72,13 @@ bruvo.boot(popsub(nancycats, 1), replen=ssr)
 \author{
   Javier F. Tabima, Zhian N. Kamvar
 }
+\references{
+  Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza,
+  and Hinrich Schulenburg. A simple method for the
+  calculation of microsatellite genotype distances
+  irrespective of ploidy level. Molecular Ecology,
+  13(7):2101-2106, 2004.
+}
 \seealso{
   \code{\link{nancycats}}, \code{\link{upgma}},
   \code{\link{nj}}, \code{\link{boot.phylo}},

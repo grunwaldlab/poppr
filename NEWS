@@ -20,7 +20,7 @@ BUG FIXES
 * Fixed bug in diss.dist function that would return an inflated distance for haploids.
 
 DOCUMENTATION
-* Added explaination for the index of association in poppr_manual.
+* Added explanation for the index of association in poppr_manual.
 * Expanded installation section to include installation instructions from github.
 
 MISC
@@ -29,7 +29,7 @@ MISC
 poppr 1.0.1
 ===========
 IMPROVEMENTS
-* Rlgorithm for the index of association was updated to increase speed.
+* Algorithm for the index of association was updated to increase speed.
 
 BUG FIXES
 * Removed unnecessary rounding factor for missing data in `bruvo.dist`.
@@ -56,7 +56,7 @@ NEW FEATURES
 * information printed to screen from `missingno` and `mlg.crosspop` will now be wrapped to 80 characters.
 
 BUG FIXES
-* `poppr` will now be able to correctly recognise GenAlEx files with both geographic and regional data.
+* `poppr` will now be able to correctly recognize GenAlEx files with both geographic and regional data.
 * calculation of the index of association on P/A data with missing values will no longer return an error. 
 
 poppr 0.4

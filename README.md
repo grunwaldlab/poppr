@@ -11,22 +11,27 @@ genind object and offers the following implementations:
 - drawing of dendrograms with bootstrap support for Bruvo's distance
 - drawing of minimum spanning networks for genetic distances
 - calculation of the index of association (![equation](http://latex.codecogs.com/gif.latex?I_A)) or ![equation](http://latex.codecogs.com/gif.latex?\\bar{r}_d)
-- batch processing on any server that has R (>2.15.0) installed
+- batch processing on any server that has R ( &ge; 2.15.1) installed
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
+
+[![Build Status](https://travis-ci.org/poppr/poppr.png?branch=pair_ia)](https://travis-ci.org/poppr/poppr?branch=pair_ia)
+If the image above says "Passing", then that means it should be safe to install with the latest version of R. If it does not say "Passing", I am probably trying to fix whatever problem is causing it as fast as I can.
 
 ## Installation
 
 ### From CRAN
 
-Binary versions for mac and windows are available for R 3.0 [**here**](http://cran.r-project.org/web/packages/poppr/index.html).
+Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/web/packages/poppr/index.html).
 
-To install, make sure R is updated to the latest version, and in your console, type:
+To install, make sure R is at least version 2.15.1 (the authors recommend 3.0), and in your console, type:
 
-    install.packages("poppr")
-    
-If you do not want to upgrade to R 3.0 just yet, see about installing from github below.
+```s
+install.packages("poppr")
+```
+
+If you want the absolute latest version of *poppr*, see about installing from github below.
 
 ***
 
@@ -40,23 +45,29 @@ To install this package from github, make sure you have the following:
 
 First, install the required dependencies:
 
-    install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
+```s
+install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
+```
 
 Now you can use the `install_github()` function:
 
 #### For the latest stable release:    
 
-    library(devtools)
-    install_github("poppr", "poppr")
-    library(poppr)
-    
+```s
+library(devtools)
+install_github("poppr", "poppr")
+library(poppr)
+```
+
 #### For the bleeding edge development version:
 
-    library(devtools)
-    install_github("poppr", "poppr", ref = "devel")
-    library(poppr)
+```s
+library(devtools)
+install_github("poppr", "poppr", ref = "devel")
+library(poppr)
+```
 
-You can view the manual by typing: `vignette("poppr_manual")` after installation or by clicking [here](http://grunwaldlab.cgrb.oregonstate.edu/sites/default/files/u5/poppr_manual.pdf)
+You can view the manual by typing: `vignette("poppr_manual")` after installation or by clicking [**here**](http://grunwaldlab.cgrb.oregonstate.edu/sites/default/files/u5/poppr_manual.pdf)
 
 Be sure to visit our [Webpage](http://grunwaldlab.cgrb.oregonstate.edu/poppr-r-package-population-genetics) with FAQs and tutorials coming soon.
 	
