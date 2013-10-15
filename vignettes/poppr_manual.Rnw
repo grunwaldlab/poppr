@@ -1123,7 +1123,7 @@ So, we've gotten this far, yet we haven't actually seen what the genotypes look 
 H.df <- genind2df(H3N2)
 H.df[H.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
 @
-<<df hashing_echo, eval=FALSE>>=
+<<df hashing_eval, echo=FALSE>>=
 H.df <- genind2df(H3N2[, loc=names(H3N2@loc.names)[1:15]])
 H.df[H.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
 @
@@ -1168,14 +1168,7 @@ qplot(y=MLG, x=Population, data=df2, color=Count, size=Count) +
 \section{Index and Distance Calculations}\label{index}
 \subsection{The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\bar r_d$\}}\label{index:iard}
 
-\tab\tab The index of association was originally developed as a measure of multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to detect signatures of sexual reproduction and population structure \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with the number of loci, and was not suitable to comparisons across studies \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for this scaling and forces the index to lie between 0 (linkage equilibrium) and 1 (full disequilibrium). $I_A$ has previously been implemented in a couple of programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN} \cite{Haubold:2000}. While both of these programs are still available for download, \textit{multilocus}
-is no longer actively supported, and \textit{LIAN}, despite its speed, is only
-appropriate for haplotypic data. Both of these programs each require one
-specific file format, and neither of these programs have an internal
-ability to run in batch across multiple populations within a file or
-multiple files within a directory\footnote{It is possible to run LIAN in batch 
-across multiple files if the user is comfortable with shell scripting. It is 
-impossible to run MULTILOCUS in batch.}.
+\tab\tab The index of association was originally developed as a measure of multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to detect signatures of sexual reproduction and population structure \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with the number of loci, and was not suitable to comparisons across studies \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for this scaling and forces the index to lie between 0 (linkage equilibrium) and 1 (full disequilibrium). $I_A$ has previously been implemented in a couple of programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN} \cite{Haubold:2000}. While both of these programs are still available for download, \textit{multilocus} is no longer actively supported, and \textit{LIAN}, despite its speed, is only appropriate for haplotypic data. Both of these programs each require one specific file format, and, until recently\footnote{LIAN 3.6 allows the user to run multiple contiguous data sets within a single file or across multiple files. It is impossible to run MULTILOCUS in batch.}, neither of these programs had an internal ability to run in batch across multiple populations within a file or multiple files within a directory in the same way that poppr can (see footnote).
 
 It is important to note that for this algorithm, all missing values are treated in the same way as \textit{multilocus} in that all missing alleles are imputed to be the same as the alleles they are being compared to. Depending on the percent missing data in your data set, this might influence the statistic. If you have a lot of missing data, consider using the \texttt{missing} flag in this function.
 \subsubsection{Function: ia}\label{index:iard:ia}
@@ -1660,7 +1653,7 @@ You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal
 set.seed(2001)
 poppr(nancycats, sublist=5:6, total=FALSE, sample=999, method=3, quiet=TRUE, hist=FALSE)
 @
-<<nancy_example_show, echo=FALSE>>=
+<<nancy_example_eval, echo=FALSE>>=
 set.seed(2001)
 nan_ex <- poppr(nancycats, sublist=5:6, total=FALSE, sample=0, method=3, quiet=TRUE, hist=FALSE)
 cbind(nan_ex[1:10],list(p.Ia = c(0.599, 0.064), nan_ex[11], list(p.rD = c(0.599, 0.065), nan_ex[12])))
@@ -1774,7 +1767,7 @@ Of course, Agapow and Burt showed that this index increases steadily with the nu
 \beq
 \label{eq:r_d}
 \bar{r_d} = \frac{V_O - V_E}
-{2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{\substack{k=1\\ j<k}}^{m}\sqrt{var_j\cdot{}var_k}}
+{2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
 \eeq
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
