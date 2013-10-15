@@ -1522,7 +1522,7 @@ pc.msn
 @
 
 Note that the thickness of the edges (the lines that are connecting the dots) is representative of relatedness between individuals, but the lengths do not necessarily mean anything due to the fact that with a larger data sets, displaying lengths proportional to relatedness would be impossible to draw on a 2D surface. Interpreting these data would show that MLG 9 has 5 individuals from all four populations and that it is most closely related to MLG 7, whereas the most distantly related connection exists between MLG 25 and MLG 26.
-\newpage
+%\newpage
 Since a graph can be represented in many ways, you might want to play around with different layouts using the \texttt{layout()} function in \textit{igraph}. Type \texttt{help("layout", package = igraph)} for details. Below is the code for reconstructing the previous graph using the output:
 <<bruvo_msn_reconstruct, eval=FALSE>>=
 set.seed(9005)
