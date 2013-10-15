@@ -240,6 +240,10 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
   }
   else{
     pop <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
+    if (any(levels(pop(pop)) == "")){
+      levels(pop(pop))[levels(pop(pop)) == ""] <- "?"
+      warning("missing population factor replaced with '?'")
+    }
     poplist <- .pop.divide(pop)
   }
   # Creating the genotype matrix for vegan's diversity analysis.
