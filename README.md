@@ -16,7 +16,7 @@ genind object and offers the following implementations:
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
 
-[![Build Status](https://travis-ci.org/poppr/poppr.png?branch=master)](https://travis-ci.org/poppr/poppr?branch=master)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=master)](https://travis-ci.org/grunwaldlab/poppr?branch=master)
 
 If the image above says "Passing", then that means it should be safe to install with the latest version of R. If it does not say "Passing", I am probably trying to fix whatever problem is causing it as fast as I can.
 
