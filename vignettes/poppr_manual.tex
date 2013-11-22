@@ -79,7 +79,7 @@ The real power of \textit{poppr} is in the data manipulation and analytic tools.
 If everything is working perfectly, all the dependencies (\textit{adegenet, pegas, vegan, ggplot2, phangorn, ape} and \textit{igraph}) should be installed. In the unfortunate case this does not work, consult \url{http://cran.r-project.org/doc/manuals/R-admin.html#Installing-packages}.
 
 \subsubsection{From Source}
-\tab\tab The tarball for \textit{poppr} can be from CRAN: \url{http://cran.r-project.org/package=poppr}, the Gr\"unwald Lab website: \url{http://http://grunwaldlab.cgrb.oregonstate.edu/} under the \textsc{Resources} tab, or github at \url{https://github.com/poppr/poppr}. 
+\tab\tab The tarball for \textit{poppr} can be from CRAN: \url{http://cran.r-project.org/package=poppr}, the Gr\"unwald Lab website: \url{http://http://grunwaldlab.cgrb.oregonstate.edu/} under the \textsc{Resources} tab, or github at \url{https://github.com/grunwaldlab/poppr}. 
 
 Since \textit{poppr} contains C code, it needs to be compiled, which means that you need a working C compiler. If you are on Linux, you shouldn't have to worry too much about that, but if you are on Windows or OSX, you might need to download some special tools:
 
@@ -116,7 +116,7 @@ Now you can execute the command \texttt{install\_github} with the user and repos
 \begin{Schunk}
 \begin{Sinput}
 > library(devtools)
-> install_github("poppr", "poppr")
+> install_github(repo = "poppr", user = "grunwaldlab")
 \end{Sinput}
 \end{Schunk}
 
@@ -124,7 +124,7 @@ If you are the adventurous type and are willing to test out unreleased versions 
 \begin{Schunk}
 \begin{Sinput}
 > library(devtools)
-> install_github("poppr", "poppr", ref = "devel")
+> install_github(repo = "poppr", user = "grunwaldlab", ref = "devel")
 \end{Sinput}
 \end{Schunk}
 Users who install this version do so at their own risk. Since it is a development version, documentation may be rough or nonexistant for new functions. 
