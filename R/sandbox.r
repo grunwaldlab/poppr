@@ -485,29 +485,27 @@ genoid.bruvo.boot <- function(pop, replen=c(2), sample = 100, tree = "upgma",
 }
 
 ######## NJ modification Below #######
-
 # Begin NJ Negative length modification
 # Creating a dataframe from the tree information: Tree edges and edge length
-all.lengths <- data.frame(tre$edge,tre$edge.length)
+#all.lengths <- data.frame(tre$edge,tre$edge.length)
 # Looking at the edges that are zero.
-zero.edges <- all.lengths[tre$edge.length < 0, ]
+#zero.edges <- all.lengths[tre$edge.length < 0, ]
 # Ordering the edges to simplify the dataframe and create indices
-zero.edges[order(zero.edges[,1]),]
+#zero.edges[order(zero.edges[,1]),]
 # Checking which negative edges are included in all the edges
-all.edges <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
+#all.edges <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
 # Ordering all the edges
-index.table <- all.edges[order(all.edges[,1]),]
+#index.table <- all.edges[order(all.edges[,1]),]
 # Loop to change the NJ branch length
-for (i in (unique(index.table$X1))){
-  index.table$tre.edge.length[index.table$X1 == i] <- abs(index.table$tre.edge.length[index.table$X1 == i]) + min(index.table$tre.edge.length[index.table$X1 == i])
- }
+#for (i in (unique(index.table$X1))){
+  #index.table$tre.edge.length[index.table$X1 == i] <- abs(index.table$tre.edge.length[index.table$X1 == i]) + min(index.table$tre.edge.length[index.table$X1 == i])
+# }
 # replacing the branch length for each negative value in the total table
-all.lengths$tre.edge.length[rownames(all.lengths) %in% rownames(index.table)] <- index.table$tre.edge.length
+#all.lengths$tre.edge.length[rownames(all.lengths) %in% rownames(index.table)] <- index.table$tre.edge.length
 # replacing the branch lengths to the original tree
-tre$edge.length <- all.lengths$tre.edge.length
+#tre$edge.length <- all.lengths$tre.edge.length
 # TaDaaaa!!
-plot(tre)
-
+#plot(tre)
 ######## End of NJ Modification #######
 
 
