@@ -260,9 +260,11 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
   # analysis, and then place the support labels on the tree.
   if(tree == "upgma"){
     # require(phangorn)
+    root <- TRUE
     newfunk <- match.fun(upgma)
   }
   else if(tree == "nj"){
+    root <- FALSE
     newfunk <- match.fun(nj)
   }
   tre <- newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid))
@@ -285,7 +287,7 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
   if(quiet == FALSE){
     cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
   }
-  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid)), B = sample, quiet=quiet, ...)
+  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid)), B = sample, quiet = quiet, rooted = root, ...)
   tre$node.labels <- round(((bp / sample)*100))
   if (!is.null(cutoff)){
     if (cutoff < 1 | cutoff > 100){
