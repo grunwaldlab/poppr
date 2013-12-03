@@ -22,7 +22,7 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 
-\title{Poppr 1.0.3: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
+\title{Poppr 1.0.4: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
 
 \begin{document}
@@ -106,13 +106,13 @@ install.packages("devtools")
 Now you can execute the command \texttt{install\_github} with the user and repository name:
 <<install_github, eval = FALSE>>=
 library(devtools)
-install_github(repo = "poppr", user = "grunwaldlab")
+install_github(repo = "grunwaldlab/poppr")
 @
 
 If you are the adventurous type and are willing to test out unreleased versions of the package, you can also install the development version:
 <<install_devel, eval = FALSE>>=
 library(devtools)
-install_github(repo = "poppr", user = "grunwaldlab", ref = "devel")
+install_github(repo = "grunwaldlab/poppr", ref = "devel")
 @
 Users who install this version do so at their own risk. Since it is a development version, documentation may be rough or nonexistant for new functions. 
 
@@ -1384,12 +1384,15 @@ cat("\nBootstrapping... (note: calculation of node labels can take a while even 
   \centering
   \caption{\footnotesize UPGMA Tree of Bruvo's distance for population 9 of the data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent percentage of bootstrap replicates that contained that node.}
   \label{bruvo_upgma}
-  \includegraphics{bruvo_upgma.png}
+%  \includegraphics{bruvo_upgma.png}
 
-%<<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
-% set.seed(1001)
-% nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, quiet=TRUE, cutoff=50)
-%@
+<<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
+ set.seed(1001)
+ nan9tree <- phangorn::upgma(bruvo.dist(popsub(nancycats, 8:9), replen = rep(1, 9)))
+ nan9tree$node.labels <- c(100, NA, NA, NA, NA, 66, NA, NA, NA, NA, NA, 78, NA, 61, NA, NA, NA, NA)
+ ape::plot.phylo(nan9tree, show.node.label=TRUE)
+ ape::axisPhylo(3)
+@
 
 \end{figure}
 

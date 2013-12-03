@@ -1,3 +1,11 @@
+poppr 1.0.4
+===========
+BUG FIX
+* A previous error where bootstrap values greater than 100 were reported from `bruvo.boot` on UPGMA trees has been fixed. 
+
+MISC
+* github repository for poppr has changed from github.com/poppr/poppr to github.com/grunwaldlab/poppr
+
 poppr 1.0.3
 ===========
 IMPROVEMENTS
