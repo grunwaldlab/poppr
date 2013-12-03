@@ -56,7 +56,7 @@ Now you can use the `install_github()` function:
 
 ```s
 library(devtools)
-install_github(repo = "poppr", user = "grunwaldlab")
+install_github(repo = "grunwaldlab/poppr")
 library(poppr)
 ```
 
@@ -64,7 +64,7 @@ library(poppr)
 
 ```s
 library(devtools)
-install_github(repo = "poppr", user = "grunwaldlab", ref = "devel")
+install_github(repo = "grunwaldlab/poppr", ref = "devel")
 library(poppr)
 ```
 
