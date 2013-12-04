@@ -2,6 +2,7 @@ poppr 1.0.4
 ===========
 BUG FIX
 * A previous error where bootstrap values greater than 100 were reported from `bruvo.boot` on UPGMA trees has been fixed. 
+* Fixed correction of negative branch lenghts using Kuhner and Felsenstein (1994) normalization for NJ trees.
 
 MISC
 * github repository for poppr has changed from github.com/poppr/poppr to github.com/grunwaldlab/poppr

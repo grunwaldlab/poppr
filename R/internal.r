@@ -991,3 +991,37 @@ test_table <- function(loc, min_ind, n){
   tab <- table(loc)
   return(ifelse(any(tab > n - min_ind), FALSE, TRUE))
 }
+
+#==============================================================================#
+# Normalize negative branch lenght by converting the negative branch to zero
+# and adding the negative value to the sibling branch.
+#
+# Public functions utilizing this function:
+# # bruvo.boot
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+
+fix_negative_branch <- function (tre) {
+  # Creating a dataframe from the tree information: Tree edges and edge length
+  all.lengths <- data.frame(tre$edge,tre$edge.length)
+  # Looking at the edges that are zero.
+  zero.edges <- all.lengths[tre$edge.length < 0, ]
+  # Ordering the edges to simplify the dataframe and create indices
+  #zero.edges[order(zero.edges[,1]),]
+  # Checking which negative edges are included in all the edges
+  all.edges <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
+  # Ordering all the edges
+  index.table <- all.edges[order(all.edges[,1]),]
+  # Loop to change the NJ branch length
+  for (i in (unique(index.table$X1))){
+    index.table$tre.edge.length[index.table$X1 == i] <- abs(index.table$tre.edge.length[index.table$X1 == i]) + min(index.table$tre.edge.length[index.table$X1 == i])
+  }
+  # replacing the branch length for each negative value in the total table
+  all.lengths$tre.edge.length[rownames(all.lengths) %in% rownames(index.table)] <- index.table$tre.edge.length
+  # replacing the branch lengths to the original tree
+  tre$edge.length <- all.lengths$tre.edge.length
+  return(tre)
+}
+

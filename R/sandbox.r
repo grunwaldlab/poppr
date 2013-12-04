@@ -1067,14 +1067,6 @@ genoid.bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE,
   return(tre)
 }
 
-
-
-
-
-
-
-
-
 javier<-function(x){
   cat ("http://www.youtube.com/watch?v=1-ctsxVXvO0")
 }
