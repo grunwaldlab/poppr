@@ -269,20 +269,8 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
   }
   tre <- newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid))
   if (any (tre$edge.length < 0)){
-    warning("The branch lengths of the tree are negative.", immediate.=TRUE)
-    us.promp<- as.numeric(readline(prompt="What do you want to do?, You can:\n1. Stop the analysis\n2. Convert negative branch values to Zero (Not biologically relevant)\nEnter your Selection:"))
-    if (us.promp == 1){
-      cat("Analysis stopped due to negative branches in the resulting tree\n")
-      return(tre)
-      stop()
-    }
-    else if (us.promp == 2){
-      tre$edge.length[tre$edge.length < 0] <- 0
-    }
-    else{
-      cat("Non-valid option. Returning tree.\n")
-      return(tre)
-    }
+    warning("Some branch lengths of the tree are negative. Normalizing branches according to Kuhner and Felsenstein (1994)", immediate.=TRUE)
+	tre <- fix_negative_branch(tre)
   }
   if(quiet == FALSE){
     cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
