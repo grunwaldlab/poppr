@@ -116,7 +116,6 @@ bruvo.dist <- function(pop, replen=c(2)){
   }
   popcols <- length(pop@loc.names)*ploid
   indnames <- pop@ind.names
-  
   # This controlls for the user correcting missing data using "mean". 
   if(any(!pop@tab %in% c(0,((1:ploid)/ploid),1, NA))){
     pop@tab[!pop@tab %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
@@ -151,7 +150,7 @@ bruvo.dist <- function(pop, replen=c(2)){
   dist.mat <- matrix(ncol=nrow(pop), nrow=nrow(pop))
   dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
   dist.mat <- as.dist(dist.mat)
-  attr(dist.mat, "Labels") <- indnames
+  attr(dist.mat, "labels") <- indnames
   attr(dist.mat, "method") <- "Bruvo"
   attr(dist.mat, "call") <- match.call()
   return(dist.mat)

@@ -880,7 +880,7 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
   # ssr.matrix[is.na(ssr.matrix)] <- paste(rep(0, ploid), collapse="/")
   # Bruvo's distance needs a matrix with the number of columns equal to the
   # number of loci multiplied by the polidy. 
-
+  indnames <- rownames(ssr.matrix)
   ssr.matrix <- apply(ssr.matrix, 1, strsplit, "/")
   # Getting the values into numeric form.
   ssr.matrix <- apply(as.matrix(t(sapply(ssr.matrix, unlist))), 2, as.numeric)
@@ -894,6 +894,7 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
   dist.mat <- matrix(ncol=nrow(ssr.matrix), nrow=nrow(ssr.matrix))
   dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
   dist.mat <- as.dist(dist.mat)
+  attr(dist.mat, "labels") <- indnames
   return(dist.mat)
 }
 
