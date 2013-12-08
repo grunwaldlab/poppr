@@ -23,14 +23,3 @@ Imports:
     ape,
     igraph
 License: GPL-2
-Collate:
-    'Index_calculations.r'
-    'file_handling.r'
-    'sample_schemes.r'
-    'visualizations.r'
-    'mlg.r'
-    'bruvo.r'
-    'data_subset.r'
-    'internal.r'
-    'sandbox.r'
-    'distances.r'

@@ -2,8 +2,7 @@
 \alias{read.genalex}
 \title{Importing data from genalex formatted *.csv files.}
 \usage{
-  read.genalex(genalex, ploidy = 2, geo = FALSE,
-    region = FALSE)
+read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
 }
 \arguments{
   \item{genalex}{a *.csv file exported from genalex}
@@ -17,31 +16,31 @@
   the file.}
 }
 \value{
-  A \code{\link{genind}} object.
+A \code{\link{genind}} object.
 }
 \description{
-  read.genalex will read in a genalex-formatted file that
-  has been exported in a comma separated format and will
-  parse most types of genalex data. The output is a
-  \code{\link{genind}} object.
+read.genalex will read in a genalex-formatted file that has
+been exported in a comma separated format and will parse
+most types of genalex data. The output is a
+\code{\link{genind}} object.
 }
 \note{
-  This function cannot handle raw allele frequency data.
+This function cannot handle raw allele frequency data.
 
-  The resulting genind object will have a data frame in the
-  \code{other} slot called population_hierarchy. This will
-  contain a column for your population data and a column
-  for your Regional data if you have set the flag.
+The resulting genind object will have a data frame in the
+\code{other} slot called population_hierarchy. This will
+contain a column for your population data and a column for
+your Regional data if you have set the flag.
 
-  If there is geographic data, it will be included in a
-  data frame called xy in the \code{other} slot.
+If there is geographic data, it will be included in a data
+frame called xy in the \code{other} slot.
 
-  In the case that there are duplicated names within the
-  file, this function will assume separate individuals and
-  rename each one to a sequence of integers from 1 to the
-  number of individuals. A vector of the original names
-  will be saved in the \code{other} slot under
-  \code{original_names}.
+In the case that there are duplicated names within the
+file, this function will assume separate individuals and
+rename each one to a sequence of integers from 1 to the
+number of individuals. A vector of the original names will
+be saved in the \code{other} slot under
+\code{original_names}.
 }
 \examples{
 \dontrun{
@@ -58,9 +57,9 @@ genalex4 <- read.genalex("genalex4.csv", region=TRUE, geo=TRUE)
 }
 }
 \author{
-  Zhian N. Kamvar
+Zhian N. Kamvar
 }
 \seealso{
-  \code{\link{clonecorrect}}, \code{\link{genind}}
+\code{\link{clonecorrect}}, \code{\link{genind}}
 }
 
