@@ -1,3 +1,8 @@
+poppr 1.0.5
+===========
+BUG FIX
+* Bootstrapping algorithm for `bruvo.boot()` function was not shuffling the repeat lengths for each locus resulting in potentially erroneous bootstrap support values. This has been fixed by implementing an internal S4 class that will allow direct bootstrapping of the data and repeat lengths together.
+
 poppr 1.0.4
 ===========
 BUG FIX
