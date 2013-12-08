@@ -34,14 +34,15 @@ setMethod(
   definition = function(x, i, j, ..., drop = FALSE){
     if (missing(i)) i <- TRUE
     if (missing(j)) j <- TRUE
-    replen <- x@replen[j]
     loci <- levels(x@loc.fac)
     indices <- unlist(lapply(loci[j], function(locus){res <- which(x@loc.fac %in% locus)}))
-    locnames <- rep(names(x@all.names)[1:length(j)], x@loc.nall[replen])
-    tabnames <- paste(locnames, unlist(x@all.names[replen]), sep = ".")
+    locnames <- rep(names(x@all.names)[1:length(j)], x@loc.nall[j])
+    tabnames <- paste(locnames, unlist(x@all.names[j]), sep = ".")
     res <- truenames(x)$tab[i, indices, drop = drop]
+    print(colnames(res))
+    print(tabnames)
     colnames(res) <- tabnames
-    return(new("bootgen", gen = genind(res), replen = replen))
+    return(new("bootgen", gen = genind(res), replen = x@replen[j]))
   }
 )
 
