@@ -22,7 +22,7 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 
-\title{Poppr 1.0.4: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
+\title{Poppr 1.0.5: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
 
 \usepackage{Sweave}
@@ -2399,15 +2399,15 @@ This function will return a distance matrix (displaying the smallest population 
 > dist9
 \end{Sinput}
 \begin{Soutput}
-          N104      N105      N106      N107      N108      N109      N111      N112
-N105 0.5778800                                                                      
-N106 0.4008213 0.4563124                                                            
-N107 0.2202691 0.5093036 0.1805522                                                  
-N108 0.3270365 0.5533719 0.2352431 0.2178786                                        
-N109 0.4016376 0.2760247 0.3192139 0.3330612 0.4294671                              
-N111 0.6150004 0.8707648 0.5533278 0.6167331 0.5219014 0.7330560                    
-N112 0.5492079 0.4086363 0.4391785 0.3289388 0.3886142 0.4528936 0.8037448          
-N113 0.5925835 0.6227587 0.6203071 0.6585558 0.6186252 0.6099514 0.5060450 0.7026198
+          1         2         3         4         5         6         7         8
+2 0.5778800                                                                      
+3 0.4008213 0.4563124                                                            
+4 0.2202691 0.5093036 0.1805522                                                  
+5 0.3270365 0.5533719 0.2352431 0.2178786                                        
+6 0.4016376 0.2760247 0.3192139 0.3330612 0.4294671                              
+7 0.6150004 0.8707648 0.5533278 0.6167331 0.5219014 0.7330560                    
+8 0.5492079 0.4086363 0.4391785 0.3289388 0.3886142 0.4528936 0.8037448          
+9 0.5925835 0.6227587 0.6203071 0.6585558 0.6186252 0.6099514 0.5060450 0.7026198
 \end{Soutput}
 \end{Schunk}
 You can visualize this better with a simple heatmap:
@@ -2432,8 +2432,7 @@ Let's take a closer look at the two individuals, N113 and N111. They seem to hav
 > attr(dist9, "Labels")
 \end{Sinput}
 \begin{Soutput}
-     1      2      3      4      5      6      7      8      9 
-"N104" "N105" "N106" "N107" "N108" "N109" "N111" "N112" "N113" 
+NULL
 \end{Soutput}
 \end{Schunk}
 Remember that they all came from population 9, so let's append that to each label using the \texttt{paste()} command. 
@@ -2444,15 +2443,15 @@ Remember that they all came from population 9, so let's append that to each labe
 > dist9
 \end{Sinput}
 \begin{Soutput}
-          P09 N104  P09 N105  P09 N106  P09 N107  P09 N108  P09 N109  P09 N111  P09 N112
-P09 N105 0.5778800                                                                      
-P09 N106 0.4008213 0.4563124                                                            
-P09 N107 0.2202691 0.5093036 0.1805522                                                  
-P09 N108 0.3270365 0.5533719 0.2352431 0.2178786                                        
-P09 N109 0.4016376 0.2760247 0.3192139 0.3330612 0.4294671                              
-P09 N111 0.6150004 0.8707648 0.5533278 0.6167331 0.5219014 0.7330560                    
-P09 N112 0.5492079 0.4086363 0.4391785 0.3289388 0.3886142 0.4528936 0.8037448          
-P09 N113 0.5925835 0.6227587 0.6203071 0.6585558 0.6186252 0.6099514 0.5060450 0.7026198
+          P09       P09       P09       P09       P09       P09       P09       P09 
+P09  0.5778800                                                                      
+P09  0.4008213 0.4563124                                                            
+P09  0.2202691 0.5093036 0.1805522                                                  
+P09  0.3270365 0.5533719 0.2352431 0.2178786                                        
+P09  0.4016376 0.2760247 0.3192139 0.3330612 0.4294671                              
+P09  0.6150004 0.8707648 0.5533278 0.6167331 0.5219014 0.7330560                    
+P09  0.5492079 0.4086363 0.4391785 0.3289388 0.3886142 0.4528936 0.8037448          
+P09  0.5925835 0.6227587 0.6203071 0.6585558 0.6186252 0.6099514 0.5060450 0.7026198
 \end{Soutput}
 \end{Schunk}
 Now we can see that all of the labels are corresponding to population 9. Let's calculate Bruvo's distance between populations 8 and 9.
@@ -2592,7 +2591,7 @@ Now, we'll see what happens when we change the adjustment parameter (affects the
 \tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to using the package \textit{igraph} (type \texttt{help("plot.igraph")} for details).
 \begin{quote}
 Default Command:\\
-\texttt{bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All",\\ 
+\texttt{bruvo.msn(pop, replen = c(2), palette = topo.colors, sublist = "All",\\ 
   \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
   \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
 }
@@ -3127,7 +3126,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item bruvo.boot(pop, replen = c(2), sample = 100, tree = "upgma", showtree = TRUE, 
 cutoff = NULL, quiet = FALSE, ...)  (Section \ref{index:trees:bruvo.boot})
 \item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1) (Section \ref{index:trees:greycurve})
-\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
+\item bruvo.msn(pop, replen = c(2), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
 \item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:poppr.msn})
 \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
 \item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
