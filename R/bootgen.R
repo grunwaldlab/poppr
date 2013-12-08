@@ -10,6 +10,7 @@
 #' @export
 #' @slot replen repeat length of microsatellite loci
 #' @author Zhian Kamvar
+#' @import methods
 
 setClass("bootgen", 
          contains = c("genind"),
