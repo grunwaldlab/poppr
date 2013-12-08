@@ -39,8 +39,6 @@ setMethod(
     locnames <- rep(names(x@all.names)[1:length(j)], x@loc.nall[j])
     tabnames <- paste(locnames, unlist(x@all.names[j]), sep = ".")
     res <- truenames(x)$tab[i, indices, drop = drop]
-    print(colnames(res))
-    print(tabnames)
     colnames(res) <- tabnames
     return(new("bootgen", gen = genind(res), replen = x@replen[j]))
   }
