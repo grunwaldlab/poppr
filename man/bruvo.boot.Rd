@@ -2,7 +2,7 @@
 \alias{bruvo.boot}
 \title{Create a tree using Bruvo's Distance with non-parametric bootstrapping.}
 \usage{
-bruvo.boot(pop, replen = c(2), sample = 100, tree = "upgma",
+bruvo.boot(pop, replen = c(1), sample = 100, tree = "upgma",
   showtree = TRUE, cutoff = NULL, quiet = FALSE, ...)
 }
 \arguments{
@@ -52,7 +52,7 @@ result in an error. Please use any other method in
 If the user does not provide a vector of appropriate length
 for \code{replen} , it will be estimated by taking the
 minimum difference among represented alleles at each locus.
-It is not recommended to rely on this estimation.
+IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION.
 }
 \examples{
 # Please note that the data presented is assuming that the nancycat dataset
@@ -61,11 +61,11 @@ It is not recommended to rely on this estimation.
 
 # Load the nancycats dataset and construct the repeat vector.
 data(nancycats)
-ssr <- rep(1,9)
+ssr <- rep(2, 9)
 
 # Analyze the 1st population in nancycats
 
-bruvo.boot(popsub(nancycats, 1), replen=ssr)
+bruvo.boot(popsub(nancycats, 1), replen = ssr)
 }
 \author{
 Javier F. Tabima, Zhian N. Kamvar

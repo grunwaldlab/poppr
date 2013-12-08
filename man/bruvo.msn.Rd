@@ -86,40 +86,40 @@ becomes too large.
 data(nancycats)
 
 # View populations 8 and 9 with default colors.
-bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds",
+bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 vertex.label.cex=0.7, vertex.label.dist=0.4)
 \dontrun{
 # View heat colors.
-bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds",
+bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 palette=heat.colors, vertex.label.cex=0.7, vertex.label.dist=0.4)
 
 # View custom colors. Here, we use black and orange.
-bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds",
+bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
 vertex.label.dist=0.4)
 
 # View with darker shades of grey (setting the upper limit to 1/2 black 1/2 white).
-bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds",
+bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
 vertex.label.dist=0.4, glim=c(0, 0.5))
 
 # View with no grey scaling.
-bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds",
+bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
 vertex.label.dist=0.4, gscale=FALSE)
 
 # View with no line widths.
-bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds",
+bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
 vertex.label.dist=0.4, wscale=FALSE)
 
 # View with no scaling at all.
-bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds",
+bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
 vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
 
 # View the whole population, but without labels.
-bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
+bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)
 }
 }
 \author{

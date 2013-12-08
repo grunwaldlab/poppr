@@ -2,7 +2,7 @@
 \alias{bruvo.dist}
 \title{Calculate the average Bruvo's Distance over all loci in a population.}
 \usage{
-bruvo.dist(pop, replen = c(2))
+bruvo.dist(pop, replen = c(1))
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -28,7 +28,7 @@ cases, see the package \code{polysat}.
 If the user does not provide a vector of appropriate length
 for \code{replen} , it will be estimated by taking the
 minimum difference among represented alleles at each locus.
-It is not recommended to rely on this estimation.
+IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION.
 }
 \examples{
 # Please note that the data presented is assuming that the nancycat dataset
