@@ -42,7 +42,11 @@ setMethod(
     indices <- unlist(lapply(loci[j], function(locus){res <- which(x@loc.fac %in% locus)}))
     locnames <- rep(names(x@all.names)[1:length(j)], locnall)
     tabnames <- paste(locnames, unlist(allnames), sep = ".")
-    res <- truenames(x)$tab[i, indices, drop = drop]
+    if(!is.null(pop(x))){
+      res <- truenames(x)$tab[i, indices, drop = drop]
+    }else{
+      res <- truenames(x)[i, indices, drop = drop]
+    }
     colnames(res) <- tabnames
     x@tab <- res
     x@loc.fac <- factor(rep(names(locnall), locnall))
