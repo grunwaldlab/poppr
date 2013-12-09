@@ -601,8 +601,7 @@ mlg.matrix <- function(pop){
     # are not one or zero with a rounded value. 
     tempz <- !temp.d.vector %in% 0:1
     temp.d.vector[tempz] <- vapply(temp.d.vector[tempz], round.poppr, 1)
-  }
-  else{    
+  } else {    
     temp.d.vector <- vapply(seq(numLoci), 
                           function(x) as.vector(dist(pop@tab[,x])), 
                           temp.d.vector[,1])
@@ -611,18 +610,17 @@ mlg.matrix <- function(pop){
       temp.d.vector[which(is.na(temp.d.vector))] <- 0
     }
   }
-  if(ploidy(pop) > 1){
+  if (ploidy(pop) > 1){
     # multiplying by two is the proper way to evaluate P/A diploid data because
     # one cannot detect heterozygous loci (eg, a difference of 1).
     temp.d.vector <- temp.d.vector*ploidy(pop)
-    d.vector <- as.vector(colSums(temp.d.vector))
+    d.vector  <- as.vector(colSums(temp.d.vector))
     d2.vector <- as.vector(colSums(temp.d.vector^2))
-    D.vector <- as.vector(rowSums(temp.d.vector))
-  }
-  else{
-    d.vector <- as.vector(colSums(temp.d.vector))
+    D.vector  <- as.vector(rowSums(temp.d.vector))
+  } else {
+    d.vector  <- as.vector(colSums(temp.d.vector))
     d2.vector <- d.vector
-    D.vector <- as.vector(rowSums(temp.d.vector))
+    D.vector  <- as.vector(rowSums(temp.d.vector))
   }
   vectors <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
   return(vectors)
@@ -642,8 +640,7 @@ mlg.matrix <- function(pop){
 final <- function(Iout, result){
   if (is.null(result)){
     return(Iout)
-  }
-  else{
+  } else {
     return(result)
   }
 }
@@ -921,15 +918,13 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
   if (correction < 0){
     adj <-  (w^abs(correction))/(1/ming) 
     adj <- (adj + 1-ming) / ((1 / maxg))
-  }
-  else{
+  } else {
     adj <-  (1 - (((1-w)^abs(correction))/(1/ming)) )
     adj <- adj / (1/maxg)
   }
   if (show == FALSE){
     return(adj)
-  }
-  else{
+  } else {
     cols <- grey(sort(adj))
     hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
          ylab="Grey Adjusted", 
@@ -941,8 +936,7 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
                                        .(ming)^-1),")") + .(1-ming), 
                        .(maxg)^-1)) , 
            x=0.25,y=0.75, col="red")
-    }
-    else{
+    } else {
       text(bquote(frac(1-bgroup("(",frac((1-scriptstyle(x))^.(abs(correction)),
                                          .(ming)^-1),")"), 
                        .(maxg)^-1)) , 
@@ -965,16 +959,14 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
 #==============================================================================#
 
 guesslengths <- function(vec){
-  if(length(vec) > 1){
+  if (length(vec) > 1){
     lens <- vapply(2:length(vec), function(x) abs(vec[x] - vec[x - 1]), 1)
-    if(all(lens == 1)){
+    if (all(lens == 1)){
       return(1)
-    }
-    else{
+    } else {
       return(min(lens[lens > 1]))
     }
-  }
-  else{
+  } else {
     return(1)
   }
 }
@@ -1003,7 +995,7 @@ test_table <- function(loc, min_ind, n){
 # # none
 #==============================================================================#
 
-fix_negative_branch <- function (tre) {
+fix_negative_branch <- function(tre){
   # Creating a dataframe from the tree information: Tree edges and edge length
   all.lengths <- data.frame(tre$edge,tre$edge.length)
   # Looking at the edges that are zero.
@@ -1011,7 +1003,7 @@ fix_negative_branch <- function (tre) {
   # Checking which negative edges are included in all the edges
   all.edges <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
   # Ordering all the edges
-  index.table <- all.edges[order(all.edges[,1]),]
+  index.table <- all.edges[order(all.edges[,1]), ]
   # Loop to change the NJ branch length
   for (i in (unique(index.table$X1))){
     index.table$tre.edge.length[index.table$X1 == i] <- abs(index.table$tre.edge.length[index.table$X1 == i]) + min(index.table$tre.edge.length[index.table$X1 == i])
