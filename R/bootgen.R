@@ -105,6 +105,7 @@ setMethod(
     ## Resetting all factors that need to be set. 
     x@tab <- res
     x@loc.fac <- factor(rep(names(locnall), locnall))
+    x@loc.names <- names(locnall)
     x@loc.nall <- locnall
     x@all.names <- allnames
     x@replen <- x@replen[j]
