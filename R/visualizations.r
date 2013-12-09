@@ -356,7 +356,6 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
-  #bclone <- as.matrix(distmat)[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
   
   singlepop <- function(pop, vertex.label){
     cpop <- pop[.clonecorrector(pop), ]
@@ -427,7 +426,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
-  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
+  names(mlg.cp) <- paste0("MLG.", sort(unique(pop$other$mlg.vec)))
   cpop <- pop[.clonecorrector(pop), ]
   
   # This will determine the size of the nodes based on the number of individuals
