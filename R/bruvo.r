@@ -124,13 +124,13 @@ bruvo.dist <- function(pop, replen=c(1)){
   # Data such as this cannot easily be treated by this function and will be
   # sent to the internal function phylo.bruvo.boot
   if(!any(is.na(pop@tab)) & any(rowSums(pop@tab, na.rm=TRUE) < nLoc(pop))){
-    pop <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
+    pop <- as.matrix.data.frame(genind2df(pop, sep="/", usepop=FALSE))
     pop[pop %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
     return(phylo.bruvo.dist(pop, replen=replen, ploid=ploid))
-  }
-  else{
-    pop <- suppressWarnings(matrix(as.numeric(as.matrix(genind2df(
-  	  pop, oneColPerAll=TRUE, usepop=F))), ncol=popcols))
+  } else {
+    popdf <- genind2df(pop, oneColPerAll=TRUE, usepop=FALSE)
+    mat1  <- as.matrix.data.frame(popdf)
+    pop   <- suppressWarnings(matrix(as.numeric(mat1), ncol=popcols))
   }
 
   # Setting all missing data to 0.
@@ -403,7 +403,7 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, ...){
-  # require(igraph)
+
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
@@ -414,11 +414,11 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
     bclone <- bruvo.dist(cpop, replen=replen)
     mclone <- as.dist(bclone)
     #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
-    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
-    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+    g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
+    mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
     if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
       if(toupper(vertex.label) == "MLG"){
-        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+        vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
       }
       else if(toupper(vertex.label) == "INDS"){
         vertex.label <- cpop$ind.names
@@ -464,23 +464,23 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
-  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
+  names(mlg.cp) <- paste0("MLG.", sort(unique(pop$other$mlg.vec)))
   cpop <- pop[.clonecorrector(pop), ]
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
-  bclone <- bruvo.dist(cpop, replen=replen)
+  mlg.cp     <- mlg.cp[rank(cpop$other$mlg.vec)]
+  bclone     <- bruvo.dist(cpop, replen=replen)
   
   ###### Create a graph #######
-  g <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
-  mst <- (minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight))
+  g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
+  mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
   
   if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+      vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
     }
     else if(toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
@@ -490,7 +490,7 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color <- palette(length(pop@pop.names))
+  color   <- palette(length(pop@pop.names))
   if(gscale == TRUE){
     E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
                                      show=FALSE))
@@ -514,7 +514,7 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   #                                    show=FALSE))
   # plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'GREY')
 
-  plot(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
        vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
        vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55, 1, bty = "n", cex = 0.75, legend = pop$pop.names, 
@@ -524,11 +524,11 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   # text(x= 1.5, y = seq(0,1,l=5), labels = round(quantile(E(mst)$weight), 3))
   # rasterImage(legend_image, 0, 0, 1,1)
   # par(def.par)
-  E(mst)$width <- edgewidth
-  V(mst)$size <- mlg.number
-  V(mst)$shape <- "pie"
-  V(mst)$pie <- mlg.cp
+  E(mst)$width     <- edgewidth
+  V(mst)$size      <- mlg.number
+  V(mst)$shape     <- "pie"
+  V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
-  V(mst)$label <- vertex.label
+  V(mst)$label     <- vertex.label
   return(list(graph = mst, populations = pop$pop.names, colors = color))
 }
