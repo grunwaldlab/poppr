@@ -1008,8 +1008,6 @@ fix_negative_branch <- function (tre) {
   all.lengths <- data.frame(tre$edge,tre$edge.length)
   # Looking at the edges that are zero.
   zero.edges <- all.lengths[tre$edge.length < 0, ]
-  # Ordering the edges to simplify the dataframe and create indices
-  #zero.edges[order(zero.edges[,1]),]
   # Checking which negative edges are included in all the edges
   all.edges <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
   # Ordering all the edges
@@ -1025,3 +1023,73 @@ fix_negative_branch <- function (tre) {
   return(tre)
 }
 
+#==============================================================================#
+# Plot Minimum Spanning Networks for data sets with no or single population
+# factors.
+#
+# Public functions utilizing this function:
+# # bruvo.msn, poppr.msn
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+
+
+singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gscale = TRUE, 
+                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, ...){
+  # First, clone correct and get the number of individuals per MLG in order.
+  cpop <- pop[.clonecorrector(pop), ]
+  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  
+  # Calculate distance matrix if not supplied (Bruvo's distance)
+  if (is.null(distmat) & !is.null(replen)){
+    distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
+  }
+  
+  # Create the graphs.
+  g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")
+  mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+  
+  # Create the vertex labels
+  if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if (toupper(vertex.label) == "MLG"){
+      vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
+    } else if(toupper(vertex.label) == "INDS") {
+      vertex.label <- cpop$ind.names
+    }
+  } 
+  
+  # Adjust the color of the edges.
+  if (gscale == TRUE){
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
+                                     show=FALSE))
+  } else {
+    E(mst)$color <- rep("black", length(E(mst)$weight))
+  }
+  
+  # Adjust the widths of the edges
+  edgewidth <- 2
+  if (wscale == TRUE){
+    edgewidth <- 1/(E(mst)$weight)
+    if (any(E(mst)$weight < 0.08)){
+      edgewidth <- 1/(E(mst)$weight + 0.08)
+    }
+  }
+  
+  populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
+  
+  # Plot everything
+  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+              vertex.label = vertex.label, vertex.size = mlg.number*3, 
+              vertex.color = palette(1),  ...)
+  legend(-1.55,1,bty = "n", cex = 0.75, 
+         legend = populations, title = "Populations", fill = palette(1), 
+         border = NULL)
+  
+  # Save variables and return plot.
+  E(mst)$width <- edgewidth
+  V(mst)$size  <- mlg.number
+  V(mst)$color <- palette(1)
+  V(mst)$label <- vertex.label
+  return(list(graph = mst, populations = populations, colors = palette(1)))
+}
