@@ -339,77 +339,30 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # if(!require(igraph)){
   #   stop("You must have the igraph library installed to use this function.\n")
   # }
-  if(class(distmat) != "dist"){
-    if(is.matrix(distmat)){
-      if(any(nInd(pop) != dim(distmat))){
+  if (class(distmat) != "dist"){
+    if (is.matrix(distmat)){
+      if (any(nInd(pop) != dim(distmat))){
         stop("The size of the distance matrix does not match the size of the data.\n")
       }
       distmat <- as.dist(distmat)
-    }
-    else{
+    } else {
       stop("The distance matrix is neither a dist object nor a matrix.\n")
     }
   }
-  if(nInd(pop) != attr(distmat, "Size")){
+  if (nInd(pop) != attr(distmat, "Size")){
     stop("The size of the distance matrix does not match the size of the data.\n")
   }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
-  
-  singlepop <- function(pop, vertex.label){
-    cpop <- pop[.clonecorrector(pop), ]
-    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-    rownames(bclone) <- cpop$pop
-    colnames(bclone) <- cpop$pop
-    #bclone <- discreet.dist(cpop)
-    mclone <- as.dist(bclone)
-    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
-    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
-    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
-    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
-      if(toupper(vertex.label) == "MLG"){
-        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
-      }
-      else if(toupper(vertex.label) == "INDS"){
-        vertex.label <- cpop$ind.names
-      }
-    }
-    
-    if(gscale == TRUE){
-      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-                                       show=FALSE))
-    }
-    else{
-      E(mst)$color <- rep("black", length(E(mst)$weight))
-    }
-    
-    edgewidth <- 2
-    if(wscale==TRUE){
-      edgewidth <- 1/(E(mst)$weight)
-      if(any(E(mst)$weight < 0.08)){
-        edgewidth <- 1/(E(mst)$weight + 0.08)
-      }
-    }
-    populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
-    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
-         vertex.label = vertex.label, vertex.size = mlg.number*3, 
-         vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex = 0.75, 
-           legend = populations, title = "Populations", fill = palette(1), 
-           border = NULL)
-    E(mst)$width <- edgewidth
-    V(mst)$size <- mlg.number
-    V(mst)$color <- palette(1)
-    V(mst)$label <- vertex.label
-    return(list(graph = mst, populations = populations, colors = palette(1)))
-  }
   bclone <- as.matrix(distmat)
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
+  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
-    return(singlepop(pop, vertex.label))
+    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, 
+                         palette = palette))
   }
   # This will subset both the population and the matrix. 
   if(sublist[1] != "ALL" | !is.null(blacklist)){
@@ -421,8 +374,10 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # This will clone correct the incoming matrix. 
   bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
   
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label))
+  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, 
+                         palette = palette))
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
@@ -441,7 +396,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
   mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
   
-  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
+  if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
       vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
     }
@@ -457,20 +412,19 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   ###### Edge adjustments ######
   # Grey Scale Adjustment weighting towards more diverse or similar populations.
-  if(gscale == TRUE){
+  if (gscale == TRUE){
     E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
                                      show=FALSE))
-  }
-  else{
+  } else {
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
   
   # Width scale adjustment to avoid extremely large widths.
   # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
   edgewidth <- 2
-  if(wscale==TRUE){
+  if (wscale==TRUE){
     edgewidth <- 1/(E(mst)$weight)
-    if(any(E(mst)$weight < 0.08)){
+    if (any(E(mst)$weight < 0.08)){
       edgewidth <- 1/(E(mst)$weight + 0.08)
     }
   }
