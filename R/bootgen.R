@@ -83,12 +83,15 @@ setMethod(
     
     ## Information Gathering
     j_length <- 1:length(j)
+    if (length(j) > nLoc(x) | any(j > nLoc(x))){
+      stop('subscript out of bounds')
+    }
     loci <- levels(x@loc.fac)
     # numbers of alleles per locus
     locnall <- x@loc.nall[j]
     names(locnall) <- names(x@loc.nall[j_length])
     # names of all the alleles. Length of each list element will be equal to locnall
-    allnames <- x@all.names[j_length]
+    allnames <- x@all.names[j]
     names(allnames) <- names(x@all.names)[j_length]
     
     ## Subsetting table columns
