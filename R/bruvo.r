@@ -256,7 +256,7 @@ bruvo.boot <- function(pop, replen = c(1), sample = 100, tree = "upgma",
   tre <- newfunk(bruvo.dist(bootgen, replen = bootgen@replen))
   if (any (tre$edge.length < 0)){
     warning("Some branch lengths of the tree are negative. Normalizing branches according to Kuhner and Felsenstein (1994)", immediate.=TRUE)
-	tre <- fix_negative_branch(tre)
+	  tre <- fix_negative_branch(tre)
   }
   if(quiet == FALSE){
     cat("\nBootstrapping...\n") 
@@ -268,7 +268,7 @@ bruvo.boot <- function(pop, replen = c(1), sample = 100, tree = "upgma",
   if (!is.null(cutoff)){
     if (cutoff < 1 | cutoff > 100){
       cat("Cutoff value must be between 0 and 100.\n")
-      cutoff<- as.numeric(readline(prompt = "Choose a new cutoff value between 0 and 100:\n"))
+      cutoff <- as.numeric(readline(prompt = "Choose a new cutoff value between 0 and 100:\n"))
     }
     tre$node.labels[tre$node.labels < cutoff] <- NA
   }
