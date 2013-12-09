@@ -408,59 +408,18 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   
-  singlepop <- function(pop, vertex.label){
-    cpop <- pop[.clonecorrector(pop), ]
-    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-    bclone <- bruvo.dist(cpop, replen=replen)
-    mclone <- as.dist(bclone)
-    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
-    g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
-    mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
-    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
-      if(toupper(vertex.label) == "MLG"){
-        vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
-      }
-      else if(toupper(vertex.label) == "INDS"){
-        vertex.label <- cpop$ind.names
-      }
-    }
-    
-    if(gscale == TRUE){
-      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-                                       show=FALSE))
-    }
-    else{
-      E(mst)$color <- rep("black", length(E(mst)$weight))
-    }
-    
-    edgewidth <- 2
-    if(wscale == TRUE){
-      edgewidth <- 1/(E(mst)$weight)
-      if(any(E(mst)$weight < 0.08)){
-        edgewidth <- 1/(E(mst)$weight + 0.08)
-      }
-    }
-    populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
-    plot(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
-         vertex.label = vertex.label, vertex.size = mlg.number*3, 
-         vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex = 0.75, 
-           legend = populations, title = "Populations", fill = palette(1), 
-           border = NULL)
-    E(mst)$width <- edgewidth
-    V(mst)$size <- mlg.number
-    V(mst)$color <- palette(1)
-    V(mst)$label <- vertex.label
-    return(list(graph = mst, populations = populations, colors = palette(1)))
+  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, 
+                         palette = palette))
   }
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label))
-  }
-  if(sublist[1] != "ALL" | !is.null(blacklist)){
+  if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
   }
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label))
+  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, 
+                         palette = palette))
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
@@ -478,11 +437,10 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
   mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
   
-  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
-    if(toupper(vertex.label) == "MLG"){
+  if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if (toupper(vertex.label) == "MLG"){
       vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
-    }
-    else if(toupper(vertex.label) == "INDS"){
+    } else if (toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
     }
   }
@@ -494,15 +452,14 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   if(gscale == TRUE){
     E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
                                      show=FALSE))
-  }
-  else{
+  } else {
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
   
   edgewidth <- 2
-  if(wscale == TRUE){
+  if (wscale == TRUE){
     edgewidth <- 1/(E(mst)$weight)
-    if(any(E(mst)$weight < 0.08)){
+    if (any(E(mst)$weight < 0.08)){
       edgewidth <- 1/(E(mst)$weight + 0.08)
     }
   }
