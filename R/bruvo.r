@@ -120,15 +120,17 @@ bruvo.dist <- function(pop, replen=c(1)){
   if(any(!pop@tab %in% c(0,((1:ploid)/ploid),1, NA))){
     pop@tab[!pop@tab %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
   }
-  if(any(rowSums(pop@tab, na.rm=TRUE) < nLoc(pop))){
-    
+  # This will check for data that has missing scored as "zero".
+  # Data such as this cannot easily be treated by this function and will be
+  # sent to the internal function phylo.bruvo.boot
+  if(!any(is.na(pop@tab)) & any(rowSums(pop@tab, na.rm=TRUE) < nLoc(pop))){
     pop <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
     pop[pop %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
     return(phylo.bruvo.dist(pop, replen=replen, ploid=ploid))
   }
   else{
-    pop <- matrix(as.numeric(as.matrix(genind2df(
-  	  pop, oneColPerAll=TRUE, usepop=F))), ncol=popcols)
+    pop <- suppressWarnings(matrix(as.numeric(as.matrix(genind2df(
+  	  pop, oneColPerAll=TRUE, usepop=F))), ncol=popcols))
   }
 
   # Setting all missing data to 0.
