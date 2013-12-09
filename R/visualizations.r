@@ -435,13 +435,12 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # give us the numbers and the population information in the correct order.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
-  #bclone <- discreet.dist(cpop)
+  mlg.cp     <- mlg.cp[rank(cpop$other$mlg.vec)]
   rownames(bclone) <- cpop$pop
   colnames(bclone) <- cpop$pop
   
-  g <- graph.adjacency(as.matrix(bclone), weighted=TRUE, mode="undirected")
-  mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
+  g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
+  mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
   
   if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
@@ -455,7 +454,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color <- palette(length(pop@pop.names))
+  color   <- palette(length(pop@pop.names))
   
   ###### Edge adjustments ######
   # Grey Scale Adjustment weighting towards more diverse or similar populations.
@@ -485,11 +484,11 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
        vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
          title = "Populations", fill=color, border=NULL)
-  E(mst)$width <- edgewidth
-  V(mst)$size <- mlg.number
-  V(mst)$shape <- "pie"
-  V(mst)$pie <- mlg.cp
+  E(mst)$width     <- edgewidth
+  V(mst)$size      <- mlg.number
+  V(mst)$shape     <- "pie"
+  V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
-  V(mst)$label <- vertex.label
+  V(mst)$label     <- vertex.label
   return(list(graph = mst, populations = pop$pop.names, colors = color))
 }
