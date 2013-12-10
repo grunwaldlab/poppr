@@ -870,6 +870,7 @@ pair_diffs <- function(pop, numLoci, np)
 # Internal functions utilizing this function:
 # # none
 #
+# DEPRECIATED
 #==============================================================================#
 phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
   # Preceeding functions should take care of this:
@@ -1100,10 +1101,8 @@ bruvos_distance <- function(bruvomat, funk_call = match.call()){
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
   replen <- bruvomat@replen
-  
   x[is.na(x)] <- 0
   # Dividing the data by the repeat length of each locus.
-  
   x <- x / rep(replen, each=ploid*nrow(x))
   x <- matrix(round(x), ncol=ncol(x))
   # Getting the permutation vector.
