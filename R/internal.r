@@ -1085,3 +1085,42 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   V(mst)$label <- vertex.label
   return(list(graph = mst, populations = populations, colors = palette(1)))
 }
+
+#==============================================================================#
+# Calculate Bruvo's distance from a bruvomat object.
+#
+# Public functions utilizing this function:
+# # bruvo.msn, bruvo.dist, bruvo.boot
+#
+# Internal functions utilizing this function:
+# # singlepop_msn
+#==============================================================================#
+
+bruvos_distance <- function(bruvomat, funk_call = match.call()){
+  x      <- bruvomat@mat
+  ploid  <- bruvomat@ploidy
+  replen <- bruvomat@replen
+  
+  x[is.na(x)] <- 0
+  # Dividing the data by the repeat length of each locus.
+  
+  x <- x / rep(replen, each=ploid*nrow(x))
+  x <- matrix(round(x), ncol=ncol(x))
+  # Getting the permutation vector.
+  perms <- .Call("permuto", ploid)
+  # Calculating bruvo's distance over each locus. 
+  distmat <- .Call("bruvo_distance", x, perms, ploid)
+  # If there are missing values, the distance returns 100, which means that the
+  # comparison is not made. These are changed to NA.
+  distmat[distmat == 100] <- NA
+  # Obtaining the average distance over all loci.
+  avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+  # presenting the information in a lower triangle distance matrix.
+  dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
+  dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
+  dist.mat <- as.dist(dist.mat)
+  attr(dist.mat, "labels") <- bruvomat@ind.names
+  attr(dist.mat, "method") <- "Bruvo"
+  attr(dist.mat, "call") <- funk_call
+  return(dist.mat)
+}
