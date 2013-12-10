@@ -2,7 +2,7 @@
 \alias{bruvo.dist}
 \title{Calculate the average Bruvo's Distance over all loci in a population.}
 \usage{
-  bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
+bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -20,23 +20,23 @@
   Bruvo et al. 2004.}
 }
 \value{
-  a \code{distance matrix}
+a \code{distance matrix}
 }
 \description{
-  Calculate the average Bruvo's Distance over all loci in a
-  population.
+Calculate the average Bruvo's Distance over all loci in a
+population.
 }
 \note{
-  The result of both \code{add = TRUE} and \code{loss =
-  TRUE} is that the distance is averaged over both values.
-  If both are set to \code{FALSE}, then the infinite
-  alleles model is used. For genotypes with all missing
-  values, the result will be NA.
+The result of both \code{add = TRUE} and \code{loss = TRUE}
+is that the distance is averaged over both values. If both
+are set to \code{FALSE}, then the infinite alleles model is
+used. For genotypes with all missing values, the result
+will be NA.
 
-  If the user does not provide a vector of appropriate
-  length for \code{replen} , it will be estimated by taking
-  the minimum difference among represented alleles at each
-  locus. It is not recommended to rely on this estimation.
+If the user does not provide a vector of appropriate length
+for \code{replen} , it will be estimated by taking the
+minimum difference among represented alleles at each locus.
+IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION.
 }
 \examples{
 # Please note that the data presented is assuming that the nancycat dataset
@@ -58,16 +58,15 @@ heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 }
 }
 \author{
-  Zhian N. Kamvar
+Zhian N. Kamvar
 }
 \references{
-  Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza,
-  and Hinrich Schulenburg. A simple method for the
-  calculation of microsatellite genotype distances
-  irrespective of ploidy level. Molecular Ecology,
-  13(7):2101-2106, 2004.
+Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
+Hinrich Schulenburg. A simple method for the calculation of
+microsatellite genotype distances irrespective of ploidy
+level. Molecular Ecology, 13(7):2101-2106, 2004.
 }
 \seealso{
-  \code{\link{nancycats}}
+\code{\link{nancycats}}
 }
 

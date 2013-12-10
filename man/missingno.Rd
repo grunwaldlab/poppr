@@ -2,8 +2,7 @@
 \alias{missingno}
 \title{How to deal with missing data in a genind object.}
 \usage{
-  missingno(pop, type = "loci", cutoff = 0.05,
-    quiet = FALSE)
+missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object.}
@@ -21,14 +20,14 @@
   the action performed.}
 }
 \value{
-  a \code{\link{genind}} object.
+a \code{\link{genind}} object.
 }
 \description{
-  missingno gives the user four options to deal with
-  missing data.
+missingno gives the user four options to deal with missing
+data.
 }
 \note{
-  \emph{"wild missingno appeared!"}
+\emph{"wild missingno appeared!"}
 }
 \section{Details}{
   The default way that functions in \code{poppr} deal with
@@ -79,9 +78,9 @@ nancy.mean <- missingno(nancycats, type = "mean")
 ## Replaced 617 missing values
 }
 \author{
-  Zhian N. Kamvar
+Zhian N. Kamvar
 }
 \seealso{
-  \code{\link{na.replace}}, \code{\link{poppr}}
+\code{\link{na.replace}}, \code{\link{poppr}}
 }
 

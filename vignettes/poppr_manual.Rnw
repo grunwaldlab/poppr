@@ -1407,7 +1407,8 @@ cat("|==========================================================================
 <<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
  set.seed(1001)
  nan9tree <- phangorn::upgma(bruvo.dist(popsub(nancycats, 8:9), replen = rep(1, 9)))
- nan9tree$node.labels <- c(100, NA, NA, NA, NA, 66, NA, NA, NA, NA, NA, 78, NA, 61, NA, NA, NA, NA)
+ nan9tree$node.labels <- c(100, NA, NA, NA, NA, 69, NA, NA, NA, NA, NA, 79, NA, 66, NA, 52, NA, NA)
+ nan9tree$tip.label <- indNames(popsub(nancycats, 8:9))
  ape::plot.phylo(nan9tree, show.node.label=TRUE)
  ape::axisPhylo(3)
 @

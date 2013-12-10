@@ -132,37 +132,32 @@ extract.info <- function(x) {
                             clonecorrect=FALSE, hier=c(1), dfname="hier"){
   if (!is.genind(pop)){
     x <- pop
-    if(toupper(.readExt(x)) == "CSV"){
+    if (toupper(.readExt(x)) == "CSV"){
       try(pop <- read.genalex(x), silent=quiet)
       try(pop <- read.genalex(x, region=TRUE), silent=quiet)
       try(pop <- read.genalex(x, geo=TRUE), silent=quiet)
       try(pop <- read.genalex(x, geo=TRUE, region=TRUE), silent=quiet)
-      # try(pop <- read.aflp(x), silent=quiet)
-    }
-    else{
+    } else {
       try(pop <- import2genind(x, quiet=quiet), silent=quiet)
     }
     stopifnot(is.genind(pop))
     pop@call[2] <- x
-    popcall <- pop@call
-    pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
-    pop@call <- popcall
+    popcall     <- pop@call
+    pop         <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
+    pop@call    <- popcall
     if (clonecorrect == TRUE){
-      poplist <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
-      pop <- poplist
+      poplist  <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
+      pop      <- poplist
       pop@call <- popcall
-      #poplist <- .pop.divide(pop)
     }
-  }
-  else if (is.genind(pop)) {
-    x <- as.character(pop@call)[2]
+  } else if (is.genind(pop)) {
+    x       <- as.character(pop@call)[2]
     popcall <- pop@call
-    pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
+    pop     <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
     if (clonecorrect == TRUE){
-      poplist <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
-      pop <- poplist
+      poplist  <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
+      pop      <- poplist
       pop@call <- popcall
-      #poplist <- .pop.divide(pop)
     }
   }
   return(list(X=x, GENIND=pop))
@@ -204,8 +199,9 @@ geno.na <- function(pop){
   pop2 <- -unique(which(is.na(pop@tab), arr.ind=T)[,1])  
   if(is.na(pop2[1])){
     return(unique(which(!is.na(pop@tab), arr.ind=T)[,1]))
-  }
-  else return(pop2)
+  } else {
+    return(pop2)
+  } 
 }
 
 #==============================================================================#
@@ -222,8 +218,9 @@ loci.na <- function(pop) {
   pop2 <- -unique(which(is.na(pop@tab), arr.ind=T)[,2])  
   if(is.na(pop2[1])){
     return(unique(which(!is.na(pop@tab), arr.ind=T)[,2]))
-  }
-  else return(pop2)
+  } else {
+    return(pop2)
+  } 
 }
 
 #==============================================================================#
@@ -238,7 +235,7 @@ loci.na <- function(pop) {
 #==============================================================================#
 
 percent_missing <- function(pop, type="loci", cutoff=0.05){
-  if(toupper(type) == "LOCI"){
+  if (toupper(type) == "LOCI"){
     misslist <- loci.na(pop)
     if(all(misslist > 0)){
       return(misslist)
@@ -246,11 +243,10 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
     poplen <- nInd(pop)
     filter <- vapply(-misslist, function(x) 
       length(which(is.na(pop@tab[, x])))/poplen, 1) > cutoff
-    if(is.na(filter[1])){
+    if (is.na(filter[1])){
       filter <- 1:length(misslist)
     }
-  }
-  else{
+  } else {
     misslist <- geno.na(pop)
     if(all(misslist > 0)){
       return(misslist)
@@ -259,8 +255,8 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
     filter <- vapply(-misslist, function(x)
       length(unique( pop@loc.fac[which(is.na(pop@tab[x, ]))] )) / poplen, 1) > cutoff
   }
-  if(all(filter %in% FALSE)){
-    filter <- 1:length(misslist)
+  if (all(filter %in% FALSE)){
+    filter   <- 1:length(misslist)
     misslist <- 1:length(misslist)
   }
   return(misslist[filter])
@@ -296,7 +292,7 @@ round.poppr <- function(x){
 #==============================================================================#
 
 ia.pval <- function(index="index", sampled, observed){
-  if(all(is.nan(sampled[[index]]))){
+  if (all(is.nan(sampled[[index]]))){
     return(NA)
   }
   pval <- mean(ifelse(!is.na(sampled[[index]]) & sampled[[index]] >= observed,1,0))
@@ -315,22 +311,19 @@ ia.pval <- function(index="index", sampled, observed){
 
 .quiet <- function(quiet="minimal", IarD=NULL, pop=pop, N=NULL){
   if (quiet != TRUE){
-    if(quiet == FALSE){
+    if (quiet == FALSE){
       if (!is.null(N)){
         cat("Now Analyzing Population: ", paste(pop,",", sep=""),"N:",N,"\n")
-      }
-      else{
+      } else {
         cat("|", pop,"\n")
       }
-    }
-    else if(quiet == "noisy"){
+    } else if (quiet == "noisy"){
       cat("Population: ", pop,"\n")
-      if(!is.null(IarD)){
+      if (!is.null(IarD)){
         cat("Index of Association: ", IarD[1],"\n")
         cat("Standardized Index of Association (rbarD): ", IarD[2],"\n")
       }  
-    }
-    else{
+    } else {
       cat("|", pop ,"\n")
     }
   }
@@ -359,8 +352,8 @@ pop_splitter <- function(df, sep="_"){
     # creating a column on the data frame called h# for the heirarchical level.
     # These levels are arbitrary and labeled as they are arranged in the
     # original vector. 
-    df[[paste("h",x, sep="")]] <- "NA"
-    df[[paste("h",x, sep="")]] <- vapply(strsplit(df[[1]],sep), 
+    df[[paste0("h",x)]] <- "NA"
+    df[[paste0("h",x)]] <- vapply(strsplit(df[[1]],sep), 
                                           function(y) y[x], "1")
   }
   return(df)
@@ -429,30 +422,23 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       stop("Population names do not match population factors.")
     }
   }
-
+  
   # Treating anything present in blacklist.
   if (!is.null(blacklist)){
-
     # If both the sublist and blacklist are numeric or character.
-    if(is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
+    if (is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
       sublist <- sublist[!sublist %in% blacklist]
-    }
-    
+    } else if (is.numeric(sublist) & class(blacklist) == "character"){
     # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-    else if(is.numeric(sublist) & class(blacklist) == "character"){
       sublist <- sublist[sublist %in% which(!pop@pop.names %in% blacklist)]
-    }
-    else{
-
+    } else {
       # no sublist specified. Ideal situation
       if(all(pop@pop.names %in% sublist)){
         sublist <- sublist[-blacklist]
-      }
-
+      } else {
       # weird situation where the user will specify a certain sublist, yet index
       # the blacklist numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
-      else{
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
         sublist <- sublist[!sublist %in% pop@pop.names[blacklist]]
       }
@@ -540,7 +526,7 @@ mlg.matrix <- function(pop){
 
 .PA.Ia.Rd <- function(pop, missing=NULL){
 	vard.vector <- NULL
-	numLoci <- ncol(pop@tab)
+	numLoci     <- ncol(pop@tab)
 	numIsolates <- nrow(pop@tab)
 	# Creating this number is necessary because it is how the variance is
 	# calculated.
@@ -563,7 +549,7 @@ mlg.matrix <- function(pop){
 	rm(vard.vector)
 	# Finally, the Index of Association and the standardized Index of associati-
 	# on are calculated.
-	Ia <- (varD/sigVarj)-1
+	Ia    <- (varD/sigVarj)-1
 	rbarD <- (varD - sigVarj)/(2*sum(vardpair.vector))
 	return(c(Ia, rbarD))
 }
@@ -601,8 +587,7 @@ mlg.matrix <- function(pop){
     # are not one or zero with a rounded value. 
     tempz <- !temp.d.vector %in% 0:1
     temp.d.vector[tempz] <- vapply(temp.d.vector[tempz], round.poppr, 1)
-  }
-  else{    
+  } else {    
     temp.d.vector <- vapply(seq(numLoci), 
                           function(x) as.vector(dist(pop@tab[,x])), 
                           temp.d.vector[,1])
@@ -611,18 +596,17 @@ mlg.matrix <- function(pop){
       temp.d.vector[which(is.na(temp.d.vector))] <- 0
     }
   }
-  if(ploidy(pop) > 1){
+  if (ploidy(pop) > 1){
     # multiplying by two is the proper way to evaluate P/A diploid data because
     # one cannot detect heterozygous loci (eg, a difference of 1).
     temp.d.vector <- temp.d.vector*ploidy(pop)
-    d.vector <- as.vector(colSums(temp.d.vector))
+    d.vector  <- as.vector(colSums(temp.d.vector))
     d2.vector <- as.vector(colSums(temp.d.vector^2))
-    D.vector <- as.vector(rowSums(temp.d.vector))
-  }
-  else{
-    d.vector <- as.vector(colSums(temp.d.vector))
+    D.vector  <- as.vector(rowSums(temp.d.vector))
+  } else {
+    d.vector  <- as.vector(colSums(temp.d.vector))
     d2.vector <- d.vector
-    D.vector <- as.vector(rowSums(temp.d.vector))
+    D.vector  <- as.vector(rowSums(temp.d.vector))
   }
   vectors <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
   return(vectors)
@@ -642,8 +626,7 @@ mlg.matrix <- function(pop){
 final <- function(Iout, result){
   if (is.null(result)){
     return(Iout)
-  }
-  else{
+  } else {
     return(result)
   }
 }
@@ -667,8 +650,8 @@ final <- function(Iout, result){
     popx <- seploc(pop)
   }
   else {
-    type <- pop@type
-    popx <- pop
+    type   <- pop@type
+    popx   <- pop
     .Ia.Rd <- .PA.Ia.Rd
   }
   # if there are less than three individuals in the population, the calculation
@@ -691,18 +674,18 @@ final <- function(Iout, result){
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
   if (sample==0){
-    Iout <- IarD
+    Iout   <- IarD
     result <- NULL
   }
   # sampling will perform the iterations and then return a data frame indicating
   # the population, index, observed value, and p-value. It will also produce a 
   # histogram.
   else{
-    Iout <- NULL 
-    idx <- as.data.frame(list(Index=names(IarD)))
-    samp <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
-    samp2 <- rbind(samp, IarD)
-    p.val <- ia.pval(index="Ia", samp2, IarD[1])
+    Iout     <- NULL 
+    idx      <- as.data.frame(list(Index=names(IarD)))
+    samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
+    samp2    <- rbind(samp, IarD)
+    p.val    <- ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
       poppr.plot(samp, observed=IarD, pop=namelist$population,
@@ -711,7 +694,7 @@ final <- function(Iout, result){
     result <- 1:4
     result[c(1,3)] <- IarD
     result[c(2,4)] <- p.val
-    names(result) <- c("Ia","p.Ia","rbarD","p.rD")
+    names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
   } 
   return(final(Iout, result))
 }
@@ -873,6 +856,7 @@ pair_diffs <- function(pop, numLoci, np)
 # Internal functions utilizing this function:
 # # none
 #
+# DEPRECIATED
 #==============================================================================#
 phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss = TRUE){
   # Preceeding functions should take care of this:
@@ -880,7 +864,7 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
   # ssr.matrix[is.na(ssr.matrix)] <- paste(rep(0, ploid), collapse="/")
   # Bruvo's distance needs a matrix with the number of columns equal to the
   # number of loci multiplied by the polidy. 
-
+  indnames <- rownames(ssr.matrix)
   ssr.matrix <- apply(ssr.matrix, 1, strsplit, "/")
   # Getting the values into numeric form.
   ssr.matrix <- apply(as.matrix(t(sapply(ssr.matrix, unlist))), 2, as.numeric)
@@ -895,6 +879,7 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
   dist.mat <- matrix(ncol=nrow(ssr.matrix), nrow=nrow(ssr.matrix))
   dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
   dist.mat <- as.dist(dist.mat)
+  attr(dist.mat, "labels") <- indnames
   return(dist.mat)
 }
 
@@ -921,15 +906,13 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
   if (correction < 0){
     adj <-  (w^abs(correction))/(1/ming) 
     adj <- (adj + 1-ming) / ((1 / maxg))
-  }
-  else{
+  } else {
     adj <-  (1 - (((1-w)^abs(correction))/(1/ming)) )
     adj <- adj / (1/maxg)
   }
   if (show == FALSE){
     return(adj)
-  }
-  else{
+  } else {
     cols <- grey(sort(adj))
     hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
          ylab="Grey Adjusted", 
@@ -941,8 +924,7 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
                                        .(ming)^-1),")") + .(1-ming), 
                        .(maxg)^-1)) , 
            x=0.25,y=0.75, col="red")
-    }
-    else{
+    } else {
       text(bquote(frac(1-bgroup("(",frac((1-scriptstyle(x))^.(abs(correction)),
                                          .(ming)^-1),")"), 
                        .(maxg)^-1)) , 
@@ -965,16 +947,14 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
 #==============================================================================#
 
 guesslengths <- function(vec){
-  if(length(vec) > 1){
+  if (length(vec) > 1){
     lens <- vapply(2:length(vec), function(x) abs(vec[x] - vec[x - 1]), 1)
-    if(all(lens == 1)){
+    if (all(lens == 1)){
       return(1)
-    }
-    else{
+    } else {
       return(min(lens[lens > 1]))
     }
-  }
-  else{
+  } else {
     return(1)
   }
 }
@@ -1003,17 +983,15 @@ test_table <- function(loc, min_ind, n){
 # # none
 #==============================================================================#
 
-fix_negative_branch <- function (tre) {
+fix_negative_branch <- function(tre){
   # Creating a dataframe from the tree information: Tree edges and edge length
   all.lengths <- data.frame(tre$edge,tre$edge.length)
   # Looking at the edges that are zero.
-  zero.edges <- all.lengths[tre$edge.length < 0, ]
-  # Ordering the edges to simplify the dataframe and create indices
-  #zero.edges[order(zero.edges[,1]),]
+  zero.edges  <- all.lengths[tre$edge.length < 0, ]
   # Checking which negative edges are included in all the edges
-  all.edges <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
+  all.edges   <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
   # Ordering all the edges
-  index.table <- all.edges[order(all.edges[,1]),]
+  index.table <- all.edges[order(all.edges[,1]), ]
   # Loop to change the NJ branch length
   for (i in (unique(index.table$X1))){
     index.table$tre.edge.length[index.table$X1 == i] <- abs(index.table$tre.edge.length[index.table$X1 == i]) + min(index.table$tre.edge.length[index.table$X1 == i])
@@ -1025,3 +1003,110 @@ fix_negative_branch <- function (tre) {
   return(tre)
 }
 
+#==============================================================================#
+# Plot Minimum Spanning Networks for data sets with no or single population
+# factors.
+#
+# Public functions utilizing this function:
+# # bruvo.msn, poppr.msn
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+
+
+singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gscale = TRUE, 
+                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, ...){
+  # First, clone correct and get the number of individuals per MLG in order.
+  cpop <- pop[.clonecorrector(pop), ]
+  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  
+  # Calculate distance matrix if not supplied (Bruvo's distance)
+  if (is.null(distmat) & !is.null(replen)){
+    distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
+  }
+  
+  # Create the graphs.
+  g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")
+  mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+  
+  # Create the vertex labels
+  if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if (toupper(vertex.label) == "MLG"){
+      vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
+    } else if(toupper(vertex.label) == "INDS") {
+      vertex.label <- cpop$ind.names
+    }
+  } 
+  
+  # Adjust the color of the edges.
+  if (gscale == TRUE){
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
+                                     show=FALSE))
+  } else {
+    E(mst)$color <- rep("black", length(E(mst)$weight))
+  }
+  
+  # Adjust the widths of the edges
+  edgewidth <- 2
+  if (wscale == TRUE){
+    edgewidth <- 1/(E(mst)$weight)
+    if (any(E(mst)$weight < 0.08)){
+      edgewidth <- 1/(E(mst)$weight + 0.08)
+    }
+  }
+  
+  populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
+  
+  # Plot everything
+  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+              vertex.label = vertex.label, vertex.size = mlg.number*3, 
+              vertex.color = palette(1),  ...)
+  legend(-1.55,1,bty = "n", cex = 0.75, 
+         legend = populations, title = "Populations", fill = palette(1), 
+         border = NULL)
+  
+  # Save variables and return plot.
+  E(mst)$width <- edgewidth
+  V(mst)$size  <- mlg.number
+  V(mst)$color <- palette(1)
+  V(mst)$label <- vertex.label
+  return(list(graph = mst, populations = populations, colors = palette(1)))
+}
+
+#==============================================================================#
+# Calculate Bruvo's distance from a bruvomat object.
+#
+# Public functions utilizing this function:
+# # bruvo.msn, bruvo.dist, bruvo.boot
+#
+# Internal functions utilizing this function:
+# # singlepop_msn
+#==============================================================================#
+
+bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss = TRUE){
+  x      <- bruvomat@mat
+  ploid  <- bruvomat@ploidy
+  replen <- bruvomat@replen
+  x[is.na(x)] <- 0
+  # Dividing the data by the repeat length of each locus.
+  x <- x / rep(replen, each=ploid*nrow(x))
+  x <- matrix(round(x), ncol=ncol(x))
+  # Getting the permutation vector.
+  perms <- .Call("permuto", ploid)
+  # Calculating bruvo's distance over each locus. 
+  distmat <- .Call("bruvo_distance", x, perms, ploid, add, loss)
+  # If there are missing values, the distance returns 100, which means that the
+  # comparison is not made. These are changed to NA.
+  distmat[distmat == 100] <- NA
+  # Obtaining the average distance over all loci.
+  avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+  # presenting the information in a lower triangle distance matrix.
+  dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
+  dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
+  dist.mat <- as.dist(dist.mat)
+  attr(dist.mat, "labels") <- bruvomat@ind.names
+  attr(dist.mat, "method") <- "Bruvo"
+  attr(dist.mat, "call")   <- funk_call
+  return(dist.mat)
+}

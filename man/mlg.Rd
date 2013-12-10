@@ -5,17 +5,15 @@
 \alias{mlg.vector}
 \title{Create counts, vectors, and matrices of multilocus genotypes.}
 \usage{
-  mlg(pop, quiet = FALSE)
+mlg(pop, quiet = FALSE)
 
-  mlg.table(pop, sublist = "ALL", blacklist = NULL,
-    mlgsub = NULL, bar = TRUE, total = FALSE,
-    quiet = FALSE)
+mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
+  bar = TRUE, total = FALSE, quiet = FALSE)
 
-  mlg.vector(pop)
+mlg.vector(pop)
 
-  mlg.crosspop(pop, sublist = "ALL", blacklist = NULL,
-    mlgsub = NULL, indexreturn = FALSE, df = FALSE,
-    quiet = FALSE)
+mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
+  indexreturn = FALSE, df = FALSE, quiet = FALSE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object.}
@@ -54,35 +52,35 @@
   the matrix produced by mlg.table.}
 }
 \value{
-  an integer of the number of multilocus genotypes within
-  the sample.
+an integer of the number of multilocus genotypes within the
+sample.
 
-  a matrix with columns indicating unique multilocus
-  genotypes and rows indicating populations.
+a matrix with columns indicating unique multilocus
+genotypes and rows indicating populations.
 
-  a numeric vector naming the multilocus genotype of each
-  individual in the dataset.
+a numeric vector naming the multilocus genotype of each
+individual in the dataset.
 
-  a \code{list} containing vectors of population names for
-  each MLG.
+a \code{list} containing vectors of population names for
+each MLG.
 }
 \description{
-  Create counts, vectors, and matrices of multilocus
-  genotypes.
+Create counts, vectors, and matrices of multilocus
+genotypes.
 }
 \note{
-  The resulting matrix of \code{mlg.table} can be used for
-  analysis with the \code{\link{vegan}} package. The names
-  of the multilocus genotypes represented will be those
-  from the entire dataset. If you wish to view those
-  relative to a subsetted dataset, you can use
-  \code{mlg.bar(popsub(pop, ...))}.
+The resulting matrix of \code{mlg.table} can be used for
+analysis with the \code{\link{vegan}} package. The names of
+the multilocus genotypes represented will be those from the
+entire dataset. If you wish to view those relative to a
+subsetted dataset, you can use \code{mlg.bar(popsub(pop,
+...))}.
 
-  The numbers of \code{mlg.vector} will not match up with
-  the sequence of new genotypes found because sorting takes
-  place within the algorithm before the genotypes are
-  called so that the number of comparisons is \eqn{n-1}
-  instead of \eqn{\frac{n(n-1)}{2}}.
+The numbers of \code{mlg.vector} will not match up with the
+sequence of new genotypes found because sorting takes place
+within the algorithm before the genotypes are called so
+that the number of comparisons is \eqn{n-1} instead of
+\eqn{\frac{n(n-1)}{2}}.
 }
 \examples{
 data(H3N2)
@@ -128,9 +126,9 @@ mlg.table(mat.gid)
 }
 }
 \author{
-  Zhian N. Kamvar
+Zhian N. Kamvar
 }
 \seealso{
-  \code{\link{diversity}} \code{\link{popsub}}
+\code{\link{diversity}} \code{\link{popsub}}
 }
 
