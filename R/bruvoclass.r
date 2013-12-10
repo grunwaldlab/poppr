@@ -205,10 +205,8 @@ setMethod(
       gen@tab[!gen@tab %in% c((0:ploid)/ploid, NA)] <- NA
     }
     # This will check for data that has missing scored as "zero".
-    # Data such as this cannot easily be treated by this function and will be
-    # sent to the internal function phylo.bruvo.boot
     popcols <- ploid*nLoc(gen)
-    if(!any(is.na(gen@tab)) & any(rowSums(gen@tab, na.rm=TRUE) < nLoc(gen))){
+    if (!any(is.na(gen@tab)) & any(rowSums(gen@tab, na.rm=TRUE) < nLoc(gen))){
       mat1 <- as.matrix.data.frame(genind2df(gen, sep="/", usepop=FALSE))
       mat1[mat1 %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
       mat2 <- apply(mat1, 1, strsplit, "/")

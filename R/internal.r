@@ -132,37 +132,32 @@ extract.info <- function(x) {
                             clonecorrect=FALSE, hier=c(1), dfname="hier"){
   if (!is.genind(pop)){
     x <- pop
-    if(toupper(.readExt(x)) == "CSV"){
+    if (toupper(.readExt(x)) == "CSV"){
       try(pop <- read.genalex(x), silent=quiet)
       try(pop <- read.genalex(x, region=TRUE), silent=quiet)
       try(pop <- read.genalex(x, geo=TRUE), silent=quiet)
       try(pop <- read.genalex(x, geo=TRUE, region=TRUE), silent=quiet)
-      # try(pop <- read.aflp(x), silent=quiet)
-    }
-    else{
+    } else {
       try(pop <- import2genind(x, quiet=quiet), silent=quiet)
     }
     stopifnot(is.genind(pop))
     pop@call[2] <- x
-    popcall <- pop@call
-    pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
-    pop@call <- popcall
+    popcall     <- pop@call
+    pop         <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
+    pop@call    <- popcall
     if (clonecorrect == TRUE){
-      poplist <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
-      pop <- poplist
+      poplist  <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
+      pop      <- poplist
       pop@call <- popcall
-      #poplist <- .pop.divide(pop)
     }
-  }
-  else if (is.genind(pop)) {
-    x <- as.character(pop@call)[2]
+  } else if (is.genind(pop)) {
+    x       <- as.character(pop@call)[2]
     popcall <- pop@call
-    pop <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
+    pop     <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
     if (clonecorrect == TRUE){
-      poplist <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
-      pop <- poplist
+      poplist  <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
+      pop      <- poplist
       pop@call <- popcall
-      #poplist <- .pop.divide(pop)
     }
   }
   return(list(X=x, GENIND=pop))
@@ -204,8 +199,9 @@ geno.na <- function(pop){
   pop2 <- -unique(which(is.na(pop@tab), arr.ind=T)[,1])  
   if(is.na(pop2[1])){
     return(unique(which(!is.na(pop@tab), arr.ind=T)[,1]))
-  }
-  else return(pop2)
+  } else {
+    return(pop2)
+  } 
 }
 
 #==============================================================================#
@@ -222,8 +218,9 @@ loci.na <- function(pop) {
   pop2 <- -unique(which(is.na(pop@tab), arr.ind=T)[,2])  
   if(is.na(pop2[1])){
     return(unique(which(!is.na(pop@tab), arr.ind=T)[,2]))
-  }
-  else return(pop2)
+  } else {
+    return(pop2)
+  } 
 }
 
 #==============================================================================#
@@ -238,7 +235,7 @@ loci.na <- function(pop) {
 #==============================================================================#
 
 percent_missing <- function(pop, type="loci", cutoff=0.05){
-  if(toupper(type) == "LOCI"){
+  if (toupper(type) == "LOCI"){
     misslist <- loci.na(pop)
     if(all(misslist > 0)){
       return(misslist)
@@ -246,11 +243,10 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
     poplen <- nInd(pop)
     filter <- vapply(-misslist, function(x) 
       length(which(is.na(pop@tab[, x])))/poplen, 1) > cutoff
-    if(is.na(filter[1])){
+    if (is.na(filter[1])){
       filter <- 1:length(misslist)
     }
-  }
-  else{
+  } else {
     misslist <- geno.na(pop)
     if(all(misslist > 0)){
       return(misslist)
@@ -259,8 +255,8 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
     filter <- vapply(-misslist, function(x)
       length(unique( pop@loc.fac[which(is.na(pop@tab[x, ]))] )) / poplen, 1) > cutoff
   }
-  if(all(filter %in% FALSE)){
-    filter <- 1:length(misslist)
+  if (all(filter %in% FALSE)){
+    filter   <- 1:length(misslist)
     misslist <- 1:length(misslist)
   }
   return(misslist[filter])
@@ -296,7 +292,7 @@ round.poppr <- function(x){
 #==============================================================================#
 
 ia.pval <- function(index="index", sampled, observed){
-  if(all(is.nan(sampled[[index]]))){
+  if (all(is.nan(sampled[[index]]))){
     return(NA)
   }
   pval <- mean(ifelse(!is.na(sampled[[index]]) & sampled[[index]] >= observed,1,0))
@@ -315,22 +311,19 @@ ia.pval <- function(index="index", sampled, observed){
 
 .quiet <- function(quiet="minimal", IarD=NULL, pop=pop, N=NULL){
   if (quiet != TRUE){
-    if(quiet == FALSE){
+    if (quiet == FALSE){
       if (!is.null(N)){
         cat("Now Analyzing Population: ", paste(pop,",", sep=""),"N:",N,"\n")
-      }
-      else{
+      } else {
         cat("|", pop,"\n")
       }
-    }
-    else if(quiet == "noisy"){
+    } else if (quiet == "noisy"){
       cat("Population: ", pop,"\n")
-      if(!is.null(IarD)){
+      if (!is.null(IarD)){
         cat("Index of Association: ", IarD[1],"\n")
         cat("Standardized Index of Association (rbarD): ", IarD[2],"\n")
       }  
-    }
-    else{
+    } else {
       cat("|", pop ,"\n")
     }
   }
@@ -359,8 +352,8 @@ pop_splitter <- function(df, sep="_"){
     # creating a column on the data frame called h# for the heirarchical level.
     # These levels are arbitrary and labeled as they are arranged in the
     # original vector. 
-    df[[paste("h",x, sep="")]] <- "NA"
-    df[[paste("h",x, sep="")]] <- vapply(strsplit(df[[1]],sep), 
+    df[[paste0("h",x)]] <- "NA"
+    df[[paste0("h",x)]] <- vapply(strsplit(df[[1]],sep), 
                                           function(y) y[x], "1")
   }
   return(df)
@@ -429,30 +422,23 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       stop("Population names do not match population factors.")
     }
   }
-
+  
   # Treating anything present in blacklist.
   if (!is.null(blacklist)){
-
     # If both the sublist and blacklist are numeric or character.
-    if(is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
+    if (is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
       sublist <- sublist[!sublist %in% blacklist]
-    }
-    
+    } else if (is.numeric(sublist) & class(blacklist) == "character"){
     # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-    else if(is.numeric(sublist) & class(blacklist) == "character"){
       sublist <- sublist[sublist %in% which(!pop@pop.names %in% blacklist)]
-    }
-    else{
-
+    } else {
       # no sublist specified. Ideal situation
       if(all(pop@pop.names %in% sublist)){
         sublist <- sublist[-blacklist]
-      }
-
+      } else {
       # weird situation where the user will specify a certain sublist, yet index
       # the blacklist numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
-      else{
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
         sublist <- sublist[!sublist %in% pop@pop.names[blacklist]]
       }
@@ -540,7 +526,7 @@ mlg.matrix <- function(pop){
 
 .PA.Ia.Rd <- function(pop, missing=NULL){
 	vard.vector <- NULL
-	numLoci <- ncol(pop@tab)
+	numLoci     <- ncol(pop@tab)
 	numIsolates <- nrow(pop@tab)
 	# Creating this number is necessary because it is how the variance is
 	# calculated.
@@ -563,7 +549,7 @@ mlg.matrix <- function(pop){
 	rm(vard.vector)
 	# Finally, the Index of Association and the standardized Index of associati-
 	# on are calculated.
-	Ia <- (varD/sigVarj)-1
+	Ia    <- (varD/sigVarj)-1
 	rbarD <- (varD - sigVarj)/(2*sum(vardpair.vector))
 	return(c(Ia, rbarD))
 }
@@ -664,8 +650,8 @@ final <- function(Iout, result){
     popx <- seploc(pop)
   }
   else {
-    type <- pop@type
-    popx <- pop
+    type   <- pop@type
+    popx   <- pop
     .Ia.Rd <- .PA.Ia.Rd
   }
   # if there are less than three individuals in the population, the calculation
@@ -688,18 +674,18 @@ final <- function(Iout, result){
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
   if (sample==0){
-    Iout <- IarD
+    Iout   <- IarD
     result <- NULL
   }
   # sampling will perform the iterations and then return a data frame indicating
   # the population, index, observed value, and p-value. It will also produce a 
   # histogram.
   else{
-    Iout <- NULL 
-    idx <- as.data.frame(list(Index=names(IarD)))
-    samp <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
-    samp2 <- rbind(samp, IarD)
-    p.val <- ia.pval(index="Ia", samp2, IarD[1])
+    Iout     <- NULL 
+    idx      <- as.data.frame(list(Index=names(IarD)))
+    samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
+    samp2    <- rbind(samp, IarD)
+    p.val    <- ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
       poppr.plot(samp, observed=IarD, pop=namelist$population,
@@ -708,7 +694,7 @@ final <- function(Iout, result){
     result <- 1:4
     result[c(1,3)] <- IarD
     result[c(2,4)] <- p.val
-    names(result) <- c("Ia","p.Ia","rbarD","p.rD")
+    names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
   } 
   return(final(Iout, result))
 }
@@ -1000,9 +986,9 @@ fix_negative_branch <- function(tre){
   # Creating a dataframe from the tree information: Tree edges and edge length
   all.lengths <- data.frame(tre$edge,tre$edge.length)
   # Looking at the edges that are zero.
-  zero.edges <- all.lengths[tre$edge.length < 0, ]
+  zero.edges  <- all.lengths[tre$edge.length < 0, ]
   # Checking which negative edges are included in all the edges
-  all.edges <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
+  all.edges   <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
   # Ordering all the edges
   index.table <- all.edges[order(all.edges[,1]), ]
   # Loop to change the NJ branch length
@@ -1120,6 +1106,6 @@ bruvos_distance <- function(bruvomat, funk_call = match.call()){
   dist.mat <- as.dist(dist.mat)
   attr(dist.mat, "labels") <- bruvomat@ind.names
   attr(dist.mat, "method") <- "Bruvo"
-  attr(dist.mat, "call") <- funk_call
+  attr(dist.mat, "call")   <- funk_call
   return(dist.mat)
 }

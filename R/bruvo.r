@@ -101,7 +101,7 @@
 bruvo.dist <- function(pop, replen=c(1)){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
-  if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
+  if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
     stop("\nThis dataset does not appear to be microsatellite data. Bruvo's Distance can only be applied for true microsatellites.")
   }
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
@@ -109,7 +109,6 @@ bruvo.dist <- function(pop, replen=c(1)){
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(pop@loc.names)){
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
-    #		replen <- rep(replen[1], numLoci)
     warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
     cat(replen,"\n\n")
   }
@@ -196,7 +195,7 @@ bruvo.boot <- function(pop, replen = c(1), sample = 100, tree = "upgma",
                        showtree = TRUE, cutoff = NULL, quiet = FALSE, ...) {
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
-  if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
+  if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
     stop("\nThis dataset does not appear to be microsatellite data. Bruvo's Distance can only be applied for true microsatellites.")
   }
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
@@ -207,35 +206,31 @@ bruvo.boot <- function(pop, replen = c(1), sample = 100, tree = "upgma",
     warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
     cat(replen,"\n\n")
   }
-  #### bootgen <- new('bootgen', pop, replen)
   bootgen <- new('bruvomat', pop, replen)
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
-  if(tree == "upgma"){
-    # require(phangorn)
+  if (tree == "upgma"){
     root <- TRUE
     newfunk <- match.fun(upgma)
-  }
-  else if(tree == "nj"){
+  } else if (tree == "nj"){
     root <- FALSE
     newfunk <- match.fun(nj)
   }
-  ####  tre <- newfunk(bruvo.dist(bootgen, replen = bootgen@replen))
   tre <- newfunk(bruvos_distance(bootgen))
   if (any (tre$edge.length < 0)){
     warning("Some branch lengths of the tree are negative. Normalizing branches according to Kuhner and Felsenstein (1994)", immediate.=TRUE)
 	  tre <- fix_negative_branch(tre)
   }
-  if(quiet == FALSE){
+  if (quiet == FALSE){
     cat("\nBootstrapping...\n") 
     cat("(note: calculation of node labels can take a while even after") 
     cat(" the progress bar is full)\n\n")
   }
-  #### bp <- boot.phylo(tre, bootgen, FUN = function (x){newfunk(bruvo.dist(x, replen = x@replen))}, B = sample, quiet = quiet, rooted = root, ...)
   bootfun <- function(x){
     return(newfunk(bruvos_distance(x)))
   }
-  bp <- boot.phylo(tre, bootgen, FUN = bootfun, B = sample, quiet = quiet, rooted = root, ...)
+  bp <- boot.phylo(tre, bootgen, FUN = bootfun, B = sample, quiet = quiet, 
+                   rooted = root, ...)
   tre$node.labels <- round(((bp / sample)*100))
   if (!is.null(cutoff)){
     if (cutoff < 1 | cutoff > 100){
@@ -251,6 +246,7 @@ bruvo.boot <- function(pop, replen = c(1), sample = 100, tree = "upgma",
   if(tree=="upgma"){
     axisPhylo(3)
   } else if (tree == "nj"){
+    # I have tried different positions of the scale bar and have failed.
     add.scale.bar(lwd = 5)
   }
   return(tre)
