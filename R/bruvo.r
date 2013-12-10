@@ -68,7 +68,7 @@
 #'
 #' If the user does not provide a vector of appropriate length for \code{replen}
 #' , it will be estimated by taking the minimum difference among represented
-#' alleles at each locus. It is not recommended to rely on this estimation. 
+#' alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION. 
 #'
 #' @export
 #' @author Zhian N. Kamvar
@@ -98,61 +98,23 @@
 #' }
 #==============================================================================#
 #' @useDynLib poppr
-bruvo.dist <- function(pop, replen=c(2)){
+bruvo.dist <- function(pop, replen=c(1)){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
-  if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
+  if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
     stop("\nThis dataset does not appear to be microsatellite data. Bruvo's Distance can only be applied for true microsatellites.")
   }
-  ploid <- ploidy(pop)
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(pop@loc.names)){
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
-    #		replen <- rep(replen[1], numLoci)
     warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
     cat(replen,"\n\n")
   }
-  popcols <- length(pop@loc.names)*ploid
-  indnames <- pop@ind.names
-  # This controlls for the user correcting missing data using "mean". 
-  if(any(!pop@tab %in% c(0,((1:ploid)/ploid),1, NA))){
-    pop@tab[!pop@tab %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
-  }
-  if(any(rowSums(pop@tab, na.rm=TRUE) < nLoc(pop))){
-    
-    pop <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
-    pop[pop %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
-    return(phylo.bruvo.dist(pop, replen=replen, ploid=ploid))
-  }
-  else{
-    pop <- matrix(as.numeric(as.matrix(genind2df(
-  	  pop, oneColPerAll=TRUE, usepop=F))), ncol=popcols)
-  }
-
-  # Setting all missing data to 0.
-  pop[is.na(pop)] <- 0
-  # Dividing the data by the repeat length of each locus.
-
-  pop <- pop / rep(replen, each=ploid*nrow(pop))
-  pop <- matrix(round(pop), ncol=popcols)
-  # Getting the permutation vector.
-  perms <- .Call("permuto", ploid)
-  # Calculating bruvo's distance over each locus. 
-  distmat <- .Call("bruvo_distance", pop, perms, ploid)
-  # If there are missing values, the distance returns 100, which means that the
-  # comparison is not made. These are changed to NA.
-  distmat[distmat == 100] <- NA
-  # Obtaining the average distance over all loci.
-  avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
-  # presenting the information in a lower triangle distance matrix.
-  dist.mat <- matrix(ncol=nrow(pop), nrow=nrow(pop))
-  dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
-  dist.mat <- as.dist(dist.mat)
-  attr(dist.mat, "labels") <- indnames
-  attr(dist.mat, "method") <- "Bruvo"
-  attr(dist.mat, "call") <- match.call()
+  bruvomat  <- new('bruvomat', pop, replen)
+  funk_call <- match.call()
+  dist.mat  <- bruvos_distance(bruvomat, funk_call = funk_call)
   return(dist.mat)
 }
 
@@ -200,7 +162,7 @@ bruvo.dist <- function(pop, replen=c(2)){
 #'
 #' If the user does not provide a vector of appropriate length for \code{replen}
 #' , it will be estimated by taking the minimum difference among represented
-#' alleles at each locus. It is not recommended to rely on this estimation. 
+#' alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION. 
 #'
 #' @export
 #' @author Javier F. Tabima, Zhian N. Kamvar
@@ -217,11 +179,11 @@ bruvo.dist <- function(pop, replen=c(2)){
 #'
 #' # Load the nancycats dataset and construct the repeat vector.
 #' data(nancycats)
-#' ssr <- rep(1,9)
+#' ssr <- rep(2, 9)
 #' 
 #' # Analyze the 1st population in nancycats
 #'
-#' bruvo.boot(popsub(nancycats, 1), replen=ssr)
+#' bruvo.boot(popsub(nancycats, 1), replen = ssr)
 #'
 #==============================================================================#
 #' @importFrom phangorn upgma  midpoint
@@ -229,59 +191,53 @@ bruvo.dist <- function(pop, replen=c(2)){
 #   /     \
 #   |=(o)=|
 #   \     /
-bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma", 
+bruvo.boot <- function(pop, replen = c(1), sample = 100, tree = "upgma", 
                        showtree = TRUE, cutoff = NULL, quiet = FALSE, ...) {
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
-  if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
+  if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
     stop("\nThis dataset does not appear to be microsatellite data. Bruvo's Distance can only be applied for true microsatellites.")
   }
-  ploid <- ploidy(pop)
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(pop@loc.names)){
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
-    #    replen <- rep(replen[1], numLoci)
     warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
     cat(replen,"\n\n")
   }
-  # This controlls for the user correcting missing data using "mean". 
-  if(any(!pop@tab %in% c(0,((1:ploid)/ploid),1, NA))){
-    pop@tab[!pop@tab %in% c(0,((1:ploid)/ploid),1, NA)] <- NA
-  }
-  # Converting the genind object into a matrix with each allele separated by "/"
-  bar <- as.matrix(genind2df(pop, sep="/", usepop=FALSE))
-  # The bruvo algorithm will ignore missing data, coded as 0.
-  bar[bar %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
-  #stopifnot(require(phangorn))
+  bootgen <- new('bruvomat', pop, replen)
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
-  if(tree == "upgma"){
-    # require(phangorn)
+  if (tree == "upgma"){
     root <- TRUE
     newfunk <- match.fun(upgma)
-  }
-  else if(tree == "nj"){
+  } else if (tree == "nj"){
     root <- FALSE
     newfunk <- match.fun(nj)
   }
-  tre <- newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid))
+  tre <- newfunk(bruvos_distance(bootgen))
   if (any (tre$edge.length < 0)){
     warning("Some branch lengths of the tree are negative. Normalizing branches according to Kuhner and Felsenstein (1994)", immediate.=TRUE)
-	tre <- fix_negative_branch(tre)
+	  tre <- fix_negative_branch(tre)
   }
-  if(quiet == FALSE){
-    cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
+  if (quiet == FALSE){
+    cat("\nBootstrapping...\n") 
+    cat("(note: calculation of node labels can take a while even after") 
+    cat(" the progress bar is full)\n\n")
   }
-  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid)), B = sample, quiet = quiet, rooted = root, ...)
+  bootfun <- function(x){
+    return(newfunk(bruvos_distance(x)))
+  }
+  bp <- boot.phylo(tre, bootgen, FUN = bootfun, B = sample, quiet = quiet, 
+                   rooted = root, ...)
   tre$node.labels <- round(((bp / sample)*100))
   if (!is.null(cutoff)){
     if (cutoff < 1 | cutoff > 100){
       cat("Cutoff value must be between 0 and 100.\n")
-      cutoff<- as.numeric(readline(prompt = "Choose a new cutoff value between 0 and 100:\n"))
+      cutoff <- as.numeric(readline(prompt = "Choose a new cutoff value between 0 and 100:\n"))
     }
-    tre$node.labels[tre$node.labels < cutoff]<-NA
+    tre$node.labels[tre$node.labels < cutoff] <- NA
   }
   tre$tip.label <- pop@ind.names
   if(showtree == TRUE){
@@ -289,6 +245,9 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
   }
   if(tree=="upgma"){
     axisPhylo(3)
+  } else if (tree == "nj"){
+    # I have tried different positions of the scale bar and have failed.
+    add.scale.bar(lwd = 5)
   }
   return(tre)
 }
@@ -371,40 +330,40 @@ bruvo.boot <- function(pop, replen = c(2), sample = 100, tree = "upgma",
 #' data(nancycats)
 #' 
 #' # View populations 8 and 9 with default colors. 
-#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' vertex.label.cex=0.7, vertex.label.dist=0.4)
 #' \dontrun{
 #' # View heat colors.
-#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette=heat.colors, vertex.label.cex=0.7, vertex.label.dist=0.4)
 #' 
 #' # View custom colors. Here, we use black and orange.
-#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4)
 #' 
 #' # View with darker shades of grey (setting the upper limit to 1/2 black 1/2 white).
-#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4, glim=c(0, 0.5))
 #' 
 #' # View with no grey scaling.
-#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4, gscale=FALSE)
 #' 
 #' # View with no line widths.
-#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4, wscale=FALSE)
 #' 
 #' # View with no scaling at all.
-#' bruvo.msn(nancycats, replen=rep(1, 9), sublist=8:9, vertex.label="inds", 
+#' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
 #' 
 #' # View the whole population, but without labels.
-#' bruvo.msn(nancycats, replen=rep(1, 9), vertex.label=NA)
+#' bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)
 #' }
 #==============================================================================#
 #' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph
@@ -412,86 +371,44 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, ...){
-  # require(igraph)
+
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
   pop$other$mlg.vec <- mlg.vector(pop)
   
-  singlepop <- function(pop, vertex.label){
-    cpop <- pop[.clonecorrector(pop), ]
-    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-    bclone <- bruvo.dist(cpop, replen=replen)
-    mclone <- as.dist(bclone)
-    #attr(bclone, "Labels") <- paste("MLG.", cpop$other$mlg.vec, sep="")
-    g <- graph.adjacency(as.matrix(bclone),weighted=TRUE,mode="undirected")
-    mst <- (minimum.spanning.tree(g,algorithm="prim",weights=E(g)$weight))
-    if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
-      if(toupper(vertex.label) == "MLG"){
-        vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
-      }
-      else if(toupper(vertex.label) == "INDS"){
-        vertex.label <- cpop$ind.names
-      }
-    }
-    
-    if(gscale == TRUE){
-      E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-                                       show=FALSE))
-    }
-    else{
-      E(mst)$color <- rep("black", length(E(mst)$weight))
-    }
-    
-    edgewidth <- 2
-    if(wscale == TRUE){
-      edgewidth <- 1/(E(mst)$weight)
-      if(any(E(mst)$weight < 0.08)){
-        edgewidth <- 1/(E(mst)$weight + 0.08)
-      }
-    }
-    populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
-    plot(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
-         vertex.label = vertex.label, vertex.size = mlg.number*3, 
-         vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex = 0.75, 
-           legend = populations, title = "Populations", fill = palette(1), 
-           border = NULL)
-    E(mst)$width <- edgewidth
-    V(mst)$size <- mlg.number
-    V(mst)$color <- palette(1)
-    V(mst)$label <- vertex.label
-    return(list(graph = mst, populations = populations, colors = palette(1)))
+  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, 
+                         palette = palette))
   }
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label))
-  }
-  if(sublist[1] != "ALL" | !is.null(blacklist)){
+  if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
   }
-  if(is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop(pop, vertex.label))
+  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+    return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, 
+                         palette = palette))
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
-  names(mlg.cp) <- paste("MLG.",sort(unique(pop$other$mlg.vec)),sep="")
+  names(mlg.cp) <- paste0("MLG.", sort(unique(pop$other$mlg.vec)))
   cpop <- pop[.clonecorrector(pop), ]
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-  mlg.cp <- mlg.cp[rank(cpop$other$mlg.vec)]
-  bclone <- bruvo.dist(cpop, replen=replen)
+  mlg.cp     <- mlg.cp[rank(cpop$other$mlg.vec)]
+  bclone     <- bruvo.dist(cpop, replen=replen)
   
   ###### Create a graph #######
-  g <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
-  mst <- (minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight))
+  g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
+  mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
   
-  if(!is.na(vertex.label[1]) & length(vertex.label) == 1){
-    if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
-    }
-    else if(toupper(vertex.label) == "INDS"){
+  if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
+    if (toupper(vertex.label) == "MLG"){
+      vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
+    } else if (toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
     }
   }
@@ -499,19 +416,18 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color <- palette(length(pop@pop.names))
+  color   <- palette(length(pop@pop.names))
   if(gscale == TRUE){
     E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
                                      show=FALSE))
-  }
-  else{
+  } else {
     E(mst)$color <- rep("black", length(E(mst)$weight))
   }
   
   edgewidth <- 2
-  if(wscale == TRUE){
+  if (wscale == TRUE){
     edgewidth <- 1/(E(mst)$weight)
-    if(any(E(mst)$weight < 0.08)){
+    if (any(E(mst)$weight < 0.08)){
       edgewidth <- 1/(E(mst)$weight + 0.08)
     }
   }
@@ -523,7 +439,7 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   #                                    show=FALSE))
   # plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'GREY')
 
-  plot(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
        vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
        vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
   legend(-1.55, 1, bty = "n", cex = 0.75, legend = pop$pop.names, 
@@ -533,11 +449,11 @@ bruvo.msn <- function (pop, replen = c(1), palette = topo.colors,
   # text(x= 1.5, y = seq(0,1,l=5), labels = round(quantile(E(mst)$weight), 3))
   # rasterImage(legend_image, 0, 0, 1,1)
   # par(def.par)
-  E(mst)$width <- edgewidth
-  V(mst)$size <- mlg.number
-  V(mst)$shape <- "pie"
-  V(mst)$pie <- mlg.cp
+  E(mst)$width     <- edgewidth
+  V(mst)$size      <- mlg.number
+  V(mst)$shape     <- "pie"
+  V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
-  V(mst)$label <- vertex.label
+  V(mst)$label     <- vertex.label
   return(list(graph = mst, populations = pop$pop.names, colors = color))
 }

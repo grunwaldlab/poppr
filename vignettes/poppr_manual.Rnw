@@ -22,7 +22,7 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 
-\title{Poppr 1.0.4: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
+\title{Poppr 1.0.5: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
 
 \begin{document}
@@ -1389,7 +1389,8 @@ cat("\nBootstrapping... (note: calculation of node labels can take a while even 
 <<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
  set.seed(1001)
  nan9tree <- phangorn::upgma(bruvo.dist(popsub(nancycats, 8:9), replen = rep(1, 9)))
- nan9tree$node.labels <- c(100, NA, NA, NA, NA, 66, NA, NA, NA, NA, NA, 78, NA, 61, NA, NA, NA, NA)
+ nan9tree$node.labels <- c(100, NA, NA, NA, NA, 69, NA, NA, NA, NA, NA, 79, NA, 66, NA, 52, NA, NA)
+ nan9tree$tip.label <- indNames(popsub(nancycats, 8:9))
  ape::plot.phylo(nan9tree, show.node.label=TRUE)
  ape::axisPhylo(3)
 @
@@ -1455,7 +1456,7 @@ greycurve(glim = c(0.2, 0.9), gadj=15, gweight=2)
 \tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to using the package \textit{igraph} (type \texttt{help("plot.igraph")} for details).
 \begin{quote}
 Default Command:\\
-\texttt{bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All",\\ 
+\texttt{bruvo.msn(pop, replen = c(2), palette = topo.colors, sublist = "All",\\ 
   \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
   \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
 }
@@ -1901,7 +1902,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item bruvo.boot(pop, replen = c(2), sample = 100, tree = "upgma", showtree = TRUE, 
 cutoff = NULL, quiet = FALSE, ...)  (Section \ref{index:trees:bruvo.boot})
 \item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1) (Section \ref{index:trees:greycurve})
-\item bruvo.msn(pop, replen = c(1), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
+\item bruvo.msn(pop, replen = c(2), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
 \item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:poppr.msn})
 \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
 \item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
