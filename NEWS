@@ -1,10 +1,13 @@
 poppr 1.0.5
 ===========
 BUG FIX
-* Bootstrapping algorithm for `bruvo.boot()` function was not shuffling the repeat lengths for each locus resulting in potentially erroneous bootstrap support values. This has been fixed by implementing an internal S4 class that will allow direct bootstrapping of the data and repeat lengths together.
+* Bootstrapping algorithm for `bruvo.boot` function was not shuffling the repeat lengths for each locus resulting in potentially erroneous bootstrap support values. This has been fixed by implementing an internal S4 class that will allow direct bootstrapping of the data and repeat lengths together.
 
 IMPROVEMENTS
-* Changes to `bruvo.boot()` allow for ever so slightly faster bootstrapping.
+* Changes to `bruvo.boot` allow for ever so slightly faster bootstrapping.
+
+MISC
+* Permutations for I_A and \bar{r}_d are now visualized as a progress bar as opposed to dots.
 
 poppr 1.0.4
 ===========

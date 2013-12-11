@@ -123,7 +123,7 @@ testing_funk <- function(){
 }
 
 new.poppr <- function(pop,total=TRUE,sublist=c("ALL"),blacklist=c(NULL), sample=0,
-  method=1,missing="ignore", quiet="minimal",clonecorrect=FALSE,hier=c(1),dfname="hier",
+  method=1,missing="ignore", quiet=FALSE,clonecorrect=FALSE,hier=c(1),dfname="hier",
   hist=TRUE, minsamp=10){
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
       "non-parametric bootstrap")
@@ -277,7 +277,7 @@ new.poppr.all <- function(filelist, ...) {
 	return(result)
 }
 
-.new.ia <- function(pop,sample=0,method=1,quiet="minimal",namelist=NULL,missing="ignore",
+.new.ia <- function(pop,sample=0,method=1,quiet=FALSE,namelist=NULL,missing="ignore",
                     hist=TRUE){
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
       "non-parametric bootstrap")
@@ -308,7 +308,9 @@ new.poppr.all <- function(filelist, ...) {
 
   IarD <- .Ia.Rd(popx, missing)
   # data vomit options.
-  .quiet(quiet=quiet, IarD=IarD, pop=namelist$population)
+  if (!quiet){
+    cat("|", namelist$population ,"\n")
+  }
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
   if (sample==0){
