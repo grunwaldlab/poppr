@@ -1063,7 +1063,7 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss
   x[is.na(x)] <- 0
   # Dividing the data by the repeat length of each locus.
   x <- x / rep(replen, each=ploid*nrow(x))
-  x <- matrix(round(x), ncol=ncol(x))
+  x <- matrix(as.integer(round(x)), ncol=ncol(x))
   # Getting the permutation vector.
   perms <- .Call("permuto", ploid)
   # Calculating bruvo's distance over each locus. 
