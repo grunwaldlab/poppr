@@ -4,7 +4,7 @@
 \usage{
 poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL),
   sample = 0, method = 1, missing = "ignore", cutoff = 0.05,
-  quiet = "minimal", clonecorrect = FALSE, hier = c(1),
+  quiet = FALSE, clonecorrect = FALSE, hier = c(1),
   dfname = "population_hierarchy", keep = 1, hist = TRUE, minsamp = 10)
 }
 \arguments{
@@ -51,11 +51,8 @@ poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL),
 
   \item{quiet}{Should the function print anything to the
   screen while it is performing calculations? \code{TRUE}
-  prints nothing, \code{"minimal"} (defualt) will print the
-  population name and dots indicating permutation progress,
-  \code{FALSE} will print the number of individuals in the
-  population. \code{"noisy"} will print out the individual
-  indecies as they are produced.}
+  prints nothing, \code{FALSE} (defualt) will print the
+  population name and a progress bar.}
 
   \item{clonecorrect}{default \code{FALSE}. must be used
   with the \code{hier} and \code{dfname} parameters, or the

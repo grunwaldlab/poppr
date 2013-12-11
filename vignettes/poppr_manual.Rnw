@@ -1176,7 +1176,7 @@ It is important to note that for this algorithm, all missing values are treated 
 \tab\tab This function is a quick look at a single data set. It can do almost everything that \texttt{poppr} can do except for sorting through populations.
 \begin{quote}
 Default Command:\\
-\texttt{ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", 
+\texttt{ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
     hist = TRUE)}
 \end{quote}
 \begin{itemize}
@@ -1190,7 +1190,7 @@ Default Command:\\
     \item non-parametric bootstrap.
   \end{enumerate}
   The methods are detailed in section \ref{data.manip:shuffle:shufflepop} of this manual.
-  \item \texttt{quiet -} This has three settings, \texttt{TRUE}, \texttt{FALSE}, and \texttt{"noisy"}. If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} and if there is sampling, a single dot for each sampling replicate will be printed to the screen to show the progress of the sampling. Choosing \texttt{"noisy"} is not recommended for the average user as it is meant for debugging. It will print the values of $I_A$ and $\bar r_d$ to the screen as they are produced. 
+  \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} will produce a progress bar.
   \item \texttt{missing -} This will preprocess your missing values. It is set to ignore missing data, so that they do not contribute to the distance measure. It can also be set to \texttt{"loci", "geno", "zero", or "mean"}. For details, see section \ref{data.manip:missing:missingno} of this manual.
   \item \texttt{hist -} This will produce a pair of histograms for each population showing the distribution of $I_A$ and $\bar r_d$ across the sampled data sets, and plot the observed value as a single vertical line.
 \end{itemize}
@@ -1206,7 +1206,7 @@ ia(popsub(nancycats, 5), sample=999)
 <<ia_demo_sampling, echo=FALSE>>=
 set.seed(1001)
 simplenan <- ia(popsub(nancycats, 5))
-invisible(lapply(1:999, function(x) {cat(ifelse(x %% 50 == 0, ".\n", "."))}))
+cat("|================================================================================| 100%\n")
 c(simplenan[1], p.Ia = 0.589, simplenan[2], p.rD = 0.589)
 @
 
@@ -1377,8 +1377,8 @@ set.seed(1001)
 nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, cutoff=50)
 @
 <<progbar, echo=FALSE>>=
+cat("\nBootstrapping...\n(note: calculation of node labels can take a while even after the progress bar is full)\n\n")
 cat("|================================================================================| 100%\n")
-cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
 @
 \begin{figure}[h!]
   \centering
@@ -1583,7 +1583,7 @@ A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
 \begin{quote}
 Default Command:\\
 \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
-        \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = "minimal", \\
+        \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, \\
         \tab clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", \\
         \tab hist = TRUE, minsamp = 10)}
 \end{quote}
@@ -1605,7 +1605,7 @@ Default Command:\\
       \item[missing -] How to deal with missing data. This feeds into the \texttt{type} flag of \texttt{missingno}.
       \item[cutoff -] Allowable percentage of missing data per genotype or locus.
     \end{description}
-  \item \texttt{quiet -} This has three settings, \texttt{TRUE}, \texttt{FALSE}, and \texttt{"noisy"}. If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} and if there is sampling, a single dot for each sampling replicate will be printed to the screen to show the progress of the sampling. Choosing \texttt{"noisy"} is not recommended for the average user as it is meant for debugging. It will print the values of $I_A$ and $\bar r_d$ to the screen as they are produced. 
+  \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} (default) a progress bar will be produced.
   \item \emph{clonecorrect functions:} See section \ref{data.manip:cc}
   \begin{description}
     \item[clonecorrect -] if this is set to \texttt{TRUE}, then you will need to set the next two parameters.
@@ -1896,7 +1896,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE) (Section \ref{mlg:cross:mlg.crosspop})
 \item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE) (Section \ref{mlg:table:mlg.table})
 \item mlg.vector(pop) (Section \ref{mlg:mix:mlg.vector})
-\item ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore", hist = TRUE) (Section \ref{index:iard:ia})
+\item ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", hist = TRUE) (Section \ref{index:iard:ia})
 \item diss.dist(pop) (Section \ref{index:dist:diss.dist})
 \item bruvo.dist(pop, replen = c(2)) (Section \ref{index:bruvo:bruvo.dist})
 \item bruvo.boot(pop, replen = c(2), sample = 100, tree = "upgma", showtree = TRUE, 
@@ -1904,7 +1904,7 @@ cutoff = NULL, quiet = FALSE, ...)  (Section \ref{index:trees:bruvo.boot})
 \item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1) (Section \ref{index:trees:greycurve})
 \item bruvo.msn(pop, replen = c(2), palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
 \item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:poppr.msn})
-\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = "minimal", clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
+\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = FALSE, clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
 \item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
 \end{itemize}
 \normalsize

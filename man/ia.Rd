@@ -2,7 +2,7 @@
 \alias{ia}
 \title{Index of Association}
 \usage{
-ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore",
+ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   hist = TRUE)
 }
 \arguments{
@@ -21,13 +21,8 @@ ia(pop, sample = 0, method = 1, quiet = "minimal", missing = "ignore",
 
   \code{TRUE} prints nothing.
 
-  \code{FALSE} same as "minimal".
-
-  \code{"minimal"} (defualt) will print the population name
-  and dots indicating permutation progress.
-
-  \code{"noisy"} will print out the individual indecies as
-  they are produced.}
+  \code{FALSE} (defualt) will print the population name and
+  progress bar.}
 
   \item{missing}{a character string. see
   \code{\link{missingno}} for details.}
