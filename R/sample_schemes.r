@@ -147,7 +147,8 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 # Index of Association for the resampled population for the number of times
 # indicated in "iterations".
 #==============================================================================#
-.sampling <- function(pop,iterations,quiet="noisy",missing="ignore",type=type, method=1){ 
+.sampling <- function(pop, iterations, quiet=FALSE, missing="ignore", type=type, 
+                      method=1){ 
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
       "non-parametric bootstrap")
   if(!is.list(pop)){
@@ -161,33 +162,16 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
                                                 length = iterations)
                                  )
                             )
+  if(!quiet) progbar <- txtProgressBar(style = 3)
 	for (c in 1:iterations){
     IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)
-    sample.data$Ia[c] <- IarD[1]
+    sample.data$Ia[c]    <- IarD[1]
     sample.data$rbarD[c] <- IarD[2]
-    if (quiet != TRUE){
-      if(quiet == "noisy"){
-        cat("Sample: ",c,"\n")
-        cat("Index of Association: ", IarD[1],"\n")
-        cat("Standardized Index of Association (rbarD): ", IarD[2],"\n")
-      }
-      else{
-        if(c%%50 != 0){
-          cat(".")
-          if (c == iterations){
-            cat("\n")
-          }
-#          else if( c == 666 ){
-#            cat("\\m/")
-#          }
-        }
-        else{
-          cat(".")
-          cat("\n")
-        }      
-      }
+    if (!quiet){
+      setTxtProgressBar(progbar, c/iterations)
     }
   }
+  if(!quiet) close(progbar)
 	return(sample.data)
 }
 

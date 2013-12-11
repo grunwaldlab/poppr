@@ -300,36 +300,6 @@ ia.pval <- function(index="index", sampled, observed){
 }
 
 #==============================================================================#
-# this is simply a function to print out information to the screen depending on
-# what the user decides.
-# Public functions utilizing this function:
-# # none
-#
-# Internal functions utilizing this function:
-# # .ia
-#==============================================================================#
-
-.quiet <- function(quiet="minimal", IarD=NULL, pop=pop, N=NULL){
-  if (quiet != TRUE){
-    if (quiet == FALSE){
-      if (!is.null(N)){
-        cat("Now Analyzing Population: ", paste(pop,",", sep=""),"N:",N,"\n")
-      } else {
-        cat("|", pop,"\n")
-      }
-    } else if (quiet == "noisy"){
-      cat("Population: ", pop,"\n")
-      if (!is.null(IarD)){
-        cat("Index of Association: ", IarD[1],"\n")
-        cat("Standardized Index of Association (rbarD): ", IarD[2],"\n")
-      }  
-    } else {
-      cat("|", pop ,"\n")
-    }
-  }
-}
-
-#==============================================================================#
 # This will be used to split heirarchical population vectors that are separated
 # by a given separator (normally "_"). It's useful for maintaining the
 # population structure after clone correction. The input data is a data frame
@@ -641,8 +611,8 @@ final <- function(Iout, result){
 # 
 #==============================================================================#
 
-.ia <- function(pop,sample=0,method=1,quiet="minimal",namelist=NULL,missing="ignore",
-                    hist=TRUE){
+.ia <- function(pop, sample=0, method=1, quiet=FALSE, namelist=NULL, 
+                missing="ignore", hist=TRUE){
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
       "non-parametric bootstrap")
   if(pop@type!="PA"){
@@ -670,7 +640,9 @@ final <- function(Iout, result){
   }
   IarD <- .Ia.Rd(popx, missing)
   # data vomit options.
-  .quiet(quiet=quiet, IarD=IarD, pop=namelist$population)
+  if (!quiet){
+    cat("|", namelist$population ,"\n")
+  }
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
   if (sample==0){
