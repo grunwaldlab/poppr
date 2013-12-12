@@ -54,9 +54,7 @@
 #' @section Details: This function will shuffle each locus in the data set independently 
 #' of one another, rendering them essentially unlinked. The following methods
 #' are available to shuffle your data:
-#' \enumerate{
-#'  \item \strong{Multilocus Style Permutation} This will shuffle the genotypes 
-#' at each locus, maintaining the heterozygosity and allelic structure. 
+#' \enumerate{ 
 #'  \item \strong{Permute Alleles} This will redistribute all alleles in the
 #' sample throughout the locus. Missing data is fixed in place. This maintains
 #' allelic structure, but heterozygosity is variable.
@@ -66,6 +64,8 @@
 #' have missing data.
 #'  \item \strong{Non-Parametric Bootstrap} This will shuffle the
 #' allelic state for each individual. Missing data is fixed in place.
+#'  \item \strong{Multilocus Style Permutation} This will shuffle the genotypes 
+#' at each locus, maintaining the heterozygosity and allelic structure.
 #' } 
 #'
 #'
@@ -99,13 +99,13 @@
 #' }
 #==============================================================================#
 shufflepop <- function(pop, method=1){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
+  METHODS = c("permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap", "multilocus")
   if (all((1:4)!=method)) {
-    cat("1 = Multilocus style (maintain heterozygosity and allelic structure)\n")
-    cat("2 = Permute Alleles (maintain allelic structure)\n")
-    cat("3 = Parametric Bootstrap (simulate new population based on allelic frequency)\n")
-    cat("4 = Non-Parametric Bootstrap (simulate new population)\n")
+    cat("1 = Permute Alleles (maintain allelic structure)\n")
+    cat("2 = Parametric Bootstrap (simulate new population based on allelic frequency)\n")
+    cat("3 = Non-Parametric Bootstrap (simulate new population)\n")
+    cat("4 = Multilocus style (maintain heterozygosity and allelic structure)\n")
     cat("Select an integer (1, 2, 3, or 4): ")
     method <- as.integer(readLines(n = 1))
   }
@@ -113,11 +113,11 @@ shufflepop <- function(pop, method=1){
     stop ("Non convenient method number")
   }
   if(pop@type == "PA"){
-    if(method == 1 | method == 2){
+    if(method == 1 | method == 4){
       pop@tab <- vapply(1:ncol(pop@tab),
                         function(x) sample(pop@tab[, x]), pop@tab[, 1])
     }
-    else if(method == 3){
+    else if(method == 2){
       paramboot <- function(x){
         one <- mean(pop@tab[, x], na.rm=TRUE)
         zero <- 1-one
@@ -125,7 +125,7 @@ shufflepop <- function(pop, method=1){
       }
       pop@tab <- vapply(1:ncol(pop@tab), paramboot, pop@tab[, 1])
     }
-    else if(method == 4){
+    else if(method == 3){
       pop@tab <- vapply(1:ncol(pop@tab),
                         function(x) sample(pop@tab[, x], replace=TRUE), pop@tab[, 1])
     }
@@ -149,8 +149,8 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #==============================================================================#
 .sampling <- function(pop, iterations, quiet=FALSE, missing="ignore", type=type, 
                       method=1){ 
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
+  METHODS = c("permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap", "multilocus")
   if(!is.list(pop)){
     if(type=="PA"){
       .Ia.Rd <- .PA.Ia.Rd
@@ -182,14 +182,14 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #==============================================================================#
 
 .all.shuffler <- function(pop, type=type, method=1){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
+  METHODS = c("permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap", "multilocus")
   if(type=="PA"){
-    if(method == 1 | method == 2){
+    if(method == 1 | method == 4){
       pop@tab <- vapply(1:ncol(pop@tab),
                         function(x) sample(pop@tab[, x]), pop@tab[, 1])
     }
-    else if(method == 3){
+    else if(method == 2){
       paramboot <- function(x){
         one <- mean(pop@tab[, x], na.rm=TRUE)
         zero <- 1-one
@@ -197,7 +197,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
       }
       pop@tab <- vapply(1:ncol(pop@tab), paramboot, pop@tab[, 1])
     }
-    else if(method == 4){
+    else if(method == 3){
       pop@tab <- vapply(1:ncol(pop@tab),
                         function(x) sample(pop@tab[, x], replace=TRUE), pop@tab[, 1])
     }
@@ -213,28 +213,28 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #==============================================================================# 
 
 .locus.shuffler <- function(pop, method=1){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
+  METHODS = c("permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap", "multilocus")
   # if the locus is homozygous for all individuals, shuffling will not occur.
   if( ncol(pop@tab) > 1 ){
 
 # Maintenence of the heterozygotic and allelic structure.
-    if(method == 1)
+    if(method == 4)
       pop@tab <- .both.shuff(pop@tab)
 
 # Maintenece of only the allelic structure. Heterozygosity can fluctuate.
-    else if(method == 2)
+    else if(method == 1)
       pop@tab <- .permut.shuff(pop@tab)
 
 # Parametric Bootstraping where both heterozygosity and allelic structure can
 # change based on allelic frequency. 
-    else if(method == 3){
+    else if(method == 2){
       weights <- colMeans(pop@tab, na.rm = TRUE)
       #pop@tab  <- t(apply(pop@tab, 1, .diploid.shuff, weights))
       pop@tab <- t(rmultinom(nrow(pop@tab), size = ploidy(pop), prob = weights))/ ploidy(pop)
     }
 # Non-Parametric Bootstrap.
-    else if(method == 4){
+    else if(method == 3){
       weights <- rep(1, ncol(pop@tab))
 #       pop@tab  <- t(apply(pop@tab, 1, .diploid.shuff, weights))
       pop@tab <- t(rmultinom(nrow(pop@tab), size = ploidy(pop), prob = weights))/ ploidy(pop)
@@ -296,11 +296,11 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
   
 .permut.shuff <- function(mat){
   # gathering the counts of allelic states (represented as column numbers)
-  bucket <- as.vector(colSums(mat, na.rm=T) * 2)
+  bucket     <- as.vector(colSums(mat, na.rm=T) * 2)
   bucketlist <- rep(1:length(bucket), bucket)
   # reshuffling the allelic states
   samplist <- bucketlist[sample(length(bucketlist))]
-  newmat <- mat  
+  newmat   <- mat  
   newmat[which(!is.na(mat))] <- 0
   
   # Treating Missing Data
@@ -326,7 +326,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
       newmat[x/2, samplist[x-1]] <<- 1
     }
     else {
-      newmat[x/2, samplist[x]] <<- 0.5
+      newmat[x/2, samplist[x]]   <<- 0.5
       newmat[x/2, samplist[x-1]] <<- 0.5
     }
   }
