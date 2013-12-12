@@ -265,6 +265,7 @@ The output of \texttt{poppr()} was assigned to the variable \texttt{popdata}, so
 19        Total 187 119  9.612 0.612 4.558 68.972 0.991 0.720 14.371 0.271 rootrot.csv
 \end{Soutput}
 \end{Schunk}
+One thing to note about this output is the \texttt{NaN} in the column labeled \texttt{SE}. This is produced from calculation of a standard error based on rarefaction analysis. Occasionally, this calculation will encounter a situation in which it must attempt to take a square root of a negative number. As you no doubt have learned in high school mathematics, the root of any negative number is not defined in the set of real numbers, and must have an imaginary component, $i$. Unfortunately, R is a computer program without any imagination and, thus imaginary numbers cannot be represented. To account for this, R represents the square roots of negatives as ``not a number" or \texttt{NaN}.\\
 The fields you see in the output include:
 \begin{itemize}
   \item \texttt{Pop -} Population name (Note that ``Total" also means ``Pooled").
@@ -279,6 +280,7 @@ The fields you see in the output include:
   \item \texttt{Ia -} The index of association, $I_A$. \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}
   \item \texttt{rbarD -} The standardized index of association, $\bar r_d$. \cite{Agapow:2001}
 \end{itemize}
+
 These fields are further described in section \ref{summary}, \textit{I know what you did last summary table} at the end of this vignette. 
 
 \subsection{Get out of my dreams and into my R \{importing data into poppr\}}\label{intro:import}
@@ -1710,12 +1712,12 @@ These shuffling schemes have been implemented for the index of association, but 
 > replicate(10, ia(shufflepop(nan1, method = 2), quiet=TRUE))
 \end{Sinput}
 \begin{Soutput}
-             [,1]       [,2]       [,3]        [,4]          [,5]       [,6]         [,7]
-Ia    -0.08103362 0.06069534 -0.1262280 -0.03933352 -0.0057039928 -0.2184804 -0.073598743
-rbarD -0.01048308 0.00768355 -0.0161012 -0.00500245 -0.0007293015 -0.0280971 -0.009339033
-             [,8]       [,9]      [,10]
-Ia    -0.10471204 -0.3482340 0.61466822
-rbarD -0.01331406 -0.0442072 0.07761005
+             [,1]        [,2]        [,3]        [,4]        [,5]        [,6]       [,7]
+Ia    -0.35202232 0.057744361 0.032000000 -0.37774086 -0.21588402 -0.25668449 0.25675321
+rbarD -0.04475446 0.007344014 0.004056698 -0.04803454 -0.02751686 -0.03298552 0.03244442
+             [,8]        [,9]        [,10]
+Ia    -0.28757799 -0.10313192 -0.071845794
+rbarD -0.03681791 -0.01306466 -0.009271283
 \end{Soutput}
 \end{Schunk}
 You could use this method to replicate the resampling 999 times and then create a histogram to visualize a distribution of what would happen under different assumptions of panmixia.

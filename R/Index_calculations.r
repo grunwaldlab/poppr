@@ -283,7 +283,7 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
     
-    N.rare <- rarefy(pop.mat, raremax, se=TRUE)
+    N.rare <- suppressWarnings(rarefy(pop.mat, raremax, se=TRUE))
     IaList <- NULL
     invisible(lapply(sublist, function(x) 
       IaList <<- rbind(IaList, 
