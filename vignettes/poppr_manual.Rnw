@@ -199,6 +199,7 @@ popdata
 <<aflp2, echo=FALSE>>=
 popprsoutput
 @
+One thing to note about this output is the \texttt{NaN} in the column labeled \texttt{SE}. This is produced from calculation of a standard error based on rarefaction analysis. Occasionally, this calculation will encounter a situation in which it must attempt to take a square root of a negative number. As you no doubt have learned in high school mathematics, the root of any negative number is not defined in the set of real numbers, and must have an imaginary component, $i$. Unfortunately, R is a computer program without any imagination and, thus imaginary numbers cannot be represented. To account for this, R represents the square roots of negatives as ``not a number" or \texttt{NaN}.\\
 The fields you see in the output include:
 \begin{itemize}
   \item \texttt{Pop -} Population name (Note that ``Total" also means ``Pooled").
@@ -213,6 +214,7 @@ The fields you see in the output include:
   \item \texttt{Ia -} The index of association, $I_A$. \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}
   \item \texttt{rbarD -} The standardized index of association, $\bar r_d$. \cite{Agapow:2001}
 \end{itemize}
+
 These fields are further described in section \ref{summary}, \textit{I know what you did last summary table} at the end of this vignette. 
 
 \subsection{Get out of my dreams and into my R \{importing data into poppr\}}\label{intro:import}
