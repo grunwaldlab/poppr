@@ -51,11 +51,11 @@
 #' heterozygosity, and inbreeding to aid in the decision of a path to further
 #' analyze a specified dataset. It natively takes \code{\link{genind}} formatted
 #' files, but can convert any raw data formats that adegenet can take (fstat,
-#' structure, gentix, and genpop) as well as genalex files exported into a csv 
+#' structure, genetix, and genpop) as well as genalex files exported into a csv 
 #' format (see \code{\link{read.genalex}} for details).
 #'
 #'
-#' @param pop a \code{\link{genind}} object OR any fstat, structure, gentix, 
+#' @param pop a \code{\link{genind}} object OR any fstat, structure, genetix, 
 #' genpop, or genalex formatted file.
 #'
 #' @param total default \code{TRUE}. Should indecies be calculated for the 
@@ -76,7 +76,7 @@
 #' \code{sample = 1000} will give you p = 0.000999001). 
 #'
 #' @param method an integer from 1 to 4 indicating the method of sampling desired.
-#' see \code{popsample} for details.
+#' see \code{\link{shufflepop}} for details.
 #' 
 #' @param missing how should missing data be treated? \code{"zero"} and 
 #' \code{"mean"} will set the missing values to those documented in 
@@ -210,14 +210,14 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
                   clonecorrect=FALSE, hier=c(1), dfname="population_hierarchy", 
                   keep = 1, hist=TRUE, minsamp=10){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-              "non-parametric bootstrap")
+  METHODS = c("permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap", "multilocus")
   x <- .file.type(pop, missing=missing, cutoff=cutoff, clonecorrect=clonecorrect, 
                   hier=hier, dfname=dfname, keep=keep, quiet=TRUE)  
   # The namelist will contain information such as the filename and population
   # names so that they can easily be ported around.
   namelist <- NULL
-  callpop <- match.call()
+  callpop  <- match.call()
   if(!is.na(grep("system.file", callpop)[1])){
     popsplt <- unlist(strsplit(pop, "/"))
     namelist$File <- popsplt[length(popsplt)]
@@ -230,9 +230,9 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
   }
   #poplist <- x$POPLIST
   if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
-    pop <- x$GENIND
-    pop(pop) <- NULL
-    poplist <- NULL
+    pop           <- x$GENIND
+    pop(pop)      <- NULL
+    poplist       <- NULL
     poplist$Total <- pop
   }
   else{
@@ -250,49 +250,33 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
     pop.mat <- rbind(pop.mat, colSums(pop.mat))
   }
   sublist <- names(poplist)
-  Iout <- NULL
-  result <- NULL
+  Iout    <- NULL
+  result  <- NULL
   origpop <- x$GENIND
   rm(x)
-  total <- toupper(total)
+  total   <- toupper(total)
   missing <- toupper(missing)
-  type <- pop@type
+  type    <- pop@type
   # For presence/absences markers, a different algorithm is applied. 
   if(type=="PA"){
     .Ia.Rd <- .PA.Ia.Rd
   }
-  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-  # Creating an indicator for multiple subpopulations.
-  # MPI = Multiple Population Indicator
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
   if (is.null(poplist)){
     MPI <- NULL
   }
   else{
     MPI <- 1
   }
-  
-  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-  # ANALYSIS OF MULTIPLE POPULATIONS.
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,# 
-  
   if (!is.null(MPI)){
-    
-    #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-    # Calculations start here.
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-    
     MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
-    N.vec <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)
+    N.vec   <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)
     # Shannon-Weiner diversity index.
-    H <- vegan::diversity(pop.mat)
-    # E_1, Pielou's evenness.
-    # J <- H / log(rowSums(pop.mat > 0))
+    H       <- vegan::diversity(pop.mat)
     # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-    G <- vegan::diversity(pop.mat, "inv")
-    Hexp <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
+    G       <- vegan::diversity(pop.mat, "inv")
+    Hexp    <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
     # E_5
-    E.5 <- (G-1)/(exp(H)-1)
+    E.5     <- (G-1)/(exp(H)-1)
     # rarefaction giving the standard errors. This will use the minimum pop size
     # above a user-defined threshold.
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
@@ -311,10 +295,7 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
                            namelist=list(File=namelist$File, population = x),
                            hist=hist
                        ))))
-    
-    #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-    # Making the data look pretty.
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
+
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
                                eMLG=round(N.rare[1, ], 3), 
                                SE=round(N.rare[2, ], 3), 
@@ -326,12 +307,7 @@ poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
                                File=namelist$File))
     rownames(Iout) <- NULL
     return(final(Iout, result))
-  }
-  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
-  # ANALYSIS OF SINGLE POPULATION. This is for if there are no subpopulations to
-  # be analyzed. For details of the functions utilized, see the notes above.
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-  else { 
+  } else { 
     MLG.vec <- mlg(pop, quiet=TRUE)
     N.vec <- length(pop@ind.names)
     # Shannon-Weiner diversity index.
@@ -410,14 +386,14 @@ poppr.all <- function(filelist, ...) {
 #' Calculate the Index of Association and Standardized Index of Association.
 #' Obtain p-values from one-sided permutation tests. 
 #' 
-#' @param pop a \code{\link{genind}} object OR any fstat, structure, gentix, 
+#' @param pop a \code{\link{genind}} object OR any fstat, structure, genetix, 
 #' genpop, or genalex formatted files.
 #'
 #' @param sample an integer indicating the number of permutations desired (eg
 #' 999).
 #'
 #' @param method an integer from 1 to 4 indicating the sampling method desired.
-#' see \code{popsample} for details. 
+#' see \code{\link{shufflepop}} for details. 
 #'
 #' @param quiet Should the function print anything to the screen while it is
 #' performing calculations? 
@@ -478,15 +454,18 @@ poppr.all <- function(filelist, ...) {
 
 ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore", 
                 hist=TRUE){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
-  namelist <- NULL
+  METHODS = c("permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap", "multilocus")
+  
+  namelist            <- NULL
   namelist$population <- ifelse(length(levels(pop@pop)) > 1 | 
                                 is.null(pop@pop), "Total", pop@pop.names)
-  namelist$File <- as.character(pop@call[2])
-  popx <- pop
+  namelist$File       <- as.character(pop@call[2])
+  
+  popx    <- pop
   missing <- toupper(missing)
-  type <- pop@type
+  type    <- pop@type
+  
   if(type=="PA"){
     .Ia.Rd <- .PA.Ia.Rd
   }
@@ -508,31 +487,32 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
       return(IarD)
     }
   }
+  
   IarD <- .Ia.Rd(popx, missing)
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
   if (sample==0){
-    Iout <- IarD
+    Iout   <- IarD
     result <- NULL
   }
   # sampling will perform the iterations and then return a data frame indicating
   # the population, index, observed value, and p-value. It will also produce a 
   # histogram.
   else{
-    Iout <- NULL 
-    idx <- as.data.frame(list(Index=names(IarD)))
-    samp <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
-    samp2 <- rbind(samp, IarD)
-    p.val <- ia.pval(index="Ia", samp2, IarD[1])
+    Iout     <- NULL 
+    idx      <- as.data.frame(list(Index=names(IarD)))
+    samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
+    samp2    <- rbind(samp, IarD)
+    p.val    <- ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
       poppr.plot(samp, observed=IarD, pop=namelist$population,
                         file=namelist$File, pval=p.val, N=nrow(pop@tab))
     }
-    result <- 1:4
+    result         <- 1:4
     result[c(1,3)] <- IarD
     result[c(2,4)] <- p.val
-    names(result) <- c("Ia","p.Ia","rbarD","p.rD")
+    names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
   }  
   return(final(Iout, result))
 }
