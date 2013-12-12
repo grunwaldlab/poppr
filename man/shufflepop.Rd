@@ -23,20 +23,20 @@ independently over each locus.
   This function will shuffle each locus in the data set
   independently of one another, rendering them essentially
   unlinked. The following methods are available to shuffle
-  your data: \enumerate{ \item \strong{Multilocus Style
-  Permutation} This will shuffle the genotypes at each
-  locus, maintaining the heterozygosity and allelic
-  structure.  \item \strong{Permute Alleles} This will
-  redistribute all alleles in the sample throughout the
-  locus. Missing data is fixed in place. This maintains
-  allelic structure, but heterozygosity is variable.  \item
-  \strong{Parametric Bootstrap} This will redistribute
-  available alleles within the locus based on their allelic
-  frequencies. This means that both the allelic state and
-  heterozygosity will vary. The resulting data set will not
-  have missing data.  \item \strong{Non-Parametric
-  Bootstrap} This will shuffle the allelic state for each
-  individual. Missing data is fixed in place. }
+  your data: \enumerate{ \item \strong{Permute Alleles}
+  This will redistribute all alleles in the sample
+  throughout the locus. Missing data is fixed in place.
+  This maintains allelic structure, but heterozygosity is
+  variable.  \item \strong{Parametric Bootstrap} This will
+  redistribute available alleles within the locus based on
+  their allelic frequencies. This means that both the
+  allelic state and heterozygosity will vary. The resulting
+  data set will not have missing data.  \item
+  \strong{Non-Parametric Bootstrap} This will shuffle the
+  allelic state for each individual. Missing data is fixed
+  in place.  \item \strong{Multilocus Style Permutation}
+  This will shuffle the genotypes at each locus,
+  maintaining the heterozygosity and allelic structure. }
 }
 \examples{
 # load the microbov dataset

@@ -1618,7 +1618,7 @@ Default Command:\\
   \item \texttt{method -} a number indicating the method of sampling you wish to use. 
   The following methods are available for use:
   \begin{enumerate}
-    \item \textbf{Multilocus permutation} This is called Multilocus permutation because it does the same thing as the permutation analysis in the program \textit{multilocus} by Paul Agapow and Austin Burt \cite{Agapow:2001}. This will shuffle the genotypes at each locus. For example, a single diploid locus with four alleles (1, 2, 3, 4) with the frequencies of 0.1, 0.2, 0.3, and 0.4, respectively:
+    \item \textbf{Permute Alleles (default)} This is a sampling scheme that will permute alleles within the locus. For example, a single diploid locus with four alleles (1, 2, 3, 4) with the frequencies of 0.1, 0.2, 0.3, and 0.4, respectively:
 \begin{Schunk}
 \begin{Soutput}
      [,1] [,2]
@@ -1633,19 +1633,6 @@ might become:
 \begin{Schunk}
 \begin{Soutput}
      [,1] [,2]
-[1,]    3    3
-[2,]    4    1
-[3,]    2    2
-[4,]    4    4
-[5,]    4    3
-\end{Soutput}
-\end{Schunk}
-
-Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of section \ref{index:iard:ia} of this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
-    \item \textbf{Permute Alleles} This is a sampling scheme that will permute alleles within the locus. So, using our example above, our resampling might become:
-\begin{Schunk}
-\begin{Soutput}
-     [,1] [,2]
 [1,]    3    2
 [2,]    2    4
 [3,]    1    3
@@ -1654,7 +1641,7 @@ Note that you have the same genotypes after shuffling, so at each locus, you wil
 \end{Soutput}
 \end{Schunk}
 As you can see, The heterozygosity has changed, yet the allelic frequencies remain the same. Overall this would show you, for example, what would happen if the sample you had underwent panmixis within this sample itself. 
-    \item \textbf{Parametric Bootstrap} The previous two schemes reshuffled the observed sample, but the parametric bootstrap uses the allelic frequencies as estimates of what the true allelic frequencies are and uses those as probabilities for each allele when resampling the data with replacement. Here are two samples to show you what I mean.
+    \item \textbf{Parametric Bootstrap} The previous scheme reshuffled the observed sample, but the parametric bootstrap uses the allelic frequencies as estimates of what the true allelic frequencies are and uses those as probabilities for each allele when resampling the data with replacement. Here are two samples to show you what I mean.
 \begin{Schunk}
 \begin{Soutput}
 First Sample
@@ -1681,7 +1668,7 @@ Second Sample
 \end{Schunk}
 
 Notice how the heterozygosity has changed along with the allelic frequencies. The frequencies for alleles 3 and 4 have switched in the first data set, and we've lost allele 1 in the second data set purely by chance! This type of sampling scheme attempts to show you what the true population would look like if it were panmictic and your original sample gave you a basis for estimating expected allele frequencies. Since estimates are made from the observed allele frequencies, small samples will produce skewed results.
-    \item \textbf{Non-Parametric Bootstrap} The final method is sampling with replacement, but with no assumption about the distribution of the alleles. 
+    \item \textbf{Non-Parametric Bootstrap} The third method is sampling with replacement, but with no assumption about the distribution of the alleles. 
 \begin{Schunk}
 \begin{Soutput}
      [,1] [,2]
@@ -1693,6 +1680,19 @@ Notice how the heterozygosity has changed along with the allelic frequencies. Th
 \end{Soutput}
 \end{Schunk}
 Again, heterozygosity and allele frequencies are not maintained, but now all of the alleles have a 1 in 4 chance of being chosen.
+    \item \textbf{Multilocus permutation} This is called Multilocus permutation because it does the same thing as the permutation analysis in the program \textit{multilocus} by Paul Agapow and Austin Burt \cite{Agapow:2001}. This will shuffle the genotypes at each locus. Using our example above, here it is shuffled with method 4:
+\begin{Schunk}
+\begin{Soutput}
+     [,1] [,2]
+[1,]    3    3
+[2,]    4    1
+[3,]    2    2
+[4,]    4    4
+[5,]    4    3
+\end{Soutput}
+\end{Schunk}
+
+Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of section \ref{index:iard:ia} of this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
   \end{enumerate}
 \end{itemize}
 These shuffling schemes have been implemented for the index of association, but there may be other summary statistics you can use \texttt{shufflepop} for. All you have to do is use the function \texttt{replicate}. Let's use $I_A$ as an example:
@@ -1707,15 +1707,15 @@ These shuffling schemes have been implemented for the index of association, but 
 0.16564272 0.02105965 
 \end{Soutput}
 \begin{Sinput}
-> replicate(10, ia(shufflepop(nan1, method = 3), quiet=TRUE))
+> replicate(10, ia(shufflepop(nan1, method = 2), quiet=TRUE))
 \end{Sinput}
 \begin{Soutput}
-             [,1]        [,2]        [,3]        [,4]        [,5]        [,6]       [,7]
-Ia    0.015572859 0.078727506 -0.10168980 -0.30046022 -0.26021576 -0.25668449 0.25675321
-rbarD 0.001964457 0.009966246 -0.01284299 -0.03823542 -0.03314723 -0.03298552 0.03244442
-             [,8]        [,9]        [,10]
-Ia    -0.28757799 -0.10313192 -0.071845794
-rbarD -0.03681791 -0.01306466 -0.009271283
+             [,1]       [,2]       [,3]        [,4]          [,5]       [,6]         [,7]
+Ia    -0.08103362 0.06069534 -0.1262280 -0.03933352 -0.0057039928 -0.2184804 -0.073598743
+rbarD -0.01048308 0.00768355 -0.0161012 -0.00500245 -0.0007293015 -0.0280971 -0.009339033
+             [,8]       [,9]      [,10]
+Ia    -0.10471204 -0.3482340 0.61466822
+rbarD -0.01331406 -0.0442072 0.07761005
 \end{Soutput}
 \end{Schunk}
 You could use this method to replicate the resampling 999 times and then create a histogram to visualize a distribution of what would happen under different assumptions of panmixia.
@@ -2251,10 +2251,10 @@ Default Command:\\
   \item \texttt{sample -} You should use this flag whenever you want to reshuffle your data set. Indicate how many times you want to reshuffle your data set to obtain a P-value. 
   \item \texttt{method -} a number from 1 to 4 indicating the sampling method:
   \begin{enumerate}
-    \item \textit{multilocus} style permutation \cite{Agapow:2001}.
     \item permutation over alleles.
     \item parametric bootstrap.
     \item non-parametric bootstrap.
+    \item \textit{multilocus} style permutation \cite{Agapow:2001}.
   \end{enumerate}
   The methods are detailed in section \ref{data.manip:shuffle:shufflepop} of this manual.
   \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} will produce a progress bar.
@@ -2274,7 +2274,7 @@ Running the analysis is as simple as this:
 We can use \texttt{popsub} to subset for specific populations. Here, we'll also demonstrate the sampling flag and show you what the histogram looks like.
 \begin{Schunk}
 \begin{Sinput}
-> set.seed(1001)
+> set.seed(1009)
 > ia(popsub(nancycats, 5), sample=999)
 \end{Sinput}
 \end{Schunk}
@@ -2284,11 +2284,11 @@ We can use \texttt{popsub} to subset for specific populations. Here, we'll also 
 \end{Soutput}
 \begin{Soutput}
           Ia         p.Ia        rbarD         p.rD 
--0.047539953  0.589000000 -0.006004254  0.589000000 
+-0.047539953  0.572000000 -0.006004254  0.572000000 
 \end{Soutput}
 \end{Schunk}
 
-This analysis produced the histograms you see below. What these histograms represent are 999 resamplings of the data under the null hypothesis ($H_0$) of sexual reproduction. The way that $H_0$ is created is determined by the sampling method chosen. In this case, the method was to shuffle genotypes at each locus to simulate unlinked loci. Since the P = 0.589, we would fail to reject $H_0$ and we therefore might conclude that this population is sexually reproducing \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
+This analysis produced the histograms you see below. What these histograms represent are 999 resamplings of the data under the null hypothesis ($H_0$) of sexual reproduction. The way that $H_0$ is created is determined by the sampling method chosen. In this case, the method was to shuffle genotypes at each locus to simulate unlinked loci. Since the P = 0.572, we would fail to reject $H_0$ and we therefore might conclude that this population is sexually reproducing \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
 \begin{figure}[h!]
   \centering
   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
@@ -2297,25 +2297,12 @@ This analysis produced the histograms you see below. What these histograms repre
 \end{figure}
 %\newpage
 
-Note that both of the P-values are exactly the same. This is what you would obtain with the default sampling scheme because the variances within loci do not change. When you change the sampling scheme, however, the P-values can end up being different. That's why there are two fields for P-values. Let's look at what happens to the P-values once we change the sampling scheme to a parametric bootstrap.
-\begin{Schunk}
-\begin{Sinput}
-> set.seed(1001)
-> ia(popsub(nancycats, 5), sample=999, method=3, quiet=TRUE, hist=FALSE)
-\end{Sinput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Soutput}
-          Ia         p.Ia        rbarD         p.rD 
--0.047539953  0.589000000 -0.006004254  0.596000000 
-\end{Soutput}
-\end{Schunk}
-There, is, of course one little caveat that needs to be mentioned. The P-values are calculated by comparing how many permuted values are greater than or equal to the observed value. This includes the observed value (which is why setting the randomizations to 999 will give you a round P-value) which means that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number of permutations you select. Take for example this population of a clonal root rot pathogen, \textit{Aphanomyces euteiches}:
+There, are, of course a couple of caveats that need to be mentioned regarding our P-values. First, while we have equivalent P-values for $I_A$ and $\bar{r}_d$, they might not always be equal due to the difference in calculation. Details about that can be found in the Appendix section \ref{appendix:algorithm:iard}. Second, the P-values are calculated by comparing how many permuted values are greater than or equal to the observed value. This includes the observed value (which is why setting the randomizations to 999 will give you a round P-value) which means that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number of permutations you select. Take for example this population of a clonal root rot pathogen, \textit{Aphanomyces euteiches}:
 \begin{Schunk}
 \begin{Sinput}
 > data(Aeut)
 > set.seed(1001)
-> ia(popsub(Aeut, 1), sample=999, method=3, quiet=TRUE, hist=FALSE)
+> ia(popsub(Aeut, 1), sample=999, method=2, quiet=TRUE, hist=FALSE)
 \end{Sinput}
 \end{Schunk}
 \begin{Schunk}
@@ -2355,7 +2342,7 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
   \centering
   \caption{\footnotesize Heatmap representation of a dissimilarity distance for the data set ``Aeut"}
   \label{diss_heat_map}
-\includegraphics{poppr_manual-115}
+\includegraphics{poppr_manual-113}
 \end{figure}
 \newpage
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}\label{index:bruvo}
@@ -2436,7 +2423,7 @@ You can visualize this better with a simple heatmap:
 > heatmap(as.matrix(dist9), symm=TRUE)
 \end{Sinput}
 \end{Schunk}
-\includegraphics{poppr_manual-119}
+\includegraphics{poppr_manual-117}
 \end{figure}
 %\newpage
 
@@ -2762,7 +2749,7 @@ Default Command:\\
   \item \emph{shufflepop functions:} See section \ref{data.manip:shuffle} \\ Note that this only affects the calculation for $I_A$ and $\bar r_d$.
   \begin{description}
     \item[sample -] The number of samples you desire (eg. 999)
-    \item[method -] Which sampling method? 1: multilocus, 2: permute, 3: parametric bootstrap, 4: non-parametric bootstrap.
+    \item[method -] Which sampling method? 1: permute, 2: parametric bootstrap, 3: non-parametric bootstrap, 4: multilocus.
   \end{description}
   \item \emph{missingno functions:} See Section \ref{data.manip:missing} \\ Note that all analyses in this function ignore/impute missing data by default.
     \begin{description}
@@ -2799,7 +2786,7 @@ To begin, let's revisit our example data set of \textit{Aphanomyces euteiches} \
 3      Total 187 119 68.453 2.989 4.558 68.972 0.991 0.720 14.371 0.271 rootrot.csv
 \end{Soutput}
 \end{Schunk}
-OK, so we were able to get a table out of this. Now let's see what happens when we do some sampling to see if this is reproducing clonally or not (for simplicity's sake, we will stick with the default multilocus sampling method). We will turn quiet on and the histogram off to save space.
+OK, so we were able to get a table out of this. Now let's see what happens when we do some sampling to see if this is reproducing clonally or not. We will turn quiet on and the histogram off to save space.
 \begin{Schunk}
 \begin{Sinput}
 > poppr(Aeut, sample=999, hist=FALSE, quiet=TRUE)
@@ -2857,25 +2844,25 @@ And at the population level.
 \end{Schunk}
 As you can see, clone correction doesn't always have to involve creation of new data sets!
 
-You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal to each other. This is due to the default sampling method \cite{Agapow:2001}. Here, we show examples where they are not equal.
+You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal to each other. This will always be the case with the sampling method utilized in method 4 \cite{Agapow:2001}. Here, we show examples where they are not equal and why it's okay.
 \begin{Schunk}
 \begin{Sinput}
-> set.seed(2001)
-> poppr(nancycats, sublist=5:6, total=FALSE, sample=999, method=3, quiet=TRUE, hist=FALSE)
+> set.seed(2002)
+> poppr(nancycats, sublist=5:6, total=FALSE, sample=999, method=2, quiet=TRUE, hist=FALSE)
 \end{Sinput}
 \end{Schunk}
 \begin{Schunk}
 \begin{Soutput}
   Pop  N MLG eMLG SE     H  G Hexp E.5     Ia  p.Ia  rbarD  p.rD                     File
-1   5 15  15   11  0 2.708 15    1   1 -0.048 0.599 -0.006 0.599 truenames(nancycats)$tab
-2   6 11  11   11  0 2.398 11    1   1  0.334 0.064  0.043 0.065 truenames(nancycats)$tab
+1   5 15  15   11  0 2.708 15    1   1 -0.048 0.576 -0.006 0.576 truenames(nancycats)$tab
+2   6 11  11   11  0 2.398 11    1   1  0.334 0.070  0.043 0.071 truenames(nancycats)$tab
 \end{Soutput}
 \end{Schunk}
-The reason why the P-values would be different is described at the end of section \ref{index:iard:ia}. The differences in P-values are normally not very far off. It's important to note this because of what can happen in extremely clonal populations. You can end up with a large enough sample size consisting of very few MLGs. Upon shuffling, you find that there are very few values of $I_A$ and $\bar r_d$ that can be obtained. Observe with this simulated data set:
+The reason why the P-values would be different is described at the end of section \ref{index:iard:ia}. The differences in P-values are normally not very far off. It's important to note this because of what can happen in extremely clonal populations. You can end up with a large enough sample size consisting of very few MLGs. Upon shuffling using method 4, you find that there are very few values of $I_A$ and $\bar r_d$ that can be obtained. Observe with this simulated data set:
 \begin{Schunk}
 \begin{Sinput}
 > set.seed(2004)
-> poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE)
+> poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=4, quiet=TRUE)
 \end{Sinput}
 \end{Schunk}
 \begin{Schunk}
