@@ -7,13 +7,13 @@ ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object OR any fstat,
-  structure, gentix, genpop, or genalex formatted files.}
+  structure, genetix, genpop, or genalex formatted files.}
 
   \item{sample}{an integer indicating the number of
   permutations desired (eg 999).}
 
   \item{method}{an integer from 1 to 4 indicating the
-  sampling method desired. see \code{popsample} for
+  sampling method desired. see \code{\link{shufflepop}} for
   details.}
 
   \item{quiet}{Should the function print anything to the

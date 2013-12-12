@@ -9,7 +9,7 @@ poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL),
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object OR any fstat,
-  structure, gentix, genpop, or genalex formatted file.}
+  structure, genetix, genpop, or genalex formatted file.}
 
   \item{total}{default \code{TRUE}. Should indecies be
   calculated for the combined populations represented in
@@ -34,8 +34,8 @@ poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL),
   \code{sample = 1000} will give you p = 0.000999001).}
 
   \item{method}{an integer from 1 to 4 indicating the
-  method of sampling desired. see \code{popsample} for
-  details.}
+  method of sampling desired. see \code{\link{shufflepop}}
+  for details.}
 
   \item{missing}{how should missing data be treated?
   \code{"zero"} and \code{"mean"} will set the missing
@@ -116,7 +116,7 @@ distance, heterozygosity, and inbreeding to aid in the
 decision of a path to further analyze a specified dataset.
 It natively takes \code{\link{genind}} formatted files, but
 can convert any raw data formats that adegenet can take
-(fstat, structure, gentix, and genpop) as well as genalex
+(fstat, structure, genetix, and genpop) as well as genalex
 files exported into a csv format (see
 \code{\link{read.genalex}} for details).
 }
