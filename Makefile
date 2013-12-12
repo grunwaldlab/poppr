@@ -5,7 +5,7 @@ PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename `pwd`)
 DATE	:= $(shell date +%F)
 
-all: check clean
+all: update check clean
 
 build:
 	cd ..;\
@@ -26,8 +26,11 @@ clean:
 # Make files do not like a $ there, so you have to double it to escape.
 update:
 	perl -pi -e "s/^Date:.+?$$/Date: $(DATE)/" DESCRIPTION
+	rm vignettes/*bbl
+	rm vignettes/*log
+	rm vignettes/*toc
 
-checkdevel: build
+checkdevel: update build
 	cd ..;\
 	wget ftp://ftp.stat.math.ethz.ch/Software/R/R-devel.tar.gz;\
 	tar -xzvf R-devel.tar.gz;\
