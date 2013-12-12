@@ -613,8 +613,8 @@ final <- function(Iout, result){
 
 .ia <- function(pop, sample=0, method=1, quiet=FALSE, namelist=NULL, 
                 missing="ignore", hist=TRUE){
-  METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-      "non-parametric bootstrap")
+  METHODS = c("permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap", "multilocus")
   if(pop@type!="PA"){
     type <- pop@type
     popx <- seploc(pop)
@@ -699,10 +699,10 @@ final <- function(Iout, result){
                                         temp.d.vector[,1], np),round.poppr,1))  
   else    
     temp.d.vector <- vapply(pop, pairwisematrix, temp.d.vector[,1], np)
-  d.vector <- as.vector(colSums(temp.d.vector))
+  d.vector  <- as.vector(colSums(temp.d.vector))
   d2.vector <- as.vector(colSums(temp.d.vector^2))
-  D.vector <- as.vector(rowSums(temp.d.vector))
-  vectors <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
+  D.vector  <- as.vector(rowSums(temp.d.vector))
+  vectors   <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
   return(vectors)
 }
 #==============================================================================#
@@ -767,20 +767,20 @@ pairwisematrix <- function(pop, np){
 .Ia.Rd <- function (pop, missing = NULL) 
 {
   vard.vector <- NULL
-  numLoci <- length(pop)
+  numLoci     <- length(pop)
   numIsolates <- length(pop[[1]]@ind.names)
-  np <- choose(numIsolates, 2)
+  np          <- choose(numIsolates, 2)
   if (np < 2) {
     return(as.numeric(c(NaN, NaN)))
   }
-  V <- pair_diffs(pop, numLoci, np)
-  varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
-  vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
+  V               <- pair_diffs(pop, numLoci, np)
+  varD            <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
+  vard.vector     <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
   vardpair.vector <- .Call("pairwise_covar", vard.vector)
-  sigVarj <- sum(vard.vector)
+  sigVarj         <- sum(vard.vector)
   rm(vard.vector)
-  Ia <- (varD/sigVarj) - 1
-  rbarD <- (varD - sigVarj)/(2 * sum(vardpair.vector))
+  Ia              <- (varD/sigVarj) - 1
+  rbarD           <- (varD - sigVarj)/(2 * sum(vardpair.vector))
   return(c(Ia, rbarD))
 }
 
@@ -801,9 +801,9 @@ pair_diffs <- function(pop, numLoci, np)
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
   temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), 
                           temp.d.vector[, 1])
-  d.vector <- colSums(temp.d.vector)
+  d.vector  <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
-  D.vector <- rowSums(temp.d.vector)
+  D.vector  <- rowSums(temp.d.vector)
   return(list(d.vector = d.vector, d2.vector = d2.vector, D.vector = D.vector))
 }
 
@@ -871,14 +871,14 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2){
 #==============================================================================#
 
 adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
-  w <- weights
+  w    <- weights
   maxg <- max(glim)
   ming <- 1-(min(glim)/maxg)
   if (correction < 0){
-    adj <-  (w^abs(correction))/(1/ming) 
+    adj <- (w^abs(correction))/(1/ming) 
     adj <- (adj + 1-ming) / ((1 / maxg))
   } else {
-    adj <-  (1 - (((1-w)^abs(correction))/(1/ming)) )
+    adj <- (1 - (((1-w)^abs(correction))/(1/ming)) )
     adj <- adj / (1/maxg)
   }
   if (show == FALSE){
