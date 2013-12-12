@@ -26,9 +26,18 @@ clean:
 # Make files do not like a $ there, so you have to double it to escape.
 update:
 	perl -pi -e "s/^Date:.+?$$/Date: $(DATE)/" DESCRIPTION
-	rm vignettes/*bbl
-	rm vignettes/*log
-	rm vignettes/*toc
+	if [ -a vignettes/*bbl ]; \
+	then \
+    rm vignettes/*bbl; \
+	fi;
+	if [ -a vignettes/*log ]; \
+	then \
+    rm vignettes/*log; \
+	fi;
+	if [ -a vignettes/*toc ]; \
+	then \
+    rm vignettes/*toc; \
+	fi;
 
 checkdevel: update build
 	cd ..;\
