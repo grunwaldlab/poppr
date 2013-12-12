@@ -1,11 +1,11 @@
 poppr 1.0.5
 ===========
 NOTABLE CHANGE
-* The default shuffling algorithm for calculating the index of association has changed from multilocus-style sampling to permutation of alleles. All of the 4 methods are available, but new assignments are as follows: Method 1: permute alleles, Method 2: parametric bootstrap, Method 3: non-parametric bootstrap, Method 4: Multilocus-style sampling. Previously, Multilocus was 1 and the rest followed in the same order. There should be no compatability issues with this change. 
+* The default shuffling algorithm for calculating the index of association has changed from multilocus-style sampling to permutation of alleles. All of the 4 methods are available, but new assignments are as follows: Method 1: permute alleles, Method 2: parametric bootstrap, Method 3: non-parametric bootstrap, Method 4: Multilocus-style sampling. Previously, Multilocus was 1 and the rest followed in the same order. There should be no compatability issues with this change. Functions affected: `ia`, `poppr` `shufflepop`
 
 BUG FIX
 * Bootstrapping algorithm for `bruvo.boot` function was not shuffling the repeat lengths for each locus resulting in potentially erroneous bootstrap support values. This has been fixed by implementing an internal S4 class that will allow direct bootstrapping of the data and repeat lengths together.
-* Random INTEGER() can only be applied to a 'integer', not a 'NULL' error that would pop up with `bruvo.boot` fixed.
+* An occasional error, "INTEGER() can only be applied to a 'integer', not a 'NULL'" in `bruvo.boot` or `bruvo.dist` fixed.
 
 IMPROVEMENTS
 * Changes to `bruvo.boot` allow for ever so slightly faster bootstrapping.
