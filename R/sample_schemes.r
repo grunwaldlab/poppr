@@ -224,7 +224,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 
 # Maintenece of only the allelic structure. Heterozygosity can fluctuate.
     else if(method == 1)
-      pop@tab <- .permut.shuff(pop@tab)
+      pop@tab <- .permut.shuff(pop@tab, ploidy(pop))
 
 # Parametric Bootstraping where both heterozygosity and allelic structure can
 # change based on allelic frequency. 
