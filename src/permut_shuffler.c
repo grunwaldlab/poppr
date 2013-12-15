@@ -57,7 +57,6 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
 	cols = INTEGER(Rdim)[1]; 
 	PROTECT(Rout = allocMatrix(REALSXP, rows, cols));
 	alleles = coerceVector(alleles, INTSXP);
-	allele_freq = coerceVector(allele_freq, REALSXP);
 	ploidy = coerceVector(ploidy, INTSXP);
 	ploid = INTEGER(ploidy)[0];
 	double *loc = REAL(locus), *outmat = REAL(Rout), *afreq = REAL(allele_freq);
