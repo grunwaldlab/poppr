@@ -85,16 +85,16 @@
 #' # Take note of the Number of alleles per population and the Observed
 #' # heterozygosity as we go through each method.
 #' 
-#' # Multilocus Style: maintain allelic state and heterozygosity.
+#' # Permute Alleles: maintain allelic state; heterozygosity varies.
 #' summary(shufflepop(Zebu, method=1))
 #' \dontrun{
-#' # Permute Alleles: maintain allelic state; heterozygosity varies.
+#' # Parametric Bootstrap: do not maintain allelic state or heterozygosity
 #' summary(shufflepop(Zebu, method=2))
 #'
-#' # Parametric Bootstrap: do not maintain allelic state or heterozygosity
+#' # Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.
 #' summary(shufflepop(Zebu, method=3))
 #' 
-#' # Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.
+#' # Multilocus Style: maintain allelic state and heterozygosity.
 #' summary(shufflepop(Zebu, method=4))
 #' }
 #==============================================================================#
@@ -260,6 +260,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #
 # weights is a corresponding vector giving the allelic frequency for each allele
 # at that locus in that population. The sum of the frequencies should be 1. 
+# DEPRECIATED (replaced with multinomial distribution)
 #==============================================================================# 
 .diploid.shuff <- function(vec, weights){
   # Dealing with missing values is probably not necessary for a parametric
@@ -295,9 +296,9 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #==============================================================================#
   
 .permut.shuff <- function(mat, ploidy = 2){
-  bucket <- colSums(mat, na.rm = TRUE)*ploidy
+  bucket     <- colSums(mat, na.rm = TRUE)*ploidy
   bucketlist <- as.integer(sample(rep(1:length(bucket), bucket)))
-  mat <- .Call("permute_shuff", mat, bucketlist - 1, 1/ploidy, ploidy)
+  mat        <- .Call("permute_shuff", mat, bucketlist - 1, 1/ploidy, ploidy)
   return(mat)
 }
 

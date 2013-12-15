@@ -48,16 +48,16 @@ summary(Zebu)
 # Take note of the Number of alleles per population and the Observed
 # heterozygosity as we go through each method.
 
-# Multilocus Style: maintain allelic state and heterozygosity.
+# Permute Alleles: maintain allelic state; heterozygosity varies.
 summary(shufflepop(Zebu, method=1))
 \dontrun{
-# Permute Alleles: maintain allelic state; heterozygosity varies.
+# Parametric Bootstrap: do not maintain allelic state or heterozygosity
 summary(shufflepop(Zebu, method=2))
 
-# Parametric Bootstrap: do not maintain allelic state or heterozygosity
+# Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.
 summary(shufflepop(Zebu, method=3))
 
-# Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.
+# Multilocus Style: maintain allelic state and heterozygosity.
 summary(shufflepop(Zebu, method=4))
 }
 }
