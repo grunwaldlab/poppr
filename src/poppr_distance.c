@@ -64,7 +64,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 SEXP raw_pairdiffs(SEXP mat, SEXP ploidy)
 {
 	char binary_diffs, homozygote;
-	int count, row, col, bitcount, derp, hz, a1, a2, ht;//, i, j, k;
+	int count, row, col, bitcount, hz, a1, a2, ht;//, derp, i, j, k;
 	//SEXP Rout;
 	SEXP Rdim;
 	//SEXP dvector;
@@ -647,13 +647,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	distp = (double *) &dist;
 	if(zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
-		int *genop, ind, miss_ind = 1, full_ind = 0, z, tracker = 0, loss_tracker = 0;
+		int *genop, ind, miss_ind = 1, z, tracker = 0, loss_tracker = 0;// full_ind = 0;
 		double genome_add_sum = 0, genome_loss_sum = 0;
 		genop = (int *) &genos;
 		if (zerocatch[0] > 0) // The rows contain the zero value
 		{
 			miss_ind = 0;
-			full_ind = 1; 
+			//full_ind = 1; 
 		}
 		ind = zero_ind[miss_ind][0];
 		int short_inds[zerocatch[miss_ind]], short_counter = 0;
@@ -914,8 +914,8 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
 		int *tracker)
 {
-	int i, full_ind;
-	full_ind = 1 + (0 - miss_ind);
+	int i; //full_ind;
+	//full_ind = 1 + (0 - miss_ind);
 	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
 		genos[miss_ind*nalleles + replacement[curr_ind]];
 	for (i = curr_ind; i < inds; i++)
