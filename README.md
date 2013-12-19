@@ -23,6 +23,10 @@ Please cite poppr as:
 > Kamvar ZN, Tabima JF, Grünwald NJ. (2013) Poppr: an R package for genetic analysis of
   populations with clonal or partially clonal reproduction. PeerJ PrePrints 1:e161v1
   http://dx.doi.org/10.7287/peerj.preprints.161v1
+  
+You can obtain citation information in R by typing:
+
+    citation(package = "poppr")
 
 
 ## Installation
