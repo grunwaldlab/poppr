@@ -26,8 +26,9 @@ Please cite poppr as:
   
 You can obtain citation information in R by typing:
 
-    citation(package = "poppr")
-
+```s
+citation(package = "poppr")
+```
 
 ## Installation
 
