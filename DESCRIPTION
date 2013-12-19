@@ -8,6 +8,7 @@ Author: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>, Javier F. Tabima
     <tabimaj@onid.orst.edu>, Niklaus J. Grunwald
     <grunwaln@science.oregonstate.edu>
 Maintainer: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>
+Encoding: UTF-8
 URL: http://cran.r-project.org/package=poppr,
     http://grunwaldlab.cgrb.oregonstate.edu/poppr-r-package-population-genetics
 Description: Population genetic analyses for hierarchical analysis of partially

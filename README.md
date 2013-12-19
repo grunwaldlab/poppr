@@ -15,12 +15,25 @@ genind object and offers the following implementations:
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
+## Citation
+
+Poppr has been published in the [PeerJ PrePrint archive](https://peerj.com/preprints/), doi: [10.7287/peerj.preprints.161v1](http://dx.doi.org/10.7287/peerj.preprints.161v1).    
+Please cite poppr as:
+
+> Kamvar ZN, Tabima JF, Grünwald NJ. (2013) Poppr: an R package for genetic analysis of
+  populations with clonal or partially clonal reproduction. PeerJ PrePrints 1:e161v1
+  http://dx.doi.org/10.7287/peerj.preprints.161v1
+  
+You can obtain citation information in R by typing:
+
+    citation(package = "poppr")
+
+
+## Installation
 
 [![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=devel)](https://travis-ci.org/grunwaldlab/poppr?branch=devel)
 
 If the image above says "Passing", then that means it should be safe to install with the latest version of R. If it does not say "Passing", I am probably trying to fix whatever problem is causing it as fast as I can.
-
-## Installation
 
 ### From CRAN
 
