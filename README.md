@@ -10,7 +10,9 @@ genind object and offers the following implementations:
 - calculation of indices of genotypic diversity, evenness, richness, and rarefaction
 - drawing of dendrograms with bootstrap support for Bruvo's distance
 - drawing of minimum spanning networks for genetic distances
-- calculation of the index of association (![equation](http://latex.codecogs.com/gif.latex?I_A)) or ![equation](http://latex.codecogs.com/gif.latex?\\bar{r}_d)
+- calculation of the index of association 
+(![equation](data:img/png;base64,R0lGODlhEgAQAOMAAP///wAAAODg4ICAgKCgoFBQUCAgIPDw8GBgYLCwsBAQEMDAwHBwcJCQkEBAQNDQ0CH5BAEAAAAALAAAAAASABAAAARTEEgx6iAy613M2aBmIGEpBFgJEoGggojxguOsnSmYuBrLbwfFYhMrMQqNTQ20WFRuKNBhACAUJoNCAJGTDBKLhsP2GDQTChs1E3gtHI4PYBBgCCIAOw==))
+or ![equation](data:img/png;base64,R0lGODlhDwAOAOMAAP///wAAAKCgoICAgMDAwLCwsODg4JCQkNDQ0PDw8BAQEDAwMGBgYCAgIHBwcFBQUCH5BAEAAAAALAAAAAAPAA4AAAROEAAxaiUy6827l4VQGMSBdElBKAKwMJ1gCI2EJNqMAQzcGYsWoCHsNAwAQwC5SRAMtUlUg3DwfAOrJrGQMIocge/4oSSPBU/iUCg8BIkIADs=)
 - batch processing on any server that has R ( &ge; 2.15.1) installed
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
