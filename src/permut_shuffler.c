@@ -94,3 +94,37 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
 	return Rout;
 }
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Method for expanding indices for bootstrapping. Only slightly faster than R
+version, but seems to scale better.
+
+Inputs:
+	indices - cumulative sum of the number of alleles at each locus.
+	length - number of loci
+
+Outputs;
+	res - a list the same length as the number of loci with continuous numbers. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+SEXP expand_indices(SEXP indices, SEXP length) {
+	SEXP res;
+	SEXP tempvec;
+	int rows, i, j, *ind = INTEGER(indices);
+	int max, min = 1;
+	rows = INTEGER(length)[0];
+	PROTECT(res = allocVector(VECSXP, rows));
+	for (i = 0; i < rows; i++)
+	{
+		max = ind[i];
+		int veclength = 1 + max - min;
+		PROTECT(tempvec = allocVector(INTSXP, veclength));
+		for (j = 0; j < veclength ; j++)
+		{
+			INTEGER(tempvec)[j] = min + j;
+		}
+		SET_VECTOR_ELT(res, i, tempvec);
+		UNPROTECT(1);
+		min = ind[i] + 1;
+	}
+	UNPROTECT(1);
+	return res;
+}
