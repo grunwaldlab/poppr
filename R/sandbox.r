@@ -586,10 +586,10 @@ new.pair_diffs <- function(pop, numLoci, np)
 getinds <- function(x){
   # x is a vector indicating the size of loci in a data set (must be continuous).
   # The sum of x is equal to the number of observations.
-  to <- cumsum(x)
+  indices <- matrix(ncol = 2, nrow = length(x))
+  to   <- cumsum(x)
   from <- c(1, to[-length(to)]+1)
-  indices <- rbind(from, to)
-  rownames(indices) <- NULL
+  indices[] <- as.integer(c(from, to))
   return(indices)
 }
 
