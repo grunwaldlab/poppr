@@ -258,43 +258,6 @@ pair_ia <- function(pop){
 }
 
 
-.new.permut.shuff <- function(mat, ploidy = 2){
-  # gathering the counts of allelic states (represented as column numbers)
-  bucket <- as.vector(colSums(mat, na.rm=T) * ploidy)
-  bucketlist <- rep(1:length(bucket), bucket)
-  # reshuffling the allelic states and making a matrix with rows for each
-  # allele and columns for each individual.
-  samplist <- sample(bucketlist)
-  newmat <- mat  
-  newmat[!is.na(mat)] <- 0
-  
-  # Treating Missing Data
-  #
-  # go on to the next locus if all are NA
-  if(all(is.na(mat))){
-    next
-  }
-  # placing the individuals with missing data in the sample list so that it is
-  # the same length as the number of rows * 2 to avoid errors.
-  if(any(is.na(mat))){
-    temp <- vector(mode="numeric", length=nrow(mat) * ploidy)
-    miss <- which(is.na(mat[, 1]))
-    temp[c(-miss * ploidy, -((miss * ploidy)-1))] <- samplist
-    samplist <- temp
-    #return(samplist)
-  }
-  samplist <- matrix(samplist, nrow = ploidy)
-  # A function that will repopulate the new matrix with the shuffled alleles
-  # x is a list of even numbers, newmat is an empty matrix, and samplist is 
-  # a list of shuffled alleleic states.
-  populate.mat <- function(x, newmat, samplist, ploidy){
-    samps <- table(samplist[, x])/ploidy
-    newmat[x, as.numeric(names(samps))] <<- samps
-  }
-  lapply(1:nrow(mat), populate.mat, newmat, samplist, ploidy)
-  return(newmat)
-}
-
 poppr_pair_ia <- function(pop){
   if(is.null(pop(pop))){
     return(pair_ia(pop))
@@ -937,60 +900,6 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
         )
 } 
 
-
-total.shuffler <- function(pop, method){
-  return(lapply(pop, pop.sampler, method))
-}
-  
-
-
-pop.sampler <- function(pop, method=1){
-  pop_names <- names(table(pop@pop))
-  total_inds <- 1:length(pop@pop)
-  repop <- function(x, pop, pop_names, total_inds, method){
-    pop_vec <- total_inds[pop@pop %in% pop_names[x]]
-    if(all(is.na(pop@tab[pop_vec, ]))){
-      pop@tab[pop_vec, ] <<- pop@tab[pop_vec, ]
-      return(1)
-    }
-    cols <- which(colSums(pop[pop_vec, ]@tab, na.rm=TRUE) > 0)
-    newpop <- pop
-    if(method != 2){
-      newpop@tab[pop_vec, -cols] <- 0
-    }
-    newpop@tab[pop_vec, cols] <- .locus.shuffler(popsub(pop, x), method)@tab
-    if(method == 1){
-      replacements <- is.na(rowSums(newpop@tab[pop_vec, cols]))
-      if(any(replacements == TRUE)){
-        #cat(pop_vec,"\t",replacements,"\n")
-        newpop@tab[pop_vec[replacements], -cols] <- NA
-      }
-    }
-    pop@tab[pop_vec, ] <<- newpop@tab[pop_vec, ]
-    return(0)
-  }
-  invisible(lapply(1:length(pop_names), repop, pop, pop_names, total_inds, method))
-#   nas <- function(x, pop, pop_names, total_inds, method){
-#     pop_vec <- total_inds[pop@pop %in% pop_names[x]]
-#     if(any(is.na(pop@tab[pop_vec, ]))){
-#       newpop <- pop
-#       replacena <- function(locus, newpop, pop_vec){
-#         locus <- newpop@loc.fac %in% locus
-#         truth <- is.na(rowSums(newpop@tab[pop_vec, locus]))
-#         if(any(truth == TRUE)){
-#           #cat(pop_vec,"\n",as.numeric(locus),"\n", truth, "\n")
-#           newpop@tab[pop_vec[truth], locus] <<- NA
-#         }
-#       }
-#       invisible(lapply(names(pop@loc.names), replacena, newpop, pop_vec))
-#       pop@tab[pop_vec, ] <<- newpop@tab[pop_vec, ]
-#     }
-#   }
-#   if(method == 1){
-#     invisible(lapply(1:length(pop_names), nas, pop, pop_names, total_inds, method))
-#   }
-  return(pop)
-}
 
 
 
