@@ -49,14 +49,12 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   all.info <- strsplit(readLines(genalex, n=2), ",")
   if (any(all.info[[1]]=="")){
     num.info <- as.numeric(all.info[[1]][-which(all.info[[1]]=="")])
-  }
-  else {
+  } else {
     num.info <- as.numeric(all.info[[1]])
   }
   if (any(all.info[[2]]=="")){
     pop.info <- all.info[[2]][c(-1,-2,-3,-which(all.info[[2]]==""))]  
-  }
-  else {
+  } else {
     pop.info <- all.info[[2]][c(-1,-2,-3)]
   }
   
@@ -95,7 +93,7 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
     # indicate no geographic data. Four extra would indicate geographic data.
     # Both of these indicate that, while a regional specification exists, a 
     # column indicating the regions was not specified, so it needs to be created
-    if(((ncol(gena) %in% (loci.adj + 4)) & (geo == TRUE)) | (ncol(gena) %in% (loci.adj + 2))){
+    if (((ncol(gena) %in% (loci.adj + 4)) & (geo == TRUE)) | (ncol(gena) %in% (loci.adj + 2))){
       pop.vec <- gena[, 2]
       ind.vec <- gena[, 1]
       xy <- gena[, c((ncol(gena)-1), ncol(gena))]
@@ -108,20 +106,15 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
       reg.names <- all.info[[2]][region.inds]
       # Paste them all into a single vector.
       reg.vec <- rep(reg.names, reg.inds)
-      if(geo == TRUE){
+      if (geo == TRUE){
         geoinds <- c((ncol(gena)-1), ncol(gena))
         xy <- gena[, geoinds]
         gena <- gena[, -geoinds]
-      }
-      else{
+      } else {
         xy <- NULL
       }
       gena <- gena[, c(-1,-2)]
-    }
-    #
-    # The Regions are specified in one of the first two columns.
-    #
-    else{
+    } else {
       pop.vec <- ifelse(any(gena[, 1] == pop.info[1]), 1, 2)
       reg.vec <- ifelse(pop.vec == 2, 1, 2)
       orig.ind.vec <- NULL
@@ -142,22 +135,15 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
       # removing the non-genotypic columns from the data frame
       gena <- gena[, c(-1,-2,-ncol(gena))]
     }
-  }
-  
-  #
-  # There are no Regions specified, but there are geographic coordinates
-  #
-  else if (geo == TRUE & length(pop.info) == glob.info[3]){
+  } else if (geo == TRUE & length(pop.info) == glob.info[3]){
+    # There are no Regions specified, but there are geographic coordinates
     reg.vec <- NULL
     pop.vec <- gena[, 2]
     ind.vec <- gena[, 1]
     xy <- gena[, c((ncol(gena)-1), ncol(gena))]
     gena <- gena[, c(-1,-2,-(ncol(gena)-1),-ncol(gena))]
-  }
-  #
-  # There are no Regions or geographic coordinates
-  #
-  else{
+  } else {
+    # There are no Regions or geographic coordinates
     reg.vec <- NULL
     pop.vec <- gena[, 2]
     ind.vec <- gena[, 1]
@@ -173,50 +159,38 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   clm <- ncol(gena)
   gena.mat <- as.matrix(gena)
   # Checking for greater than haploid data.
-  if (glob.info[1] == clm/ploidy){
+  if (glob.info[1] == clm/ploidy & ploidy > 1){
     # Missing data in genalex is coded as "0" for non-presence/absence data.
     # this converts it to "NA" for adegenet.
-#     if(any(gena.mat =="0")){
-#       #gena.mat <- as.matrix(gena)
-#       gena[gena.mat == "0"] <- NA
-#       #gena <- as.data.frame(gena.mat)
-#     }
+    if(any(gena.mat == "0") & ploidy < 3){
+      gena[gena.mat == "0"] <- NA
+    }
     type <- 'codom'
-    loci <- which((1:clm) %% ploidy==1)
+    loci <- which((1:clm) %% ploidy == 1)
     gena2 <- gena[, loci]
     lapply(loci, function(x) gena2[, ((x-1)/ploidy)+1] <<-
              pop_combiner(gena, hier = x:(x+ploidy-1), sep = "/"))
-    #res <- list(Gena=gena2, Glob.info=glob.info, ploidy=ploidyy)
     res.gid <- df2genind(gena2, sep="/", ind.names=ind.vec, pop=pop.vec,
                          ploidy=ploidy, type=type)
-  }
-  # Checking for AFLP data.
-  else if (glob.info[1] == clm & all(gena.mat %in% as.integer(-1:1))) {
+  } else if (glob.info[1] == clm & all(gena.mat %in% as.integer(-1:1))) {
+    # Checking for AFLP data.
     # Missing data in genalex is coded as "-1" for presence/absence data.
     # this converts it to "NA" for adegenet.
     if(any(gena.mat == -1L)){
-      #gena.mat <- as.matrix(gena)
       gena[gena.mat == -1L] <- NA
-      #gena <- as.data.frame(gena.mat)
     }
     type <- 'PA'
-    #res <- list(Gena=gena, Glob.info=glob.info, Ploid=ploidy)
     res.gid <- df2genind(gena, ind.names=ind.vec, pop=pop.vec,
                          ploidy=ploidy, type=type)
-  }
-  # Checking for haploid microsattellite data or SNP data
-  else if (glob.info[1] == clm & !all(gena.mat %in% as.integer(-1:1))) {
+  } else if (glob.info[1] == clm & !all(gena.mat %in% as.integer(-1:1))) {
+    # Checking for haploid microsattellite data or SNP data
     if(any(gena.mat == "0")){
-      #gena.mat <- as.matrix(gena)
       gena[gena.mat == "0"] <- NA
-      #gena <- as.data.frame(gena.mat)
     }
     type <- 'codom'
-    #res <- list(Gena=gena, Glob.info=glob.info, Ploid=1)
     res.gid <- df2genind(gena, ind.names=ind.vec, pop=pop.vec,
-                         ploidy= 1, type=type)
-  }
-  else {
+                         ploidy=1, type=type)
+  } else {
     stop("Something went wrong. Check your geo and region flags to make sure they are set correctly. Otherwise, the problem may lie within the data structure itself.")
   }
   if (any(duplicated(ind.vec))){
@@ -230,11 +204,9 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   res.gid@call[2] <- basename(genalex)
   if(region==TRUE){
     res.gid@other[["population_hierarchy"]]$Region <- reg.vec
-    #return(res.gid)
   }
   if(geo==TRUE){
     res.gid@other[["xy"]] <- xy
-    #return(res.gid)
   }
   return(res.gid)
 }
@@ -247,8 +219,7 @@ pair_ia <- function(pop){
     loci_pairs <- combn(pop@loc.names, 2)
     pair_ia_vector <- apply(loci_pairs, 2, function(x) .Ia.Rd(pop_loci[x]))
     colnames(pair_ia_vector) <- apply(loci_pairs, 2, paste, collapse = ":")
-  }
-  else{
+  } else {
     loci_pairs <- combn(1:nLoc(pop), 2)
     pair_ia_vector <- apply(loci_pairs, 2, function(x) .PA.Ia.Rd(pop[, x], missing = "ignore"))
     colnames(pair_ia_vector) <- apply(combn(pop@loc.names, 2), 2, paste, collapse = ":")
@@ -267,10 +238,6 @@ poppr_pair_ia <- function(pop){
   res_mat <- matrix(0.5, 2, loci_pairs)
   pops_array <- vapply(pops, pair_ia, res_mat)
   return(pops_array)
-}
-
-.new.diploid.shuff <- function(n, ploidy = 2, weights){
-  return(t(rmultinom(n, size = ploidy, prob = weights))/ ploidy)
 }
 
 
