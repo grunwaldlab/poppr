@@ -7,6 +7,8 @@ DATE	:= $(shell date +%F)
 
 all: update check clean
 
+alldev: update checkdevel cleandevel
+
 build:
 	cd ..;\
 	R CMD build $(PKGSRC) --resave-data --compact-vignettes=gs+qpdf
@@ -22,6 +24,10 @@ check: build
 clean:
 	cd ..;\
 	$(RM) -r $(PKGNAME).Rcheck/
+
+cleandevel:
+	cd ..;\
+	$(RM) -r R-devel*
 
 # Make files do not like a $ there, so you have to double it to escape.
 update:
@@ -39,7 +45,7 @@ update:
     rm vignettes/*toc; \
 	fi;
 
-checkdevel: update build
+checkdevel: build
 	cd ..;\
 	wget ftp://ftp.stat.math.ethz.ch/Software/R/R-devel.tar.gz;\
 	tar -xzvf R-devel.tar.gz;\
