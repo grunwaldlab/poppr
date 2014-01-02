@@ -48,32 +48,36 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
-new.diss.dist <- function(pop, diff = TRUE){
-  ploid     <- ploidy(pop)
-  ind.names <- pop@ind.names
-  inds      <- nInd(pop)
+new.diss.dist <- function(x, diff = TRUE, alleles = TRUE, frac = TRUE){
+  ploid     <- ploidy(x)
+  ind.names <- x@ind.names
+  inds      <- nInd(x)
   np        <- choose(inds, 2)
-  dist.vec  <- matrix(data = 0, nrow=inds, ncol=inds)
-  numLoci       <- length(pop)
-  temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  if(pop@type == "PA"){
-    temp.d.vector <- apply(pop@tab, 2, function(x) .Call("pairdiffs", as.matrix((x))))
+  dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
+  numLoci   <- nLoc(x)
+  if(x@type == "PA"){
+    dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
+    ploid <- 1
+  } else {
+    x <- seploc(x)
+    dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
+                            numeric(np))
   }
-  else{
-    pop           <- seploc(pop)
-
-    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
-                            temp.d.vector[, 1])
+  if (!alleles & x@type == "codom"){
+    dist_by_locus[dist_by_locus > 0] <- 1
+    ploid <- 1
   }
   if (!diff){
-    temp.d.vector[] <- ifelse(temp.d.vector == 0, 1, 0)
+    max_dist      <- numLoci*ploid
+    dist_by_locus <- max_dist - dist_by_locus
   }
-  dist.vec[lower.tri(dist.vec)] <- rowSums(temp.d.vector)
-  colnames(dist.vec) <- ind.names
-  rownames(dist.vec) <- ind.names
-  return(as.dist(dist.vec))
-  loci <- ifelse(is.list(pop), length(pop), nLoc(pop))
-  return(as.dist(dist.vec/(loci*ploid)))
+  dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
+  colnames(dist.mat)            <- ind.names
+  rownames(dist.mat)            <- ind.names
+  if (frac){
+    dist.mat <- dist.mat/(numLoci*ploid)
+  }
+  return(as.dist(dist.mat))
 }
 
 
