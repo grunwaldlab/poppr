@@ -48,22 +48,32 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
-poppramova <- function(x, hier = NULL, dfname = "population_hierarchy", distmat = NULL, ...){
-  if (is.null(hier) | is.null(distmat)){
-    stop("both a hierarchy and distance matrix need to be specified.")
+new.diss.dist <- function(pop, diff = TRUE){
+  ploid     <- ploidy(pop)
+  ind.names <- pop@ind.names
+  inds      <- nInd(pop)
+  np        <- choose(inds, 2)
+  dist.vec  <- matrix(data = 0, nrow=inds, ncol=inds)
+  numLoci       <- length(pop)
+  temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
+  if(pop@type == "PA"){
+    temp.d.vector <- apply(pop@tab, 2, function(x) .Call("pairdiffs", as.matrix((x))))
   }
-  if (!class(distmat) %in% c("dist", "matrix")){
-    stop(paste(substitute(distmat), "must be a distance matrix."))
+  else{
+    pop           <- seploc(pop)
+
+    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
+                            temp.d.vector[, 1])
   }
-  if (!is.genind(x)){
-    stop(paste(substitute(x), "is not a genind object."))
+  if (!diff){
+    temp.d.vector[] <- ifelse(temp.d.vector == 0, 1, 0)
   }
-  if (!all(hier %in% names(other(x)[[dfname]]))){
-    stop("Hierarcy names do not match those in the data frame.")
-  }
-  amova_formula <- as.formula(paste("distmat ~", paste(hier, collapse = "/")))
-  out <- pegas::amova(amova_formula, data = other(x)[[dfname]][hier], ...)
-  return(out)
+  dist.vec[lower.tri(dist.vec)] <- rowSums(temp.d.vector)
+  colnames(dist.vec) <- ind.names
+  rownames(dist.vec) <- ind.names
+  return(as.dist(dist.vec))
+  loci <- ifelse(is.list(pop), length(pop), nLoc(pop))
+  return(as.dist(dist.vec/(loci*ploid)))
 }
 
 
