@@ -91,10 +91,9 @@ new.diss.dist <- function(x, diff = TRUE, alleles = TRUE, frac = TRUE){
 # df[names(newdf)] <- newdf # Add new columns.
 #
 make_hierarchy <- function(hier, df){
-  levs <- hier[[2]]
+  levs <- attr(terms(hier), "term.labels")
   if (length(levs) > 1){
-    levs <- as.character(as.expression(levs))
-    levs <- unlist(strsplit(levs, "/"))
+    levs <- gsub(":", "_", levs)
   }
   if (!all(levs %in% names(df))){
     msg <- paste("One or more levels in the given hierarchy is not present", 
@@ -109,10 +108,9 @@ make_hierarchy <- function(hier, df){
 }
 
 permute_hierarchy <- function(hier, df){
-  levs <- hier[[2]]
+  levs <- attr(terms(hier), "term.labels")
   if (length(levs) > 1){
-    levs <- as.character(as.expression(levs))
-    levs <- unlist(strsplit(levs, "/"))
+    levs <- gsub(":", "_", levs)
   }
   if (!all(levs %in% names(df))){
     msg <- paste("One or more levels in the given hierarchy is not present", 
