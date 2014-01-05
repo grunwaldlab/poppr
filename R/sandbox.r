@@ -146,7 +146,36 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   }
   smallest <- df[[levs[length(levs)]]]
   factlist <- lapply(df[-length(levs)], make_ade_df_col, smallest)
-  return(data.frame(factlist))
+  return(rev(data.frame(factlist)))
+}
+
+ade4_amova <- function(hier, x, clonecorrect = FALSE, 
+                       dfname = "population_hierarchy", sep = "_", missing = "0"){
+  if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
+  if (!dfname %in% names(other(x))){
+    stop(paste(dfname, "is not present in the 'other' slot"))
+  }
+  parsed_hier <- gsub(":", "_", attr(terms(hier), "term.labels"))
+  full_hier <- parsed_hier[length(parsed_hier)]
+  if (!full_hier %in% names(other(x)[[dfname]])){
+    hiers <- all.vars(hier)
+    if (!all(hiers %in% names(other(x)[[dfname]]))){
+      hier_incompatible_warning(hiers, df)
+    }
+    x <- splitcombine(x, hier = hiers, df = dfname, method = 2)
+  } else {
+    pop(x) <- other(x)[[dfname]][[full_hier]]
+  }
+  x       <- missingno(x, missing)
+  hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
+  xstruct <- make_ade_df(hier, hierdf)
+  xdist   <- sqrt(diss.dist(x[.clonecorrector(x), ])*ploidy(x)*nLoc(x))
+  xtab    <- t(mlg.matrix(x))
+  if (clonecorrect){
+    xtab  <- ifelse(xtab == 0, 0, 1)
+  }
+  xtab    <- as.data.frame(xtab[unique(mlg.vector(x)), ])
+  return(ade4::amova(samples = xtab, distances = xdist, structures = xstruct))
 }
 
 pair_ia <- function(pop){
