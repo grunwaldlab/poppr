@@ -90,10 +90,11 @@ new.diss.dist <- function(x, diff = TRUE, alleles = TRUE, frac = TRUE){
 # newdf <- make_hierarchy(~ a/b/c, df)
 # df[names(newdf)] <- newdf # Add new columns.
 #
-make_hierarchy <- function(hier, df){
-  levs <- attr(terms(hier), "term.labels")
+make_hierarchy <- function(hier, df, expand_label = FALSE){
+  newlevs <- attr(terms(hier), "term.labels")
+  levs <- all.vars(hier)
   if (length(levs) > 1){
-    levs <- gsub(":", "_", levs)
+    newlevs <- gsub(":", "_", newlevs)
   }
   if (!all(levs %in% names(df))){
     msg <- paste("One or more levels in the given hierarchy is not present", 
@@ -103,27 +104,12 @@ make_hierarchy <- function(hier, df){
     stop(msg)
   }
   newdf <- df[levs[1]]
-  lapply(1:length(levs), function(x) newdf[[paste(levs[1:x], collapse = "_")]] <<- as.factor(pop_combiner(df, levs[1:x])))
+  if (!expand_label){
+    newlevs <- levs
+  }
+  print(newlevs)
+  lapply(1:length(levs), function(x) newdf[[newlevs[x]]] <<- as.factor(pop_combiner(df, levs[1:x])))
   return(newdf)
-}
-
-permute_hierarchy <- function(hier, df){
-  levs <- attr(terms(hier), "term.labels")
-  if (length(levs) > 1){
-    levs <- gsub(":", "_", levs)
-  }
-  if (!all(levs %in% names(df))){
-    msg <- paste("One or more levels in the given hierarchy is not present", 
-                 "in the data frame.",
-                 "\nHierarchy:\t", paste(levs, collapse = ", "), "\nData:\t\t", 
-                 paste(names(df), collapse = ", "))
-    stop(msg)
-  }
-  nlev <- length(levs)
-  levmat <- matrix(.Call("permuto", nlev) + 1, nrow = nlev)
-  lev_perm <- paste("~", apply(levmat, 2, function(x) paste(levs[x], collapse = "/")))
-  lapply(lev_perm, function(x){newdf <- make_hierarchy(as.formula(x), df); df[names(newdf)] <<- newdf})
-  return(df)
 }
 
 pair_ia <- function(pop){
