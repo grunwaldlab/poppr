@@ -108,6 +108,25 @@ make_hierarchy <- function(hier, df){
   return(newdf)
 }
 
+permute_hierarchy <- function(hier, df){
+  levs <- hier[[2]]
+  if (length(levs) > 1){
+    levs <- as.character(as.expression(levs))
+    levs <- unlist(strsplit(levs, "/"))
+  }
+  if (!all(levs %in% names(df))){
+    msg <- paste("One or more levels in the given hierarchy is not present", 
+                 "in the data frame.",
+                 "\nHierarchy:\t", paste(levs, collapse = ", "), "\nData:\t\t", 
+                 paste(names(df), collapse = ", "))
+    stop(msg)
+  }
+  nlev <- length(levs)
+  levmat <- matrix(.Call("permuto", nlev) + 1, nrow = nlev)
+  lev_perm <- paste("~", apply(levmat, 2, function(x) paste(levs[x], collapse = "/")))
+  lapply(lev_perm, function(x){newdf <- make_hierarchy(as.formula(x), df); df[names(newdf)] <<- newdf})
+  return(df)
+}
 
 pair_ia <- function(pop){
 
