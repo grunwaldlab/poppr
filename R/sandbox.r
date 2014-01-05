@@ -80,6 +80,23 @@ new.diss.dist <- function(x, diff = TRUE, alleles = TRUE, frac = TRUE){
   return(as.dist(dist.mat))
 }
 
+make_hierarchy <- function(hier, df){
+  levs <- hier[[2]]
+  if (length(levs) > 1){
+    levs <- as.character(as.expression(levs))
+    levs <- unlist(strsplit(levs, "/"))
+  }
+  if (!all(levs %in% names(df))){
+    msg <- paste("One or more levels in the given hierarchy is not present", 
+                 "in the data frame.",
+                 "\nHierarchy:\t", paste(levs, collapse = ", "), "\nData:\t\t", 
+                 paste(names(df), collapse = ", "))
+    stop(msg)
+  }
+  lapply(1:length(levs), function(x) df[[paste(levs[1:x], collapse = "_")]] <<- as.factor(pop_combiner(df, levs[1:x])))
+  return(df)
+}
+
 
 pair_ia <- function(pop){
 
