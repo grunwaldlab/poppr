@@ -80,6 +80,16 @@ new.diss.dist <- function(x, diff = TRUE, alleles = TRUE, frac = TRUE){
   return(as.dist(dist.mat))
 }
 
+# hier = a nested formula such as ~ A/B/C where C is nested within B, which is
+# nested within A.
+#
+# df = a data frame containing columns corresponding to the variables in hier.
+#
+# example:
+# df <- data.frame(list(a = letters, b = LETTERS, c = 1:26))
+# newdf <- make_hierarchy(~ a/b/c, df)
+# df[names(newdf)] <- newdf # Add new columns.
+#
 make_hierarchy <- function(hier, df){
   levs <- hier[[2]]
   if (length(levs) > 1){
@@ -93,8 +103,9 @@ make_hierarchy <- function(hier, df){
                  paste(names(df), collapse = ", "))
     stop(msg)
   }
-  lapply(1:length(levs), function(x) df[[paste(levs[1:x], collapse = "_")]] <<- as.factor(pop_combiner(df, levs[1:x])))
-  return(df)
+  newdf <- df[levs[1]]
+  lapply(1:length(levs), function(x) newdf[[paste(levs[1:x], collapse = "_")]] <<- as.factor(pop_combiner(df, levs[1:x])))
+  return(newdf)
 }
 
 
