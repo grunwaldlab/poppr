@@ -80,6 +80,15 @@ new.diss.dist <- function(x, diff = TRUE, alleles = TRUE, frac = TRUE){
   return(as.dist(dist.mat))
 }
 
+# A function that will quit the function if a level in the hierarchy is not
+# present in the given data frame.
+hier_incompatible_warning <- function(levs, df){
+  msg <- paste("One or more levels in the given hierarchy is not present", 
+               "in the data frame.",
+               "\nHierarchy:\t", paste(levs, collapse = ", "), "\nData:\t\t", 
+               paste(names(df), collapse = ", "))
+  stop(msg)
+}
 # hier = a nested formula such as ~ A/B/C where C is nested within B, which is
 # nested within A.
 #
@@ -97,19 +106,47 @@ make_hierarchy <- function(hier, df, expand_label = FALSE){
     newlevs <- gsub(":", "_", newlevs)
   }
   if (!all(levs %in% names(df))){
-    msg <- paste("One or more levels in the given hierarchy is not present", 
-                 "in the data frame.",
-                 "\nHierarchy:\t", paste(levs, collapse = ", "), "\nData:\t\t", 
-                 paste(names(df), collapse = ", "))
-    stop(msg)
+    hier_incompatible_warning(levs, df)
   }
   newdf <- df[levs[1]]
   if (!expand_label){
     newlevs <- levs
   }
-  print(newlevs)
   lapply(1:length(levs), function(x) newdf[[newlevs[x]]] <<- as.factor(pop_combiner(df, levs[1:x])))
   return(newdf)
+}
+
+
+#==============================================================================#
+# Functions for creating the structure data frame needed for ade4's AMOVA
+# implementation.
+#==============================================================================#
+getsubpops <- function(x) {
+  y <- table(x)
+  return(length(y[y > 0]))
+}
+
+make_ade_df_col <- function(x, smallest){
+  facts <- tapply(smallest, x, getsubpops) 
+  return(as.factor(rep(names(facts), facts)))
+}
+
+make_ade_df <- function(hier, df, expanded = FALSE){
+  if (expanded){
+    levs <- attr(terms(hier), "term.labels")
+  } else {
+    levs <- all.vars(hier)
+  }
+  if(length(levs) <= 1){
+    stop("Only one level present")
+  }
+  levs <- gsub(":", "_", levs)
+  if(!all(levs %in% names(df))){
+    hier_incompatible_warning(levs, df)
+  }
+  smallest <- df[[levs[length(levs)]]]
+  factlist <- lapply(df[-length(levs)], make_ade_df_col, smallest)
+  return(data.frame(factlist))
 }
 
 pair_ia <- function(pop){
