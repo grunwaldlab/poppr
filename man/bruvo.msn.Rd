@@ -3,10 +3,11 @@
 \title{Create minimum spanning network of selected populations using Brvuo's
 distance.}
 \usage{
-bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
-  palette = topo.colors, sublist = "All", blacklist = NULL,
-  vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3,
-  gweight = 1, wscale = TRUE, ...)
+  bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
+    palette = topo.colors, sublist = "All",
+    blacklist = NULL, vertex.label = "MLG", gscale = TRUE,
+    glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE,
+    ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -74,21 +75,21 @@ bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
   plot.igraph}
 }
 \value{
-\item{graph}{a minimum spanning network with nodes
-corresponding to MLGs within the data set. Colors of the
-nodes represent population membership. Width and color of
-the edges represent distance.} \item{populations}{a vector
-of the population names corresponding to the vertex colors}
-\item{colors}{a vector of the hexadecimal representations
-of the colors used in the vertex colors}
+  \item{graph}{a minimum spanning network with nodes
+  corresponding to MLGs within the data set. Colors of the
+  nodes represent population membership. Width and color of
+  the edges represent distance.} \item{populations}{a
+  vector of the population names corresponding to the
+  vertex colors} \item{colors}{a vector of the hexadecimal
+  representations of the colors used in the vertex colors}
 }
 \description{
-Create minimum spanning network of selected populations
-using Brvuo's distance.
+  Create minimum spanning network of selected populations
+  using Brvuo's distance.
 }
 \note{
-The edges of these graphs may cross each other if the graph
-becomes too large.
+  The edges of these graphs may cross each other if the
+  graph becomes too large.
 }
 \examples{
 # Load the data set.
@@ -132,19 +133,20 @@ bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)
 }
 }
 \author{
-Javier F. Tabima, Zhian N. Kamvar
+  Javier F. Tabima, Zhian N. Kamvar
 }
 \references{
-Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
-Hinrich Schulenburg. A simple method for the calculation of
-microsatellite genotype distances irrespective of ploidy
-level. Molecular Ecology, 13(7):2101-2106, 2004.
+  Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza,
+  and Hinrich Schulenburg. A simple method for the
+  calculation of microsatellite genotype distances
+  irrespective of ploidy level. Molecular Ecology,
+  13(7):2101-2106, 2004.
 }
 \seealso{
-\code{\link{nancycats}}, \code{\link{upgma}},
-\code{\link{nj}}, \code{\link{boot.phylo}},
-\code{\link{nodelabels}}, \code{\link{na.replace}},
-\code{\link{missingno}}, \code{\link{bruvo.boot}},
-\code{\link{greycurve}}.
+  \code{\link{nancycats}}, \code{\link{upgma}},
+  \code{\link{nj}}, \code{\link{boot.phylo}},
+  \code{\link{nodelabels}}, \code{\link{na.replace}},
+  \code{\link{missingno}}, \code{\link{bruvo.boot}},
+  \code{\link{greycurve}}.
 }
 

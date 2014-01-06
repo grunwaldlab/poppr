@@ -3,7 +3,7 @@
 \title{Shuffle individuals in a \code{\link{genind}} object independently over each
 locus.}
 \usage{
-shufflepop(pop, method = 1)
+  shufflepop(pop, method = 1)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -12,12 +12,12 @@ shufflepop(pop, method = 1)
   below.}
 }
 \value{
-a \code{\link{genind}} object shuffled by a specified
-method
+  a \code{\link{genind}} object shuffled by a specified
+  method
 }
 \description{
-Shuffle individuals in a \code{\link{genind}} object
-independently over each locus.
+  Shuffle individuals in a \code{\link{genind}} object
+  independently over each locus.
 }
 \section{Details}{
   This function will shuffle each locus in the data set
@@ -62,11 +62,11 @@ summary(shufflepop(Zebu, method=4))
 }
 }
 \author{
-Zhian N. Kamvar
+  Zhian N. Kamvar
 }
 \references{
-Paul-Michael Agapow and Austin Burt. 2001. Indices of
-multilocus linkage disequilibrium. \emph{Molecular Ecology
-Notes}, 1(1-2):101-102
+  Paul-Michael Agapow and Austin Burt. 2001. Indices of
+  multilocus linkage disequilibrium. \emph{Molecular
+  Ecology Notes}, 1(1-2):101-102
 }
 

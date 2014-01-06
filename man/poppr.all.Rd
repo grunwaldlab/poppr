@@ -2,7 +2,7 @@
 \alias{poppr.all}
 \title{Process a list of files with poppr}
 \usage{
-poppr.all(filelist, ...)
+  poppr.all(filelist, ...)
 }
 \arguments{
   \item{filelist}{a list of files in the current working
@@ -11,13 +11,13 @@ poppr.all(filelist, ...)
   \item{...}{arguments passed on to poppr}
 }
 \value{
-see \code{\link{poppr}}
+  see \code{\link{poppr}}
 }
 \description{
-poppr.all is a wrapper function that will loop through a
-list of files from the workind directory, execute
-\code{\link{poppr}}, and concatenate the output into one
-data frame.
+  poppr.all is a wrapper function that will loop through a
+  list of files from the workind directory, execute
+  \code{\link{poppr}}, and concatenate the output into one
+  data frame.
 }
 \examples{
 \dontrun{
@@ -32,9 +32,9 @@ poppr.all(x$files)
 }
 }
 \author{
-Zhian N. Kamvar
+  Zhian N. Kamvar
 }
 \seealso{
-\code{\link{poppr}}, \code{\link{getfile}}
+  \code{\link{poppr}}, \code{\link{getfile}}
 }
 

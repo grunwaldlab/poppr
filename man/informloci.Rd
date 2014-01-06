@@ -2,7 +2,7 @@
 \alias{informloci}
 \title{Remove all non-phylogentically informative loci}
 \usage{
-informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)
+  informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object.}
@@ -17,24 +17,25 @@ informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)
   printed to screen.}
 }
 \value{
-A \code{genind} object with user-defined informative loci.
+  A \code{genind} object with user-defined informative
+  loci.
 }
 \description{
-This function will facilitate in removing phylogenetically
-uninformative loci from a \code{\link{genind}} object. The
-user can specify what is meant by phylogenetically
-uninformative with a specification of the cutoff
-percentage. Any loci under the cutoff will be removed. For
-convenience's sake, the default cutoff is set to 2
-individuals.
+  This function will facilitate in removing
+  phylogenetically uninformative loci from a
+  \code{\link{genind}} object. The user can specify what is
+  meant by phylogenetically uninformative with a
+  specification of the cutoff percentage. Any loci under
+  the cutoff will be removed. For convenience's sake, the
+  default cutoff is set to 2 individuals.
 }
 \note{
-This will have a few side effects that affect certain
-analyses. First, the number of multilocus genotypes might
-be reduced due to the reduced number of markers. Second, if
-you plan on using this data for analysis of the index of
-association, be sure to use the standardized version
-(rbarD) that corrects for the number of observed loci.
+  This will have a few side effects that affect certain
+  analyses. First, the number of multilocus genotypes might
+  be reduced due to the reduced number of markers. Second,
+  if you plan on using this data for analysis of the index
+  of association, be sure to use the standardized version
+  (rbarD) that corrects for the number of observed loci.
 }
 \examples{
 # Load the data set H3N2

@@ -2,8 +2,9 @@
 \alias{splitcombine}
 \title{Split a or combine items within a data frame in \code{\link{genind}} objects.}
 \usage{
-splitcombine(pop, method = 1, dfname = "population_hierarchy", sep = "_",
-  hier = c(1), setpopulation = TRUE, fixed = TRUE)
+  splitcombine(pop, method = 1,
+    dfname = "population_hierarchy", sep = "_",
+    hier = c(1), setpopulation = TRUE, fixed = TRUE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object.}
@@ -33,27 +34,28 @@ splitcombine(pop, method = 1, dfname = "population_hierarchy", sep = "_",
   method.}
 }
 \value{
-a \code{\link{genind}} object with a modified data frame in
-the \code{\link{other}} slot.
+  a \code{\link{genind}} object with a modified data frame
+  in the \code{\link{other}} slot.
 }
 \description{
-Often, one way a lot of file formats fail is that they do
-not allow multiple population hierarchies. This can be
-circumvented, however, by coding all of the hierarchies in
-one string in the input file with a common separator (eg.
-"_"). \code{splitcombine} will be able to recognise those
-separators and create a data frame of all the population
-structures for whatever subsetting you might need.
+  Often, one way a lot of file formats fail is that they do
+  not allow multiple population hierarchies. This can be
+  circumvented, however, by coding all of the hierarchies
+  in one string in the input file with a common separator
+  (eg. "_"). \code{splitcombine} will be able to recognise
+  those separators and create a data frame of all the
+  population structures for whatever subsetting you might
+  need.
 }
 \note{
-The separator field is sensitive to regular expressions. If
-you do not know what those are, please use the default
-underscore to separate your populations. Use \code{fixed =
-TRUE} to ignore regular expressions. If you do not set the
-\code{hier} flag for the split method, your new data frame
-will have the names "comb", "h1", "h2" and so on; for the
-combine method, your data frame will return the first
-column of your data frame.
+  The separator field is sensitive to regular expressions.
+  If you do not know what those are, please use the default
+  underscore to separate your populations. Use \code{fixed
+  = TRUE} to ignore regular expressions. If you do not set
+  the \code{hier} flag for the split method, your new data
+  frame will have the names "comb", "h1", "h2" and so on;
+  for the combine method, your data frame will return the
+  first column of your data frame.
 }
 \examples{
 \dontrun{
@@ -89,6 +91,6 @@ H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "
 }
 }
 \author{
-Zhian N. Kamvar
+  Zhian N. Kamvar
 }
 

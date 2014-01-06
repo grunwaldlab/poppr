@@ -2,7 +2,7 @@
 \alias{greycurve}
 \title{Display a greyscale gradient adjusted to specific parameters}
 \usage{
-greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
+  greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
 }
 \arguments{
   \item{glim}{"grey limit". Two numbers between zero and
@@ -22,14 +22,14 @@ greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
   differences between more distantly related nodes.}
 }
 \value{
-A plot displaying a grey gradient from 0.001 to 1 with
-minimum and maximum values displayed as yellow lines, and
-an equation for the correction displayed in red.
+  A plot displaying a grey gradient from 0.001 to 1 with
+  minimum and maximum values displayed as yellow lines, and
+  an equation for the correction displayed in red.
 }
 \description{
-This function has one purpose. It is for deciding the
-appropriate scaling for a grey palette to be used for edge
-weights of a minimum spanning network.
+  This function has one purpose. It is for deciding the
+  appropriate scaling for a grey palette to be used for
+  edge weights of a minimum spanning network.
 }
 \examples{
 # Normal grey curve with an adjustment of 3, an upper limit of 0.8, and
@@ -50,6 +50,6 @@ greycurve(glim=c(0.1,0.8), gweight=2)
 }
 }
 \author{
-Zhian N. Kamvar
+  Zhian N. Kamvar
 }
 

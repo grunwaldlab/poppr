@@ -2,7 +2,7 @@
 \alias{getfile}
 \title{Get a file name and path and store them in a list.}
 \usage{
-getfile(multi = FALSE, pattern = NULL, combine = TRUE)
+  getfile(multi = FALSE, pattern = NULL, combine = TRUE)
 }
 \arguments{
   \item{multi}{this is an indicator to allow the user to
@@ -19,17 +19,17 @@ getfile(multi = FALSE, pattern = NULL, combine = TRUE)
   have the basename.}
 }
 \value{
-\item{path}{a character string of the absolute path to the
-chosen file or files} \item{files}{a character vector
-containing the chosen file name or names.}
+  \item{path}{a character string of the absolute path to
+  the chosen file or files} \item{files}{a character vector
+  containing the chosen file name or names.}
 }
 \description{
-getfile is a convenience function that serves as a wrapper
-for the functions \code{\link{file.choose},
-\link{file.path},} and \code{\link{list.files}}. If the
-user is working in a GUI environment, a window will pop up,
-allowing the user to choose a specified file regardless of
-path.
+  getfile is a convenience function that serves as a
+  wrapper for the functions \code{\link{file.choose},
+  \link{file.path},} and \code{\link{list.files}}. If the
+  user is working in a GUI environment, a window will pop
+  up, allowing the user to choose a specified file
+  regardless of path.
 }
 \examples{
 \dontrun{
@@ -50,6 +50,6 @@ write.csv(yfiles)
 }
 }
 \author{
-Zhian N. Kamvar
+  Zhian N. Kamvar
 }
 

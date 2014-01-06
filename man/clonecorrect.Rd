@@ -2,8 +2,9 @@
 \alias{clonecorrect}
 \title{Remove potential bias caused by cloned genotypes in genind object.}
 \usage{
-clonecorrect(pop, hier = c(1), dfname = "population_hierarchy",
-  combine = FALSE, keep = 1)
+  clonecorrect(pop, hier = c(1),
+    dfname = "population_hierarchy", combine = FALSE,
+    keep = 1)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -31,19 +32,19 @@ clonecorrect(pop, hier = c(1), dfname = "population_hierarchy",
   respect to year, you can set \code{keep = c(1,3)}.}
 }
 \value{
-a clone corrected \code{\link{genind}} object.
+  a clone corrected \code{\link{genind}} object.
 }
 \description{
-This function removes any duplicated multi locus genotypes
-from any specified population hierarchy.
+  This function removes any duplicated multi locus
+  genotypes from any specified population hierarchy.
 }
 \note{
-This function will clone correct to the population level
-indicated in the \code{pop} slot of the
-\code{\link{genind}} object if there is no data frame
-specified in dfname. If there is no population structure
-and there is no specified data frame, it will clone correct
-the entire \code{\link{genind}} object.
+  This function will clone correct to the population level
+  indicated in the \code{pop} slot of the
+  \code{\link{genind}} object if there is no data frame
+  specified in dfname. If there is no population structure
+  and there is no specified data frame, it will clone
+  correct the entire \code{\link{genind}} object.
 }
 \examples{
 # LOAD A. euteiches data set
@@ -96,6 +97,6 @@ length(other(c.y.m)$x$country) # 1190
 }
 }
 \author{
-Zhian N. Kamvar
+  Zhian N. Kamvar
 }
 
