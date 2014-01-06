@@ -693,7 +693,7 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
 #' N.informdecimated <- informloci(Nepal, cutoff = 0.1)
 #' @export
 #==============================================================================#
-
+#' @importFrom pegas as.loci
 informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
   if(!is.genind(pop)){
     stop("This function only works on genind objects.")

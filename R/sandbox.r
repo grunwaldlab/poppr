@@ -164,6 +164,7 @@ not_euclid_msg <- function(){
   stop(msg)
 }
 
+#' @importFrom ade4 amova
 # the ... here refers to arguments to be passed on to missingno
 ade4_amova <- function(hier, x, clonecorrect = FALSE, 
                        dfname = "population_hierarchy", sep = "_", missing = "0",
@@ -179,7 +180,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE,
     if (!all(hiers %in% names(other(x)[[dfname]]))){
       hier_incompatible_warning(hiers, df)
     }
-    x <- splitcombine(x, hier = hiers, df = dfname, method = 2)
+    x <- splitcombine(x, hier = hiers, dfname = dfname, method = 2)
   } else {
     pop(x) <- other(x)[[dfname]][[full_hier]]
   }
@@ -191,7 +192,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE,
   # missing to mean of the columns: indiscreet distances.
   # remove loci at cutoff
   # remove individuals at cutoff
-  x       <- missingno(x, type = missing, ...)
+  x       <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
   xdist   <- sqrt(diss.dist(x[.clonecorrector(x), ])*ploidy(x)*nLoc(x))
@@ -499,7 +500,7 @@ new.pair_diffs <- function(pop, numLoci, np)
 {
   ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- mclapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2))
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), numeric(np))
   return(temp.d.vector)
   d.vector <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
@@ -568,14 +569,8 @@ brian.ia <- function(pop, sample=0, valuereturn = FALSE, method=1,
     p.val <- ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
-      if(require(ggplot2)){
-        poppr.plot(samp, observed=IarD, pop=namelist$population,
-                          file=namelist$File, pval=p.val, N=nrow(pop@tab))
-      }
-      else{      
-        permut.histogram(samp, IarD, p.val[1], pop=namelist$population, 
-                        file=namelist$File)
-      }
+      poppr.plot(samp, observed=IarD, pop=namelist$population,
+                        file=namelist$File, pval=p.val, N=nrow(pop@tab))
     }
     result <- 1:4
     result[c(1,3)] <- IarD
@@ -688,7 +683,7 @@ jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.58
     popx <- pop
   }
   alt <- jack.ia(popx, sample, type = pop@type, divisor)
-  library(reshape)
+  # library(reshape)
   mnull <- melt(null$sample)
   malt <- melt(alt)
   mnull$Distribution <- "null"
@@ -728,7 +723,7 @@ jackbootplot <- function(df, obs.df){
                              # binwidth=diff(range(dfrbarDalt$value))/30) +
 
               geom_rug(alpha = 0.5, aes_string(color = "Distribution")) +
-              facet_grid(" ~ variable", scale = "free_x", labeller = label_parsed) + theme_classic() +
+              facet_grid(" ~ variable", scales = "free_x", labeller = label_parsed) + theme_classic() +
               geom_vline(data = obs.df, aes_string(xintercept = "value", 
                                                    group = "variable"), 
                          linetype = "dashed") 
@@ -762,8 +757,8 @@ old.bootia <- function(pop, inds, iterations, comb){
     # Now we have to subset the vector. Adding the duplicated comparisons will
     # not complete the entire data set, so the rest has to be filled in with 
     # zeroes, since that's the value one would obtain from comparisons to self.
-    V[1:length(samdup), ] <- V[samdup, ]
-    V[-(1:length(samdup)), ] <- 0
+    V[1:length(samdump), ] <- V[samdump, ]
+    V[-(1:length(samdump)), ] <- 0
     
     # Calculate necessary vectors and send them to be calculated into Ia and rd.
     V <- list(d.vector = colSums(V), 
@@ -804,7 +799,7 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
   #}
   #alt <- bootia(popx, inds, sample)
   alt <- data.frame(t(alt))
-  library(reshape)
+  # library(reshape)
   mnull <- melt(null$sample)
   malt <- melt(alt)
   mnull$Distribution <- "null"
@@ -820,6 +815,8 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
   #print(distplot)
   return(list(observed = null$index, null_samples = null$samples, alt_samples = alt, plot = distplot))
 }
+
+#' @importFrom reshape2 melt
 
 jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.587302){
   inds <- nInd(pop)
@@ -839,7 +836,7 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
   cat("Alternative Distribution (Jack Knife)...\t")
   half <- round(inds/divisor)
   altjack <- jack.ia(popx, sample, type = pop@type, divisor)  
-  library(reshape)
+  # library(reshape)
   mnull <- melt(null$sample)
   bmalt <- melt(altboot)
   jmalt <- melt(altjack)

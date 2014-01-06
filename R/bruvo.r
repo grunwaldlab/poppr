@@ -199,7 +199,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #'
 #==============================================================================#
 #' @importFrom phangorn upgma  midpoint
-#' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize nodelabels tiplabels
+#' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize nodelabels tiplabels add.scale.bar
 #   /     \
 #   |=(o)=|
 #   \     /

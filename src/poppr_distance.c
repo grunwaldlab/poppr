@@ -115,13 +115,13 @@ SEXP raw_pairdiffs(SEXP mat, SEXP ploidy)
 				a1 = (RAW(mat)[count] >> bitcount) & 0x01;
 				a2 = (RAW(mat)[count + 1] >> bitcount) & 0x01;
 				ht = (binary_diffs >> bitcount) & 0x01;
-				printf("%d AND %d:\t%d\t\t", a1, a2, hz);
-				printf("%d XOR %d:\t%d\t\t", a1, a2, ht);
-				printf("RESULT:\t%d\n", hz+ht);						
+				Rprintf("%d AND %d:\t%d\t\t", a1, a2, hz);
+				Rprintf("%d XOR %d:\t%d\t\t", a1, a2, ht);
+				Rprintf("RESULT:\t%d\n", hz+ht);						
 			}
 		}
 		out:
-		printf("\n");
+		Rprintf("\n");
 	}
 	return R_NilValue;
 }

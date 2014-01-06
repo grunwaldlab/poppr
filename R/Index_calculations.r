@@ -205,7 +205,7 @@
 #' 				clonecorrect=TRUE, hier="country", dfname="x")
 #' }
 #==============================================================================#
-#' @import adegenet pegas ggplot2 vegan
+#' @import adegenet ggplot2 vegan
 poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
                   clonecorrect=FALSE, hier=c(1), dfname="population_hierarchy", 
