@@ -138,7 +138,8 @@ make_ade_df <- function(hier, df, expanded = FALSE){
     levs <- all.vars(hier)
   }
   if(length(levs) <= 1){
-    stop("Only one level present")
+    # stop("Only one level present")
+    return(NULL)
   }
   levs <- gsub(":", "_", levs)
   if(!all(levs %in% names(df))){
@@ -155,7 +156,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE,
   if (!dfname %in% names(other(x))){
     stop(paste(dfname, "is not present in the 'other' slot"))
   }
-  parsed_hier <- gsub(":", "_", attr(terms(hier), "term.labels"))
+  parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
   full_hier <- parsed_hier[length(parsed_hier)]
   if (!full_hier %in% names(other(x)[[dfname]])){
     hiers <- all.vars(hier)
