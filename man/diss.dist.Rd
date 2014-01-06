@@ -2,7 +2,7 @@
 \alias{diss.dist}
 \title{Calculate a distance matrix based on relative dissimilarity}
 \usage{
-  diss.dist(x, diff = TRUE, frac = TRUE, mat = FALSE)
+diss.dist(x, diff = TRUE, frac = TRUE, mat = FALSE)
 }
 \arguments{
   \item{x}{a \code{\link{genind}} object.}
@@ -23,18 +23,17 @@
   \code{TRUE} returns a matrix object.}
 }
 \value{
-  Pairwise distances between individuals present in the
-  genind object.
+Pairwise distances between individuals present in the
+genind object.
 }
 \description{
-  diss.dist uses the same discreet dissimilarity matrix
-  utilized by the index of association (see
-  \code{\link{ia}} for details). It returns a distance
-  reflecting a ratio of the number of observed differences
-  by the number of possible differences. Eg. two
-  individuals who share half of the same alleles will have
-  a distance of 0.5. This function can analyze distances
-  for any marker system.
+diss.dist uses the same discreet dissimilarity matrix
+utilized by the index of association (see \code{\link{ia}}
+for details). It returns a distance reflecting a ratio of
+the number of observed differences by the number of
+possible differences. Eg. two individuals who share half of
+the same alleles will have a distance of 0.5. This function
+can analyze distances for any marker system.
 }
 \examples{
 # A simple example. Let's analyze the mean distance among populations of A.
@@ -48,6 +47,6 @@ mean(diss.dist(Aeut))
 }
 }
 \author{
-  Zhian N. Kamvar
+Zhian N. Kamvar
 }
 

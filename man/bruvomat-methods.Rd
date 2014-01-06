@@ -1,8 +1,16 @@
-\name{initialize}
-\alias{[}
-\alias{dim}
-\alias{initialize}
+\docType{methods}
+\name{initialize,bruvomat-method}
+\alias{[,bruvomat,ANY,ANY,ANY-method}
+\alias{dim,bruvomat-method}
+\alias{initialize,bruvomat-method}
 \title{Methods used for the bruvomat object.}
+\usage{
+\S4method{initialize}{bruvomat}(.Object, gen, replen)
+
+\S4method{dim}{bruvomat}(x)
+
+\S4method{[}{bruvomat,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
+}
 \arguments{
   \item{.Object}{a character, "bruvomat"}
 
@@ -24,6 +32,6 @@
   \item{drop}{set to \code{FALSE}}
 }
 \description{
-  This is not designed for user interaction.
+This is not designed for user interaction.
 }
 

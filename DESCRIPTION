@@ -15,25 +15,15 @@ Description: Population genetic analyses for hierarchical analysis of partially
     clonal populations built upon the architecture of the adegenet package.
 Depends:
     R (>= 2.15.1),
-    adegenet,
-    pegas
+    adegenet
 Imports:
     vegan,
     ggplot2,
     phangorn,
     ape,
     igraph,
-    methods
+    methods,
+    ade4,
+    pegas,
+    reshape2
 License: GPL-2
-Collate:
-    'Index_calculations.r'
-    'bruvo.r'
-    'bruvoclass.r'
-    'data_subset.r'
-    'distances.r'
-    'file_handling.r'
-    'internal.r'
-    'mlg.r'
-    'sample_schemes.r'
-    'sandbox.r'
-    'visualizations.r'

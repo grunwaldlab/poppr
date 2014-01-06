@@ -2,8 +2,7 @@
 \alias{popsub}
 \title{Subset a \code{\link{genind}} object by population}
 \usage{
-  popsub(pop, sublist = "ALL", blacklist = NULL,
-    mat = NULL, drop = TRUE)
+popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object.}
@@ -24,11 +23,11 @@
   alleles will be dropped from the population.}
 }
 \value{
-  A \code{genind} object or a matrix.
+A \code{genind} object or a matrix.
 }
 \description{
-  Create a new dataset with specified populations or
-  exclude specified populations from the dataset.
+Create a new dataset with specified populations or exclude
+specified populations from the dataset.
 }
 \examples{
 # Load the dataset microbov.

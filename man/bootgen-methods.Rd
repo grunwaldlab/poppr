@@ -1,8 +1,16 @@
-\name{[}
-\alias{[}
-\alias{dim}
-\alias{initialize}
+\docType{methods}
+\name{[,bootgen,ANY,ANY,ANY-method}
+\alias{[,bootgen,ANY,ANY,ANY-method}
+\alias{dim,bootgen-method}
+\alias{initialize,bootgen-method}
 \title{Methods used for the bootgen object.}
+\usage{
+\S4method{[}{bootgen,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{dim}{bootgen}(x)
+
+\S4method{initialize}{bootgen}(.Object, gen, replen)
+}
 \arguments{
   \item{x}{a \code{"\linkS4class{bootgen}"} object}
 
@@ -24,6 +32,6 @@
   length for each microsatellite locus.}
 }
 \description{
-  This is not designed for user interaction.
+This is not designed for user interaction.
 }
 

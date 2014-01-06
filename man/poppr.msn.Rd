@@ -3,10 +3,9 @@
 \title{Create a minimum spanning network of selected populations using a distance
 matrix.}
 \usage{
-  poppr.msn(pop, distmat, palette = topo.colors,
-    sublist = "All", blacklist = NULL,
-    vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),
-    gadj = 3, gweight = 1, wscale = TRUE, ...)
+poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",
+  blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
+  0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -66,21 +65,21 @@ matrix.}
   plot.igraph}
 }
 \value{
-  \item{graph}{a minimum spanning network with nodes
-  corresponding to MLGs within the data set. Colors of the
-  nodes represent population membership. Width and color of
-  the edges represent distance.} \item{populations}{a
-  vector of the population names corresponding to the
-  vertex colors} \item{colors}{a vector of the hexadecimal
-  representations of the colors used in the vertex colors}
+\item{graph}{a minimum spanning network with nodes
+corresponding to MLGs within the data set. Colors of the
+nodes represent population membership. Width and color of
+the edges represent distance.} \item{populations}{a vector
+of the population names corresponding to the vertex colors}
+\item{colors}{a vector of the hexadecimal representations
+of the colors used in the vertex colors}
 }
 \description{
-  Create a minimum spanning network of selected populations
-  using a distance matrix.
+Create a minimum spanning network of selected populations
+using a distance matrix.
 }
 \note{
-  The edges of these graphs may cross each other if the
-  graph becomes too large.
+The edges of these graphs may cross each other if the graph
+becomes too large.
 }
 \examples{
 # Load the data set and calculate the distance matrix for all individuals.
@@ -114,12 +113,12 @@ round(E(micro.msn$graph)$weight, 3), NA), vertex.size=2, edge.label.color="red")
 }
 }
 \author{
-  Javier F. Tabima, Zhian N. Kamvar
+Javier F. Tabima, Zhian N. Kamvar
 }
 \seealso{
-  \code{\link{nancycats}}, \code{\link{upgma}},
-  \code{\link{nj}}, \code{\link{nodelabels}},
-  \code{\link{na.replace}}, \code{\link{missingno}},
-  \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
+\code{\link{nancycats}}, \code{\link{upgma}},
+\code{\link{nj}}, \code{\link{nodelabels}},
+\code{\link{na.replace}}, \code{\link{missingno}},
+\code{\link{bruvo.msn}}, \code{\link{greycurve}}.
 }
 
