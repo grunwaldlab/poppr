@@ -48,30 +48,31 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
-new.diss.dist <- function(gid, diff = TRUE, alleles = TRUE, frac = TRUE){
-  stopifnot(is.genind(gid))
-  ploid     <- ploidy(gid)
-  ind.names <- gid@ind.names
-  inds      <- nInd(gid)
+
+new.diss.dist <- function(x, diff=TRUE, alleles=TRUE, frac=TRUE, mat=FALSE){
+  stopifnot(is.genind(x))
+  ploid     <- ploidy(x)
+  ind.names <- x@ind.names
+  inds      <- nInd(x)
   np        <- choose(inds, 2)
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
-  numLoci   <- nLoc(gid)
-  print(class(gid))
-  if(gid@type == "PA"){
-    dist_by_locus <- matrix(.Call("pairdiffs", gid@tab))
+  numLoci   <- nLoc(x)
+  type      <- x@type
+  if(type == "PA"){
+    dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
     ploid <- 1
   } else {
-    gid <- seploc(gid)
-    dist_by_locus <- vapply(gid, function(gid) .Call("pairdiffs", gid@tab)*(ploid/2),
+    x <- seploc(x)
+    dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
                             numeric(np))
   }
-  if (!alleles & gid@type == "codom"){
+  if (!alleles & type == "codom"){
     dist_by_locus[dist_by_locus > 0] <- 1
     ploid <- 1
   }
   if (!diff){
-    magid_dist      <- numLoci*ploid
-    dist_by_locus <- magid_dist - dist_by_locus
+    max_dist      <- numLoci*ploid
+    dist_by_locus <- max_dist - dist_by_locus
   }
   dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
   colnames(dist.mat)            <- ind.names
@@ -79,7 +80,11 @@ new.diss.dist <- function(gid, diff = TRUE, alleles = TRUE, frac = TRUE){
   if (frac){
     dist.mat <- dist.mat/(numLoci*ploid)
   }
-  return(as.dist(dist.mat))
+  dist.mat <- as.dist(dist.mat)
+  if (mat == TRUE){
+    dist.mat <- as.matrix(dist.mat)
+  }
+  return(dist.mat)
 }
 
 # A function that will quit the function if a level in the hierarchy is not
