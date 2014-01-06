@@ -48,28 +48,30 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
-new.diss.dist <- function(x, diff = TRUE, alleles = TRUE, frac = TRUE){
-  ploid     <- ploidy(x)
-  ind.names <- x@ind.names
-  inds      <- nInd(x)
+new.diss.dist <- function(gid, diff = TRUE, alleles = TRUE, frac = TRUE){
+  stopifnot(is.genind(gid))
+  ploid     <- ploidy(gid)
+  ind.names <- gid@ind.names
+  inds      <- nInd(gid)
   np        <- choose(inds, 2)
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
-  numLoci   <- nLoc(x)
-  if(x@type == "PA"){
-    dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
+  numLoci   <- nLoc(gid)
+  print(class(gid))
+  if(gid@type == "PA"){
+    dist_by_locus <- matrix(.Call("pairdiffs", gid@tab))
     ploid <- 1
   } else {
-    x <- seploc(x)
-    dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
+    gid <- seploc(gid)
+    dist_by_locus <- vapply(gid, function(gid) .Call("pairdiffs", gid@tab)*(ploid/2),
                             numeric(np))
   }
-  if (!alleles & x@type == "codom"){
+  if (!alleles & gid@type == "codom"){
     dist_by_locus[dist_by_locus > 0] <- 1
     ploid <- 1
   }
   if (!diff){
-    max_dist      <- numLoci*ploid
-    dist_by_locus <- max_dist - dist_by_locus
+    magid_dist      <- numLoci*ploid
+    dist_by_locus <- magid_dist - dist_by_locus
   }
   dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
   colnames(dist.mat)            <- ind.names
@@ -150,8 +152,17 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   return(rev(data.frame(factlist)))
 }
 
+not_euclid_msg <- function(){
+  msg <- paste("The distance matrix generated is non-euclidean.",
+               "This version of AMOVA requires the distances to be euclidean.",
+               "Try again with a different missing or cutoff argument.")
+  stop(msg)
+}
+
+# the ... here refers to arguments to be passed on to missingno
 ade4_amova <- function(hier, x, clonecorrect = FALSE, 
-                       dfname = "population_hierarchy", sep = "_", missing = "0"){
+                       dfname = "population_hierarchy", sep = "_", missing = "0",
+                       cutoff = 0, quiet = TRUE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   if (!dfname %in% names(other(x))){
     stop(paste(dfname, "is not present in the 'other' slot"))
@@ -167,10 +178,21 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE,
   } else {
     pop(x) <- other(x)[[dfname]][[full_hier]]
   }
-  x       <- missingno(x, missing)
+  # Treat missing data. This is a part I do not particularly like. The distance
+  # matrix must be euclidean, but the dissimilarity distance will not allow
+  # missing data to contribute to the distance. 
+  #
+  # This is corrected by setting missing to zero: more diversity
+  # missing to mean of the columns: indiscreet distances.
+  # remove loci at cutoff
+  # remove individuals at cutoff
+  x       <- missingno(x, type = missing, ...)
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
   xdist   <- sqrt(diss.dist(x[.clonecorrector(x), ])*ploidy(x)*nLoc(x))
+  if (!is.euclid(xdist)){
+    not_euclid_msg()
+  }
   xtab    <- t(mlg.matrix(x))
   if (clonecorrect){
     xtab  <- ifelse(xtab == 0, 0, 1)
