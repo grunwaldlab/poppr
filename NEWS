@@ -4,6 +4,7 @@ NEW FEATURES
 * Polyploids are now supported in poppr. Many functions in adegenet will unfortunately break. All functions in poppr should be able to work with polyploids.
 * Calculations of Bruvo's distance now features correction for missing data
 utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
+* `diss.dist` now has options to return raw distaces, similarity distances, and a matrix instead of a dist object.
 
 NAMESPACE CHANGES
 * poppr no longer (and never has) depended on pegas.
