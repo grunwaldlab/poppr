@@ -94,7 +94,7 @@ hier_incompatible_warning <- function(levs, df){
                "in the data frame.",
                "\nHierarchy:\t", paste(levs, collapse = ", "), "\nData:\t\t", 
                paste(names(df), collapse = ", "))
-  stop(msg)
+  return(msg)
 }
 # hier = a nested formula such as ~ A/B/C where C is nested within B, which is
 # nested within A.
@@ -113,7 +113,7 @@ make_hierarchy <- function(hier, df, expand_label = FALSE){
     newlevs <- gsub(":", "_", newlevs)
   }
   if (!all(levs %in% names(df))){
-    hier_incompatible_warning(levs, df)
+    stop(hier_incompatible_warning(levs, df))
   }
   newdf <- df[levs[1]]
   if (!expand_label){
@@ -150,7 +150,7 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   }
   levs <- gsub(":", "_", levs)
   if(!all(levs %in% names(df))){
-    hier_incompatible_warning(levs, df)
+    stop(hier_incompatible_warning(levs, df))
   }
   smallest <- df[[levs[length(levs)]]]
   factlist <- lapply(df[-length(levs)], make_ade_df_col, smallest)
@@ -158,10 +158,11 @@ make_ade_df <- function(hier, df, expanded = FALSE){
 }
 
 not_euclid_msg <- function(){
-  msg <- paste("The distance matrix generated is non-euclidean.",
-               "This version of AMOVA requires the distances to be euclidean.",
-               "Try again with a different missing or cutoff argument.")
-  stop(msg)
+  msg <- paste("\nThe distance matrix generated is non-euclidean.",
+               "Try again with a different missing or cutoff argument.",
+               "\n\nYou can test your matrix using the is.euclid function from",
+               "ade4:\n\tis.euclid(sqrt(diss.dist(x, frac = FALSE)))")
+  return(msg)
 }
 
 #' @importFrom ade4 amova
@@ -196,7 +197,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE,
   xstruct <- make_ade_df(hier, hierdf)
   xdist   <- sqrt(diss.dist(x[.clonecorrector(x), ], frac = FALSE))
   if (!is.euclid(xdist)){
-    not_euclid_msg()
+    stop(not_euclid_msg())
   }
   xtab    <- t(mlg.matrix(x))
   if (clonecorrect){
