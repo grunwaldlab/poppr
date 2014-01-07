@@ -165,7 +165,6 @@ not_euclid_msg <- function(){
 }
 
 #' @importFrom ade4 amova
-# the ... here refers to arguments to be passed on to missingno
 ade4_amova <- function(hier, x, clonecorrect = FALSE, 
                        dfname = "population_hierarchy", sep = "_", missing = "0",
                        cutoff = 0, quiet = TRUE){
@@ -195,7 +194,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE,
   x       <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
-  xdist   <- sqrt(diss.dist(x[.clonecorrector(x), ])*ploidy(x)*nLoc(x))
+  xdist   <- sqrt(diss.dist(x[.clonecorrector(x), ], frac = FALSE))
   if (!is.euclid(xdist)){
     not_euclid_msg()
   }
