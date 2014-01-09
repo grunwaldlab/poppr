@@ -165,10 +165,10 @@ not_euclid_msg <- function(){
   return(msg)
 }
 
-#' @importFrom ade4 amova
-ade4_amova <- function(hier, x, clonecorrect = FALSE, 
-                       dfname = "population_hierarchy", sep = "_", missing = "0",
-                       cutoff = 0, quiet = TRUE){
+#' @importFrom ade4 amova is.euclid cailliez
+ade4_amova <- function(hier, x, clonecorrect = FALSE, dist = NULL, squared = TRUE,
+                       correction = "cailliez", dfname = "population_hierarchy",
+                       sep = "_", missing = "0", cutoff = 0, quiet = TRUE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   if (!dfname %in% names(other(x))){
     stop(paste(dfname, "is not present in the 'other' slot"))
@@ -195,10 +195,24 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE,
   x       <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
-  xdist   <- sqrt(diss.dist(x[.clonecorrector(x), ], frac = FALSE))
-  if (!is.euclid(xdist)){
-    stop(not_euclid_msg())
+  if (is.null(dist)){
+    xdist   <- sqrt(diss.dist(x[.clonecorrector(x), ], frac = FALSE))
+  } else {
+    corrected <- .clonecorrector(x)
+    xdist     <- as.dist(as.matrix(dist)[corrected, corrected])
+    if (squared){
+      xdist <- sqrt(xdist)
+    }
   }
+  if (!is.euclid(xdist)){
+    if (!correction %in% c("cailliez", "quasieuclid", "lingoes")){
+      stop(not_euclid_msg())
+    } else {
+      correct_fun <- match.fun(correction)
+      xdist       <- correct_fun(xdist, print = TRUE)
+    }
+  }
+  
   xtab    <- t(mlg.matrix(x))
   if (clonecorrect){
     xtab  <- ifelse(xtab == 0, 0, 1)
@@ -206,6 +220,75 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE,
   xtab    <- as.data.frame(xtab[unique(mlg.vector(x)), ])
   return(ade4::amova(samples = xtab, distances = xdist, structures = xstruct))
 }
+
+
+# Create a population hierarchy in a genind object if one is not there.
+
+genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
+  if (is.null(df)){
+    df <- data.frame(Pop = pop(x))
+  } 
+  other(x)[[dfname]] <- df
+  return(x)
+}
+
+
+# tabulate the amount of missing data per locus. 
+
+number_missing <- function(x, divisor){
+  missing_result <- colSums(1 - propTyped(x, by = "both"))
+  return(missing_result/divisor)
+}
+
+# Create a table of missing data per population and plot it. 
+missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE, returnplot = FALSE, fill = "red"){
+  pops <- seppop(x, drop = FALSE)
+  inds <- ifelse(percent, nInd(x), 1)
+  misstab <- vapply(pops, number_missing, numeric(nLoc(x)), inds)
+  # misstab <- apply(misstab, 2, "/", inds)
+  rownames(misstab) <- x@loc.names
+  if (plot){
+    title <- paste("Percent missing per locus and population of", as.character(substitute(x)))
+    missdf <- melt(misstab, varnames = c("Locus", "Population"), value.name = "Missing")
+
+    missdf[1:2] <- data.frame(lapply(missdf[1:2], function(x) factor(x, levels = unique(x))))
+    outplot <- ggplot(missdf) + 
+               geom_tile(aes_string(x = "Locus", y = "Population", alpha = "Missing"), fill = I(fill)) +
+               geom_point(aes_string(x = "Locus", y = "Population", size = "Missing")) + 
+               labs(list(title = title, x = "Locus", y = "Population")) +
+               labs(alpha = "Percent Missing\n(Per locus over whole data set.)") + 
+               scale_alpha(range = 0:1) 
+    print(outplot)
+  }
+  if (df){
+    if(!exists("missdf")){
+      missdf <- melt(misstab, varnames = c("Locus", "Population"), value.name = "Missing")
+    }
+    misstab <- missdf
+  }
+  if (returnplot){
+    misstab <- list(table = misstab, plot = outplot)
+  }
+  return(misstab)
+}
+
+
+private_alleles <- function(gid){
+  if (!is.genind(gid) & !is.genpop(gid)) stop(paste(gid, "is not a genind or genpop object."))
+    if (is.genind(gid) & !is.null(pop(gid)) | is.genpop(gid) & nrow(gid@tab) > 1){
+      if (is.genind(gid)){
+          gid.pop <- truenames(genind2genpop(gid, quiet = TRUE))
+        } else {
+          gid.pop <- truenames(gid)
+        }
+        privates <- gid.pop[, colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2]
+        privates <- privates[rowSums(privates) > 0, ]
+        return(privates)
+      } else {
+    stop("There are no populations detected")
+  }
+}
+
 
 pair_ia <- function(pop){
 
