@@ -195,8 +195,8 @@ separate_haplotypes <- function(x){
 ## second haplotype and hap_fac will be c(1,1,1,2,2,2) for both.
 ##
 hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
-  new_ind_names <- paste(ind_names, hap_fac[inds[2] - 1], sep = ".")
-  new_pop       <- rep(hap_fac[inds[2] - 1], nrow(x))
+  new_ind_names <- paste(ind_names, hap_fac[inds[2]], sep = ".")
+  new_pop       <- rep(hap_fac[inds[2]], nrow(x))
   x2 <- lapply(x[loci_cols], substr, inds[1], inds[2])
   x2 <- data.frame(x2, stringsAsFactors = F)
   x2 <- df2genind(x2, ploidy = 1, pop=new_pop, ind.names=new_ind_names)
