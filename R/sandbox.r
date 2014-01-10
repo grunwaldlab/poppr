@@ -127,6 +127,24 @@ not_euclid_msg <- function(){
   return(msg)
 }
 
+separate_haplotypes <- function(x, hierdf){
+  ploidy <- ploidy(x)
+  allele_list <- unlist(lapply(x@all.names, nchar))
+  allele_length <- sum(allele_list)/length(allele_list))
+  if (!all(allele_list == allele_length)){
+    stop("not all alleles are of equal length.")
+  }
+  population <- pop(x)
+  inds <- indNames(x)
+  x.loc <- as.loci(x)
+  loci_cols <- attr(x.loc, "locicol")
+  if (length(grep("/", unlist(x.loc))) == 0){
+    ploidy <- 1
+  }
+  
+  
+}
+
 #==============================================================================#
 # Implementation of ade4's AMOVA function. Note that this cannot be used at the
 # moment to calculate within individual variances. It will either compute a
