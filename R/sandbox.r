@@ -127,16 +127,14 @@ not_euclid_msg <- function(){
   return(msg)
 }
 
-pool_haplotypes <- function(hier, x, df){
-  hier <- update.formula(hier, ~./Individual)
-  ploidy <- ploidy(x)
+pool_haplotypes <- function(x, dfname = "population_hierarchy"){
+  ploidy        <- ploidy(x)
+  df            <- other(x)[[dfname]]
   df$Individual <- indNames(x)
-  df <- df[rep(1:nrow(df), ploidy), ]
-  print(nrow(df))
-  newx <- repool(separate_haplotypes(x))
-  print(nInd(newx))
-  pop(newx) <- df$Individual
-  other(newx)$population_hierarchy <- df
+  df            <- df[rep(1:nrow(df), ploidy), ]
+  newx          <- repool(separate_haplotypes(x))
+  pop(newx)     <- df$Individual
+  other(newx)[[dfname]] <- df
   return(newx)
 }
 
