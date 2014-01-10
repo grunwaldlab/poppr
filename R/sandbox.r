@@ -289,6 +289,35 @@ private_alleles <- function(gid){
   }
 }
 
+#' @importFrom pegas summary.loci 
+locus_table_pegas <- function(x, lev = "allele", type = "codom"){
+  unique_types <- x[[lev]]
+  # Removing any zero-typed alleles that would be present with polyploids.
+  zero_names   <- grep("^0+?$", names(unique_types))
+  if (length(zero_names) > 0 & type == "codom"){
+    unique_types <- unique_types[-zero_names]
+  }
+  N            <- length(unique_types)
+  H            <- vegan::diversity(unique_types)
+  G            <- vegan::diversity(unique_types, "inv")
+  Simp         <- vegan::diversity(unique_types, "simp")
+  Hexp         <- (N/(N-1)) * Simp
+  E.5          <- (G - 1)/(exp(H) - 1)
+  names(N)     <- paste0("N", lev)
+  return(c(N, H = H, G = G, Simp = Simp, Hexp = Hexp, E.5 = E.5))
+}
+
+locus_table <- function(x, lev = "allele"){
+  x.loc   <- summary(as.loci(x))
+  outmat  <- vapply(x.loc, locus_table_pegas, numeric(6), lev, x@type)
+  loci    <- colnames(outmat)
+  divs    <- rownames(outmat)
+  outmat  <- t(outmat)
+  dimlist <- list(`locus` = loci, `diversity index` = divs)
+  attr(outmat, "dimnames") <- dimlist
+  return(outmat)
+}
+
 
 pair_ia <- function(pop){
 
