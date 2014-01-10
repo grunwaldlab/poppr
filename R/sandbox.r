@@ -57,6 +57,14 @@ hier_incompatible_warning <- function(levs, df){
                paste(names(df), collapse = ", "))
   return(msg)
 }
+# Self explanitory
+not_euclid_msg <- function(){
+  msg <- paste("\nThe distance matrix generated is non-euclidean.",
+               "Try again with a different missing or cutoff argument.",
+               "\n\nYou can test your matrix using the is.euclid function from",
+               "ade4:\n\tis.euclid(sqrt(diss.dist(x, frac = FALSE)))")
+  return(msg)
+}
 #==============================================================================#
 # hier = a nested formula such as ~ A/B/C where C is nested within B, which is
 # nested within A.
@@ -94,12 +102,13 @@ getsubpops <- function(x) {
   y <- table(x)
   return(length(y[y > 0]))
 }
-
+# Compare the hierarchies to the smallest and count the number of times each
+# unique value occurs.
 make_ade_df_col <- function(x, smallest){
   facts <- tapply(smallest, x, getsubpops) 
   return(as.factor(rep(names(facts), facts)))
 }
-
+# Main Function
 make_ade_df <- function(hier, df, expanded = FALSE){
   if (expanded){
     levs <- attr(terms(hier), "term.labels")
@@ -119,14 +128,14 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   return(rev(data.frame(factlist)))
 }
 
-not_euclid_msg <- function(){
-  msg <- paste("\nThe distance matrix generated is non-euclidean.",
-               "Try again with a different missing or cutoff argument.",
-               "\n\nYou can test your matrix using the is.euclid function from",
-               "ade4:\n\tis.euclid(sqrt(diss.dist(x, frac = FALSE)))")
-  return(msg)
-}
-
+#==============================================================================#
+# Haplotype pooling. 
+# The following functions are necessary to account for within sample variation. 
+# They will separate the haplotypes of a genind object and repool them so that
+# there are n*k individuals in the new data set where n is the number of
+# individuals and k is the ploidy. 
+#==============================================================================#
+## Main Function. Lengthens the population hierarchy as well.
 pool_haplotypes <- function(x, dfname = "population_hierarchy"){
   ploidy        <- ploidy(x)
   df            <- other(x)[[dfname]]
@@ -137,8 +146,8 @@ pool_haplotypes <- function(x, dfname = "population_hierarchy"){
   other(newx)[[dfname]] <- df
   return(newx)
 }
-
-
+## Secondary function. Transforms the genind object into a loci object and
+## collects information necessary to collect individual haplotypes.
 separate_haplotypes <- function(x){
   ploidy        <- ploidy(x)
   allele_list   <- unlist(lapply(x@all.names, nchar))
@@ -159,6 +168,32 @@ separate_haplotypes <- function(x){
   return(haplist)
 }
 
+## Obtains specific haplotypes from a genind object.
+## 
+## Arguments:
+##   inds      - indexes of the first and last characters defining the haplotype
+##   x         - the loci object
+##   loci_cols - the columns defining the loci
+##   ind_names - the sample names
+##   hap_fac   - a vector defining the haplotype. 
+##
+## Since the inds and hap_fac args are not intuitive, I should demonstrate.
+## Let's say we have a two individuals with two loci:
+##      1      2
+##   A: 10/20  30/40
+##   B: 15/15  25/10
+##
+## They have the haplotypes of 
+##   A1: 10 30 
+##   A2: 20 40 
+##   B1: 15 25
+##   B2: 15 10
+##
+## Each genotype at a locus is 5 characters long. To get the haplotypes, we need
+## to avoid the separator.
+## inds in this case will be c(1, 2) for the first haplotype and c(4, 5) for the
+## second haplotype and hap_fac will be c(1,1,1,2,2,2) for both.
+##
 hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
   new_ind_names <- paste(ind_names, hap_fac[inds[2] - 1], sep = ".")
   new_pop       <- rep(hap_fac[inds[2] - 1], nrow(x))
@@ -168,6 +203,7 @@ hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
   return(x2)
 }
 
+## Function for determining if a genind object has any heterozygous sites.
 check_Hs <- function(x){
   res <- any(x@tab > 0 & x@tab < 1, na.rm = TRUE)
   return(res)
