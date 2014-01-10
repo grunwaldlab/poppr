@@ -307,7 +307,8 @@ locus_table_pegas <- function(x, lev = "allele", type = "codom"){
   return(c(N, H = H, G = G, Simp = Simp, Hexp = Hexp, E.5 = E.5))
 }
 
-locus_table <- function(x, lev = "allele"){
+locus_table <- function(x, lev = "allele", population = "ALL"){
+  x       <- popsub(x, population, drop = FALSE)
   x.loc   <- summary(as.loci(x))
   outmat  <- vapply(x.loc, locus_table_pegas, numeric(6), lev, x@type)
   loci    <- colnames(outmat)
