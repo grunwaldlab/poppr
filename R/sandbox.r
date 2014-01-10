@@ -298,7 +298,7 @@ private_alleles <- function(gid){
 # The wrapper for this is locus_table, which will take in a genind object and 
 # send it into locus_table_pegas. 
 #==============================================================================#
-#' @importFrom pegas summary.loci 
+
 locus_table_pegas <- function(x, lev = "allele", type = "codom"){
   unique_types <- x[[lev]]
   # Removing any zero-typed alleles that would be present with polyploids.
