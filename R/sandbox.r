@@ -168,7 +168,9 @@ hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
   return(x2)
 }
 
-
+check_Hs <- function(x){
+  res <- any(x@tab > 0 & x@tab < 1)
+}
 #==============================================================================#
 # Implementation of ade4's AMOVA function. Note that this cannot be used at the
 # moment to calculate within individual variances. It will either compute a
@@ -185,9 +187,7 @@ hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
 # thusly: ~ Year/Population/Subpopulation
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
-ade4_amova <- function(hier, x, clonecorrect = FALSE, dist = NULL, squared = TRUE,
-                       correction = "cailliez", dfname = "population_hierarchy",
-                       sep = "_", missing = "0", cutoff = 0, quiet = TRUE){
+ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL, squared = TRUE, correction = "cailliez", dfname = "population_hierarchy", sep = "_", missing = "0", cutoff = 0, quiet = TRUE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   if (!dfname %in% names(other(x))){
     stop(paste(dfname, "is not present in the 'other' slot"))
@@ -211,6 +211,10 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, dist = NULL, squared = TRU
   # missing to mean of the columns: indiscreet distances.
   # remove loci at cutoff
   # remove individuals at cutoff
+  if (within & ploidy(x) > 1 & check_Hs(x)){
+    hier <- update(hier, ~./Individual)
+    x    <- pool_haplotypes(x, dfname = dfname)
+  }
   x       <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
