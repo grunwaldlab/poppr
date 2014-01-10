@@ -169,7 +169,8 @@ hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
 }
 
 check_Hs <- function(x){
-  res <- any(x@tab > 0 & x@tab < 1)
+  res <- any(x@tab > 0 & x@tab < 1, na.rm = TRUE)
+  return(res)
 }
 #==============================================================================#
 # Implementation of ade4's AMOVA function. Note that this cannot be used at the
