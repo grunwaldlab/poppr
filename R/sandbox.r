@@ -48,45 +48,6 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
-
-new.diss.dist <- function(x, diff=TRUE, alleles=TRUE, frac=TRUE, mat=FALSE){
-  stopifnot(is.genind(x))
-  ploid     <- ploidy(x)
-  ind.names <- x@ind.names
-  inds      <- nInd(x)
-  np        <- choose(inds, 2)
-  dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
-  numLoci   <- nLoc(x)
-  type      <- x@type
-  if(type == "PA"){
-    dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
-    ploid <- 1
-  } else {
-    x <- seploc(x)
-    dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
-                            numeric(np))
-  }
-  if (!alleles & type == "codom"){
-    dist_by_locus[dist_by_locus > 0] <- 1
-    ploid <- 1
-  }
-  if (!diff){
-    max_dist      <- numLoci*ploid
-    dist_by_locus <- max_dist - dist_by_locus
-  }
-  dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
-  colnames(dist.mat)            <- ind.names
-  rownames(dist.mat)            <- ind.names
-  if (frac){
-    dist.mat <- dist.mat/(numLoci*ploid)
-  }
-  dist.mat <- as.dist(dist.mat)
-  if (mat == TRUE){
-    dist.mat <- as.matrix(dist.mat)
-  }
-  return(dist.mat)
-}
-
 # A function that will quit the function if a level in the hierarchy is not
 # present in the given data frame.
 hier_incompatible_warning <- function(levs, df){
@@ -96,6 +57,7 @@ hier_incompatible_warning <- function(levs, df){
                paste(names(df), collapse = ", "))
   return(msg)
 }
+#==============================================================================#
 # hier = a nested formula such as ~ A/B/C where C is nested within B, which is
 # nested within A.
 #
@@ -105,7 +67,7 @@ hier_incompatible_warning <- function(levs, df){
 # df <- data.frame(list(a = letters, b = LETTERS, c = 1:26))
 # newdf <- make_hierarchy(~ a/b/c, df)
 # df[names(newdf)] <- newdf # Add new columns.
-#
+#==============================================================================#
 make_hierarchy <- function(hier, df, expand_label = FALSE){
   newlevs <- attr(terms(hier), "term.labels")
   levs <- all.vars(hier)
@@ -165,7 +127,22 @@ not_euclid_msg <- function(){
   return(msg)
 }
 
-#' @importFrom ade4 amova is.euclid cailliez
+#==============================================================================#
+# Implementation of ade4's AMOVA function. Note that this cannot be used at the
+# moment to calculate within individual variances. It will either compute a
+# distance matrix or take in a distance matrix. Missing data must be treated
+# here and is currently treated as extra alleles, but this can be modified by
+# the user. Since ade4 needs a euclidean matrix, this function will, by default,
+# correct the distance via the cailliez correction, which will add a number to 
+# all the distances to satisfy euclidean nature. 
+# Clone correction at the lowest level of the hierarchy is possible. 
+#
+# Note: This takes a nested formula argument. If you want to analyze the
+# hierarchy of Year to Population to Subpopulation, you should make sure you
+# have the right data frame in your "other" slot and then write the formula
+# thusly: ~ Year/Population/Subpopulation
+#==============================================================================#
+#' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 ade4_amova <- function(hier, x, clonecorrect = FALSE, dist = NULL, squared = TRUE,
                        correction = "cailliez", dfname = "population_hierarchy",
                        sep = "_", missing = "0", cutoff = 0, quiet = TRUE){
@@ -222,8 +199,9 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, dist = NULL, squared = TRU
 }
 
 
+#==============================================================================#
 # Create a population hierarchy in a genind object if one is not there.
-
+#==============================================================================#
 genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
   if (is.null(df)){
     df <- data.frame(Pop = pop(x))
@@ -233,6 +211,14 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
 }
 
 
+#==============================================================================#
+# Idea, create a table representing missing data in the data set. This will 
+# show missing data across loci and populations. Currently, it is set up to 
+# show missing data as a percentage of the entire data set, but it should
+# really be dynamic to what is needed with the missing data. This function will
+# plot the missing data on a heatmap.  
+#==============================================================================#
+
 # tabulate the amount of missing data per locus. 
 
 number_missing <- function(x, divisor){
@@ -240,13 +226,18 @@ number_missing <- function(x, divisor){
   return(missing_result/divisor)
 }
 
-# Create a table of missing data per population and plot it. 
-missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE, returnplot = FALSE, fill = "red"){
+
+missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE, 
+                          returnplot = FALSE, fill = "red"){
   pops <- seppop(x, drop = FALSE)
   inds <- ifelse(percent, nInd(x), 1)
   misstab <- vapply(pops, number_missing, numeric(nLoc(x)), inds)
   # misstab <- apply(misstab, 2, "/", inds)
   rownames(misstab) <- x@loc.names
+  if (all(misstab == 0)){
+    cat("No Missing Data Found!")
+    return(NULL)
+  }
   if (plot){
     title <- paste("Percent missing per locus and population of", as.character(substitute(x)))
     missdf <- melt(misstab, varnames = c("Locus", "Population"), value.name = "Missing")
@@ -273,6 +264,11 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE, returnplo
 }
 
 
+#==============================================================================#
+# This function will simply return a table denoting private alleles within
+# populations. The rows will indicate populations with private alleles and the
+# columns will be the specific alleles. 
+#==============================================================================#
 private_alleles <- function(gid){
   if (!is.genind(gid) & !is.genpop(gid)) stop(paste(gid, "is not a genind or genpop object."))
     if (is.genind(gid) & !is.null(pop(gid)) | is.genpop(gid) & nrow(gid@tab) > 1){
@@ -289,6 +285,19 @@ private_alleles <- function(gid){
   }
 }
 
+#==============================================================================#
+# The following two functions serve as summary functions across loci. It was
+# noted that there are no functions that really give explicit summaries
+# accross loci, so these were written to do so. 
+#
+# The function locus_table_pegas is the internal workhorse. It will process a 
+# summary.loci object into a nice table utilizing the various diversity indices 
+# provided by vegan. Note that it has a catch which will remove all allele names
+# that are any amount of zeroes and nothing else. The reason for this being that
+# these alleles actually represent missing data. 
+# The wrapper for this is locus_table, which will take in a genind object and 
+# send it into locus_table_pegas. 
+#==============================================================================#
 #' @importFrom pegas summary.loci 
 locus_table_pegas <- function(x, lev = "allele", type = "codom"){
   unique_types <- x[[lev]]
