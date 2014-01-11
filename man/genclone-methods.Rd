@@ -1,0 +1,37 @@
+\docType{methods}
+\name{[,genclone,ANY,ANY,ANY-method}
+\alias{[,genclone,ANY,ANY,ANY-method}
+\alias{initialize,genclone-method}
+\title{Methods used for the genclone object}
+\usage{
+\S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{initialize}{genclone}(.Object, gen, hierarchy)
+}
+\arguments{
+  \item{x}{a genclone object}
+
+  \item{i}{vector of numerics indicating number of
+  individuals desired}
+
+  \item{j}{a vector of numerics corresponding to the loci
+  desired.}
+
+  \item{...}{passed on to the \code{\linkS4class{genind}}
+  object.}
+
+  \item{drop}{set to \code{FALSE}}
+
+  \item{.Object}{a character, "genclone"}
+
+  \item{gen}{\code{"\linkS4class{genind}"} object}
+
+  \item{hierarchy}{a data frame where each row i represents
+  the different population assignments of individual i in
+  the data set. If this is empty, the hierarchy will be
+  created from the population factor.}
+}
+\description{
+words.
+}
+
