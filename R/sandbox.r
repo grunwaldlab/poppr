@@ -343,6 +343,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     missdf <- melt(misstab, varnames = c("Locus", "Population"), value.name = "Missing")
     leg_title <- "Missing"
     missdf[1:2] <- data.frame(lapply(missdf[1:2], function(x) factor(x, levels = unique(x))))
+    # levels(missdf[[1]]) <- rev(levels(missdf[[1]]))
     plotdf <- textdf <- missdf
     if (percent) {
       plotdf$Missing <- round(plotdf$Missing*100, 3)
@@ -361,13 +362,13 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     if (scaled | !percent){
       lims <- c(0, max(plotdf$Missing))
     }
-    linedata <- data.frame(list(yint = ncol(misstab) - 0.5, 
-                                xint = nrow(misstab) - 0.5))
+    linedata <- data.frame(list(xint = ncol(misstab) - 0.5, 
+                                yint = nrow(misstab) - 0.5))
     textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
     plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
-    outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
+    outplot <- ggplot(plotdf, aes_string(y = "Locus", x = "Population")) + 
                geom_tile(aes_string(fill = "Missing")) +
-               labs(list(title = title, x = "Locus", y = "Population")) +
+               labs(list(title = title, y = "Locus", x = "Population")) +
                labs(fill = leg_title) + 
                scale_fill_gradient(low = low, high = high, na.value = "white", 
                                    limits = lims) +
@@ -438,32 +439,61 @@ private_alleles <- function(gid){
 # Note: lev argument has only the options of "allele" or "genotype"
 #==============================================================================#
 
-locus_table_pegas <- function(x, lev = "allele", type = "codom"){
+locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codom"){
   unique_types <- x[[lev]]
   # Removing any zero-typed alleles that would be present with polyploids.
   zero_names   <- grep("^0+?$", names(unique_types))
+  
   if (length(zero_names) > 0 & type == "codom"){
     unique_types <- unique_types[-zero_names]
   }
-  N            <- length(unique_types)
-  H            <- vegan::diversity(unique_types)
-  G            <- vegan::diversity(unique_types, "inv")
-  Simp         <- vegan::diversity(unique_types, "simp")
-  Hexp         <- (N/(N-1)) * Simp
-  E.5          <- (G - 1)/(exp(H) - 1)
-  names(N)     <- paste0("N", lev)
-  return(c(N, H = H, G = G, Simp = Simp, Hexp = Hexp, E.5 = E.5))
+  
+  N       <- length(unique_types)
+  H       <- vegan::diversity(unique_types)
+  G       <- vegan::diversity(unique_types, "inv")
+  Simp    <- vegan::diversity(unique_types, "simp")
+  nei     <- (N/(N-1)) * Simp
+  
+  if (index == "simpson"){
+    idx        <- Simp
+    names(idx) <- "1-D"
+  } else if (index == "shannon"){
+    idx        <- H
+    names(idx) <- "H"
+  } else {
+    idx        <- G
+    names(idx) <- "G"
+  }
+  
+  E.5        <- (G - 1)/(exp(H) - 1)
+  names(N)   <- lev
+  return(c(N, idx, Hexp = nei, Evenness = E.5))
 }
 
-locus_table <- function(x, lev = "allele", population = "ALL"){
+locus_table <- function(x, index ="simpson", lev = "allele", population = "ALL", information = TRUE){
+  INDICES <- c("shannon", "simpson", "invsimpson")
+  index   <- match.arg(index, INDICES)
   x       <- popsub(x, population, drop = FALSE)
   x.loc   <- summary(as.loci(x))
-  outmat  <- vapply(x.loc, locus_table_pegas, numeric(6), lev, x@type)
+  outmat  <- vapply(x.loc, locus_table_pegas, numeric(4), index, lev, x@type)
   loci    <- colnames(outmat)
   divs    <- rownames(outmat)
   outmat  <- t(outmat)
-  dimlist <- list(`locus` = loci, `diversity index` = divs)
+  dimlist <- list(`locus` = loci, `summary` = divs)
   attr(outmat, "dimnames") <- dimlist
+  if (information){
+    if (index == "simpson"){
+      msg <- "Simpson index"
+    } else if (index == "shannon"){
+      msg <- "Shannon-Wiener index"
+    } else {
+      msg <- "Stoddard and Taylor index"
+    }
+    cat("\n", divs[1], "= Number of observed", paste0(divs[1], "s"))
+    cat("\n", divs[2], "=", msg)
+    cat("\n", divs[3], "= Nei's 1978 expected heterozygosity\n")
+    cat("------------------------------------------\n")
+  }
   return(outmat)
 }
 
