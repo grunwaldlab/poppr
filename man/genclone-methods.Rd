@@ -2,11 +2,14 @@
 \name{[,genclone,ANY,ANY,ANY-method}
 \alias{[,genclone,ANY,ANY,ANY-method}
 \alias{initialize,genclone-method}
+\alias{show,genclone-method}
 \title{Methods used for the genclone object}
 \usage{
 \S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{initialize}{genclone}(.Object, gen, hierarchy)
+
+\S4method{show}{genclone}(object)
 }
 \arguments{
   \item{x}{a genclone object}
@@ -30,6 +33,8 @@
   the different population assignments of individual i in
   the data set. If this is empty, the hierarchy will be
   created from the population factor.}
+
+  \item{object}{Any R object}
 }
 \description{
 words.

@@ -136,3 +136,40 @@ setMethod(
     }
     
   })
+
+# #==============================================================================#
+# #' @export
+# #' @rdname mlg-methods
+# #' @docType methods
+# #==============================================================================#
+# setGeneric("mlg", function(pop, ...) standardGeneric("mlg"))
+# 
+# #' @rdname mlg-methods
+# setMethod(
+#   f = "mlg",
+#   signature = "genclone",
+#   definition = function(pop, quiet = FALSE){
+#     if (!quiet){
+#       cat("#############################\n")
+#       cat("# Number of Individuals: ", nInd(pop), "\n")
+#       cat("# Number of MLG: ", unique(pop@mlg), "\n")
+#       cat("#############################\n")
+#     }
+#     return(unique(pop@mlg))
+#   })
+# 
+# 
+# #==============================================================================#
+# #' @export
+# #' @rdname mlg-methods
+# #' @docType methods
+# #==============================================================================#
+# setGeneric("mlg.vector", function(pop) standardGeneric("mlg.vector"))
+# 
+# #' @rdname mlg-methods
+# setMethod(
+#   f = "mlg.vector",
+#   signature = "genclone",
+#   definition = function(pop){
+#     return(pop@mlg)
+#   })
