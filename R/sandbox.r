@@ -311,27 +311,62 @@ number_missing <- function(x, divisor){
 
 
 missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE, 
-                          returnplot = FALSE, fill = "red"){
+                          returnplot = FALSE, low = "blue", high = "red", 
+                          plotlab = TRUE){
   pops <- seppop(x, drop = FALSE)
-  inds <- ifelse(percent, nInd(x), 1)
-  misstab <- vapply(pops, number_missing, numeric(nLoc(x)), inds)
-  # misstab <- apply(misstab, 2, "/", inds)
-  rownames(misstab) <- x@loc.names
+  pops$Total <- x
+  inds <- 1
+  if (percent){
+    inds <- c(table(pop(x)), nInd(x))
+  }
+  misstab <- matrix(0, nrow = nLoc(x) + 1, ncol = length(pops))
+  misstab[1:nLoc(x), ] <- vapply(pops, number_missing, numeric(nLoc(x)), 1)
+  misstab[-nrow(misstab), ] <- t(apply(misstab[-nrow(misstab), ], 1, "/", inds))
+  misstab[nrow(misstab), ] <- colMeans(misstab[-nrow(misstab), ])
+  rownames(misstab) <- c(x@loc.names, "Mean")
+  colnames(misstab) <- names(pops)
   if (all(misstab == 0)){
     cat("No Missing Data Found!")
     return(NULL)
   }
   if (plot){
-    title <- paste("Percent missing per locus and population of", as.character(substitute(x)))
+    
     missdf <- melt(misstab, varnames = c("Locus", "Population"), value.name = "Missing")
-
+    leg_title <- "Missing"
     missdf[1:2] <- data.frame(lapply(missdf[1:2], function(x) factor(x, levels = unique(x))))
-    outplot <- ggplot(missdf) + 
-               geom_tile(aes_string(x = "Locus", y = "Population", alpha = "Missing"), fill = I(fill)) +
-               geom_point(aes_string(x = "Locus", y = "Population", size = "Missing")) + 
+    plotdf <- textdf <- missdf
+    if (percent) {
+      plotdf$Missing <- round(plotdf$Missing*100, 3)
+      textdf$Missing <- paste(plotdf$Missing, "%")
+      miss <- "0 %"
+      title <- paste("Percent missing data per locus and population of", 
+                     as.character(substitute(x)))
+      leg_title <- paste("Percent", leg_title)
+    } else {
+      textdf$Missing <- round(textdf$Missing, 3)
+      miss <- 0
+      title <- paste("Missing data per locus and population of", 
+                     as.character(substitute(x)))
+    }
+    linedata <- data.frame(list(yint = ncol(misstab) - 0.5, xint = nrow(misstab) - 0.5))
+    textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
+    plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
+    outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
+               geom_tile(aes_string(fill = "Missing")) +
                labs(list(title = title, x = "Locus", y = "Population")) +
-               labs(alpha = "Percent Missing\n(Per locus over whole data set.)") + 
-               scale_alpha(range = 0:1) 
+               labs(fill = leg_title) + 
+               scale_fill_gradient(low = low, high = high, na.value = "white")
+    if (plotlab){
+    outplot <- outplot +
+               geom_hline(aes(yintercept = yint), data = linedata) + 
+               geom_vline(aes(xintercept = xint), data = linedata) + 
+               geom_text(aes_string(label = "Missing"), data = textdf)
+    }
+    outplot <- outplot +
+               theme_classic() + 
+               scale_x_discrete(expand = c(0, -1)) + 
+               scale_y_discrete(expand = c(0, -1)) + 
+               theme(axis.text.x = element_text(size = 10, angle = -45, hjust = 0, vjust = 1))
     print(outplot)
   }
   if (df){
