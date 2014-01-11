@@ -371,8 +371,8 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
                labs(fill = leg_title) + 
                scale_fill_gradient(low = low, high = high, na.value = "white", 
                                    limits = lims) +
-               geom_hline(aes(yintercept = yint), data = linedata) + 
-               geom_vline(aes(xintercept = xint), data = linedata) 
+               geom_hline(aes_string(yintercept = "yint"), data = linedata) + 
+               geom_vline(aes_string(xintercept = "xint"), data = linedata) 
     if (plotlab){
       outplot <- outplot + geom_text(aes_string(label = "Missing"), 
                                      data = textdf)
