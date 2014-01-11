@@ -296,23 +296,32 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
 
 #==============================================================================#
 # Idea, create a table representing missing data in the data set. This will 
-# show missing data across loci and populations. Currently, it is set up to 
-# show missing data as a percentage of the entire data set, but it should
-# really be dynamic to what is needed with the missing data. This function will
-# plot the missing data on a heatmap.  
+# show missing data across loci and populations. 
+# Args:
+# 
+#   x - a genind object
+#   percent - should the data be presented as a percent or raw value? Note that 
+#             this represents percentage with respect to the population. 
+#   plot - should this be plotted
+#   df - return a data frame in long format
+#   returnplot - return the plot as the second element of a list
+#   low - color representing no missing data
+#   high - color representing missing data
+#   plotlab - print the missing values on the plot.
+#   scaled - if percent = TRUE, then this will make the scale from 0 to 100, if 
+#   this is not turned on (default), then the highest missing value will be the max.
 #==============================================================================#
 
 # tabulate the amount of missing data per locus. 
-
 number_missing <- function(x, divisor){
   missing_result <- colSums(1 - propTyped(x, by = "both"))
   return(missing_result/divisor)
 }
 
-
+# main function
 missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE, 
                           returnplot = FALSE, low = "blue", high = "red", 
-                          plotlab = TRUE){
+                          plotlab = TRUE, scaled = TRUE){
   pops <- seppop(x, drop = FALSE)
   pops$Total <- x
   inds <- 1
@@ -342,38 +351,49 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
       title <- paste("Percent missing data per locus and population of", 
                      as.character(substitute(x)))
       leg_title <- paste("Percent", leg_title)
+      if(!scaled) lims <- c(0, 100)
     } else {
       textdf$Missing <- round(textdf$Missing, 3)
       miss <- 0
       title <- paste("Missing data per locus and population of", 
                      as.character(substitute(x)))
     }
-    linedata <- data.frame(list(yint = ncol(misstab) - 0.5, xint = nrow(misstab) - 0.5))
+    if (scaled | !percent){
+      lims <- c(0, max(plotdf$Missing))
+    }
+    linedata <- data.frame(list(yint = ncol(misstab) - 0.5, 
+                                xint = nrow(misstab) - 0.5))
     textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
     plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
     outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
                geom_tile(aes_string(fill = "Missing")) +
                labs(list(title = title, x = "Locus", y = "Population")) +
                labs(fill = leg_title) + 
-               scale_fill_gradient(low = low, high = high, na.value = "white")
-    if (plotlab){
-    outplot <- outplot +
+               scale_fill_gradient(low = low, high = high, na.value = "white", 
+                                   limits = lims) +
                geom_hline(aes(yintercept = yint), data = linedata) + 
-               geom_vline(aes(xintercept = xint), data = linedata) + 
-               geom_text(aes_string(label = "Missing"), data = textdf)
+               geom_vline(aes(xintercept = xint), data = linedata) 
+    if (plotlab){
+      outplot <- outplot + geom_text(aes_string(label = "Missing"), 
+                                     data = textdf)
     }
     outplot <- outplot +
                theme_classic() + 
                scale_x_discrete(expand = c(0, -1)) + 
                scale_y_discrete(expand = c(0, -1)) + 
-               theme(axis.text.x = element_text(size = 10, angle = -45, hjust = 0, vjust = 1))
+               theme(axis.text.x = element_text(size = 10, angle = -45, 
+                                                hjust = 0, vjust = 1))
     print(outplot)
   }
   if (df){
     if(!exists("missdf")){
-      missdf <- melt(misstab, varnames = c("Locus", "Population"), value.name = "Missing")
+      missdf <- melt(misstab, varnames = c("Locus", "Population"), 
+                     value.name = "Missing")
     }
     misstab <- missdf
+  } else {
+    attr(misstab, "dimnames") <- list(Locus = rownames(misstab), 
+                                      Population = colnames(misstab))
   }
   if (returnplot){
     misstab <- list(table = misstab, plot = outplot)
