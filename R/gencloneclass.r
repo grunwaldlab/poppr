@@ -115,3 +115,24 @@ setMethod(
     return(.Object)
   }
 )
+
+#==============================================================================#
+#' @rdname genclone-methods
+#==============================================================================#
+setMethod(
+  f = "show",
+  signature = "genclone",
+  definition = function(object){
+    callNextMethod(object)
+    cat("\rPoppr-specfic elements")
+    cat("\n----------------------\n")
+    cat("@mlg: a numeric vector designating each of the", length(unique(object@mlg)),
+        "multilocus genotypes.\n")
+    if (length(object@hierarchy) > 0){
+      cat("@hierarchy: a data frame identifying", length(object@hierarchy),
+          "hierarchical levels:", names(object@hierarchy), "\n", fill = 80)
+    } else {
+      cat("@hierarchy: empty")
+    }
+    
+  })
