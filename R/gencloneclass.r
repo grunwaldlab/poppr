@@ -102,16 +102,16 @@ setMethod(
   signature = "genclone",
   definition = function(.Object, gen, hierarchy){
     if (missing(gen)) gen <- new("genind")
-    if (missing(hier)){
+    if (missing(hierarchy)){
       if (is.null(pop(gen))){
-        hier <- data.frame()
+        hierarchy <- data.frame()
       } else {
-        hier <- data.frame(Pop = pop(gen))
+        hierarchy <- data.frame(Pop = pop(gen))
       }
     }
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
     slot(.Object, "mlg")       <- mlg.vector(gen)
-    slot(.Object, "hierarchy") <- hier
+    slot(.Object, "hierarchy") <- hierarchy
     return(.Object)
   }
 )
