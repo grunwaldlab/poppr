@@ -137,6 +137,26 @@ setMethod(
     
   })
 
+#==============================================================================#
+#' Access and organize the population hierarchy for genclone objects.
+#' 
+#' word
+#' 
+#' @export
+#' @rdname hierarchy-methods
+#' @param x a genclone object
+#' @param ... I'll fiddle with this later.
+#' @docType methods
+#==============================================================================#
+setGeneric("hierarchy", function(x, ...) standardGeneric("hierarchy"))
+
+#' @rdname hierarchy-methods
+setMethod(
+  f = "hierarchy",
+  signature = "genclone",
+  definition = function(x, ...){
+    return(x@hierarchy)
+  })
 # #==============================================================================#
 # #' @export
 # #' @rdname mlg-methods
