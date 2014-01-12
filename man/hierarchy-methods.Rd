@@ -1,14 +1,14 @@
 \docType{methods}
-\name{hierarchy}
-\alias{hierarchy}
-\alias{hierarchy,genclone-method}
+\name{gethierarchy}
+\alias{gethierarchy}
+\alias{gethierarchy,genclone-method}
 \alias{hierarchy<-}
 \alias{hierarchy<-,genclone-method}
 \title{Access and organize the population hierarchy for genclone objects.}
 \usage{
-hierarchy(x, ...)
+gethierarchy(x, formula = NULL, combine = TRUE)
 
-\S4method{hierarchy}{genclone}(x, ...)
+\S4method{gethierarchy}{genclone}(x, formula = NULL, combine = TRUE)
 
 hierarchy(x) <- value
 
@@ -17,7 +17,12 @@ hierarchy(x) <- value
 \arguments{
   \item{x}{a genclone object}
 
-  \item{...}{I'll fiddle with this later.}
+  \item{formula}{a nested formula indicating the order of
+  the population hierarchy. Defaults to \code{NULL}.}
+
+  \item{combine}{if \code{TRUE}, the levels will be
+  combined according to the formula argument. If it is
+  \code{FALSE}, the levels will not be combined.}
 
   \item{value}{a data frame to replace the population
   hierarchy with.}

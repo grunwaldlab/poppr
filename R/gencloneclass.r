@@ -178,17 +178,33 @@ setMethod(
 #' @export
 #' @rdname hierarchy-methods
 #' @param x a genclone object
-#' @param ... I'll fiddle with this later.
+#' @param formula a nested formula indicating the order of the population
+#' hierarchy. Defaults to \code{NULL}.
+#' @param combine if \code{TRUE}, the levels will be combined according to the
+#' formula argument. If it is \code{FALSE}, the levels will not be combined.
 #' @docType methods
 #==============================================================================#
-setGeneric("hierarchy", function(x, ...) standardGeneric("hierarchy"))
+gethierarchy <- function(x, formula = NULL, combine = TRUE) standardGeneric("gethierarchy")
+
+#' @export
+setGeneric("gethierarchy")
 
 #' @rdname hierarchy-methods
 setMethod(
-  f = "hierarchy",
-  signature = "genclone",
-  definition = function(x, ...){
-    return(x@hierarchy)
+  f = "gethierarchy",
+  signature = c(x = "genclone"),
+  definition = function(x, formula = NULL, combine = TRUE){
+    if (is.null(formula)) return(x@hierarchy)
+    vars <- all.vars(formula)
+    if (any(!vars %in% names(x@hierarchy))){
+      stop(hier_incompatible_warning(vars, x@hierarchy))
+    }
+    if (combine){
+      hier <- make_hierarchy(formula, x@hierarchy)
+    } else {
+      hier <- x@hierarchy[all.vars(formula)]
+    }
+    return(hier)
   })
 
 #==============================================================================#
