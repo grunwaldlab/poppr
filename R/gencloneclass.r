@@ -157,9 +157,40 @@ setMethod(
   definition = function(x, ...){
     return(x@hierarchy)
   })
+
+#==============================================================================#
+#' @export
+#' @rdname hierarchy-methods
+#' @param value a data frame to replace the population hierarchy with.
+#' @docType methods
+#==============================================================================#
+setGeneric("hierarchy<-", function(x, value) standardGeneric("hierarchy<-"))
+
+#' @rdname hierarchy-methods
+setMethod(
+  f = "hierarchy<-",
+  signature = "genclone",
+  definition = function(x, value){
+    if (!inherits(value, "data.frame")){
+      stop(paste(substitute(value), "is not a data frame"))
+    }
+    if (nrow(value) != nInd(x)){
+      stop("Number of rows in data frame not equal to number of individuals in object.")
+    }
+    x@hierarchy <- value
+    return(x)
+  })
+
+
 # #==============================================================================#
+# #' Multilocus genotype functions
+# #' 
+# #' words
+# #' 
 # #' @export
 # #' @rdname mlg-methods
+# #' @param pop a genclone object
+# #' @param ... other things quiet perhaps
 # #' @docType methods
 # #==============================================================================#
 # setGeneric("mlg", function(pop, ...) standardGeneric("mlg"))
@@ -177,8 +208,8 @@ setMethod(
 #     }
 #     return(unique(pop@mlg))
 #   })
-# 
-# 
+
+
 # #==============================================================================#
 # #' @export
 # #' @rdname mlg-methods

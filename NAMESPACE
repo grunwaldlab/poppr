@@ -1,3 +1,4 @@
+export("hierarchy<-")
 export(bruvo.boot)
 export(bruvo.dist)
 export(bruvo.msn)
