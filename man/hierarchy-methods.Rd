@@ -2,6 +2,8 @@
 \name{gethierarchy}
 \alias{gethierarchy}
 \alias{gethierarchy,genclone-method}
+\alias{sethierarchy}
+\alias{sethierarchy,genclone-method}
 \alias{sethierarchy<-}
 \alias{sethierarchy<-,genclone-method}
 \alias{setpop}
@@ -14,36 +16,34 @@ gethierarchy(x, formula = NULL, combine = TRUE)
 
 \S4method{gethierarchy}{genclone}(x, formula = NULL, combine = TRUE)
 
-sethierarchy(x) <- value
+sethierarchy(x, df) <- value
 
-\S4method{sethierarchy}{genclone}(x) <- value
+\S4method{sethierarchy}{genclone}(x, df) <- value
+
+sethierarchy(x, df)
+
+\S4method{sethierarchy}{genclone}(x, df)
 
 setpop(x, formula = NULL)
 
-\S4method{setpop}{genclone}(x, formula)
+\S4method{setpop}{genclone}(x, formula = NULL)
 
-setpop(x) <- value
+setpop(x, formula = NULL) <- value
 
-\S4method{setpop}{genclone}(x) <- value
+\S4method{setpop}{genclone}(x, formula) <- value
 }
 \arguments{
   \item{x}{a genclone object}
 
   \item{formula}{a nested formula indicating the order of
-  the population hierarchy. Defaults to \code{NULL}.}
+  the population hierarchy.}
 
   \item{combine}{if \code{TRUE}, the levels will be
   combined according to the formula argument. If it is
   \code{FALSE}, the levels will not be combined.}
 
-  \item{value}{a data frame to replace the population
-  hierarchy with.}
-
-  \item{formula}{a formula defining the levels of the
-  population hierarchy to set the population factor with.}
-
-  \item{value}{a formula to replace the population
-  hierarchy with.}
+  \item{df}{a data frame giving the population hierarchy of
+  each individual.}
 }
 \description{
 word

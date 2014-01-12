@@ -179,7 +179,7 @@ setMethod(
 #' @rdname hierarchy-methods
 #' @param x a genclone object
 #' @param formula a nested formula indicating the order of the population
-#' hierarchy. Defaults to \code{NULL}.
+#' hierarchy.
 #' @param combine if \code{TRUE}, the levels will be combined according to the
 #' formula argument. If it is \code{FALSE}, the levels will not be combined.
 #' @docType methods
@@ -210,10 +210,10 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname hierarchy-methods
-#' @param value a data frame to replace the population hierarchy with.
+#' @param df a data frame giving the population hierarchy of each individual.
 #' @docType methods
 #==============================================================================#
-"sethierarchy<-" <- function(x, value) standardGeneric("sethierarchy<-")
+"sethierarchy<-" <- function(x, df) standardGeneric("sethierarchy<-")
 
 #' @export
 setGeneric("sethierarchy<-")
@@ -221,15 +221,40 @@ setGeneric("sethierarchy<-")
 #' @rdname hierarchy-methods
 setMethod(
   f = "sethierarchy<-",
-  signature = "genclone",
-  definition = function(x, value){
-    if (!inherits(value, "data.frame")){
-      stop(paste(substitute(value), "is not a data frame"))
+  signature = c(x = "genclone"),
+  definition = function(x, df){
+    if (!inherits(df, "data.frame")){
+      stop(paste(substitute(df), "is not a data frame"))
     }
-    if (nrow(value) != nInd(x)){
+    if (nrow(df) != nInd(x)){
       stop("Number of rows in data frame not equal to number of individuals in object.")
     }
-    x@hierarchy <- value
+    x@hierarchy <- df
+    return(x)
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname hierarchy-methods
+#' @docType methods
+#==============================================================================#
+"sethierarchy" <- function(x, df) standardGeneric("sethierarchy<-")
+
+#' @export
+setGeneric("sethierarchy")
+
+#' @rdname hierarchy-methods
+setMethod(
+  f = "sethierarchy",
+  signature = c(x = "genclone"),
+  definition = function(x, df){
+    if (!inherits(df, "data.frame")){
+      stop(paste(substitute(df), "is not a data frame"))
+    }
+    if (nrow(df) != nInd(x)){
+      stop("Number of rows in data frame not equal to number of individuals in object.")
+    }
+    x@hierarchy <- df
     return(x)
   })
 
@@ -237,8 +262,6 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname hierarchy-methods
-#' @param formula a formula defining the levels of the population hierarchy to
-#' set the population factor with.
 #' @docType methods
 #==============================================================================#
 "setpop" <- function(x, formula = NULL) standardGeneric("setpop")
@@ -249,8 +272,8 @@ setGeneric("setpop")
 #' @rdname hierarchy-methods
 setMethod(
   f = "setpop",
-  signature = "genclone",
-  definition = function(x, formula){
+  signature = c(x = "genclone"),
+  definition = function(x, formula = NULL){
     if (is.null(formula) | !is.language(formula)){
       stop(paste(substitute(formula), "must be a valid formula object."))
     }
@@ -265,10 +288,9 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname hierarchy-methods
-#' @param value a formula to replace the population hierarchy with.
 #' @docType methods
 #==============================================================================#
-"setpop<-" <- function(x, value = NULL) standardGeneric("setpop<-")
+"setpop<-" <- function(x, formula = NULL) standardGeneric("setpop<-")
 
 #' @export
 setGeneric("setpop<-")
@@ -276,16 +298,16 @@ setGeneric("setpop<-")
 #' @rdname hierarchy-methods
 setMethod(
   f = "setpop<-",
-  signature = "genclone",
-  definition = function(x, value){
-    if (is.null(value) | !is.language(value)){
-      stop(paste(substitute(value), "must be a valid value object."))
+  signature = c(x = "genclone"),
+  definition = function(x, formula){
+    if (is.null(formula) | !is.language(formula)){
+      stop(paste(substitute(formula), "must be a valid formula object."))
     }
-    vars <- all.vars(value)
+    vars <- all.vars(formula)
     if (!all(vars %in% names(x@hierarchy))){
       stop(hier_incompatible_warning(vars, x@hierarchy))
     }
-    pop(x) <- make_hierarchy(value, x@hierarchy)[[length(vars)]]
+    pop(x) <- make_hierarchy(formula, x@hierarchy)[[length(vars)]]
     return(x)
   })
 # #==============================================================================#
