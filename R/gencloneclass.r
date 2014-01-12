@@ -171,11 +171,12 @@ setMethod(
   })
 
 #==============================================================================#
-#' Access and organize the population hierarchy for genclone objects.
+#' Access and manipulate the population hierarchy for genclone objects.
 #' 
-#' word
+#' The following methods allow the user to quickly change the hierarchy or
+#' population of a genclone object. 
 #' 
-#' @export
+#' @export 
 #' @rdname hierarchy-methods
 #' @param x a genclone object
 #' @param formula a nested formula indicating the order of the population
@@ -189,7 +190,7 @@ gethierarchy <- function(x, formula = NULL, combine = TRUE) standardGeneric("get
 #' @export
 setGeneric("gethierarchy")
 
-#' @rdname hierarchy-methods
+
 setMethod(
   f = "gethierarchy",
   signature = c(x = "genclone"),
@@ -210,58 +211,66 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname hierarchy-methods
-#' @param df a data frame giving the population hierarchy of each individual.
+#' @param value a data frame giving the population hierarchy of each individual.
 #' @docType methods
 #==============================================================================#
-"sethierarchy<-" <- function(x, df) standardGeneric("sethierarchy<-")
+"sethierarchy<-" <- function(x, value) standardGeneric("sethierarchy<-")
 
 #' @export
 setGeneric("sethierarchy<-")
 
-#' @rdname hierarchy-methods
+
 setMethod(
   f = "sethierarchy<-",
   signature = c(x = "genclone"),
-  definition = function(x, df){
-    if (!inherits(df, "data.frame")){
-      stop(paste(substitute(df), "is not a data frame"))
+  definition = function(x, value){
+    if (!inherits(value, "data.frame")){
+      stop(paste(substitute(value), "is not a data frame"))
     }
-    if (nrow(df) != nInd(x)){
+    if (nrow(value) != nInd(x)){
       stop("Number of rows in data frame not equal to number of individuals in object.")
     }
-    x@hierarchy <- df
+    x@hierarchy <- value
     return(x)
   })
 
 #==============================================================================#
-#' @export
+#' @export 
 #' @rdname hierarchy-methods
 #' @docType methods
 #==============================================================================#
-"sethierarchy" <- function(x, df) standardGeneric("sethierarchy<-")
+"sethierarchy" <- function(x, value) standardGeneric("sethierarchy<-")
 
 #' @export
 setGeneric("sethierarchy")
 
-#' @rdname hierarchy-methods
 setMethod(
   f = "sethierarchy",
   signature = c(x = "genclone"),
-  definition = function(x, df){
-    if (!inherits(df, "data.frame")){
-      stop(paste(substitute(df), "is not a data frame"))
+  definition = function(x, value){
+    if (!inherits(value, "data.frame")){
+      stop(paste(substitute(value), "is not a data frame"))
     }
-    if (nrow(df) != nInd(x)){
+    if (nrow(value) != nInd(x)){
       stop("Number of rows in data frame not equal to number of individuals in object.")
     }
-    x@hierarchy <- df
+    x@hierarchy <- value
     return(x)
   })
 
 
 #==============================================================================#
-#' @export
-#' @rdname hierarchy-methods
+#' Manipulate the population factor of genclone objects.
+#' 
+#' The following methods allow the user to quickly change the population of a 
+#' genclone object. 
+#' 
+#' @export 
+#' @rdname population-methods
+#' @param x a genclone object
+#' @param formula a nested formula indicating the order of the population
+#' hierarchy.
+#' @param value same as formula
 #' @docType methods
 #==============================================================================#
 "setpop" <- function(x, formula = NULL) standardGeneric("setpop")
@@ -269,7 +278,7 @@ setMethod(
 #' @export
 setGeneric("setpop")
 
-#' @rdname hierarchy-methods
+
 setMethod(
   f = "setpop",
   signature = c(x = "genclone"),
@@ -287,27 +296,27 @@ setMethod(
 
 #==============================================================================#
 #' @export
-#' @rdname hierarchy-methods
+#' @rdname population-methods
 #' @docType methods
 #==============================================================================#
-"setpop<-" <- function(x, formula = NULL) standardGeneric("setpop<-")
+"setpop<-" <- function(x, value) standardGeneric("setpop<-")
 
 #' @export
 setGeneric("setpop<-")
 
-#' @rdname hierarchy-methods
+
 setMethod(
   f = "setpop<-",
   signature = c(x = "genclone"),
-  definition = function(x, formula){
-    if (is.null(formula) | !is.language(formula)){
-      stop(paste(substitute(formula), "must be a valid formula object."))
+  definition = function(x, value){
+    if (is.null(value) | !is.language(value)){
+      stop(paste(substitute(value), "must be a valid value object."))
     }
-    vars <- all.vars(formula)
+    vars <- all.vars(value)
     if (!all(vars %in% names(x@hierarchy))){
       stop(hier_incompatible_warning(vars, x@hierarchy))
     }
-    pop(x) <- make_hierarchy(formula, x@hierarchy)[[length(vars)]]
+    pop(x) <- make_hierarchy(value, x@hierarchy)[[length(vars)]]
     return(x)
   })
 # #==============================================================================#
