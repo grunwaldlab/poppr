@@ -2,17 +2,29 @@
 \name{gethierarchy}
 \alias{gethierarchy}
 \alias{gethierarchy,genclone-method}
-\alias{hierarchy<-}
-\alias{hierarchy<-,genclone-method}
+\alias{sethierarchy<-}
+\alias{sethierarchy<-,genclone-method}
+\alias{setpop}
+\alias{setpop,genclone-method}
+\alias{setpop<-}
+\alias{setpop<-,genclone-method}
 \title{Access and organize the population hierarchy for genclone objects.}
 \usage{
 gethierarchy(x, formula = NULL, combine = TRUE)
 
 \S4method{gethierarchy}{genclone}(x, formula = NULL, combine = TRUE)
 
-hierarchy(x) <- value
+sethierarchy(x) <- value
 
-\S4method{hierarchy}{genclone}(x) <- value
+\S4method{sethierarchy}{genclone}(x) <- value
+
+setpop(x, formula = NULL)
+
+\S4method{setpop}{genclone}(x, formula)
+
+setpop(x) <- value
+
+\S4method{setpop}{genclone}(x) <- value
 }
 \arguments{
   \item{x}{a genclone object}
@@ -25,6 +37,12 @@ hierarchy(x) <- value
   \code{FALSE}, the levels will not be combined.}
 
   \item{value}{a data frame to replace the population
+  hierarchy with.}
+
+  \item{formula}{a formula defining the levels of the
+  population hierarchy to set the population factor with.}
+
+  \item{value}{a formula to replace the population
   hierarchy with.}
 }
 \description{

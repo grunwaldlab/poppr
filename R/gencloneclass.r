@@ -213,11 +213,14 @@ setMethod(
 #' @param value a data frame to replace the population hierarchy with.
 #' @docType methods
 #==============================================================================#
-setGeneric("hierarchy<-", function(x, value) standardGeneric("hierarchy<-"))
+"sethierarchy<-" <- function(x, value) standardGeneric("sethierarchy<-")
+
+#' @export
+setGeneric("sethierarchy<-")
 
 #' @rdname hierarchy-methods
 setMethod(
-  f = "hierarchy<-",
+  f = "sethierarchy<-",
   signature = "genclone",
   definition = function(x, value){
     if (!inherits(value, "data.frame")){
@@ -231,6 +234,60 @@ setMethod(
   })
 
 
+#==============================================================================#
+#' @export
+#' @rdname hierarchy-methods
+#' @param formula a formula defining the levels of the population hierarchy to
+#' set the population factor with.
+#' @docType methods
+#==============================================================================#
+"setpop" <- function(x, formula = NULL) standardGeneric("setpop")
+
+#' @export
+setGeneric("setpop")
+
+#' @rdname hierarchy-methods
+setMethod(
+  f = "setpop",
+  signature = "genclone",
+  definition = function(x, formula){
+    if (is.null(formula) | !is.language(formula)){
+      stop(paste(substitute(formula), "must be a valid formula object."))
+    }
+    vars <- all.vars(formula)
+    if (!all(vars %in% names(x@hierarchy))){
+      stop(hier_incompatible_warning(vars, x@hierarchy))
+    }
+    pop(x) <- make_hierarchy(formula, x@hierarchy)[[length(vars)]]
+    return(x)
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname hierarchy-methods
+#' @param value a formula to replace the population hierarchy with.
+#' @docType methods
+#==============================================================================#
+"setpop<-" <- function(x, value = NULL) standardGeneric("setpop<-")
+
+#' @export
+setGeneric("setpop<-")
+
+#' @rdname hierarchy-methods
+setMethod(
+  f = "setpop<-",
+  signature = "genclone",
+  definition = function(x, value){
+    if (is.null(value) | !is.language(value)){
+      stop(paste(substitute(value), "must be a valid value object."))
+    }
+    vars <- all.vars(value)
+    if (!all(vars %in% names(x@hierarchy))){
+      stop(hier_incompatible_warning(vars, x@hierarchy))
+    }
+    pop(x) <- make_hierarchy(value, x@hierarchy)[[length(vars)]]
+    return(x)
+  })
 # #==============================================================================#
 # #' Multilocus genotype functions
 # #' 
