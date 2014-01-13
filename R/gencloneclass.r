@@ -45,14 +45,14 @@
 #==============================================================================#
 #' Genclone class
 #' 
-#' Genclone is an S4 class that extends the \code{\linkS4class{genind-class}}
+#' Genclone is an S4 class that extends the \code{\linkS4class{genind}}
 #' from the \emph{\link{adegenet}} package. It will have all of the same
-#' attributes as the \code{\linkS4class{genind-class}}, but it will contain two
+#' attributes as the \code{\linkS4class{genind}}, but it will contain two
 #' extra slots that will help retain information about population hierarchies
 #' and multilocus genotypes.
 #' 
 #' @section Extends: 
-#' Class \code{"\linkS4class{genind-class}"}, directly.
+#' Class \code{"\linkS4class{genind}"}, directly.
 #' 
 #' @details The genclone class will allow for more optimized methods of clone
 #' correcting and analyzing data over multiple levels of population hierarchy.
@@ -102,7 +102,7 @@ setClass("genclone",
 #' 
 #' words.
 #' 
-#' @rdname genclone-methods
+#' @rdname genclone-method
 #' @param x a genclone object
 #' @param i vector of numerics indicating number of individuals desired
 #' @param j a vector of numerics corresponding to the loci desired.
@@ -123,7 +123,7 @@ setMethod(
 )
 
 #==============================================================================#
-#' @rdname genclone-methods
+#' @rdname genclone-method
 #' @param .Object a character, "genclone"
 #' @param gen \code{"\linkS4class{genind}"} object
 #' @param hierarchy a data frame where each row i represents the different
@@ -150,7 +150,7 @@ setMethod(
 )
 
 #==============================================================================#
-#' @rdname genclone-methods
+#' @rdname genclone-method
 #==============================================================================#
 setMethod(
   f = "show",
@@ -178,6 +178,7 @@ setMethod(
 #' 
 #' @export 
 #' @rdname hierarchy-methods
+#' @aliases gethierarchy,genclone-method
 #' @param x a genclone object
 #' @param formula a nested formula indicating the order of the population
 #' hierarchy.
@@ -211,6 +212,7 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname hierarchy-methods
+#' @aliases sethierarchy<-,genclone-method
 #' @param value a data frame giving the population hierarchy of each individual.
 #' @docType methods
 #==============================================================================#
@@ -237,6 +239,7 @@ setMethod(
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
+#' @aliases sethierarchy,genclone-method
 #' @docType methods
 #==============================================================================#
 "sethierarchy" <- function(x, value) standardGeneric("sethierarchy<-")
@@ -271,6 +274,7 @@ setMethod(
 #' @param formula a nested formula indicating the order of the population
 #' hierarchy.
 #' @param value same as formula
+#' @aliases setpop,genclone-method
 #' @docType methods
 #==============================================================================#
 "setpop" <- function(x, formula = NULL) standardGeneric("setpop")
@@ -297,6 +301,7 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname population-methods
+#' @aliases setpop<-,genclone-method
 #' @docType methods
 #==============================================================================#
 "setpop<-" <- function(x, value) standardGeneric("setpop<-")

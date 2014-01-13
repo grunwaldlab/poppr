@@ -1,8 +1,11 @@
 \docType{methods}
 \name{gethierarchy}
 \alias{gethierarchy}
+\alias{gethierarchy,genclone-method}
 \alias{sethierarchy}
+\alias{sethierarchy,genclone-method}
 \alias{sethierarchy<-}
+\alias{sethierarchy<-,genclone-method}
 \title{Access and manipulate the population hierarchy for genclone objects.}
 \usage{
 gethierarchy(x, formula = NULL, combine = TRUE)

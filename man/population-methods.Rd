@@ -1,7 +1,9 @@
 \docType{methods}
 \name{setpop}
 \alias{setpop}
+\alias{setpop,genclone-method}
 \alias{setpop<-}
+\alias{setpop<-,genclone-method}
 \title{Manipulate the population factor of genclone objects.}
 \usage{
 setpop(x, formula = NULL)
