@@ -43,58 +43,167 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
 #==============================================================================#
-#' Genclone class
+#' Methods used for the bootgen object. 
 #' 
-#' Genclone is an S4 class that extends the \code{\linkS4class{genind}}
-#' from the \emph{\link{adegenet}} package. It will have all of the same
-#' attributes as the \code{\linkS4class{genind}}, but it will contain two
-#' extra slots that will help retain information about population hierarchies
-#' and multilocus genotypes.
+#' This is not designed for user interaction.
 #' 
-#' @section Extends: 
-#' Class \code{"\linkS4class{genind}"}, directly.
-#' 
-#' @details The genclone class will allow for more optimized methods of clone
-#' correcting and analyzing data over multiple levels of population hierarchy.
-#' 
-#' Previously, for hierarchical analysis to work in a \code{\link{genind}}
-#' object, the user had to place a data frame in the \code{\link{other}} slot of
-#' the object. The suggested name of the data frame was 
-#' \code{population_hierarchy}, and this was used to be able to store the
-#' hierarchical information inside the object so that the user did not have to
-#' keep track of that information. This method worked, but it became apparent
-#' that this method of doing things became a bit confusing to the user as the
-#' method for changing the population of an object became:
-#' 
-#' \code{pop(object) <- other(object)$population_hierarchy$population_name}
-#' 
-#' That is a lot to keep track of. The new hierarchy slot will allow the user
-#' to be able to insert a population hierarchy into the slot and then change it
-#' with one function and a formula:
-#' 
-#' \code{sethierarchy(object, ~Population/Subpopulation)}
-#' 
-#' making this become slightly more intuitive and tractable.
-#' 
-#' Calculations of multilocus genotypes is rapid, but unfortunately, the
-#' assignments can change if the number of individuals in the population is
-#' different. This means that if you analyze the multilocus genotypes for two
-#' subpopulations, they will have different multilocus genotype assignments even
-#' though they may share multilocus genotypes. The new slot allows us to be able
-#' to assign the multilocus genotypes and retain that information no matter how 
-#' we subset the data set.
-#' 
-#' @name genclone-class
-#' @rdname genclone-class
-#' @export
-#' @slot mlg a vector representing multilocus genotypes for the data set.
-#' @slot hierarchy a data frame containing hierarchical levels.
-#' @author Zhian N. Kamvar
-#' @import methods
+#' @rdname bootgen-methods
+#' @param x a \code{"\linkS4class{bootgen}"} object
+#' @param i vector of numerics indicating number of individuals desired
+#' @param j a vector of numerics corresponding to the loci desired.
+#' @param ... unused.
+#' @param drop set to \code{FALSE}
 #==============================================================================#
-setClass("genclone", 
-         contains = "genind",
-         representation = representation(mlg = "numeric", hierarchy = "data.frame"),
+setMethod(
+  f = "[",
+  signature(x = "bootgen"),
+  definition = function(x, i, j, ..., drop = FALSE){
+    if (missing(i)) i <- TRUE
+    if (missing(j)) j <- TRUE
+    if (length(j) > nLoc(x) | any(j > nLoc(x))){
+      stop('subscript out of bounds')
+    }
+    
+    # Taking Names
+    locnall         <- x@loc.nall[j]
+    allnames        <- x@all.names[j]
+    names(allnames) <- names(x@all.names)[1:length(j)]
+    names(locnall)  <- names(allnames)
+    
+    # Shuffling
+    # matcols  <- apply(getinds(x@loc.nall), 1, function(ind) ind[1]:ind[2])[j]
+    matcols  <- .Call("expand_indices", cumsum(x@loc.nall), nLoc(x))[j]
+    indices  <- unlist(matcols)
+    locnames <- rep(names(allnames), locnall)
+    tabnames <- paste(locnames, unlist(allnames), sep = ".")
+    res      <- slot(x, "tab")[i, indices, drop = drop]
+    colnames(res) <- tabnames
+    
+    ## Resetting all factors that need to be set. 
+    slot(x, "tab")       <- res
+    slot(x, "loc.fac")   <- factor(locnames, names(allnames))
+    slot(x, "loc.names") <- names(allnames)
+    slot(x, "loc.nall")  <- locnall
+    slot(x, "all.names") <- allnames
+    slot(x, "replen")    <- slot(x, "replen")[j]
+    return(x)
+  }
+)
+
+#==============================================================================#
+#' @rdname bootgen-methods
+#==============================================================================#
+setMethod(
+  f = "dim",
+  signature(x = "bootgen"),
+  definition = function(x){
+    return(c(nInd(x), nLoc(x)))
+  }
+)
+
+
+#==============================================================================#
+#' @rdname bootgen-methods
+#' @param .Object a character, "bootgen"
+#' @param gen \code{"\linkS4class{genind}"} object
+#' @param replen a vector of numbers indicating the repeat length for each 
+#' microsatellite locus.
+#==============================================================================#
+setMethod(
+  f = "initialize",
+  signature = "bootgen",
+  definition = function(.Object, gen, replen){
+    if (missing(gen)) gen <- new("genind")
+    if (missing(replen)){
+      replen <- vapply(gen@all.names, function(y) guesslengths(as.numeric(y)), 1)
+    }
+    lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
+    slot(.Object, "replen") <- replen
+    return(.Object)
+  })
+
+
+
+
+
+#==============================================================================#
+#' @rdname bruvomat-methods
+#' @param .Object a character, "bruvomat"
+#' @param gen \code{"\linkS4class{genind}"} object
+#' @param replen a vector of numbers indicating the repeat length for each 
+#' microsatellite locus.
+#==============================================================================#
+setMethod(
+  f = "initialize",
+  signature = "bruvomat",
+  definition = function(.Object, gen, replen){
+    if (missing(gen)) gen <- new("genind")
+    if (missing(replen)){
+      replen <- vapply(gen@all.names, function(y) guesslengths(as.numeric(y)), 1)
+    }
+    ploid <- ploidy(gen)
+    # This controlls for the user correcting missing data using "mean". 
+    if (any(!gen@tab %in% c((0:ploid)/ploid, NA))){
+      gen@tab[!gen@tab %in% c((0:ploid)/ploid, NA)] <- NA
+    }
+    # This will check for data that has missing scored as "zero".
+    popcols <- ploid*nLoc(gen)
+    if (!any(is.na(gen@tab)) & any(rowSums(gen@tab, na.rm=TRUE) < nLoc(gen))){
+      mat1 <- as.matrix.data.frame(genind2df(gen, sep="/", usepop=FALSE))
+      mat1[mat1 %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
+      mat2 <- apply(mat1, 1, strsplit, "/")
+      mat3 <- apply(as.matrix(t(sapply(mat2, unlist))), 2, as.numeric)
+      vec1 <- suppressWarnings(as.numeric(unlist(mat3)))
+      pop  <- matrix(vec1, nrow=nInd(gen), ncol=popcols)
+    } else {
+      popdf <- genind2df(gen, oneColPerAll=TRUE, usepop=FALSE)
+      mat1  <- as.matrix.data.frame(popdf)
+      pop   <- suppressWarnings(matrix(as.numeric(mat1), ncol=popcols))
+    }
+    slot(.Object, "mat")       <- pop
+    slot(.Object, "replen")    <- replen
+    slot(.Object, "ploidy")    <- ploid
+    slot(.Object, "ind.names") <- indNames(gen)
+    return(.Object)
+  }
+)
+
+#==============================================================================#
+#' @rdname bruvomat-methods
+#==============================================================================#
+setMethod(
+  f = "dim",
+  signature(x = "bruvomat"),
+  definition = function(x){
+    return(c(nrow(x@mat), ncol(x@mat)/x@ploidy))
+  }
+)
+
+#==============================================================================#
+#' Methods used for the bruvomat object. 
+#' 
+#' This is not designed for user interaction.
+#' 
+#' @rdname bruvomat-methods
+#' @param x a \code{"\linkS4class{bruvomat}"} object
+#' @param i vector of numerics indicating number of individuals desired
+#' @param j a vector of numerics corresponding to the loci desired.
+#' @param ... unused.
+#' @param drop set to \code{FALSE}
+#==============================================================================#
+setMethod(
+  f = "[",
+  signature(x = "bruvomat"),
+  definition = function(x, i, j, ..., drop = FALSE){
+    if (missing(i)) i <- TRUE
+    if (missing(j)) j <- TRUE
+    x@replen    <- x@replen[j]
+    x@ind.names <- x@ind.names[i]
+    cols        <- rep(1:ncol(x), each = x@ploidy)
+    replacement <- vapply(j, function(ind) which(cols == ind), 1:x@ploidy)
+    x@mat       <- x@mat[i, as.vector(replacement), drop = FALSE]
+    return(x)
+  }
 )
 
 #==============================================================================#
