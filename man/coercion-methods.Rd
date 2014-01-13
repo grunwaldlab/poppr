@@ -1,22 +1,21 @@
 \docType{methods}
 \name{as.genclone}
 \alias{as.genclone}
-\alias{as.genclone,as.genind,genclone-method}
+\alias{as.genclone,genind-method}
 \alias{as.genind}
-\alias{as.genind,as.genclone,genclone-method}
+\alias{as.genind,genclone-method}
 \title{Create a genclone object from a genind object.}
 \usage{
-as.genclone(gen, hierarchy = NULL)
+as.genclone(x, hierarchy = NULL)
 
-as.genind(gcl)
+as.genind(x)
 }
 \arguments{
-  \item{gen}{a \code{\linkS4class{genind}} object}
+  \item{x}{a \code{\linkS4class{genind}} or
+  \code{\linkS4class{genclone}} object}
 
   \item{hierarchy}{a data frame representing the population
   hierarchy.}
-
-  \item{gcl}{a \code{\linkS4class{genclone}}}
 }
 \description{
 Wrapper for genclone initializer. The hierarchy must have

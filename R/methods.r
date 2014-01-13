@@ -301,9 +301,9 @@ setMethod(
 #' defined, the population will be set as the hierarchy under the label "Pop". 
 #' 
 #' @export 
-#' @rdname as.genclone
-#' @aliases as.genclone,as.genind,genclone-method
-#' @param gen a \code{\linkS4class{genind}} object
+#' @rdname coercion-methods
+#' @aliases as.genclone,genind-method
+#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object
 #' @param hierarchy a data frame representing the population hierarchy.
 #' @docType methods
 #' @examples
@@ -315,49 +315,67 @@ setMethod(
 #' Aeut.gc
 #' Aeut <- as.genind(Aeut.gc)
 #==============================================================================#
-as.genclone <- function(gen, hierarchy = NULL){
+as.genclone <- function(x, hierarchy = NULL){
   standardGeneric("as.genclone")
 }
 
 #' @export
 setGeneric("as.genclone")
 
+
 setMethod(
   f = "as.genclone",
-  signature(gen = "genind"),
-  definition = function(gen, hierarchy){
+  signature(x = "genind"),
+  definition = function(x, hierarchy){
     if (missing(hierarchy)){
-      newgenclone <- new("genclone", gen)
+      if ("population_hierarchy" %in% names(other(x))){
+        hierarchy   <- other(x)[["population_hierarchy"]]
+        newgenclone <- new("genclone", x, hierarchy)
+      } else {
+        newgenclone <- new("genclone", x)
+      }
     } else {
-      newgenclone <- new("genclone", gen, hierarchy)
+      newgenclone   <- new("genclone", x, hierarchy)
     }
     return(newgenclone)
   })
 
 
 #' @export
-#' @rdname as.genclone
-#' @aliases as.genind,as.genclone,genclone-method
-#' @param gcl a \code{\linkS4class{genclone}}
+#' @rdname coercion-methods
+#' @aliases as.genind,genclone-method
 #' @docType methods
-as.genind <- function(gcl){
+as.genind <- function(x){
   standardGeneric("as.genind")
 }
 
 #' @export
 setGeneric("as.genind")
 
+
 setMethod(
   f = "as.genind",
-  signature(gcl = "genclone"),
-  definition = function(gcl){
-      slots <- names(gcl)
-      slots <- slots[!slots %in% c("mlg", "hierarchy")]
-      gid   <- new("genind")
-      lapply(slots, function(x) slot(gid, x) <<- slot(gcl, x))
+  signature(x = "genclone"),
+  definition = function(x){
+      slots         <- names(x)
+      slots         <- slots[!slots %in% c("mlg", "hierarchy")]
+      gid           <- new("genind")
+      gid@tab       <- x@tab
+      gid@ind.names <- x@ind.names
+      gid@loc.names <- x@loc.names
+      gid@loc.nall  <- x@loc.nall
+      gid@loc.fac   <- x@loc.fac
+      gid@all.names <- x@all.names
+      pop(gid)      <- pop(x)
+      gid@ploidy    <- x@ploidy
+      gid@call      <- match.call()
+      gid@type      <- x@type
+      gid@other     <- x@other
+
       if (!"population_hierarchy" %in% names(other(gid))){
-        other(gid)[["population_hierarchy"]] <- gethierarchy(gcl)
+        other(gid)[["population_hierarchy"]] <- gethierarchy(x)
       }
+      
       return(gid)
     })
 #==============================================================================#
