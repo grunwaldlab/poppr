@@ -220,6 +220,35 @@ setMethod(
 #------------------------------------------------------------------------------#
 ################################################################################
 #==============================================================================#
+#' Check for validity of a genclone object
+#' 
+#' In the hat
+#' 
+#' @rdname is.genclone
+#' @aliases is.genclone,genclone-method
+#' @param x a genclone object
+#' @docType methods
+#' @examples
+#' data(nancycats)
+#' nanclone <- as.genclone(nancycats)
+#' is.genclone(nanclone)
+#==============================================================================#
+is.genclone <- function(x){
+  standardGeneric("is.genclone")
+}
+
+#' @export
+setGeneric("is.genclone")
+
+setMethod(
+  f = "is.genclone",
+  signature(x = "genclone"),
+  definition = function(x){
+    res <- (is(x, "genclone") & validObject(x))
+    return(res)
+    })
+
+#==============================================================================#
 #' Methods used for the genclone object
 #' 
 #' words.
@@ -264,9 +293,11 @@ setMethod(
         hierarchy <- data.frame(Pop = pop(gen))
       }
     }
+
+    # No 'initialize' method for genind objects...
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
     slot(.Object, "mlg")       <- mlg.vector(gen)
-    slot(.Object, "hierarchy") <- hierarchy#new("genhier", hierarchy)
+    slot(.Object, "hierarchy") <- hierarchy
     return(.Object)
   }
 )
@@ -313,7 +344,6 @@ setMethod(
 #' Aeut.gc
 #' Aeut.gc <- as.genclone(Aeut, other(Aeut)$population_hierarchy[-1])
 #' Aeut.gc
-#' Aeut <- as.genind(Aeut.gc)
 #==============================================================================#
 as.genclone <- function(x, hierarchy = NULL){
   standardGeneric("as.genclone")
@@ -340,44 +370,6 @@ setMethod(
     return(newgenclone)
   })
 
-
-#' @export
-#' @rdname coercion-methods
-#' @aliases as.genind,genclone-method
-#' @docType methods
-as.genind <- function(x){
-  standardGeneric("as.genind")
-}
-
-#' @export
-setGeneric("as.genind")
-
-
-setMethod(
-  f = "as.genind",
-  signature(x = "genclone"),
-  definition = function(x){
-      slots         <- names(x)
-      slots         <- slots[!slots %in% c("mlg", "hierarchy")]
-      gid           <- new("genind")
-      gid@tab       <- x@tab
-      gid@ind.names <- x@ind.names
-      gid@loc.names <- x@loc.names
-      gid@loc.nall  <- x@loc.nall
-      gid@loc.fac   <- x@loc.fac
-      gid@all.names <- x@all.names
-      pop(gid)      <- pop(x)
-      gid@ploidy    <- x@ploidy
-      gid@call      <- match.call()
-      gid@type      <- x@type
-      gid@other     <- x@other
-
-      if (!"population_hierarchy" %in% names(other(gid))){
-        other(gid)[["population_hierarchy"]] <- gethierarchy(x)
-      }
-      
-      return(gid)
-    })
 #==============================================================================#
 #' Access and manipulate the population hierarchy for genclone objects.
 #' 
@@ -558,39 +550,22 @@ setMethod(
 # #' words
 # #' 
 # #' @export
-# #' @rdname mlg-methods
-# #' @param pop a genclone object
+# #' @rdname mlg
+# #' @aliases mlg,genclone-methods
+# #' @param x a genclone object
 # #' @param ... other things quiet perhaps
 # #' @docType methods
 # #==============================================================================#
-# setGeneric("mlg", function(pop, ...) standardGeneric("mlg"))
-# 
-# #' @rdname mlg-methods
+# mlg <- function(x, ...){
+#   standardGeneric("mlg")
+# }
+
+# #' @export
+# setGeneric("mlg")
+
 # setMethod(
 #   f = "mlg",
 #   signature(x = "genclone"),
-#   definition = function(pop, quiet = FALSE){
-#     if (!quiet){
-#       cat("#############################\n")
-#       cat("# Number of Individuals: ", nInd(pop), "\n")
-#       cat("# Number of MLG: ", unique(pop@mlg), "\n")
-#       cat("#############################\n")
-#     }
-#     return(unique(pop@mlg))
-#   })
-
-
-# #==============================================================================#
-# #' @export
-# #' @rdname mlg-methods
-# #' @docType methods
-# #==============================================================================#
-# setGeneric("mlg.vector", function(pop) standardGeneric("mlg.vector"))
-# 
-# #' @rdname mlg-methods
-# setMethod(
-#   f = "mlg.vector",
-#   signature(x = "genclone"),
-#   definition = function(pop){
-#     return(pop@mlg)
+#   definition = function(x){
+#     return(x@mlg)
 #   })

@@ -2,13 +2,9 @@
 \name{as.genclone}
 \alias{as.genclone}
 \alias{as.genclone,genind-method}
-\alias{as.genind}
-\alias{as.genind,genclone-method}
 \title{Create a genclone object from a genind object.}
 \usage{
 as.genclone(x, hierarchy = NULL)
-
-as.genind(x)
 }
 \arguments{
   \item{x}{a \code{\linkS4class{genind}} or
@@ -31,6 +27,5 @@ Aeut.gc <- as.genclone(Aeut)
 Aeut.gc
 Aeut.gc <- as.genclone(Aeut, other(Aeut)$population_hierarchy[-1])
 Aeut.gc
-Aeut <- as.genind(Aeut.gc)
 }
 
