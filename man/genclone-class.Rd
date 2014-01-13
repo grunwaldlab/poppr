@@ -4,12 +4,11 @@
 \title{Genclone class}
 \description{
 Genclone is an S4 class that extends the
-\code{\linkS4class{genind-class}} from the
-\emph{\link{adegenet}} package. It will have all of the
-same attributes as the \code{\linkS4class{genind-class}},
-but it will contain two extra slots that will help retain
-information about population hierarchies and multilocus
-genotypes.
+\code{\linkS4class{genind}} from the \emph{\link{adegenet}}
+package. It will have all of the same attributes as the
+\code{\linkS4class{genind}}, but it will contain two extra
+slots that will help retain information about population
+hierarchies and multilocus genotypes.
 }
 \details{
 The genclone class will allow for more optimized methods of
@@ -58,7 +57,7 @@ how we subset the data set.
 \item{\code{hierarchy}}{a data frame containing hierarchical levels.}
 }}
 \section{Extends}{
-  Class \code{"\linkS4class{genind-class}"}, directly.
+  Class \code{"\linkS4class{genind}"}, directly.
 }
 \author{
 Zhian N. Kamvar
