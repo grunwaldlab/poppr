@@ -1,5 +1,7 @@
 export("sethierarchy<-")
 export("setpop<-")
+export(as.genclone)
+export(as.genind)
 export(bruvo.boot)
 export(bruvo.dist)
 export(bruvo.msn)

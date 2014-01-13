@@ -219,7 +219,6 @@ setMethod(
 # GENCLONE METHODS
 #------------------------------------------------------------------------------#
 ################################################################################
-
 #==============================================================================#
 #' Methods used for the genclone object
 #' 
@@ -267,7 +266,7 @@ setMethod(
     }
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
     slot(.Object, "mlg")       <- mlg.vector(gen)
-    slot(.Object, "hierarchy") <- hierarchy
+    slot(.Object, "hierarchy") <- hierarchy#new("genhier", hierarchy)
     return(.Object)
   }
 )
@@ -295,6 +294,73 @@ setMethod(
   })
 
 #==============================================================================#
+#' Create a genclone object from a genind object.
+#' 
+#' Wrapper for genclone initializer. The hierarchy must have the same number of
+#' rows as the number of observations in the genind object. If no hierarchy is
+#' defined, the population will be set as the hierarchy under the label "Pop". 
+#' 
+#' @export 
+#' @rdname as.genclone
+#' @aliases as.genclone,as.genind,genclone-method
+#' @param gen a \code{\linkS4class{genind}} object
+#' @param hierarchy a data frame representing the population hierarchy.
+#' @docType methods
+#' @examples
+#' data(Aeut)
+#' Aeut
+#' Aeut.gc <- as.genclone(Aeut)
+#' Aeut.gc
+#' Aeut.gc <- as.genclone(Aeut, other(Aeut)$population_hierarchy[-1])
+#' Aeut.gc
+#' Aeut <- as.genind(Aeut.gc)
+#==============================================================================#
+as.genclone <- function(gen, hierarchy = NULL){
+  standardGeneric("as.genclone")
+}
+
+#' @export
+setGeneric("as.genclone")
+
+setMethod(
+  f = "as.genclone",
+  signature(gen = "genind"),
+  definition = function(gen, hierarchy){
+    if (missing(hierarchy)){
+      newgenclone <- new("genclone", gen)
+    } else {
+      newgenclone <- new("genclone", gen, hierarchy)
+    }
+    return(newgenclone)
+  })
+
+
+#' @export
+#' @rdname as.genclone
+#' @aliases as.genind,as.genclone,genclone-method
+#' @param gcl a \code{\linkS4class{genclone}}
+#' @docType methods
+as.genind <- function(gcl){
+  standardGeneric("as.genind")
+}
+
+#' @export
+setGeneric("as.genind")
+
+setMethod(
+  f = "as.genind",
+  signature(gcl = "genclone"),
+  definition = function(gcl){
+      slots <- names(gcl)
+      slots <- slots[!slots %in% c("mlg", "hierarchy")]
+      gid   <- new("genind")
+      lapply(slots, function(x) slot(gid, x) <<- slot(gcl, x))
+      if (!"population_hierarchy" %in% names(other(gid))){
+        other(gid)[["population_hierarchy"]] <- gethierarchy(gcl)
+      }
+      return(gid)
+    })
+#==============================================================================#
 #' Access and manipulate the population hierarchy for genclone objects.
 #' 
 #' The following methods allow the user to quickly change the hierarchy or
@@ -317,7 +383,6 @@ gethierarchy <- function(x, formula = NULL, combine = TRUE){
 #' @export
 setGeneric("gethierarchy")
 
-
 setMethod(
   f = "gethierarchy",
   signature(x = "genclone"),
@@ -332,7 +397,10 @@ setMethod(
     } else {
       hier <- x@hierarchy[all.vars(formula)]
     }
-    return(hier)
+    print(head(hier))
+    cat("\t...\n")
+    print(tail(hier))
+    invisible(return(hier))
   })
 
 #==============================================================================#
