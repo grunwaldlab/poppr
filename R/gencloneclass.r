@@ -218,6 +218,16 @@ setMethod(
 #' @aliases sethierarchy<-,genclone-method
 #' @param value a data frame giving the population hierarchy of each individual.
 #' @docType methods
+#' @examples
+#' 
+#' data(Aeut)
+#' Aeut.gc <- new('genclone', Aeut, other(Aeut)$population_hierarchy)
+#' head(gethierarchy(Aeut.gc))
+#' head(gethierarchy(Aeut.gc, ~Pop/Subpop))
+#' popsub <- gethierarchy(Aeut.gc, ~Pop/Subpop, combine = FALSE)
+#' Aeut.gc <- sethierarchy(Aeut.gc, popsub)
+#' sethierarchy(Aeut.gc) <- popsub
+#' head(gethierarchy(Aeut.gc))
 #==============================================================================#
 "sethierarchy<-" <- function(x, value){
   standardGeneric("sethierarchy<-")

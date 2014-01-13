@@ -31,4 +31,14 @@ sethierarchy(x, value)
 The following methods allow the user to quickly change the
 hierarchy or population of a genclone object.
 }
+\examples{
+data(Aeut)
+Aeut.gc <- new('genclone', Aeut, other(Aeut)$population_hierarchy)
+head(gethierarchy(Aeut.gc))
+head(gethierarchy(Aeut.gc, ~Pop/Subpop))
+popsub <- gethierarchy(Aeut.gc, ~Pop/Subpop, combine = FALSE)
+Aeut.gc <- sethierarchy(Aeut.gc, popsub)
+sethierarchy(Aeut.gc) <- popsub
+head(gethierarchy(Aeut.gc))
+}
 
