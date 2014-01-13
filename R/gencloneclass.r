@@ -93,7 +93,7 @@
 #' @import methods
 #==============================================================================#
 setClass("genclone", 
-         contains = c("genind"),
+         contains = "genind",
          representation = representation(mlg = "numeric", hierarchy = "data.frame"),
 )
 
@@ -132,7 +132,7 @@ setMethod(
 #==============================================================================#
 setMethod(      
   f = "initialize",
-  signature = "genclone",
+  signature("genclone"),
   definition = function(.Object, gen, hierarchy){
     if (missing(gen)) gen <- new("genind")
     if (missing(hierarchy)){
@@ -151,10 +151,11 @@ setMethod(
 
 #==============================================================================#
 #' @rdname genclone-method
+#' @param object a genclone object
 #==============================================================================#
 setMethod(
   f = "show",
-  signature = "genclone",
+  signature("genclone"),
   definition = function(object){
     callNextMethod(object)
     cat("\rPoppr-specfic elements")
@@ -186,7 +187,9 @@ setMethod(
 #' formula argument. If it is \code{FALSE}, the levels will not be combined.
 #' @docType methods
 #==============================================================================#
-gethierarchy <- function(x, formula = NULL, combine = TRUE) standardGeneric("gethierarchy")
+gethierarchy <- function(x, formula = NULL, combine = TRUE){
+  standardGeneric("gethierarchy")
+} 
 
 #' @export
 setGeneric("gethierarchy")
@@ -194,7 +197,7 @@ setGeneric("gethierarchy")
 
 setMethod(
   f = "gethierarchy",
-  signature = c(x = "genclone"),
+  signature(x = "genclone"),
   definition = function(x, formula = NULL, combine = TRUE){
     if (is.null(formula)) return(x@hierarchy)
     vars <- all.vars(formula)
@@ -216,7 +219,9 @@ setMethod(
 #' @param value a data frame giving the population hierarchy of each individual.
 #' @docType methods
 #==============================================================================#
-"sethierarchy<-" <- function(x, value) standardGeneric("sethierarchy<-")
+"sethierarchy<-" <- function(x, value){
+  standardGeneric("sethierarchy<-")
+} 
 
 #' @export
 setGeneric("sethierarchy<-")
@@ -224,7 +229,7 @@ setGeneric("sethierarchy<-")
 
 setMethod(
   f = "sethierarchy<-",
-  signature = c(x = "genclone"),
+  signature(x = "genclone"),
   definition = function(x, value){
     if (!inherits(value, "data.frame")){
       stop(paste(substitute(value), "is not a data frame"))
@@ -249,7 +254,7 @@ setGeneric("sethierarchy")
 
 setMethod(
   f = "sethierarchy",
-  signature = c(x = "genclone"),
+  signature(x = "genclone"),
   definition = function(x, value){
     if (!inherits(value, "data.frame")){
       stop(paste(substitute(value), "is not a data frame"))
@@ -276,6 +281,27 @@ setMethod(
 #' @param value same as formula
 #' @aliases setpop,genclone-method
 #' @docType methods
+#' @examples
+#' 
+#' data(Aeut)
+#' Aeut.gc <- new('genclone', Aeut, other(Aeut)$population_hierarchy)
+#' 
+#' # Notice that there are two hierarchies, Pop and Subpop
+#' Aeut.gc 
+#' 
+#' # Currently set on just Pop
+#' head(pop(Aeut.gc)) 
+#' 
+#' # setting the hierarchy to both Pop and Subpop
+#' setpop(Aeut.gc) <- ~Pop/Subpop 
+#' head(pop(Aeut.gc))
+#' 
+#' \dontrun{
+#' 
+#' # Can be used to create objects as well.
+#' Aeut.old <- setpop(Aeut.gc, ~Pop) 
+#' head(pop(Aeut.old))
+#' }
 #==============================================================================#
 "setpop" <- function(x, formula = NULL) standardGeneric("setpop")
 
@@ -285,7 +311,7 @@ setGeneric("setpop")
 
 setMethod(
   f = "setpop",
-  signature = c(x = "genclone"),
+  signature(x = "genclone"),
   definition = function(x, formula = NULL){
     if (is.null(formula) | !is.language(formula)){
       stop(paste(substitute(formula), "must be a valid formula object."))
@@ -312,7 +338,7 @@ setGeneric("setpop<-")
 
 setMethod(
   f = "setpop<-",
-  signature = c(x = "genclone"),
+  signature(x = "genclone"),
   definition = function(x, value){
     if (is.null(value) | !is.language(value)){
       stop(paste(substitute(value), "must be a valid value object."))
@@ -340,7 +366,7 @@ setMethod(
 # #' @rdname mlg-methods
 # setMethod(
 #   f = "mlg",
-#   signature = "genclone",
+#   signature(x = "genclone"),
 #   definition = function(pop, quiet = FALSE){
 #     if (!quiet){
 #       cat("#############################\n")
@@ -362,7 +388,7 @@ setMethod(
 # #' @rdname mlg-methods
 # setMethod(
 #   f = "mlg.vector",
-#   signature = "genclone",
+#   signature(x = "genclone"),
 #   definition = function(pop){
 #     return(pop@mlg)
 #   })

@@ -34,7 +34,7 @@
   the data set. If this is empty, the hierarchy will be
   created from the population factor.}
 
-  \item{object}{Any R object}
+  \item{object}{a genclone object}
 }
 \description{
 words.

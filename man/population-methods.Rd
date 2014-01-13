@@ -22,4 +22,25 @@ setpop(x) <- value
 The following methods allow the user to quickly change the
 population of a genclone object.
 }
+\examples{
+data(Aeut)
+Aeut.gc <- new('genclone', Aeut, other(Aeut)$population_hierarchy)
+
+# Notice that there are two hierarchies, Pop and Subpop
+Aeut.gc
+
+# Currently set on just Pop
+head(pop(Aeut.gc))
+
+# setting the hierarchy to both Pop and Subpop
+setpop(Aeut.gc) <- ~Pop/Subpop
+head(pop(Aeut.gc))
+
+\dontrun{
+
+# Can be used to create objects as well.
+Aeut.old <- setpop(Aeut.gc, ~Pop)
+head(pop(Aeut.old))
+}
+}
 
