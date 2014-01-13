@@ -42,6 +42,13 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
+
+################################################################################
+#------------------------------------------------------------------------------#
+# BOOTGEN METHODS
+#------------------------------------------------------------------------------#
+################################################################################
+
 #==============================================================================#
 #' Methods used for the bootgen object. 
 #' 
@@ -101,7 +108,6 @@ setMethod(
   }
 )
 
-
 #==============================================================================#
 #' @rdname bootgen-methods
 #' @param .Object a character, "bootgen"
@@ -122,9 +128,11 @@ setMethod(
     return(.Object)
   })
 
-
-
-
+################################################################################
+#------------------------------------------------------------------------------#
+# BRUVOMAT METHODS
+#------------------------------------------------------------------------------#
+################################################################################
 
 #==============================================================================#
 #' @rdname bruvomat-methods
@@ -205,6 +213,12 @@ setMethod(
     return(x)
   }
 )
+
+################################################################################
+#------------------------------------------------------------------------------#
+# GENCLONE METHODS
+#------------------------------------------------------------------------------#
+################################################################################
 
 #==============================================================================#
 #' Methods used for the genclone object
@@ -338,35 +352,9 @@ setMethod(
 #' sethierarchy(Aeut.gc) <- popsub
 #' head(gethierarchy(Aeut.gc))
 #==============================================================================#
-"sethierarchy<-" <- function(x, value){
-  standardGeneric("sethierarchy<-")
+sethierarchy <- function(x, value){
+  standardGeneric("sethierarchy")
 } 
-
-#' @export
-setGeneric("sethierarchy<-")
-
-
-setMethod(
-  f = "sethierarchy<-",
-  signature(x = "genclone"),
-  definition = function(x, value){
-    if (!inherits(value, "data.frame")){
-      stop(paste(substitute(value), "is not a data frame"))
-    }
-    if (nrow(value) != nInd(x)){
-      stop("Number of rows in data frame not equal to number of individuals in object.")
-    }
-    x@hierarchy <- value
-    return(x)
-  })
-
-#==============================================================================#
-#' @export 
-#' @rdname hierarchy-methods
-#' @aliases sethierarchy,genclone-method
-#' @docType methods
-#==============================================================================#
-"sethierarchy" <- function(x, value) standardGeneric("sethierarchy<-")
 
 #' @export
 setGeneric("sethierarchy")
@@ -385,6 +373,25 @@ setMethod(
     return(x)
   })
 
+#==============================================================================#
+#' @export 
+#' @rdname hierarchy-methods
+#' @aliases sethierarchy,genclone-method
+#' @docType methods
+#==============================================================================#
+"sethierarchy<-" <- function(x, value){
+  standardGeneric("sethierarchy<-")
+}  
+
+#' @export
+setGeneric("sethierarchy<-")
+
+setMethod(
+  f = "sethierarchy<-",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    return(sethierarchy(x, value))
+  })
 
 #==============================================================================#
 #' Manipulate the population factor of genclone objects.
@@ -422,11 +429,10 @@ setMethod(
 #' head(pop(Aeut.old))
 #' }
 #==============================================================================#
-"setpop" <- function(x, formula = NULL) standardGeneric("setpop")
+setpop <- function(x, formula = NULL) standardGeneric("setpop")
 
 #' @export
 setGeneric("setpop")
-
 
 setMethod(
   f = "setpop",
@@ -454,20 +460,11 @@ setMethod(
 #' @export
 setGeneric("setpop<-")
 
-
 setMethod(
   f = "setpop<-",
   signature(x = "genclone"),
   definition = function(x, value){
-    if (is.null(value) | !is.language(value)){
-      stop(paste(substitute(value), "must be a valid value object."))
-    }
-    vars <- all.vars(value)
-    if (!all(vars %in% names(x@hierarchy))){
-      stop(hier_incompatible_warning(vars, x@hierarchy))
-    }
-    pop(x) <- make_hierarchy(value, x@hierarchy)[[length(vars)]]
-    return(x)
+    return(setpop(x, value))
   })
 # #==============================================================================#
 # #' Multilocus genotype functions

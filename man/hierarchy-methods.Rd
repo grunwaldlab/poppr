@@ -10,9 +10,9 @@
 \usage{
 gethierarchy(x, formula = NULL, combine = TRUE)
 
-sethierarchy(x) <- value
-
 sethierarchy(x, value)
+
+sethierarchy(x) <- value
 }
 \arguments{
   \item{x}{a genclone object}
