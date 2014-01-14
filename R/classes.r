@@ -99,27 +99,27 @@ setClass("genclone",
                                          hierarchy = "data.frame"),
 )
 
-valid.genclone <- function(object){
-  slots   <- slotNames(object)
-  if (any(!c("mlg", "hierarchy") %in% slots)){
-    return(FALSE)
-  }
-  inds    <- length(object@ind.names)
-  mlgs    <- length(object@ind.names)
-  hier    <- length(object@hierarchy)
-  hierobs <- nrow(object@hierarchy)
-  if (mlgs != inds){  
-    cat("Multilocus genotypes do not match the number of observations")
-    return(FALSE)
-  }
-  if (hier > 0 & hierobs != inds){
-    cat("Hierarchy does not match the number of observations")
-    return(FALSE)
-  }
-  return(TRUE)
-}
-
-setValidity("genclone", valid.genclone)
+# valid.genclone <- function(object){
+#   slots   <- slotNames(object)
+#   if (any(!c("mlg", "hierarchy") %in% slots)){
+#     return(FALSE)
+#   }
+#   inds    <- length(object@ind.names)
+#   mlgs    <- length(object@ind.names)
+#   hier    <- length(object@hierarchy)
+#   hierobs <- nrow(object@hierarchy)
+#   if (mlgs != inds){  
+#     cat("Multilocus genotypes do not match the number of observations")
+#     return(FALSE)
+#   }
+#   if (hier > 0 & hierobs != inds){
+#     cat("Hierarchy does not match the number of observations")
+#     return(FALSE)
+#   }
+#   return(TRUE)
+# }
+# 
+# setValidity("genclone", valid.genclone)
 
 #==============================================================================#
 #~ mlg object
