@@ -114,7 +114,14 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   }
   smallest  <- df[[levs[length(levs)]]]
   smallinds <- !duplicated(smallest)
-  factlist <- lapply(df[smallinds, -length(levs)], function(x) factor(x, unique(x)))
+  newdf     <- df[smallinds, ]
+  newdf     <- newdf[-length(levs)]
+  if (length(newdf) > 1){
+    factlist <- lapply(newdf, function(x) factor(x, unique(x)))
+  } else {
+    factlist        <- list(factor(newdf[[1]], unique(newdf[[1]])))
+    names(factlist) <- names(newdf)
+  }  
   return(rev(data.frame(factlist)))
 }
 
