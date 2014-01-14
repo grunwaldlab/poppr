@@ -251,8 +251,8 @@ is.genclone <- function(x){
 #==============================================================================#
 setMethod(
   f = "[",
-  signature(x = "genclone"),
-  definition = function(x, i, j, ..., drop = FALSE){
+  signature(x = "genclone", i = "ANY", j = "ANY", drop = "ANY"),
+  definition = function(x, i, j, ..., loc=NULL, treatOther=TRUE, quiet=TRUE, drop = FALSE){
     if (missing(i)) i <- TRUE
     if (missing(j)) j <- TRUE
     mlg       <- slot(x, "mlg")[i]

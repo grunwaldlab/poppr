@@ -5,7 +5,8 @@
 \alias{show,genclone-method}
 \title{Methods used for the genclone object}
 \usage{
-\S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., loc = NULL,
+  treatOther = TRUE, quiet = TRUE, drop = FALSE)
 
 \S4method{initialize}{genclone}(.Object, gen, hierarchy, mlg)
 
