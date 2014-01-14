@@ -176,10 +176,15 @@ extract.info <- function(x) {
 #==============================================================================#
 
 .clonecorrector <- function(x){
-  res <- -which(duplicated(x@tab[, 1:ncol(x@tab)]))
+  if (is.genclone(x)){
+    is_duplicated <- duplicated(x@mlg)
+  } else {
+    is_duplicated <- duplicated(x@tab[, 1:ncol(x@tab)])
+  }
+  res <- -which(is_duplicated)
   # conditional for the case that all individuals are unique.
   if(is.na(res[1])){
-    res <- which(!duplicated(x@tab[, 1:ncol(x@tab)]))
+    res <- which(!is_duplicated)
   }
   return(res)
 }
