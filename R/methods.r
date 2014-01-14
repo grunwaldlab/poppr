@@ -258,7 +258,6 @@ setMethod(
     slot(x, "mlg")       <- slot(x, "mlg")[i]
     slot(x, "hierarchy") <- slot(x, "hierarchy")[i, , drop = FALSE]
     callNextMethod()
-    return(x)
   }
 )
 
