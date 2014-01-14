@@ -137,22 +137,26 @@ NULL
 #==============================================================================#
 
 mlg <- function(pop, quiet=FALSE){
-  if(!is.genind(pop)){
-    stop("x is not a genind object")
+  if (!is.genind(pop)){
+    stop(paste(substitute(pop), "is not a genind object"))
   }
-  if(nrow(pop@tab)==1){
-    derp <- 1
-  }
-  else {
-    derp <- nrow(unique(pop@tab[, 1:ncol(pop@tab)]))
+  if (is.genclone(pop)){
+    out <- length(unique(pop@mlg))
+  } else {
+    if(nrow(pop@tab)==1){
+      out <- 1
+    }
+    else {
+      out <- nrow(unique(pop@tab[, 1:ncol(pop@tab)]))
+    } 
   } 
   if(quiet!=TRUE){
     cat("#############################\n")
-    cat("# Number of Individuals: "); cat(length(pop@ind.names),"\n")
-    cat("# Number of MLG: "); cat(derp,"\n")
+    cat("# Number of Individuals: ", nInd(pop), "\n")
+    cat("# Number of MLG: ", out, "\n")
     cat("#############################\n")
   }
-  return(derp)
+  return(out)
 }
 #==============================================================================#
 #' @rdname mlg
@@ -164,7 +168,7 @@ mlg <- function(pop, quiet=FALSE){
 #' the \code{\link{vegan}} package.
 #' The names of the multilocus genotypes represented will be those from
 #' the entire dataset. If you wish to view those relative to a subsetted
-#' dataset, you can use \code{mlg.bar(popsub(pop, ...))}.
+#' dataset, you can use \code{mlg.table(popsub(pop, ...))}.
 #' 
 #' @export
 #
@@ -193,12 +197,6 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   #````````````````````````````````````````````````````````````````````````````#
   # Dealing with the visualizations.
   if(bar){
-    # if(!require(ggplot2)){
-    #   warning("ggplot2 must be installed to visualize the MLG distributions.")
-    #   mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
-    #   return(mlgtab)
-    # }
-    
     # Function for setting up and organizing data frame to produce ggplot2 graphs
     plot1 <- function(mlgt){
 
