@@ -141,15 +141,24 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
   if(!is.genind(pop)){
     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
   }
-  
+  if (is.language(hier)){
+    hierformula <- hier
+    hier <- all.vars(hier)
+  }
   popcall <- pop@call
   if (is.na(hier[1])){
     return(pop[.clonecorrector(pop), ])
   }
-  
-  # Checks for data frame in the @other slot. If it's not there, this loop is
-  # initiated.
-  if(is.null(other(pop)[[dfname]])){
+  if (is.genclone(pop)){
+    if (is.numeric(hier)){
+      hier <- names(gethierarchy(pop))[hier]
+      hierformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
+    }
+    if (!all(hier %in% names(gethierarchy(pop)))){
+      stop(hier_incompatible_warning(hier, gethierarchy(pop)))
+    }
+    setpop(pop) <- hierformula
+  } else if (is.null(other(pop)[[dfname]])) {
     if(length(hier) == 1 & hier[1] == 1){
       if(length(levels(pop(pop))) == 1 | is.null(pop(pop))){
         pop <- pop[.clonecorrector(pop), ]
@@ -175,7 +184,9 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
   }
   
   # Combining the population factor by the hierarchy
-  pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier)
+  if(!is.genclone(pop)){
+    pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier)
+  }
   cpop <- length(pop$pop.names)
   
   # Steps for correction:
@@ -196,13 +207,19 @@ clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy",
     # When the combine flag is not true, the default is to keep the first level
     # of the hierarchy. The keep flag is a numeric vector corresponding to the
     # hier flag indicating which levels the user wants to keep.
-    if(length(keep) > 1){
-      pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
+    if (is.genclone(pop)){
+      hier <- hier[keep]
+      newformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
+      setpop(pop) <- newformula
+    } else {
+      if(length(keep) > 1){
+        pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
+      }
+      else{
+        pop(pop) <- pop$other[[dfname]][[hier[keep]]]
+      }
+      names(pop$pop.names) <- levels(pop$pop)
     }
-    else{
-      pop(pop) <- pop$other[[dfname]][[hier[keep]]]
-    }
-    names(pop$pop.names) <- levels(pop$pop)
   }
   pop@call <- popcall
   return(pop)
