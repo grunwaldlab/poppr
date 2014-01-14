@@ -441,14 +441,17 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 
 mlg.matrix <- function(pop){
   
-  # getting the genotype counts
-  countvec2 <- mlg.vector(pop)
+  if (is.genclone(pop)){
+    mlgvec <- pop@mlg
+  } else{
+    mlgvec <- mlg.vector(pop)
+  }
   
   if(!is.null(pop@pop)){
   
     # creating a new population matrix. Rows are the population indicator and 
     # columns are the genotype indicator.
-    mlg.mat <- matrix(ncol=length(unique(countvec2)),nrow=length(levels(pop@pop)),
+    mlg.mat <- matrix(ncol=length(unique(mlgvec)),nrow=length(levels(pop@pop)),
                     data=0)
     # populating (no, pun intended.) the matrix with genotype counts.
   
@@ -457,7 +460,7 @@ mlg.matrix <- function(pop){
                            count <- as.numeric(paste(unlist
                                     (strsplit(z,""))[2:nchar(z)],
                                                        collapse=""))
-                           sapply(countvec2[which(pop@pop==z)], 
+                           sapply(mlgvec[which(pop@pop==z)], 
                                   function(a) mlg.mat[count, a] <<-
                                               mlg.mat[count, a] + 1)
                          })
@@ -468,8 +471,8 @@ mlg.matrix <- function(pop){
     # if there are no populations to speak of.
 
     mlg.mat <- t(as.matrix(
-                  vector(length=length(unique(countvec2)), mode="numeric")))
-    sapply(countvec2, function(a) mlg.mat[a] <<- mlg.mat[a] + 1)
+                  vector(length=length(unique(mlgvec)), mode="numeric")))
+    sapply(mlgvec, function(a) mlg.mat[a] <<- mlg.mat[a] + 1)
     rownames(mlg.mat) <- "Total"
   }
 
