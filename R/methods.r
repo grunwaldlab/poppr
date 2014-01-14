@@ -255,9 +255,11 @@ setMethod(
   definition = function(x, i, j, ..., drop = FALSE){
     if (missing(i)) i <- TRUE
     if (missing(j)) j <- TRUE
-    slot(x, "mlg")       <- slot(x, "mlg")[i]
-    slot(x, "hierarchy") <- slot(x, "hierarchy")[i, , drop = FALSE]
-    callNextMethod()
+    mlg       <- slot(x, "mlg")[i]
+    hierarchy <- slot(x, "hierarchy")[i, , drop = FALSE]
+    x <- callNextMethod()
+    x <- new("genclone", x, hierarchy, mlg)
+    return(x)
   }
 )
 
@@ -266,14 +268,20 @@ setMethod(
 #' @param .Object a character, "genclone"
 #' @param gen \code{"\linkS4class{genind}"} object
 #' @param hierarchy a data frame where each row i represents the different
+#' @param mlg a vector of multilocus genotypes
 #' population assignments of individual i in the data set. If this is empty, the
 #' hierarchy will be created from the population factor.
 #==============================================================================#
 setMethod(      
   f = "initialize",
   signature("genclone"),
-  definition = function(.Object, gen, hierarchy){
-    if (missing(gen)) gen <- new("genind")
+  definition = function(.Object, gen, hierarchy, mlg){
+    if (missing(gen)){
+      gen <- new("genind")
+      if (missing(mlg)) mlg <- 0
+    } else {
+      if (missing(mlg)) mlg <- mlg.vector(gen)
+    }
     if (missing(hierarchy)){
       if (is.null(pop(gen))){
         hierarchy <- data.frame()
@@ -284,7 +292,7 @@ setMethod(
 
     # No 'initialize' method for genind objects...
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
-    slot(.Object, "mlg")       <- mlg.vector(gen)
+    slot(.Object, "mlg")       <- mlg
     slot(.Object, "hierarchy") <- hierarchy
     return(.Object)
   }
@@ -298,17 +306,33 @@ setMethod(
   f = "show",
   signature("genclone"),
   definition = function(object){
-    callNextMethod(object)
-    cat("\rPoppr-specfic elements")
-    cat("\n----------------------\n")
-    cat("@mlg: a numeric vector designating each of the", length(unique(object@mlg)),
-        "multilocus genotypes.\n")
-    if (length(object@hierarchy) > 0){
-      cat("@hierarchy: a data frame identifying", length(object@hierarchy),
-          "hierarchical levels:", names(object@hierarchy), "\n", fill = 80)
-    } else {
-      cat("@hierarchy: empty")
-    }
+    ploid <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
+      "nona", "deca", "hendeca", "dodeca")
+    ploid <- paste0(ploid[object@ploidy], "ploid")
+    nind <- nInd(object)
+    type <- ifelse(object@type == "PA", "dominant", "codominant")
+    nmlg <- length(unique(object@mlg))
+    nloc <- nLoc(object)
+    npop <- ifelse(is.null(object@pop), 0, length(object@pop.names))
+    hier <- length(object@hierarchy)
+    chars <- nchar(c(nmlg, nind, nloc, hier, npop))
+    ltab <- max(chars) - chars
+    ltab <- vapply(ltab, function(x) substr("\t     ", 1, x + 1), character(1))
+    pops <- object@pop.names
+    hiernames <- names(object@hierarchy)
+    cat("\nThis is a genclone object\n")
+    cat("-------------------------\n")
+    cat("Genotype information:\n\n",
+      nmlg, ltab[1], "multilocus genotypes\n",
+      nind, ltab[2], ploid, "individuals\n", 
+      nloc, ltab[3], type, "loci\n\n"
+      )
+    pophier <- ifelse(hier > 1, "hierarchies -", "hierarchy -")
+    if (hier == 0) pophier <- "hierarchies."
+    popdef <- ifelse(npop > 0, "defined -", "defined.")
+    cat("Population information:\n\n")
+    cat("", hier, ltab[4], "population", pophier, hiernames, fill = TRUE)
+    cat("", npop, ltab[5], "populations", popdef, pops, fill = TRUE)
     
   })
 
