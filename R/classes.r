@@ -145,10 +145,11 @@ subset_mlgtable <- function(tab, hierarchy, df){
   if (nrow(df) != sum(tab)){
     stop("Number of rows in the data frame must equal the sum of the table.")
   }
+  form <- as.formula(paste0("~", paste(names(df), collapse = "/")))
   def_hier <- all.vars(hierarchy)
-  def_hier <- def_hier[length(def_hier) - 1]
+  def_hier <- def_hier[length(def_hier)]
   
-  newdf <- make_ade_df(hierarchy, df)[[def_hier]]
+  newdf <- make_ade_df(form, df)[[def_hier]]
   
   hier_levs <- levels(newdf[def_hier])
   ncols <- ncol(tab)
