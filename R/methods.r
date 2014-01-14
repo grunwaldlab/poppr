@@ -248,6 +248,9 @@ is.genclone <- function(x){
 #' @param j a vector of numerics corresponding to the loci desired.
 #' @param ... passed on to the \code{\linkS4class{genind}} object.
 #' @param drop set to \code{FALSE}
+#' @param loc passed on to \code{\linkS4class{genind}} object.
+#' @param treatOther passed on to \code{\linkS4class{genind}} object.
+#' @param quiet passed on to \code{\linkS4class{genind}} object.
 #==============================================================================#
 setMethod(
   f = "[",

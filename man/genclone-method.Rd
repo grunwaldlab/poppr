@@ -26,6 +26,15 @@
 
   \item{drop}{set to \code{FALSE}}
 
+  \item{loc}{passed on to \code{\linkS4class{genind}}
+  object.}
+
+  \item{treatOther}{passed on to
+  \code{\linkS4class{genind}} object.}
+
+  \item{quiet}{passed on to \code{\linkS4class{genind}}
+  object.}
+
   \item{.Object}{a character, "genclone"}
 
   \item{gen}{\code{"\linkS4class{genind}"} object}
