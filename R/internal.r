@@ -439,44 +439,34 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 # # none
 #==============================================================================#
 
-mlg.matrix <- function(pop){
+mlg.matrix <- function(x){
   
-  if (is.genclone(pop)){
-    mlgvec <- pop@mlg
+  if (is.genclone(x)){
+    mlgvec <- x@mlg
   } else{
-    mlgvec <- mlg.vector(pop)
+    mlgvec <- mlg.vector(x)
   }
-  
-  if(!is.null(pop@pop)){
-  
+  mlgs <- length(unique(mlgvec))
+  if (!is.null(x@pop)){
     # creating a new population matrix. Rows are the population indicator and 
     # columns are the genotype indicator.
-    mlg.mat <- matrix(ncol=length(unique(mlgvec)),nrow=length(levels(pop@pop)),
-                    data=0)
+    mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0)
     # populating (no, pun intended.) the matrix with genotype counts.
-  
-    lapply(levels(pop@pop),function(z){
+    lapply(levels(x@pop),function(z){
                            # This first part gets the index for the row names. 
-                           count <- as.numeric(paste(unlist
-                                    (strsplit(z,""))[2:nchar(z)],
-                                                       collapse=""))
-                           sapply(mlgvec[which(pop@pop==z)], 
+                           count <- as.numeric(substr(z, 2, nchar(z)))
+                           sapply(mlgvec[which(x@pop==z)], 
                                   function(a) mlg.mat[count, a] <<-
                                               mlg.mat[count, a] + 1)
                          })
-    rownames(mlg.mat) <- pop@pop.names
-  }
-  else{
-
+    rownames(mlg.mat) <-x@pop.names
+  } else {
     # if there are no populations to speak of.
-
-    mlg.mat <- t(as.matrix(
-                  vector(length=length(unique(mlgvec)), mode="numeric")))
+    mlg.mat <- t(as.matrix(vector(length=mlgs, mode="numeric")))
     sapply(mlgvec, function(a) mlg.mat[a] <<- mlg.mat[a] + 1)
     rownames(mlg.mat) <- "Total"
   }
-
-  colnames(mlg.mat) <- paste("MLG",seq(ncol(mlg.mat)), sep=".")
+  colnames(mlg.mat) <- paste("MLG", 1:mlgs, sep=".")
   return(mlg.mat)
 }
 
