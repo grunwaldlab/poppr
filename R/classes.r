@@ -100,6 +100,10 @@ setClass("genclone",
 )
 
 valid.genclone <- function(object){
+  slots   <- slotNames(object)
+  if (any(!c("mlg", "hierarchy") %in% slots)){
+    return(FALSE)
+  }
   inds    <- length(object@ind.names)
   mlgs    <- length(object@ind.names)
   hier    <- length(object@hierarchy)
@@ -116,6 +120,44 @@ valid.genclone <- function(object){
 }
 
 setValidity("genclone", valid.genclone)
+
+#==============================================================================#
+#~ mlg object
+#~ 
+#~ An internal object used for multilocus genotype definition. 
+#~ Not intended for user interaction. Ideally what this will do is create the
+#~ multilocus genotype table from scratch with the lowest level of the
+#~ population hierarchy and then subset it with higher levels when requested.
+#~ 
+#~ 
+#~ @name mlg-class
+#~ @rdname mlg-class
+#~ @export
+#~ @slot table a matrix representing the multilocus genotypes of the smallest
+#~ hierarchy. Defaults to NULL
+#~ @slot mlg a single integer with the number of multilocus genotypes in the
+#~ dataset
+#~ @slot vec a vector defining the multilocus genotypes
+#~ @author Zhian Kamvar
+#~ @import methods
+#==============================================================================#
+subset_mlgtable <- function(tab, hierarchy, df){
+  if (nrow(df) != sum(tab)){
+    stop("Number of rows in the data frame must equal the sum of the table.")
+  }
+  def_hier <- all.vars(hierarchy)
+  def_hier <- def_hier[length(def_hier) - 1]
+  
+  newdf <- make_ade_df(hierarchy, df)[[def_hier]]
+  
+  hier_levs <- levels(newdf[def_hier])
+  ncols <- ncol(tab)
+  newmat <- vapply(hier_levs, function(x) colSums(tab[newdf == x, ]), numeric(ncols))
+  dimnames(newmat) <- list(colnames(tab), hier_levs)
+  return(t(newmat))
+}
+
+
 #==============================================================================#
 #' bruvomat object
 #' 
