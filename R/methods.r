@@ -224,29 +224,18 @@ setMethod(
 #' 
 #' In the hat
 #' 
+#' @export
 #' @rdname is.genclone
-#' @aliases is.genclone,genclone-method
 #' @param x a genclone object
-#' @docType methods
 #' @examples
 #' data(nancycats)
 #' nanclone <- as.genclone(nancycats)
 #' is.genclone(nanclone)
 #==============================================================================#
-is.genclone <- function(x){
-  standardGeneric("is.genclone")
+is.genclone <- function(x){ 
+  res <- (is(x, "genclone") & validObject(x))
+  return(res)
 }
-
-#' @export
-setGeneric("is.genclone")
-
-setMethod(
-  f = "is.genclone",
-  signature(x = "genclone"),
-  definition = function(x){
-    res <- (is(x, "genclone") & validObject(x))
-    return(res)
-    })
 
 #==============================================================================#
 #' Methods used for the genclone object
