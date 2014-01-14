@@ -144,7 +144,7 @@ mlg <- function(pop, quiet=FALSE){
     derp <- 1
   }
   else {
-    derp <- nrow(unique(pop@tab[,1:ncol(pop@tab)]))
+    derp <- nrow(unique(pop@tab[, 1:ncol(pop@tab)]))
   } 
   if(quiet!=TRUE){
     cat("#############################\n")

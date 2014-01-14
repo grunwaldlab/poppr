@@ -407,9 +407,6 @@ setMethod(
     } else {
       hier <- x@hierarchy[all.vars(formula)]
     }
-    print(head(hier))
-    cat("\t...\n")
-    print(tail(hier))
     invisible(return(hier))
   })
 
@@ -417,18 +414,36 @@ setMethod(
 #' @export
 #' @rdname hierarchy-methods
 #' @aliases sethierarchy<-,genclone-method
-#' @param value a data frame giving the population hierarchy of each individual.
+#' @param value a data frame OR vector OR formula (see details).
 #' @docType methods
-#' @examples
 #' 
+#' @details
+#' These functions allow the user to seamlessly assign the hierarchy of their
+#' \code{\linkS4class{genclone}} object. Note that there are two ways of
+#' performing \code{sethierarchy()} and \code{namehierarchy()}, they essentially
+#' do the same thing except that the assignment method (the one with the "\code{<-}") 
+#' will modify the object in place whereas the non-assignment method will not 
+#' modify the original object. Due to convention, everything right of
+#' the assignment is termed \code{value}. To avoid confusion, here is a guide:
+#' \enumerate{
+#'  \item \strong{sethierarchy()} This will be a \code{\link{data.frame}} that 
+#'  defines the hierarchy for each individual in the rows.
+#'  \item \strong{namehierarchy()} This will be either a \code{\link{vector}} or
+#'  a \code{\link{formula}} that will define the names.
+#' }
+#' 
+#' @examples
 #' data(Aeut)
-#' Aeut.gc <- new('genclone', Aeut, other(Aeut)$population_hierarchy)
+#' Aeut.gc <- as.genclone(Aeut)
 #' head(gethierarchy(Aeut.gc))
-#' head(gethierarchy(Aeut.gc, ~Pop/Subpop))
-#' popsub <- gethierarchy(Aeut.gc, ~Pop/Subpop, combine = FALSE)
+#' popsub <- other(Aeut)$population_hierarchy[-1]
 #' Aeut.gc <- sethierarchy(Aeut.gc, popsub)
 #' sethierarchy(Aeut.gc) <- popsub
 #' head(gethierarchy(Aeut.gc))
+#' namehierarchy(Aeut.gc) <- ~Population/Subpopulation
+#' Aeut.gc
+#' Aeut.old <- namehierarchy(Aeut.gc, ~Pop/Subpop)
+#' Aeut.old
 #==============================================================================#
 sethierarchy <- function(x, value){
   standardGeneric("sethierarchy")
@@ -469,6 +484,53 @@ setMethod(
   signature(x = "genclone"),
   definition = function(x, value){
     return(sethierarchy(x, value))
+  })
+
+#==============================================================================#
+#' @export 
+#' @rdname hierarchy-methods
+#' @aliases namehierarchy,genclone-method
+#' @docType methods
+#==============================================================================#
+"namehierarchy" <- function(x, value){
+  standardGeneric("namehierarchy")
+}  
+
+#' @export
+setGeneric("namehierarchy")
+
+setMethod(
+  f = "namehierarchy",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    if (is.language(value)){
+      value <- all.vars(value)
+    }
+    if (!is.vector(value) | length(value) != length(x@hierarchy)){
+      stop(paste("Hierarchy, needs a vector argument of length", length(x@hierarchy)))
+    }
+    names(x@hierarchy) <- value
+    return(x)
+  })
+
+#==============================================================================#
+#' @export 
+#' @rdname hierarchy-methods
+#' @aliases namehierarchy<-,genclone-method
+#' @docType methods
+#==============================================================================#
+"namehierarchy<-" <- function(x, value){
+  standardGeneric("namehierarchy<-")
+}  
+
+#' @export
+setGeneric("namehierarchy<-")
+
+setMethod(
+  f = "namehierarchy<-",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    return(namehierarchy(x, value))
   })
 
 #==============================================================================#
@@ -544,28 +606,3 @@ setMethod(
   definition = function(x, value){
     return(setpop(x, value))
   })
-# #==============================================================================#
-# #' Multilocus genotype functions
-# #' 
-# #' words
-# #' 
-# #' @export
-# #' @rdname mlg
-# #' @aliases mlg,genclone-methods
-# #' @param x a genclone object
-# #' @param ... other things quiet perhaps
-# #' @docType methods
-# #==============================================================================#
-# mlg <- function(x, ...){
-#   standardGeneric("mlg")
-# }
-
-# #' @export
-# setGeneric("mlg")
-
-# setMethod(
-#   f = "mlg",
-#   signature(x = "genclone"),
-#   definition = function(x){
-#     return(x@mlg)
-#   })
