@@ -95,20 +95,9 @@ make_hierarchy <- function(hier, df, expand_label = FALSE){
 
 
 #==============================================================================#
-# Functions for creating the structure data frame needed for ade4's AMOVA
+# Function for creating the structure data frame needed for ade4's AMOVA
 # implementation.
 #==============================================================================#
-getsubpops <- function(x) {
-  y <- table(x)
-  return(length(y[y > 0]))
-}
-# Compare the hierarchies to the smallest and count the number of times each
-# unique value occurs.
-make_ade_df_col <- function(x, smallest){
-  facts <- tapply(smallest, x, getsubpops) 
-  return(as.factor(rep(names(facts), facts)))
-}
-# Main Function
 make_ade_df <- function(hier, df, expanded = FALSE){
   if (expanded){
     levs <- attr(terms(hier), "term.labels")
@@ -123,8 +112,9 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   if(!all(levs %in% names(df))){
     stop(hier_incompatible_warning(levs, df))
   }
-  smallest <- df[[levs[length(levs)]]]
-  factlist <- lapply(df[-length(levs)], make_ade_df_col, smallest)
+  smallest  <- df[[levs[length(levs)]]]
+  smallinds <- !duplicated(smallest)
+  factlist <- lapply(df[smallinds, -length(levs)], function(x) factor(x, unique(x)))
   return(rev(data.frame(factlist)))
 }
 
