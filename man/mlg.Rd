@@ -16,7 +16,8 @@ mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
 }
 \arguments{
-  \item{pop}{a \code{\link{genind}} object.}
+  \item{pop}{a \code{\linkS4class{genind}} or
+  \code{\linkS4class{genclone}} object.}
 
   \item{sublist}{a \code{vector} of population names or
   indices that the user wishes to keep. Default to "ALL".}
@@ -73,7 +74,7 @@ The resulting matrix of \code{mlg.table} can be used for
 analysis with the \code{\link{vegan}} package. The names of
 the multilocus genotypes represented will be those from the
 entire dataset. If you wish to view those relative to a
-subsetted dataset, you can use \code{mlg.bar(popsub(pop,
+subsetted dataset, you can use \code{mlg.table(popsub(pop,
 ...))}.
 
 The numbers of \code{mlg.vector} will not match up with the

@@ -45,7 +45,7 @@
 #'
 #' @name mlg
 #'
-#' @param pop a \code{\link{genind}} object.
+#' @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.
 #'
 #' @param sublist a \code{vector} of population names or indices that the user
 #' wishes to keep. Default to "ALL".
@@ -122,14 +122,6 @@
 NULL
 #==============================================================================#
 #' @rdname mlg
-# Multi Locus Genotype
-#
-# Count the number of unique multilocus genotypes found within a genind object.
-#
-# @param x a \code{\link{genind}} object.
-#
-# @param quiet default \code{TRUE}. If set to \code{FALSE}, it will display the
-# number of individuals and MLG on the output device.
 #'
 #' @return an integer of the number of multilocus genotypes within the sample.
 #'
