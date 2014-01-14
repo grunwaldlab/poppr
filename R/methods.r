@@ -268,9 +268,10 @@ setMethod(
 #' @param .Object a character, "genclone"
 #' @param gen \code{"\linkS4class{genind}"} object
 #' @param hierarchy a data frame where each row i represents the different
-#' @param mlg a vector of multilocus genotypes
 #' population assignments of individual i in the data set. If this is empty, the
 #' hierarchy will be created from the population factor.
+#' @param mlg a vector where each element assigns the multilocus genotype of
+#' that individual in the data set. 
 #==============================================================================#
 setMethod(      
   f = "initialize",
