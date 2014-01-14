@@ -153,7 +153,7 @@ subset_mlgtable <- function(tab, hierarchy, df){
   
   hier_levs <- levels(newdf[def_hier])
   ncols <- ncol(tab)
-  newmat <- vapply(hier_levs, function(x) colSums(tab[newdf == x, ]), numeric(ncols))
+  newmat <- vapply(hier_levs, function(x) colSums(tab[newdf == x, , drop = FALSE]), numeric(ncols))
   dimnames(newmat) <- list(colnames(tab), hier_levs)
   return(t(newmat))
 }
