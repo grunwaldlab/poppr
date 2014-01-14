@@ -221,7 +221,10 @@ check_Hs <- function(x){
 # thusly: ~ Year/Population/Subpopulation
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
-ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL, squared = TRUE, correction = "cailliez", dfname = "population_hierarchy", sep = "_", missing = "0", cutoff = 0, quiet = TRUE){
+ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL, 
+                       squared = TRUE, correction = "cailliez", 
+                       dfname = "population_hierarchy", sep = "_", missing = "0", 
+                       cutoff = 0, quiet = TRUE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
   full_hier <- parsed_hier[length(parsed_hier)]

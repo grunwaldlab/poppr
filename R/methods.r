@@ -310,16 +310,16 @@ setMethod(
     ploid <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
     ploid <- paste0(ploid[object@ploidy], "ploid")
-    nind <- nInd(object)
-    type <- ifelse(object@type == "PA", "dominant", "codominant")
-    nmlg <- length(unique(object@mlg))
-    nloc <- nLoc(object)
-    npop <- ifelse(is.null(object@pop), 0, length(object@pop.names))
-    hier <- length(object@hierarchy)
+    nind  <- nInd(object)
+    type  <- ifelse(object@type == "PA", "dominant", "codominant")
+    nmlg  <- length(unique(object@mlg))
+    nloc  <- nLoc(object)
+    npop  <- ifelse(is.null(object@pop), 0, length(object@pop.names))
+    hier  <- length(object@hierarchy)
     chars <- nchar(c(nmlg, nind, nloc, hier, npop))
-    ltab <- max(chars) - chars
-    ltab <- vapply(ltab, function(x) substr("\t     ", 1, x + 1), character(1))
-    pops <- object@pop.names
+    ltab  <- max(chars) - chars
+    ltab  <- vapply(ltab, function(x) substr("\t     ", 1, x + 1), character(1))
+    pops  <- object@pop.names
     hiernames <- names(object@hierarchy)
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
@@ -330,7 +330,7 @@ setMethod(
       )
     pophier <- ifelse(hier > 1, "hierarchies -", "hierarchy -")
     if (hier == 0) pophier <- "hierarchies."
-    popdef <- ifelse(npop > 0, "defined -", "defined.")
+    popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
     cat("", hier, ltab[4], "population", pophier, hiernames, fill = TRUE)
     cat("", npop, ltab[5], "populations", popdef, pops, fill = TRUE)
