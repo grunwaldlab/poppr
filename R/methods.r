@@ -260,9 +260,75 @@ setMethod(
     if (missing(j)) j <- TRUE
     mlg       <- slot(x, "mlg")[i]
     hierarchy <- slot(x, "hierarchy")[i, , drop = FALSE]
-    x <- callNextMethod()
-    x <- new("genclone", x, hierarchy, mlg)
-    return(x)
+    ## The following is lifted directly from the adegenet source code as
+    ## callNextMethod() was throwing the error:
+    ##
+    ## Error in callNextMethod() : bad object found as method (class "function")
+    ##
+    pop <- NULL
+    if (is.null(x@pop)) { 
+      tab <- truenames(x) 
+    } else {
+        temp <- truenames(x)
+        tab  <- temp$tab
+        pop  <- temp$pop
+        pop  <- factor(pop[i])
+    }
+
+    old.other <- other(x)
+
+    ## handle loc argument
+    if(!is.null(loc)){
+      loc  <- as.character(loc)
+      temp <- !loc %in% x@loc.fac
+      if (any(temp)) { # si mauvais loci
+        noloc <- paste(loc[temp], collapse = " ")
+        warning(paste("the following specified loci do not exist:", noloc))
+      } 
+      j <- x$loc.fac %in% loc
+    } # end loc argument
+
+    prevcall <- match.call()
+
+    tab <- tab[i, j, ..., drop=FALSE]
+
+    if(drop){
+      allNb  <- apply(tab, 2, sum, na.rm=TRUE) # allele absolute frequencies
+      toKeep <- (allNb > 1e-10)
+      tab    <- tab[ , toKeep, drop=FALSE]
+    }
+
+    res <- genind(tab, pop=pop, prevcall=prevcall, ploidy=x@ploidy, type=x@type)
+    res <- new("genclone", res, hierarchy, mlg)
+
+    ## handle 'other' slot
+    nOther <- length(x@other)
+    namesOther <- names(x@other)
+    counter <- 0
+    if(treatOther){
+      f1 <- function(obj, n = nrow(x@tab)){
+        counter <<- counter + 1
+        if (!is.null(dim(obj)) && nrow(obj) == n){ # if the element is a matrix-like obj
+          obj <- obj[i , , drop=FALSE]
+        } else if (length(obj) == n){ # if the element is not a matrix but has a length == n
+          obj <- obj[i]
+          if (is.factor(obj)){
+            obj <- factor(obj)
+          }
+        } else {
+          if (!quiet){
+            warning(paste("cannot treat the object",namesOther[counter]))
+          } 
+        }
+        return(obj)
+      } # end f1
+
+      res@other <- lapply(x@other, f1) # treat all elements
+    } else {
+        other(res) <- old.other
+    } # end treatOther
+
+    return(res)
   }
 )
 
