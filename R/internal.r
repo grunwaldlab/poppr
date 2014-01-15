@@ -1080,3 +1080,20 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss
   attr(dist.mat, "call")   <- funk_call
   return(dist.mat)
 }
+
+#==============================================================================#
+# The unexported print.amova from ade4
+#
+# Public functions utilizing this function:
+# # ade4_amova
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+print.amova <- function(x, full = FALSE, ...){
+  if (full == TRUE){
+    print(x)
+  } else {
+    print(x[-((length(x) - 2):length(x))]) 
+  }
+}
