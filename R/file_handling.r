@@ -158,6 +158,8 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' 
 #' @param region indicates the presence of regional data in the file. 
 #' 
+#' @param genclone should the output be a genclone object? Defaults to \code{TRUE}
+#' 
 #' @return A \code{\link{genind}} object. 
 #'
 #' @note This function cannot handle raw allele frequency data. 
@@ -372,6 +374,9 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   }
   if(geo==TRUE){
     res.gid@other[["xy"]] <- xy
+  }
+  if (genclone){
+    res.gid <- as.genclone(res.gid)
   }
   return(res.gid)
 }

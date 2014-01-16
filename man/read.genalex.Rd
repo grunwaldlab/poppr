@@ -15,6 +15,9 @@ read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
 
   \item{region}{indicates the presence of regional data in
   the file.}
+
+  \item{genclone}{should the output be a genclone object?
+  Defaults to \code{TRUE}}
 }
 \value{
 A \code{\link{genind}} object.
