@@ -456,6 +456,21 @@ setMethod(
   })
 
 #==============================================================================#
+# Seploc method for genclone objects. 
+#==============================================================================#
+setMethod(
+  f = "seploc",
+  signature(x = "genclone"),
+  definition = function(x, ...){
+    mlg       <- x@mlg
+    hierarchy <- x@hierarchy
+    listx     <- callNextMethod()
+    if (is.genind(listx[[1]])){
+      listx <- lapply(listx, function(gid) new("genclone", gid, hierarchy, mlg))
+    }
+    return(listx)
+  })
+#==============================================================================#
 #' Access and manipulate the population hierarchy for genclone objects.
 #' 
 #' The following methods allow the user to quickly change the hierarchy or
