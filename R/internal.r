@@ -990,9 +990,13 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   # First, clone correct and get the number of individuals per MLG in order.
   cpop <- pop[.clonecorrector(pop), ]
   if (is.genclone(pop)){
-    mlg.number <- table(pop$mlg)[rank(cpop$mlg)]
+    mlgs <- pop$mlg
+    cmlg <- cpop$mlg
+    mlg.number <- table(mlgs)[rank(cmlg)]
   } else {
-    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+    mlg.number <- table(mlgs)[rank(cmlg)]
   }
   
   # Calculate distance matrix if not supplied (Bruvo's distance)
@@ -1007,7 +1011,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   # Create the vertex labels
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
+      vertex.label <- paste0("MLG.", cmlg)
     } else if(toupper(vertex.label) == "INDS") {
       vertex.label <- cpop$ind.names
     }
