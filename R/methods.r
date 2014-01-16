@@ -387,7 +387,7 @@ setMethod(
     hier  <- length(object@hierarchy)
     chars <- nchar(c(nmlg, nind, nloc, hier, npop))
     ltab  <- max(chars) - chars
-    ltab  <- vapply(ltab, function(x) substr("\t     ", 1, x + 1), character(1))
+    ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops  <- object@pop.names
     hiernames <- names(object@hierarchy)
     cat("\nThis is a genclone object\n")
