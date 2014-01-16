@@ -347,7 +347,11 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     cat("Multiple populations are needed for this analysis.\n")
     return(0)
   }
-  vec <- mlg.vector(pop)
+  if (is.genclone(pop)){
+    vec <- pop@mlg
+  } else {
+    vec <- mlg.vector(pop) 
+  }
   subind <- sub_index(pop, sublist, blacklist)
   vec <- vec[subind]
   mlgtab <- mlg.matrix(pop)
