@@ -265,16 +265,20 @@ setMethod(
     ##
     ## Error in callNextMethod() : bad object found as method (class "function")
     ##
+    ## The reason for this is the fact that the `genind` function calls
+    ## `new("genind")` within the function. Because of this, using
+    ## `callNextMethod()` returns a genind object instead of modifying the
+    ## genclone object as it should. 
     pop <- NULL
     if (is.null(x@pop)) { 
       tab <- truenames(x) 
     } else {
-        temp <- truenames(x)
-        tab  <- temp$tab
-        pop  <- temp$pop
-        pop  <- factor(pop[i])
+      temp <- truenames(x)
+      tab  <- temp$tab
+      pop  <- temp$pop
+      pop  <- factor(pop[i])
     }
-
+    nrowx     <- nrow(x@tab)
     old.other <- other(x)
 
     ## handle loc argument
@@ -285,12 +289,11 @@ setMethod(
         noloc <- paste(loc[temp], collapse = " ")
         warning(paste("the following specified loci do not exist:", noloc))
       } 
-      j <- x$loc.fac %in% loc
+      j    <- x$loc.fac %in% loc
     } # end loc argument
 
-    prevcall <- match.call()
-
-    tab <- tab[i, j, ..., drop=FALSE]
+    prevcall <- x@call
+    tab      <- tab[i, j, ..., drop=FALSE]
 
     if(drop){
       allNb  <- apply(tab, 2, sum, na.rm=TRUE) # allele absolute frequencies
@@ -300,13 +303,13 @@ setMethod(
 
     res <- genind(tab, pop=pop, prevcall=prevcall, ploidy=x@ploidy, type=x@type)
     res <- new("genclone", res, hierarchy, mlg)
-
+  
     ## handle 'other' slot
-    nOther <- length(x@other)
+    nOther     <- length(x@other)
     namesOther <- names(x@other)
-    counter <- 0
-    if(treatOther){
-      f1 <- function(obj, n = nrow(x@tab)){
+    counter    <- 0
+    if (treatOther){
+      f1 <- function(obj, n = nrowx){
         counter <<- counter + 1
         if (!is.null(dim(obj)) && nrow(obj) == n){ # if the element is a matrix-like obj
           obj <- obj[i , , drop=FALSE]
@@ -317,7 +320,7 @@ setMethod(
           }
         } else {
           if (!quiet){
-            warning(paste("cannot treat the object",namesOther[counter]))
+            warning(paste("cannot treat the object", namesOther[counter]))
           } 
         }
         return(obj)
@@ -325,7 +328,7 @@ setMethod(
 
       res@other <- lapply(x@other, f1) # treat all elements
     } else {
-        other(res) <- old.other
+      res@other <- old.other
     } # end treatOther
 
     return(res)
