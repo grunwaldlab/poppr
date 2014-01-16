@@ -592,7 +592,7 @@ setMethod(
 #' @aliases namehierarchy,genclone-method
 #' @docType methods
 #==============================================================================#
-"namehierarchy" <- function(x, value){
+namehierarchy <- function(x, value){
   standardGeneric("namehierarchy")
 }  
 
@@ -631,6 +631,77 @@ setMethod(
   signature(x = "genclone"),
   definition = function(x, value){
     return(namehierarchy(x, value))
+  })
+
+#==============================================================================#
+#' @export 
+#' @rdname hierarchy-methods
+#' @aliases splithierarchy,genclone-method
+#' @docType methods
+#==============================================================================#
+splithierarchy <- function(x, value, sep = "_"){
+  standardGeneric("splithierarchy")
+}  
+
+#' @export
+setGeneric("splithierarchy")
+
+setMethod(
+  f = "splithierarchy",
+  signature(x = "genclone"),
+  definition = function(x, value, sep = "_"){
+    if (is.language(value)){
+      # valterms <- attr(terms(value), "term.labels")
+      # valterms <- valterms[length(valterms)]
+      # valterms <- gsub(":", sep, valterms)
+      value    <- all.vars(value)
+    } else {
+      stop("value must be a formula.")
+    }
+    if (length(value) < 1){
+      stop("value must have more than one hierarchical level.")
+    }
+    hierarchy  <- x@hierarchy
+    if (length(hierarchy) > 1){
+      warning("Hierarchy must be length 1. Taking the first column.")
+      hierarchy <- hierarchy[1]
+    }
+    seps <- gregexpr(sep, hierarchy[[1]])
+    sepmatch <- vapply(seps, function(val) all(as.integer(val) > 0), logical(1))
+    seps <- vapply(seps, length, numeric(1))
+    all_seps_match <- all(sepmatch)
+    given_seps <- length(value) - 1 
+    if (!all_seps_match | all(seps != given_seps)){
+      seps <- ifelse(all_seps_match, seps[1], 0) + 1
+      msg1 <- paste("\n  Data has", seps, ifelse(seps == 1, "level", "levels"),
+                    "of hierarchy with the separator", sep, ".")
+      msg2 <- paste("Here is the fist column of the data:", hierarchy[1, ])
+      stop(paste(msg1, "\n ", msg2))
+    }
+    hierarchy        <- pop_splitter(hierarchy, sep = sep)[-1]
+    names(hierarchy) <- value
+    x@hierarchy      <- hierarchy
+    return(x) 
+  })
+
+#==============================================================================#
+#' @export 
+#' @rdname hierarchy-methods
+#' @aliases splithierarchy<-,genclone-method
+#' @docType methods
+#==============================================================================#
+"splithierarchy<-" <- function(x, value){
+  standardGeneric("splithierarchy<-")
+}  
+
+#' @export
+setGeneric("splithierarchy<-")
+
+setMethod(
+  f = "splithierarchy<-",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    return(splithierarchy(x, value))
   })
 
 #==============================================================================#
