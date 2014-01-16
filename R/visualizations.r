@@ -354,18 +354,16 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     # Storing the MLG vector into the genind object
     pop$other$mlg.vec <- mlg.vector(pop)  
   }
-  cpop <- pop[.clonecorrector(pop), ]
-  if (is.genclone(pop)){
-    mlgs <- pop@mlg
-    cmlg <- cpop@mlg
-  } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
-  }
   bclone <- as.matrix(distmat)
+
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+    if (is.genclone(pop)){
+      mlgs <- pop@mlg
+    } else {
+      mlgs <- pop$other$mlg.vec
+    }
     bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
@@ -377,7 +375,14 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
     pop <- popsub(pop, sublist, blacklist)
   }
-  
+  cpop <- pop[.clonecorrector(pop), ]
+  if (is.genclone(pop)){
+    mlgs <- pop@mlg
+    cmlg <- cpop@mlg
+  } else {
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+  }
   # This will clone correct the incoming matrix. 
   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   
