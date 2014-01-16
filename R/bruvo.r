@@ -400,8 +400,10 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
                        wscale = TRUE, ...){
 
   gadj <- ifelse(gweight == 1, gadj, -gadj)
-  # Storing the MLG vector into the genind object
-  pop$other$mlg.vec <- mlg.vector(pop)
+  if (!is.genclone(pop)){
+    # Storing the MLG vector into the genind object
+    pop$other$mlg.vec <- mlg.vector(pop)  
+  }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
@@ -416,15 +418,23 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
                          palette = palette))
   }
   # Obtaining population information for all MLGs
-  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
-  names(mlg.cp) <- paste0("MLG.", sort(unique(pop$other$mlg.vec)))
   cpop <- pop[.clonecorrector(pop), ]
+  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
+  if (is.genclone(pop)){
+    mlgs <- pop@mlg
+    cmlg <- cpop@mlg
+  } else {
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+  }
+  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
+  
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
   # Note: rank is used to correctly subset the data
-  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-  mlg.cp     <- mlg.cp[rank(cpop$other$mlg.vec)]
+  mlg.number <- table(mlgs)[rank(cmlg)]
+  mlg.cp     <- mlg.cp[rank(cmlg)]
   bclone     <- bruvo.dist(cpop, replen=replen)
   
   ###### Create a graph #######
@@ -433,7 +443,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cpop$other$mlg.vec)
+      vertex.label <- paste0("MLG.", cmlg)
     } else if (toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
     }
