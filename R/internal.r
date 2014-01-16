@@ -989,7 +989,11 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
                       glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, ...){
   # First, clone correct and get the number of individuals per MLG in order.
   cpop <- pop[.clonecorrector(pop), ]
-  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  if (is.genclone(pop)){
+    mlg.number <- table(pop$mlg)[rank(cpop$mlg)]
+  } else {
+    mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
+  }
   
   # Calculate distance matrix if not supplied (Bruvo's distance)
   if (is.null(distmat) & !is.null(replen)){
