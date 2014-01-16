@@ -335,10 +335,6 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale=TRUE, ...){
-  # require(igraph)
-  # if(!require(igraph)){
-  #   stop("You must have the igraph library installed to use this function.\n")
-  # }
   if (class(distmat) != "dist"){
     if (is.matrix(distmat)){
       if (any(nInd(pop) != dim(distmat))){
@@ -354,12 +350,23 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
-  pop$other$mlg.vec <- mlg.vector(pop)
+  if (!is.genclone(pop)){
+    # Storing the MLG vector into the genind object
+    pop$other$mlg.vec <- mlg.vector(pop)  
+  }
+  cpop <- pop[.clonecorrector(pop), ]
+  if (is.genclone(pop)){
+    mlgs <- pop@mlg
+    cmlg <- cpop@mlg
+  } else {
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+  }
   bclone <- as.matrix(distmat)
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+    bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette))
@@ -372,7 +379,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   }
   
   # This will clone correct the incoming matrix. 
-  bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+  bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
@@ -381,15 +388,14 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
-  names(mlg.cp) <- paste0("MLG.", sort(unique(pop$other$mlg.vec)))
-  cpop <- pop[.clonecorrector(pop), ]
-  
+
+  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
   # Note: rank is used to correctly subset the data
-  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-  mlg.cp     <- mlg.cp[rank(cpop$other$mlg.vec)]
+  mlg.number <- table(mlgs)[rank(cmlg)]
+  mlg.cp     <- mlg.cp[rank(cmlg)]
   rownames(bclone) <- cpop$pop
   colnames(bclone) <- cpop$pop
   
@@ -398,7 +404,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+      vertex.label <- paste("MLG.", cmlg, sep="")
     }
     else if(toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
