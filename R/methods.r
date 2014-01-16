@@ -520,7 +520,7 @@ setMethod(
 #' @details
 #' These functions allow the user to seamlessly assign the hierarchy of their
 #' \code{\linkS4class{genclone}} object. Note that there are two ways of
-#' performing \code{sethierarchy()} and \code{namehierarchy()}, they essentially
+#' performing all methods (except for \code{gethierarchy()}). They essentially
 #' do the same thing except that the assignment method (the one with the "\code{<-}") 
 #' will modify the object in place whereas the non-assignment method will not 
 #' modify the original object. Due to convention, everything right of
@@ -530,20 +530,49 @@ setMethod(
 #'  defines the hierarchy for each individual in the rows.
 #'  \item \strong{namehierarchy()} This will be either a \code{\link{vector}} or
 #'  a \code{\link{formula}} that will define the names.
+#'  \item \strong{splithierarchy()} This will be a \code{\link{formula}}
+#'  argument with the same number of levels as the hierarchy you wish to split.
 #' }
 #' 
 #' @examples
-#' data(Aeut)
-#' Aeut.gc <- as.genclone(Aeut)
+#' # Load our data set and convert it to a genclone object.
+#' Aeut.gc <- read.genalex(system.file("files/rootrot.csv", package = "poppr"))
+#' 
+#' # we can see the hierarchy is set to Population_Subpopulation.
 #' head(gethierarchy(Aeut.gc))
-#' popsub <- other(Aeut)$population_hierarchy[-1]
-#' Aeut.gc <- sethierarchy(Aeut.gc, popsub)
-#' sethierarchy(Aeut.gc) <- popsub
+#' 
+#' # We can use splithierarchy() to split them.
+#' splithierarchy(Aeut.gc) <- ~Pop/Subpop
+#' Aeut.gc
 #' head(gethierarchy(Aeut.gc))
+#' 
+#' # We can also use gethierarchy to combine the hierarchy.
+#' head(gethierarchy(Aeut.gc ~Pop/Subpop))
+#' 
+#' # We can also give it a more descriptive name. 
 #' namehierarchy(Aeut.gc) <- ~Population/Subpopulation
 #' Aeut.gc
-#' Aeut.old <- namehierarchy(Aeut.gc, ~Pop/Subpop)
-#' Aeut.old
+#' Aeut.gc <- namehierarchy(Aeut.gc, ~Pop/Subpop)
+#' Aeut.gc
+#' 
+#' \dontrun{
+#' # let's look at the microbov data set:
+#' data(microbov)
+#' microgc <- as.genclone(microbov)
+#' microgc
+#' 
+#' # We see that we have three vectors of different names here. 
+#' ?microbov
+#' # These are Country, Breed, and Species
+#' names(other(microgc))
+#' 
+#' # Let's set the hierarchy
+#' sethierarchy(microgc) <- data.frame(other(microgc))
+#' microgc
+#' 
+#' # And change the names so we know what they are
+#' namehierarchy(microgc) <- ~Country/Breed/Species
+#' }
 #==============================================================================#
 sethierarchy <- function(x, value){
   standardGeneric("sethierarchy")
