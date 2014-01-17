@@ -518,6 +518,29 @@ setMethod(
 #' @docType methods
 #' 
 #' @details
+#' 
+#' \strong{Function Specifics}
+#' \itemize{
+#' \item \strong{gethierarchy()} - This will retrieve the data from the
+#' \emph{hierarchy} slot in the \linkS4class{genclone} object. You have the
+#' option to choose specific parts of the hierarchy using a formula (see below)
+#' and you can choose to combine the hierarchy (default)
+#' \item \strong{sethierarchy()} - Set or reset a population hierarchy
+#' in your \linkS4class{genclone} object.
+#' \item \strong{namehierarchy()} - Rename the levels of your population 
+#' hierarchy.
+#' \item \strong{splithierarchy()} - This is conceptually similar to the default
+#' method of \code{\link{splitcombine}}. It is often difficult to import files
+#' with several levels of hierarchy as most data formats do not allow unlimited
+#' population levels. This is circumvented by collapsing all hierarchical levels
+#' into a single population factor with a common separator for each observation.
+#' This function will then split those hierarchies for you, but it works best
+#' on a hierarchy that only has a single column in it. See the rootrot example
+#' below.
+#' }
+#' 
+#' \strong{Argument Specifics}
+#' 
 #' These functions allow the user to seamlessly assign the hierarchy of their
 #' \code{\linkS4class{genclone}} object. Note that there are two ways of
 #' performing all methods (except for \code{gethierarchy()}). They essentially
@@ -534,7 +557,40 @@ setMethod(
 #'  argument with the same number of levels as the hierarchy you wish to split.
 #' }
 #' 
+#' \strong{Details on Formulas}
+#' 
+#' The preferred use of these functions is with a \code{\link{formula}} object.
+#' Specifically, a hierarchical formula argument is used to assign the levels of
+#' the hierarchy. An example of a hierarchical formula would be:\cr
+#'    \code{~Country/City/Neighborhood}\cr
+#' or \cr
+#'    \code{~Country + Country:City + Country:City:Neighborhood}\cr
+#' of course, the first method is slightly easier to read. It is important to
+#' use hiearchical formulas when specifying hierarchies as other types of formulas
+#' (eg. \code{~Country*City*Neighborhood}) might give spurious results. 
+#' 
 #' @examples
+#' # let's look at the microbov data set:
+#' data(microbov)
+#' microgc <- as.genclone(microbov)
+#' microgc
+#' 
+#' # We see that we have three vectors of different names here. 
+#' ?microbov
+#' # These are Country, Breed, and Species
+#' names(other(microgc))
+#' 
+#' # Let's set the hierarchy
+#' sethierarchy(microgc) <- data.frame(other(microgc))
+#' microgc
+#' 
+#' # And change the names so we know what they are
+#' namehierarchy(microgc) <- ~Country/Breed/Species
+#' 
+#' # let's see what the hierarchy looks like by Species and Breed:
+#' head(gethierarchy(microgc, ~Breed/Species))
+#' 
+#' \dontrun{
 #' # Load our data set and convert it to a genclone object.
 #' Aeut.gc <- read.genalex(system.file("files/rootrot.csv", package = "poppr"))
 #' 
@@ -554,24 +610,6 @@ setMethod(
 #' Aeut.gc
 #' Aeut.gc <- namehierarchy(Aeut.gc, ~Pop/Subpop)
 #' Aeut.gc
-#' 
-#' \dontrun{
-#' # let's look at the microbov data set:
-#' data(microbov)
-#' microgc <- as.genclone(microbov)
-#' microgc
-#' 
-#' # We see that we have three vectors of different names here. 
-#' ?microbov
-#' # These are Country, Breed, and Species
-#' names(other(microgc))
-#' 
-#' # Let's set the hierarchy
-#' sethierarchy(microgc) <- data.frame(other(microgc))
-#' microgc
-#' 
-#' # And change the names so we know what they are
-#' namehierarchy(microgc) <- ~Country/Breed/Species
 #' }
 #==============================================================================#
 sethierarchy <- function(x, value){
@@ -667,6 +705,8 @@ setMethod(
 #' @rdname hierarchy-methods
 #' @aliases splithierarchy,genclone-method
 #' @docType methods
+#' @param sep a \code{character} indicating the character used to separate
+#' population hierarchies. This defaults to "_".
 #==============================================================================#
 splithierarchy <- function(x, value, sep = "_"){
   standardGeneric("splithierarchy")
