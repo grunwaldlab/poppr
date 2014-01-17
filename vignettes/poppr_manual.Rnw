@@ -34,19 +34,45 @@
 thm <- knit_theme$get("acid")
 knit_theme$set(thm)
 opts_chunk$set(concordance=TRUE)
-opts_chunk$set(size = 'footnotesize', message = FALSE)
+opts_chunk$set(size = 'footnotesize', message = FALSE, warning = FALSE)
 opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'asis')
 @
 
 <<poppr_funk, eval = TRUE, echo = FALSE>>=
-poppr_funk <- ls("package:poppr")
 print_args <- function(arg_name, arg_list){
   arg_value <- arg_list[[arg_name]]  
   if (missing(arg_value)){
-    cat(paste0(arg_name, ", "))
+    return(arg_name)
+    #cat(paste0(arg_name, ", "))
   } else {
-    comma <- ifelse(arg_value == arg_list[[length(arg_list)]], ")", ", ")
-    cat(paste0(arg_name, " = ", arg_value, comma))
+    if (arg_name == "glim"){
+      arg_value <- 'c(0, 0.8)'
+    } else if (arg_name == "cutoff" & length(arg_value) > 1){
+      arg_value <- '2/nInd(pop)'
+    } else if (is.character(arg_value)){
+      arg_value <- paste0('"', arg_value, '"')
+    } else if (is.null(arg_value)) {
+      arg_value <- "NULL"
+    } else if (is.na(arg_value)){
+      arg_value <- "NA"
+    } else {
+      arg_value <- as.character(arg_value)
+    }
+    return(paste0(arg_name, " = ", arg_value))
+    #cat(paste0(arg_name, " = ", arg_value, comma))
+  }
+}
+print_command <- function(funk){
+  forms <- formals(funk)
+  arg_length <- length(forms)
+  all_args <- vapply(names(forms), print_args, character(1), forms)
+  if (arg_length > 1){
+    all_args <- c(paste0(all_args[-arg_length], ","), all_args[arg_length])
+    cat(paste0(funk,"(",all_args[1]), 
+      all_args[c(-1,-arg_length)], 
+      paste0(all_args[arg_length],")"), fill = 80)
+  } else {
+    cat(paste0(funk,"(",all_args,")"), fill = 80)
   }
 }
 @
@@ -247,8 +273,7 @@ Default Command:
 % \texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
 <<getfile_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "getfile"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 \end{quote}
 \begin{itemize}
@@ -352,8 +377,7 @@ Now we have our FSTAT file!
 Default Command:
 <<read.genalex_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "read.genalex"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE, genclone = TRUE)}
 \end{quote}
@@ -448,8 +472,7 @@ WARNING: This will overwrite any file that exists with the same name.
 Default Command:
 <<genind2genalex_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "genind2genalex"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 }
 % \texttt{genind2genalex(pop, filename = "genalex.csv", quiet = FALSE)}
@@ -610,8 +633,7 @@ Do you see what I mean when I say individual allele frequencies at each locus? F
 Default Command:
 <<missingo_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "missingno"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)}
 \end{quote}
@@ -694,8 +716,7 @@ Whichever choice you make, The \textit{poppr} function \texttt{splitcombine} can
 Default Command:
 <<splitcombine_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "splitcombine"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)}
 \end{quote}
@@ -813,8 +834,7 @@ Having these hierarchies in your data set is important when it comes to clone-ce
 Default Command:
 <<popsub_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "popsub"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)}
 \end{quote}
@@ -870,8 +890,7 @@ And that, is how you subset your data with poppr!
 Default Command:
 <<clonecorrect_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "clonecorrect"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)}
 \end{quote}
@@ -904,8 +923,7 @@ As you can see from the summary tables, everything all sub-populations have been
 Default Command:
 <<shufflepop_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "shufflepop"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{shufflepop(pop, method = 1)}
 \end{quote}
@@ -970,8 +988,7 @@ You could use this method to replicate the resampling 999 times and then create 
 Default Command:
 <<informloci_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "informloci"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)}
 \end{quote}
@@ -1012,8 +1029,7 @@ naninform <- informloci(nancycats, cutoff = 0.05)
 Default Command:
 <<mlg_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "mlg"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{mlg(pop, quiet = FALSE)}
 \end{quote}
@@ -1036,8 +1052,7 @@ We can see that since the number of individuals exceeds the number of multilocus
 Default Command:
 <<mlg.crosspop_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "mlg.crosspop"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)}
 \end{quote}
@@ -1078,8 +1093,7 @@ We can also create a table of multilocus genotypes per population as well as bar
 Default Command:
 <<mlg.table_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "mlg.table"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE)}
 \end{quote}
@@ -1163,8 +1177,7 @@ We can go even further and subset the original data set to only give us those ML
 Default Command:
 <<mlg.vector_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "mlg.vector"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{mlg.vector(pop)}
 \end{quote}
@@ -1269,8 +1282,7 @@ It is important to note that for this algorithm, all missing values are treated 
 Default Command:
 <<ia_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "ia"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
 %     hist = TRUE)}
@@ -1345,8 +1357,7 @@ If you want to be able to report $P < 0.001$ in this situation, then you can sim
 Default Command:
 <<diss.dist_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "diss.dist"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{diss.dist(pop)}
 \end{quote}
@@ -1396,8 +1407,7 @@ We will save this object for a later demonstration of the addition and loss mode
 Default Command:
 <<bruvo.dist_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "bruvo.dist"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)}
 \end{quote}
@@ -1491,8 +1501,7 @@ Remember N113 and N111? Take a look at where they fall on the heatmap. They don'
 Default Command:
 <<bruvo.boot_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "bruvo.boot"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
 \end{quote}
@@ -1543,8 +1552,7 @@ With linear grey scaling, it becomes very difficult to detect the differences in
 Default Command:
 <<greycurve_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "greycurve"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)}
 \end{quote}
@@ -1599,8 +1607,7 @@ greycurve(glim = c(0.2, 0.9), gadj=15, gweight=2)
 Default Command:
 <<bruvo.msn_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "bruvo.msn"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\ 
 %   \tab sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, \\
@@ -1677,8 +1684,7 @@ That's it. For the most part, this function is functionally the same as \texttt{
 Default Command:
 <<poppr.msn_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "poppr.msn"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",\\ 
 %   \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
@@ -1734,8 +1740,7 @@ A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
 Default Command:
 <<poppr_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "poppr"
-forms <- formals(funk)
-cat(paste0(funk,"(")); invisible(lapply(names(forms), print_args, forms))
+print_command(funk)
 @
 % \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
 %         \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, \\

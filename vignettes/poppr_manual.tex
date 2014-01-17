@@ -83,12 +83,7 @@
 
 
 
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: no item called "{}package:poppr"{} on the search list}}\end{kframe}
-\end{knitrout}
 
 % \definecolor{Sinput}{rgb}{0.75,0.19,0.19}
 % \definecolor{Soutput}{rgb}{0,0,0}
@@ -395,7 +390,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-getfile(multi = FALSE, pattern = combine = TRUE)
+getfile(multi = FALSE, pattern = NULL, combine = TRUE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -807,7 +802,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-genind2genalex(pop, filename = genalex.csv, quiet = FALSE, geo = FALSE, geodf = xy)
+genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, 
+geodf = "xy")
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1053,7 +1049,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-missingno(pop, type = loci, cutoff = 0.05, quiet = FALSE)
+missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1305,7 +1301,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-splitcombine(pop, method = 1)dfname = population_hierarchy, sep = _, hier = c,  hier = 1, setpopulation = TRUE)fixed = TRUE)
+splitcombine(pop, method = 1, dfname = "population_hierarchy", sep = "_", 
+hier = 1, setpopulation = TRUE, fixed = TRUE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1558,7 +1555,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-popsub(pop, sublist = ALL, blacklist = mat = drop = TRUE)
+popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1698,7 +1695,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-clonecorrect(pop, hier = c,  hier = 1, dfname = population_hierarchy, combine = FALSE, keep = 1)
+clonecorrect(pop, hier = 1, dfname = "population_hierarchy", combine = FALSE, 
+keep = 1)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1757,7 +1755,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-shufflepop(pop, method = 1)
+shufflepop(pop,  method = 1)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1891,7 +1889,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-informloci(pop, cutoff = /,  cutoff = 2,  cutoff = nInd(pop), quiet = FALSE)
+informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1958,7 +1956,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-mlg(pop, quiet = FALSE)
+mlg(pop,  quiet = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1997,7 +1995,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-mlg.crosspop(pop, sublist = ALL, blacklist = mlgsub = indexreturn = FALSE)df = FALSE)quiet = FALSE)
+mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, 
+indexreturn = FALSE, df = FALSE, quiet = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2108,7 +2107,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-mlg.table(pop, sublist = ALL, blacklist = mlgsub = bar = TRUE, total = FALSE)quiet = FALSE)
+mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, 
+total = FALSE, quiet = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2304,7 +2304,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-mlg.vector(pop, 
+mlg.vector(pop)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2558,7 +2558,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-ia(pop, sample = 0, method = 1)quiet = FALSE, missing = ignore, hist = TRUE)
+ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", hist = TRUE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2755,7 +2755,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-bruvo.dist(pop, replen = 1)add = TRUE)loss = TRUE)
+bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2962,7 +2962,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = upgma, showtree = TRUE, cutoff = quiet = FALSE, ..., 
+bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, 
+tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE, ...)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -3032,7 +3033,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-greycurve(glim = c,  glim = 0,  glim = 0.8, gadj = 3, gweight = 1)
+greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -3139,7 +3140,9 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors, sublist = All, blacklist = vertex.label = MLG, gscale = TRUE, glim = c,  glim = 0,  glim = 0.8, gadj = 3, gweight = 1, wscale = TRUE, ..., 
+bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors, 
+sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, 
+glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -3252,7 +3255,9 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-poppr.msn(pop, distmat, palette = topo.colors, sublist = All, blacklist = vertex.label = MLG, gscale = TRUE, glim = c,  glim = 0,  glim = 0.8, gadj = 3, gweight = 1, wscale = TRUE, ..., 
+poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", 
+blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), 
+gadj = 3, gweight = 1, wscale = TRUE, ...)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -3322,7 +3327,10 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-poppr(pop, total = TRUE, sublist = c,  sublist = ALL, blacklist = c,  blacklist = NULL, sample = 0, method = 1, missing = ignore, cutoff = 0.05, quiet = FALSE, clonecorrect = FALSE, hier = c,  hier = 1, dfname = population_hierarchy, keep = 1, hist = TRUE, minsamp = 10)
+poppr(pop, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0, 
+method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, 
+clonecorrect = FALSE, hier = 1, dfname = "population_hierarchy", keep = 1, 
+hist = TRUE, minsamp = 10)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
