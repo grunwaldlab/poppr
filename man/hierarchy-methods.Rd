@@ -150,4 +150,11 @@ Aeut.gc <- namehierarchy(Aeut.gc, ~Pop/Subpop)
 Aeut.gc
 }
 }
+\author{
+Zhian N. Kamvar
+}
+\seealso{
+\code{\link{setpop}} \code{\link{genclone}}
+\code{\link{as.genclone}}
+}
 

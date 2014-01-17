@@ -43,4 +43,7 @@ Aeut.old <- setpop(Aeut.gc, ~Pop)
 head(pop(Aeut.old))
 }
 }
+\author{
+Zhian N. Kamvar
+}
 

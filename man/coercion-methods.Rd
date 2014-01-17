@@ -28,4 +28,7 @@ Aeut.gc
 Aeut.gc <- as.genclone(Aeut, other(Aeut)$population_hierarchy[-1])
 Aeut.gc
 }
+\author{
+Zhian N. Kamvar
+}
 

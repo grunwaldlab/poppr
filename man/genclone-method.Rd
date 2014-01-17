@@ -50,6 +50,9 @@
   \item{object}{a genclone object}
 }
 \description{
-words.
+Default methods for subsetting genclone objects.
+}
+\author{
+Zhian N. Kamvar
 }
 

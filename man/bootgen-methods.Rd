@@ -34,4 +34,7 @@
 \description{
 This is not designed for user interaction.
 }
+\author{
+Zhian N. Kamvar
+}
 

@@ -8,11 +8,15 @@ is.genclone(x)
   \item{x}{a genclone object}
 }
 \description{
-In the hat
+Note that a \linkS4class{genclone} object will always be a
+valid \linkS4class{genind} object.
 }
 \examples{
 data(nancycats)
 nanclone <- as.genclone(nancycats)
 is.genclone(nanclone)
+}
+\author{
+Zhian N. Kamvar
 }
 

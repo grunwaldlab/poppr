@@ -59,7 +59,8 @@
 #' @param i vector of numerics indicating number of individuals desired
 #' @param j a vector of numerics corresponding to the loci desired.
 #' @param ... unused.
-#' @param drop set to \code{FALSE}
+#' @param drop set to \code{FALSE} 
+#' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(
   f = "[",
@@ -139,7 +140,8 @@ setMethod(
 #' @param .Object a character, "bruvomat"
 #' @param gen \code{"\linkS4class{genind}"} object
 #' @param replen a vector of numbers indicating the repeat length for each 
-#' microsatellite locus.
+#' microsatellite locus. 
+#' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(
   f = "initialize",
@@ -222,11 +224,13 @@ setMethod(
 #==============================================================================#
 #' Check for validity of a genclone object
 #' 
-#' In the hat
+#' Note that a \linkS4class{genclone} object will always be a valid 
+#' \linkS4class{genind} object.
 #' 
 #' @export
 #' @rdname is.genclone
-#' @param x a genclone object
+#' @param x a genclone object 
+#' @author Zhian N. Kamvar
 #' @examples
 #' data(nancycats)
 #' nanclone <- as.genclone(nancycats)
@@ -240,7 +244,7 @@ is.genclone <- function(x){
 #==============================================================================#
 #' Methods used for the genclone object
 #' 
-#' words.
+#' Default methods for subsetting genclone objects. 
 #' 
 #' @rdname genclone-method
 #' @param x a genclone object
@@ -250,7 +254,8 @@ is.genclone <- function(x){
 #' @param drop set to \code{FALSE}
 #' @param loc passed on to \code{\linkS4class{genind}} object.
 #' @param treatOther passed on to \code{\linkS4class{genind}} object.
-#' @param quiet passed on to \code{\linkS4class{genind}} object.
+#' @param quiet passed on to \code{\linkS4class{genind}} object. 
+#' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(
   f = "[",
@@ -421,7 +426,8 @@ setMethod(
 #' @aliases as.genclone,genind-method
 #' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object
 #' @param hierarchy a data frame representing the population hierarchy.
-#' @docType methods
+#' @docType methods 
+#' @author Zhian N. Kamvar
 #' @examples
 #' data(Aeut)
 #' Aeut
@@ -569,6 +575,9 @@ setMethod(
 #' use hiearchical formulas when specifying hierarchies as other types of formulas
 #' (eg. \code{~Country*City*Neighborhood}) might give spurious results. 
 #' 
+#' @seealso \code{\link{setpop}} \code{\link{genclone}} \code{\link{as.genclone}}
+#' 
+#' @author Zhian N. Kamvar
 #' @examples
 #' # let's look at the microbov data set:
 #' data(microbov)
@@ -786,7 +795,8 @@ setMethod(
 #' hierarchy.
 #' @param value same as formula
 #' @aliases setpop,genclone-method
-#' @docType methods
+#' @docType methods 
+#' @author Zhian N. Kamvar
 #' @examples
 #' 
 #' data(Aeut)
