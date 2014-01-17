@@ -1,5 +1,6 @@
 \docType{class}
 \name{genclone-class}
+\alias{genclone}
 \alias{genclone-class}
 \title{Genclone class}
 \description{
@@ -30,24 +31,20 @@ object became:
 \code{pop(object) <-
 other(object)$population_hierarchy$population_name}
 
-That is a lot to keep track of. The new hierarchy slot will
-allow the user to be able to insert a population hierarchy
-into the slot and then change it with one function and a
+That is a lot to keep track of. The new
+\code{\strong{hierarchy}} slot will allow the user to
+change the population factor with one function and a
 formula:
 
-\code{sethierarchy(object, ~Population/Subpopulation)}
+\code{setpop(object) <- ~Population/Subpopulation}
 
 making this become slightly more intuitive and tractable.
 
-Calculations of multilocus genotypes is rapid, but
-unfortunately, the assignments can change if the number of
-individuals in the population is different. This means that
-if you analyze the multilocus genotypes for two
-subpopulations, they will have different multilocus
-genotype assignments even though they may share multilocus
-genotypes. The new slot allows us to be able to assign the
-multilocus genotypes and retain that information no matter
-how we subset the data set.
+Previously for \linkS4class{genind} objects, multilocus
+genotypes were not retained after a data set was subset by
+population. The new \code{\strong{mlg}} slot allows us to
+assign the multilocus genotypes and retain that information
+no matter how we subset the data set.
 }
 \section{Slots}{
 
@@ -61,5 +58,9 @@ how we subset the data set.
 }
 \author{
 Zhian N. Kamvar
+}
+\seealso{
+\code{\link{sethierarchy}} \code{\link{setpop}}
+\code{\linkS4class{genind}}
 }
 
