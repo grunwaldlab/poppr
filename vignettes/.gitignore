@@ -59,3 +59,4 @@ poppr_manual-112.pdf
 *.toc
 *.log
 figures/
+figure/*
