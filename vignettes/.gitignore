@@ -58,5 +58,6 @@ poppr_manual-112.pdf
 *.bbl
 *.toc
 *.log
+*.blg
 figures/
 figure/

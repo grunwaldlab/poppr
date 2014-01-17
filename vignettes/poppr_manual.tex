@@ -49,6 +49,7 @@
 
 \usepackage{alltt}
 %\VignetteIndexEntry{Poppr User Manual}
+%\VignetteEngine{knitr::knitr}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,urlcolor=blue]{hyperref}
 \usepackage{array}
@@ -81,6 +82,13 @@
 
 
 
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: no item called "{}package:poppr"{} on the search list}}\end{kframe}
+\end{knitrout}
 
 % \definecolor{Sinput}{rgb}{0.75,0.19,0.19}
 % \definecolor{Soutput}{rgb}{0,0,0}
@@ -382,8 +390,16 @@ There are several ways of reading data into R.
 \subsubsection{Function: getfile}\label{intro:import:getfile}
 \tab\tab \texttt{getfile} gives the user an easy way to point R to the directory in which your data is stored. It is only meant for R GUIs such as Rstudio. Using this on the command line has very little advantage over setting the working directory manually. 
 \begin{quote}
-Default Command:\\
-\texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
+Default Command:
+% \texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+getfile(multi = FALSE, pattern = combine = TRUE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
 \end{quote}
 \begin{itemize}
   \item \texttt{multi -} This is normally set to \texttt{FALSE}, meaning that it will only grab the file you selected. If it's \texttt{TRUE}, it will grab all files within the directory, constrained only by what you type into the \texttt{pattern} field.
@@ -641,8 +657,16 @@ Now we have our FSTAT file!
 
 \tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and can be very powerful in its analyses. \textit{Poppr} has added the ability to read *.CSV files\footnote{*.CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object or \textit{poppr}'s \texttt{genclone} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
 \begin{quote}
-Default Command:\\
-\texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE, genclone = TRUE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE, genclone = TRUE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE, genclone = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{genalex -} a *.CSV file exported from GenAlEx on your disk (For example: \texttt{"my\_genalex\_file.csv"}).
@@ -779,8 +803,17 @@ If you have a large data set with many population levels, you can use the follow
 \tab\tab Of course, being able to export data is just as useful as being able to import it, so we have this handy little function that will write a GenAlEx formatted file to wherever you desire.\\ 
 WARNING: This will overwrite any file that exists with the same name.
 \begin{quote}
-Default Command:\\
-\texttt{genind2genalex(pop, filename = "genalex.csv", quiet = FALSE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+genind2genalex(pop, filename = genalex.csv, quiet = FALSE, geo = FALSE, geodf = xy)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+}
+% \texttt{genind2genalex(pop, filename = "genalex.csv", quiet = FALSE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -1016,8 +1049,16 @@ Do you see what I mean when I say individual allele frequencies at each locus? F
 
 \tab\tab \texttt{missingno} is a function that serves partially as a wrapper for adegenet's \texttt{na.replace} to replace missing data and as a way to exclude specific areas that contain systematic missing data.  
 \begin{quote}
-Default Command:\\
-\texttt{missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+missingno(pop, type = loci, cutoff = 0.05, quiet = FALSE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -1260,8 +1301,16 @@ Whichever choice you make, The \textit{poppr} function \texttt{splitcombine} can
 
 \tab\tab This function will allow you to combine your population hierarchies in ways meaningful to your data without needing to know R programming. It can either split a vector of combined population hierarchies or it can combine columns of a data frame containing population hierarchies (Note that it will only split the first column of the data frame if you choose \texttt{method = 1}).
 \begin{quote}
-Default Command:\\
-\texttt{splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+splitcombine(pop, method = 1)dfname = population_hierarchy, sep = _, hier = c,  hier = 1, setpopulation = TRUE)fixed = TRUE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object with a data frame in the \texttt{@other} slot.
@@ -1505,8 +1554,16 @@ Having these hierarchies in your data set is important when it comes to clone-ce
 
 \tab\tab The command \texttt{popsub} is powerful in that it allows you to choose exactly what populations you choose to include or exclude from your analyses. As with many R functions, you can easily use this within a function to avoid creating a new variable to keep track of.  
 \begin{quote}
-Default Command:\\
-\texttt{popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+popsub(pop, sublist = ALL, blacklist = mat = drop = TRUE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -1637,8 +1694,16 @@ And that, is how you subset your data with poppr!
 
 \tab\tab This function will return a clone corrected data set corrected for the lowest population level. Population levels are specified with the \texttt{hier} flag. You can choose to combine the population hierarchy to analyze at the lowest population level by choosing \texttt{combine = TRUE}.
 \begin{quote}
-Default Command:\\
-\texttt{clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+clonecorrect(pop, hier = c,  hier = 1, dfname = population_hierarchy, combine = FALSE, keep = 1)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object that has a population hierarchy data frame in the \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily require a population factor to begin with. 
@@ -1688,8 +1753,16 @@ As you can see from the summary tables, everything all sub-populations have been
 \tab\tab A common null hypothesis for populations with mixed reproductive modes is panmixia, or to put it simply: lots of sex. A handy way to test for that is permutation analysis to assess random linkage among loci whereupon you randomly shuffle your data. \textit{Poppr} uses randomly shuffled data sets in order to calculate P-values for the index of association ($I_A$ and $\bar r_d$) \cite{Agapow:2001}. Since there might be other tests where a permutation analysis would be pertinent, a shuffler for \texttt{genind} objects was created with four shuffling schemes: two schemes shuffling without replacement and two shuffling with replacement. Details below.
 \subsubsection{Function: shufflepop}\label{data.manip:shuffle:shufflepop}
 \begin{quote}
-Default Command:\\
-\texttt{shufflepop(pop, method = 1)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+shufflepop(pop, method = 1)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{shufflepop(pop, method = 1)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -1814,8 +1887,16 @@ You could use this method to replicate the resampling 999 times and then create 
  \tab\tab Phylogenetically uninformative loci are those that have only one sample differentiating from the rest. This can lead to biased results when using multilocus analyses such as the index of association (See \ref{index:iard} and \ref{summary}). These nuisance loci can be removed with the following function.
 \subsubsection{Function: informloci}\label{data.manip:informloci:informloci}
 \begin{quote}
-Default Command:\\
-\texttt{informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+informloci(pop, cutoff = /,  cutoff = 2,  cutoff = nInd(pop), quiet = FALSE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)}
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
@@ -1873,8 +1954,16 @@ Now what happens when you have all informative loci:
 
 \tab\tab The function \texttt{mlg} allows for the counting of the number of MLGs in a \texttt{genind} object. This is a very simple command for quick reference to determine if your data set needs further multilocus genotype analysis.
 \begin{quote}
-Default Command:\\
-\texttt{mlg(pop, quiet = FALSE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+mlg(pop, quiet = FALSE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{mlg(pop, quiet = FALSE)}
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
@@ -1904,8 +1993,16 @@ We can see that since the number of individuals exceeds the number of multilocus
 
 \tab\tab Analyze the MLGs that cross populations within your data set. This has three output modes. The default one gives a list of MLGs, and for each MLG, it gives a named numeric vector indicating the abundance of that MLG in each population. Alternate outputs are described with \texttt{indexreturn} and \texttt{df}.
 \begin{quote}
-Default Command:\\
-\texttt{mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+mlg.crosspop(pop, sublist = ALL, blacklist = mlgsub = indexreturn = FALSE)df = FALSE)quiet = FALSE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)}
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
@@ -2007,8 +2104,16 @@ We can also create a table of multilocus genotypes per population as well as bar
 
 \tab\tab Produce a matrix containing counts of MLGs (columns) per population (rows). If there is no population structure to your data set, a vector will be produced instead.
 \begin{quote}
-Default Command:\\
-\texttt{mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+mlg.table(pop, sublist = ALL, blacklist = mlgsub = bar = TRUE, total = FALSE)quiet = FALSE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE)}
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
@@ -2195,8 +2300,16 @@ We can go even further and subset the original data set to only give us those ML
 
 \tab\tab This function is the backbone for \texttt{mlg.table} and \texttt{mlg.crosspop}, and is The function that determines what your MLGs are. This is quite useful for sub-setting the data set to only contain the MLGs of interest. The numbers in the vector correspond to the number of columns in a matrix produced by \texttt{mlg.table}. It is important to remember that this is also sensitive to missing data and will treat it as a single extra allele. 
 \begin{quote}
-Default Command:\\
-\texttt{mlg.vector(pop)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+mlg.vector(pop, 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{mlg.vector(pop)}
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
@@ -2441,9 +2554,17 @@ It is important to note that for this algorithm, all missing values are treated 
 
 \tab\tab This function is a quick look at a single data set. It can do almost everything that \texttt{poppr} can do except for sorting through populations.
 \begin{quote}
-Default Command:\\
-\texttt{ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
-    hist = TRUE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+ia(pop, sample = 0, method = 1)quiet = FALSE, missing = ignore, hist = TRUE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
+%     hist = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -2545,8 +2666,16 @@ If you want to be able to report $P < 0.001$ in this situation, then you can sim
 \tab\tab Use this function to calculate relative dissimilarity between individuals and return a distance matrix for use in creating cladograms or minimum spanning networks. A note: missing alleles will be imputed to be the same as the challenging allele, decreasing the distance between some individuals. If you want to consider all missing data as special alleles, treat your data with \texttt{missingno(pop, type = "zero")} beforehand. 
 
 \begin{quote}
-Default Command:\\
-\texttt{diss.dist(pop)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+diss.dist(x, diff = TRUE, frac = TRUE, mat = FALSE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{diss.dist(pop)}
 \end{quote}
 
 \begin{itemize}
@@ -2622,8 +2751,16 @@ We will save this object for a later demonstration of the addition and loss mode
 
 \tab\tab Bruvo's distance requires knowledge of the repeat lengths of each locus, so take care to read the description below.
 \begin{quote}
-Default Command:\\
-\texttt{bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+bruvo.dist(pop, replen = 1)add = TRUE)loss = TRUE)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -2821,8 +2958,16 @@ Remember N113 and N111? Take a look at where they fall on the heatmap. They don'
 
 \tab\tab This function provides the ability to draw a dendrogram based on Bruvo's distance including bootstrap support. 
 \begin{quote}
-Default Command:\\
-\texttt{bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = upgma, showtree = TRUE, cutoff = quiet = FALSE, ..., 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -2876,15 +3021,23 @@ For this example, let's set the cutoff to 50\%.
 
 
 \end{figure}
-
+\newpage
 \subsubsection{Function: greycurve}\label{index:trees:greycurve}
 \tab\tab Use this function to display a gradient of grey values based on user-defined parameters. The following functions will display a minimum spanning network that utilize a grey scale to display the weight of the lines (referred to as ``edges") that connect two or more individuals. The darker the line the closer the distance. Since this is based off of a linear grey scale, what happens when you have a distance matrix comprised of values all below 0.2 or all above 0.8? 
 
 With linear grey scaling, it becomes very difficult to detect the differences in these ranges. The following function allows you to visualize and manipulate a gradient from black to white so that you can use it in \textit{poppr}'s msn functions below to maximize the visual differences in your data.
 
 \begin{quote}
-Default Command:\\
-\texttt{greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+greycurve(glim = c,  glim = 0,  glim = 0.8, gadj = 3, gweight = 1)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)}
 \end{quote}
 
 
@@ -2982,11 +3135,19 @@ Now, we'll see what happens when we change the adjustment parameter (affects the
 \subsubsection{Function: bruvo.msn}\label{index:trees:bruvo.msn}
 \tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to using the package \textit{igraph} (type \texttt{help("plot.igraph")} for details).
 \begin{quote}
-Default Command:\\
-\texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\ 
-  \tab sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, \\
-  \tab glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
-}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors, sublist = All, blacklist = vertex.label = MLG, gscale = TRUE, glim = c,  glim = 0,  glim = 0.8, gadj = 3, gweight = 1, wscale = TRUE, ..., 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\ 
+%   \tab sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, \\
+%   \tab glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
+% }
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -3087,11 +3248,19 @@ Since a graph can be represented in many ways, you might want to play around wit
 That's it. For the most part, this function is functionally the same as \texttt{bruvo.msn}, except that instead of being exclusive to microsatellite markers, you can now visualize distances in any marker type provided that you have the two items listed above.
 
 \begin{quote}
-Default Command:\\
-\texttt{poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",\\ 
-  \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
-  \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
-}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+poppr.msn(pop, distmat, palette = topo.colors, sublist = All, blacklist = vertex.label = MLG, gscale = TRUE, glim = c,  glim = 0,  glim = 0.8, gadj = 3, gweight = 1, wscale = TRUE, ..., 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",\\ 
+%   \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
+%   \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
+% }
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
@@ -3149,11 +3318,19 @@ Since we have the ability, let's visualize the \textit{A. euteiches} data set \c
 
 \tab\tab This function is quite daunting with all its possibilities. You have the option to subset your data for specific populations, correct for missing data, and clone correct. With each of these possibilities, comes the need to provide all the arguments for their various functions.
 \begin{quote}
-Default Command:\\
-\texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
-        \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, \\
-        \tab clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", \\
-        \tab hist = TRUE, minsamp = 10)}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+poppr(pop, total = TRUE, sublist = c,  sublist = ALL, blacklist = c,  blacklist = NULL, sample = 0, method = 1, missing = ignore, cutoff = 0.05, quiet = FALSE, clonecorrect = FALSE, hier = c,  hier = 1, dfname = population_hierarchy, keep = 1, hist = TRUE, minsamp = 10)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+% \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
+%         \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, \\
+%         \tab clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", \\
+%         \tab hist = TRUE, minsamp = 10)}
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} A \texttt{genind} object.
