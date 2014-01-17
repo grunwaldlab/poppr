@@ -209,7 +209,7 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' }
 #==============================================================================#
 
-read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
+read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE, genclone = TRUE){
   # The first two lines from a genalex file contain all of the information about
   # the structure of the file (except for ploidy and geographic info)
   gencall <- match.call()

@@ -2,7 +2,8 @@
 \alias{read.genalex}
 \title{Importing data from genalex formatted *.csv files.}
 \usage{
-read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
+read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
+  genclone = TRUE)
 }
 \arguments{
   \item{genalex}{a *.csv file exported from genalex}
