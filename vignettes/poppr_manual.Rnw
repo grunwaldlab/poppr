@@ -321,16 +321,17 @@ list(
 Now we have our FSTAT file!
 \subsubsection{Function: read.genalex}\label{intro:import:read.genalex}
 
-\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and can be very powerful in its analyses. \textit{Poppr} has added the ability to read *.CSV files\footnote{*.CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
+\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and can be very powerful in its analyses. \textit{Poppr} has added the ability to read *.CSV files\footnote{*.CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object or \textit{poppr}'s \texttt{genclone} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
 \begin{quote}
 Default Command:\\
-\texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)}
+\texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE, genclone = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{genalex -} a *.CSV file exported from GenAlEx on your disk (For example: \texttt{"my\_genalex\_file.csv"}).
   \item \texttt{ploidy -} a number indicating the ploidy for the data set (eg 2 for diploids, 1 for haploids).
   \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in section \ref{intro:genind:other}).
   \item \texttt{region -} To format your GenAlEx file to include regions along with your populations, You can choose to include a separate column for regional data, or, since regional data must be in contiguous blocks, you can simply format it in the same way you would any other data (see the GenAlEx manual for details). If you have your file organized in this manner, select this option and the regional information will be stored in the resulting genind object in the \texttt{@other} slot.
+  \item \texttt{genclone -} This flag defaults to \texttt{TRUE} and will automatically convert your data into a \texttt{genclone} object (see Section <><><>).
 \end{itemize}
 
 \begin{center}
@@ -359,7 +360,8 @@ Now import the data into \textit{poppr} like so:
 <<read.genalex_ex>>=
 rootrot <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 @
-Executing rootrot shows that this file is now in genind format (ie. the format required by \textit{poppr} and \textit{adegenet}).
+Executing rootrot shows that this file is now in genclone format and can be used
+with any function in \textit{poppr} and \textit{adegenet}
 <<read.genalex_ex2>>==
 rootrot
 @
@@ -371,9 +373,9 @@ rootrot
 <<microsave, eval=FALSE>>=
 library(poppr)
 data(microbov)
-microbov@other$population_hierarchy <- data.frame(list(Country = microbov@other$coun, 
-  Species = microbov@other$spe, Breed = microbov@other$breed))
-microbov <- splitcombine(microbov, method=2, hier=c("Country", "Species", "Breed"))
+microbov <- as.genclone(microbov)
+sethierarchy(microbov) <- data.frame(other(microbov))
+setpop(microbov) <- ~coun/breed/spe
 genind2genalex(microbov, file="~/Desktop/microbov.csv")
 @
 <<microsave_message, echo=FALSE>>=
