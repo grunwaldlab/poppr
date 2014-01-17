@@ -32,7 +32,7 @@ object became:
 other(object)$population_hierarchy$population_name}
 
 That is a lot to keep track of. The new
-\code{\strong{hierarchy}} slot will allow the user to
+\strong{\code{hierarchy}} slot will allow the user to
 change the population factor with one function and a
 formula:
 
@@ -42,7 +42,7 @@ making this become slightly more intuitive and tractable.
 
 Previously for \linkS4class{genind} objects, multilocus
 genotypes were not retained after a data set was subset by
-population. The new \code{\strong{mlg}} slot allows us to
+population. The new \strong{\code{mlg}} slot allows us to
 assign the multilocus genotypes and retain that information
 no matter how we subset the data set.
 }
