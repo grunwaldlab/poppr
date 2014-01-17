@@ -1,5 +1,6 @@
 \documentclass[letterpaper]{article}
 %\VignetteIndexEntry{Poppr User Manual}
+%\VignetteEngine{knitr::knitr}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,urlcolor=blue]{hyperref}
 \usepackage{array}
@@ -28,16 +29,24 @@
 \begin{document}
 % Set the width of figures.
 \setkeys{Gin}{width=0.5\textwidth}
-\SweaveOpts{concordance=TRUE}
-\definecolor{Sinput}{rgb}{0.75,0.19,0.19}
-\definecolor{Soutput}{rgb}{0,0,0}
-\definecolor{Scode}{rgb}{0.75,0.19,0.19}
+
+<<include=FALSE>>=
+thm <- knit_theme$get("acid")
+knit_theme$set(thm)
+opts_chunk$set(concordance=TRUE)
+opts_chunk$set(size = 'footnotesize', message = FALSE)
+opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'asis')
+@
+
+% \definecolor{Sinput}{rgb}{0.75,0.19,0.19}
+% \definecolor{Soutput}{rgb}{0,0,0}
+% \definecolor{Scode}{rgb}{0.75,0.19,0.19}
 \definecolor{light-gray}{gray}{0.95}
 \definecolor{salmon}{HTML}{F0AAAA}
-\DefineVerbatimEnvironment{Sinput}{Verbatim}
-{formatcom={\color{Sinput}},fontsize=\footnotesize, baselinestretch=0.75}
-\DefineVerbatimEnvironment{Soutput}{Verbatim}
-{formatcom={\color{Soutput}},fontsize=\footnotesize, baselinestretch=0.75}
+% \DefineVerbatimEnvironment{Sinput}{Verbatim}
+% {formatcom={\color{Sinput}},fontsize=\footnotesize, baselinestretch=0.75}
+% \DefineVerbatimEnvironment{Soutput}{Verbatim}
+% {formatcom={\color{Soutput}},fontsize=\footnotesize, baselinestretch=0.75}
 % The first page will have the title, abstract, and then the \textit{Poppr} logo at the bottom.
 \maketitle
 \begin{abstract}
@@ -1022,7 +1031,7 @@ H.tab[1:10, 1:10]
   \centering
   \caption{\footnotesize An example of a bar-chart produced by \texttt{mlg.table}. Note that this data set would produce several such charts.}
   \label{nortable}
-<<mlgbarplot, fig=TRUE, echo=FALSE, results=hide>>=
+<<mlgbarplot, echo=FALSE, results='hide'>>=
 mlg.table(H3N2, sublist="Norway", quiet=TRUE, bar=TRUE)
 @
 \end{figure}
@@ -1045,7 +1054,7 @@ rarecurve(H.year, ylab="Multilocus genotypes expected", sample=min(rowSums(H.yea
   \centering
   \caption{\footnotesize An example of a rarefaction curve produced using a MLG table.}
   \label{rarecurve}
-<<mlgrareplot, fig=TRUE, echo=FALSE, results=hide>>=
+<<mlgrareplot, echo=FALSE, results='hide'>>=
 library(vegan)
 H.year <- mlg.table(H.year, bar=FALSE)
 rarecurve(H.year, ylab="Multilocus Genotypes Expected", sample=min(rowSums(H.year)))
@@ -1101,7 +1110,7 @@ And we can see where exactly these three MLGs fall within our data set.
   \centering
   \caption{\footnotesize An example of the same bar-chart as \textit{Figure 1}, but focusing on three MLGs.}
   \label{nortable2}
-<<subnor, fig=TRUE, results=hide, echo=FALSE>>=
+<<subnor, results='hide', echo=FALSE>>=
 mlg.table(H3N2, sublist="Norway", mlgsub=UGNN)
 @
 \end{figure}
@@ -1158,11 +1167,11 @@ And now we can visualize the largest ten MLG complexes using \textit{ggplot2}'s 
   \centering
   \caption{\footnotesize An example of the versatility of the MLG information.}
   \label{mlgtable2}
-<<ggplotchart, fig=TRUE, resolution=300>>=
+<<ggplotchart, resolution=300>>=
 df2 <- df[df$MLG %in% H.max, ]
 library(ggplot2)
 qplot(y=MLG, x=Population, data=df2, color=Count, size=Count) +
-  theme(axis.text.x = element_text(size = 10, angle = -45, hjust = 0))
+      theme(axis.text.x = element_text(size = 10, angle = -45, hjust = 0))
 @
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1219,7 +1228,7 @@ This analysis produced the histograms you see below. What these histograms repre
   \centering
   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
   \label{ia_demo_fig}
-<<fig=TRUE, width=8, height=8, echo=FALSE, eval=TRUE, figs.only=TRUE, resolution=300>>=
+<<fig.width=8, fig.height=8, echo=FALSE, eval=TRUE, figs.only=TRUE, resolution=300>>=
 set.seed(1009)
 nan5 <- ia(popsub(nancycats, 5), sample=999, quiet=TRUE)
 @
@@ -1267,7 +1276,7 @@ heatmap(as.matrix(A.dist), symm=TRUE)
   \centering
   \caption{\footnotesize Heatmap representation of a dissimilarity distance for the data set ``Aeut"}
   \label{diss_heat_map}
-<<fig=TRUE, echo=FALSE, resolution=300>>=
+<<echo=FALSE, resolution=300>>=
 data(Aeut)
 A.dist <- diss.dist(Aeut)
 heatmap(as.matrix(A.dist), symm=TRUE)
@@ -1327,17 +1336,18 @@ This function will return a distance matrix (displaying the smallest population 
 dist9 <- bruvo.dist(popsub(nancycats, 9), replen=rep(1,9))
 dist9
 @
+
 You can visualize this better with a simple heatmap:
 %\newpage
 
-<<bruvo_heat, echo=FALSE>>=
+<<bruvo_heat, eval = FALSE>>=
 heatmap(as.matrix(dist9), symm=TRUE)
 @
 \begin{figure}[h!]
   \centering
   \caption{\footnotesize Heatmap representation of Bruvo's distance for population 9 of the data set ``nancycats"}
   \label{bruvo_heat_map}
-<<fig=TRUE, resolution=300>>=
+<<resolution=300, echo = FALSE>>=
 heatmap(as.matrix(dist9), symm=TRUE)
 @
 \end{figure}
@@ -1365,7 +1375,7 @@ heatmap(as.matrix(dist9to8), symm=TRUE)
   \centering
   \caption{\footnotesize Heatmap representation of Bruvo's distance for populations 8 and 9 of the data set ``nancycats"}
   \label{bruvo_heat_map_8to9}
-<<popcompare_bruvo2, echo=FALSE, fig=TRUE, resolution=300>>=
+<<popcompare_bruvo2, echo=FALSE, resolution=300>>=
 dist9to8 <- bruvo.dist(popsub(nancycats, 8:9), replen=rep(1,9))
 dist9to8.attr <- attr(dist9to8, "Labels")
 nan9to8pop <- nancycats@pop[nancycats@pop %in% c("P08", "P09")]
@@ -1415,7 +1425,7 @@ cat("|==========================================================================
   \label{bruvo_upgma}
 %  \includegraphics{bruvo_upgma.png}
 
-<<bruvo_tree, fig=TRUE, echo=FALSE, resolution=300>>=
+<<bruvo_tree, echo=FALSE, resolution=300>>=
  set.seed(1001)
  nan9tree <- phangorn::upgma(bruvo.dist(popsub(nancycats, 8:9), replen = rep(1, 9)))
  nan9tree$node.labels <- c(100, NA, NA, NA, NA, 69, NA, NA, NA, NA, NA, 79, NA, 66, NA, 52, NA, NA)
@@ -1425,7 +1435,7 @@ cat("|==========================================================================
 @
 
 \end{figure}
-
+\newpage
 \subsubsection{Function: greycurve}\label{index:trees:greycurve}
 \tab\tab Use this function to display a gradient of grey values based on user-defined parameters. The following functions will display a minimum spanning network that utilize a grey scale to display the weight of the lines (referred to as ``edges") that connect two or more individuals. The darker the line the closer the distance. Since this is based off of a linear grey scale, what happens when you have a distance matrix comprised of values all below 0.2 or all above 0.8? 
 
@@ -1441,12 +1451,11 @@ This function does not return any values. It will print a visual gradient from b
 
 %\newpage
 First, we'll see what happens when we change the weight parameter.
-\setkeys{Gin}{width=\textwidth}
 \begin{figure}[h!]
 \begin{minipage}[b]{0.45\linewidth}
 \centering
 \caption{\footnotesize Default for \texttt{greycurve()}, weighted for small values.}
-<<greycurve_normal, fig=TRUE>>=
+<<greycurve_normal, out.width='\\linewidth'>>=
 greycurve()
 @
 \end{minipage}
@@ -1454,7 +1463,7 @@ greycurve()
 \begin{minipage}[b]{0.45\linewidth}
 \centering
 \caption{\footnotesize weighting for large values.}
-<<greywidth_inverse, fig=TRUE>>=
+<<greywidth_inverse, out.width='\\linewidth'>>=
 greycurve(gweight = 2)
 @
 \end{minipage}
@@ -1466,7 +1475,7 @@ Now, we'll see what happens when we change the adjustment parameter (affects the
 \begin{minipage}[b]{0.45\linewidth}
 \centering
 \caption{\footnotesize Setting the lower and upper limits and weighting the curve heavily toward smaller values.}
-<<greycurve_small_heavy, fig=TRUE>>=
+<<greycurve_small_heavy, out.width='\\linewidth'>>=
 greycurve(glim = c(0.2, 0.9), gadj=15)
 @
 \end{minipage}
@@ -1474,7 +1483,7 @@ greycurve(glim = c(0.2, 0.9), gadj=15)
 \begin{minipage}[b]{0.45\linewidth}
 \centering
 \caption{\footnotesize Same as the figure on the left, but weighting heavily toward larger values.}
-<<greywidth_large_heavy, fig=TRUE>>=
+<<greywidth_large_heavy, out.width='\\linewidth'>>=
 greycurve(glim = c(0.2, 0.9), gadj=15, gweight=2)
 @
 \end{minipage}
@@ -1515,12 +1524,11 @@ set.seed(9005)
 pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
           vertex.label.dist=-0.5, palette=colorRampPalette(c("blue", "yellow")))
 @
-\setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[ht!]
   \centering
   \caption{\footnotesize Minimum Spanning Network representing 4 simulated populations. Each node represents a different multi locus genotype (MLG). Node sizes and colors correspond to the number of individuals and population membership, respectively. Edge thickness and color are proportional to Bruvo's distance. Edge lengths are arbitrary.}
   \label{mst_bruvo}
-<<bruvo_msn, fig=TRUE, resolution=300, echo=FALSE>>=
+<<bruvo_msn, resolution=300, echo=FALSE, out.width='0.8\\linewidth'>>=
 data(partial_clone)
 set.seed(9005)
 pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
@@ -1541,8 +1549,8 @@ Since a graph can be represented in many ways, you might want to play around wit
 <<bruvo_msn_reconstruct, eval=FALSE>>=
 set.seed(9005)
 library(igraph)
-plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3, vertex.label.cex=0.7, 
-     vertex.label.dist=-0.5,)
+plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3, 
+     vertex.label.cex=0.7, vertex.label.dist=-0.5,)
 legend(-1.55, 1, bty = "n", cex = 0.75, legend = pc.msn$populations, 
        title = "Populations", fill = pc.msn$colors, border = NULL)
 @
@@ -1587,19 +1595,17 @@ set.seed(9005)
 A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
 @
 
-\setkeys{Gin}{width=0.8\textwidth}
 \begin{figure}[ht!]
   \centering
   \caption{\footnotesize Minimum Spanning Network representing 4 simulated populations. Each node represents a different multi locus genotype (MLG). Node sizes and colors correspond to the number of individuals and population membership, respectively. Edge thickness and color are proportional to Bruvo's distance. Edge lengths are arbitrary.}
   \label{mst_poppr}
-<<poppr_msn_fig, fig=TRUE, resolution=300, echo=FALSE>>=
+<<poppr_msn_fig, resolution=300, echo=FALSE, out.width='0.8\\linewidth'>>=
 data(Aeut)
 A.dist <- diss.dist(Aeut)
 set.seed(9005)
 A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
 @
 \end{figure}
-\setkeys{Gin}{width=0.5\textwidth}
 \newpage
 %\subsubsection{Gory details} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
