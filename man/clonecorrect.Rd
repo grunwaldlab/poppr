@@ -2,7 +2,7 @@
 \alias{clonecorrect}
 \title{Remove potential bias caused by cloned genotypes in genind object.}
 \usage{
-clonecorrect(pop, hier = c(1), dfname = "population_hierarchy",
+clonecorrect(pop, hier = 1, dfname = "population_hierarchy",
   combine = FALSE, keep = 1)
 }
 \arguments{

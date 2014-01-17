@@ -206,9 +206,9 @@
 #' }
 #==============================================================================#
 #' @import adegenet ggplot2 vegan
-poppr <- function(pop,total=TRUE, sublist=c("ALL"), blacklist=c(NULL), sample=0,
+poppr <- function(pop,total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
-                  clonecorrect=FALSE, hier=c(1), dfname="population_hierarchy", 
+                  clonecorrect=FALSE, hier=1, dfname="population_hierarchy", 
                   keep = 1, hist=TRUE, minsamp=10){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")

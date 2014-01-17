@@ -135,7 +135,7 @@
 #' }
 #==============================================================================#
 
-clonecorrect <- function(pop, hier=c(1), dfname="population_hierarchy", 
+clonecorrect <- function(pop, hier=1, dfname="population_hierarchy", 
                          combine = FALSE, keep = 1){
   clonecall <- match.call()$pop
   if(!is.genind(pop)){
@@ -569,7 +569,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
 #' }
 #==============================================================================#
-splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=c(1), setpopulation=TRUE, fixed=TRUE){
+splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=1, setpopulation=TRUE, fixed=TRUE){
   if (!is.genind(pop)){
     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
   }

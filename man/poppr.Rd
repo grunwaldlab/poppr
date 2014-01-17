@@ -2,10 +2,10 @@
 \alias{poppr}
 \title{Produce a basic summary table for population genetic analyses.}
 \usage{
-poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL),
-  sample = 0, method = 1, missing = "ignore", cutoff = 0.05,
-  quiet = FALSE, clonecorrect = FALSE, hier = c(1),
-  dfname = "population_hierarchy", keep = 1, hist = TRUE, minsamp = 10)
+poppr(pop, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
+  method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE,
+  clonecorrect = FALSE, hier = 1, dfname = "population_hierarchy",
+  keep = 1, hist = TRUE, minsamp = 10)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object OR any fstat,

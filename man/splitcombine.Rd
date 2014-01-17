@@ -3,7 +3,7 @@
 \title{Split a or combine items within a data frame in \code{\link{genind}} objects.}
 \usage{
 splitcombine(pop, method = 1, dfname = "population_hierarchy", sep = "_",
-  hier = c(1), setpopulation = TRUE, fixed = TRUE)
+  hier = 1, setpopulation = TRUE, fixed = TRUE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object.}
