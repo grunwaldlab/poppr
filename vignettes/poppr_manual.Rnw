@@ -199,7 +199,7 @@ popdata
 <<aflp2, echo=FALSE>>=
 popprsoutput
 @
-One thing to note about this output is the \texttt{NaN} in the column labeled \texttt{SE}. This is produced from calculation of a standard error based on rarefaction analysis. Occasionally, this calculation will encounter a situation in which it must attempt to take a square root of a negative number. As you no doubt have learned in high school mathematics, the root of any negative number is not defined in the set of real numbers, and must have an imaginary component, $i$. Unfortunately, R is a computer program without any imagination and, thus imaginary numbers cannot be represented. To account for this, R represents the square roots of negatives as ``not a number" or \texttt{NaN}.\\
+One thing to note about this output is the \texttt{NaN} in the column labeled \texttt{SE}. This is produced from calculation of a standard error based on rarefaction analysis. Occasionally, this calculation will encounter a situation in which it must attempt to take a square root of a negative number. As you no doubt have learned in high school mathematics, the root of any negative number is not defined in the set of real numbers, and must have an imaginary component, $i$. Unfortunately, R will not represent the imaginary components of numbers unless you specifically tell it to do so. To account for this, R represents the square roots of negatives as ``not a number" or \texttt{NaN}.\\
 The fields you see in the output include:
 \begin{itemize}
   \item \texttt{Pop -} Population name (Note that ``Total" also means ``Pooled").
