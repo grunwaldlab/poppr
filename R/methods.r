@@ -612,7 +612,7 @@ setMethod(
 #' head(gethierarchy(Aeut.gc))
 #' 
 #' # We can also use gethierarchy to combine the hierarchy.
-#' head(gethierarchy(Aeut.gc ~Pop/Subpop))
+#' head(gethierarchy(Aeut.gc, ~Pop/Subpop))
 #' 
 #' # We can also give it a more descriptive name. 
 #' namehierarchy(Aeut.gc) <- ~Population/Subpopulation
