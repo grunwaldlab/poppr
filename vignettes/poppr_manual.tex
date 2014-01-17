@@ -265,7 +265,7 @@ The output of \texttt{poppr()} was assigned to the variable \texttt{popdata}, so
 19        Total 187 119  9.612 0.612 4.558 68.972 0.991 0.720 14.371 0.271 rootrot.csv
 \end{Soutput}
 \end{Schunk}
-One thing to note about this output is the \texttt{NaN} in the column labeled \texttt{SE}. This is produced from calculation of a standard error based on rarefaction analysis. Occasionally, this calculation will encounter a situation in which it must attempt to take a square root of a negative number. As you no doubt have learned in high school mathematics, the root of any negative number is not defined in the set of real numbers, and must have an imaginary component, $i$. Unfortunately, R is a computer program without any imagination and, thus imaginary numbers cannot be represented. To account for this, R represents the square roots of negatives as ``not a number" or \texttt{NaN}.\\
+One thing to note about this output is the \texttt{NaN} in the column labeled \texttt{SE}. This is produced from calculation of a standard error based on rarefaction analysis. Occasionally, this calculation will encounter a situation in which it must attempt to take a square root of a negative number. As you no doubt have learned in high school mathematics, the root of any negative number is not defined in the set of real numbers, and must have an imaginary component, $i$. Unfortunately, R will not represent the imaginary components of numbers unless you specifically tell it to do so. To account for this, R represents the square roots of negatives as ``not a number" or \texttt{NaN}.\\
 The fields you see in the output include:
 \begin{itemize}
   \item \texttt{Pop -} Population name (Note that ``Total" also means ``Pooled").
@@ -500,16 +500,17 @@ $path
 Now we have our FSTAT file!
 \subsubsection{Function: read.genalex}\label{intro:import:read.genalex}
 
-\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and can be very powerful in its analyses. \textit{Poppr} has added the ability to read *.CSV files\footnote{*.CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
+\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and can be very powerful in its analyses. \textit{Poppr} has added the ability to read *.CSV files\footnote{*.CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object or \textit{poppr}'s \texttt{genclone} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
 \begin{quote}
 Default Command:\\
-\texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)}
+\texttt{read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE, genclone = TRUE)}
 \end{quote}
 \begin{itemize}
   \item \texttt{genalex -} a *.CSV file exported from GenAlEx on your disk (For example: \texttt{"my\_genalex\_file.csv"}).
   \item \texttt{ploidy -} a number indicating the ploidy for the data set (eg 2 for diploids, 1 for haploids).
   \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in section \ref{intro:genind:other}).
   \item \texttt{region -} To format your GenAlEx file to include regions along with your populations, You can choose to include a separate column for regional data, or, since regional data must be in contiguous blocks, you can simply format it in the same way you would any other data (see the GenAlEx manual for details). If you have your file organized in this manner, select this option and the regional information will be stored in the resulting genind object in the \texttt{@other} slot.
+  \item \texttt{genclone -} This flag defaults to \texttt{TRUE} and will automatically convert your data into a \texttt{genclone} object (see Section <><><>).
 \end{itemize}
 
 \begin{center}
@@ -544,7 +545,8 @@ Now import the data into \textit{poppr} like so:
 > rootrot <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 \end{Sinput}
 \end{Schunk}
-Executing rootrot shows that this file is now in genind format (ie. the format required by \textit{poppr} and \textit{adegenet}).
+Executing rootrot shows that this file is now in genclone format and can be used
+with any function in \textit{poppr} and \textit{adegenet}
 \begin{Schunk}
 \begin{Sinput}
 > rootrot
@@ -584,9 +586,9 @@ Optionnal contents:
 \begin{Sinput}
 > library(poppr)
 > data(microbov)
-> microbov@other$population_hierarchy <- data.frame(list(Country = microbov@other$coun, 
-+   Species = microbov@other$spe, Breed = microbov@other$breed))
-> microbov <- splitcombine(microbov, method=2, hier=c("Country", "Species", "Breed"))
+> microbov <- as.genclone(microbov)
+> sethierarchy(microbov) <- data.frame(other(microbov))
+> setpop(microbov) <- ~coun/breed/spe
 > genind2genalex(microbov, file="~/Desktop/microbov.csv")
 \end{Sinput}
 \end{Schunk}
@@ -749,250 +751,72 @@ Do you see what I mean when I say individual allele frequencies at each locus? F
 
 \subsubsection{The other slot}\label{intro:genind:other}
 
-\tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
-\begin{Schunk}
-\begin{Sinput}
-> df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
-+                       locus2=c("201/201", "202/203", "203/204"), 
-+                       locus3=c("301/302", "301/303", "304/305")
-+                       )
-+                  )
-> dfg <- df2genind(df, sep="/")
-\end{Sinput}
-\end{Schunk}
-Next we will display the contents of the \texttt{genind} object \texttt{dfg}
-\begin{Schunk}
-\begin{Sinput}
-> dfg
-\end{Sinput}
-\begin{Soutput}
-   #####################
-   ### Genind object ### 
-   #####################
-- genotypes of individuals - 
-
-S4 class:  genind
-@call: df2genind(X = df, sep = "/")
-
-@tab:  3 x 12 matrix of genotypes
-
-@ind.names: vector of  3 individual names
-@loc.names: vector of  3 locus names
-@loc.nall: number of alleles per locus
-@loc.fac: locus factor for the  12 columns of @tab
-@all.names: list of  3 components yielding allele names for each locus
-@ploidy:  2
-@type:  codom
-
-Optionnal contents: 
-@pop:  - empty -
-@pop.names:  - empty -
-
-@other: - empty -
-\end{Soutput}
-\end{Schunk}
-
-The matrix containing our allelic frequencies is located in the \texttt{@tab} slot. All of the  slots below that have very specific properties related to the matrix in \texttt{@tab}, but the \texttt{@other} slot is more or less a grab bag, where you can place anything you want, even if it doesn't make sense!
-
-Here, I'll give you an example of placing the genind object inside itself. Notice first, that the \texttt{@other} slot is empty and pay attention to the commands I use, noting that you can use either ``\$" or ``@" to access the slots.
-\begin{Schunk}
-\begin{Sinput}
-> # First off, how big is the object?
-> print(object.size(dfg), units="auto")
-\end{Sinput}
-\begin{Soutput}
-8.5 Kb
-\end{Soutput}
-\begin{Sinput}
-> dfg$other$dfg <- dfg
-> dfg # we can now see that the @other slot is now filled.
-\end{Sinput}
-\begin{Soutput}
-   #####################
-   ### Genind object ### 
-   #####################
-- genotypes of individuals - 
-
-S4 class:  genind
-@call: df2genind(X = df, sep = "/")
-
-@tab:  3 x 12 matrix of genotypes
-
-@ind.names: vector of  3 individual names
-@loc.names: vector of  3 locus names
-@loc.nall: number of alleles per locus
-@loc.fac: locus factor for the  12 columns of @tab
-@all.names: list of  3 components yielding allele names for each locus
-@ploidy:  2
-@type:  codom
-
-Optionnal contents: 
-@pop:  - empty -
-@pop.names:  - empty -
-
-@other: a list containing: dfg 
-\end{Soutput}
-\begin{Sinput}
-> dfg$other$dfg
-\end{Sinput}
-\begin{Soutput}
-   #####################
-   ### Genind object ### 
-   #####################
-- genotypes of individuals - 
-
-S4 class:  genind
-@call: df2genind(X = df, sep = "/")
-
-@tab:  3 x 12 matrix of genotypes
-
-@ind.names: vector of  3 individual names
-@loc.names: vector of  3 locus names
-@loc.nall: number of alleles per locus
-@loc.fac: locus factor for the  12 columns of @tab
-@all.names: list of  3 components yielding allele names for each locus
-@ploidy:  2
-@type:  codom
-
-Optionnal contents: 
-@pop:  - empty -
-@pop.names:  - empty -
-
-@other: - empty -
-\end{Soutput}
-\begin{Sinput}
-> print(object.size(dfg), units="auto") # How big is it now?
-\end{Sinput}
-\begin{Soutput}
-17.2 Kb
-\end{Soutput}
-\end{Schunk}
-\begin{center}
-   \fcolorbox{black}{light-gray}{
-         \begin{minipage}[t]{0.8\textwidth}
-{\large \textsc{What is the \# sign for?}}\\
-This is called a comment. If you type something in R with the ``\#" sign in front of it, R will not interpret it.
-        \end{minipage}
-      }
-\end{center}
-
-And we can continue to do this until we reach the limit of our available memory. Why am I showing this silliness to you? For one thing I want to show you that you can stick anything you want into that slot and the object will not be hurt in any way. It's also important when considering how you are going to deal with the population structure of your genind object. For the \textit{poppr} functions \texttt{clonecorrect} (Section \ref{data.manip:cc:clonecorrect}) and \texttt{splitcombine} (Section \ref{data.manip:hier:splitcombine}) to work, a data frame of the population hierarchy must be present in the \texttt{@other} slot and it must have the same number of rows as individuals in the data set. There are several ways to go about this. If you know how to create a data frame or import data into R, the command is no more difficult than \texttt{obj\$other\$population\_hierarchy <- df}. If you do not know how to create a data frame or import data into R, you can visit Quick R at \url{http://www.statmethods.net/input/importingdata.html}.
-\subsubsection{Setting the population factor \{adegenet's function: pop\}}\label{intro:genind:pop}
-
-\tab\tab A genind object can contain several populations, and, if you have differing population structures, you might want to switch among them for different analyses. The tools you as the user would need, are the slot \texttt{@pop.names} and the \textit{adegenet} function \texttt{pop()}. I'll use the H3N2 data set packaged with \textit{adegenet} as an example.
-\begin{Schunk}
-\begin{Sinput}
-> data(H3N2)
-> H3N2
-\end{Sinput}
-\begin{Soutput}
-   #####################
-   ### Genind object ### 
-   #####################
-- genotypes of individuals - 
-
-S4 class:  genind
-@call: .local(x = x, i = i, j = j, drop = drop)
-
-@tab:  1903 x 334 matrix of genotypes
-
-@ind.names: vector of  1903 individual names
-@loc.names: vector of  125 locus names
-@loc.nall: number of alleles per locus
-@loc.fac: locus factor for the  334 columns of @tab
-@all.names: list of  125 components yielding allele names for each locus
-@ploidy:  1
-@type:  codom
-
-Optionnal contents: 
-@pop:  - empty -
-@pop.names:  - empty -
-
-@other: a list containing: x  xy  epid 
-\end{Soutput}
-\begin{Sinput}
-> pop(H3N2)
-\end{Sinput}
-\begin{Soutput}
-NULL
-\end{Soutput}
-\begin{Sinput}
-> H3N2$pop.names
-\end{Sinput}
-\begin{Soutput}
-NULL
-\end{Soutput}
-\end{Schunk}
-
-Notice how both the pop and pop.names are empty. This means that the population information needs to be set. Notice, however that there are 1903 individuals in the data set and that the \texttt{@other} slot is not empty. Let's investigate an object in this slot.
-\begin{Schunk}
-\begin{Sinput}
-> head(H3N2$other$x)
-\end{Sinput}
-\begin{Soutput}
-         accession length  host segment subtype country year       Virus name
-AB434107  AB434107   1701 Human  4 (HA)    H3N2   Japan 2002 Influenza Avirus
-AB434108  AB434108   1701 Human  4 (HA)    H3N2   Japan 2002 Influenza Avirus
-AB438242  AB438242    827 Human  4 (HA)    H3N2   Japan 2002 Influenza Avirus
-AB438243  AB438243    827 Human  4 (HA)    H3N2   Japan 2002 Influenza Avirus
-AB438244  AB438244    827 Human  4 (HA)    H3N2   Japan 2002 Influenza Avirus
-AB438245  AB438245    827 Human  4 (HA)    H3N2   Japan 2002 Influenza Avirus
-                           Misc info  Age Gender       date usePreciseLoc localisation
-AB434107   (A/Morioka/34/2002(H3N2)) <NA>   <NA> 2002/02/25         FALSE        japan
-AB434108   (A/Morioka/52/2002(H3N2)) <NA>   <NA> 2002/03/01         FALSE        japan
-AB438242  (A/Niigata/F11/2002(H3N2)) <NA>   <NA> 2002/01/22         FALSE        japan
-AB438243 (A/Niigata/F100/2002(H3N2)) <NA>   <NA> 2002/02/18         FALSE        japan
-AB438244 (A/Niigata/F175/2002(H3N2)) <NA>   <NA> 2002/02/25         FALSE        japan
-AB438245 (A/Niigata/F245/2002(H3N2)) <NA>   <NA> 2002/03/04         FALSE        japan
-              lon      lat month
-AB434107 137.2155 35.58418     2
-AB434108 137.2155 35.58418     3
-AB438242 137.2155 35.58418     1
-AB438243 137.2155 35.58418     2
-AB438244 137.2155 35.58418     2
-AB438245 137.2155 35.58418     3
-\end{Soutput}
-\begin{Sinput}
-> nrow(H3N2$other$x)
-\end{Sinput}
-\begin{Soutput}
-[1] 1903
-\end{Soutput}
-\end{Schunk}
-\begin{center}
-   \fcolorbox{black}{light-gray}{
-        \begin{minipage}[t]{0.8\textwidth}
-{\large \textsc{What is head()?}}\\
-\texttt{head()} is a command that will show you only the top portion of an R object. By default it will show you the first six elements (or rows of a data frame or matrix). This is so that you can quickly check the contents of an object.
-        \end{minipage}
-   }
-\end{center}
-
-We can see that it's a data frame containing a wealth of information that we could use to subset our data. So, let's start by setting the population structure by country. How do we do that? Well, the function \texttt{pop()} will allow us to set that structure using a vector that is the same length as the number of individuals in the data set. Since the number of rows in the data frame \texttt{x} meets that criteria, we can use any item in that data frame. Let's take a look.
-\begin{Schunk}
-\begin{Sinput}
-> pop(H3N2) <- H3N2$other$x$country
-> head(pop(H3N2))
-\end{Sinput}
-\begin{Soutput}
-[1] Japan Japan Japan Japan Japan Japan
-37 Levels: Japan USA Finland China South Korea Norway Taiwan France ... Algeria
-\end{Soutput}
-\begin{Sinput}
-> H3N2$pop.names
-\end{Sinput}
-\begin{Soutput}
- [1] "Japan"          "USA"            "Finland"        "China"          "South Korea"   
- [6] "Norway"         "Taiwan"         "France"         "Latvia"         "Netherlands"   
-[11] "Bulgaria"       "Turkey"         "United Kingdom" "Denmark"        "Austria"       
-[16] "Canada"         "Italy"          "Russia"         "Bangladesh"     "Egypt"         
-[21] "Germany"        "Romania"        "Ukraine"        "Czech Republic" "Greece"        
-[26] "Iceland"        "Ireland"        "Sweden"         "Nepal"          "Saudi Arabia"  
-[31] "Switzerland"    "Iran"           "Mongolia"       "Spain"          "Slovenia"      
-[36] "Croatia"        "Algeria"       
-\end{Soutput}
-\end{Schunk}
-Notice how useful the \texttt{@other} slot can be. We now have population structure in the data set and you now know how to set the population factor. The other slot will become useful later on when we are talking about multilocus genotypes.
+% \tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
+% <<example_data_frame>>=
+% df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
+%                       locus2=c("201/201", "202/203", "203/204"), 
+%                       locus3=c("301/302", "301/303", "304/305")
+%                       )
+%                  )
+% dfg <- df2genind(df, sep="/")
+% @
+% Next we will display the contents of the \texttt{genind} object \texttt{dfg}
+% <<display_example>>=
+% dfg
+% @
+% 
+% The matrix containing our allelic frequencies is located in the \texttt{@tab} slot. All of the  slots below that have very specific properties related to the matrix in \texttt{@tab}, but the \texttt{@other} slot is more or less a grab bag, where you can place anything you want, even if it doesn't make sense!
+% 
+% Here, I'll give you an example of placing the genind object inside itself. Notice first, that the \texttt{@other} slot is empty and pay attention to the commands I use, noting that you can use either ``\$" or ``@" to access the slots.
+% <<other_slot>>=
+% # First off, how big is the object?
+% print(object.size(dfg), units="auto")
+% dfg$other$dfg <- dfg
+% dfg # we can now see that the @other slot is now filled.
+% dfg$other$dfg
+% print(object.size(dfg), units="auto") # How big is it now?
+% @
+% \begin{center}
+%    \fcolorbox{black}{light-gray}{
+%          \begin{minipage}[t]{0.8\textwidth}
+% {\large \textsc{What is the \# sign for?}}\\
+% This is called a comment. If you type something in R with the ``\#" sign in front of it, R will not interpret it.
+%         \end{minipage}
+%       }
+% \end{center}
+% 
+% And we can continue to do this until we reach the limit of our available memory. Why am I showing this silliness to you? For one thing I want to show you that you can stick anything you want into that slot and the object will not be hurt in any way. It's also important when considering how you are going to deal with the population structure of your genind object. For the \textit{poppr} functions \texttt{clonecorrect} (Section \ref{data.manip:cc:clonecorrect}) and \texttt{splitcombine} (Section \ref{data.manip:hier:splitcombine}) to work, a data frame of the population hierarchy must be present in the \texttt{@other} slot and it must have the same number of rows as individuals in the data set. There are several ways to go about this. If you know how to create a data frame or import data into R, the command is no more difficult than \texttt{obj\$other\$population\_hierarchy <- df}. If you do not know how to create a data frame or import data into R, you can visit Quick R at \url{http://www.statmethods.net/input/importingdata.html}.
+% \subsubsection{Setting the population factor \{adegenet's function: pop\}}\label{intro:genind:pop}
+% 
+% \tab\tab A genind object can contain several populations, and, if you have differing population structures, you might want to switch among them for different analyses. The tools you as the user would need, are the slot \texttt{@pop.names} and the \textit{adegenet} function \texttt{pop()}. I'll use the H3N2 data set packaged with \textit{adegenet} as an example.
+% <<H3N2_data1>>=
+% data(H3N2)
+% H3N2
+% pop(H3N2)
+% H3N2$pop.names
+% @
+% 
+% Notice how both the pop and pop.names are empty. This means that the population information needs to be set. Notice, however that there are 1903 individuals in the data set and that the \texttt{@other} slot is not empty. Let's investigate an object in this slot.
+% <<H3N2_other_slot>>=
+% head(H3N2$other$x)
+% nrow(H3N2$other$x)
+% @
+% \begin{center}
+%    \fcolorbox{black}{light-gray}{
+%         \begin{minipage}[t]{0.8\textwidth}
+% {\large \textsc{What is head()?}}\\
+% \texttt{head()} is a command that will show you only the top portion of an R object. By default it will show you the first six elements (or rows of a data frame or matrix). This is so that you can quickly check the contents of an object.
+%         \end{minipage}
+%    }
+% \end{center}
+% 
+% We can see that it's a data frame containing a wealth of information that we could use to subset our data. So, let's start by setting the population structure by country. How do we do that? Well, the function \texttt{pop()} will allow us to set that structure using a vector that is the same length as the number of individuals in the data set. Since the number of rows in the data frame \texttt{x} meets that criteria, we can use any item in that data frame. Let's take a look.
+% <<setting_H3N2_population>>=
+% pop(H3N2) <- H3N2$other$x$country
+% head(pop(H3N2))
+% H3N2$pop.names
+% @
+% Notice how useful the \texttt{@other} slot can be. We now have population structure in the data set and you now know how to set the population factor. The other slot will become useful later on when we are talking about multilocus genotypes.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2295,7 +2119,7 @@ This analysis produced the histograms you see below. What these histograms repre
   \centering
   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$ calculated from 999 resamplings of population 5 from the data set ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as vertical blue lines overlaid on the distributions. The ticks at the bottom of each histogram represent individual observations.}
   \label{ia_demo_fig}
-\includegraphics{poppr_manual-109}
+\includegraphics{poppr_manual-103}
 \end{figure}
 %\newpage
 
@@ -2344,7 +2168,7 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
   \centering
   \caption{\footnotesize Heatmap representation of a dissimilarity distance for the data set ``Aeut"}
   \label{diss_heat_map}
-\includegraphics{poppr_manual-113}
+\includegraphics{poppr_manual-107}
 \end{figure}
 \newpage
 \subsection{Step by stepwise mutation \{Bruvo's distance\}}\label{index:bruvo}
@@ -2483,7 +2307,7 @@ You can visualize this better with a simple heatmap:
 > heatmap(as.matrix(dist9), symm=TRUE)
 \end{Sinput}
 \end{Schunk}
-\includegraphics{poppr_manual-119}
+\includegraphics{poppr_manual-113}
 \end{figure}
 %\newpage
 
