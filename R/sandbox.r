@@ -1248,10 +1248,9 @@ javier<-function(x){
 
 # Usage: 
 # td(fasta file location)
-
+#' @importFrom ape read.dna
+#' @importFrom pegas tajima.test
 td <- function (x){
-  require(ape)
-  require(pegas)
   seq <- read.dna(x,format="fasta")
   tt <- tajima.test(seq)
   tt$file <- basename(x)
@@ -1281,10 +1280,9 @@ td <- function (x){
 #Function n.diversity: Nucleotide diversity calculation for sequence data.
 # Usage:
 # n.diversity(fasta file location)
-
+#' @importFrom ape read.dna
+#' @importFrom pegas nuc.div
 n.diversity <- function (x){
-  require(ape)
-  require(pegas)
   seq <- read.dna(x,format="fasta")
   nd <- list()
   nd$nuc.div <- round(nuc.div(seq),digits=3)
@@ -1295,9 +1293,8 @@ n.diversity <- function (x){
 
 ## dN/dS Estimation
 # Function dnds: Calculation of dN/dS
+#' @importFrom seqinr read.alignment kaks
 dn.ds <- function (x){
-  require(ape)
-  require(seqinr)
   seq <- read.alignment(x,format="fasta")
   tab <- kaks(seq)
   tab <- (t(as.data.frame(unlist(tab))))
@@ -1332,9 +1329,8 @@ dn.ds <- function (x){
 # multi.td(list of fasta files)
 # 
 # To get the list of FASTA files use list.files()
-
+#' @importFrom plyr rbind.fill
 multi.td <- function(x){
-  require(plyr)
   cat("Tajimas D Calculation\n")
   rbind.fill(lapply(x,td))
 }
@@ -1345,11 +1341,9 @@ multi.td <- function(x){
 # multi.nd(list of fasta files)
 # 
 # To get the list of FASTA files use list.files() 
-
+#' @importFrom plyr rbind.fill
 multi.nd <- function(x){
-  require(plyr)
-  cat("Nuleotide Diversity\n")
-  
+  cat("Nuleotide Diversity\n") 
   rbind.fill(lapply(x,n.diversity))
 }
 
@@ -1359,8 +1353,8 @@ multi.nd <- function(x){
 # multi.dnds(list of fasta files)
 # 
 # To get the list of FASTA files use list.files()
+#' @importFrom plyr rbind.fill
 multi.dnds <- function(x){
-  require(plyr)
   cat("dN/dS\n")
   rbind.fill(lapply(x,dn.ds))
 }
