@@ -116,6 +116,10 @@
 #' 
 #' @param minsamp an \code{integer} indicating the minimum number of individuals
 #' to resample for rarefaction analysis. 
+#' 
+#' @param legend \code{logical}. When this is set to \code{TRUE}, a legend
+#' describing the resulting table columns will be printed. Defaults to 
+#' \code{FALSE}
 #'
 #' @return 
 #' \item{Pop}{A vector indicating the pouplation factor}
@@ -209,7 +213,7 @@
 poppr <- function(pop,total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
                   clonecorrect=FALSE, hier=1, dfname="population_hierarchy", 
-                  keep = 1, hist=TRUE, minsamp=10){
+                  keep = 1, hist=TRUE, minsamp=10, legend = FALSE){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   x <- .file.type(pop, missing=missing, cutoff=cutoff, clonecorrect=clonecorrect, 
@@ -267,6 +271,7 @@ poppr <- function(pop,total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   else{
     MPI <- 1
   }
+  if (legend) poppr_message()
   if (!is.null(MPI)){
     MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
     N.vec   <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)

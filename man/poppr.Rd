@@ -5,7 +5,7 @@
 poppr(pop, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE,
   clonecorrect = FALSE, hier = 1, dfname = "population_hierarchy",
-  keep = 1, hist = TRUE, minsamp = 10)
+  keep = 1, hist = TRUE, minsamp = 10, legend = FALSE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object OR any fstat,
@@ -82,6 +82,10 @@ poppr(pop, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   \item{minsamp}{an \code{integer} indicating the minimum
   number of individuals to resample for rarefaction
   analysis.}
+
+  \item{legend}{\code{logical}. When this is set to
+  \code{TRUE}, a legend describing the resulting table
+  columns will be printed. Defaults to \code{FALSE}}
 }
 \value{
 \item{Pop}{A vector indicating the pouplation factor}
