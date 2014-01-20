@@ -58,13 +58,15 @@ hier_incompatible_warning <- function(levs, df){
   return(msg)
 }
 # Self explanitory
-not_euclid_msg <- function(){
-  msg <- paste("\nThe distance matrix generated is non-euclidean.",
-               "Try again with a different missing or cutoff argument.",
-               "\n\nYou can test your matrix using the is.euclid function from",
-               "ade4:\n\tis.euclid(sqrt(diss.dist(x, frac = FALSE)))")
+not_euclid_msg <- function(correction){
+  msg <- paste0("\nThe distance matrix generated is non-euclidean and a correction is needed.",
+                "\nYou supplied: correction = '", correction, "'\nPlease change",
+                " it to one of the following:\n",
+                "\t'cailliez'\t'quasieuclid'\t'lingoes'")
   return(msg)
 }
+
+
 #==============================================================================#
 # hier = a nested formula such as ~ A/B/C where C is nested within B, which is
 # nested within A.
@@ -223,8 +225,8 @@ check_Hs <- function(x){
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL, 
                        squared = TRUE, correction = "cailliez", 
-                       dfname = "population_hierarchy", sep = "_", missing = "0", 
-                       cutoff = 0, quiet = TRUE){
+                       dfname = "population_hierarchy", sep = "_", missing = "loci", 
+                       cutoff = 0.05, quiet = TRUE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
   full_hier <- parsed_hier[length(parsed_hier)]
@@ -262,7 +264,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
   if (is.null(dist)){
-    xdist   <- sqrt(diss.dist(clonecorrect(x, hier = NA), frac = FALSE))
+    xdist <- sqrt(diss.dist(clonecorrect(x, hier = NA), frac = FALSE))
   } else {
     corrected <- .clonecorrector(x)
     xdist     <- as.dist(as.matrix(dist)[corrected, corrected])
@@ -271,11 +273,17 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
     }
   }
   if (!is.euclid(xdist)){
-    if (!correction %in% c("cailliez", "quasieuclid", "lingoes")){
-      stop(not_euclid_msg())
+    CORRECTIONS <- c("cailliez", "quasieuclid", "lingoes")
+    try(correct <- match.arg(correction, CORRECTIONS))
+    if (!exists("correct")){
+      stop(not_euclid_msg(correction))
     } else {
-      correct_fun <- match.fun(correction)
-      xdist       <- correct_fun(xdist, print = TRUE)
+      correct_fun <- match.fun(correct)
+      if (correct == CORRECTIONS[2]){
+        xdist <- correct_fun(xdist)        
+      } else {
+        xdist <- correct_fun(xdist, print = TRUE, cor.zero = FALSE)        
+      }
     }
   }
   
