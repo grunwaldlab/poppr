@@ -1244,3 +1244,126 @@ genoid.bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE,
 javier<-function(x){
   cat ("http://www.youtube.com/watch?v=1-ctsxVXvO0")
 }
+
+#######################################################
+### Functions for Sequence Data ------------------- ###
+### Tajima's D, Nuc. Diversity and Ka/Ks estimation ###
+#######################################################
+# using the packages pegas, ape and sequin, Im creating some wrappers to be able to do multiple calculations of basic pop. gen. statistical tests such as Tajimas D, Nucleotide diversity (pi) and dN/dS selection (as Ka/Ks)
+
+# ## Tajimas D calculation
+# Function td: Tajima-D wrapper to get a data frame out of the data with the Tajimas D value, the p-values for normality and poisson, the files and if the p-value (for normality) is significant or not.
+
+# Usage: 
+# td(fasta file location)
+#' @importFrom ape read.dna
+#' @importFrom pegas tajima.test
+td <- function (x){
+  seq <- read.dna(x,format="fasta")
+  tt <- tajima.test(seq)
+  tt$file <- basename(x)
+  
+  if (!is.na(tt$Pval.normal)){
+    if (tt$Pval.normal >= 0.05){
+      tt$stat <- c("Neutral")
+    } else {
+      if (tt$D < 1){
+        tt$stat <- c("Adaptive Selection (Positive selection)")
+      } else if (tt$D > 1){
+        tt$stat <- c("Puryfing Selection (Negative selection)")
+      }
+    }
+  }
+  else {
+    tt$D <- NA
+    tt$Pval.normal <- NA
+    tt$Pval.beta <- NA
+    tt$stat <- c("No Segregating sites")
+  }
+  
+  return (as.data.frame(tt))
+}  
+
+## Nucleotide Diversity
+#Function n.diversity: Nucleotide diversity calculation for sequence data.
+# Usage:
+# n.diversity(fasta file location)
+#' @importFrom ape read.dna
+#' @importFrom pegas nuc.div
+n.diversity <- function (x){
+  seq <- read.dna(x,format="fasta")
+  nd <- list()
+  nd$nuc.div <- round(nuc.div(seq),digits=3)
+  nd$file <- basename(x)
+  return(as.data.frame(nd))
+}
+
+
+## dN/dS Estimation
+# Function dnds: Calculation of dN/dS
+#' @importFrom seqinr read.alignment kaks
+dn.ds <- function (x){
+  seq <- read.alignment(x,format="fasta")
+  tab <- kaks(seq)
+  tab <- (t(as.data.frame(unlist(tab))))
+  rownames(tab) <- basename(x)
+  if (is.na(tab[,1])){
+    tab <- data.frame(NA,NA,NA,NA)
+    rownames(tab) <- basename(x)
+    colnames(tab) <- c("ka","ks","vka","vks")
+  }
+  tab <- as.data.frame(tab)
+  tab$dnds <- tab$ka/tab$ks
+  if (!is.na(tab$dnds)){
+    if (tab$dnds > 1){
+      tab$selection <- c("Positive Selection")
+    } else if (tab$dnds < 1){
+      tab$selection <- c("Negative Selection")
+    } else if (tab$dnds == 1){
+      tab$selection <- c("Neutral")
+    }
+  }else{
+    tab$selection <- NA
+  }
+  return(tab)
+}
+
+
+#### Wrappers for multiple sequences 
+
+# Function multi.td: Tajima-D wrapper for multiple sets
+# 
+# Usage: 
+# multi.td(list of fasta files)
+# 
+# To get the list of FASTA files use list.files()
+#' @importFrom plyr rbind.fill
+multi.td <- function(x){
+  cat("Tajimas D Calculation\n")
+  rbind.fill(lapply(x,td))
+}
+
+#Function multi.nd: Nucleotide diversity wrapper for multiple sets
+# 
+# Usage: 
+# multi.nd(list of fasta files)
+# 
+# To get the list of FASTA files use list.files() 
+#' @importFrom plyr rbind.fill
+multi.nd <- function(x){
+  cat("Nuleotide Diversity\n") 
+  rbind.fill(lapply(x,n.diversity))
+}
+
+# Function multi.dnds: dN/dS wrapper for multiple pairs
+# 
+# Usage: 
+# multi.dnds(list of fasta files)
+# 
+# To get the list of FASTA files use list.files()
+#' @importFrom plyr rbind.fill
+multi.dnds <- function(x){
+  cat("dN/dS\n")
+  rbind.fill(lapply(x,dn.ds))
+}
+

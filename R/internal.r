@@ -1105,3 +1105,29 @@ print.amova <- function(x, full = FALSE, ...){
     print(x[-((length(x) - 2):length(x))]) 
   }
 }
+
+#==============================================================================#
+# Message to print after running the poppr function
+#
+# Public functions utilizing this function:
+# # poppr poppr.all
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+
+poppr_message <- function(){
+  cat("-----------------------------------------------------------------------|\n")
+  cat("Pop   = Population name (Total == Pooled)\n")
+  cat("N     = Census population size\n")
+  cat("MLG   = Number of unique multilocus genotypes (MLG) observed\n")
+  cat("eMLG  = Number of expected MLG based on rarefaction at smallest N >= 10\n")
+  cat("SE    = Standard error of rarefaction analysis\n")
+  cat("H     = Shannon-Wiener Index of MLG diversity\n")
+  cat("G     = Stoddart and Taylor's Index of MLG diversity\n")
+  cat("Hexp  = Nei's 1978 genotypic diversity (Expected Heterozygosity)\n")
+  cat("E.5   = Evenness\n")
+  cat("Ia    = Index of association\n")
+  cat("rbarD = Standardized index of association\n")
+  cat("-----------------------------------------------------------------------|\n")
+}
