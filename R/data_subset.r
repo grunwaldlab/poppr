@@ -381,7 +381,7 @@ popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #' \strong{\code{"loci"}} - removes all loci containing missing data in the entire data
 #' set. 
 #'
-#' \strong{\code{"geno"}} - removes any genotypes/isolates/individuals with missing data.
+#' \strong{\code{"genotype"}} - removes any genotypes/isolates/individuals with missing data.
 #'
 #' \strong{\code{"mean"}} - replaces all NA's with the mean of the alleles for the entire
 #' data set.
@@ -461,10 +461,11 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
         } else {
           remloc <- pop@loc.names[!cumsum(pop@loc.nall) %in% navals]
           cat("\n Found", sum(is.na(pop@tab)),"missing values.")
-          loci <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", "loci"))
-          cat("\n",loci,"contained missing values greater than",
+          loci   <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", 
+                          "loci"))
+          cat("\n", loci, "contained missing values greater than",
               paste0(cutoff*100,"%."))
-          cat("\n Removing",loci,":", remloc,"\n", fill = 80)
+          cat("\n Removing", loci, ":", remloc,"\n", fill = 80)
         }
       }
       pop <- pop[, navals]
@@ -492,8 +493,8 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
         } else {
           remgeno <- pop@loc.names[!cumsum(pop@loc.nall) %in% navals]
           cat("\n Found", sum(is.na(pop@tab)),"missing values.")
-          geno <- paste(length(remgeno), ifelse(length(remgeno) == 1, 
-                        "genotype", "genotypes"))
+          geno    <- paste(length(remgeno), ifelse(length(remgeno) == 1, 
+                           "genotype", "genotypes"))
           cat("\n", geno, "contained missing values greater than",
               paste0(cutoff*100,"%."))
           cat("\n Removing", geno, ":", remgeno,"\n", fill = 80)
