@@ -440,8 +440,11 @@ popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
   if(sum(is.na(pop@tab)) > 0){
     # removes any loci (columns) with missing values.
-    MISSINGOPTS <- c("loci", "genotypes", "mean", "zero", "0")
+    MISSINGOPTS <- c("loci", "genotypes", "mean", "zero", "0", "ignore")
     type        <- match.arg(tolower(type), MISSINGOPTS)
+    if (type == "ignore"){
+      return(pop)
+    }
     navals      <- percent_missing(pop, type = type, cutoff = cutoff)
     if (type == "loci"){
       if(quiet != TRUE){
