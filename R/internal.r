@@ -241,28 +241,33 @@ loci.na <- function(pop) {
 
 percent_missing <- function(pop, type="loci", cutoff=0.05){
   if (toupper(type) == "LOCI"){
-    misslist <- loci.na(pop)
-    if(all(misslist > 0)){
-      return(misslist)
-    }
-    poplen <- nInd(pop)
-    filter <- vapply(-misslist, function(x) 
-      length(which(is.na(pop@tab[, x])))/poplen, 1) > cutoff
-    if (is.na(filter[1])){
-      filter <- 1:length(misslist)
-    }
+    # misslist <- loci.na(pop)
+    # if(all(misslist > 0)){
+    #   return(misslist)
+    # }
+    # poplen <- nInd(pop)
+    # filter <- vapply(-misslist, function(x) 
+    #   length(which(is.na(pop@tab[, x])))/poplen, 1) > cutoff
+    # if (is.na(filter[1])){
+    #   filter <- 1:length(misslist)
+    # }
+    missing_loci <- 1 - propTyped(pop, "loc")
+    names(missing_loci) <- levels(pop@loc.fac)
+    missing_loci <- missing_loci[missing_loci > cutoff]
+    print(missing_loci)
+    misslist <- 1:ncol(pop@tab)
+    filter <- !pop@loc.fac %in% names(missing_loci)
   } else {
-    misslist <- geno.na(pop)
-    if(all(misslist > 0)){
-      return(misslist)
-    }
-    poplen <- nLoc(pop)
-    filter <- vapply(-misslist, function(x)
-      length(unique( pop@loc.fac[which(is.na(pop@tab[x, ]))] )) / poplen, 1) > cutoff
-  }
-  if (all(filter %in% FALSE)){
-    filter   <- 1:length(misslist)
-    misslist <- 1:length(misslist)
+    # misslist <- geno.na(pop)
+    # if(all(misslist > 0)){
+    #   return(misslist)
+    # }
+    # poplen <- nLoc(pop)
+    # filter <- vapply(-misslist, function(x)
+    #   length(unique( pop@loc.fac[which(is.na(pop@tab[x, ]))] )) / poplen, 1) > cutoff
+    missing_geno <- 1 - propTyped(pop, "ind")
+    misslist <- 1:nInd(pop)
+    filter <- missing_geno > cutoff
   }
   return(misslist[filter])
 }
