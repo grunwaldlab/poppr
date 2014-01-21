@@ -451,14 +451,14 @@ mlg.matrix <- function(x){
   if (!is.null(x@pop)){
     # creating a new population matrix. Rows are the population indicator and 
     # columns are the genotype indicator.
-    mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0)
+    mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0L)
     # populating (no, pun intended.) the matrix with genotype counts.
     lapply(levels(x@pop),function(z){
                            # This first part gets the index for the row names. 
                            count <- as.numeric(substr(z, 2, nchar(z)))
                            sapply(mlgvec[which(x@pop==z)], 
                                   function(a) mlg.mat[count, a] <<-
-                                              mlg.mat[count, a] + 1)
+                                              mlg.mat[count, a] + 1L)
                          })
     rownames(mlg.mat) <-x@pop.names
   } else {

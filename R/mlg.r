@@ -135,7 +135,7 @@ mlg <- function(pop, quiet=FALSE){
   if (is.genclone(pop)){
     out <- length(unique(pop@mlg))
   } else {
-    if(nrow(pop@tab)==1){
+    if(nrow(pop@tab) == 1){
       out <- 1
     }
     else {
@@ -174,13 +174,13 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   mlgtab <- mlg.matrix(pop)
   if(!is.null(mlgsub)){
     mlgtab <- mlgtab[, mlgsub]
-    mlgtab <- mlgtab[which(rowSums(mlgtab) > 0), ]
+    mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), ]
     pop <- popsub(pop, sublist=rownames(mlgtab))
   }
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
     mlgtab <- mlgtab[unlist(vapply(pop@pop.names, 
-                function(x) which(rownames(mlgtab)==x), 1)), , drop=FALSE]
+                function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
   }
   if(total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
     mlgtab <- rbind(mlgtab, colSums(mlgtab))
@@ -208,7 +208,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
     if(!is.null(pop@pop.names)){
       popnames <- pop@pop.names
       if(total & nrow(mlgtab) > 1)
-        popnames[length(popnames)+1] <- "Total"
+        popnames[length(popnames) + 1] <- "Total"
       
       # Function for printing plots with population structures one by one.  
       printplot <- function(n, quiet=quiet) {
@@ -291,9 +291,9 @@ mlg.vector <- function(pop){
   xtab <- pop@tab
   # concatenating each genotype into one long string.
   xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ]*pop@ploidy, 
-                                                    collapse=""), "string")
+                                                    collapse = ""), "string")
   # creating a new vector to store the counts of unique genotypes.
-  countvec <- vector(length=length(xsort), mode="numeric")
+  countvec <- vector(length = length(xsort), mode = "integer")
   # sorting the genotypes ($x) and preserving the index ($xi). 
   xsorted <- sort(xsort, index.return=TRUE)
   
@@ -304,17 +304,17 @@ mlg.vector <- function(pop){
   # object to modify. In this case it is countvec, which was declared above.
   
   f1 <- function(num, comp){
-    if(num-1 == 0){
-      countvec[num] <<- 1
+    if(num - 1 == 0){
+      countvec[num] <<- 1L
     }
     # These have the exact same strings, thus they are the same MLG. Perpetuate
     # The MLG index.
-    else if(comp[num] == comp[num-1]){
-      countvec[num] <<- countvec[num-1]
+    else if(comp[num] == comp[num - 1]){
+      countvec[num] <<- countvec[num - 1]
     }
     # These have differnt strings, increment the MLG index by one.
     else{
-      countvec[num] <<- countvec[num-1] + 1
+      countvec[num] <<- countvec[num - 1] + 1L
     }
   }
 
@@ -353,21 +353,21 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     vec <- mlg.vector(pop) 
   }
   subind <- sub_index(pop, sublist, blacklist)
-  vec <- vec[subind]
+  vec    <- vec[subind]
   mlgtab <- mlg.matrix(pop)
   if(!is.null(mlgsub)){
     mlgtab <- mlgtab[, mlgsub]
-    mlgs <- 1:ncol(mlgtab)
+    mlgs   <- 1:ncol(mlgtab)
     names(mlgs) <- colnames(mlgtab)
   }
   else{
     if(sublist[1] != "ALL" | !is.null(blacklist)){
-      pop <- popsub(pop, sublist, blacklist)
+      pop    <- popsub(pop, sublist, blacklist)
       mlgtab <- mlgtab[unlist(vapply(pop@pop.names, 
-                  function(x) which(rownames(mlgtab)==x), 1)), , drop=FALSE]
+                  function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
     }
     #mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
-    mlgs <- unlist(strsplit(names(which(colSums(ifelse(mlgtab==0, 0, 1)) > 1)), 
+    mlgs <- unlist(strsplit(names(which(colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1)), 
                           "\\."))
     mlgs <- as.numeric(mlgs[!mlgs %in% "MLG"])
     if(length(mlgs) == 0){
@@ -380,9 +380,9 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     }
   }
   popop <- function(x, quiet=TRUE){
-    popnames <- mlgtab[mlgtab[, x] > 0, x]
+    popnames <- mlgtab[mlgtab[, x] > 0L, x]
     if(length(popnames) == 1){
-      names(popnames) <- rownames(mlgtab[mlgtab[, x] > 0, x, drop=FALSE])
+      names(popnames) <- rownames(mlgtab[mlgtab[, x] > 0L, x, drop=FALSE])
     }
     if(!quiet)
       cat(paste(x, ":", sep=""),paste("(",sum(popnames)," inds)", sep=""),
@@ -390,7 +390,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     return(popnames)
   }
   # Removing any populations that are not represented by the MLGs.
-  mlgtab <- mlgtab[rowSums(mlgtab[, mlgs, drop=FALSE]) > 0, mlgs, drop=FALSE]
+  mlgtab <- mlgtab[rowSums(mlgtab[, mlgs, drop=FALSE]) > 0L, mlgs, drop=FALSE]
   # Compiling the list.
   mlg.dup <- lapply(colnames(mlgtab), popop, quiet=quiet)
   names(mlg.dup) <- colnames(mlgtab)
