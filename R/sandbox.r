@@ -266,8 +266,19 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
   if (is.null(dist)){
     xdist <- sqrt(diss.dist(clonecorrect(x, hier = NA), frac = FALSE))
   } else {
-    corrected <- .clonecorrector(x)
-    xdist     <- as.dist(as.matrix(dist)[corrected, corrected])
+    datalength <- choose(nInd(x), 2)
+    mlglength  <- choose(mlg(x, quiet = TRUE), 2)
+    if (length(dist) > mlglength & length(dist) == datalength){
+      corrected <- .clonecorrector(x)
+      xdist     <- as.dist(as.matrix(dist)[corrected, corrected])
+    } else if(length(dist) == mlglength){
+      xdist <- dist
+    } else {
+      cat("Data:", datalength)
+      cat("\nMLGs:", mlglength)
+      cat("\ndist:", length(dist))
+      stop("Distance matrix does not match the data.")
+    }
     if (squared){
       xdist <- sqrt(xdist)
     }
