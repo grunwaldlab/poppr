@@ -221,6 +221,24 @@ check_Hs <- function(x){
 # hierarchy of Year to Population to Subpopulation, you should make sure you
 # have the right data frame in your "other" slot and then write the formula
 # thusly: ~ Year/Population/Subpopulation
+#
+# arguments:
+#
+# hier         = a formula such as ~Pop/Subpop
+# x            = a genind object
+# clonecorrect = This refers to clone correction of the final output relative to
+#                The lowest hierararchical level. FALSE
+# within       = should witin individual variation be calculated? TRUE
+# dist         = A user provided distance matrix NULL
+# squared      = Is the distance matrix squared? TRUE
+# correction   = A correction for non-euclidean distances provided by ade4.
+#                The default, "quasieuclid", seems to give the best results.
+# dfname       = the data frame containing the population hierarchy.
+#                "population_hierarchy"
+# sep          = the separator for the population hierarchy levels. "_"
+# missing      = how to deal with missing data. Default is "loci".
+# cutoff       = a cutoff for percent missing data to tolerate. 0.05
+# quiet        = Should messages be printed? TRUE
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL, 
@@ -267,17 +285,19 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
     xdist <- sqrt(diss.dist(clonecorrect(x, hier = NA), frac = FALSE))
   } else {
     datalength <- choose(nInd(x), 2)
-    mlglength  <- choose(mlg(x, quiet = TRUE), 2)
+    mlgs       <- mlg(x, quiet = TRUE)
+    mlglength  <- choose(mlgs, 2)
     if (length(dist) > mlglength & length(dist) == datalength){
       corrected <- .clonecorrector(x)
       xdist     <- as.dist(as.matrix(dist)[corrected, corrected])
     } else if(length(dist) == mlglength){
       xdist <- dist
     } else {
-      msg <- paste("\nUncorrected observations expected:", datalength,
-      "\nCorrected observations expected:", mlglength,
-      "\nObservations in provided distance matrix:", length(dist),
-      "\nDistance matrix does not match the data.")
+      msg <- paste("\nDistance matrix does not match the data.",
+      "\nUncorrected observations expected..........", nInd(x),
+      "\nClone corrected observations expected......", mlgs,
+      "\nObservations in provided distance matrix...", ceiling(sqrt(length(dist)*2)),
+      ifelse(within == TRUE, "\nTry setting within = FALSE.", "\n"))
       stop(msg)
     }
     if (squared){
