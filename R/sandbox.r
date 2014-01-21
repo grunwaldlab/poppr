@@ -338,8 +338,14 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
 #==============================================================================#
 
 # tabulate the amount of missing data per locus. 
-number_missing <- function(x, divisor){
+number_missing_locus <- function(x, divisor){
   missing_result <- colSums(1 - propTyped(x, by = "both"))
+  return(missing_result/divisor)
+}
+
+# tabulate the amount of missing data per genotype. 
+number_missing_geno <- function(x, divisor){
+  missing_result <- rowSums(1 - propTyped(x, by = "both"))
   return(missing_result/divisor)
 }
 
@@ -354,7 +360,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     inds <- c(table(pop(x)), nInd(x))
   }
   misstab <- matrix(0, nrow = nLoc(x) + 1, ncol = length(pops))
-  misstab[1:nLoc(x), ] <- vapply(pops, number_missing, numeric(nLoc(x)), 1)
+  misstab[1:nLoc(x), ] <- vapply(pops, number_missing_locus, numeric(nLoc(x)), 1)
   misstab[-nrow(misstab), ] <- t(apply(misstab[-nrow(misstab), ], 1, "/", inds))
   misstab[nrow(misstab), ] <- colMeans(misstab[-nrow(misstab), ])
   rownames(misstab) <- c(x@loc.names, "Mean")
