@@ -445,14 +445,8 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 #==============================================================================#
 
 mlg.matrix <- function(x){
-  
-  if (is.genclone(x)){
-    mlgvec <- x@mlg
-    mlgs   <- length(tabulate(mlgvec))
-  } else{
-    mlgvec <- mlg.vector(x)
-    mlgs   <- length(unique(mlgvec))
-  }
+  mlgvec <- mlg.vector(x)
+  mlgs   <- length(unique(mlgvec))
   
   if (!is.null(x@pop)){
     # creating a new population matrix. Rows are the population indicator and 
@@ -473,13 +467,7 @@ mlg.matrix <- function(x){
     sapply(mlgvec, function(a) mlg.mat[a] <<- mlg.mat[a] + 1)
     rownames(mlg.mat) <- "Total"
   }
-  if (is.genclone(x)){
-    uniqs <- sort(unique(x@mlg))
-    mlg.mat <- mlg.mat[, uniqs]
-    colnames(mlg.mat) <- paste("MLG", uniqs, sep = ".")
-  } else {
-    colnames(mlg.mat) <- paste("MLG", 1:mlgs, sep=".")
-  }
+  colnames(mlg.mat) <- paste("MLG", 1:mlgs, sep=".")
   return(mlg.mat)
 }
 
