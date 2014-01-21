@@ -224,9 +224,9 @@ check_Hs <- function(x){
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL, 
-                       squared = TRUE, correction = "cailliez", 
+                       squared = TRUE, correction = "quasieuclid", 
                        dfname = "population_hierarchy", sep = "_", missing = "loci", 
-                       cutoff = 0.05, quiet = TRUE){
+                       cutoff = 0.05, quiet = FALSE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
   full_hier <- parsed_hier[length(parsed_hier)]
@@ -274,10 +274,11 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
     } else if(length(dist) == mlglength){
       xdist <- dist
     } else {
-      cat("Data:", datalength)
-      cat("\nMLGs:", mlglength)
-      cat("\ndist:", length(dist))
-      stop("Distance matrix does not match the data.")
+      msg <- paste("\nUncorrected observations expected:", datalength,
+      "\nCorrected observations expected:", mlglength,
+      "\nObservations in provided distance matrix:", length(dist),
+      "\nDistance matrix does not match the data.")
+      stop(msg)
     }
     if (squared){
       xdist <- sqrt(xdist)
@@ -291,6 +292,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
     } else {
       correct_fun <- match.fun(correct)
       if (correct == CORRECTIONS[2]){
+        cat("Utilizing quasieuclid correction method. See ?quasieuclid for details.\n")
         xdist <- correct_fun(xdist)        
       } else {
         xdist <- correct_fun(xdist, print = TRUE, cor.zero = FALSE)        
