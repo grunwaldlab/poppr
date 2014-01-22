@@ -345,7 +345,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' 
 #' @export
 #' @author Javier F. Tabima, Zhian N. Kamvar
-#'
+#' @aliases msn.bruvo
 #' @references
 #' Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
 #' simple method for the calculation of microsatellite genotype distances irrespective

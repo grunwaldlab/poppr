@@ -1,4 +1,5 @@
 \name{poppr.msn}
+\alias{msn.poppr}
 \alias{poppr.msn}
 \title{Create a minimum spanning network of selected populations using a distance
 matrix.}

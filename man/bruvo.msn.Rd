@@ -1,5 +1,6 @@
 \name{bruvo.msn}
 \alias{bruvo.msn}
+\alias{msn.bruvo}
 \title{Create minimum spanning network of selected populations using Brvuo's
 distance.}
 \usage{

@@ -297,6 +297,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
 #' 
 #' @export
+#' @aliases msn.poppr
 #' @author Javier F. Tabima, Zhian N. Kamvar
 #' @examples
 #' 
