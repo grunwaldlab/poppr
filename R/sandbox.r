@@ -415,13 +415,13 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     if (scaled | !percent){
       lims <- c(0, max(plotdf$Missing))
     }
-    linedata <- data.frame(list(xint = ncol(misstab) - 0.5, 
-                                yint = nrow(misstab) - 0.5))
+    linedata <- data.frame(list(yint = ncol(misstab) - 0.5, 
+                                xint = nrow(misstab) - 0.5))
     textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
     plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
-    outplot <- ggplot(plotdf, aes_string(y = "Locus", x = "Population")) + 
+    outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
                geom_tile(aes_string(fill = "Missing")) +
-               labs(list(title = title, y = "Locus", x = "Population")) +
+               labs(list(title = title, x = "Locus", y = "Population")) +
                labs(fill = leg_title) + 
                scale_fill_gradient(low = low, high = high, na.value = "white", 
                                    limits = lims) +
@@ -448,6 +448,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
   } else {
     attr(misstab, "dimnames") <- list(Locus = rownames(misstab), 
                                       Population = colnames(misstab))
+    misstab <- t(misstab)
   }
   if (returnplot){
     misstab <- list(table = misstab, plot = outplot)
