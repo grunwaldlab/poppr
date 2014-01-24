@@ -40,7 +40,7 @@ data.
   \strong{\code{"loci"}} - removes all loci containing
   missing data in the entire data set.
 
-  \strong{\code{"geno"}} - removes any
+  \strong{\code{"genotype"}} - removes any
   genotypes/isolates/individuals with missing data.
 
   \strong{\code{"mean"}} - replaces all NA's with the mean

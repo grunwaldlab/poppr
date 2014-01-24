@@ -198,6 +198,8 @@ extract.info <- function(x) {
 #
 # Internal functions utilizing this function:
 # # percent_missing
+#
+# DEPRECIATED
 #==============================================================================#
 
 geno.na <- function(pop){
@@ -217,6 +219,8 @@ geno.na <- function(pop){
 #
 # Internal functions utilizing this function:
 # # percent_missing
+#
+# DEPRECIATED
 #==============================================================================#
 
 loci.na <- function(pop) {
@@ -241,28 +245,15 @@ loci.na <- function(pop) {
 
 percent_missing <- function(pop, type="loci", cutoff=0.05){
   if (toupper(type) == "LOCI"){
-    misslist <- loci.na(pop)
-    if(all(misslist > 0)){
-      return(misslist)
-    }
-    poplen <- nInd(pop)
-    filter <- vapply(-misslist, function(x) 
-      length(which(is.na(pop@tab[, x])))/poplen, 1) > cutoff
-    if (is.na(filter[1])){
-      filter <- 1:length(misslist)
-    }
+    missing_loci        <- 1 - propTyped(pop, "loc")
+    names(missing_loci) <- levels(pop@loc.fac)
+    missing_loci        <- missing_loci[missing_loci > cutoff]
+    misslist            <- 1:ncol(pop@tab)
+    filter              <- !pop@loc.fac %in% names(missing_loci)
   } else {
-    misslist <- geno.na(pop)
-    if(all(misslist > 0)){
-      return(misslist)
-    }
-    poplen <- nLoc(pop)
-    filter <- vapply(-misslist, function(x)
-      length(unique( pop@loc.fac[which(is.na(pop@tab[x, ]))] )) / poplen, 1) > cutoff
-  }
-  if (all(filter %in% FALSE)){
-    filter   <- 1:length(misslist)
-    misslist <- 1:length(misslist)
+    missing_geno <- 1 - propTyped(pop, "ind")
+    misslist     <- 1:nInd(pop)
+    filter       <- missing_geno > cutoff
   }
   return(misslist[filter])
 }
@@ -445,24 +436,20 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 #==============================================================================#
 
 mlg.matrix <- function(x){
+  mlgvec <- mlg.vector(x)
+  mlgs   <- length(unique(mlgvec))
   
-  if (is.genclone(x)){
-    mlgvec <- x@mlg
-  } else{
-    mlgvec <- mlg.vector(x)
-  }
-  mlgs <- length(unique(mlgvec))
   if (!is.null(x@pop)){
     # creating a new population matrix. Rows are the population indicator and 
     # columns are the genotype indicator.
-    mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0)
+    mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0L)
     # populating (no, pun intended.) the matrix with genotype counts.
     lapply(levels(x@pop),function(z){
                            # This first part gets the index for the row names. 
                            count <- as.numeric(substr(z, 2, nchar(z)))
                            sapply(mlgvec[which(x@pop==z)], 
                                   function(a) mlg.mat[count, a] <<-
-                                              mlg.mat[count, a] + 1)
+                                              mlg.mat[count, a] + 1L)
                          })
     rownames(mlg.mat) <-x@pop.names
   } else {
@@ -1104,4 +1091,30 @@ print.amova <- function(x, full = FALSE, ...){
   } else {
     print(x[-((length(x) - 2):length(x))]) 
   }
+}
+
+#==============================================================================#
+# Message to print after running the poppr function
+#
+# Public functions utilizing this function:
+# # poppr poppr.all
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+
+poppr_message <- function(){
+  cat("-----------------------------------------------------------------------|\n")
+  cat("Pop   = Population name (Total == Pooled)\n")
+  cat("N     = Census population size\n")
+  cat("MLG   = Number of unique multilocus genotypes (MLG) observed\n")
+  cat("eMLG  = Number of expected MLG based on rarefaction at smallest N >= 10\n")
+  cat("SE    = Standard error of rarefaction analysis\n")
+  cat("H     = Shannon-Wiener Index of MLG diversity\n")
+  cat("G     = Stoddart and Taylor's Index of MLG diversity\n")
+  cat("Hexp  = Nei's 1978 genotypic diversity (Expected Heterozygosity)\n")
+  cat("E.5   = Evenness\n")
+  cat("Ia    = Index of association\n")
+  cat("rbarD = Standardized index of association\n")
+  cat("-----------------------------------------------------------------------|\n")
 }

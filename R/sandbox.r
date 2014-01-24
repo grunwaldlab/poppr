@@ -58,13 +58,15 @@ hier_incompatible_warning <- function(levs, df){
   return(msg)
 }
 # Self explanitory
-not_euclid_msg <- function(){
-  msg <- paste("\nThe distance matrix generated is non-euclidean.",
-               "Try again with a different missing or cutoff argument.",
-               "\n\nYou can test your matrix using the is.euclid function from",
-               "ade4:\n\tis.euclid(sqrt(diss.dist(x, frac = FALSE)))")
+not_euclid_msg <- function(correction){
+  msg <- paste0("\nThe distance matrix generated is non-euclidean and a correction is needed.",
+                "\nYou supplied: correction = '", correction, "'\nPlease change",
+                " it to one of the following:\n",
+                "\t'cailliez'\t'quasieuclid'\t'lingoes'")
   return(msg)
 }
+
+
 #==============================================================================#
 # hier = a nested formula such as ~ A/B/C where C is nested within B, which is
 # nested within A.
@@ -219,12 +221,30 @@ check_Hs <- function(x){
 # hierarchy of Year to Population to Subpopulation, you should make sure you
 # have the right data frame in your "other" slot and then write the formula
 # thusly: ~ Year/Population/Subpopulation
+#
+# arguments:
+#
+# hier         = a formula such as ~Pop/Subpop
+# x            = a genind object
+# clonecorrect = This refers to clone correction of the final output relative to
+#                The lowest hierararchical level. FALSE
+# within       = should witin individual variation be calculated? TRUE
+# dist         = A user provided distance matrix NULL
+# squared      = Is the distance matrix squared? TRUE
+# correction   = A correction for non-euclidean distances provided by ade4.
+#                The default, "quasieuclid", seems to give the best results.
+# dfname       = the data frame containing the population hierarchy.
+#                "population_hierarchy"
+# sep          = the separator for the population hierarchy levels. "_"
+# missing      = how to deal with missing data. Default is "loci".
+# cutoff       = a cutoff for percent missing data to tolerate. 0.05
+# quiet        = Should messages be printed? TRUE
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL, 
-                       squared = TRUE, correction = "cailliez", 
-                       dfname = "population_hierarchy", sep = "_", missing = "0", 
-                       cutoff = 0, quiet = TRUE){
+                       squared = TRUE, correction = "quasieuclid", 
+                       dfname = "population_hierarchy", sep = "_", missing = "loci", 
+                       cutoff = 0.05, quiet = FALSE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
   full_hier <- parsed_hier[length(parsed_hier)]
@@ -262,20 +282,41 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
   if (is.null(dist)){
-    xdist   <- sqrt(diss.dist(clonecorrect(x, hier = NA), frac = FALSE))
+    xdist <- sqrt(diss.dist(clonecorrect(x, hier = NA), frac = FALSE))
   } else {
-    corrected <- .clonecorrector(x)
-    xdist     <- as.dist(as.matrix(dist)[corrected, corrected])
+    datalength <- choose(nInd(x), 2)
+    mlgs       <- mlg(x, quiet = TRUE)
+    mlglength  <- choose(mlgs, 2)
+    if (length(dist) > mlglength & length(dist) == datalength){
+      corrected <- .clonecorrector(x)
+      xdist     <- as.dist(as.matrix(dist)[corrected, corrected])
+    } else if(length(dist) == mlglength){
+      xdist <- dist
+    } else {
+      msg <- paste("\nDistance matrix does not match the data.",
+      "\nUncorrected observations expected..........", nInd(x),
+      "\nClone corrected observations expected......", mlgs,
+      "\nObservations in provided distance matrix...", ceiling(sqrt(length(dist)*2)),
+      ifelse(within == TRUE, "\nTry setting within = FALSE.", "\n"))
+      stop(msg)
+    }
     if (squared){
       xdist <- sqrt(xdist)
     }
   }
   if (!is.euclid(xdist)){
-    if (!correction %in% c("cailliez", "quasieuclid", "lingoes")){
-      stop(not_euclid_msg())
+    CORRECTIONS <- c("cailliez", "quasieuclid", "lingoes")
+    try(correct <- match.arg(correction, CORRECTIONS))
+    if (!exists("correct")){
+      stop(not_euclid_msg(correction))
     } else {
-      correct_fun <- match.fun(correction)
-      xdist       <- correct_fun(xdist, print = TRUE)
+      correct_fun <- match.fun(correct)
+      if (correct == CORRECTIONS[2]){
+        cat("Utilizing quasieuclid correction method. See ?quasieuclid for details.\n")
+        xdist <- correct_fun(xdist)        
+      } else {
+        xdist <- correct_fun(xdist, print = TRUE, cor.zero = FALSE)        
+      }
     }
   }
   
@@ -319,8 +360,14 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
 #==============================================================================#
 
 # tabulate the amount of missing data per locus. 
-number_missing <- function(x, divisor){
+number_missing_locus <- function(x, divisor){
   missing_result <- colSums(1 - propTyped(x, by = "both"))
+  return(missing_result/divisor)
+}
+
+# tabulate the amount of missing data per genotype. 
+number_missing_geno <- function(x, divisor){
+  missing_result <- rowSums(1 - propTyped(x, by = "both"))
   return(missing_result/divisor)
 }
 
@@ -335,7 +382,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     inds <- c(table(pop(x)), nInd(x))
   }
   misstab <- matrix(0, nrow = nLoc(x) + 1, ncol = length(pops))
-  misstab[1:nLoc(x), ] <- vapply(pops, number_missing, numeric(nLoc(x)), 1)
+  misstab[1:nLoc(x), ] <- vapply(pops, number_missing_locus, numeric(nLoc(x)), 1)
   misstab[-nrow(misstab), ] <- t(apply(misstab[-nrow(misstab), ], 1, "/", inds))
   misstab[nrow(misstab), ] <- colMeans(misstab[-nrow(misstab), ])
   rownames(misstab) <- c(x@loc.names, "Mean")
@@ -368,13 +415,13 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     if (scaled | !percent){
       lims <- c(0, max(plotdf$Missing))
     }
-    linedata <- data.frame(list(xint = ncol(misstab) - 0.5, 
-                                yint = nrow(misstab) - 0.5))
+    linedata <- data.frame(list(yint = ncol(misstab) - 0.5, 
+                                xint = nrow(misstab) - 0.5))
     textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
     plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
-    outplot <- ggplot(plotdf, aes_string(y = "Locus", x = "Population")) + 
+    outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
                geom_tile(aes_string(fill = "Missing")) +
-               labs(list(title = title, y = "Locus", x = "Population")) +
+               labs(list(title = title, x = "Locus", y = "Population")) +
                labs(fill = leg_title) + 
                scale_fill_gradient(low = low, high = high, na.value = "white", 
                                    limits = lims) +
@@ -401,6 +448,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
   } else {
     attr(misstab, "dimnames") <- list(Locus = rownames(misstab), 
                                       Population = colnames(misstab))
+    misstab <- t(misstab)
   }
   if (returnplot){
     misstab <- list(table = misstab, plot = outplot)

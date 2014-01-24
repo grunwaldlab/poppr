@@ -474,7 +474,6 @@ Default Command:
 funk <- "genind2genalex"
 print_command(funk)
 @
-}
 % \texttt{genind2genalex(pop, filename = "genalex.csv", quiet = FALSE)}
 \end{quote}
 \begin{itemize}
