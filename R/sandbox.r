@@ -1302,7 +1302,7 @@ javier<-function(x){
 ####################################################################################################################################
 #' td
 #' 
-#' Tajima-D wrapper of \code{pegas} function \code{tajima.test} to get a data frame out of the data with the Tajima D value, the p-values for normality and poisson, the files and if the p-value (for normality) is significant or not.
+#' Tajima-D wrapper of \code{pegas} function \code\link{{tajima.test}} to get a data frame out of the data with the Tajima D value, the p-values for normality and poisson, the files and if the p-value (for normality) is significant or not.
 #' 
 #' @param x an alignment \code{fasta} file (preferably full path, fasta|fas extension).
 #' 
@@ -1310,7 +1310,7 @@ javier<-function(x){
 #' 
 #' @seealso \code{\link{tajima.test}}
 #' 
-#' @note The input FASTA file MUST BE AN ALIGNMENT! Be sure to use the full path. The FASTA files are read by \code{\link{ape}} function \code{read.dna} and then processed and ran trough \code{pegas} function \code{\link{tajima_test}}.
+#' @note The input FASTA file MUST BE AN ALIGNMENT! Be sure to use the full path. The FASTA files are read by \code{\link{ape}} function \code{read.dna} and then processed and ran trough \code{pegas} function \code{\link{tajima.test}}.
 #'
 #' @export
 #' 
