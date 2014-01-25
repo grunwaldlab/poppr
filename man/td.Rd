@@ -15,17 +15,17 @@ and if the p-value (for normality) is significant or not.
 }
 \description{
 Tajima-D wrapper of \code{pegas} function
-\code{tajima.test} to get a data frame out of the data with
-the Tajima D value, the p-values for normality and poisson,
-the files and if the p-value (for normality) is significant
-or not.
+\code{\link{tajima.test}} to get a data frame out of the
+data with the Tajima D value, the p-values for normality
+and poisson, the files and if the p-value (for normality)
+is significant or not.
 }
 \note{
 The input FASTA file MUST BE AN ALIGNMENT! Be sure to use
 the full path. The FASTA files are read by
 \code{\link{ape}} function \code{read.dna} and then
 processed and ran trough \code{pegas} function
-\code{\link{tajima_test}}.
+\code{\link{tajima.test}}.
 }
 \examples{
 # Analyze one of the included FASTA alignment files
