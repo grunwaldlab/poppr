@@ -1589,4 +1589,70 @@ multi.dnds <- function(x){
   cat("dN/dS\n")
   rbind.fill(lapply(x,dn.ds))
 }
+###############################################################################################################################
 
+td.new <- function (x){
+    seq <- read.dna(x,format="fasta")
+    tt <- tajima.test(seq)
+    tt <- unlist(tt)
+    return ((tt))
+}
+
+multi.td.new <- function(x,cutoff = 0.05){
+  cat("Tajimas D Calculation\n")
+    tt.df <- t(vapply(x,td.new,numeric(3)))
+    rownames(tt.df) <- basename(x)
+    tt.df <- as.data.frame(tt.df)
+    pna <- is.na(tt.df$Pval.normal)  
+    pcutoff <- tt.df$Pval.normal > cutoff
+    tt.df$stat[pcutoff] <- "Neutral"
+    tt.df$stat[!pcutoff&tt.df$D>1] <- "Positive"
+    tt.df$stat[!pcutoff&tt.df$D<1] <- "Negative" 
+    tt.df$stat[pna] <- "Non_segregating"
+    return(tt.df)  
+  }
+
+
+n.diversity.new <- function (x){
+  seq <- read.dna(x,format="fasta")
+   nuc.div <- round(nuc.div(seq),digits=3)
+  unlist(nuc.div)
+  return(nuc.div)
+}
+
+
+multi.nd.new <- function(x){
+  cat("Nucleotide Diversity\n")
+  nd.df <- (vapply(x,n.diversity.new,numeric(1)))
+  nd.df <- as.data.frame(nd.df)
+  rownames(nd.df) <- basename(x)
+  colnames(nd.df) <- c("Nuc.Div")
+  return(nd.df)  
+}
+
+
+
+dn.ds.new <- function (x){
+    seq <- read.alignment(x,format="fasta")
+    if (!seq$nb == 2){
+      stop("This alignment has more than 2 sequences. Incorrect way to use the dN/dS algorithm")
+    } else {
+    tab <- supressWarnings(kaks(seq))
+    tab <- unlist(tab)
+    if (is.na(tab)){
+     tab <- as.numeric(c(ka = NA,ks = NA,vka = NA,vks = NA))
+    }
+    return(tab)
+  }
+ }
+
+multi.dnds.new <- function(x){
+  cat("dN/dS calculation\n")
+  dnds.df <- (vapply(x,dn.ds.new,numeric(4)))
+  dnds.df <-as.data.frame(t(dnds.df))
+  rownames(dnds.df) <- basename(x)
+  dnds.df$dnds <- dnds.df$ka/dnds.df$ks
+  dnds.df$stat[dnds.df$dnds>1] <- "Positive"
+  dnds.df$stat[dnds.df$dnds<1] <- "Negative"
+  return(dnds.df)  
+}
