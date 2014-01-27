@@ -1590,40 +1590,44 @@ multi.dnds <- function(x){
   rbind.fill(lapply(x,dn.ds))
 }
 ###############################################################################################################################
+# 
+# Note for Javier: 
+#   I have made notes on the lines that could be cleaned up. 
 
 td.new <- function (x){
-    seq <- read.dna(x,format="fasta")
+    seq <- read.dna(x,format="fasta") # Add spaces after commas
     tt <- tajima.test(seq)
     tt <- unlist(tt)
     return ((tt))
 }
 
-multi.td.new <- function(x,cutoff = 0.05){
+multi.td.new <- function(x,cutoff = 0.05){ # Add spaces after commas
   cat("Tajimas D Calculation\n")
-    tt.df <- t(vapply(x,td.new,numeric(3)))
+    tt.df <- t(vapply(x,td.new,numeric(3))) # Add spaces after commas
     rownames(tt.df) <- basename(x)
     tt.df <- as.data.frame(tt.df)
     pna <- is.na(tt.df$Pval.normal)  
     pcutoff <- tt.df$Pval.normal > cutoff
     tt.df$stat[pcutoff] <- "Neutral"
-    tt.df$stat[!pcutoff&tt.df$D>1] <- "Positive"
-    tt.df$stat[!pcutoff&tt.df$D<1] <- "Negative" 
+    tt.df$stat[!pcutoff&tt.df$D>1] <- "Positive" # Add spaces around 
+    tt.df$stat[!pcutoff&tt.df$D<1] <- "Negative" # the binary operators
     tt.df$stat[pna] <- "Non_segregating"
     return(tt.df)  
   }
 
 
 n.diversity.new <- function (x){
-  seq <- read.dna(x,format="fasta")
-   nuc.div <- round(nuc.div(seq),digits=3)
+  seq <- read.dna(x,format="fasta") # Add spaces after commas
+  # No reason to round these results.
+  nuc.div <- round(nuc.div(seq),digits=3) # Add spaces after commas
   unlist(nuc.div)
   return(nuc.div)
 }
 
 
 multi.nd.new <- function(x){
-  cat("Nucleotide Diversity\n")
-  nd.df <- (vapply(x,n.diversity.new,numeric(1)))
+  cat("Nucleotide Diversity\n") # Use a 'quiet' argument for this.
+  nd.df <- (vapply(x,n.diversity.new,numeric(1))) # Add spaces after commas
   nd.df <- as.data.frame(nd.df)
   rownames(nd.df) <- basename(x)
   colnames(nd.df) <- c("Nuc.Div")
@@ -1633,22 +1637,23 @@ multi.nd.new <- function(x){
 
 
 dn.ds.new <- function (x){
-    seq <- read.alignment(x,format="fasta")
+    seq <- read.alignment(x,format="fasta") # Add spaces after commas
     if (!seq$nb == 2){
+      # Make this stop message more informative. 
       stop("This alignment has more than 2 sequences. Incorrect way to use the dN/dS algorithm")
     } else {
-    tab <- supressWarnings(kaks(seq))
+    tab <- suppressWarnings(kaks(seq))
     tab <- unlist(tab)
     if (is.na(tab)){
-     tab <- as.numeric(c(ka = NA,ks = NA,vka = NA,vks = NA))
+     tab <- as.numeric(c(ka = NA,ks = NA,vka = NA,vks = NA)) # Add spaces after commas
     }
     return(tab)
   }
  }
 
 multi.dnds.new <- function(x){
-  cat("dN/dS calculation\n")
-  dnds.df <- (vapply(x,dn.ds.new,numeric(4)))
+  cat("dN/dS calculation\n") # Use a 'quiet' argument for this.
+  dnds.df <- (vapply(x,dn.ds.new,numeric(4))) # Add spaces after commas
   dnds.df <-as.data.frame(t(dnds.df))
   rownames(dnds.df) <- basename(x)
   dnds.df$dnds <- dnds.df$ka/dnds.df$ks
