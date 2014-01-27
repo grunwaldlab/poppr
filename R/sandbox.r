@@ -1644,7 +1644,7 @@ dn.ds.new <- function (x){
     } else {
     tab <- suppressWarnings(kaks(seq))
     tab <- unlist(tab)
-    if (is.na(tab)){
+    if (is.na(tab)){ # if statements only take one value. 
      tab <- as.numeric(c(ka = NA,ks = NA,vka = NA,vks = NA)) # Add spaces after commas
     }
     return(tab)
