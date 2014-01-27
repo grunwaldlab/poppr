@@ -1593,6 +1593,9 @@ multi.dnds <- function(x){
 # 
 # Note for Javier: 
 #   I have made notes on the lines that could be cleaned up. 
+#   This throws an error:
+#   Anouk <- system.file("sequences/Anouk.fasta", package = "seqinr")
+#   td.new(Anouk)
 
 td.new <- function (x){
     seq <- read.dna(x,format="fasta") # Add spaces after commas
