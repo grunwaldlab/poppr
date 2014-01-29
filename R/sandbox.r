@@ -42,7 +42,12 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
-
+unmatched_pops_warning <- function(pops, sublist){
+  msg <- paste("The sublist provided does not match any of the populations:\n",
+               "\tsublist.......", sublist, "\n", 
+               "\tPopulations...", paste(pops, collapse = " "))
+  return(msg)
+}
 
 new.popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 
@@ -54,6 +59,7 @@ new.popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
       warning("No population structure. Subsetting not taking place.")
     return(gid)
   }
+  orig_list <- sublist 
   popnames <- gid@pop.names
   if (toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
@@ -112,12 +118,16 @@ new.popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     }
     sublist <- pop(gid) %in% sublist
     if (!any(sublist)){
-      nothing_warn <- paste("Nothing present in the sublist.\n",
+      if (!is.numeric(orig_list) & !any(gid@pop.names %in% orig_list)){
+        stop(unmatched_pops_warning(gid@pop.names, orig_list))
+      } else {
+        nothing_warn <- paste("Nothing present in the sublist.\n",
                             "Perhaps the sublist and blacklist arguments have",
                             "duplicate entries?\n",
                             "Subsetting not taking place.")
-      warning(nothing_warn)
-      return(gid)
+        warning(nothing_warn)
+        return(gid)
+      }
     }
     gid <- gid[sublist, , drop = drop]
     gid@call <- match.call()
