@@ -39,42 +39,22 @@ opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'a
 @
 
 <<poppr_funk, eval = TRUE, echo = FALSE>>=
-print_args <- function(arg_name, arg_list){
-  arg_value <- arg_list[[arg_name]]  
-  if (missing(arg_value)){
-    return(arg_name)
-    #cat(paste0(arg_name, ", "))
-  } else {
-    if (arg_name == "glim"){
-      arg_value <- 'c(0, 0.8)'
-    } else if (arg_name == "cutoff" & length(arg_value) > 1){
-      arg_value <- '2/nInd(pop)'
-    } else if (is.character(arg_value)){
-      arg_value <- paste0('"', arg_value, '"')
-    } else if (is.null(arg_value)) {
-      arg_value <- "NULL"
-    } else if (is.na(arg_value)){
-      arg_value <- "NA"
-    } else {
-      arg_value <- as.character(arg_value)
-    }
-    return(paste0(arg_name, " = ", arg_value))
-    #cat(paste0(arg_name, " = ", arg_value, comma))
-  }
-}
 print_command <- function(funk){
-  forms <- formals(funk)
-  arg_length <- length(forms)
-  all_args <- vapply(names(forms), print_args, character(1), forms)
-  if (arg_length > 1){
-    all_args <- c(paste0(all_args[-arg_length], ","), all_args[arg_length])
-    cat(paste0(funk,"(",all_args[1]), 
-      all_args[c(-1,-arg_length)], 
-      paste0(all_args[arg_length],")"), fill = 80)
-  } else {
-    cat(paste0(funk,"(",all_args,")"), fill = 80)
-  }
+  fargs <- formals(funk)
+  
+  lapply(names(fargs), function(arg_name, fargs){
+    arg <- fargs[[arg_name]]
+    if (missing(arg)){
+      fargs[[arg_name]] <<- as.symbol(arg_name)
+      names(fargs)[names(fargs) == arg_name] <<- ""
+    }
+  }, fargs)
+  fargs$call <- as.symbol(funk)
+  fargs <- fargs[c(length(fargs), 1:(length(fargs) - 1))]
+  return(as.call(fargs))
 }
+
+
 @
 % \definecolor{Sinput}{rgb}{0.75,0.19,0.19}
 % \definecolor{Soutput}{rgb}{0,0,0}
