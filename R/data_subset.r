@@ -278,14 +278,14 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 
   if (!is.genind(pop)){
-    stop("pop.subset requires a genind object\n")
+    stop("popsub requires a genind object\n")
   }
   if (is.null(pop(pop))){
     if(sublist[1] != "ALL")
       warning("No population structure. Subsetting not taking place.")
     return(pop)
   }
-  if(toupper(sublist[1]) == "ALL"){
+  if (toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
       return(pop)
     }
@@ -334,22 +334,22 @@ popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
       }
     }
   }
-  if(!is.null(mat)){
+  if (!is.null(mat)){
     mat <- mat[sublist, , drop=FALSE]
     return(mat[, which(colSums(mat) > 0), drop=FALSE])
-  }
-  else{
+  } else {
     # subsetting the population. 
-    if (is.numeric(sublist))
+    if (is.numeric(sublist)){
       sublist <- names(pop@pop.names[sublist])
-    else
+    } else{
       sublist <- names(pop@pop.names[pop@pop.names %in% sublist])
-      sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
-    if(is.na(sublist[1])){
+    }
+    sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
+    if (is.na(sublist[1])){
       warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
       return(pop)
     }
-    pop <- pop[sublist, ,drop=drop]
+    pop <- pop[sublist, , drop = drop]
     pop@call <- match.call()
     return(pop)
   }
