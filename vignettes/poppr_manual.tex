@@ -546,9 +546,9 @@ Navigate to the \textit{adegenet} folder in your R library.
 ##  [6] "/path/to/R/adegenet/files/nancycats.gen"    
 ##  [7] "/path/to/R/adegenet/files/nancycats.gtx"    
 ##  [8] "/path/to/R/adegenet/files/nancycats.str"    
-##  [9] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
-## [10] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
-## [11] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
+##  [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+## [10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
+## [11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
 ## [12] "/path/to/R/adegenet/files/usflu.fasta"      
 ## 
 ## $path
@@ -656,7 +656,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE)
+read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE, 
+    genclone = TRUE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -721,29 +722,20 @@ with any function in \textit{poppr} and \textit{adegenet}
 \end{alltt}
 \begin{verbatim}
 ## 
-##    #####################
-##    ### Genind object ### 
-##    #####################
-## - genotypes of individuals - 
+## This is a genclone object
+## -------------------------
+## Genotype information:
 ## 
-## S4 class:  genind
-## @call: read.genalex(genalex = "rootrot.csv")
+##  119   multilocus genotypes
+##  187   diploid individuals
+##  56    dominant loci
 ## 
-## @tab:  187 x 56 matrix of genotypes
+## Population information:
 ## 
-## @ind.names: vector of  187 individual names
-## @loc.names: vector of  56 locus names
-## @loc.nall: NULL
-## @loc.fac: NULL
-## @all.names: NULL
-## @ploidy:  2
-## @type:  PA
-## 
-## Optionnal contents: 
-## @pop:  factor giving the population of each individual
-## @pop.names:  factor giving the population of each individual
-## 
-## @other: a list containing: population_hierarchy
+##  1     population hierarchy - Pop
+##  18    populations defined - Athena_1 Athena_2 Athena_3 Athena_4 Athena_5 Athena_6 
+## Athena_7 Athena_8 Athena_9 Athena_10 Mt. Vernon_1 Mt. Vernon_2 Mt. Vernon_3 Mt. Vernon_4 
+## Mt. Vernon_5 Mt. Vernon_6 Mt. Vernon_7 Mt. Vernon_8
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -811,8 +803,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, 
-geodf = "xy")
+genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, 
+    geo = FALSE, geodf = "xy")
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1217,10 +1209,8 @@ You notice how the values of NA changed, yet the basic structure stayed the same
 \begin{verbatim}
 ## 
 ##  Found 617 missing values.
-##  38 genotypes contained missing values greater than 5%.
-##  Removing 38 genotypes : N215 N216 N188 N189 N190 N191 N192 N302 N304 N310 
-## N195 N197 N198 N199 N200 N201 N206 N182 N184 N186 N298 N299 N300 N301 N303 N282 
-## N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290
+##  9 genotypes contained missing values greater than 5%.
+##  Removing 9 genotypes : fca8 fca23 fca43 fca45 fca77 fca78 fca90 fca96 fca37
 \end{verbatim}
 \begin{alltt}
 \hlstd{nanloci}\hlopt{$}\hlstd{tab[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,} \hlnum{8}\hlopt{:}\hlnum{13}\hlstd{]}
@@ -1265,18 +1255,18 @@ Let's look at what happened when we removed individuals.
 \hlstd{nangeno}\hlopt{$}\hlstd{tab[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,} \hlnum{8}\hlopt{:}\hlnum{13}\hlstd{]}
 \end{alltt}
 \begin{verbatim}
-##     L1.08 L1.09 L1.10 L1.11 L1.12 L1.13
-## 001   0.0   0.5     0     0     0   0.5
-## 002   0.5   0.5     0     0     0   0.0
-## 003   0.5   0.5     0     0     0   0.0
-## 004   0.0   0.5     0     0     0   0.5
-## 005   0.0   1.0     0     0     0   0.0
+##    L1.08 L1.09 L1.10 L1.11 L1.12 L1.13
+## 01    NA    NA    NA    NA    NA    NA
+## 02    NA    NA    NA    NA    NA    NA
+## 03    NA    NA    NA    NA    NA    NA
+## 04    NA    NA    NA    NA    NA    NA
+## 05    NA    NA    NA    NA    NA    NA
 \end{verbatim}
 \begin{alltt}
 \hlkwd{length}\hlstd{(nangeno}\hlopt{$}\hlstd{ind.names)}  \hlcom{# Individuals}
 \end{alltt}
 \begin{verbatim}
-## [1] 199
+## [1] 38
 \end{verbatim}
 \begin{alltt}
 \hlstd{nangeno}\hlopt{$}\hlstd{loc.names}  \hlcom{# Names of the loci}
@@ -1308,9 +1298,11 @@ Whichever choice you make, The \textit{poppr} function \texttt{splitcombine} can
 Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{Error: values must be length 1,\\ but FUN(X[[5]]) result is length 2}}\end{kframe}
+\begin{verbatim}
+splitcombine(pop, method = 1, dfname = "population_hierarchy", 
+    sep = "_", hier = 1, setpopulation = TRUE, fixed = TRUE)
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
 % \texttt{splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)}
@@ -1700,9 +1692,11 @@ And that, is how you subset your data with poppr!
 Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{Error: values must be length 1,\\ but FUN(X[[2]]) result is length 2}}\end{kframe}
+\begin{verbatim}
+clonecorrect(pop, hier = 1, dfname = "population_hierarchy", 
+    combine = FALSE, keep = 1)
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
 % \texttt{clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)}
@@ -1759,7 +1753,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-shufflepop(pop,  method = 1)
+shufflepop(pop, method = 1)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1960,7 +1954,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-mlg(pop,  quiet = FALSE)
+mlg(pop, quiet = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1979,8 +1973,8 @@ mlg(pop,  quiet = FALSE)
 \end{alltt}
 \begin{verbatim}
 ## #############################
-## # Number of Individuals: 1903 
-## # Number of MLG: 752 
+## # Number of Individuals:  1903 
+## # Number of MLG:  752 
 ## #############################
 ## [1] 752
 \end{verbatim}
@@ -2000,7 +1994,7 @@ Default Command:
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, 
-indexreturn = FALSE, df = FALSE, quiet = FALSE)
+    indexreturn = FALSE, df = FALSE, quiet = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2111,8 +2105,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, 
-total = FALSE, quiet = FALSE)
+mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, 
+    bar = TRUE, total = FALSE, quiet = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2562,7 +2556,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", hist = TRUE)
+ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
+    hist = TRUE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2674,7 +2669,7 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-diss.dist(pop)
+diss.dist(x, diff = TRUE, frac = TRUE, mat = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2758,9 +2753,10 @@ We will save this object for a later demonstration of the addition and loss mode
 Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{Error: values must be length 1,\\ but FUN(X[[2]]) result is length 2}}\end{kframe}
+\begin{verbatim}
+bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
 % \texttt{bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)}
@@ -2964,9 +2960,12 @@ Remember N113 and N111? Take a look at where they fall on the heatmap. They don'
 Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{Error: values must be length 1,\\ but FUN(X[[2]]) result is length 2}}\end{kframe}
+\begin{verbatim}
+bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, 
+    tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE, 
+    ...)
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
 % \texttt{bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
@@ -3140,9 +3139,13 @@ Now, we'll see what happens when we change the adjustment parameter (affects the
 Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{Error: values must be length 1,\\ but FUN(X[[2]]) result is length 2}}\end{kframe}
+\begin{verbatim}
+bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors, 
+    sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+    gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, 
+    ...)
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
 % \texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\ 
@@ -3254,8 +3257,8 @@ Default Command:
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
 poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", 
-blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), 
-gadj = 3, gweight = 1, wscale = TRUE, ...)
+    blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 
+        0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -3324,9 +3327,13 @@ Since we have the ability, let's visualize the \textit{A. euteiches} data set \c
 Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{Error: values must be length 1,\\ but FUN(X[[3]]) result is length 2}}\end{kframe}
+\begin{verbatim}
+poppr(pop, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0, 
+    method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, 
+    clonecorrect = FALSE, hier = 1, dfname = "population_hierarchy", 
+    keep = 1, hist = TRUE, minsamp = 10, legend = FALSE)
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
 % \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
@@ -3798,6 +3805,35 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = FALSE, clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
 \item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
 \end{itemize}
+% 
+% Possible replacement:
+% \begin{itemize}
+% \item print_command("getfile") (Section \ref{intro:import:getfile})
+% \item print_command("read.genalex") (Section \ref{intro:import:read.genalex}) 
+% \item print_command("genind2genalex") (Section \ref{intro:import:genind2genalex})
+% \item print_command("missingno") (Section \ref{data.manip:missing:missingno})
+% \item print_command("splitcombine") (Section \ref{data.manip:hier:splitcombine})
+% \item print_command("popsub") (Section \ref{data.manip:divide:popsub})
+% \item print_command("clonecorrect") (Section \ref{data.manip:cc:clonecorrect})
+% \item print_command("shufflepop") (Section \ref{data.manip:shuffle:shufflepop})
+% \item print_command("informloci") (Section \ref{data.manip:informloci})
+% \item print_command("mlg") (Section \ref{mlg:mlg:mlg})
+% \item print_command("mlg.crosspop") (Section \ref{mlg:cross:mlg.crosspop})
+% \item print_command("mlg.table") (Section \ref{mlg:table:mlg.table})
+% \item print_command("mlg.vector") (Section \ref{mlg:mix:mlg.vector})
+% \item print_command("ia") (Section \ref{index:iard:ia})
+% \item print_command("diss.dist") (Section \ref{index:dist:diss.dist})
+% \item print_command("bruvo.dist") (Section \ref{index:bruvo:bruvo.dist})
+% \item print_command("bruvo.boot") (Section \ref{index:trees:bruvo.boot})
+% \item print_command("greycurve") (Section \ref{index:trees:greycurve})
+% \item print_command("bruvo.msn") (Section \ref{index:trees:bruvo.msn})
+% \item print_command("poppr.msn") (Section \ref{index:trees:poppr.msn})
+% \item print_command("poppr") (Section \ref{summary:poppr})
+% \item print_command("poppr.all") (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
+
+
+
+
 \normalsize
 \bibliographystyle{plain}
 \bibliography{poppr_man}

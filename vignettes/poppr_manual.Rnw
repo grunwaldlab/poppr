@@ -2061,6 +2061,35 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = FALSE, clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
 \item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
 \end{itemize}
+% 
+% Possible replacement:
+% \begin{itemize}
+% \item \Sexpr{print_command("getfile")} (Section \ref{intro:import:getfile})
+% \item \Sexpr{print_command("read.genalex")} (Section \ref{intro:import:read.genalex}) 
+% \item \Sexpr{print_command("genind2genalex")} (Section \ref{intro:import:genind2genalex})
+% \item \Sexpr{print_command("missingno")} (Section \ref{data.manip:missing:missingno})
+% \item \Sexpr{print_command("splitcombine")} (Section \ref{data.manip:hier:splitcombine})
+% \item \Sexpr{print_command("popsub")} (Section \ref{data.manip:divide:popsub})
+% \item \Sexpr{print_command("clonecorrect")} (Section \ref{data.manip:cc:clonecorrect})
+% \item \Sexpr{print_command("shufflepop")} (Section \ref{data.manip:shuffle:shufflepop})
+% \item \Sexpr{print_command("informloci")} (Section \ref{data.manip:informloci})
+% \item \Sexpr{print_command("mlg")} (Section \ref{mlg:mlg:mlg})
+% \item \Sexpr{print_command("mlg.crosspop")} (Section \ref{mlg:cross:mlg.crosspop})
+% \item \Sexpr{print_command("mlg.table")} (Section \ref{mlg:table:mlg.table})
+% \item \Sexpr{print_command("mlg.vector")} (Section \ref{mlg:mix:mlg.vector})
+% \item \Sexpr{print_command("ia")} (Section \ref{index:iard:ia})
+% \item \Sexpr{print_command("diss.dist")} (Section \ref{index:dist:diss.dist})
+% \item \Sexpr{print_command("bruvo.dist")} (Section \ref{index:bruvo:bruvo.dist})
+% \item \Sexpr{print_command("bruvo.boot")} (Section \ref{index:trees:bruvo.boot})
+% \item \Sexpr{print_command("greycurve")} (Section \ref{index:trees:greycurve})
+% \item \Sexpr{print_command("bruvo.msn")} (Section \ref{index:trees:bruvo.msn})
+% \item \Sexpr{print_command("poppr.msn")} (Section \ref{index:trees:poppr.msn})
+% \item \Sexpr{print_command("poppr")} (Section \ref{summary:poppr})
+% \item \Sexpr{print_command("poppr.all")} (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
+
+
+
+
 \normalsize
 \bibliographystyle{plain}
 \bibliography{poppr_man}
