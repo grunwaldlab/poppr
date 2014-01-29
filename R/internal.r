@@ -434,8 +434,27 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 # Internal functions utilizing this function:
 # # none
 #==============================================================================#
-
 mlg.matrix <- function(x){
+  if (is.genclone(x)){
+    mlgvec <- x@mlg
+  } else {
+    mlgvec <- mlg.vector(x)
+  }
+  mlgs   <- length(unique(mlgvec))
+  if (!is.null(pop(x))){
+    mlg.mat <- table(pop(x), mlgvec)
+  } else {
+    mlg.mat <- matrix(table(mlgvec), nrow = 1)
+    rownames(mlg.mat) <- "Total"
+  }
+  names(attr(mlg.mat, "dimnames")) <- NULL
+  colnames(mlg.mat) <- paste("MLG", colnames(mlg.mat), sep=".")
+  return(mlg.mat)
+}
+#==============================================================================#
+# DEPRECIATED
+#==============================================================================#
+old.mlg.matrix <- function(x){
   mlgvec <- mlg.vector(x)
   mlgs   <- length(unique(mlgvec))
   
@@ -461,7 +480,6 @@ mlg.matrix <- function(x){
   colnames(mlg.mat) <- paste("MLG", 1:mlgs, sep=".")
   return(mlg.mat)
 }
-
 #==============================================================================#
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
 # 
