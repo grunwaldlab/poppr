@@ -44,30 +44,31 @@
 
 
 
-new.popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
+new.popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 
-  if (!is.genind(pop)){
+  if (!is.genind(gid)){
     stop("popsub requires a genind object\n")
   }
-  if (is.null(pop(pop))){
+  if (is.null(pop(gid))){
     if(sublist[1] != "ALL")
       warning("No population structure. Subsetting not taking place.")
-    return(pop)
+    return(gid)
   }
+  popnames <- gid@pop.names
   if (toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
-      return(pop)
+      return(gid)
     } else {
       # filling the sublist with all of the population names.
-      sublist <- pop@pop.names 
+      sublist <- popnames 
     }
   }
 
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
-  if (is.null(names(pop@pop.names))){
-    if (length(pop@pop.names) == length(levels(pop@pop))){
-      names(pop@pop.names) <- levels(pop@pop)
+  if (is.null(names(popnames))){
+    if (length(popnames) == length(levels(gid@pop))){
+      names(popnames) <- levels(gid@pop)
     }
     else{
       stop("Population names do not match population factors.")
@@ -78,27 +79,24 @@ new.popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
   if (!is.null(blacklist)){
 
     # If both the sublist and blacklist are numeric or character.
-    if(is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
+    if (is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
       sublist <- sublist[!sublist %in% blacklist]
     }
     
     # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-    else if(is.numeric(sublist) & class(blacklist) == "character"){
-      sublist <- sublist[sublist %in% which(!pop@pop.names %in% blacklist)]
-    }
-    else{
-
+    else if (is.numeric(sublist) & class(blacklist) == "character"){
+      sublist <- sublist[sublist %in% which(!popnames %in% blacklist)]
+    } else {
       # no sublist specified. Ideal situation
-      if(all(pop@pop.names %in% sublist)){
+      if(all(popnames %in% sublist)){
         sublist <- sublist[-blacklist]
       }
-
       # weird situation where the user will specify a certain sublist, yet index
       # the blacklist numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
       else{
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
-        sublist <- sublist[!sublist %in% pop@pop.names[blacklist]]
+        sublist <- sublist[!sublist %in% popnames[blacklist]]
       }
     }
   }
@@ -108,18 +106,22 @@ new.popsub <- function(pop, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
   } else {
     # subsetting the population. 
     if (is.numeric(sublist)){
-      sublist <- names(pop@pop.names[sublist])
-    } else{
-      sublist <- names(pop@pop.names[pop@pop.names %in% sublist])
+      sublist <- popnames[sublist]
+    } else {
+      sublist <- popnames[popnames %in% sublist]
     }
-    sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
-    if (is.na(sublist[1])){
-      warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
-      return(pop)
+    sublist <- pop(gid) %in% sublist
+    if (!any(sublist)){
+      nothing_warn <- paste("Nothing present in the sublist.\n",
+                            "Perhaps the sublist and blacklist arguments have",
+                            "duplicate entries?\n",
+                            "Subsetting not taking place.")
+      warning(nothing_warn)
+      return(gid)
     }
-    pop <- pop[sublist, , drop = drop]
-    pop@call <- match.call()
-    return(pop)
+    gid <- gid[sublist, , drop = drop]
+    gid@call <- match.call()
+    return(gid)
   }
 }
 
