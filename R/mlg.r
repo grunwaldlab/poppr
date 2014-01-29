@@ -181,6 +181,9 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
     pop <- popsub(pop, sublist, blacklist)
     mlgtab <- mlgtab[unlist(vapply(pop@pop.names, 
                 function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
+    rows <- rownames(mlgtab)
+#     subrows <- rows %in% sublist & !rows %in% blacklist
+#     mlgtab <- mlgtab[subrows, , drop = FALSE]
   }
   if(total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
     mlgtab <- rbind(mlgtab, colSums(mlgtab))
