@@ -477,11 +477,42 @@ As you can see, now all of the files that existed in that directory are there! N
 ## | 9 
 ## | 10 
 ## | Total 
-## | File:  simulated.dat
+## | File:  simulated.dat 
+## | Total
+##             Pop   N MLG   eMLG    SE     H      G  Hexp   E.5     Ia rbarD          File
+## 1      Athena_1   9   7  7.000 0.000 1.889  6.231 0.944 0.932  2.925 0.210   rootrot.csv
+## 2      Athena_2  12  12 10.000   NaN 2.485 12.000 1.000 1.000  4.160 0.128   rootrot.csv
+## 3      Athena_3  10   2  2.000 0.000 0.325  1.220 0.200 0.571  2.000 1.000   rootrot.csv
+## 4      Athena_4  13   9  7.154 0.769 1.946  5.121 0.872 0.687  5.495 0.372   rootrot.csv
+## 5      Athena_5  10   7  7.000 0.000 1.834  5.556 0.911 0.866  4.532 0.353   rootrot.csv
+## 6      Athena_6   5   5  5.000 0.000 1.609  5.000 1.000 1.000  2.464 0.190   rootrot.csv
+## 7      Athena_7  11  10  9.182 0.386 2.272  9.308 0.982 0.955  2.129 0.086   rootrot.csv
+## 8      Athena_8   8   6  6.000 0.000 1.667  4.571 0.893 0.831  3.857 0.323   rootrot.csv
+## 9      Athena_9  10  10 10.000 0.000 2.303 10.000 1.000 1.000  2.815 0.118   rootrot.csv
+## 10    Athena_10   9   8  8.000 0.000 2.043  7.364 0.972 0.948  2.849 0.137   rootrot.csv
+## 11 Mt. Vernon_1  10   9  9.000 0.000 2.164  8.333 0.978 0.952  7.132 0.276   rootrot.csv
+## 12 Mt. Vernon_2   6   6  6.000 0.000 1.792  6.000 1.000 1.000 20.649 0.492   rootrot.csv
+## 13 Mt. Vernon_3   8   6  6.000 0.000 1.667  4.571 0.893 0.831  2.117 0.106   rootrot.csv
+## 14 Mt. Vernon_4  12   8  6.833 0.665 1.814  4.500 0.848 0.681  3.008 0.255   rootrot.csv
+## 15 Mt. Vernon_5  17   7  5.541 0.828 1.758  5.070 0.853 0.848  2.677 0.340   rootrot.csv
+## 16 Mt. Vernon_6  12  11  9.318 0.466 2.369 10.286 0.985 0.958 19.498 0.467   rootrot.csv
+## 17 Mt. Vernon_7  12   9  7.818 0.649 2.095  7.200 0.939 0.870  1.208 0.153   rootrot.csv
+## 18 Mt. Vernon_8  13   9  7.346 0.764 2.032  6.259 0.910 0.794  1.153 0.169   rootrot.csv
+## 19        Total 187 119  9.612 0.612 4.558 68.972 0.991 0.720 14.371 0.271   rootrot.csv
+## 20            1  19  16  9.211 0.701 2.726 14.440 0.982 0.942 14.229 0.313  rootrot2.csv
+## 21            2  18  18 10.000 0.000 2.890 18.000 1.000 1.000  9.143 0.194  rootrot2.csv
+## 22            3  18   8  5.265 1.009 1.609  3.375 0.745 0.594 22.843 0.573  rootrot2.csv
+## 23            4  25  17  7.887 1.124 2.575  9.615 0.933 0.710 18.488 0.415  rootrot2.csv
+## 24            5  27  14  7.511 1.057 2.446  9.720 0.932 0.828 23.002 0.520  rootrot2.csv
+## 25            6  17  15  9.338 0.633 2.670 13.762 0.985 0.949 17.778 0.410  rootrot2.csv
+## 26            7  23  19  9.178 0.764 2.872 16.030 0.980 0.902 19.162 0.405  rootrot2.csv
+## 27            8  21  15  8.273 0.981 2.558 10.756 0.952 0.820 24.313 0.543  rootrot2.csv
+## 28            9  10  10 10.000 0.000 2.303 10.000 1.000 1.000  2.815 0.118  rootrot2.csv
+## 29           10   9   8  8.000 0.000 2.043  7.364 0.972 0.948  2.849 0.137  rootrot2.csv
+## 30        Total 187 119  9.612 0.612 4.558 68.972 0.991 0.720 14.371 0.271  rootrot2.csv
+## 31        Total 100   6  6.000 0.000 1.235  2.790 0.648 0.735  0.050 0.061 simulated.dat
 \end{verbatim}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: length of 'dimnames' [2] not equal to array extent}}\end{kframe}
+\end{kframe}
 \end{knitrout}
 
 
@@ -3469,11 +3500,11 @@ The reason why the P-values would be different is described at the end of sectio
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: length of 'dimnames' [2] not equal to array extent}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'sim\_ex' not found}}\end{kframe}
+\begin{verbatim}
+##     Pop   N MLG eMLG SE     H    G  Hexp   E.5   Ia p.Ia rbarD p.rD          File
+## 1 Total 100   6    6  0 1.235 2.79 0.648 0.735 0.05 0.09 0.061 0.09 simulated.dat
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
 \begin{figure}[h!]
