@@ -78,6 +78,33 @@
 #' @author Zhian N. Kamvar
 #' @examples
 #'
+#' # Load the data set
+#' data(Aeut)
+#' # Investigate the number of multilocus genotypes.
+#' amlg <- mlg(Aeut)
+#' amlg # 119
+#' # show the multilocus genotype vector 
+#' avec <- mlg.vector(Aeut)
+#' avec 
+#' # Get a table
+#' atab <- mlg.table(Aeut, bar = FALSE)
+#' atab
+#' # See where multilocus genotypes cross populations
+#' acrs <- mlg.crosspop(Aeut) # MLG.59: (2 inds) Athena Mt. Vernon
+#' 
+#' \dontrun{
+#' 
+#' # A simple example. 10 individuals, 5 genotypes.
+#' mat1 <- matrix(ncol=5, 25:1)
+#' mat1 <- rbind(mat1, mat1)
+#' mat <- matrix(nrow=10, ncol=5, paste(mat1,mat1,sep="/"))
+#' mat.gid <- df2genind(mat, sep="/")
+#' mlg(mat.gid)
+#' mlg.vector(mat.gid)
+#' mlg.table(mat.gid)
+#' 
+#' # Now for a more complicated example.
+#' # Data set of 1903 samples of the H3N2 flu virus genotyped at 125 SNP loci.
 #' data(H3N2)
 #' mlg(H3N2, quiet=FALSE)
 #' 
@@ -90,7 +117,6 @@
 #' # Show which genotypes exist accross populations in the entire dataset.
 #' res <- mlg.crosspop(H3N2, quiet=FALSE)
 #'
-#' \dontrun{
 #' # Let's say we want to visualize the multilocus genotype distribution for the
 #' # USA and Russia
 #' mlg.table(H3N2, sublist=c("USA", "Russia"), bar=TRUE)
@@ -110,14 +136,6 @@
 #' # analyze only the MLGs that are duplicated across populations. 
 #' new.H <- H3N2[H.vec %in% inds, ]
 #' 
-#' # A simple example. 10 individuals, 5 genotypes.
-#' mat1 <- matrix(ncol=5, 25:1)
-#' mat1 <- rbind(mat1, mat1)
-#' mat <- matrix(nrow=10, ncol=5, paste(mat1,mat1,sep="/"))
-#' mat.gid <- df2genind(mat, sep="/")
-#' mlg(mat.gid)
-#' mlg.vector(mat.gid)
-#' mlg.table(mat.gid)
 #' }
 NULL
 #==============================================================================#
