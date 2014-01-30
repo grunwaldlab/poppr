@@ -4,6 +4,11 @@ test_that("subsetting needs a genind object", {
   expect_error(popsub(1:10), "popsub requires a genind object\n")
 })
 
+test_that("sublist needs to match populations", {
+  data(microbov)
+  expect_error(popsub(microbov, "missingno"), 
+               unmatched_pops_warning(microbov@pop.names, "missingno"))
+})
 
 test_that("subsetting works with populations", {
   data(nancycats)
