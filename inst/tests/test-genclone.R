@@ -1,0 +1,18 @@
+context("Genclone coercion tests")
+
+test_that("A genclone object contains a genind object", {
+	data(partial_clone)
+	pc <- as.genclone(partial_clone)
+	expect_that(slotNames(partial_clone), matches(slotNames(pc)[-c(1:2)]))
+	expect_that(partial_clone@tab, equals(pc@tab))
+	expect_that(partial_clone@loc.names, is_identical_to(pc@loc.names))
+	expect_that(partial_clone@loc.nall, is_identical_to(pc@loc.nall))
+	expect_that(partial_clone@all.names, is_identical_to(pc@all.names))
+	expect_that(partial_clone@ind.names, is_identical_to(pc@ind.names))
+	expect_that(partial_clone@pop, is_identical_to(pc@pop))
+	expect_that(partial_clone@pop.names, is_identical_to(pc@pop.names))
+	expect_that(partial_clone@ploidy, is_identical_to(pc@ploidy))
+	expect_that(partial_clone@type, is_identical_to(pc@type))
+	expect_that(partial_clone@other, is_identical_to(pc@other))
+	expect_that(pc@mlg, is_identical_to(mlg.vector(partial_clone)))
+})
