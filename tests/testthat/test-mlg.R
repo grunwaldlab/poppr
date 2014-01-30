@@ -1,0 +1,16 @@
+context("Multilocus genotype tests")
+
+test_that("multilocus genotype vector is same length as samples", {
+  data(Aeut)
+  data(partial_clone)
+  data(nancycats)
+  amlg <- mlg.vector(Aeut)
+  pmlg <- mlg.vector(partial_clone)
+  nmlg <- mlg.vector(nancycats)
+  expect_that(length(amlg), equals(nInd(Aeut)))
+  expect_that(length(pmlg), equals(nInd(partial_clone)))
+  expect_that(length(nmlg), equals(nInd(nancycats)))
+  expect_that(length(unique(amlg)), equals(mlg(Aeut, quiet = TRUE)))
+  expect_that(length(unique(pmlg)), equals(mlg(partial_clone, quiet = TRUE)))
+  expect_that(length(unique(nmlg)), equals(mlg(nancycats, quiet = TRUE)))
+})
