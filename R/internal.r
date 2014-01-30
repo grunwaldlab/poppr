@@ -448,6 +448,9 @@ mlg.matrix <- function(x){
     rownames(mlg.mat) <- "Total"
   }
   names(attr(mlg.mat, "dimnames")) <- NULL
+  if (is.null(colnames(mlg.mat))){
+    colnames(mlg.mat) <- 1:mlgs
+  }
   colnames(mlg.mat) <- paste("MLG", colnames(mlg.mat), sep=".")
   return(mlg.mat)
 }
