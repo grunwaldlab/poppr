@@ -10,6 +10,13 @@ test_that("sublist needs to match populations", {
                poppr:::unmatched_pops_warning(microbov@pop.names, "missingno"))
 })
 
+test_that("sum of the pops equal the whole", {
+  data(microbov)
+  mb1to7  <- popsub(microbov, 1:7)
+  mb8to15 <- popsub(microbov, 8:15)
+  expect_that(nInd(mb1to7) + nInd(mb8to15), equals(nInd(microbov)))
+  })
+
 test_that("subsetting works with populations", {
   data(nancycats)
   temp  <- nancycats@pop=="P04" | nancycats@pop=="P08"
