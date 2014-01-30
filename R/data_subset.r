@@ -231,7 +231,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 # is optional, and the default is to do nothing. The structure will allow the
 # user to select a range of populations and exclude a small number of them
 # without having to use the total. 
-# eg pop <- pop.subset(x, sublist=1:50, blacklist=c(17, 33))
+# eg pop <- popsub(x, sublist=1:50, blacklist=c(17, 33))
 # 
 #' Subset a \code{\link{genind}} object by population
 #' 
