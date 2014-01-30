@@ -5,7 +5,7 @@
 popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
 }
 \arguments{
-  \item{x}{a \code{\link{genind}} object.}
+  \item{gid}{a \code{\link{genind}} object.}
 
   \item{sublist}{a \code{vector} of population names or
   indexes that the user wishes to keep. Default to "ALL".}
