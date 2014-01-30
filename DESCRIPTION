@@ -28,4 +28,6 @@ Imports:
     reshape2,
     seqinr,
     plyr
+Suggests:
+    testthat
 License: GPL-2
