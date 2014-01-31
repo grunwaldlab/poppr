@@ -1,4 +1,4 @@
-context("Poppr table")
+context("Poppr table tests")
 
 test_that("poppr returns expected PA values", {
   data(Aeut)

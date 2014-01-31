@@ -1,4 +1,4 @@
-context("Population subset")
+context("Population subset tests")
 
 test_that("subsetting needs a genind object", {
   expect_error(popsub(1:10), "popsub requires a genind object\n")
