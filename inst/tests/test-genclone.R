@@ -16,3 +16,24 @@ test_that("A genclone object contains a genind object", {
 	expect_that(partial_clone@other, is_identical_to(pc@other))
 	expect_that(pc@mlg, is_identical_to(mlg.vector(partial_clone)))
 })
+
+test_that("Hierarchy methods work for genclone objects.", {
+  data(Aeut)
+  agc <- as.genclone(Aeut)
+  expect_that(length(gethierarchy(agc)), equals(3))
+  expect_that(agc@pop.names, equals(c(P1 = "Athena", P2 = "Mt. Vernon")))
+  expect_that({agcsplit <- splithierarchy(agc, ~Pop/Subpop)}, gives_warning())
+  expect_that(gethierarchy(agcsplit), equals(gethierarchy(agc, ~Pop/Subpop, combine = FALSE)))
+  expect_that(sethierarchy(agc, gethierarchy(agcsplit)), equals(agcsplit))
+  namehierarchy(agcsplit) <- ~Field/Core
+  expect_that(names(gethierarchy(agcsplit)), equals(c("Field", "Core")))
+  setpop(agc) <- ~Pop/Subpop
+  expect_that(agc@pop.names, equals(c("Athena_1", "Athena_2", "Athena_3", 
+                                      "Athena_4", "Athena_5", "Athena_6", 
+                                      "Athena_7", "Athena_8", "Athena_9", 
+                                      "Athena_10", "Mt. Vernon_1", 
+                                      "Mt. Vernon_2", "Mt. Vernon_3", 
+                                      "Mt. Vernon_4", "Mt. Vernon_5", 
+                                      "Mt. Vernon_6", "Mt. Vernon_7", 
+                                      "Mt. Vernon_8")))
+})
