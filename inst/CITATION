@@ -3,7 +3,7 @@ citHeader("To cite poppr in publications, please use:")
 vers <- paste("R package version", meta$Version) 
 
 citEntry(entry = 'article',
- title = "\\textit{Poppr}: an {R} package for genetic analysis of populations with clonal or partially clonal reproduction",
+ title = "\\textit{Poppr}: an {R} package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction.",
  author = personList(as.person("Zhian N. Kamvar"),
                      as.person("Javier F. Tabima"),
                      as.person(paste0("Niklaus J. Gr", 
@@ -12,15 +12,12 @@ citEntry(entry = 'article',
                                      )
                               )
           ),
- year = "2013",
- month = "12",
+ year = "2014",
  keywords = "population genetics, clonality, genotypic diversity, index of association, Bruvo's distance, clone correction, minimum spanning networks, hierarchy, bootstrap, permutation",
  key = "kamvar2013poppr",
  volume = "1",
- pages = "e161v1",
- journal = "PeerJ PrePrints",
- issn = "2167-9843",
- url = "http://dx.doi.org/10.7287/peerj.preprints.161v1",
- doi = "10.7287/peerj.preprints.161v1",
- textVersion = "Kamvar ZN, Tabima JF, Grünwald NJ. (2013) Poppr: an R package for genetic analysis of populations with clonal or partially clonal reproduction. PeerJ PrePrints 1:e161v1 http://dx.doi.org/10.7287/peerj.preprints.161v1"
+ journal = "PeerJ",
+ note = "in press",
+ textVersion = "Kamvar ZN, Tabima JF, Grünwald NJ. (2013) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ, in press."
 )
+
