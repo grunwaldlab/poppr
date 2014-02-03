@@ -1,7 +1,7 @@
 citHeader("To cite poppr in publications, please use:")
 
 vers <- paste("R package version", meta$Version) 
-umlaut <- iconv("\x9f", from = "MAC", to = "UTF-8")
+umlaut <- iconv("\x9f", from = "MAC", to = "UTF-8") # paste0("u", "\u0308")
 
 citEntry(entry = 'article',
  title = "\\textit{Poppr}: an {R} package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction.",
