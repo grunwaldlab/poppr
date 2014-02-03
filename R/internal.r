@@ -1139,3 +1139,55 @@ poppr_message <- function(){
   cat("rbarD = Standardized index of association\n")
   cat("-----------------------------------------------------------------------|\n")
 }
+
+#==============================================================================#
+# A function that will quit the function if a level in the hierarchy is not
+# present in the given data frame.
+#
+# Public functions utilizing this function:
+# # setpop gethierarchy poppr.amova
+#
+# Internal functions utilizing this function:
+# # make_hierarchy make_ade_df
+#==============================================================================#
+hier_incompatible_warning <- function(levs, df){
+  msg <- paste("One or more levels in the given hierarchy is not present", 
+               "in the data frame.",
+               "\nHierarchy:\t", paste(levs, collapse = ", "), "\nData:\t\t", 
+               paste(names(df), collapse = ", "))
+  return(msg)
+}
+
+#==============================================================================#
+# Warning message for when a distance matrix is non-euclidean and the user 
+# did not specify an appropriate correction.
+#
+# Public functions utilizing this function:
+# # poppr.amova
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+not_euclid_msg <- function(correction){
+  msg <- paste0("\nThe distance matrix generated is non-euclidean and a correction is needed.",
+                "\nYou supplied: correction = '", correction, "'\nPlease change",
+                " it to one of the following:\n",
+                "\t'cailliez'\t'quasieuclid'\t'lingoes'")
+  return(msg)
+}
+
+#==============================================================================#
+# Warning message for the function popsub.
+# Public functions utilizing this function:
+#
+# # popsub
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+unmatched_pops_warning <- function(pops, sublist){
+  msg <- paste("The sublist provided does not match any of the populations:\n",
+               "\tsublist.......", sublist, "\n", 
+               "\tPopulations...", paste(pops, collapse = " "))
+  return(msg)
+}

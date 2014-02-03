@@ -42,12 +42,6 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
-unmatched_pops_warning <- function(pops, sublist){
-  msg <- paste("The sublist provided does not match any of the populations:\n",
-               "\tsublist.......", sublist, "\n", 
-               "\tPopulations...", paste(pops, collapse = " "))
-  return(msg)
-}
 
 
 # Keeping this for compatability
@@ -55,23 +49,7 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
-# A function that will quit the function if a level in the hierarchy is not
-# present in the given data frame.
-hier_incompatible_warning <- function(levs, df){
-  msg <- paste("One or more levels in the given hierarchy is not present", 
-               "in the data frame.",
-               "\nHierarchy:\t", paste(levs, collapse = ", "), "\nData:\t\t", 
-               paste(names(df), collapse = ", "))
-  return(msg)
-}
-# Self explanitory
-not_euclid_msg <- function(correction){
-  msg <- paste0("\nThe distance matrix generated is non-euclidean and a correction is needed.",
-                "\nYou supplied: correction = '", correction, "'\nPlease change",
-                " it to one of the following:\n",
-                "\t'cailliez'\t'quasieuclid'\t'lingoes'")
-  return(msg)
-}
+
 
 
 #==============================================================================#
@@ -231,8 +209,8 @@ check_Hs <- function(x){
 #
 # arguments:
 #
-# hier         = a formula such as ~Pop/Subpop
 # x            = a genind object
+# hier         = a formula such as ~Pop/Subpop
 # clonecorrect = This refers to clone correction of the final output relative to
 #                The lowest hierararchical level. FALSE
 # within       = should witin individual variation be calculated? TRUE
@@ -248,11 +226,12 @@ check_Hs <- function(x){
 # quiet        = Should messages be printed? TRUE
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
-ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL, 
+ade4_amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE, dist = NULL, 
                        squared = TRUE, correction = "quasieuclid", 
                        dfname = "population_hierarchy", sep = "_", missing = "loci", 
                        cutoff = 0.05, quiet = FALSE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
+  if (is.null(hier)) stop("A population hierarchy must be specified")
   parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
   full_hier <- parsed_hier[length(parsed_hier)]
   
@@ -322,6 +301,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
     } else {
       correct_fun <- match.fun(correct)
       if (correct == CORRECTIONS[2]){
+        cat("Distance matrix is non-euclidean.\n")
         cat("Utilizing quasieuclid correction method. See ?quasieuclid for details.\n")
         xdist <- correct_fun(xdist)        
       } else {
