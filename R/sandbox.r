@@ -366,6 +366,9 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
   # missing to mean of the columns: indiscreet distances.
   # remove loci at cutoff
   # remove individuals at cutoff
+  if (clonecorrect){
+    x <- clonecorrect(x, hier = hier, keep = 1:length(all.vars(hier)))
+  }
   if (within & ploidy(x) > 1 & check_Hs(x)){
     hier <- update(hier, ~./Individual)
     x    <- pool_haplotypes(x, dfname = dfname)
@@ -411,11 +414,7 @@ ade4_amova <- function(hier, x, clonecorrect = FALSE, within = TRUE, dist = NULL
       }
     }
   }
-  
-  xtab    <- t(mlg.matrix(x))
-  if (clonecorrect){
-    xtab  <- ifelse(xtab == 0, 0, 1)
-  }
+  xtab  <- t(mlg.matrix(x))
   xtab    <- as.data.frame(xtab[unique(mlg.vector(x)), ])
   return(ade4::amova(samples = xtab, distances = xdist, structures = xstruct))
 }
