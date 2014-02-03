@@ -37,7 +37,7 @@ Javier F. Tabima
 \references{
 Tajima, F. (Nov 1989). "Statistical method for testing the
 neutral mutation hypothesis by DNA polymorphism.". Genetics
-123 (3): 585–95. PMC 1203831. PMID 2513255.
+123 (3): 585-95. PMC 1203831. PMID 2513255.
 }
 \seealso{
 \code{\link{tajima.test}}
