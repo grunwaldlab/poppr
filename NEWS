@@ -5,6 +5,8 @@ NEW FEATURES
 * Calculations of Bruvo's distance now features correction for missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
 * `diss.dist` now has options to return raw distaces, similarity distances, and a matrix instead of a dist object.
 * `read.genalex()` now has the option to import as a genclone object. This is the default action.
+* output of the mlg functions are now represented as integers to decrease thier size in memory.
+* `mlg.matrix` is now calculated faster utilizing R's internal tabulating capabilities.
 
 NEW DATA CLASSES
 * The `genclone` object is a new extension of the `genind` object from adegenet. This object contains slots containing population hierarchies and multilocus genotype definitions and will work with all analyses in adegenet and poppr. 
