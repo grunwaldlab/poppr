@@ -25,9 +25,7 @@ Imports:
     methods,
     ade4,
     pegas,
-    reshape2,
-    seqinr,
-    plyr
+    reshape2
 Suggests:
     testthat
 License: GPL-2
