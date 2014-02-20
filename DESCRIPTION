@@ -26,8 +26,7 @@ Imports:
     ade4,
     pegas,
     reshape2,
-    seqinr,
-    plyr
+    seqinr
 Suggests:
     testthat
 License: GPL-2

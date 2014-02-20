@@ -1313,34 +1313,12 @@ javier<-function(x){
 #' 
 #' @importFrom ape read.dna
 #' @importFrom pegas tajima.test
-td <- function (x){
-  if(!file_ext(x)=="fasta"){
-    stop("Only alignments in FASTA format are accepted. Check your dataset content and file extension.")
-  } else {
-    seq <- read.dna(x,format="fasta|fas")
-    tt <- tajima.test(seq)
-    tt$file <- basename(x)
-    
-    if (!is.na(tt$Pval.normal)){
-      if (tt$Pval.normal >= 0.05){
-        tt$stat <- c("Neutral")
-      } else {
-        if (tt$D < 1){
-          tt$stat <- c("Adaptive Selection (Positive selection)")
-        } else if (tt$D > 1){
-          tt$stat <- c("Puryfing Selection (Negative selection)")
-        }
-      }
-    }
-    else {
-      tt$D <- NA
-      tt$Pval.normal <- NA
-      tt$Pval.beta <- NA
-      tt$stat <- c("No Segregating sites")
-    }
-    
-    return (as.data.frame(tt))
-  }  
+#' 
+td<- function (x){
+  seq <- read.dna(x,format = "fasta")
+  tt <- tajima.test(seq)
+  tt <- unlist(tt)
+  return ((tt))
 }
 ############################################################################
 ## Nucleotide Diversity
@@ -1375,18 +1353,13 @@ td <- function (x){
 #'  
 #' @importFrom ape read.dna
 #' @importFrom pegas nuc.div
+#' 
 n.diversity <- function (x){
-  if(!file_ext(x)=="fasta"){
-    stop("Only alignments in FASTA format are accepted. Check your dataset content and file extension.")
-  } else {
-  seq <- read.dna(x,format="fasta|fas")
-  nd <- list()
-  nd$nuc.div <- round(nuc.div(seq),digits=3)
-  nd$file <- basename(x)
-  return(as.data.frame(nd))
-  }
+  seq <- read.dna(x, format="fasta")
+  nuc.div <- nuc.div(seq)
+  unlist(nuc.div)
+  return(nuc.div)
 }
-
 ############################################################################
 ## dN/dS Estimation
 # Function dnds: Calculation of dN/dS
@@ -1416,31 +1389,16 @@ n.diversity <- function (x){
 #' # Analyze one of the included FASTA alignment files
 #' # dn.ds("data_1.fasta",format="fasta")
 #' @importFrom seqinr read.alignment kaks
+#' 
 dn.ds <- function (x){
-  if(!file_ext(x)=="fasta|fas"){
-    stop("Only alignments in FASTA format are accepted. Check your dataset content and file extension.")
+  seq <- read.alignment(x, format="fasta") 
+  if (!seq$nb == 2){
+    stop("This alignment has more than 2 sequences. dN/dS compares between orthologous genes in a pair of species")
   } else {
-    seq <- read.alignment(x,format="fasta")
-    tab <- kaks(seq)
-    tab <- (t(as.data.frame(unlist(tab))))
-    rownames(tab) <- basename(x)
-    if (is.na(tab[,1])){
-      tab <- data.frame(NA,NA,NA,NA)
-      rownames(tab) <- basename(x)
-      colnames(tab) <- c("ka","ks","vka","vks")
-    }
-    tab <- as.data.frame(tab)
-    tab$dnds <- tab$ka/tab$ks
-    if (!is.na(tab$dnds)){
-      if (tab$dnds > 1){
-        tab$selection <- c("Positive Selection")
-      } else if (tab$dnds < 1){
-        tab$selection <- c("Negative Selection")
-      } else if (tab$dnds == 1){
-        tab$selection <- c("Neutral")
-      }
-    }else{
-      tab$selection <- NA
+    tab <- suppressWarnings(kaks(seq))
+    tab <- unlist(tab)
+    if (is.na(tab)){
+      tab <- as.numeric(c(ka = NA, ks = NA, vka = NA, vks = NA))
     }
     return(tab)
   }
@@ -1468,6 +1426,8 @@ dn.ds <- function (x){
 #' Tajima-D wrapper for multiple sets of FASTA files and the \code{\link{td}} function
 #' 
 #' @param x a \code{list} of multiple alignment \code{fasta} files (preferably full path, fasta|fas extension).
+#' @param cutoff a \code{integer} of the cutoff value for the p-statistic.
+#' @param quiet a \code{boolean} for verbosity.
 #' 
 #' @return a table with the Tajima's D calculation for all the files in the list.
 #' 
@@ -1487,14 +1447,20 @@ dn.ds <- function (x){
 #' # Run the function
 #' # multi.td(list.pairs)
 #' 
-#' @importFrom plyr rbind.fill
-multi.td <- function(x){
-  cat("Tajimas D Calculation\n")
-  if (!is.list(x)){
-    stop("x must be of class 'list', for just a calculation in a single alignment use the td function")
-  } else {
-  rbind.fill(lapply(x,td))
+multi.td <- function(x, cutoff = 0.05, quiet = FALSE){
+  if (quiet == FALSE){
+    cat("Tajimas D Calculation\n")
   }
+  tt.df <- t(vapply(x, td,numeric(3))) 
+  rownames(tt.df) <- sub("^([^.]*).*", "\\1", basename(x)) 
+  tt.df <- as.data.frame(tt.df)
+  pna <- is.na(tt.df$Pval.normal)  
+  pcutoff <- tt.df$Pval.normal > cutoff
+  tt.df$stat[pcutoff] <- "Neutral"
+  tt.df$stat[!pcutoff&tt.df$D > 1] <- "Positive"
+  tt.df$stat[!pcutoff&tt.df$D < 1] <- "Negative"
+  tt.df$stat[pna] <- "Non_segregating"
+  return(tt.df)  
 }
 ############################################################################
 #Function multi.nd: Nucleotide diversity wrapper for multiple sets
@@ -1509,6 +1475,8 @@ multi.td <- function(x){
 #' Nucleotide diversity wrapper for multiple sets of FASTA files and the \code{\link{n.diversity}} function
 #' 
 #' @param x a \code{list} of multiple alignment \code{fasta} files (preferably full path, fasta|fas extension).
+#' @param quiet a \code{boolean} for verbosity.
+#'
 #' 
 #' @return a table with the nucleotide diversity calculation for all the files in the list.
 #' 
@@ -1528,17 +1496,17 @@ multi.td <- function(x){
 #' # Run the function
 #' # multi.nd(list.pairs)
 #' 
-#' @importFrom plyr rbind.fill
-#' 
-multi.nd <- function(x){
-  cat("Nuleotide Diversity\n") 
-  if (!is.list(x)){
-    stop("x must be of class 'list', for just a calculation in a single alignment use the n.diversity function")
-  } else {
-  rbind.fill(lapply(x,n.diversity))
+multi.nd <- function(x, quiet = FALSE){
+  if (quiet == FALSE){
+    cat("Nucleotide Diversity\n")
+  }
+  nd.df <- (vapply(x,n.diversity,numeric(1))) # Add spaces after commas
+  nd.df <- as.data.frame(nd.df)
+  rownames(nd.df) <- sub("^([^.]*).*", "\\1", basename(x)) 
+  colnames(nd.df) <- c("Nuc.Div")
+  return(nd.df)  
 }
-}
-############################################################################
+##########################################################################
 
 # Function multi.dnds: dN/dS wrapper for multiple pairs
 # 
@@ -1552,6 +1520,7 @@ multi.nd <- function(x){
 #' dN/dS (as Ka/Ks) wrapper for multiple sets of FASTA files and the \code{\link{dn.ds}} function
 #' 
 #' @param x a \code{list} of multiple alignment \code{fasta} files (preferably full path, fasta|fas extension).
+#' @param quiet a \code{boolean} for verbosity.
 #' 
 #' @return a table with the dN/dS calculation for all the files in the list.
 #' 
@@ -1570,81 +1539,14 @@ multi.nd <- function(x){
 #' #
 #' # Run the function
 #' # multi.dnds(list.pairs)
-#' @importFrom plyr rbind.fill
-multi.dnds <- function(x){
-  cat("dN/dS\n")
-  rbind.fill(lapply(x,dn.ds))
-}
-###############################################################################################################################
-# 
-# Note for Javier: 
-#   I have made notes on the lines that could be cleaned up. 
-#   This throws an error:
-#   Anouk <- system.file("sequences/Anouk.fasta", package = "seqinr")
-#   td.new(Anouk)
 
-td.new <- function (x){
-    seq <- read.dna(x,format="fasta") # Add spaces after commas
-    tt <- tajima.test(seq)
-    tt <- unlist(tt)
-    return ((tt))
-}
-
-multi.td.new <- function(x,cutoff = 0.05){ # Add spaces after commas
-  cat("Tajimas D Calculation\n")
-    tt.df <- t(vapply(x,td.new,numeric(3))) # Add spaces after commas
-    rownames(tt.df) <- basename(x)
-    tt.df <- as.data.frame(tt.df)
-    pna <- is.na(tt.df$Pval.normal)  
-    pcutoff <- tt.df$Pval.normal > cutoff
-    tt.df$stat[pcutoff] <- "Neutral"
-    tt.df$stat[!pcutoff&tt.df$D>1] <- "Positive" # Add spaces around 
-    tt.df$stat[!pcutoff&tt.df$D<1] <- "Negative" # the binary operators
-    tt.df$stat[pna] <- "Non_segregating"
-    return(tt.df)  
+multi.dnds <- function(x, quiet=FALSE){
+  if (quiet == FALSE){  
+    cat("dN/dS calculation\n")
   }
-
-
-n.diversity.new <- function (x){
-  seq <- read.dna(x,format="fasta") # Add spaces after commas
-  # No reason to round these results.
-  nuc.div <- round(nuc.div(seq),digits=3) # Add spaces after commas
-  unlist(nuc.div)
-  return(nuc.div)
-}
-
-
-multi.nd.new <- function(x){
-  cat("Nucleotide Diversity\n") # Use a 'quiet' argument for this.
-  nd.df <- (vapply(x,n.diversity.new,numeric(1))) # Add spaces after commas
-  nd.df <- as.data.frame(nd.df)
-  rownames(nd.df) <- basename(x)
-  colnames(nd.df) <- c("Nuc.Div")
-  return(nd.df)  
-}
-
-
-
-dn.ds.new <- function (x){
-    seq <- read.alignment(x,format="fasta") # Add spaces after commas
-    if (!seq$nb == 2){
-      # Make this stop message more informative. 
-      stop("This alignment has more than 2 sequences. Incorrect way to use the dN/dS algorithm")
-    } else {
-    tab <- suppressWarnings(kaks(seq))
-    tab <- unlist(tab)
-    if (is.na(tab)){ # if statements only take one value. 
-     tab <- as.numeric(c(ka = NA,ks = NA,vka = NA,vks = NA)) # Add spaces after commas
-    }
-    return(tab)
-  }
- }
-
-multi.dnds.new <- function(x){
-  cat("dN/dS calculation\n") # Use a 'quiet' argument for this.
-  dnds.df <- (vapply(x,dn.ds.new,numeric(4))) # Add spaces after commas
+  dnds.df <- (vapply(x, dn.ds,numeric(4)))
   dnds.df <-as.data.frame(t(dnds.df))
-  rownames(dnds.df) <- basename(x)
+  rownames(dnds.df) <- sub("^([^.]*).*", "\\1", basename(x)) 
   dnds.df$dnds <- dnds.df$ka/dnds.df$ks
   dnds.df$stat[dnds.df$dnds>1] <- "Positive"
   dnds.df$stat[dnds.df$dnds<1] <- "Negative"

@@ -2,11 +2,13 @@
 \alias{multi.nd}
 \title{multi.nd}
 \usage{
-multi.nd(x)
+multi.nd(x, quiet = FALSE)
 }
 \arguments{
   \item{x}{a \code{list} of multiple alignment \code{fasta}
   files (preferably full path, fasta|fas extension).}
+
+  \item{quiet}{a \code{boolean} for verbosity.}
 }
 \value{
 a table with the nucleotide diversity calculation for all

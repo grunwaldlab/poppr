@@ -2,11 +2,16 @@
 \alias{multi.td}
 \title{multi.td}
 \usage{
-multi.td(x)
+multi.td(x, cutoff = 0.05, quiet = FALSE)
 }
 \arguments{
   \item{x}{a \code{list} of multiple alignment \code{fasta}
   files (preferably full path, fasta|fas extension).}
+
+  \item{cutoff}{a \code{integer} of the cutoff value for
+  the p-statistic.}
+
+  \item{quiet}{a \code{boolean} for verbosity.}
 }
 \value{
 a table with the Tajima's D calculation for all the files

@@ -2,11 +2,13 @@
 \alias{multi.dnds}
 \title{multi.dnds}
 \usage{
-multi.dnds(x)
+multi.dnds(x, quiet = FALSE)
 }
 \arguments{
   \item{x}{a \code{list} of multiple alignment \code{fasta}
   files (preferably full path, fasta|fas extension).}
+
+  \item{quiet}{a \code{boolean} for verbosity.}
 }
 \value{
 a table with the dN/dS calculation for all the files in the

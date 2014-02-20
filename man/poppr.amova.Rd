@@ -81,4 +81,5 @@ amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
 amova.cc.result[1:4]
 }
 }
+\keyword{amova}
 

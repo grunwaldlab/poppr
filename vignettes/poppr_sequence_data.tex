@@ -1,0 +1,200 @@
+\documentclass[letterpaper]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0, 0, 0}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.502,0,0.502}{\textbf{#1}}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.651,0.522,0}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{1,0.502,0}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{1,0,0.502}{\textbf{#1}}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.733,0.475,0.467}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.502,0.502,0.753}{\textbf{#1}}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0.502,0.753}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0,0.267,0.4}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+%\VignetteIndexEntry{Poppr User Manual}
+%\VignetteEngine{knitr::knitr}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+\usepackage{array}
+\usepackage{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[utf8]{inputenc} % for UTF-8/single quotes from sQuote()
+\usepackage{fullpage}
+\usepackage{mathtools}
+\usepackage{makeidx}
+\usepackage{listings}
+\usepackage{hyperref}
+
+% Set the width of figures.
+\setkeys{Gin}{width=0.5\textwidth}
+
+
+
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+\begin{document}
+\title{Sequence data in poppr: A how to.}
+
+
+\author{Javier F. Tabima}
+
+\maketitle
+So far, I guess you have used \texttt{poppr} and are aware of the multiple functionalities of this great package. Now, using these kind of data might be simple to use for a geneticist that is used to SSR, AFLP or SNP data, but what about the sequence data?
+We've created a couple of wrappers to ease the calculation of several statistics in population genetics such as \textbf{Tajima's D}, \textbf{Nucleotide diversity} ($\pi$) and the \textbf{dN/dS ratio}. 
+
+Now, you may ask yourself: "Why would we want new wrappers for these if they are available in excelent packages such as \texttt{pegas} and \texttt{seqinr}?". Well, because these new wrappers permit the calculation of multiple files sequentially, giving the information of several datasets that might be related (e.g. A calculation of the average $\pi$ of all the genes in a genome of a species, or to define which genes of interest are under positive, negative or neutral selection).
+
+This manual will work as a primer for the use of these functions. The data included does not represent any real dataset but will guide you through the process of using and getting familiarized with the functions. Lets begin then!
+
+\section{What is sequence data?}
+
+Sequence data can be defined as any loci, regoin of interest or DNA chunk that the researcher is interested in, as long as it has the whole information of such region in nucleotides or aminoacids. A lot of different sequence data files have been used, the most common ones being the \texttt{FASTA} and \texttt{Phylip} formats. There are many other formats that are used in different programs (such as \texttt{NEXUS, Clustal, GenBank}) but we are not interested in those. Let's see some examples of the two formats:
+
+\subsection{\texttt{FASTA} format}
+
+\texttt{FASTA} files are, by definition (Wikipedia page :P):
+\begin{quotation}
+``In bioinformatics, FASTA format is a text-based format for representing either nucleotide sequences or peptide sequences, in which nucleotides or amino acids are represented using single-letter codes. The format also allows for sequence names and comments to precede the sequences.``
+\end{quotation}
+
+So, the \texttt{FASTA} file has two important features: the \textbf{header} and the \textbf{sequence}. the \textbf{header} has the sequence name and could have some descriptions, for example:
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+>Sequence_Name Description
+ (here is the nucleotide/aminoacid information)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+A better example is to use an actual sequence. This example comes from \textbf{NCBI} Accession Number:XM002898690, the \emph{Phytophthora infestans} T30-4 catalase (PITG15292) mRNA. 
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+>gi|301099288|ref|XM_002898690.1| Phytophthora infestans T30-4 catalase (PITG_15292) mRNA, complete cds
+ ATGGCTCCACCCACTCTTACAACGAGCAATGGCGCCCCGATGCCGCGATACGGACTGACGGCCTCCGCCACTGCTGGGTCCACTGG
+ ACCACAGCTGCTCCAAGACTTTGAGTTTATCGACCACCTCTCGCATTTCGACCGTGAACGCGTCCCGGAGCGCGTCGTGCACGCCA
+ AAGGGGGCGGCGCATTCGGATACTTCGAGGTGACGCACCCCGAGATCACCGACTACACGTGTGCTAAAATGTTTTCGAATGCCGGC
+ AAGCGGACGCCAGTAGCAGCTCGATTCTCAATCGTGACGGCGGAATCCGGGAGCCCCGATACGATGCGAGACCCGCGGGGCTTCGC
+ GCTCAA
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+In ANY fasta file, the first character that defines where the name/comments go is a ">" symbol. So, the name of the sequence comes after the symbol and has no spaces on it. In this case, the name of the sequence is:
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+>gi|301099288|ref|XM_002898690.1|
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Right next to the name you have the description. Descriptions are useless for may programs but are good for researchers. In this sequence, the descriptions is giving us:
+
+\begin{enumerate}
+  \item The species \emph{(Phytophthora infestans)} and the sample name (T30-4)
+  \item The gene name (Catalase) and the category of this sequence (complete cds)
+\end{enumerate}
+
+After the name/description line, the sequence data can be found. It can be nucleotide or aminoacid data. For a much more complete description of a FASTA file, go to \href{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}{NCBI's FASTA file} website. 
+
+\subsection{\texttt{Phylip} format}
+
+The \textbf{great} \href{http://www.gs.washington.edu/faculty/felsenstein.htm}{Joseph Felsenstein} developed the PHYLIP package for inferring phylogenies. In his package you needed to create a different format than the regular FASTA file. Instead of using a multi-FASTA file like this one:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+>gi|301099288|ref|XM_002898690.1| Phytophthora infestans T30-4 catalase (PITG_15292) mRNA, complete cds
+ ATGGCTCCACCCACTCTTACAACGAGCAATGGCGCCCCGATGCCGCGATACGGACTGACGGCCTCCGCCACTGCTGGGTCCACTGG
+ ACCACAGCTGCTCCAAGACTTTGAGTTTATCGACCACCTCTCGCATTTCGACCGTGAACGCGTCCCGGAGCGCGTCGTGCACGCCA
+ AAGGGGGCGGCGCATTCGGATACTTCGAGGTGACGCACCCCGAGATCACCGACTACACGTGTGCTAAAATGTTTTCGAATGCCGGC
+ AAGCGGACGCCAGTAGCAGCTCGATTCTCAATCGTGACGGCGGAATCCGGGAGCCCCGATACGATGCGAGACCCGCGGGGCTTCGC
+ GCTCAA
+ >gi|301099208|ref|XM_002898650.1| Phytophthora infestans T30-4 catalase (PITG_15248) mRNA, complete cds
+ ATGGCTCCACCCACTCTTACAACGAGCAATGGCGCCCCGATGCCGCGATACGGACTGACGGCCTCCGCCACTGCTGGGTCCACTGG
+ ACCACAGCTGCTCCAAGACTTTGAGTTTATCGACCACCTCTCGCATTTCGACCGTGAACGCGTCCCGGAGCGCGTCGTGCACGCCA
+ AAGGGGGCGGCGCATTCGGATACTTCGAGGTGACGCACCCCGAGATCACCGACTACACGTGTGCTAAAATGTTTTCGAATGCCGGC
+ AAGCGGACGCCAGTAGCAGCTCGATTCTCAATCGTGACGGCGGAATCCGGGAGCCCCGATACGATGCGAGACCCGCGGGGCTTCGC
+ GCTCAA
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Phylip uses something more of this style:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+ 2 358
+ gi|301099288|ref|XM_002898690.1| ATGGCTCCACCCACTCTTACAACGAGCAATGGCGCCCCGATGCCGCGATACGCTGG...
+ gi|301099208|ref|XM_002898650.1| ATGGCTCCACCCACTCTTACAACGAGCAATGGCGCCCCGATGCCGCGATACGCTGG...
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+So, the Phylip format seems to be much more simpler than the FASTA format. In this case, the \textbf{header} of the file is comprised by two numbers:
+
+\begin{enumerate}
+  \item The number of samples in the file (2)
+  \item The length of the sequences (358)
+\end{enumerate}
+
+After the header, the following lines contain the sequence data (name and sequence). All the sequences on the Phylip format must have the same length, and are product of multiple sequence alignments. 
+
+\textbf{Warning:} Most of the programs that handle Phylip files only accept Phylip 3.0 format, or less than 9 characters in the name only using alphanumeric characters. For a deeper explanation of the Phylip format, go to \href{http://evolution.genetics.washington.edu/phylip/doc/sequence.html}{the Felsestein's phylip page}.
+
+\section{What can we do using \texttt{poppr} and sequence data?}
+Like I said before, we've created a couple of wrappers to ease the calculation of several statistics in population genetics such as \textbf{Nucleotide diversity} ($\pi$), \textbf{Tajima's D} and the \textbf{dN/dS ratio}. lets try and give a little primer on each of these statistics.
+
+\subsection{Nucleotide Diversity ($\pi$,  Nei and Li, 1979)}
+A simple explanation of $\pi$ is that nucleotide diversity is a measure of polymorphism in a sample of gene sequences. It can be define as a summary statistic used to represent patterns of molecular diversity within a sample of gene copies. The thing about $\pi$ is that can give you an approach to the gene diversity by measuring the expected heterozygosity in a single locus.
+
+
+\begin{equation}
+\pi = \sum_{ij} x_i x_j \pi_{ij}
+\end{equation}
+
+\end{document}
