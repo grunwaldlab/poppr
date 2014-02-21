@@ -5,20 +5,20 @@ test_that("subsetting needs a genind object", {
 })
 
 test_that("sublist needs to match populations", {
-  data(microbov)
+  data(microbov, package = "adegenet")
   expect_error(popsub(microbov, "missingno"), 
                poppr:::unmatched_pops_warning(microbov@pop.names, "missingno"))
 })
 
 test_that("sum of the pops equal the whole", {
-  data(microbov)
+  data(microbov, package = "adegenet")
   mb1to7  <- popsub(microbov, 1:7)
   mb8to15 <- popsub(microbov, 8:15)
   expect_that(nInd(mb1to7) + nInd(mb8to15), equals(nInd(microbov)))
   })
 
 test_that("subsetting works with populations", {
-  data(nancycats)
+  data(nancycats, package = "adegenet")
   temp  <- nancycats@pop=="P04" | nancycats@pop=="P08"
   p48   <- nancycats[temp, ]
   p4    <- nancycats[nancycats@pop == "P04", , drop = TRUE]
@@ -52,7 +52,7 @@ test_that("subsetting works with populations", {
 })
 
 test_that("subsetting doesn't work without populations", {
-  data(partial_clone)
+  data(partial_clone, package = "poppr")
   p1 <- 1:50 %% 4 == 1
   expect_that(nInd(popsub(partial_clone, 1)), equals(nInd(partial_clone[p1, ])))
   expect_that(popsub(partial_clone, 1)@tab, equals(partial_clone[p1, , drop = TRUE]@tab))
@@ -61,7 +61,7 @@ test_that("subsetting doesn't work without populations", {
 })
 
 test_that("subsetting works with genclone objects", {
-  data(nancycats)
+  data(nancycats, package = "adegenet")
   temp      <- nancycats@pop=="P04" | nancycats@pop=="P08"
   p48       <- nancycats[temp, ]
   p4        <- nancycats[nancycats@pop == "P04", , drop = TRUE]
