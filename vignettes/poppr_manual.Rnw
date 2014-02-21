@@ -10,6 +10,7 @@
 \usepackage{fullpage}
 \usepackage{mathtools}
 \usepackage{makeidx}
+\usepackage{hyperref}
 % \usepackage{lineno}
 % Doublespacing.
 % \usepackage{setspace}
@@ -22,6 +23,7 @@
 \newcommand{\eeq}{\end{equation}}
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
+\newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
 
 \title{Poppr 1.1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
@@ -2035,32 +2037,76 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 
 \subsection{Function calls}\label{appendix:funk}
 
-\tab\tab Here is a list of all the default function calls for \textit{poppr}. Details can be found in the above sections.\\
-\tt \small
-\begin{itemize}
-\item getfile(multi = FALSE, pattern = NULL, combine = TRUE) (Section \ref{intro:import:getfile})
-\item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE) (Section \ref{intro:import:read.genalex}) 
-\item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, geodf = "xy") (Section \ref{intro:import:genind2genalex})
-\item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE) (Section \ref{data.manip:missing:missingno})
-\item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE) (Section \ref{data.manip:hier:splitcombine})
-\item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL) (Section \ref{data.manip:divide:popsub})
-\item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1) (Section \ref{data.manip:cc:clonecorrect})
-\item shufflepop(pop, method = 1) (Section \ref{data.manip:shuffle:shufflepop})
-\item informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE) (Section \ref{data.manip:informloci})
-\item mlg(pop, quiet = FALSE) (Section \ref{mlg:mlg:mlg})
-\item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE) (Section \ref{mlg:cross:mlg.crosspop})
-\item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE) (Section \ref{mlg:table:mlg.table})
-\item mlg.vector(pop) (Section \ref{mlg:mix:mlg.vector})
-\item ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", hist = TRUE) (Section \ref{index:iard:ia})
-\item diss.dist(pop) (Section \ref{index:dist:diss.dist})
-\item bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE) (Section \ref{index:bruvo:bruvo.dist})
-\item bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE) (Section \ref{index:trees:bruvo.boot})
-\item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1) (Section \ref{index:trees:greycurve})
-\item bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
-\item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:poppr.msn})
-\item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = FALSE, clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
-\item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
-\end{itemize}
+% \tab\tab Here is a list of all the default function calls for \textit{poppr}. Details can be found in the above sections.\\
+% \tt \small
+% \begin{itemize}
+% \item getfile(multi = FALSE, pattern = NULL, combine = TRUE) (Section \ref{intro:import:getfile})
+% \item read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE) (Section \ref{intro:import:read.genalex}) 
+% \item genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE, geodf = "xy") (Section \ref{intro:import:genind2genalex})
+% \item missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE) (Section \ref{data.manip:missing:missingno})
+% \item splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE) (Section \ref{data.manip:hier:splitcombine})
+% \item popsub(pop, sublist = "ALL", blacklist = NULL, mat = NULL) (Section \ref{data.manip:divide:popsub})
+% \item clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1) (Section \ref{data.manip:cc:clonecorrect})
+% \item shufflepop(pop, method = 1) (Section \ref{data.manip:shuffle:shufflepop})
+% \item informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE) (Section \ref{data.manip:informloci})
+% \item mlg(pop, quiet = FALSE) (Section \ref{mlg:mlg:mlg})
+% \item mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE) (Section \ref{mlg:cross:mlg.crosspop})
+% \item mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, total = FALSE, quiet = FALSE) (Section \ref{mlg:table:mlg.table})
+% \item mlg.vector(pop) (Section \ref{mlg:mix:mlg.vector})
+% \item ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", hist = TRUE) (Section \ref{index:iard:ia})
+% \item diss.dist(pop) (Section \ref{index:dist:diss.dist})
+% \item bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE) (Section \ref{index:bruvo:bruvo.dist})
+% \item bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE) (Section \ref{index:trees:bruvo.boot})
+% \item greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1) (Section \ref{index:trees:greycurve})
+% \item bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:bruvo.msn})
+% \item poppr.msn(pop, distmat, palette = topo.colors, sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...) (Section \ref{index:trees:poppr.msn})
+% \item poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0, method = 1, missing = "ignore", cutoff=0.05, quiet = FALSE, clonecorrect = FALSE, hier = c(1), keep = 1, dfname = "population\_hierarchy", hist = TRUE, minsamp = 10) (Section \ref{summary:poppr})
+% \item poppr.all(filelist, ...) (Sections \ref{intro:import:getfile} and \ref{summary:poppr})
+% \end{itemize}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll}
+ \hline
+\textbf{\large Function} & \textbf{\large Description} \\ 
+\hline
+\textbf{Import/Export} & \\
+\texttt{\hyperref[intro:import:getfile]{getfile}} & Provides a quick GUI to grab files for import \\
+\texttt{read.genalex} & Read \textit{GenAlEx} formatted csv files to a genind object \\
+\texttt{genind2genalex} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
+\hline
+\textbf{Manipulation} & \\
+\texttt{missingno} & Handles missing data \\
+\texttt{clonecorrect} & Clone censors at a specified population hierarchy \\
+\texttt{informloci} & Detects and removes phylogenetically uninformative loci \\
+\texttt{popsub} & Subsets genind objects by population \\
+\texttt{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
+\texttt{splitcombine} & Manipulates population hierarchy \\ 
+\hline
+\textbf{Analysis} & \\
+\texttt{bruvo.boot} & Produces dendrograms with bootstrap support based on Bruvo's distance \\
+\texttt{bruvo.dist} & Calculates Bruvo's distance \\
+\texttt{diss.dist} & Calculates the percent allelic dissimilarity \\
+\texttt{ia} & Calculates the index of association \\
+\texttt{mlg} & Calculates the number of multilocus genotypes \\
+\texttt{mlg.crosspop} & Finds all multilocus genotypes that cross populations \\
+\texttt{mlg.table} & Returns a table of populations by multilocus genotypes \\
+\texttt{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\ 
+ & each individual \\
+\texttt{poppr} & Returns a diversity table by population \\
+\texttt{poppr.all} & Returns a diversity table by population for all compatible files specified \\
+\hline
+\textbf{Visualization} & \\
+\texttt{greycurve} & Helper to determine the appropriate parameters for adjusting the\\
+ & grey level for msn functions \\
+\texttt{bruvo.msn} & Produces minimum spanning networks based off Bruvo's distance\\
+ & colored by population \\
+\texttt{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\  
+ & matrix related to the data \\
+\hline
+\end{tabular}
+\end{table}
+
 % 
 % Possible replacement:
 % \begin{itemize}
