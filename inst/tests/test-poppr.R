@@ -3,7 +3,7 @@ context("Poppr table tests")
 test_that("poppr returns expected PA values", {
   data(Aeut, package = "poppr")
   A.tab <- poppr(Aeut, quiet = TRUE)
-  expect_that(A.tab$Pop, matches(c("Athena", "Mt. Vernon", "Total")))
+  expect_that(A.tab$Pop, is_equivalent_to(as.factor(c("Athena", "Mt. Vernon", "Total"))))
   expect_that(A.tab$N, equals(c(97, 90, 187)))
   expect_that(A.tab$MLG, equals(c(70, 50, 119)))
   expect_that(A.tab$eMLG, equals(c(65.981, 50, 68.453)))
@@ -19,7 +19,7 @@ test_that("poppr returns expected PA values", {
 test_that("poppr returns expected codominant values", {
   data(partial_clone, package = "poppr")
   p.tab <- poppr(partial_clone, quiet = TRUE)
-  expect_that(p.tab$Pop, matches(c("1", "2", "3", "4", "Total")))
+  expect_that(p.tab$Pop, is_equivalent_to(as.factor(c("1", "2", "3", "4", "Total"))))
   expect_that(p.tab$N, equals(c(13, 13, 12, 12, 50)))
   expect_that(p.tab$MLG, equals(c(10, 12, 11, 9, 26)))
   expect_that(p.tab$eMLG, equals(c(9.462, 11.154, 11, 9, 9.937)))
