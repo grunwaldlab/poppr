@@ -199,7 +199,7 @@ extract.info <- function(x) {
 # Internal functions utilizing this function:
 # # percent_missing
 #
-# DEPRECIATED
+# DEPRECATED
 #==============================================================================#
 
 geno.na <- function(pop){
@@ -220,7 +220,7 @@ geno.na <- function(pop){
 # Internal functions utilizing this function:
 # # percent_missing
 #
-# DEPRECIATED
+# DEPRECATED
 #==============================================================================#
 
 loci.na <- function(pop) {
@@ -455,7 +455,7 @@ mlg.matrix <- function(x){
   return(mlg.mat)
 }
 #==============================================================================#
-# DEPRECIATED
+# DEPRECATED
 #==============================================================================#
 old.mlg.matrix <- function(x){
   mlgvec <- mlg.vector(x)
@@ -695,7 +695,7 @@ final <- function(Iout, result){
 # 			isolates.
 #
 #
-# DEPRECIATED
+# DEPRECATED
 #==============================================================================#
 .pairwise.differences <- function(pop,numLoci,np, missing){  
   temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
@@ -718,7 +718,7 @@ final <- function(Iout, result){
 # one allele. In that case, the resulting pairwise differences will all be zero.
 #
 #
-# DEPRECIATED 
+# DEPRECATED 
 #==============================================================================#
 pairwisematrix <- function(pop, np){
   temp.d.vector <- vector(mode="numeric", length=np)
@@ -731,7 +731,7 @@ pairwisematrix <- function(pop, np){
 # https://stat.ethz.ch/pipermail/r-help/2004-August/055324.html
 #
 #
-# DEPRECIATED
+# DEPRECATED
 #==============================================================================#
 .pairwise.diffs <- function(x){
   stopifnot(is.matrix(x))
@@ -750,7 +750,7 @@ pairwisematrix <- function(pop, np){
 # caluclated. 
 #
 #
-# DEPRECIATED
+# DEPRECATED
 #==============================================================================#
 .pairwise.variances <- function(vard.vector, pair.alleles){  
   # Here the roots of the products of the variances are being produced and
@@ -814,7 +814,7 @@ pair_diffs <- function(pop, numLoci, np)
 }
 
 #==============================================================================#
-# Internal counter...probably depreciated.
+# Internal counter...probably DEPRECATED.
 #==============================================================================#
 .new_counter <- function() {
   i <- 0
@@ -834,7 +834,7 @@ pair_diffs <- function(pop, numLoci, np)
 # Internal functions utilizing this function:
 # # none
 #
-# DEPRECIATED
+# DEPRECATED
 #==============================================================================#
 phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss = TRUE){
   # Preceeding functions should take care of this:

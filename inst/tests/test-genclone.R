@@ -1,9 +1,10 @@
 context("Genclone coercion tests")
 
 test_that("A genclone object contains a genind object", {
-	data(partial_clone)
+
+	data(partial_clone, package = "poppr")
 	pc <- as.genclone(partial_clone)
-	expect_that(slotNames(partial_clone), matches(slotNames(pc)[-c(1:2)]))
+	expect_that(slotNames(partial_clone), equals(slotNames(pc)[-c(1:2)]))
 	expect_that(partial_clone@tab, equals(pc@tab))
 	expect_that(partial_clone@loc.names, is_identical_to(pc@loc.names))
 	expect_that(partial_clone@loc.nall, is_identical_to(pc@loc.nall))
@@ -18,7 +19,7 @@ test_that("A genclone object contains a genind object", {
 })
 
 test_that("Hierarchy methods work for genclone objects.", {
-  data(Aeut)
+  data(Aeut, package = "poppr")
   agc <- as.genclone(Aeut)
   expect_that(length(gethierarchy(agc)), equals(3))
   expect_that(agc@pop.names, equals(c(P1 = "Athena", P2 = "Mt. Vernon")))

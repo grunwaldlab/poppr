@@ -260,7 +260,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #
 # weights is a corresponding vector giving the allelic frequency for each allele
 # at that locus in that population. The sum of the frequencies should be 1. 
-# DEPRECIATED (replaced with multinomial distribution)
+# DEPRECATED (replaced with multinomial distribution)
 #==============================================================================# 
 .diploid.shuff <- function(vec, weights){
   # Dealing with missing values is probably not necessary for a parametric

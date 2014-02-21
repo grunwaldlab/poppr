@@ -1,9 +1,9 @@
 context("Multilocus genotype tests")
 
 test_that("multilocus genotype vector is same length as samples", {
-  data(Aeut)
-  data(partial_clone)
-  data(nancycats)
+  data(Aeut, package = "poppr")
+  data(partial_clone, package = "poppr")
+  data(nancycats, package = "adegenet")
   amlg <- mlg.vector(Aeut)
   pmlg <- mlg.vector(partial_clone)
   nmlg <- mlg.vector(nancycats)
@@ -16,9 +16,9 @@ test_that("multilocus genotype vector is same length as samples", {
 })
 
 test_that("multilocus genotype matrix matches mlg.vector and data", {
-  data(Aeut)
-  data(partial_clone)
-  data(nancycats)
+  data(Aeut, package = "poppr")
+  data(partial_clone, package = "poppr")
+  data(nancycats, package = "adegenet")
   aclone <- as.genclone(Aeut)
   atab   <- mlg.table(Aeut, bar = FALSE)
   ptab   <- mlg.table(partial_clone, bar = FALSE)
