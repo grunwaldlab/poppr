@@ -31,9 +31,9 @@ test_that("subsetting works with populations", {
   expect_that(popsub(nan48, 1)@tab, equals(p4@tab))
   expect_that(popsub(nancycats, 4)@tab, equals(p4@tab))
   # Populations equivalent
-  expect_that(as.character(pop(nan48)), matches(as.character(pop(p48))))
+  expect_that(as.character(pop(nan48)), is_identical_to(as.character(pop(p48))))
   # Individuals equivalent
-  expect_that(nan48@ind.names, matches(p48@ind.names))
+  expect_that(nan48@ind.names, is_identical_to(p48@ind.names))
   # Rejects unknown populations
   expect_that(popsub(nancycats, 18), gives_warning())
   # Rejects equivalent blacklist and sublist
@@ -75,9 +75,9 @@ test_that("subsetting works with genclone objects", {
   expect_that(popsub(nan48, 1)@tab, equals(p4@tab))
   expect_that(popsub(nancycats, 4)@tab, equals(p4@tab))
   # Populations equivalent
-  expect_that(as.character(pop(nan48)), matches(as.character(pop(p48))))
+  expect_that(as.character(pop(nan48)), is_identical_to(as.character(pop(p48))))
   # Individuals equivalent
-  expect_that(nan48@ind.names, matches(p48@ind.names))
+  expect_that(nan48@ind.names, is_identical_to(p48@ind.names))
   # Rejects unknown populations
   expect_that(popsub(nancycats, 18), gives_warning())
   # Rejects equivalent blacklist and sublist
