@@ -1,5 +1,4 @@
 context("Genclone coercion tests")
-library(poppr)
 
 test_that("A genclone object contains a genind object", {
 
