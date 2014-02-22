@@ -52,33 +52,7 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 
 
 
-#==============================================================================#
-# hier = a nested formula such as ~ A/B/C where C is nested within B, which is
-# nested within A.
-#
-# df = a data frame containing columns corresponding to the variables in hier.
-#
-# example:
-# df <- data.frame(list(a = letters, b = LETTERS, c = 1:26))
-# newdf <- make_hierarchy(~ a/b/c, df)
-# df[names(newdf)] <- newdf # Add new columns.
-#==============================================================================#
-make_hierarchy <- function(hier, df, expand_label = FALSE){
-  newlevs <- attr(terms(hier), "term.labels")
-  levs <- all.vars(hier)
-  if (length(levs) > 1){
-    newlevs <- gsub(":", "_", newlevs)
-  }
-  if (!all(levs %in% names(df))){
-    stop(hier_incompatible_warning(levs, df))
-  }
-  newdf <- df[levs[1]]
-  if (!expand_label){
-    newlevs <- levs
-  }
-  lapply(1:length(levs), function(x) newdf[[newlevs[x]]] <<- as.factor(pop_combiner(df, levs[1:x])))
-  return(newdf)
-}
+
 
 
 #==============================================================================#
@@ -192,7 +166,6 @@ check_Hs <- function(x){
   res <- any(x@tab > 0 & x@tab < 1, na.rm = TRUE)
   return(res)
 }
-
 
 
 #==============================================================================#
