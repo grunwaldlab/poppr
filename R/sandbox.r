@@ -67,69 +67,6 @@ pool_haplotypes <- function(x, dfname = "population_hierarchy"){
   other(newx)[[dfname]] <- df
   return(newx)
 }
-## Secondary function. Transforms the genind object into a loci object and
-## collects information necessary to collect individual haplotypes.
-separate_haplotypes <- function(x){
-  ploidy        <- ploidy(x)
-  allele_list   <- unlist(lapply(x@all.names, nchar))
-  allele_length <- sum(allele_list)/length(allele_list)
-  if (!all(allele_list == allele_length)){
-    stop("not all alleles are of equal length.")
-  }
-  inds        <- indNames(x)
-  x.loc       <- as.loci(x)
-  loci_cols   <- attr(x.loc, "locicol")
-  pop_col     <- which(names(x.loc) == "population")
-  geno_length <- allele_length*ploidy + ploidy - 1
-  sep         <- which(1:geno_length %% (allele_length + 1) == 0)
-  sep         <- c(0, sep, geno_length + 1)
-  hap_fac     <- rep(1:ploidy, each = allele_length + 1)
-  allele_inds <- lapply(1:ploidy, function(i) c(sep[i] + 1, sep[i + 1] - 1))
-  haplist     <- lapply(allele_inds, hap2genind, x.loc, loci_cols, inds, hap_fac)
-  return(haplist)
-}
-
-## Obtains specific haplotypes from a genind object.
-## 
-## Arguments:
-##   inds      - indexes of the first and last characters defining the haplotype
-##   x         - the loci object
-##   loci_cols - the columns defining the loci
-##   ind_names - the sample names
-##   hap_fac   - a vector defining the haplotype. 
-##
-## Since the inds and hap_fac args are not intuitive, I should demonstrate.
-## Let's say we have a two individuals with two loci:
-##      1      2
-##   A: 10/20  30/40
-##   B: 15/15  25/10
-##
-## They have the haplotypes of 
-##   A1: 10 30 
-##   A2: 20 40 
-##   B1: 15 25
-##   B2: 15 10
-##
-## Each genotype at a locus is 5 characters long. To get the haplotypes, we need
-## to avoid the separator.
-## inds in this case will be c(1, 2) for the first haplotype and c(4, 5) for the
-## second haplotype and hap_fac will be c(1,1,1,2,2,2) for both.
-##
-hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
-  new_ind_names <- paste(ind_names, hap_fac[inds[2]], sep = ".")
-  new_pop       <- rep(hap_fac[inds[2]], nrow(x))
-  x2 <- lapply(x[loci_cols], substr, inds[1], inds[2])
-  x2 <- data.frame(x2, stringsAsFactors = F)
-  x2 <- df2genind(x2, ploidy = 1, pop=new_pop, ind.names=new_ind_names)
-  return(x2)
-}
-
-## Function for determining if a genind object has any heterozygous sites.
-check_Hs <- function(x){
-  res <- any(x@tab > 0 & x@tab < 1, na.rm = TRUE)
-  return(res)
-}
-
 
 #==============================================================================#
 # Create a population hierarchy in a genind object if one is not there.

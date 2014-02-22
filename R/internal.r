@@ -1307,6 +1307,7 @@ check_Hs <- function(x){
 ## inds in this case will be c(1, 2) for the first haplotype and c(4, 5) for the
 ## second haplotype and hap_fac will be c(1,1,1,2,2,2) for both.
 ##
+# Public functions utilizing this function:
 # # none
 #
 # Internal functions utilizing this function:
@@ -1321,4 +1322,29 @@ hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
   return(x2)
 }
 
-
+## Secondary function. Transforms the genind object into a loci object and
+## collects information necessary to collect individual haplotypes.
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # pool_haplotypes
+separate_haplotypes <- function(x){
+  ploidy        <- ploidy(x)
+  allele_list   <- unlist(lapply(x@all.names, nchar))
+  allele_length <- sum(allele_list)/length(allele_list)
+  if (!all(allele_list == allele_length)){
+    stop("not all alleles are of equal length.")
+  }
+  inds        <- indNames(x)
+  x.loc       <- as.loci(x)
+  loci_cols   <- attr(x.loc, "locicol")
+  pop_col     <- which(names(x.loc) == "population")
+  geno_length <- allele_length*ploidy + ploidy - 1
+  sep         <- which(1:geno_length %% (allele_length + 1) == 0)
+  sep         <- c(0, sep, geno_length + 1)
+  hap_fac     <- rep(1:ploidy, each = allele_length + 1)
+  allele_inds <- lapply(1:ploidy, function(i) c(sep[i] + 1, sep[i + 1] - 1))
+  haplist     <- lapply(allele_inds, hap2genind, x.loc, loci_cols, inds, hap_fac)
+  return(haplist)
+}
