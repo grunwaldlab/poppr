@@ -13,7 +13,7 @@ RnwWeave: knitr
 LaTeX: pdfLaTeX
 
 BuildType: Package
-PackageInstallArgs: --no-multiarch --with-keep.source
+PackageInstallArgs: --no-multiarch --with-keep.source --install-tests
 PackageBuildArgs: --resave-data --compact-vignettes=gs+qpdf
 PackageBuildBinaryArgs: --html, --latex, --build
 PackageCheckArgs: --as-cran --no-build-vignettes
