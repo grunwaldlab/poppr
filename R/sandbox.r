@@ -53,39 +53,6 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 
 
 
-
-
-#==============================================================================#
-# Function for creating the structure data frame needed for ade4's AMOVA
-# implementation.
-#==============================================================================#
-make_ade_df <- function(hier, df, expanded = FALSE){
-  if (expanded){
-    levs <- attr(terms(hier), "term.labels")
-  } else {
-    levs <- all.vars(hier)
-  }
-  if(length(levs) <= 1){
-    # stop("Only one level present")
-    return(NULL)
-  }
-  levs <- gsub(":", "_", levs)
-  if(!all(levs %in% names(df))){
-    stop(hier_incompatible_warning(levs, df))
-  }
-  smallest  <- df[[levs[length(levs)]]]
-  smallinds <- !duplicated(smallest)
-  newdf     <- df[smallinds, ]
-  newdf     <- newdf[-length(levs)]
-  if (length(newdf) > 1){
-    factlist <- lapply(newdf, function(x) factor(x, unique(x)))
-  } else {
-    factlist        <- list(factor(newdf[[1]], unique(newdf[[1]])))
-    names(factlist) <- names(newdf)
-  }  
-  return(rev(data.frame(factlist)))
-}
-
 #==============================================================================#
 # Haplotype pooling. 
 # The following functions are necessary to account for within sample variation. 
