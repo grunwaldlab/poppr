@@ -1,3 +1,2 @@
 library(testthat)
-library(poppr)
-test_package("poppr")
+test_check("poppr")
