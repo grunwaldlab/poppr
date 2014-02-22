@@ -49,10 +49,6 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
-
-
-
-
 #==============================================================================#
 # Haplotype pooling. 
 # The following functions are necessary to account for within sample variation. 

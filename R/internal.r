@@ -1268,3 +1268,57 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   return(rev(data.frame(factlist)))
 }
 
+# Function for determining if a genind object has any heterozygous sites.
+# Public functions utilizing this function:
+#
+# # none...yet
+#
+# Internal functions utilizing this function:
+# # none
+
+check_Hs <- function(x){
+  res <- any(x@tab > 0 & x@tab < 1, na.rm = TRUE)
+  return(res)
+}
+
+## Obtains specific haplotypes from a genind object.
+## 
+## Arguments:
+##   inds      - indexes of the first and last characters defining the haplotype
+##   x         - the loci object
+##   loci_cols - the columns defining the loci
+##   ind_names - the sample names
+##   hap_fac   - a vector defining the haplotype. 
+##
+## Since the inds and hap_fac args are not intuitive, I should demonstrate.
+## Let's say we have a two individuals with two loci:
+##      1      2
+##   A: 10/20  30/40
+##   B: 15/15  25/10
+##
+## They have the haplotypes of 
+##   A1: 10 30 
+##   A2: 20 40 
+##   B1: 15 25
+##   B2: 15 10
+##
+## Each genotype at a locus is 5 characters long. To get the haplotypes, we need
+## to avoid the separator.
+## inds in this case will be c(1, 2) for the first haplotype and c(4, 5) for the
+## second haplotype and hap_fac will be c(1,1,1,2,2,2) for both.
+##
+# # none
+#
+# Internal functions utilizing this function:
+# # separate_haplotypes
+
+hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
+  new_ind_names <- paste(ind_names, hap_fac[inds[2]], sep = ".")
+  new_pop       <- rep(hap_fac[inds[2]], nrow(x))
+  x2 <- lapply(x[loci_cols], substr, inds[1], inds[2])
+  x2 <- data.frame(x2, stringsAsFactors = F)
+  x2 <- df2genind(x2, ploidy = 1, pop=new_pop, ind.names=new_ind_names)
+  return(x2)
+}
+
+
