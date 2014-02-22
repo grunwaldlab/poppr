@@ -42,30 +42,9 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
-
-
 # Keeping this for compatability
 new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
-}
-
-#==============================================================================#
-# Haplotype pooling. 
-# The following functions are necessary to account for within sample variation. 
-# They will separate the haplotypes of a genind object and repool them so that
-# there are n*k individuals in the new data set where n is the number of
-# individuals and k is the ploidy. 
-#==============================================================================#
-## Main Function. Lengthens the population hierarchy as well.
-pool_haplotypes <- function(x, dfname = "population_hierarchy"){
-  ploidy        <- ploidy(x)
-  df            <- other(x)[[dfname]]
-  df$Individual <- indNames(x)
-  df            <- df[rep(1:nrow(df), ploidy), ]
-  newx          <- repool(separate_haplotypes(x))
-  pop(newx)     <- df$Individual
-  other(newx)[[dfname]] <- df
-  return(newx)
 }
 
 #==============================================================================#
