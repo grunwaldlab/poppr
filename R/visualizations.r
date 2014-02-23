@@ -457,3 +457,143 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   V(mst)$label     <- vertex.label
   return(list(graph = mst, populations = pop$pop.names, colors = color))
 }
+
+
+#==============================================================================#
+#' Create a table summarizing missing data a genind or genclone object
+#' 
+#' @param x a \linkS4class{genind} or \linkS4class{genclone} object.
+#' 
+#' @param percent \code{logical}. If \code{TRUE} (default), table and plot will
+#'   represent missing data as a percentage of each cell. If \code{FALSE}, the 
+#'   table and plot will represent missing data as raw counts. (See details)
+#' 
+#' @param plot \code{logical}. If \code{TRUE}, a simple heatmap will be
+#'   produced. If \code{FALSE} (default), no heatmap will be produced.
+#' 
+#' @param df \code{logical}. If \code{TRUE}, the data will be returned as a long
+#'   form data frame. If \code{FALSE} (default), a matrix with populations in
+#'   rows and loci in columns will be returned.
+#' 
+#' @param returnplot \code{logical}. If \code{TRUE}, a list is returned with two
+#'   elements: \code{table} - the normal output and \code{plot} - the ggplot
+#'   object. If \code{FALSE}, the missing table is returned.
+#' 
+#' @param low \code{character}. What color should represent no missing data?
+#'   (default: "blue")
+#' 
+#' @param high \code{character}. What color should represent the highest amount
+#'   of missing data? (default: "red")
+#'   
+#' @param plotlab \code{logical}. If \code{TRUE} (default), values of missing
+#'   data greater than 0\% will be plotted. If \code{FALSE}, the plot will
+#'   appear unappended.
+#' 
+#' @param scaled \code{logical}. This is for when \code{percent = TRUE}. If
+#'   \code{TRUE} (default), the color specified in \code{high} will represent
+#'   the highest observed value of missing data. If \code{FALSE}, the color
+#'   specified in \code{high} will represent 100\%.
+#'   
+#' @return a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot = TRUE}) representing missing data in a \linkS4class{genind} or \linkS4class{genclone} object.
+#' 
+#' @details This data is potentially useful for identifying areas of systematic
+#' missing data. It is important to note that when visualizing missing data as a
+#' percentage, that the percentage of missing data is \strong{relative to the
+#' population and locus}, not to the entire data set. Likewise, the last column
+#' represents an average amount of missing data over all loci for each
+#' population, and the last row, "Total", represents the entire data set.
+#' 
+#' @export
+#' @author Zhian N. Kamvar
+#' @examples
+#' data(nancycats)
+#' nancy.miss <- missing_table(nancycats, plot = TRUE)
+#' 
+#==============================================================================#
+missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE, 
+                          returnplot = FALSE, low = "blue", high = "red", 
+                          plotlab = TRUE, scaled = TRUE){
+  pops       <- seppop(x, drop = FALSE)
+  pops$Total <- x
+  inds       <- 1
+  if (percent){
+    inds <- c(table(pop(x)), nInd(x))
+  }
+  misstab              <- matrix(0, nrow = nLoc(x) + 1, ncol = length(pops))
+  misstab[1:nLoc(x), ] <- vapply(pops, number_missing_locus, numeric(nLoc(x)), 1)
+  misstab[-nrow(misstab), ] <- t(apply(misstab[-nrow(misstab), ], 1, "/", inds))
+  misstab[nrow(misstab), ]  <- colMeans(misstab[-nrow(misstab), ])
+  rownames(misstab)         <- c(x@loc.names, "Mean")
+  colnames(misstab)         <- names(pops)
+  if (all(misstab == 0)){
+    cat("No Missing Data Found!")
+    return(NULL)
+  }
+  if (plot){
+    missdf      <- melt(misstab, varnames = c("Locus", "Population"), 
+                        value.name = "Missing")
+    leg_title   <- "Missing"
+    missdf[1:2] <- data.frame(lapply(missdf[1:2], 
+                                     function(x) factor(x, levels = unique(x))))
+    # levels(missdf[[1]]) <- rev(levels(missdf[[1]]))
+    plotdf <- textdf <- missdf
+    if (percent) {
+      plotdf$Missing <- round(plotdf$Missing*100, 2)
+      textdf$Missing <- paste(plotdf$Missing, "%")
+      miss           <- "0 %"
+      title          <- paste("Percent missing data per locus and population of", 
+                              as.character(substitute(x)))
+      leg_title      <- paste("Percent", leg_title)
+      if(!scaled){
+        lims <- c(0, 100)
+      }
+    } else {
+      textdf$Missing <- round(textdf$Missing, 2)
+      miss           <- 0
+      title          <- paste("Missing data per locus and population of", 
+                              as.character(substitute(x)))
+    }
+    if (scaled | !percent){
+      lims <- c(0, max(plotdf$Missing))
+    }
+    linedata       <- data.frame(list(yint = 1.5, #ncol(misstab) - 0.5, 
+                                      xint = nrow(misstab) - 0.5))
+    textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
+    plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
+    outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
+      geom_tile(aes_string(fill = "Missing")) +
+      labs(list(title = title, x = "Locus", y = "Population")) +
+      labs(fill = leg_title) + 
+      scale_fill_gradient(low = low, high = high, na.value = "white", 
+                          limits = lims) +
+      geom_hline(aes_string(yintercept = "yint"), data = linedata) + 
+      geom_vline(aes_string(xintercept = "xint"), data = linedata) 
+    if (plotlab){
+      outplot <- outplot + geom_text(aes_string(label = "Missing"), 
+                                     data = textdf)
+    }
+    outplot <- outplot +
+      theme_classic() + 
+      scale_x_discrete(expand = c(0, -1)) + 
+      scale_y_discrete(expand = c(0, -1), 
+                       limits = rev(unique(plotdf$Population))) + 
+      theme(axis.text.x = element_text(size = 10, angle = -45, 
+                                       hjust = 0, vjust = 1)) 
+    print(outplot)
+  }
+  if (df){
+    if(!exists("missdf")){
+      missdf <- melt(misstab, varnames = c("Locus", "Population"), 
+                     value.name = "Missing")
+    }
+    misstab <- missdf
+  } else {
+    attr(misstab, "dimnames") <- list(Locus = rownames(misstab), 
+                                      Population = colnames(misstab))
+    misstab <- t(misstab)
+  }
+  if (returnplot){
+    misstab <- list(table = misstab, plot = outplot)
+  }
+  return(misstab)
+}
