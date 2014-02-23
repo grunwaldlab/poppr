@@ -117,7 +117,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     # levels(missdf[[1]]) <- rev(levels(missdf[[1]]))
     plotdf <- textdf <- missdf
     if (percent) {
-      plotdf$Missing <- round(plotdf$Missing*100, 3)
+      plotdf$Missing <- round(plotdf$Missing*100, 2)
       textdf$Missing <- paste(plotdf$Missing, "%")
       miss <- "0 %"
       title <- paste("Percent missing data per locus and population of", 
@@ -125,7 +125,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
       leg_title <- paste("Percent", leg_title)
       if(!scaled) lims <- c(0, 100)
     } else {
-      textdf$Missing <- round(textdf$Missing, 3)
+      textdf$Missing <- round(textdf$Missing, 2)
       miss <- 0
       title <- paste("Missing data per locus and population of", 
                      as.character(substitute(x)))
@@ -133,7 +133,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     if (scaled | !percent){
       lims <- c(0, max(plotdf$Missing))
     }
-    linedata <- data.frame(list(yint = ncol(misstab) - 0.5, 
+    linedata <- data.frame(list(yint = 1.5, #ncol(misstab) - 0.5, 
                                 xint = nrow(misstab) - 0.5))
     textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
     plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
@@ -152,9 +152,10 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     outplot <- outplot +
                theme_classic() + 
                scale_x_discrete(expand = c(0, -1)) + 
-               scale_y_discrete(expand = c(0, -1)) + 
+               scale_y_discrete(expand = c(0, -1), 
+                                limits = rev(unique(plotdf$Population))) + 
                theme(axis.text.x = element_text(size = 10, angle = -45, 
-                                                hjust = 0, vjust = 1))
+                                                hjust = 0, vjust = 1)) 
     print(outplot)
   }
   if (df){
