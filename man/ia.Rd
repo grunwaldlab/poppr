@@ -3,7 +3,7 @@
 \title{Index of Association}
 \usage{
 ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
-  hist = TRUE)
+  hist = TRUE, valuereturn = FALSE)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object OR any fstat,
@@ -30,6 +30,11 @@ ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   \item{hist}{\code{logical} if \code{TRUE}, a histogram
   will be printed for each population if there is
   sampling.}
+
+  \item{valuereturn}{\code{logical} if \code{TRUE}, the
+  index values from the reshuffled data is returned. If
+  \code{FALSE} (default), the index is returned with
+  associated p-values in a 4 element numeric vector.}
 }
 \value{
 \emph{If no sampling has occured:}
@@ -49,6 +54,12 @@ standardized index of association.} \item{p.rD}{A factor
 indicating the p-value resutling from a one-sided
 permutation test based on the number of samples indicated
 in the original call.}
+
+\emph{If there is sampling and valureturn = TRUE} A list
+with the following elements: \item{index}{The above vector}
+\item{samples}{A data frame with s by 2 column data frame
+where s is the number of samples defined. The columns are
+for the values of Ia and rbarD, respectively.}
 }
 \description{
 Calculate the Index of Association and Standardized Index
@@ -60,6 +71,12 @@ data(nancycats)
 ia(nancycats)
 
 \dontrun{
+# Get the indices back and plot them using base R graphics:
+nansamp <- ia(nancycats, sample = 999, indexreturn = TRUE)
+layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
+hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
+hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
+
 # Get the index for each population.
 lapply(seppop(nancycats), ia)
 # With sampling

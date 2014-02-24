@@ -411,24 +411,30 @@ poppr.all <- function(filelist, ...) {
 #'
 #' @param hist \code{logical} if \code{TRUE}, a histogram will be printed for
 #' each population if there is sampling.
-#'
-#' @return 
-#' \emph{If no sampling has occured:}
 #' 
-#' A named number vector of length 2 giving the Index of Association,
-#' "Ia"; and the Standardized Index of Association, "rbarD"
-#'
+#' @param valuereturn \code{logical} if \code{TRUE}, the index values from the
+#'   reshuffled data is returned. If \code{FALSE} (default), the index is
+#'   returned with associated p-values in a 4 element numeric vector.
+#'   
+#' @return \emph{If no sampling has occured:}
+#' 
+#' A named number vector of length 2 giving the Index of Association, "Ia"; and
+#' the Standardized Index of Association, "rbarD"
+#' 
 #' \emph{If there is sampling:}
-#'
-#' A a named number vector of length 4 with the following values:
-#' \item{Ia}{numeric. The index of association.}
-#' \item{p.Ia}{A number indicating the p-value resulting from a one-sided
-#' permutation test based on the number of samples indicated in the original
-#' call.}
-#' \item{rbarD}{numeric. The standardized index of association.}
-#' \item{p.rD}{A factor indicating the p-value resutling from a one-sided
-#' permutation test based on the number of samples indicated in the original
-#' call.}
+#' 
+#' A a named number vector of length 4 with the following values: 
+#' \item{Ia}{numeric. The index of association.} \item{p.Ia}{A number indicating
+#' the p-value resulting from a one-sided permutation test based on the number
+#' of samples indicated in the original call.} \item{rbarD}{numeric. The
+#' standardized index of association.} \item{p.rD}{A factor indicating the
+#' p-value resutling from a one-sided permutation test based on the number of
+#' samples indicated in the original call.}
+#' 
+#' \emph{If there is sampling and valureturn = TRUE} A list with the following
+#' elements: \item{index}{The above vector} \item{samples}{A data frame with s
+#' by 2 column data frame where s is the number of samples defined. The columns
+#' are for the values of Ia and rbarD, respectively.}
 #'
 #' @references  Paul-Michael Agapow and Austin Burt. Indices of multilocus 
 #' linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102, 2001
@@ -450,6 +456,12 @@ poppr.all <- function(filelist, ...) {
 #' ia(nancycats)
 #' 
 #' \dontrun{
+#' # Get the indices back and plot them using base R graphics:
+#' nansamp <- ia(nancycats, sample = 999, indexreturn = TRUE)
+#' layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
+#' hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
+#' hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
+#'
 #' # Get the index for each population.
 #' lapply(seppop(nancycats), ia)
 #' # With sampling
@@ -458,7 +470,7 @@ poppr.all <- function(filelist, ...) {
 #==============================================================================#
 
 ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore", 
-                hist=TRUE){
+                hist=TRUE, valuereturn = FALSE){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   
@@ -481,13 +493,13 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   # if there are less than three individuals in the population, the calculation
   # does not proceed. 
   if (nInd(pop) < 3){
-    IarD <- as.numeric(c(NA,NA))
+    IarD <- as.numeric(c(NA, NA))
     names(IarD) <- c("Ia", "rbarD")
     if(sample==0){
       return(IarD)
     }
     else{
-      IarD <- as.numeric(rep(NA,4))
+      IarD <- as.numeric(rep(NA, 4))
       names(IarD) <- c("Ia","p.Ia","rbarD","p.rD")
       return(IarD)
     }
@@ -518,6 +530,9 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
     result[c(1,3)] <- IarD
     result[c(2,4)] <- p.val
     names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
+    if (valuereturn == TRUE){
+      return(list(index = final(Iout, result), samples = samp))
+    }
   }  
   return(final(Iout, result))
 }
