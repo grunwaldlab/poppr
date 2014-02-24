@@ -1282,6 +1282,9 @@ print_command(funk)
   \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} will produce a progress bar.
   \item \texttt{missing -} This will preprocess your missing values. It is set to ignore missing data, so that they do not contribute to the distance measure. It can also be set to \texttt{"loci", "geno", "zero", or "mean"}. For details, see section \ref{data.manip:missing:missingno} of this manual.
   \item \texttt{hist -} This will produce a pair of histograms for each population showing the distribution of $I_A$ and $\bar r_d$ across the sampled data sets, and plot the observed value as a single vertical line.
+  \item \texttt{valuereturn -} If set to \texttt{TRUE} and the number of samples
+  is greater than zero, it will return all values generated from the permuted
+  data. 
 \end{itemize}
 Running the analysis is as simple as this:
 <<ia_demo>>=
@@ -1310,6 +1313,30 @@ nan5 <- ia(popsub(nancycats, 5), sample=999, quiet=TRUE)
 @
 \end{figure}
 %\newpage
+
+If we wanted to, we could also have set the flag \texttt{valuereturn = TRUE} to 
+get back our permuted data if we wanted to make our own histograms (we'll set 
+the number of samples to 9 for demonstrative purposes):
+
+<<ia_demo_sampling_vr_dummy, eval = FALSE>>=
+set.seed(1009)
+ia(popsub(nancycats, 5), sample = 9, hist = FALSE, valuereturn = TRUE)
+@
+
+<<ia_demo_sampling_vr, echo = FALSE>>=
+cat("|================================================================================| 100%\n")
+structure(list(index = structure(c(-0.0475399533129828, 0.5, 
+-0.00600425397248417, 0.5), .Names = c("Ia", "p.Ia", "rbarD", 
+"p.rD")), samples = structure(list(Ia = c(-0.174180206794681, 
+0.110998135909168, -0.0516575036742681, -0.227057548622598, -0.290794613187196, 
+0.17142682029909, 0.127426390403491, -0.0489769895090723, -0.0100523130577507
+), rbarD = c(-0.022056780840299, 0.0142082562146926, -0.00661071136361462, 
+-0.0289477478354951, -0.0366851757977678, 0.0217644448059182, 
+0.0160542108673502, -0.00622397887147145, -0.00126986051456087
+)), .Names = c("Ia", "rbarD"), row.names = c(NA, -9L), class = "data.frame")), .Names = c("index", 
+"samples"))
+@
+
 
 There, are, of course a couple of caveats that need to be mentioned regarding our P-values. First, while we have equivalent P-values for $I_A$ and $\bar{r}_d$, they might not always be equal due to the difference in calculation. Details about that can be found in the Appendix section \ref{appendix:algorithm:iard}. Second, the P-values are calculated by comparing how many permuted values are greater than or equal to the observed value. This includes the observed value (which is why setting the randomizations to 999 will give you a round P-value) which means that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number of permutations you select. Take for example this population of a clonal root rot pathogen, \textit{Aphanomyces euteiches}:
 <<ia_Aeut_ex, eval=FALSE>>=
