@@ -650,7 +650,7 @@ jack.pair_diffs <- function(pop, numLoci, np)
 #
 #
 
-jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.587302){
+jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.58730158730159){
   inds <- nInd(pop)
   half <- round(inds/divisor)
   cat("Creating Null Distribution...\t")
