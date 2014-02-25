@@ -1276,142 +1276,8 @@ javier<-function(x){
 ### Tajima's D, Nuc. Diversity and Ka/Ks estimation ###
 #######################################################
 #
-#
 # using the packages pegas, ape and sequin, Im creating some wrappers to be able to do multiple calculations of basic pop. gen. statistical tests such as Tajimas D, Nucleotide diversity (pi) and dN/dS selection (as Ka/Ks)
 #
-#
-####################################################################################################################################
-# ## Tajimas D calculation
-# Function td: Tajima-D wrapper to get a data frame out of the data with the Tajimas D value, the p-values for normality and poisson, the files and if the p-value (for normality) is significant or not.
-# Usage: 
-# td(fasta file location)
-####################################################################################################################################
-#' td
-#' 
-#' Tajima-D wrapper of \code{pegas} function \code{\link{tajima.test}} to get a data frame out of the data with the Tajima D value, the p-values for normality and poisson, the files and if the p-value (for normality) is significant or not.
-#' 
-#' @param x an alignment \code{fasta} file (preferably full path, fasta|fas extension).
-#' 
-#' @return a table with the Tajima's D calculation results: Tajimas D value, the p-values for normality and poisson, the files and if the p-value (for normality) is significant or not.
-#' 
-#' @seealso \code{\link{tajima.test}}
-#' 
-#' @note The input FASTA file MUST BE AN ALIGNMENT! Be sure to use the full path. The FASTA files are read by \code{\link{ape}} function \code{read.dna} and then processed and ran trough \code{pegas} function \code{\link{tajima.test}}.
-#'
-#' @export
-#' 
-#' @author Javier F. Tabima
-#' 
-#' @references
-#' Tajima, F. (Nov 1989). "Statistical method for testing the neutral mutation hypothesis by DNA polymorphism.". 
-#' Genetics 123 (3): 585-95. PMC 1203831. PMID 2513255.
-#' 
-#' @examples
-#'
-#' # Analyze one of the included FASTA alignment files
-#' # td("data_1.fasta",format="fasta")
-#' 
-#' @importFrom ape read.dna
-#' @importFrom pegas tajima.test
-#' 
-td<- function (x){
-  seq <- read.dna(x,format = "fasta")
-  tt <- tajima.test(seq)
-  tt <- unlist(tt)
-  return ((tt))
-}
-############################################################################
-## Nucleotide Diversity
-#Function n.diversity: Nucleotide diversity calculation for sequence data.
-# Usage:
-# n.diversity(fasta file location)
-############################################################################
-#' n.diversity
-#' 
-#' Nucleotide diversity calculation for sequence data. Wrapper of \code{pegas} function \code{nuc.div} to get a data frame out of the data with the nucleotide diversity estimate.
-#' 
-#' @param x an alignment \code{fasta} file (preferably full path, fasta|fas extension).
-#' 
-#' @return a table with the Nucleotide Diversity calculation results.
-#' 
-#' @seealso \code{\link{nuc.div}}
-#' 
-#' @note The input FASTA file MUST BE AN ALIGNMENT! Be sure to use the full path. The FASTA files are read by \code{\link{ape}} function \code{read.dna} and then processed and ran trough \code{pegas} function \code{\link{nuc.div}}.
-#'
-#' @export
-#' 
-#' @author Javier F. Tabima
-#' 
-#' @references
-#' Nei, M. (1987) Molecular evolutionary genetics. New York: Columbia University Press.
-#' Nei, M and Li, W. 1979. "Mathematical Model for Studying Genetic Variation in Terms of Restriction Endonucleases". PNAS 76 
-#' 
-#' @examples
-#'
-#' # Analyze one of the included FASTA alignment files
-#' # n.diversity("data_1.fasta",format="fasta")
-#'  
-#' @importFrom ape read.dna
-#' @importFrom pegas nuc.div
-#' 
-n.diversity <- function (x){
-  seq <- read.dna(x, format="fasta")
-  nuc.div <- nuc.div(seq)
-  unlist(nuc.div)
-  return(nuc.div)
-}
-############################################################################
-## dN/dS Estimation
-# Function dnds: Calculation of dN/dS
-############################################################################
-
-#' dn.ds
-#' 
-#' dN/dS (as Ka/Ks estimation) estimation of selection. Wrapper of \code{seqinr} function \code{\link{kaks}}
-#' 
-#' @param x an alignment \code{fasta} file (preferably full path, fasta|fas extension).
-#' 
-#' @return a table with the dN/dS (Ka/Ks) value and the estimate for selection (Positive, Negative or Neutral)
-#' 
-#' @seealso \code{\link{kaks}}
-#' 
-#' @note The input FASTA file MUST BE AN ALIGNMENT! Be sure to use the full path. The FASTA files are read by \code{\link{seqinr}} function \code{read.alignment}.
-#'
-#' @export
-#' 
-#' @author Javier F. Tabima
-#' 
-#' @references
-#' Li WH, Wu CI, Luo CC. 1985. A new method for estimating synonymous and nonsynonymous rates of nucleotide substitution considering the relative likelihood of nucleotide and codon changes. Mol Biol Evol 2(2):150-174. 
-#' Zhang, Z., Li, J., Zhao, X., Wang, J., Wong, G.K. and Yu, J. (2006) KaKs_Calculator: calculating Ka and Ks through model selection and model averaging, Genomics Proteomics Bioinformatics, 4(4): 259-263.
-#' @examples
-#'
-#' # Analyze one of the included FASTA alignment files
-#' # dn.ds("data_1.fasta",format="fasta")
-#' @importFrom seqinr read.alignment kaks
-#' 
-dn.ds <- function (x){
-  seq <- read.alignment(x, format="fasta") 
-  if (!seq$nb == 2){
-    stop("This alignment has more than 2 sequences. dN/dS compares between orthologous genes in a pair of species")
-  } else {
-    tab <- suppressWarnings(kaks(seq))
-    tab <- unlist(tab)
-    if (is.na(tab)){
-      tab <- as.numeric(c(ka = NA, ks = NA, vka = NA, vks = NA))
-    }
-    return(tab)
-  }
-}
-
-############################################################################
-############################################################################
-####
-#### Wrappers for multiple sequences 
-####
-############################################################################
-############################################################################
-
 ############################################################################
 # Function multi.td: Tajima-D wrapper for multiple sets
 # 
@@ -1420,7 +1286,6 @@ dn.ds <- function (x){
 # 
 # To get the list of FASTA files use list.files()
 ############################################################################
-
 #' multi.td
 #' 
 #' Tajima-D wrapper for multiple sets of FASTA files and the \code{\link{td}} function

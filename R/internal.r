@@ -1191,3 +1191,59 @@ unmatched_pops_warning <- function(pops, sublist){
                "\tPopulations...", paste(pops, collapse = " "))
   return(msg)
 }
+
+
+#=============================================================================#
+#Sequence data functions. Used by several functions in the sandbox.
+#=============================================================================#
+
+#=============================================================================#
+# Tajimas D calculation
+# Function td: Tajima-D wrapper to get a data frame out of the data with the Tajimas D value, the p-values for normality and poisson, the files and if the p-value (for normality) is significant or not.
+# Requires: ape, pegas
+# Functions using this function:
+# # multi.td
+#=============================================================================#
+td<- function (x){
+  seq <- read.dna(x,format = "fasta")
+  tt <- tajima.test(seq)
+  tt <- unlist(tt)
+  return ((tt))
+}
+
+#=============================================================================#
+# Nucleotide Diversity
+# Function n.diversity: Nucleotide diversity calculation for sequence data.
+# Requires: ape, pegas
+# Functions using this function:
+# # multi.nd
+#=============================================================================#
+
+n.diversity <- function (x){
+  seq <- read.dna(x, format="fasta")
+  nuc.div <- nuc.div(seq)
+  unlist(nuc.div)
+  return(nuc.div)
+}
+
+#=============================================================================#
+# dN/dS Estimation
+# Function dnds: Calculation of dN/dS
+# Requires: seqinr
+# Functions using this function:
+# # multi.dnds
+#=============================================================================#
+
+dn.ds <- function (x){
+  seq <- read.alignment(x, format="fasta") 
+  if (!seq$nb == 2){
+    stop("This alignment has more than 2 sequences. dN/dS compares between orthologous genes in a pair of species")
+  } else {
+    tab <- suppressWarnings(kaks(seq))
+    tab <- unlist(tab)
+    if (is.na(tab)){
+      tab <- as.numeric(c(ka = NA, ks = NA, vka = NA, vks = NA))
+    }
+    return(tab)
+  }
+}
