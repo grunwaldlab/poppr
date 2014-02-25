@@ -531,9 +531,26 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
     result[c(2,4)] <- p.val
     names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
     if (valuereturn == TRUE){
-      return(list(index = final(Iout, result), samples = samp))
-    }
+      iaobj <- list(index = final(Iout, result), samples = samp)
+      class(iaobj) <- "ialist"
+      return(iaobj)
+    } 
   }  
   return(final(Iout, result))
 }
 
+#' @export
+print.ialist <- function(x, ...){
+  cat("Index\n")
+  print(x$index)
+  cat("Samples\n")
+  print(head(x$samples))
+}
+
+#' @export
+print.amova <- function (x, full = FALSE, ...) 
+{
+  if (full == TRUE) 
+    print(x)
+  else print(x[-((length(x) - 2):length(x))])
+}
