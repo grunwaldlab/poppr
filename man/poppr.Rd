@@ -124,10 +124,6 @@ can convert any raw data formats that adegenet can take
 files exported into a csv format (see
 \code{\link{read.genalex}} for details).
 }
-\note{
-All values are rounded to three significant digits for the
-final table.
-}
 \examples{
 data(nancycats)
 poppr(nancycats)
