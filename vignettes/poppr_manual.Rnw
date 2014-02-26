@@ -277,12 +277,13 @@ x$files <- list.files(dirname(system.file("files/rootrot.csv", package="poppr"))
 x$files <- paste(x$path, x$files, sep="/")
 x
 @
-As you can see, now all of the files that existed in that directory are there! Now you can look at all those files at once!
+As you can see, now all of the files that existed in that directory are there! Now you can look at all those files at once! For space reasons, we will only print 2 siginficant digits.
 <<poppr.all, eval=FALSE>>=
-poppr.all(x$files)
+all_files <- poppr.all(x$files)
+print(all_files, digits = 2)
 @
 <<poppr.all_eval, echo=FALSE>>=
-poppr.all(c(system.file("files/rootrot.csv", package="poppr"), system.file("files/rootrot2.csv", package="poppr"), system.file("files/simulated.dat", package="poppr")))
+print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), system.file("files/rootrot2.csv", package="poppr"), system.file("files/simulated.dat", package="poppr"))), digits = 2)
 @
 
 You've seen examples of how to use \texttt{getfile} to extract a single file and all the files in a directory, but what if you wanted many files, but only wanted ones that were of a certain type or had a certain name? This is what you would use the \texttt{pattern} argument for.
@@ -953,14 +954,54 @@ exmat[sample(1:5), ]
 Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of section \ref{index:iard:ia} of this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
   \end{enumerate}
 \end{itemize}
-These shuffling schemes have been implemented for the index of association, but there may be other summary statistics you can use \texttt{shufflepop} for. All you have to do is use the function \texttt{replicate}. Let's use $I_A$ as an example:
-<<shuffle_ia>>=
+These shuffling schemes have been implemented for the index of association, but there may be other summary statistics you can use \texttt{shufflepop} for. All you have to do is use the function \texttt{replicate}. Let's use average Bruvo's
+distance as an example:
+<<shuffle_bd>>=
 data(nancycats)
 nan1 <- popsub(nancycats, 1)
-ia(nan1)
-replicate(10, ia(shufflepop(nan1, method = 2), quiet=TRUE))
+reps <- rep(2, 9) # Assuming dinucleotide repeats.
+observed <- mean(bruvo.dist(nan1, replen = reps))
+observed
+@
+<<shuffle_bd_replicate_dummy, eval=FALSE>>=
+set.seed(9999)
+bd.test <- replicate(100, mean(bruvo.dist(shufflepop(nan1, method = 2), replen = rep(2, 9))))
+@
+<<shuffle_bd_replicate, echo = FALSE>>=
+bd.test <- c(0.383180217978395, 0.415172887731481, 0.395401716820988, 0.36112075617284, 
+0.381246383101852, 0.391417100694444, 0.368165268132716, 0.44764419367284, 
+0.39599006558642, 0.392292390046296, 0.416001157407407, 0.359629388503086, 
+0.375589554398148, 0.405174575617284, 0.409643856095679, 0.391482204861111, 
+0.382218123070988, 0.41436149691358, 0.383174189814815, 0.404762249228395, 
+0.409695698302469, 0.351765046296296, 0.375487075617284, 0.394843508873457, 
+0.403155140817901, 0.395619936342593, 0.35908203125, 0.396396363811728, 
+0.387588011188272, 0.375771604938272, 0.374916811342593, 0.371144386574074, 
+0.375567853009259, 0.372751494984568, 0.41537181712963, 0.390055941358025, 
+0.372065489969136, 0.38319106867284, 0.418766878858025, 0.389811197916667, 
+0.391309799382716, 0.380735194830247, 0.392493730709877, 0.407855902777778, 
+0.373485725308642, 0.393967013888889, 0.419801311728395, 0.419554157021605, 
+0.349768518518519, 0.368592062114198, 0.396170910493827, 0.38164665316358, 
+0.397676745756173, 0.359424430941358, 0.390004099151235, 0.375790895061728, 
+0.415828751929012, 0.396510898919753, 0.398491753472222, 0.399006558641975, 
+0.378590374228395, 0.410376880787037, 0.373421826774691, 0.401580584490741, 
+0.388343942901235, 0.389790702160494, 0.406230709876543, 0.410212914737654, 
+0.411181037808642, 0.397419945987654, 0.409830729166667, 0.38501880787037, 
+0.375995852623457, 0.374977092978395, 0.404217303240741, 0.381970968364198, 
+0.427674093364198, 0.421094955632716, 0.392737268518519, 0.372973331404321, 
+0.396556712962963, 0.41493537808642, 0.367643229166667, 0.417230902777778, 
+0.37703872492284, 0.388992573302469, 0.390311535493827, 0.404422260802469, 
+0.325649836033951, 0.382992139274691, 0.396333670910494, 0.385146604938272, 
+0.40302734375, 0.369362461419753, 0.40317684220679, 0.400687210648148, 
+0.402665653935185, 0.383434606481481, 0.398591820987654, 0.403266059027778
+)
 @
 You could use this method to replicate the resampling 999 times and then create a histogram to visualize a distribution of what would happen under different assumptions of panmixia.
+
+<<bd_histogram>>=
+hist(bd.test, xlab = "Bruvo's Distance", main = "Average Bruvo's distance over 100 randomizations")
+abline(v = observed, col = "red")
+legend('topleft', legend="observed", col="red", lty = 1)
+@
 
 \subsection{Cut It Out!  \{removing uninformative loci\}}\label{data.manip:informloci}
  \tab\tab Phylogenetically uninformative loci are those that have only one sample differentiating from the rest. This can lead to biased results when using multilocus analyses such as the index of association (See \ref{index:iard} and \ref{summary}). These nuisance loci can be removed with the following function.
