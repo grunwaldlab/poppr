@@ -1319,8 +1319,26 @@ H.dup <- mlg.crosspop(H3N2, quiet=TRUE)
 @
 Here is a snippet of what the output looks like when \texttt{quiet} is \texttt{FALSE}. It will print out the MLG name, the total number of individuals that make up that MLG, and the populations where that MLG can be found.
 <<crosspopout, echo=FALSE>>=
-H.inds <- mlg.crosspop(H3N2, indexreturn=TRUE)
-Hadoo <- mlg.crosspop(H3N2, mlgsub=H.inds[1:10])
+x <- structure(list(MLG.3 = structure(c(4L, 8L), .Names = c("USA", 
+"Denmark")), MLG.9 = structure(c(1L, 13L, 1L, 1L), .Names = c("Japan", 
+"USA", "Finland", "Denmark")), MLG.31 = structure(c(2L, 7L), .Names = c("Japan", 
+"Canada")), MLG.75 = structure(c(2L, 8L, 2L, 1L, 6L, 2L, 1L, 
+1L), .Names = c("Japan", "USA", "Finland", "Norway", "Denmark", 
+"Austria", "Russia", "Ireland")), MLG.80 = structure(c(1L, 1L
+), .Names = c("USA", "Denmark")), MLG.86 = structure(3:4, .Names = c("Denmark", 
+"Austria")), MLG.95 = structure(c(1L, 1L), .Names = c("USA", 
+"Bangladesh")), MLG.97 = structure(c(1L, 5L, 1L, 1L), .Names = c("USA", 
+"Austria", "Bangladesh", "Romania")), MLG.104 = structure(1:2, .Names = c("USA", 
+"France")), MLG.110 = structure(c(2L, 3L, 11L), .Names = c("Japan", 
+"USA", "China"))), .Names = c("MLG.3", "MLG.9", "MLG.31", "MLG.75", 
+"MLG.80", "MLG.86", "MLG.95", "MLG.97", "MLG.104", "MLG.110"))
+printthings <- function(ind, x){
+  cat(paste0(names(x)[ind], ":"), 
+      paste0("(", sum(x[[ind]])," inds)"), 
+      names(x[[ind]]), 
+      "\n")
+}
+invisible(lapply(1:10, printthings, x))
 @
 The output of this function is a list of MLGs, each containing a vector indicating the number of copies in each population. We'll count the number of populations each MLG crosses using the function \texttt{sapply} with \texttt{length}.
 <<crosspop2>>=
@@ -1373,10 +1391,53 @@ mlg.table(H3N2, sublist="Norway", quiet=TRUE, bar=TRUE)
 The MLG table is not restricted for use with just \textit{Poppr}. One of the main advantages of the function \texttt{mlg.table} is that it allows easy access to diversity functions present in the package \textit{vegan} \cite{vegan}. One very simple example is to create a rarefaction curve for each population in your data set giving the number of expected MLGs for a given sample size. For more information, type \texttt{help("diversity", package="vegan")} in your R console.
 
 For the sake of a simple example, instead of drawing a curve for each of the 37 countries represented in this sample, let's change the population structure to be the different years of the epidemics. 
-<<mlgrare1>>=
+<<mlgrare1_dummy, eval = FALSE>>=
 H.year <- H3N2
 pop(H.year) <- H.year$other$x$year
 summary(H.year) # Check the data to make sure it's correct.
+@
+<<mlgrare1, echo = FALSE>>=
+H.year <- H3N2
+pop(H.year) <- H.year$other$x$year
+res <- structure(list(N = 1903L, pop.eff = structure(c(158, 415, 399, 
+469, 462), .Names = c("2002", "2003", "2004", "2005", "2006")), 
+    loc.nall = structure(c(3L, 3L, 4L, 2L, 4L, 2L, 3L, 2L, 4L, 
+    3L, 4L, 2L, 4L, 3L, 2L, 2L, 3L, 3L, 2L, 2L, 3L, 3L, 3L, 2L, 
+    2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 4L, 4L, 3L, 3L, 3L, 4L, 
+    2L, 2L, 2L, 4L, 3L, 2L, 3L, 4L, 2L, 3L, 2L, 3L, 2L, 2L, 2L, 
+    4L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 4L, 4L, 4L, 3L, 3L, 2L, 3L, 
+    4L, 3L, 2L, 3L, 3L, 3L, 3L, 2L, 3L, 2L, 4L, 2L, 3L, 2L, 2L, 
+    3L, 3L, 3L, 3L, 2L, 2L, 2L, 2L, 3L, 2L, 3L, 2L, 3L, 2L, 3L, 
+    2L, 3L, 3L, 2L, 2L, 2L, 3L, 2L, 2L, 2L, 3L, 3L, 3L, 2L, 2L, 
+    3L, 3L, 3L, 3L, 4L, 2L, 3L, 3L, 4L, 3L, 2L), .Names = c("L001", 
+    "L002", "L003", "L004", "L005", "L006", "L007", "L008", "L009", 
+    "L010", "L011", "L012", "L013", "L014", "L015", "L016", "L017", 
+    "L018", "L019", "L020", "L021", "L022", "L023", "L024", "L025", 
+    "L026", "L027", "L028", "L029", "L030", "L031", "L032", "L033", 
+    "L034", "L035", "L036", "L037", "L038", "L039", "L040", "L041", 
+    "L042", "L043", "L044", "L045", "L046", "L047", "L048", "L049", 
+    "L050", "L051", "L052", "L053", "L054", "L055", "L056", "L057", 
+    "L058", "L059", "L060", "L061", "L062", "L063", "L064", "L065", 
+    "L066", "L067", "L068", "L069", "L070", "L071", "L072", "L073", 
+    "L074", "L075", "L076", "L077", "L078", "L079", "L080", "L081", 
+    "L082", "L083", "L084", "L085", "L086", "L087", "L088", "L089", 
+    "L090", "L091", "L092", "L093", "L094", "L095", "L096", "L097", 
+    "L098", "L099", "L100", "L101", "L102", "L103", "L104", "L105", 
+    "L106", "L107", "L108", "L109", "L110", "L111", "L112", "L113", 
+    "L114", "L115", "L116", "L117", "L118", "L119", "L120", "L121", 
+    "L122", "L123", "L124", "L125")), pop.nall = structure(c(203L, 
+    255L, 232L, 262L, 240L), .Names = c("1", "2", "3", "4", "5"
+    )), NA.perc = 2.36342616920652, Hobs = 0, Xexp = 0), .Names = c("N", 
+"pop.eff", "loc.nall", "pop.nall", "NA.perc", "Hobs", "Xexp"))
+listlab <- c("# Total number of genotypes: ", "# Population sample sizes: ", 
+    "# Number of alleles per locus: ", "# Number of alleles per population: ", 
+    "# Percentage of missing data: ", "# Observed heterozygosity: ", 
+    "# Expected heterozygosity: ")
+cat("\n", listlab[1], res[[1]], "\n")
+for (i in 2:7) {
+    cat("\n", listlab[i], "\n")
+    print(res[[i]])
+}
 @
 <<mlgrare2, eval=FALSE>>=
 library(vegan)
