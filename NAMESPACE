@@ -1,5 +1,6 @@
 S3method(print,amova)
 S3method(print,ialist)
+S3method(print,popprtable)
 export("namehierarchy<-")
 export("sethierarchy<-")
 export("setpop<-")
