@@ -146,8 +146,6 @@
 #' n is the number of observed values.}
 #' \item{File}{A vector indicating the name of the original data file.}
 #'
-#' @note All values are rounded to three significant digits for the final table.
-#' 
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
 #' \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
 #'
@@ -302,16 +300,15 @@ poppr <- function(pop,total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                        ))))
 
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
-                               eMLG=round(N.rare[1, ], 3), 
-                               SE=round(N.rare[2, ], 3), 
-                               H=round(H, 3), 
-                               G=round(G,3),
-                               Hexp=round(Hexp, 3),
-                               E.5=round(E.5,3),
-                               round(IaList, 3),
+                               eMLG=N.rare[1, ], 
+                               SE=N.rare[2, ], 
+                               H=H, 
+                               G=G,
+                               Hexp=Hexp,
+                               E.5=E.5,
+                               IaList,
                                File=namelist$File))
     rownames(Iout) <- NULL
-    return(final(Iout, result))
   } else { 
     MLG.vec <- mlg(pop, quiet=TRUE)
     N.vec <- length(pop@ind.names)
@@ -331,17 +328,18 @@ poppr <- function(pop,total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
     Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
-                               eMLG=round(N.rare[1, ], 3), 
-                               SE=round(N.rare[2, ], 3),
-                               H=round(H, 3), 
-                               G=round(G,3), 
-                               Hexp=round(Hexp, 3), 
-                               E.5=round(E.5,3), 
-                               round(as.data.frame(t(IaList)), 3),
+                               eMLG=N.rare[1, ], 
+                               SE=N.rare[2, ],
+                               H=H, 
+                               G=G, 
+                               Hexp=Hexp, 
+                               E.5=E.5, 
+                               as.data.frame(t(IaList)),
                                File=namelist$File))
     rownames(Iout) <- NULL
-    return(final(Iout, result))
   }
+  class(Iout) <- c("popprtable", "data.frame")
+  return(final(Iout, result)) 
 }
 
 #==============================================================================#
@@ -537,20 +535,4 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
     } 
   }  
   return(final(Iout, result))
-}
-
-#' @export
-print.ialist <- function(x, ...){
-  cat("Index\n")
-  print(x$index)
-  cat("Samples\n")
-  print(head(x$samples))
-}
-
-#' @export
-print.amova <- function (x, full = FALSE, ...) 
-{
-  if (full == TRUE) 
-    print(x)
-  else print(x[-((length(x) - 2):length(x))])
 }
