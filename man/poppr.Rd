@@ -8,7 +8,8 @@ poppr(pop, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   keep = 1, hist = TRUE, minsamp = 10, legend = FALSE)
 }
 \arguments{
-  \item{pop}{a \code{\link{genind}} object OR any fstat,
+  \item{pop}{a \code{\link{genind}} object OR a
+  \code{\linkS4class{genclone}} object OR any fstat,
   structure, genetix, genpop, or genalex formatted file.}
 
   \item{total}{default \code{TRUE}. Should indecies be
@@ -56,19 +57,23 @@ poppr(pop, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 
   \item{clonecorrect}{default \code{FALSE}. must be used
   with the \code{hier} and \code{dfname} parameters, or the
-  user will potentially get undesiered results. see
+  user will potentially get undesired results. see
   \code{\link{clonecorrect}} for details.}
 
-  \item{hier}{a \code{numeric or character list}. This is
-  the list of vectors within a data frame (specified in
-  \code{dfname}) in the 'other' slot of the
-  \code{\link{genind}} object. The list should indicate the
-  population hierarchy to be used for clone correction.}
+  \item{hier}{\begin{itemize} \item \strong{for genind
+  objects} - a \code{numeric or character} vector OR a
+  hierarchical formula. This is the list of columns within
+  a data frame (specified in \code{dfname}) in the 'other'
+  slot of the \code{\link{genind}} object. The list should
+  indicate the population hierarchy to be used for clone
+  correction \item \strong{for genclone objects} - a
+  \code{formula} indicating the hierarchical levels to be
+  used. The hierarchies should be present in the \code{\}
 
   \item{dfname}{a \code{character string}. This is the name
-  of the data frame or list containing the vectors of the
-  population hierarchy within the \code{other} slot of the
-  \code{\link{genind}} object.}
+  of the data frame or heirarchy containing the vectors of
+  the population hierarchy within the \code{other} slot of
+  the \code{\link{genind}} object.}
 
   \item{keep}{an \code{integer}. This indicates the levels
   of the population hierarchy you wish to keep after clone
@@ -115,14 +120,15 @@ the number of observed values.} \item{File}{A vector
 indicating the name of the original data file.}
 }
 \description{
-This function allows the user to quickly view indecies of
-distance, heterozygosity, and inbreeding to aid in the
+This function allows the user to quickly view indicies of
+heterozygosity, evenness, and inbreeding to aid in the
 decision of a path to further analyze a specified dataset.
-It natively takes \code{\link{genind}} formatted files, but
-can convert any raw data formats that adegenet can take
-(fstat, structure, genetix, and genpop) as well as genalex
-files exported into a csv format (see
-\code{\link{read.genalex}} for details).
+It natively takes \code{\linkS4class{genind}} and
+\code{\linkS4class{genclone}} formatted files, but can
+convert any raw data formats that adegenet can take (fstat,
+structure, genetix, and genpop) as well as genalex files
+exported into a csv format (see \code{\link{read.genalex}}
+for details).
 }
 \examples{
 data(nancycats)
@@ -178,7 +184,7 @@ Genetics, 89(3):583-590, 1978.
 
 Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre
 Legendre, Peter R. Minchin, R. B. O'Hara, Gavin L. Simpson,
-Peter Solymos, M. Henry H. Stevens, and Helene Wagner.
+Peter Solymos, M. Henry H.  Stevens, and Helene Wagner.
 vegan: Community Ecology Package, 2012. R package version
 2.0-5.
 
@@ -189,8 +195,8 @@ communication. Bell Systems Technical Journal,
 27:379-423,623-656, 1948
 
 J M Smith, N H Smith, M O'Rourke, and B G Spratt. How
-clonal are bacteria? Proceedings of the National Academy of
-Sciences, 90(10):4384-4388, 1993.
+clonal are bacteria?  Proceedings of the National Academy
+of Sciences, 90(10):4384-4388, 1993.
 
 J.A. Stoddart and J.F. Taylor. Genotypic diversity:
 estimation and prediction in samples. Genetics,
