@@ -97,14 +97,17 @@
 #'   and \code{dfname} parameters, or the user will potentially get undesired
 #'   results. see \code{\link{clonecorrect}} for details.
 #'   
-#' @param hier \begin{itemize} \item \strong{for genind objects} - a 
+#' @param hier 
+#' \itemize{
+#'   \item \strong{for genind objects} - a 
 #'   \code{numeric or character} vector OR a hierarchical formula. This is the 
 #'   list of columns within a data frame (specified in \code{dfname}) in the 
 #'   'other' slot of the \code{\link{genind}} object. The list should indicate 
 #'   the population hierarchy to be used for clone correction \item \strong{for 
 #'   genclone objects} - a \code{formula} indicating the hierarchical levels to 
-#'   be used. The hierarchies should be present in the \code{\@hierarchy} slot. 
+#'   be used. The hierarchies should be present in the \code{hierarchy} slot. 
 #'   See \code{\link{sethierarchy}} for details.
+#'   }
 #'   
 #' @param dfname a \code{character string}. This is the name of the data frame 
 #'   or heirarchy containing the vectors of the population hierarchy within the 
