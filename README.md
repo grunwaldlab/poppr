@@ -45,7 +45,7 @@ If the image above says "Passing", then that means it should be safe to install 
 
 Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/web/packages/poppr/index.html).
 
-To install, make sure R is at least version 2.15.1 (the authors recommend 3.0), and in your console, type:
+To install, make sure R is at least version 2.15.1 (the authors recommend &ge; 3.0), and in your console, type:
 
 ```s
 install.packages("poppr")

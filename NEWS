@@ -4,18 +4,23 @@ NEW FEATURES
 * Polyploids are now supported in poppr. Many functions in adegenet will unfortunately break. All functions in poppr should be able to work with polyploids.
 * Calculations of Bruvo's distance now features correction for missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
 * `diss.dist` now has options to return raw distaces, similarity distances, and a matrix instead of a dist object.
-* `read.genalex()` now has the option to import as a genclone object. This is the default action.
-* output of the mlg functions are now represented as integers to decrease thier size in memory.
-* `mlg.matrix` is now calculated faster utilizing R's internal tabulating capabilities.
+* `read.genalex` now has the option to import as a genclone object. This is the default action.
+* `poppr.all` will be able to analyze lists of genind or genclone objects.
+* `ia` now has the argument valuereturn which will return the sampled data.
 
 NEW DATA CLASSES
 * The `genclone` object is a new extension of the `genind` object from adegenet. This object contains slots containing population hierarchies and multilocus genotype definitions and will work with all analyses in adegenet and poppr. 
 
 NEW FUNCTIONS
 * [get,set,name,split]hierarchy - functions that will manipulate the hierarchy slot in a `genclone` object utilizing hierarchical formulae as arguments for simplification.
-* `setpop()` will set the population of a `genclone` object utilizing model formulae regarding the hierarchy slot.
-* `as.genclone()` will automatically convert genind objects to genclone objects.
-* `is.genclone()` checks the validity of genclone objects.
+* `setpop` will set the population of a `genclone` object utilizing model formulae regarding the hierarchy slot.
+* `as.genclone` will automatically convert genind objects to genclone objects.
+* `is.genclone` checks the validity of genclone objects.
+* `poppr.amova` will run amova on any hierarchical level. This also includes the feature to run amova on clone censored data sets. It utilizes the ade4 version of amova. 
+* `missing_table` will calculate missing data per population per locus and gives the user the option to visualize this as a heatmap.
+
+NEW CAR
+* Not really.
 
 NAMESPACE CHANGES
 * poppr no longer depends on pegas.
@@ -23,6 +28,12 @@ NAMESPACE CHANGES
 
 IMPROVEMENTS
 * default shuffling algorithm has been implemented in C to increase speed.
+* output of the mlg functions are now represented as integers to decrease thier size in memory.
+* `mlg.matrix` is now calculated faster utilizing R's internal tabulating capabilities.
+* The function `poppr` will no longer return rounded results, but rather is printed with three significant digits.
+
+MISC
+* Added unit tests.
 
 poppr 1.0.5
 ===========
