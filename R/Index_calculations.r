@@ -230,7 +230,7 @@ poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
     popsplt <- unlist(strsplit(pop, "/"))
     namelist$File <- popsplt[length(popsplt)]
   } else if (is.genind(pop)){
-    namelist$File <- x$X
+    namelist$File <- as.character(callpop[2])
   } else {
     namelist$File <- basename(x$X)
   }
@@ -259,7 +259,6 @@ poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   Iout    <- NULL
   result  <- NULL
   origpop <- x$GENIND
-  rm(x)
   total   <- toupper(total)
   missing <- toupper(missing)
   type    <- pop@type
@@ -267,23 +266,20 @@ poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   if(type=="PA"){
     .Ia.Rd <- .PA.Ia.Rd
   }
-  if (is.null(poplist)){
-    MPI <- NULL
-  }
-  else{
-    MPI <- 1
-  }
   if (legend) poppr_message()
-  if (!is.null(MPI)){
-    MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
-    N.vec   <- rowSums(pop.mat)
-    # Shannon-Weiner diversity index.
-    H       <- vegan::diversity(pop.mat)
-    # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-    G       <- vegan::diversity(pop.mat, "inv")
-    Hexp    <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
-    # E_5
-    E.5     <- (G-1)/(exp(H)-1)
+  
+  MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
+  N.vec   <- rowSums(pop.mat)
+  # Shannon-Weiner diversity index.
+  H       <- vegan::diversity(pop.mat)
+  # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
+  G       <- vegan::diversity(pop.mat, "inv")
+  Hexp    <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
+  # E_5
+  E.5     <- (G-1)/(exp(H)-1)
+  
+  if (!is.null(poplist)){
+
     # rarefaction giving the standard errors. This will use the minimum pop size
     # above a user-defined threshold.
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
@@ -314,17 +310,15 @@ poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                                File=namelist$File))
     rownames(Iout) <- NULL
   } else { 
-    MLG.vec <- mlg(pop, quiet=TRUE)
-    N.vec <- length(pop@ind.names)
-    # Shannon-Weiner diversity index.
-    H <- vegan::diversity(pop.mat)
-    # E_1, Pielou's evenness.
-    # J <- H / log(rowSums(pop.mat > 0))
-    # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-    G <- vegan::diversity(pop.mat, "inv")
-    Hexp <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
-    # E_5
-    E.5 <- (G-1)/(exp(H)-1)
+#     MLG.vec <- mlg(pop, quiet=TRUE)
+#     N.vec <- length(pop@ind.names)
+#     # Shannon-Weiner diversity index.
+#     H <- vegan::diversity(pop.mat)
+#     # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
+#     G <- vegan::diversity(pop.mat, "inv")
+#     Hexp <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
+#     # E_5
+#     E.5 <- (G-1)/(exp(H)-1)
     # rarefaction giving the standard errors. No population structure means that
     # the sample is equal to the number of individuals.
     N.rare <- rarefy(pop.mat, sum(pop.mat), se=TRUE)
