@@ -56,7 +56,7 @@
 #' \code{\link{read.genalex}} for details).
 #' 
 #' 
-#' @param pop a \code{\link{genind}} object OR a \code{\linkS4class{genclone}} 
+#' @param dat a \code{\linkS4class{genind}} object OR a \code{\linkS4class{genclone}} 
 #'   object OR any fstat, structure, genetix, genpop, or genalex formatted file.
 #'   
 #' @param total default \code{TRUE}. Should indecies be calculated for the 
@@ -213,13 +213,13 @@
 #' }
 #==============================================================================#
 #' @import adegenet ggplot2 vegan
-poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
+poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
                   clonecorrect=FALSE, hier=1, dfname="population_hierarchy", 
                   keep = 1, hist=TRUE, minsamp=10, legend=FALSE){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
-  x <- process_file(pop, missing = missing, cutoff = cutoff, 
+  x <- process_file(dat, missing = missing, cutoff = cutoff, 
                   clonecorrect = clonecorrect, hier = hier, dfname = dfname, 
                   keep = keep, quiet = TRUE)  
   # The namelist will contain information such as the filename and population
@@ -227,41 +227,40 @@ poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   namelist <- NULL
   callpop  <- match.call()
   if (!is.na(grep("system.file", callpop)[1])){
-    popsplt <- unlist(strsplit(pop, "/"))
+    popsplt <- unlist(strsplit(dat, "/"))
     namelist$File <- popsplt[length(popsplt)]
-  } else if (is.genind(pop)){
+  } else if (is.genind(dat)){
     namelist$File <- as.character(callpop[2])
   } else {
     namelist$File <- basename(x$X)
   }
   #poplist <- x$POPLIST
   if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
-    pop           <- x$GENIND
-    pop(pop)      <- NULL
+    dat           <- x$GENIND
+    pop(dat)      <- NULL
     poplist       <- NULL
-    poplist$Total <- pop
+    poplist$Total <- dat
   }
   else{
-    pop <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
-    if (any(levels(pop(pop)) == "")){
-      levels(pop(pop))[levels(pop(pop)) == ""] <- "?"
+    dat <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
+    if (any(levels(pop(dat)) == "")){
+      levels(pop(dat))[levels(pop(dat)) == ""] <- "?"
       warning("missing population factor replaced with '?'")
     }
-    poplist <- .pop.divide(pop)
+    poplist <- .pop.divide(dat)
   }
   # Creating the genotype matrix for vegan's diversity analysis.
-  pop.mat <- mlg.matrix(pop)
+  pop.mat <- mlg.matrix(dat)
   if (total==TRUE & !is.null(poplist) & length(poplist) > 1){
-    poplist$Total <- pop
+    poplist$Total <- dat
     pop.mat <- rbind(pop.mat, colSums(pop.mat))
   }
   sublist <- names(poplist)
   Iout    <- NULL
-  result  <- NULL
   origpop <- x$GENIND
   total   <- toupper(total)
   missing <- toupper(missing)
-  type    <- pop@type
+  type    <- dat@type
   # For presence/absences markers, a different algorithm is applied. 
   if(type=="PA"){
     .Ia.Rd <- .PA.Ia.Rd
@@ -279,65 +278,41 @@ poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   E.5     <- (G-1)/(exp(H)-1)
   
   if (!is.null(poplist)){
-
     # rarefaction giving the standard errors. This will use the minimum pop size
     # above a user-defined threshold.
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
-    
-    N.rare <- suppressWarnings(rarefy(pop.mat, raremax, se=TRUE))
-    IaList <- NULL
-    invisible(lapply(sublist, function(x) 
-      IaList <<- rbind(IaList, 
-                       .ia(poplist[[x]], 
-                           sample=sample, 
-                           method=method, 
-                           quiet=quiet, 
-                           missing=missing, 
-                           namelist=list(File=namelist$File, population = x),
-                           hist=hist
-                       ))))
-
+    N.rare  <- suppressWarnings(rarefy(pop.mat, raremax, se=TRUE))
+    IaList  <- NULL
+    invisible(lapply(sublist, function(x){ 
+      namelist <- list(File = namelist$File, population = x)
+      IaList   <<- rbind(IaList, 
+                       .ia(poplist[[x]], sample=sample, method=method, 
+                        quiet=quiet, missing=missing, namelist=namelist, 
+                        hist=hist) 
+                       )
+      })) 
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
-                               eMLG=N.rare[1, ], 
-                               SE=N.rare[2, ], 
-                               H=H, 
-                               G=G,
-                               Hexp=Hexp,
-                               E.5=E.5,
-                               IaList,
-                               File=namelist$File))
+                               eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, 
+                               G=G, Hexp=Hexp, E.5=E.5, IaList, 
+                               File=namelist$File)) 
     rownames(Iout) <- NULL
   } else { 
-#     MLG.vec <- mlg(pop, quiet=TRUE)
-#     N.vec <- length(pop@ind.names)
-#     # Shannon-Weiner diversity index.
-#     H <- vegan::diversity(pop.mat)
-#     # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-#     G <- vegan::diversity(pop.mat, "inv")
-#     Hexp <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
-#     # E_5
-#     E.5 <- (G-1)/(exp(H)-1)
     # rarefaction giving the standard errors. No population structure means that
     # the sample is equal to the number of individuals.
     N.rare <- rarefy(pop.mat, sum(pop.mat), se=TRUE)
-    IaList <- .ia(pop, sample=sample, method=method, quiet=quiet, missing=missing,
+    IaList <- .ia(dat, sample=sample, method=method, quiet=quiet, missing=missing,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
     Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
-                               eMLG=N.rare[1, ], 
-                               SE=N.rare[2, ],
-                               H=H, 
-                               G=G, 
-                               Hexp=Hexp, 
-                               E.5=E.5, 
-                               as.data.frame(t(IaList)),
-                               File=namelist$File))
+                               eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, G=G, 
+                               Hexp=Hexp, E.5=E.5, as.data.frame(t(IaList)), 
+                               File=namelist$File)) 
     rownames(Iout) <- NULL
   }
   class(Iout) <- c("popprtable", "data.frame")
-  return(final(Iout, result)) 
+  return(Iout) 
 }
 
 #==============================================================================#
@@ -369,11 +344,25 @@ poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
 #' poppr.all(x$files)
 #' }
 #==============================================================================# 
-poppr.all <- function(filelist, ...) {
+poppr.all <- function(filelist, ...){
 	result <- NULL
-	for(a in filelist){
-    cat("| File: ",basename(a),"\n")
-		result <- rbind(result, poppr(a, ...))
+	for(a in seq(length(filelist))){
+    cat(" \\    \n")
+    input <- filelist[[a]]
+    if (is.genind(input)){
+      file <- names(filelist)[a]
+      if (is.null(file)){
+        file <- a
+      }
+      cat("  | Data: ")
+    } else {
+      file <- basename(input)
+      cat("  | File: ")
+    }
+    cat(file, "\n /    \n")
+    res      <- poppr(input, ...)
+    res$File <- file
+		result   <- rbind(result, res)
 	}
 	return(result)
 }
