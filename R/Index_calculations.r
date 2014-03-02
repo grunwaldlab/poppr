@@ -275,7 +275,7 @@ poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   }
   if (legend) poppr_message()
   if (!is.null(MPI)){
-    MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
+    MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
     N.vec   <- rowSums(pop.mat)
     # Shannon-Weiner diversity index.
     H       <- vegan::diversity(pop.mat)
