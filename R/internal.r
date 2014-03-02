@@ -128,39 +128,39 @@ extract.info <- function(x) {
 # Internal functions utilizing this function:
 # # new.poppr (in testing)
 #==============================================================================#
-.file.type <- function(pop, quiet=TRUE, missing="ignore", cutoff=0.05, keep=1,
+process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=1,
                             clonecorrect=FALSE, hier=c(1), dfname="hier"){
-  if (!is.genind(pop)){
-    x <- pop
+  if (!is.genind(input)){
+    x <- input
     if (toupper(.readExt(x)) == "CSV"){
-      try(pop <- read.genalex(x), silent=quiet)
-      try(pop <- read.genalex(x, region=TRUE), silent=quiet)
-      try(pop <- read.genalex(x, geo=TRUE), silent=quiet)
-      try(pop <- read.genalex(x, geo=TRUE, region=TRUE), silent=quiet)
+      try(input <- read.genalex(x), silent=quiet)
+      try(input <- read.genalex(x, region=TRUE), silent=quiet)
+      try(input <- read.genalex(x, geo=TRUE), silent=quiet)
+      try(input <- read.genalex(x, geo=TRUE, region=TRUE), silent=quiet)
     } else {
-      try(pop <- import2genind(x, quiet=quiet), silent=quiet)
+      try(input <- import2genind(x, quiet=quiet), silent=quiet)
     }
-    stopifnot(is.genind(pop))
-    pop@call[2] <- x
-    popcall     <- pop@call
-    pop         <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
-    pop@call    <- popcall
+    stopifnot(is.genind(input))
+    input@call[2] <- x
+    popcall       <- input@call
+    input         <- missingno(input, type=missing, cutoff=cutoff, quiet=quiet)
+    input@call    <- popcall
     if (clonecorrect == TRUE){
-      poplist  <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
-      pop      <- poplist
-      pop@call <- popcall
+      poplist    <- clonecorrect(input, hier=hier, dfname=dfname, keep=keep)
+      input      <- poplist
+      input@call <- popcall
     }
-  } else if (is.genind(pop)) {
-    x       <- as.character(pop@call)[2]
-    popcall <- pop@call
-    pop     <- missingno(pop, type=missing, cutoff=cutoff, quiet=quiet)
+  } else if (is.genind(input)) {
+    x         <- as.character(match.call()[2])
+    popcall   <- input@call
+    input     <- missingno(input, type=missing, cutoff=cutoff, quiet=quiet)
     if (clonecorrect == TRUE){
-      poplist  <- clonecorrect(pop, hier=hier, dfname=dfname, keep=keep)
-      pop      <- poplist
-      pop@call <- popcall
+      poplist    <- clonecorrect(input, hier=hier, dfname=dfname, keep=keep)
+      input      <- poplist
+      input@call <- popcall
     }
   }
-  return(list(X=x, GENIND=pop))
+  return(list(X=x, GENIND=input))
 }
 
 #==============================================================================#
