@@ -230,7 +230,7 @@ new.poppr <- function(pop,total=TRUE,sublist=c("ALL"),blacklist=c(NULL), sample=
   hist=TRUE, minsamp=10){
   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
       "non-parametric bootstrap")
-	x <- .file.type(pop, missing=missing, clonecorrect=clonecorrect, hier=hier, 
+	x <- process_file(pop, missing=missing, clonecorrect=clonecorrect, hier=hier, 
                   dfname=dfname, quiet=TRUE)	
   # The namelist will contain information such as the filename and population
   # names so that they can easily be ported around.

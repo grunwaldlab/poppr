@@ -213,26 +213,25 @@
 #' }
 #==============================================================================#
 #' @import adegenet ggplot2 vegan
-poppr <- function(pop,total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
+poppr <- function(pop, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
                   clonecorrect=FALSE, hier=1, dfname="population_hierarchy", 
-                  keep = 1, hist=TRUE, minsamp=10, legend = FALSE){
+                  keep = 1, hist=TRUE, minsamp=10, legend=FALSE){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
-  x <- .file.type(pop, missing=missing, cutoff=cutoff, clonecorrect=clonecorrect, 
-                  hier=hier, dfname=dfname, keep=keep, quiet=TRUE)  
+  x <- process_file(pop, missing = missing, cutoff = cutoff, 
+                  clonecorrect = clonecorrect, hier = hier, dfname = dfname, 
+                  keep = keep, quiet = TRUE)  
   # The namelist will contain information such as the filename and population
   # names so that they can easily be ported around.
   namelist <- NULL
   callpop  <- match.call()
-  if(!is.na(grep("system.file", callpop)[1])){
+  if (!is.na(grep("system.file", callpop)[1])){
     popsplt <- unlist(strsplit(pop, "/"))
     namelist$File <- popsplt[length(popsplt)]
-  }
-  else if(is.genind(pop)){
+  } else if (is.genind(pop)){
     namelist$File <- x$X
-  }
-  else{
+  } else {
     namelist$File <- basename(x$X)
   }
   #poplist <- x$POPLIST
@@ -277,7 +276,7 @@ poppr <- function(pop,total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   if (legend) poppr_message()
   if (!is.null(MPI)){
     MLG.vec <- vapply(sublist, function(x) mlg(poplist[[x]], quiet=TRUE), 1)
-    N.vec   <- vapply(sublist, function(x) length(poplist[[x]]@ind.names), 1)
+    N.vec   <- rowSums(pop.mat)
     # Shannon-Weiner diversity index.
     H       <- vegan::diversity(pop.mat)
     # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
