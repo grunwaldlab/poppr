@@ -72,7 +72,7 @@ ia(nancycats)
 
 \dontrun{
 # Get the indices back and plot them using base R graphics:
-nansamp <- ia(nancycats, sample = 999, indexreturn = TRUE)
+nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
 layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
 hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
 hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])

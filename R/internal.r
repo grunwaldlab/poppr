@@ -285,6 +285,7 @@ round.poppr <- function(x){
 #
 # Internal functions utilizing this function:
 # # .ia
+# DEPRECATED
 #==============================================================================#
 
 ia.pval <- function(index="index", sampled, observed){
@@ -662,9 +663,8 @@ final <- function(Iout, result){
     Iout     <- NULL 
     idx      <- as.data.frame(list(Index=names(IarD)))
     samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
-    samp2    <- rbind(samp, IarD)
-    p.val    <- ia.pval(index="Ia", samp2, IarD[1])
-    p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
+    p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
+    p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
       poppr.plot(samp, observed=IarD, pop=namelist$population,
                         file=namelist$File, pval=p.val, N=nrow(pop@tab))

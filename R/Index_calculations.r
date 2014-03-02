@@ -442,7 +442,7 @@ poppr.all <- function(filelist, ...){
 #' 
 #' \dontrun{
 #' # Get the indices back and plot them using base R graphics:
-#' nansamp <- ia(nancycats, sample = 999, indexreturn = TRUE)
+#' nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
 #' layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
 #' hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
 #' hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
@@ -462,7 +462,7 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   namelist            <- NULL
   namelist$population <- ifelse(length(levels(pop@pop)) > 1 | 
                                 is.null(pop@pop), "Total", pop@pop.names)
-  namelist$File       <- as.character(pop@call[2])
+  namelist$File       <- as.character(match.call()[2])
   
   popx    <- pop
   missing <- toupper(missing)
@@ -470,8 +470,7 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   
   if(type=="PA"){
     .Ia.Rd <- .PA.Ia.Rd
-  }
-  else {
+  } else {
     popx <- seploc(popx)
   }
 
@@ -480,10 +479,9 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   if (nInd(pop) < 3){
     IarD <- as.numeric(c(NA, NA))
     names(IarD) <- c("Ia", "rbarD")
-    if(sample==0){
+    if (sample==0){
       return(IarD)
-    }
-    else{
+    } else {
       IarD <- as.numeric(rep(NA, 4))
       names(IarD) <- c("Ia","p.Ia","rbarD","p.rD")
       return(IarD)
@@ -496,18 +494,16 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   if (sample==0){
     Iout   <- IarD
     result <- NULL
-  }
+  } else {
   # sampling will perform the iterations and then return a data frame indicating
   # the population, index, observed value, and p-value. It will also produce a 
   # histogram.
-  else{
     Iout     <- NULL 
     idx      <- as.data.frame(list(Index=names(IarD)))
     samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
-    samp2    <- rbind(samp, IarD)
-    p.val    <- ia.pval(index="Ia", samp2, IarD[1])
-    p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
-    if(hist == TRUE){
+    p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
+    p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
+    if (hist == TRUE){
       poppr.plot(samp, observed=IarD, pop=namelist$population,
                         file=namelist$File, pval=p.val, N=nrow(pop@tab))
     }
