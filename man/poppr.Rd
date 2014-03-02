@@ -2,13 +2,13 @@
 \alias{poppr}
 \title{Produce a basic summary table for population genetic analyses.}
 \usage{
-poppr(pop, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
+poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE,
   clonecorrect = FALSE, hier = 1, dfname = "population_hierarchy",
   keep = 1, hist = TRUE, minsamp = 10, legend = FALSE)
 }
 \arguments{
-  \item{pop}{a \code{\link{genind}} object OR a
+  \item{dat}{a \code{\linkS4class{genind}} object OR a
   \code{\linkS4class{genclone}} object OR any fstat,
   structure, genetix, genpop, or genalex formatted file.}
 
