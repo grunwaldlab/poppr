@@ -2122,7 +2122,9 @@ print_command(funk)
 %         \tab hist = TRUE, minsamp = 10)}
 \end{quote}
 \begin{itemize}
-  \item \texttt{pop -} A \texttt{genind} object.
+  \item \texttt{dat -} A \texttt{genind} object, \texttt{genclone} object, or a 
+  path to a file on your machine that contains genetix, structure, fstat, genpop,
+  or genalex formatted data.
   \item \texttt{total -} This is also a synonym for ``pooled". This will calculate all diversity statistics on the entire data set if set to \texttt{TRUE} or if there is no population structure.
   \item \emph{popsub functions:} See section \ref{data.manip:divide}
   \begin{description}
