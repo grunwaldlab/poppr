@@ -22,9 +22,7 @@ or (![equation](http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d))
 Poppr has been published in the [PeerJ PrePrint archive](https://peerj.com/preprints/), doi: [10.7287/peerj.preprints.161v1](http://dx.doi.org/10.7287/peerj.preprints.161v1).    
 Please cite poppr as:
 
-> Kamvar ZN, Tabima JF, Grünwald NJ. (2013) Poppr: an R package for genetic analysis of
-  populations with clonal or partially clonal reproduction. PeerJ PrePrints 1:e161v1
-  http://dx.doi.org/10.7287/peerj.preprints.161v1
+> Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. [PeerJ 2:e281](http://dx.doi.org/10.7717/peerj.281)
   
 You can obtain citation information in R by typing:
 
