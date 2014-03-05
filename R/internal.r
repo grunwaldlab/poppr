@@ -1081,3 +1081,52 @@ bruvos_distance <- function(bruvomat, funk_call = match.call()){
   attr(dist.mat, "call")   <- funk_call
   return(dist.mat)
 }
+
+
+#' @importFrom ape prop.part postprocess.prop.part prop.clades countBipartitions
+poppr.boot.phylo <- function(phy, x, FUN, B = 100, block = 1,
+                       trees = FALSE, quiet = FALSE, rooted = FALSE){
+    pp
+    boot.tree <- vector("list", B)
+
+    if (!quiet) # suggestion by Alastair Potts
+        progbar <- txtProgressBar(style = 3)
+
+    y <- nc <- ncol(x)
+
+    if (block > 1) {
+        a <- seq(1, nc - 1, block)
+        b <- seq(block, nc, block)
+        y <- mapply(":", a, b, SIMPLIFY = FALSE)
+    }
+
+    for (i in 1:B) {
+        boot.samp <- unlist(sample(y, replace = TRUE))
+        boot.tree[[i]] <- FUN(x[, boot.samp])
+        if (!quiet) setTxtProgressBar(progbar, i/B)
+    }
+    if (!quiet) close(progbar)
+
+    ## for (i in 1:B) storage.mode(boot.tree[[i]]$Nnode) <- "integer"
+    ## storage.mode(phy$Nnode) <- "integer"
+
+    if (!quiet) cat("Calculating bootstrap values...")
+
+     if (rooted) {
+        pp <- prop.part(boot.tree)
+        if (!rooted) pp <- postprocess.prop.part(pp)
+        ans <- prop.clades(phy, part = pp, rooted = rooted)
+    } else {
+        phy <- reorder(phy, "postorder")
+        ints <- phy$edge[, 2] > Ntip(phy)
+        ans <- countBipartitions(phy, boot.tree)
+        ans <- c(B, ans[order(phy$edge[ints, 2])])
+    }
+
+    if (trees) {
+        class(boot.tree) <- "multiPhylo"
+        ans <- list(BP = ans, trees = boot.tree)
+    }
+    if (!quiet) cat(" done.\n")
+    ans
+}

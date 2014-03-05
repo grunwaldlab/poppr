@@ -229,7 +229,7 @@ bruvo.boot <- function(pop, replen = c(1), sample = 100, tree = "upgma",
   bootfun <- function(x){
     return(newfunk(bruvos_distance(x)))
   }
-  bp <- boot.phylo(tre, bootgen, FUN = bootfun, B = sample, quiet = quiet, 
+  bp <- poppr.boot.phylo(tre, bootgen, FUN = bootfun, B = sample, quiet = quiet, 
                    rooted = root, ...)
   tre$node.labels <- round(((bp / sample)*100))
   if (!is.null(cutoff)){
