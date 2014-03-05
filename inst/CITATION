@@ -19,6 +19,6 @@ citEntry(entry = 'article',
  url = "http://dx.doi.org/10.7717/peerj.281",
  doi = "10.7717/peerj.281",
  journal = "PeerJ",
- textVersion = paste0("Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281")
+ textVersion = paste0("Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281 http://dx.doi.org/10.7717/peerj.281")
 )
 

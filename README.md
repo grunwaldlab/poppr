@@ -21,7 +21,7 @@ or (![equation](http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d))
 
 Please cite poppr as:
 
-> Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. [PeerJ 2:e281](http://dx.doi.org/10.7717/peerj.281)
+> Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281 [http://dx.doi.org/10.7717/peerj.281](http://dx.doi.org/10.7717/peerj.281)
   
 You can obtain citation information in R by typing:
 
