@@ -1084,9 +1084,9 @@ bruvos_distance <- function(bruvomat, funk_call = match.call()){
 
 
 #' @importFrom ape prop.part postprocess.prop.part prop.clades countBipartitions
+#' @importFrom ape add.scale.bar Ntip
 poppr.boot.phylo <- function(phy, x, FUN, B = 100, block = 1,
                        trees = FALSE, quiet = FALSE, rooted = FALSE){
-    pp
     boot.tree <- vector("list", B)
 
     if (!quiet) # suggestion by Alastair Potts
