@@ -1,3 +1,8 @@
+poppr 1.0.6
+===========
+BUG FIX
+* Fixed bug for users who have downloaded ape version 3.1 or higher where bruvo.boot would throw an error. 
+
 poppr 1.0.5
 ===========
 NOTABLE CHANGE
