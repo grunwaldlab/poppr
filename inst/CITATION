@@ -10,11 +10,15 @@ citEntry(entry = 'article',
                      as.person(paste0("Niklaus J. Gr", umlaut, "nwald"))
           ),
  year = "2014",
+ month = "3",
+ volume = "2",
+ pages = "e281",
  keywords = "population genetics, clonality, genotypic diversity, index of association, Bruvo's distance, clone correction, minimum spanning networks, hierarchy, bootstrap, permutation",
  key = "kamvar2013poppr",
- volume = "1",
+ issn = "2167-8359",
+ url = "http://dx.doi.org/10.7717/peerj.281",
+ doi = "10.7717/peerj.281",
  journal = "PeerJ",
- note = "in press",
- textVersion = paste0("Kamvar ZN, Tabima JF, Gr", umlaut, "nwald NJ. (2013) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ, in press.")
+ textVersion = paste0("Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281 http://dx.doi.org/10.7717/peerj.281")
 )
 
