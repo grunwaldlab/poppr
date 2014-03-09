@@ -29,6 +29,10 @@ You can obtain citation information in R by typing:
 citation(package = "poppr")
 ```
 
+## Help
+
+Users who have any questions/comments/suggestions regarding any version of poppr (stable or development) should direct their comments to the [Poppr google group](http://groups.google.com/group/poppr)
+
 ## Installation
 
 [![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=master)](https://travis-ci.org/grunwaldlab/poppr?branch=master)
