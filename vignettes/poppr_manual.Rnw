@@ -505,10 +505,18 @@ cat("Extracting the table ... Writing the table to ~/Desktop/nancycats_inds_xy.c
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Getting to know adegenet's genind object}\label{intro:genind}
 
-\tab\tab Since \textit{poppr} was built around adegenet's framework, it is important to know how \textit{adegenet} stores data in the genind object, as that is the object used by \textit{poppr}. To create a genind object, \textit{adegenet} takes a data frame of genotypes (rows) across multiple loci (columns) and converts them into a matrix of individual allelic frequencies at each locus \cite{Jombart:2008}.
+\tab\tab Since \textit{poppr} was built around adegenet's framework, it is
+important to know how \textit{adegenet} stores data in the genind object, as
+that is the object used by \textit{poppr}. To create a genind object, 
+\textit{adegenet} takes a data frame of genotypes (rows) across multiple loci
+(columns) and converts them into a matrix of individual allelic frequencies at
+each locus \cite{Jombart:2008}.
 
-For example, if you had a data frame with 3 diploid individuals each with 3 loci that had 3, 4, and 5 allelic states respectively, the resulting \texttt{genind} object would contain a matrix that has 3 rows and 12 columns. 
-\noindent Here's the example data frame:
+For example, if you had a data frame with 3 diploid individuals each with 3 loci
+that had 3, 4, and 5 allelic states respectively, the resulting \texttt{genind}
+object would contain a matrix that has 3 rows and 12 columns. 
+
+\noindent Let's look at the example data frame:
 <<ex_data, echo=FALSE>>=
 library(adegenet)
 df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
@@ -525,6 +533,116 @@ The first three columns represent the alleles of locus 1, the next four represen
 Do you see what I mean when I say individual allele frequencies at each locus? For a diploid individual, you only have three possible allele frequencies at each locus: 1, 0.5, or 0. Now, this is not the entire genind object, but it is the main feature. The object also has various elements associated with it that give you information about the population membership, the names of loci, individuals, and alleles among other things that \textit{poppr} uses to work \cite{Jombart:2008}. If you wish to know more, see the \textit{adegenet} ``Getting Started" manual. 
 
 \subsubsection{The other slot}\label{intro:genind:other}
+
+This section has been deprecated.
+
+\subsection{Send in the clones \{the genclone object\}}\label{intro:genclone}
+
+In \textit{poppr} versions 1.0.x, all of the functions revolved around
+\texttt{genind} objects. However, there were a few limitations to our use of
+this particular data structure.
+
+\begin{enumerate}
+  \item Defining multilocus genotypes was inconsistant when analyzing subsetted
+        data.
+  \item Population hierarchies had to be defined in a data frame contained in 
+        the ``other" slot of the \texttt{genind} object. 
+\end{enumerate}
+
+Both of these issues led to inefficient data manipulation as well as confusion 
+on the user's end. The \texttt{genclone} class was defined in order to make 
+working with hierarchies more intuitive. It is built off of the 
+\texttt{genind} object and has dedicated slots for the population hierarchy and
+defined multilocus genotypes. 
+
+\subsubsection{Function: as.genclone}\label{intro:genclone:as.genclone}
+\begin{quote}
+Default Command:
+<<as.genclone_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "as.genclone"
+print_command(funk)
+@
+\end{quote}
+\begin{itemize}
+  \item \textbf{x -} a \texttt{genind} object to be converted.
+  \item \textbf{hierarchy -} an optional data frame whose columns define the 
+  population hierarchy of the data set.
+\end{itemize}
+
+Let's show an example of a \texttt{genclone} object. First, we will take an 
+existing \texttt{genind} object and convert it using the function 
+\texttt{as.genclone} (We can also use the function 
+\texttt{\hyperref[intro:import:read.genalex]{read.genalex}} to import as
+\texttt{genclone} or \texttt{genind} objects). We will use the \texttt{Aeut}
+data set because it is a clonal data set that has a simple population hierarchy
+\cite{Grunwald:2006}. The data set is here: \url{http://dx.doi.org/10.6084/m9.figshare.877104} and it is AFLP data of the root rot
+pathogen \textit{Aphanomyces euteiches} collected from two different fields in
+NW Oregon and W Washington, USA. These fields were divided up into subplots from
+which samples were collected. The fields represent the population and the
+subplots represent the subpopulation. 
+Let's take a look at what the \texttt{genind} object looks like:
+<<show_genind>>=
+library(poppr)
+data(Aeut)
+Aeut
+@
+
+We can see that it gives us a lot of about the object. This is useful for people
+who are more comfortable with programming, but might be information overload for
+your average biologist. Unfortunately this output doesn't tell us about the 
+number of populations, population hierarchical levels, or multiloucus genotypes. 
+When we convert it to a\texttt{genclone} object, the multilocus genotypes will
+be defined and the population hierarchy (if a data frame is defined in the 
+\texttt{@other} slot called ``population\_hierarchy") will be set.
+
+<<as_genclone>>=
+agc <- as.genclone(Aeut)
+agc
+@
+
+We can see here that it shows less information, but it gives us a very simple
+overview of our data. Don't be fooled, however, because it contains all the same
+information as a \texttt{genind} object:
+
+<<genclone_compare>>=
+is.genind(Aeut)
+is.genclone(Aeut)
+is.genind(agc)
+is.genclone(agc)
+
+# Adegenet functions work the same, too
+nInd(Aeut)
+nInd(agc)
+@
+
+The advantage of the \texttt{genclone} object is that setting the pouplation
+from the hierarchy becomes \textbf{much} easier. Here's an example of how we can
+set the population to a combination of the population hierarchy in both a
+\texttt{genind} and \texttt{genclone} object. 
+
+<<setpop>>=
+# We'll look at the population names
+Aeut$pop.names
+
+# genind way:
+# Get the population hierarchy. Luckily, it was already combined
+pophier <- other(Aeut)$population_hierarchy$Pop_Subpop
+pop(Aeut) <- pophier
+Aeut$pop.names
+
+# genclone way:
+agc
+setpop(agc) <- ~Pop/Subpop
+agc
+@
+
+The difference between the two is clear: With the \texttt{genind} object, the
+user must find the vector defining the population and set it using that vector.
+With the \texttt{genclone} object, the vector is already defined in the object
+and the user simply supplies a formula argument giving the hierarchy. This 
+formula driven method is also used for clone correction, combining hierarchical
+levels and conducting AMOVA. These will all be explained in later chapters. For
+examples and details, type \texttt{help("genclone")} in your R console.
 
 % \tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
 % <<example_data_frame>>=
@@ -2445,6 +2563,7 @@ and description.
 \texttt{\hyperref[intro:import:getfile]{getfile}} & Provides a quick GUI to grab files for import \\
 \texttt{\hyperref[intro:import:read.genalex]{read.genalex}} & Read \textit{GenAlEx} formatted csv files to a genind object \\
 \texttt{\hyperref[intro:import:genind2genalex]{genind2genalex}} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
+\texttt{\hyperref[intro:genclone:as.genclone]{as.genclone}} & Converts genind objects to genclone objects \\
 \hline
 \textbf{Manipulation} & \\
 \texttt{\hyperref[data.manip:missing:missingno]{missingno}} & Handles missing data \\
