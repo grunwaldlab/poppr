@@ -1241,7 +1241,7 @@ dn.ds <- function (x){
   } else {
     tab <- suppressWarnings(kaks(seq))
     tab <- unlist(tab)
-    if (is.na(tab)){
+    if (all(is.na(tab))){
       tab <- as.numeric(c(ka = NA, ks = NA, vka = NA, vks = NA))
     }
     return(tab)

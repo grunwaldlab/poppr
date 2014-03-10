@@ -1417,3 +1417,57 @@ multi.dnds <- function(x, quiet=FALSE){
   dnds.df$stat[dnds.df$dnds<1] <- "Negative"
   return(dnds.df)  
 }
+
+##########################################################################
+
+# Function multi.dnds.chisq: dN/dS wrapper for multiple pairs using a chi-
+# square significance test.
+# 
+# Usage: 
+# multi.dnds.chisq(list of fasta files,c.interval = a number)
+# 
+# To get the list of FASTA files use list.files()
+############################################################################
+#' multi.dnds
+#' 
+#' dN/dS (as Ka/Ks) wrapper for multiple sets of FASTA files and the \code{\link{dn.ds}} function
+#' 
+#' @param x a \code{list} of multiple alignment \code{fasta} files (preferably full path, fasta|fas extension).
+#' @param quiet a \code{boolean} for verbosity.
+#' @param c.interval a \code{numeric} to set the confidence interval for the chi-square test.
+#' 
+#' @return a table with the dN/dS calculation for all the files in the list.
+#' 
+#' @seealso \code{\link{dn.ds}}
+#' 
+#' @note To create the list of files use the \code{\link{list.files}} function. (See examples for help)
+#'
+#' @export
+#' 
+#' @author Javier F. Tabima
+#' 
+#' @examples
+#'
+#' # Create the list of FASTA files
+#' #list.pairs <- list.files(path="fasta_file_folder/", pattern="*.fasta$", full.names=TRUE)
+#' #
+#' # Run the function
+#' # multi.dnds.chisq(list.pairs,c.interval=0.95)
+
+
+multi.dnds.chisq <- function(x, quiet=FALSE, c.interval = 0.05){
+  if (quiet == FALSE){  
+    cat("dN/dS calculation\n")
+  }
+  dnds.df <- (vapply(x, dn.ds,numeric(4)))
+  dnds.df <-as.data.frame(t(dnds.df))
+  rownames(dnds.df) <- sub("^([^.]*).*", "\\1", basename(x)) 
+  dnds.df$dnds <- dnds.df$ka/dnds.df$ks
+  dnds.df$chi.square <- ((dnds.df$dnds - 1)^2)/1
+  c.interval <- 1 - c.interval
+  significant <- dnds.df$chi.square > qchisq(c.interval, df=1)
+  dnds.df$stat[significant & dnds.df$dnds>1] <- "Positive"
+  dnds.df$stat[significant & dnds.df$dnds<1] <- "Negative"
+  dnds.df$stat[!significant] <- "Neutral"
+  return(dnds.df)  
+}
