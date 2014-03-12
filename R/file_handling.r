@@ -220,8 +220,8 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
   # the structure of the file (except for ploidy and geographic info)
   gencall  <- match.call()
 
-  all.info <- strsplit(readLines(genalex, n = 2), ",")
-  gena     <- read.table(genalex, sep = ",", header = TRUE, skip = 2, 
+  all.info <- strsplit(readLines(genalex, n = 2), sep)
+  gena     <- read.table(genalex, sep = sep, header = TRUE, skip = 2, 
                          stringsAsFactors = FALSE, check.names = FALSE)
   num.info <- as.numeric(all.info[[1]])
   pop.info <- all.info[[2]][-c(1:3)]
@@ -381,26 +381,29 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
 #' in genalex. 
 #'
 #' @param pop a \code{\link{genind}} object.
-#' 
+#'   
 #' @param filename a string indicating the name and/or path of the file you wish
-#' to create.
-#'
-#' @param quiet \code{logical} If \code{FALSE} a message will be printed to the
-#' screen.
-#' 
+#'   to create.
+#'   
+#' @param quiet \code{logical} If \code{FALSE} a message will be printed to the 
+#'   screen.
+#'   
 #' @param geo \code{logical} Default is \code{FALSE}. If it is set to 
-#' \code{TRUE}, the resulting file will have two columns for geographic data.
-#' 
-#' @param geodf \code{character} Since the \code{other} slot in the adegenet object
-#' can contain many different items, you must specify the name of the data frame
-#' in the \code{other} slot containing your geographic coordinates. It defaults to
-#' "xy". 
-#' 
-#' @note If you enter a file name that exists, that file will be overwritten.
-#' If your data set lacks a population structure, it will be coded in the new
-#' file as a single population lableled "Pop". Likewise, if you don't have any
-#' labels for your individuals, they will be labeled as "ind1" through 
-#' "ind\emph{N}", with \emph{N} being the size of your population.
+#'   \code{TRUE}, the resulting file will have two columns for geographic data.
+#'   
+#' @param geodf \code{character} Since the \code{other} slot in the adegenet
+#'   object can contain many different items, you must specify the name of the
+#'   data frame in the \code{other} slot containing your geographic coordinates.
+#'   It defaults to "xy".
+#'   
+#' @param sep a character specifying what character to use to separate columns.
+#'   Defaults to ",".
+#'   
+#' @note If you enter a file name that exists, that file will be overwritten. If
+#'   your data set lacks a population structure, it will be coded in the new 
+#'   file as a single population lableled "Pop". Likewise, if you don't have any
+#'   labels for your individuals, they will be labeled as "ind1" through 
+#'   "ind\emph{N}", with \emph{N} being the size of your population.
 #'
 #' @seealso \code{\link{clonecorrect}}, \code{\link{genind}}
 #'
@@ -412,9 +415,11 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
 #' genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 #' }
 #==============================================================================#
-genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FALSE, geodf="xy"){
-  if(!is.genind(pop)) stop("A genind object is needed.")
-  if(is.null(pop@pop)){
+genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE, 
+                           geo = FALSE, geodf = "xy", sep = ","){
+  if (!is.genind(pop)) stop("A genind object is needed.")
+  if (nchar(sep) != 1) stop("sep must be one byte/character (eg. \",\")")
+  if (is.null(pop@pop)){
     pop(pop) <- rep("Pop", nInd(pop))
   }
   popcall <- match.call()
@@ -465,7 +470,7 @@ genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FALSE, 
   df <- cbind(pop@ind.names, df)
   # setting the NA replacement. This doesn't work too well. 
   replacement <- ifelse(pop@type =="PA","-1","0")
-  if(!quiet) cat("Writing the table to",filename,"... ")
+  if(!quiet) cat("Writing the table to", filename, "... ")
   
   if(geo == TRUE & !is.null(pop$other[[geodf]])){
     replacemat <- matrix("", 3, 3)
@@ -480,16 +485,16 @@ genind2genalex <- function(pop, filename="genalex.csv", quiet=FALSE, geo=FALSE, 
   }
   else if (geo == TRUE){
     popcall <- popcall[2]
-    warning(paste("There is no data frame or matrix in ",
-                  paste(substitute(popcall), collapse=""), 
-                  "@other called ",geodf,
-                  ".\nThe xy coordinates will not be represented in the resulting file.", sep=""))
+    warning(paste0("There is no data frame or matrix in ",
+                  paste0(substitute(popcall)), "@other called ", geodf,
+                  ".\nThe xy coordinates will not be represented in the",
+                  " resulting file."))
   }
   
   df[df == "NA" | is.na(df)] <- replacement
-  write.table(infolines, file=filename, quote=FALSE, row.names=FALSE, 
-              col.names=FALSE, sep=",")
-  write.table(df, file=filename, quote=TRUE, na=replacement, append=TRUE, 
-              row.names=FALSE, col.names=FALSE, sep=",")
+  write.table(infolines, file = filename, quote = FALSE, row.names = FALSE, 
+              col.names = FALSE, sep = sep)
+  write.table(df, file = filename, quote = TRUE, na = replacement, append = TRUE, 
+              row.names = FALSE, col.names = FALSE, sep = sep)
   if(!quiet) cat("Done.\n")
 }

@@ -3,7 +3,7 @@
 \title{Exporting data from genind objects to genalex formatted *.csv files.}
 \usage{
 genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE,
-  geodf = "xy")
+  geodf = "xy", sep = ",")
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object.}
@@ -23,6 +23,9 @@ genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE,
   you must specify the name of the data frame in the
   \code{other} slot containing your geographic coordinates.
   It defaults to "xy".}
+
+  \item{sep}{a character specifying what character to use
+  to separate columns.  Defaults to ",".}
 }
 \description{
 genind2genalex will export a genind object to a *.csv file
