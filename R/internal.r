@@ -47,16 +47,16 @@
 #' @name Aeut
 #' @docType data
 #' @usage data(Aeut)
-#' @description The Aeut dataset consists of 187 isolates of the Oomycete root
-#' rot pathogen, \emph{Aphanomyces euteiches} collected from two different
-#' fields in NW Oregon and W Washington, USA. 
-#' @format a \code{\link{genind}} object with two popualations containing a 
-#' data frame in the \code{other} slot called \code{population_hierarchy}.
-#' This data frame gives indices of the populations and subpopulations for the
-#' data set.
-#' @references Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis 
-#' of Diversity, Selfing, and Genetic Differentiation in Populations of the 
-#' Oomycete \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141
+#' @description The Aeut dataset consists of 187 isolates of the Oomycete root 
+#'   rot pathogen, \emph{Aphanomyces euteiches} collected from two different 
+#'   fields in NW Oregon and W Washington, USA.
+#' @format a \code{\link{genind}} object with two popualations containing a data
+#'   frame in the \code{other} slot called \code{population_hierarchy}. This
+#'   data frame gives indices of the populations and subpopulations for the data
+#'   set.
+#' @references Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
+#'   Diversity, Selfing, and Genetic Differentiation in Populations of the 
+#'   Oomycete \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141
 #==============================================================================#
 NULL
 #==============================================================================#
@@ -67,14 +67,29 @@ NULL
 #' @docType data
 #' @usage data(partial_clone)
 #' @description These data were simulated using SimuPOP version 1.0.8 with 
-#' 99.9\% clonal reproduction over 10,000 generations. Populations were assigned
-#' post-hoc and are simply present for the purposes of demonstrating a minimum
-#' spanning network with Bruvo's distance.  
+#'   99.9\% clonal reproduction over 10,000 generations. Populations were
+#'   assigned post-hoc and are simply present for the purposes of demonstrating
+#'   a minimum spanning network with Bruvo's distance.
 #' @format a \code{\link{genind}} object with 50 individuals, 10 loci, and four 
-#' popualations. 
+#'   popualations.
 #' @references Bo Peng and Christopher Amos (2008) Forward-time simulations of 
-#' nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11): 
-#' 1408-1409. 
+#'   nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11):
+#'   1408-1409.
+#==============================================================================#
+NULL
+#==============================================================================#
+#' Phytophthora infestans data from Mexico and South America.
+#' 
+#' @name Pinf
+#' @docType data
+#' @usage data(Pinf)
+#' @description The Pinf data set contains 86 isolates genotyped over 11 
+#'   microsatellite loci collected from Mexico, Peru, Columbia, and Ecuador.
+#'   This is a subset of the data used for the reference below.
+#' @format a \code{\linkS4class{genclone}} object with 2 population hierarchies
+#'   called "Continent" and "Country" that contain 2 and 4 populations,
+#'   respectively.
+#' @references Goss, EM et al. submitted, 2014.
 #==============================================================================#
 NULL
 #==============================================================================#
