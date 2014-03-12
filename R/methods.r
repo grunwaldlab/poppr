@@ -543,17 +543,23 @@ setMethod(
 #' This function will then split those hierarchies for you, but it works best
 #' on a hierarchy that only has a single column in it. See the rootrot example
 #' below.
+#' \item \strong{addhierarchy()} - Add levels to your population hierarchy. If
+#' you have extra hierarchical levels you want to add to your population
+#' hierarchy, you can use this method to do so. You can input a data frame or a
+#' vector, but if you put in a vector, you have the option to name it (if you
+#' are using the functional version and not the assignment version).
 #' }
 #' 
 #' \strong{Argument Specifics}
 #' 
-#' These functions allow the user to seamlessly assign the hierarchy of their
-#' \code{\linkS4class{genclone}} object. Note that there are two ways of
-#' performing all methods (except for \code{gethierarchy()}). They essentially
-#' do the same thing except that the assignment method (the one with the "\code{<-}") 
-#' will modify the object in place whereas the non-assignment method will not 
-#' modify the original object. Due to convention, everything right of
-#' the assignment is termed \code{value}. To avoid confusion, here is a guide:
+#' These functions allow the user to seamlessly assign the hierarchy of their 
+#' \code{\linkS4class{genclone}} object. Note that there are two ways of 
+#' performing all methods (except for \code{gethierarchy()}). They essentially 
+#' do the same thing except that the assignment method (the one with the
+#' "\code{<-}") will modify the object in place whereas the non-assignment
+#' method will not modify the original object. Due to convention, everything
+#' right of the assignment is termed \code{value}. To avoid confusion, here is a
+#' guide:
 #' \enumerate{
 #'  \item \strong{sethierarchy()} This will be a \code{\link{data.frame}} that 
 #'  defines the hierarchy for each individual in the rows.
@@ -561,6 +567,9 @@ setMethod(
 #'  a \code{\link{formula}} that will define the names.
 #'  \item \strong{splithierarchy()} This will be a \code{\link{formula}}
 #'  argument with the same number of levels as the hierarchy you wish to split.
+#'  \item \strong{addhierarchy()} This will be a \code{\link{vector}} or
+#'  \code{\link{data.frame}} with the same length as the number of individuals
+#'  in your data.
 #' }
 #' 
 #' \strong{Details on Formulas}
@@ -744,11 +753,11 @@ setMethod(
       warning("Hierarchy must be length 1. Taking the first column.")
       hierarchy <- hierarchy[1]
     }
-    seps <- gregexpr(sep, hierarchy[[1]])
+    seps     <- gregexpr(sep, hierarchy[[1]])
     sepmatch <- vapply(seps, function(val) all(as.integer(val) > 0), logical(1))
-    seps <- vapply(seps, length, numeric(1))
+    seps     <- vapply(seps, length, numeric(1))
     all_seps_match <- all(sepmatch)
-    given_seps <- length(value) - 1 
+    given_seps     <- length(value) - 1 
     if (!all_seps_match | all(seps != given_seps)){
       seps <- ifelse(all_seps_match, seps[1], 0) + 1
       msg1 <- paste("\n  Data has", seps, ifelse(seps == 1, "level", "levels"),
@@ -781,6 +790,61 @@ setMethod(
   definition = function(x, value){
     return(splithierarchy(x, value))
   })
+
+#==============================================================================#
+#' @export 
+#' @rdname hierarchy-methods
+#' @aliases addhierarchy,genclone-method
+#' @param name an optional name argument for use with addhierarchy if supplying
+#'   a vector. Defaults to "NEW".
+#' @docType methods
+#==============================================================================#
+addhierarchy <- function(x, value, name = "NEW"){
+  standardGeneric("addhierarchy")
+}  
+
+#' @export
+setGeneric("addhierarchy")
+
+setMethod(
+  f = "addhierarchy",
+  signature(x = "genclone"),
+  definition = function(x, value, name = "NEW"){
+    
+    hierarchy  <- x@hierarchy
+    if ((is.vector(value) | is.factor(value)) & length(value) == nrow(hierarchy)){
+      NEW <- data.frame(value)
+      names(NEW) <- name
+      hierarchy <- cbind(hierarchy, NEW)
+    } else if (is.data.frame(value) && nrow(value) == nrow(hierarchy)){
+      hierarchy <- cbind(hierarchy, value)
+    } else {
+      stop("value must be a vector or data frame.")
+    }
+    x@hierarchy <- hierarchy
+    return(x) 
+  })
+
+#==============================================================================#
+#' @export 
+#' @rdname hierarchy-methods
+#' @aliases addhierarchy<-,genclone-method
+#' @docType methods
+#==============================================================================#
+"addhierarchy<-" <- function(x, value){
+  standardGeneric("addhierarchy<-")
+}  
+
+#' @export
+setGeneric("addhierarchy<-")
+
+setMethod(
+  f = "addhierarchy<-",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    return(addhierarchy(x, value))
+  })
+
 
 #==============================================================================#
 #' Manipulate the population factor of genclone objects.
