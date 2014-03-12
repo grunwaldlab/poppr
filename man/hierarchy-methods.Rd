@@ -1,5 +1,9 @@
 \docType{methods}
 \name{gethierarchy}
+\alias{addhierarchy}
+\alias{addhierarchy,genclone-method}
+\alias{addhierarchy<-}
+\alias{addhierarchy<-,genclone-method}
 \alias{gethierarchy}
 \alias{gethierarchy,genclone-method}
 \alias{namehierarchy}
@@ -29,6 +33,10 @@ namehierarchy(x) <- value
 splithierarchy(x, value, sep = "_")
 
 splithierarchy(x) <- value
+
+addhierarchy(x, value, name = "NEW")
+
+addhierarchy(x) <- value
 }
 \arguments{
   \item{x}{a genclone object}
@@ -46,6 +54,9 @@ splithierarchy(x) <- value
   \item{sep}{a \code{character} indicating the character
   used to separate population hierarchies. This defaults to
   "_".}
+
+  \item{name}{an optional name argument for use with
+  addhierarchy if supplying a vector. Defaults to "NEW".}
 }
 \description{
 The following methods allow the user to quickly change the
@@ -71,7 +82,13 @@ single population factor with a common separator for each
 observation. This function will then split those
 hierarchies for you, but it works best on a hierarchy that
 only has a single column in it. See the rootrot example
-below. }
+below. \item \strong{addhierarchy()} - Add levels to your
+population hierarchy. If you have extra hierarchical levels
+you want to add to your population hierarchy, you can use
+this method to do so. You can input a data frame or a
+vector, but if you put in a vector, you have the option to
+name it (if you are using the functional version and not
+the assignment version). }
 
 \strong{Argument Specifics}
 
@@ -91,7 +108,10 @@ hierarchy for each individual in the rows.  \item
 \code{\link{vector}} or a \code{\link{formula}} that will
 define the names.  \item \strong{splithierarchy()} This
 will be a \code{\link{formula}} argument with the same
-number of levels as the hierarchy you wish to split. }
+number of levels as the hierarchy you wish to split.  \item
+\strong{addhierarchy()} This will be a \code{\link{vector}}
+or \code{\link{data.frame}} with the same length as the
+number of individuals in your data. }
 
 \strong{Details on Formulas}
 
