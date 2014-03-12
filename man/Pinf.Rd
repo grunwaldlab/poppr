@@ -15,6 +15,10 @@ and Ecuador.  This is a subset of the data used for the
 reference below.
 }
 \references{
-Goss, EM et al. submitted, 2014.
+Goss EM, Tabima JF, Cooke DEL, Restrepo S, Fry WE, Forbes
+GA, Fieland VJ, Cardenas M and Grünwald NJ (2014). “The
+Irish famine pathogen Phytophthora infestans originated in
+central Mexico rather than the Andes.” Proceedings of the
+National Academy of Sciences, ##(3), pp. in press.
 }
 

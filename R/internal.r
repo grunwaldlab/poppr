@@ -89,7 +89,10 @@ NULL
 #' @format a \code{\linkS4class{genclone}} object with 2 population hierarchies
 #'   called "Continent" and "Country" that contain 2 and 4 populations,
 #'   respectively.
-#' @references Goss, EM et al. submitted, 2014.
+#' @references Goss EM, Tabima JF, Cooke DEL, Restrepo S, Fry WE, Forbes GA,
+#'   Fieland VJ, Cardenas M and Grünwald NJ (2014). “The Irish famine pathogen
+#'   Phytophthora infestans originated in central Mexico rather than the Andes.”
+#'   Proceedings of the National Academy of Sciences, ##(3), pp. in press.
 #==============================================================================#
 NULL
 #==============================================================================#
