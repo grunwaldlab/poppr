@@ -3,7 +3,7 @@
 \title{Importing data from genalex formatted *.csv files.}
 \usage{
 read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
-  genclone = TRUE)
+  genclone = TRUE, sep = ",")
 }
 \arguments{
   \item{genalex}{a *.csv file exported from genalex}
@@ -19,6 +19,9 @@ read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 
   \item{genclone}{should the output be a genclone object?
   Defaults to \code{TRUE}}
+
+  \item{sep}{A character specifying the column separator of
+  the data. Defaults to ",".}
 }
 \value{
 A \code{\link{genind}} object.
@@ -50,8 +53,8 @@ has missing data at a particular locus, then the entire
 locus is considered missing. This works for diploids and
 haploids where allelic dosage is unambiguous. For
 polyploids this poses a problem as much of the data set
-would be transformed into missing data. With this function,
-I have created a workaround.
+would be transformed into missing data.  With this
+function, I have created a workaround.
 
 When importing polyploid data sets, missing data is scored
 as "0" and kept within the genind object as an extra
