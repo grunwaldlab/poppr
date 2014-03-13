@@ -519,3 +519,34 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   }  
   return(final(Iout, result))
 }
+
+locus_table <- function(x, index = "simpson", lev = "allele", 
+                        population = "ALL", information = TRUE){
+  INDICES <- c("shannon", "simpson", "invsimpson")
+  index   <- match.arg(index, INDICES)
+  x       <- popsub(x, population, drop = FALSE)
+  x.loc   <- summary(as.loci(x))
+  outmat  <- vapply(x.loc, locus_table_pegas, numeric(4), index, lev, x@type)
+  loci    <- colnames(outmat)
+  divs    <- rownames(outmat)
+  res     <- matrix(0.0, nrow = ncol(outmat) + 1, ncol = nrow(outmat))
+  dimlist <- list(`locus` = c(loci, "mean"), `summary` = divs)
+  res[-nrow(res), ]     <- t(outmat)
+  res[nrow(res), ]      <- colMeans(res[-nrow(res), ], na.rm = TRUE)
+  attr(res, "dimnames") <- dimlist
+  if (information){
+    if (index == "simpson"){
+      msg <- "Simpson index"
+    } else if (index == "shannon"){
+      msg <- "Shannon-Wiener index"
+    } else {
+      msg <- "Stoddard and Taylor index"
+    }
+    cat("\n", divs[1], "= Number of observed", paste0(divs[1], "s"))
+    cat("\n", divs[2], "=", msg)
+    cat("\n", divs[3], "= Nei's 1978 expected heterozygosity\n")
+    cat("------------------------------------------\n")
+  }
+  class(res) <- c("locustable", "matrix")
+  return(res)
+}
