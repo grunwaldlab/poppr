@@ -89,7 +89,61 @@ number_missing_geno <- function(x, divisor){
   return(missing_result/divisor)
 }
 
-# main function
+#==============================================================================#
+# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
+# modifications.
+#==============================================================================#
+neidist <- function(x){
+  if (is.genind(x))
+    X    <- x@tab
+  else if (length(dim(x)) == 2)
+    X <- x
+  else
+    stop("Object must be a matrix or genind object")
+  nlig <- nrow(X)
+  d    <- X %*% t(X)
+  vec  <- sqrt(diag(d))
+  d <- d/vec[col(d)]
+  d <- d/vec[row(d)]
+  d <- -log(d)
+  # Nei's distance can be infinite. Here we are replacing infinites with an
+  # order of magnitude higher than the max observed distance.
+  maxval <- max(d[!d == Inf])]
+  d[d == Inf] <- maxval*10
+  d <- as.dist(d)
+  return(d)
+}
+
+#==============================================================================#
+# Bootstrapping for nei's distance. Potentially take distance as an argument
+# later on.
+#==============================================================================#
+boot.neidist <- function(x, tree = "nj", sample = 100){
+  x <- missingno(x, "mean")
+  if (x@type == "codom") 
+    xboot <- new("bootgen", x)
+  else
+    xboot <- x@tab
+  ARGS <- c("nj", "upgma")
+  treearg <- match.arg(tree, ARGS)
+  tree <- match.fun(treearg)
+  treefunk <- function(x) tree(neidist(x))
+  xtree <- treefunk(xboot)
+  if (any(xtree$edge.len < 0)){
+    xtree <- fix_negative_branch(xtree)
+  }
+  root <- ifelse(treearg == "nj", FALSE, TRUE)
+  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root)
+  plot(xtree, show.tip.label = FALSE)
+  xtree$tip.label <- x@ind.names
+  tiplabels(xtree$tip.label, adj = c(-0.25, 0.5), frame="n", cex=0.8, font=2)
+  nodelabels(nodelabs, adj = c(1.3, -0.5), frame="n", cex=0.9, font=3)
+  xtree$node.label <- nodelabs
+  return(xtree)
+}
+
+
+
 
 
 
