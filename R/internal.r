@@ -1390,3 +1390,48 @@ pool_haplotypes <- function(x, dfname = "population_hierarchy"){
   other(newx)[[dfname]] <- df
   return(newx)
 }
+
+#==============================================================================#
+# The function locus_table_pegas is the internal workhorse. It will process a 
+# summary.loci object into a nice table utilizing the various diversity indices 
+# provided by vegan. Note that it has a catch which will remove all allele names
+# that are any amount of zeroes and nothing else. The reason for this being that
+# these alleles actually represent missing data. 
+# The wrapper for this is locus_table, which will take in a genind object and 
+# send it into locus_table_pegas. 
+# Note: lev argument has only the options of "allele" or "genotype"
+# Public functions utilizing this function:
+# # locus_table
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codom"){
+  unique_types <- x[[lev]]
+  # Removing any zero-typed alleles that would be present with polyploids.
+  zero_names   <- grep("^0+?$", names(unique_types))
+  if (length(zero_names) > 0 & type == "codom"){
+    unique_types <- unique_types[-zero_names]
+  }
+  
+  N       <- length(unique_types)
+  H       <- vegan::diversity(unique_types)
+  G       <- vegan::diversity(unique_types, "inv")
+  Simp    <- vegan::diversity(unique_types, "simp")
+  nei     <- (N/(N-1)) * Simp
+  
+  if (index == "simpson"){
+    idx        <- Simp
+    names(idx) <- "1-D"
+  } else if (index == "shannon"){
+    idx        <- H
+    names(idx) <- "H"
+  } else {
+    idx        <- G
+    names(idx) <- "G"
+  }
+  
+  E.5        <- (G - 1)/(exp(H) - 1)
+  names(N)   <- lev
+  return(c(N, idx, Hexp = nei, Evenness = E.5))
+}
