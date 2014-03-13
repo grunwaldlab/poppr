@@ -12,12 +12,13 @@ NEW DATA CLASSES
 * The `genclone` object is a new extension of the `genind` object from adegenet. This object contains slots containing population hierarchies and multilocus genotype definitions and will work with all analyses in adegenet and poppr. 
 
 NEW FUNCTIONS
-* [get,set,name,split]hierarchy - functions that will manipulate the hierarchy slot in a `genclone` object utilizing hierarchical formulae as arguments for simplification.
+* [get,set,name,split,add]hierarchy - functions that will manipulate the hierarchy slot in a `genclone` object utilizing hierarchical formulae as arguments for simplification.
 * `setpop` will set the population of a `genclone` object utilizing model formulae regarding the hierarchy slot.
 * `as.genclone` will automatically convert genind objects to genclone objects.
 * `is.genclone` checks the validity of genclone objects.
 * `poppr.amova` will run amova on any hierarchical level. This also includes the feature to run amova on clone censored data sets. It utilizes the ade4 version of amova. 
 * `missing_table` will calculate missing data per population per locus and gives the user the option to visualize this as a heatmap.
+* `locus_table` will calculate diversity and evenness statistics over all loci in a genind or genclone object. 
 
 NEW CAR
 * Not really.
