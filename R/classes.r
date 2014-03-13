@@ -203,11 +203,11 @@ setClass(
 #' @name bootgen-class
 #' @rdname bootgen-class
 #' @export
-#' @slot replen repeat length of microsatellite loci
+#' @slot alllist a list with numeric vectors, each representing a different locus where each element in the vector represents the index for a specific allele.
 #' @author Zhian Kamvar
 #' @import methods
 #==============================================================================#
 setClass("bootgen", 
          contains = c("genind"),
-         representation = representation(replen = "numeric"),
+         representation = representation(alllist = "list"),
 )

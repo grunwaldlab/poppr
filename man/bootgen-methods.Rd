@@ -9,7 +9,7 @@
 
 \S4method{dim}{bootgen}(x)
 
-\S4method{initialize}{bootgen}(.Object, gen, replen)
+\S4method{initialize}{bootgen}(.Object, gen)
 }
 \arguments{
   \item{x}{a \code{"\linkS4class{bootgen}"} object}
@@ -27,9 +27,6 @@
   \item{.Object}{a character, "bootgen"}
 
   \item{gen}{\code{"\linkS4class{genind}"} object}
-
-  \item{replen}{a vector of numbers indicating the repeat
-  length for each microsatellite locus.}
 }
 \description{
 This is not designed for user interaction.

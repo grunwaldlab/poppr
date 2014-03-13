@@ -77,15 +77,15 @@ setMethod(
     allnames        <- x@all.names[j]
     names(allnames) <- names(x@all.names)[1:length(j)]
     names(locnall)  <- names(allnames)
-    
+    alllist         <- slot(x, "alllist")[j]
     # Shuffling
     # matcols  <- apply(getinds(x@loc.nall), 1, function(ind) ind[1]:ind[2])[j]
-    matcols  <- .Call("expand_indices", cumsum(x@loc.nall), nLoc(x))[j]
-    indices  <- unlist(matcols)
-    locnames <- rep(names(allnames), locnall)
-    tabnames <- paste(locnames, unlist(allnames), sep = ".")
-    res      <- slot(x, "tab")[i, indices, drop = drop]
-    colnames(res) <- tabnames
+    # matcols  <- .Call("expand_indices", cumsum(x@loc.nall), nLoc(x))[j]
+    indices         <- unlist(alllist)
+    locnames        <- rep(names(allnames), locnall)
+    tabnames        <- paste(locnames, unlist(allnames), sep = ".")
+    res             <- slot(x, "tab")[i, indices, drop = drop]
+    colnames(res)   <- tabnames
     
     ## Resetting all factors that need to be set. 
     slot(x, "tab")       <- res
@@ -93,7 +93,7 @@ setMethod(
     slot(x, "loc.names") <- names(allnames)
     slot(x, "loc.nall")  <- locnall
     slot(x, "all.names") <- allnames
-    slot(x, "replen")    <- slot(x, "replen")[j]
+    slot(x, "alllist")   <- alllist
     return(x)
   }
 )
@@ -113,19 +113,15 @@ setMethod(
 #' @rdname bootgen-methods
 #' @param .Object a character, "bootgen"
 #' @param gen \code{"\linkS4class{genind}"} object
-#' @param replen a vector of numbers indicating the repeat length for each 
-#' microsatellite locus.
 #==============================================================================#
 setMethod(
   f = "initialize",
   signature = "bootgen",
-  definition = function(.Object, gen, replen){
+  definition = function(.Object, gen){
     if (missing(gen)) gen <- new("genind")
-    if (missing(replen)){
-      replen <- vapply(gen@all.names, function(y) guesslengths(as.numeric(y)), 1)
-    }
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
-    slot(.Object, "replen") <- replen
+    slot(.Object, "alllist") <- .Call("expand_indices", cumsum(.Object@loc.nall), 
+                                      nLoc(.Object))
     return(.Object)
   })
 
