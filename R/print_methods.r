@@ -81,6 +81,6 @@ print.locustable <- function(x, ...){
   if (length(call > 0) && names(call) %in% "digits"){
     print.table(x, ...)
   } else {
-    print.table(x, digits = 2, ...)
+    print.table(x, digits = 2, zero.print = ".", ...)
   }
 }

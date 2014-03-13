@@ -591,6 +591,7 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
     attr(misstab, "dimnames") <- list(Locus = rownames(misstab), 
                                       Population = colnames(misstab))
     misstab <- t(misstab)
+    class(misstab) <- c("locustable", "matrix")
   }
   if (returnplot){
     misstab <- list(table = misstab, plot = outplot)
