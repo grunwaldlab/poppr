@@ -19,6 +19,6 @@ be equal to (ploidy)*(number of loci)}
 \item{\code{ind.names}}{names of individuals in matrix rows.}
 }}
 \author{
-Zhian Kamvar
+Zhian N. Kamvar
 }
 

@@ -9,12 +9,14 @@ user interaction.
 \section{Slots}{
 
 \describe{
-\item{\code{alllist}}{a list with numeric vectors, each representing a different locus where each element in the vector represents the index for a specific allele.}
+\item{\code{alllist}}{a list with numeric vectors, each representing a different
+  locus where each element in the vector represents the index for a specific
+  allele.}
 }}
 \section{Extends}{
-  Class \code{"\linkS4class{genind}"}, directly.
+  Class \code{"\linkS4class{genclone}"}, directly.
 }
 \author{
-Zhian Kamvar
+Zhian N. Kamvar
 }
 
