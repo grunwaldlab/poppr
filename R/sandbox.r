@@ -95,23 +95,22 @@ number_missing_geno <- function(x, divisor){
 #==============================================================================#
 neidist <- function(x){
   if (is.genind(x))
-    X    <- x@tab
+    MAT    <- x@tab
   else if (length(dim(x)) == 2)
-    X <- x
+    MAT <- x
   else
     stop("Object must be a matrix or genind object")
-  nlig <- nrow(X)
-  d    <- X %*% t(X)
-  vec  <- sqrt(diag(d))
-  d <- d/vec[col(d)]
-  d <- d/vec[row(d)]
-  d <- -log(d)
+  IDMAT <- MAT %*% t(MAT)
+  vec   <- sqrt(diag(IDMAT))
+  IDMAT <- IDMAT/vec[col(IDMAT)]
+  IDMAT <- IDMAT/vec[row(IDMAT)]
+  D     <- -log(IDMAT)
   # Nei's distance can be infinite. Here we are replacing infinites with an
   # order of magnitude higher than the max observed distance.
-  maxval <- max(d[!d == Inf])
-  d[d == Inf] <- maxval*10
-  d <- as.dist(d)
-  return(d)
+  maxval      <- max(D[!D == Inf])
+  D[D == Inf] <- maxval*10
+  D     <- as.dist(D)
+  return(D)
 }
 
 #==============================================================================#
@@ -141,11 +140,6 @@ boot.neidist <- function(x, tree = "nj", sample = 100){
   xtree$node.label <- nodelabs
   return(xtree)
 }
-
-
-
-
-
 
 #==============================================================================#
 # This function will simply return a table denoting private alleles within
