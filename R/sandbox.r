@@ -117,7 +117,7 @@ nei.dist <- function(x){
 # Bootstrapping for nei's distance. Potentially take distance as an argument
 # later on.
 #==============================================================================#
-nei.boot <- function(x, tree = "nj", sample = 100){
+nei.boot <- function(x, tree = "nj", sample = 100, cutoff = 50){
   x <- missingno(x, "mean")
   if (x@type == "codom") 
     xboot <- new("bootgen", x)
@@ -132,11 +132,14 @@ nei.boot <- function(x, tree = "nj", sample = 100){
   }
   root <- ifelse(treearg == "nj", FALSE, TRUE)
   nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root)
-  plot(xtree, show.tip.label = FALSE)
+  nodelabs <- (nodelabs/sample)*100
+  nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
+  #plot(xtree, show.tip.label = FALSE)
   xtree$tip.label <- x@ind.names
-  tiplabels(xtree$tip.label, adj = c(-0.25, 0.5), frame="n", cex=0.8, font=2)
-  nodelabels(nodelabs, adj = c(1.3, -0.5), frame="n", cex=0.9, font=3)
+  #tiplabels(xtree$tip.label, adj = c(-0.25, 0.5), frame="n", cex=0.8, font=2)
+  #nodelabels(nodelabs, adj = c(1.3, -0.5), frame="n", cex=0.9, font=3)
   xtree$node.label <- nodelabs
+  poppr.plot.phylo(xtree, tree)
   return(xtree)
 }
 
@@ -145,6 +148,20 @@ tree_generator <- function(tree, distance, quiet = TRUE){
   DISTFUNK <- match.fun(distance)
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
   return(function(x) TREEFUNK(DISTFUNK(x)))
+}
+
+poppr.plot.phylo <- function(tree, type = "nj"){
+  ARGS <- c("nj", "upgma")
+  type <- match.arg(type, ARGS)
+  barlen <- min(median(tree$edge.length), 0.1)
+  if (barlen < 0.1) barlen <- 0.01
+  plot.phylo(midpoint(tree), cex = 0.8, font = 2, adj = 0)
+  nodelabels(tree$node.label, adj = c(1.3, -0.5), frame = "n", cex = 0.8, font = 3)
+  if (type == "nj"){
+    add.scale.bar(lwd = 5, length = barlen)
+  } else {
+    axisPhylo(3)
+  }
 }
 
 #==============================================================================#
