@@ -93,7 +93,7 @@ number_missing_geno <- function(x, divisor){
 # Calculating Nei's distance for a genind object. Lifted from dist.genpop with
 # modifications.
 #==============================================================================#
-neidist <- function(x){
+nei.dist <- function(x){
   if (is.genind(x))
     MAT    <- x@tab
   else if (length(dim(x)) == 2)
@@ -117,7 +117,7 @@ neidist <- function(x){
 # Bootstrapping for nei's distance. Potentially take distance as an argument
 # later on.
 #==============================================================================#
-boot.neidist <- function(x, tree = "nj", sample = 100){
+nei.boot <- function(x, tree = "nj", sample = 100){
   x <- missingno(x, "mean")
   if (x@type == "codom") 
     xboot <- new("bootgen", x)
@@ -125,8 +125,7 @@ boot.neidist <- function(x, tree = "nj", sample = 100){
     xboot <- x@tab
   ARGS <- c("nj", "upgma")
   treearg <- match.arg(tree, ARGS)
-  tree <- match.fun(treearg)
-  treefunk <- function(x) tree(neidist(x))
+  treefunk <- tree_generator(treearg, nei.dist)
   xtree <- treefunk(xboot)
   if (any(xtree$edge.len < 0)){
     xtree <- fix_negative_branch(xtree)
@@ -139,6 +138,13 @@ boot.neidist <- function(x, tree = "nj", sample = 100){
   nodelabels(nodelabs, adj = c(1.3, -0.5), frame="n", cex=0.9, font=3)
   xtree$node.label <- nodelabs
   return(xtree)
+}
+
+tree_generator <- function(tree, distance, quiet = TRUE){
+  TREEFUNK <- match.fun(tree)
+  DISTFUNK <- match.fun(distance)
+  if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
+  return(function(x) TREEFUNK(DISTFUNK(x)))
 }
 
 #==============================================================================#
