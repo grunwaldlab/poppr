@@ -108,7 +108,7 @@ neidist <- function(x){
   d <- -log(d)
   # Nei's distance can be infinite. Here we are replacing infinites with an
   # order of magnitude higher than the max observed distance.
-  maxval <- max(d[!d == Inf])]
+  maxval <- max(d[!d == Inf])
   d[d == Inf] <- maxval*10
   d <- as.dist(d)
   return(d)
