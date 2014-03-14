@@ -208,6 +208,6 @@ setClass(
 #' @import methods
 #==============================================================================#
 setClass("bootgen", 
-         contains = c("genind"),
+         contains = c("genclone"),
          representation = representation(alllist = "list"),
 )

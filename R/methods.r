@@ -118,7 +118,8 @@ setMethod(
   f = "initialize",
   signature = "bootgen",
   definition = function(.Object, gen){
-    if (missing(gen)) gen <- new("genind")
+    if (missing(gen)) gen <- new("genclone")
+    if (!is.genclone(gen)) gen <- as.genclone(gen)
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
     slot(.Object, "alllist") <- .Call("expand_indices", cumsum(.Object@loc.nall), 
                                       nLoc(.Object))
