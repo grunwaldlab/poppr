@@ -170,18 +170,22 @@ poppr.plot.phylo <- function(tree, type = "nj"){
 # populations. The rows will indicate populations with private alleles and the
 # columns will be the specific alleles. 
 #==============================================================================#
-private_alleles <- function(gid){
-  if (!is.genind(gid) & !is.genpop(gid)) stop(paste(gid, "is not a genind or genpop object."))
-    if (is.genind(gid) & !is.null(pop(gid)) | is.genpop(gid) & nrow(gid@tab) > 1){
-      if (is.genind(gid)){
-          gid.pop <- truenames(genind2genpop(gid, quiet = TRUE))
-        } else {
-          gid.pop <- truenames(gid)
-        }
-        privates <- gid.pop[, colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2]
-        privates <- privates[rowSums(privates) > 0, ]
-        return(privates)
+private_alleles <- function(gid, report = "table"){
+  ARGS <- c("table", "individuals", "loci")
+  report <- match.arg(report, ARGS)
+  if (!is.genind(gid) & !is.genpop(gid)){
+    stop(paste(gid, "is not a genind or genpop object."))
+  }
+  if (is.genind(gid) & !is.null(pop(gid)) | is.genpop(gid) & nrow(gid@tab) > 1){
+    if (is.genind(gid)){
+        gid.pop <- truenames(genind2genpop(gid, quiet = TRUE))
       } else {
+        gid.pop <- truenames(gid)
+      }
+    privates <- gid.pop[, colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2]
+    privates <- privates[rowSums(privates) > 0, ]
+    return(privates)
+  } else {
     stop("There are no populations detected")
   }
 }
