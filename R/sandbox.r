@@ -285,10 +285,10 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   
   # Importing functions from igraph. This can be deleted when implemented in
   # poppr.
-  E                 <- match.fun(igraph::E)
-  `E<-`             <- match.fun(igraph::`E<-`)
-  V                 <- match.fun(igraph::V)
-  plot.igraph       <- match.fun(igraph::plot.igraph)
+  # E                 <- match.fun(igraph::E)
+  # `E<-`             <- match.fun(igraph::`E<-`)
+  # V                 <- match.fun(igraph::V)
+  # plot.igraph       <- match.fun(igraph::plot.igraph)
   delete.edges      <- match.fun(igraph::delete.edges)
   edge_below_cutoff <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
   poppr_msn$graph   <- delete.edges(poppr_msn$graph, edge_below_cutoff)
@@ -298,8 +298,8 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   wmin    <- min(weights)
   wmax    <- max(weights)
   gadj    <- ifelse(gweight == 1, gadj, -gadj)
-  E(poppr_msn$graph)$color <- gray(poppr:::adjustcurve(weights, glim=glim,
-                                                       correction=gadj,show=FALSE))
+  E(poppr_msn$graph)$color <- gray(adjustcurve(weights, glim=glim,
+                                               correction=gadj,show=FALSE))
   
   # Highlighting only the names of the submitted genotypes and the matching
   # isolates.
@@ -354,12 +354,10 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   ## SCALE BAR
   if (quantiles){
     scales <- sort(weights)
-    greyscales <- gray(poppr:::adjustcurve(scales, show=FALSE,
-                                           glim=glim, correction=gadj))
+    greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
   } else {
     scales <- seq(wmin, wmax, l = 1000)
-    greyscales <- gray(poppr:::adjustcurve(scales, show=FALSE,
-                                           glim=glim, correction=gadj))
+    greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
   }
   legend_image <- as.raster(matrix(greyscales, nrow=1))
   par(mar = c(0, 1, 0, 1) + 0.5)
