@@ -93,7 +93,7 @@ number_missing_geno <- function(x, divisor){
 # Calculating Nei's distance for a genind object. Lifted from dist.genpop with
 # modifications.
 #==============================================================================#
-nei.dist <- function(x){
+nei.dist <- function(x, warning = TRUE){
   if (is.genind(x))
     MAT    <- x@tab
   else if (length(dim(x)) == 2)
@@ -107,8 +107,13 @@ nei.dist <- function(x){
   D     <- -log(IDMAT)
   # Nei's distance can be infinite. Here we are replacing infinites with an
   # order of magnitude higher than the max observed distance.
-  maxval      <- max(D[!D == Inf])
-  D[D == Inf] <- maxval*10
+  if (any(D == Inf)){
+    if (warning){
+      warning("Infinite values detected.")
+    }
+    maxval      <- max(D[!D == Inf])
+    D[D == Inf] <- maxval*10
+  }
   D     <- as.dist(D)
   return(D)
 }
