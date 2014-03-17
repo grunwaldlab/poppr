@@ -132,7 +132,7 @@ nei.boot <- function(x, tree = "upgma", sample = 100, cutoff = 50){
   ARGS     <- c("nj", "upgma")
   treearg  <- match.arg(tree, ARGS)
   treefunk <- tree_generator(treearg, nei.dist)
-  xtree    <- treefunk(xboot)
+  xtree    <- treefunk(xboot, warning = FALSE)
   if (any(xtree$edge.len < 0)){
     xtree <- fix_negative_branch(xtree)
   }
@@ -150,7 +150,7 @@ tree_generator <- function(tree, distance, quiet = TRUE){
   TREEFUNK <- match.fun(tree)
   DISTFUNK <- match.fun(distance)
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
-  return(function(x) TREEFUNK(DISTFUNK(x)))
+  return(function(x, ...) TREEFUNK(DISTFUNK(x, ...)))
 }
 
 poppr.plot.phylo <- function(tree, type = "nj"){
