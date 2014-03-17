@@ -895,7 +895,8 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
 #
 #==============================================================================#
 
-adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
+adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE, 
+  scalebar = FALSE){
   w    <- weights
   maxg <- max(glim)
   ming <- 1-(min(glim)/maxg)
@@ -906,9 +907,9 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
     adj <- (1 - (((1-w)^abs(correction))/(1/ming)) )
     adj <- adj / (1/maxg)
   }
-  if (show == FALSE){
+  if (!show){
     return(adj)
-  } else {
+  } else if (!scalebar){
     cols <- grey(sort(adj))
     hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
          ylab="Grey Adjusted", 
@@ -928,6 +929,27 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE){
     }
     lines(x=0:1, y=c(min(glim),min(glim)), col="yellow")
     lines(x=0:1, y=c(max(glim),max(glim)), col="yellow")    
+  } else {
+    with_quantiles <- sort(weights)
+    wq_raster      <- t(as.raster(as.matrix(gray(sort(adj)), nrow = 1)))
+    no_quantiles   <- seq(min(weights), max(weights), length = 1000)
+    nq_raster      <- adjustcurve(no_quantiles, glim, correction, show = FALSE)
+    nq_raster      <- t(as.raster(as.matrix(gray(nq_raster), nrow = 1)))
+    layout(matrix(1:2, nrow = 2))
+    plot.new()
+    rasterImage(wq_raster, 0, 0.5, 1, 1)
+    polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+    axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(with_quantiles), 3))
+    text(0.5, 0, labels = "Quantiles From Data", font = 2, cex = 1.5, adj = c(0.5, 0))
+    plot.new()
+    rasterImage(nq_raster, 0, 0.5, 1, 1)
+    polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+    axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(no_quantiles), 3))
+    text(0.5, 0, labels = "Quantiles From Smoothing", font = 2, cex = 1.5, adj = c(0.5, 0))
+    # Return top level plot to defau lts.
+    layout(matrix(c(1), ncol=1, byrow=T))
+    par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
+    par(oma=c(0,0,0,0)) # Figure margins
   }
 }
 
