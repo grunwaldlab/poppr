@@ -14,11 +14,19 @@ as.genclone(x, hierarchy = NULL)
   hierarchy.}
 }
 \description{
-Wrapper for genclone initializer. The hierarchy must have
-the same number of rows as the number of observations in
-the genind object. If no hierarchy is defined, the
-population will be set as the hierarchy under the label
-"Pop".
+Wrapper for genclone initializer.
+}
+\note{
+The hierarchy must have the same number of rows as the
+number of observations in the genind object. If no
+hierarchy is defined, the function will search for a data
+frame in the \code{\link{other}} slot called
+"population\_hierarchy" and set that as the hieararchy. If
+none is defined, the population will be set as the
+hierarchy under the label "Pop". Use the function
+\code{\link{splithierarchy}} to split up any population
+hierarchies that might be combined in the population
+factor.
 }
 \examples{
 data(Aeut)
@@ -30,5 +38,8 @@ Aeut.gc
 }
 \author{
 Zhian N. Kamvar
+}
+\seealso{
+\code{\link{splithierarchy}}
 }
 

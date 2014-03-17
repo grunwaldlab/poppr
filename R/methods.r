@@ -60,6 +60,7 @@
 #' @param j a vector of numerics corresponding to the loci desired.
 #' @param ... unused.
 #' @param drop set to \code{FALSE} 
+#' @keywords internal
 #' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(
@@ -138,6 +139,7 @@ setMethod(
 #' @param gen \code{"\linkS4class{genind}"} object
 #' @param replen a vector of numbers indicating the repeat length for each 
 #' microsatellite locus. 
+#' @keywords internal
 #' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(
@@ -177,6 +179,7 @@ setMethod(
 
 #==============================================================================#
 #' @rdname bruvomat-methods
+#' @keywords internal
 #==============================================================================#
 setMethod(
   f = "dim",
@@ -196,6 +199,7 @@ setMethod(
 #' @param i vector of numerics indicating number of individuals desired
 #' @param j a vector of numerics corresponding to the loci desired.
 #' @param ... unused.
+#' @keywords internal
 #' @param drop set to \code{FALSE}
 #==============================================================================#
 setMethod(
@@ -346,6 +350,7 @@ setMethod(
 #' hierarchy will be created from the population factor.
 #' @param mlg a vector where each element assigns the multilocus genotype of
 #' that individual in the data set. 
+#' @keywords internal
 #==============================================================================#
 setMethod(      
   f = "initialize",
@@ -414,16 +419,25 @@ setMethod(
 #==============================================================================#
 #' Create a genclone object from a genind object.
 #' 
-#' Wrapper for genclone initializer. The hierarchy must have the same number of
-#' rows as the number of observations in the genind object. If no hierarchy is
-#' defined, the population will be set as the hierarchy under the label "Pop". 
+#' Wrapper for genclone initializer.
 #' 
-#' @export 
+#' @export
 #' @rdname coercion-methods
 #' @aliases as.genclone,genind-method
-#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object
+#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#'   object
 #' @param hierarchy a data frame representing the population hierarchy.
-#' @docType methods 
+#' @docType methods
+#'   
+#' @note The hierarchy must have the same number of rows as the number of
+#'   observations in the genind object. If no hierarchy is defined, the function
+#'   will search for a data frame in the \code{\link{other}} slot called
+#'   "population\_hierarchy" and set that as the hieararchy. If none is defined,
+#'   the population will be set as the hierarchy under the label "Pop". Use the
+#'   function \code{\link{splithierarchy}} to split up any population
+#'   hierarchies that might be combined in the population factor.
+#' 
+#' @seealso \code{\link{splithierarchy}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' data(Aeut)

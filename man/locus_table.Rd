@@ -79,6 +79,6 @@ communication. Bell Systems Technical Journal,
 27:379-423,623-656, 1948
 }
 \seealso{
-vegan::diversity, poppr
+\code{\link{vegan::diversity}}, \code{\link{poppr}}
 }
 

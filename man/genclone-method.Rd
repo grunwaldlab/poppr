@@ -55,4 +55,5 @@ Default methods for subsetting genclone objects.
 \author{
 Zhian N. Kamvar
 }
+\keyword{internal}
 
