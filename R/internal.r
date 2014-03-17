@@ -896,7 +896,7 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
 #==============================================================================#
 
 adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE, 
-  scalebar = FALSE){
+  scalebar = FALSE, smooth = TRUE){
   w    <- weights
   maxg <- max(glim)
   ming <- 1-(min(glim)/maxg)
@@ -910,12 +910,22 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE,
   if (!show){
     return(adj)
   } else if (!scalebar){
-    cols <- grey(sort(adj))
-    hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
-         ylab="Grey Adjusted", 
-         main=paste("Grey adjustment\n min:", min(glim), "max:", max(glim), 
-                    "adjust:",abs(correction)))
-    points(x=w, y=adj, col=grey(rev(adj)), pch=20)
+    # cols <- grey(sort(adj))
+    # hist(w, col=cols, border=NA, breaks=w, ylim=0:1, xlab="Observed Value", 
+    #      ylab="Grey Adjusted", 
+    #      main=paste("Grey adjustment\n min:", min(glim), "max:", max(glim), 
+    #                 "adjust:",abs(correction)))
+    with_quantiles <- sort(weights)
+    wq_raster      <- t(as.raster(as.matrix(gray(sort(adj)), nrow = 1)))
+    xlims <- c(min(weights), max(weights))
+    plot(xlims, 0:1, type = "n", ylim = 0:1, xlim = xlims, xlab = "", ylab = "")
+    rasterImage(wq_raster, xlims[1], 0, xlims[2], 1)
+    points(x=w, y=adj, col=grey(rev(sort(adj))), pch=20)
+    title(xlab="Observed Value", ylab="Grey Adjusted", 
+          main=paste("Grey adjustment\n min:", 
+                     min(glim), 
+                     "max:", max(glim), 
+                     "adjust:",abs(correction)))
     if (correction < 0){
       text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
                                        .(ming)^-1),")") + .(1-ming), 
@@ -927,8 +937,8 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE,
                        .(maxg)^-1)) , 
            x=0.15,y=0.75, col="red")
     }
-    lines(x=0:1, y=c(min(glim),min(glim)), col="yellow")
-    lines(x=0:1, y=c(max(glim),max(glim)), col="yellow")    
+    lines(x=xlims, y=c(min(glim),min(glim)), col="yellow")
+    lines(x=xlims, y=c(max(glim),max(glim)), col="yellow")    
   } else {
     with_quantiles <- sort(weights)
     wq_raster      <- t(as.raster(as.matrix(gray(sort(adj)), nrow = 1)))
