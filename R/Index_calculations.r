@@ -547,7 +547,7 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
 #'   observed, Diversity index chosen, Nei's 1978 expected heterozygosity, and
 #'   Evenness.
 #'   
-#' @seealso \code{\link{vegan::diversity}}, \code{\link{poppr}}
+#' @seealso \code{\link[vegan]{diversity}}, \code{\link{poppr}}
 #'   
 #' @note This will calculate statistics for polyploids as well by only counting
 #'   observed allelic states.

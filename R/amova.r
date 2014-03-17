@@ -79,58 +79,67 @@
 #' This function utilizes the ade4 implementation of AMOVA. See 
 #' \code{\link[ade4]{amova}} for details on the specific implementation.
 #' 
-#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object
-#' 
+#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#'   object
+#'   
 #' @param hier a hierarchical \code{\link{formula}} that defines your population
-#' hieararchy. (e.g.: ~Population/Subpopulation). \strong{See Details below.}
-#' 
+#'   hieararchy. (e.g.: ~Population/Subpopulation). \strong{See Details below.}
+#'   
 #' @param clonecorrect \code{logical} if \code{TRUE}, the data set will be clone
-#' corrected with respect to the lowest level of the hierarchy. The default is
-#' set to \code{FALSE}. See \code{\link{clonecorrect}} for details.
-#' 
+#'   corrected with respect to the lowest level of the hierarchy. The default is
+#'   set to \code{FALSE}. See \code{\link{clonecorrect}} for details.
+#'   
 #' @param within \code{logical}. When this is set to \code{TRUE} (Default), 
-#' variance within individuals are calculated as well. If this is set to \code{FALSE},
-#' The lowest level of the hierarchy will be the sample level. See Details below.
-#' 
-#' @param dist an optional distance matrix calculated on your data. 
-#' 
-#' @param squared if a distance matrix is supplied, this indicates whether or not 
-#' it represents squared distances. 
-#' 
-#' @param correction a \code{character} defining the correction method for
-#' non-euclidean distances. Options are \code{\link[ade4]{quasieuclid}} (Default),
-#' \code{\link[ade4]{lingoes}}, and \code{\link[ade4]{cailliez}}. See Details below.
-#' 
-#' @param dfname if the input data set is a \code{\linkS4class{genind}} object,
-#' specify the name of the data frame in the \code{\link[adegenet]{other}} slot
-#' defining the population hierarchy. Defaults to \code{"population_hierarchy"}
-#' 
+#'   variance within individuals are calculated as well. If this is set to
+#'   \code{FALSE}, The lowest level of the hierarchy will be the sample level.
+#'   See Details below.
+#'   
+#' @param dist an optional distance matrix calculated on your data.
+#'   
+#' @param squared if a distance matrix is supplied, this indicates whether or
+#'   not it represents squared distances.
+#'   
+#' @param correction a \code{character} defining the correction method for 
+#'   non-euclidean distances. Options are \code{\link[ade4]{quasieuclid}}
+#'   (Default), \code{\link[ade4]{lingoes}}, and \code{\link[ade4]{cailliez}}.
+#'   See Details below.
+#'   
+#' @param dfname if the input data set is a \code{\linkS4class{genind}} object, 
+#'   specify the name of the data frame in the \code{\link[adegenet]{other}}
+#'   slot defining the population hierarchy. Defaults to
+#'   \code{"population_hierarchy"}
+#'   
 #' @param sep What character is used to separate the popualtion hierarchy?
-#' 
-#' @param missing specify method of correcting for missing data utilizing options
-#' given in the function \code{\link{missingno}}. Default is \code{"loci"}.
-#' 
-#' @param cutoff specify the level at which missing data should be removed/modified.
-#' See \code{\link{missingno}} for details.
-#' 
+#'   
+#' @param missing specify method of correcting for missing data utilizing
+#'   options given in the function \code{\link{missingno}}. Default is
+#'   \code{"loci"}.
+#'   
+#' @param cutoff specify the level at which missing data should be
+#'   removed/modified. See \code{\link{missingno}} for details.
+#'   
 #' @param quiet \code{logical} If \code{FALSE} (Default), messages regarding any
-#' corrections will be printed to the screen. If \code{TRUE}, no messages will
-#' be printed. 
-#' 
+#'   corrections will be printed to the screen. If \code{TRUE}, no messages will
+#'   be printed.
+#'   
 #' @return a list of class \code{amova} from the ade4 package. See 
-#' \code{\link[ade4]{amova}} for details. 
-#' 
+#'   \code{\link[ade4]{amova}} for details.
+#'   
 #' @keywords amova
+#' @aliases amova
+#' @seealso \code{\link[ade4]{amova}} \code{\link{clonecorrect}}
+#'   \code{\link{diss.dist}} \code{\link{missingno}}
+#'   \code{\link[ade4]{is.euclid}} \code{\link{sethierarchy}}
 #' @export
 #' @examples
 #' data(Aeut)
 #' agc <- as.genclone(Aeut)
 #' agc
 #' amova.result <- poppr.amova(agc, ~Pop/Subpop)
-#' amova.result[1:4]
+#' amova.result
 #' \dontrun{
 #' amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
-#' amova.cc.result[1:4]
+#' amova.cc.result
 #' }
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes

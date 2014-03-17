@@ -48,7 +48,7 @@
 
   tips <- c(
     "\nNeed help? Try the poppr mailing list: http://groups.google.com/group/poppr.\n",
-    "\nUse suppressPackageStartupMessages to eliminate package startup messages.\n"
+    "\nUse suppressPackageStartupMessages(library(poppr)) to eliminate package startup messages.\n"
   )
   
   tip <- sample(tips, 1)

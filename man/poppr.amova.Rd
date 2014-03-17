@@ -1,4 +1,5 @@
 \name{poppr.amova}
+\alias{amova}
 \alias{poppr.amova}
 \title{Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.}
 \usage{
@@ -75,11 +76,16 @@ data(Aeut)
 agc <- as.genclone(Aeut)
 agc
 amova.result <- poppr.amova(agc, ~Pop/Subpop)
-amova.result[1:4]
+amova.result
 \dontrun{
 amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
-amova.cc.result[1:4]
+amova.cc.result
 }
+}
+\seealso{
+\code{\link[ade4]{amova}} \code{\link{clonecorrect}}
+\code{\link{diss.dist}} \code{\link{missingno}}
+\code{\link[ade4]{is.euclid}} \code{\link{sethierarchy}}
 }
 \keyword{amova}
 
