@@ -39,7 +39,7 @@ poppr.amova(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   correction method for non-euclidean distances. Options
   are \code{\link[ade4]{quasieuclid}} (Default),
   \code{\link[ade4]{lingoes}}, and
-  \code{\link[ade4]{cailliez}}. See Details below.}
+  \code{\link[ade4]{cailliez}}.  See Details below.}
 
   \item{dfname}{if the input data set is a
   \code{\linkS4class{genind}} object, specify the name of

@@ -13,6 +13,7 @@ URL: http://cran.r-project.org/package=poppr,
     http://grunwaldlab.cgrb.oregonstate.edu/poppr-r-package-population-genetics
 Description: Population genetic analyses for hierarchical analysis of partially
     clonal populations built upon the architecture of the adegenet package.
+MailingList: http://groups.google.com/group/poppr
 Depends:
     R (>= 2.15.1),
     adegenet
