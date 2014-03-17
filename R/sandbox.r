@@ -354,11 +354,10 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   ## SCALE BAR
   if (quantiles){
     scales <- sort(weights)
-    greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
   } else {
     scales <- seq(wmin, wmax, l = 1000)
-    greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
   }
+  greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
   legend_image <- as.raster(matrix(greyscales, nrow=1))
   par(mar = c(0, 1, 0, 1) + 0.5)
   plot.new()
