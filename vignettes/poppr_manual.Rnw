@@ -2548,6 +2548,16 @@ dev.off()
 
 Remember, it is important not to forget to type \texttt{dev.off()} when you are done making graphs. Note that I did not have to specify a resolution for this image since it is based off of vector graphics.
 
+\subsection{Todo}
+
+\begin{itemize}
+  \item locus\_table
+  \item missing\_table
+  \item amova
+  \item *hierarchy
+  \item setpop
+\end{itemize}
+
 \subsection{Table of Functions}\label{appendix:funk}
 
 \tab\tab Below is a table of functions found in \textit{poppr}. These functions are
