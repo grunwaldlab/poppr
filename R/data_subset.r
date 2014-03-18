@@ -481,7 +481,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
     }  
     # removes any genotypes (rows) with missing values.
     else if (type == "genotypes"){
-      nageno <- percent_missing(pop, type=type, cutoff=cutoff)
+      # nageno <- percent_missing(pop, type=type, cutoff=cutoff)
       if(quiet != TRUE){
         # if(all(nageno < 0)){
         #   remgeno <- pop@ind.names[-nageno]
@@ -500,7 +500,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
           cat("\n No genotypes with missing values above",
               paste0(cutoff*100, "%"),"found.\n")
         } else {
-          remgeno <- pop@loc.names[!cumsum(pop@loc.nall) %in% navals]
+          remgeno <- indNames(pop)[-navals]
           cat("\n Found", sum(is.na(pop@tab)),"missing values.")
           geno    <- paste(length(remgeno), ifelse(length(remgeno) == 1, 
                            "genotype", "genotypes"))

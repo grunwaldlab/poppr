@@ -271,7 +271,7 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
   } else {
     missing_geno <- 1 - propTyped(pop, "ind")
     misslist     <- 1:nInd(pop)
-    filter       <- missing_geno > cutoff
+    filter       <- missing_geno <= cutoff
   }
   return(misslist[filter])
 }
