@@ -604,6 +604,9 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
 #' 
 #' This function has one purpose. It is for deciding the appropriate scaling for
 #' a grey palette to be used for edge weights of a minimum spanning network.
+#'
+#'
+#' @param data a sequence of numbers to be converted to greyscale.
 #' 
 #' @param glim "grey limit". Two numbers between zero and one. They determine 
 #' the upper and lower limits for the \code{\link{gray}} function. Default is 0
@@ -617,6 +620,10 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
 #' will be weighted to emphasize the differences between closely related nodes.
 #' If it is 2, the grey scale will be weighted to emphasize the differences
 #' between more distantly related nodes. 
+#'
+#' @param scalebar When this is set to \code{TRUE}, two scalebars will be
+#' plotted. The purpose of this is for adding a scale bar to minimum spanning
+#' networks produced in earlier versions of poppr. 
 #' 
 #' @return A plot displaying a grey gradient from 0.001 to 1 with minimum and 
 #' maximum values displayed as yellow lines, and an equation for the correction 
@@ -643,7 +650,8 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
 #' }
 #' @export
 #==============================================================================#
-greycurve <- function(glim = c(0,0.8), gadj = 3, gweight = 1){
+greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8), 
+                      gadj = 3, gweight = 1, scalebar = FALSE){
   gadj <- ifelse(gweight == 1, gadj, -gadj)
-  adjustcurve(seq(0.001, 1, 0.001), glim, correction=gadj, show=TRUE)
+  adjustcurve(data, glim, correction=gadj, show=TRUE)
 }
