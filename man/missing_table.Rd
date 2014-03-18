@@ -57,13 +57,16 @@ genclone object
 }
 \details{
 This data is potentially useful for identifying areas of
-systematic missing data. It is important to note that when
-visualizing missing data as a percentage, that the
-percentage of missing data is \strong{relative to the
-population and locus}, not to the entire data set.
-Likewise, the last column represents an average amount of
-missing data over all loci for each population, and the
-last row, "Total", represents the entire data set.
+systematic missing data. There are a few caveats to be
+aware of.  \itemize{ \item \strong{For counts of missing
+data}: Each count represents the number of individuals with
+missing data at each locus. The last column, "mean" can be
+thought of as the average number of individuals with
+missing data per locus. \item \strong{For percentage
+missing data}: This percentage is \strong{relative to the
+population and locus}, not ot the enitre data set. The last
+colum, "mean" represents the average percent of the
+population with missing data per locus. }
 }
 \examples{
 data(nancycats)
