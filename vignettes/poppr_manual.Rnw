@@ -2050,7 +2050,14 @@ print_command(funk)
 \end{quote}
 
 
-This function does not return any values. It will print a visual gradient from black to white horizontally. On this gradient, it will plot the adjustment curve (in opposing grey values), yellow horizontal lines bounding the maximum and minimum values, and the equation used to calculate the correction in red. Keep in mind that this is plotting values from zero to one.
+This function does not return any values. It will print a visual gradient from black to white horizontally. On this gradient, it will plot the adjustment curve (in opposing grey values), yellow horizontal lines bounding the maximum and minimum values, and the equation used to calculate the correction in red. By default it will use a sequence from 1 to 0 to plot the curve, but you can use
+any sequence. Let's take 1000 random normal draws:
+
+<<greycurve_rnorm>>=
+set.seed(9999)
+xnorm <- rnorm(1000)
+@
+
 
 %\newpage
 First, we'll see what happens when we change the weight parameter.
@@ -2059,7 +2066,7 @@ First, we'll see what happens when we change the weight parameter.
 \centering
 \caption{\footnotesize Default for \texttt{greycurve()}, weighted for small values.}
 <<greycurve_normal, out.width='\\linewidth'>>=
-greycurve()
+greycurve(xnorm)
 @
 \end{minipage}
 \hspace{0.5cm}
@@ -2067,19 +2074,25 @@ greycurve()
 \centering
 \caption{\footnotesize weighting for large values.}
 <<greywidth_inverse, out.width='\\linewidth'>>=
-greycurve(gweight = 2)
+greycurve(xnorm, gweight = 2)
 @
 \end{minipage}
 \end{figure}
 
-Now, we'll see what happens when we change the adjustment parameter (affects the shape of the curve) and the upper and lower limits of the grey scale.
+If you change the adjustment parameter, \texttt{gadj}, the shape of the curve
+will change, and if you change the limit parameter, \texttt{glim}, the bounds of
+the curve will change.
+
+This function also will plot scalebars for use with minimum spanning networks produced in previous versions of poppr. Just use the scalebar argument and you
+will get a scalebar using the quantiles from the data and a scalebar with the 
+data smoothed from the minimum to the maximum.
 
 \begin{figure}[h!]
 \begin{minipage}[b]{0.45\linewidth}
 \centering
-\caption{\footnotesize Setting the lower and upper limits and weighting the curve heavily toward smaller values.}
+\caption{\footnotesize We can see that more data lies around zero (as expected with a random normal distribution)}
 <<greycurve_small_heavy, out.width='\\linewidth'>>=
-greycurve(glim = c(0.2, 0.9), gadj=15)
+greycurve(xnorm, scalebar = TRUE)
 @
 \end{minipage}
 \hspace{0.5cm}
@@ -2087,7 +2100,7 @@ greycurve(glim = c(0.2, 0.9), gadj=15)
 \centering
 \caption{\footnotesize Same as the figure on the left, but weighting heavily toward larger values.}
 <<greywidth_large_heavy, out.width='\\linewidth'>>=
-greycurve(glim = c(0.2, 0.9), gadj=15, gweight=2)
+greycurve(xnorm, gweight=2, scalebar = TRUE)
 @
 \end{minipage}
 \end{figure}

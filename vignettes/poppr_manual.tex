@@ -3364,7 +3364,8 @@ Default Command:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
-greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
+greycurve(data = seq(0, 1, length = 1000), glim = c(0, 0.8), 
+    gadj = 3, gweight = 1, scalebar = FALSE)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -3373,7 +3374,19 @@ greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
 \end{quote}
 
 
-This function does not return any values. It will print a visual gradient from black to white horizontally. On this gradient, it will plot the adjustment curve (in opposing grey values), yellow horizontal lines bounding the maximum and minimum values, and the equation used to calculate the correction in red. Keep in mind that this is plotting values from zero to one.
+This function does not return any values. It will print a visual gradient from black to white horizontally. On this gradient, it will plot the adjustment curve (in opposing grey values), yellow horizontal lines bounding the maximum and minimum values, and the equation used to calculate the correction in red. By default it will use a sequence from 1 to 0 to plot the curve, but you can use
+any sequence. Let's take 1000 random normal draws:
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{set.seed}\hlstd{(}\hlnum{9999}\hlstd{)}
+\hlstd{xnorm} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{1000}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
 
 %\newpage
 First, we'll see what happens when we change the weight parameter.
@@ -3384,7 +3397,7 @@ First, we'll see what happens when we change the weight parameter.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{greycurve}\hlstd{()}
+\hlkwd{greycurve}\hlstd{(xnorm)}
 \end{alltt}
 \end{kframe}
 
@@ -3404,7 +3417,7 @@ First, we'll see what happens when we change the weight parameter.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{greycurve}\hlstd{(}\hlkwc{gweight} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlkwd{greycurve}\hlstd{(xnorm,} \hlkwc{gweight} \hlstd{=} \hlnum{2}\hlstd{)}
 \end{alltt}
 \end{kframe}
 
@@ -3419,16 +3432,22 @@ First, we'll see what happens when we change the weight parameter.
 \end{minipage}
 \end{figure}
 
-Now, we'll see what happens when we change the adjustment parameter (affects the shape of the curve) and the upper and lower limits of the grey scale.
+If you change the adjustment parameter, \texttt{gadj}, the shape of the curve
+will change, and if you change the limit parameter, \texttt{glim}, the bounds of
+the curve will change.
+
+This function also will plot scalebars for use with minimum spanning networks produced in previous versions of poppr. Just use the scalebar argument and you
+will get a scalebar using the quantiles from the data and a scalebar with the 
+data smoothed from the minimum to the maximum.
 
 \begin{figure}[h!]
 \begin{minipage}[b]{0.45\linewidth}
 \centering
-\caption{\footnotesize Setting the lower and upper limits and weighting the curve heavily toward smaller values.}
+\caption{\footnotesize We can see that more data lies around zero (as expected with a random normal distribution)}
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{greycurve}\hlstd{(}\hlkwc{glim} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.2}\hlstd{,} \hlnum{0.9}\hlstd{),} \hlkwc{gadj} \hlstd{=} \hlnum{15}\hlstd{)}
+\hlkwd{greycurve}\hlstd{(xnorm,} \hlkwc{scalebar} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \end{alltt}
 \end{kframe}
 
@@ -3448,7 +3467,7 @@ Now, we'll see what happens when we change the adjustment parameter (affects the
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{greycurve}\hlstd{(}\hlkwc{glim} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.2}\hlstd{,} \hlnum{0.9}\hlstd{),} \hlkwc{gadj} \hlstd{=} \hlnum{15}\hlstd{,} \hlkwc{gweight} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlkwd{greycurve}\hlstd{(xnorm,} \hlkwc{gweight} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{scalebar} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \end{alltt}
 \end{kframe}
 
