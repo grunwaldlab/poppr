@@ -435,10 +435,11 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
   edgewidth <- 2
   if (wscale==TRUE){
-    edgewidth <- 1/(E(mst)$weight)
-    if (any(E(mst)$weight < 0.08)){
-      edgewidth <- 1/(E(mst)$weight + 0.08)
-    }
+    edgewidth <- rerange(E(mst)$weight)
+    if (any(edgewidth < 0.08)){
+      edgewidth <- edgewidth + 0.08
+    } 
+    edgewidth <- 1/edgewidth
   }
   
   # This creates a list of colors corresponding to populations.
