@@ -880,6 +880,24 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
 }
 
 #==============================================================================#
+# This will transform the data to be in the range of [0, 1]
+#
+# Public functions utilizing this function:
+# poppr.msn
+# 
+# Internal functions utilizing this function:
+# # adjustcurve
+#==============================================================================#
+
+rerange <- function(x){
+  if (min(x) < 0)
+    x <- x + abs(min(x))
+  if (max(x) > 1)
+    x <- x/max(x)
+  return(x)
+}
+
+#==============================================================================#
 # This will adjust the grey scale with respect to the edge weights for igraph.
 # This is needed because the length of the edges do not correspond to weights.
 # If show is set to TRUE, it will show a graph giving the equation used for con-
@@ -898,10 +916,7 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
 adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE, 
   scalebar = FALSE, smooth = TRUE){
   w    <- weights
-  if (min(w) < 0)
-    w <- w + abs(min(w))
-  if (max(w) > 1)
-    w <- w/max(w)
+  w    <- rerange(w)
   maxg <- max(glim)
   ming <- 1-(min(glim)/maxg)
   if (correction < 0){
