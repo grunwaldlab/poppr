@@ -2,9 +2,13 @@
 \alias{greycurve}
 \title{Display a greyscale gradient adjusted to specific parameters}
 \usage{
-greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
+greycurve(data = seq(0, 1, length = 1000), glim = c(0, 0.8), gadj = 3,
+  gweight = 1, scalebar = FALSE)
 }
 \arguments{
+  \item{data}{a sequence of numbers to be converted to
+  greyscale.}
+
   \item{glim}{"grey limit". Two numbers between zero and
   one. They determine the upper and lower limits for the
   \code{\link{gray}} function. Default is 0 (black) and 0.8
@@ -20,6 +24,11 @@ greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)
   differences between closely related nodes. If it is 2,
   the grey scale will be weighted to emphasize the
   differences between more distantly related nodes.}
+
+  \item{scalebar}{When this is set to \code{TRUE}, two
+  scalebars will be plotted. The purpose of this is for
+  adding a scale bar to minimum spanning networks produced
+  in earlier versions of poppr.}
 }
 \value{
 A plot displaying a grey gradient from 0.001 to 1 with

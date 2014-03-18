@@ -495,7 +495,9 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 #'   the highest observed value of missing data. If \code{FALSE}, the color
 #'   specified in \code{high} will represent 100\%.
 #'   
-#' @return a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot = TRUE}) representing missing data in a \linkS4class{genind} or \linkS4class{genclone} object.
+#' @return a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot
+#'   = TRUE}) representing missing data in a \linkS4class{genind} or
+#'   \linkS4class{genclone} object.
 #' 
 #' @details This data is potentially useful for identifying areas of systematic
 #' missing data. It is important to note that when visualizing missing data as a
@@ -654,5 +656,5 @@ missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE,
 greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8), 
                       gadj = 3, gweight = 1, scalebar = FALSE){
   gadj <- ifelse(gweight == 1, gadj, -gadj)
-  adjustcurve(data, glim, correction=gadj, show=TRUE)
+  adjustcurve(data, glim, correction=gadj, show = TRUE, scalebar = scalebar)
 }
