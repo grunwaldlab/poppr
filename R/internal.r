@@ -898,6 +898,10 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
 adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE, 
   scalebar = FALSE, smooth = TRUE){
   w    <- weights
+  if (min(w) < 0)
+    w <- w + abs(min(w))
+  if (max(w) > 1)
+    w <- w/max(w)
   maxg <- max(glim)
   ming <- 1-(min(glim)/maxg)
   if (correction < 0){
@@ -920,7 +924,7 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE,
     xlims <- c(min(weights), max(weights))
     plot(xlims, 0:1, type = "n", ylim = 0:1, xlim = xlims, xlab = "", ylab = "")
     rasterImage(wq_raster, xlims[1], 0, xlims[2], 1)
-    points(x=w, y=adj, col=grey(rev(sort(adj))), pch=20)
+    points(x = sort(weights), y = sort(adj), col=grey(rev(sort(adj))), pch=20)
     title(xlab="Observed Value", ylab="Grey Adjusted", 
           main=paste("Grey adjustment\n min:", 
                      min(glim), 
@@ -930,12 +934,12 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE,
       text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
                                        .(ming)^-1),")") + .(1-ming), 
                        .(maxg)^-1)) , 
-           x=0.25,y=0.75, col="red")
+           x = min(weights) + (0.25*max(weights)), y=0.75, col="red")
     } else {
       text(bquote(frac(1-bgroup("(",frac((1-scriptstyle(x))^.(abs(correction)),
                                          .(ming)^-1),")"), 
                        .(maxg)^-1)) , 
-           x=0.15,y=0.75, col="red")
+           x= min(weights) + (0.15*max(weights)), y=0.75, col="red")
     }
     lines(x=xlims, y=c(min(glim),min(glim)), col="yellow")
     lines(x=xlims, y=c(max(glim),max(glim)), col="yellow")    
