@@ -108,15 +108,14 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
-    stop("\nThis dataset does not appear to be microsatellite data. Bruvo's Distance can only be applied for true microsatellites.")
+    stop(non_ssr_data_warning())
   }
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(pop@loc.names)){
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
-    warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
-    cat(replen,"\n\n")
+    warning(repeat_length_warning(replen), immediate. = TRUE)
   }
   bruvomat  <- new('bruvomat', pop, replen)
   funk_call <- match.call()
@@ -210,15 +209,14 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
-    stop("\nThis dataset does not appear to be microsatellite data. Bruvo's Distance can only be applied for true microsatellites.")
+    stop(non_ssr_data_warning())
   }
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(pop@loc.names)){
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
-    warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
-    cat(replen,"\n\n")
+    warning(repeat_length_warning(replen), immediate. = TRUE)
   }
   bootgen <- new('bruvomat', pop, replen)
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
@@ -232,7 +230,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   }
   tre <- newfunk(bruvos_distance(bootgen, funk_call = match.call(), add = add, loss = loss))
   if (any (tre$edge.length < 0)){
-    warning("Some branch lengths of the tree are negative. Normalizing branches according to Kuhner and Felsenstein (1994)", immediate.=TRUE)
+    warning(negative_branch_warning(), immediate.=TRUE)
 	  tre <- fix_negative_branch(tre)
   }
   if (quiet == FALSE){
@@ -249,7 +247,8 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   if (!is.null(cutoff)){
     if (cutoff < 1 | cutoff > 100){
       cat("Cutoff value must be between 0 and 100.\n")
-      cutoff <- as.numeric(readline(prompt = "Choose a new cutoff value between 0 and 100:\n"))
+      prompt_msg <- "Choose a new cutoff value between 0 and 100:\n"
+      cutoff <- as.numeric(readline(prompt = prompt_msg))
     }
     tre$node.labels[tre$node.labels < cutoff] <- NA
   }

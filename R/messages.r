@@ -98,8 +98,9 @@ hier_incompatible_warning <- function(levs, df){
 # # none
 #==============================================================================#
 not_euclid_msg <- function(correction){
-  msg <- paste0("\nThe distance matrix generated is non-euclidean and a correction is needed.",
-                "\nYou supplied: correction = '", correction, "'\nPlease change",
+  msg <- paste0("\nThe distance matrix generated is non-euclidean and a ", 
+  							"correction is needed.\n",
+                "You supplied: correction = '", correction, "'\nPlease change",
                 " it to one of the following:\n",
                 "\t'cailliez'\t'quasieuclid'\t'lingoes'")
   return(msg)
@@ -131,5 +132,12 @@ repeat_length_warning <- function(replen){
 non_ssr_data_warning <- function(){
 	msg <- paste("\nThis dataset does not appear to be microsatellite data.",
 				       "Bruvo's Distance can only be applied for true microsatellites.")
+	return(msg)
+}
+
+negative_branch_warning <- function(){
+	msg <- paste("Some branch lengths of the tree are negative.", 
+							 "Normalizing branches according to Kuhner and Felsenstein",
+							 "(1994)")
 	return(msg)
 }
