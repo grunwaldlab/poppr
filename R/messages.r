@@ -121,3 +121,15 @@ unmatched_pops_warning <- function(pops, sublist){
   return(msg)
 }
 
+repeat_length_warning <- function(replen){
+	msg <- paste("\n\nRepeat length vector for loci is not equal to the number",
+							 "of loci represented.\nEstimating repeat lengths from data:\n",
+							 paste0("c(", paste(replen, collapse = ", "),")"), "\n\n")
+  return(msg)
+}
+
+non_ssr_data_warning <- function(){
+	msg <- paste("\nThis dataset does not appear to be microsatellite data.",
+				       "Bruvo's Distance can only be applied for true microsatellites.")
+	return(msg)
+}
