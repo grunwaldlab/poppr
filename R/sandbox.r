@@ -159,7 +159,7 @@ poppr.plot.phylo <- function(tree, type = "nj"){
   barlen <- min(median(tree$edge.length), 0.1)
   if (barlen < 0.1) barlen <- 0.01
   if (type == "nj"){
-    tree <- midpoint(tree)
+    tree <- ladderize(tree)
   }
   plot.phylo(tree, cex = 0.8, font = 2, adj = 0)
   nodelabels(tree$node.label, adj = c(1.3, -0.5), frame = "n", cex = 0.8, font = 3)

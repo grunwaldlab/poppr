@@ -198,7 +198,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' bruvo.boot(popsub(nancycats, 1), replen = ssr)
 #'
 #==============================================================================#
-#' @importFrom phangorn upgma  midpoint
+#' @importFrom phangorn upgma midpoint
 #' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize 
 #' @importFrom ape add.scale.bar nodelabels tiplabels
 #   /     \
@@ -254,22 +254,8 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
     tre$node.labels[tre$node.labels < cutoff] <- NA
   }
   tre$tip.label <- pop@ind.names
-  if(showtree == TRUE){
-    plot(tre, show.node.label=TRUE)
-  }
-#  This works, but unfortunately, it lies ouside of the plot borders.
-#  tre$tip.label <- pop@ind.names
-#  if(showtree == TRUE){
-#    plot(tre, show.tip.label=FALSE)
-#    tiplabels(pop@ind.names, adj= c(-0.25, 0.5), frame="n", cex=0.8, font=2)
-#    nodelabels(tre$node.label, adj = c(1.3, -0.5), frame="n", cex=0.9, font=3)
-#  }
-
-  if(tree=="upgma"){
-    axisPhylo(3)
-  } else if (tree == "nj"){
-    # I have tried different positions of the scale bar and have failed.
-    add.scale.bar(lwd = 5)
+  if (showtree == TRUE){
+    poppr.plot.phylo(tre, tree)
   }
   return(tre)
 }
