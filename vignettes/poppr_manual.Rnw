@@ -2011,7 +2011,7 @@ print_command(funk)
 
 For this example, let's set the cutoff to 50\%.
 <<bruvo_boot, eval=FALSE>>=
-set.seed(1001)
+set.seed(410)
 nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, cutoff=50)
 @
 <<progbar, echo=FALSE>>=
@@ -2025,12 +2025,14 @@ cat("|==========================================================================
 %  \includegraphics{bruvo_upgma.png}
 
 <<bruvo_tree, echo=FALSE, resolution=300>>=
- set.seed(1001)
+ set.seed(410)
  nan9tree <- phangorn::upgma(bruvo.dist(popsub(nancycats, 8:9), replen = rep(1, 9)))
- nan9tree$node.labels <- c(100, NA, NA, NA, NA, 69, NA, NA, NA, NA, NA, 79, NA, 66, NA, 52, NA, NA)
+ nan9tree$node.labels <- c(100, NA, NA, NA, NA, 64, NA, NA, NA, NA, NA, 80, NA,
+                           62, NA, 52, NA, NA)
  nan9tree$tip.label <- indNames(popsub(nancycats, 8:9))
- ape::plot.phylo(nan9tree, show.node.label=TRUE)
- ape::axisPhylo(3)
+#  ape::plot.phylo(nan9tree, show.node.label=TRUE)
+#  ape::axisPhylo(3)
+ poppr:::poppr.plot.phylo(nan9tree, "upgma")
 @
 
 \end{figure}
