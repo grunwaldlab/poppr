@@ -1560,7 +1560,7 @@ for (i in 2:7) {
 <<mlgrare2, eval=FALSE>>=
 library(vegan)
 H.year <- mlg.table(H.year, bar=FALSE)
-rarecurve(H.year, ylab="Multilocus genotypes expected", sample=min(rowSums(H.year)))
+rarecurve(H.year, ylab="Multilocus genotypes expected", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
 \begin{figure}[h!]
   \centering
@@ -1569,7 +1569,7 @@ rarecurve(H.year, ylab="Multilocus genotypes expected", sample=min(rowSums(H.yea
 <<mlgrareplot, echo=FALSE, results='hide'>>=
 library(vegan)
 H.year <- mlg.table(H.year, bar=FALSE)
-rarecurve(H.year, ylab="Multilocus Genotypes Expected", sample=min(rowSums(H.year)))
+rarecurve(H.year, ylab="Multilocus Genotypes Expected", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
 \end{figure}
 \newpage

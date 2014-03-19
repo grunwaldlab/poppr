@@ -1473,8 +1473,10 @@ You notice how the values of NA changed, yet the basic structure stayed the same
 \begin{verbatim}
 ## 
 ##  Found 617 missing values.
-##  9 genotypes contained missing values greater than 5%.
-##  Removing 9 genotypes : fca8 fca23 fca43 fca45 fca77 fca78 fca90 fca96 fca37
+##  38 genotypes contained missing values greater than 5%.
+##  Removing 38 genotypes : N215 N216 N188 N189 N190 N191 N192 N298 N299 N300 
+## N301 N302 N303 N304 N310 N195 N197 N198 N199 N200 N201 N206 N182 N184 N186 N282 
+## N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290
 \end{verbatim}
 \begin{alltt}
 \hlstd{nanloci}\hlopt{$}\hlstd{tab[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,} \hlnum{8}\hlopt{:}\hlnum{13}\hlstd{]}
@@ -1519,18 +1521,18 @@ Let's look at what happened when we removed individuals.
 \hlstd{nangeno}\hlopt{$}\hlstd{tab[}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{,} \hlnum{8}\hlopt{:}\hlnum{13}\hlstd{]}
 \end{alltt}
 \begin{verbatim}
-##    L1.08 L1.09 L1.10 L1.11 L1.12 L1.13
-## 01    NA    NA    NA    NA    NA    NA
-## 02    NA    NA    NA    NA    NA    NA
-## 03    NA    NA    NA    NA    NA    NA
-## 04    NA    NA    NA    NA    NA    NA
-## 05    NA    NA    NA    NA    NA    NA
+##     L1.08 L1.09 L1.10 L1.11 L1.12 L1.13
+## 001   0.0   0.5     0     0     0   0.5
+## 002   0.5   0.5     0     0     0   0.0
+## 003   0.5   0.5     0     0     0   0.0
+## 004   0.0   0.5     0     0     0   0.5
+## 005   0.0   1.0     0     0     0   0.0
 \end{verbatim}
 \begin{alltt}
 \hlkwd{length}\hlstd{(nangeno}\hlopt{$}\hlstd{ind.names)}  \hlcom{# Individuals}
 \end{alltt}
 \begin{verbatim}
-## [1] 38
+## [1] 199
 \end{verbatim}
 \begin{alltt}
 \hlstd{nangeno}\hlopt{$}\hlstd{loc.names}  \hlcom{# Names of the loci}
@@ -2511,7 +2513,8 @@ For the sake of a simple example, instead of drawing a curve for each of the 37 
 \begin{alltt}
 \hlkwd{library}\hlstd{(vegan)}
 \hlstd{H.year} \hlkwb{<-} \hlkwd{mlg.table}\hlstd{(H.year,} \hlkwc{bar} \hlstd{=} \hlnum{FALSE}\hlstd{)}
-\hlkwd{rarecurve}\hlstd{(H.year,} \hlkwc{ylab} \hlstd{=} \hlstr{"Multilocus genotypes expected"}\hlstd{,} \hlkwc{sample} \hlstd{=} \hlkwd{min}\hlstd{(}\hlkwd{rowSums}\hlstd{(H.year)))}
+\hlkwd{rarecurve}\hlstd{(H.year,} \hlkwc{ylab} \hlstd{=} \hlstr{"Multilocus genotypes expected"}\hlstd{,} \hlkwc{sample} \hlstd{=} \hlkwd{min}\hlstd{(}\hlkwd{rowSums}\hlstd{(H.year)),} \hlkwc{border} \hlstd{=} \hlnum{NA}\hlstd{,}
+    \hlkwc{fill} \hlstd{=} \hlnum{NA}\hlstd{,} \hlkwc{font} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{cex} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"blue"}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
