@@ -89,6 +89,16 @@ number_missing_geno <- function(x, divisor){
   return(missing_result/divisor)
 }
 
+
+infinite_vals_replacement <- function(D, warning){
+  if (warning){
+    warning("Infinite values detected.")
+  }
+  maxval      <- max(D[!D == Inf])
+  D[D == Inf] <- maxval*10
+  return(D)
+}
+
 #==============================================================================#
 # Calculating Nei's distance for a genind object. Lifted from dist.genpop with
 # modifications.
