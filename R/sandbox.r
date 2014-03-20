@@ -381,6 +381,40 @@ poppr_pair_ia <- function(pop){
 
 
 
+
+update_poppr_graph <- function(graphlist, palette){
+  palette <- match.fun(palette)
+  lookup <- data.frame(old    = graphlist$colors, 
+                       update = palette(length(graphlist$colors)), 
+                       stringsAsFactors = FALSE)
+  colorlist <- V(graphlist$graph)$pie.color
+  V(graphlist$graph)$pie.color <- update_color_list(colorlist, lookup)
+  graphlist$colors <- lookup[[2]]
+  return(graphlist)
+}
+
+update_color_list <- function(colorlist, lookup){
+  return(lapply(colorlist, update_colors, lookup))
+}
+
+update_colors <- function(colorvec, lookup){
+  x <- vapply(1:length(colorvec), update_single_color, "a", lookup, colorvec)
+  return(x)
+}
+
+update_single_color <- function(x, lookup, colorvec){
+  update <- lookup[[2]]
+  original <- lookup[[1]]
+  return(update[original %in% colorvec[x]])
+}
+
+
+
+
+
+
+
+
 #==============================================================================#
 #Function to plot the minimum spanning network obtained from poppr.msn or 
 #bruvo.msn. This is in development. At the moment, it's purpose is to plot all 
