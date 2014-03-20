@@ -151,7 +151,7 @@ dcano <- function(mat) {
   return(daux)
 }
 
-roger.dist <- function(x){
+rodger.dist <- function(x){
   if (is.genind(x)){ 
     if (x@type == "PA"){
       MAT     <- x@tab
@@ -407,13 +407,6 @@ update_single_color <- function(x, lookup, colorvec){
   original <- lookup[[1]]
   return(update[original %in% colorvec[x]])
 }
-
-
-
-
-
-
-
 
 #==============================================================================#
 #Function to plot the minimum spanning network obtained from poppr.msn or 
