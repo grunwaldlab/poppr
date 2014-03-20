@@ -137,7 +137,7 @@ edward.dist <- function(x){
   }
   MAT     <- sqrt(MAT)
   D       <- MAT%*%t(MAT)
-  D       <- 1-D/nloc
+  D       <- 1-D/nloc # Negative number are generated here.
   diag(D) <- 0
   D       <- sqrt(D)
   D       <- as.dist(D)
