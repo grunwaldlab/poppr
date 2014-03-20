@@ -118,6 +118,124 @@ nei.dist <- function(x, warning = TRUE){
   return(D)
 }
 
+# modified from adegenet dist.genpop
+edward.dist <- function(x){
+  if (is.genind(x)){ 
+    MAT    <- x@tab
+    nloc   <- nLoc(x)
+  }
+  else if (length(dim(x)) == 2){
+    MAT  <- x
+    nloc <- ncol(x)
+  }
+  else{
+    stop("Object must be a matrix or genind object")
+  }
+  MAT     <- sqrt(MAT)
+  D       <- MAT%*%t(MAT)
+  D       <- 1-D/nloc
+  diag(D) <- 0
+  D       <- sqrt(D)
+  D       <- as.dist(D)
+  return(D)
+}
+
+
+# From adegenet dist.genpop
+dcano <- function(mat) {
+  daux       <- mat%*%t(mat)
+  vec        <- diag(daux)
+  daux       <- -2*daux + vec[col(daux)] + vec[row(daux)]
+  diag(daux) <- 0
+  daux       <- sqrt(.5*daux)
+  return(daux)
+}
+
+roger.dist <- function(x){
+  if (is.genind(x)){ 
+    if (x@type == "PA"){
+      MAT     <- x@tab
+      nloc    <- nLoc(x)
+      loc.fac <- factor(x@loc.names, levels = x@loc.names)
+      nlig    <- nInd(x)
+    } else {
+      MAT     <- x@tab
+      nloc    <- nLoc(x)
+      loc.fac <- x@loc.fac
+      nlig    <- nInd(x)      
+    }
+  }
+  else if (length(dim(x)) == 2){
+    MAT     <- x
+    nloc    <- ncol(x)
+    loc.fac <- factor(colnames(x), levels = colnames(x))
+    nlig    <- nrow(x)
+  }
+  else{
+    stop("Object must be a matrix or genind object")
+  }
+  # kX is a list of K=nloc matrices
+  kX <- lapply(split(MAT, loc.fac[col(MAT)]), matrix, nrow = nlig)
+  D  <- matrix(0, nlig, nlig)
+  for(i in 1:length(kX)){
+    D <- D + dcano(kX[[i]])
+  }
+  D <- D/length(kX)
+  D <- as.dist(D)
+  return(D)
+}
+
+
+reynold.dist <- function(x){
+  if (is.genind(x)){
+    MAT    <- x@tab
+    nloc   <- nLoc(x)
+  }
+  else if (length(dim(x)) == 2){
+    MAT  <- x
+    nloc <- ncol(x)
+  }
+  else{
+    stop("Object must be a matrix or genind object")
+  }
+  denomi       <- MAT %*% t(MAT)
+  vec          <- apply(MAT, 1, function(x) sum(x*x))
+  D            <- -2*denomi + vec[col(denomi)] + vec[row(denomi)]
+  diag(D)      <- 0
+  denomi       <- 2*nloc - 2*denomi
+  diag(denomi) <- 1
+  D            <- D/denomi
+  D            <- sqrt(D)
+  D            <- as.dist(D)
+  return(D)
+}
+
+# It looks like provesti distance is pretty much the same as diss.dist.
+
+provesti.dist <- function(x){
+  if (is.genind(x)){
+    MAT    <- x@tab
+    nlig   <- nInd(x)
+    nloc   <- nLoc(x)
+  }
+  else if (length(dim(x)) == 2){
+    MAT  <- x
+    nlig <- nrow(x)
+    nloc <- nLoc(x)
+  }
+  else{
+    stop("Object must be a matrix or genind object")
+  }
+  w0   <- 1:(nlig-1)
+  loca <- function(k){
+    w1     <- (k+1):nlig
+    resloc <- unlist(lapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]))))
+    return(resloc/(2*nloc))
+  }
+  d    <- unlist(lapply(w0, loca))
+  return(as.dist(d))
+}
+
 #==============================================================================#
 # Bootstrapping for nei's distance. Potentially take distance as an argument
 # later on.
