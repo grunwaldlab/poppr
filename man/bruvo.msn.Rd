@@ -7,7 +7,7 @@ distance.}
 bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
   palette = topo.colors, sublist = "All", blacklist = NULL,
   vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3,
-  gweight = 1, wscale = TRUE, ...)
+  gweight = 1, wscale = TRUE, showplot = TRUE, ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -71,6 +71,9 @@ bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
   Bruvo's distance , with the lines becoming thicker for
   more related nodes.}
 
+  \item{showplot}{logical. If \code{TRUE}, the graph will
+  be plotted. If \code{FALSE}, it will simply be returned.}
+
   \item{...}{any other arguments that could go into
   plot.igraph}
 }
@@ -105,27 +108,27 @@ palette=heat.colors, vertex.label.cex=0.7, vertex.label.dist=0.4)
 
 # View custom colors. Here, we use black and orange.
 bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
-palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
+palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7,
 vertex.label.dist=0.4)
 
 # View with darker shades of grey (setting the upper limit to 1/2 black 1/2 white).
 bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
-palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
+palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7,
 vertex.label.dist=0.4, glim=c(0, 0.5))
 
 # View with no grey scaling.
 bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
-palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
+palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7,
 vertex.label.dist=0.4, gscale=FALSE)
 
 # View with no line widths.
 bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
-palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
+palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7,
 vertex.label.dist=0.4, wscale=FALSE)
 
 # View with no scaling at all.
 bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
-palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7,
+palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7,
 vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
 
 # View the whole population, but without labels.

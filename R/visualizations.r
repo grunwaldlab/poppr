@@ -238,63 +238,65 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' matrix.
 #'
 #' @param pop a \code{\link{genind}} object
-#'
+#'   
 #' @param distmat a distance matrix that has been derived from your data set.
-#' 
-#' @param palette a \code{function} defining the color palette to be used to
-#' color the populations on the graph. It defaults to \code{\link{topo.colors}},
-#' but you can easily create new schemes by using \code{\link{colorRampPalette}}
-#' (see examples for details)
-#' 
-#' @param sublist a \code{vector} of population names or indexes that the user
-#' wishes to keep. Default to "ALL".
-#'
+#'   
+#' @param palette a \code{function} defining the color palette to be used to 
+#'   color the populations on the graph. It defaults to
+#'   \code{\link{topo.colors}}, but you can easily create new schemes by using
+#'   \code{\link{colorRampPalette}} (see examples for details)
+#'   
+#' @param sublist a \code{vector} of population names or indexes that the user 
+#'   wishes to keep. Default to "ALL".
+#'   
 #' @param blacklist a \code{vector} of population names or indexes that the user
-#' wishes to discard. Default to \code{NULL}
-#' 
+#'   wishes to discard. Default to \code{NULL}
+#'   
 #' @param vertex.label a \code{vector} of characters to label each vertex. There
-#' are two defaults: \code{"MLG"} will label the nodes with the multilocus genotype
-#' from the original data set and \code{"inds"} will label the nodes with the 
-#' representative individual names.
-#' 
+#'   are two defaults: \code{"MLG"} will label the nodes with the multilocus
+#'   genotype from the original data set and \code{"inds"} will label the nodes
+#'   with the representative individual names.
+#'   
 #' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
-#' of the edges proportional to the observed distance, with the lines becoming 
-#' darker for more related nodes. See \code{\link{greycurve}} for details.
-#' 
+#'   of the edges proportional to the observed distance, with the lines becoming
+#'   darker for more related nodes. See \code{\link{greycurve}} for details.
+#'   
 #' @param glim "grey limit". Two numbers between zero and one. They determine 
-#' the upper and lower limits for the \code{\link{gray}} function. Default is 0
-#' (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
-#' 
-#' @param gadj "grey adjust". a positive \code{integer} greater than zero that
-#' will serve as the exponent to the edge weight to scale the grey value to
-#' represent that weight. See \code{\link{greycurve}} for details.
-#' 
-#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale
-#' will be weighted to emphasize the differences between closely related nodes.
-#' If it is 2, the grey scale will be weighted to emphasize the differences
-#' between more distantly related nodes. See \code{\link{greycurve}} for details.
-#' 
-#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be
-#' scaled proportional to the inverse of the observed distance , with the lines 
-#' becoming thicker for more related nodes.
-#' 
+#'   the upper and lower limits for the \code{\link{gray}} function. Default is
+#'   0 (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
+#'   
+#' @param gadj "grey adjust". a positive \code{integer} greater than zero that 
+#'   will serve as the exponent to the edge weight to scale the grey value to 
+#'   represent that weight. See \code{\link{greycurve}} for details.
+#'   
+#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale 
+#'   will be weighted to emphasize the differences between closely related
+#'   nodes. If it is 2, the grey scale will be weighted to emphasize the
+#'   differences between more distantly related nodes. See
+#'   \code{\link{greycurve}} for details.
+#'   
+#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be 
+#'   scaled proportional to the inverse of the observed distance , with the
+#'   lines becoming thicker for more related nodes.
+#'   
+#' @param showplot logical. If \code{TRUE}, the graph will be plotted. If
+#'   \code{FALSE}, it will simply be returned.
+#'   
 #' @param ... any other arguments that could go into plot.igraph
-#'
-#' @return 
-#' \item{graph}{a minimum spanning network with nodes corresponding to MLGs within
-#' the data set. Colors of the nodes represent population membership. Width and
-#' color of the edges represent distance.}
-#' \item{populations}{a vector of the population names corresponding to the 
-#' vertex colors}
-#' \item{colors}{a vector of the hexadecimal representations of the colors used
-#' in the vertex colors}
-#' 
+#'   
+#' @return \item{graph}{a minimum spanning network with nodes corresponding to 
+#'   MLGs within the data set. Colors of the nodes represent population 
+#'   membership. Width and color of the edges represent distance.} 
+#'   \item{populations}{a vector of the population names corresponding to the 
+#'   vertex colors} \item{colors}{a vector of the hexadecimal representations of
+#'   the colors used in the vertex colors}
+#'   
 #' @note The edges of these graphs may cross each other if the graph becomes too
-#' large. 
-#'
-#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
-#' \code{\link{nodelabels}}, \code{\link{na.replace}}, \code{\link{missingno}}, 
-#' \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
+#'   large.
+#'   
+#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}}, 
+#'   \code{\link{nodelabels}}, \code{\link{na.replace}},
+#'   \code{\link{missingno}}, \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
 #' 
 #' @export
 #' @aliases msn.poppr
@@ -335,7 +337,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 poppr.msn <- function (pop, distmat, palette = topo.colors, 
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale=TRUE, ...){
+                       wscale=TRUE, showplot = TRUE,...){
   if (class(distmat) != "dist"){
     if (is.matrix(distmat)){
       if (any(nInd(pop) != dim(distmat))){
@@ -444,12 +446,13 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
-  
-  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
-       vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
-       vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-  legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
-         title = "Populations", fill=color, border=NULL)
+  if (showplot){
+    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+         vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
+         vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
+    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
+           title = "Populations", fill=color, border=NULL)
+  }
   E(mst)$width     <- edgewidth
   V(mst)$size      <- mlg.number
   V(mst)$shape     <- "pie"

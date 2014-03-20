@@ -264,78 +264,81 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' distance.
 #'
 #' @param pop a \code{\link{genind}} object
-#'
+#'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
-#' nucleotide repeats for each microsatellite locus.
-#'
-#' @param add if \code{TRUE}, genotypes with zero values will be treated under
-#' the genome addition model presented in Bruvo et al. 2004.
-#' 
-#' @param loss if \code{TRUE}, genotypes with zero values will be treated under
-#' the genome loss model presented in Bruvo et al. 2004.
-#'  
-#' @param palette a \code{function} defining the color palette to be used to
-#' color the populations on the graph. It defaults to \code{\link{topo.colors}},
-#' but you can easily create new schemes by using \code{\link{colorRampPalette}}
-#' (see examples for details)
-#' 
-#' @param sublist a \code{vector} of population names or indexes that the user
-#' wishes to keep. Default to "ALL".
-#'
+#'   nucleotide repeats for each microsatellite locus.
+#'   
+#' @param add if \code{TRUE}, genotypes with zero values will be treated under 
+#'   the genome addition model presented in Bruvo et al. 2004.
+#'   
+#' @param loss if \code{TRUE}, genotypes with zero values will be treated under 
+#'   the genome loss model presented in Bruvo et al. 2004.
+#'   
+#' @param palette a \code{function} defining the color palette to be used to 
+#'   color the populations on the graph. It defaults to
+#'   \code{\link{topo.colors}}, but you can easily create new schemes by using
+#'   \code{\link{colorRampPalette}} (see examples for details)
+#'   
+#' @param sublist a \code{vector} of population names or indexes that the user 
+#'   wishes to keep. Default to "ALL".
+#'   
 #' @param blacklist a \code{vector} of population names or indexes that the user
-#' wishes to discard. Default to \code{NULL}
-#' 
+#'   wishes to discard. Default to \code{NULL}
+#'   
 #' @param vertex.label a \code{vector} of characters to label each vertex. There
-#' are two defaults: \code{"MLG"} will label the nodes with the multilocus genotype
-#' from the original data set and \code{"inds"} will label the nodes with the 
-#' representative individual names.
-#' 
+#'   are two defaults: \code{"MLG"} will label the nodes with the multilocus
+#'   genotype from the original data set and \code{"inds"} will label the nodes
+#'   with the representative individual names.
+#'   
 #' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
-#' of the edges proportional to Bruvo's distance, with the lines becoming darker
-#' for more related nodes. See \code{\link{greycurve}} for details.
-#' 
+#'   of the edges proportional to Bruvo's distance, with the lines becoming
+#'   darker for more related nodes. See \code{\link{greycurve}} for details.
+#'   
 #' @param glim "grey limit". Two numbers between zero and one. They determine 
-#' the upper and lower limits for the \code{\link{gray}} function. Default is 0
-#' (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
-#' 
-#' @param gadj "grey adjust". a positive \code{integer} greater than zero that
-#' will serve as the exponent to the edge weight to scale the grey value to
-#' represent that weight. See \code{\link{greycurve}} for details.
-#' 
-#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale
-#' will be weighted to emphasize the differences between closely related nodes.
-#' If it is 2, the grey scale will be weighted to emphasize the differences
-#' between more distantly related nodes. See \code{\link{greycurve}} for details.
-#' 
-#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be
-#' scaled proportional to the inverse of Bruvo's distance , with the lines 
-#' becoming thicker for more related nodes.
-#' 
+#'   the upper and lower limits for the \code{\link{gray}} function. Default is
+#'   0 (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
+#'   
+#' @param gadj "grey adjust". a positive \code{integer} greater than zero that 
+#'   will serve as the exponent to the edge weight to scale the grey value to 
+#'   represent that weight. See \code{\link{greycurve}} for details.
+#'   
+#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale 
+#'   will be weighted to emphasize the differences between closely related
+#'   nodes. If it is 2, the grey scale will be weighted to emphasize the
+#'   differences between more distantly related nodes. See
+#'   \code{\link{greycurve}} for details.
+#'   
+#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be 
+#'   scaled proportional to the inverse of Bruvo's distance , with the lines 
+#'   becoming thicker for more related nodes.
+#'   
+#' @param showplot logical. If \code{TRUE}, the graph will be plotted. If
+#'   \code{FALSE}, it will simply be returned.
+#'   
 #' @param ... any other arguments that could go into plot.igraph
-#'
-#' @return 
-#' \item{graph}{a minimum spanning network with nodes corresponding to MLGs within
-#' the data set. Colors of the nodes represent population membership. Width and
-#' color of the edges represent distance.}
+#'   
+#' @return \item{graph}{a minimum spanning network with nodes corresponding to
+#' MLGs within the data set. Colors of the nodes represent population
+#' membership. Width and color of the edges represent distance.} 
 #' \item{populations}{a vector of the population names corresponding to the 
-#' vertex colors}
-#' \item{colors}{a vector of the hexadecimal representations of the colors used
-#' in the vertex colors}
+#' vertex colors} \item{colors}{a vector of the hexadecimal representations of
+#' the colors used in the vertex colors}
 #' 
 #' @note The edges of these graphs may cross each other if the graph becomes too
-#' large. 
-#'
-#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
-#' \code{\link{boot.phylo}}, \code{\link{nodelabels}}, \code{\link{na.replace}},
-#' \code{\link{missingno}}, \code{\link{bruvo.boot}}, \code{\link{greycurve}}.
-#' 
+#'   large.
+#'   
+#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}}, 
+#'   \code{\link{boot.phylo}}, \code{\link{nodelabels}},
+#'   \code{\link{na.replace}}, \code{\link{missingno}},
+#'   \code{\link{bruvo.boot}}, \code{\link{greycurve}}.
+#'   
 #' @export
 #' @author Javier F. Tabima, Zhian N. Kamvar
 #' @aliases msn.bruvo
-#' @references
-#' Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
-#' simple method for the calculation of microsatellite genotype distances irrespective
-#' of ploidy level. Molecular Ecology, 13(7):2101-2106, 2004.
+#' @references Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
+#' Hinrich Schulenburg. A simple method for the calculation of microsatellite
+#' genotype distances irrespective of ploidy level. Molecular Ecology,
+#' 13(7):2101-2106, 2004.
 #'
 #' @examples
 #' 
@@ -352,27 +355,27 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' 
 #' # View custom colors. Here, we use black and orange.
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
-#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4)
 #' 
 #' # View with darker shades of grey (setting the upper limit to 1/2 black 1/2 white).
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
-#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4, glim=c(0, 0.5))
 #' 
 #' # View with no grey scaling.
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
-#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4, gscale=FALSE)
 #' 
 #' # View with no line widths.
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
-#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4, wscale=FALSE)
 #' 
 #' # View with no scaling at all.
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
-#' palette = colorRampPalette(c("orange", "black"), vertex.label.cex=0.7, 
+#' palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7, 
 #' vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
 #' 
 #' # View the whole population, but without labels.
@@ -383,7 +386,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale = TRUE, ...){
+                       wscale = TRUE, showplot = TRUE, ...){
 
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   if (!is.genclone(pop)){
@@ -447,30 +450,22 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   }
   
   edgewidth <- 2
-  if (wscale == TRUE){
-    edgewidth <- 1/(E(mst)$weight)
-    if (any(E(mst)$weight < 0.08)){
-      edgewidth <- 1/(E(mst)$weight + 0.08)
-    }
+  if (wscale==TRUE){
+    edgewidth <- rerange(E(mst)$weight)
+    if (any(edgewidth < 0.08)){
+      edgewidth <- edgewidth + 0.08
+    } 
+    edgewidth <- 1/edgewidth
   }
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
-  # def.par <- par(no.readonly = TRUE)
-  # layout(matrix(1:3,ncol=3), width = c(1,3,1))
-  # gcol <- gray(adjustcurve(sort(E(mst)$weight), glim=glim, correction=gadj, 
-  #                                    show=FALSE))
-  # plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'GREY')
-
-  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
-       vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
-       vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-  legend(-1.55, 1, bty = "n", cex = 0.75, legend = pop$pop.names, 
-         title = "Populations", fill = color, border = NULL)
-  # legend_image <- as.raster(matrix(gcol, ncol=1))
-  # plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'GREY')
-  # text(x= 1.5, y = seq(0,1,l=5), labels = round(quantile(E(mst)$weight), 3))
-  # rasterImage(legend_image, 0, 0, 1,1)
-  # par(def.par)
+  if (showplot){
+    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+         vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
+         vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
+    legend(-1.55, 1, bty = "n", cex = 0.75, legend = pop$pop.names, 
+           title = "Populations", fill = color, border = NULL)
+  }
   E(mst)$width     <- edgewidth
   V(mst)$size      <- mlg.number
   V(mst)$shape     <- "pie"

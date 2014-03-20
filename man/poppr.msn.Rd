@@ -6,7 +6,7 @@ matrix.}
 \usage{
 poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",
   blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
-  0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
+  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE, ...)
 }
 \arguments{
   \item{pop}{a \code{\link{genind}} object}
@@ -61,6 +61,9 @@ poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",
   edge widths will be scaled proportional to the inverse of
   the observed distance , with the lines becoming thicker
   for more related nodes.}
+
+  \item{showplot}{logical. If \code{TRUE}, the graph will
+  be plotted. If \code{FALSE}, it will simply be returned.}
 
   \item{...}{any other arguments that could go into
   plot.igraph}
