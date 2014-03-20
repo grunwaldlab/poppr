@@ -7,6 +7,8 @@ NEW FEATURES
 * `read.genalex` now has the option to import as a genclone object. This is the default action.
 * `poppr.all` will be able to analyze lists of genind or genclone objects.
 * `ia` now has the argument valuereturn which will return the sampled data.
+* `[bruvo,poppr].msn` functions now give the user the choice to show the graph.
+* `bruvo.boot` has a cleaner plot style. 
 
 NEW DATA CLASSES
 * The `genclone` object is a new extension of the `genind` object from adegenet. This object contains slots containing population hierarchies and multilocus genotype definitions and will work with all analyses in adegenet and poppr. 
