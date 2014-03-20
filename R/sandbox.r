@@ -212,6 +212,7 @@ reynold.dist <- function(x){
 
 # It looks like provesti distance is pretty much the same as diss.dist.
 
+
 provesti.dist <- function(x){
   if (is.genind(x)){
     MAT    <- x@tab
