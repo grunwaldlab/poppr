@@ -218,11 +218,13 @@ provesti.dist <- function(x){
     MAT    <- x@tab
     nlig   <- nInd(x)
     nloc   <- nLoc(x)
+    labs   <- indNames(x)
   }
   else if (length(dim(x)) == 2){
     MAT  <- x
     nlig <- nrow(x)
     nloc <- ncol(x)
+    labs <- rownames(x)
   }
   else{
     stop("Object must be a matrix or genind object")
@@ -237,6 +239,7 @@ provesti.dist <- function(x){
   resmat <- matrix(numeric(0), nlig, nlig)
   resmat[lower.tri(resmat)] <- d
   d <- as.dist(resmat)
+  attr(d, "Labels") <- labs
   return(d)
 }
 
