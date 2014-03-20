@@ -456,10 +456,12 @@ update_single_color <- function(x, lookup, colorvec){
 
 plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
                            gweight = 1, inds = "ALL", quantiles = TRUE, 
-                           nodelab = 2, cutoff = NULL, ...){
+                           nodelab = 2, cutoff = NULL, palette = NULL, ...){
   if(!is.genind(gid)) stop(paste(gid, "is not a genind object."))
   if(!identical(names(poppr_msn), c("graph", "populations", "colors"))) stop("graph not compatible")
-  
+  if (!is.null(palette)){
+    poppr_msn <- update_poppr_graph(poppr_msn, palette)
+  }
   # Importing functions from igraph. This can be deleted when implemented in
   # poppr.
   # E                 <- match.fun(igraph::E)
