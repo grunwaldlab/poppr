@@ -295,11 +295,15 @@ any.boot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100, cut
   return(xtree)
 }
 
-tree_generator <- function(tree, distance, quiet = TRUE){
+tree_generator <- function(tree, distance, quiet = TRUE, ...){
   TREEFUNK <- match.fun(tree)
   DISTFUNK <- match.fun(distance)
+  distargs <- formals(distance)[-1]
+  otherargs <- list(...)
+  matchargs <- names(distargs) %in% names(otherargs)
+  distargs[matchargs] <- otherargs[matchargs]
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
-  return(function(x, ...) TREEFUNK(DISTFUNK(x, ...)))
+  return(function(x) TREEFUNK(do.call(DISTFUNK, c(x, distargs))))
 }
 
 poppr.plot.phylo <- function(tree, type = "nj"){
