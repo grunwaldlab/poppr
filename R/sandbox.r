@@ -115,14 +115,8 @@ nei.dist <- function(x, warning = TRUE){
   IDMAT <- IDMAT/vec[col(IDMAT)]
   IDMAT <- IDMAT/vec[row(IDMAT)]
   D     <- -log(IDMAT)
-  # Nei's distance can be infinite. Here we are replacing infinites with an
-  # order of magnitude higher than the max observed distance.
   if (any(D == Inf)){
-    if (warning){
-      warning("Infinite values detected.")
-    }
-    maxval      <- max(D[!D == Inf])
-    D[D == Inf] <- maxval*10
+    D <- infinite_vals_replacement(D, warning)
   }
   D     <- as.dist(D)
   return(D)
@@ -157,6 +151,9 @@ dcano <- function(mat) {
   vec        <- diag(daux)
   daux       <- -2*daux + vec[col(daux)] + vec[row(daux)]
   diag(daux) <- 0
+  if (any(daux == Inf)){
+    daux <- infinite_vals_replacement(daux, warning)
+  }
   daux       <- sqrt(.5*daux)
   return(daux)
 }
