@@ -271,7 +271,7 @@ nei.boot <- function(x, tree = "upgma", sample = 100, cutoff = 50){
   return(xtree)
 }
 
-any.boot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100, cutoff = 50){
+any.boot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100, cutoff = 50, ...){
   x <- missingno(x, "mean")
   if (x@type == "codom"){
     xboot <- new("bootgen", x)
@@ -280,7 +280,7 @@ any.boot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100, cut
   }
   ARGS     <- c("nj", "upgma")
   treearg  <- match.arg(tree, ARGS)
-  treefunk <- tree_generator(treearg, distance)
+  treefunk <- tree_generator(treearg, distance, ...)
   xtree    <- treefunk(xboot)
   if (any(xtree$edge.len < 0)){
     xtree <- fix_negative_branch(xtree)
