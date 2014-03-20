@@ -221,7 +221,7 @@ provesti.dist <- function(x){
   else if (length(dim(x)) == 2){
     MAT  <- x
     nlig <- nrow(x)
-    nloc <- nLoc(x)
+    nloc <- ncol(x)
   }
   else{
     stop("Object must be a matrix or genind object")
@@ -233,7 +233,10 @@ provesti.dist <- function(x){
     return(resloc/(2*nloc))
   }
   d    <- unlist(lapply(w0, loca))
-  return(as.dist(d))
+  resmat <- matrix(numeric(0), nlig, nlig)
+  resmat[lower.tri(resmat)] <- d
+  d <- as.dist(resmat)
+  return(d)
 }
 
 #==============================================================================#
