@@ -114,12 +114,16 @@ any.boot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100, cut
 tree_generator <- function(tree, distance, quiet = TRUE, ...){
   TREEFUNK <- match.fun(tree)
   DISTFUNK <- match.fun(distance)
-  distargs <- formals(distance)[-1]
+  distargs <- formals(distance)
   otherargs <- list(...)
   matchargs <- names(distargs) %in% names(otherargs)
   distargs[matchargs] <- otherargs[matchargs]
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
-  return(function(x) TREEFUNK(do.call(DISTFUNK, c(x, distargs))))
+  treedist <- function(x){
+    distargs[[1]] <- x
+    TREEFUNK(do.call(DISTFUNK, c(distargs)))
+  }
+  return(treedist)
 }
 
 pair_ia <- function(pop){
