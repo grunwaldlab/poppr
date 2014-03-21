@@ -1,0 +1,41 @@
+\name{private_alleles}
+\alias{private_alleles}
+\title{Tablulate alleles the occur in only one population.}
+\usage{
+private_alleles(gid, report = "table", level = "population")
+}
+\arguments{
+  \item{gid}{a \code{\linkS4class{genind}} or
+  \code{\linkS4class{genclone}} object.}
+
+  \item{report}{one of \code{"table", "vector",} or
+  \code{"data.frame"}. Tables (Default) and data frame will
+  report counts along with populations or individuals.
+  Vectors will simply report which populations or
+  individuals contain private alleles. Tables are matrices
+  with populations or individuals in rows and alleles in
+  columns. Data frames are long form.}
+
+  \item{level}{one of \code{"population"} (Default) or
+  \code{"individual"}.}
+}
+\value{
+a matrix, data.frame, or vector defining the populations or
+individuals containing private alleles. If vector is
+chosen, alleles are not defined.
+}
+\description{
+Tablulate alleles the occur in only one population.
+}
+\examples{
+data(Pinf) # Load P. infestans data.
+setpop(Pinf) <- ~Country # Set the population to be at the country level
+private_alleles(Pinf)
+\dontrun{
+# An example of how this data can be displayed.
+library(ggplot2)
+Pinfpriv <- private_alleles(Pinf, report = "data.frame")
+ggplot(Pinfpriv) + geom_tile(aes(x = population, y = allele, fill = count))
+}
+}
+
