@@ -1502,3 +1502,29 @@ infinite_vals_replacement <- function(D, warning){
   D[D == Inf] <- maxval*10
   return(D)
 }
+
+#==============================================================================#
+# Given a tree function and a distance function, this will generate an
+# automatic tree generating function. This is useful for functions such as
+# boot.phylo.
+#
+# Public functions utilizing this function:
+# anyboot
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+tree_generator <- function(tree, distance, quiet = TRUE, ...){
+  TREEFUNK <- match.fun(tree)
+  DISTFUNK <- match.fun(distance)
+  distargs <- formals(distance)
+  otherargs <- list(...)
+  matchargs <- names(distargs) %in% names(otherargs)
+  distargs[matchargs] <- otherargs[matchargs]
+  if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
+  treedist <- function(x){
+    distargs[[1]] <- x
+    TREEFUNK(do.call(DISTFUNK, c(distargs)))
+  }
+  return(treedist)
+}
