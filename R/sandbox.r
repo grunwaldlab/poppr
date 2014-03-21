@@ -313,27 +313,6 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
   return(function(x) TREEFUNK(do.call(DISTFUNK, c(x, distargs))))
 }
 
-poppr.plot.phylo <- function(tree, type = "nj"){
-  ARGS <- c("nj", "upgma")
-  type <- match.arg(type, ARGS)
-  barlen <- min(median(tree$edge.length), 0.1)
-  if (barlen < 0.1) barlen <- 0.01
-  if (type == "nj"){
-    tree <- ladderize(tree)
-  }
-  plot.phylo(tree, cex = 0.8, font = 2, adj = 0, xpd = TRUE)
-  nodelabels(tree$node.label, adj = c(1.3, -0.5), frame = "n", cex = 0.8, 
-             font = 3, xpd = TRUE)
-  if (type == "nj"){
-    add.scale.bar(lwd = 5, length = barlen)
-  } else {
-    axisPhylo(3)
-  }
-}
-
-
-
-
 pair_ia <- function(pop){
 
   if(pop@type == "codom"){
@@ -361,10 +340,6 @@ poppr_pair_ia <- function(pop){
   pops_array <- vapply(pops, pair_ia, res_mat)
   return(pops_array)
 }
-
-
-
-
 
 update_poppr_graph <- function(graphlist, palette){
   palette <- match.fun(palette)

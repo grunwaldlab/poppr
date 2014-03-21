@@ -1403,3 +1403,30 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codo
   names(N)   <- lev
   return(c(N, idx, Hexp = nei, Evenness = E.5))
 }
+
+#==============================================================================#
+# Function to plot phylo objects the way I want to.
+#
+# Public functions utilizing this function:
+# bruvo.boot
+#
+# Private functions utilizing this function:
+# # nei.boot any.boot
+#==============================================================================#
+poppr.plot.phylo <- function(tree, type = "nj"){
+  ARGS <- c("nj", "upgma")
+  type <- match.arg(type, ARGS)
+  barlen <- min(median(tree$edge.length), 0.1)
+  if (barlen < 0.1) barlen <- 0.01
+  if (type == "nj"){
+    tree <- ladderize(tree)
+  }
+  plot.phylo(tree, cex = 0.8, font = 2, adj = 0, xpd = TRUE)
+  nodelabels(tree$node.label, adj = c(1.3, -0.5), frame = "n", cex = 0.8, 
+             font = 3, xpd = TRUE)
+  if (type == "nj"){
+    add.scale.bar(lwd = 5, length = barlen)
+  } else {
+    axisPhylo(3)
+  }
+}
