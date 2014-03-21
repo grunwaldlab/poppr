@@ -2572,6 +2572,8 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
   \item *hierarchy
   \item setpop
   \item private\_alleles
+  \item anyboot
+  \item *.dist
 \end{itemize}
 
 \subsection{Table of Functions}\label{appendix:funk}
