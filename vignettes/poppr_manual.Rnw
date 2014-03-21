@@ -2571,6 +2571,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
   \item amova
   \item *hierarchy
   \item setpop
+  \item private\_alleles
 \end{itemize}
 
 \subsection{Table of Functions}\label{appendix:funk}
