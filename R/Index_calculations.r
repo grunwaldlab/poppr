@@ -614,3 +614,72 @@ locus_table <- function(x, index = "simpson", lev = "allele",
   class(res) <- c("locustable", "matrix")
   return(res)
 }
+
+#==============================================================================#
+#' Tablulate alleles the occur in only one population. 
+#' 
+#' @param gid a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#'   object.
+#'   
+#' @param report one of \code{"table", "vector",} or \code{"data.frame"}. Tables
+#'   (Default) and data frame will report counts along with populations or 
+#'   individuals. Vectors will simply report which populations or individuals 
+#'   contain private alleles. Tables are matrices with populations or 
+#'   individuals in rows and alleles in columns. Data frames are long form.
+#'   
+#' @param level one of \code{"population"} (Default) or \code{"individual"}.
+#'   
+#' @return a matrix, data.frame, or vector defining the populations or
+#'   individuals containing private alleles. If vector is chosen, alleles are
+#'   not defined.
+#'
+#' @export
+#' @examples
+#' 
+#' data(Pinf) # Load P. infestans data.
+#' setpop(Pinf) <- ~Country # Set the population to be at the country level
+#' private_alleles(Pinf)
+#' \dontrun{
+#' # An example of how this data can be displayed.
+#' library(ggplot2)
+#' Pinfpriv <- private_alleles(Pinf, report = "data.frame")
+#' ggplot(Pinfpriv) + geom_tile(aes(x = population, y = allele, fill = count))
+#' }
+#==============================================================================#
+private_alleles <- function(gid, report = "table", level = "population"){
+  REPORTARGS <- c("table", "vector", "data.frame")
+  LEVELARGS  <- c("individual", "population")
+  report <- match.arg(report, REPORTARGS)
+  level  <- match.arg(level, LEVELARGS)
+  if (!is.genind(gid) & !is.genpop(gid)){
+    stop(paste(gid, "is not a genind or genpop object."))
+  }
+  if (is.genind(gid) & !is.null(pop(gid)) | is.genpop(gid) & nrow(gid@tab) > 1){
+    if (is.genind(gid)){
+      gid.pop <- truenames(genind2genpop(gid, quiet = TRUE))
+    } else {
+      gid.pop <- truenames(gid)
+    }
+    privates <- gid.pop[, colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2]
+    privates <- privates[rowSums(privates) > 0, ]
+    if (level == "individual" & is.genind(gid)){
+      gid.tab  <- truenames(gid)$tab
+      privates <- gid.tab[, colnames(gid.pop) %in% colnames(privates)]
+      privates <- privates[rowSums(privates, na.rm = TRUE) > 0, ]
+    }
+    if (length(privates) == 0){
+      privates <- NULL
+      cat("No private alleles detected.")
+      return(invisible(NULL))
+    }
+    if (report == "vector"){
+      privates <- rownames(privates)
+    } else if (report == "data.frame"){
+      privates <- melt(privates, varnames = c(level, "allele"), 
+                       value.name = "count")
+    }
+    return(privates)
+  } else {
+    stop("There are no populations detected")
+  }
+}
