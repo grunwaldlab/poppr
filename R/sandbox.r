@@ -59,57 +59,6 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
 }
 
 
-#==============================================================================#
-# Bootstrapping for nei's distance. Potentially take distance as an argument
-# later on.
-#==============================================================================#
-nei.boot <- function(x, tree = "upgma", sample = 100, cutoff = 50){
-  x <- missingno(x, "mean")
-  if (x@type == "codom"){
-    xboot <- new("bootgen", x)
-  } else {
-    xboot <- x@tab
-  }
-  ARGS     <- c("nj", "upgma")
-  treearg  <- match.arg(tree, ARGS)
-  treefunk <- tree_generator(treearg, nei.dist)
-  xtree    <- treefunk(xboot, warning = FALSE)
-  if (any(xtree$edge.len < 0)){
-    xtree <- fix_negative_branch(xtree)
-  }
-  root     <- ifelse(treearg == "nj", FALSE, TRUE)
-  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root)
-  nodelabs <- (nodelabs/sample)*100
-  nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
-  xtree$tip.label  <- indNames(x)
-  xtree$node.label <- nodelabs
-  poppr.plot.phylo(xtree, tree)
-  return(xtree)
-}
-
-any.boot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100, cutoff = 50, ...){
-  x <- missingno(x, "mean")
-  if (x@type == "codom"){
-    xboot <- new("bootgen", x)
-  } else {
-    xboot <- x@tab
-  }
-  ARGS     <- c("nj", "upgma")
-  treearg  <- match.arg(tree, ARGS)
-  treefunk <- tree_generator(treearg, distance, ...)
-  xtree    <- treefunk(xboot)
-  if (any(xtree$edge.len < 0)){
-    xtree <- fix_negative_branch(xtree)
-  }
-  root     <- ifelse(treearg == "nj", FALSE, TRUE)
-  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root)
-  nodelabs <- (nodelabs/sample)*100
-  nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
-  xtree$tip.label  <- indNames(x)
-  xtree$node.label <- nodelabs
-  poppr.plot.phylo(xtree, tree)
-  return(xtree)
-}
 
 tree_generator <- function(tree, distance, quiet = TRUE, ...){
   TREEFUNK <- match.fun(tree)

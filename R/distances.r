@@ -282,10 +282,7 @@ reynold.dist <- function(x){
 
 # It looks like provesti distance is pretty much the same as diss.dist.
 
-#==============================================================================#
-# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
-# modifications.
-#==============================================================================#
+
 #' @rdname genetic_distance
 #' @export
 provesti.dist <- function(x){
@@ -316,4 +313,98 @@ provesti.dist <- function(x){
   d <- as.dist(resmat)
   attr(d, "Labels") <- labs
   return(d)
+}
+
+
+#==============================================================================#
+#' Calculate a dendrogram with bootstrap support using any distance applicable
+#' to genind or genclone objects.
+#' 
+#' @param x a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.
+#'   
+#' @param tree one of "upgma" (Default) or "nj" defining the type of dendrogram 
+#'   to be produced, UPGMA or Neighbor-Joining.
+#'   
+#' @param distance a character or function defining the distance to be applied 
+#'   to x. Defaults to \code{\link{nei.dist}}.
+#'   
+#' @param sample An integer representing the number of bootstrap replicates
+#'   Default is 100.
+#'   
+#' @param cutoff An integer from 0 to 100 setting the cutoff value to return the
+#'   bootstrap values on the nodes. Default is 0.
+#'   
+#' @param showtree If \code{TRUE} (Default), a dendrogram will be plotted. If
+#'   \code{FALSE}, nothing will be plotted.
+#'   
+#' @param ... any parameters to be passed off to the distance method.
+#'   
+#' @return an object of class \code{\link[ape]{phylo}}.
+#'   
+#' @details This function utilizes an internal class called
+#' \code{\linkS4class{bootgen}} that allows bootstrapping of objects that
+#' inherit the genind class. This is necessary due to the fact that columns in
+#' the genind matrix are defined as alleles and are thus interrelated. This
+#' function will specifically bootstrap loci so that results are biologically
+#' relevant. With this function, the user can also define a custom distance to
+#' be performed on the genind or genclone object.
+#' 
+#' @seealso \code{\link{nei.dist}} \code{\link{edward.dist}}
+#'   \code{\link{rodger.dist}} \code{\link{reynold.dist}}
+#'   \code{\link{provesti.dist}} \code{\link{diss.dist}}
+#'   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}}
+#'   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
+#'   
+#' @export
+#' @examples
+#' 
+#' data(nancycats)
+#' nan9 <- popsub(nancycats, 9)
+#' 
+#' set.seed(9999)
+#' # Generate a tree using nei's distance
+#' neinan <- any.boot(nan9, dist = nei.dist)
+#' 
+#' set.seed(9999)
+#' # Generate a tree using custom distance
+#' bindist <- function(x) dist(x, method = "binary")
+#' binnan <- any.boot(nan9, dist = bindist)
+#' 
+#' \dontrun{
+#' # AFLP data
+#' data(Aeut)
+#' 
+#' # Nei's distance
+#' anei <- any.boot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
+#' 
+#' # Rodger's distance
+#' arog <- any.boot(Aeut, dist = rodger.dist, sample = 1000, cutoff = 50)
+#' 
+#' }
+#==============================================================================#
+any.boot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
+                     cutoff = 0, showtree = TRUE, ...){
+  x <- missingno(x, "mean")
+  if (x@type == "codom"){
+    xboot <- new("bootgen", x)
+  } else {
+    xboot <- x@tab
+  }
+  ARGS     <- c("nj", "upgma")
+  treearg  <- match.arg(tree, ARGS)
+  treefunk <- tree_generator(treearg, distance, ...)
+  xtree    <- treefunk(xboot)
+  if (any(xtree$edge.len < 0)){
+    xtree <- fix_negative_branch(xtree)
+  }
+  root     <- ifelse(treearg == "nj", FALSE, TRUE)
+  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root)
+  nodelabs <- (nodelabs/sample)*100
+  nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
+  xtree$tip.label  <- indNames(x)
+  xtree$node.label <- nodelabs
+  if (showtree){
+    poppr.plot.phylo(xtree, tree)
+  }
+  return(xtree)
 }
