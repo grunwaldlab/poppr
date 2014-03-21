@@ -369,7 +369,9 @@ print_command(funk)
   \item \texttt{ploidy -} a number indicating the ploidy for the data set (eg 2 for diploids, 1 for haploids).
   \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in section \ref{intro:genind:other}).
   \item \texttt{region -} To format your GenAlEx file to include regions along with your populations, You can choose to include a separate column for regional data, or, since regional data must be in contiguous blocks, you can simply format it in the same way you would any other data (see the GenAlEx manual for details). If you have your file organized in this manner, select this option and the regional information will be stored in the resulting genind object in the \texttt{@other} slot.
-  \item \texttt{genclone -} This flag defaults to \texttt{TRUE} and will automatically convert your data into a \texttt{genclone} object (see Section <><><>).
+  \item \texttt{genclone -} This flag defaults to \texttt{TRUE} and will automatically convert your data into a \texttt{genclone} object (see Section \ref{intro:genclone:as.genclone}).
+  \item \texttt{sep -} The separator argument for your data. It defaults to ``,", but some countries use ``;" by default. This avoids the user having to
+  specifically restructure his or data.
 \end{itemize}
 
 \begin{center}
@@ -465,6 +467,8 @@ print_command(funk)
   \item \texttt{quiet -} If this is set to \texttt{FALSE}, a message will be printed to the screen.
   \item \texttt{geo -} This is set to \texttt{FALSE} by default. If it is set to \texttt{TRUE}, then that means you have a data frame or matrix in the \texttt{@other} slot of your genind object that contains geographic coordinates for all individuals or all populations. Setting this to \texttt{TRUE} means that you want the resulting file to have two extra columns at the end of your file with geographic coordinates.
   \item \texttt{geodf -} The name of the data frame or matrix containing the geographic coordinates. The default is \texttt{geodf = "xy"}.
+  \item \texttt{sep -} A separator to separate columns in the resulting file.
+  Defaults to ``,".
 \end{itemize}
 
 First, a simple example for the rootrot data we demonstrated in section 1.4.2:
@@ -482,7 +486,7 @@ nancycats@other$xy
 @
 And we can export it easily:
 <<genind2genalex_nancy, eval=FALSE>>=
-genind2genalex(nancycats, "~/Desktop/nancycats_pop_xy.csv")
+genind2genalex(nancycats, "~/Desktop/nancycats_pop_xy.csv", geo = TRUE)
 @
 <<genind2genalex_cat2, echo=FALSE>>=
 cat("Extracting the table ... Writing the table to ~/Desktop/nancycats_pop_xy.csv ... Done.\n")
@@ -495,7 +499,7 @@ head(nan2@other$xy)
 @
 Now we can export it to a different file.
 <<genind2genalex_nancy_grow, eval=FALSE>>=
-genind2genalex(nan2, "~/Desktop/nancycats_inds_xy.csv")
+genind2genalex(nan2, "~/Desktop/nancycats_inds_xy.csv", geo = TRUE)
 @
 <<genind2genalex_cat3, echo=FALSE>>=
 cat("Extracting the table ... Writing the table to ~/Desktop/nancycats_inds_xy.csv ... Done.\n")
@@ -534,7 +538,18 @@ Do you see what I mean when I say individual allele frequencies at each locus? F
 
 \subsubsection{The other slot}\label{intro:genind:other}
 
-This section has been deprecated.
+The other slot is a place in the genind object that can be used to store useful
+information about the data. One application would be to store data of 
+microsatellite repeat lengths for use with \texttt{\hyperref[index:bruvo]{Bruvo's 
+Distance}}. Here's a simple example using the dataset nancycats. We will assume
+that this data set has dinucleotide repeats at all nine loci. We use the command
+\texttt{other()} to access the slot and name a new item in it with the \texttt{\$}:
+
+<<other_replen>>=
+data(nancycats) # Load the data
+other(nancycats)$repeat_lengths <- rep(2, 9) # assign a 
+other(nancycats) # two items named xy and repeat_lengths
+@
 
 \subsection{Send in the clones \{the genclone object\}}\label{intro:genclone}
 
@@ -598,6 +613,9 @@ be defined and the population hierarchy (if a data frame is defined in the
 <<as_genclone>>=
 agc <- as.genclone(Aeut)
 agc
+
+# We can also manually set the hierarchy.
+as.genclone(Aeut, hierarchy = other(Aeut)$population_hierarchy[-1])
 @
 
 We can see here that it shows less information, but it gives us a very simple
@@ -605,14 +623,10 @@ overview of our data. Don't be fooled, however, because it contains all the same
 information as a \texttt{genind} object:
 
 <<genclone_compare>>=
-is.genind(Aeut)
-is.genclone(Aeut)
-is.genind(agc)
-is.genclone(agc)
+c(is.genind(Aeut), is.genclone(Aeut), is.genind(agc), is.genclone(agc))
 
 # Adegenet functions work the same, too
-nInd(Aeut)
-nInd(agc)
+c(nInd(Aeut), nInd(agc))
 @
 
 The advantage of the \texttt{genclone} object is that setting the pouplation
@@ -644,6 +658,34 @@ formula driven method is also used for clone correction, combining hierarchical
 levels and conducting AMOVA. These will all be explained in later chapters. For
 examples and details, type \texttt{help("genclone")} in your R console.
 
+\subsection{Accessing the population hierarchy}\label{intro:genclone:access}
+
+The hierarchy slot in the genclone object is special because it allows us to
+rapidly access and manipulate different levels of a population hierarchy without
+the complication of creating new data sets. Previously, in poppr, if you wanted
+to access the popualtion hierarchy, you had to provide a vector of the names
+of the population hierarchy. This was awkward because defining a vector of
+strings in R is awkward:
+
+<<stringdef, eval = FALSE>>=
+c("Population", "Subpopulation", "Year")
+@
+
+So, to replace the old method, we decided to implement the use of hierarchical
+nested formulae:
+
+<<formuladef, eval = FALSE>>=
+~Population/Subpopulation/Year
+@
+
+\textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if you only 
+are specifying one level.
+
+The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
+years nested within subpopulations, nested within populations. This allows the
+user to easily restructure the population hierarchy. Manipulation of the hierarchy
+is necessary for clone correction and AMOVA analysis. See section <Can you  take
+me hierarchy> for more details on manipulation of hierarchies. 
 % \tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
 % <<example_data_frame>>=
 % df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
