@@ -363,26 +363,26 @@ provesti.dist <- function(x){
 #' 
 #' set.seed(9999)
 #' # Generate a tree using nei's distance
-#' neinan <- any.boot(nan9, dist = nei.dist)
+#' neinan <- anyboot(nan9, dist = nei.dist)
 #' 
 #' set.seed(9999)
 #' # Generate a tree using custom distance
 #' bindist <- function(x) dist(x, method = "binary")
-#' binnan <- any.boot(nan9, dist = bindist)
+#' binnan <- anyboot(nan9, dist = bindist)
 #' 
 #' \dontrun{
 #' # AFLP data
 #' data(Aeut)
 #' 
 #' # Nei's distance
-#' anei <- any.boot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
+#' anei <- anyboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 #' 
 #' # Rodger's distance
-#' arog <- any.boot(Aeut, dist = rodger.dist, sample = 1000, cutoff = 50)
+#' arog <- anyboot(Aeut, dist = rodger.dist, sample = 1000, cutoff = 50)
 #' 
 #' }
 #==============================================================================#
-any.boot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
+anyboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                      cutoff = 0, showtree = TRUE, ...){
   x <- missingno(x, "mean")
   if (x@type == "codom"){
