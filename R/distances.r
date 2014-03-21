@@ -120,3 +120,200 @@ diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
 }
 
 
+#==============================================================================#
+# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
+# modifications.
+#' Calculate Genetic Distance for a genind or genclone object.
+#' 
+#' These functions are modified from the function \link[adegenet]{dist.genpop} to
+#' be applicable for distances between individuals.
+#' 
+#' @param x a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.
+#' 
+#' @param warning If \code{TRUE}, a warning will be printed if any infinite
+#' values are detected and replaced. If \code{FALSE}, these values will be
+#' replaced without warning. See Details below.
+#' 
+#' @return an object of class dist with the same number of observations as the
+#' number of individuals in your data.
+#' 
+#' @details 
+#' It is important to be careful with the interpretation of these 
+#' distances as they were originally intended for calculation of between-population distance. As Nei's distance is the negative log of 0:1, this means that it is
+#' very possible to obtain distances of infinity. When this happens, infinite values are corrected to be 10 * max(D) where D is the distance matrix without infinite values. 
+#' 
+#' Provesti's distance is analogous to \code{\link{diss.dist}}, except you must
+#' treat NA's specifically before using this distance. 
+#' 
+#' @rdname genetic_distance
+#' @export
+#' @examples
+#' 
+#' data(nancycats)
+#' nan9 <- popsub(nancycats, 9)
+#' neinan <- nei.dist(nan9)
+#' ednan <- edward.dist(nan9)
+#' rodnan <- rodger.dist(nan9)
+#' reynan <- reynold.dist(nan9)
+#' pronan <- provesti.dist(nan9)
+#' 
+#==============================================================================#
+nei.dist <- function(x, warning = TRUE){
+  if (is.genind(x))
+    MAT    <- x@tab
+  else if (length(dim(x)) == 2)
+    MAT <- x
+  else
+    stop("Object must be a matrix or genind object")
+  IDMAT <- MAT %*% t(MAT)
+  vec   <- sqrt(diag(IDMAT))
+  IDMAT <- IDMAT/vec[col(IDMAT)]
+  IDMAT <- IDMAT/vec[row(IDMAT)]
+  D     <- -log(IDMAT)
+  if (any(D == Inf)){
+    D <- infinite_vals_replacement(D, warning)
+  }
+  D     <- as.dist(D)
+  return(D)
+}
+
+
+#==============================================================================#
+# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
+# modifications.
+#==============================================================================#
+# modified from adegenet dist.genpop
+
+#' @rdname genetic_distance
+#' @export
+edward.dist <- function(x){
+  if (is.genind(x)){ 
+    MAT    <- x@tab
+    nloc   <- nLoc(x)
+  }
+  else if (length(dim(x)) == 2){
+    MAT  <- x
+    nloc <- ncol(x)
+  }
+  else{
+    stop("Object must be a matrix or genind object")
+  }
+  MAT     <- sqrt(MAT)
+  D       <- MAT%*%t(MAT)
+  D       <- 1-D/nloc # Negative number are generated here.
+  diag(D) <- 0
+  D       <- sqrt(D)
+  D       <- as.dist(D)
+  return(D)
+}
+
+
+
+
+#==============================================================================#
+# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
+# modifications.
+#==============================================================================#
+#' @rdname genetic_distance
+#' @export
+rodger.dist <- function(x){
+  if (is.genind(x)){ 
+    if (x@type == "PA"){
+      MAT     <- x@tab
+      nloc    <- nLoc(x)
+      loc.fac <- factor(x@loc.names, levels = x@loc.names)
+      nlig    <- nInd(x)
+    } else {
+      MAT     <- x@tab
+      nloc    <- nLoc(x)
+      loc.fac <- x@loc.fac
+      nlig    <- nInd(x)      
+    }
+  }
+  else if (length(dim(x)) == 2){
+    MAT     <- x
+    nloc    <- ncol(x)
+    loc.fac <- factor(colnames(x), levels = colnames(x))
+    nlig    <- nrow(x)
+  }
+  else{
+    stop("Object must be a matrix or genind object")
+  }
+  # kX is a list of K=nloc matrices
+  kX <- lapply(split(MAT, loc.fac[col(MAT)]), matrix, nrow = nlig)
+  D  <- matrix(0, nlig, nlig)
+  for(i in 1:length(kX)){
+    D <- D + dcano(kX[[i]])
+  }
+  D <- D/length(kX)
+  D <- as.dist(D)
+  return(D)
+}
+
+#==============================================================================#
+# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
+# modifications.
+#==============================================================================#
+#' @rdname genetic_distance
+#' @export
+reynold.dist <- function(x){
+  if (is.genind(x)){
+    MAT    <- x@tab
+    nloc   <- nLoc(x)
+  }
+  else if (length(dim(x)) == 2){
+    MAT  <- x
+    nloc <- ncol(x)
+  }
+  else{
+    stop("Object must be a matrix or genind object")
+  }
+  denomi       <- MAT %*% t(MAT)
+  vec          <- apply(MAT, 1, function(x) sum(x*x))
+  D            <- -2*denomi + vec[col(denomi)] + vec[row(denomi)]
+  diag(D)      <- 0
+  denomi       <- 2*nloc - 2*denomi
+  diag(denomi) <- 1
+  D            <- D/denomi
+  D            <- sqrt(D)
+  D            <- as.dist(D)
+  return(D)
+}
+
+# It looks like provesti distance is pretty much the same as diss.dist.
+
+#==============================================================================#
+# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
+# modifications.
+#==============================================================================#
+#' @rdname genetic_distance
+#' @export
+provesti.dist <- function(x){
+  if (is.genind(x)){
+    MAT    <- x@tab
+    nlig   <- nInd(x)
+    nloc   <- nLoc(x)
+    labs   <- indNames(x)
+  }
+  else if (length(dim(x)) == 2){
+    MAT  <- x
+    nlig <- nrow(x)
+    nloc <- ncol(x)
+    labs <- rownames(x)
+  }
+  else{
+    stop("Object must be a matrix or genind object")
+  }
+  w0   <- 1:(nlig-1)
+  loca <- function(k){
+    w1     <- (k+1):nlig
+    resloc <- unlist(lapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]))))
+    return(resloc/(2*nloc))
+  }
+  d    <- unlist(lapply(w0, loca))
+  resmat <- matrix(numeric(0), nlig, nlig)
+  resmat[lower.tri(resmat)] <- d
+  d <- as.dist(resmat)
+  attr(d, "Labels") <- labs
+  return(d)
+}

@@ -1430,3 +1430,75 @@ poppr.plot.phylo <- function(tree, type = "nj"){
     axisPhylo(3)
   }
 }
+
+
+#==============================================================================#
+# Function to do something with Rodger's distance
+#
+# Public functions utilizing this function:
+# rodger.dist
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+# From adegenet dist.genpop
+dcano <- function(mat) {
+  daux       <- mat%*%t(mat)
+  vec        <- diag(daux)
+  daux       <- -2*daux + vec[col(daux)] + vec[row(daux)]
+  diag(daux) <- 0
+  if (any(daux == Inf)){
+    daux <- infinite_vals_replacement(daux, warning)
+  }
+  daux       <- sqrt(.5*daux)
+  return(daux)
+}
+
+#==============================================================================#
+# tabulate the amount of missing data per locus. 
+#
+# Public functions utilizing this function:
+# none
+#
+# Private functions utilizing this function:
+# # percent_missing
+#==============================================================================#
+
+number_missing_locus <- function(x, divisor){
+  missing_result <- colSums(1 - propTyped(x, by = "both"))
+  return(missing_result/divisor)
+}
+
+#==============================================================================#
+# tabulate the amount of missing data per genotype. 
+#
+# Public functions utilizing this function:
+# none
+#
+# Private functions utilizing this function:
+# # percent_missing
+#==============================================================================#
+
+number_missing_geno <- function(x, divisor){
+  missing_result <- rowSums(1 - propTyped(x, by = "both"))
+  return(missing_result/divisor)
+}
+
+#==============================================================================#
+# Replace infinite values with the maximum finite value of a distance matrix.
+#
+# Public functions utilizing this function:
+# nei.dist
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+
+infinite_vals_replacement <- function(D, warning){
+  if (warning){
+    warning("Infinite values detected.")
+  }
+  maxval      <- max(D[!D == Inf])
+  D[D == Inf] <- maxval*10
+  return(D)
+}
