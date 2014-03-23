@@ -24,6 +24,9 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 \newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
+\newcommand{\cmdlink}[2]{
+  \texttt{\hyperref[#1]{#2}}
+}
 
 \title{Poppr 1.1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
@@ -587,7 +590,7 @@ print_command(funk)
 Let's show an example of a \texttt{genclone} object. First, we will take an 
 existing \texttt{genind} object and convert it using the function 
 \texttt{as.genclone} (We can also use the function 
-\texttt{\hyperref[intro:import:read.genalex]{read.genalex}} to import as
+\cmdlink{intro:import:read.genalex}{read.genalex} to import as
 \texttt{genclone} or \texttt{genind} objects). We will use the \texttt{Aeut}
 data set because it is a clonal data set that has a simple population hierarchy
 \cite{Grunwald:2006}. The data set is here: \url{http://dx.doi.org/10.6084/m9.figshare.877104} and it is AFLP data of the root rot
@@ -673,14 +676,14 @@ of the population hierarchy. This was awkward because defining a vector of
 strings in R is awkward:
 
 <<stringdef, eval = FALSE>>=
-c("Population", "Subpopulation", "Year")
+hier = c("Population", "Subpopulation", "Year")
 @
 
 So, to replace the old method, we decided to implement the use of hierarchical
 nested formulae:
 
 <<formuladef, eval = FALSE>>=
-~Population/Subpopulation/Year
+hier = ~Population/Subpopulation/Year
 @
 
 \textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if you only 
@@ -689,8 +692,8 @@ are specifying one level.
 The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
 years nested within subpopulations, nested within populations. This allows the
 user to easily restructure the population hierarchy. Manipulation of the hierarchy
-is necessary for clone correction and AMOVA analysis. See section <Can you  take
-me hierarchy> for more details on manipulation of hierarchies. 
+is necessary for clone correction and AMOVA analysis. See the section 
+\cmdlink{data.manip:hier}{Can you take me hier(archy)} for more details on manipulation of hierarchies. 
 % \tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
 % <<example_data_frame>>=
 % df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
@@ -850,15 +853,17 @@ We can see here that the number of individuals decreased, yet we have the same n
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Can you take me hier(archy)? \{population hierarchy construction\}}\label{data.manip:hier}
 
-\tab\tab Remember all that fuss we made about the \texttt{@other} slot above in section \ref{intro:genind:other}? The way you can achieve hierarchical analysis in \textit{poppr} is through a data frame in that slot. Many of the file formats that \textit{adegenet} and \textit{poppr} can import do not allow for more than two hierarchies. If you need more levels, you have a couple of choices: 
-\begin{enumerate}
-  \item Import them into R as a data frame with each column being a separate hierarchical element.
-  \item Collapse them into a single population factor so that you can trick these file formats into taking multiple population hierarchies (eg. instead of ``Pop1", ``Subpop1", ``Subsubpop1", you would have ``Pop1\_Subpop1\_Subsubpop1"). 
-\end{enumerate}
-Whichever choice you make, The \textit{poppr} function \texttt{splitcombine} can help you divide and combine those factors in any way you can think of.
+\tab\tab In poppr versions 1.0.x, this section of the manual contained a 4 page
+explaination of the function 
+% \tab\tab Remember all that fuss we made about the \texttt{@other} slot above in section \ref{intro:genind:other}? The way you can achieve hierarchical analysis in \textit{poppr} is through a data frame in that slot. Many of the file formats that \textit{adegenet} and \textit{poppr} can import do not allow for more than two hierarchies. If you need more levels, you have a couple of choices: 
+% \begin{enumerate}
+%   \item Import them into R as a data frame with each column being a separate hierarchical element.
+%   \item Collapse them into a single population factor so that you can trick these file formats into taking multiple population hierarchies (eg. instead of ``Pop1", ``Subpop1", ``Subsubpop1", you would have ``Pop1\_Subpop1\_Subsubpop1"). 
+% \end{enumerate}
+% Whichever choice you make, The \textit{poppr} function \texttt{splitcombine} can help you divide and combine those factors in any way you can think of.
 \subsubsection{Function: splitcombine}\label{data.manip:hier:splitcombine}
-
-\tab\tab This function will allow you to combine your population hierarchies in ways meaningful to your data without needing to know R programming. It can either split a vector of combined population hierarchies or it can combine columns of a data frame containing population hierarchies (Note that it will only split the first column of the data frame if you choose \texttt{method = 1}).
+% 
+% \tab\tab This function will allow you to combine your population hierarchies in ways meaningful to your data without needing to know R programming. It can either split a vector of combined population hierarchies or it can combine columns of a data frame containing population hierarchies (Note that it will only split the first column of the data frame if you choose \texttt{method = 1}).
 \begin{quote}
 Default Command:
 <<splitcombine_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -867,105 +872,93 @@ print_command(funk)
 @
 % \texttt{splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)}
 \end{quote}
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object with a data frame in the \texttt{@other} slot.
-  \item \texttt{method -} An integer indicating what you want to do on your data frame:
-  \begin{enumerate}
-    \item \textbf{split} Any populations combined using a common separator in your data frame. So, a population hierarchy of ``Pop1\_Subpop1\_Subsubpop1" would be split into a data frame containing the columns ``Pop1", ``Subpop1", ``Subsubpop1". Since it will split the population factor, it needs only to be used once. 
-    \item \textbf{combine} If you have your population hierarchy split into a data frame, you can do the exact opposite of method 1 and combine separate elements into one.
-  \end{enumerate}
-  \item \texttt{dfname -} This is the name of the data frame containing your population factor. Note that you are not limited to one data frame in your genind object. If you do not have that data frame in the \texttt{@other} slot, a warning will be returned and nothing will happen.
-  \item \texttt{sep -} A separation factor you want to separate your populations with. Note, that you can choose whatever you want, but be careful because some characters have special meanings (regular expressions) in R and could give you incorrect results (``\_" is the suggested default).
-  \item \texttt{hier -} This can be a vector of words or numbers referring to what you want to name your population hierarchies in \texttt{method = 1}, or specific column names in your data frame in \texttt{method = 2}. 
-  \item \texttt{setpopulation -} if \texttt{TRUE} (default), this will automatically set the population factor to either the highest population factor (with \texttt{method = 1}, split) or the combined population hierarchy (with \texttt{method = 2}, combine). if this is set to \texttt{FALSE}, the population factor will not be set.
-  \item \texttt{fixed -} This is an option to be passed onto the \textit{base} function \texttt{strsplit}. For those not familiar with regular expressions, it will tell R whether or not the character in \texttt{split} should be treated as a special character or not. If you don't know regular expressions, don't touch it.
-\end{itemize}
-
-Let's give an example using AFLP data of different populations of \textit{A. euteiches} collected in Washington and Oregon. \cite{Grunwald:2006}
-<<Aeut>>=
-Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
-summary(Aeut)
-@
-\begin{center}
-   \fcolorbox{black}{light-gray}{
-         \begin{minipage}[t]{0.8\textwidth}
-{\large \textsc{Does this summary seem a little lacking?}}\\
-The data that we have here is presence absence data. This means that many of the functions that \textit{adegenet} uses to calculate heterozygosity and number of alleles are slightly useless in this regard.
-        \end{minipage}
-      }
-\end{center}
-Notice that we have 18 different ``populations" here, but they are really a hierarchy. Let's say we want to analyze the diversity statistics of the two overall populations. Take a look at how the combined population factor is kept in the data frame.
-<<splitcombine_view>>=
-head(Aeut$other$population_hierarchy)
-@
-We'll use \texttt{splitcombine} to split that into a population and sub-population and set the population factor to the population.
-\begin{center}
-   \fcolorbox{black}{light-gray}{
-         \begin{minipage}[t]{0.8\textwidth}
-{\large \textsc{Important point about splitcombine}}\\
-Ideally, method split should only be used once after you read in your data. The reason for this is that when you select this method, it will look in the first column of your data frame to choose the combined population factor to split.
-If you do not name your hierarchy or if you attempt to give your hierarchy too many names, it will automatically name the columns ``h1", ``h2", etc. 
-        \end{minipage}
-      }
-\end{center}
-<<splitcombine_split>>=
-Aeut.pop <- splitcombine(Aeut, method=1, dfname="population_hierarchy", hier=c("Pop", "Subpop"), setpopulation=TRUE)
-head(Aeut.pop$other$population_hierarchy)
-summary(Aeut.pop)
-@
-
-Now we can see that we have a data frame with all of our population factors separated, and we still have our original combined hierarchy, but it is now called ``Pop\_Subpop". This allows you to keep track of what you named your population hierarchies. We can now run the function \texttt{poppr} to get a diversity analysis.
-<<splitcombine_poppr>>=
-poppr(Aeut.pop, quiet=TRUE)
-@
-%\newpage
-It's as simple as that. Now, let's take a look at the same data set, except the input file is a GenAlEx file that has been formatted with Regional data (See section \ref{intro:import:read.genalex} for details). First, let's see how the data set is laid out:
-
-\setkeys{Gin}{width=0.9\textwidth}
-
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize \footnotesize Part of the rootrot2.csv data set. Note the last two columns denoting the Regions and the number of individuals per region.}
-  \label{rootrot2_csv}
-\includegraphics{rootrot2}
-\end{figure}
-\setkeys{Gin}{width=0.5\textwidth}
-
-% We can reverse it by simply changing the method.
-\begin{center}
-   \fcolorbox{black}{light-gray}{
-         \begin{minipage}[t]{0.8\textwidth}
-{\large \textsc{The amazing disappearing options!}}\\
-Notice that I'm not writing in many of the options? This is because they have defaults. Since the data frame in my \texttt{@other} slot is called ``population hierarchy", I don't have to specify that every time I do the function call, and that saves a lot of typing! 
-% Also, since the hierarchy has already been split into its components, I can now index the data frame by column number. So, since I want to combine the ``Pop" and ``Subpop" components, I will tell the function to use columns 2 through 3.
-        \end{minipage}
-      }
-\end{center}
-
-We'll import our data using \texttt{read.genalex} and take a look at the population hierarchy.
-<<read_rootrot2>>=
-Aeut2 <- read.genalex(system.file("files/rootrot2.csv", package="poppr"), region=TRUE)
-head(Aeut2@other$population_hierarchy)
-summary(Aeut2)
-@
-What we see is that we have both of the population factors, but the names have changed and they are not combined. Note that since we specified ``Athena" and ``Mt. Vernon" as regions, the other level of the hierarchy was set as the population factor. We'll use \texttt{splitcombine} to combine both of these in the proper order. Note that we can use the indexes of the data frame columns to index these.
-
-<<splitcombine_combine>>=
-Aeut2.combine <- splitcombine(Aeut2, method=2, hier=2:1)
-head(Aeut2.combine@other$population_hierarchy)
-summary(Aeut2.combine)
-@
-% <<splitcombine_combine>>=
-% Aeut.combine <- splitcombine(Aeut.pop, method=2, hier=2:3)
-% head(Aeut.combine$other$population_hierarchy)
-% summary(Aeut.combine)
+% \begin{itemize}
+%   \item \texttt{pop -} a \texttt{genind} object with a data frame in the \texttt{@other} slot.
+%   \item \texttt{method -} An integer indicating what you want to do on your data frame:
+%   \begin{enumerate}
+%     \item \textbf{split} Any populations combined using a common separator in your data frame. So, a population hierarchy of ``Pop1\_Subpop1\_Subsubpop1" would be split into a data frame containing the columns ``Pop1", ``Subpop1", ``Subsubpop1". Since it will split the population factor, it needs only to be used once. 
+%     \item \textbf{combine} If you have your population hierarchy split into a data frame, you can do the exact opposite of method 1 and combine separate elements into one.
+%   \end{enumerate}
+%   \item \texttt{dfname -} This is the name of the data frame containing your population factor. Note that you are not limited to one data frame in your genind object. If you do not have that data frame in the \texttt{@other} slot, a warning will be returned and nothing will happen.
+%   \item \texttt{sep -} A separation factor you want to separate your populations with. Note, that you can choose whatever you want, but be careful because some characters have special meanings (regular expressions) in R and could give you incorrect results (``\_" is the suggested default).
+%   \item \texttt{hier -} This can be a vector of words or numbers referring to what you want to name your population hierarchies in \texttt{method = 1}, or specific column names in your data frame in \texttt{method = 2}. 
+%   \item \texttt{setpopulation -} if \texttt{TRUE} (default), this will automatically set the population factor to either the highest population factor (with \texttt{method = 1}, split) or the combined population hierarchy (with \texttt{method = 2}, combine). if this is set to \texttt{FALSE}, the population factor will not be set.
+%   \item \texttt{fixed -} This is an option to be passed onto the \textit{base} function \texttt{strsplit}. For those not familiar with regular expressions, it will tell R whether or not the character in \texttt{split} should be treated as a special character or not. If you don't know regular expressions, don't touch it.
+% \end{itemize}
+% 
+% Let's give an example using AFLP data of different populations of \textit{A. euteiches} collected in Washington and Oregon. \cite{Grunwald:2006}
+% <<Aeut>>=
+% Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
+% summary(Aeut)
+% @
+% \begin{center}
+%    \fcolorbox{black}{light-gray}{
+%          \begin{minipage}[t]{0.8\textwidth}
+% {\large \textsc{Does this summary seem a little lacking?}}\\
+% The data that we have here is presence absence data. This means that many of the functions that \textit{adegenet} uses to calculate heterozygosity and number of alleles are slightly useless in this regard.
+%         \end{minipage}
+%       }
+% \end{center}
+% Notice that we have 18 different ``populations" here, but they are really a hierarchy. Let's say we want to analyze the diversity statistics of the two overall populations. Take a look at how the combined population factor is kept in the data frame.
+% <<splitcombine_view>>=
+% head(Aeut$other$population_hierarchy)
+% @
+% We'll use \texttt{splitcombine} to split that into a population and sub-population and set the population factor to the population.
+% \begin{center}
+%    \fcolorbox{black}{light-gray}{
+%          \begin{minipage}[t]{0.8\textwidth}
+% {\large \textsc{Important point about splitcombine}}\\
+% Ideally, method split should only be used once after you read in your data. The reason for this is that when you select this method, it will look in the first column of your data frame to choose the combined population factor to split.
+% If you do not name your hierarchy or if you attempt to give your hierarchy too many names, it will automatically name the columns ``h1", ``h2", etc. 
+%         \end{minipage}
+%       }
+% \end{center}
+% <<splitcombine_split>>=
+% Aeut.pop <- splitcombine(Aeut, method=1, dfname="population_hierarchy", hier=c("Pop", "Subpop"), setpopulation=TRUE)
+% head(Aeut.pop$other$population_hierarchy)
+% summary(Aeut.pop)
 % @
 % 
-% Let's imagine for a second that these ``hierarchies" are not actually hierarchical, but rather they represent independent variables (For example: the ``Subpop" factor could represent months of the year). In this case, we would want to only analyze the ``Subpop" factor. We can do this by using \texttt{splitcombine} with only one hierarchical level.
-% <<splitcombine_subpop>>=
-% Aeut.subpop <- splitcombine(Aeut.pop, method=2, hier="Subpop")
-% summary(Aeut.subpop)
-% poppr(Aeut.subpop, quiet=TRUE)
+% Now we can see that we have a data frame with all of our population factors separated, and we still have our original combined hierarchy, but it is now called ``Pop\_Subpop". This allows you to keep track of what you named your population hierarchies. We can now run the function \texttt{poppr} to get a diversity analysis.
+% <<splitcombine_poppr>>=
+% poppr(Aeut.pop, quiet=TRUE)
+% @
+% %\newpage
+% It's as simple as that. Now, let's take a look at the same data set, except the input file is a GenAlEx file that has been formatted with Regional data (See section \ref{intro:import:read.genalex} for details). First, let's see how the data set is laid out:
+% 
+% \setkeys{Gin}{width=0.9\textwidth}
+% 
+% \begin{figure}[h!]
+%   \centering
+%   \caption{\footnotesize \footnotesize Part of the rootrot2.csv data set. Note the last two columns denoting the Regions and the number of individuals per region.}
+%   \label{rootrot2_csv}
+% \includegraphics{rootrot2}
+% \end{figure}
+% \setkeys{Gin}{width=0.5\textwidth}
+% 
+% % We can reverse it by simply changing the method.
+% \begin{center}
+%    \fcolorbox{black}{light-gray}{
+%          \begin{minipage}[t]{0.8\textwidth}
+% {\large \textsc{The amazing disappearing options!}}\\
+% Notice that I'm not writing in many of the options? This is because they have defaults. Since the data frame in my \texttt{@other} slot is called ``population hierarchy", I don't have to specify that every time I do the function call, and that saves a lot of typing! 
+% % Also, since the hierarchy has already been split into its components, I can now index the data frame by column number. So, since I want to combine the ``Pop" and ``Subpop" components, I will tell the function to use columns 2 through 3.
+%         \end{minipage}
+%       }
+% \end{center}
+% 
+% We'll import our data using \texttt{read.genalex} and take a look at the population hierarchy.
+% <<read_rootrot2>>=
+% Aeut2 <- read.genalex(system.file("files/rootrot2.csv", package="poppr"), region=TRUE)
+% head(Aeut2@other$population_hierarchy)
+% summary(Aeut2)
+% @
+% What we see is that we have both of the population factors, but the names have changed and they are not combined. Note that since we specified ``Athena" and ``Mt. Vernon" as regions, the other level of the hierarchy was set as the population factor. We'll use \texttt{splitcombine} to combine both of these in the proper order. Note that we can use the indexes of the data frame columns to index these.
+% 
+% <<splitcombine_combine>>=
+% Aeut2.combine <- splitcombine(Aeut2, method=2, hier=2:1)
+% head(Aeut2.combine@other$population_hierarchy)
+% summary(Aeut2.combine)
 % @
 Having these hierarchies in your data set is important when it comes to clone-censoring your data set (see section \ref{data.manip:cc} \textit{Attack of the Clone Correction}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2635,38 +2628,38 @@ and description.
 \textbf{\large Function} & \textbf{\large Description} \\ 
 \hline
 \textbf{Import/Export} & \\
-\texttt{\hyperref[intro:import:getfile]{getfile}} & Provides a quick GUI to grab files for import \\
-\texttt{\hyperref[intro:import:read.genalex]{read.genalex}} & Read \textit{GenAlEx} formatted csv files to a genind object \\
-\texttt{\hyperref[intro:import:genind2genalex]{genind2genalex}} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
-\texttt{\hyperref[intro:genclone:as.genclone]{as.genclone}} & Converts genind objects to genclone objects \\
+\cmdlink{intro:import:getfile}{getfile} & Provides a quick GUI to grab files for import \\
+\cmdlink{intro:import:read.genalex}{read.genalex} & Read \textit{GenAlEx} formatted csv files to a genind object \\
+\cmdlink{intro:import:genind2genalex}{genind2genalex} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
+\cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
 \hline
 \textbf{Manipulation} & \\
-\texttt{\hyperref[data.manip:missing:missingno]{missingno}} & Handles missing data \\
-\texttt{\hyperref[data.manip:cc:clonecorrect]{clonecorrect}} & Clone censors at a specified population hierarchy \\
-\texttt{\hyperref[data.manip:informloci]{informloci}} & Detects and removes phylogenetically uninformative loci \\
-\texttt{\hyperref[data.manip:divide:popsub]{popsub}} & Subsets genind objects by population \\
-\texttt{\hyperref[data.manip:shuffle:shufflepop]{shufflepop}} & Shuffles genotypes at each locus using four different shuffling algorithms \\
-\texttt{\hyperref[data.manip:hier:splitcombine]{splitcombine}} & Manipulates population hierarchy \\ 
+\cmdlink{data.manip:missing:missingno}{missingno} & Handles missing data \\
+\cmdlink{data.manip:cc:clonecorrect}{clonecorrect} & Clone censors at a specified population hierarchy \\
+\cmdlink{data.manip:informloci}{informloci} & Detects and removes phylogenetically uninformative loci \\
+\cmdlink{data.manip:divide:popsub}{popsub} & Subsets genind objects by population \\
+\cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
+\cmdlink{data.manip:hier:splitcombine}{splitcombine} & Manipulates population hierarchy \\ 
 \hline
 \textbf{Analysis} & \\
-\texttt{\hyperref[index:trees:bruvo.boot]{bruvo.boot}} & Produces dendrograms with bootstrap support based on Bruvo's distance \\
-\texttt{\hyperref[index:bruvo:bruvo.dist]{bruvo.dist}} & Calculates Bruvo's distance \\
-\texttt{\hyperref[index:dist:diss.dist]{diss.dist}} & Calculates the percent allelic dissimilarity \\
-\texttt{\hyperref[index:iard:ia]{ia}} & Calculates the index of association \\
-\texttt{\hyperref[mlg:mlg:mlg]{mlg}} & Calculates the number of multilocus genotypes \\
-\texttt{\hyperref[mlg:cross:mlg.crosspop]{mlg.crosspop}} & Finds all multilocus genotypes that cross populations \\
-\texttt{\hyperref[mlg:table:mlg.table]{mlg.table}} & Returns a table of populations by multilocus genotypes \\
-\texttt{\hyperref[mlg:mix:mlg.vector]{mlg.vector}} & Returns a vector of a numeric multilocus genotype assignment for \\ 
+\cmdlink{index:trees:bruvo.boot}{bruvo.boot} & Produces dendrograms with bootstrap support based on Bruvo's distance \\
+\cmdlink{index:bruvo:bruvo.dist}{bruvo.dist} & Calculates Bruvo's distance \\
+\cmdlink{index:dist:diss.dist}{diss.dist} & Calculates the percent allelic dissimilarity \\
+\cmdlink{index:iard:ia}{ia} & Calculates the index of association \\
+\cmdlink{mlg:mlg:mlg}{mlg} & Calculates the number of multilocus genotypes \\
+\cmdlink{mlg:cross:mlg.crosspop}{mlg.crosspop} & Finds all multilocus genotypes that cross populations \\
+\cmdlink{mlg:table:mlg.table}{mlg.table} & Returns a table of populations by multilocus genotypes \\
+\cmdlink{mlg:mix:mlg.vector}{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\ 
  & each individual \\
-\texttt{\hyperref[summary:poppr]{poppr}} & Returns a diversity table by population \\
-\texttt{\hyperref[summary:poppr]{poppr.all}} & Returns a diversity table by population for all compatible files specified \\
+\cmdlink{summary:poppr}{poppr} & Returns a diversity table by population \\
+\cmdlink{summary:poppr}{poppr.all} & Returns a diversity table by population for all compatible files specified \\
 \hline
 \textbf{Visualization} & \\
-\texttt{\hyperref[index:trees:greycurve]{greycurve}} & Helper to determine the appropriate parameters for adjusting the\\
+\cmdlink{index:trees:greycurve}{greycurve} & Helper to determine the appropriate parameters for adjusting the\\
  & grey level for msn functions \\
-\texttt{\hyperref[index:trees:bruvo.msn]{bruvo.msn}} & Produces minimum spanning networks based off Bruvo's distance\\
+\cmdlink{index:trees:bruvo.msn}{bruvo.msn} & Produces minimum spanning networks based off Bruvo's distance\\
  & colored by population \\
-\texttt{\hyperref[index:trees:poppr.msn]{poppr.msn}} & Produces a minimum spanning network for any pairwise distance\\  
+\cmdlink{index:trees:poppr.msn}{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\  
  & matrix related to the data \\
 \hline
 \end{tabular}
