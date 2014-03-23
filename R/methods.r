@@ -399,7 +399,11 @@ setMethod(
     ltab  <- max(chars) - chars
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops  <- object@pop.names
+    if (length(pops) > 10) 
+      pops <- c(pops[1:10], "...")
     hiernames <- names(object@hierarchy)
+    if (length(hiernames) > 10) 
+      hiernames <- c(hiernames[1:10], "...")
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
