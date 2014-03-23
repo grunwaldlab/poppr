@@ -1155,7 +1155,7 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss
   dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
   dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
   dist.mat <- as.dist(dist.mat)
-  attr(dist.mat, "labels") <- bruvomat@ind.names
+  attr(dist.mat, "Labels") <- bruvomat@ind.names
   attr(dist.mat, "method") <- "Bruvo"
   attr(dist.mat, "call")   <- funk_call
   return(dist.mat)
