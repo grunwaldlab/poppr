@@ -409,16 +409,16 @@ setMethod(
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
-      nmlg, ltab[1], "multilocus genotypes\n",
-      nind, ltab[2], ploid, "individuals\n", 
-      nloc, ltab[3], type, "loci\n\n"
+      ltab[1], nmlg, "multilocus genotypes\n",
+      ltab[2], nind, ploid, "individuals\n", 
+      ltab[3], nloc, type, "loci\n\n"
       )
     pophier <- ifelse(hier > 1, "hierarchies -", "hierarchy -")
     if (hier == 0) pophier <- "hierarchies."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
-    cat("", hier, ltab[4], "population", pophier, hiernames, fill = TRUE)
-    cat("", npop, ltab[5], "populations", popdef, pops, fill = TRUE)
+    cat("", ltab[4], hier, "population", pophier, hiernames, fill = TRUE)
+    cat("", ltab[5], npop, "populations", popdef, pops, fill = TRUE)
     
   })
 
@@ -451,16 +451,16 @@ setMethod(
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
-      nmlg, ltab[1], "multilocus genotypes\n",
-      nind, ltab[2], ploid, "individuals\n", 
-      nloc, ltab[3], type, "loci\n\n"
+      ltab[1], nmlg, "multilocus genotypes\n",
+      ltab[2], nind, ploid, "individuals\n", 
+      ltab[3], nloc, type, "loci\n\n"
       )
     pophier <- ifelse(hier > 1, "hierarchies -", "hierarchy -")
     if (hier == 0) pophier <- "hierarchies."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
-    cat("", hier, ltab[4], "population", pophier, hiernames, fill = TRUE)
-    cat("", npop, ltab[5], "populations", popdef, pops, fill = TRUE)
+    cat("", ltab[4], hier, "population", pophier, hiernames, fill = TRUE)
+    cat("", ltab[5], npop, "populations", popdef, pops, fill = TRUE)
   })
 
 #==============================================================================#
