@@ -399,11 +399,13 @@ setMethod(
     ltab  <- max(chars) - chars
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops  <- object@pop.names
-    if (length(pops) > 7) 
-      pops <- c(pops[1:6], "...", pops[length(pops)])
+    poplen <- length(pops)
+    if (poplen > 7) 
+      pops <- c(pops[1:3], "...", pops[(poplen-3):poplen])
     hiernames <- names(object@hierarchy)
-    if (length(hiernames) > 7) 
-      hiernames <- c(hiernames[1:6], "...", hiernames[length(hiernames)])
+    hierlen <- length(hiernames)
+    if (hierlen > 7) 
+      hiernames <- c(hiernames[1:3], "...", hiernames[(hierlen-3):hierlen])
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
@@ -423,7 +425,7 @@ setMethod(
 #==============================================================================#
 #' @rdname genclone-method
 #' @param x a genclone object
-#' @param fullnames \code{logical}. If \code{TRUE}, then the full names of the populations will be printed. If \code{FALSE}, then only the first six and last population names are displayed.
+#' @param fullnames \code{logical}. If \code{TRUE}, then the full names of the populations will be printed. If \code{FALSE}, then only the first and last three population names are displayed.
 #==============================================================================#
 setMethod(
   f = "print",
@@ -442,11 +444,13 @@ setMethod(
     ltab  <- max(chars) - chars
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops  <- x@pop.names
-    if (!fullnames && length(pops) > 7) 
-      pops <- c(pops[1:6], "...", pops[length(pops)])
+    poplen <- length(pops)
+    if (!fullnames && poplen > 7) 
+      pops <- c(pops[1:3], "...", pops[(poplen-3):poplen])
     hiernames <- names(x@hierarchy)
-    if (!fullnames && length(hiernames) > 7) 
-      hiernames <- c(hiernames[1:6], "...", hiernames[length(hiernames)])
+    hierlen <- length(hiernames)
+    if (!fullnames && hierlen > 7) 
+      hiernames <- c(hiernames[1:3], "...", hiernames[(hierlen-3):hierlen])
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",

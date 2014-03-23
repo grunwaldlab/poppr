@@ -56,8 +56,8 @@
 
   \item{fullnames}{\code{logical}. If \code{TRUE}, then the
   full names of the populations will be printed. If
-  \code{FALSE}, then only the first six and last population
-  names are displayed.}
+  \code{FALSE}, then only the first and last three
+  population names are displayed.}
 }
 \description{
 Default methods for subsetting genclone objects.
