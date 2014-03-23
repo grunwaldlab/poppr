@@ -990,15 +990,67 @@ virus
 \noindent
 Now we have hierarchies... a lot of them. Let's say we only wanted year and
 country. All we have to do is simply just subset the data frame by those columns
-and use sethierarchy again.
+and use \texttt{sethierarchy} again.
 
 <<H3N2_sethierarchy_again>>=
 sethierarchy(virus) <- virus_info[c("country", "year")]
 virus
 @
+\noindent
+We can use the function \texttt{setpop} to set the population to year with
+respect to country:
 
+<<H3N2_set_country>>=
+setpop(virus) <- ~year/country
+virus
+@
+\noindent
+Just by year:
+<<H3N2_set_year>>=
+setpop(virus) <- ~year
+virus
+@
 
 \subsubsection{Viewing hierarchies}\label{data.manip:hier:view}
+
+If you wanted to view your hierarchies to make sure that you made no spelling
+errors in your population definitions, you can extract the data frame from your
+genclone object by using the function \texttt{gethierarchy}:
+
+\begin{quote}
+Default Command:
+<<gethierarchy_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "gethierarchy"
+print_command(funk)
+@
+\end{quote}
+\noindent
+Where \textbf{x} is the genclone object, \textbf{formula} defines the hierarchical
+levels, and \textbf{combine} indicates whether or not you want the lower levels 
+of the hierarchy combined with the higher levels. For example, in the root rot
+data above, the hierarchical levels are explicitly hierarchical and should be
+combined. Note, if you don't supply a formula argument, the data frame as it
+exists will be returned.
+
+<<aphan_hier_get>>=
+head(gethierarchy(aphan))
+head(gethierarchy(aphan, ~field/sample))
+@
+
+If the hierarchical levels are not nested, or you simply want to use this
+hierarchy for another data set, you might want to set the \textbf{combine} flag
+to \texttt{FALSE}. Let's use the virus data as an example:
+
+<<virus_get>>=
+head(gethierarchy(virus, ~year/country))
+head(gethierarchy(virus, ~year/country, combine = FALSE))
+@
+
+It will return only the levels you ask it to return:
+
+<<virus_onepop>>=
+head(gethierarchy(virus, ~country))
+@
 
 \subsubsection{Manipulating hierarchies}\label{data.manip:hier:manip}
 
