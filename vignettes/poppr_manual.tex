@@ -1661,16 +1661,6 @@ has been superceeded by the hierarchy methods for \seclink{intro:genclone}{gencl
 objects. In this section, we will walk you through the process of defining, 
 manipulating, and adding to population hierarchies within genclone objects. 
 
-
-... Section options ...
-\begin{itemize}
-\item Refer to \seclink{intro:genclone:access}{Accessing hierarchies}.
-\item Ways of using the methods (f(x) <- y vs. f(x, y))
-\item Hierarchy Definitions (set, name)
-\item Viewing hierarchies (get)
-\item Hierarchy Manipulations (split, add)
-\end{itemize}
-
 \subsubsection{General hierarchy method use}\label{data.manip:hier:method}
 
 \tab\tab There are currently 5 methods that manipulate population hierarchies in
@@ -1684,17 +1674,356 @@ genclone objects:
   \hline
  & Method & Function & Input & Result\\ 
   \hline
-1 & set & \texttt{sethierarchy} & data frame & new hierarchy\\ 
+  1 & set & \texttt{sethierarchy} & data frame & new hierarchy\\ 
   2 & get & \texttt{gethierarchy} & formula & data frame\\ 
   3 & name & \texttt{namehierarchy} & formula & new hierarchy names\\ 
   4 & split & \texttt{splithierarchy} & formula & defined hierarchical levels\\ 
-  5 & add & \texttt{addhierarchy} & vector or data frame & new hierarchical level\\ 
+  5 & add & \texttt{addhierarchy} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
 \end{table}
+\noindent
+NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies}.\\
+\noindent
+There is also one other function that allows you to define populations based on
+hierarchies called \texttt{setpop}. This will likely be the most used function. 
+
+These functions all have a syntax that looks like this:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+newobject <- \hlkwd{function}(object, input)
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Let's take a data set of \textit{Phytophthora infestans} collected from North
+America and South America and use that as an example. It has two population 
+hierarchies defined, Continent and Country:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{data}\hlstd{(Pinf)}
+\hlstd{Pinf}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  72   multilocus genotypes
+##  86   tetraploid individuals
+##  11   codominant loci
+## 
+## Population information:
+## 
+##  2    population hierarchies - Continent Country
+##  2    populations defined - South America North America
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Let's say I wanted to change the hierarchy names to Spanish. I can do that using
+\texttt{namehierarchy}.
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{elPinf} \hlkwb{<-} \hlkwd{namehierarchy}\hlstd{(Pinf,} \hlopt{~}\hlstd{continente}\hlopt{/}\hlstd{pais)}  \hlcom{# Don't forget the formula syntax!}
+\hlstd{elPinf}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  72   multilocus genotypes
+##  86   tetraploid individuals
+##  11   codominant loci
+## 
+## Population information:
+## 
+##  2    population hierarchies - continente pais
+##  2    populations defined - South America North America
+\end{verbatim}
+\begin{alltt}
+\hlstd{Pinf}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  72   multilocus genotypes
+##  86   tetraploid individuals
+##  11   codominant loci
+## 
+## Population information:
+## 
+##  2    population hierarchies - Continent Country
+##  2    populations defined - South America North America
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+The original data set has stayed the same and we now have a new data set with the
+names we want.
+
+Of course, it would be silly to create a new data set every time we wanted to
+do something like change names. This is why all of the above functions (with the
+exception of \texttt{gethierarchy}) all have the replacement syntax of:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{function}(object) <- input
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+\textbf{NOTE: This is the preferred syntax}.\\ 
+\noindent
+This allows the object to be edited \textit{in place} and makes things generally
+easier. Let's revisit our previous example:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{Pinf}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  72   multilocus genotypes
+##  86   tetraploid individuals
+##  11   codominant loci
+## 
+## Population information:
+## 
+##  2    population hierarchies - Continent Country
+##  2    populations defined - South America North America
+\end{verbatim}
+\begin{alltt}
+\hlkwd{namehierarchy}\hlstd{(Pinf)} \hlkwb{<-} \hlopt{~}\hlstd{continente}\hlopt{/}\hlstd{pais}
+\hlstd{Pinf}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  72   multilocus genotypes
+##  86   tetraploid individuals
+##  11   codominant loci
+## 
+## Population information:
+## 
+##  2    population hierarchies - continente pais
+##  2    populations defined - South America North America
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+While we will mainly be using the replacement syntax in this vignette, the 
+advantage to having both systems is that with the 
+\texttt{function(object, input)} syntax, you can test manipulation without 
+affecting your object.
+
+\subsubsection{Defining hierarchies}\label{data.manip:hier:define}
+
+\tab\tab In order to utilize hierarchies, they must be defined. As genind objects
+don't inherently define population hierarchies. The user must do so. One way is
+to define your hierarchies in a spreadsheet and import that as a data frame using
+the function \texttt{read.table}. Another way of automatically
+doing so is to concatenate your hierarchies using a common delimiter such as `\_'
+and defining that as the population factor in your input file. See the section 
+\seclink{intro:import:genalex.short}{Genalex Formatting Shortcuts} for more
+details. An example of a formatted GenAlEx file can be found here: \url{http://dx.doi.org/10.6084/m9.figshare.877104}. It is an AFLP data set of the rootrot pathogen \texttt{Aphanomyces euteiches}. We will use this data set as an example of
+importing hierarchical data automatically. We will first copy the download link
+from figshare and use it with the function 
+\cmdlink{intro:import:read.genalex}{read.genalex}. 
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{aphan} \hlkwb{<-} \hlkwd{read.genalex}\hlstd{(}\hlstr{"http://files.figshare.com/1314228/rootrot.csv"}\hlstd{)}
+\hlstd{aphan}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  119   multilocus genotypes
+##  187   diploid individuals
+##  56    dominant loci
+## 
+## Population information:
+## 
+##  1     population hierarchy - Pop
+##  18    populations defined - Athena_1 Athena_2 Athena_3 ... Mt. Vernon_5 Mt. Vernon_6 
+## Mt. Vernon_7 Mt. Vernon_8
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+We can see that there is 1 hierarchy defined, but the data is defined by field
+and soil sample. Since we had imported the hierarchy in a concatenated manner,
+we must now use the function \texttt{splithierarchy} to remove the concatenation
+and define the names of the hierarchical levels:
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{splithierarchy}\hlstd{(aphan)} \hlkwb{<-} \hlopt{~}\hlstd{field}\hlopt{/}\hlstd{sample}
+\hlstd{aphan}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  119   multilocus genotypes
+##  187   diploid individuals
+##  56    dominant loci
+## 
+## Population information:
+## 
+##  2     population hierarchies - field sample
+##  18    populations defined - Athena_1 Athena_2 Athena_3 ... Mt. Vernon_5 Mt. Vernon_6 
+## Mt. Vernon_7 Mt. Vernon_8
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+Now we have sucessfully defined our hierarchies.
+
+If you have imported your data with a single population and have a separate data
+frame that you read in with \texttt{read.table}, this is how you would define
+your hierarchy. For demonstrative purposes, we will use the H3N2 viral data set.
+This contains a data frame called `x' in the \seclink{intro:genind:other}{other slot}
+that contains many variables including country, year, and month of collection. 
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{data}\hlstd{(H3N2)}
+\hlstd{virus} \hlkwb{<-} \hlkwd{as.genclone}\hlstd{(H3N2)}  \hlcom{# Converting it to a genclone object.}
+\hlstd{virus_info} \hlkwb{<-} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{other}\hlstd{(H3N2)}\hlopt{$}\hlstd{x)}  \hlcom{# extracting the data frame}
+
+\hlstd{virus}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  752    multilocus genotypes
+##  1903   haploid individuals
+##  125    codominant loci
+## 
+## Population information:
+## 
+##  0      population hierarchies. 
+##  0      populations defined.
+\end{verbatim}
+\begin{alltt}
+\hlkwd{names}\hlstd{(virus_info)}
+\end{alltt}
+\begin{verbatim}
+##  [1] "accession"     "length"        "host"          "segment"       "subtype"      
+##  [6] "country"       "year"          "Virus name"    "Misc info"     "Age"          
+## [11] "Gender"        "date"          "usePreciseLoc" "localisation"  "lon"          
+## [16] "lat"           "month"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+Right now, there is no population set, nor are there any hierarchies set. We will
+use the function \texttt{sethierarchy} to define the hierarchy of the data set.
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{sethierarchy}\hlstd{(virus)} \hlkwb{<-} \hlstd{virus_info}
+\hlstd{virus}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  752    multilocus genotypes
+##  1903   haploid individuals
+##  125    codominant loci
+## 
+## Population information:
+## 
+##  17     population hierarchies - accession length host ... localisation lon lat month
+##  0      populations defined.
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+Now we have hierarchies... a lot of them. Let's say we only wanted year and
+country. All we have to do is simply just subset the data frame by those columns
+and use sethierarchy again.
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{sethierarchy}\hlstd{(virus)} \hlkwb{<-} \hlstd{virus_info[}\hlkwd{c}\hlstd{(}\hlstr{"country"}\hlstd{,} \hlstr{"year"}\hlstd{)]}
+\hlstd{virus}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  752    multilocus genotypes
+##  1903   haploid individuals
+##  125    codominant loci
+## 
+## Population information:
+## 
+##  2      population hierarchies - country year
+##  0      populations defined.
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
 
 
 
+\subsubsection{Viewing hierarchies}\label{data.manip:hier:view}
+
+\subsubsection{Manipulating hierarchies}\label{data.manip:hier:manip}
+
+... Section options ...
+\begin{itemize}
+\item Refer to \seclink{intro:genclone:access}{Accessing hierarchies}.
+\item Ways of using the methods (f(x) <- y vs. f(x, y))
+\item Hierarchy Definitions (set, split)
+\item Viewing hierarchies (get)
+\item Hierarchy Manipulations (name, add)
+\end{itemize}
 % \tab\tab Remember all that fuss we made about the \texttt{@other} slot above in section \ref{intro:genind:other}? The way you can achieve hierarchical analysis in \textit{poppr} is through a data frame in that slot. Many of the file formats that \textit{adegenet} and \textit{poppr} can import do not allow for more than two hierarchies. If you need more levels, you have a couple of choices: 
 % \begin{enumerate}
 %   \item Import them into R as a data frame with each column being a separate hierarchical element.
