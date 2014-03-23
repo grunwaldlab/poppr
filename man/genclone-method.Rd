@@ -13,7 +13,7 @@
 
 \S4method{show}{genclone}(object)
 
-\S4method{print}{genclone}(x, ..., fullnames = TRUE)
+\S4method{print}{genclone}(x, ...)
 }
 \arguments{
   \item{x}{a genclone object}

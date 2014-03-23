@@ -424,13 +424,16 @@ setMethod(
 
 #==============================================================================#
 #' @rdname genclone-method
+#' @export
 #' @param x a genclone object
-#' @param fullnames \code{logical}. If \code{TRUE}, then the full names of the populations will be printed. If \code{FALSE}, then only the first and last three population names are displayed.
+#' @param fullnames \code{logical}. If \code{TRUE}, then the full names of the
+#'   populations will be printed. If \code{FALSE}, then only the first and last
+#'   three population names are displayed.
 #==============================================================================#
 setMethod(
   f = "print",
   signature("genclone"),
-  definition = function(x, ..., fullnames = TRUE){
+  definition = function(x, ...){
     ploid <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
     ploid <- paste0(ploid[x@ploidy], "ploid")
@@ -444,13 +447,7 @@ setMethod(
     ltab  <- max(chars) - chars
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops  <- x@pop.names
-    poplen <- length(pops)
-    if (!fullnames && poplen > 7) 
-      pops <- c(pops[1:3], "...", pops[(poplen-3):poplen])
     hiernames <- names(x@hierarchy)
-    hierlen <- length(hiernames)
-    if (!fullnames && hierlen > 7) 
-      hiernames <- c(hiernames[1:3], "...", hiernames[(hierlen-3):hierlen])
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
