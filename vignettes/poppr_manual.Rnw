@@ -28,7 +28,7 @@
   \texttt{\hyperref[#1]{#2}}
 }
 \newcommand{\seclink}[2]{
-  \textbf{\hyperref[#1]{#2}}
+  \textit{\hyperref[#1]{#2}}
 }
 
 \title{Poppr 1.1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
@@ -414,7 +414,7 @@ rootrot
 
 \subsubsection{Genalex formatting shortcuts}\label{intro:import:genalex.short}
 
-\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see section \ref{data.manip:hier:splitcombine} of this manual). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \textit{adegenet} (for details, type \texttt{help("microbov")} into your R console). It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in section \ref{intro:genind:other}). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
+\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see below). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \textit{adegenet} (for details, type \texttt{help("microbov")} into your R console). It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in section \ref{intro:genind:other}). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
 
 <<microsave, eval=FALSE>>=
 library(poppr)
@@ -692,7 +692,7 @@ are specifying one level.
 The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
 years nested within subpopulations, nested within populations. This allows the
 user to easily restructure the population hierarchy. Manipulation of the hierarchy
-is necessary for clone correction and AMOVA analysis. See the section 
+is necessary for \seclink{data.manip:cc}{clone correction} and AMOVA analysis. See the section 
 \seclink{data.manip:hier}{Can you take me hier(archy)} for more details on manipulation of hierarchies. 
 % \tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
 % <<example_data_frame>>=
@@ -853,13 +853,14 @@ We can see here that the number of individuals decreased, yet we have the same n
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Can you take me hier(archy)? \{population hierarchy construction\}}\label{data.manip:hier}
 
-\tab\tab In poppr versions 1.0.x, this section of the manual contained a 4 page
-explaination of the function \cmdlink{data.manip:hier:splitcombine}{splitcombine}.
+\tab\tab In poppr versions 1.0.x, this section of the manual contained a long
+explaination of the function \texttt{splitcombine}.
 This was a function whose intended use was to manipulate population hierarchies
 within \seclink{intro:genind}{genind} objects, but whose useage ended up becoming 
-very clunky and a bit confusing. The function (presented at the end of this section)
-has been superceeded by the hierarchy methods for \seclink{intro:genclone}{genclone}
-objects. In this section, we will walk you through the process of defining, 
+very clunky and a bit confusing. The function has been superceeded by the hierarchy methods for \seclink{intro:genclone}{genclone}
+objects. If you want to know more about \texttt{splitcombine}, please see its
+help page by typing \texttt{?splitcombine} or refer to earlier versions of this
+manual. In this section, we will walk you through the process of defining, 
 manipulating, and adding to population hierarchies within genclone objects. 
 
 \subsubsection{General hierarchy method use}\label{data.manip:hier:method}
@@ -931,7 +932,7 @@ advantage to having both systems is that with the
 \texttt{function(object, input)} syntax, you can test manipulation without 
 affecting your object.
 
-\subsubsection{Defining populations with hierarchies}\label{data.manip:hier:define}
+\subsubsection{Defining populations with hierarchies}\label{data.manip:hier:setpop}
 
 Of course, these hierarchies would mean nothing if it was difficult or not
 possible to define the populations in the data set We notice that above, we have
@@ -1170,17 +1171,17 @@ at once.
 %   \item Collapse them into a single population factor so that you can trick these file formats into taking multiple population hierarchies (eg. instead of ``Pop1", ``Subpop1", ``Subsubpop1", you would have ``Pop1\_Subpop1\_Subsubpop1"). 
 % \end{enumerate}
 % Whichever choice you make, The \textit{poppr} function \texttt{splitcombine} can help you divide and combine those factors in any way you can think of.
-\subsubsection{Function: splitcombine}\label{data.manip:hier:splitcombine}
-% 
-% \tab\tab This function will allow you to combine your population hierarchies in ways meaningful to your data without needing to know R programming. It can either split a vector of combined population hierarchies or it can combine columns of a data frame containing population hierarchies (Note that it will only split the first column of the data frame if you choose \texttt{method = 1}).
-\begin{quote}
-Default Command:
-<<splitcombine_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "splitcombine"
-print_command(funk)
-@
-% \texttt{splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)}
-\end{quote}
+% \subsubsection{Function: splitcombine}\label{data.manip:hier:splitcombine}
+% % 
+% % \tab\tab This function will allow you to combine your population hierarchies in ways meaningful to your data without needing to know R programming. It can either split a vector of combined population hierarchies or it can combine columns of a data frame containing population hierarchies (Note that it will only split the first column of the data frame if you choose \texttt{method = 1}).
+% \begin{quote}
+% Default Command:
+% <<splitcombine_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "splitcombine"
+% print_command(funk)
+% @
+% % \texttt{splitcombine(pop, method = 1, dfname = "population\_hierarchy", sep = "\_", hier = c(1), setpopulation = TRUE, fixed = TRUE)}
+% \end{quote}
 % \begin{itemize}
 %   \item \texttt{pop -} a \texttt{genind} object with a data frame in the \texttt{@other} slot.
 %   \item \texttt{method -} An integer indicating what you want to do on your data frame:
@@ -1269,7 +1270,7 @@ print_command(funk)
 % head(Aeut2.combine@other$population_hierarchy)
 % summary(Aeut2.combine)
 % @
-Having these hierarchies in your data set is important when it comes to clone-censoring your data set (see section \ref{data.manip:cc} \textit{Attack of the Clone Correction}).
+% Having these hierarchies in your data set is important when it comes to clone-censoring your data set (see section \ref{data.manip:cc} \textit{Attack of the Clone Correction}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3128,8 +3129,6 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
   \item locus\_table
   \item missing\_table
   \item amova
-  \item *hierarchy
-  \item setpop
   \item private\_alleles
   \item anyboot
   \item *.dist
@@ -3141,7 +3140,7 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 linked within the document. Simply click on a funciton name to go to its definition 
 and description. 
 
-\begin{table}[ht]
+\begin{table}[h!]
 \centering
 \begin{tabular}{ll}
 \textbf{\large Function} & \textbf{\large Description} \\ 
@@ -3153,12 +3152,18 @@ and description.
 \cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
 \hline
 \textbf{Manipulation} & \\
+\cmdlink{data.manip:hier:setpop}{setpop} & Set the population using defined hierarchies\\
+\cmdlink{data.manip:hier:define}{splithierarchy} & Split a concatenated hierarchy imported as a population\\
+\cmdlink{data.manip:hier:define}{sethierarchy} & Define a population hierarchy of a genclone object\\
+\cmdlink{data.manip:hier:view}{gethierarchy} & Extract the hierarchy data frame\\
+\cmdlink{data.manip:hier:manip}{addhierarchy} & Add a vector or data frame to an existing hierarchy \\
+\cmdlink{data.manip:hier:manip}{namehierarchy} & Rename a population hierarchy\\
 \cmdlink{data.manip:missing:missingno}{missingno} & Handles missing data \\
 \cmdlink{data.manip:cc:clonecorrect}{clonecorrect} & Clone censors at a specified population hierarchy \\
 \cmdlink{data.manip:informloci}{informloci} & Detects and removes phylogenetically uninformative loci \\
 \cmdlink{data.manip:divide:popsub}{popsub} & Subsets genind objects by population \\
 \cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
-\cmdlink{data.manip:hier:splitcombine}{splitcombine} & Manipulates population hierarchy \\ 
+\texttt{splitcombine*} & Manipulates population hierarchy *Deprecated\\ 
 \hline
 \textbf{Analysis} & \\
 \cmdlink{index:trees:bruvo.boot}{bruvo.boot} & Produces dendrograms with bootstrap support based on Bruvo's distance \\
