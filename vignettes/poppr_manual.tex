@@ -509,7 +509,7 @@ As you can see, now all of the files that existed in that directory are there! N
 ## 18 Mt. Vernon_8  13   9  7.3 7.6e-01 2.03  6.3 0.91 0.79  1.15 0.169   rootrot.csv
 ## 19        Total 187 119  9.6 6.1e-01 4.56 69.0 0.99 0.72 14.37 0.271   rootrot.csv
 ## 20            1  19  16  9.2 7.0e-01 2.73 14.4 0.98 0.94 14.23 0.313  rootrot2.csv
-## 21            2  18  18 10.0 4.2e-07 2.89 18.0 1.00 1.00  9.14 0.194  rootrot2.csv
+## 21            2  18  18 10.0 5.4e-07 2.89 18.0 1.00 1.00  9.14 0.194  rootrot2.csv
 ## 22            3  18   8  5.3 1.0e+00 1.61  3.4 0.75 0.59 22.84 0.573  rootrot2.csv
 ## 23            4  25  17  7.9 1.1e+00 2.58  9.6 0.93 0.71 18.49 0.415  rootrot2.csv
 ## 24            5  27  14  7.5 1.1e+00 2.45  9.7 0.93 0.83 23.00 0.520  rootrot2.csv
@@ -555,9 +555,9 @@ Navigate to the \textit{adegenet} folder in your R library.
 ##  [6] "/path/to/R/adegenet/files/nancycats.gen"    
 ##  [7] "/path/to/R/adegenet/files/nancycats.gtx"    
 ##  [8] "/path/to/R/adegenet/files/nancycats.str"    
-##  [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
-## [10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
-## [11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+##  [9] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
+## [10] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+## [11] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
 ## [12] "/path/to/R/adegenet/files/usflu.fasta"      
 ## 
 ## $path
@@ -744,9 +744,8 @@ with any function in \textit{poppr} and \textit{adegenet}
 ## Population information:
 ## 
 ##  1     population hierarchy - Pop
-##  18    populations defined - Athena_1 Athena_2 Athena_3 Athena_4 Athena_5 Athena_6 
-## Athena_7 Athena_8 Athena_9 Athena_10 Mt. Vernon_1 Mt. Vernon_2 Mt. Vernon_3 Mt. Vernon_4 
-## Mt. Vernon_5 Mt. Vernon_6 Mt. Vernon_7 Mt. Vernon_8
+##  18    populations defined - Athena_1 Athena_2 Athena_3 ... Mt. Vernon_5 Mt. Vernon_6 
+## Mt. Vernon_7 Mt. Vernon_8
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1112,7 +1111,7 @@ We can see that it gives us a lot of about the object. This is useful for people
 who are more comfortable with programming, but might be information overload for
 your average biologist. Unfortunately this output doesn't tell us about the 
 number of populations, population hierarchical levels, or multiloucus genotypes. 
-When we convert it to a\texttt{genclone} object, the multilocus genotypes will
+When we convert it to a \texttt{genclone} object, the multilocus genotypes will
 be defined and the population hierarchy (if a data frame is defined in the 
 \texttt{@other} slot called ``population\_hierarchy") will be set.
 
@@ -1232,6 +1231,28 @@ set the population to a combination of the population hierarchy in both a
 \begin{alltt}
 \hlkwd{setpop}\hlstd{(agc)} \hlkwb{<-} \hlopt{~}\hlstd{Pop}\hlopt{/}\hlstd{Subpop}
 \hlstd{agc}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##  119   multilocus genotypes
+##  187   diploid individuals
+##  56    dominant loci
+## 
+## Population information:
+## 
+##  3     population hierarchies - Pop_Subpop Pop Subpop
+##  18    populations defined - Athena_1 Athena_2 Athena_3 ... Mt. Vernon_5 Mt. Vernon_6 
+## Mt. Vernon_7 Mt. Vernon_8
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Notice that you only see the first and last three population names.  Use the print method}
+\hlcom{# to display all population names.}
+
+\hlkwd{print}\hlstd{(agc)}
 \end{alltt}
 \begin{verbatim}
 ## 

@@ -606,7 +606,7 @@ We can see that it gives us a lot of about the object. This is useful for people
 who are more comfortable with programming, but might be information overload for
 your average biologist. Unfortunately this output doesn't tell us about the 
 number of populations, population hierarchical levels, or multiloucus genotypes. 
-When we convert it to a\texttt{genclone} object, the multilocus genotypes will
+When we convert it to a \texttt{genclone} object, the multilocus genotypes will
 be defined and the population hierarchy (if a data frame is defined in the 
 \texttt{@other} slot called ``population\_hierarchy") will be set.
 
@@ -648,6 +648,11 @@ Aeut$pop.names
 agc
 setpop(agc) <- ~Pop/Subpop
 agc
+
+# Notice that you only see the first and last three population names.
+# Use the print method to display all population names.
+
+print(agc)
 @
 
 The difference between the two is clear: With the \texttt{genind} object, the
