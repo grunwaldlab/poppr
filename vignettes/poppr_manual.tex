@@ -76,6 +76,9 @@
 \newcommand{\cmdlink}[2]{
   \texttt{\hyperref[#1]{#2}}
 }
+\newcommand{\seclink}[2]{
+  \textbf{\hyperref[#1]{#2}}
+}
 
 \title{Poppr 1.1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
@@ -984,8 +987,8 @@ Do you see what I mean when I say individual allele frequencies at each locus? F
 
 The other slot is a place in the genind object that can be used to store useful
 information about the data. One application would be to store data of 
-microsatellite repeat lengths for use with \texttt{\hyperref[index:bruvo]{Bruvo's 
-Distance}}. Here's a simple example using the dataset nancycats. We will assume
+microsatellite repeat lengths for use with \seclink{index:bruvo}{Bruvo's 
+Distance}. Here's a simple example using the dataset nancycats. We will assume
 that this data set has dinucleotide repeats at all nine loci. We use the command
 \texttt{other()} to access the slot and name a new item in it with the \texttt{\$}:
 
@@ -1303,10 +1306,8 @@ strings in R is awkward:
 \end{kframe}
 \end{knitrout}
 
-
 So, to replace the old method, we decided to implement the use of hierarchical
 nested formulae:
-
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -1315,7 +1316,6 @@ nested formulae:
 \end{kframe}
 \end{knitrout}
 
-
 \textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if you only 
 are specifying one level.
 
@@ -1323,7 +1323,7 @@ The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
 years nested within subpopulations, nested within populations. This allows the
 user to easily restructure the population hierarchy. Manipulation of the hierarchy
 is necessary for clone correction and AMOVA analysis. See the section 
-\cmdlink{data.manip:hier}{Can you take me hier(archy)} for more details on manipulation of hierarchies. 
+\seclink{data.manip:hier}{Can you take me hier(archy)} for more details on manipulation of hierarchies. 
 % \tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
 % <<example_data_frame>>=
 % df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
@@ -1653,7 +1653,48 @@ We can see here that the number of individuals decreased, yet we have the same n
 \subsection{Can you take me hier(archy)? \{population hierarchy construction\}}\label{data.manip:hier}
 
 \tab\tab In poppr versions 1.0.x, this section of the manual contained a 4 page
-explaination of the function 
+explaination of the function \cmdlink{data.manip:hier:splitcombine}{splitcombine}.
+This was a function whose intended use was to manipulate population hierarchies
+within \seclink{intro:genind}{genind} objects, but whose useage ended up becoming 
+very clunky and a bit confusing. The function (presented at the end of this section)
+has been superceeded by the hierarchy methods for \seclink{intro:genclone}{genclone}
+objects. In this section, we will walk you through the process of defining, 
+manipulating, and adding to population hierarchies within genclone objects. 
+
+
+... Section options ...
+\begin{itemize}
+\item Refer to \seclink{intro:genclone:access}{Accessing hierarchies}.
+\item Ways of using the methods (f(x) <- y vs. f(x, y))
+\item Hierarchy Definitions (set, name)
+\item Viewing hierarchies (get)
+\item Hierarchy Manipulations (split, add)
+\end{itemize}
+
+\subsubsection{General hierarchy method use}\label{data.manip:hier:method}
+
+\tab\tab There are currently 5 methods that manipulate population hierarchies in
+genclone objects:
+
+% latex table generated in R 3.0.3 by xtable 1.7-3 package
+% Sat Mar 22 20:24:23 2014
+\begin{table}[ht]
+\centering
+\begin{tabular}{rllll}
+  \hline
+ & Method & Function & Input & Result\\ 
+  \hline
+1 & set & \texttt{sethierarchy} & data frame & new hierarchy\\ 
+  2 & get & \texttt{gethierarchy} & formula & data frame\\ 
+  3 & name & \texttt{namehierarchy} & formula & new hierarchy names\\ 
+  4 & split & \texttt{splithierarchy} & formula & defined hierarchical levels\\ 
+  5 & add & \texttt{addhierarchy} & vector or data frame & new hierarchical level\\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+
 % \tab\tab Remember all that fuss we made about the \texttt{@other} slot above in section \ref{intro:genind:other}? The way you can achieve hierarchical analysis in \textit{poppr} is through a data frame in that slot. Many of the file formats that \textit{adegenet} and \textit{poppr} can import do not allow for more than two hierarchies. If you need more levels, you have a couple of choices: 
 % \begin{enumerate}
 %   \item Import them into R as a data frame with each column being a separate hierarchical element.
