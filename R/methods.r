@@ -399,11 +399,11 @@ setMethod(
     ltab  <- max(chars) - chars
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops  <- object@pop.names
-    if (length(pops) > 10) 
-      pops <- c(pops[1:10], "...")
+    if (length(pops) > 7) 
+      pops <- c(pops[1:6], "...", pops[length(pops)])
     hiernames <- names(object@hierarchy)
-    if (length(hiernames) > 10) 
-      hiernames <- c(hiernames[1:10], "...")
+    if (length(hiernames) > 7) 
+      hiernames <- c(hiernames[1:6], "...", hiernames[length(hiernames)])
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
@@ -418,6 +418,48 @@ setMethod(
     cat("", hier, ltab[4], "population", pophier, hiernames, fill = TRUE)
     cat("", npop, ltab[5], "populations", popdef, pops, fill = TRUE)
     
+  })
+
+#==============================================================================#
+#' @rdname genclone-method
+#' @param x a genclone object
+#' @param fullnames \code{logical}. If \code{TRUE}, then the full names of the populations will be printed. If \code{FALSE}, then only the first six and last population names are displayed.
+#==============================================================================#
+setMethod(
+  f = "print",
+  signature("genclone"),
+  definition = function(x, ..., fullnames = TRUE){
+    ploid <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
+      "nona", "deca", "hendeca", "dodeca")
+    ploid <- paste0(ploid[x@ploidy], "ploid")
+    nind  <- nInd(x)
+    type  <- ifelse(x@type == "PA", "dominant", "codominant")
+    nmlg  <- length(unique(x@mlg))
+    nloc  <- nLoc(x)
+    npop  <- ifelse(is.null(x@pop), 0, length(x@pop.names))
+    hier  <- length(x@hierarchy)
+    chars <- nchar(c(nmlg, nind, nloc, hier, npop))
+    ltab  <- max(chars) - chars
+    ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
+    pops  <- x@pop.names
+    if (!fullnames && length(pops) > 7) 
+      pops <- c(pops[1:6], "...", pops[length(pops)])
+    hiernames <- names(x@hierarchy)
+    if (!fullnames && length(hiernames) > 7) 
+      hiernames <- c(hiernames[1:6], "...", hiernames[length(hiernames)])
+    cat("\nThis is a genclone object\n")
+    cat("-------------------------\n")
+    cat("Genotype information:\n\n",
+      nmlg, ltab[1], "multilocus genotypes\n",
+      nind, ltab[2], ploid, "individuals\n", 
+      nloc, ltab[3], type, "loci\n\n"
+      )
+    pophier <- ifelse(hier > 1, "hierarchies -", "hierarchy -")
+    if (hier == 0) pophier <- "hierarchies."
+    popdef  <- ifelse(npop > 0, "defined -", "defined.")
+    cat("Population information:\n\n")
+    cat("", hier, ltab[4], "population", pophier, hiernames, fill = TRUE)
+    cat("", npop, ltab[5], "populations", popdef, pops, fill = TRUE)
   })
 
 #==============================================================================#

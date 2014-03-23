@@ -2,6 +2,7 @@
 \name{[,genclone,ANY,ANY,ANY-method}
 \alias{[,genclone,ANY,ANY,ANY-method}
 \alias{initialize,genclone-method}
+\alias{print,genclone-method}
 \alias{show,genclone-method}
 \title{Methods used for the genclone object}
 \usage{
@@ -11,6 +12,8 @@
 \S4method{initialize}{genclone}(.Object, gen, hierarchy, mlg)
 
 \S4method{show}{genclone}(object)
+
+\S4method{print}{genclone}(x, ..., fullnames = TRUE)
 }
 \arguments{
   \item{x}{a genclone object}
@@ -48,6 +51,13 @@
   multilocus genotype of that individual in the data set.}
 
   \item{object}{a genclone object}
+
+  \item{x}{a genclone object}
+
+  \item{fullnames}{\code{logical}. If \code{TRUE}, then the
+  full names of the populations will be printed. If
+  \code{FALSE}, then only the first six and last population
+  names are displayed.}
 }
 \description{
 Default methods for subsetting genclone objects.
