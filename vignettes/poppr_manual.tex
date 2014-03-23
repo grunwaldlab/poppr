@@ -1493,7 +1493,7 @@ We can see here a lot of summary statistics about nancycats. Here we can see tha
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{nancycats}\hlopt{$}\hlstd{loc.names}  \hlcom{# Names of the loci}
+\hlkwd{locNames}\hlstd{(nancycats)}  \hlcom{# Names of the loci}
 \end{alltt}
 \begin{verbatim}
 ##      L1      L2      L3      L4      L5      L6      L7      L8      L9 
@@ -1599,13 +1599,13 @@ Let's look at the loci names and number of individuals.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{length}\hlstd{(nanloci}\hlopt{$}\hlstd{ind.names)}  \hlcom{# Individuals}
+\hlkwd{nInd}\hlstd{(nanloci)}  \hlcom{# Individuals}
 \end{alltt}
 \begin{verbatim}
 ## [1] 237
 \end{verbatim}
 \begin{alltt}
-\hlstd{nanloci}\hlopt{$}\hlstd{loc.names}  \hlcom{# Names of the loci}
+\hlkwd{locNames}\hlstd{(nanloci)}  \hlcom{# Names of the loci}
 \end{alltt}
 \begin{verbatim}
 ##      L1      L2      L3      L4      L5      L6      L7 
@@ -1630,13 +1630,13 @@ Let's look at what happened when we removed individuals.
 ## 005   0.0   1.0     0     0     0   0.0
 \end{verbatim}
 \begin{alltt}
-\hlkwd{length}\hlstd{(nangeno}\hlopt{$}\hlstd{ind.names)}  \hlcom{# Individuals}
+\hlkwd{nInd}\hlstd{(nangeno)}  \hlcom{# Individuals}
 \end{alltt}
 \begin{verbatim}
 ## [1] 199
 \end{verbatim}
 \begin{alltt}
-\hlstd{nangeno}\hlopt{$}\hlstd{loc.names}  \hlcom{# Names of the loci}
+\hlkwd{locNames}\hlstd{(nangeno)}  \hlcom{# Names of the loci}
 \end{alltt}
 \begin{verbatim}
 ##      L1      L2      L3      L4      L5      L6      L7      L8      L9 
@@ -1683,10 +1683,8 @@ genclone objects:
 \end{tabular}
 \end{table}
 \noindent
-NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies}.\\
-\noindent
-There is also one other function that allows you to define populations based on
-hierarchies called \texttt{setpop}. This will likely be the most used function. 
+NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
+details on how to access hierarchies.\\
 
 These functions all have a syntax that looks like this:
 \begin{knitrout}\footnotesize
@@ -1724,6 +1722,7 @@ hierarchies defined, Continent and Country:
 \end{kframe}
 \end{knitrout}
 
+\noindent
 Let's say I wanted to change the hierarchy names to Spanish. I can do that using
 \texttt{namehierarchy}.
 \begin{knitrout}\footnotesize
@@ -1768,6 +1767,7 @@ Let's say I wanted to change the hierarchy names to Spanish. I can do that using
 \end{kframe}
 \end{knitrout}
 
+\noindent
 The original data set has stayed the same and we now have a new data set with the
 names we want.
 
@@ -1834,6 +1834,115 @@ advantage to having both systems is that with the
 \texttt{function(object, input)} syntax, you can test manipulation without 
 affecting your object.
 
+\subsubsection{Defining populations with hierarchies}\label{data.manip:hier:define}
+
+Of course, these hierarchies would mean nothing if it was difficult or not
+possible to define the populations in the data set We notice that above, we have
+two hierarchies for Continent and Country, but the populations only show Continent
+level populations. If we wanted to investigate each country separately, we would
+need to reset the population to be represented by Country. This can be done with
+the function \texttt{setpop}.
+
+This function utilizes the defined population hierarchies to set the population.
+We'll use our data set above to illustrate this:
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{namehierarchy}\hlstd{(Pinf)} \hlkwb{<-} \hlopt{~}\hlstd{Continent}\hlopt{/}\hlstd{Country}
+\hlstd{Pinf}  \hlcom{# Still by continent}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    72 multilocus genotypes
+##    86 tetraploid individuals
+##    11 codominant loci
+## 
+## Population information:
+## 
+##     2 population hierarchies - Continent Country
+##     2 populations defined - South America North America
+\end{verbatim}
+\begin{alltt}
+\hlkwd{setpop}\hlstd{(Pinf)} \hlkwb{<-} \hlopt{~}\hlstd{Country}
+\hlstd{Pinf}  \hlcom{# Now set by country}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    72 multilocus genotypes
+##    86 tetraploid individuals
+##    11 codominant loci
+## 
+## Population information:
+## 
+##     2 population hierarchies - Continent Country
+##     4 populations defined - Colombia Ecuador Mexico Peru
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+The beauty about it is the fact that it will also combine all the hierarchical
+levels you want to use. Let's see when we ask it to set the population of
+Country with respect to Continent.
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{setpop}\hlstd{(Pinf)} \hlkwb{<-} \hlopt{~}\hlstd{Continent}\hlopt{/}\hlstd{Country}
+\hlstd{Pinf}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    72 multilocus genotypes
+##    86 tetraploid individuals
+##    11 codominant loci
+## 
+## Population information:
+## 
+##     2 population hierarchies - Continent Country
+##     4 populations defined - South America_Colombia South America_Ecuador 
+## North America_Mexico South America_Peru
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+Nice!
+
+Let's see what happens when we want to try to set our population year collected
+with respect to country.
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{setpop}\hlstd{(Pinf)} \hlkwb{<-} \hlopt{~}\hlstd{Country}\hlopt{/}\hlstd{Year}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: One or more levels in the given hierarchy is not present in the data frame. \\\#\# Hierarchy:	 Country, Year \\\#\# Data:		 Continent, Country}}\end{kframe}
+\end{knitrout}
+
+\noindent
+This didn't work because we don't have Year defined within our hierarchy. In this
+case, we would likely have an outside vector defining the year. To define the 
+population to just year, we could use the \textit{adegenet} function \texttt{pop}
+to set the population with respect to year, but this would not update the
+hierarchy. A better way to do this would be to add year to the hierarchy with the
+function \cmdlink{data.manip:hier:manip}{addhierarchy} and define it as above.
+
 \subsubsection{Defining hierarchies}\label{data.manip:hier:define}
 
 \tab\tab In order to utilize hierarchies, they must be defined. As genind objects
@@ -1843,9 +1952,11 @@ the function \texttt{read.table}. Another way of automatically
 doing so is to concatenate your hierarchies using a common delimiter such as `\_'
 and defining that as the population factor in your input file. See the section 
 \seclink{intro:import:genalex.short}{Genalex Formatting Shortcuts} for more
-details. An example of a formatted GenAlEx file can be found here: \url{http://dx.doi.org/10.6084/m9.figshare.877104}. It is an AFLP data set of the rootrot pathogen \texttt{Aphanomyces euteiches}. We will use this data set as an example of
-importing hierarchical data automatically. We will first copy the download link
-from figshare and use it with the function 
+details. An example of a formatted GenAlEx file can be found here: 
+\url{http://dx.doi.org/10.6084/m9.figshare.877104}. It is an AFLP data set of the
+root rot pathogen \texttt{Aphanomyces euteiches}. We will use this data set as 
+an example of importing hierarchical data automatically. We will first copy the 
+download link from figshare and use it with the function 
 \cmdlink{intro:import:read.genalex}{read.genalex}. 
 
 \begin{knitrout}\footnotesize
@@ -2039,32 +2150,6 @@ respect to country:
 \end{kframe}
 \end{knitrout}
 
-\noindent
-Just by year:
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{setpop}\hlstd{(virus)} \hlkwb{<-} \hlopt{~}\hlstd{year}
-\hlstd{virus}
-\end{alltt}
-\begin{verbatim}
-## 
-## This is a genclone object
-## -------------------------
-## Genotype information:
-## 
-##     752 multilocus genotypes
-##    1903 haploid individuals
-##     125 codominant loci
-## 
-## Population information:
-## 
-##       2 population hierarchies - country year
-##       5 populations defined - 2002 2003 2004 2005 2006
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
 
 \subsubsection{Viewing hierarchies}\label{data.manip:hier:view}
 
@@ -2177,14 +2262,199 @@ It will return only the levels you ask it to return:
 
 \subsubsection{Manipulating hierarchies}\label{data.manip:hier:manip}
 
-... Section options ...
-\begin{itemize}
-\item Refer to \seclink{intro:genclone:access}{Accessing hierarchies}.
-\item Ways of using the methods (f(x) <- y vs. f(x, y))
-\item Hierarchy Definitions (set, split)
-\item Viewing hierarchies (get)
-\item Hierarchy Manipulations (name, add)
-\end{itemize}
+Once we have our hierarchies set in place, we want to be able to rename and add
+to them. For this example, we will revisit the virus example from above. We have
+set the population hierarchy to be based on year and country, but we've noticed
+that we left out month. And let's say that we did something stupid like this:
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{virus_info} \hlkwb{<-} \hlstd{virus_info[[}\hlstr{"month"}\hlstd{]]}
+\hlkwd{names}\hlstd{(virus_info)}
+\end{alltt}
+\begin{verbatim}
+## NULL
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+If we were saving our script the whole time, we could just go back and retrieve
+the data frame, but that defeats the purpose of this section where we imagine
+that we've recieved new information and wanted to add it to our hierarchy. If we
+want to add this to our hierarchy, all we have to do is just use the function
+\texttt{addhierarchy}.
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{addhierarchy}\hlstd{(virus)} \hlkwb{<-} \hlstd{virus_info}
+\hlstd{virus}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##     752 multilocus genotypes
+##    1903 haploid individuals
+##     125 codominant loci
+## 
+## Population information:
+## 
+##       3 population hierarchies - country year NEW
+##     102 populations defined - 2002_Japan 2002_USA 2002_Finland ... 2006_Bangladesh 
+## 2006_Algeria 2006_Sweden 2006_Greece
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Uh oh, we see that the new hierarchical level is called `NEW' when we want it to
+be called `month'. When this happens, we can simply just rename the hierarchy
+using the function \texttt{namehierarchy}.
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{namehierarchy}\hlstd{(virus)} \hlkwb{<-} \hlopt{~}\hlstd{year}\hlopt{/}\hlstd{country}\hlopt{/}\hlstd{month}
+\hlstd{virus}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##     752 multilocus genotypes
+##    1903 haploid individuals
+##     125 codominant loci
+## 
+## Population information:
+## 
+##       3 population hierarchies - country year month
+##     102 populations defined - 2002_Japan 2002_USA 2002_Finland ... 2006_Bangladesh 
+## 2006_Algeria 2006_Sweden 2006_Greece
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Of course, we could also use the $f(x, y)$ syntax instead of the assignment 
+defined as thus:
+\begin{quote}
+Default Command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+addhierarchy(x, value, name = "NEW")
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\end{quote}
+We notice that there is an argument called \textbf{name}. This will set the name
+of our new level. Let's rewind and imagine that we didn't set the hierarchy back
+there.
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{virus}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##     752 multilocus genotypes
+##    1903 haploid individuals
+##     125 codominant loci
+## 
+## Population information:
+## 
+##       2 population hierarchies - country year
+##     102 populations defined - 2002_Japan 2002_USA 2002_Finland ... 2006_Bangladesh 
+## 2006_Algeria 2006_Sweden 2006_Greece
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+We will use the above syntax to assign the virus information with the name of
+the vector.
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{virus} \hlkwb{<-} \hlkwd{addhierarchy}\hlstd{(virus, virus_info,} \hlstr{"month"}\hlstd{)}
+\hlstd{virus}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##     752 multilocus genotypes
+##    1903 haploid individuals
+##     125 codominant loci
+## 
+## Population information:
+## 
+##       3 population hierarchies - country year month
+##     102 populations defined - 2002_Japan 2002_USA 2002_Finland ... 2006_Bangladesh 
+## 2006_Algeria 2006_Sweden 2006_Greece
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+But here's an even easier way:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{addhierarchy}\hlstd{(virus)} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwc{month} \hlstd{= virus_info)}
+\hlstd{virus}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##     752 multilocus genotypes
+##    1903 haploid individuals
+##     125 codominant loci
+## 
+## Population information:
+## 
+##       3 population hierarchies - country year month
+##     102 populations defined - 2002_Japan 2002_USA 2002_Finland ... 2006_Bangladesh 
+## 2006_Algeria 2006_Sweden 2006_Greece
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+If we use a data frame to add a population hierarchy, it will be added and all
+of the column names will be preserved. This allows you to add multiple hierarchies
+at once.
+
 % \tab\tab Remember all that fuss we made about the \texttt{@other} slot above in section \ref{intro:genind:other}? The way you can achieve hierarchical analysis in \textit{poppr} is through a data frame in that slot. Many of the file formats that \textit{adegenet} and \textit{poppr} can import do not allow for more than two hierarchies. If you need more levels, you have a couple of choices: 
 % \begin{enumerate}
 %   \item Import them into R as a data frame with each column being a separate hierarchical element.
@@ -2325,13 +2595,12 @@ popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
   \item \texttt{mat -} (see section \ref{mlg}, \textit{Multilocus Genotype Analysis} for more information) This is where you would put a matrix that's produced by \texttt{mlg.table} to be subsetted instead of the genind object. If you do this, the matrix will return with only the rows equal to your populations and only the multilocus genotypes (columns) pertaining to those populations. 
 \end{itemize}
 
-To demonstrate this tool, let's revisit the H3N2 data set. Let's say we wanted to analyze only the data in North America. To make sure we are all on the same page, we will reset the population factor to ``country". Remember that this is located in a data frame in the \texttt{@other} slot called ``x".
+To demonstrate this tool, let's revisit the virus data set that we saw in \seclink{data.manip:hier:define}{Defining hierarchies}. Let's say we wanted to analyze only the data in North America. To make sure we are all on the same page, we will reset the population factor to ``country".
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{data}\hlstd{(H3N2)}
-\hlkwd{pop}\hlstd{(H3N2)} \hlkwb{<-} \hlstd{H3N2}\hlopt{$}\hlstd{other}\hlopt{$}\hlstd{x}\hlopt{$}\hlstd{country}
-\hlstd{H3N2}\hlopt{$}\hlstd{pop.names}  \hlcom{# Only two countries from North America.}
+\hlkwd{setpop}\hlstd{(virus)} \hlkwb{<-} \hlopt{~}\hlstd{country}
+\hlstd{virus}\hlopt{$}\hlstd{pop.names}  \hlcom{# Only two countries from North America.}
 \end{alltt}
 \begin{verbatim}
 ##  [1] "Japan"          "USA"            "Finland"        "China"          "South Korea"   
@@ -2344,8 +2613,8 @@ To demonstrate this tool, let's revisit the H3N2 data set. Let's say we wanted t
 ## [36] "Croatia"        "Algeria"
 \end{verbatim}
 \begin{alltt}
-\hlstd{H.na} \hlkwb{<-} \hlkwd{popsub}\hlstd{(H3N2,} \hlkwc{sublist} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"USA"}\hlstd{,} \hlstr{"Canada"}\hlstd{))}
-\hlstd{H.na}\hlopt{$}\hlstd{pop.names}
+\hlstd{vna} \hlkwb{<-} \hlkwd{popsub}\hlstd{(virus,} \hlkwc{sublist} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"USA"}\hlstd{,} \hlstr{"Canada"}\hlstd{))}
+\hlstd{vna}\hlopt{$}\hlstd{pop.names}
 \end{alltt}
 \begin{verbatim}
 ##       P1       P2 
@@ -2354,17 +2623,18 @@ To demonstrate this tool, let's revisit the H3N2 data set. Let's say we wanted t
 \end{kframe}
 \end{knitrout}
 
+\noindent
 Since this is a larger data set, running the \texttt{summary} function might take a few seconds longer than we want it to. If we want to see the population size, we can use the \textit{adegenet} function \texttt{nInd()}:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{nInd}\hlstd{(H.na)}
+\hlkwd{nInd}\hlstd{(vna)}
 \end{alltt}
 \begin{verbatim}
 ## [1] 665
 \end{verbatim}
 \begin{alltt}
-\hlkwd{nInd}\hlstd{(H3N2)}
+\hlkwd{nInd}\hlstd{(virus)}
 \end{alltt}
 \begin{verbatim}
 ## [1] 1903
@@ -2372,12 +2642,13 @@ Since this is a larger data set, running the \texttt{summary} function might tak
 \end{kframe}
 \end{knitrout}
 
+\noindent
 You can see that the population factors are correct and that the size of the data set is considerably smaller. Let's see the data set without the North American countries.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H.minus.na} \hlkwb{<-} \hlkwd{popsub}\hlstd{(H3N2,} \hlkwc{blacklist} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"USA"}\hlstd{,} \hlstr{"Canada"}\hlstd{))}
-\hlstd{H.minus.na}\hlopt{$}\hlstd{pop.names}
+\hlstd{vnaminus} \hlkwb{<-} \hlkwd{popsub}\hlstd{(virus,} \hlkwc{blacklist} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"USA"}\hlstd{,} \hlstr{"Canada"}\hlstd{))}
+\hlstd{vnaminus}\hlopt{$}\hlstd{pop.names}
 \end{alltt}
 \begin{verbatim}
 ##              P01              P02              P03              P04              P05 
@@ -2398,11 +2669,12 @@ You can see that the population factors are correct and that the size of the dat
 \end{kframe}
 \end{knitrout}
 
+\noindent
 Let's make sure that the number of individuals in both data sets added up equals the number of individuals in our original data set:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{(}\hlkwd{nInd}\hlstd{(H.minus.na)} \hlopt{+} \hlkwd{nInd}\hlstd{(H.na))} \hlopt{==} \hlkwd{nInd}\hlstd{(H3N2)}
+\hlstd{(}\hlkwd{nInd}\hlstd{(vnaminus)} \hlopt{+} \hlkwd{nInd}\hlstd{(vna))} \hlopt{==} \hlkwd{nInd}\hlstd{(virus)}
 \end{alltt}
 \begin{verbatim}
 ## [1] TRUE
@@ -2415,16 +2687,16 @@ Now we have data sets with and without North America. Let's try something a bit 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{Hsort} \hlkwb{<-} \hlkwd{sort}\hlstd{(H3N2}\hlopt{$}\hlstd{pop.names)[}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{]}
-\hlstd{Hsort}
+\hlstd{vsort} \hlkwb{<-} \hlkwd{sort}\hlstd{(virus}\hlopt{$}\hlstd{pop.names)[}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{]}
+\hlstd{vsort}
 \end{alltt}
 \begin{verbatim}
 ##  [1] "Algeria"        "Austria"        "Bangladesh"     "Bulgaria"       "Canada"        
 ##  [6] "China"          "Croatia"        "Czech Republic" "Denmark"        "Egypt"
 \end{verbatim}
 \begin{alltt}
-\hlstd{H.alph} \hlkwb{<-} \hlkwd{popsub}\hlstd{(H3N2,} \hlkwc{sublist} \hlstd{= Hsort,} \hlkwc{blacklist} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"USA"}\hlstd{,} \hlstr{"Canada"}\hlstd{))}
-\hlstd{H.alph}\hlopt{$}\hlstd{pop.names}
+\hlstd{valph} \hlkwb{<-} \hlkwd{popsub}\hlstd{(virus,} \hlkwc{sublist} \hlstd{= vsort,} \hlkwc{blacklist} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"USA"}\hlstd{,} \hlstr{"Canada"}\hlstd{))}
+\hlstd{valph}\hlopt{$}\hlstd{pop.names}
 \end{alltt}
 \begin{verbatim}
 ##               P1               P2               P3               P4               P5 
@@ -2435,16 +2707,27 @@ Now we have data sets with and without North America. Let's try something a bit 
 \end{kframe}
 \end{knitrout}
 
+\noindent
 And that, is how you subset your data with poppr!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Attack of the clone correction \{clone-censor data sets\}}\label{data.manip:cc}
 
-\tab\tab Clone correction refers to the ability of keeping one observation per clone in a given population (or sub-population). Clone correcting can be hazardous if its done by hand (even on small data sets) and it requires a defined population hierarchy to get relevant results. \textit{Poppr} has a clone correcting function that is able to correct at the lowest level of any defined population hierarchy. Note that clone correction in \textit{poppr} is sensitive to missing data, as it treats all missing data as a single extra allele.
+\tab\tab Clone correction refers to the ability of keeping one observation per
+clone in a given population (or sub-population). Clone correcting can be
+hazardous if its done by hand (even on small data sets) and it requires a
+defined population hierarchy to get relevant results. \textit{Poppr} has a clone
+correcting function that is able to correct at the lowest level of any defined
+population hierarchy. Note that clone correction in \textit{poppr} is sensitive
+to missing data, as it treats all missing data as a single extra allele.
 \subsubsection{Function: clonecorrect}\label{data.manip:cc:clonecorrect}
 
-\tab\tab This function will return a clone corrected data set corrected for the lowest population level. Population levels are specified with the \texttt{hier} flag. You can choose to combine the population hierarchy to analyze at the lowest population level by choosing \texttt{combine = TRUE}.
+\tab\tab This function will return a clone corrected data set corrected for the
+lowest population level. Population levels are specified with the \texttt{hier}
+flag. You can choose to combine the population hierarchy to analyze at the
+lowest population level by choosing \texttt{combine = TRUE}.
+
 \begin{quote}
 Default Command:
 \begin{knitrout}
@@ -2456,50 +2739,165 @@ clonecorrect(pop, hier = 1, dfname = "population_hierarchy",
 \end{kframe}
 \end{knitrout}
 
-% \texttt{clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)}
 \end{quote}
 \begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object that has a population hierarchy data frame in the \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily require a population factor to begin with. 
-  \item \texttt{hier -} This can be a vector of words or numbers referring to specific column names in your data frame in the \texttt{@other} slot.
-  \item \texttt{dfname -} The name of a data frame you have in the \texttt{@other} slot with the population factors.
-  \item \texttt{combine -} Do you want to combine the population hierarchy? If it's set to \texttt{FALSE} (default), you will be returned a genind object with the top most hierarchical level as a population factor. 
-  \item \texttt{keep -} This flag is to be used if you set \texttt{combine = FALSE}. This will tell clone correct to return a specific combination of your hierarchy. For example, imagine a hierarchy that needs to be clone corrected at three levels: \textit{Population} by \textit{Year} by \textit{Month}. If you wanted to only run an analysis on the \textit{Population} level, you would set \texttt{keep = 1} since \textit{Population} is the first level of the hierarchy. On the other hand, if you wanted to run analysis on \textit{Year} by \textit{Month}, you would set \texttt{keep = 2:3} since those are the second and third levels of the hierarchy. 
+  \item \texttt{pop -} a \texttt{genclone} object with a defined hierarchy or a
+   \texttt{genind} object that has a population hierarchy data frame in the 
+   \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily 
+   require a population factor to begin with. 
+  \item \texttt{hier -} A formula where the levels representing the hierarchical
+   levels in your data. 
+  \item \texttt{dfname -} \textbf{Only for use in genind objects, otherwise, deprecated}
+   The name of a data frame you have in the \texttt{@other} slot with the population factors. 
+  \item \texttt{combine -} Do you want to combine the population hierarchy? 
+   If it's set to \texttt{FALSE} (default), you will be returned an object with 
+   the top most hierarchical level as a population factor unless the \textbf{keep}
+   argument is defined. If set to \texttt{TRUE}, the hierarchy will be returned
+   combined. 
+  \item \texttt{keep -} This flag is to be used if you set \texttt{combine = FALSE}. 
+   This will tell clone correct to return a specific combination of your hierarchy
+   defined as integers.
+   For example, imagine a hierarchy that needs to be clone corrected at three levels: 
+   \textit{Population} by \textit{Year} by \textit{Month}. If you wanted to only 
+   run an analysis on the \textit{Population} level, you would set \texttt{keep = 1} 
+   since \textit{Population} is the first level of the hierarchy. On the other hand, 
+   if you wanted to run analysis on \textit{Year} by \textit{Month}, you would set 
+   \texttt{keep = 2:3} since those are the second and third levels of the hierarchy. 
 \end{itemize}
 
-Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} data since that data set is known to include clonal populations \cite{Grunwald:2006}. Notice that I am not including the options \texttt{dfname} and \texttt{combine} because the default arguments suit my needs.
+Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} 
+data that we loaded earlier in the section \seclink{data.manip:hier}{Can you take
+me hier(archy)} since that data set is known to include clonal populations 
+\cite{Grunwald:2006}. Normally, we will assign the clone corrected data to a new
+variable, but we will not do so for this demonstration. As the data sets pass by,
+notice how many individuals and multilocus genotypes we have in the genclone
+object.
+
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{data}\hlstd{(Aeut)}
-\hlstd{A.cc} \hlkwb{<-} \hlkwd{clonecorrect}\hlstd{(Aeut,} \hlkwc{hier} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"Pop"}\hlstd{,} \hlstr{"Subpop"}\hlstd{),} \hlkwc{keep} \hlstd{=} \hlnum{1}\hlstd{)}
-\hlkwd{poppr}\hlstd{(A.cc,} \hlkwc{quiet} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlstd{aphan}
 \end{alltt}
 \begin{verbatim}
-##          Pop   N MLG eMLG   SE    H    G  Hexp   E.5    Ia  rbarD File
-## 1     Athena  76  70 60.6 1.02 4.22 65.6 0.998 0.963  2.54 0.0622 A.cc
-## 2 Mt. Vernon  65  50 50.0 0.00 3.80 36.7 0.988 0.821 14.31 0.2977 A.cc
-## 3      Total 141 119 59.6 1.85 4.71 97.0 0.997 0.876 13.80 0.2600 A.cc
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    119 multilocus genotypes
+##    187 diploid individuals
+##     56 dominant loci
+## 
+## Population information:
+## 
+##      2 population hierarchies - field sample
+##     18 populations defined - Athena_1 Athena_2 Athena_3 ... Mt. Vernon_5 Mt. Vernon_6 
+## Mt. Vernon_7 Mt. Vernon_8
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Correcting by sample with respect to field and keeping field as the population.}
+\hlkwd{clonecorrect}\hlstd{(aphan,} \hlkwc{hier} \hlstd{=} \hlopt{~}\hlstd{field}\hlopt{/}\hlstd{sample)}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    119 multilocus genotypes
+##    141 diploid individuals
+##     56 dominant loci
+## 
+## Population information:
+## 
+##      2 population hierarchies - field sample
+##      2 populations defined - Athena Mt. Vernon
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Keeping both field and sample}
+\hlkwd{clonecorrect}\hlstd{(aphan,} \hlkwc{hier} \hlstd{=} \hlopt{~}\hlstd{field}\hlopt{/}\hlstd{sample,} \hlkwc{combine} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    119 multilocus genotypes
+##    141 diploid individuals
+##     56 dominant loci
+## 
+## Population information:
+## 
+##      2 population hierarchies - field sample
+##     18 populations defined - Athena_1 Athena_2 Athena_3 ... Mt. Vernon_5 Mt. Vernon_6 
+## Mt. Vernon_7 Mt. Vernon_8
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Keeping only the sample}
+\hlkwd{clonecorrect}\hlstd{(aphan,} \hlkwc{hier} \hlstd{=} \hlopt{~}\hlstd{field}\hlopt{/}\hlstd{sample,} \hlkwc{keep} \hlstd{=} \hlnum{2}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    119 multilocus genotypes
+##    141 diploid individuals
+##     56 dominant loci
+## 
+## Population information:
+## 
+##      2 population hierarchies - field sample
+##     10 populations defined - 1 2 3 ... 7 8 9 10
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Correcting by field}
+\hlkwd{clonecorrect}\hlstd{(aphan,} \hlkwc{hier} \hlstd{=} \hlopt{~}\hlstd{field)}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    119 multilocus genotypes
+##    120 diploid individuals
+##     56 dominant loci
+## 
+## Population information:
+## 
+##      2 population hierarchies - field sample
+##      2 populations defined - Athena Mt. Vernon
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Correcting over whole data set}
+\hlkwd{clonecorrect}\hlstd{(aphan,} \hlkwc{hier} \hlstd{=} \hlnum{NA}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    119 multilocus genotypes
+##    119 diploid individuals
+##     56 dominant loci
+## 
+## Population information:
+## 
+##      2 population hierarchies - field sample
+##     18 populations defined - Athena_1 Athena_2 Athena_3 ... Mt. Vernon_5 Mt. Vernon_6 
+## Mt. Vernon_7 Mt. Vernon_8
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-Now let's compare the clone corrected analysis to the uncorrected data set:
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{poppr}\hlstd{(Aeut,} \hlkwc{quiet} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\end{alltt}
-\begin{verbatim}
-##          Pop   N MLG eMLG   SE    H    G  Hexp   E.5    Ia  rbarD File
-## 1     Athena  97  70 66.0 1.25 4.06 42.2 0.986 0.721  2.91 0.0724 Aeut
-## 2 Mt. Vernon  90  50 50.0 0.00 3.67 28.7 0.976 0.726 13.30 0.2816 Aeut
-## 3      Total 187 119 68.5 2.99 4.56 69.0 0.991 0.720 14.37 0.2706 Aeut
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-As you can see from the summary tables, everything all sub-populations have been clone censored to the sub population level with respect to the population hierarchy. Notice how the observed number of individuals \texttt{(N)} decreases in the clone corrected data set.
+\noindent
+That, in a nutshell is clone correction. Note that you can use this to create 
+new data sets, but also that the function \cmdlink{summary:poppr}{poppr} also
+utilizes this function internally. 
 
 \subsection{Every day I'm shuffling (data sets)  \{permutations and bootstrap resampling\}}\label{data.manip:shuffle}
 
@@ -2523,87 +2921,208 @@ shufflepop(pop, method = 1)
   The following methods are available for use:
   \begin{enumerate}
     \item \textbf{Permute Alleles (default)} This is a sampling scheme that will permute alleles within the locus. For example, a single diploid locus with four alleles (1, 2, 3, 4) with the frequencies of 0.1, 0.2, 0.3, and 0.4, respectively:
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-##      [,1] [,2]
-## [1,]    4    4
-## [2,]    4    1
-## [3,]    4    3
-## [4,]    2    2
-## [5,]    3    3
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-might become:
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-##      [,1] [,2]
-## [1,]    3    2
-## [2,]    2    4
-## [3,]    1    3
-## [4,]    4    3
-## [5,]    4    4
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+% <<shuffle_mat, echo=FALSE>>=
+% exmat <- matrix(c(4,4,
+%          4,1,
+%          4,3,
+%          2,2,
+%          3,3), 5, byrow=TRUE)
+% exmat
+% @
+% latex table generated in R 3.0.3 by xtable 1.7-3 package
+% Sun Mar 23 11:52:35 2014
+\begin{table}[h!]
+\centering
+\begin{tabular}{lc}
+          \hline
+            & A1/A2 \\ 
+          \hline
+          1 & 4/4 \\ 
+          2 & 4/1 \\ 
+          3 & 4/3 \\ 
+          4 & 2/2 \\ 
+          5 & 3/3 \\ 
+           \hline
+        \end{tabular}
+        \caption{Original}
+        \label{tab:original}
+\end{table}
+\newpage
+Might become
+\begin{table}[h!]
+\centering
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+            & A1/A2 \\ 
+          \hline
+          1 & 3/4 \\ 
+          2 & 2/3 \\ 
+          3 & 4/4 \\ 
+          4 & 2/1 \\ 
+          5 & 3/4 \\ 
+           \hline
+        \end{tabular}
+        \caption{Permute 1}
+        \label{tab:singlebest}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 1/3 \\ 
+          2 & 2/4 \\ 
+          3 & 3/4 \\ 
+          4 & 4/3 \\ 
+          5 & 4/2 \\ 
+           \hline
+        \end{tabular}
+        \caption{Permute 2}
+        \label{tab:twobest}
+    \end{minipage}
+}}
+\end{table}
 
 As you can see, The heterozygosity has changed, yet the allelic frequencies remain the same. Overall this would show you, for example, what would happen if the sample you had underwent panmixis within this sample itself. 
-    \item \textbf{Parametric Bootstrap} The previous scheme reshuffled the observed sample, but the parametric bootstrap uses the allelic frequencies as estimates of what the true allelic frequencies are and uses those as probabilities for each allele when resampling the data with replacement. Here are two samples to show you what I mean.
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## First Sample
-##      [,1] [,2]
-## [1,]    1    3
-## [2,]    3    3
-## [3,]    3    2
-## [4,]    4    4
-## [5,]    4    2
-## Second Sample
-##      [,1] [,2]
-## [1,]    3    4
-## [2,]    2    3
-## [3,]    4    2
-## [4,]    4    4
-## [5,]    4    2
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+    \item \textbf{Parametric Bootstrap} The previous scheme reshuffled the observed sample, but the parametric bootstrap draws samples from a multinomial distribution using the observed allele frequencies as weights. Here are two samples to show you what I mean.
+% <<param_boot, echo=FALSE>>=
+% set.seed(1001)
+% cat("First Sample")
+% matrix(sample(1:4, 10, prob=c(0.1,0.2,0.3,0.4), replace=TRUE), 5, byrow=T)
+% cat("Second Sample")
+% matrix(sample(1:4, 10, prob=c(0.1,0.2,0.3,0.4), replace=TRUE), 5, byrow=T)
+% @
 
+\begin{table}[h!]
+\centering
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 1/3 \\ 
+          2 & 3/3 \\ 
+          3 & 3/2 \\ 
+          4 & 4/4 \\ 
+          5 & 4/2 \\ 
+           \hline
+        \end{tabular}
+        \caption{Parametric 1}
+        \label{tab:param1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 3/4 \\ 
+          2 & 2/3 \\ 
+          3 & 4/2 \\ 
+          4 & 4/4 \\ 
+          5 & 4/2 \\ 
+           \hline
+        \end{tabular}
+        \caption{Parametric 2}
+        \label{tab:param2}
+    \end{minipage}
+}}
+\end{table}
 
 Notice how the heterozygosity has changed along with the allelic frequencies. The frequencies for alleles 3 and 4 have switched in the first data set, and we've lost allele 1 in the second data set purely by chance! This type of sampling scheme attempts to show you what the true population would look like if it were panmictic and your original sample gave you a basis for estimating expected allele frequencies. Since estimates are made from the observed allele frequencies, small samples will produce skewed results.
-    \item \textbf{Non-Parametric Bootstrap} The third method is sampling with replacement, but with no assumption about the distribution of the alleles. 
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-##      [,1] [,2]
-## [1,]    1    3
-## [2,]    3    3
-## [3,]    3    1
-## [4,]    2    2
-## [5,]    3    1
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+    \item \textbf{Non-Parametric Bootstrap} The third method is sampling with replacement, again drawing from a multinomial distribution, but with no assumption about the allele frequencies. 
+% <<boot, echo=FALSE>>=
+% set.seed(1001)
+% matrix(sample(1:4, 10, prob=rep(1, 4), replace=TRUE), 5, byrow=T)
+% @
+
+% latex table generated in R 3.0.3 by xtable 1.7-3 package
+% Sun Mar 23 11:57:06 2014
+
+\begin{table}[h!]
+\centering
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 1/3 \\ 
+          2 & 3/3 \\ 
+          3 & 3/1 \\ 
+          4 & 2/2 \\ 
+          5 & 3/1 \\ 
+           \hline
+        \end{tabular}
+        \caption{Non-parametric 1}
+        \label{tab:nonparam1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 1/3 \\ 
+          2 & 3/1 \\ 
+          3 & 2/3 \\ 
+          4 & 2/1 \\ 
+          5 & 4/3 \\ 
+           \hline
+        \end{tabular}
+        \caption{Non-parametric 2}
+        \label{tab:nonparam2}
+    \end{minipage}
+}}
+\end{table}
 
 Again, heterozygosity and allele frequencies are not maintained, but now all of the alleles have a 1 in 4 chance of being chosen.
     \item \textbf{Multilocus permutation} This is called Multilocus permutation because it does the same thing as the permutation analysis in the program \textit{multilocus} by Paul Agapow and Austin Burt \cite{Agapow:2001}. This will shuffle the genotypes at each locus. Using our example above, here it is shuffled with method 4:
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-##      [,1] [,2]
-## [1,]    3    3
-## [2,]    4    1
-## [3,]    2    2
-## [4,]    4    4
-## [5,]    4    3
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+% <<multilocus_shuffle,echo=FALSE>>=
+% set.seed(1001)
+% exmat[sample(1:5), ]
+% @
 
+\begin{table}[h!]
+\centering
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 3/3 \\ 
+          2 & 4/1 \\ 
+          3 & 2/2 \\ 
+          4 & 4/4 \\ 
+          5 & 4/3 \\ 
+           \hline
+        \end{tabular}
+        \caption{ML 1}
+        \label{tab:singlebest}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 4/4 \\ 
+          2 & 2/2 \\ 
+          3 & 3/3 \\ 
+          4 & 4/3 \\ 
+          5 & 4/1 \\ 
+           \hline
+        \end{tabular}
+        \caption{ML 2}
+        \label{tab:twobest}
+    \end{minipage}
+}}
+\end{table}
 
 Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of section \ref{index:iard:ia} of this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
   \end{enumerate}

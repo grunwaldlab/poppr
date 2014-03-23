@@ -815,7 +815,7 @@ summary(nancycats)
 
 We can see here a lot of summary statistics about nancycats. Here we can see that there are 17 populations, 237 individuals, and 9 loci. Nancycats also has a little over 2.3\% missing data. Let's take a look at the names of the loci and the structure of the data. In order to save space, I will only show you the first five individuals (rows) and a portion of the alleles in the first locus (columns).
 <<nancy_indiv>>=
-nancycats$loc.names # Names of the loci
+locNames(nancycats) # Names of the loci
 nancycats$tab[1:5, 8:13]
 @
 
@@ -836,15 +836,15 @@ nanloci$tab[1:5, 8:13]
 Notice how we now see columns named ``L2.01" and ``L2.02". This is showing us another locus because we have removed the first. Recall from the summary table that the first locus had 16 alleles, and the second had 11. Now that we've removed loci containing missing data, all others have shifted over.\\
 Let's look at the loci names and number of individuals.
 <<missingno_loci>>=
-length(nanloci$ind.names) # Individuals
-nanloci$loc.names # Names of the loci
+nInd(nanloci) # Individuals
+locNames(nanloci) # Names of the loci
 @
 You can see that the number of individuals stayed the same but the loci ``fca8", ``fca45", and ``fca96" were removed.\\
 Let's look at what happened when we removed individuals.
 <<missingno_geno>>=
 nangeno$tab[1:5, 8:13]
-length(nangeno$ind.names) # Individuals
-nangeno$loc.names # Names of the loci
+nInd(nangeno) # Individuals
+locNames(nangeno) # Names of the loci
 @
 
 We can see here that the number of individuals decreased, yet we have the same number of loci. Notice how the frequency matrix changes in both scenarios? In the scenario with ``loci", we removed several columns of the data set, and so with our sub-setting, we see alleles from the second locus. In the scenario with ``geno", we removed several rows of the data set so we see other individuals in our sub-setting.
@@ -884,10 +884,8 @@ genclone objects:
 \end{tabular}
 \end{table}
 \noindent
-NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies}.\\
-\noindent
-There is also one other function that allows you to define populations based on
-hierarchies called \texttt{setpop}. This will likely be the most used function. 
+NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
+details on how to access hierarchies.\\
 
 These functions all have a syntax that looks like this:
 <<hier_syntax, eval = FALSE>>=
@@ -900,6 +898,7 @@ hierarchies defined, Continent and Country:
 data(Pinf)
 Pinf
 @
+\noindent
 Let's say I wanted to change the hierarchy names to Spanish. I can do that using
 \texttt{namehierarchy}.
 <<Pinf_rename>>=
@@ -907,6 +906,7 @@ elPinf <- namehierarchy(Pinf, ~continente/pais) # Don't forget the formula synta
 elPinf
 Pinf
 @
+\noindent
 The original data set has stayed the same and we now have a new data set with the
 names we want.
 
@@ -931,6 +931,50 @@ advantage to having both systems is that with the
 \texttt{function(object, input)} syntax, you can test manipulation without 
 affecting your object.
 
+\subsubsection{Defining populations with hierarchies}\label{data.manip:hier:define}
+
+Of course, these hierarchies would mean nothing if it was difficult or not
+possible to define the populations in the data set We notice that above, we have
+two hierarchies for Continent and Country, but the populations only show Continent
+level populations. If we wanted to investigate each country separately, we would
+need to reset the population to be represented by Country. This can be done with
+the function \texttt{setpop}.
+
+This function utilizes the defined population hierarchies to set the population.
+We'll use our data set above to illustrate this:
+
+<<Pinf_setpop>>=
+namehierarchy(Pinf) <- ~Continent/Country
+Pinf # Still by continent
+setpop(Pinf) <- ~Country
+Pinf # Now set by country
+@
+\noindent
+The beauty about it is the fact that it will also combine all the hierarchical
+levels you want to use. Let's see when we ask it to set the population of
+Country with respect to Continent.
+
+<<Pinf_setpop_combine>>=
+setpop(Pinf) <- ~Continent/Country
+Pinf
+@
+\noindent
+Nice!
+
+Let's see what happens when we want to try to set our population year collected
+with respect to country.
+
+<<Pinf_error>>=
+setpop(Pinf) <- ~Country/Year
+@
+\noindent
+This didn't work because we don't have Year defined within our hierarchy. In this
+case, we would likely have an outside vector defining the year. To define the 
+population to just year, we could use the \textit{adegenet} function \texttt{pop}
+to set the population with respect to year, but this would not update the
+hierarchy. A better way to do this would be to add year to the hierarchy with the
+function \cmdlink{data.manip:hier:manip}{addhierarchy} and define it as above.
+
 \subsubsection{Defining hierarchies}\label{data.manip:hier:define}
 
 \tab\tab In order to utilize hierarchies, they must be defined. As genind objects
@@ -940,9 +984,11 @@ the function \texttt{read.table}. Another way of automatically
 doing so is to concatenate your hierarchies using a common delimiter such as `\_'
 and defining that as the population factor in your input file. See the section 
 \seclink{intro:import:genalex.short}{Genalex Formatting Shortcuts} for more
-details. An example of a formatted GenAlEx file can be found here: \url{http://dx.doi.org/10.6084/m9.figshare.877104}. It is an AFLP data set of the rootrot pathogen \texttt{Aphanomyces euteiches}. We will use this data set as an example of
-importing hierarchical data automatically. We will first copy the download link
-from figshare and use it with the function 
+details. An example of a formatted GenAlEx file can be found here: 
+\url{http://dx.doi.org/10.6084/m9.figshare.877104}. It is an AFLP data set of the
+root rot pathogen \texttt{Aphanomyces euteiches}. We will use this data set as 
+an example of importing hierarchical data automatically. We will first copy the 
+download link from figshare and use it with the function 
 \cmdlink{intro:import:read.genalex}{read.genalex}. 
 
 <<aphan_dummy_figshare, eval = FALSE>>=
@@ -1004,12 +1050,6 @@ respect to country:
 setpop(virus) <- ~year/country
 virus
 @
-\noindent
-Just by year:
-<<H3N2_set_year>>=
-setpop(virus) <- ~year
-virus
-@
 
 \subsubsection{Viewing hierarchies}\label{data.manip:hier:view}
 
@@ -1054,14 +1094,76 @@ head(gethierarchy(virus, ~country))
 
 \subsubsection{Manipulating hierarchies}\label{data.manip:hier:manip}
 
-... Section options ...
-\begin{itemize}
-\item Refer to \seclink{intro:genclone:access}{Accessing hierarchies}.
-\item Ways of using the methods (f(x) <- y vs. f(x, y))
-\item Hierarchy Definitions (set, split)
-\item Viewing hierarchies (get)
-\item Hierarchy Manipulations (name, add)
-\end{itemize}
+Once we have our hierarchies set in place, we want to be able to rename and add
+to them. For this example, we will revisit the virus example from above. We have
+set the population hierarchy to be based on year and country, but we've noticed
+that we left out month. And let's say that we did something stupid like this:
+
+<<virus_stupid>>=
+virus_info <- virus_info[["month"]]
+names(virus_info)
+@
+\noindent
+If we were saving our script the whole time, we could just go back and retrieve
+the data frame, but that defeats the purpose of this section where we imagine
+that we've recieved new information and wanted to add it to our hierarchy. If we
+want to add this to our hierarchy, all we have to do is just use the function
+\texttt{addhierarchy}.
+<<virus_add_oops, eval=FALSE>>=
+addhierarchy(virus) <- virus_info
+virus
+@
+<<virus_add_behind, echo = FALSE>>=
+addhierarchy(virus, virus_info)
+@
+
+Uh oh, we see that the new hierarchical level is called `NEW' when we want it to
+be called `month'. When this happens, we can simply just rename the hierarchy
+using the function \texttt{namehierarchy}.
+<<virus_name, eval = FALSE>>=
+namehierarchy(virus) <- ~year/country/month
+virus
+@
+<<virus_name_behind, echo = FALSE>>=
+addhierarchy(virus, virus_info, name = "month")
+@
+
+Of course, we could also use the $f(x, y)$ syntax instead of the assignment 
+defined as thus:
+\begin{quote}
+Default Command:
+<<addhierarchy_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "addhierarchy"
+print_command(funk)
+@
+\end{quote}
+We notice that there is an argument called \textbf{name}. This will set the name
+of our new level. Let's rewind and imagine that we didn't set the hierarchy back
+there.
+<<virus_again>>=
+virus
+@
+\noindent
+We will use the above syntax to assign the virus information with the name of
+the vector.
+<<virus_named, eval = FALSE>>=
+virus <- addhierarchy(virus, virus_info, "month")
+virus
+@
+<<virus_named_behind, echo = FALSE>>=
+addhierarchy(virus, virus_info, "month")
+@
+\noindent
+But here's an even easier way:
+<<virus_named_df>>=
+addhierarchy(virus) <- data.frame(month = virus_info)
+virus
+@
+\noindent
+If we use a data frame to add a population hierarchy, it will be added and all
+of the column names will be preserved. This allows you to add multiple hierarchies
+at once.
+
 % \tab\tab Remember all that fuss we made about the \texttt{@other} slot above in section \ref{intro:genind:other}? The way you can achieve hierarchical analysis in \textit{poppr} is through a data frame in that slot. Many of the file formats that \textit{adegenet} and \textit{poppr} can import do not allow for more than two hierarchies. If you need more levels, you have a couple of choices: 
 % \begin{enumerate}
 %   \item Import them into R as a data frame with each column being a separate hierarchical element.
@@ -1193,74 +1295,117 @@ print_command(funk)
   \item \texttt{mat -} (see section \ref{mlg}, \textit{Multilocus Genotype Analysis} for more information) This is where you would put a matrix that's produced by \texttt{mlg.table} to be subsetted instead of the genind object. If you do this, the matrix will return with only the rows equal to your populations and only the multilocus genotypes (columns) pertaining to those populations. 
 \end{itemize}
 
-To demonstrate this tool, let's revisit the H3N2 data set. Let's say we wanted to analyze only the data in North America. To make sure we are all on the same page, we will reset the population factor to ``country". Remember that this is located in a data frame in the \texttt{@other} slot called ``x".
+To demonstrate this tool, let's revisit the virus data set that we saw in \seclink{data.manip:hier:define}{Defining hierarchies}. Let's say we wanted to analyze only the data in North America. To make sure we are all on the same page, we will reset the population factor to ``country".
 <<popsub_sublist>>=
-data(H3N2)
-pop(H3N2) <- H3N2$other$x$country
-H3N2$pop.names # Only two countries from North America.
-H.na <- popsub(H3N2, sublist=c("USA", "Canada"))
-H.na$pop.names
+setpop(virus) <- ~country
+virus$pop.names # Only two countries from North America.
+vna <- popsub(virus, sublist=c("USA", "Canada"))
+vna$pop.names
 @
+\noindent
 Since this is a larger data set, running the \texttt{summary} function might take a few seconds longer than we want it to. If we want to see the population size, we can use the \textit{adegenet} function \texttt{nInd()}:
 <<popsub_sizes>>=
-nInd(H.na)
-nInd(H3N2)
+nInd(vna)
+nInd(virus)
 @
+\noindent
 You can see that the population factors are correct and that the size of the data set is considerably smaller. Let's see the data set without the North American countries.
 <<popsub_blacklist>>=
-H.minus.na <- popsub(H3N2, blacklist=c("USA", "Canada"))
-H.minus.na$pop.names
+vnaminus <- popsub(virus, blacklist=c("USA", "Canada"))
+vnaminus$pop.names
 @
+\noindent
 Let's make sure that the number of individuals in both data sets added up equals the number of individuals in our original data set:
 <<length_test>>=
-(nInd(H.minus.na) + nInd(H.na)) == nInd(H3N2)
+(nInd(vnaminus) + nInd(vna)) == nInd(virus)
 @
 
 Now we have data sets with and without North America. Let's try something a bit more challenging. Let's say that we want The first 10 populations in alphabetical order, but we know that we still don't want any countries in North America. We can easily do this by using the \textit{base} function \texttt{sort}.
 <<popsub_combine>>=
-Hsort <- sort(H3N2$pop.names)[1:10]
-Hsort
-H.alph <- popsub(H3N2, sublist=Hsort, blacklist=c("USA", "Canada"))
-H.alph$pop.names
+vsort <- sort(virus$pop.names)[1:10]
+vsort
+valph <- popsub(virus, sublist=vsort, blacklist=c("USA", "Canada"))
+valph$pop.names
 @
+\noindent
 And that, is how you subset your data with poppr!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Attack of the clone correction \{clone-censor data sets\}}\label{data.manip:cc}
 
-\tab\tab Clone correction refers to the ability of keeping one observation per clone in a given population (or sub-population). Clone correcting can be hazardous if its done by hand (even on small data sets) and it requires a defined population hierarchy to get relevant results. \textit{Poppr} has a clone correcting function that is able to correct at the lowest level of any defined population hierarchy. Note that clone correction in \textit{poppr} is sensitive to missing data, as it treats all missing data as a single extra allele.
+\tab\tab Clone correction refers to the ability of keeping one observation per
+clone in a given population (or sub-population). Clone correcting can be
+hazardous if its done by hand (even on small data sets) and it requires a
+defined population hierarchy to get relevant results. \textit{Poppr} has a clone
+correcting function that is able to correct at the lowest level of any defined
+population hierarchy. Note that clone correction in \textit{poppr} is sensitive
+to missing data, as it treats all missing data as a single extra allele.
 \subsubsection{Function: clonecorrect}\label{data.manip:cc:clonecorrect}
 
-\tab\tab This function will return a clone corrected data set corrected for the lowest population level. Population levels are specified with the \texttt{hier} flag. You can choose to combine the population hierarchy to analyze at the lowest population level by choosing \texttt{combine = TRUE}.
+\tab\tab This function will return a clone corrected data set corrected for the
+lowest population level. Population levels are specified with the \texttt{hier}
+flag. You can choose to combine the population hierarchy to analyze at the
+lowest population level by choosing \texttt{combine = TRUE}.
+
 \begin{quote}
 Default Command:
 <<clonecorrect_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
 funk <- "clonecorrect"
 print_command(funk)
 @
-% \texttt{clonecorrect(pop, hier = c(1), dfname = "population\_hierarchy", combine = FALSE, keep = 1)}
 \end{quote}
 \begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object that has a population hierarchy data frame in the \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily require a population factor to begin with. 
-  \item \texttt{hier -} This can be a vector of words or numbers referring to specific column names in your data frame in the \texttt{@other} slot.
-  \item \texttt{dfname -} The name of a data frame you have in the \texttt{@other} slot with the population factors.
-  \item \texttt{combine -} Do you want to combine the population hierarchy? If it's set to \texttt{FALSE} (default), you will be returned a genind object with the top most hierarchical level as a population factor. 
-  \item \texttt{keep -} This flag is to be used if you set \texttt{combine = FALSE}. This will tell clone correct to return a specific combination of your hierarchy. For example, imagine a hierarchy that needs to be clone corrected at three levels: \textit{Population} by \textit{Year} by \textit{Month}. If you wanted to only run an analysis on the \textit{Population} level, you would set \texttt{keep = 1} since \textit{Population} is the first level of the hierarchy. On the other hand, if you wanted to run analysis on \textit{Year} by \textit{Month}, you would set \texttt{keep = 2:3} since those are the second and third levels of the hierarchy. 
+  \item \texttt{pop -} a \texttt{genclone} object with a defined hierarchy or a
+   \texttt{genind} object that has a population hierarchy data frame in the 
+   \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily 
+   require a population factor to begin with. 
+  \item \texttt{hier -} A formula where the levels representing the hierarchical
+   levels in your data. 
+  \item \texttt{dfname -} \textbf{Only for use in genind objects, otherwise, deprecated}
+   The name of a data frame you have in the \texttt{@other} slot with the population factors. 
+  \item \texttt{combine -} Do you want to combine the population hierarchy? 
+   If it's set to \texttt{FALSE} (default), you will be returned an object with 
+   the top most hierarchical level as a population factor unless the \textbf{keep}
+   argument is defined. If set to \texttt{TRUE}, the hierarchy will be returned
+   combined. 
+  \item \texttt{keep -} This flag is to be used if you set \texttt{combine = FALSE}. 
+   This will tell clone correct to return a specific combination of your hierarchy
+   defined as integers.
+   For example, imagine a hierarchy that needs to be clone corrected at three levels: 
+   \textit{Population} by \textit{Year} by \textit{Month}. If you wanted to only 
+   run an analysis on the \textit{Population} level, you would set \texttt{keep = 1} 
+   since \textit{Population} is the first level of the hierarchy. On the other hand, 
+   if you wanted to run analysis on \textit{Year} by \textit{Month}, you would set 
+   \texttt{keep = 2:3} since those are the second and third levels of the hierarchy. 
 \end{itemize}
 
-Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} data since that data set is known to include clonal populations \cite{Grunwald:2006}. Notice that I am not including the options \texttt{dfname} and \texttt{combine} because the default arguments suit my needs.
-<<clonecorrect>>=
-data(Aeut)
-A.cc <- clonecorrect(Aeut,  hier=c("Pop", "Subpop"), keep=1)
-poppr(A.cc, quiet=TRUE)
-@
-Now let's compare the clone corrected analysis to the uncorrected data set:
-<<clonecorrect_comparison>>=
-poppr(Aeut, quiet=TRUE)
-@
+Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} 
+data that we loaded earlier in the section \seclink{data.manip:hier}{Can you take
+me hier(archy)} since that data set is known to include clonal populations 
+\cite{Grunwald:2006}. Normally, we will assign the clone corrected data to a new
+variable, but we will not do so for this demonstration. As the data sets pass by,
+notice how many individuals and multilocus genotypes we have in the genclone
+object.
 
-As you can see from the summary tables, everything all sub-populations have been clone censored to the sub population level with respect to the population hierarchy. Notice how the observed number of individuals \texttt{(N)} decreases in the clone corrected data set.
+<<clonecorrect>>=
+aphan
+# Correcting by sample with respect to field and keeping field as the
+# population.
+clonecorrect(aphan,  hier = ~field/sample)
+# Keeping both field and sample
+clonecorrect(aphan, hier = ~field/sample, combine = TRUE)
+# Keeping only the sample
+clonecorrect(aphan, hier = ~field/sample, keep = 2)
+# Correcting by field
+clonecorrect(aphan, hier = ~field)
+# Correcting over whole data set
+clonecorrect(aphan, hier = NA)
+@
+\noindent
+That, in a nutshell is clone correction. Note that you can use this to create 
+new data sets, but also that the function \cmdlink{summary:poppr}{poppr} also
+utilizes this function internally. 
 
 \subsection{Every day I'm shuffling (data sets)  \{permutations and bootstrap resampling\}}\label{data.manip:shuffle}
 
@@ -1280,41 +1425,208 @@ print_command(funk)
   The following methods are available for use:
   \begin{enumerate}
     \item \textbf{Permute Alleles (default)} This is a sampling scheme that will permute alleles within the locus. For example, a single diploid locus with four alleles (1, 2, 3, 4) with the frequencies of 0.1, 0.2, 0.3, and 0.4, respectively:
-<<shuffle_mat, echo=FALSE>>=
-exmat <- matrix(c(4,4,
-         4,1,
-         4,3,
-         2,2,
-         3,3), 5, byrow=TRUE)
-exmat
-@
-might become:
-<<permutation, echo=FALSE>>=
-set.seed(1001)
-matrix(sample(exmat), 5, byrow=T)
-@
+% <<shuffle_mat, echo=FALSE>>=
+% exmat <- matrix(c(4,4,
+%          4,1,
+%          4,3,
+%          2,2,
+%          3,3), 5, byrow=TRUE)
+% exmat
+% @
+% latex table generated in R 3.0.3 by xtable 1.7-3 package
+% Sun Mar 23 11:52:35 2014
+\begin{table}[h!]
+\centering
+\begin{tabular}{lc}
+          \hline
+            & A1/A2 \\ 
+          \hline
+          1 & 4/4 \\ 
+          2 & 4/1 \\ 
+          3 & 4/3 \\ 
+          4 & 2/2 \\ 
+          5 & 3/3 \\ 
+           \hline
+        \end{tabular}
+        \caption{Original}
+        \label{tab:original}
+\end{table}
+\newpage
+Might become
+\begin{table}[h!]
+\centering
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+            & A1/A2 \\ 
+          \hline
+          1 & 3/4 \\ 
+          2 & 2/3 \\ 
+          3 & 4/4 \\ 
+          4 & 2/1 \\ 
+          5 & 3/4 \\ 
+           \hline
+        \end{tabular}
+        \caption{Permute 1}
+        \label{tab:singlebest}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 1/3 \\ 
+          2 & 2/4 \\ 
+          3 & 3/4 \\ 
+          4 & 4/3 \\ 
+          5 & 4/2 \\ 
+           \hline
+        \end{tabular}
+        \caption{Permute 2}
+        \label{tab:twobest}
+    \end{minipage}
+}}
+\end{table}
+
 As you can see, The heterozygosity has changed, yet the allelic frequencies remain the same. Overall this would show you, for example, what would happen if the sample you had underwent panmixis within this sample itself. 
-    \item \textbf{Parametric Bootstrap} The previous scheme reshuffled the observed sample, but the parametric bootstrap uses the allelic frequencies as estimates of what the true allelic frequencies are and uses those as probabilities for each allele when resampling the data with replacement. Here are two samples to show you what I mean.
-<<param_boot, echo=FALSE>>=
-set.seed(1001)
-cat("First Sample")
-matrix(sample(1:4, 10, prob=c(0.1,0.2,0.3,0.4), replace=TRUE), 5, byrow=T)
-cat("Second Sample")
-matrix(sample(1:4, 10, prob=c(0.1,0.2,0.3,0.4), replace=TRUE), 5, byrow=T)
-@
+    \item \textbf{Parametric Bootstrap} The previous scheme reshuffled the observed sample, but the parametric bootstrap draws samples from a multinomial distribution using the observed allele frequencies as weights. Here are two samples to show you what I mean.
+% <<param_boot, echo=FALSE>>=
+% set.seed(1001)
+% cat("First Sample")
+% matrix(sample(1:4, 10, prob=c(0.1,0.2,0.3,0.4), replace=TRUE), 5, byrow=T)
+% cat("Second Sample")
+% matrix(sample(1:4, 10, prob=c(0.1,0.2,0.3,0.4), replace=TRUE), 5, byrow=T)
+% @
+
+\begin{table}[h!]
+\centering
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 1/3 \\ 
+          2 & 3/3 \\ 
+          3 & 3/2 \\ 
+          4 & 4/4 \\ 
+          5 & 4/2 \\ 
+           \hline
+        \end{tabular}
+        \caption{Parametric 1}
+        \label{tab:param1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 3/4 \\ 
+          2 & 2/3 \\ 
+          3 & 4/2 \\ 
+          4 & 4/4 \\ 
+          5 & 4/2 \\ 
+           \hline
+        \end{tabular}
+        \caption{Parametric 2}
+        \label{tab:param2}
+    \end{minipage}
+}}
+\end{table}
 
 Notice how the heterozygosity has changed along with the allelic frequencies. The frequencies for alleles 3 and 4 have switched in the first data set, and we've lost allele 1 in the second data set purely by chance! This type of sampling scheme attempts to show you what the true population would look like if it were panmictic and your original sample gave you a basis for estimating expected allele frequencies. Since estimates are made from the observed allele frequencies, small samples will produce skewed results.
-    \item \textbf{Non-Parametric Bootstrap} The third method is sampling with replacement, but with no assumption about the distribution of the alleles. 
-<<boot, echo=FALSE>>=
-set.seed(1001)
-matrix(sample(1:4, 10, prob=rep(1, 4), replace=TRUE), 5, byrow=T)
-@
+    \item \textbf{Non-Parametric Bootstrap} The third method is sampling with replacement, again drawing from a multinomial distribution, but with no assumption about the allele frequencies. 
+% <<boot, echo=FALSE>>=
+% set.seed(1001)
+% matrix(sample(1:4, 10, prob=rep(1, 4), replace=TRUE), 5, byrow=T)
+% @
+
+% latex table generated in R 3.0.3 by xtable 1.7-3 package
+% Sun Mar 23 11:57:06 2014
+
+\begin{table}[h!]
+\centering
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 1/3 \\ 
+          2 & 3/3 \\ 
+          3 & 3/1 \\ 
+          4 & 2/2 \\ 
+          5 & 3/1 \\ 
+           \hline
+        \end{tabular}
+        \caption{Non-parametric 1}
+        \label{tab:nonparam1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 1/3 \\ 
+          2 & 3/1 \\ 
+          3 & 2/3 \\ 
+          4 & 2/1 \\ 
+          5 & 4/3 \\ 
+           \hline
+        \end{tabular}
+        \caption{Non-parametric 2}
+        \label{tab:nonparam2}
+    \end{minipage}
+}}
+\end{table}
+
 Again, heterozygosity and allele frequencies are not maintained, but now all of the alleles have a 1 in 4 chance of being chosen.
     \item \textbf{Multilocus permutation} This is called Multilocus permutation because it does the same thing as the permutation analysis in the program \textit{multilocus} by Paul Agapow and Austin Burt \cite{Agapow:2001}. This will shuffle the genotypes at each locus. Using our example above, here it is shuffled with method 4:
-<<multilocus_shuffle,echo=FALSE>>=
-set.seed(1001)
-exmat[sample(1:5), ]
-@
+% <<multilocus_shuffle,echo=FALSE>>=
+% set.seed(1001)
+% exmat[sample(1:5), ]
+% @
+
+\begin{table}[h!]
+\centering
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 3/3 \\ 
+          2 & 4/1 \\ 
+          3 & 2/2 \\ 
+          4 & 4/4 \\ 
+          5 & 4/3 \\ 
+           \hline
+        \end{tabular}
+        \caption{ML 1}
+        \label{tab:singlebest}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\hsize}\centering
+        \begin{tabular}{lc}
+          \hline
+         & A1/A2 \\ 
+          \hline
+        1 & 4/4 \\ 
+          2 & 2/2 \\ 
+          3 & 3/3 \\ 
+          4 & 4/3 \\ 
+          5 & 4/1 \\ 
+           \hline
+        \end{tabular}
+        \caption{ML 2}
+        \label{tab:twobest}
+    \end{minipage}
+}}
+\end{table}
 
 Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of section \ref{index:iard:ia} of this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
   \end{enumerate}
