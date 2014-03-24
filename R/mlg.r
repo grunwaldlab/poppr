@@ -308,7 +308,9 @@ mlg.vector <- function(pop){
   # Step 4: evaluate strings in sorted vector and increment to the respective 
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
-
+  if (is.genclone(pop)){
+    return(pop@mlg)
+  }
   xtab <- pop@tab
   # concatenating each genotype into one long string.
   xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ]*pop@ploidy, 
