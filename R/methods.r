@@ -238,7 +238,7 @@ setMethod(
 #' is.genclone(nanclone)
 #==============================================================================#
 is.genclone <- function(x){ 
-  res <- (is(x, "genclone") & validObject(x))
+  res <- (is(x, "genclone"))
   return(res)
 }
 
