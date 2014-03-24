@@ -51,7 +51,10 @@
 %\VignetteIndexEntry{Poppr User Manual}
 %\VignetteEngine{knitr::knitr}
 \usepackage{graphicx}
-\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+\usepackage[colorlinks = true,
+            urlcolor = blue,
+            citecolor = blue,
+            linkcolor = blue]{hyperref}
 \usepackage{array}
 \usepackage{color}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
@@ -59,17 +62,10 @@
 \usepackage{fullpage}
 \usepackage{mathtools}
 \usepackage{makeidx}
-\usepackage{hyperref}
-% \usepackage{lineno}
-% Doublespacing.
-% \usepackage{setspace}
-% \setstretch{2}
 
 % for bold symbols in mathmode
 \usepackage{bm}
 \newcommand{\R}{\mathbb{R}}
-\newcommand{\beq}{\begin{equation}}
-\newcommand{\eeq}{\end{equation}}
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 \newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
@@ -77,7 +73,7 @@
   \texttt{\hyperref[#1]{#2}}
 }
 \newcommand{\seclink}[2]{
-  \textit{\hyperref[#1]{#2}}
+  \textsc{\hyperref[#1]{#2}}
 }
 
 \title{Poppr 1.1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
@@ -93,16 +89,10 @@
 
 
 
-% \definecolor{Sinput}{rgb}{0.75,0.19,0.19}
-% \definecolor{Soutput}{rgb}{0,0,0}
-% \definecolor{Scode}{rgb}{0.75,0.19,0.19}
+
 \definecolor{light-gray}{gray}{0.95}
 \definecolor{salmon}{HTML}{F0AAAA}
-% \DefineVerbatimEnvironment{Sinput}{Verbatim}
-% {formatcom={\color{Sinput}},fontsize=\footnotesize, baselinestretch=0.75}
-% \DefineVerbatimEnvironment{Soutput}{Verbatim}
-% {formatcom={\color{Soutput}},fontsize=\footnotesize, baselinestretch=0.75}
-% The first page will have the title, abstract, and then the \textit{Poppr} logo at the bottom.
+
 \maketitle
 \begin{abstract}
 \textit{Poppr} provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. \textit{Poppr}'s main advantage is the ease of use and integration with other packages such as \textit{adegenet} and \textit{vegan}, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo's distance and the index of association. 
@@ -284,11 +274,11 @@ Here we can see that \texttt{x} is a list with two entries: \texttt{\$files} giv
          \begin{minipage}[t]{0.8\textwidth}
 {\large \textsc{Not sure what I mean by path or working directory?}}\\
 For anyone who has never used a command line, this is a new concept. 
-You can think of the path as an address. So instead of \texttt{"/path/to/R"}, you could have \texttt{"/USA/Oregon/Corvallis"}. Or on your computer, it could be \texttt{"C:/users/poppr-user/R/win-library/2.15"} on Windows (where "poppr-user" is your username) or \texttt{"/Library/Frameworks/R.framework/Versions/2.15/Resources/library"} on OSX. Each slash represents a folder that you would click through when you are using the mouse.
+You can think of the path as an address. So instead of \texttt{"/path/to/R"}, you could have \texttt{"/USA/Oregon/Corvallis"}. Or on your computer, it could be \texttt{"C:/users/poppr-user/R/win-library/2.15"} on Windows (where poppr-user" is your username) or \texttt{"/Library/Frameworks/R.framework/Versions/2.15/Resources/library"} on OSX. Each slash represents a folder that you would click through when you are using the mouse.
 
 A working directory is simply the folder that R is working in. It is where you can access and write files. When you tell R to read a file, it will only look for that file in your working directory. Note that you will not endanger your files by reading them into R. R works by making a copy of the file into memory. This means that you can manipulate the data in any way that you want without ever losing the content.\\
 
-To find out your current working directory, type \texttt{getwd()} into the R console. Usually, you will start off a session in your "home" directory, which will look like this: \texttt{"$\sim$/"}.
+To find out your current working directory, type \texttt{getwd()} into the R console. Usually, you will start off a session in your ``home" directory, which will look like this: \texttt{``$\sim$/"}.
 The command \texttt{setwd()} will change your working directory to any place of your choice on your computer as indicated by the path that you provide.
 For more information, see Quick R at \url{http://www.statmethods.net}.
          \end{minipage}
@@ -299,7 +289,7 @@ For more information, see Quick R at \url{http://www.statmethods.net}.
 % <<setwd, eval=FALSE>>=
 % setwd(x$path)
 % @
-We will use \texttt{x\$files} to access the file. The \texttt{poppr()} function provides a quick and convenient first analysis of your data directly from the file on the your disk (For information on importing your data into R, see section \ref{intro:import}, \textit{Get out of my dreams and into my R}).
+We will use \texttt{x\$files} to access the file. The \texttt{poppr()} function provides a quick and convenient first analysis of your data directly from the file on the your disk (For information on importing your data into R, see section\seclink{intro:import}{Get out of my dreams and into my R.})
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -386,7 +376,7 @@ The fields you see in the output include:
   \item \texttt{rbarD -} The standardized index of association, $\bar r_d$. \cite{Agapow:2001}
 \end{itemize}
 
-These fields are further described in section \ref{summary}, \textit{I know what you did last summary table} at the end of this vignette. 
+These fields are further described in section\seclink{summary}{I know what you did last summary table}at the end of this vignette. 
 
 \subsection{Get out of my dreams and into my R \{importing data into poppr\}}\label{intro:import}
 There are several ways of reading data into R. 
@@ -515,7 +505,7 @@ As you can see, now all of the files that existed in that directory are there! N
 ## 18 Mt. Vernon_8  13   9  7.3 7.6e-01 2.03  6.3 0.91 0.79  1.15 0.169   rootrot.csv
 ## 19        Total 187 119  9.6 6.1e-01 4.56 69.0 0.99 0.72 14.37 0.271   rootrot.csv
 ## 20            1  19  16  9.2 7.0e-01 2.73 14.4 0.98 0.94 14.23 0.313  rootrot2.csv
-## 21            2  18  18 10.0 5.4e-07 2.89 18.0 1.00 1.00  9.14 0.194  rootrot2.csv
+## 21            2  18  18 10.0 4.2e-07 2.89 18.0 1.00 1.00  9.14 0.194  rootrot2.csv
 ## 22            3  18   8  5.3 1.0e+00 1.61  3.4 0.75 0.59 22.84 0.573  rootrot2.csv
 ## 23            4  25  17  7.9 1.1e+00 2.58  9.6 0.93 0.71 18.49 0.415  rootrot2.csv
 ## 24            5  27  14  7.5 1.1e+00 2.45  9.7 0.93 0.83 23.00 0.520  rootrot2.csv
@@ -561,9 +551,9 @@ Navigate to the \textit{adegenet} folder in your R library.
 ##  [6] "/path/to/R/adegenet/files/nancycats.gen"    
 ##  [7] "/path/to/R/adegenet/files/nancycats.gtx"    
 ##  [8] "/path/to/R/adegenet/files/nancycats.str"    
-##  [9] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
-## [10] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
-## [11] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
+##  [9] "/path/to/R/adegenet/files/pdH1N1-HA.fasta"  
+## [10] "/path/to/R/adegenet/files/pdH1N1-NA.fasta"  
+## [11] "/path/to/R/adegenet/files/pdH1N1-data.csv"  
 ## [12] "/path/to/R/adegenet/files/usflu.fasta"      
 ## 
 ## $path
@@ -682,9 +672,9 @@ read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 \begin{itemize}
   \item \texttt{genalex -} a *.CSV file exported from GenAlEx on your disk (For example: \texttt{"my\_genalex\_file.csv"}).
   \item \texttt{ploidy -} a number indicating the ploidy for the data set (eg 2 for diploids, 1 for haploids).
-  \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in section \ref{intro:genind:other}).
+  \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in\seclink{intro:genind:other}{The other slot.})
   \item \texttt{region -} To format your GenAlEx file to include regions along with your populations, You can choose to include a separate column for regional data, or, since regional data must be in contiguous blocks, you can simply format it in the same way you would any other data (see the GenAlEx manual for details). If you have your file organized in this manner, select this option and the regional information will be stored in the resulting genind object in the \texttt{@other} slot.
-  \item \texttt{genclone -} This flag defaults to \texttt{TRUE} and will automatically convert your data into a \texttt{genclone} object (see Section \ref{intro:genclone:as.genclone}).
+  \item \texttt{genclone -} This flag defaults to \texttt{TRUE} and will automatically convert your data into a \texttt{genclone} object (see\seclink{intro:genclone}{Send in the clones}for more info).
   \item \texttt{sep -} The separator argument for your data. It defaults to ``,", but some countries use ``;" by default. This avoids the user having to
   specifically restructure his or data.
 \end{itemize}
@@ -759,7 +749,7 @@ with any function in \textit{poppr} and \textit{adegenet}
 
 \subsubsection{Genalex formatting shortcuts}\label{intro:import:genalex.short}
 
-\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see below). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \textit{adegenet} (for details, type \texttt{help("microbov")} into your R console). It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in section \ref{intro:genind:other}). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
+\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see below). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \textit{adegenet} (for details, type \texttt{help("microbov")} into your R console). It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in\seclink{intro:genind:other}{The other slot}). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
@@ -987,7 +977,7 @@ Do you see what I mean when I say individual allele frequencies at each locus? F
 
 The other slot is a place in the genind object that can be used to store useful
 information about the data. One application would be to store data of 
-microsatellite repeat lengths for use with \seclink{index:bruvo}{Bruvo's 
+microsatellite repeat lengths for use with\seclink{index:bruvo}{Bruvo's 
 Distance}. Here's a simple example using the dataset nancycats. We will assume
 that this data set has dinucleotide repeats at all nine loci. We use the command
 \texttt{other()} to access the slot and name a new item in it with the \texttt{\$}:
@@ -1322,8 +1312,7 @@ are specifying one level.
 The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
 years nested within subpopulations, nested within populations. This allows the
 user to easily restructure the population hierarchy. Manipulation of the hierarchy
-is necessary for \seclink{data.manip:cc}{clone correction} and AMOVA analysis. See the section 
-\seclink{data.manip:hier}{Can you take me hier(archy)} for more details on manipulation of hierarchies. 
+is necessary for\seclink{data.manip:cc}{clone correction}and AMOVA analysis. See the section\seclink{data.manip:hier}{Can you take me hier(archy)}for more details on manipulation of hierarchies. 
 % \tab\tab The element that you as a \textit{poppr} user needs to be concerned with is the ``other" slot. No, I'm not trying to be cryptic. If you look at an \textit{adegenet} object, you will see that it has several ``slots" (starting with ``@"). \cite{Jombart:2008} Let's start by recreating that data frame I showed you earlier.
 % <<example_data_frame>>=
 % df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
@@ -1655,9 +1644,8 @@ We can see here that the number of individuals decreased, yet we have the same n
 \tab\tab In poppr versions 1.0.x, this section of the manual contained a long
 explaination of the function \texttt{splitcombine}.
 This was a function whose intended use was to manipulate population hierarchies
-within \seclink{intro:genind}{genind} objects, but whose useage ended up becoming 
-very clunky and a bit confusing. The function has been superceeded by the hierarchy methods for \seclink{intro:genclone}{genclone}
-objects. If you want to know more about \texttt{splitcombine}, please see its
+within\seclink{intro:genind}{genind}objects, but whose useage ended up becoming 
+very clunky and a bit confusing. The function has been superceeded by the hierarchy methods for\seclink{intro:genclone}{genclone}objects. If you want to know more about \texttt{splitcombine}, please see its
 help page by typing \texttt{?splitcombine} or refer to earlier versions of this
 manual. In this section, we will walk you through the process of defining, 
 manipulating, and adding to population hierarchies within genclone objects. 
@@ -1684,7 +1672,7 @@ genclone objects:
 \end{tabular}
 \end{table}
 \noindent
-NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
+NOTE: Refer to\seclink{intro:genclone:access}{Accessing hierarchies}for more
 details on how to access hierarchies.\\
 
 These functions all have a syntax that looks like this:
@@ -1952,7 +1940,7 @@ to define your hierarchies in a spreadsheet and import that as a data frame usin
 the function \texttt{read.table}. Another way of automatically
 doing so is to concatenate your hierarchies using a common delimiter such as `\_'
 and defining that as the population factor in your input file. See the section 
-\seclink{intro:import:genalex.short}{Genalex Formatting Shortcuts} for more
+\seclink{intro:import:genalex.short}{Genalex Formatting Shortcuts}for more
 details. An example of a formatted GenAlEx file can be found here: 
 \url{http://dx.doi.org/10.6084/m9.figshare.877104}. It is an AFLP data set of the
 root rot pathogen \texttt{Aphanomyces euteiches}. We will use this data set as 
@@ -2027,8 +2015,7 @@ Now we have sucessfully defined our hierarchies.
 If you have imported your data with a single population and have a separate data
 frame that you read in with \texttt{read.table}, this is how you would define
 your hierarchy. For demonstrative purposes, we will use the H3N2 viral data set.
-This contains a data frame called `x' in the \seclink{intro:genind:other}{other slot}
-that contains many variables including country, year, and month of collection. 
+This contains a data frame called `x' in the\seclink{intro:genind:other}{other slot}that contains many variables including country, year, and month of collection. 
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
@@ -2588,10 +2575,10 @@ popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
   \item \texttt{sublist -} The vector of populations or integers representing the populations in your data set you wish to retain. For example: \texttt{sublist = c("pop\_z", "pop\_y")} or \texttt{sublist = 1:2}.
   \item \texttt{blacklist -} The vector of populations or integers representing the populations in your data set you wish to exclude. This can take the same type of arguments as sublist, and can be used in conjunction with sublist for when you want a range of populations, but know that there is one in there that you do not want to analyze. For example: \texttt{sublist = 1:15, blacklist = "pop\_x"}.
   One very useful thing about the blacklist is that it allows the user to be extremely paranoid about the data. You can set the blacklist to contain populations that are not even in your data set and it will still work!
-  \item \texttt{mat -} (see section \ref{mlg}, \textit{Multilocus Genotype Analysis} for more information) This is where you would put a matrix that's produced by \texttt{mlg.table} to be subsetted instead of the genind object. If you do this, the matrix will return with only the rows equal to your populations and only the multilocus genotypes (columns) pertaining to those populations. 
+  \item \texttt{mat -} (see section\seclink{mlg}{Multilocus Genotype Analysis}for more information) This is where you would put a matrix that's produced by \texttt{mlg.table} to be subsetted instead of the genind object. If you do this, the matrix will return with only the rows equal to your populations and only the multilocus genotypes (columns) pertaining to those populations. 
 \end{itemize}
 
-To demonstrate this tool, let's revisit the virus data set that we saw in \seclink{data.manip:hier:define}{Defining hierarchies}. Let's say we wanted to analyze only the data in North America. To make sure we are all on the same page, we will reset the population factor to ``country".
+To demonstrate this tool, let's revisit the virus data set that we saw in\seclink{data.manip:hier:define}{Defining hierarchies.}Let's say we wanted to analyze only the data in North America. To make sure we are all on the same page, we will reset the population factor to ``country".
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -2762,7 +2749,7 @@ clonecorrect(pop, hier = 1, dfname = "population_hierarchy",
 \end{itemize}
 
 Let's look at ways to clone-correct our data. We'll look at our \textit{A. euteichies} 
-data that we loaded earlier in the section \seclink{data.manip:hier}{Can you take
+data that we loaded earlier in the section\seclink{data.manip:hier}{Can you take
 me hier(archy)} since that data set is known to include clonal populations 
 \cite{Grunwald:2006}. Normally, we will assign the clone corrected data to a new
 variable, but we will not do so for this demonstration. As the data sets pass by,
@@ -3120,7 +3107,7 @@ Again, heterozygosity and allele frequencies are not maintained, but now all of 
 }}
 \end{table}
 
-Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of section \ref{index:iard:ia} of this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
+Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of\seclink{index:iard:ia}{Function: ia}in this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
   \end{enumerate}
 \end{itemize}
 These shuffling schemes have been implemented for the index of association, but there may be other summary statistics you can use \texttt{shufflepop} for. All you have to do is use the function \texttt{replicate}. Let's use average Bruvo's
@@ -3172,7 +3159,7 @@ You could use this method to replicate the resampling 999 times and then create 
 
 
 \subsection{Cut It Out!  \{removing uninformative loci\}}\label{data.manip:informloci}
- \tab\tab Phylogenetically uninformative loci are those that have only one sample differentiating from the rest. This can lead to biased results when using multilocus analyses such as the index of association (See \ref{index:iard} and \ref{summary}). These nuisance loci can be removed with the following function.
+ \tab\tab Phylogenetically uninformative loci are those that have only one sample differentiating from the rest. This can lead to biased results when using multilocus analyses such as the index of association (See\seclink{index:iard}{The missing linkage disequilibrium}and\seclink{summary}{I know what you did last summary table}). These nuisance loci can be removed with the following function.
 \subsubsection{Function: informloci}\label{data.manip:informloci:informloci}
 \begin{quote}
 Default Command:
@@ -3295,9 +3282,9 @@ mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
-    \item \texttt{sublist -} see \texttt{mlg.table}, Section \ref{mlg:table:mlg.table}. Analyze specified populations.
-    \item \texttt{blacklist -} see \texttt{mlg.table}, Section \ref{mlg:table:mlg.table}. Do not include specified populations.
-    \item \texttt{mlgsub -} see \texttt{mlg.table}, Section \ref{mlg:table:mlg.table}. Only analyze specified MLGs. The vector for this flag can be produced by this function as you will see later in this vignette.
+    \item \texttt{sublist -} see\cmdlink{mlg:table:mlg.table}{mlg.table.}Analyze specified populations.
+    \item \texttt{blacklist -} see\cmdlink{mlg:table:mlg.table}{mlg.table.}Do not include specified populations.
+    \item \texttt{mlgsub -} see\cmdlink{mlg:table:mlg.table}{mlg.table.}Only analyze specified MLGs. The vector for this flag can be produced by this function as you will see later in this vignette.
     \item \texttt{indexreturn -} return a vector of indices of MLGs. (You can use these in the \texttt{mlgsub} flag, or you can use them to subset the columns of an MLG table). 
     \item \texttt{df -} return a data frame containing the MLGs, the populations they cross, and the number of copies you find in each population. This is useful for making graphs in \textit{ggplot2}.
     \item \texttt{quiet -} \texttt{TRUE} or \texttt{FALSE}. Should the populations be printed to screen as they are processed? (will print nothing if \texttt{indexreturn} is \texttt{TRUE})
@@ -3407,8 +3394,8 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
-    \item \texttt{sublist -} a vector indicating which specific populations you want to produce a table for. This can be a numeric or character vector. See section \ref{data.manip:divide:popsub} for details.
-    \item \texttt{blacklist -} a vector indicating which specific populations you do not want to include in your table. This can be a numeric or character vector, and does not necessarily have to be the same type as \texttt{sublist}. eg. \texttt{sublist=1:10, blacklist="USA"}. See section \ref{data.manip:divide:popsub} for details.
+    \item \texttt{sublist -} a vector indicating which specific populations you want to produce a table for. This can be a numeric or character vector. See\cmdlink{data.manip:divide:popsub}{popsub}for details.
+    \item \texttt{blacklist -} a vector indicating which specific populations you do not want to include in your table. This can be a numeric or character vector, and does not necessarily have to be the same type as \texttt{sublist}. eg. \texttt{sublist=1:10, blacklist="USA"}. See\cmdlink{data.manip:divide:popsub}{popsub}for details.
     \item \texttt{mlgsub -} a vector containing the indices of MLGs you wish to subset your table with. 
     \item \texttt{bar -} \texttt{TRUE} or \texttt{FALSE}. If  \texttt{TRUE}, a bar plot will be printed for each population with more than one individual. 
     \item \texttt{total -} \texttt{TRUE} or \texttt{FALSE}. Should the entire data set be included in the table? This is equivalent to evoking \texttt{colSums} on the table.
@@ -3873,9 +3860,9 @@ ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
     \item non-parametric bootstrap.
     \item \textit{multilocus} style permutation \cite{Agapow:2001}.
   \end{enumerate}
-  The methods are detailed in section \ref{data.manip:shuffle:shufflepop} of this manual.
+  The methods are detailed in\cmdlink{data.manip:shuffle:shufflepop}{shufflepop.}
   \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} will produce a progress bar.
-  \item \texttt{missing -} This will preprocess your missing values. It is set to ignore missing data, so that they do not contribute to the distance measure. It can also be set to \texttt{"loci", "geno", "zero", or "mean"}. For details, see section \ref{data.manip:missing:missingno} of this manual.
+  \item \texttt{missing -} This will preprocess your missing values. It is set to ignore missing data, so that they do not contribute to the distance measure. It can also be set to \texttt{"loci", "geno", "zero", or "mean"}. For details, see\seclink{data.manip:missing:missingno}{missingno.}
   \item \texttt{hist -} This will produce a pair of histograms for each population showing the distribution of $I_A$ and $\bar r_d$ across the sampled data sets, and plot the observed value as a single vertical line.
   \item \texttt{valuereturn -} If set to \texttt{TRUE} and the number of samples
   is greater than zero, it will return all values generated from the permuted
@@ -3973,7 +3960,7 @@ the number of samples to 9 for demonstrative purposes):
 
 
 
-There, are, of course a couple of caveats that need to be mentioned regarding our P-values. First, while we have equivalent P-values for $I_A$ and $\bar{r}_d$, they might not always be equal due to the difference in calculation. Details about that can be found in the Appendix section \ref{appendix:algorithm:iard}. Second, the P-values are calculated by comparing how many permuted values are greater than or equal to the observed value. This includes the observed value (which is why setting the randomizations to 999 will give you a round P-value) which means that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number of permutations you select. Take for example this population of a clonal root rot pathogen, \textit{Aphanomyces euteiches}:
+There, are, of course a couple of caveats that need to be mentioned regarding our P-values. First, while we have equivalent P-values for $I_A$ and $\bar{r}_d$, they might not always be equal due to the difference in calculation. Details about that can be found in the Appendix section\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.}Second, the P-values are calculated by comparing how many permuted values are greater than or equal to the observed value. This includes the observed value (which is why setting the randomizations to 999 will give you a round P-value) which means that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number of permutations you select. Take for example this population of a clonal root rot pathogen, \textit{Aphanomyces euteiches}:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -3998,7 +3985,7 @@ If you want to be able to report $P < 0.001$ in this situation, then you can sim
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Going the distance \{dissimilarity distance\}}\label{index:dist}
-\tab\tab Since \textit{poppr} is still in its infancy, the number of distance measures it can offer are few. Bruvo's distance is well supported and allows you to quickly visualize your data, but it only allows for microsatellites. The index of association, above, utilizes a discreet dissimilarity distance matrix. It is with this matrix that we have constructed a relative dissimilarity distance where the distance is the ratio of the number of dissimilarities to the number of dissimilarities possible. The number of dissimilarities possible is the number of loci multiplied by the ploidy, so if you have 10 loci from a diploid population, then there are 20 dissimilarities possible. For details, see equations (\ref{eq:ia_d}) and (\ref{eq:ia_D}) in section \ref{appendix:algorithm:iard}. 
+\tab\tab Since \textit{poppr} is still in its infancy, the number of distance measures it can offer are few. Bruvo's distance is well supported and allows you to quickly visualize your data, but it only allows for microsatellites. The index of association, above, utilizes a discreet dissimilarity distance matrix. It is with this matrix that we have constructed a relative dissimilarity distance where the distance is the ratio of the number of dissimilarities to the number of dissimilarities possible. The number of dissimilarities possible is the number of loci multiplied by the ploidy, so if you have 10 loci from a diploid population, then there are 20 dissimilarities possible. For details, see equations (\ref{eq:ia_d}) and (\ref{eq:ia_D}) in\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.} 
 
 \subsubsection{Function: diss.dist}\label{index:dist:diss.dist}
 
@@ -4104,8 +4091,8 @@ bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{replen -} This is a vector of numbers indicating the repeat length for each locus in your sample. If you have two dinucleotide repeats and five tetranucleotide repeats, you would put \texttt{c(2,2,4,4,4,4,4)} in this field. If you have imported data where that represents the raw number of steps, all you would have to type is \texttt{rep(1, n)}, replacing $n$ with the number of loci in your sample. It is important that you place something in this field because this function will attempt to estimate the repeat length based on the minimum difference of the alleles represented; with variability of position calls, relying on this estimation is NOT recommended. 
-  \item \texttt{add -} For missing data: use the genome addition model (see section \ref{appendix:algorithm:bruvo})
-  \item \texttt{loss -} For missing data: use the genome loss model (see section \ref{appendix:algorithm:bruvo})
+  \item \texttt{add -} For missing data: use the genome addition model (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's distance.})
+  \item \texttt{loss -} For missing data: use the genome loss model (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's distance.})
 \end{itemize}
 
 To illustrate why it is important to specify the repeat lengths, let's imagine a locus that contains 5 alleles and the true repeat length is 4. Note that Bruvo's distance between alleles is calculated as $1 - 2^{-[x]}$, where $x$ is the difference in repeat lengths:
@@ -4314,8 +4301,8 @@ bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
-  \item \texttt{add -} For missing data: use the genome addition model (see section \ref{appendix:algorithm:bruvo})
-  \item \texttt{loss -} For missing data: use the genome loss model (see section \ref{appendix:algorithm:bruvo})
+  \item \texttt{add -} For missing data: use the genome addition model (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's distance.})
+  \item \texttt{loss -} For missing data: use the genome loss model (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's distance.})
   \item \texttt{sample -} How many bootstraps do you want to perform? 
   \item \texttt{tree -} Two trees are available, Neighbor-Joining \texttt{"nj"} or UPGMA \texttt{"upgma"}.
   \item \texttt{showtree -} if \texttt{TRUE}, a tree will be plotted automatically.
@@ -4516,8 +4503,8 @@ bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
-  \item \texttt{add -} For missing data: use the genome addition model (see section \ref{appendix:algorithm:bruvo})
-  \item \texttt{loss -} For missing data: use the genome loss model (see section \ref{appendix:algorithm:bruvo})
+  \item \texttt{add -} For missing data: use the genome addition model (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's distance.})
+  \item \texttt{loss -} For missing data: use the genome loss model (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's distance.})
   \item \texttt{palette -} this is a \textbf{function} definining a color palette to use. The default is \texttt{topo.colors}. There are different palettes, which you can search by typing \texttt{?rainbow}. If you want a custom color palette, an easy way is to use the function \texttt{colorRampPalette}.
   \item \texttt{sublist -} The populations you wish to analyze. This defaults to ``All". See section \ref{data.manip:divide:popsub} for details.
   \item \texttt{blacklist -} Populations you do not want to include in the graph. See section \ref{data.manip:divide:popsub} for details.
@@ -4905,10 +4892,10 @@ As you can see, the distribution is much closer to a distribution we would expec
 \subsubsection{$I_A$ and $\bar r_d$}\label{appendix:algorithm:iard}
 
 \tab \tab The index of association was originally developed by A.H.D. Brown analyzing population structure of wheat \cite{Brown:1980}. It has been widely used as a tool to detect clonal reproduction within populations \cite{Smith:1993}. Populations whose members are undergoing sexual reproduction, whether it be selfing or out-crossing, will produce gametes via meiosis, and thus have a chance to shuffle alleles in the next generation. Populations whose members are undergoing clonal reproduction, however, generally do so via mitosis. This means that the most likely mechanism for a change in genotype is via mutation. The rate of mutation varies from species to species, but it is rarely sufficiently high to approximate a random shuffling of alleles. The index of association is a calculation based on the ratio of the variance of the raw number of differences between individuals and the sum of those variances over each locus \cite{Smith:1993}. You can also think of it as the observed variance over the expected variance. If they  are the same, then the index is zero after subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
-\beq
+\begin{equation}
 \label{eq:I_A}
 I_A = \frac{V_O}{V_E}-1
-\eeq
+\end{equation}
 Since the distance is more or less a binary distance, any sort of marker can be used for this analysis. In the calculation, phase is not considered, and any difference increases the distance between two individuals. Consider the genotypes of the dummy data frame we created earlier:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
@@ -4936,10 +4923,10 @@ Now, consider the first locus represented in the genind object:
 Remember that each column represents a different allele and that each entry in the table represents the fraction of the genotype made up by that allele at that locus. Notice also that the sum of the rows all equal one. \textit{Poppr} uses this to calculate distances by simply taking the sum of the absolute values of the differences between rows.
 
 The calculation for the distance between two individuals at a single locus with $a$ allelic states and a ploidy of $k$ is as follows\footnote{Individuals with Presence / Absence data will have the $k/2$ term dropped.}:
-\beq
+\begin{equation}
 \label{eq:ia_d}
 d = \displaystyle \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid
-\eeq
+\end{equation}
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -4970,77 +4957,77 @@ As you can see, these values of $d$ at locus one add up to 2, 2, and 1, respecti
 
 To find the total number of differences between two individuals over all loci, you just take $d$ over $m$ loci, a value we'll call $D$:
 
-\beq
+\begin{equation}
 \label{eq:ia_D}
 D = \displaystyle \sum_{i=1}^{m} d_i
-\eeq
+\end{equation}
 
 These values are calculated over all possible combinations of individuals in the data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{}m$ values of $d$ and ${n \choose 2}$ values of $D$.
 Calculating the observed variances is fairly straightforward (modified from Agapow and Burt, 2001) \cite{Agapow:2001}:
 
-\beq
+\begin{equation}
 \label{eq:V_O}
 V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n \choose 2}}
-\eeq
+\end{equation}
 
 Calculating the expected variance is the sum of each of the variances of the individual loci. The calculation at a single locus, $j$ is the same as the previous equation, substituting values of $D$ for $d$ \cite{Agapow:2001}:
 
-\beq
+\begin{equation}
 \label{eq:var_j}
 var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n \choose 2}}
-\eeq
+\end{equation}
 
 The expected variance is then the sum of all the variances over all $m$ loci \cite{Agapow:2001}:
 
-\beq
+\begin{equation}
 \label{eq:V_E}
 V_E = \displaystyle \sum_{j=1}^{m} var_j
-\eeq
+\end{equation}
 
 Now you can plug the sums of equations (\ref{eq:V_O}) and (\ref{eq:V_E}) into equation (\ref{eq:I_A}) to get the index of association.
 Of course, Agapow and Burt showed that this index increases steadily with the number of loci, so they came up with an approximation that is widely used, $\bar r_d$ \cite{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}. The equation is as follows, utilizing equations (\ref{eq:V_O}), (\ref{eq:var_j}), and (\ref{eq:V_E}) \cite{Agapow:2001}:
 
-\beq
+\begin{equation}
 \label{eq:r_d}
 \bar{r_d} = \frac{V_O - V_E}
 {2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
-\eeq
+\end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Bruvo's distance}\label{appendix:algorithm:bruvo}
 
 \tab \tab Bruvo's distance between two individuals calculates the minimum distance across all combinations of possible pairs of alleles at a single locus and then averaging that distance across all loci \cite{Bruvo:2004}. The distance between each pair of alleles is calculated as \cite{Bruvo:2004}:
 
-\beq
+\begin{equation}
 \label{eq:m_x}
 m_x = 2^{-\mid x \mid}
-\eeq
+\end{equation}
 
-\beq
+\begin{equation}
 \label{eq:d_a}
 d_a = 1 - m_x
-\eeq
+\end{equation}
 
 Where $x$ is the number of steps between each allele. So, let's say we were comparing two haploid $(k = 1)$ individuals with alleles 228 and 244 at a locus that had a tetranucleotide repeat pattern (CATG$)^n$. The number of steps for each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For samples with higher ploidy ($k$), there would be $k$ such distances of which we would need to take the sum \cite{Bruvo:2004}.
 
-\beq
+\begin{equation}
 \label{eq:s_i}
 s_i = \displaystyle \sum_{a=1}^{k} d_a
-\eeq
+\end{equation}
 
 Unfortunately, it's not as simple as that since we do not assume to know phase. Because of this, we need to take all possible combinations of alleles into account. This means that we will have $k^2$ values of $d_a$, when we only want $k$. How do we know which $k$ distances we want? We will have to invoke parsimony for this and attempt to take the minimum sum of the alleles, of which there are $k!$ possibilities \cite{Bruvo:2004}:
 
-\beq
+\begin{equation}
 \label{eq:d_l}
 d_l = \frac{\left(\displaystyle \min_{i \dotsc k!} s_i\right)}{k}
-\eeq
+\end{equation}
 
 Finally, after all of this, we can get the average distance over all loci \cite{Bruvo:2004}. 
 
-\beq
+\begin{equation}
 \label{eq:D}
 D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
-\eeq
+\end{equation}
 
 This is calculated over all possible combinations of individuals and results in a lower triangle distance matrix over all individuals. 
 
