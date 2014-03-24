@@ -82,7 +82,7 @@ poppr_pair_ia <- function(pop){
   }
   pops <- seppop(pop, drop = FALSE)
   loci_pairs <- choose(nLoc(pop), 2)
-  res_mat <- matrix(0.5, 2, loci_pairs)
+  res_mat    <- matrix(0.5, 2, loci_pairs)
   pops_array <- vapply(pops, pair_ia, res_mat)
   return(pops_array)
 }
@@ -92,9 +92,9 @@ update_poppr_graph <- function(graphlist, palette){
   lookup <- data.frame(old    = graphlist$colors, 
                        update = palette(length(graphlist$colors)), 
                        stringsAsFactors = FALSE)
-  colorlist <- V(graphlist$graph)$pie.color
+  colorlist                    <- V(graphlist$graph)$pie.color
   V(graphlist$graph)$pie.color <- update_color_list(colorlist, lookup)
-  graphlist$colors <- lookup[[2]]
+  graphlist$colors             <- lookup[[2]]
   return(graphlist)
 }
 
@@ -108,7 +108,7 @@ update_colors <- function(colorvec, lookup){
 }
 
 update_single_color <- function(x, lookup, colorvec){
-  update <- lookup[[2]]
+  update   <- lookup[[2]]
   original <- lookup[[1]]
   return(update[original %in% colorvec[x]])
 }
