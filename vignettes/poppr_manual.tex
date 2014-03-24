@@ -76,6 +76,11 @@
   \textsc{\hyperref[#1]{#2}}
 }
 
+\newcommand{\poppr}{\textit{poppr}}
+\newcommand{\Poppr}{\textit{Poppr}}
+\newcommand{\adegenet}{\textit{adegenet}}
+\newcommand{\Adegenet}{\textit{Adegenet}}
+
 \title{Poppr 1.1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -95,9 +100,9 @@
 
 \maketitle
 \begin{abstract}
-\textit{Poppr} provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. \textit{Poppr}'s main advantage is the ease of use and integration with other packages such as \textit{adegenet} and \textit{vegan}, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo's distance and the index of association. 
+\Poppr{} provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. \Poppr{}'s main advantage is the ease of use and integration with other packages such as \adegenet{} and \textit{vegan}, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo's distance and the index of association. 
 \end{abstract}
-% Inserting the \textit{Poppr} logo here
+% Inserting the \Poppr{} logo here
 \begin{figure}[b]
   \centering
   \label{logo}
@@ -117,26 +122,29 @@
 %
 %=============================================================================%
 %=============================================================================%
-\section{Introduction}\label{intro}
+\section{Introduction}
+\label{intro}
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Purpose}\label{intro:purpose}
+\subsection{Purpose}
+\label{intro:purpose}
 
-\tab\tab\textit{Poppr} is an R package with convenient functions for analysis of genetic data with mixed modes of reproduction including sexual and clonal reproduction. While there are many R packages in CRAN and other repositories with tools for population genetic analyses, few are appropriate for populations with mixed modes of reproduction. There are several stand alone programs that can handle these types of data sets, but they are often platform specific and often only accept specific data types. Furthermore, a typical analysis often involves switching between many programs, and converting data to each specific format.
+\tab\tab\Poppr{} is an R package with convenient functions for analysis of genetic data with mixed modes of reproduction including sexual and clonal reproduction. While there are many R packages in CRAN and other repositories with tools for population genetic analyses, few are appropriate for populations with mixed modes of reproduction. There are several stand alone programs that can handle these types of data sets, but they are often platform specific and often only accept specific data types. Furthermore, a typical analysis often involves switching between many programs, and converting data to each specific format.
 
-\textit{Poppr} is designed to make analysis of populations with mixed reproductive modes more streamlined and user friendly so that the researcher using it can focus on data analysis and interpretation. \textit{Poppr} allows analysis of haploid and diploid dominant/co-dominant marker data including microsattelites, Single Nucleotide Polymorphisms (SNP), and Amplified Fragment Length Polymorphisms (AFLP). To avoid creating yet another file format that is specific to a program, \textit{poppr} was created on the backbone of the popular R package \textit{adegenet} and can take all the file formats that \textit{adegenet} can take (Genpop, Genetix, Fstat, and Structure) and newly introduces compatibility with GenAlEx formatted files (exported to CSV). This means that anything you can analyze in \textit{adegenet} can be further analyzed with \textit{poppr}.
+\Poppr{} is designed to make analysis of populations with mixed reproductive modes more streamlined and user friendly so that the researcher using it can focus on data analysis and interpretation. \Poppr{} allows analysis of haploid and diploid dominant/co-dominant marker data including microsattelites, Single Nucleotide Polymorphisms (SNP), and Amplified Fragment Length Polymorphisms (AFLP). To avoid creating yet another file format that is specific to a program, \poppr{} was created on the backbone of the popular R package \adegenet{} and can take all the file formats that \adegenet{} can take (Genpop, Genetix, Fstat, and Structure) and newly introduces compatibility with GenAlEx formatted files (exported to CSV). This means that anything you can analyze in \adegenet{} can be further analyzed with \poppr{}.
 
-The real power of \textit{poppr} is in the data manipulation and analytic tools. \textit{Poppr} has the ability to define multiple population hierarchies, clone-censor, and subset data sets. With \textit{poppr} you can also quickly calculate Bruvo's distance, the index of association, and easily determine which multilocus genotypes are shared across populations.
+The real power of \poppr{} is in the data manipulation and analytic tools. \Poppr{} has the ability to define multiple population hierarchies, clone-censor, and subset data sets. With \poppr{} you can also quickly calculate Bruvo's distance, the index of association, and easily determine which multilocus genotypes are shared across populations.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Installation}\label{intro:install}
+\subsection{Installation}
+\label{intro:install}
 
 \tab\tab This manual assumes that you have already installed R. If you have not, please refer to The CRAN home page at \url{http://cran.r-project.org/}. The author also recommends utilizing an R gui such as Rstudio (\url{http://www.rstudio.com/}) for a better R experience. 
 
 \subsubsection{From CRAN}
-\tab\tab To install \textit{poppr} from CRAN is as simple as selecting ``Package Installer" from the menu ``Packages \& Data" in the gui or by typing in your command line:
+\tab\tab To install \poppr{} from CRAN is as simple as selecting ``Package Installer" from the menu ``Packages \& Data" in the gui or by typing in your command line:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -148,16 +156,16 @@ The real power of \textit{poppr} is in the data manipulation and analytic tools.
 If everything is working perfectly, all the dependencies (\textit{adegenet, pegas, vegan, ggplot2, phangorn, ape} and \textit{igraph}) should be installed. In the unfortunate case this does not work, consult \url{http://cran.r-project.org/doc/manuals/R-admin.html#Installing-packages}.
 
 \subsubsection{From Source}
-\tab\tab The tarball for \textit{poppr} can be from CRAN: \url{http://cran.r-project.org/package=poppr}, the Gr\"unwald Lab website: \url{http://http://grunwaldlab.cgrb.oregonstate.edu/} under the \textsc{Resources} tab, or github at \url{https://github.com/grunwaldlab/poppr}. 
+\tab\tab The tarball for \poppr{} can be from CRAN: \url{http://cran.r-project.org/package=poppr}, the Gr\"unwald Lab website: \url{http://http://grunwaldlab.cgrb.oregonstate.edu/} under the \textsc{Resources} tab, or github at \url{https://github.com/grunwaldlab/poppr}. 
 
-Since \textit{poppr} contains C code, it needs to be compiled, which means that you need a working C compiler. If you are on Linux, you shouldn't have to worry too much about that, but if you are on Windows or OSX, you might need to download some special tools:
+Since \poppr{} contains C code, it needs to be compiled, which means that you need a working C compiler. If you are on Linux, you shouldn't have to worry too much about that, but if you are on Windows or OSX, you might need to download some special tools:
 
 \begin{description}
   \item[Windows] Download Rtools: \url{http://cran.r-project.org/bin/windows/Rtools/}
   \item[OSX] Download Xcode: \url{https://developer.apple.com/xcode/}
 \end{description}
 
-If you choose to install \textit{poppr} from a source file, you should first make sure to install all of the dependencies with the following command:
+If you choose to install \poppr{} from a source file, you should first make sure to install all of the dependencies with the following command:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -180,7 +188,7 @@ After installing dependencies, download the package to your computer and then yo
 
 
 \subsubsection{From github}
-\tab\tab Github is a repository where you can find all stable and development versions of \textit{poppr}. Installing from github requires a C compiler, so be sure to read the section above for instructions on how to obtain that if you aren't on a Linux system. 
+\tab\tab Github is a repository where you can find all stable and development versions of \poppr{}. Installing from github requires a C compiler, so be sure to read the section above for instructions on how to obtain that if you aren't on a Linux system. 
 
 To install from github, you do not need to actually download the tarball since there is a package called \textit{devtools} that will download and install the package for you directly from github. After you have installed all dependencies (see above section), you should download \textit{devtools}:
 \begin{knitrout}\footnotesize
@@ -217,9 +225,10 @@ Users who install this version do so at their own risk. Since it is a developmen
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Quick start}\label{intro:qstart}
+\subsection{Quick start}
+\label{intro:qstart}
 
-\tab\tab The author assumes that if you have reached this point in the manual, then you have successfully installed R and \textit{poppr}. Before proceeding, you should be aware that R is case sensitive. This means that the words ``Case" and ``case" are different from R's perspective. You should also know where your R package Library is located.
+\tab\tab The author assumes that if you have reached this point in the manual, then you have successfully installed R and \poppr{}. Before proceeding, you should be aware that R is case sensitive. This means that the words ``Case" and ``case" are different from R's perspective. You should also know where your R package Library is located.
 \begin{center}
    \fcolorbox{black}{light-gray}{
         \begin{minipage}[t]{0.8\textwidth}
@@ -232,7 +241,7 @@ R is as powerful as it is through a community of people who submit extra code ca
 Importing a file into R involves you knowing the path to your file and then typing that into R's console. \texttt{getfile()} will help provide a point and click interface for selecting a file. There are two steps:
 
 
-Before you do anything, you'll want to tell your computer to search R's library to find the \textit{poppr} and load the package:
+Before you do anything, you'll want to tell your computer to search R's library to find the \poppr{} and load the package:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -393,9 +402,11 @@ These fields are further described in section\seclink{summary}{I know what you d
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Get out of my dreams and into my R \{importing data into poppr\}}\label{intro:import}
+\subsection{Get out of my dreams and into my R \{importing data into poppr\}}
+\label{intro:import}
 There are several ways of reading data into R. 
-\subsubsection{Function: getfile}\label{intro:import:getfile}
+\subsubsection{Function: getfile}
+\label{intro:import:getfile}
 \tab\tab \texttt{getfile} gives the user an easy way to point R to the directory in which your data is stored. It is only meant for R GUIs such as Rstudio. Using this on the command line has very little advantage over setting the working directory manually. 
 \begin{quote}
 Default Command:
@@ -537,7 +548,7 @@ As you can see, now all of the files that existed in that directory are there! N
 
 
 You've seen examples of how to use \texttt{getfile} to extract a single file and all the files in a directory, but what if you wanted many files, but only wanted ones that were of a certain type or had a certain name? This is what you would use the \texttt{pattern} argument for.
-A perfect use would be the example data contained in the \textit{adegenet} package. Let's take a look at the names of these files.
+A perfect use would be the example data contained in the \adegenet{} package. Let's take a look at the names of these files.
 \begin{center}
    \fcolorbox{black}{salmon}{
         \begin{minipage}[t]{0.8\textwidth}
@@ -553,7 +564,7 @@ A perfect use would be the example data contained in the \textit{adegenet} packa
 \end{kframe}
 \end{knitrout}
 
-Navigate to the \textit{adegenet} folder in your R library.
+Navigate to the \adegenet{} folder in your R library.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{verbatim}
@@ -668,9 +679,10 @@ Uh-oh. We've run into a problem. Three out of our four files are not FSTAT files
 \end{knitrout}
 
 Now we have our FSTAT file!
-\subsubsection{Function: read.genalex}\label{intro:import:read.genalex}
+\subsubsection{Function: read.genalex}
+\label{intro:import:read.genalex}
 
-\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and can be very powerful in its analyses. \textit{Poppr} has added the ability to read *.CSV files\footnote{*.CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \textit{poppr} function \texttt{read.genalex} will import it into \textit{adegenet}'s \texttt{genind} object or \textit{poppr}'s \texttt{genclone} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
+\tab\tab A very popular program for population genetics is GenAlEx (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and can be very powerful in its analyses. \Poppr{} has added the ability to read *.CSV files\footnote{*.CSV files are comma separated files that are easily machine readable.} produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently it cannot import allelic frequency data from GenAlEx. All the user has to do is to export a single sheet of GenAlEx data from Excel into a *.CSV file, and the \poppr{} function \texttt{read.genalex} will import it into \adegenet{}'s \texttt{genind} object or \poppr{}'s \texttt{genclone} object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
 \begin{quote}
 Default Command:
 \begin{knitrout}
@@ -686,7 +698,7 @@ read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 \begin{itemize}
   \item \texttt{genalex -} a *.CSV file exported from GenAlEx on your disk (For example: \texttt{"my\_genalex\_file.csv"}).
   \item \texttt{ploidy -} a number indicating the ploidy for the data set (eg 2 for diploids, 1 for haploids).
-  \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \textit{poppr}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in\seclink{intro:genind:other}{The other slot.})
+  \item \texttt{geo -} GenAlEx allows you to have geographic data within your file. To do this for \poppr{}, you will need to follow the first format outlined in the GenAlEx manual and place the geographic data AFTER all genetic and demographic data with one blank column separating it (See the GenAlEx Manual for details). If you have geographic information in your file, set this flag to \texttt{TRUE} and it will be included within the resulting genind object in the \texttt{@other} slot. (If you don't know what that is, don't worry. It will be explained later in\seclink{intro:genind:other}{The other slot.})
   \item \texttt{region -} To format your GenAlEx file to include regions along with your populations, You can choose to include a separate column for regional data, or, since regional data must be in contiguous blocks, you can simply format it in the same way you would any other data (see the GenAlEx manual for details). If you have your file organized in this manner, select this option and the regional information will be stored in the resulting genind object in the \texttt{@other} slot.
   \item \texttt{genclone -} This flag defaults to \texttt{TRUE} and will automatically convert your data into a \texttt{genclone} object (see\seclink{intro:genclone}{Send in the clones}for more info).
   \item \texttt{sep -} The separator argument for your data. It defaults to ``,", but some countries use ``;" by default. This avoids the user having to
@@ -725,7 +737,7 @@ We have a short example of genalex formatted data with no geographic or regional
 \end{kframe}
 \end{knitrout}
 
-Now import the data into \textit{poppr} like so:
+Now import the data into \poppr{} like so:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -735,7 +747,7 @@ Now import the data into \textit{poppr} like so:
 \end{knitrout}
 
 Executing rootrot shows that this file is now in genclone format and can be used
-with any function in \textit{poppr} and \textit{adegenet}
+with any function in \poppr{} and \adegenet{}
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -761,9 +773,10 @@ with any function in \textit{poppr} and \textit{adegenet}
 \end{knitrout}
 
 
-\subsubsection{Genalex formatting shortcuts}\label{intro:import:genalex.short}
+\subsubsection{Genalex formatting shortcuts}
+\label{intro:import:genalex.short}
 
-\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see below). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \textit{adegenet} (for details, type \texttt{help("microbov")} into your R console). It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in\seclink{intro:genind:other}{The other slot}). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
+\tab\tab The GenAlEx format is a nice way to import data because it allows you to have geographic coordinates and two hierarchical levels of sampling (Region and population). If you have multiple levels of hierarchy, you will need to code them so that you combine multiple columns of hierarchy into one using a common separator (For an example, see below). A problem arises when it becomes more work than it's worth to do that since, for the GenAlEx format, you must provide the sizes of each population in the header. Here, I'll show you a simple way to circumvent that. First, let's use the microbov data set from \adegenet{} (for details, type \texttt{help("microbov")} into your R console). It contains three demographic factors: Country, Species and Breed contained within the \texttt{@other} slot (detailed in\seclink{intro:genind:other}{The other slot}). We will combine these and save the file to our desktop. We will cover these functions later in this manual. For now, just know they exist.
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
@@ -798,7 +811,7 @@ After we do this, we can open the file in our favorite spreadsheet editor and se
 \end{figure}
 
 \newpage
-All that \textit{poppr} needs from the first header row are the first three numbers (unless you are including regional data, but it's not terribly necessary with the hierarchical support \textit{poppr} provides.), which represent the number of loci, individuals, and populations, respectively. After that, you have counts of individuals per population in each subsequent cell. For \textit{poppr}, These cells don't matter because we already have that information in column 2.
+All that \poppr{} needs from the first header row are the first three numbers (unless you are including regional data, but it's not terribly necessary with the hierarchical support \poppr{} provides.), which represent the number of loci, individuals, and populations, respectively. After that, you have counts of individuals per population in each subsequent cell. For \poppr{}, These cells don't matter because we already have that information in column 2.
 
 If you have a large data set with many population levels, you can use the following shortcut by setting the number in the third cell to 1. The number in cell 4 is arbitrary (but must be there). In the following figure, it is set to the number of individuals in your data set, but can easily be replaced with any other number (perhaps your favorite number?). 
 
@@ -810,11 +823,13 @@ If you have a large data set with many population levels, you can use the follow
 
 \setkeys{Gin}{width=0.5\textwidth}
 
-\subsubsection{Other ways of importing data}\label{intro:import:other}
+\subsubsection{Other ways of importing data}
+\label{intro:import:other}
 
-\tab\tab \textit{Adegenet} already supports the import of FSTAT, Structure, Genpop, and Genetix formatted files, so if you have those formats, you can import them using the function \texttt{import2genind}. For sequence data, check if you can use \texttt{read.dna} from the \textit{ape} package to import your data. If you can, then you can use the \textit{adegenet} function \texttt{DNAbin2genind}. If you don't have any of these formats handy, you can still import your data using R's \texttt{read.table} along with \texttt{df2genind} from \textit{adegenet}. For more information, see \textit{adegenet}'s ``Getting Started" vignette.
+\tab\tab \Adegenet{} already supports the import of FSTAT, Structure, Genpop, and Genetix formatted files, so if you have those formats, you can import them using the function \texttt{import2genind}. For sequence data, check if you can use \texttt{read.dna} from the \textit{ape} package to import your data. If you can, then you can use the \adegenet{} function \texttt{DNAbin2genind}. If you don't have any of these formats handy, you can still import your data using R's \texttt{read.table} along with \texttt{df2genind} from \adegenet{}. For more information, see \adegenet{}'s ``Getting Started" vignette.
 
-\subsubsection{Function: genind2genalex}\label{intro:import:genind2genalex}
+\subsubsection{Function: genind2genalex}
+\label{intro:import:genind2genalex}
 
 \tab\tab Of course, being able to export data is just as useful as being able to import it, so we have this handy little function that will write a GenAlEx formatted file to wherever you desire.\\ 
 WARNING: This will overwrite any file that exists with the same name.
@@ -946,12 +961,13 @@ Now we can export it to a different file.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Getting to know adegenet's genind object}\label{intro:genind}
+\subsection{Getting to know \adegenet{}'s genind object}
+\label{intro:genind}
 
-\tab\tab Since \textit{poppr} was built around adegenet's framework, it is
-important to know how \textit{adegenet} stores data in the genind object, as
-that is the object used by \textit{poppr}. To create a genind object, 
-\textit{adegenet} takes a data frame of genotypes (rows) across multiple loci
+\tab\tab Since \poppr{} was built around \adegenet{}'s framework, it is
+important to know how \adegenet{} stores data in the genind object, as
+that is the object used by \poppr{}. To create a genind object, 
+\adegenet{} takes a data frame of genotypes (rows) across multiple loci
 (columns) and converts them into a matrix of individual allelic frequencies at
 each locus \cite{Jombart:2008}.
 
@@ -985,9 +1001,10 @@ And the resulting matrix after importing to genind.
 
 The first three columns represent the alleles of locus 1, the next four represent locus 2, and the last five represent locus 3.
 
-Do you see what I mean when I say individual allele frequencies at each locus? For a diploid individual, you only have three possible allele frequencies at each locus: 1, 0.5, or 0. Now, this is not the entire genind object, but it is the main feature. The object also has various elements associated with it that give you information about the population membership, the names of loci, individuals, and alleles among other things that \textit{poppr} uses to work \cite{Jombart:2008}. If you wish to know more, see the \textit{adegenet} ``Getting Started" manual. 
+Do you see what I mean when I say individual allele frequencies at each locus? For a diploid individual, you only have three possible allele frequencies at each locus: 1, 0.5, or 0. Now, this is not the entire genind object, but it is the main feature. The object also has various elements associated with it that give you information about the population membership, the names of loci, individuals, and alleles among other things that \poppr{} uses to work \cite{Jombart:2008}. If you wish to know more, see the \adegenet{} ``Getting Started" manual. 
 
-\subsubsection{The other slot}\label{intro:genind:other}
+\subsubsection{The other slot}
+\label{intro:genind:other}
 
 The other slot is a place in the genind object that can be used to store useful
 information about the data. One application would be to store data of 
@@ -1034,9 +1051,10 @@ that this data set has dinucleotide repeats at all nine loci. We use the command
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Send in the clones \{the genclone object\}}\label{intro:genclone}
+\subsection{Send in the clones \{the genclone object\}}
+\label{intro:genclone}
 
-In \textit{poppr} versions 1.0.x, all of the functions revolved around
+In \poppr{} versions 1.0.x, all of the functions revolved around
 \texttt{genind} objects. However, there were a few limitations to our use of
 this particular data structure.
 
@@ -1053,7 +1071,8 @@ working with hierarchies more intuitive. It is built off of the
 \texttt{genind} object and has dedicated slots for the population hierarchy and
 defined multilocus genotypes. 
 
-\subsubsection{Function: as.genclone}\label{intro:genclone:as.genclone}
+\subsubsection{Function: as.genclone}
+\label{intro:genclone:as.genclone}
 \begin{quote}
 Default Command:
 \begin{knitrout}
@@ -1299,7 +1318,8 @@ examples and details, type \texttt{help("genclone")} in your R console.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Accessing the population hierarchy}\label{intro:genclone:access}
+\subsection{Accessing the population hierarchy}
+\label{intro:genclone:access}
 
 The hierarchy slot in the genclone object is special because it allows us to
 rapidly access and manipulate different levels of a population hierarchy without
@@ -1341,18 +1361,21 @@ is necessary for\seclink{data.manip:cc}{clone correction}and AMOVA analysis. See
 %
 %=============================================================================%
 %=============================================================================%
-\section{Data Manipulation}\label{data.manip}
+\section{Data Manipulation}
+\label{data.manip}
 
-\tab\tab One tedious aspect of population genetic analysis is the need for repeated data manipulation. \textit{Adegenet} has some functions for manipulating data that are limited to replacing missing data and dividing data into populations, loci, or by sample size \cite{Jombart:2008}. \textit{Poppr} includes novel functions for clone-censoring your data sets or sub-setting a genind object by specific populations.
+\tab\tab One tedious aspect of population genetic analysis is the need for repeated data manipulation. \Adegenet{} has some functions for manipulating data that are limited to replacing missing data and dividing data into populations, loci, or by sample size \cite{Jombart:2008}. \Poppr{} includes novel functions for clone-censoring your data sets or sub-setting a genind object by specific populations.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Inside the golden days of missing data \{replace or remove missing data\}}\label{data.manip:missing}
+\subsection{Inside the golden days of missing data \{replace or remove missing data\}}
+\label{data.manip:missing}
 
-\tab\tab A data set without missing data is always ideal, but often not achievable. Many functions in \textit{adegenet} cannot handle missing data and thus the function \texttt{na.replace} exists \cite{Jombart:2008}. It will replace missing data with with either ``0" representing a mysterious extra allele in the data set resulting in more diversity or the mean of allelic frequencies at the locus. There is no set method, however, for simply removing missing data from analyses, which is why the \textit{poppr} function \texttt{missingno} (see below) exists. If the name makes you uneasy it's because it should. Missing data can mean different things based on your data type. For microsatellites, missing data might represent any source of error that could cause a PCR product to not amplify in gel electrophoresis, which may or may not be biologically relevant. For a DNA alignment, missing data could mean something as simple as an insertion or deletion, which is biologically relevant. The choice to exclude or estimate data has very different implications for the type of data you have.
-\subsubsection{Function: missingno}\label{data.manip:missing:missingno}
+\tab\tab A data set without missing data is always ideal, but often not achievable. Many functions in \adegenet{} cannot handle missing data and thus the function \texttt{na.replace} exists \cite{Jombart:2008}. It will replace missing data with with either ``0" representing a mysterious extra allele in the data set resulting in more diversity or the mean of allelic frequencies at the locus. There is no set method, however, for simply removing missing data from analyses, which is why the \poppr{} function \texttt{missingno} (see below) exists. If the name makes you uneasy it's because it should. Missing data can mean different things based on your data type. For microsatellites, missing data might represent any source of error that could cause a PCR product to not amplify in gel electrophoresis, which may or may not be biologically relevant. For a DNA alignment, missing data could mean something as simple as an insertion or deletion, which is biologically relevant. The choice to exclude or estimate data has very different implications for the type of data you have.
+\subsubsection{Function: missingno}
+\label{data.manip:missing:missingno}
 
-\tab\tab \texttt{missingno} is a function that serves partially as a wrapper for adegenet's \texttt{na.replace} to replace missing data and as a way to exclude specific areas that contain systematic missing data.  
+\tab\tab \texttt{missingno} is a function that serves partially as a wrapper for \adegenet{}'s \texttt{na.replace} to replace missing data and as a way to exclude specific areas that contain systematic missing data.  
 \begin{quote}
 Default Command:
 \begin{knitrout}
@@ -1378,7 +1401,7 @@ missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
     \item \texttt{quiet -} When this is set to \texttt{FALSE}, the number of missing values replaced will be printed to screen if the method is ``zero" or ``mean". It will print the number of loci or individuals removed if the method is ``loci" or ``geno".
 \end{itemize}
 
-Of course, seeing is believing. Let's take a look at what this does by focusing in on areas with missing data. Note that I will be using some sub-setting functions here that are described in adegenet's \textit{Getting Started} vignette. First, let's take a look at what the missing data in R looks like as well as how many loci and individuals the data set nancycats contains. We need to first tell R to look in its library for the package \textit{poppr}.
+Of course, seeing is believing. Let's take a look at what this does by focusing in on areas with missing data. Note that I will be using some sub-setting functions here that are described in \adegenet{}'s \textit{Getting Started} vignette. First, let's take a look at what the missing data in R looks like as well as how many loci and individuals the data set nancycats contains. We need to first tell R to look in its library for the package \poppr{}.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -1387,7 +1410,7 @@ Of course, seeing is believing. Let's take a look at what this does by focusing 
 \end{kframe}
 \end{knitrout}
 
-Next, we'll initialize the \textit{adegenet} data set nancycats and load it into memory.
+Next, we'll initialize the \adegenet{} data set nancycats and load it into memory.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -1396,7 +1419,7 @@ Next, we'll initialize the \textit{adegenet} data set nancycats and load it into
 \end{kframe}
 \end{knitrout}
 
-Now, we'll take a quick look at the nancycats data set using \textit{adegenet}'s \texttt{summary()} \index{summary} function:
+Now, we'll take a quick look at the nancycats data set using \adegenet{}'s \texttt{summary()} \index{summary} function:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -1500,7 +1523,7 @@ When looking at this data set, recall how a \texttt{genind} object is formatted.
 \end{kframe}
 \end{knitrout}
 
-You notice how the values of NA changed, yet the basic structure stayed the same. These are the replacement options from adegenet. Let's look at the same example with the exclusion options (set to the default cutoff of 5\%).
+You notice how the values of NA changed, yet the basic structure stayed the same. These are the replacement options from \adegenet{}. Let's look at the same example with the exclusion options (set to the default cutoff of 5\%).
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -1594,7 +1617,8 @@ We can see here that the number of individuals decreased, yet we have the same n
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Can you take me hier(archy)? \{population hierarchy construction\}}\label{data.manip:hier}
+\subsection{Can you take me hier(archy)? \{population hierarchy construction\}}
+\label{data.manip:hier}
 
 \tab\tab In poppr versions 1.0.x, this section of the manual contained a long
 explaination of the function \texttt{splitcombine}.
@@ -1605,7 +1629,8 @@ help page by typing \texttt{?splitcombine} or refer to earlier versions of this
 manual. In this section, we will walk you through the process of defining, 
 manipulating, and adding to population hierarchies within genclone objects. 
 
-\subsubsection{General hierarchy method use}\label{data.manip:hier:method}
+\subsubsection{General hierarchy method use}
+\label{data.manip:hier:method}
 
 \tab\tab There are currently 5 methods that manipulate population hierarchies in
 genclone objects:
@@ -1778,7 +1803,8 @@ advantage to having both systems is that with the
 \texttt{function(object, input)} syntax, you can test manipulation without 
 affecting your object.
 
-\subsubsection{Defining populations with hierarchies}\label{data.manip:hier:setpop}
+\subsubsection{Defining populations with hierarchies}
+\label{data.manip:hier:setpop}
 
 Of course, these hierarchies would mean nothing if it was difficult or not
 possible to define the populations in the data set We notice that above, we have
@@ -1882,12 +1908,13 @@ with respect to country.
 \noindent
 This didn't work because we don't have Year defined within our hierarchy. In this
 case, we would likely have an outside vector defining the year. To define the 
-population to just year, we could use the \textit{adegenet} function \texttt{pop}
+population to just year, we could use the \adegenet{} function \texttt{pop}
 to set the population with respect to year, but this would not update the
 hierarchy. A better way to do this would be to add year to the hierarchy with the
 function \cmdlink{data.manip:hier:manip}{addhierarchy} and define it as above.
 
-\subsubsection{Defining hierarchies}\label{data.manip:hier:define}
+\subsubsection{Defining hierarchies}
+\label{data.manip:hier:define}
 
 \tab\tab In order to utilize hierarchies, they must be defined. As genind objects
 don't inherently define population hierarchies. The user must do so. One way is
@@ -1970,7 +1997,7 @@ Now we have sucessfully defined our hierarchies.
 If you have imported your data with a single population and have a separate data
 frame that you read in with \texttt{read.table}, this is how you would define
 your hierarchy. For demonstrative purposes, we will use the H3N2 viral data set.
-This contains a data frame called `x' in the\seclink{intro:genind:other}{other slot}that contains many variables including country, year, and month of collection. 
+This contains a data frame called `x' in the\seclink{intro:genind:other}{other slot}that contains many variables including country, year, and month of collection. \label{data:virus}
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
@@ -2094,7 +2121,8 @@ respect to country:
 \end{knitrout}
 
 
-\subsubsection{Viewing hierarchies}\label{data.manip:hier:view}
+\subsubsection{Viewing hierarchies}
+\label{data.manip:hier:view}
 
 If you wanted to view your hierarchies to make sure that you made no spelling
 errors in your population definitions, you can extract the data frame from your
@@ -2203,7 +2231,8 @@ It will return only the levels you ask it to return:
 \end{knitrout}
 
 
-\subsubsection{Manipulating hierarchies}\label{data.manip:hier:manip}
+\subsubsection{Manipulating hierarchies}
+\label{data.manip:hier:manip}
 
 Once we have our hierarchies set in place, we want to be able to rename and add
 to them. For this example, we will revisit the virus example from above. We have
@@ -2400,10 +2429,12 @@ at once.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Divide (populations) and conquer (your analysis) \{extract populations\}}\label{data.manip:divide}
+\subsection{Divide (populations) and conquer (your analysis) \{extract populations\}}
+\label{data.manip:divide}
 
-\tab\tab As I've mentioned before, \textit{adegenet} has many ways of sub-setting the data, but you cannot easily subset a \texttt{genind} object by population in an efficient way. \textit{Poppr} allows sub-setting a population from a \texttt{genind} object with one command.
-\subsubsection{Function: popsub}\label{data.manip:divide:popsub}
+\tab\tab As I've mentioned before, \adegenet{} has many ways of sub-setting the data, but you cannot easily subset a \texttt{genind} object by population in an efficient way. \Poppr{} allows sub-setting a population from a \texttt{genind} object with one command.
+\subsubsection{Function: popsub}
+\label{data.manip:divide:popsub}
 
 \tab\tab The command \texttt{popsub} is powerful in that it allows you to choose exactly what populations you choose to include or exclude from your analyses. As with many R functions, you can easily use this within a function to avoid creating a new variable to keep track of.  
 \begin{quote}
@@ -2426,7 +2457,7 @@ popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
   \item \texttt{mat -} (see section\seclink{mlg}{Multilocus Genotype Analysis}for more information) This is where you would put a matrix that's produced by \texttt{mlg.table} to be subsetted instead of the genind object. If you do this, the matrix will return with only the rows equal to your populations and only the multilocus genotypes (columns) pertaining to those populations. 
 \end{itemize}
 
-To demonstrate this tool, let's revisit the virus data set that we saw in\seclink{data.manip:hier:define}{Defining hierarchies.}Let's say we wanted to analyze only the data in North America. To make sure we are all on the same page, we will reset the population factor to ``country".
+To demonstrate this tool, let's revisit the \seclink{data:virus}{virus data} set that we saw in\seclink{data.manip:hier:define}{Defining hierarchies.}Let's say we wanted to analyze only the data in North America. To make sure we are all on the same page, we will reset the population factor to ``country".
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -2455,7 +2486,7 @@ To demonstrate this tool, let's revisit the virus data set that we saw in\seclin
 \end{knitrout}
 
 \noindent
-Since this is a larger data set, running the \texttt{summary} function might take a few seconds longer than we want it to. If we want to see the population size, we can use the \textit{adegenet} function \texttt{nInd()}:
+Since this is a larger data set, running the \texttt{summary} function might take a few seconds longer than we want it to. If we want to see the population size, we can use the \adegenet{} function \texttt{nInd()}:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -2543,16 +2574,18 @@ And that, is how you subset your data with poppr!
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Attack of the clone correction \{clone-censor data sets\}}\label{data.manip:cc}
+\subsection{Attack of the clone correction \{clone-censor data sets\}}
+\label{data.manip:cc}
 
 \tab\tab Clone correction refers to the ability of keeping one observation per
 clone in a given population (or sub-population). Clone correcting can be
 hazardous if its done by hand (even on small data sets) and it requires a
-defined population hierarchy to get relevant results. \textit{Poppr} has a clone
+defined population hierarchy to get relevant results. \Poppr{} has a clone
 correcting function that is able to correct at the lowest level of any defined
-population hierarchy. Note that clone correction in \textit{poppr} is sensitive
+population hierarchy. Note that clone correction in \poppr{} is sensitive
 to missing data, as it treats all missing data as a single extra allele.
-\subsubsection{Function: clonecorrect}\label{data.manip:cc:clonecorrect}
+\subsubsection{Function: clonecorrect}
+\label{data.manip:cc:clonecorrect}
 
 \tab\tab This function will return a clone corrected data set corrected for the
 lowest population level. Population levels are specified with the \texttt{hier}
@@ -2752,16 +2785,18 @@ Correcting over whole data set
 
 \noindent
 That, in a nutshell is clone correction. Note that you can use this to create 
-new data sets, but also that the function \cmdlink{summary:poppr}{poppr} also
+new data sets, but also that the function\cmdlink{summary:poppr}{poppr}also
 utilizes this function internally. 
 
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Every day I'm shuffling (data sets)  \{permutations and bootstrap resampling\}}\label{data.manip:shuffle}
+\subsection{Every day I'm shuffling (data sets)  \{permutations and bootstrap resampling\}}
+\label{data.manip:shuffle}
 
-\tab\tab A common null hypothesis for populations with mixed reproductive modes is panmixia, or to put it simply: lots of sex. A handy way to test for that is permutation analysis to assess random linkage among loci whereupon you randomly shuffle your data. \textit{Poppr} uses randomly shuffled data sets in order to calculate P-values for the index of association ($I_A$ and $\bar r_d$) \cite{Agapow:2001}. Since there might be other tests where a permutation analysis would be pertinent, a shuffler for \texttt{genind} objects was created with four shuffling schemes: two schemes shuffling without replacement and two shuffling with replacement. Details below.
-\subsubsection{Function: shufflepop}\label{data.manip:shuffle:shufflepop}
+\tab\tab A common null hypothesis for populations with mixed reproductive modes is panmixia, or to put it simply: lots of sex. A handy way to test for that is permutation analysis to assess random linkage among loci whereupon you randomly shuffle your data. \Poppr{} uses randomly shuffled data sets in order to calculate P-values for the index of association ($I_A$ and $\bar r_d$) \cite{Agapow:2001}. Since there might be other tests where a permutation analysis would be pertinent, a shuffler for \texttt{genind} objects was created with four shuffling schemes: two schemes shuffling without replacement and two shuffling with replacement. Details below.
+\subsubsection{Function: shufflepop}
+\label{data.manip:shuffle:shufflepop}
 \begin{quote}
 Default Command:
 \begin{knitrout}
@@ -2986,8 +3021,7 @@ Again, heterozygosity and allele frequencies are not maintained, but now all of 
 Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of\seclink{index:iard:ia}{Function: ia}in this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
   \end{enumerate}
 \end{itemize}
-These shuffling schemes have been implemented for the index of association, but there may be other summary statistics you can use \texttt{shufflepop} for. All you have to do is use the function \texttt{replicate}. Let's use average Bruvo's
-distance as an example:
+These shuffling schemes have been implemented for the index of association, but there may be other summary statistics you can use \texttt{shufflepop} for. All you have to do is use the function \texttt{replicate}. Let's use average\seclink{index:bruvo}{Bruvo's distance}with the first population of the data set \texttt{nancycats} as an example:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -3037,9 +3071,11 @@ You could use this method to replicate the resampling 999 times and then create 
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Cut It Out!  \{removing uninformative loci\}}\label{data.manip:informloci}
+\subsection{Cut It Out!  \{removing uninformative loci\}}
+\label{data.manip:informloci}
  \tab\tab Phylogenetically uninformative loci are those that have only one sample differentiating from the rest. This can lead to biased results when using multilocus analyses such as the index of association (See\seclink{index:iard}{The missing linkage disequilibrium}and\seclink{summary}{I know what you did last summary table}). These nuisance loci can be removed with the following function.
-\subsubsection{Function: informloci}\label{data.manip:informloci:informloci}
+\subsubsection{Function: informloci}
+\label{data.manip:informloci:informloci}
 \begin{quote}
 Default Command:
 \begin{knitrout}
@@ -3054,11 +3090,11 @@ informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
-    \item \texttt{cutoff -} this represents the minimum fraction of individuals needed for a locus to be considered informative. The default is set to $2/n$ with $n$ being the number of individuals in the data set (represented by the \textit{adegenet} function \texttt{nInd}). Essentially, this means that any locus with fewer than 2 observations differing will be removed. The user can also specify a fraction of observations for the cutoff (eg. 0.05).
-    \item \texttt{quiet -} if \texttt{TRUE}, nothing will be printed to the screen, if \texttt{FALSE}, the cutoff value in percentage and number of individuals will be printed as well as the names of the uninfomrative loci found. 
+    \item \texttt{cutoff -} this represents the minimum fraction of individuals needed for a locus to be considered informative. The default is set to $2/n$ with $n$ being the number of individuals in the data set (represented by the \adegenet{} function \texttt{nInd}). Essentially, this means that any locus with fewer than 2 observations differing will be removed. The user can also specify a fraction of observations for the cutoff (eg. 0.05).
+    \item \texttt{quiet -} if \texttt{TRUE}, nothing will be printed to the screen, if \texttt{FALSE} (default), the cutoff value in percentage and number of individuals will be printed as well as the names of the uninfomrative loci found. 
   \end{itemize}
 
-Here's a quick example.
+Here's a quick example using the H3N2 virus SNP data set. We will only retain loci that have a minor allele frequency of $\geq 5\%$
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -3080,7 +3116,9 @@ Here's a quick example.
 \end{kframe}
 \end{knitrout}
 
-Now what happens when you have all informative loci:
+Now what happens when you have all informative loci. We'll use the nancycats
+data set, which has microsatellite loci. It is important to note that this is
+searching for loci with a specified genotype frequency as fixed heterozygous sites are also uninformative:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -3102,58 +3140,75 @@ Now what happens when you have all informative loci:
 %
 %=============================================================================%
 %=============================================================================%
-\section{Multilocus Genotype Analysis}\label{mlg}
+\section{Multilocus Genotype Analysis}
+\label{mlg}
 
-\tab\tab In populations with mixed sexual and clonal reproduction, it is not uncommon to have multiple samples from the same population have the same genotype across multiple loci (multilocus genotype, MLG). Here, we introduce tools for tracking MLGs within and across populations in \texttt{genind} objects from the \textit{adegenet} package. We will be using SNP data from isolates of the H3N2 virus from 2002 to 2006.
+\tab\tab In populations with mixed sexual and clonal reproduction, it is not uncommon to have multiple samples from the same population have the same genotype across multiple loci (multilocus genotype, MLG). Here, we introduce tools for tracking MLGs within and across populations in\seclink{genind}{intro:genind}objects from the \adegenet{} package. We will be using the\seclink{data:virus}{virus}data set which SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that genclone objects are optimal for these analyses.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Just a peek \{How many multilocus genotypes are in our data set?\}}\label{mlg:mlg}
-
-\tab\tab First, let's take a quick look at how many Multilocus Genotypes are present within the H3N2 data set using the \texttt{mlg} function. This will tell us if any MLG analysis is needed.
-\subsubsection{Function: mlg}\label{mlg:mlg:mlg}
-
-\tab\tab The function \texttt{mlg} allows for the counting of the number of MLGs in a \texttt{genind} object. This is a very simple command for quick reference to determine if your data set needs further multilocus genotype analysis.
-\begin{quote}
-Default Command:
-\begin{knitrout}
+\subsection{Just a peek \{How many multilocus genotypes are in our data set?\}}
+\label{mlg:mlg}
+\tab\tab Counting the number of multilocus genotypes in a population is the first step for these analyses as they allow one to quickly see how many clones
+exist. With the\seclink{intro:genclone}{genclone}object, This information is
+already displayed when we view the object.
+\begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{virus}
+\end{alltt}
 \begin{verbatim}
-mlg(pop, quiet = FALSE)
+## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##     752 multilocus genotypes
+##    1903 haploid individuals
+##     125 codominant loci
+## 
+## Population information:
+## 
+##       3 population hierarchies - country year month
+##      37 populations defined - Japan USA Finland ... Spain Slovenia Croatia Algeria
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-% \texttt{mlg(pop, quiet = FALSE)}
-\end{quote}
-  \begin{itemize}
-    \item \texttt{pop -} a \texttt{genind} object.
-    \item \texttt{quiet -} if \texttt{TRUE}, the number of individuals and multilocus genotypes will be printed to the screen, if \texttt{FALSE}, nothing will be printed to the screen and the number of multilocus genotypes will be reported.
-  \end{itemize}
+\noindent
+If we need to store the number of MLGs as a variable, we can simply run the \texttt{mlg} command.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{data}\hlstd{(H3N2)}
-\hlkwd{mlg}\hlstd{(H3N2,} \hlkwc{quiet} \hlstd{=} \hlnum{FALSE}\hlstd{)}
+\hlstd{virus_mlg} \hlkwb{<-} \hlkwd{mlg}\hlstd{(virus)}
 \end{alltt}
 \begin{verbatim}
 ## #############################
 ## # Number of Individuals:  1903 
 ## # Number of MLG:  752 
 ## #############################
+\end{verbatim}
+\begin{alltt}
+\hlstd{virus_mlg}
+\end{alltt}
+\begin{verbatim}
 ## [1] 752
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
+\label{mlg:mlg:mlg}
+
 We can see that since the number of individuals exceeds the number of multilocus genotypes, this data set contains clones. Let's take a look at where those clones are with respect to populations.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Clone-ing around \{MLGs across populations\}}\label{mlg:cross}
+\subsection{Clone-ing around \{MLGs across populations\}}
+\label{mlg:cross}
 
 \tab\tab Since you have the ability to change the population structure of your data set freely, it is quite possible to see some of the same MLGs across different populations. Tracking them by hand can be a nightmare with large data sets. Luckily, \texttt{mlg.crosspop} has you covered in that regard.
-\subsubsection{Function: mlg.crosspop}\label{mlg:cross:mlg.crosspop}
+\subsubsection{Function: mlg.crosspop}
+\label{mlg:cross:mlg.crosspop}
 
 \tab\tab Analyze the MLGs that cross populations within your data set. This has three output modes. The default one gives a list of MLGs, and for each MLG, it gives a named numeric vector indicating the abundance of that MLG in each population. Alternate outputs are described with \texttt{indexreturn} and \texttt{df}.
 \begin{quote}
@@ -3167,7 +3222,6 @@ mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 \end{kframe}
 \end{knitrout}
 
-% \texttt{mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)}
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
@@ -3183,8 +3237,8 @@ We can see what Multilocus Genotypes cross different populations and then give a
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{pop}\hlstd{(H3N2)} \hlkwb{<-} \hlstd{H3N2}\hlopt{$}\hlstd{other}\hlopt{$}\hlstd{x}\hlopt{$}\hlstd{country}
-\hlstd{H.dup} \hlkwb{<-} \hlkwd{mlg.crosspop}\hlstd{(H3N2,} \hlkwc{quiet} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{setpop}\hlstd{(virus)} \hlkwb{<-} \hlopt{~}\hlstd{country}
+\hlstd{v.dup} \hlkwb{<-} \hlkwd{mlg.crosspop}\hlstd{(virus,} \hlkwc{quiet} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -3211,7 +3265,7 @@ The output of this function is a list of MLGs, each containing a vector indicati
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{head}\hlstd{(H.dup)}
+\hlkwd{head}\hlstd{(v.dup)}
 \end{alltt}
 \begin{verbatim}
 ## $MLG.3
@@ -3239,8 +3293,8 @@ The output of this function is a list of MLGs, each containing a vector indicati
 ##       3       4
 \end{verbatim}
 \begin{alltt}
-\hlstd{H.num} \hlkwb{<-} \hlkwd{sapply}\hlstd{(H.dup, length)}  \hlcom{# count the number of populations each MLG crosses.}
-\hlstd{H.num}
+\hlstd{v.num} \hlkwb{<-} \hlkwd{sapply}\hlstd{(v.dup, length)}  \hlcom{# count the number of populations each MLG crosses.}
+\hlstd{v.num}
 \end{alltt}
 \begin{verbatim}
 ##   MLG.3   MLG.9  MLG.31  MLG.75  MLG.80  MLG.86  MLG.95  MLG.97 MLG.104 MLG.110 MLG.119 
@@ -3265,10 +3319,12 @@ The output of this function is a list of MLGs, each containing a vector indicati
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Bringing something to the table \{producing MLG tables and graphs\}}\label{mlg:table}
+\subsection{Bringing something to the table \{producing MLG tables and graphs\}}
+\label{mlg:table}
 
 We can also create a table of multilocus genotypes per population as well as bar graphs to give us a visual representation of the data. This is achieved through the function \texttt{mlg.table}
-\subsubsection{Function: mlg.table}\label{mlg:table:mlg.table}
+\subsubsection{Function: mlg.table}
+\label{mlg:table:mlg.table}
 
 \tab\tab Produce a matrix containing counts of MLGs (columns) per population (rows). If there is no population structure to your data set, a vector will be produced instead.
 \begin{quote}
@@ -3296,8 +3352,8 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H.tab} \hlkwb{<-} \hlkwd{mlg.table}\hlstd{(H3N2,} \hlkwc{quiet} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{bar} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\hlstd{H.tab[}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{,} \hlnum{1}\hlopt{:}\hlnum{10}\hlstd{]}  \hlcom{# Showing the first 10 columns and rows of the table.}
+\hlstd{v.tab} \hlkwb{<-} \hlkwd{mlg.table}\hlstd{(virus,} \hlkwc{quiet} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{bar} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlstd{v.tab[}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{,} \hlnum{1}\hlopt{:}\hlnum{10}\hlstd{]}  \hlcom{# Showing the first 10 columns and rows of the table.}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -3338,15 +3394,14 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 \end{figure}
 \newpage
 
-The MLG table is not restricted for use with just \textit{Poppr}. One of the main advantages of the function \texttt{mlg.table} is that it allows easy access to diversity functions present in the package \textit{vegan} \cite{vegan}. One very simple example is to create a rarefaction curve for each population in your data set giving the number of expected MLGs for a given sample size. For more information, type \texttt{help("diversity", package="vegan")} in your R console.
+The MLG table is not restricted for use with just \Poppr{}. One of the main advantages of the function \texttt{mlg.table} is that it allows easy access to diversity functions present in the package \textit{vegan} \cite{vegan}. One very simple example is to create a rarefaction curve for each population in your data set giving the number of expected MLGs for a given sample size. For more information, type \texttt{help("diversity", package="vegan")} in your R console.
 
 For the sake of a simple example, instead of drawing a curve for each of the 37 countries represented in this sample, let's change the population structure to be the different years of the epidemics. 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H.year} \hlkwb{<-} \hlstd{H3N2}
-\hlkwd{pop}\hlstd{(H.year)} \hlkwb{<-} \hlstd{H.year}\hlopt{$}\hlstd{other}\hlopt{$}\hlstd{x}\hlopt{$}\hlstd{year}
-\hlkwd{summary}\hlstd{(H.year)}  \hlcom{# Check the data to make sure it's correct.}
+\hlkwd{setpop}\hlstd{(virus)} \hlkwb{<-} \hlopt{~}\hlstd{year}
+\hlkwd{summary}\hlstd{(virus)}  \hlcom{# Check the data to make sure it's correct.}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -3397,7 +3452,7 @@ For the sake of a simple example, instead of drawing a curve for each of the 37 
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{library}\hlstd{(vegan)}
-\hlstd{H.year} \hlkwb{<-} \hlkwd{mlg.table}\hlstd{(H.year,} \hlkwc{bar} \hlstd{=} \hlnum{FALSE}\hlstd{)}
+\hlstd{H.year} \hlkwb{<-} \hlkwd{mlg.table}\hlstd{(virus,} \hlkwc{bar} \hlstd{=} \hlnum{FALSE}\hlstd{)}
 \hlkwd{rarecurve}\hlstd{(H.year,} \hlkwc{ylab} \hlstd{=} \hlstr{"Multilocus genotypes expected"}\hlstd{,} \hlkwc{sample} \hlstd{=} \hlkwd{min}\hlstd{(}\hlkwd{rowSums}\hlstd{(H.year)),} \hlkwc{border} \hlstd{=} \hlnum{NA}\hlstd{,}
     \hlkwc{fill} \hlstd{=} \hlnum{NA}\hlstd{,} \hlkwc{font} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{cex} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"blue"}\hlstd{)}
 \end{alltt}
@@ -3422,26 +3477,28 @@ For the sake of a simple example, instead of drawing a curve for each of the 37 
 \end{figure}
 \newpage
 
-The minimum value from the \textit{base} function \texttt{rowSums()} of the table represents the minimum common sample size of all populations. Setting the ``sample" flag draws the horizontal and vertical lines you see on the graph. The intersections of these lines correspond to the numbers you would find if you ran the function \texttt{poppr} on this data set (under the column ``\texttt{eMLG}").
+The minimum value from the \textit{base} function \texttt{rowSums()} of the table represents the minimum common sample size of all populations. Setting the ``sample" flag draws the horizontal and vertical lines you see on the graph. The intersections of these lines correspond to the numbers you would find if you ran the function \cmdlink{summary:poppr}{poppr}on this data set (under the column ``\texttt{eMLG}").
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Getting into the mix \{combining MLG functions\}}\label{mlg:mix}
+\subsection{Getting into the mix \{combining MLG functions\}}
+\label{mlg:mix}
 
 \tab\tab Alone, the different functionalities are neat. Combined, we can create interesting data sets. Let's say we wanted to know which MLGs were duplicated across the regions of the United Kingdom, Germany, Netherlands, and Norway. All we have to do is use the \texttt{sublist} flag in the function:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
+\hlkwd{setpop}\hlstd{(virus)} \hlkwb{<-} \hlopt{~}\hlstd{country}
 \hlstd{UGNN.list} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"United Kingdom"}\hlstd{,} \hlstr{"Germany"}\hlstd{,} \hlstr{"Netherlands"}\hlstd{,} \hlstr{"Norway"}\hlstd{)}
-\hlstd{UGNN} \hlkwb{<-} \hlkwd{mlg.crosspop}\hlstd{(H3N2,} \hlkwc{sublist} \hlstd{= UGNN.list,} \hlkwc{indexreturn} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlstd{UGNN} \hlkwb{<-} \hlkwd{mlg.crosspop}\hlstd{(virus,} \hlkwc{sublist} \hlstd{= UGNN.list,} \hlkwc{indexreturn} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 OK, the output tells us that there are three MLGs that are crossing between these
-populations, but we do not know how many are in each. We can easily find that out if we subset our original table, \texttt{H.tab}. 
+populations, but we do not know how many are in each. We can easily find that out if we subset our original table, \texttt{v.tab}. 
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
@@ -3459,7 +3516,7 @@ populations, but we do not know how many are in each. We can easily find that ou
 ## [1] "United Kingdom" "Germany"        "Netherlands"    "Norway"
 \end{verbatim}
 \begin{alltt}
-\hlstd{H.tab[UGNN.list, UGNN]}
+\hlstd{v.tab[UGNN.list, UGNN]}
 \end{alltt}
 \begin{verbatim}
 ##                MLG.315 MLG.317 MLG.620
@@ -3473,8 +3530,16 @@ populations, but we do not know how many are in each. We can easily find that ou
 
 
 Now we can see that Norway has a higher incidence of nearly all of these MLGs. 
+We can investigate the incidence of these MLGs throughout our data set. 
+
+
+\begin{quote}
+To Be Continued
+\end{quote}
+
 We can go even further and subset the original data set to only give us those MLGs by utilizing the function \texttt{mlg.vector}:
-\subsubsection{Function: mlg.vector}\label{mlg:mix:mlg.vector}
+\subsubsection{Function: mlg.vector}
+\label{mlg:mix:mlg.vector}
 
 \tab\tab This function is the backbone for \texttt{mlg.table} and \texttt{mlg.crosspop}, and is The function that determines what your MLGs are. This is quite useful for sub-setting the data set to only contain the MLGs of interest. The numbers in the vector correspond to the number of columns in a matrix produced by \texttt{mlg.table}. It is important to remember that this is also sensitive to missing data and will treat it as a single extra allele. 
 \begin{quote}
@@ -3495,18 +3560,18 @@ mlg.vector(pop)
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H.vec} \hlkwb{<-} \hlkwd{mlg.vector}\hlstd{(H3N2)}
-\hlstd{H.sub} \hlkwb{<-} \hlstd{H3N2[H.vec} \hlopt{%in%} \hlstd{UGNN, ]}
-\hlkwd{mlg.table}\hlstd{(H.sub,} \hlkwc{bar} \hlstd{=} \hlnum{FALSE}\hlstd{)}
+\hlstd{v.vec} \hlkwb{<-} \hlkwd{mlg.vector}\hlstd{(virus)}
+\hlstd{v.sub} \hlkwb{<-} \hlstd{virus[v.vec} \hlopt{%in%} \hlstd{UGNN, ]}
+\hlkwd{mlg.table}\hlstd{(v.sub,} \hlkwc{bar} \hlstd{=} \hlnum{FALSE}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##                MLG.1 MLG.2 MLG.3
-## Austria            0     0     7
-## Germany            0     1     1
-## Greece             0     0     1
-## Norway             2     3     1
-## Japan              4     1     0
-## United Kingdom     1     0     0
+##                MLG.315 MLG.317 MLG.620
+## Austria              0       0       7
+## Germany              0       1       1
+## Greece               0       0       1
+## Norway               2       3       1
+## Japan                4       1       0
+## United Kingdom       1       0       0
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -3515,7 +3580,7 @@ You can also do the same thing using the mlgsub flag.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{mlg.table}\hlstd{(H3N2,} \hlkwc{mlgsub} \hlstd{= UGNN,} \hlkwc{bar} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{mlg.table}\hlstd{(virus,} \hlkwc{mlgsub} \hlstd{= UGNN,} \hlkwc{bar} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -3557,14 +3622,14 @@ Now, you might notice that the MLG vector no longer matches up with our data aft
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H.vec[}\hlnum{1}\hlopt{:}\hlnum{22}\hlstd{]}
+\hlstd{v.vec[}\hlnum{1}\hlopt{:}\hlnum{22}\hlstd{]}
 \end{alltt}
 \begin{verbatim}
 ##  [1] 605 605 672 675 674 673 670 671 670 678 678 678 678 582 615 580 581 570 615 582 582
 ## [22] 592
 \end{verbatim}
 \begin{alltt}
-\hlkwd{mlg.vector}\hlstd{(H.sub)}
+\hlkwd{mlg.vector}\hlstd{(v.sub)}
 \end{alltt}
 \begin{verbatim}
 ##  [1] 3 3 3 3 3 3 3 3 3 3 2 1 1 2 2 1 2 1 1 1 1 2
@@ -3572,31 +3637,22 @@ Now, you might notice that the MLG vector no longer matches up with our data aft
 \end{kframe}
 \end{knitrout}
 
-Well, this is unfortunate because it means that we can't compare any subsetted data with non-subsetted data. Luckily, there's a little trick we can do using our old friend, the \texttt{@other} slot.
-If we place the MLG vector in the \texttt{@other} slot of our original data set, it will be subsetted along with the data.
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{H3N2}\hlopt{@}\hlkwc{other}\hlopt{$}\hlstd{MLG.vector} \hlkwb{<-} \hlstd{H.vec}
-\hlstd{H.sub} \hlkwb{<-} \hlstd{H3N2[H.vec} \hlopt{%in%} \hlstd{UGNN, ]}
-\hlstd{H.sub}\hlopt{@}\hlkwc{other}\hlopt{$}\hlstd{MLG.vector}
-\end{alltt}
-\begin{verbatim}
-##  [1] 620 620 620 620 620 620 620 620 620 620 317 315 315 317 317 315 317 315 315 315 315
-## [22] 317
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-Magic!\\
+% Well, this is unfortunate because it means that we can't compare any subsetted data with non-subsetted data. Luckily, there's a little trick we can do using our old friend, the \texttt{@other} slot.
+% If we place the MLG vector in the \texttt{@other} slot of our original data set, it will be subsetted along with the data.
+% <<>>=
+% virus@other$MLG.vector <- H.vec
+% H.sub <- virus[H.vec %in% UGNN, ]
+% H.sub@other$MLG.vector
+% @
+% Magic!\\
 %\newpage
 
 So, we've gotten this far, yet we haven't actually seen what the genotypes look like! For analyses where the genotypic signature is important, this is a crucial identification step. Lucky for us, the \texttt{genind} object retains all of the genotypic information and can be accessed using the \texttt{genind2df} function. Let's take a look at the three genotypes we specified above utilizing the vector of MLGs we created above, \texttt{H.vec}.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H.df} \hlkwb{<-} \hlkwd{genind2df}\hlstd{(H3N2)}
-\hlstd{H.df[H.vec} \hlopt{%in%} \hlstd{UGNN,} \hlnum{1}\hlopt{:}\hlnum{15}\hlstd{]}  \hlcom{# Showing only 15 columns becaus it is a large dataset.}
+\hlstd{v.df} \hlkwb{<-} \hlkwd{genind2df}\hlstd{(virus)}
+\hlstd{v.df[v.vec} \hlopt{%in%} \hlstd{UGNN,} \hlnum{1}\hlopt{:}\hlnum{15}\hlstd{]}  \hlcom{# Showing only 15 columns becaus it is a large dataset.}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -3642,7 +3698,7 @@ Notice that there seems to be a clear separation between the SNPs of the first 1
 ##     315     317     620
 \end{verbatim}
 \begin{alltt}
-\hlstd{H.vec[H.vec} \hlopt{%in%} \hlstd{UGNN]}
+\hlstd{v.vec[v.vec} \hlopt{%in%} \hlstd{UGNN]}
 \end{alltt}
 \begin{verbatim}
 ##  [1] 620 620 620 620 620 620 620 620 620 620 317 315 315 317 317 315 317 315 315 315 315
@@ -3657,13 +3713,14 @@ We have the MLGs 315, 317, and 620, and the result of the sub-setting shows us t
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Do you see what I see? \{alternative data visualization\}}\label{mlg:alt.vis}
+\subsection{Do you see what I see? \{alternative data visualization\}}
+\label{mlg:alt.vis}
 
-\tab\tab The graphs that are output by \textit{poppr} are simply aids for the user to make data analysis easier. We want to better visualize how these MLGs cross populations by MLG or population. We also want to see exactly what MLGs are in which populations, and how prevalent they are. As the package \textit{ggplot2} is based on data frames, we have to give ourselves a data frame to work with. We can do this using the \texttt{df = TRUE} flag.
+\tab\tab The graphs that are output by \poppr{} are simply aids for the user to make data analysis easier. We want to better visualize how these MLGs cross populations by MLG or population. We also want to see exactly what MLGs are in which populations, and how prevalent they are. As the package \textit{ggplot2} is based on data frames, we have to give ourselves a data frame to work with. We can do this using the \texttt{df = TRUE} flag.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{df} \hlkwb{<-} \hlkwd{mlg.crosspop}\hlstd{(H3N2,} \hlkwc{df} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{quiet} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlstd{df} \hlkwb{<-} \hlkwd{mlg.crosspop}\hlstd{(virus,} \hlkwc{df} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{quiet} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \hlkwd{names}\hlstd{(df)}
 \end{alltt}
 \begin{verbatim}
@@ -3676,9 +3733,9 @@ Now that we have our data frame, we can do a couple of things. We can first see 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H.max} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{sort}\hlstd{(H.num,} \hlkwc{decreasing} \hlstd{=} \hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{])}
+\hlstd{v.max} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{sort}\hlstd{(v.num,} \hlkwc{decreasing} \hlstd{=} \hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{])}
 \hlcom{# Showing the data frame by the largest MLG complex.}
-\hlstd{df[df}\hlopt{$}\hlstd{MLG} \hlopt{%in%} \hlstd{H.max[}\hlnum{1}\hlstd{], ]}
+\hlstd{df[df}\hlopt{$}\hlstd{MLG} \hlopt{%in%} \hlstd{v.max[}\hlnum{1}\hlstd{], ]}
 \end{alltt}
 \begin{verbatim}
 ##        MLG  Population Count
@@ -3704,7 +3761,7 @@ And now we can visualize the largest ten MLG complexes using \textit{ggplot2}'s 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{df2} \hlkwb{<-} \hlstd{df[df}\hlopt{$}\hlstd{MLG} \hlopt{%in%} \hlstd{H.max, ]}
+\hlstd{df2} \hlkwb{<-} \hlstd{df[df}\hlopt{$}\hlstd{MLG} \hlopt{%in%} \hlstd{v.max, ]}
 \hlkwd{library}\hlstd{(ggplot2)}
 \hlkwd{qplot}\hlstd{(}\hlkwc{y} \hlstd{= MLG,} \hlkwc{x} \hlstd{= Population,} \hlkwc{data} \hlstd{= df2,} \hlkwc{color} \hlstd{= Count,} \hlkwc{size} \hlstd{= Count)} \hlopt{+} \hlkwd{theme}\hlstd{(}\hlkwc{axis.text.x} \hlstd{=} \hlkwd{element_text}\hlstd{(}\hlkwc{size} \hlstd{=} \hlnum{10}\hlstd{,}
     \hlkwc{angle} \hlstd{=} \hlopt{-}\hlnum{45}\hlstd{,} \hlkwc{hjust} \hlstd{=} \hlnum{0}\hlstd{))}
@@ -3727,16 +3784,19 @@ And now we can visualize the largest ten MLG complexes using \textit{ggplot2}'s 
 %
 %=============================================================================%
 %=============================================================================%
-\section{Index and Distance Calculations}\label{index}
+\section{Index and Distance Calculations}
+\label{index}
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\bar r_d$\}}\label{index:iard}
+\subsection{The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\bar r_d$\}}
+\label{index:iard}
 
 \tab\tab The index of association was originally developed as a measure of multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to detect signatures of sexual reproduction and population structure \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with the number of loci, and was not suitable to comparisons across studies \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for this scaling and forces the index to lie between 0 (linkage equilibrium) and 1 (full disequilibrium). $I_A$ has previously been implemented in a couple of programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN} \cite{Haubold:2000}. While both of these programs are still available for download, \textit{multilocus} is no longer actively supported, and \textit{LIAN}, despite its speed, is only appropriate for haplotypic data. Both of these programs each require one specific file format, and, until recently\footnote{LIAN 3.6 allows the user to run multiple contiguous data sets within a single file or across multiple files. It is impossible to run MULTILOCUS in batch.}, neither of these programs had an internal ability to run in batch across multiple populations within a file or multiple files within a directory in the same way that poppr can (see footnote).
 
 It is important to note that for this algorithm, all missing values are treated in the same way as \textit{multilocus} in that all missing alleles are imputed to be the same as the alleles they are being compared to. Depending on the percent missing data in your data set, this might influence the statistic. If you have a lot of missing data, consider using the \texttt{missing} flag in this function.
-\subsubsection{Function: ia}\label{index:iard:ia}
+\subsubsection{Function: ia}
+\label{index:iard:ia}
 
 \tab\tab This function is a quick look at a single data set. It can do almost everything that \texttt{poppr} can do except for sorting through populations.
 \begin{quote}
@@ -3813,7 +3873,7 @@ This analysis produced the histograms you see below. What these histograms repre
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}
 
-{\centering \includegraphics[width=0.5\linewidth]{figure/unnamed-chunk-7} 
+{\centering \includegraphics[width=0.5\linewidth]{figure/unnamed-chunk-6} 
 
 }
 
@@ -3890,10 +3950,12 @@ If you want to be able to report $P < 0.001$ in this situation, then you can sim
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Going the distance \{dissimilarity distance\}}\label{index:dist}
-\tab\tab Since \textit{poppr} is still in its infancy, the number of distance measures it can offer are few. Bruvo's distance is well supported and allows you to quickly visualize your data, but it only allows for microsatellites. The index of association, above, utilizes a discreet dissimilarity distance matrix. It is with this matrix that we have constructed a relative dissimilarity distance where the distance is the ratio of the number of dissimilarities to the number of dissimilarities possible. The number of dissimilarities possible is the number of loci multiplied by the ploidy, so if you have 10 loci from a diploid population, then there are 20 dissimilarities possible. For details, see equations (\ref{eq:ia_d}) and (\ref{eq:ia_D}) in\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.} 
+\subsection{Going the distance \{dissimilarity distance\}}
+\label{index:dist}
+\tab\tab Since \poppr{} is still in its infancy, the number of distance measures it can offer are few. Bruvo's distance is well supported and allows you to quickly visualize your data, but it only allows for microsatellites. The index of association, above, utilizes a discreet dissimilarity distance matrix. It is with this matrix that we have constructed a relative dissimilarity distance where the distance is the ratio of the number of dissimilarities to the number of dissimilarities possible. The number of dissimilarities possible is the number of loci multiplied by the ploidy, so if you have 10 loci from a diploid population, then there are 20 dissimilarities possible. For details, see equations (\ref{eq:ia_d}) and (\ref{eq:ia_D}) in\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.} 
 
-\subsubsection{Function: diss.dist}\label{index:dist:diss.dist}
+\subsubsection{Function: diss.dist}
+\label{index:dist:diss.dist}
 
 \tab\tab Use this function to calculate relative dissimilarity between individuals and return a distance matrix for use in creating cladograms or minimum spanning networks. A note: missing alleles will be imputed to be the same as the challenging allele, decreasing the distance between some individuals. If you want to consider all missing data as special alleles, treat your data with \texttt{missingno(pop, type = "zero")} beforehand. 
 
@@ -3931,7 +3993,7 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}
 
-{\centering \includegraphics[width=0.5\linewidth]{figure/unnamed-chunk-8} 
+{\centering \includegraphics[width=0.5\linewidth]{figure/unnamed-chunk-7} 
 
 }
 
@@ -3944,11 +4006,12 @@ Since we have a data set that we know is very clonal, let's analyze the \textit{
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Step by stepwise mutation \{Bruvo's distance\}}\label{index:bruvo}
+\subsection{Step by stepwise mutation \{Bruvo's distance\}}
+\label{index:bruvo}
 
 \tab\tab Bruvo's distance is a genetic distance measure for microsatellite markers utilizing a stepwise mutation model that allows for differing ploidy levels \cite{Bruvo:2004}. As \textit{adegenet's} \texttt{genind} object has an all or none approach to missing data, any genotypes not exhibiting full ploidy will be treated as missing. This means that only non-special cases will be considered for the calculation and missing data will be ignored \cite{Bruvo:2004}.
 
-This is true only if missing data is treated as missing when importing to \textit{adegenet}. If missing data in the initial data frame has missing microsatellite alleles coded as 0, then the genind object will not treat them as missing (unless the genotype has no alleles in it). An example adapted from the \textit{adegenet} "Getting Started" vignette shows how this can be done:
+This is true only if missing data is treated as missing when importing to \adegenet{}. If missing data in the initial data frame has missing microsatellite alleles coded as 0, then the genind object will not treat them as missing (unless the genotype has no alleles in it). An example adapted from the \adegenet{} "Getting Started" vignette shows how this can be done:
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
@@ -3980,9 +4043,10 @@ This is true only if missing data is treated as missing when importing to \texti
 \end{knitrout}
 
 
-We will save this object for a later demonstration of the addition and loss models of Bruvo's distance. It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the \textit{adegenet} function \texttt{dist.genpop}
+We will save this object for a later demonstration of the addition and loss models of Bruvo's distance. It is important to note that this is a distance between individuals, not populations, unlike Nei's 1978 distance \cite{Nei:1978}. For distances between populations, see the \adegenet{} function \texttt{dist.genpop}
 
-\subsubsection{Function: bruvo.dist}\label{index:bruvo:bruvo.dist}
+\subsubsection{Function: bruvo.dist}
+\label{index:bruvo:bruvo.dist}
 
 \tab\tab Bruvo's distance requires knowledge of the repeat lengths of each locus, so take care to read the description below.
 \begin{quote}
@@ -4107,7 +4171,7 @@ You can visualize this better with a simple heatmap:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}
 
-{\centering \includegraphics[width=0.5\linewidth]{figure/unnamed-chunk-9} 
+{\centering \includegraphics[width=0.5\linewidth]{figure/unnamed-chunk-8} 
 
 }
 
@@ -4189,11 +4253,13 @@ Remember N113 and N111? Take a look at where they fall on the heatmap. They don'
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{See the forest for the trees \{visualizing distances with dendrograms and networks\}}\label{index:trees}
+\subsection{See the forest for the trees \{visualizing distances with dendrograms and networks\}}
+\label{index:trees}
 
 \tab\tab Staring at a raw distance matrix might be able to tell you something about your data, but it also might be able to ruin your eyesight. In this section, we present functions to display this data in trees and networks. 
 
-\subsubsection{Function: bruvo.boot}\label{index:trees:bruvo.boot}
+\subsubsection{Function: bruvo.boot}
+\label{index:trees:bruvo.boot}
 
 \tab\tab This function provides the ability to draw a dendrogram based on Bruvo's distance including bootstrap support. 
 \begin{quote}
@@ -4263,10 +4329,11 @@ For this example, let's set the cutoff to 50\%.
 
 \end{figure}
 \newpage
-\subsubsection{Function: greycurve}\label{index:trees:greycurve}
+\subsubsection{Function: greycurve}
+\label{index:trees:greycurve}
 \tab\tab Use this function to display a gradient of grey values based on user-defined parameters. The following functions will display a minimum spanning network that utilize a grey scale to display the weight of the lines (referred to as ``edges") that connect two or more individuals. The darker the line the closer the distance. Since this is based off of a linear grey scale, what happens when you have a distance matrix comprised of values all below 0.2 or all above 0.8? 
 
-With linear grey scaling, it becomes very difficult to detect the differences in these ranges. The following function allows you to visualize and manipulate a gradient from black to white so that you can use it in \textit{poppr}'s msn functions below to maximize the visual differences in your data.
+With linear grey scaling, it becomes very difficult to detect the differences in these ranges. The following function allows you to visualize and manipulate a gradient from black to white so that you can use it in \poppr{}'s msn functions below to maximize the visual differences in your data.
 
 \begin{quote}
 Default Command:
@@ -4392,7 +4459,8 @@ data smoothed from the minimum to the maximum.
 \end{figure}
 \newpage
 
-\subsubsection{Function: bruvo.msn}\label{index:trees:bruvo.msn}
+\subsubsection{Function: bruvo.msn}
+\label{index:trees:bruvo.msn}
 \tab\tab This function will automatically draw a minimum spanning network of MLGs based on Bruvo's distance. It's important to note that this will recalculate Bruvo's distance each time it is run, but the amount of time it takes to run is on the order of seconds. It will return a list containing the network, the populations and the related colors in the network so you can export or redraw it with the legend if you wanted to using the package \textit{igraph} (type \texttt{help("plot.igraph")} for details).
 \begin{quote}
 Default Command:
@@ -4420,7 +4488,7 @@ bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
   \item \texttt{palette -} this is a \textbf{function} definining a color palette to use. The default is \texttt{topo.colors}. There are different palettes, which you can search by typing \texttt{?rainbow}. If you want a custom color palette, an easy way is to use the function \texttt{colorRampPalette}.
   \item \texttt{sublist -} The populations you wish to analyze. This defaults to ``All". See section \ref{data.manip:divide:popsub} for details.
   \item \texttt{blacklist -} Populations you do not want to include in the graph. See section \ref{data.manip:divide:popsub} for details.
-  \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
+  \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \Poppr{} has added two arguments specific to \poppr{}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
   \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will be converted to greyscale based on Bruvo's distance. If two nodes are closely related, the edge will appear darker. The limits of the scale can be set by the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors will be black. 
   \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets you set the limits of the grey scaling based on R's internal \texttt{grey} function. For example, if you wanted a maximum of 50\% white saturation (for use if you have distantly related nodes) and a minimum of 1\%, you would use \texttt{glim = c(0.01, 0.5)}. 
   \item \texttt{gadj -} This is an integer greater than zero used to adjust the scaling factor for the grey curve. Since very small changes in the grey scale are not easily precieved, it's useful to be able to adjust the grey scale to be able to show you the weights of each edge. For example, a population with most weights less than 0.3, you might want to set \texttt{gadj = 10} to exaggerate the grey scale. 
@@ -4429,7 +4497,7 @@ bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
   \item \texttt{... -} This is a placeholder for any other arguments that you want to supply to \textit{igraph}. Useful arguments are \texttt{vertex.label.cex} to adjust the size of the labels, \texttt{vertex.label.dist} to adjust the position of the labels, and \texttt{vertex.label.color} to adjust the color of the labels.
 \end{itemize}
 
-Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. \textit{Poppr} offers an easy way to plot these. For a demonstration, let's analyze a simulated data set of 50 individuals from populations that reproduce at a 99.9\% rate of clonal reproduction.
+Often, minimum spanning networks are the preferred way to visualize Bruvo's distance. \Poppr{} offers an easy way to plot these. For a demonstration, let's analyze a simulated data set of 50 individuals from populations that reproduce at a 99.9\% rate of clonal reproduction.
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
@@ -4500,7 +4568,8 @@ Since a graph can be represented in many ways, you might want to play around wit
 \end{knitrout}
 
 
-\subsubsection{Function: poppr.msn}\label{index:trees:poppr.msn}
+\subsubsection{Function: poppr.msn}
+\label{index:trees:poppr.msn}
 
 \tab\tab Use this function to draw a minimum spanning network from your data set and a distance matrix derived from your data set. Since there are hundreds of distances that can be calculated for genetic data, and since I want to be able to graduate at some point in this decade, functions to automatically calculate distances and draw the minimum spanning networks will be few and far between. This function is an attempt to meet the user halfway and draw a minimum spanning network provided that the user has supplied two things:
 \begin{enumerate}
@@ -4534,7 +4603,7 @@ poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",
   \item \texttt{palette -} this is a \textbf{function} definining a color palette to use. The default is \texttt{topo.colors}. There are different palettes, which you can search by typing \texttt{?rainbow}. If you want a custom color palette, an easy way is to use the function \texttt{colorRampPalette}.
   \item \texttt{sublist -} The populations you wish to analyze. This defaults to ``All".
   \item \texttt{blacklist -} Populations you do not want to include in the graph.
-  \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \textit{Poppr} has added two arguments specific to \textit{poppr}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
+  \item \texttt{vertex.label -} This is an option that is passed on to \textit{igraph}'s \texttt{plot} function. \Poppr{} has added two arguments specific to \poppr{}. If you want to label the graph with the multilocus genotypes from the whole data set, use the argument \texttt{vertex.label = "mlg"}. If you want to display the representative individual names, you can use the argument \texttt{vertex.label = "inds"}. I say representative individual names because, only one representative from each MLG will be present in the clone corrected data set used to calculate the distance. For no labels, you can choose \texttt{vertex.label = NA}. 
   \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will be converted to greyscale based on the distance. If two nodes are closely related, the edge will appear darker. The limits of the scale can be set by the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors will be black. 
   \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets you set the limits of the grey scaling based on R's internal \texttt{grey} function. For example, if you wanted a maximum of 50\% white saturation (for use if you have distantly related nodes) and a minimum of 1\%, you would use \texttt{glim = c(0.01, 0.5)}. 
   \item \texttt{gadj -} This is an integer greater than zero used to adjust the scaling factor for the grey curve. Since very small changes in the grey scale are not easily precieved, it's useful to be able to adjust the grey scale to be able to show you the weights of each edge. For example, a population with most weights less than 0.3, you might want to set \texttt{gadj = 10} to exaggerate the grey scale. 
@@ -4584,13 +4653,15 @@ Since we have the ability, let's visualize the \textit{A. euteiches} data set \c
 %
 %=============================================================================%
 %=============================================================================%
-\section{I know what you did last summary table \{diversity table\}}\label{summary}
+\section{I know what you did last summary table \{diversity table\}}
+\label{summary}
 
-\tab\tab Remember the summary function that you used to get all the diversity statistics in section \ref{intro:qstart}? In this section, we will flesh out all that you can do with this function. This was the very first function that was written for \textit{poppr} to make it easy for the user to manipulate and summarize the data in one function.
+\tab\tab Remember the summary function that you used to get all the diversity statistics in section \ref{intro:qstart}? In this section, we will flesh out all that you can do with this function. This was the very first function that was written for \poppr{} to make it easy for the user to manipulate and summarize the data in one function.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Function: poppr}\label{summary:poppr}
+\subsection{Function: poppr}
+\label{summary:poppr}
 
 \tab\tab This function is quite daunting with all its possibilities. You have the option to subset your data for specific populations, correct for missing data, and clone correct. With each of these possibilities, comes the need to provide all the arguments for their various functions.
 \begin{quote}
@@ -4813,12 +4884,15 @@ As you can see, the distribution is much closer to a distribution we would expec
 %
 %=============================================================================%
 %=============================================================================%
-\section{Appendix}\label{appendix}
+\section{Appendix}
+\label{appendix}
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Algorithmic Details}\label{appendix:algorithm}
-\subsubsection{$I_A$ and $\bar r_d$}\label{appendix:algorithm:iard}
+\subsection{Algorithmic Details}
+\label{appendix:algorithm}
+\subsubsection{$I_A$ and $\bar r_d$}
+\label{appendix:algorithm:iard}
 
 \tab \tab The index of association was originally developed by A.H.D. Brown analyzing population structure of wheat \cite{Brown:1980}. It has been widely used as a tool to detect clonal reproduction within populations \cite{Smith:1993}. Populations whose members are undergoing sexual reproduction, whether it be selfing or out-crossing, will produce gametes via meiosis, and thus have a chance to shuffle alleles in the next generation. Populations whose members are undergoing clonal reproduction, however, generally do so via mitosis. This means that the most likely mechanism for a change in genotype is via mutation. The rate of mutation varies from species to species, but it is rarely sufficiently high to approximate a random shuffling of alleles. The index of association is a calculation based on the ratio of the variance of the raw number of differences between individuals and the sum of those variances over each locus \cite{Smith:1993}. You can also think of it as the observed variance over the expected variance. If they  are the same, then the index is zero after subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
 \begin{equation}
@@ -4849,7 +4923,7 @@ Now, consider the first locus represented in the genind object:
 \end{kframe}
 \end{knitrout}
 
-Remember that each column represents a different allele and that each entry in the table represents the fraction of the genotype made up by that allele at that locus. Notice also that the sum of the rows all equal one. \textit{Poppr} uses this to calculate distances by simply taking the sum of the absolute values of the differences between rows.
+Remember that each column represents a different allele and that each entry in the table represents the fraction of the genotype made up by that allele at that locus. Notice also that the sum of the rows all equal one. \Poppr{} uses this to calculate distances by simply taking the sum of the absolute values of the differences between rows.
 
 The calculation for the distance between two individuals at a single locus with $a$ allelic states and a ploidy of $k$ is as follows\footnote{Individuals with Presence / Absence data will have the $k/2$ term dropped.}:
 \begin{equation}
@@ -4923,7 +4997,8 @@ Of course, Agapow and Burt showed that this index increases steadily with the nu
 \end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Bruvo's distance}\label{appendix:algorithm:bruvo}
+\subsubsection{Bruvo's distance}
+\label{appendix:algorithm:bruvo}
 
 \tab \tab Bruvo's distance between two individuals calculates the minimum distance across all combinations of possible pairs of alleles at a single locus and then averaging that distance across all loci \cite{Bruvo:2004}. The distance between each pair of alleles is calculated as \cite{Bruvo:2004}:
 
@@ -4960,7 +5035,8 @@ D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
 
 This is calculated over all possible combinations of individuals and results in a lower triangle distance matrix over all individuals. 
 
-\subsubsection{Special Cases of Bruvo's distance}\label{appendix:algorithm:bruvospecial}
+\subsubsection{Special Cases of Bruvo's distance}
+\label{appendix:algorithm:bruvospecial}
 \tab\tab As shown in the above section, ploidy is irrelevant with respect to calculation of Bruvo's distance. However, since it makes a comparison between all alleles at a locus, it only makes sense that the two loci need to have the same ploidy level. Unfortunately for polyploids, it's often difficult to fully separate distinct alleles at each locus, so you end up with genotypes that appear to have a lower ploidy level than the organism \cite{Bruvo:2004}. 
 
 To help deal with these situatons, Bruvo has suggested three methods for dealing with these differences in ploidy levels \cite{Bruvo:2004}:
@@ -4978,10 +5054,12 @@ To reduce the number of calcuations and assumptions otherwise, Bruvo's distance 
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Exporting Graphics}\label{appendix:graphics}
+\subsection{Exporting Graphics}
+\label{appendix:graphics}
 \tab\tab R has the ability to produce nice graphics from most any type of data, but to get these graphics into a report, presentation, or manuscript can be a bit challenging. It's no secret that the R Documentation pages are a little difficult to interpret, so I will give the reader here a short example on how to export graphics from R. Note that any code here that will produce images will also be present in other places in this vignette. The default installation of the R GUI is quite minimal, and for an easy way to manage your plots and code, I strongly encourage the user to use Rstudio \url{http://www.rstudio.com/}.
 
-\subsubsection{Basics}\label{appendix:graphics:basics}
+\subsubsection{Basics}
+\label{appendix:graphics:basics}
 \tab\tab Before you export graphics, you have to ask yourself what they will be used for. If you want to use the graphic for a website, you might want to opt for a low-resolution image so that it can load quickly. With printing, you'll want to make sure that you have a scalable or at least a very high resolution image. Here, I will give some general guidelines for graphics (note that these are merely suggestions, not defined rules).
 \begin{itemize}
   \item \textbf{What you see is not always what you get} I have often seen presentations where the colors were too light or posters with painfully pixellated graphs. Think about what you are going to be using a graphic for and how it will appear to the intended audience given the media type.
@@ -4990,7 +5068,8 @@ To reduce the number of calcuations and assumptions otherwise, Bruvo's distance 
   \item \textbf{Before saving, make sure the units and dimensions are correct} Unless you really wanted to save a graph that's over 6 feet wide.
 \end{itemize}
 
-\subsubsection{Image Editors}\label{appendix:graphics:editors}
+\subsubsection{Image Editors}
+\label{appendix:graphics:editors}
 \tab\tab Often times, fine details such as labels on networks need to be tweaked by hand. Luckily, there are a wide variety of programs that can help you do that. Here is a short list of image editors (both free and for a price) that you can use to edit your graphics.
 \begin{itemize}
   \item Bitmap based editors (for jpeg, bmp, png, etc...)
@@ -5010,8 +5089,9 @@ To reduce the number of calcuations and assumptions otherwise, Bruvo's distance 
   \end{quote}
 \end{itemize}
 
-\subsubsection{Exporting ggplot2 graphics}\label{appendix:graphics:ggplot2}
-\tab\tab \textit{ggplot2} is a fantastic package that \textit{poppr} uses to produce graphs for the \texttt{mlg.table}, \texttt{poppr}, and \texttt{ia} functions. Saving a plot with \textit{ggplot2} is performed with one command after your plot has rendered:
+\subsubsection{Exporting ggplot2 graphics}
+\label{appendix:graphics:ggplot2}
+\tab\tab \textit{ggplot2} is a fantastic package that \poppr{} uses to produce graphs for the \texttt{mlg.table}, \texttt{poppr}, and \texttt{ia} functions. Saving a plot with \textit{ggplot2} is performed with one command after your plot has rendered:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -5024,8 +5104,9 @@ To reduce the number of calcuations and assumptions otherwise, Bruvo's distance 
 
 Note that you can name the file anything, and \texttt{ggsave} will save it in that format for you. The details are in the documentation and you can access it by typing \texttt{help("ggsave")} in your R console. The important things to note are that you can set a \texttt{width}, \texttt{height}, and \texttt{unit}. The only downside to this function is that you can only save one plot at a time. If you want to be able to save multiple plots, read on to the next section.
 
-\subsubsection{Exporting any graphics}\label{appendix:graphics:export}
-\tab\tab Some of the functions that \textit{poppr} offers will give you multiple plots, and if you want to save them all, using \texttt{ggsave} will require a lot of tedious typing and clicking. Luckily, R has Functions that will save any plot you generate in nearly any image format you want. You can save in raster images such as png, bpm, and jpeg. You can also save in vector based images such as svg, pdf, and postscript. The important thing to remember is that when you are saving in a raster format, the default units of measurement are ``pixels", but you can change that by specifying your unit of choice and a resolution.
+\subsubsection{Exporting any graphics}
+\label{appendix:graphics:export}
+\tab\tab Some of the functions that \poppr{} offers will give you multiple plots, and if you want to save them all, using \texttt{ggsave} will require a lot of tedious typing and clicking. Luckily, R has Functions that will save any plot you generate in nearly any image format you want. You can save in raster images such as png, bpm, and jpeg. You can also save in vector based images such as svg, pdf, and postscript. The important thing to remember is that when you are saving in a raster format, the default units of measurement are ``pixels", but you can change that by specifying your unit of choice and a resolution.
 
 For raster images and svg files, you can only save your plots in multiple files, but pdf and postscript plots can be saved in one file as multiple pages. All of these functions have the same basic form. You call the function to specify the file type you want (eg. \texttt{pdf("myfile.pdf")}), create any graphs that you want to create, and then make sure to close the session with the function \texttt{dev.off()}. Let's give an example saving to pdf and png files. 
 
@@ -5076,9 +5157,10 @@ Remember, it is important not to forget to type \texttt{dev.off()} when you are 
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Table of Functions}\label{appendix:funk}
+\subsection{Table of Functions}
+\label{appendix:funk}
 
-\tab\tab Below is a table of functions found in \textit{poppr}. These functions are
+\tab\tab Below is a table of functions found in \poppr{}. These functions are
 linked within the document. Simply click on a funciton name to go to its definition 
 and description. 
 
