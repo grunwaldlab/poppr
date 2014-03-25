@@ -1735,7 +1735,7 @@ We can see that there is 1 hierarchy defined, but we know that the data is defin
 \end{knitrout}
 
 \noindent
-Now we have sucessfully defined our hierarchies. If you have imported your data in this manner, you may skip to the \seclink{data.manip:hier:setpop}{defining with hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, or \seclink{data.manip:hier:manip}{manipulating hierarchies}.
+Now we have sucessfully defined our hierarchies. If you have imported your data in this manner, you may skip to the \seclink{data.manip:hier:setpop}{defining populations with hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, or \seclink{data.manip:hier:manip}{manipulating hierarchies}.
 
 If you have imported your data with a single population and have a separate data frame that you read in with \texttt{read.table}, the following is how you would define your hierarchy. For demonstrative purposes, we will use the H3N2 viral data set. This contains a data frame called `x' in the\seclink{intro:genind:other}{other slot}that contains many variables including country, year, and month of collection.
 \label{data:virus}
@@ -3553,12 +3553,12 @@ And now we can visualize the largest ten MLG complexes using \textit{ggplot2}'s 
 %
 %=============================================================================%
 %=============================================================================%
-\section{Index and Distance Calculations}
+\section{Data Analysis}
 \label{index}
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\bar r_d$\}}
+\subsection{The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\bar{r}_d$\}}
 \label{index:iard}
 
 \tab\tab The index of association was originally developed as a measure of multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to detect signatures of sexual reproduction and population structure \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with the number of loci, and was not suitable to comparisons across studies \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for this scaling and forces the index to lie between 0 (linkage equilibrium) and 1 (full disequilibrium). $I_A$ has previously been implemented in a couple of programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN} \cite{Haubold:2000}. While both of these programs are still available for download, \textit{multilocus} is no longer actively supported, and \textit{LIAN}, despite its speed, is only appropriate for haplotypic data. Both of these programs each require one specific file format, and, until recently\footnote{LIAN 3.6 allows the user to run multiple contiguous data sets within a single file or across multiple files. It is impossible to run MULTILOCUS in batch.}, neither of these programs had an internal ability to run in batch across multiple populations within a file or multiple files within a directory in the same way that poppr can (see footnote).
@@ -3595,7 +3595,7 @@ ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   The methods are detailed in\cmdlink{data.manip:shuffle:shufflepop}{shufflepop.}
   \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the screen as the sampling progresses. If \texttt{FALSE} will produce a progress bar.
   \item \texttt{missing -} This will preprocess your missing values. It is set to ignore missing data, so that they do not contribute to the distance measure. It can also be set to \texttt{"loci", "geno", "zero", or "mean"}. For details, see\seclink{data.manip:missing:missingno}{missingno.}
-  \item \texttt{hist -} This will produce a pair of histograms for each population showing the distribution of $I_A$ and $\bar r_d$ across the sampled data sets, and plot the observed value as a single vertical line.
+  \item \texttt{hist -} This will produce a pair of histograms for each population showing the distribution of $I_A$ and $\bar{r}_d$ across the sampled data sets, and plot the observed value as a single vertical line.
   \item \texttt{valuereturn -} If set to \texttt{TRUE} and the number of samples
   is greater than zero, it will return all values generated from the permuted
   data. 
@@ -3713,9 +3713,156 @@ There, are, of course a couple of caveats that need to be mentioned regarding ou
 \end{knitrout}
 
 If you want to be able to report $P < 0.001$ in this situation, then you can simply increase the number in sample: \texttt{sample = 1999}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%-----------------------------------------------------------------------------%
+%
+%-----------------------------------------------------------------------------%
+\subsection{May I have distance? \{genetic distances\}}
+\label{index:gendist}
+
+
+Let \textbf{A} a table containing allelic frequencies with $t$ populations (rows) and $m$ alleles (columns).\\
+Let  $\nu$ the number of loci. The locus $j$ gets $m(j)$ alleles. 
+
+\begin{equation}
+  m=\sum_{j=1}^{\nu} m(j)
+\end{equation}
+
+
+For the row $i$ and the modality $k$ of the variable $j$, notice the value
+
+\begin{equation}
+  a_{ij}^k\\ (1 \leq i \leq t,\\ 1 \leq j \leq \nu,\\ 1 \leq k \leq m(j))
+\end{equation}
+
+the value of the initial table.
+
+\begin{equation}
+  a_{ij}^{\cdot}=\sum_{k=1}^{m(j)}a_{ij}^k 
+\end{equation}
+
+and 
+
+\begin{equation}
+  p_{ij}^k=\frac{a_{ij}^k}{a_{ij}^{\cdot}}
+\end{equation}
+
+
+Let \textbf{P} the table of general term $p_{ij}^k$
+
+
+The sum of all allele frequencies for a single population at a single locus is one.
+\begin{equation}
+ p_{ij}^{\cdot}=\sum_{k=1}^{m(j)}p_{ij}^k=1
+\end{equation}
+
+The sum of all allele frequences over all loci is equal to the number of loci.
+\begin{equation}
+p_{i{\cdot}}^{\cdot}=\sum_{j=1}^{\nu}p_{ij}^{\cdot}=\nu
+\end{equation}
+
+The the sum of the entire table is the sum of all loci multiplied by the number of populations. 
+\begin{equation}
+p_{{\cdot}{\cdot}}^{\cdot}=\sum_{j=1}^{\nu}p_{i{\cdot}}^{\cdot}=t\nu
+\end{equation}
+
+\subsubsection{Non-Euclidean distances}
+\label{index:gendist:neu}
+Dissimilarity distance
+\label{distance:dissimilarity}
+
+
+Provesti distance
+\label{distance:provesti}
+\begin{equation}
+  D_5(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  |p_{aj}^k - p_{bj}^k|
+\end{equation}
+
+
+Absolute Genetic distance
+
+... are all the same!
+
+Nei's distance
+\label{distance:nei}
+\begin{equation}
+  D_1(a,b)= -\ln(\frac{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  p_{aj}^k p_{bj}^k}{\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  {(p_{aj}^k) }^2}\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  {(p_{bj}^k)}^2}})
+\end{equation}
+
+Is something different!
+
+\subsubsection{Euclidean distance}
+\label{index:gendist:eu}
+
+Edward's Angular distance
+\label{distance:edward}
+\begin{equation}
+  D_2(a,b)=\sqrt{1-\frac{1}{\nu} \sum_{k=1}^{\nu}
+  \sum_{j=1}^{m(k)} \sqrt{p_{aj}^k  p_{bj}^k}}
+\end{equation}
+
+Reynold's Coancestry distance
+\label{distance:reynold}
+\begin{equation}
+  D_3(a,b)=\sqrt{\frac{\sum_{k=1}^{\nu}
+  \sum_{j=1}^{m(k)}{(p_{aj}^k - p_{bj}^k)}^2}{2 \sum_{k=1}^{\nu} (1-
+  \sum_{j=1}^{m(k)}p_{aj}^k p_{bj}^k)}}
+\end{equation}
+
+
+Rodger's distance 
+\label{distance:roger}
+\begin{equation}
+  D_4(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
+  \sum_{j=1}^{m(k)}{(p_{aj}^k - p_{bj}^k)}^2}
+\end{equation}
+
+\subsubsection{Bruvo's distance for microsatellites}
+\label{index:gendist:bruvo}
+
+This is based off of a specific model where it is necessary to specify the repeat lengths of the markers at each locus. Eg a repeat of $(CAT)^n$ would have a repeat length of 3. 
+\label{distance:bruvo}
+
+\subsection{Give `em the boot(strap) \{bootstrap analysis\}}
+\label{index:boot}
+\subsubsection{Bootstrapping any distance}
+\label{index:boot:any}
+\subsubsection{Bootstrapping Bruvo's Distance}
+\label{index:boot:bruvo}
+This is optimized for Bruvo's distance. 
+
+\subsection{Nothing but net(works) \{minimum spanning networks\}}
+
+\subsection{Come here! AMOVA here! \{Analysis of MOlecular VAriance\}}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
