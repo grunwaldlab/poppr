@@ -401,11 +401,11 @@ setMethod(
     pops   <- object@pop.names
     poplen <- length(pops)
     if (poplen > 7) 
-      pops <- c(pops[1:3], "...", pops[(poplen-3):poplen])
+      pops <- c(pops[1:3], "...", pops[(poplen-2):poplen])
     hiernames <- names(object@hierarchy)
     hierlen   <- length(hiernames)
     if (hierlen > 7) 
-      hiernames <- c(hiernames[1:3], "...", hiernames[(hierlen-3):hierlen])
+      hiernames <- c(hiernames[1:3], "...", hiernames[(hierlen-2):hierlen])
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
