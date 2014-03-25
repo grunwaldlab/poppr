@@ -386,24 +386,24 @@ setMethod(
   f = "show",
   signature("genclone"),
   definition = function(object){
-    ploid <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
+    ploid  <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
-    ploid <- paste0(ploid[object@ploidy], "ploid")
-    nind  <- nInd(object)
-    type  <- ifelse(object@type == "PA", "dominant", "codominant")
-    nmlg  <- length(unique(object@mlg))
-    nloc  <- nLoc(object)
-    npop  <- ifelse(is.null(object@pop), 0, length(object@pop.names))
-    hier  <- length(object@hierarchy)
-    chars <- nchar(c(nmlg, nind, nloc, hier, npop))
-    ltab  <- max(chars) - chars
-    ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
-    pops  <- object@pop.names
+    ploid  <- paste0(ploid[object@ploidy], "ploid")
+    nind   <- nInd(object)
+    type   <- ifelse(object@type == "PA", "dominant", "codominant")
+    nmlg   <- length(unique(object@mlg))
+    nloc   <- nLoc(object)
+    npop   <- ifelse(is.null(object@pop), 0, length(object@pop.names))
+    hier   <- length(object@hierarchy)
+    chars  <- nchar(c(nmlg, nind, nloc, hier, npop))
+    ltab   <- max(chars) - chars
+    ltab   <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
+    pops   <- object@pop.names
     poplen <- length(pops)
     if (poplen > 7) 
       pops <- c(pops[1:3], "...", pops[(poplen-3):poplen])
     hiernames <- names(object@hierarchy)
-    hierlen <- length(hiernames)
+    hierlen   <- length(hiernames)
     if (hierlen > 7) 
       hiernames <- c(hiernames[1:3], "...", hiernames[(hierlen-3):hierlen])
     cat("\nThis is a genclone object\n")
