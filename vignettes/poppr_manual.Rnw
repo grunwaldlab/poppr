@@ -819,129 +819,44 @@ We can see here that the number of individuals decreased, yet we have the same n
 \subsection{Can you take me hier(archy)? \{population hierarchy construction\}}
 \label{data.manip:hier}
 
-\tab\tab In poppr versions 1.0.x, this section of the manual contained a long
-explaination of the function \texttt{splitcombine}.
-This was a function whose intended use was to manipulate population hierarchies
-within\seclink{intro:genind}{genind}objects, but whose useage ended up becoming 
-very clunky and a bit confusing. The function has been superceeded by the hierarchy methods for\seclink{intro:genclone}{genclone}objects. If you want to know more about \texttt{splitcombine}, please see its
-help page by typing \texttt{?splitcombine} or refer to earlier versions of this
-manual. In this section, we will walk you through the process of defining, 
-manipulating, and adding to population hierarchies within genclone objects. 
-
-\subsubsection{General hierarchy method use}
-\label{data.manip:hier:method}
-
-\tab\tab There are currently 5 methods that manipulate population hierarchies in
-genclone objects:
-
+\tab\tab In poppr versions 1.0.x, this section of the manual contained a long explaination of the function \texttt{splitcombine}. This was a function whose intended use was to manipulate population hierarchies within\seclink{intro:genind}{genind}objects, but whose useage ended up becoming very clunky and a bit confusing. The function has been superceeded by the hierarchy methods for\seclink{intro:genclone}{genclone}objects. If you want to know more about \texttt{splitcombine}, please see its help page by typing \texttt{?splitcombine} or refer to earlier versions of this manual. In this section, we will walk you through the process of defining, manipulating, and adding to population hierarchies within genclone objects. There are currently 5 methods that manipulate population hierarchies in genclone objects:
 % latex table generated in R 3.0.3 by xtable 1.7-3 package
 % Sat Mar 22 20:24:23 2014
 \begin{table}[ht]
 \centering
-\begin{tabular}{rllll}
+\begin{tabular}{llll}
   \hline
- & Method & Function & Input & Result\\ 
+ Method & Function & Input & Result\\ 
   \hline
-  1 & set & \texttt{sethierarchy} & data frame & new hierarchy\\ 
-  2 & get & \texttt{gethierarchy} & formula & data frame\\ 
-  3 & name & \texttt{namehierarchy} & formula & new hierarchy names\\ 
-  4 & split & \texttt{splithierarchy} & formula & defined hierarchical levels\\ 
-  5 & add & \texttt{addhierarchy} & vector or data frame & new hierarchical level\\
+ split & \cmdlink{data.manip:hier:define:split}{splithierarchy} & formula & defined hierarchical levels\\
+ set & \cmdlink{data.manip:hier:define:set}{sethierarchy} & data frame & new hierarchy\\ 
+ get & \cmdlink{data.manip:hier:view}{gethierarchy} & formula & data frame\\ 
+ name & \cmdlink{data.manip:hier:manip:name}{namehierarchy} & formula & new hierarchy names\\ 
+ add & \cmdlink{data.manip:hier:manip:add}{addhierarchy} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
 \end{table}
 \noindent
-NOTE: Refer to\seclink{intro:genclone:access}{Accessing hierarchies}for more
-details on how to access hierarchies.\\
 
-These functions all have a syntax that looks like this:
-<<hier_syntax, eval = FALSE>>=
-newobject <- function(object, input)
-@
-Let's take a data set of \textit{Phytophthora infestans} collected from North
-America and South America and use that as an example. It has two population 
-hierarchies defined, Continent and Country:
-<<Pinf_load>>=
-data(Pinf)
-Pinf
-@
-\noindent
-Let's say I wanted to change the hierarchy names to Spanish. I can do that using
-\texttt{namehierarchy}.
-<<Pinf_rename>>=
-elPinf <- namehierarchy(Pinf, ~continente/pais) # Don't forget the formula syntax!
-elPinf
-Pinf
-@
-\noindent
-The original data set has stayed the same and we now have a new data set with the
-names we want.
+\begin{center}
+   \fcolorbox{black}{light-gray}{
+         \begin{minipage}[t]{0.8\textwidth}
+{\large \textsc{A note about formulas}}\\
+        The formulas used by genclone objects always start with a $\sim$ and 
+        are hierarchical levels are always separated by a $/$. Some examples
+        are: 
 
-Of course, it would be silly to create a new data set every time we wanted to
-do something like change names. This is why all of the above functions (with the
-exception of \texttt{gethierarchy}) all have the replacement syntax of:
-<<hier_syntax_replace, eval = FALSE>>=
-function(object) <- input
-@
-\noindent
-\textbf{NOTE: This is the preferred syntax}.\\ 
-\noindent
-This allows the object to be edited \textit{in place} and makes things generally
-easier. Let's revisit our previous example:
-<<Pinf_replace>>=
-Pinf
-namehierarchy(Pinf) <- ~continente/pais
-Pinf
-@
-While we will mainly be using the replacement syntax in this vignette, the 
-advantage to having both systems is that with the 
-\texttt{function(object, input)} syntax, you can test manipulation without 
-affecting your object.
+        $\sim$Country/City/District 
 
-\subsubsection{Defining populations with hierarchies}
-\label{data.manip:hier:setpop}
+        $\sim$Field/Year
 
-Of course, these hierarchies would mean nothing if it was difficult or not
-possible to define the populations in the data set We notice that above, we have
-two hierarchies for Continent and Country, but the populations only show Continent
-level populations. If we wanted to investigate each country separately, we would
-need to reset the population to be represented by Country. This can be done with
-the function \texttt{setpop}.
+        Refer to\seclink{intro:genclone:access}{Accessing hierarchies}for more
+        details on how to access hierarchies.
+        \end{minipage}
+      }
+\end{center}
 
-This function utilizes the defined population hierarchies to set the population.
-We'll use our data set above to illustrate this:
-
-<<Pinf_setpop>>=
-namehierarchy(Pinf) <- ~Continent/Country
-Pinf # Still by continent
-setpop(Pinf) <- ~Country
-Pinf # Now set by country
-@
-\noindent
-The beauty about it is the fact that it will also combine all the hierarchical
-levels you want to use. Let's see when we ask it to set the population of
-Country with respect to Continent.
-
-<<Pinf_setpop_combine>>=
-setpop(Pinf) <- ~Continent/Country
-Pinf
-@
-\noindent
-Nice!
-
-Let's see what happens when we want to try to set our population year collected
-with respect to country.
-
-<<Pinf_error>>=
-setpop(Pinf) <- ~Country/Year
-@
-\noindent
-This didn't work because we don't have Year defined within our hierarchy. In this
-case, we would likely have an outside vector defining the year. To define the 
-population to just year, we could use the \adegenet{} function \texttt{pop}
-to set the population with respect to year, but this would not update the
-hierarchy. A better way to do this would be to add year to the hierarchy with the
-function \cmdlink{data.manip:hier:manip}{addhierarchy} and define it as above.
+In this section, we will show you how to\seclink{data.manip:hier:define}{define}hierarchies,\seclink{data.manip:hier:view}{view}your hierarchies to ensure that populations are correctly defined,\seclink{data.manip:hier:manip}{manipulate} your hierarchies by adding and renaming them, and use these hierarchies to\seclink{data.manip:hier:setpop}{set the population}in your\seclink{intro:genclone}{genclone}object.
 
 \subsubsection{Defining hierarchies}
 \label{data.manip:hier:define}
@@ -969,22 +884,17 @@ aphan <- namehierarchy(sethierarchy(agc, gethierarchy(agc, ~Pop_Subpop)), ~Pop)
 aphan
 @
 \noindent
-We can see that there is 1 hierarchy defined, but the data is defined by field
-and soil sample. Since we had imported the hierarchy in a concatenated manner,
-we must now use the function \texttt{splithierarchy} to remove the concatenation
-and define the names of the hierarchical levels:
-
+We can see that there is 1 hierarchy defined, but we know that the data is defined by field and soil sample. When data is read in from GenAlEx formatted data, the hierarchy is automatically defined as the population. Since we had imported the hierarchy in a concatenated manner, we must now use the function \texttt{splithierarchy} to remove the concatenation and define the names of the hierarchical levels:
+\label{data.manip:hier:define:split}
 <<aphan_split>>=
 splithierarchy(aphan) <- ~field/sample
 aphan
 @
 \noindent
-Now we have sucessfully defined our hierarchies.
+Now we have sucessfully defined our hierarchies. If you have imported your data in this manner, you may skip to the \seclink{data.manip:hier:setpop}{defining populations with hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, or \seclink{data.manip:hier:manip}{manipulating hierarchies}.
 
-If you have imported your data with a single population and have a separate data
-frame that you read in with \texttt{read.table}, this is how you would define
-your hierarchy. For demonstrative purposes, we will use the H3N2 viral data set.
-This contains a data frame called `x' in the\seclink{intro:genind:other}{other slot}that contains many variables including country, year, and month of collection. \label{data:virus}
+If you have imported your data with a single population and have a separate data frame that you read in with \texttt{read.table}, the following is how you would define your hierarchy. For demonstrative purposes, we will use the H3N2 viral data set. This contains a data frame called `x' in the\seclink{intro:genind:other}{other slot}that contains many variables including country, year, and month of collection.
+\label{data:virus}
 
 <<H3N2_data>>=
 data(H3N2)
@@ -994,6 +904,7 @@ virus_info <- as.data.frame(other(H3N2)$x) # extracting the data frame
 virus
 names(virus_info)
 @
+\label{data.manip:hier:define:set}
 \noindent
 Right now, there is no population set, nor are there any hierarchies set. We will
 use the function \texttt{sethierarchy} to define the hierarchy of the data set.
@@ -1064,11 +975,7 @@ head(gethierarchy(virus, ~country))
 \subsubsection{Manipulating hierarchies}
 \label{data.manip:hier:manip}
 
-Once we have our hierarchies set in place, we want to be able to rename and add
-to them. For this example, we will revisit the virus example from above. We have
-set the population hierarchy to be based on year and country, but we've noticed
-that we left out month. And let's say that we did something stupid like this:
-
+Once we have our hierarchies set in place, we want to be able to rename and add to them. For this example, we will revisit the\seclink{data:virus}{virus example}from above. We have set the population hierarchy to be based on year and country, but we've noticed that we left out month. And let's say that we did something stupid like this:
 <<virus_stupid>>=
 virus_info <- virus_info[["month"]]
 names(virus_info)
@@ -1076,30 +983,8 @@ names(virus_info)
 \noindent
 If we were saving our script the whole time, we could just go back and retrieve
 the data frame, but that defeats the purpose of this section where we imagine
-that we've recieved new information and wanted to add it to our hierarchy. If we
-want to add this to our hierarchy, all we have to do is just use the function
-\texttt{addhierarchy}.
-<<virus_add_oops, eval=FALSE>>=
-addhierarchy(virus) <- virus_info
-virus
-@
-<<virus_add_behind, echo = FALSE>>=
-addhierarchy(virus, virus_info)
-@
-
-Uh oh, we see that the new hierarchical level is called `NEW' when we want it to
-be called `month'. When this happens, we can simply just rename the hierarchy
-using the function \texttt{namehierarchy}.
-<<virus_name, eval = FALSE>>=
-namehierarchy(virus) <- ~year/country/month
-virus
-@
-<<virus_name_behind, echo = FALSE>>=
-addhierarchy(virus, virus_info, name = "month")
-@
-
-Of course, we could also use the $f(x, y)$ syntax instead of the assignment 
-defined as thus:
+that we've recieved new information and wanted to add it to our hierarchy. If we want to add this to our hierarchy, all we have to do is just use the 
+function \texttt{addhierarchy} defined as thus:
 \begin{quote}
 Default Command:
 <<addhierarchy_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -1107,32 +992,70 @@ funk <- "addhierarchy"
 print_command(funk)
 @
 \end{quote}
-We notice that there is an argument called \textbf{name}. This will set the name
-of our new level. Let's rewind and imagine that we didn't set the hierarchy back
-there.
-<<virus_again>>=
+\noindent
+There are two ways to use this function: by assignment and by argument. 
+\label{data.manip:hier:manip:add}
+<<virus_add_arg>>=
+addhierarchy(virus, virus_info, name = "month") # By Argument
+addhierarchy(virus) <- virus_info # By Assignment
 virus
 @
-\noindent
-We will use the above syntax to assign the virus information with the name of
-the vector.
-<<virus_named, eval = FALSE>>=
-virus <- addhierarchy(virus, virus_info, "month")
+
+We notice that the argument method allows you to name your hierarchy, but you must reassign a new object whereas the assignment method allows you to manipulate the object in place, but the new hierarchy is simply labeled as \texttt{NEW}. If you prefer the assignment method, you can still customize the
+name of your hierarchy with the function \texttt{namehierarchy}, which allows you to rename all of the levels of your hierarchy
+\label{data.manip:hier:manip:name}
+
+<<virus_name>>=
+namehierarchy(virus) <- ~country/year/month
 virus
 @
-<<virus_named_behind, echo = FALSE>>=
-addhierarchy(virus, virus_info, "month")
+
+\subsubsection{Defining populations with hierarchies}
+\label{data.manip:hier:setpop}
+
+Of course, these hierarchies would mean nothing if it was difficult or not
+possible to define the populations in the data set. For this example, we will
+use a data set of \textit{Phytophthora infestans} collected from North America
+and South America.
+
+<<Pinf_setpop>>=
+data(Pinf)
+Pinf
 @
 \noindent
-But here's an even easier way:
-<<virus_named_df>>=
-addhierarchy(virus) <- data.frame(month = virus_info)
-virus
+We notice that above, we have two hierarchies for Continent and Country, but the populations only show Continent level populations. If we wanted to investigate each country separately, we would need to reset the population to be represented by Country. This can be done with the function \texttt{setpop}. This function utilizes the defined population hierarchies to set the population. We'll use our data set above to illustrate this:
+
+<<Pinf_setpop2>>=
+setpop(Pinf) <- ~Country
+Pinf # Now set by country
 @
 \noindent
-If we use a data frame to add a population hierarchy, it will be added and all
-of the column names will be preserved. This allows you to add multiple hierarchies
-at once.
+The beauty about it is the fact that it will also combine all the hierarchical
+levels you want to use. Let's see when we ask it to set the population of
+Country with respect to Continent.
+
+<<Pinf_setpop_combine>>=
+setpop(Pinf) <- ~Continent/Country
+Pinf
+@
+\noindent
+Nice!
+
+Let's see what happens when we want to try to set our population year collected
+with respect to country.
+
+<<Pinf_error>>=
+setpop(Pinf) <- ~Country/Year
+@
+\noindent
+This didn't work because we don't have Year defined within our hierarchy. In 
+this case, we would likely have an outside vector defining the year. To define 
+the population to just year, we could use the \adegenet{} function \texttt{pop}
+ to set the population with respect to year, but this would not update the 
+hierarchy. A better way to do this would be to add year to the hierarchy with 
+the function \cmdlink{data.manip:hier:manip}{addhierarchy} and define it as 
+above.
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1289,7 +1212,7 @@ utilizes this function internally.
 \subsection{Every day I'm shuffling (data sets)  \{permutations and bootstrap resampling\}}
 \label{data.manip:shuffle}
 
-\tab\tab A common null hypothesis for populations with mixed reproductive modes is panmixia, or to put it simply: lots of sex. A handy way to test for that is permutation analysis to assess random linkage among loci whereupon you randomly shuffle your data. \Poppr{} uses randomly shuffled data sets in order to calculate P-values for the index of association ($I_A$ and $\bar r_d$) \cite{Agapow:2001}. Since there might be other tests where a permutation analysis would be pertinent, a shuffler for \texttt{genind} objects was created with four shuffling schemes: two schemes shuffling without replacement and two shuffling with replacement. Details below.
+\tab\tab A common null hypothesis for populations with mixed reproductive modes is panmixia, or to put it simply: lots of sex. A handy way to test for that is permutation analysis to assess random linkage among loci whereupon you randomly shuffle your data. \Poppr{} uses randomly shuffled data sets in order to calculate P-values for the index of association ($I_A$ and $\bar{r}_d$) \cite{Agapow:2001}. Since there might be other tests where a permutation analysis would be pertinent, a shuffler for \texttt{genind} objects was created with four shuffling schemes: two schemes shuffling without replacement and two shuffling with replacement. Details below.
 \subsubsection{Function: shufflepop}
 \label{data.manip:shuffle:shufflepop}
 \begin{quote}
@@ -1509,7 +1432,7 @@ Again, heterozygosity and allele frequencies are not maintained, but now all of 
 }}
 \end{table}
 
-Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar r_d$ are exactly the same (for an explanation, see the end of\seclink{index:iard:ia}{Function: ia}in this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
+Note that you have the same genotypes after shuffling, so at each locus, you will maintain the same allelic frequencies and heterozygosity. So, in this sample, you will only see a homozygote with allele 2. This also ensures that the P-values associated with $I_A$ and $\bar{r}_d$ are exactly the same (for an explanation, see the end of\seclink{index:iard:ia}{Function: ia}in this manual). Unfortunately, if you are trying to simulate a sexual population, this does not make much biological sense as it assumes that alleles are not independently assorting within individuals.
   \end{enumerate}
 \end{itemize}
 These shuffling schemes have been implemented for the index of association, but there may be other summary statistics you can use \texttt{shufflepop} for. All you have to do is use the function \texttt{replicate}. Let's use average\seclink{index:bruvo}{Bruvo's distance}with the first population of the data set \texttt{nancycats} as an example:
@@ -1833,7 +1756,7 @@ naninform <- informloci(nancycats, cutoff = 0.05)
 \section{Multilocus Genotype Analysis}
 \label{mlg}
 
-\tab\tab In populations with mixed sexual and clonal reproduction, it is not uncommon to have multiple samples from the same population have the same genotype across multiple loci (multilocus genotype, MLG). Here, we introduce tools for tracking MLGs within and across populations in\seclink{genind}{intro:genind}objects from the \adegenet{} package. We will be using the\seclink{data:virus}{virus}data set which SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that genclone objects are optimal for these analyses.
+\tab\tab In populations with mixed sexual and clonal reproduction, it is not uncommon to have multiple samples from the same population have the same genotype across multiple loci (multilocus genotype, MLG). Here, we introduce tools for tracking MLGs within and across populations in\seclink{intro:genind}{genind}objects from the \adegenet{} package. We will be using the\seclink{data:virus}{virus}data set which SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that genclone objects are optimal for these analyses.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1874,8 +1797,8 @@ print_command(funk)
 \end{quote}
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
-    \item \texttt{sublist -} see\cmdlink{mlg:table:mlg.table}{mlg.table.}Analyze specified populations.
-    \item \texttt{blacklist -} see\cmdlink{mlg:table:mlg.table}{mlg.table.}Do not include specified populations.
+    \item \texttt{sublist -} see\cmdlink{data.manip:divide:popsub}{popsub.}Analyze specified populations.
+    \item \texttt{blacklist -} see\cmdlink{data.manip:divide:popsub}{popsub.}Do not include specified populations.
     \item \texttt{mlgsub -} see\cmdlink{mlg:table:mlg.table}{mlg.table.}Only analyze specified MLGs. The vector for this flag can be produced by this function as you will see later in this vignette.
     \item \texttt{indexreturn -} return a vector of indices of MLGs. (You can use these in the \texttt{mlgsub} flag, or you can use them to subset the columns of an MLG table). 
     \item \texttt{df -} return a data frame containing the MLGs, the populations they cross, and the number of copies you find in each population. This is useful for making graphs in \textit{ggplot2}.
@@ -1883,13 +1806,14 @@ print_command(funk)
   \end{itemize}
   
 We can see what Multilocus Genotypes cross different populations and then give a vector that shows how many populations each multi-population MLG crosses.
-<<crosspop, eval=TRUE>>=
+<<crosspop, eval=FALSE>>=
 setpop(virus) <- ~country
 v.dup <- mlg.crosspop(virus, quiet=TRUE)
 @
 Here is a snippet of what the output looks like when \texttt{quiet} is \texttt{FALSE}. It will print out the MLG name, the total number of individuals that make up that MLG, and the populations where that MLG can be found.
 <<crosspopout, echo=FALSE>>=
-x <- structure(list(MLG.3 = structure(c(4L, 8L), .Names = c("USA", 
+setpop(virus) <- ~country
+v.dup <- structure(list(MLG.3 = structure(c(4L, 8L), .Names = c("USA", 
 "Denmark")), MLG.9 = structure(c(1L, 13L, 1L, 1L), .Names = c("Japan", 
 "USA", "Finland", "Denmark")), MLG.31 = structure(c(2L, 7L), .Names = c("Japan", 
 "Canada")), MLG.75 = structure(c(2L, 8L, 2L, 1L, 6L, 2L, 1L, 
@@ -1908,7 +1832,7 @@ printthings <- function(ind, x){
       names(x[[ind]]), 
       "\n")
 }
-invisible(lapply(1:10, printthings, x))
+invisible(lapply(1:10, printthings, v.dup))
 @
 The output of this function is a list of MLGs, each containing a vector indicating the number of copies in each population. We'll count the number of populations each MLG crosses using the function \texttt{sapply} with \texttt{length}.
 <<crosspop2>>=
@@ -2022,16 +1946,15 @@ rarecurve(H.year, ylab="Multilocus genotypes expected", sample=min(rowSums(H.yea
   \caption{\footnotesize An example of a rarefaction curve produced using a MLG table.}
   \label{rarecurve}
 <<mlgrareplot, echo=FALSE, results='hide'>>=
-library(vegan)
+# library(vegan)
 H.year <- mlg.table(virus, bar=FALSE)
-rarecurve(H.year, ylab="Multilocus Genotypes Expected", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
+vegan::rarecurve(H.year, ylab="Multilocus Genotypes Expected", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
 \end{figure}
 \newpage
 
-The minimum value from the \textit{base} function \texttt{rowSums()} of the table represents the minimum common sample size of all populations. Setting the ``sample" flag draws the horizontal and vertical lines you see on the graph. The intersections of these lines correspond to the numbers you would find if you ran the function \cmdlink{summary:poppr}{poppr}on this data set (under the column ``\texttt{eMLG}").
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The minimum value from the \textit{base} function \texttt{rowSums()} of the table represents the minimum common sample size of all populations. Setting the ``sample" flag draws the horizontal and vertical lines you see on the graph. The intersections of these lines correspond to the numbers you would find if you ran the function\cmdlink{summary:poppr}{poppr}on this data set (under the column ``\texttt{eMLG}").
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -2054,40 +1977,48 @@ v.tab[UGNN.list, UGNN]
 @
 
 Now we can see that Norway has a higher incidence of nearly all of these MLGs. 
-We can investigate the incidence of these MLGs throughout our data set. 
+We can investigate the incidence of these MLGs throughout our data set. One
+thing that the\seclink{intro:genclone}{genclone}object keeps track of is a 
+single vector defining the unique multilocus genotypes within the data. These
+are represented as integers and can be accessed with the function 
+\texttt{mlg.vector}. This is useful for finding what MLGs correspond to which
+individuals or populations. Let's use \texttt{mlg.vector} to find the individual names corresponding to the MLGs. First we'll investigate what the 
+output of this function looks like.
 
-
-\begin{quote}
-To Be Continued
-\end{quote}
-
-We can go even further and subset the original data set to only give us those MLGs by utilizing the function \texttt{mlg.vector}:
-\subsubsection{Function: mlg.vector}
-\label{mlg:mix:mlg.vector}
-
-\tab\tab This function is the backbone for \texttt{mlg.table} and \texttt{mlg.crosspop}, and is The function that determines what your MLGs are. This is quite useful for sub-setting the data set to only contain the MLGs of interest. The numbers in the vector correspond to the number of columns in a matrix produced by \texttt{mlg.table}. It is important to remember that this is also sensitive to missing data and will treat it as a single extra allele. 
-\begin{quote}
-Default Command:
-<<mlg.vector_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "mlg.vector"
-print_command(funk)
-@
-% \texttt{mlg.vector(pop)}
-\end{quote}
-  \begin{itemize}
-    \item \texttt{pop -} a \texttt{genind} object.
-  \end{itemize}
-<<subdata>>=
+<<mlg.vector_first>>=
 v.vec <- mlg.vector(virus)
-v.sub <- virus[v.vec %in% UGNN, ]
-mlg.table(v.sub, bar=FALSE)
+str(v.vec) # Analyze the structure.
+length(unique(v.vec)) # count the number of MLGs
+virus # equal to the first number in this output.
 @
-You can also do the same thing using the mlgsub flag.
+\label{mlg:mix:mlg.vector}
+\noindent
+We can see that the numbers are all mixed up, but the order of the MLG vector
+corresponds to the order of individuals in our data set. We can see immediately
+that the first two individuals are both designated as MLG \Sexpr{v.vec[1]},
+indicating that they both have the exact same genetic profile. We will take our
+vector of MLGs crossing UK, Germany, Netherlands, and Norway and match them to 
+the MLG vector to see where else they occur.
+
+<<mlg.vector_match>>=
+UGNN # Show what we are looking for
+UGNN_match <- v.vec %in% UGNN
+table(UGNN_match) # How many individuals matched to those three MLGs?
+@
+\noindent
+22 individuals matched to those three MLGs. We can use this vector to analyze
+what individuals they come from.
+
+<<mlg.vector_inds>>=
+indNames(virus)[UGNN_match]
+@
+
+We can also use the vector of MLGs to subset\cmdlink{mlg:table:mlg.table}{mlg.table} with the \texttt{mlgsub} flag. 
 <<mlgsub_flag, eval=FALSE>>=
-mlg.table(virus, mlgsub=UGNN, bar=TRUE)
+mlg.table(virus, mlgsub = UGNN, bar = TRUE)
 @
 <<mlgsub_flagshow, echo=FALSE>>=
-mlg.table(virus, mlgsub=UGNN, bar=FALSE)
+mlg.table(virus, mlgsub = UGNN, bar = FALSE)
 @
 And we can see where exactly these three MLGs fall within our data set.
 \begin{figure}[h!]
@@ -2095,25 +2026,10 @@ And we can see where exactly these three MLGs fall within our data set.
   \caption{\footnotesize An example of the same bar-chart as \textit{Figure 1}, but focusing on three MLGs.}
   \label{nortable2}
 <<subnor, results='hide', echo=FALSE>>=
-mlg.table(virus, sublist="Norway", mlgsub=UGNN)
+mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 @
 \end{figure}
-\\
 \newpage
-Now, you might notice that the MLG vector no longer matches up with our data after we subset it.
-<<>>=
-v.vec[1:22]
-mlg.vector(v.sub)
-@
-% Well, this is unfortunate because it means that we can't compare any subsetted data with non-subsetted data. Luckily, there's a little trick we can do using our old friend, the \texttt{@other} slot.
-% If we place the MLG vector in the \texttt{@other} slot of our original data set, it will be subsetted along with the data.
-% <<>>=
-% virus@other$MLG.vector <- H.vec
-% H.sub <- virus[H.vec %in% UGNN, ]
-% H.sub@other$MLG.vector
-% @
-% Magic!\\
-%\newpage
 
 So, we've gotten this far, yet we haven't actually seen what the genotypes look like! For analyses where the genotypic signature is important, this is a crucial identification step. Lucky for us, the \texttt{genind} object retains all of the genotypic information and can be accessed using the \texttt{genind2df} function. Let's take a look at the three genotypes we specified above utilizing the vector of MLGs we created above, \texttt{H.vec}.
 <<df hashing_echo, eval=FALSE>>=
@@ -2164,13 +2080,12 @@ structure(list(pop = structure(c(15L, 15L, 15L, 15L, 15L, 15L,
 "DQ883619", "DQ883620", "DQ883628", "EU501609", "EU501642", "EU501643", 
 "EU501735", "EU501742", "EU502513"), class = "data.frame")
 @
-Notice that there seems to be a clear separation between the SNPs of the first 10 isolates and the rest? This is no coincidence. Take a look at the output of our sub-setting.
+Notice that there seems to be a clear separation between the SNPs of the first 10 isolates and the rest? This is no coincidence. Take a look at the output of our earlier sub-setting.
 <<subsetting>>=
-UGNN
-v.vec[v.vec %in% UGNN]
+v.vec[UGNN_match]
 @
 
-We have the MLGs 315, 317, and 620, and the result of the sub-setting shows us that 620 occurs earlier in our data set, and that MLGs 315 and 317 are mixed in together. The reason why we do not see a mixture of three different sets of SNP calls in our little window is because \texttt{mlg.vector} creates the MLGs by first concatenating and then sorting the genotypes. This way, the closer two MLG indexes are to each other, the fewer differences they will have between one another. 
+We have the MLGs \Sexpr{UGNN[1]}, \Sexpr{UGNN[2]}, and \Sexpr{UGNN[3]}, and the result of the sub-setting shows us that \Sexpr{UGNN[3]} occurs earlier in our data set, and that MLGs \Sexpr{UGNN[1]} and \Sexpr{UGNN[2]} are mixed in together. The reason why we do not see a mixture of three different sets of SNP calls in our little window is because \texttt{mlg.vector} creates the MLGs by first concatenating and then sorting the genotypes. This way, the closer two MLG indexes are to each other, the fewer differences they will have between one another. 
 
 %-----------------------------------------------------------------------------%
 %
@@ -2183,7 +2098,7 @@ We have the MLGs 315, 317, and 620, and the result of the sub-setting shows us t
 df <- mlg.crosspop(virus, df=TRUE, quiet=TRUE)
 names(df)
 @
-Now that we have our data frame, we can do a couple of things. We can first see where the most omnipresent MLG occurs. After that, we will plot the top ten MLGs using ggplot2.
+Now that we have our data frame, we can do a couple of things. We can first see where the most omnipresent MLG occurs. After that, we will plot the top ten MLGs using ggplot2. Remember that \texttt{v.num} is the number of populations per multilocus genotype.
 <<>>=
 v.max <- names(sort(v.num, decreasing=TRUE)[1:10])
 # Showing the data frame by the largest MLG complex.
@@ -2887,6 +2802,75 @@ As you can see, the distribution is much closer to a distribution we would expec
 %=============================================================================%
 \section{Appendix}
 \label{appendix}
+
+\subsection{General hierarchy method use}
+\label{appendix:hier:method}
+
+\tab\tab To reiterate, there are currently 5 methods that manipulate population hierarchies in genclone objects:
+% latex table generated in R 3.0.3 by xtable 1.7-3 package
+% Sat Mar 22 20:24:23 2014
+\begin{table}[ht]
+\centering
+\begin{tabular}{llll}
+  \hline
+ Method & Function & Input & Result\\ 
+  \hline
+ split & \cmdlink{data.manip:hier:define:split}{splithierarchy} & formula & defined hierarchical levels\\
+ set & \cmdlink{data.manip:hier:define:set}{sethierarchy} & data frame & new hierarchy\\ 
+ get & \cmdlink{data.manip:hier:view}{gethierarchy} & formula & data frame\\ 
+ name & \cmdlink{data.manip:hier:manip:name}{namehierarchy} & formula & new hierarchy names\\ 
+ add & \cmdlink{data.manip:hier:manip:add}{addhierarchy} & vector or data frame & new hierarchical level\\
+   \hline
+\end{tabular}
+\end{table}
+\noindent
+NOTE: Refer to\seclink{intro:genclone:access}{Accessing hierarchies}for more
+details on how to access hierarchies.\\
+
+These functions all have a syntax that looks like this:
+<<hier_syntax, eval = FALSE>>=
+newobject <- function(object, input)
+@
+Let's take a data set of \textit{Phytophthora infestans} collected from North
+America and South America and use that as an example. It has two population 
+hierarchies defined, Continent and Country:
+<<Pinf_load>>=
+data(Pinf)
+Pinf
+@
+\noindent
+Let's say I wanted to change the hierarchy names to Spanish. I can do that using
+\texttt{namehierarchy}.
+<<Pinf_rename>>=
+elPinf <- namehierarchy(Pinf, ~continente/pais) # Don't forget the formula syntax!
+elPinf
+Pinf
+@
+\noindent
+The original data set has stayed the same and we now have a new data set with the
+names we want.
+
+Of course, it would be silly to create a new data set every time we wanted to
+do something like change names. This is why all of the above functions (with the
+exception of \texttt{gethierarchy}) all have the replacement syntax of:
+<<hier_syntax_replace, eval = FALSE>>=
+function(object) <- input
+@
+\noindent
+\textbf{NOTE: This is the preferred syntax}.\\ 
+\noindent
+This allows the object to be edited \textit{in place} and makes things generally
+easier. Let's revisit our previous example:
+<<Pinf_replace>>=
+Pinf
+namehierarchy(Pinf) <- ~continente/pais
+Pinf
+@
+While we will mainly be using the replacement syntax in this vignette, the 
+advantage to having both systems is that with the 
+\texttt{function(object, input)} syntax, you can test manipulation without 
+affecting your object.
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
