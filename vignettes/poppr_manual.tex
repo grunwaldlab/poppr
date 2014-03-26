@@ -3153,7 +3153,7 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 \end{figure}
 \newpage
 
-The MLG table is not restricted for use with just \Poppr{}. One of the main advantages of the function \texttt{mlg.table} is that it allows easy access to diversity functions present in the package \textit{vegan} \cite{vegan}. One very simple example is to create a rarefaction curve for each population in your data set giving the number of expected MLGs for a given sample size. For more information, type \texttt{help("diversity", package="vegan")} in your R console.
+The MLG table is not restricted for use with just \poppr{}. One of the main advantages of the function \texttt{mlg.table} is that it allows easy access to diversity functions present in the package \textit{vegan} \cite{vegan}. One very simple example is to create a rarefaction curve for each population in your data set giving the number of expected MLGs for a given sample size. For more information, type \texttt{help("diversity", package="vegan")} in your R console.
 
 For the sake of a simple example, instead of drawing a curve for each of the 37 countries represented in this sample, let's change the population structure to be the different years of the epidemics. 
 \begin{knitrout}\footnotesize
@@ -3794,7 +3794,7 @@ Provesti distance
 
 Absolute Genetic distance
 
-... are all the same!
+... are all the same! Note that these two really are exactly the same. They are an extension of Bray-Curtis Dissimilarity.
 
 Nei's distance
 \label{distance:nei}
@@ -3826,7 +3826,7 @@ Reynold's Coancestry distance
 \end{equation}
 
 
-Rodger's distance 
+Roger's distance 
 \label{distance:roger}
 \begin{equation}
   D_4(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
