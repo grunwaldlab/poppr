@@ -35,6 +35,11 @@ possible differences. Eg. two individuals who share half of
 the same alleles will have a distance of 0.5. This function
 can analyze distances for any marker system.
 }
+\note{
+This is exactly the same as \code{\link{provesti.dist}},
+except that it performs better for large numbers of
+individuals (n > 125).
+}
 \examples{
 # A simple example. Let's analyze the mean distance among populations of A.
 # euteiches.

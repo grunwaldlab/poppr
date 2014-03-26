@@ -3,14 +3,14 @@
 \alias{nei.dist}
 \alias{provesti.dist}
 \alias{reynold.dist}
-\alias{rodger.dist}
+\alias{roger.dist}
 \title{Calculate Genetic Distance for a genind or genclone object.}
 \usage{
 nei.dist(x, warning = TRUE)
 
 edward.dist(x)
 
-rodger.dist(x)
+roger.dist(x)
 
 reynold.dist(x)
 
@@ -42,17 +42,19 @@ distance is the negative log of 0:1, this means that it is
 very possible to obtain distances of infinity. When this
 happens, infinite values are corrected to be 10 * max(D)
 where D is the distance matrix without infinite values.
-
-Provesti's distance is analogous to
-\code{\link{diss.dist}}, except you must treat NA's
-specifically before using this distance.
+}
+\note{
+Provesti's distance is identical to
+\code{\link{diss.dist}}, except that
+\code{\link{diss.dist}} is optimized for a larger number of
+individuals (n > 125) at the cost of required memory.
 }
 \examples{
 data(nancycats)
 nan9 <- popsub(nancycats, 9)
 neinan <- nei.dist(nan9)
 ednan <- edward.dist(nan9)
-rodnan <- rodger.dist(nan9)
+rodnan <- roger.dist(nan9)
 reynan <- reynold.dist(nan9)
 pronan <- provesti.dist(nan9)
 }

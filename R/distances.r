@@ -66,6 +66,9 @@
 #' 
 #' @return Pairwise distances between individuals present in the genind object.
 #' @author Zhian N. Kamvar
+#' 
+#' @note This is exactly the same as \code{\link{provesti.dist}}, except that
+#' it performs better for large numbers of individuals (n > 125). 
 #'
 #' @examples
 #' 
@@ -129,21 +132,24 @@ diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
 #' be applicable for distances between individuals.
 #' 
 #' @param x a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.
-#' 
-#' @param warning If \code{TRUE}, a warning will be printed if any infinite
-#' values are detected and replaced. If \code{FALSE}, these values will be
-#' replaced without warning. See Details below.
-#' 
-#' @return an object of class dist with the same number of observations as the
-#' number of individuals in your data.
-#' 
-#' @details 
-#' It is important to be careful with the interpretation of these 
-#' distances as they were originally intended for calculation of between-population distance. As Nei's distance is the negative log of 0:1, this means that it is
-#' very possible to obtain distances of infinity. When this happens, infinite values are corrected to be 10 * max(D) where D is the distance matrix without infinite values. 
-#' 
-#' Provesti's distance is analogous to \code{\link{diss.dist}}, except you must
-#' treat NA's specifically before using this distance. 
+#'   
+#' @param warning If \code{TRUE}, a warning will be printed if any infinite 
+#'   values are detected and replaced. If \code{FALSE}, these values will be 
+#'   replaced without warning. See Details below.
+#'   
+#' @return an object of class dist with the same number of observations as the 
+#'   number of individuals in your data.
+#'   
+#' @details It is important to be careful with the interpretation of these 
+#'   distances as they were originally intended for calculation of 
+#'   between-population distance. As Nei's distance is the negative log of 0:1, 
+#'   this means that it is very possible to obtain distances of infinity. When 
+#'   this happens, infinite values are corrected to be 10 * max(D) where D is
+#'   the distance matrix without infinite values.
+#'   
+#' @note Provesti's distance is identical to \code{\link{diss.dist}}, except
+#'   that \code{\link{diss.dist}} is optimized for a larger number of
+#'   individuals (n > 125) at the cost of required memory.
 #' 
 #' @rdname genetic_distance
 #' @export
@@ -153,7 +159,7 @@ diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
 #' nan9 <- popsub(nancycats, 9)
 #' neinan <- nei.dist(nan9)
 #' ednan <- edward.dist(nan9)
-#' rodnan <- rodger.dist(nan9)
+#' rodnan <- roger.dist(nan9)
 #' reynan <- reynold.dist(nan9)
 #' pronan <- provesti.dist(nan9)
 #' 
@@ -216,7 +222,7 @@ edward.dist <- function(x){
 #==============================================================================#
 #' @rdname genetic_distance
 #' @export
-rodger.dist <- function(x){
+roger.dist <- function(x){
   if (is.genind(x)){ 
     if (x@type == "PA"){
       MAT     <- x@tab
@@ -302,16 +308,25 @@ provesti.dist <- function(x){
     stop("Object must be a matrix or genind object")
   }
   w0   <- 1:(nlig-1)
-  loca <- function(k){
+  loca <- function(k, nlig, MAT, nLoc){
     w1     <- (k+1):nlig
-    resloc <- unlist(lapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]))))
+    resloc <- vapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]), na.rm = TRUE), numeric(1))
     return(resloc/(2*nloc))
   }
-  d    <- unlist(lapply(w0, loca))
-  resmat <- matrix(numeric(0), nlig, nlig)
-  resmat[lower.tri(resmat)] <- d
-  d <- as.dist(resmat)
+  d    <- unlist(lapply(w0, loca, nlig, MAT, nLoc))
+
+  attr(d, "Size")   <- nlig
   attr(d, "Labels") <- labs
+  attr(d, "Diag")   <- FALSE
+  attr(d, "Upper")  <- FALSE
+  attr(d, "method") <- "provesti"
+  attr(d, "call")   <- match.call()
+  class(d) <- "dist"
+
+  # resmat <- matrix(numeric(0), nlig, nlig)
+  # resmat[lower.tri(resmat)] <- d
+  # d <- as.dist(resmat)
+  # attr(d, "Labels") <- labs
   return(d)
 }
 
@@ -337,6 +352,9 @@ provesti.dist <- function(x){
 #' @param showtree If \code{TRUE} (Default), a dendrogram will be plotted. If
 #'   \code{FALSE}, nothing will be plotted.
 #'   
+#' @param missing any method to be used by \code{\link{missingno}}: "mean"
+#'   (default), "zero", "loci", "genotype", or "ignore".
+#'   
 #' @param ... any parameters to be passed off to the distance method.
 #'   
 #' @return an object of class \code{\link[ape]{phylo}}.
@@ -349,8 +367,12 @@ provesti.dist <- function(x){
 #' relevant. With this function, the user can also define a custom distance to
 #' be performed on the genind or genclone object.
 #' 
+#' @note \code{\link{provesti.dist}} and \code{\link{diss.dist}} are exactly the
+#'   same, but \code{\link{diss.dist}} scales better for large numbers of
+#'   individuals (n > 125) at the cost of required memory.
+#' 
 #' @seealso \code{\link{nei.dist}} \code{\link{edward.dist}}
-#'   \code{\link{rodger.dist}} \code{\link{reynold.dist}}
+#'   \code{\link{roger.dist}} \code{\link{reynold.dist}}
 #'   \code{\link{provesti.dist}} \code{\link{diss.dist}}
 #'   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}}
 #'   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
@@ -377,14 +399,14 @@ provesti.dist <- function(x){
 #' # Nei's distance
 #' anei <- anyboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 #' 
-#' # Rodger's distance
-#' arog <- anyboot(Aeut, dist = rodger.dist, sample = 1000, cutoff = 50)
+#' # Roger's distance
+#' arog <- anyboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
 #' 
 #' }
 #==============================================================================#
 anyboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
-                     cutoff = 0, showtree = TRUE, ...){
-  x <- missingno(x, "mean")
+                     cutoff = 0, showtree = TRUE, missing = "mean", ...){
+  x <- missingno(x, missing)
   if (x@type == "codom"){
     xboot <- new("bootgen", x)
   } else {

@@ -4,7 +4,7 @@
 to genind or genclone objects.}
 \usage{
 anyboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
-  cutoff = 0, showtree = TRUE, ...)
+  cutoff = 0, showtree = TRUE, missing = "mean", ...)
 }
 \arguments{
   \item{x}{a \linkS4class{genind}, \linkS4class{genclone},
@@ -29,6 +29,10 @@ anyboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
   will be plotted. If \code{FALSE}, nothing will be
   plotted.}
 
+  \item{missing}{any method to be used by
+  \code{\link{missingno}}: "mean" (default), "zero",
+  "loci", "genotype", or "ignore".}
+
   \item{...}{any parameters to be passed off to the
   distance method.}
 }
@@ -50,6 +54,12 @@ biologically relevant. With this function, the user can
 also define a custom distance to be performed on the genind
 or genclone object.
 }
+\note{
+\code{\link{provesti.dist}} and \code{\link{diss.dist}} are
+exactly the same, but \code{\link{diss.dist}} scales better
+for large numbers of individuals (n > 125) at the cost of
+required memory.
+}
 \examples{
 data(nancycats)
 nan9 <- popsub(nancycats, 9)
@@ -70,14 +80,14 @@ data(Aeut)
 # Nei's distance
 anei <- anyboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 
-# Rodger's distance
-arog <- anyboot(Aeut, dist = rodger.dist, sample = 1000, cutoff = 50)
+# Roger's distance
+arog <- anyboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
 
 }
 }
 \seealso{
 \code{\link{nei.dist}} \code{\link{edward.dist}}
-\code{\link{rodger.dist}} \code{\link{reynold.dist}}
+\code{\link{roger.dist}} \code{\link{reynold.dist}}
 \code{\link{provesti.dist}} \code{\link{diss.dist}}
 \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}}
 \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
