@@ -1528,3 +1528,63 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
   }
   return(treedist)
 }
+
+#==============================================================================#
+# This will retrieve a genetic matrix based on genpop status or not.
+#
+# Public functions utilizing this function:
+# *.dist
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+get_gen_mat <- function(x){
+  if (is.genpop(x)){
+    MAT  <- makefreq(x, missing = "mean", quiet = TRUE)$tab
+  } else {
+    MAT  <- x@tab
+  }
+  return(MAT)
+}
+
+#==============================================================================#
+# This will retrieve the labels for the distance matrix from "gen" objects
+#
+# Public functions utilizing this function:
+# *.dist
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+get_gen_dist_labs <- function(x){
+  if (is.genind(x)){
+    labs <- indNames(x)
+  } else if (is.genpop(x)){
+    labs <- x@pop.names
+  } else if (is(x, "bootgen")){
+    labs <- names(x)
+  } else {
+    labs <- rownames(x)
+  }
+  return(labs)
+}
+
+#==============================================================================#
+# This will give attributes to genetic distance matrices. 
+#
+# Public functions utilizing this function:
+# *.dist
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+make_attributes <- function(d, nlig, labs, method, matched_call){
+  attr(d, "Size")   <- nlig
+  attr(d, "Labels") <- labs
+  attr(d, "Diag")   <- FALSE
+  attr(d, "Upper")  <- FALSE
+  attr(d, "method") <- method
+  attr(d, "call")   <- matched_call
+  class(d) <- "dist"
+  return(d)
+}

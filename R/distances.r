@@ -315,39 +315,6 @@ provesti.dist <- function(x){
 }
 
 
-get_gen_mat <- function(x){
-  if (is.genpop(x)){
-    MAT  <- makefreq(x, missing = "mean", quiet = TRUE)$tab
-  } else {
-    MAT  <- x@tab
-  }
-  return(MAT)
-}
-
-get_gen_dist_labs <- function(x){
-  if (is.genind(x)){
-    labs <- indNames(x)
-  } else if (is.genpop(x)){
-    labs <- x@pop.names
-  } else if (is(x, "bootgen")){
-    labs <- names(x)
-  } else {
-    labs <- rownames(x)
-  }
-  return(labs)
-}
-
-make_attributes <- function(d, nlig, labs, method, matched_call){
-  attr(d, "Size")   <- nlig
-  attr(d, "Labels") <- labs
-  attr(d, "Diag")   <- FALSE
-  attr(d, "Upper")  <- FALSE
-  attr(d, "method") <- method
-  attr(d, "call")   <- matched_call
-  class(d) <- "dist"
-  return(d)
-}
-
 #==============================================================================#
 #' Calculate a dendrogram with bootstrap support using any distance applicable
 #' to genind or genclone objects.
