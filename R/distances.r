@@ -282,9 +282,10 @@ reynolds.dist <- function(x){
 #' @export
 provesti.dist <- function(x){
   if (is(x, "gen")){
-    MAT  <- get_gen_mat(x)
-    nlig <- nrow(x@tab)
-    nloc <- length(x@loc.names)
+    MAT   <- get_gen_mat(x)
+    nlig  <- nrow(x@tab)
+    nloc  <- length(x@loc.names)
+    ploid <- x@ploidy
   } else if (length(dim(x)) == 2){
     MAT  <- x
     nlig <- nrow(x)
@@ -296,7 +297,10 @@ provesti.dist <- function(x){
   loca <- function(k, nlig, MAT, nLoc){
     w1     <- (k+1):nlig
     resloc <- vapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]), na.rm = TRUE), numeric(1))
-    return(resloc/(2*nloc))
+    if (x@type == "codom"){
+      resloc <- resloc*(1/2)
+    }
+    return(resloc/nloc)
   }
 
   d    <- unlist(lapply(w0, loca, nlig, MAT, nLoc))

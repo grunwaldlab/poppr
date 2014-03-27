@@ -9,11 +9,15 @@ user interaction.
 \section{Slots}{
 
 \describe{
+\item{\code{type}}{a character denoting Codominant ("codom") or Dominant data ("P/A")}
+
+\item{\code{ploidy}}{an integer denoting the ploidy of the data set. (>=1)}
+
 \item{\code{alllist}}{a list with numeric vectors, each representing a different
   locus where each element in the vector represents the index for a specific
   allele.}
 
-\item{\code{names}}{a vector containing names of the observed samples}
+\item{\code{names}}{a vector containing names of the observed samples.}
 }}
 \section{Extends}{
   Virtual Class \code{"\linkS4class{gen}"}.

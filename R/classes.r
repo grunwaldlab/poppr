@@ -203,15 +203,20 @@ setClass(
 #' @name bootgen-class
 #' @rdname bootgen-class
 #' @export
+#' @slot type a character denoting Codominant ("codom") or Dominant data ("P/A")
+#' @slot ploidy an integer denoting the ploidy of the data set. (>=1)
 #' @slot alllist a list with numeric vectors, each representing a different
 #'   locus where each element in the vector represents the index for a specific
 #'   allele.
-#' @slot names a vector containing names of the observed samples
+#' @slot names a vector containing names of the observed samples.
 #' @author Zhian N. Kamvar
 #' @import methods
 #==============================================================================#
 setClass("bootgen", 
          contains = c("gen"),
-         representation = representation(names = "vector", 
+         representation = representation(
+                          type = "character",
+                          ploidy = "integer",
+                          names = "vector", 
                           alllist = "list"),
 )
