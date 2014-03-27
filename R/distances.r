@@ -298,7 +298,10 @@ provesti.dist <- function(x){
     w1     <- (k+1):nlig
     resloc <- vapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]), na.rm = TRUE), numeric(1))
     if (x@type == "codom"){
-      resloc <- resloc*(1/2)
+      # This only applies to codominant data because dominant data can only take
+      # on a single state. Dividing by two indicates that the observations can
+      # occupy co-occurring states.
+      resloc <- resloc/2
     }
     return(resloc/nloc)
   }
