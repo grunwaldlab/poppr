@@ -1,5 +1,6 @@
 \docType{methods}
 \name{[,bootgen,ANY,ANY,ANY-method}
+\alias{$,bootgen-method}
 \alias{[,bootgen,ANY,ANY,ANY-method}
 \alias{dim,bootgen-method}
 \alias{initialize,bootgen-method}
@@ -8,6 +9,8 @@
 \S4method{[}{bootgen,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{dim}{bootgen}(x)
+
+\S4method{$}{bootgen}(x, name)
 
 \S4method{initialize}{bootgen}(.Object, gen)
 }
@@ -26,7 +29,12 @@
 
   \item{.Object}{a character, "bootgen"}
 
-  \item{gen}{\code{"\linkS4class{genind}"} object}
+  \item{gen}{a genind, genclone, or genpop object}
+
+  \item{name}{ A literal character string or a \link{name}
+  (possibly \link{backtick} quoted).  For extraction, this
+  is normally (see under \sQuote{Environments}) partially
+  matched to the \code{\link{names}} of the object.  }
 }
 \description{
 This is not designed for user interaction.

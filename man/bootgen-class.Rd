@@ -12,9 +12,11 @@ user interaction.
 \item{\code{alllist}}{a list with numeric vectors, each representing a different
   locus where each element in the vector represents the index for a specific
   allele.}
+
+\item{\code{names}}{a vector containing names of the observed samples}
 }}
 \section{Extends}{
-  Class \code{"\linkS4class{genclone}"}, directly.
+  Virtual Class \code{"\linkS4class{gen}"}.
 }
 \author{
 Zhian N. Kamvar

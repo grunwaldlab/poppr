@@ -198,7 +198,7 @@ setClass(
 #' An internal object used for bootstrapping. Not intended for user interaction.
 #' 
 #' @section Extends: 
-#' Class \code{"\linkS4class{genclone}"}, directly.
+#' Virtual Class \code{"\linkS4class{gen}"}.
 #' 
 #' @name bootgen-class
 #' @rdname bootgen-class
@@ -206,10 +206,12 @@ setClass(
 #' @slot alllist a list with numeric vectors, each representing a different
 #'   locus where each element in the vector represents the index for a specific
 #'   allele.
+#' @slot names a vector containing names of the observed samples
 #' @author Zhian N. Kamvar
 #' @import methods
 #==============================================================================#
 setClass("bootgen", 
-         contains = c("genclone"),
-         representation = representation(alllist = "list"),
+         contains = c("gen"),
+         representation = representation(names = "vector", 
+                          alllist = "list"),
 )

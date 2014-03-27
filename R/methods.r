@@ -69,7 +69,8 @@ setMethod(
   definition = function(x, i, j, ..., drop = FALSE){
     if (missing(i)) i <- TRUE
     if (missing(j)) j <- TRUE
-    if (length(j) > nLoc(x) | any(j > nLoc(x))){
+    loc <- dim(x)[2]
+    if (length(j) > loc | any(j > loc)){
       stop('subscript out of bounds')
     }
     
@@ -95,6 +96,7 @@ setMethod(
     slot(x, "loc.nall")  <- locnall
     slot(x, "all.names") <- allnames
     slot(x, "alllist")   <- alllist
+    slot(x, "names")     <- slot(x, "names")[i]
     return(x)
   }
 )
@@ -106,24 +108,51 @@ setMethod(
   f = "dim",
   signature(x = "bootgen"),
   definition = function(x){
-    return(c(nInd(x), nLoc(x)))
+    return(c(length(slot(x, "names")), length(slot(x, "loc.names"))))
+  }
+)
+
+#==============================================================================#
+#' @rdname bootgen-methods
+#==============================================================================#
+setMethod(
+  f = "$",
+  signature(x = "bootgen"),
+  definition = function(x, name){
+    return(slot(x, name))
   }
 )
 
 #==============================================================================#
 #' @rdname bootgen-methods
 #' @param .Object a character, "bootgen"
-#' @param gen \code{"\linkS4class{genind}"} object
+#' @param gen a genind, genclone, or genpop object
 #==============================================================================#
 setMethod(
   f = "initialize",
   signature = "bootgen",
   definition = function(.Object, gen){
-    if (missing(gen)) gen <- new("genclone")
-    if (!is.genclone(gen)) gen <- as.genclone(gen)
-    lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
-    slot(.Object, "alllist") <- .Call("expand_indices", cumsum(.Object@loc.nall), 
-                                      nLoc(.Object))
+    if (missing(gen)){
+      stop("gen must be specified.")
+    }
+    if (is.genind(gen)){
+      objnames <- slot(gen, "ind.names")
+      tab      <- slot(gen, "tab")
+    } else if (is.genpop(gen)){
+      objnames <- slot(gen, "pop.names")
+      tab      <- makefreq(gen, missing = "mean", quiet = TRUE)$tab
+    } else {
+      stop("gen must be a valid gen object.")
+    }
+    num_alleles                <- slot(gen, "loc.nall")
+    num_loci                   <- length(num_alleles)
+    slot(.Object, "tab")       <- tab       
+    slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")   
+    slot(.Object, "loc.names") <- slot(gen, "loc.names") 
+    slot(.Object, "loc.nall")  <- num_alleles  
+    slot(.Object, "all.names") <- slot(gen, "all.names") 
+    slot(.Object, "alllist")   <- .Call("expand_indices", cumsum(num_alleles), num_loci)
+    slot(.Object, "names")     <- objnames
     return(.Object)
   })
 
