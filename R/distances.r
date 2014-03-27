@@ -88,10 +88,10 @@ diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
   stopifnot(is.genind(x))
   ploid     <- ploidy(x)
   ind.names <- x@ind.names
-  inds      <- nInd(x)
+  inds      <- nrow(x@tab)
   np        <- choose(inds, 2)
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
-  numLoci   <- nLoc(x)
+  numLoci   <- length(x@loc.names)
   type      <- x@type
   if(type == "PA"){
     dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
@@ -158,15 +158,15 @@ diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
 #' data(nancycats)
 #' nan9 <- popsub(nancycats, 9)
 #' neinan <- nei.dist(nan9)
-#' ednan <- edward.dist(nan9)
-#' rodnan <- roger.dist(nan9)
-#' reynan <- reynold.dist(nan9)
+#' ednan <- edwards.dist(nan9)
+#' rodnan <- rogers.dist(nan9)
+#' reynan <- reynolds.dist(nan9)
 #' pronan <- provesti.dist(nan9)
 #' 
 #==============================================================================#
 nei.dist <- function(x, warning = TRUE){
-  if (is.genind(x))
-    MAT    <- x@tab
+  if (is(x, "gen"))
+    MAT    <- get_gen_mat(x)
   else if (length(dim(x)) == 2)
     MAT <- x
   else
@@ -180,60 +180,51 @@ nei.dist <- function(x, warning = TRUE){
     D <- infinite_vals_replacement(D, warning)
   }
   D     <- as.dist(D)
+  labs  <- get_gen_dist_labs(x)
+  D     <- make_attributes(D, length(labs), labs, "Nei", match.call())
   return(D)
 }
 
-
-#==============================================================================#
-# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
-# modifications.
-#==============================================================================#
 # modified from adegenet dist.genpop
 
 #' @rdname genetic_distance
 #' @export
-edward.dist <- function(x){
-  if (is.genind(x)){ 
-    MAT    <- x@tab
-    nloc   <- nLoc(x)
-  }
-  else if (length(dim(x)) == 2){
+edwards.dist <- function(x){
+  if (is(x, "gen")){ 
+    MAT  <- get_gen_mat(x)
+    nloc <- length(x@loc.names)
+  } else if (length(dim(x)) == 2){
     MAT  <- x
     nloc <- ncol(x)
-  }
-  else{
+  } else{
     stop("Object must be a matrix or genind object")
   }
   MAT     <- sqrt(MAT)
   D       <- MAT%*%t(MAT)
-  D       <- 1-D/nloc # Negative number are generated here.
+  D       <- 1 - D/nloc # Negative number are generated here.
   diag(D) <- 0
   D       <- sqrt(D)
   D       <- as.dist(D)
+  labs    <- get_gen_dist_labs(x)
+  D       <- make_attributes(D, length(labs), labs, "Edwards", match.call())
   return(D)
 }
 
 
-
-
-#==============================================================================#
-# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
-# modifications.
-#==============================================================================#
 #' @rdname genetic_distance
 #' @export
-roger.dist <- function(x){
-  if (is.genind(x)){ 
-    if (x@type == "PA"){
+rogers.dist <- function(x){
+  if (is(x, "gen")){ 
+    if (is.genind(x) && x@type == "PA"){
       MAT     <- x@tab
-      nloc    <- nLoc(x)
+      nloc    <- length(x@loc.names)
       loc.fac <- factor(x@loc.names, levels = x@loc.names)
-      nlig    <- nInd(x)
+      nlig    <- nrow(x@tab)
     } else {
-      MAT     <- x@tab
-      nloc    <- nLoc(x)
+      MAT     <- get_gen_mat(x)
+      nloc    <- length(x@loc.names)
       loc.fac <- x@loc.fac
-      nlig    <- nInd(x)      
+      nlig    <- nrow(x@tab)      
     }
   }
   else if (length(dim(x)) == 2){
@@ -251,21 +242,19 @@ roger.dist <- function(x){
   for(i in 1:length(kX)){
     D <- D + dcano(kX[[i]])
   }
-  D <- D/length(kX)
-  D <- as.dist(D)
+  D    <- D/length(kX)
+  D    <- as.dist(D)
+  labs <- get_gen_dist_labs(x)
+  D    <- make_attributes(D, nlig, labs, "Rogers", match.call())
   return(D)
 }
 
-#==============================================================================#
-# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
-# modifications.
-#==============================================================================#
 #' @rdname genetic_distance
 #' @export
-reynold.dist <- function(x){
-  if (is.genind(x)){
-    MAT    <- x@tab
-    nloc   <- nLoc(x)
+reynolds.dist <- function(x){
+  if (is(x, "gen")){ 
+    MAT    <- get_gen_mat(x)
+    nloc   <- length(x@loc.names)
   }
   else if (length(dim(x)) == 2){
     MAT  <- x
@@ -283,26 +272,25 @@ reynold.dist <- function(x){
   D            <- D/denomi
   D            <- sqrt(D)
   D            <- as.dist(D)
+  labs         <- get_gen_dist_labs(x)
+  D            <- make_attributes(D, length(labs), labs, "Reynolds", 
+                                  match.call())
   return(D)
 }
-
-# It looks like provesti distance is pretty much the same as diss.dist.
-
 
 #' @rdname genetic_distance
 #' @export
 provesti.dist <- function(x){
-  if (is.genind(x)){
-    MAT    <- x@tab
-    nlig   <- nInd(x)
-    nloc   <- nLoc(x)
-    labs   <- indNames(x)
+
+  if (is(x, "gen")){
+    MAT  <- get_gen_mat(x)
+    nlig <- nrow(x@tab)
+    nloc <- length(x@loc.names)
   }
   else if (length(dim(x)) == 2){
     MAT  <- x
     nlig <- nrow(x)
     nloc <- ncol(x)
-    labs <- rownames(x)
   }
   else{
     stop("Object must be a matrix or genind object")
@@ -313,15 +301,11 @@ provesti.dist <- function(x){
     resloc <- vapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]), na.rm = TRUE), numeric(1))
     return(resloc/(2*nloc))
   }
+
   d    <- unlist(lapply(w0, loca, nlig, MAT, nLoc))
 
-  attr(d, "Size")   <- nlig
-  attr(d, "Labels") <- labs
-  attr(d, "Diag")   <- FALSE
-  attr(d, "Upper")  <- FALSE
-  attr(d, "method") <- "provesti"
-  attr(d, "call")   <- match.call()
-  class(d) <- "dist"
+  labs <- get_gen_dist_labs(x)
+  d    <- make_attributes(d, nlig, labs, "Provesti", match.call())
 
   # resmat <- matrix(numeric(0), nlig, nlig)
   # resmat[lower.tri(resmat)] <- d
@@ -330,6 +314,39 @@ provesti.dist <- function(x){
   return(d)
 }
 
+
+get_gen_mat <- function(x){
+  if (is.genpop(x)){
+    MAT  <- makefreq(x, missing = "mean", quiet = TRUE)$tab
+  } else {
+    MAT  <- x@tab
+  }
+  return(MAT)
+}
+
+get_gen_dist_labs <- function(x){
+  if (is.genind(x)){
+    labs <- indNames(x)
+  } else if (is.genpop(x)){
+    labs <- x@pop.names
+  } else if (is(x, "bootgen")){
+    labs <- names(x)
+  } else {
+    labs <- rownames(x)
+  }
+  return(labs)
+}
+
+make_attributes <- function(d, nlig, labs, method, matched_call){
+  attr(d, "Size")   <- nlig
+  attr(d, "Labels") <- labs
+  attr(d, "Diag")   <- FALSE
+  attr(d, "Upper")  <- FALSE
+  attr(d, "method") <- method
+  attr(d, "call")   <- matched_call
+  class(d) <- "dist"
+  return(d)
+}
 
 #==============================================================================#
 #' Calculate a dendrogram with bootstrap support using any distance applicable
@@ -371,8 +388,8 @@ provesti.dist <- function(x){
 #'   same, but \code{\link{diss.dist}} scales better for large numbers of
 #'   individuals (n > 125) at the cost of required memory.
 #' 
-#' @seealso \code{\link{nei.dist}} \code{\link{edward.dist}}
-#'   \code{\link{roger.dist}} \code{\link{reynold.dist}}
+#' @seealso \code{\link{nei.dist}} \code{\link{edwards.dist}}
+#'   \code{\link{rogers.dist}} \code{\link{reynolds.dist}}
 #'   \code{\link{provesti.dist}} \code{\link{diss.dist}}
 #'   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}}
 #'   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
@@ -389,7 +406,7 @@ provesti.dist <- function(x){
 #' 
 #' set.seed(9999)
 #' # Generate a tree using custom distance
-#' bindist <- function(x) dist(x, method = "binary")
+#' bindist <- function(x) dist(x$tab, method = "binary")
 #' binnan <- anyboot(nan9, dist = bindist)
 #' 
 #' \dontrun{
@@ -399,18 +416,22 @@ provesti.dist <- function(x){
 #' # Nei's distance
 #' anei <- anyboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 #' 
-#' # Roger's distance
+#' # Rogers' distance
 #' arog <- anyboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
 #' 
 #' }
 #==============================================================================#
 anyboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                      cutoff = 0, showtree = TRUE, missing = "mean", ...){
-  x <- missingno(x, missing)
-  if (x@type == "codom"){
-    xboot <- new("bootgen", x)
+  if (is.genind(x)){
+    x <- missingno(x, missing)
+    if (x@type == "PA"){
+      xboot <- x@tab
+    } else {
+      xboot <- new("bootgen", x)
+    }
   } else {
-    xboot <- x@tab
+    xboot <- new("bootgen", x)
   }
   ARGS     <- c("nj", "upgma")
   treearg  <- match.arg(tree, ARGS)
@@ -423,7 +444,11 @@ anyboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
   nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root)
   nodelabs <- (nodelabs/sample)*100
   nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
-  xtree$tip.label  <- indNames(x)
+  if (is.genind(x)){
+    xtree$tip.label <- indNames(x)
+  } else {
+    xtree$tip.label <- x@pop.names
+  }
   xtree$node.label <- nodelabs
   if (showtree){
     poppr.plot.phylo(xtree, tree)

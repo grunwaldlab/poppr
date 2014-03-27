@@ -1,18 +1,18 @@
 \name{nei.dist}
-\alias{edward.dist}
+\alias{edwards.dist}
 \alias{nei.dist}
 \alias{provesti.dist}
-\alias{reynold.dist}
-\alias{roger.dist}
+\alias{reynolds.dist}
+\alias{rogers.dist}
 \title{Calculate Genetic Distance for a genind or genclone object.}
 \usage{
 nei.dist(x, warning = TRUE)
 
-edward.dist(x)
+edwards.dist(x)
 
-roger.dist(x)
+rogers.dist(x)
 
-reynold.dist(x)
+reynolds.dist(x)
 
 provesti.dist(x)
 }
@@ -53,9 +53,9 @@ individuals (n > 125) at the cost of required memory.
 data(nancycats)
 nan9 <- popsub(nancycats, 9)
 neinan <- nei.dist(nan9)
-ednan <- edward.dist(nan9)
-rodnan <- roger.dist(nan9)
-reynan <- reynold.dist(nan9)
+ednan <- edwards.dist(nan9)
+rodnan <- rogers.dist(nan9)
+reynan <- reynolds.dist(nan9)
 pronan <- provesti.dist(nan9)
 }
 

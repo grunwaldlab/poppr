@@ -70,7 +70,7 @@ neinan <- anyboot(nan9, dist = nei.dist)
 
 set.seed(9999)
 # Generate a tree using custom distance
-bindist <- function(x) dist(x, method = "binary")
+bindist <- function(x) dist(x$tab, method = "binary")
 binnan <- anyboot(nan9, dist = bindist)
 
 \dontrun{
@@ -80,14 +80,14 @@ data(Aeut)
 # Nei's distance
 anei <- anyboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 
-# Roger's distance
+# Rogers' distance
 arog <- anyboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
 
 }
 }
 \seealso{
-\code{\link{nei.dist}} \code{\link{edward.dist}}
-\code{\link{roger.dist}} \code{\link{reynold.dist}}
+\code{\link{nei.dist}} \code{\link{edwards.dist}}
+\code{\link{rogers.dist}} \code{\link{reynolds.dist}}
 \code{\link{provesti.dist}} \code{\link{diss.dist}}
 \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}}
 \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
