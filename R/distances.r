@@ -281,18 +281,15 @@ reynolds.dist <- function(x){
 #' @rdname genetic_distance
 #' @export
 provesti.dist <- function(x){
-
   if (is(x, "gen")){
     MAT  <- get_gen_mat(x)
     nlig <- nrow(x@tab)
     nloc <- length(x@loc.names)
-  }
-  else if (length(dim(x)) == 2){
+  } else if (length(dim(x)) == 2){
     MAT  <- x
     nlig <- nrow(x)
     nloc <- ncol(x)
-  }
-  else{
+  } else {
     stop("Object must be a matrix or genind object")
   }
   w0   <- 1:(nlig-1)
@@ -392,10 +389,14 @@ anyboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                      cutoff = 0, showtree = TRUE, missing = "mean", ...){
   if (is.genind(x)){
     x <- missingno(x, missing)
-    if (x@type == "PA"){
-      xboot <- x@tab
+  }
+  if (x@type == "PA"){
+    xboot           <- x@tab
+    colnames(xboot) <- locNames(x)
+    if (is.genpop(x)){
+      rownames(xboot) <- x@pop.names
     } else {
-      xboot <- new("bootgen", x)
+      rownames(xboot) <- indNames(x)
     }
   } else {
     xboot <- new("bootgen", x)
