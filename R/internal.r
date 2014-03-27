@@ -1539,7 +1539,7 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
 # # none
 #==============================================================================#
 get_gen_mat <- function(x){
-  if (is.genpop(x) & x@type == "codom"){
+  if (is.genpop(x) && x@type == "codom"){
     MAT  <- makefreq(x, missing = "mean", quiet = TRUE)$tab
   } else {
     MAT  <- x@tab
