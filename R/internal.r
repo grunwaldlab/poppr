@@ -1447,10 +1447,10 @@ dcano <- function(mat) {
   vec        <- diag(daux)
   daux       <- -2*daux + vec[col(daux)] + vec[row(daux)]
   diag(daux) <- 0
-  if (any(daux == Inf)){
-    daux <- infinite_vals_replacement(daux, warning)
-  }
-  daux       <- sqrt(.5*daux)
+  # if (any(daux == Inf)){
+  #   daux <- infinite_vals_replacement(daux, warning)
+  # }
+  daux       <- sqrt(daux*0.5)
   return(daux)
 }
 

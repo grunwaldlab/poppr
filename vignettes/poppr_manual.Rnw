@@ -2249,80 +2249,128 @@ If you want to be able to report $P < 0.001$ in this situation, then you can sim
 \subsection{May I have distance? \{genetic distances\}}
 \label{index:gendist}
 
+\tab\tab Genetic distances are great tools for analyzing diversity in populations
+as they are the basis for creating dendrograms with bootstrap support and also
+for AMOVA. This section will simply present different genetic distances along
+with a few notes about them. Most of these distances are derived from the 
+\textit{ade4} and \adegenet packages, where they were implemented as distances
+between populations. \Poppr extends the implementation to individuals as well
+(with the exception of Bruvo's distance).
 
-Let \textbf{A} a table containing allelic frequencies with $t$ populations (rows) and $m$ alleles (columns).\\
-Let  $\nu$ the number of loci. The locus $j$ gets $m(j)$ alleles. 
+\begin{table}[ht]
+\centering
+\begin{tabular}{llll}
+  \hline
+ Method & Function & Euclidean \\ 
+  \hline
+\seclink{distance:dissimilarity}{Provesti} & \texttt{provesti.dist} & No \\
+ & \texttt{diss.dist} & \\
+\seclink{distance:nei}{Nei} & \texttt{nei.dist} & No \\
+\seclink{distance:edwards}{Edwards} & \texttt{edward.dist} & Yes \\
+\seclink{distance:reynolds}{Reynolds} & \texttt{reynold.dist} & Yes \\
+\seclink{distance:rogers}{Rogers} & \texttt{rogers.dist} & Yes \\
+\seclink{distance:bruvo}{Bruvo} & \texttt{bruvo.dist} & No \\
+   \hline
+\end{tabular}
+\end{table}
+
+All of the distances are based on the table found in 
+a\seclink{intro:genind}{genind object.}I have translated the following from math
+jargon into English with a few minor modifications:
+
+\begin{quote}
+Let \textbf{A} a table containing allelic frequencies with $t$ populations or
+individuals (rows) and $m$ alleles (columns).\\
+Let $\nu$ be the number of loci. The locus $j$ gets $m(j)$ alleles. 
+
 
 \begin{equation}
   m=\sum_{j=1}^{\nu} m(j)
 \end{equation}
+\end{quote}
 
 
+Again, this is describing the table present in 
+the\seclink{intro:genind}{genind object} where, instead of having the number of
+columns equal the number of loci, the number of columns equals the number of 
+observed alleles in the entire data set. So, if you had a data set with 5 loci
+that had 2 alleles each, your table would have ten columns. Of course, codominant
+loci like microsatellites have varying numbers of alleles. 
+
+
+\begin{quote}
 For the row $i$ and the modality $k$ of the variable $j$, notice the value
 
 \begin{equation}
-  a_{ij}^k\\ (1 \leq i \leq t,\\ 1 \leq j \leq \nu,\\ 1 \leq k \leq m(j))
+  a_{ijk}\\ (1 \leq i \leq t,\\ 1 \leq j \leq \nu,\\ 1 \leq k \leq m(j))
 \end{equation}
 
 the value of the initial table.
 
 \begin{equation}
-  a_{ij}^{\cdot}=\sum_{k=1}^{m(j)}a_{ij}^k 
+  a_{ij\cdot}=\sum_{k=1}^{m(j)}a_{ijk} 
 \end{equation}
 
 and 
 
 \begin{equation}
-  p_{ij}^k=\frac{a_{ij}^k}{a_{ij}^{\cdot}}
+  p_{ijk}=\frac{a_{ijk}}{a_{ij\cdot}}
 \end{equation}
+\end{quote}
 
+The above couple of equations are basically defining the allele frequency ($p_{ijk}$). 
+Remember that $i$ is individual, $j$ is locus, and $k$ is allele. The following
+continutes to describe properties of the table:
 
-Let \textbf{P} the table of general term $p_{ij}^k$
-
-
-The sum of all allele frequencies for a single population at a single locus is one.
 \begin{equation}
- p_{ij}^{\cdot}=\sum_{k=1}^{m(j)}p_{ij}^k=1
+ p_{ij\cdot}=\sum_{k=1}^{m(j)}p_{ijk}=1
 \end{equation}
+The sum of all allele frequencies for a single population (or individual) at a 
+single locus is one.
 
+\begin{equation}
+p_{i{\cdot}\cdot}=\sum_{j=1}^{\nu}p_{ij\cdot}=\nu
+\end{equation}
 The sum of all allele frequences over all loci is equal to the number of loci.
+ 
 \begin{equation}
-p_{i{\cdot}}^{\cdot}=\sum_{j=1}^{\nu}p_{ij}^{\cdot}=\nu
+p_{{\cdot}{\cdot}\cdot}=\sum_{j=1}^{\nu}p_{i{\cdot}\cdot}=t\nu
 \end{equation}
+The the sum of the entire table is the sum of all loci multiplied by the number 
+of populations (or individuals).
 
-The the sum of the entire table is the sum of all loci multiplied by the number of populations. 
-\begin{equation}
-p_{{\cdot}{\cdot}}^{\cdot}=\sum_{j=1}^{\nu}p_{i{\cdot}}^{\cdot}=t\nu
-\end{equation}
+
+%
+%-----------------------------------------------------------------------------%
+%
 
 \subsubsection{Non-Euclidean distances}
 \label{index:gendist:neu}
 Dissimilarity distance
 \label{distance:dissimilarity}
 
+One of the least known distances and yet more conceptually satisfying is
+Provesti's (Also spelled Prevosti) distance. It's conceptually satisfying
+because it can be thought of as a percentage of dissimilar sites between two
+individuals or populations or the absolute genetic distance. 
+It is implemented in two functions, \texttt{provesti.dist} and \texttt{diss.dist}. 
 
-Provesti distance
 \label{distance:provesti}
 \begin{equation}
-  D_5(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  |p_{aj}^k - p_{bj}^k|
+  D_{P}(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  |p_{ajk} - p_{bjk}|
 \end{equation}
+Note: for AFLP data, the $2$ is dropped. 
 
-
-Absolute Genetic distance
-
-... are all the same! Note that these two really are exactly the same. They are an extension of Bray-Curtis Dissimilarity.
 
 Nei's distance
 \label{distance:nei}
 \begin{equation}
   D_1(a,b)= -\ln(\frac{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  p_{aj}^k p_{bj}^k}{\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  {(p_{aj}^k) }^2}\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  {(p_{bj}^k)}^2}})
+  p_{ajk} p_{bjk}}{\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  {(p_{ajk}) }^2}\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  {(p_{bjk})}^2}})
 \end{equation}
-
-Is something different!
 
 \subsubsection{Euclidean distance}
 \label{index:gendist:eu}
@@ -2331,15 +2379,15 @@ Edward's Angular distance
 \label{distance:edward}
 \begin{equation}
   D_2(a,b)=\sqrt{1-\frac{1}{\nu} \sum_{k=1}^{\nu}
-  \sum_{j=1}^{m(k)} \sqrt{p_{aj}^k  p_{bj}^k}}
+  \sum_{j=1}^{m(k)} \sqrt{p_{ajk}  p_{bjk}}}
 \end{equation}
 
 Reynold's Coancestry distance
 \label{distance:reynold}
 \begin{equation}
   D_3(a,b)=\sqrt{\frac{\sum_{k=1}^{\nu}
-  \sum_{j=1}^{m(k)}{(p_{aj}^k - p_{bj}^k)}^2}{2 \sum_{k=1}^{\nu} (1-
-  \sum_{j=1}^{m(k)}p_{aj}^k p_{bj}^k)}}
+  \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}{2 \sum_{k=1}^{\nu} (1-
+  \sum_{j=1}^{m(k)}p_{ajk} p_{bjk})}}
 \end{equation}
 
 
@@ -2347,14 +2395,48 @@ Roger's distance
 \label{distance:roger}
 \begin{equation}
   D_4(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
-  \sum_{j=1}^{m(k)}{(p_{aj}^k - p_{bj}^k)}^2}
+  \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}
 \end{equation}
 
 \subsubsection{Bruvo's distance for microsatellites}
 \label{index:gendist:bruvo}
 
-This is based off of a specific model where it is necessary to specify the repeat lengths of the markers at each locus. Eg a repeat of $(CAT)^n$ would have a repeat length of 3. 
+This is based off of a specific model where it is necessary to specify the repeat
+lengths of the markers at each locus. Eg a repeat of $(CAT)^n$ would have a repeat
+length of 3. 
 \label{distance:bruvo}
+
+
+Comparing all distances (WIP)
+
+<<mantel>>=
+data(nancycats)
+nancy9 <- popsub(nancycats, 9)
+repeats <- rep(2, 9)
+pro_nan <- provesti.dist(nancy9)
+nei_nan <- nei.dist(nancy9)
+edw_nan <- edwards.dist(nancy9)
+rey_nan <- reynolds.dist(nancy9)
+rog_nan <- rogers.dist(nancy9)
+bru_nan <- bruvo.dist(nancy9, replen = repeats)
+distlist <- list(Provesti = pro_nan,
+                 Nei = nei_nan,
+                 Edwards = edw_nan,
+                 Reynolds = rey_nan,
+                 Rogers = rog_nan,
+                 Bruvo = bru_nan)
+combs <- combn(x = 1:length(distlist), m = 2)
+mtest <- apply(combs, 2, function(x) mantel.randtest(distlist[[x[1]]], distlist[[x[2]]])$obs)
+attr(mtest, "class") <- "dist"
+attr(mtest, "Size") <- 6
+attr(mtest, "Labels") <- names(distlist)
+mtest <- as.matrix(mtest)
+diag(mtest) <- 1
+library(reshape2)
+library(ggplot2)
+ggplot(melt(mtest)) + geom_tile(aes_string(x = "Var1", y = "Var2", fill = "value"))
+@
+
 
 \subsection{Give `em the boot(strap) \{bootstrap analysis\}}
 \label{index:boot}
