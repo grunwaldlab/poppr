@@ -3744,18 +3744,29 @@ between populations. \Poppr extends the implementation to individuals as well
 \centering
 \begin{tabular}{llll}
   \hline
- Method & Function & Euclidean \\ 
+ Method & Function & Assumption & Euclidean \\ 
   \hline
-\seclink{distance:dissimilarity}{Provesti} & \texttt{provesti.dist} & No \\
- & \texttt{diss.dist} & \\
-\seclink{distance:nei}{Nei} & \texttt{nei.dist} & No \\
-\seclink{distance:edwards}{Edwards} & \texttt{edward.dist} & Yes \\
-\seclink{distance:reynolds}{Reynolds} & \texttt{reynold.dist} & Yes \\
-\seclink{distance:rogers}{Rogers} & \texttt{rogers.dist} & Yes \\
-\seclink{distance:bruvo}{Bruvo} & \texttt{bruvo.dist} & No \\
+\seclink{distance:dissimilarity}{Provesti} & \texttt{provesti.dist} & - & No \\
+ & \texttt{diss.dist} & & \\
+\seclink{distance:nei}{Nei} & \texttt{nei.dist} & Infinite Alleles & No \\
+ & & Genetic Drift & \\
+\seclink{distance:edwards}{Edwards} & \texttt{edwards.dist} & Genetic Drift & Yes \\
+\seclink{distance:reynolds}{Reynolds} & \texttt{reynolds.dist} & Genetic Drift & Yes \\
+\seclink{distance:rogers}{Rogers} & \texttt{rogers.dist} & - & Yes \\
+\seclink{distance:bruvo}{Bruvo} & \texttt{bruvo.dist} & Stepwise Mutation & No \\
    \hline
 \end{tabular}
 \end{table}
+
+Note on these distances: It is valuable for the user to know which distance is
+appropriate for use within his/her system. All of these distances except for
+Bruvo's distance are based on allele frequencies. Bruvo's distance takes into
+account the value of the allele, and thus may be more appropriate for questions
+of finding clonal descendents as opposed to a distance that will estimate the
+number of mutations that occured. 
+
+Currently only Bruvo's distance and Provesti's distance perform as expected with
+polyploid data. The other distances appear to give spurious results.
 
 All of the distances are based on the table found in 
 a\seclink{intro:genind}{genind object.}I have translated the following from math
@@ -3859,14 +3870,14 @@ Nei's distance
 \label{index:gendist:eu}
 
 Edward's Angular distance
-\label{distance:edward}
+\label{distance:edwards}
 \begin{equation}
   D_2(a,b)=\sqrt{1-\frac{1}{\nu} \sum_{k=1}^{\nu}
   \sum_{j=1}^{m(k)} \sqrt{p_{ajk}  p_{bjk}}}
 \end{equation}
 
 Reynold's Coancestry distance
-\label{distance:reynold}
+\label{distance:reynolds}
 \begin{equation}
   D_3(a,b)=\sqrt{\frac{\sum_{k=1}^{\nu}
   \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}{2 \sum_{k=1}^{\nu} (1-
@@ -3875,7 +3886,7 @@ Reynold's Coancestry distance
 
 
 Roger's distance 
-\label{distance:roger}
+\label{distance:rogers}
 \begin{equation}
   D_4(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
   \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}
