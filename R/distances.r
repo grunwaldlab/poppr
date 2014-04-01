@@ -373,26 +373,26 @@ provesti.dist <- function(x){
 #' 
 #' set.seed(9999)
 #' # Generate a tree using nei's distance
-#' neinan <- anyboot(nan9, dist = nei.dist)
+#' neinan <- aboot(nan9, dist = nei.dist)
 #' 
 #' set.seed(9999)
 #' # Generate a tree using custom distance
 #' bindist <- function(x) dist(x$tab, method = "binary")
-#' binnan <- anyboot(nan9, dist = bindist)
+#' binnan <- aboot(nan9, dist = bindist)
 #' 
 #' \dontrun{
 #' # AFLP data
 #' data(Aeut)
 #' 
 #' # Nei's distance
-#' anei <- anyboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
+#' anei <- aboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 #' 
 #' # Rogers' distance
-#' arog <- anyboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
+#' arog <- aboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
 #' 
 #' }
 #==============================================================================#
-anyboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
+aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                      cutoff = 0, showtree = TRUE, missing = "mean", ...){
   if (is.genind(x)){
     x <- missingno(x, missing)
