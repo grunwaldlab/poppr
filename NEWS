@@ -23,6 +23,7 @@ NEW FUNCTIONS
 * `locus_table` will calculate diversity and evenness statistics over all loci in a genind or genclone object.
 * `*.dist` functions will calculate Nei's distance, Rogers' Distance, Edwards' Distance, Reynolds' Distance, and Provestis' Distance.
 * `aboot` will allow the user to create bootstrapped dendrograms for ANY distance that can be calculated on genind or genpop objects.
+* `plot_poppr_msn` will plot minimum spanning networks produced with poppr. 
 
 NEW CAR
 * Not really.
