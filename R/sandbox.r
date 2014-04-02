@@ -80,7 +80,7 @@ poppr_pair_ia <- function(pop){
   if(is.null(pop(pop))){
     return(pair_ia(pop))
   }
-  pops <- seppop(pop, drop = FALSE)
+  pops       <- seppop(pop, drop = FALSE)
   loci_pairs <- choose(nLoc(pop), 2)
   res_mat    <- matrix(0.5, 2, loci_pairs)
   pops_array <- vapply(pops, pair_ia, res_mat)
@@ -89,18 +89,15 @@ poppr_pair_ia <- function(pop){
 
 update_poppr_graph <- function(graphlist, palette){
   palette <- match.fun(palette)
-  lookup <- data.frame(old    = graphlist$colors, 
+  lookup  <- data.frame(old    = graphlist$colors, 
                        update = palette(length(graphlist$colors)), 
                        stringsAsFactors = FALSE)
   colorlist                    <- V(graphlist$graph)$pie.color
-  V(graphlist$graph)$pie.color <- update_color_list(colorlist, lookup)
+  V(graphlist$graph)$pie.color <- lapply(colorlist, update_colors, lookup)
   graphlist$colors             <- lookup[[2]]
   return(graphlist)
 }
 
-update_color_list <- function(colorlist, lookup){
-  return(lapply(colorlist, update_colors, lookup))
-}
 
 update_colors <- function(colorvec, lookup){
   x <- vapply(1:length(colorvec), update_single_color, "a", lookup, colorvec)
@@ -118,9 +115,9 @@ update_single_color <- function(x, lookup, colorvec){
 #bruvo.msn. This is in development. At the moment, it's purpose is to plot all 
 #of the individual names that are assigned to a node. 
 #
-# usage: plot_poppr_msn(gid, poppr_msn)
+# usage: plot_poppr_msn(x, poppr_msn)
 #
-# gid: a genind object
+# x: a genind object
 #
 # poppr_msn: the output from a poppr.msn or bruvo.msn function
 #
@@ -152,11 +149,16 @@ update_single_color <- function(x, lookup, colorvec){
 # vertex.label.font = 2)
 #==============================================================================#
 
-plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
+plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
                            gweight = 1, inds = "ALL", quantiles = TRUE, 
-                           nodelab = 2, cutoff = NULL, palette = NULL, ...){
-  if(!is.genind(gid)) stop(paste(gid, "is not a genind object."))
-  if(!identical(names(poppr_msn), c("graph", "populations", "colors"))) stop("graph not compatible")
+                           nodelab = 2, cutoff = NULL, palette = NULL,
+                           layfun = igraph::layout.auto, ...){
+  if (!is.genind(x)){
+    stop(paste(substitute(x), "is not a genind or genclone object."))
+  }
+  if (!identical(names(poppr_msn), c("graph", "populations", "colors"))){
+    stop("graph not compatible")
+  }
   if (!is.null(palette)){
     poppr_msn <- update_poppr_graph(poppr_msn, palette)
   }
@@ -166,9 +168,13 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   # `E<-`             <- match.fun(igraph::`E<-`)
   # V                 <- match.fun(igraph::V)
   # plot.igraph       <- match.fun(igraph::plot.igraph)
+  if (!is.null(layfun)){
+    LAYFUN <- match.fun(layfun)
+    lay <- LAYFUN(poppr_msn$graph)
+  }
   delete.edges      <- match.fun(igraph::delete.edges)
-  edge_below_cutoff <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
-  poppr_msn$graph   <- delete.edges(poppr_msn$graph, edge_below_cutoff)
+  edge_above_cutoff <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
+  poppr_msn$graph   <- delete.edges(poppr_msn$graph, edge_above_cutoff)
   # Adjusting color scales. This will replace any previous scaling contained in
   # poppr_msn.
   weights <- E(poppr_msn$graph)$weight
@@ -180,26 +186,27 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   
   # Highlighting only the names of the submitted genotypes and the matching
   # isolates.
-  gid.mlg <- mlg.vector(gid)
-  labs <- unique(gid.mlg)
+  x.mlg <- mlg.vector(x)
+  labs <- unique(x.mlg)
   # The labels in the graph are organized by MLG, so we will use that to extract
   # the names we need.
   if (length(inds) == 1 & toupper(inds[1]) == "ALL"){
-    gid.input <- unique(gid.mlg)
+    x.input <- unique(x.mlg)
   } else {
-    gid.input <- unique(gid.mlg[gid@ind.names %in% inds])
+    x.input <- unique(x.mlg[x@ind.names %in% inds])
   }
-  # Combine all the names that match with each particular MLG in gid.input.
-  combined_names <- vapply(gid.input, function(x)
-    paste(rev(gid@ind.names[gid.mlg == x]),
-          collapse = "\n"),
-    " ")
+  # Combine all the names that match with each particular MLG in x.input.
+  combined_names <- vapply(x.input, function(mlgname)
+                           paste(rev(x@ind.names[x.mlg == mlgname]),
+                                 collapse = "\n"),
+                           character(1))
   # Remove labels that are not specified.
-  labs[which(!labs %in% gid.input)] <- NA
+  labs[which(!labs %in% x.input)] <- NA
   labs[!is.na(labs)] <- combined_names
-  if (all(is.na(labs))){
-    labs <- V(poppr_msn$graph)$size
-    labs <- ifelse(labs >= nodelab, labs, NA)
+  if (any(is.na(labs))){
+    sizelabs <- V(poppr_msn$graph)$size
+    sizelabs <- ifelse(sizelabs >= nodelab, sizelabs, NA)
+    labs     <- ifelse(is.na(labs), sizelabs, labs)
   }
   # Change the size of the vertices to a log scale.
   vsize <- log(V(poppr_msn$graph)$size, base = 1.15) + 3
@@ -215,9 +222,9 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   
   ## LEGEND
   par(mar = c(0, 0, 1, 0) + 0.5)
-  too_many_pops <- as.integer(ceiling(length(gid$pop.names)/30))
+  too_many_pops   <- as.integer(ceiling(length(x$pop.names)/30))
   pops_correction <- ifelse(too_many_pops > 1, -1, 1)
-  yintersperse <- ifelse(too_many_pops > 1, 0.51, 0.62)
+  yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
   plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
        main = 'POPULATION')
   legend("topleft", bty = "n", cex = 1.2^pops_correction,
@@ -226,7 +233,8 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   
   ## PLOT
   par(mar = c(0,0,0,0))
-  plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, ...)
+  plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
+              layout = lay, ...)
   
   ## SCALE BAR
   if (quantiles){
@@ -239,7 +247,7 @@ plot_poppr_msn <- function(gid, poppr_msn, gadj = 3, glim = c(0, 0.8),
   par(mar = c(0, 1, 0, 1) + 0.5)
   plot.new()
   rasterImage(legend_image, 0, 0.5, 1, 1)
-  polygon(c(0, 1 , 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+  polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
   axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
   text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
   
