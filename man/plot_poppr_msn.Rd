@@ -116,7 +116,7 @@ plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, cutoff = 0.2)
 # Showing clusters of MLGS with at most 5\% variation
 # Notice that the Mt. Vernon population appears to be more clonal.
 set.seed(50)
-plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57", layout = NULL)
+plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57", layfun = NULL)
 
 
 \dontrun{

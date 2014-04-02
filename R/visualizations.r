@@ -782,17 +782,17 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' amsn <- poppr.msn(Aeut, diss.dist(Aeut), showplot = FALSE)
 #' 
 #' # Default
-#' set.seed(50)
+#' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, gadj = 15)
 #' 
 #' # Removing link between populations and labelling no individuals
-#' set.seed(50)
+#' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, cutoff = 0.2)
 #' 
 #' # Showing clusters of MLGS with at most 5% variation
 #' # Notice that the Mt. Vernon population appears to be more clonal.
 #' set.seed(50) 
-#' plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57", layout = NULL)
+#' plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57", layfun = NULL)
 #' 
 #' 
 #' \dontrun{
@@ -815,17 +815,11 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
   if (!is.null(palette)){
     poppr_msn <- update_poppr_graph(poppr_msn, palette)
   }
-  # Importing functions from igraph. This can be deleted when implemented in
-  # poppr.
-  # E                 <- match.fun(igraph::E)
-  # `E<-`             <- match.fun(igraph::`E<-`)
-  # V                 <- match.fun(igraph::V)
-  # plot.igraph       <- match.fun(igraph::plot.igraph)
   if (!is.null(layfun)){
     LAYFUN <- match.fun(layfun)
     lay <- LAYFUN(poppr_msn$graph)
   } else {
-    lay <- NULL
+    lay <- layout.auto
   }
   # delete.edges      <- match.fun(igraph::delete.edges)
   edge_above_cutoff <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]

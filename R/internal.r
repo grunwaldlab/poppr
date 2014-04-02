@@ -1589,3 +1589,54 @@ make_attributes <- function(d, nlig, labs, method, matched_call){
   class(d) <- "dist"
   return(d)
 }
+
+#==============================================================================#
+# Function used to update colors in poppr msn 
+#
+# Public functions utilizing this function:
+# plot_poppr_msn
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+update_poppr_graph <- function(graphlist, palette){
+  palette <- match.fun(palette)
+  lookup  <- data.frame(old    = graphlist$colors, 
+                       update = palette(length(graphlist$colors)), 
+                       stringsAsFactors = FALSE)
+  colorlist                    <- V(graphlist$graph)$pie.color
+  V(graphlist$graph)$pie.color <- lapply(colorlist, update_colors, lookup)
+  graphlist$colors             <- lookup[[2]]
+  return(graphlist)
+}
+
+#==============================================================================#
+# Function used to update colors in poppr msn 
+#
+# Public functions utilizing this function:
+# none
+#
+# Private functions utilizing this function:
+# # update_poppr_graph
+#==============================================================================#
+update_colors <- function(colorvec, lookup){
+  x <- vapply(1:length(colorvec), update_single_color, "a", lookup, colorvec)
+  return(x)
+}
+#==============================================================================#
+# Function used to update colors in poppr msn 
+#
+# Public functions utilizing this function:
+# none
+#
+# Private functions utilizing this function:
+# # update_colors
+#==============================================================================#
+update_single_color <- function(x, lookup, colorvec){
+  update   <- lookup[[2]]
+  original <- lookup[[1]]
+  return(update[original %in% colorvec[x]])
+}
+
+
+
