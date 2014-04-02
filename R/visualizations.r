@@ -824,6 +824,8 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
   if (!is.null(layfun)){
     LAYFUN <- match.fun(layfun)
     lay <- LAYFUN(poppr_msn$graph)
+  } else {
+    lay <- NULL
   }
   # delete.edges      <- match.fun(igraph::delete.edges)
   edge_above_cutoff <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
