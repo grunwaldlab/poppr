@@ -898,6 +898,25 @@ rerange <- function(x){
 }
 
 #==============================================================================#
+# This will scale the edge widths
+#
+# Public functions utilizing this function:
+# poppr.msn
+# 
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+
+make_edge_width <- function(mst){
+  edgewidth <- rerange(E(mst)$weight)
+  if (any(edgewidth < 0.08)){
+    edgewidth <- edgewidth + 0.08
+  } 
+  return(1/edgewidth)
+}
+
+
+#==============================================================================#
 # This will adjust the grey scale with respect to the edge weights for igraph.
 # This is needed because the length of the edges do not correspond to weights.
 # If show is set to TRUE, it will show a graph giving the equation used for con-

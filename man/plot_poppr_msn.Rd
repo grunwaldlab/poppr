@@ -4,7 +4,7 @@
 \usage{
 plot_poppr_msn(x, poppr_msn, gadj = 3, glim = c(0, 0.8), gweight = 1,
   inds = "ALL", quantiles = TRUE, nodelab = 2, cutoff = NULL,
-  palette = NULL, layfun = layout.auto, ...)
+  palette = NULL, layfun = layout.auto, beforecut = FALSE, ...)
 }
 \arguments{
   \item{x}{a \code{\linkS4class{genind}} or
@@ -43,6 +43,11 @@ plot_poppr_msn(x, poppr_msn, gadj = 3, glim = c(0, 0.8), gweight = 1,
   in your graph. It defaults to
   \code{\link[igraph]{layout.auto}}.}
 
+  \item{beforecut}{if \code{TRUE}, the layout of the graph
+  will be computed before any edges are removed with
+  \code{cutoff}. If \code{FALSE} (Default), the layout will
+  be computed after any edges are removed.}
+
   \item{...}{any other parameters to be passed on to
   \code{\link[igraph]{plot.igraph}}.}
 
@@ -75,7 +80,12 @@ populations, but did not provide a scale bar and it did not
 provide the user a simple way of manipulating the layout or
 labels. This function allows the user to manipulate many
 facets of graph creation, making the creation of minimum
-spanning networks ever so slightly more user friendly.
+spanning networks ever so slightly more user friendly. Note
+that this function will only plot individual names, not MLG
+names since the naming convention for those are arbitrary.
+This will also not give the user the option to remove the
+shading or widths of the edges as they are informative to
+the distance.
 
 This function must have both the source data and the output
 msn to work.  The source data must also have the same
@@ -96,9 +106,10 @@ nodes, simply set this to a very high number. \item
 investigate groups of multilocus genotypes separated by a
 specific distance or if you have two distinct populations
 and you want to physically separate them in your network.
-\item \code{layfun} This will set the layout BEFORE the
-cutoff is set, if you want the layout to be set after the
-cutoff, simply set this value to NULL.}
+\item \code{beforecut} This is an indicator useful if you
+want to maintain the same position of the nodes before and
+after removing edges with the \code{cutoff} argument. This
+works best if you set a seed before you run the function.}
 }
 \examples{
 # Using a data set of the Aphanomyces eutieches root rot pathogen.
@@ -106,23 +117,32 @@ data(Aeut)
 amsn <- poppr.msn(Aeut, diss.dist(Aeut), showplot = FALSE)
 
 # Default
-set.seed(50)
-plot_poppr_msn(Aeut, amsn, gadj = 15)
+library(igraph) # To get all the layouts.
+set.seed(500)
+plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 
 # Removing link between populations and labelling no individuals
-set.seed(50)
-plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, cutoff = 0.2)
+set.seed(500)
+plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
 
+# Labelling individual #57 because it is an MLG that crosses popualtions
 # Showing clusters of MLGS with at most 5\% variation
-# Notice that the Mt. Vernon population appears to be more clonal.
+# Notice that the Mt. Vernon population appears to be more clonal
 set.seed(50)
-plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57", layfun = NULL)
+plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57")
 
 
 \dontrun{
 data(partial_clone)
 pcmsn <- bruvo.msn(partial_clone, replen = rep(1, 10))
 plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "sim 20")
+
+# Something pretty
+data(microbov)
+micmsn <- poppr.msn(microbov, diss.dist(microbov), showplot = FALSE)
+
+plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", quantiles = FALSE)
+plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", cutoff = 0.3, quantiles = FALSE)
 }
 }
 \author{

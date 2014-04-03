@@ -437,11 +437,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
   edgewidth <- 2
   if (wscale==TRUE){
-    edgewidth <- rerange(E(mst)$weight)
-    if (any(edgewidth < 0.08)){
-      edgewidth <- edgewidth + 0.08
-    } 
-    edgewidth <- 1/edgewidth
+    edgewidth <- make_edge_width(mst)
   }
   
   # This creates a list of colors corresponding to populations.
@@ -738,36 +734,46 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   you want to use to delimit your populations. The default is whatever
 #'   palette was used to produce the original graph.
 #'   
-#' @param layfun a function specifying the layout of nodes in your graph. It
+#' @param layfun a function specifying the layout of nodes in your graph. It 
 #'   defaults to \code{\link[igraph]{layout.auto}}.
+#'   
+#' @param beforecut if \code{TRUE}, the layout of the graph will be computed
+#'   before any edges are removed with \code{cutoff}. If \code{FALSE} (Default),
+#'   the layout will be computed after any edges are removed.
 #'   
 #' @param ... any other parameters to be passed on to
 #'   \code{\link[igraph]{plot.igraph}}.
 #'   
 #' @details The previous incarnation of msn plotting in poppr simply plotted the
-#'   minimum spanning network with the legend of populations, but did not
-#'   provide a scale bar and it did not provide the user a simple way of
-#'   manipulating the layout or labels. This function allows the user to
-#'   manipulate many facets of graph creation, making the creation of minimum
-#'   spanning networks ever so slightly more user friendly.
+#'   minimum spanning network with the legend of populations, but did not 
+#'   provide a scale bar and it did not provide the user a simple way of 
+#'   manipulating the layout or labels. This function allows the user to 
+#'   manipulate many facets of graph creation, making the creation of minimum 
+#'   spanning networks ever so slightly more user friendly. Note that this
+#'   function will only plot individual names, not MLG names since the naming
+#'   convention for those are arbitrary. This will also not give the user the
+#'   option to remove the shading or widths of the edges as they are informative
+#'   to the distance.
 #'   
-#'   This function must have both the source data and the output msn to work.
-#'   The source data must also have the same population structure as the graph.
+#'   This function must have both the source data and the output msn to work. 
+#'   The source data must also have the same population structure as the graph. 
 #'   Every other parameter has a default setting.
 #'   
-#'   Parameter details: \itemize{ \item \code{inds} This will take in the name
+#'   Parameter details: \itemize{ \item \code{inds} This will take in the name 
 #'   of a query individual in your data set and will use that to query any other
-#'   individuals that share multilocus genotypes and label their node on the
-#'   graph. The default is to label all the nodes, but you can set it to a name
-#'   that doesn't exist to label none of the nodes. \item \code{nodelab} If a
-#'   node is not labeled by individual, this will label the size of the nodes
+#'   individuals that share multilocus genotypes and label their node on the 
+#'   graph. The default is to label all the nodes, but you can set it to a name 
+#'   that doesn't exist to label none of the nodes. \item \code{nodelab} If a 
+#'   node is not labeled by individual, this will label the size of the nodes 
 #'   greater than or equal to this value. If you don't want to label the size of
-#'   the nodes, simply set this to a very high number. \item \code{cutoff} This
-#'   is useful for when you want to investigate groups of multilocus genotypes
-#'   separated by a specific distance or if you have two distinct populations
-#'   and you want to physically separate them in your network. \item
-#'   \code{layfun} This will set the layout BEFORE the cutoff is set, if you
-#'   want the layout to be set after the cutoff, simply set this value to NULL.}
+#'   the nodes, simply set this to a very high number. \item \code{cutoff} This 
+#'   is useful for when you want to investigate groups of multilocus genotypes 
+#'   separated by a specific distance or if you have two distinct populations 
+#'   and you want to physically separate them in your network. \item 
+#'   \code{beforecut} This is an indicator useful if you want to maintain the 
+#'   same position of the nodes before and after removing edges with the
+#'   \code{cutoff} argument. This works best if you set a seed before you run
+#'   the function.}
 #' 
 #' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 #' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
@@ -782,30 +788,39 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' amsn <- poppr.msn(Aeut, diss.dist(Aeut), showplot = FALSE)
 #' 
 #' # Default
+#' library(igraph) # To get all the layouts.
 #' set.seed(500)
-#' plot_poppr_msn(Aeut, amsn, gadj = 15)
+#' plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 #' 
 #' # Removing link between populations and labelling no individuals
 #' set.seed(500)
-#' plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, cutoff = 0.2)
+#' plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
 #' 
+#' # Labelling individual #57 because it is an MLG that crosses popualtions
 #' # Showing clusters of MLGS with at most 5% variation
-#' # Notice that the Mt. Vernon population appears to be more clonal.
+#' # Notice that the Mt. Vernon population appears to be more clonal
 #' set.seed(50) 
-#' plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57", layfun = NULL)
+#' plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57")
 #' 
 #' 
 #' \dontrun{
 #' data(partial_clone)
 #' pcmsn <- bruvo.msn(partial_clone, replen = rep(1, 10))
 #' plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "sim 20")
+#' 
+#' # Something pretty
+#' data(microbov)
+#' micmsn <- poppr.msn(microbov, diss.dist(microbov), showplot = FALSE)
+#' 
+#' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", quantiles = FALSE)
+#' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", cutoff = 0.3, quantiles = FALSE)
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
 plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
                            gweight = 1, inds = "ALL", quantiles = TRUE, 
                            nodelab = 2, cutoff = NULL, palette = NULL,
-                           layfun = layout.auto, ...){
+                           layfun = layout.auto, beforecut = FALSE, ...){
   if (!is.genind(x)){
     stop(paste(substitute(x), "is not a genind or genclone object."))
   }
@@ -815,11 +830,11 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
   if (!is.null(palette)){
     poppr_msn <- update_poppr_graph(poppr_msn, palette)
   }
-  if (!is.null(layfun)){
+  if (beforecut){
     LAYFUN <- match.fun(layfun)
     lay <- LAYFUN(poppr_msn$graph)
   } else {
-    lay <- layout.auto
+    lay <- match.fun(layfun)
   }
   # delete.edges      <- match.fun(igraph::delete.edges)
   edge_above_cutoff <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
@@ -862,9 +877,9 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
   
   # Plotting parameters.
   def.par <- par(no.readonly = TRUE)
-  # Setting up the matrix for plotting. Three vertical panels with a 1:3:1
-  # ratio with legend:plot:greyscale
-  #layout(matrix(1:3, ncol = 3), widths = c(1, 3, 0.5))
+  # Setting up the matrix for plotting. One Vertical panel of width 1 and height
+  # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
+  # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
   layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
          widths = c(1, 4), heights= c(4.5, 0.5))
   # mar = bottom left top right

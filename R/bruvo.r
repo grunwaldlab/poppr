@@ -451,11 +451,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   
   edgewidth <- 2
   if (wscale==TRUE){
-    edgewidth <- rerange(E(mst)$weight)
-    if (any(edgewidth < 0.08)){
-      edgewidth <- edgewidth + 0.08
-    } 
-    edgewidth <- 1/edgewidth
+    edgewidth <- make_edge_width(mst)
   }
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
