@@ -812,8 +812,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' data(microbov)
 #' micmsn <- poppr.msn(microbov, diss.dist(microbov), showplot = FALSE)
 #' 
-#' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", quantiles = FALSE)
-#' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", cutoff = 0.3, quantiles = FALSE)
+#' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", quantiles = FALSE)
+#' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", cutoff = 0.3, quantiles = FALSE)
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
