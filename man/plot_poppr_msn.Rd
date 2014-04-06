@@ -141,8 +141,10 @@ plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "sim 20")
 data(microbov)
 micmsn <- poppr.msn(microbov, diss.dist(microbov), showplot = FALSE)
 
-plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", quantiles = FALSE)
-plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", cutoff = 0.3, quantiles = FALSE)
+plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
+  quantiles = FALSE)
+plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
+  cutoff = 0.3, quantiles = FALSE)
 }
 }
 \author{
