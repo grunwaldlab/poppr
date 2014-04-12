@@ -538,7 +538,7 @@ old.mlg.matrix <- function(x){
 	# Next is to create a vector containing all of the variances of d (there
 	# will be one for each locus)
 	vard.vector <- ((V$d2.vector-((V$d.vector^2)/np))/np)
-	vardpair.vector <- .Call("pairwise_covar", vard.vector)
+	vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
 	# The sum of the variances necessary for the calculation of Ia is calculated
 	sigVarj <- sum(vard.vector)
 	rm(vard.vector)
@@ -800,7 +800,7 @@ pairwisematrix <- function(pop, np){
   V               <- pair_diffs(pop, numLoci, np)
   varD            <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
   vard.vector     <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
-  vardpair.vector <- .Call("pairwise_covar", vard.vector)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
   sigVarj         <- sum(vard.vector)
   rm(vard.vector)
   Ia              <- (varD/sigVarj) - 1
@@ -823,7 +823,7 @@ pair_diffs <- function(pop, numLoci, np)
 {
   ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), 
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab, PACKAGE = "poppr")*(ploid/2), 
                           temp.d.vector[, 1])
   d.vector  <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
@@ -867,8 +867,8 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
   # Dividing each column by the repeat length and changing the values to integers.
   ssr.matrix <- apply(ssr.matrix / rep(replen, each=ploid*nrow(ssr.matrix)), 2, round)
   ssr.matrix <- apply(ssr.matrix, 2, as.integer)
-  perms <- .Call("permuto", ploid)
-  distmat <- .Call("bruvo_distance", ssr.matrix, perms, ploid, add, loss)
+  perms <- .Call("permuto", ploid, PACKAGE = "poppr")
+  distmat <- .Call("bruvo_distance", ssr.matrix, perms, ploid, add, loss, PACKAGE = "poppr")
   distmat[distmat == 100] <- NA
   avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
   # presenting the information in a lower triangle distance matrix.
@@ -1162,9 +1162,9 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss
   x <- x / rep(replen, each=ploid*nrow(x))
   x <- matrix(as.integer(round(x)), ncol=ncol(x))
   # Getting the permutation vector.
-  perms <- .Call("permuto", ploid)
+  perms <- .Call("permuto", ploid, PACKAGE = "poppr")
   # Calculating bruvo's distance over each locus. 
-  distmat <- .Call("bruvo_distance", x, perms, ploid, add, loss)
+  distmat <- .Call("bruvo_distance", x, perms, ploid, add, loss, PACKAGE = "poppr")
   # If there are missing values, the distance returns 100, which means that the
   # comparison is not made. These are changed to NA.
   distmat[distmat == 100] <- NA

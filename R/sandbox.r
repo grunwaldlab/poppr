@@ -355,7 +355,7 @@ new.poppr.all <- function(filelist, ...) {
   V <- new.pair_diffs(pop, numLoci, np)
   varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
   vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
-  vardpair.vector <- .Call("pairwise_covar", vard.vector)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
   sigVarj <- sum(vard.vector)
   rm(vard.vector)
   Ia <- (varD/sigVarj) - 1
@@ -378,7 +378,7 @@ new.pair_diffs <- function(pop, numLoci, np)
 {
   ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), numeric(np))
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab, PACKAGE = "poppr")*(ploid/2), numeric(np))
   return(temp.d.vector)
   d.vector <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
@@ -511,7 +511,7 @@ jack.Ia.Rd <- function (pop){
 jack.calc <- function(V, np){
   varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
   vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
-  vardpair.vector <- .Call("pairwise_covar", vard.vector)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
   sigVarj <- sum(vard.vector)
   rm(vard.vector)
   Ia <- (varD/sigVarj) - 1
@@ -534,7 +534,7 @@ jack.pair_diffs <- function(pop, numLoci, np)
   } 
   else {
     ploid <- ploidy(pop[[1]])
-    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), 
+    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab, PACKAGE = "poppr")*(ploid/2), 
                             temp.d.vector[, 1])
   }
   return(temp.d.vector)
