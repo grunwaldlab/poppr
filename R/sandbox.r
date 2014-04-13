@@ -58,6 +58,32 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
   return(x)
 }
 
+# A function designed to remove padding zeroes from genind objects. This is
+# necessary to calculate frequency-based statistics. The zeroes paradigm is
+# still useful for calculation of the index of association and Bruvo's distance
+recode_polyploids <- function(poly, newploidy = poly@ploidy){
+  MAT <- truenames(poly)$tab
+  fac <- poly@loc.fac
+  zerocols <- !duplicated(fac)
+  newfac <- fac[!zerocols]
+  loci <- lapply(split(MAT, fac[col(MAT)]), matrix, nrow = nInd(poly))
+  loci <- lapply(loci, "[", , -1)
+  loci <- lapply(loci, function(mat) t(apply(mat, 1, function(x) x/sum(x))))
+  #return(loci)
+  newMAT <- matrix(nrow = nInd(poly), ncol = length(newfac))
+  newMAT[] <- unlist(loci)
+  colnames(newMAT) <- colnames(MAT)[!zerocols]
+  rownames(newMAT) <- rownames(MAT)
+  newgen <- genind(newMAT, pop = pop(poly), ploidy = ploidy(poly), type = poly@type)
+  newgen@other <- poly@other
+  if (is.genclone(poly)){
+    newgen <- new('genclone', newgen, poly@hierarchy, poly@mlg)
+  }
+  return(newgen)
+}
+
+
+
 
 pair_ia <- function(pop){
 
