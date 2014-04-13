@@ -82,7 +82,18 @@ recode_polyploids <- function(poly, newploidy = poly@ploidy){
   return(newgen)
 }
 
-
+gen2polysat <- function(gen, newploidy = gen@ploidy){
+  if (!require(polysat)){
+    stop("User needs polysat installed")
+  }
+  gen <- recode_polyploids(gen, newploidy)
+  gendf <- genind2df(gen, sep = "/", usepop = FALSE)
+  gendf <- lapply(gendf, strsplit, "/")
+  gendf <- lapply(gendf, lapply, as.numeric)
+  ambig <- new("genambig", samples = indNames(gen), loci = locNames(gen))
+  lapply(names(gendf), function(x) Genotypes(ambig, loci = x) <<- gendf[[x]])
+  return(ambig)
+}
 
 
 pair_ia <- function(pop){
