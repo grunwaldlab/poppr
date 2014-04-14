@@ -342,6 +342,9 @@ provesti.dist <- function(x){
 #'   
 #' @param missing any method to be used by \code{\link{missingno}}: "mean"
 #'   (default), "zero", "loci", "genotype", or "ignore".
+#'
+#' @param quiet if \code{FALSE} (Default), a progress bar will be printed to 
+#' screen. 
 #'   
 #' @param ... any parameters to be passed off to the distance method.
 #'   
@@ -393,7 +396,8 @@ provesti.dist <- function(x){
 #' }
 #==============================================================================#
 aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
-                     cutoff = 0, showtree = TRUE, missing = "mean", ...){
+                     cutoff = 0, showtree = TRUE, missing = "mean", quiet = FALSE,
+                     ...){
   if (is.genind(x)){
     x <- missingno(x, missing)
   }
@@ -416,7 +420,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
     xtree <- fix_negative_branch(xtree)
   }
   root     <- ifelse(treearg == "nj", FALSE, TRUE)
-  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root)
+  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root, quiet = quiet)
   nodelabs <- (nodelabs/sample)*100
   nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
   if (is.genind(x)){

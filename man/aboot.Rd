@@ -4,7 +4,7 @@
 to genind or genclone objects.}
 \usage{
 aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
-  cutoff = 0, showtree = TRUE, missing = "mean", ...)
+  cutoff = 0, showtree = TRUE, missing = "mean", quiet = FALSE, ...)
 }
 \arguments{
   \item{x}{a \linkS4class{genind}, \linkS4class{genclone},
@@ -32,6 +32,9 @@ aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
   \item{missing}{any method to be used by
   \code{\link{missingno}}: "mean" (default), "zero",
   "loci", "genotype", or "ignore".}
+
+  \item{quiet}{if \code{FALSE} (Default), a progress bar
+  will be printed to screen.}
 
   \item{...}{any parameters to be passed off to the
   distance method.}
