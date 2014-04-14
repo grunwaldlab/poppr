@@ -67,14 +67,17 @@ recode_polyploids <- function(poly, newploidy = poly@ploidy){
   zerocols <- !duplicated(fac)
   newfac <- fac[!zerocols]
   loci <- lapply(split(MAT, fac[col(MAT)]), matrix, nrow = nInd(poly))
-  loci <- lapply(loci, "[", , -1)
+  loci <- lapply(1:length(loci), function(x){
+    locus <- loci[[x]]
+    alleles <- as.numeric(poly@all.names[[x]])
+    return(locus[, alleles > 0])
+  })
   loci <- lapply(loci, function(mat) t(apply(mat, 1, function(x) x/sum(x))))
-  #return(loci)
   newMAT <- matrix(nrow = nInd(poly), ncol = length(newfac))
   newMAT[] <- unlist(loci)
   colnames(newMAT) <- colnames(MAT)[!zerocols]
   rownames(newMAT) <- rownames(MAT)
-  newgen <- genind(newMAT, pop = pop(poly), ploidy = ploidy(poly), type = poly@type)
+  newgen <- genind(newMAT, pop = pop(poly), ploidy = newploidy, type = poly@type)
   newgen@other <- poly@other
   if (is.genclone(poly)){
     newgen <- new('genclone', newgen, poly@hierarchy, poly@mlg)
@@ -86,7 +89,7 @@ gen2polysat <- function(gen, newploidy = gen@ploidy){
   if (!require(polysat)){
     stop("User needs polysat installed")
   }
-  gen <- recode_polyploids(gen, newploidy)
+  gen   <- recode_polyploids(gen, newploidy)
   gendf <- genind2df(gen, sep = "/", usepop = FALSE)
   gendf <- lapply(gendf, strsplit, "/")
   gendf <- lapply(gendf, lapply, as.numeric)
