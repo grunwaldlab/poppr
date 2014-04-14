@@ -99,6 +99,17 @@ gen2polysat <- function(gen, newploidy = gen@ploidy){
 }
 
 
+new_graph_pops <- function(graph, dat, color){
+  cmlg       <- unique(mlg.vector(dat))
+  mlg.cp     <- mlg.crosspop(dat, mlgsub = 1:length(cmlg), quiet = TRUE)
+  mlg.cp     <- mlg.cp[rank(cmlg)]
+  mlg.color  <- lapply(mlg.cp, function(x) color[dat@pop.names %in% names(x)])
+  V(graph)$pie <- mlg.cp
+  V(graph)$pie.color <- mlg.color
+  return(graph)
+}
+
+
 pair_ia <- function(pop){
 
   if(pop@type == "codom"){
