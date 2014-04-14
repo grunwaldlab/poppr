@@ -110,6 +110,25 @@ new_graph_pops <- function(graph, dat, color){
 }
 
 
+test_microsat <- function(x){
+  allnames <- unlist(lapply(x@all.names, as.numeric))
+  if (any(is.na(allnames))){
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
+
+test_zeroes <- function(x){
+  if (test_microsat(x)){
+    allnames <- unlist(lapply(x@all.names, as.numeric))
+    if (any(allnames == 0)){
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
 pair_ia <- function(pop){
 
   if(pop@type == "codom"){
