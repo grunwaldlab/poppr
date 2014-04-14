@@ -1044,8 +1044,12 @@ Nice!
 Let's see what happens when we want to try to set our population year collected
 with respect to country.
 
-<<Pinf_error>>=
+<<Pinf_error, eval = FALSE>>=
 setpop(Pinf) <- ~Country/Year
+@
+
+<<Pinf_error_show, message = TRUE, echo = F>>=
+cat("Error in setpop(x, value) :", poppr:::hier_incompatible_warning(c("Country", "Year"), data.frame(list(Continent = 1, Country = 2))))
 @
 \noindent
 This didn't work because we don't have Year defined within our hierarchy. In 
@@ -3069,7 +3073,7 @@ details on how to access hierarchies.\\
 
 These functions all have a syntax that looks like this:
 <<hier_syntax, eval = FALSE>>=
-newobject <- function(object, input)
+newobject <- FUNCTION(object, input)
 @
 Let's take a data set of \textit{Phytophthora infestans} collected from North
 America and South America and use that as an example. It has two population 
@@ -3094,7 +3098,7 @@ Of course, it would be silly to create a new data set every time we wanted to
 do something like change names. This is why all of the above functions (with the
 exception of \texttt{gethierarchy}) all have the replacement syntax of:
 <<hier_syntax_replace, eval = FALSE>>=
-function(object) <- input
+FUNCTION(object) <- input
 @
 \noindent
 \textbf{NOTE: This is the preferred syntax}.\\ 
