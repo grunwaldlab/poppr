@@ -151,7 +151,7 @@ setMethod(
     slot(.Object, "loc.names") <- slot(gen, "loc.names") 
     slot(.Object, "loc.nall")  <- num_alleles  
     slot(.Object, "all.names") <- slot(gen, "all.names") 
-    slot(.Object, "alllist")   <- .Call("expand_indices", cumsum(num_alleles), num_loci)
+    slot(.Object, "alllist")   <- .Call("expand_indices", cumsum(num_alleles), num_loci, PACKAGE = "poppr")
     slot(.Object, "names")     <- objnames
     slot(.Object, "type")      <- slot(gen, "type")
     slot(.Object, "ploidy")    <- as.integer(slot(gen, "ploidy"))

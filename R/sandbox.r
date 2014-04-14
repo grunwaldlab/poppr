@@ -58,6 +58,43 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
   return(x)
 }
 
+# A function designed to remove padding zeroes from genind objects. This is
+# necessary to calculate frequency-based statistics. The zeroes paradigm is
+# still useful for calculation of the index of association and Bruvo's distance
+recode_polyploids <- function(poly, newploidy = poly@ploidy){
+  MAT <- truenames(poly)$tab
+  fac <- poly@loc.fac
+  zerocols <- !duplicated(fac)
+  newfac <- fac[!zerocols]
+  loci <- lapply(split(MAT, fac[col(MAT)]), matrix, nrow = nInd(poly))
+  loci <- lapply(loci, "[", , -1)
+  loci <- lapply(loci, function(mat) t(apply(mat, 1, function(x) x/sum(x))))
+  #return(loci)
+  newMAT <- matrix(nrow = nInd(poly), ncol = length(newfac))
+  newMAT[] <- unlist(loci)
+  colnames(newMAT) <- colnames(MAT)[!zerocols]
+  rownames(newMAT) <- rownames(MAT)
+  newgen <- genind(newMAT, pop = pop(poly), ploidy = ploidy(poly), type = poly@type)
+  newgen@other <- poly@other
+  if (is.genclone(poly)){
+    newgen <- new('genclone', newgen, poly@hierarchy, poly@mlg)
+  }
+  return(newgen)
+}
+
+gen2polysat <- function(gen, newploidy = gen@ploidy){
+  if (!require(polysat)){
+    stop("User needs polysat installed")
+  }
+  gen <- recode_polyploids(gen, newploidy)
+  gendf <- genind2df(gen, sep = "/", usepop = FALSE)
+  gendf <- lapply(gendf, strsplit, "/")
+  gendf <- lapply(gendf, lapply, as.numeric)
+  ambig <- new("genambig", samples = indNames(gen), loci = locNames(gen))
+  lapply(names(gendf), function(x) Genotypes(ambig, loci = x) <<- gendf[[x]])
+  return(ambig)
+}
+
 
 pair_ia <- function(pop){
 
@@ -355,7 +392,7 @@ new.poppr.all <- function(filelist, ...) {
   V <- new.pair_diffs(pop, numLoci, np)
   varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
   vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
-  vardpair.vector <- .Call("pairwise_covar", vard.vector)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
   sigVarj <- sum(vard.vector)
   rm(vard.vector)
   Ia <- (varD/sigVarj) - 1
@@ -378,7 +415,7 @@ new.pair_diffs <- function(pop, numLoci, np)
 {
   ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), numeric(np))
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab, PACKAGE = "poppr")*(ploid/2), numeric(np))
   return(temp.d.vector)
   d.vector <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
@@ -511,7 +548,7 @@ jack.Ia.Rd <- function (pop){
 jack.calc <- function(V, np){
   varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
   vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
-  vardpair.vector <- .Call("pairwise_covar", vard.vector)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
   sigVarj <- sum(vard.vector)
   rm(vard.vector)
   Ia <- (varD/sigVarj) - 1
@@ -534,7 +571,7 @@ jack.pair_diffs <- function(pop, numLoci, np)
   } 
   else {
     ploid <- ploidy(pop[[1]])
-    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab)*(ploid/2), 
+    temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab, PACKAGE = "poppr")*(ploid/2), 
                             temp.d.vector[, 1])
   }
   return(temp.d.vector)
