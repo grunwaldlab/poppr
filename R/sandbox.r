@@ -176,13 +176,54 @@ new.all.shuff <- function(pop, type=type, method=1, ploidvec= NULL, zerocol = 1L
     }
   } 
   else {
-    pop <- lapply(1:length(pop), function(x) new.locus.shuffler(pop[[x]], method = method, ploidvec[, x], zerocol))
+    pop <- lapply(1:length(pop), function(x){
+      new.locus.shuffler(pop[[x]], method = method, ploidvec[, x], zerocol)
+    })
   }
   return(pop)
 }
 
 new.locus.shuffler <- function(pop, method=1, ploidvec = NULL, zerocol = 1L){
-  pop@tab <- new.permut.shuff(pop@tab, ploidy = ploidy(pop), ploidvec, zerocol)
+  ploid <- ploidy(pop)
+  if (method == 1){
+    pop@tab <- new.permut.shuff(pop@tab, ploidy = ploid, ploidvec, zerocol)    
+  } else if (method == 2){
+
+    uploids <- unique(ploidvec)
+    weights <- colMeans(pop@tab[, -zerocol, drop = FALSE], na.rm = TRUE)
+    
+    if (length(uploids) > 1){
+      ploidprobs <- table(ploidvec)
+      newploids <- sample(unique(ploidvec), length(ploidvec), 
+                          prob = ploidprobs/sum(ploidprobs), replace = TRUE)
+      pop@tab[, zerocol] <- newploids/ploid
+      lapply(unique(newploids), function(x){
+        pop@tab[newploids == x, -zerocol] <<- t(rmultinom(sum(newploids == x), 
+                                                size = x, prob = weights))/ploid
+        
+      })
+    
+    } else {
+      pop@tab[, -zerocol] <- t(rmultinom(length(ploidvec), size = uploids, 
+                               prob = weights))/ploid
+    }
+  } else if (method == 3){
+    uploids <- unique(ploidvec)
+    if (length(uploids) > 1){
+      newploids <- sample(unique(ploidvec), length(ploidvec), replace = TRUE)
+      pop@tab[, zerocol] <- newploids/ploid
+      lapply(unique(newploids), function(x){
+        pop@tab[newploids == x, -zerocol] <<- t(rmultinom(sum(newploids == x), 
+                                                size = x, prob = rep(1, ploid)))/ploid
+        
+      })
+    } else {
+      pop@tab[, -zerocol] <- t(rmultinom(length(ploidvec), size = uploids, 
+                               prob = rep(1, ploid)))/ploid
+    }
+  } else if (method == 4){
+    pop@tab <- pop@tab[sample(nInd(pop)), ]
+  }
   return(pop)
 }
 
