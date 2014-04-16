@@ -110,6 +110,8 @@ Inputs:
 Outputs;
 	Rout - the permuted matrix. 
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 SEXP new_permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy,
 	SEXP ploidvec, SEXP zero_col)
 {
@@ -140,7 +142,14 @@ SEXP new_permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy,
 			}
 			else
 			{
-				outmat[i + j*rows] = 0.0; 
+				if (j == zc)
+				{
+					outmat[i + j*rows] = *(afreq) * (ploid - pv[i]);
+				}
+				else
+				{
+					outmat[i + j*rows] = 0.0; 
+				}
 			}
 		}
 		if (miss == 1)
@@ -150,24 +159,15 @@ SEXP new_permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy,
 		else
 		{
 			// permute the alleles by adding the allele frequency
-			for(p = 0; p < ploidvec[i]; p++)
+			for(p = 0; p < pv[i]; p++)
 			{
-				if (p == zc)
-				{
-					outmat[i + alle[count++]*rows] = ploidvec[i]/ploidy;
-				}
-				else
-				{
-					outmat[i + alle[count++]*rows] += *(afreq);
-				}
-				
+				outmat[i + alle[count++]*rows] += *(afreq);
 			}
 		}
 	}
 	UNPROTECT(1);
 	return Rout;
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Method for expanding indices for bootstrapping. Only slightly faster than R

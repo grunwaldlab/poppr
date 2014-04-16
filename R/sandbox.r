@@ -135,8 +135,22 @@ get_local_ploidy <- function(x){
   stopifnot(test_zeroes(x))
   zerocol <- which(as.numeric(x@all.names[[1]]) == 0)
   locs <- names(x@loc.names)
-  locmat <- vapply(1:nLoc(x), function(z) ploidy - x[loc = locs[z]]@tab[, zerocol]*ploidy, numeric(nInd(x)))
+  locmat <- vapply(1:nLoc(x), function(z) as.integer(round(ploidy - x[loc = locs[z]]@tab[, zerocol]*ploidy)), integer(nInd(x)))
   return(locmat)
+}
+
+new.permut.shuff <- function(mat, ploidy = 2L, ploidvec = NULL, zerocol = 1L){
+  bucket     <- round(colSums(mat, na.rm = TRUE)*ploidy)[-zerocol]
+  bucketlen <- (1:ncol(mat))[-zerocol]
+  bucketlist <- as.integer(sample(rep(bucketlen, bucket)))
+  nas <- !is.na(ploidvec)
+  ploidvec[nas] <- sample(ploidvec[nas])
+  #return(list(mat = mat, bucket = bucket, bucketlist = bucketlist - 1L,
+              # allele = 1/ploidy, ploidy = ploidy, ploidvec = as.integer(ploidvec), 
+              # zerocol = zerocol - 1L))
+  mat <- .Call("new_permute_shuff", mat, bucketlist - 1L, 1/ploidy, ploidy, 
+                      ploidvec, zerocol - 1L, PACKAGE = "poppr")
+  return(mat)
 }
 
 pair_ia <- function(pop){
