@@ -129,6 +129,16 @@ test_zeroes <- function(x){
   return(FALSE)
 }
 
+get_local_ploidy <- function(x){
+  ploidy <- x@ploidy
+  stopifnot(ploidy > 2)
+  stopifnot(test_zeroes(x))
+  zerocol <- which(as.numeric(x@all.names[[1]]) == 0)
+  locs <- names(x@loc.names)
+  locmat <- vapply(1:nLoc(x), function(z) ploidy - x[loc = locs[z]]@tab[, zerocol]*ploidy, numeric(nInd(x)))
+  return(locmat)
+}
+
 pair_ia <- function(pop){
 
   if(pop@type == "codom"){
