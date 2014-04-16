@@ -145,12 +145,45 @@ new.permut.shuff <- function(mat, ploidy = 2L, ploidvec = NULL, zerocol = 1L){
   bucketlist <- as.integer(sample(rep(bucketlen, bucket)))
   nas <- !is.na(ploidvec)
   ploidvec[nas] <- sample(ploidvec[nas])
-  #return(list(mat = mat, bucket = bucket, bucketlist = bucketlist - 1L,
-              # allele = 1/ploidy, ploidy = ploidy, ploidvec = as.integer(ploidvec), 
-              # zerocol = zerocol - 1L))
   mat <- .Call("new_permute_shuff", mat, bucketlist - 1L, 1/ploidy, ploidy, 
-                      ploidvec, zerocol - 1L, PACKAGE = "poppr")
+                     ploidvec, zerocol - 1L, PACKAGE = "poppr")
+  # mat <- list(mat = mat, bucket = bucket, bucketlist = bucketlist - 1L, 
+  #             allele = 1/ploidy, ploidy = ploidy, ploidvec = ploidvec, 
+  #             zerocol = zerocol - 1L)
   return(mat)
+}
+
+
+new.all.shuff <- function(pop, type=type, method=1, ploidvec= NULL, zerocol = 1L){
+  METHODS = c("permute alleles", "parametric bootstrap",
+              "non-parametric bootstrap", "multilocus")
+  if(type=="PA"){
+    if(method == 1 | method == 4){
+      pop@tab <- vapply(1:ncol(pop@tab),
+                        function(x) sample(pop@tab[, x]), pop@tab[, 1])
+    }
+    else if(method == 2){
+      paramboot <- function(x){
+        one <- mean(pop@tab[, x], na.rm=TRUE)
+        zero <- 1-one
+        return(sample(c(1,0), length(pop@tab[, x]), prob=c(one, zero), replace=TRUE))
+      }
+      pop@tab <- vapply(1:ncol(pop@tab), paramboot, pop@tab[, 1])
+    }
+    else if(method == 3){
+      pop@tab <- vapply(1:ncol(pop@tab),
+                        function(x) sample(pop@tab[, x], replace=TRUE), pop@tab[, 1])
+    }
+  } 
+  else {
+    pop <- lapply(1:length(pop), function(x) new.locus.shuffler(pop[[x]], method = method, ploidvec[, x], zerocol))
+  }
+  return(pop)
+}
+
+new.locus.shuffler <- function(pop, method=1, ploidvec = NULL, zerocol = 1L){
+  pop@tab <- new.permut.shuff(pop@tab, ploidy = ploidy(pop), ploidvec, zerocol)
+  return(pop)
 }
 
 pair_ia <- function(pop){
