@@ -163,14 +163,29 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
                                  )
                             )
   if(!quiet) progbar <- txtProgressBar(style = 3)
-	for (c in 1:iterations){
-    IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)
+  # ploid <- ploidy(pop[[1]])
+  # tz <- test_zeroes(pop[[1]])
+  # if (ploid > 2 & tz){
+  #   zcol <- which(as.numeric(pop[[1]]@all.names[[1]]) == 0)
+  #   ploidvec <- vapply(pop, get_local_ploidy, integer(nInd(pop[[1]])))
+  #   ploidind <- TRUE
+  # } else {
+  #   ploidind <- FALSE
+  # }
+  for (c in 1:iterations){
+    # if (ploidind){
+    #   IarD <- .Ia.Rd(new.all.shuff(pop, type, method, ploidvec = ploidvec, 
+    #                                zerocol = zcol), missing = missing)
+    # } else {
+      IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)
+    # }
     sample.data$Ia[c]    <- IarD[1]
     sample.data$rbarD[c] <- IarD[2]
     if (!quiet){
       setTxtProgressBar(progbar, c/iterations)
     }
   }
+
   if(!quiet) close(progbar)
 	return(sample.data)
 }
