@@ -296,7 +296,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #==============================================================================#
   
 .permut.shuff <- function(mat, ploidy = 2){
-  bucket     <- colSums(mat, na.rm = TRUE)*ploidy
+  bucket     <- round(colSums(mat, na.rm = TRUE)*ploidy)
   bucketlist <- as.integer(sample(rep(1:length(bucket), bucket)))
   mat        <- .Call("permute_shuff", mat, bucketlist - 1, 1/ploidy, ploidy, PACKAGE = "poppr")
   return(mat)
