@@ -142,35 +142,34 @@ multilocus genotypes are shared across populations.
 \subsection{Installation}
 \label{intro:install}
 
-\tab\tab This manual assumes that you have already installed R. If you have not,
-please refer to The CRAN home page at \url{http://cran.r-project.org/}. The
-author also recommends utilizing an R gui such as Rstudio
-(\url{http://www.rstudio.com/}) for a better R experience.
+\tab\tab This manual assumes you have installed R. If you have not,
+please refer to The CRAN home page at \url{http://cran.r-project.org/}. We also
+recommend the Rstudio IDE (\url{http://www.rstudio.com/}), which allows the user
+to view the R console, environment, scripts, and plots in a single window.
 
 \subsubsection{From CRAN}
-\tab\tab To install \poppr{} from CRAN is as simple as selecting ``Package
-Installer" from the menu ``Packages \& Data" in the gui or by typing in your
-command line:
+\tab\tab To install \poppr{} from CRAN, select ``Package
+Installer" from the menu ``Packages \& Data" in the gui or type:
 
 <<install, eval=FALSE>>=
 install.packages("poppr", dependencies=TRUE)
 @
 
-If everything is working perfectly, all the dependencies (\textit{adegenet,
-pegas, vegan, ggplot2, phangorn, ape} and \textit{igraph}) should be installed.
-In the unfortunate case this does not work, consult
+All dependencies (\textit{adegenet, pegas, vegan, ggplot2, phangorn, ape,
+reshape2} and \textit{igraph}) will also be installed. In the unfortunate case
+this does not work, consult
 \url{http://cran.r-project.org/doc/manuals/R-admin.html#Installing-packages}.
 
 \subsubsection{From Source}
-\tab\tab The tarball for \poppr{} can be from CRAN:
-\url{http://cran.r-project.org/package=poppr}, the Gr\"unwald Lab website:
-\url{http://http://grunwaldlab.cgrb.oregonstate.edu/} under the
-\textsc{Resources} tab, or github at \url{https://github.com/grunwaldlab/poppr}.
+\tab\tab The tarball for \poppr{} can be downloaded from CRAN:
+\url{http://cran.r-project.org/package=poppr}, under the \textsc{Resources} tab
+in the Gr\"unwald Lab website:
+\url{http://http://grunwaldlab.cgrb.oregonstate.edu/}, or via github at
+\url{https://github.com/grunwaldlab/poppr}.
 
 Since \poppr{} contains C code, it needs to be compiled, which means that you
-need a working C compiler. If you are on Linux, you shouldn't have to worry too
-much about that, but if you are on Windows or OSX, you might need to download
-some special tools:
+need a working C compiler. If you are on Linux, you should have that, but if you
+are on Windows or OSX, you might need to download some special tools:
 
 \begin{description}
   \item[Windows] Download Rtools: \url{http://cran.r-project.org/bin/windows/Rtools/}
@@ -183,10 +182,10 @@ to install all of the dependencies with the following command:
 <<install_depend, eval=FALSE>>=
 install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
 @
-\textbf{If you want to install from github, you may skip to the next section.}
+\textbf{If you want to install from github, skip to the next section.}
 
 After installing dependencies, download the package to your computer and then
-you can install it with:
+install it with:
 <<install_source, eval=FALSE>>=
 install.packages("/path/to/poppr.tar.gz", type="source", repos=NULL)
 @
@@ -197,7 +196,7 @@ versions of \poppr{}. Installing from github requires a C compiler, so be sure
 to read the section above for instructions on how to obtain that if you aren't
 on a Linux system.
 
-To install from github, you do not need to actually download the tarball since
+To install from github, you do not need to download the tarball since
 there is a package called \textit{devtools} that will download and install the
 package for you directly from github. After you have installed all dependencies
 (see above section), you should download \textit{devtools}:
@@ -217,8 +216,9 @@ of the package, you can also install the development version:
 library(devtools)
 install_github(repo = "grunwaldlab/poppr", ref = "devel")
 @
-Users who install this version do so at their own risk. Since it is a 
-development version, documentation may be rough or nonexistant for new functions. 
+Users who install this version do so at their own risk. Since it is a
+development version, documentation may be incomplete or nonexistant for new
+functions.
 
 %-----------------------------------------------------------------------------%
 %
@@ -229,7 +229,7 @@ development version, documentation may be rough or nonexistant for new functions
 \tab\tab The author assumes that if you have reached this point in the manual,
 then you have successfully installed R and \poppr{}. Before proceeding, you
 should be aware that R is case sensitive. This means that the words ``Case" and
-``case" are different from R's perspective. You should also know where your R
+``case" are different. You should also know where your R
 package Library is located.
 \begin{center}
    \fcolorbox{light-gray}{light-gray}{
@@ -238,7 +238,7 @@ package Library is located.
           R is as powerful as it is through a community of people who submit
           extra code called ``Packages" to help it do specific things. These
           packages live in a certain place on your computer called an R library.
-          You can find out where this library is by typing .libPaths()
+          You can find out where this library is by typing \texttt{.libPaths()}
         \end{minipage}
     }
 \end{center}
@@ -249,8 +249,7 @@ click interface for selecting a file. There are two steps:
 library(poppr)
 x <- list(files="/path/to/R/poppr/files/rootrot.csv", path="/path/to/R/poppr/files")
 @
-Before you do anything, you'll want to tell your computer to search R's library
-to find the \poppr{} and load the package:
+Tell your computer to search R's library to find the \poppr{} and load the package:
 <<getfilefunk, eval=FALSE>>=
 library(poppr)
 @
@@ -258,7 +257,7 @@ After that, you can use \texttt{getfile()}
 <<getfilefunk2, eval=FALSE>>=
 x <- getfile()
 @
-At this point, a pop up window will appear like this\footnote{This window
+A pop up window will appear like this\footnote{This window
 sometimes appears behind your current session of R, depending on the GUI and you
 will have to toggle to this window}:
 \begin{figure}[h!]
@@ -267,6 +266,7 @@ will have to toggle to this window}:
   \label{getfile window}
   \includegraphics{getfile.png}
 \end{figure}
+\newpage
 \begin{center}
    \fcolorbox{light-gray}{light-gray}{
       \begin{minipage}[t]{0.8\textwidth}
@@ -280,19 +280,19 @@ will have to toggle to this window}:
       \end{minipage}
     }
 \end{center}
-\newpage
 
-We can navigate throughout your entire computer through this little window and
-tell R where to go. The example I'm using goes to your R library directory. If
-you don't know where that is, you can find it by typing \texttt{.libPaths()}
-into the R command line. Once we select a file, the file name and its path will
-be stored in the variable, x. We can confirm what we selected by simply typing
-\texttt{x} into R's command line.
+
+We can navigate throughout your entire computer through this window and tell R
+where to go. The example I'm using goes to your R library directory where
+\poppr{} is stored. If you don't know where that is, you can find it by typing
+\texttt{find.package('poppr')} into the R command line. Once we select a file,
+the file name and its path will be stored in the variable, x. We can confirm
+that by typing \texttt{x} into R's command line.
 <<getfilex>>=
 x
 @
 Here we can see that \texttt{x} is a list with two entries: \texttt{\$files}
-giving you the files you selected and \texttt{\$path} giving you the path to
+shows the files you selected and \texttt{\$path} shows the path to
 those files.
 \begin{center}
   \fcolorbox{light-gray}{light-gray}{
@@ -302,32 +302,33 @@ those files.
       can think of the path as an address. So instead of
       \texttt{"/path/to/R"}, you could have \texttt{"/USA/Oregon/Corvallis"}.
       Or on your computer, it could be 
-      \texttt{"C:/users/poppr-user/R/win-library/2.15"} on Windows (where poppr-
-      user" is your username) or 
-      \texttt{"/Library/Frameworks/R.framework/Versions/2.15/Resources/library"} 
-      on OSX. Each slash represents a folder that you would click through when
+      \texttt{"C:/users/poppr-user/R/win-library/3.1"} on Windows (where ``poppr-user"
+       is your username) or 
+      \texttt{"/Library/Frameworks/R.framework/Versions/3.1/Resources/library"} 
+      on OSX. Each slash represents a folder that you would click on when
       you are using the mouse.
 
-      A working directory is simply the folder that R is working in. It is where
+      A working directory is the folder that R is working in. It is where
       you can access and write files. When you tell R to read a file, it will
       only look for that file in your working directory. Note that you will not
       endanger your files by reading them into R. R works by making a copy of
       the file into memory. This means that you can manipulate the data in any
-      way that you want without ever losing the content.\\
+      way that you want without ever changing the original file.\\
 
-      To find out your current working directory, type \texttt{getwd()} into the
-      R console. Usually, you will start off a session in your ``home"
-      directory, which will look like this: \texttt{``$\sim$/"}. The command
-      \texttt{setwd()} will change your working directory to any place of your
-      choice on your computer as indicated by the path that you provide. For
-      more information, see Quick R at \url{http://www.statmethods.net}.
+      To find what your current working directory is set to, type
+      \texttt{getwd()} into the R console. Usually, you will start off a session
+      in your ``home" directory, which will look like this: \texttt{"$\sim$/"}.
+      The command \texttt{setwd()} will change your working directory to any
+      folder of your choice on your computer as indicated by the path that you
+      provide. For more information, see Quick R at
+      \url{http://www.statmethods.net}.
     \end{minipage}
   }
 \end{center}
 
 We will use \texttt{x\$files} to access the file. The \texttt{poppr()} function
-provides a quick and convenient first analysis of your data directly from the
-file on the your disk (For information on importing your data into R, see
+provides a simple first analysis of your data directly from the file on the your
+disk (For information on importing your data into R, see
 section\seclink{intro:import}{Get out of my dreams and into my R.})
 <<firstpoppr, eval=FALSE>>=
 popdata <- poppr(x$files)
@@ -344,15 +345,6 @@ popdata
 <<aflp2, echo=FALSE>>=
 popprsoutput
 @
-One thing to note about this output is the \texttt{NaN} in the column labeled
-\texttt{SE}. This is produced from calculation of a standard error based on
-rarefaction analysis. Occasionally, this calculation will encounter a situation
-in which it must attempt to take a square root of a negative number. As you no
-doubt have learned in high school mathematics, the root of any negative number
-is not defined in the set of real numbers, and must have an imaginary component,
-$i$. Unfortunately, R will not represent the imaginary components of numbers
-unless you specifically tell it to do so. To account for this, R represents the
-square roots of negatives as ``not a number" or \texttt{NaN}.\\
 The fields you see in the output include:
 \begin{itemize}
   \item \texttt{Pop -} Population name (Note that ``Total" also means
@@ -378,17 +370,28 @@ The fields you see in the output include:
 These fields are further described in section\seclink{summary}{I know what you
 did last summary table}at the end of this vignette.
 
+One thing to note about this output is the \texttt{NaN} in the column labeled
+\texttt{SE}. In R, \texttt{NaN} means ``Not a number''. This is produced from
+calculation of a standard error based on rarefaction analysis. Occasionally,
+this calculation will encounter a situation in which it must attempt to take a
+square root of a negative number. Since the root of any negative number is not
+defined in the set of real numbers, it must therefore have an imaginary
+component, $i$. Unfortunately, R will not represent the imaginary components of
+numbers unless you specifically tell it to do so. By default, R represents these
+as \texttt{NaN}.\\
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Get out of my dreams and into my R \{importing data into poppr\}}
+\subsection{Importing data into poppr \{Get out of my dreams and into my R\}}
 \label{intro:import}
-There are several ways of reading data into R. 
+There are several ways of reading data into R. One way is using the function
+\texttt{getfile}.
 \subsubsection{Function: getfile}
 \label{intro:import:getfile}
 \tab\tab \texttt{getfile} gives the user an easy way to point R to the directory
 in which your data is stored. It is only meant for R GUIs such as Rstudio. Using
-this on the command line has very little advantage over setting the working
+this on the command line has little advantage over setting the working
 directory manually.
 \begin{quote}
 Default Command:
@@ -412,12 +415,9 @@ print_command(funk)
 \end{itemize}
 
 This method works for a single file, but let's say you had a lot of data sets
-you wanted to import. You would have to do all of these one by one, right? Not
-so. \texttt{getfile} has a nice little flag called \texttt{multi} telling the
-computer that you want to grab multiple files in the folder. You would use this
-with \texttt{poppr.all} to produce a summary table for all of your
-files\footnote{These files do not need to be similar in any way to do this
-analysis}:
+you wanted to import. Instead of doing these one-by-one, \texttt{getfile} has a
+flag called \texttt{multi} telling the computer that you want to grab multiple
+files in the folder:
 <<multi_getfile, eval = FALSE>>=
 x <- getfile(multi=TRUE)
 @
@@ -432,22 +432,26 @@ x$files <- paste(x$path, x$files, sep="/")
 x
 @
 As you can see, now all of the files that existed in that directory are there!
-Now you can look at all those files at once! For space reasons, we will only
-print 2 siginficant digits.
+Now you can look at all those files at once! We will use \texttt{poppr.all} to
+produce a summary table for all of your files\footnote{These files do not need
+to be similar in any way to do this analysis}. Let's set \texttt{digits = 2} to
+only print 2 significant digits.
 <<poppr.all, eval=FALSE>>=
-all_files <- poppr.all(x$files)
-print(all_files, digits = 2)
+all_files <- poppr.all(x$files) print(all_files, digits = 2)
 @
 <<poppr.all_eval, echo=FALSE>>=
-print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), system.file("files/rootrot2.csv", package="poppr"), system.file("files/simulated.dat", package="poppr"))), digits = 2)
+print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), 
+                  system.file("files/rootrot2.csv", package="poppr"), 
+                  system.file("files/simulated.dat", package="poppr"))), 
+      digits = 2)
 @
 
 You've seen examples of how to use \texttt{getfile} to extract a single file and
-all the files in a directory, but what if you wanted many files, but only wanted
-ones that were of a certain type or had a certain name? This is what you would
-use the \texttt{pattern} argument for. A perfect use would be the example data
-contained in the \adegenet{} package. Let's take a look at the names of these
-files.
+all the files in a directory, but what if you wanted many files only of a
+certain type or with a certain name? This is what you would use the
+\texttt{pattern} argument for. For example, there are several data files with
+different formats in the \adegenet{} folder in your R library. Let's take a look
+at the names of these files.
 \begin{center}
   \fcolorbox{light-gray}{salmon}{
     \begin{minipage}[t]{0.8\textwidth}
@@ -472,9 +476,9 @@ list(
 We can see that we have a mix of files with different formats. If we tried to
 run all of these files using poppr, we would have a problem because some of the
 file formats have no direct import into a \texttt{genind} object (*.fasta, or
-*.snp), or just simply are not supported (eg. *.rda files). We want to be able
-to filter these files out, and we will do so with the \texttt{pattern} argument.
-Let's say we only wanted the files that have the word "nancy" in them.
+*.snp), or just simply are not supported (eg. *.rda files). To filter these
+files, use the \texttt{pattern} argument. Let's say we only wanted the files
+that have the word ``nancy'' in them.
 <<getfile_nancy,eval=FALSE>>=
 getfile(multi=TRUE, pattern="nancy")
 @
@@ -538,10 +542,9 @@ Now we have our FSTAT file!
 can be very powerful in its analyses. \Poppr{} has added the ability to read
 *.CSV files\footnote{*.CSV files are comma separated files that are easily
 machine readable.} produced in the GenAlEx format. It can handle data types
-containing regions and geographic coordinates, but currently it cannot import
-allelic frequency data from GenAlEx. All the user has to do is to export a
-single sheet of GenAlEx data from Excel into a *.CSV file, and the \poppr{}
-function \texttt{read.genalex} will import it into \adegenet{}'s \texttt{genind}
+containing regions and geographic coordinates, but currently cannot import
+allelic frequency data from GenAlEx. Using the \poppr{}
+function \texttt{read.genalex} will import your data into \adegenet{}'s \texttt{genind}
 object or \poppr{}'s \texttt{genclone} object (more information on that below).
 For ways of formatting a GenAlEx file, see the manual here:
 \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
