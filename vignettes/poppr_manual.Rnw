@@ -32,8 +32,12 @@
 \newcommand{\adegenet}{\textit{adegenet}}
 \newcommand{\Adegenet}{\textit{Adegenet}}
 
-\title{Poppr 1.1.0.99: An R package for genetic analysis of populations with mixed (clonal/sexual) reproduction}
-\author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1) Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR}}
+\title{Poppr 1.1.0.99: An R package for genetic analysis of populations with
+mixed (clonal/sexual) reproduction}
+\author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
+Department of Botany and Plant Pathology, Oregon State University, Corvallis,
+OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
+Corvallis, OR}}
 
 \begin{document}
 % Set the width of figures.
@@ -103,13 +107,15 @@ genotype analysis, calculation of Bruvo's distance and the index of association.
 %=============================================================================%
 \section{Introduction}
 \label{intro}
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
 \subsection{Purpose}
 \label{intro:purpose}
 
-\tab\tab\Poppr{} is an R package with convenient functions for analysis of
+
+\Poppr{} is an R package with convenient functions for analysis of
 genetic data with mixed modes of reproduction including sexual and clonal
 reproduction. While there are many R packages in CRAN and other repositories
 with tools for population genetic analyses, few are appropriate for populations
@@ -136,13 +142,15 @@ The real power of \poppr{} is in the data manipulation and analytic tools.
 censor, and subset data sets. With \poppr{} you can also quickly calculate
 Bruvo's distance, the index of association, and easily determine which
 multilocus genotypes are shared across populations.
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
 \subsection{Installation}
 \label{intro:install}
 
-\tab\tab This manual assumes you have installed R. If you have not,
+
+This manual assumes you have installed R. If you have not,
 please refer to The CRAN home page at \url{http://cran.r-project.org/}. We also
 recommend the Rstudio IDE (\url{http://www.rstudio.com/}), which allows the user
 to view the R console, environment, scripts, and plots in a single window.
@@ -385,6 +393,8 @@ as \texttt{NaN}.\\
 %-----------------------------------------------------------------------------%
 \subsection{Importing data into poppr \{Get out of my dreams and into my R\}}
 \label{intro:import}
+
+
 There are several ways of reading data into R. One way is using the function
 \texttt{getfile}.
 \subsubsection{Function: getfile}
@@ -834,7 +844,7 @@ other(nancycats) # two items named xy and repeat_lengths
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Send in the clones \{the genclone object\}}
+\subsection{The genclone object \{send in the clones\}}
 \label{intro:genclone}
 
 In \poppr{} versions 1.0.x, all of the functions revolved around\texttt{genind}
@@ -1000,7 +1010,7 @@ populations.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Inside the golden days of missing data \{replace or remove missing data\}}
+\subsection{Replace or remove missing data \{Inside the golden days of missing data\}}
 \label{data.manip:missing}
 
 \tab\tab A data set without missing data is always ideal, but often not
@@ -1139,7 +1149,7 @@ our sub-setting.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Can you take me hier(archy)? \{population hierarchy construction\}}
+\subsection{Population hierarchy construction \{Can you take me hier(archy)?\}}
 \label{data.manip:hier}
 
 \tab\tab In poppr versions 1.0.x, this section of the manual contained a long
@@ -1430,7 +1440,7 @@ above.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Divide (populations) and conquer (your analysis) \{extract populations\}}
+\subsection{Extract populations \{Divide (populations) and conquer (your analysis)\}}
 \label{data.manip:divide}
 
 \tab\tab As I've mentioned before, \adegenet{} has many ways of sub-setting the
@@ -1522,7 +1532,7 @@ And that, is how you subset your data with poppr!
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Attack of the clone correction \{clone-censor data sets\}}
+\subsection{Clone-censor data sets \{Attack of the clone correction\}}
 \label{data.manip:cc}
 
 \tab\tab Clone correction refers to the ability of keeping one observation per
@@ -1614,7 +1624,7 @@ utilizes this function internally.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Every day I'm shuffling (data sets)  \{permutations and bootstrap resampling\}}
+\subsection{Permutations and bootstrap resampling \{every day I'm shuffling (data sets)\}}
 \label{data.manip:shuffle}
 
 \tab\tab A common null hypothesis for populations with mixed reproductive modes
@@ -2154,7 +2164,7 @@ legend('topleft', legend="observed", col="red", lty = 1)
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Cut It Out!  \{removing uninformative loci\}}
+\subsection{Removing uninformative loci \{Cut It Out!\}}
 \label{data.manip:informloci}
 \tab\tab Phylogenetically uninformative loci are those that have only one
 sample differentiating from the rest. This can lead to biased results when
@@ -2226,7 +2236,7 @@ analyses.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Just a peek \{How many multilocus genotypes are in our data set?\}}
+\subsection{How many multilocus genotypes are in our data set? \{Just a peek\}}
 \label{mlg:mlg}
 \tab\tab Counting the number of multilocus genotypes in a population is the
 first step for these analyses as they allow one to quickly see how many clones
@@ -2250,7 +2260,7 @@ clones are with respect to populations.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Clone-ing around \{MLGs across populations\}}
+\subsection{MLGs across populations \{clone-ing around\}}
 \label{mlg:cross}
 
 \tab\tab Since you have the ability to change the population structure of your
@@ -2337,7 +2347,7 @@ v.num
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Bringing something to the table \{producing MLG tables and graphs\}}
+\subsection{Producing MLG tables and graphs \{bringing something to the table\}}
 \label{mlg:table}
 
 We can also create a table of multilocus genotypes per population as well as bar
@@ -2481,7 +2491,7 @@ the function\cmdlink{summary:poppr}{poppr}on this data set (under the column
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Getting into the mix \{combining MLG functions\}}
+\subsection{Combining MLG functions \{getting into the mix\}}
 \label{mlg:mix}
 
 \tab\tab Alone, the different functionalities are neat. Combined, we can create
@@ -2634,7 +2644,7 @@ another.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Do you see what I see? \{alternative data visualization\}}
+\subsection{Alternative data visualization \{do you see what I see?\}}
 \label{mlg:alt.vis}
 
 \tab\tab The graphs that are output by \poppr{} are simply aids for the user to
@@ -2681,7 +2691,7 @@ qplot(y=MLG, x=Population, data=df2, color=Count, size=Count) +
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{The missing linkage disequilibrium \{calculating the index of association, $I_A$ and $\bar{r}_d$\}}
+\subsection{Calculating the index of association, $I_A$ and $\bar{r}_d$ \{the missing linkage disequilibrium\}}
 \label{index:iard}
 
 \tab\tab The index of association was originally developed as a measure of
@@ -2854,7 +2864,7 @@ simply increase the number in sample: \texttt{sample = 1999}
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{May I have distance? \{genetic distances\}}
+\subsection{Genetic distances \{may I have distance?\}}
 \label{index:gendist}
 
 \tab\tab Genetic distances are great tools for analyzing diversity in
@@ -3057,7 +3067,7 @@ ggplot(melt(mtest)) + geom_tile(aes_string(x = "Var1", y = "Var2", fill = "value
 @
 
 
-\subsection{Give `em the boot(strap) \{bootstrap analysis\}}
+\subsection{Bootstrap analysis \{give `em the boot(strap)\}}
 \label{index:boot}
 \subsubsection{Bootstrapping any distance}
 \label{index:boot:any}
@@ -3065,9 +3075,9 @@ ggplot(melt(mtest)) + geom_tile(aes_string(x = "Var1", y = "Var2", fill = "value
 \label{index:boot:bruvo}
 This is optimized for Bruvo's distance. 
 
-\subsection{Nothing but net(works) \{minimum spanning networks\}}
+\subsection{Minimum spanning networks \{nothing but net(works)\}}
 
-\subsection{Come here! AMOVA here! \{Analysis of MOlecular VAriance\}}
+\subsection{Analysis of MOlecular VAriance \{Come here! AMOVA here!\}}
 %
 %
 %
@@ -3143,7 +3153,7 @@ heatmap(as.matrix(A.dist), symm=TRUE)
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Step by stepwise mutation \{Bruvo's distance\}}
+\subsection{Bruvo's distance \{step by stepwise mutation\}}
 \label{index:bruvo}
 
 \tab\tab Bruvo's distance is a genetic distance measure for microsatellite
@@ -3719,7 +3729,7 @@ A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
 %
 %=============================================================================%
 %=============================================================================%
-\section{I know what you did last summary table \{diversity table\}}
+\section{Diversity table \{I know what you did last summary table\}}
 \label{summary}
 
 \tab\tab Remember the summary function that you used to get all the diversity
