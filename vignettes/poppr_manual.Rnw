@@ -31,6 +31,16 @@
 \newcommand{\Poppr}{\textit{Poppr}}
 \newcommand{\adegenet}{\textit{adegenet}}
 \newcommand{\Adegenet}{\textit{Adegenet}}
+\newcommand{\tline}{
+  \noindent
+  \rule{\textwidth}{1pt}
+  \par
+}
+\newcommand{\bline}{
+  \noindent
+  \rule{\textwidth}{1pt}
+  \kern1pt
+}
 
 \title{Poppr 1.1.0.99: An R package for genetic analysis of populations with
 mixed (clonal/sexual) reproduction}
@@ -402,7 +412,8 @@ There are several ways of reading data into R. One way is using the function
 \tab\tab \texttt{getfile} gives the user an easy way to point R to the directory
 in which your data is stored. It is only meant for R GUIs such as Rstudio. Using
 this on the command line has little advantage over setting the working
-directory manually.
+directory manually.\\
+\tline{}
 \begin{quote}
 Default Command:
 % \texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
@@ -423,6 +434,7 @@ print_command(funk)
   all the files. This is set to \texttt{TRUE} by default so that you can access
   your files no matter what working directory you are in.
 \end{itemize}
+\bline{}
 
 This method works for a single file, but let's say you had a lot of data sets
 you wanted to import. Instead of doing these one-by-one, \texttt{getfile} has a
@@ -553,11 +565,93 @@ can be very powerful in its analyses. \Poppr{} has added the ability to read
 *.CSV files\footnote{*.CSV files are comma separated files that are easily
 machine readable.} produced in the GenAlEx format. It can handle data types
 containing regions and geographic coordinates, but currently cannot import
-allelic frequency data from GenAlEx. Using the \poppr{}
-function \texttt{read.genalex} will import your data into \adegenet{}'s \texttt{genind}
+allelic frequency data from GenAlEx. Using the \poppr{} function
+\texttt{read.genalex} will import your data into \adegenet{}'s \texttt{genind}
 object or \poppr{}'s \texttt{genclone} object (more information on that below).
 For ways of formatting a GenAlEx file, see the manual here:
 \url{http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx\%206.5\%20Guide.pdf}
+
+
+Below is an example of the GenAlEx format. We will use the data set called
+\texttt{microbov} from the \adegenet{} package to generate it. The data contains
+three demographic factors: Country, Species and Breed contained within the
+\texttt{@other} slot (detailed in\seclink{intro:genind:other}{The other slot}).
+We will combine these and save the file to the desktop. Details of these
+functions are presented elsewhere in this manual.
+
+<<microsave, eval=FALSE>>=
+library(poppr)
+data(microbov)
+microbov <- as.genclone(microbov)
+sethierarchy(microbov) <- data.frame(other(microbov))
+setpop(microbov) <- ~coun/breed/spe
+genind2genalex(microbov, file="~/Desktop/microbov.csv")
+@
+<<microsave_message, echo=FALSE>>=
+cat("Extracting the table ... Writing the table to ~/Desktop/microbov.csv ... Done.")
+@
+
+\setkeys{Gin}{width=\textwidth}
+
+\begin{figure}[h!]
+  \centering
+  \caption{\footnotesize \footnotesize The first 15 individuals and 4 loci of
+  the microbov data set. The first column contains the individual names, the
+  second column contains the population names, and each subsequent column
+  represents microsatellite genetic data. Highlighted in red is a list of
+  populations and their relative sizes.}
+  \label{microbov unmodified}
+\includegraphics{unmod_dat}
+\end{figure}
+
+The GenAlEx format contains individuals in rows and loci in columns. Individual
+data begins at row 4. Column A always contains individual names and column B
+defines the population of each individual. Notice here that the three
+demographic factors from the data have been concatenated with a ``\_''. This
+allows us to import more than one population factor to use as hierarchical
+levels in a\seclink{intro:genclone}{genclone object.}
+
+\newpage
+
+The First three rows contain information pretaining to the global data set. The
+only important information for \poppr{} is the information contained in row 3
+and the first three columns of row 1. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|l|l|ll|}
+  \hline
+ & \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \\ 
+  \hline
+ \textbf{1} & \# of Loci & \# of Individuals & \# of Populations & Pop1 Size & ...\\
+ \hline
+ \textbf{2} & - & - & - & Pop1 Name & ...\\
+ \hline
+ \textbf{3} & - & - & Locus 1 & ... & \\
+  \hline
+\end{tabular}
+\end{table}
+
+Highlighted in red in figure \ref{microbov unmodified} are definitions of the
+number of populations and their respective sizes. As this is redundant
+information, we can remove it. Below is an example of a valid data set that can
+be imported into \poppr{}.
+
+\begin{figure}[h!]
+  \centering
+  \caption{\footnotesize \footnotesize The first 15 individuals and 4 loci of
+  the microbov data set. This is the same figure as above, however the
+  populations and counts have been removed from the header row and the third
+  number in the header has been replaced by 1.}
+\includegraphics{mod_dat}
+\end{figure}
+
+\setkeys{Gin}{width=0.5\textwidth}
+
+All GenAlEx formatted data can be imported with the command \texttt{read.genalex},
+detailed below:
+\newpage
+\tline{}
 \begin{quote}
 Default Command:
 <<read.genalex_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -579,21 +673,20 @@ print_command(funk)
   object in the \texttt{@other} slot. (If you don't know what that is, don't
   worry. It will be explained later in\seclink{intro:genind:other}{The other
   slot.})
-  \item \texttt{region -} To format your GenAlEx file to include regions along
-  with your populations, You can choose to include a separate column for
-  regional data, or, since regional data must be in contiguous blocks, you can
-  simply format it in the same way you would any other data (see the GenAlEx
-  manual for details). If you have your file organized in this manner, select
-  this option and the regional information will be stored in the resulting
-  genind object in the \texttt{@other} slot.
-  \item \texttt{genclone -} This flag defaults to \texttt{TRUE} and will
-  automatically convert your data into a \texttt{genclone} object
-  (see\seclink{intro:genclone}{Send in the clones}for more info).
-  \item \texttt{sep -} The separator argument for your data. It defaults to
-  ``,", but some countries use ``;" by default. This avoids the user having to
-  specifically restructure his or data.
+  \item \texttt{region -} To format your GenAlEx file to include regions, you
+  can choose to include a separate column for regional data, or, since regional
+  data must be in contiguous blocks, you can simply format it in the same way
+  you would any other data (see the GenAlEx manual for details). If you have
+  your file organized in this manner, select this option and the regional
+  information will be stored in the \texttt{@other} slot of the resulting
+  genind object or be incorporated into the hierarchy of the genclone object.
+  \item \texttt{genclone -} This flag will convert your data into a
+  \texttt{genclone} object (see\seclink{intro:genclone}{Send in the clones}for
+  more info).
+  \item \texttt{sep -} The separator argument for columns in your data. It
+  defaults to ``,".
 \end{itemize}
-
+\bline{}
 \begin{center}
   \fcolorbox{light-gray}{light-gray}{
     \begin{minipage}[t]{0.8\textwidth}
@@ -631,86 +724,19 @@ with any function in \poppr{} and \adegenet{}
 rootrot
 @
 
-\subsubsection{Genalex formatting shortcuts}
-\label{intro:import:genalex.short}
-
-\tab\tab The GenAlEx format is a nice way to import data because it allows you
-to have geographic coordinates and two hierarchical levels of sampling (Region
-and population). If you have multiple levels of hierarchy, you will need to code
-them so that you combine multiple columns of hierarchy into one using a common
-separator (For an example, see below). A problem arises when it becomes more
-work than it's worth to do that since, for the GenAlEx format, you must provide
-the sizes of each population in the header. Here, I'll show you a simple way to
-circumvent that. First, let's use the microbov data set from \adegenet{} (for
-details, type \texttt{help("microbov")} into your R console). It contains three
-demographic factors: Country, Species and Breed contained within the
-\texttt{@other} slot (detailed in\seclink{intro:genind:other}{The other slot}).
-We will combine these and save the file to our desktop. We will cover these
-functions later in this manual. For now, just know they exist.
-
-<<microsave, eval=FALSE>>=
-library(poppr)
-data(microbov)
-microbov <- as.genclone(microbov)
-sethierarchy(microbov) <- data.frame(other(microbov))
-setpop(microbov) <- ~coun/breed/spe
-genind2genalex(microbov, file="~/Desktop/microbov.csv")
-@
-<<microsave_message, echo=FALSE>>=
-cat("Extracting the table ... Writing the table to ~/Desktop/microbov.csv ... Done.")
-@
-After we do this, we can open the file in our favorite spreadsheet editor and
-see the following image.
-
-\setkeys{Gin}{width=\textwidth}
-
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize \footnotesize The first 15 individuals and 4 loci of
-  the microbov data set. The first column contains the individual names, the
-  second column contains the population names, and each subsequent column
-  represents microsatellite genetic data. Highlighted in red is a list of
-  populations and their relative sizes.}
-  \label{microbov unmodified}
-\includegraphics{unmod_dat}
-\end{figure}
-
-\newpage
-All that \poppr{} needs from the first header row are the first three numbers
-(unless you are including regional data, but it's not terribly necessary with
-the hierarchical support \poppr{} provides.), which represent the number of
-loci, individuals, and populations, respectively. After that, you have counts of
-individuals per population in each subsequent cell. For \poppr{}, These cells
-don't matter because we already have that information in column 2.
-
-If you have a large data set with many population levels, you can use the
-following shortcut by setting the number in the third cell to 1. The number in
-cell 4 is arbitrary (but must be there). In the following figure, it is set to
-the number of individuals in your data set, but can easily be replaced with any
-other number (perhaps your favorite number?).
-
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize \footnotesize The first 15 individuals and 4 loci of
-  the microbov data set. This is the same figure as above, however the
-  populations and counts have been removed from the header row and the third
-  number in the header has been replaced by 1.}
-\includegraphics{mod_dat}
-\end{figure}
-
-\setkeys{Gin}{width=0.5\textwidth}
 
 \subsubsection{Other ways of importing data}
 \label{intro:import:other}
 
 \tab\tab \Adegenet{} already supports the import of FSTAT, Structure, Genpop,
-and Genetix formatted files, so if you have those formats, you can import them
-using the function \texttt{import2genind}. For sequence data, check if you can
-use \texttt{read.dna} from the \textit{ape} package to import your data. If you
-can, then you can use the \adegenet{} function \texttt{DNAbin2genind}. If you
-don't have any of these formats handy, you can still import your data using R's
-\texttt{read.table} along with \texttt{df2genind} from \adegenet{}. For more
-information, see \adegenet{}'s ``Getting Started" vignette.
+and Genetix formatted files, so if you have data in those formats, you can
+import them using the function \texttt{import2genind}. For sequence data, check
+if you can use \texttt{read.dna} from the \textit{ape} package to import your
+data. If you can, then you can use the \adegenet{} function
+\texttt{DNAbin2genind}. If you don't have any of these formats handy, you can
+still import your data using R's \texttt{read.table} along with
+\texttt{df2genind} from \adegenet{}. For more information, see \adegenet{}'s
+``Getting Started" vignette.
 
 \subsubsection{Function: genind2genalex}
 \label{intro:import:genind2genalex}
@@ -1216,7 +1242,7 @@ way is to define your hierarchies in a spreadsheet and import that as a data
 frame using the function \texttt{read.table}. Another way of automatically doing
 so is to concatenate your hierarchies using a common delimiter such as `\_' and
 defining that as the population factor in your input file. See the section
-\seclink{intro:import:genalex.short}{Genalex Formatting Shortcuts}for more
+\seclink{intro:import:read.genalex}{read.genalex}for more
 details. An example of a formatted GenAlEx file can be found here:
 \url{http://dx.doi.org/10.6084/m9.figshare.877104}. It is an AFLP data set of the
 root rot pathogen \texttt{Aphanomyces euteiches}. We will use this data set as
