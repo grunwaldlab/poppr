@@ -822,48 +822,77 @@ the object used by \poppr{}. To create a genind object, \adegenet{} takes a data
 frame of genotypes (rows) across multiple loci (columns) and converts them into
 a matrix of individual allelic frequencies at each locus \cite{Jombart:2008}.
 
-For example, if you had a data frame with 3 diploid individuals each with 3 loci
-that had 3, 4, and 5 allelic states respectively, the resulting \texttt{genind}
-object would contain a matrix that has 3 rows and 12 columns. 
+For example, Let's say we had data with 3 diploid individuals each with 3 loci
+that had 3, 4, and 5 allelic states respectively:
 
-\noindent Let's look at the example data frame:
-<<ex_data, echo=FALSE>>=
+% latex table generated in R 3.1.0 by xtable 1.7-3 package
+% Sat Apr 19 19:03:55 2014
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlll}
+  \hline
+ & locus1 & locus2 & locus3 \\ 
+  \hline
+1 & 101/101 & 201/201 & 301/302 \\ 
+  2 & 102/103 & 202/203 & 301/303 \\ 
+  3 & 102/102 & 203/204 & 304/305 \\ 
+   \hline
+\end{tabular}
+\label{example_table}
+\end{table}
+\noindent
+The resulting \texttt{genind} object would contain a matrix that has 3 rows and
+12 columns. Below is a schematic of what that would look like. Each column
+represents a separate allele, each row represents an individual and each color
+represents a different locus. 
+
+<<ex_data_picture, echo = FALSE>>=
 library(adegenet)
 df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
                       locus2=c("201/201", "202/203", "203/204"), 
                       locus3=c("301/302", "301/303", "304/305")))
-df
+dat <- df2genind(df, sep="/")$tab
+tdat <- dat
+tdat[] <- 1
+barplot(tdat, axes = FALSE)
+barplot(rep(3, 12), col = rep(rainbow(3, alpha = 0.5), 3:5), axes = FALSE, add = TRUE)
+axis(2, at = 1:3 - 0.5, labels = 1:3, tick = FALSE)
+axis(3, at = c(2, 6.125, 11.5), labels = names(df), tick = FALSE)
 @
-And the resulting matrix after importing to genind.
+\noindent
+When we look at the data derived from table \ref{example_table}, we see that we
+have a matrix of individual allele frequencies at each locus. 
 <<ex_genind, echo=FALSE>>=
-df2genind(df, sep="/")$tab
+dat
 @
-The first three columns represent the alleles of locus 1, the next four
-represent locus 2, and the last five represent locus 3.
-
-Do you see what I mean when I say individual allele frequencies at each locus?
-For a diploid individual, you only have three possible allele frequencies at
-each locus: 1, 0.5, or 0. Now, this is not the entire genind object, but it is
-the main feature. The object also has various elements associated with it that
-give you information about the population membership, the names of loci,
-individuals, and alleles among other things that \poppr{} uses to work
-\cite{Jombart:2008}. If you wish to know more, see the \adegenet{} ``Getting
-Started" manual.
+\noindent
+At each locus, the allele frequencies for each individual sum to one.
+Homozygotes are denoted as having an allele frequency of 1 at a particular
+allele while heterozygotes have their allele frequencies represented as $1/p$
+wher $p$ = ploidy. Along with this matrix, are elements that define the names of
+the individuals, loci, alleles, and populations. If you wish to know more, see
+the \adegenet{} ``Getting Started'' manual.
 
 \subsubsection{The other slot}
 \label{intro:genind:other}
 
 The other slot is a place in the genind object that can be used to store useful
-information about the data. One application would be to store data of
-microsatellite repeat lengths for use with\seclink{index:bruvo}{Bruvo's
-Distance}. Here's a simple example using the dataset nancycats. We will assume
-that this data set has dinucleotide repeats at all nine loci. We use the command
-\texttt{other()} to access the slot and name a new item in it with the
-\texttt{\$}:
+information about the data. We saw earlier that it could store demographic
+information, now let's explore a different example.\seclink{distance:bruvo}{Bruvo's 
+distance}is based off of a stepwise mutation model for microsatellites. This 
+requires us to know the length of the repeat of each locus. We could store the
+repeat lengths in a separate variable in our R environment, but we are at risk
+of losing that. One wa to prevent it from being lost would be to place it in the
+``other'' slot. For the purpose of this example, we will use the ``nancycats''
+data set from the \adegenet{} package and assume that it has dinucleotide repeats
+at all of its loci.
 
 <<other_replen>>=
 data(nancycats) # Load the data
-other(nancycats)$repeat_lengths <- rep(2, 9) # assign a 
+other(nancycats) # geographical coordinates
+repeats <- rep(2, nLoc(nancycats)) #nLoc = number of loci
+repeats
+other(nancycats)$repeat_lengths <- repeats
 other(nancycats) # two items named xy and repeat_lengths
 @
 
