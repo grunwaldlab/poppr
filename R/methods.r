@@ -444,11 +444,11 @@ setMethod(
       ltab[2], nind, ploid, "individuals\n", 
       ltab[3], nloc, type, "loci\n\n"
       )
-    pophier <- ifelse(hier > 1, "hierarchies -", "hierarchy -")
-    if (hier == 0) pophier <- "hierarchies."
+    pophier <- ifelse(hier > 1, "levels -", "level -")
+    if (hier == 0) pophier <- "levels."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
-    cat("", ltab[4], hier, "population", pophier, hiernames, fill = TRUE)
+    cat("", ltab[4], hier, "hierarchical", pophier, hiernames, fill = TRUE)
     cat("", ltab[5], npop, "populations", popdef, pops, fill = TRUE)
     
   })
@@ -486,11 +486,11 @@ setMethod(
       ltab[2], nind, ploid, "individuals\n", 
       ltab[3], nloc, type, "loci\n\n"
       )
-    pophier <- ifelse(hier > 1, "hierarchies -", "hierarchy -")
-    if (hier == 0) pophier <- "hierarchies."
+    pophier <- ifelse(hier > 1, "levels -", "level -")
+    if (hier == 0) pophier <- "levels."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
-    cat("", ltab[4], hier, "population", pophier, hiernames, fill = TRUE)
+    cat("", ltab[4], hier, "hierarchical", pophier, hiernames, fill = TRUE)
     cat("", ltab[5], npop, "populations", popdef, pops, fill = TRUE)
   })
 
