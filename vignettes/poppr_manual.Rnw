@@ -744,7 +744,9 @@ still import your data using R's \texttt{read.table} along with
 \tab\tab Of course, being able to export data is just as useful as being able to
 import it, so we have this handy little function that will write a GenAlEx
 formatted file to wherever you desire.\\ 
-WARNING: This will overwrite any file that exists with the same name.
+\textbf{WARNING: This will overwrite any file that exists with the same name.}
+
+\tline{}
 \begin{quote}
 Default Command:
 <<genind2genalex_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -755,23 +757,21 @@ print_command(funk)
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{filename -} This is where you specify where you want the file to
-  go. If you simply type the file name, it will deposit the file in the
-  directory R is currently in. If you don't know what directory you are in, you
-  can type \texttt{getwd()} to find out.
-  \item \texttt{quiet -} If this is set to \texttt{FALSE}, a message will be
-  printed to the screen.
-  \item \texttt{geo -} This is set to \texttt{FALSE} by default. If it is set to
-  \texttt{TRUE}, then that means you have a data frame or matrix in the
-  \texttt{@other} slot of your genind object that contains geographic
+  \item \texttt{filename -} This is where you specify the path to the new file
+  you wish to create. If you specify only a filename with no path, it will place
+  the file in your current working directory.
+  \item \texttt{quiet -} If this is set to \texttt{FALSE}, a status message will
+  be printed to the console as the extraction progresses.
+  \item \texttt{geo -} Set to \texttt{TRUE}, if you have a data frame or matrix
+  in the  \texttt{@other} slot of your genind object that contains geographic
   coordinates for all individuals or all populations. Setting this to
-  \texttt{TRUE} means that you want the resulting file to have two extra columns
-  at the end of your file with geographic coordinates.
+  \texttt{TRUE} means the resulting file will have two extra columns at the end
+  of your file with geographic coordinates.
   \item \texttt{geodf -} The name of the data frame or matrix containing the
-  geographic coordinates. The default is \texttt{geodf = "xy"}.
+  geographic coordinates.
   \item \texttt{sep -} A separator to separate columns in the resulting file.
-  Defaults to ``,".
 \end{itemize}
+\bline{}
 
 First, a simple example for the rootrot data we demonstrated in section 1.4.2:
 <<genind2genalex, eval=FALSE>>=
@@ -781,23 +781,23 @@ genind2genalex(rootrot, "~/Desktop/rootrot.csv")
 cat("Extracting the table ... Writing the table to ~/Desktop/rootrot.csv ... Done.\n")
 @
 
-Now here's an example of exporting the nancycats data set into GenAlEx format
+Here's an example of exporting the nancycats data set into GenAlEx format
 with geographic information. If we look at the nancycats geographic information,
 we can see it's coordinates for each population, but not each individual:
 <<nancyxy>>=
 data(nancycats)
 nancycats@other$xy
 @
-And we can export it easily:
+
+To export it:
 <<genind2genalex_nancy, eval=FALSE>>=
 genind2genalex(nancycats, "~/Desktop/nancycats_pop_xy.csv", geo = TRUE)
 @
 <<genind2genalex_cat2, echo=FALSE>>=
 cat("Extracting the table ... Writing the table to ~/Desktop/nancycats_pop_xy.csv ... Done.\n")
 @
-If we wanted to assign a geographic coordinate to each individual, we can simply
-use this little repetition trick knowing that there are 17 populations in the
-data set:
+If we wanted to assign a geographic coordinate to each individual, we can use
+this trick knowing that there are 17 populations in the data set:
 <<nancy_grow_xy>>=
 nan2 <- nancycats
 nan2@other$xy <- nan2@other$xy[rep(1:17, table(pop(nan2))), ]
