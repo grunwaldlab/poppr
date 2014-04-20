@@ -902,25 +902,29 @@ other(nancycats) # two items named xy and repeat_lengths
 \subsection{The genclone object \{send in the clones\}}
 \label{intro:genclone}
 
-In \poppr{} versions 1.0.x, all of the functions revolved around\texttt{genind}
-objects. However, there were a few limitations to our use of this particular
-data structure.
+The \texttt{genclone} class was defined in order to make working with
+hierarchies more intuitive. It is built off of the \texttt{genind} object and
+has dedicated slots for the population hierarchy and defined multilocus
+genotypes.
 
-\begin{enumerate}
-  \item Defining multilocus genotypes was inconsistant when analyzing subsetted
-        data.
-  \item Population hierarchies had to be defined in a data frame contained in 
-        the ``other" slot of the \texttt{genind} object. 
-\end{enumerate}
+The main difference between the genclone and genind objects is how they handle
+populations: With the \texttt{genind} object, the user must find the vector
+defining the population and set it using that vector. With the \texttt{genclone}
+object, the vector is already defined in the object and the user simply supplies
+a formula argument giving the hierarchy. This formula driven method is also used
+for clone correction, combining hierarchical levels and conducting AMOVA. These
+will all be explained in later chapters. For examples and details, type
+\texttt{help("genclone")} in your R console.
 
-Both of these issues led to inefficient data manipulation as well as confusion
-on the user's end. The \texttt{genclone} class was defined in order to make
-working with hierarchies more intuitive. It is built off of the \texttt{genind}
-object and has dedicated slots for the population hierarchy and defined
-multilocus genotypes.
+The function \texttt{as.genclone} allows the user to convert a \texttt{genind}
+object to a \texttt{genclone} object. The following example will demonstrate
+that the \texttt{genclone} object is an extention of the \texttt{genind} object
+as well as the advantages of having populations pre-defined in your data set.
 
 \subsubsection{Function: as.genclone}
 \label{intro:genclone:as.genclone}
+
+\tline{}
 \begin{quote}
 Default Command:
 <<as.genclone_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -930,9 +934,10 @@ print_command(funk)
 \end{quote}
 \begin{itemize}
   \item \textbf{x -} a \texttt{genind} object to be converted.
-  \item \textbf{hierarchy -} an optional data frame whose columns define the 
-  population hierarchy of the data set.
+  \item \textbf{hierarchy -} an optional data frame where each column represents
+  a hierarchical level of the population hierarchy in the data set.
 \end{itemize}
+\bline{}
 
 Let's show an example of a \texttt{genclone} object. First, we will take an
 existing \texttt{genind} object and convert it using the function
@@ -954,12 +959,10 @@ data(Aeut)
 Aeut
 @
 
-We can see that it gives us a lot of about the object. This is useful for people
-who are more comfortable with programming, but might be information overload for
-your average biologist. Unfortunately this output doesn't tell us about the
-number of populations, population hierarchical levels, or multiloucus genotypes.
-When we convert it to a \texttt{genclone} object, the multilocus genotypes will
-be defined and the population hierarchy (if a data frame is defined in the
+This gives us a lot of information about the object, and is useful once you
+become more comfortable with programming. Once we convert it to a
+\texttt{genclone} object, the multilocus genotypes will be defined and the
+population hierarchy (if a data frame is defined in the
 \texttt{@other} slot called ``population\_hierarchy") will be set.
 
 <<as_genclone>>=
@@ -971,8 +974,10 @@ as.genclone(Aeut, hierarchy = other(Aeut)$population_hierarchy[-1])
 @
 
 We can see here that it shows less information, but it gives us a very simple
-overview of our data. Don't be fooled, however, because it contains all the same
-information as a \texttt{genind} object:
+overview of our data. Don't be fooled, however, because it contains the same
+information as a \texttt{genind} object and the advantage of the
+\texttt{genclone} object is that setting the population from the hierarchy
+becomes \textbf{much} easier. 
 
 <<genclone_compare>>=
 c(is.genind(Aeut), is.genclone(Aeut), is.genind(agc), is.genclone(agc))
@@ -981,17 +986,12 @@ c(is.genind(Aeut), is.genclone(Aeut), is.genind(agc), is.genclone(agc))
 c(nInd(Aeut), nInd(agc))
 @
 
-The advantage of the \texttt{genclone} object is that setting the pouplation
-from the hierarchy becomes \textbf{much} easier. Here's an example of how we can
-set the population to a combination of the population hierarchy in both a
-\texttt{genind} and \texttt{genclone} object. 
-
 <<setpop>>=
 # We'll look at the population names
 Aeut$pop.names
 
 # genind way:
-# Get the population hierarchy. Luckily, it was already combined
+# Extract the combined hierarchical levels.
 pophier <- other(Aeut)$population_hierarchy$Pop_Subpop
 pop(Aeut) <- pophier
 Aeut$pop.names
@@ -1002,18 +1002,10 @@ setpop(agc) <- ~Pop/Subpop
 agc
 
 # Notice that you only see the first and last three population names.
-# Use the print method to display all population names.
+# Use the print function to display all population names.
 
 print(agc)
 @
-
-The difference between the two is clear: With the \texttt{genind} object, the
-user must find the vector defining the population and set it using that vector.
-With the \texttt{genclone} object, the vector is already defined in the object
-and the user simply supplies a formula argument giving the hierarchy. This 
-formula driven method is also used for clone correction, combining hierarchical
-levels and conducting AMOVA. These will all be explained in later chapters. For
-examples and details, type \texttt{help("genclone")} in your R console.
 
 %-----------------------------------------------------------------------------%
 %
@@ -1021,30 +1013,23 @@ examples and details, type \texttt{help("genclone")} in your R console.
 \subsection{Accessing the population hierarchy}
 \label{intro:genclone:access}
 
-The hierarchy slot in the genclone object is special because it allows us to
-rapidly access and manipulate different levels of a population hierarchy without
-the complication of creating new data sets. Previously, in poppr, if you wanted
-to access the popualtion hierarchy, you had to provide a vector of the names
-of the population hierarchy. This was awkward because defining a vector of
-strings in R is awkward:
+The hierarchy slot in the genclone object allows us to access and manipulate
+different levels of a population hierarchy without the complication of creating
+new data sets. We implemented the use of hierarchical nested formulae:
 
-<<stringdef, eval = FALSE>>=
-hier = c("Population", "Subpopulation", "Year")
-@
-So, to replace the old method, we decided to implement the use of hierarchical
-nested formulae:
 <<formuladef, eval = FALSE>>=
 hier = ~Population/Subpopulation/Year
 @
-\textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if you only 
-are specifying one level.
+\noindent
+\textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if
+you only are specifying one level.
 
 The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
 years nested within subpopulations, nested within populations. This allows the
 user to easily restructure the population hierarchy. Manipulation of the
 hierarchy is necessary for\seclink{data.manip:cc}{clone correction}and AMOVA
-analysis. See the section\seclink{data.manip:hier}{Can you take me hier(archy)}for 
-more details on manipulation of hierarchies.
+analysis. See the section\seclink{data.manip:hier}{Can you take me
+hier(archy)}for more details on manipulation of hierarchies.
 
 %=============================================================================%
 %=============================================================================%
