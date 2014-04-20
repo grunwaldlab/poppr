@@ -905,16 +905,19 @@ other(nancycats) # two items named xy and repeat_lengths
 The \texttt{genclone} class was defined in order to make working with
 hierarchies more intuitive. It is built off of the \texttt{genind} object and
 has dedicated slots for the population hierarchy and defined multilocus
-genotypes.
+genotypes. The name genclone refers to the fact that it has the ability to
+handle genotypes of clonal organisms (but it is also used for sexual
+populations).
 
 The main difference between the genclone and genind objects is how they handle
 populations: With the \texttt{genind} object, the user must find the vector
-defining the population and set it using that vector. With the \texttt{genclone}
-object, the vector is already defined in the object and the user simply supplies
-a formula argument giving the hierarchy. This formula driven method is also used
-for clone correction, combining hierarchical levels and conducting AMOVA. These
-will all be explained in later chapters. For examples and details, type
-\texttt{help("genclone")} in your R console.
+defining the population and set it using that vector. The \texttt{genclone}
+object already defines a data frame with different population factors or
+hierarchical levels in the object. The user simply supplies a formula defining
+the desired hierarchy with which to set the population. This formula driven
+method is also used for clone correction, combining hierarchical levels and
+conducting AMOVA. These will all be explained in later chapters. For examples
+and details, type \texttt{help("genclone")} in your R console.
 
 The function \texttt{as.genclone} allows the user to convert a \texttt{genind}
 object to a \texttt{genclone} object. The following example will demonstrate
