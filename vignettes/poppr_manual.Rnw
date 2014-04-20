@@ -643,6 +643,7 @@ be imported into \poppr{}.
   the microbov data set. This is the same figure as above, however the
   populations and counts have been removed from the header row and the third
   number in the header has been replaced by 1.}
+  \label{microbov modified}
 \includegraphics{mod_dat}
 \end{figure}
 
@@ -1071,6 +1072,7 @@ For a DNA alignment, missing data could mean something as simple as an insertion
 or deletion, which is biologically relevant. The choice to exclude or estimate
 data has very different implications for the type of data you have.
 
+\tline{}
 \subsubsection{Function: missingno}
 \label{data.manip:missing:missingno}
 
@@ -1112,6 +1114,7 @@ print_command(funk)
     or ``mean". It will print the number of loci or individuals removed if the
     method is ``loci" or ``geno".
 \end{itemize}
+\bline{}
 
 Of course, seeing is believing. Let's take a look at what this does by focusing
 in on areas with missing data. Note that I will be using some sub-setting
@@ -1195,17 +1198,21 @@ our sub-setting.
 \subsection{Population hierarchy construction \{Can you take me hier(archy)?\}}
 \label{data.manip:hier}
 
-\tab\tab In poppr versions 1.0.x, this section of the manual contained a long
-explaination of the function \texttt{splitcombine}. This was a function whose
-intended use was to manipulate population hierarchies
-within\seclink{intro:genind}{genind}objects, but whose useage ended up becoming
-very clunky and a bit confusing. The function has been superceeded by the
-hierarchy methods for\seclink{intro:genclone}{genclone}objects. If you want to
-know more about \texttt{splitcombine}, please see its help page by typing
-\texttt{?splitcombine} or refer to earlier versions of this manual. In this
-section, we will walk you through the process of defining, manipulating, and
-adding to population hierarchies within genclone objects. There are currently 5
-methods that manipulate population hierarchies in genclone objects:
+\tab\tab in \poppr{}, the\seclink{intro:genclone}{genclone}object contains a
+slot called \texttt{hierarchy}. This slot contains a data frame used to define
+hierarchical levels of population factors describing your data. The preferred
+way of defining these hierarchical levels is to concatenate them using `\_' and
+use them to define a single population in your data before you import it into
+\poppr{}. Examples of this format can be found in figures \ref{microbov
+unmodified}, \ref{microbov modified}, and at
+\url{http://dx.doi.org/10.6084/m9.figshare.877104}.
+
+In this section, we will show you how to\seclink{data.manip:hier:define}{define}
+hierarchical levels,\seclink{data.manip:hier:view}{view}those levels to ensure
+that they are correctly defined,\seclink{data.manip:hier:manip}{manipulate} your
+hierarchical levels by adding and renaming them, and use these levels
+to\seclink{data.manip:hier:setpop}{set the population}in
+your\seclink{intro:genclone}{genclone}object using the following methods:
 
 % latex table generated in R 3.0.3 by xtable 1.7-3 package
 % Sat Mar 22 20:24:23 2014
@@ -1216,14 +1223,14 @@ methods that manipulate population hierarchies in genclone objects:
  Method & Function & Input & Result\\ 
   \hline
  split & \cmdlink{data.manip:hier:define:split}{splithierarchy} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{sethierarchy} & data frame & new hierarchy\\ 
+ set & \cmdlink{data.manip:hier:define:set}{sethierarchy} & data frame & new hierarchical levels\\ 
  get & \cmdlink{data.manip:hier:view}{gethierarchy} & formula & data frame\\ 
- name & \cmdlink{data.manip:hier:manip:name}{namehierarchy} & formula & new hierarchy names\\ 
+ name & \cmdlink{data.manip:hier:manip:name}{namehierarchy} & formula & new hierarchical level names\\ 
  add & \cmdlink{data.manip:hier:manip:add}{addhierarchy} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
 \end{table}
-\noindent
+
 
 \begin{center}
   \fcolorbox{light-gray}{light-gray}{
@@ -1242,31 +1249,18 @@ methods that manipulate population hierarchies in genclone objects:
     \end{minipage}
     }
 \end{center}
-
-In this section, we will show you how to\seclink{data.manip:hier:define}{define}
-hierarchies,\seclink{data.manip:hier:view}{view}your hierarchies to ensure that
-populations are correctly defined,\seclink{data.manip:hier:manip}{manipulate}
-your hierarchies by adding and renaming them, and use these hierarchies
-to\seclink{data.manip:hier:setpop}{set the population}in
-your\seclink{intro:genclone}{genclone}object.
+\noindent
+In the next section, we'll explore two ways of defining hierarchical levels.
 
 \subsubsection{Defining hierarchies}
 \label{data.manip:hier:define}
 
-\tab\tab In order to utilize hierarchies, they must be defined. As genind
-objects don't inherently define population hierarchies. The user must do so. One
-way is to define your hierarchies in a spreadsheet and import that as a data
-frame using the function \texttt{read.table}. Another way of automatically doing
-so is to concatenate your hierarchies using a common delimiter such as `\_' and
-defining that as the population factor in your input file. See the section
-\seclink{intro:import:read.genalex}{read.genalex}for more
-details. An example of a formatted GenAlEx file can be found here:
-\url{http://dx.doi.org/10.6084/m9.figshare.877104}. It is an AFLP data set of the
-root rot pathogen \texttt{Aphanomyces euteiches}. We will use this data set as
-an example of importing hierarchical data automatically. We will first copy the
-download link from figshare and use it with the function
-\cmdlink{intro:import:read.genalex}{read.genalex}.
-
+\tab\tab As explained above, the best way to define hierarchical levels is to
+concatenate them using `\_' and set that as your population factor. We will use
+the example data set from \url{http://dx.doi.org/10.6084/m9.figshare.877104}. It
+is an AFLP data set of the root rot pathogen \textit{Aphanomyces euteiches} from
+two fields and multiple soil cores per field. First, we will follow the link and
+copy the download link from figshare.
 <<aphan_dummy_figshare, eval = FALSE>>=
 aphan <- read.genalex("http://files.figshare.com/1314228/rootrot.csv")
 aphan
@@ -1276,12 +1270,12 @@ aphan <- namehierarchy(sethierarchy(agc, gethierarchy(agc, ~Pop_Subpop)), ~Pop)
 aphan
 @
 \noindent
-We can see that there is 1 hierarchy defined, but we know that the data is
-defined by field and soil sample. When data is read in from GenAlEx formatted
-data, the hierarchy is automatically defined as the population. Since we had
-imported the hierarchy in a concatenated manner, we must now use the function
-\texttt{splithierarchy} to remove the concatenation and define the names of the
-hierarchical levels:
+The supplemental information in the data defined two hierarchical leves, yet we
+only see one here labeled `Pop'. This is how populations are automatically
+defined when importing to a\seclink{intro:genclone}{genclone}object since it
+does not know how many hierarchical levels you have defined. To define these
+levels present in the data set, we will need to split them up using the function
+\texttt{splithierarchy}:
 \label{data.manip:hier:define:split}
 <<aphan_split>>=
 splithierarchy(aphan) <- ~field/sample
@@ -1289,48 +1283,66 @@ aphan
 @
 \noindent
 Now we have sucessfully defined our hierarchies. If you have imported your data
-in this manner, you may skip to the \seclink{data.manip:hier:setpop}{defining
-populations with hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, 
-or \seclink{data.manip:hier:manip}{manipulating hierarchies}.
+in this manner, you may skip to the \seclink{data.manip:hier:setpop}{setting
+population hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, or
+\seclink{data.manip:hier:manip}{manipulating hierarchical levels.}
 
-If you have imported your data with a single population and have a separate data
-frame that you read in with \texttt{read.table}, the following is how you would
-define your hierarchy. For demonstrative purposes, we will use the H3N2 viral
-data set. This contains a data frame called `x' in
-the\seclink{intro:genind:other}{other slot}that contains many variables
-including country, year, and month of collection.
+\bline{}
+
+If you have imported your data with a single population and want to add
+hierarchical levels separately, you can use the function \texttt{sethierarchy}
+with a data frame containing your hierarchical levels. For this example, we will
+use the data set \texttt{H3N2}, which contains SNP data from the H3N2 virus.
+This data set holds a data frame in the the\seclink{intro:genind:other}{other
+slot}that contains many variables including country, year, and month of
+collection. We will first load the data and write that data frame to a file on
+the desktop. 
 \label{data:virus}
-
-<<H3N2_data>>=
+<<H3N2_data_show, eval = FALSE>>=
 data(H3N2)
-virus      <- as.genclone(H3N2) # Converting it to a genclone object.
+write.table(other(H3N2)$x, file = "~/Desktop/virus_info.csv", row.names = FALSE)
+@
+<<H3N2_data_noshow, echo = FALSE>>=
+data(H3N2)
 virus_info <- as.data.frame(other(H3N2)$x) # extracting the data frame
+@
+\noindent
+Now we have our data and we have a separate table in a file on our desktop
+defining our hierarchical levels. Let's import those levels into R with
+\texttt{read.table} and see what they are:
 
-virus
+<<H3N2_read_table, eval = FALSE>>=
+virus_info <- read.table("~/Desktop/virus_info.csv", header = TRUE)
 names(virus_info)
 @
+<<H3N2_read_table_eval, echo = FALSE>>=
+names(virus_info)
+@
+
+From here we will convert our genind object to a genclone object and use
+\texttt{sethierarchy} to define the hierarchical levels with the table we just
+imported.
+
 \label{data.manip:hier:define:set}
-\noindent
-Right now, there is no population set, nor are there any hierarchies set. We
-will use the function \texttt{sethierarchy} to define the hierarchy of the data
-set.
 <<H3N2_sethierarchy>>=
-sethierarchy(virus) <- virus_info
+virus <- as.genclone(H3N2) # Converting it to a genclone object.
+sethierarchy(virus) <- virus_info # Setting the hierarchy
 virus
 @
 \noindent
-Now we have hierarchies... a lot of them. Let's say we only wanted year and
-country. All we have to do is simply just subset the data frame by those columns
-and use \texttt{sethierarchy} again.
-
+In this data, levels such as host and segment are unimportant levels because
+they are all the same. Let's say that we are only interested in year and country.
+To make things easier to view, we will set the hierarchical levels to these two
+columns:
 <<H3N2_sethierarchy_again>>=
 sethierarchy(virus) <- virus_info[c("country", "year")]
 virus
 @
-\noindent
-We can use the function \texttt{setpop} to set the population to year with
-respect to country:
 
+Notice that there are no populations defined. Now that we have the hierarchical
+levels in place, we can use it to define the population hierarchy. We will use
+the function \texttt{setpop} to define the population as year with respect to
+country:
 <<H3N2_set_country>>=
 setpop(virus) <- ~year/country
 virus
@@ -1378,14 +1390,14 @@ It will return only the levels you ask it to return:
 head(gethierarchy(virus, ~country))
 @
 
-\subsubsection{Manipulating hierarchies}
+\subsubsection{Manipulating hierarchical levels}
 \label{data.manip:hier:manip}
 
 Once we have our hierarchies set in place, we want to be able to rename and add
 to them. For this example, we will revisit the\seclink{data:virus}{virus
 example}from above. We have set the population hierarchy to be based on year and
-country, but we've noticed that we left out month. And let's say that we did
-something stupid like this:
+country, but we've noticed that we left out month. And let's say that we
+accidentally overwrote the data object like this:
 <<virus_stupid>>=
 virus_info <- virus_info[["month"]]
 names(virus_info)
@@ -1394,8 +1406,8 @@ names(virus_info)
 If we were saving our script the whole time, we could just go back and retrieve
 the data frame, but that defeats the purpose of this section where we imagine
 that we've recieved new information and wanted to add it to our hierarchy. If we
-want to add this to our hierarchy, all we have to do is just use the
-function \texttt{addhierarchy} defined as thus:
+want to add this to our hierarchy, we just use the function
+\texttt{addhierarchy} defined as thus:
 \begin{quote}
 Default Command:
 <<addhierarchy_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -1404,41 +1416,43 @@ print_command(funk)
 @
 \end{quote}
 \noindent
-There are two ways to use this function: by assignment and by argument. 
+We can use this function to add on a new column to the data frame.  
 \label{data.manip:hier:manip:add}
 <<virus_add_arg>>=
-addhierarchy(virus, virus_info, name = "month") # By Argument
-addhierarchy(virus) <- virus_info # By Assignment
+addhierarchy(virus) <- virus_info 
 virus
 @
-
-We notice that the argument method allows you to name your hierarchy, but you
-must reassign a new object whereas the assignment method allows you to
-manipulate the object in place, but the new hierarchy is simply labeled as
-\texttt{NEW}. If you prefer the assignment method, you can still customize the
-name of your hierarchy with the function \texttt{namehierarchy}, which allows
-you to rename all of the levels of your hierarchy
+\noindent
+Notice that the new hierarchical level is simply labeled as \texttt{NEW}. We
+will customize the name of the hierarchical levels with the function
+\texttt{namehierarchy}. 
 \label{data.manip:hier:manip:name}
 
 <<virus_name>>=
 namehierarchy(virus) <- ~country/year/month
 virus
 @
+\noindent
+Of course, perhaps a better way still would be to use a data frame:
+<<virus_add_df, eval = FALSE>>=
+addhierarchy(virus) <- data.frame(month = virus_info)
+@
 
 \subsubsection{Defining populations with hierarchies}
 \label{data.manip:hier:setpop}
 
-Of course, these hierarchies would mean nothing if it was difficult or not
-possible to define the populations in the data set. For this example, we will
-use a data set of \textit{Phytophthora infestans} collected from North America
-and South America.
+Now that we have defined the hierarchical levels in the data set, setting the
+population hierarchy allows us to group our data according to the hierarchical
+level of your choice. This is a necessary step. For this example, we will use a
+data set of \textit{Phytophthora infestans} collected from North America and
+South America.
 
 <<Pinf_setpop>>=
 data(Pinf)
 Pinf
 @
 \noindent
-We notice that above, we have two hierarchies for Continent and Country, but the
+Above we have two hierarchies for Continent and Country, but the
 populations only show Continent level populations. If we wanted to investigate
 each country separately, we would need to reset the population to be represented
 by Country. This can be done with the function \texttt{setpop}. This function
@@ -1460,25 +1474,6 @@ Pinf
 @
 \noindent
 Nice!
-
-Let's see what happens when we want to try to set our population year collected
-with respect to country.
-
-<<Pinf_error, eval = FALSE>>=
-setpop(Pinf) <- ~Country/Year
-@
-
-<<Pinf_error_show, message = TRUE, echo = F>>=
-cat("Error in setpop(x, value) :", poppr:::hier_incompatible_warning(c("Country", "Year"), data.frame(list(Continent = 1, Country = 2))))
-@
-\noindent
-This didn't work because we don't have Year defined within our hierarchy. In 
-this case, we would likely have an outside vector defining the year. To define 
-the population to just year, we could use the \adegenet{} function \texttt{pop}
- to set the population with respect to year, but this would not update the 
-hierarchy. A better way to do this would be to add year to the hierarchy with 
-the function \cmdlink{data.manip:hier:manip}{addhierarchy} and define it as 
-above.
 
 %-----------------------------------------------------------------------------%
 %
