@@ -399,6 +399,8 @@ setMethod(
       } else {
         hierarchy <- data.frame(Pop = pop(gen))
       }
+    } else {
+      hierarchy <- data.frame(lapply(hierarchy, function(f) factor(f, unique(f))))
     }
 
     # No 'initialize' method for genind objects...
@@ -736,6 +738,7 @@ setMethod(
     if (nrow(value) != nInd(x)){
       stop("Number of rows in data frame not equal to number of individuals in object.")
     }
+    value <- data.frame(lapply(value, function(f) factor(f, unique(f))))
     x@hierarchy <- value
     return(x)
   })
@@ -814,6 +817,7 @@ setMethod(
 #' @docType methods
 #' @param sep a \code{character} indicating the character used to separate
 #' population hierarchies. This defaults to "_".
+#' @importFrom reshape2 colsplit
 #==============================================================================#
 splithierarchy <- function(x, value, sep = "_"){
   standardGeneric("splithierarchy")
@@ -854,9 +858,10 @@ setMethod(
       msg2 <- paste("Here is the fist column of the data:", hierarchy[1, ])
       stop(paste(msg1, "\n ", msg2))
     }
-    hierarchy        <- pop_splitter(hierarchy, sep = sep)[-1]
-    names(hierarchy) <- value
-    x@hierarchy      <- hierarchy
+    x@hierarchy <- colsplit(as.character(hierarchy[[1]]), pattern = sep, value)
+    x@hierarchy <- data.frame(lapply(x@hierarchy, function(f) factor(f, levels = unique(f))))
+    # names(hierarchy) <- value
+    # x@hierarchy      <- hierarchy
     return(x) 
   })
 
@@ -902,10 +907,12 @@ setMethod(
     
     hierarchy  <- x@hierarchy
     if ((is.vector(value) | is.factor(value)) & length(value) == nrow(hierarchy)){
+      value <- factor(value, levels = unique(value))
       NEW <- data.frame(value)
       names(NEW) <- name
       hierarchy <- cbind(hierarchy, NEW)
     } else if (is.data.frame(value) && nrow(value) == nrow(hierarchy)){
+      value <- data.frame(lapply(value, function(f) factor(f, unique(f))))
       hierarchy <- cbind(hierarchy, value)
     } else {
       stop("value must be a vector or data frame.")
