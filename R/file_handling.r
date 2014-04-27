@@ -455,6 +455,7 @@ genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE,
     thirdline <- c(thirdline, rep("", lenfac))
   }
   infolines <- rbind(topline, secondline, thirdline)
+
   
   # converting to a data frame
   if(any(!pop@tab %in% c(0, ((1:ploid)/ploid), 1, NA))){
@@ -492,6 +493,12 @@ genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE,
   }
   
   df[df == "NA" | is.na(df)] <- replacement
+  
+  if (ncol(infolines) > ncol(df)){
+    lendiff <- ncol(infolines) - ncol(df)
+    padding <- matrix("", nrow = nInd(pop), ncol = lendiff)
+    df      <- cbind(df, padding)
+  }
   write.table(infolines, file = filename, quote = FALSE, row.names = FALSE, 
               col.names = FALSE, sep = sep)
   write.table(df, file = filename, quote = TRUE, na = replacement, append = TRUE, 
