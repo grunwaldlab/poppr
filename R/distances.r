@@ -176,7 +176,7 @@ nei.dist <- function(x, warning = TRUE){
   IDMAT <- IDMAT/vec[col(IDMAT)]
   IDMAT <- IDMAT/vec[row(IDMAT)]
   D     <- -log(IDMAT)
-  if (any(D == Inf)){
+  if (any(D %in% Inf)){
     D <- infinite_vals_replacement(D, warning)
   }
   D     <- as.dist(D)
