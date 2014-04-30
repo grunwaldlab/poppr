@@ -1079,7 +1079,7 @@ fix_negative_branch <- function(tre){
 
 
 singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gscale = TRUE, 
-                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, ...){
+                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, ...){
   # First, clone correct and get the number of individuals per MLG in order.
   cpop <- pop[.clonecorrector(pop), ]
   if (is.genclone(pop)){
@@ -1130,12 +1130,14 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
   
   # Plot everything
-  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
-              vertex.label = vertex.label, vertex.size = mlg.number*3, 
-              vertex.color = palette(1),  ...)
-  legend(-1.55,1,bty = "n", cex = 0.75, 
-         legend = populations, title = "Populations", fill = palette(1), 
-         border = NULL)
+  if (showplot){
+    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+                vertex.label = vertex.label, vertex.size = mlg.number*3, 
+                vertex.color = palette(1),  ...)
+    legend(-1.55,1,bty = "n", cex = 0.75, 
+           legend = populations, title = "Populations", fill = palette(1), 
+           border = NULL)
+  }
   
   # Save variables and return plot.
   E(mst)$width <- edgewidth
@@ -1623,14 +1625,19 @@ make_attributes <- function(d, nlig, labs, method, matched_call){
 # Private functions utilizing this function:
 # # none
 #==============================================================================#
-update_poppr_graph <- function(graphlist, palette){
-  palette <- match.fun(palette)
+update_poppr_graph <- function(graphlist, PALETTE){
+  PALETTE <- match.fun(PALETTE)
   lookup  <- data.frame(old    = graphlist$colors, 
-                       update = palette(length(graphlist$colors)), 
+                       update = PALETTE(length(graphlist$colors)), 
                        stringsAsFactors = FALSE)
-  colorlist                    <- V(graphlist$graph)$pie.color
-  V(graphlist$graph)$pie.color <- lapply(colorlist, update_colors, lookup)
-  graphlist$colors             <- lookup[[2]]
+  if (nrow(lookup) > 1){
+    colorlist                    <- V(graphlist$graph)$pie.color
+    V(graphlist$graph)$pie.color <- lapply(colorlist, update_colors, lookup)
+  } else {
+    colorlist <- V(graphlist$graph)$color
+    V(graphlist$graph)$color <- rep(PALETTE(1), length(colorlist))
+  }
+  graphlist$colors <- lookup[[2]]
   return(graphlist)
 }
 

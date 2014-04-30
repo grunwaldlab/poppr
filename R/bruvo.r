@@ -404,7 +404,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
+                         palette = palette, showplot = showplot, ...))
   }
   # Obtaining population information for all MLGs
   cpop <- pop[.clonecorrector(pop), ]

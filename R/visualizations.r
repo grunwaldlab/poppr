@@ -337,7 +337,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 poppr.msn <- function (pop, distmat, palette = topo.colors, 
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale=TRUE, showplot = TRUE,...){
+                       wscale=TRUE, showplot = TRUE, ...){
   if (class(distmat) != "dist"){
     if (is.matrix(distmat)){
       if (any(nInd(pop) != dim(distmat))){
@@ -392,7 +392,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
+                         palette = palette, showplot = showplot, ...))
   }
   # Obtaining population information for all MLGs
   mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
