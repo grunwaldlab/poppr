@@ -890,10 +890,12 @@ phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss 
 #==============================================================================#
 
 rerange <- function(x){
-  if (min(x) < 0)
-    x <- x + abs(min(x))
-  if (max(x) > 1)
-    x <- x/max(x)
+  minx <- min(x, na.rm = TRUE)
+  maxx <- max(x, na.rm = TRUE)
+  if (minx < 0)
+    x <- x + abs(minx)
+  if (maxx > 1)
+    x <- x/maxx
   return(x)
 }
 
