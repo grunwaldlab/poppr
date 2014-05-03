@@ -110,83 +110,11 @@ new_graph_pops <- function(graph, dat, color){
 }
 
 
-test_microsat <- function(x){
-  allnames <- unlist(lapply(x@all.names, as.numeric))
-  if (any(is.na(allnames))){
-    return(FALSE)
-  } else {
-    return(TRUE)
-  }
-}
-
-test_zeroes <- function(x){
-  if (test_microsat(x)){
-    allnames <- unlist(lapply(x@all.names, as.numeric))
-    if (any(allnames == 0) & x@ploidy > 2){
-      return(TRUE)
-    }
-  }
-  return(FALSE)
-}
-
-get_local_ploidy <- function(x){
-  ploidy <- x@ploidy
-  stopifnot(ploidy > 2)
-  stopifnot(test_zeroes(x))
-  zerocol <- which(as.numeric(x@all.names[[1]]) == 0)
-  locs <- names(x@loc.names)
-  locmat <- vapply(1:nLoc(x), function(z) as.integer(round(ploidy - x[loc = locs[z]]@tab[, zerocol]*ploidy)), 
-                   integer(nInd(x)))
-  return(locmat)
-}
 
 
-polyploid_table <- function(gen, plot = TRUE, df = FALSE, returnplot = FALSE, 
-                            low = "blue", high = "red"){
-  datalabel <- as.character(match.call()[2])
-  if (gen@ploidy <= 2){
-    warning("This function is meant for polyploid data.")
-    ploid_table <- matrix(gen@ploidy, nrow = nInd(gen), ncol = nLoc(gen))
-    missing <- propTyped(gen, "both") == 0
-    ploid_table[missing] <- NA
-  } else {
-    ploid_table <- get_local_ploidy(gen)
-  }
-  dimnames(ploid_table) <- list(Samples = indNames(gen), Loci = locNames(gen))
-  if (plot){
-    ploid_df <- melt(ploid_table, value.name = "Observed_Ploidy")
-    vars <- aes_string(x = "Loci", y = "Samples", fill = "Observed_Ploidy")
-
-    mytheme <- theme_classic() +  
-               theme(axis.text.x = element_text(size = 10, angle = -45, 
-                                                hjust = 0, vjust = 1)) 
-
-    title <- paste("Observed ploidy of", datalabel)
-    ploidplot <- ggplot(ploid_df) + geom_tile(vars) + 
-                 scale_fill_gradient(low = low, high = high) + 
-                 scale_x_discrete(expand = c(0, -1)) + 
-                 scale_y_discrete(expand = c(0, -1), 
-                                  limits = rev(unique(ploid_df$Samples))) + 
-                 labs(list(title = title, x = "Locus", y = "Sample", 
-                           fill = "Observed\nPloidy")) +
-                 mytheme 
-
-    print(ploidplot)
-  }
-
-  if (df){
-    if(!exists("ploid_df")){
-      ploid_df <- melt(ploid_table, value.name = "Observed_Ploidy")
-    }
-    ploid_table <- ploid_df
-  } else {
-    class(ploid_table) <- c("locustable", "matrix")
-  }
-  if (returnplot & exists("ploidplot")){
-    ploid_table <- list(table = ploid_table, plot = ploidplot)
-  }
-  return(ploid_table)
-}
+#==============================================================================#
+# An attempt at making the shuffling schemes handle polyploid data better.
+#==============================================================================#
 
 new.permut.shuff <- function(mat, ploidy = 2L, ploidvec = NULL, zerocol = 1L){
   bucket     <- round(colSums(mat, na.rm = TRUE)*ploidy)[-zerocol]

@@ -1670,5 +1670,65 @@ update_single_color <- function(x, lookup, colorvec){
   return(update[original %in% colorvec[x]])
 }
 
+#==============================================================================#
+# Function used to obtain information about local ploidy in a genind data set
+# for polyploids. When polyploids are imported, the entire data set is coded in
+# such a way that the whole data set is considered to be the ploidy of the higest
+# observed datum. The missing data are coded as "0". This function will simply
+# take the difference between the maximum ploidy and the number of zeroes present. 
+#
+# Public functions utilizing this function:
+# info_table
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+get_local_ploidy <- function(x){
+  ploidy <- x@ploidy
+  stopifnot(ploidy > 2)
+  stopifnot(test_zeroes(x))
+  zerocol <- which(as.numeric(x@all.names[[1]]) == 0)
+  locs <- names(x@loc.names)
+  locmat <- vapply(1:nLoc(x), function(z) as.integer(round(ploidy - x[loc = locs[z]]@tab[, zerocol]*ploidy)), 
+                   integer(nInd(x)))
+  return(locmat)
+}
+#==============================================================================#
+# Test if a data set is comprised of microsatellites.
+#
+# Public functions utilizing this function:
+# none
+#
+# Private functions utilizing this function:
+# # test_zeroes
+#==============================================================================#
+test_microsat <- function(x){
+  allnames <- unlist(lapply(x@all.names, as.numeric))
+  if (any(is.na(allnames))){
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
+#==============================================================================#
+# Test if a polyploid microsatellite data set represent missing data as "0"
+#
+# Public functions utilizing this function:
+# none
+#
+# Private functions utilizing this function:
+# # get_local_ploidy
+#==============================================================================#
+test_zeroes <- function(x){
+  if (test_microsat(x)){
+    allnames <- unlist(lapply(x@all.names, as.numeric))
+    if (any(allnames == 0) & x@ploidy > 2){
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
+
 
 
