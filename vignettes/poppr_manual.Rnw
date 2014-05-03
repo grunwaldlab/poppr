@@ -4465,10 +4465,22 @@ definition and description.
 \cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
 \texttt{splitcombine*} & Manipulates population hierarchy *Deprecated\\ 
 \hline
+\textbf{Distances} & \\
+\cmdlink{index:bruvo:bruvo.dist}{bruvo.dist} & Bruvo's distance \\
+\cmdlink{index:dist:diss.dist}{diss.dist} & Absolute genetic distance (see \texttt{provesti.dist}) \\
+\texttt{nei.dist} & Nei's 1978 genetic distance \\
+\texttt{rogers.dist} & Rogers' euclidean distance \\
+\texttt{reynolds.dist} & Reynolds' coancestry distance \\
+\texttt{edwards.dist} & Edwards' angular distance \\
+\texttt{provesti.dist} & Provesti's absolute genetic distance \\
+\hline
+\textbf{Bootstrapping} & \\
+\texttt{aboot} & Creates a bootstrapped dendrogram for any distance measure \\
+\cmdlink{index:trees:bruvo.boot}{bruvo.boot} & Produces dendrograms with bootstrap support\\
+ & based on Bruvo's distance \\
+\hline
 \textbf{Analysis} & \\
-\cmdlink{index:trees:bruvo.boot}{bruvo.boot} & Produces dendrograms with bootstrap support based on Bruvo's distance \\
-\cmdlink{index:bruvo:bruvo.dist}{bruvo.dist} & Calculates Bruvo's distance \\
-\cmdlink{index:dist:diss.dist}{diss.dist} & Calculates the percent allelic dissimilarity \\
+\texttt{poppr.amova} & Analysis of Molecular Variance (as implemented in ade4) \\
 \cmdlink{index:iard:ia}{ia} & Calculates the index of association \\
 \cmdlink{mlg:mlg:mlg}{mlg} & Calculates the number of multilocus genotypes \\
 \cmdlink{mlg:cross:mlg.crosspop}{mlg.crosspop} & Finds all multilocus genotypes that cross populations \\
@@ -4479,12 +4491,15 @@ definition and description.
 \cmdlink{summary:poppr}{poppr.all} & Returns a diversity table by population for all compatible files specified \\
 \hline
 \textbf{Visualization} & \\
+\texttt{plot\_poppr\_msn} & Plots minimum spanning networks produced in poppr with\\
+ & scale bar and legend \\
 \cmdlink{index:trees:greycurve}{greycurve} & Helper to determine the appropriate parameters for adjusting the\\
  & grey level for msn functions \\
 \cmdlink{index:trees:bruvo.msn}{bruvo.msn} & Produces minimum spanning networks based off Bruvo's distance\\
  & colored by population \\
 \cmdlink{index:trees:poppr.msn}{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\  
  & matrix related to the data \\
+\texttt{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
 \hline
 \end{tabular}
 \end{table}
