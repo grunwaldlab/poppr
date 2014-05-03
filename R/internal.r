@@ -894,6 +894,7 @@ rerange <- function(x){
   maxx <- max(x, na.rm = TRUE)
   if (minx < 0)
     x <- x + abs(minx)
+    maxx <- maxx + abs(minx)
   if (maxx > 1)
     x <- x/maxx
   return(x)
