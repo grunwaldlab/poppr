@@ -1481,17 +1481,20 @@ Nice!
 \subsection{Extract populations \{Divide (populations) and conquer (your analysis)\}}
 \label{data.manip:divide}
 
-\tab\tab As I've mentioned before, \adegenet{} has many ways of sub-setting the
-data, but you cannot easily subset a \texttt{genind} object by population in an
-efficient way. \Poppr{} allows sub-setting a population from a \texttt{genind}
-object with one command.
+\tab\tab \Adegenet{} provides methods for subsetting data by individual or
+splitting all of the data into a list of populations. If you only want one or
+two populations, these methods become tedious. The \poppr{} function
+\texttt{popsub} makes this easier:
+
 \subsubsection{Function: popsub}
 \label{data.manip:divide:popsub}
 
 \tab\tab The command \texttt{popsub} is powerful in that it allows you to choose
 exactly what populations you choose to include or exclude from your analyses. As
-with many R functions, you can easily use this within a function to avoid
+with many R functions, you can also use this within a function to avoid
 creating a new variable to keep track of.
+
+\tline{}
 \begin{quote}
 Default Command:
 <<popsub_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -1502,11 +1505,11 @@ print_command(funk)
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{sublist -} The vector of populations or integers representing
-  the populations in your data set you wish to retain. For example:
+  \item \texttt{sublist -} vector of populations or integers representing
+  the populations in your data set you wish to \textbf{retain}. For example:
   \texttt{sublist = c("pop\_z", "pop\_y")} or \texttt{sublist = 1:2}.
-  \item \texttt{blacklist -} The vector of populations or integers representing
-  the populations in your data set you wish to exclude. This can take the same
+  \item \texttt{blacklist -} vector of populations or integers representing
+  the populations in your data set you wish to \textbf{exclude}. This can take the same
   type of arguments as sublist, and can be used in conjunction with sublist for
   when you want a range of populations, but know that there is one in there that
   you do not want to analyze. For example: \texttt{sublist = 1:15, blacklist =
@@ -1514,14 +1517,13 @@ print_command(funk)
   user to be extremely paranoid about the data. You can set the blacklist to
   contain populations that are not even in your data set and it will still work!
   \item \texttt{mat -} (see section\seclink{mlg}{Multilocus Genotype
-  Analysis}for more information) This is where you would put a matrix that's
-  produced by \texttt{mlg.table} to be subsetted instead of the genind object.
-  If you do this, the matrix will return with only the rows equal to your
-  populations and only the multilocus genotypes (columns) pertaining to those
-  populations.
+  Analysis}for more information) A matrix produced from
+  the\cmdlink{mlg:table:mlg.table}{mlg.table}function. This overrides the
+  \textit{pop} argument and subsets this table instead.
 \end{itemize}
+\bline{}
 
-To demonstrate this tool, let's revisit the \seclink{data:virus}{virus data} set
+To demonstrate this tool, let's revisit the \seclink{data:virus}{virus}data set
 that we saw in\seclink{data.manip:hier:define}{Defining hierarchies.}Let's say
 we wanted to analyze only the data in North America. To make sure we are all on
 the same page, we will reset the population factor to ``country".
@@ -1532,12 +1534,10 @@ vna <- popsub(virus, sublist=c("USA", "Canada"))
 vna$pop.names
 @
 \noindent
-Since this is a larger data set, running the \texttt{summary} function might
-take a few seconds longer than we want it to. If we want to see the population
-size, we can use the \adegenet{} function \texttt{nInd()}:
+If we want to see the population size, we can use the \adegenet{} function
+\texttt{nInd()}:
 <<popsub_sizes>>=
-nInd(vna)
-nInd(virus)
+c(NorthAmerica = nInd(vna), Total = nInd(virus))
 @
 \noindent
 You can see that the population factors are correct and that the size of the
@@ -1548,14 +1548,14 @@ vnaminus <- popsub(virus, blacklist=c("USA", "Canada"))
 vnaminus$pop.names
 @
 \noindent
-Let's make sure that the number of individuals in both data sets added up equals
+Let's make sure that the number of individuals in both data sets is equal to
 the number of individuals in our original data set:
 <<length_test>>=
 (nInd(vnaminus) + nInd(vna)) == nInd(virus)
 @
 
 Now we have data sets with and without North America. Let's try something a bit
-more challenging. Let's say that we want The first 10 populations in
+more challenging. Let's say that we want the first 10 populations in
 alphabetical order, but we know that we still don't want any countries in North
 America. We can easily do this by using the \textit{base} function
 \texttt{sort}.
@@ -1573,13 +1573,16 @@ And that, is how you subset your data with poppr!
 \subsection{Clone-censor data sets \{Attack of the clone correction\}}
 \label{data.manip:cc}
 
-\tab\tab Clone correction refers to the ability of keeping one observation per
-clone in a given population (or sub-population). Clone correcting can be
+\tab\tab Clone correction refers to the ability of keeping one observation of each MLG in a given population (or sub-population). Clone correcting can be
 hazardous if its done by hand (even on small data sets) and it requires a
 defined population hierarchy to get relevant results. \Poppr{} has a clone
-correcting function that is able to correct at the lowest level of any defined
+correcting function that that will correct down to the lowest level of any defined
 population hierarchy. Note that clone correction in \poppr{} is sensitive to
 missing data, as it treats all missing data as a single extra allele.
+
+This function will create new data sets, but it is also utilized by the function
+\cmdlink{summary:poppr}{poppr}natively.
+
 \subsubsection{Function: clonecorrect}
 \label{data.manip:cc:clonecorrect}
 
@@ -1588,6 +1591,7 @@ lowest population level. Population levels are specified with the \texttt{hier}
 flag. You can choose to combine the population hierarchy to analyze at the
 lowest population level by choosing \texttt{combine = TRUE}.
 
+\tline{}
 \begin{quote}
 Default Command:
 <<clonecorrect_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -1600,8 +1604,8 @@ print_command(funk)
    \texttt{genind} object that has a population hierarchy data frame in the
    \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily
    require a population factor to begin with.
-  \item \texttt{hier -} A formula where the levels representing the hierarchical
-   levels in your data.
+  \item \texttt{hier -} A hierarchical formula (eg. \texttt{$\sim$Pop/Subpop}),
+  representing the hierarchical levels in your data.
   \item \texttt{dfname -} \textbf{Only for use in genind objects, otherwise,
    deprecated} The name of a data frame you have in the \texttt{@other} slot
    with the population factors.
@@ -1622,42 +1626,38 @@ print_command(funk)
    \texttt{keep = 2:3} since those are the second and third levels of the
    hierarchy.
 \end{itemize}
+\bline{}
 
 Let's look at ways to clone-correct our data. We'll look at our \textit{A.
 euteichies} data that we loaded earlier in the
 section\seclink{data.manip:hier}{Can you take me hier(archy)} since that data
-set is known to include clonal populations \cite{Grunwald:2006}. 
-Normally, we will assign the clone corrected data to a new variable, but we will
-not do so for this demonstration. As the data sets pass by, notice how many
-individuals and multilocus genotypes we have in the genclone object.
+set is known to include clonal populations \cite{Grunwald:2006}. Try playing
+around with the data and see what different combinations of the \texttt{hier},
+and \texttt{keep} flags produce. Below, I will give three examples of clone
+corrections at the sample level with respect to field, at the field level, and
+finally, at the level of the entire data set.
 
+First, we will examine the original data set.
 <<clonecorrect>>=
 aphan # Original object
 @
-Correcting by sample with respect to field and keeping field as the population.
+\noindent
+Now we correct by sample with respect to field and keep the field as the population.
 <<clonecorrect2>>=
 clonecorrect(aphan,  hier = ~field/sample)
+# Your turn: Use the same hierarchy and use combine = TRUE and then
+# keep = 1:2. Is there any difference?
 @
-Keeping both field and sample
+\noindent
+Correcting by field. Notice how the number of MLG is much closer to our census.
 <<clonecorrect3>>=
-clonecorrect(aphan, hier = ~field/sample, combine = TRUE)
-@
-Keeping only the sample
-<<clonecorrect4>>=
-clonecorrect(aphan, hier = ~field/sample, keep = 2)
-@
-Correcting by field
-<<clonecorrect5>>=
 clonecorrect(aphan, hier = ~field)
 @
-Correcting over whole data set
+\noindent
+Correcting over whole data set. Our MLG is equal to our census.
 <<clonecorrectx>>=
 clonecorrect(aphan, hier = NA)
 @
-\noindent
-That, in a nutshell is clone correction. Note that you can use this to create 
-new data sets, but also that the function\cmdlink{summary:poppr}{poppr}also
-utilizes this function internally. 
 
 %-----------------------------------------------------------------------------%
 %
@@ -1666,38 +1666,30 @@ utilizes this function internally.
 \label{data.manip:shuffle}
 
 \tab\tab A common null hypothesis for populations with mixed reproductive modes
-is panmixia, or to put it simply: lots of sex. A handy way to test for that is
-permutation analysis to assess random linkage among loci whereupon you randomly
-shuffle your data. \Poppr{} uses randomly shuffled data sets in order to
-calculate P-values for the index of association ($I_A$ and $\bar{r}_d$)
-\cite{Agapow:2001}. Since there might be other tests where a permutation
-analysis would be pertinent, a shuffler for \texttt{genind} objects was created
-with four shuffling schemes: two schemes shuffling without replacement and two
-shuffling with replacement. Details below.
-\subsubsection{Function: shufflepop}
-\label{data.manip:shuffle:shufflepop}
-\begin{quote}
-Default Command:
-<<shufflepop_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "shufflepop"
-print_command(funk)
-@
-% \texttt{shufflepop(pop, method = 1)}
-\end{quote}
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{method -} a number indicating the method of sampling you wish to
-  use. The following methods are available for use:
-  \begin{enumerate}
-    \item \textbf{Permute Alleles (default)} This is a sampling scheme that will permute alleles within the locus. For example, a single diploid locus with four alleles (1, 2, 3, 4) with the frequencies of 0.1, 0.2, 0.3, and 0.4, respectively:
-% <<shuffle_mat, echo=FALSE>>=
-% exmat <- matrix(c(4,4,
-%          4,1,
-%          4,3,
-%          2,2,
-%          3,3), 5, byrow=TRUE)
-% exmat
-% @
+is panmixia, or to put it simply: lots of sex. \Poppr{} randomly shuffles data
+sets in order to calculate P-values for the index of association ($I_A$ and
+$\bar{r}_d$) \cite{Agapow:2001} using 4 different methods: 
+
+% latex table generated in R 3.1.0 by xtable 1.7-3 package
+% Fri May  2 23:17:17 2014
+\begin{table}[ht]
+\centering
+\begin{tabular}{rll}
+  \hline
+method & strategy & units sampled \\ 
+  \hline
+1 & permutation & alleles \\ 
+  2 & simulation & alleles \\ 
+  3 & simulation & alleles \\ 
+  4 & permutation & genotypes \\ 
+   \hline
+\end{tabular}
+\end{table} 
+
+These methods are detailed below. We will create a dummy data set to be shuffled
+by each example below. Let's assume a single diploid locus with four alleles (1,
+2, 3, 4) with the frequencies of 0.1, 0.2, 0.3, and 0.4, respectively:
+
 % latex table generated in R 3.0.3 by xtable 1.7-3 package
 % Sun Mar 23 11:52:35 2014
 \begin{table}[h!]
@@ -1716,8 +1708,36 @@ print_command(funk)
         \caption{Original}
         \label{tab:original}
 \end{table}
-\newpage
-Might become
+\noindent
+The 4 methods are detailed below.
+
+\tline{}
+\subsubsection{Function: shufflepop}
+\label{data.manip:shuffle:shufflepop}
+\begin{quote}
+Default Command:
+<<shufflepop_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "shufflepop"
+print_command(funk)
+@
+% \texttt{shufflepop(pop, method = 1)}
+\end{quote}
+\begin{itemize}
+  \item \texttt{pop -} a \texttt{genind} object.
+  \item \texttt{method -} a number indicating the method of sampling you wish to
+  use. The following methods are available for use:
+  \begin{enumerate}
+    \item \textbf{Permute Alleles (default)} This is a sampling scheme that will \textbf{permute alleles within the locus.}
+% <<shuffle_mat, echo=FALSE>>=
+% exmat <- matrix(c(4,4,
+%          4,1,
+%          4,3,
+%          2,2,
+%          3,3), 5, byrow=TRUE)
+% exmat
+% @
+
+The example above might become tables \ref{tab:permsinglebest} and \ref{tab:permtwobest}.
 \begin{table}[h!]
 \centering
 \makebox[0pt][c]{\parbox{\textwidth}{%
@@ -1734,7 +1754,7 @@ Might become
            \hline
         \end{tabular}
         \caption{Permute 1}
-        \label{tab:singlebest}
+        \label{tab:permsinglebest}
     \end{minipage}
     \hfill
     \begin{minipage}[b]{0.45\hsize}\centering
@@ -1750,18 +1770,18 @@ Might become
            \hline
         \end{tabular}
         \caption{Permute 2}
-        \label{tab:twobest}
+        \label{tab:permtwobest}
     \end{minipage}
 }}
 \end{table}
 
 As you can see, The heterozygosity has changed, yet the allelic frequencies
-remain the same. Overall this would show you, for example, what would happen if
+remain the same. Overall this would show you what would happen if
 the sample you had underwent panmixis within this sample itself.
     \item \textbf{Parametric Bootstrap} The previous scheme reshuffled the
-    observed sample, but the parametric bootstrap draws samples from a
-    multinomial distribution using the observed allele frequencies as weights.
-    Here are two samples to show you what I mean.
+    observed sample, but the parametric bootstrap \textbf{draws samples from a
+    multinomial distribution using the observed allele frequencies as weights.}
+    Tables \ref{tab:param1} and \ref{tab:param2} are examples of what I mean.
 % <<param_boot, echo=FALSE>>=
 % set.seed(1001)
 % cat("First Sample")
@@ -1815,8 +1835,8 @@ it were panmictic and your original sample gave you a basis for estimating
 expected allele frequencies. Since estimates are made from the observed allele
 frequencies, small samples will produce skewed results.
     \item \textbf{Non-Parametric Bootstrap} The third method is sampling with
-    replacement, again drawing from a multinomial distribution, but with no
-    assumption about the allele frequencies.
+    replacement, again \textbf{drawing from a multinomial distribution, but with no
+    assumption about the allele frequencies} (tables \ref{tab:nonparam1} and \ref{tab:nonparam2}).
 % <<boot, echo=FALSE>>=
 % set.seed(1001)
 % matrix(sample(1:4, 10, prob=rep(1, 4), replace=TRUE), 5, byrow=T)
@@ -1867,8 +1887,9 @@ the alleles have a 1 in 4 chance of being chosen.
     \item \textbf{Multilocus permutation} This is called Multilocus permutation
     because it does the same thing as the permutation analysis in the program
     \textit{multilocus} by Paul Agapow and Austin Burt \cite{Agapow:2001}. This
-    will shuffle the genotypes at each locus. Using our example above, here it
-    is shuffled with method 4:
+    will shuffle the genotypes at each locus. Using our example above, tables
+    \ref{tab:singlebest} and \ref{tab:twobest}
+    are shuffled with method 4.
 % <<multilocus_shuffle,echo=FALSE>>=
 % set.seed(1001)
 % exmat[sample(1:5), ]
@@ -1917,10 +1938,13 @@ sample, you will only see a homozygote with allele 2. This also ensures that the
 P-values associated with $I_A$ and $\bar{r}_d$ are exactly the same (for an
 explanation, see the end of\seclink{index:iard:ia}{Function: ia}in this manual).
 Unfortunately, if you are trying to simulate a sexual population, this does not
-make much biological sense as it assumes that alleles are not independently
-assorting within individuals.
+make much biological sense as it \textbf{assumes that alleles are not independently
+assorting within individuals.}
   \end{enumerate}
 \end{itemize}
+
+\bline{}
+
 These shuffling schemes have been implemented for the index of association, but
 there may be other summary statistics you can use \texttt{shufflepop} for. All
 you have to do is use the function \texttt{replicate}. Let's use
