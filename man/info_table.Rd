@@ -8,8 +8,8 @@ info_table(gen, type = "missing", percent = TRUE, plot = FALSE,
   plotlab = TRUE, scaled = TRUE)
 }
 \arguments{
-  \item{x}{a \linkS4class{genind} or \linkS4class{genclone}
-  object.}
+  \item{gen}{a \linkS4class{genind} or
+  \linkS4class{genclone} object.}
 
   \item{type}{\code{character}. What information should be
   returned. Choices are "missing" (Default) and "ploidy".

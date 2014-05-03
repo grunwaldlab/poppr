@@ -463,7 +463,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 #' Create a table summarizing missing data or ploidy information of a genind or
 #' genclone object
 #' 
-#' @param x a \linkS4class{genind} or \linkS4class{genclone} object.
+#' @param gen a \linkS4class{genind} or \linkS4class{genclone} object.
 #'   
 #' @param type \code{character}. What information should be returned. Choices
 #'   are "missing" (Default) and "ploidy". See Description.
