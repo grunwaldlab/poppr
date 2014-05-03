@@ -460,148 +460,205 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
 
 #==============================================================================#
-#' Create a table summarizing missing data a genind or genclone object
+#' Create a table summarizing missing data or ploidy information of a genind or
+#' genclone object
 #' 
 #' @param x a \linkS4class{genind} or \linkS4class{genclone} object.
-#' 
-#' @param percent \code{logical}. If \code{TRUE} (default), table and plot will
-#'   represent missing data as a percentage of each cell. If \code{FALSE}, the 
-#'   table and plot will represent missing data as raw counts. (See details)
-#' 
-#' @param plot \code{logical}. If \code{TRUE}, a simple heatmap will be
+#'   
+#' @param type \code{character}. What information should be returned. Choices
+#'   are "missing" (Default) and "ploidy". See Description.
+#'   
+#' @param percent \code{logical}. (ONLY FOR \code{type = 'missing'}) If
+#'   \code{TRUE} (default), table and plot will represent missing data as a
+#'   percentage of each cell. If \code{FALSE}, the table and plot will represent
+#'   missing data as raw counts. (See details)
+#'   
+#' @param plot \code{logical}. If \code{TRUE}, a simple heatmap will be 
 #'   produced. If \code{FALSE} (default), no heatmap will be produced.
-#' 
+#'   
 #' @param df \code{logical}. If \code{TRUE}, the data will be returned as a long
-#'   form data frame. If \code{FALSE} (default), a matrix with populations in
-#'   rows and loci in columns will be returned.
-#' 
+#'   form data frame. If \code{FALSE} (default), a matrix with samples in rows
+#'   and loci in columns will be returned.
+#'   
 #' @param returnplot \code{logical}. If \code{TRUE}, a list is returned with two
-#'   elements: \code{table} - the normal output and \code{plot} - the ggplot
-#'   object. If \code{FALSE}, the missing table is returned.
-#' 
-#' @param low \code{character}. What color should represent no missing data?
-#'   (default: "blue")
-#' 
-#' @param high \code{character}. What color should represent the highest amount
-#'   of missing data? (default: "red")
+#'   elements: \code{table} - the normal output and \code{plot} - the ggplot 
+#'   object. If \code{FALSE}, the table is returned.
 #'   
-#' @param plotlab \code{logical}. If \code{TRUE} (default), values of missing
-#'   data greater than 0\% will be plotted. If \code{FALSE}, the plot will
-#'   appear unappended.
-#' 
-#' @param scaled \code{logical}. This is for when \code{percent = TRUE}. If
-#'   \code{TRUE} (default), the color specified in \code{high} will represent
-#'   the highest observed value of missing data. If \code{FALSE}, the color
-#'   specified in \code{high} will represent 100\%.
+#' @param low \code{character}. What color should represent no missing data or 
+#'   lowest observed ploidy? (default: "blue")
 #'   
-#' @return a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot
-#'   = TRUE}) representing missing data in a \linkS4class{genind} or
-#'   \linkS4class{genclone} object.
+#' @param high \code{character}. What color should represent the highest amount 
+#'   of missing data or observed ploidy? (default: "red")
+#'   
+#' @param plotlab \code{logical}. (ONLY FOR \code{type = 'missing'}) If
+#'   \code{TRUE} (default), values of missing data greater than 0\% will be
+#'   plotted. If \code{FALSE}, the plot will appear unappended.
+#'   
+#' @param scaled \code{logical}. (ONLY FOR \code{type = 'missing'}) This is for
+#'   when \code{percent = TRUE}. If \code{TRUE} (default), the color specified
+#'   in \code{high} will represent the highest observed value of missing data.
+#'   If \code{FALSE}, the color specified in \code{high} will represent 100\%.
+#'   
+#' @return a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot 
+#'   = TRUE}) representing missing data per population (\code{type = 'missing'})
+#'   or ploidy per individual (\code{type = 'ploidy'}) in a \linkS4class{genind}
+#'   or \linkS4class{genclone} object.
 #' 
-#' @details This data is potentially useful for identifying areas of systematic 
-#'   missing data. There are a few caveats to be aware of. 
-#'   \itemize{ \item \strong{For counts of missing data}: Each count represents
-#'   the number of individuals with missing data at each locus. The last column,
-#'   "mean" can be thought of as the average number of individuals with missing
-#'   data per locus. \item \strong{For percentage missing data}: This percentage
-#'   is \strong{relative to the population and locus}, not ot the enitre data
-#'   set. The last colum, "mean" represents the average percent of the
-#'   population with missing data per locus. }
-#' 
+#' @details 
+#'   Missing data is accounted for on a per-population level.\cr
+#'   Ploidy is accounted for on a per-individual level.
+#'   
+#'   \strong{For type = 'missing'}\cr
+#'   This data is potentially useful for identifying areas of systematic missing
+#'   data. There are a few caveats to be aware of. \itemize{ \item
+#'   \strong{Regarding counts of missing data}: Each count represents the number
+#'   of individuals with missing data at each locus. The last column, "mean" can
+#'   be thought of as the average number of individuals with missing data per
+#'   locus. \item \strong{Regarding percentage missing data}: This percentage is
+#'   \strong{relative to the population and locus}, not ot the enitre data set.
+#'   The last colum, "mean" represents the average percent of the population
+#'   with missing data per locus. } 
+#'   \strong{For type = 'ploidy'}\cr
+#'   This option is useful for data that has been imported with mixed ploidies.
+#'   It will summarize the relative levels of ploidy per individual per locus.
+#'   This is simply based off of observed alleles and does not provide any
+#'   further estimates.
+#'   
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
 #' data(nancycats)
-#' nancy.miss <- missing_table(nancycats, plot = TRUE)
+#' nancy.miss <- info_table(nancycats, plot = TRUE, type = "missing")
+#' data(Pinf)
+#' Pinf.ploid <- info_table(Pinf, plot = TRUE, type = "ploidy")
 #' 
 #==============================================================================#
-missing_table <- function(x, percent = TRUE, plot = FALSE, df = FALSE, 
-                          returnplot = FALSE, low = "blue", high = "red", 
-                          plotlab = TRUE, scaled = TRUE){
-  pops       <- seppop(x, drop = FALSE)
-  pops$Total <- x
-  inds       <- 1
-  if (percent){
-    inds <- c(table(pop(x)), nInd(x))
-  }
-  misstab              <- matrix(0, nrow = nLoc(x) + 1, ncol = length(pops))
-  misstab[1:nLoc(x), ] <- vapply(pops, number_missing_locus, numeric(nLoc(x)), 1)
-  misstab[-nrow(misstab), ] <- t(apply(misstab[-nrow(misstab), ], 1, "/", inds))
-  misstab[nrow(misstab), ]  <- colMeans(misstab[-nrow(misstab), ])
-  rownames(misstab)         <- c(x@loc.names, "Mean")
-  colnames(misstab)         <- names(pops)
-  if (all(misstab == 0)){
-    cat("No Missing Data Found!")
-    return(NULL)
-  }
-  if (plot){
-    missdf      <- melt(misstab, varnames = c("Locus", "Population"), 
-                        value.name = "Missing")
-    leg_title   <- "Missing"
-    missdf[1:2] <- data.frame(lapply(missdf[1:2], 
-                                     function(x) factor(x, levels = unique(x))))
-    # levels(missdf[[1]]) <- rev(levels(missdf[[1]]))
-    plotdf <- textdf <- missdf
-    if (percent) {
-      plotdf$Missing <- round(plotdf$Missing*100, 2)
-      textdf$Missing <- paste(plotdf$Missing, "%")
-      miss           <- "0 %"
-      title          <- paste("Percent missing data per locus and population of", 
-                              as.character(substitute(x)))
-      leg_title      <- paste("Percent", leg_title)
-      if(!scaled){
-        lims <- c(0, 100)
+info_table <- function(gen, type = "missing", percent = TRUE, plot = FALSE, 
+                       df = FALSE, returnplot = FALSE, low = "blue", 
+                       high = "red", plotlab = TRUE, scaled = TRUE){
+  datalabel <- as.character(match.call()[2])
+  ARGS      <- c("missing", "ploidy")
+  type      <- match.arg(type, ARGS)
+
+  if (type == "missing"){
+
+    valname    <- "Missing"
+    pops       <- seppop(gen, drop = FALSE)
+    pops$Total <- gen
+    inds       <- 1
+    if (percent){
+      inds <- c(table(pop(gen)), nInd(gen))
+    }
+    data_table <- matrix(0, nrow = nLoc(gen) + 1, ncol = length(pops))
+    data_table[1:nLoc(gen), ] <- vapply(pops, number_missing_locus, numeric(nLoc(gen)), 1)
+    data_table[-nrow(data_table), ] <- t(apply(data_table[-nrow(data_table), ], 1, "/", inds))
+    data_table[nrow(data_table), ]  <- colMeans(data_table[-nrow(data_table), ])
+    rownames(data_table)         <- c(gen@loc.names, "Mean")
+    colnames(data_table)         <- names(pops)
+    dimnames(data_table) <- list(Locus = c(gen@loc.names, "Mean"), Population = names(pops))
+    if (all(data_table == 0)){
+      cat("No Missing Data Found!")
+      return(NULL)
+    }
+    if (plot){
+      data_df      <- melt(data_table, value.name = valname)
+      leg_title    <- valname
+      data_df[1:2] <- data.frame(lapply(data_df[1:2], 
+                                       function(x) factor(x, levels = unique(x))))
+      plotdf <- textdf <- data_df
+      if (percent) {
+        plotdf$Missing <- round(plotdf$Missing*100, 2)
+        textdf$Missing <- paste(plotdf$Missing, "%")
+        miss           <- "0 %"
+        title          <- paste("Percent missing data per locus and population of", 
+                                as.character(substitute(gen)))
+        leg_title      <- paste("Percent", leg_title)
+        if(!scaled){
+          lims <- c(0, 100)
+        }
+      } else {
+        textdf$Missing <- round(textdf$Missing, 2)
+        miss           <- 0
+        title          <- paste("Missing data per locus and population of", 
+                                as.character(substitute(gen)))
       }
+      if (scaled | !percent){
+        lims <- c(0, max(plotdf$Missing))
+      }
+      linedata <- data.frame(list(yint = 1.5, xint = nrow(data_table) - 0.5))
+      textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
+      plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
+
+      outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
+        geom_tile(aes_string(fill = valname)) +
+        labs(list(title = title, x = "Locus", y = "Population")) +
+        labs(fill = leg_title) + 
+        scale_fill_gradient(low = low, high = high, na.value = "white", 
+                            limits = lims) +
+        geom_hline(aes_string(yintercept = "yint"), data = linedata) + 
+        geom_vline(aes_string(xintercept = "xint"), data = linedata) 
+      if (plotlab){
+        outplot <- outplot + geom_text(aes_string(label = valname), 
+                                       data = textdf)
+      }
+      outplot <- outplot +
+        theme_classic() + 
+        scale_x_discrete(expand = c(0, -1)) + 
+        scale_y_discrete(expand = c(0, -1), 
+                         limits = rev(unique(plotdf$Population))) + 
+        theme(axis.text.x = element_text(size = 10, angle = -45, 
+                                         hjust = 0, vjust = 1)) 
+      print(outplot)
+    }
+
+  } else if (type == "ploidy"){
+
+    valname <- "Observed_Ploidy"
+    if (gen@ploidy <= 2){
+      warning("This function is meant for polyploid data.")
+      data_table <- matrix(gen@ploidy, nrow = nInd(gen), ncol = nLoc(gen))
+      missing <- propTyped(gen, "both") == 0
+      data_table[missing] <- NA
     } else {
-      textdf$Missing <- round(textdf$Missing, 2)
-      miss           <- 0
-      title          <- paste("Missing data per locus and population of", 
-                              as.character(substitute(x)))
+      data_table <- get_local_ploidy(gen)
     }
-    if (scaled | !percent){
-      lims <- c(0, max(plotdf$Missing))
+    dimnames(data_table) <- list(Samples = indNames(gen), Loci = locNames(gen))
+    if (plot){
+      data_df <- melt(data_table, value.name = valname)
+      vars <- aes_string(x = "Loci", y = "Samples", fill = valname)
+
+      mytheme <- theme_classic() +  
+                 theme(axis.text.x = element_text(size = 10, angle = -45, 
+                                                  hjust = 0, vjust = 1)) 
+
+      title <- paste("Observed ploidy of", datalabel)
+      outplot <- ggplot(data_df) + geom_tile(vars) + 
+                   scale_fill_gradient(low = low, high = high) + 
+                   scale_x_discrete(expand = c(0, -1)) + 
+                   scale_y_discrete(expand = c(0, -1), 
+                                    limits = rev(unique(data_df$Samples))) + 
+                   labs(list(title = title, x = "Locus", y = "Sample", 
+                             fill = "Observed\nPloidy")) +
+                   mytheme 
+
+      print(outplot)
     }
-    linedata       <- data.frame(list(yint = 1.5, #ncol(misstab) - 0.5, 
-                                      xint = nrow(misstab) - 0.5))
-    textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
-    plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
-    outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
-      geom_tile(aes_string(fill = "Missing")) +
-      labs(list(title = title, x = "Locus", y = "Population")) +
-      labs(fill = leg_title) + 
-      scale_fill_gradient(low = low, high = high, na.value = "white", 
-                          limits = lims) +
-      geom_hline(aes_string(yintercept = "yint"), data = linedata) + 
-      geom_vline(aes_string(xintercept = "xint"), data = linedata) 
-    if (plotlab){
-      outplot <- outplot + geom_text(aes_string(label = "Missing"), 
-                                     data = textdf)
-    }
-    outplot <- outplot +
-      theme_classic() + 
-      scale_x_discrete(expand = c(0, -1)) + 
-      scale_y_discrete(expand = c(0, -1), 
-                       limits = rev(unique(plotdf$Population))) + 
-      theme(axis.text.x = element_text(size = 10, angle = -45, 
-                                       hjust = 0, vjust = 1)) 
-    print(outplot)
   }
   if (df){
-    if(!exists("missdf")){
-      missdf <- melt(misstab, varnames = c("Locus", "Population"), 
-                     value.name = "Missing")
+    if(!exists("data_df")){
+      data_df <- melt(data_table, value.name = valname)
     }
-    misstab <- missdf
+    data_table <- data_df
   } else {
-    attr(misstab, "dimnames") <- list(Locus = rownames(misstab), 
-                                      Population = colnames(misstab))
-    misstab <- t(misstab)
-    class(misstab) <- c("locustable", "matrix")
+    if (type == "missing"){
+      data_table <- t(data_table)
+    }
+    class(data_table) <- c("locustable", "matrix")
   }
-  if (returnplot){
-    misstab <- list(table = misstab, plot = outplot)
+  if (returnplot & exists("outplot")){
+    data_table <- list(table = data_table, plot = outplot)
   }
-  return(misstab)
+  return(data_table)
 }
 
 #==============================================================================#
