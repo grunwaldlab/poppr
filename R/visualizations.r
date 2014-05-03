@@ -626,6 +626,8 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
     dimnames(data_table) <- list(Samples = indNames(gen), Loci = locNames(gen))
     if (plot){
       data_df <- melt(data_table, value.name = valname)
+      data_df[1:2] <- data.frame(lapply(data_df[1:2], 
+                                       function(x) factor(x, levels = unique(x))))
       vars <- aes_string(x = "Loci", y = "Samples", fill = valname)
 
       mytheme <- theme_classic() +  
