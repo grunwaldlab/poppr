@@ -19,7 +19,7 @@ NEW FUNCTIONS
 * `as.genclone` will automatically convert genind objects to genclone objects.
 * `is.genclone` checks the validity of genclone objects.
 * `poppr.amova` will run amova on any hierarchical level. This also includes the feature to run amova on clone censored data sets. It utilizes the ade4 version of amova. 
-* `missing_table` will calculate missing data per population per locus and gives the user the option to visualize this as a heatmap.
+* `info_table` will calculate missing data per population per locus or ploidy per individual per locus and gives the user the option to visualize this as a heatmap.
 * `locus_table` will calculate diversity and evenness statistics over all loci in a genind or genclone object.
 * `*.dist` functions will calculate Nei's distance, Rogers' Distance, Edwards' Distance, Reynolds' Distance, and Provestis' Distance.
 * `aboot` will allow the user to create bootstrapped dendrograms for ANY distance that can be calculated on genind or genpop objects.
