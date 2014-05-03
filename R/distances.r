@@ -152,6 +152,7 @@ diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
 #'   individuals (n > 125) at the cost of required memory.
 #' 
 #' @rdname genetic_distance
+#' @keywords nei rogers rodgers reynolds coancestry edwards angular provesti
 #' @export
 #' @examples
 #' 
@@ -369,6 +370,8 @@ provesti.dist <- function(x){
 #'   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
 #'   
 #' @export
+#' @keywords bootstrap
+#' @aliases bootstrap
 #' @examples
 #' 
 #' data(nancycats)
@@ -391,7 +394,7 @@ provesti.dist <- function(x){
 #' anei <- aboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 #' 
 #' # Rogers' distance
-#' arog <- aboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
+#' arog <- aboot(Aeut, dist = rogers.dist, sample = 1000, cutoff = 50)
 #' 
 #' }
 #==============================================================================#

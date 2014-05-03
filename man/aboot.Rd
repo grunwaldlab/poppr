@@ -1,5 +1,6 @@
 \name{aboot}
 \alias{aboot}
+\alias{bootstrap}
 \title{Calculate a dendrogram with bootstrap support using any distance applicable
 to genind or genclone objects.}
 \usage{
@@ -95,4 +96,5 @@ arog <- aboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
 \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}}
 \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
 }
+\keyword{bootstrap}
 

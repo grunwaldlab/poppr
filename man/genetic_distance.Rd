@@ -58,4 +58,12 @@ rodnan <- rogers.dist(nan9)
 reynan <- reynolds.dist(nan9)
 pronan <- provesti.dist(nan9)
 }
+\keyword{angular}
+\keyword{coancestry}
+\keyword{edwards}
+\keyword{nei}
+\keyword{provesti}
+\keyword{reynolds}
+\keyword{rodgers}
+\keyword{rogers}
 
