@@ -525,6 +525,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 #'   further estimates.
 #'   
 #' @export
+#' @keywords missing ploidy
 #' @author Zhian N. Kamvar
 #' @examples
 #' data(nancycats)
@@ -533,7 +534,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 #' Pinf.ploid <- info_table(Pinf, plot = TRUE, type = "ploidy")
 #' 
 #==============================================================================#
-info_table <- function(gen, type = "missing", percent = TRUE, plot = FALSE, 
+info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot = FALSE, 
                        df = FALSE, returnplot = FALSE, low = "blue", 
                        high = "red", plotlab = TRUE, scaled = TRUE){
   datalabel <- as.character(match.call()[2])
@@ -571,7 +572,7 @@ info_table <- function(gen, type = "missing", percent = TRUE, plot = FALSE,
         textdf$Missing <- paste(plotdf$Missing, "%")
         miss           <- "0 %"
         title          <- paste("Percent missing data per locus and population of", 
-                                as.character(substitute(gen)))
+                                datalabel)
         leg_title      <- paste("Percent", leg_title)
         if(!scaled){
           lims <- c(0, 100)
@@ -580,7 +581,7 @@ info_table <- function(gen, type = "missing", percent = TRUE, plot = FALSE,
         textdf$Missing <- round(textdf$Missing, 2)
         miss           <- 0
         title          <- paste("Missing data per locus and population of", 
-                                as.character(substitute(gen)))
+                                datalabel)
       }
       if (scaled | !percent){
         lims <- c(0, max(plotdf$Missing))
@@ -643,7 +644,7 @@ info_table <- function(gen, type = "missing", percent = TRUE, plot = FALSE,
 
       print(outplot)
     }
-  }
+  } 
   if (df){
     if(!exists("data_df")){
       data_df <- melt(data_table, value.name = valname)
