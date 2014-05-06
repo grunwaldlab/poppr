@@ -64,7 +64,7 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
 recode_polyploids <- function(poly, newploidy = poly@ploidy){
   MAT <- truenames(poly)$tab
   fac <- poly@loc.fac
-  zerocols <- !duplicated(fac)
+  zerocols <- as.numeric(unlist(poly@all.names)) == 0#!duplicated(fac)
   newfac <- fac[!zerocols]
   loci <- lapply(split(MAT, fac[col(MAT)]), matrix, nrow = nInd(poly))
   loci <- lapply(1:length(loci), function(x){
