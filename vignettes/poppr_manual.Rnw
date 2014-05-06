@@ -13,6 +13,7 @@
 \usepackage{fullpage}
 \usepackage{mathtools}
 \usepackage{makeidx}
+\usepackage{longtable}
 
 % for bold symbols in mathmode
 \usepackage{bm}
@@ -1034,7 +1035,7 @@ new data sets. We implemented the use of hierarchical nested formulae:
 hier = ~Population/Subpopulation/Year
 @
 \noindent
-\textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if
+\jala{} \textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if
 you only are specifying one level.
 
 The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
@@ -1060,147 +1061,7 @@ that are limited to replacing missing data and dividing data into populations,
 loci, or by sample size \cite{Jombart:2008}. \Poppr{} includes novel functions
 for clone-censoring your data sets or sub-setting a genind object by specific
 populations.
-%-----------------------------------------------------------------------------%
-%
-%-----------------------------------------------------------------------------%
-\subsection{Replace or remove missing data \{Inside the golden days of missing data\}}
-\label{data.manip:missing}
 
-\tab\tab A data set without missing data is always ideal, but often not
-achievable. Many functions in \adegenet{} cannot handle missing data and thus
-the function \texttt{na.replace} exists \cite{Jombart:2008}. It will replace
-missing data with with either ``0" representing a mysterious extra allele in the
-data set resulting in more diversity or the mean of allelic frequencies at the
-locus. There is no set method, however, for simply removing missing data from
-analyses, which is why the \poppr{} function \texttt{missingno} (see below)
-exists. If the name makes you uneasy it's because it should. Missing data can
-mean different things based on your data type. For microsatellites, missing data
-might represent any source of error that could cause a PCR product to not
-amplify in gel electrophoresis, which may or may not be biologically relevant.
-For a DNA alignment, missing data could mean something as simple as an insertion
-or deletion, which is biologically relevant. The choice to exclude or estimate
-data has very different implications for the type of data you have.
-
-\tline{}
-\subsubsection{Function: missingno}
-\label{data.manip:missing:missingno}
-
-\tab\tab \texttt{missingno} is a function that serves partially as a wrapper for
-\adegenet{}'s \texttt{na.replace} to replace missing data and as a way to
-exclude specific areas that contain systematic missing data.
-\begin{quote}
-Default Command:
-<<missingo_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "missingno"
-print_command(funk)
-@
-% \texttt{missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)}
-\end{quote}
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{type -} This could be one of four options:
-    \begin{description}
-      \item[ ``mean"] This replaces missing data with the mean allele
-      frequencies in the entire data set.
-      \item[ ``zero" or ``0"] This replaces missing data with zero, signifying a
-      new allele.
-      \item[ ``loci"] This is to be used for a data set that has systematic
-      problems with certain loci that contain null alleles or simply failed to
-      amplify. This will remove loci with a defined threshold of missing data
-      from the data set.
-      \item[ ``geno"] This is to be used for genotypes (individuals) in your
-      data set where many null alleles are present. Individuals with a defined
-      threshold missing data will be removed.
-    \end{description}
-    \item \texttt{cutoff -} This is a numeric value from 0 to 1 indicating the
-    percent allowable missing data for either loci or genotypes. If you have,
-    for example, two loci containing missing 5\% and 10\% missing data,
-    respectively and you set \texttt{cutoff = 0.05}, \texttt{missingno} will
-    remove the second locus. Percent missing data for genotypes is considered
-    the percent missing loci over number of total loci.
-    \item \texttt{quiet -} When this is set to \texttt{FALSE}, the number of
-    missing values replaced will be printed to screen if the method is ``zero"
-    or ``mean". It will print the number of loci or individuals removed if the
-    method is ``loci" or ``geno".
-\end{itemize}
-\bline{}
-
-Of course, seeing is believing. Let's take a look at what this does by focusing
-in on areas with missing data. Note that I will be using some sub-setting
-functions here that are described in \adegenet{}'s \textit{Getting Started}
-vignette. First, let's take a look at what the missing data in R looks like as
-well as how many loci and individuals the data set nancycats contains. We need
-to first tell R to look in its library for the package \poppr{}.
-<<initializing_poppr>>=
-library(poppr)
-@
-Next, we'll initialize the \adegenet{} data set nancycats and load it into memory.
-<<initializing_nancycats>>=
-data(nancycats)
-@
-Now, we'll take a quick look at the nancycats data set using \adegenet{}'s
-\texttt{summary()} \index{summary} function:
-<<nancy_summary>>=
-summary(nancycats)
-@
-
-We can see here a lot of summary statistics about nancycats. Here we can see
-that there are 17 populations, 237 individuals, and 9 loci. Nancycats also has a
-little over 2.3\% missing data. Let's take a look at the names of the loci and
-the structure of the data. In order to save space, I will only show you the
-first five individuals (rows) and a portion of the alleles in the first locus
-(columns).
-<<nancy_indiv>>=
-locNames(nancycats) # Names of the loci
-nancycats$tab[1:5, 8:13]
-@
-
-When looking at this data set, recall how a \texttt{genind} object is formatted.
-You have a matrix of 0's, 1's and 0.5's. For diploids, if you see 0.5, that
-means it is heterozygous at that allele, and a 1 means it's homozygous. Here we
-see three heterozygotes and two individuals with missing data (indicated by NA).
-Now, there are more places with missing data in the data set, but I'm only
-showing a little bit at one locus so it's easier to digest. Let's first replace
-it by zero and mean, respectively.
-<<missingno_replace>>=
-nanzero <- missingno(nancycats, type = "zero")
-nanmean <- missingno(nancycats, type = "mean")
-nanzero$tab[1:5, 8:13]
-nanmean$tab[1:5, 8:13]
-@
-You notice how the values of NA changed, yet the basic structure stayed the
-same. These are the replacement options from \adegenet{}. Let's look at the same
-example with the exclusion options (set to the default cutoff of 5\%).
-<<missingno_exclude>>=
-nanloci <-  missingno(nancycats, "loci")
-nangeno <-  missingno(nancycats, "geno")
-nanloci$tab[1:5, 8:13]
-@
-
-Notice how we now see columns named ``L2.01" and ``L2.02". This is showing us
-another locus because we have removed the first. Recall from the summary table
-that the first locus had 16 alleles, and the second had 11. Now that we've
-removed loci containing missing data, all others have shifted over.\\ Let's look
-at the loci names and number of individuals.
-<<missingno_loci>>=
-nInd(nanloci) # Individuals
-locNames(nanloci) # Names of the loci
-@
-You can see that the number of individuals stayed the same but the loci ``fca8",
-``fca45", and ``fca96" were removed.\\
-Let's look at what happened when we removed individuals.
-<<missingno_geno>>=
-nangeno$tab[1:5, 8:13]
-nInd(nangeno) # Individuals
-locNames(nangeno) # Names of the loci
-@
-
-We can see here that the number of individuals decreased, yet we have the same
-number of loci. Notice how the frequency matrix changes in both scenarios? In
-the scenario with ``loci", we removed several columns of the data set, and so
-with our sub-setting, we see alleles from the second locus. In the scenario with
-``geno", we removed several rows of the data set so we see other individuals in
-our sub-setting.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1483,7 +1344,141 @@ Pinf
 @
 \noindent
 Nice!
+%-----------------------------------------------------------------------------%
+%
+%-----------------------------------------------------------------------------%
+\subsection{Replace or remove missing data \{Inside the golden days of missing data\}}
+\label{data.manip:missing}
 
+\tab\tab A data set without missing data is always ideal, but often not
+achievable. Many functions in \adegenet{} cannot handle missing data and thus
+the function \texttt{na.replace} exists \cite{Jombart:2008}. It will replace
+missing data with with either ``0" representing a mysterious extra allele in the
+data set resulting in more diversity or the mean of allelic frequencies at the
+locus. There is no set method, however, for simply removing missing data from
+analyses, which is why the \poppr{} function \texttt{missingno} (see below)
+exists. If the name makes you uneasy it's because it should. Missing data can
+mean different things based on your data type. For microsatellites, missing data
+might represent any source of error that could cause a PCR product to not
+amplify in gel electrophoresis, which may or may not be biologically relevant.
+For a DNA alignment, missing data could mean something as simple as an insertion
+or deletion, which is biologically relevant. The choice to exclude or estimate
+data has very different implications for the type of data you have.
+
+\begin{center}
+  \fcolorbox{light-gray}{salmon}{
+    \begin{minipage}[t]{0.8\textwidth}
+      {\begin{center} \jala{}\jala{} \textbf{WARNING}\revjala{}\revjala{}\end{center}}
+      Treatment of Missing data is a non-trivial task. You should understand the nature of missing data in your data set before treatment.
+    \end{minipage}
+  }
+\end{center}
+
+\tline{}
+\subsubsection{Function: missingno}
+\label{data.manip:missing:missingno}
+
+\tab\tab \texttt{missingno} is a function that serves partially as a wrapper for
+\adegenet{}'s \texttt{na.replace} to replace missing data and as a way to
+exclude specific areas that contain systematic missing data.
+\begin{quote}
+Default Command:
+<<missingo_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "missingno"
+print_command(funk)
+@
+% \texttt{missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)}
+\end{quote}
+\begin{itemize}
+  \item \texttt{pop -} a \texttt{genind} object.
+  \item \texttt{type -} This could be one of four options:
+    \begin{description}
+      \item[ ``mean"] This replaces missing data with the mean allele
+      frequencies in the entire data set.
+      \item[ ``zero" or ``0"] This replaces missing data with zero, signifying a
+      new allele.
+      \item[ ``loci"] This is to be used for a data set that has systematic
+      problems with certain loci that contain null alleles or simply failed to
+      amplify. This will remove loci with a defined threshold of missing data
+      from the data set.
+      \item[ ``geno"] This is to be used for genotypes (individuals) in your
+      data set where many null alleles are present. Individuals with a defined
+      threshold missing data will be removed.
+    \end{description}
+    \item \texttt{cutoff -} This is a numeric value from 0 to 1 indicating the
+    percent allowable missing data for either loci or genotypes. If you have,
+    for example, two loci containing missing 5\% and 10\% missing data,
+    respectively and you set \texttt{cutoff = 0.05}, \texttt{missingno} will
+    remove the second locus. Percent missing data for genotypes is considered
+    the percent missing loci over number of total loci.
+    \item \texttt{quiet -} When this is set to \texttt{FALSE}, the number of
+    missing values replaced will be printed to screen if the method is ``zero"
+    or ``mean". It will print the number of loci or individuals removed if the
+    method is ``loci" or ``geno".
+\end{itemize}
+\bline{}
+
+Let's take a look at what this does by focusing in on areas with missing data.
+We'll use the data set \texttt{nancycats} as an example. Using the \poppr{}
+function \texttt{info\_table}, we can assess missing data within populations.
+<<initializing_poppr, out.width=".8\\linewidth", fig.height = 6, fig.width = 10>>=
+library(poppr)
+data(nancycats)
+info_table(nancycats, plot = TRUE)
+@
+\label{function:info-table}
+
+We can see that locus \Sexpr{locNames(nancycats)[1]} has a lot of missing data.
+To demonstrate the function\cmdlink{data.manip:missing:missingno}{missingno}, we
+will zoom into the first five individuals at the first locus.
+<<nancy_indiv>>=
+nancycats$tab[1:5, 8:13]
+@
+
+When looking at this data set, recall how a \texttt{genind} object is formatted.
+You have a matrix of 0's, 1's and 0.5's. For diploids, if you see 0.5, that
+means it is heterozygous at that allele, and a 1 means it's homozygous. Here we
+see three heterozygotes and two individuals with missing data (indicated by NA).
+Let's first replace it by zero and mean, respectively.
+<<missingno_replace>>=
+nanzero <- missingno(nancycats, type = "zero")
+nanmean <- missingno(nancycats, type = "mean")
+nanzero$tab[1:5, 8:13]
+nanmean$tab[1:5, 8:13]
+@
+You notice how the values of NA changed, yet the basic structure stayed the
+same. These are the replacement options from \adegenet{}. Let's look at the same
+example with the exclusion options (set to the default cutoff of 5\%).
+<<missingno_exclude>>=
+nanloci <-  missingno(nancycats, "loci")
+nangeno <-  missingno(nancycats, "geno")
+nanloci$tab[1:5, 8:13]
+@
+
+Notice how we now see columns named ``L2.01" and ``L2.02". This is showing us
+another locus because we have removed the first. Recall from the summary table
+that the first locus had 16 alleles, and the second had 11. Now that we've
+removed loci containing missing data, all others have shifted over.\\ Let's look
+at the loci names and number of individuals.
+<<missingno_loci>>=
+nInd(nanloci) # Individuals
+locNames(nanloci) # Names of the loci
+@
+You can see that the number of individuals stayed the same but the loci ``fca8",
+``fca45", and ``fca96" were removed.\\
+Let's look at what happened when we removed individuals.
+<<missingno_geno>>=
+nangeno$tab[1:5, 8:13]
+nInd(nangeno) # Individuals
+locNames(nangeno) # Names of the loci
+@
+
+We can see here that the number of individuals decreased, yet we have the same
+number of loci. Notice how the frequency matrix changes in both scenarios? In
+the scenario with ``loci", we removed several columns of the data set, and so
+with our sub-setting, we see alleles from the second locus. In the scenario with
+``geno", we removed several rows of the data set so we see other individuals in
+our sub-setting.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -3963,33 +3958,56 @@ set.seed(2004)
 sim_ex <- poppr(system.file("files/simulated.dat", package="poppr"), sample=0, method=4, quiet=TRUE, hist=FALSE)
 cbind(sim_ex[1:10],list(p.Ia = c(0.09), sim_ex[11], list(p.rD = c(0.09), sim_ex[12])))
 @
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize Output of multilocus-style sampling. Note the multi-
-  modal distribution.}
-  \label{simulated_dist_fig}
-  \includegraphics{simulated_dist_fig.png}
-% <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
-% set.seed(2004)
-% der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE, hist=TRUE)
-% @
-\end{figure}
-\newpage
 
 Take a look a these two histograms. The number of ways you can recombine the
 data with the default sampling method is very small. Other sampling methods
 could give a more theoretical distribution. Let's try the parametric bootstrap
 (For details, see section \ref{data.manip:shuffle}).
+
 \begin{figure}[h!]
-  \centering
+\begin{minipage}[b]{0.5\linewidth}
+\centering
+\caption{\footnotesize Output of multilocus-style sampling. Note the multimodal distribution.}
+  \label{simulated_dist_fig}
+  \includegraphics{simulated_dist_fig.pdf}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
   \caption{\footnotesize Output for parametric bootstrap sampling.}
   \label{simulated_param_fig}
-  \includegraphics{simulated_param_fig.png}
-% <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
-% set.seed(2004)
-% der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=3, quiet=TRUE)
-% @
+  \includegraphics{simulated_param_fig.pdf}
+\end{minipage}
 \end{figure}
+
+
+
+
+
+% \begin{figure}[h!]
+%   \centering
+%   \caption{\footnotesize Output of multilocus-style sampling. Note the multi-
+%   modal distribution.}
+%   \label{simulated_dist_fig}
+%   \includegraphics{simulated_dist_fig.png}
+% % <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
+% % set.seed(2004)
+% % der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE, hist=TRUE)
+% % @
+% \end{figure}
+% \newpage
+
+
+% \begin{figure}[h!]
+%   \centering
+%   \caption{\footnotesize Output for parametric bootstrap sampling.}
+%   \label{simulated_param_fig}
+%   \includegraphics{simulated_param_fig.png}
+% % <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
+% % set.seed(2004)
+% % der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=3, quiet=TRUE)
+% % @
+% \end{figure}
 
 As you can see, the distribution is much closer to a distribution we would
 expect if this were a small sample of a larger population.
@@ -4432,7 +4450,6 @@ image since it is based off of vector graphics.
 
 \begin{itemize}
   \item locus\_table
-  \item missing\_table
   \item amova
   \item private\_alleles
   \item anyboot
@@ -4446,21 +4463,34 @@ image since it is based off of vector graphics.
 \label{appendix:funk}
 
 \tab\tab Below is a table of functions found in \poppr{}. These functions are
-linked within the document. Simply click on a funciton name to go to its
-definition and description.
+linked within the document. If a function name is blue, simply click on it to go
+to its definition and description.
 
-\begin{table}[h!]
-\centering
-\begin{tabular}{ll}
-\textbf{\large Function} & \textbf{\large Description} \\ 
-\hline
-\textbf{Import/Export} & \\
+\begin{center}
+\begin{longtable}{ll}
+\caption{Functions available in \poppr{}} \label{function_table} \\
+
+\hline \\[-1.5ex] \textbf{\large Function} & \textbf{\large Description} \\ \hline \\[-1.5ex]
+\endfirsthead
+
+\multicolumn{2}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline \\[-1.5ex] \textbf{\large Function} & \textbf{\large Description} \\ \hline \\[-1.5ex]
+\endhead
+
+\hline \multicolumn{2}{r}{\textbf{Continued on next page...}} \\
+\endfoot
+
+\hline \hline
+\endlastfoot
+
+\multicolumn{2}{l}{\Large\textsc{Import/Export}}\\
 \cmdlink{intro:import:getfile}{getfile} & Provides a quick GUI to grab files for import \\
 \cmdlink{intro:import:read.genalex}{read.genalex} & Read \textit{GenAlEx} formatted csv files to a genind object \\
 \cmdlink{intro:import:genind2genalex}{genind2genalex} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
 \cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
-\hline
-\textbf{Manipulation} & \\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Manipulation}}\\
 \cmdlink{data.manip:hier:setpop}{setpop} & Set the population using defined hierarchies\\
 \cmdlink{data.manip:hier:define}{splithierarchy} & Split a concatenated hierarchy imported as a population\\
 \cmdlink{data.manip:hier:define}{sethierarchy} & Define a population hierarchy of a genclone object\\
@@ -4473,8 +4503,8 @@ definition and description.
 \cmdlink{data.manip:divide:popsub}{popsub} & Subsets genind objects by population \\
 \cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
 \texttt{splitcombine*} & Manipulates population hierarchy *Deprecated\\ 
-\hline
-\textbf{Distances} & \\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Distances}}\\
 \cmdlink{index:bruvo:bruvo.dist}{bruvo.dist} & Bruvo's distance \\
 \cmdlink{index:dist:diss.dist}{diss.dist} & Absolute genetic distance (see \texttt{provesti.dist}) \\
 \texttt{nei.dist} & Nei's 1978 genetic distance \\
@@ -4482,13 +4512,13 @@ definition and description.
 \texttt{reynolds.dist} & Reynolds' coancestry distance \\
 \texttt{edwards.dist} & Edwards' angular distance \\
 \texttt{provesti.dist} & Provesti's absolute genetic distance \\
-\hline
-\textbf{Bootstrapping} & \\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Bootstrapping}}\\
 \texttt{aboot} & Creates a bootstrapped dendrogram for any distance measure \\
 \cmdlink{index:trees:bruvo.boot}{bruvo.boot} & Produces dendrograms with bootstrap support\\
  & based on Bruvo's distance \\
-\hline
-\textbf{Analysis} & \\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Analysis}}\\
 \texttt{poppr.amova} & Analysis of Molecular Variance (as implemented in ade4) \\
 \cmdlink{index:iard:ia}{ia} & Calculates the index of association \\
 \cmdlink{mlg:mlg:mlg}{mlg} & Calculates the number of multilocus genotypes \\
@@ -4498,8 +4528,8 @@ definition and description.
  & each individual \\
 \cmdlink{summary:poppr}{poppr} & Returns a diversity table by population \\
 \cmdlink{summary:poppr}{poppr.all} & Returns a diversity table by population for all compatible files specified \\
-\hline
-\textbf{Visualization} & \\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Visualization}}\\
 \texttt{plot\_poppr\_msn} & Plots minimum spanning networks produced in poppr with\\
  & scale bar and legend \\
 \cmdlink{index:trees:greycurve}{greycurve} & Helper to determine the appropriate parameters for adjusting the\\
@@ -4508,12 +4538,11 @@ definition and description.
  & colored by population \\
 \cmdlink{index:trees:poppr.msn}{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\  
  & matrix related to the data \\
-\texttt{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
+\cmdlink{function:info-table}{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
 \hline
-\end{tabular}
-\end{table}
 
-\newpage
+\end{longtable}
+\end{center}
 
 \bibliographystyle{plain}
 \bibliography{poppr_man}
