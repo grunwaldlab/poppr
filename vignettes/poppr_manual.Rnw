@@ -42,6 +42,14 @@
   \kern1pt
 }
 
+\newcommand{\jala}{
+  \includegraphics[height = 5mm, keepaspectratio=true]{jalapeno-poppers}
+}
+
+\newcommand{\revjala}{
+  \scalebox{-1}[1]{\jala{}}
+}
+
 \title{Poppr 1.1.0.99: An R package for genetic analysis of populations with
 mixed (clonal/sexual) reproduction}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
@@ -83,7 +91,7 @@ print_command <- function(funk){
 
 \maketitle 
 \begin{abstract} 
-\Poppr{} provides open-source, cross-platform tools
+\includegraphics[height = 5mm, keepaspectratio=true]{jalapeno-poppers}\Poppr{} provides open-source, cross-platform tools
 for quick analysis of population genetic data enabling focus on data analysis
 and interpretation. While there are a plethora of packages for population
 genetic analysis, few are able to offer quick and easy analysis of populations
@@ -459,7 +467,8 @@ produce a summary table for all of your files\footnote{These files do not need
 to be similar in any way to do this analysis}. Let's set \texttt{digits = 2} to
 only print 2 significant digits.
 <<poppr.all, eval=FALSE>>=
-all_files <- poppr.all(x$files) print(all_files, digits = 2)
+all_files <- poppr.all(x$files)
+print(all_files, digits = 2)
 @
 <<poppr.all_eval, echo=FALSE>>=
 print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), 
@@ -477,7 +486,7 @@ at the names of these files.
 \begin{center}
   \fcolorbox{light-gray}{salmon}{
     \begin{minipage}[t]{0.8\textwidth}
-      For the rest of this section, remember that every time you invoke
+      \jala{} For the rest of this section, remember that every time you invoke
       \texttt{getfile()}, a window will pop up and you should select a file
       before hitting enter.
     \end{minipage}
@@ -1235,7 +1244,7 @@ your\seclink{intro:genclone}{genclone}object using the following methods:
 \begin{center}
   \fcolorbox{light-gray}{light-gray}{
     \begin{minipage}[t]{0.8\textwidth}
-      {\large \textsc{A note about formulas}}\\
+      \jala{} {\large \textsc{A note about formulas}} \revjala{}\\
       The formulas used by genclone objects always start with a $\sim$ and 
       are hierarchical levels are always separated by a $/$. Some examples
       are: 
