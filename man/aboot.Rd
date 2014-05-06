@@ -85,7 +85,7 @@ data(Aeut)
 anei <- aboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 
 # Rogers' distance
-arog <- aboot(Aeut, dist = roger.dist, sample = 1000, cutoff = 50)
+arog <- aboot(Aeut, dist = rogers.dist, sample = 1000, cutoff = 50)
 
 }
 }

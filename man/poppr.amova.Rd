@@ -71,16 +71,69 @@ This function utilizes the ade4 implementation of AMOVA.
 See \code{\link[ade4]{amova}} for details on the specific
 implementation.
 }
+\details{
+The poppr implementation of AMOVA is a very detailed
+wrapper for the ade4 implementation. The output is an
+\code{\link[ade4]{amova}} class list that contains the
+results in the first four elements and the inputs in the
+last three. The inputs required for the ade4 implementation
+are: a distance matrix on all unique genotypes
+(haplotypes), a data frame defining the hierarchy of the
+distance matrix and a genotype (haplotype) frequency table.
+All of this data can be constructed from a
+\code{\linkS4class{genind}} object, but can be daunting for
+a novice R user. This function automates the entire
+process. Since there are many variables regarding genetic
+data, some points need to be highlighted: \cr \strong{On
+Hierarchies:} The hierarchy is defined by different
+hierarchical levels that separate your data. In a
+\code{\linkS4class{genclone}} object, these levels are
+inherently defined in the \code{hierarchy} slot. For
+\code{\linkS4class{genind}} objects, these levels must be
+defined in a data frame located within the
+\code{\link[adegenet]{other}} slot. It is best practice to
+name this data frame \code{"population_hierarchy"}. \cr
+\strong{On Within Individual Variance:} Heterozygosities
+within diploid genotypes are sources of variation from
+within individuals and can be quantified in AMOVA. When
+\code{within = TRUE}, poppr will split diploid genotypes
+into haplotypes and use those to calculate
+within-individual variance. No estimation of phase is made.
+This acts much like the default settings for AMOVA in the
+Arlequin software package. Within individual variance will
+not be calculated for haploid individuals or dominant
+markers. \cr \strong{On Euclidean Distances:} AMOVA, as
+defined by Excoffier et al., utilizes an absolute genetic
+distance measured in the number of differences between two
+samples across all loci. With the ade4 implementation of
+AMOVA (utilized by poppr), distances must be Euclidean (due
+to the nature of the calculations). Unfortunately, many
+genetic distance measures are not always euclidean and must
+be corrected for before being analyzed. Poppr automates
+this with three methods implemented in ade4,
+\code{\link{quasieuclid}}, \code{\link{lingoes}}, and
+\code{\link{cailliez}}. The correction of these distances
+should not adversely affect the outcome of the analysis.
+}
 \examples{
 data(Aeut)
 agc <- as.genclone(Aeut)
 agc
 amova.result <- poppr.amova(agc, ~Pop/Subpop)
 amova.result
+randtest(amova.result) # Test for significance
 \dontrun{
 amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
 amova.cc.result
+randtest(amova.cc.result)
 }
+}
+\references{
+Excoffier, L., Smouse, P.E. and Quattro, J.M. (1992)
+Analysis of molecular variance inferred from metric
+distances among DNA haplotypes: application to human
+mitochondrial DNA restriction data. \emph{Genetics},
+\strong{131}, 479–491.
 }
 \seealso{
 \code{\link[ade4]{amova}} \code{\link{clonecorrect}}
