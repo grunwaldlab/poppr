@@ -43,6 +43,7 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
 
+#~ @export
 #' @S3method print ialist
 print.ialist <- function(x, ...){
   cat("Index\n")
@@ -57,6 +58,7 @@ print.ialist <- function(x, ...){
   }
 }
 
+#~ @export
 #' @S3method print amova
 print.amova <- function(x, full = FALSE, ...) 
 {
@@ -65,6 +67,7 @@ print.amova <- function(x, full = FALSE, ...)
   else print(x[-((length(x) - 2):length(x))])
 }
 
+#~ @export
 #' @S3method print popprtable
 print.popprtable <- function(x, ...){
   call <- list(...)
@@ -75,6 +78,7 @@ print.popprtable <- function(x, ...){
   }
 }
 
+#~ @export
 #' @S3method print locustable
 print.locustable <- function(x, ...){
   call <- list(...)
