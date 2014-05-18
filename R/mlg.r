@@ -215,11 +215,13 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
 
       # create a data frame that ggplot2 can read.
       mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 
-            count = rep(mlgt, mlgt)))
+            count = rep(mlgt, mlgt)), stringsAsFactors = FALSE)
 
       # Organize the data frame by count in descending order.
-      mlgt.df[["MLG"]] <- reorder(mlgt.df[["MLG"]], -mlgt.df[["count"]])
-
+      # mlgt.df[["MLG"]] <- reorder(mlgt.df[["MLG"]], -mlgt.df[["count"]])
+      rearranged <- order(mlgt.df$count, decreasing = TRUE)
+      mlgt.df <- mlgt.df[rearranged, ]
+      mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
       # plot it
       return(ggplot(mlgt.df, aes_string(x = "MLG")) + geom_bar(aes_string(fill = "count"), position="identity"))
       #theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0)))
