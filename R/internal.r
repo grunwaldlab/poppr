@@ -1729,6 +1729,54 @@ test_zeroes <- function(x){
   return(FALSE)
 }
 
+#==============================================================================#
+# Internal plotting function for mlg.table
+#
+# Public functions utilizing this function:
+# none
+#
+# Private functions utilizing this function:
+# # print_mlg_barplot
+#==============================================================================#
+mlg_barplot <- function(mlgt){
 
+  # create a data frame that ggplot2 can read.
+  mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 
+                                count = rep(mlgt, mlgt)), 
+                           stringsAsFactors = FALSE)
 
+  # Organize the data frame by count in descending order.
+  rearranged <- order(mlgt.df$count, decreasing = TRUE)
+  mlgt.df <- mlgt.df[rearranged, ]
+  mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
 
+  # plot it
+  return(ggplot(mlgt.df, aes_string(x = "MLG")) + 
+         geom_bar(aes_string(fill = "count"), position="identity"))
+}
+
+#==============================================================================#
+# Internal plotting function for mlg.table
+#
+# Public functions utilizing this function:
+# mlg.table
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+
+print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
+  if(!quiet) cat("|",n,"\n")
+
+  # Gather all nonzero values
+  mlgt <- mlgtab[n, mlgtab[n, ] > 0, drop=FALSE]
+
+  # controlling for the situation where the population size is 1.
+  if (sum(mlgtab[n, ]) > 1){ 
+    print(mlg_barplot(mlgt) +
+            theme_classic() %+replace%
+            theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) + 
+            labs(title=paste("Population:", n, "\nN =", sum(mlgtab[n, ]),
+                             "MLG =", length(mlgt))))
+  }
+}

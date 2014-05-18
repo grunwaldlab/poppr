@@ -200,72 +200,33 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
     mlgtab <- mlgtab[unlist(vapply(pop@pop.names, 
                 function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
     rows <- rownames(mlgtab)
-#     subrows <- rows %in% sublist & !rows %in% blacklist
-#     mlgtab <- mlgtab[subrows, , drop = FALSE]
   }
   if(total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
     mlgtab <- rbind(mlgtab, colSums(mlgtab))
     rownames(mlgtab)[nrow(mlgtab)] <- "Total"
   }
-  #````````````````````````````````````````````````````````````````````````````#
+
   # Dealing with the visualizations.
   if(bar){
-    # Function for setting up and organizing data frame to produce ggplot2 graphs
-    plot1 <- function(mlgt){
-
-      # create a data frame that ggplot2 can read.
-      mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 
-            count = rep(mlgt, mlgt)), stringsAsFactors = FALSE)
-
-      # Organize the data frame by count in descending order.
-      # mlgt.df[["MLG"]] <- reorder(mlgt.df[["MLG"]], -mlgt.df[["count"]])
-      rearranged <- order(mlgt.df$count, decreasing = TRUE)
-      mlgt.df <- mlgt.df[rearranged, ]
-      mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
-      # plot it
-      return(ggplot(mlgt.df, aes_string(x = "MLG")) + geom_bar(aes_string(fill = "count"), position="identity"))
-      #theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0)))
-    }
-
     # If there is a population structure
     if(!is.null(pop@pop.names)){
       popnames <- pop@pop.names
-      if(total & nrow(mlgtab) > 1)
+      if(total & nrow(mlgtab) > 1){
         popnames[length(popnames) + 1] <- "Total"
-      
-      # Function for printing plots with population structures one by one.  
-      printplot <- function(n, quiet=quiet) {
-        if(!quiet) cat("|",n,"\n")
-
-        # Gather all nonzero values
-        mlgt <- mlgtab[n, mlgtab[n, ] > 0, drop=FALSE]
-
-        # controlling for the situation where the population size is 1.
-        if (sum(mlgtab[n, ]) > 1){ 
-          print(plot1(mlgt) +
-                  theme_classic() %+replace%
-                  theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0, vjust=1)) + 
-                  labs(title=paste("Population:",n,"\nN =",sum(mlgtab[n, ]),
-                                   "MLG =",length(mlgt))))
-        }
       }
-      
       # Apply this over all populations. 
-      invisible(lapply(popnames, printplot, quiet=quiet))
+      invisible(lapply(popnames, print_mlg_barplot, mlgtab, quiet=quiet))
     }
     
     # If there is no population structure detected.
     else {
-      print(plot1(mlgtab) + 
-              theme_classic() %+replace%
-              theme(axis.text.x=element_text(size = 10, angle=-45, hjust=0, 
-                                             vjust=1)) +
-              labs(title= paste("File:",as.character(pop@call[2]),
-                                "\nN =",sum(mlgtab),"MLG =",length(mlgtab))
-                   ))
+      print(mlg_barplot(mlgtab) + 
+        theme_classic() %+replace%
+        theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
+        labs(title = paste("File:", as.character(pop@call[2]), "\nN =",
+                           sum(mlgtab), "MLG =", length(mlgtab))))
     }
   }
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
 
   mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
   return(mlgtab)
