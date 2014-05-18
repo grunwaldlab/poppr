@@ -390,16 +390,19 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
                   function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
     }
     #mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
-    mlgs <- unlist(strsplit(names(which(colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1)), 
-                          "\\."))
-    mlgs <- as.numeric(mlgs[!mlgs %in% "MLG"])
-    if(length(mlgs) == 0){
+    # mlgs <- unlist(strsplit(names(which(colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1)), 
+    #                       "\\."))
+    # mlgs <- as.numeric(mlgs[!mlgs %in% "MLG"])
+    mlgs <- colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1
+    if(sum(mlgs) == 0){
       cat("No multilocus genotypes were detected across populations\n")
       return(0)
     }
-    names(mlgs) <- paste("MLG", mlgs, sep=".")
+    #names(mlgs) <- paste("MLG", mlgs, sep=".")
     if(indexreturn){
-      return(mlgs)
+      mlgout <- unlist(strsplit(names(mlgs[mlgs])))
+      mlgout <- as.numeric(!mlgout %in% "MLG")
+      return(mlgout)
     }
   }
   popop <- function(x, quiet=TRUE){
