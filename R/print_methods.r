@@ -43,8 +43,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
 
-#~ @export
-#' @S3method print ialist
+#' @method print ialist
+#' @export
 print.ialist <- function(x, ...){
   cat("Index\n")
   print(x$index)
@@ -58,8 +58,8 @@ print.ialist <- function(x, ...){
   }
 }
 
-#~ @export
-#' @S3method print amova
+#' @method print amova
+#' @export
 print.amova <- function(x, full = FALSE, ...) 
 {
   if (full == TRUE) 
@@ -67,8 +67,8 @@ print.amova <- function(x, full = FALSE, ...)
   else print(x[-((length(x) - 2):length(x))])
 }
 
-#~ @export
-#' @S3method print popprtable
+#' @method print popprtable
+#' @export
 print.popprtable <- function(x, ...){
   call <- list(...)
   if (length(call > 0) && names(call) %in% "digits"){
@@ -78,8 +78,8 @@ print.popprtable <- function(x, ...){
   }
 }
 
-#~ @export
-#' @S3method print locustable
+#' @method print locustable
+#' @export
 print.locustable <- function(x, ...){
   call <- list(...)
   if (length(call > 0) && names(call) %in% "digits"){
