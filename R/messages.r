@@ -122,6 +122,15 @@ unmatched_pops_warning <- function(pops, sublist){
   return(msg)
 }
 
+#==============================================================================#
+# Warning messages for Bruvo's distance calculation.
+# Public functions utilizing this function:
+#
+# # bruvo.dist bruvo.boot bruvo.msn
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
 repeat_length_warning <- function(replen){
 	msg <- paste("\n\nRepeat length vector for loci is not equal to the number",
 							 "of loci represented.\nEstimating repeat lengths from data:\n",
@@ -135,12 +144,31 @@ non_ssr_data_warning <- function(){
 	return(msg)
 }
 
+#==============================================================================#
+# Warning message for Neighbor-Joining trees.
+# Public functions utilizing this function:
+#
+# # aboot bruvo.boot
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
 negative_branch_warning <- function(){
 	msg <- paste("Some branch lengths of the tree are negative.", 
 							 "Normalizing branches according to Kuhner and Felsenstein",
 							 "(1994)")
 	return(msg)
 }
+
+#==============================================================================#
+# Warning message for mlg.crosspop with the flag mlgsub.
+# Public functions utilizing this function:
+#
+# # mlg.crosspop
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
 
 mlg_sub_warning <- function(mlgs){
   msg <- paste0("The following multilocus genotypes are not defined in this ",
