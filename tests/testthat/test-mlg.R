@@ -33,3 +33,24 @@ test_that("multilocus genotype matrix matches mlg.vector and data", {
   expect_that(sum(ptab), equals(nInd(partial_clone)))
   expect_that(sum(ntab), equals(nInd(nancycats)))
 })
+
+test_that("mlg.crosspop will work with subsetted genclone objects", {
+  data(Aeut, package = "poppr")
+  agc <- as.genclone(Aeut)
+  Athena <- popsub(agc, "Athena")
+  setpop(Athena) <- ~Subpop
+  expected_output <- structure(list(MLG.13 = structure(c(1L, 1L), .Names = c("8", 
+"9")), MLG.23 = structure(c(1L, 1L), .Names = c("4", "6")), MLG.24 = structure(c(1L, 
+1L), .Names = c("9", "10")), MLG.32 = structure(c(1L, 1L), .Names = c("7", 
+"9")), MLG.52 = structure(c(1L, 1L), .Names = c("5", "9")), MLG.63 = structure(c(1L, 
+1L), .Names = c("1", "5"))), .Names = c("MLG.13", "MLG.23", "MLG.24", 
+"MLG.32", "MLG.52", "MLG.63"))
+  expected_mlgout <- c(13, 23, 24, 32, 52, 63)
+
+  expect_that(x <- mlg.crosspop(Athena, quiet = TRUE), equals(expected_output))
+  expect_that(y <- mlg.crosspop(Athena, indexreturn = TRUE), equals(expected_mlgout))
+})
+
+
+
+

@@ -400,8 +400,8 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     }
     #names(mlgs) <- paste("MLG", mlgs, sep=".")
     if(indexreturn){
-      mlgout <- unlist(strsplit(names(mlgs[mlgs])))
-      mlgout <- as.numeric(!mlgout %in% "MLG")
+      mlgout <- unlist(strsplit(names(mlgs[mlgs]), "\\."))
+      mlgout <- as.numeric(mlgout[!mlgout %in% "MLG"])
       return(mlgout)
     }
   }
