@@ -379,7 +379,14 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
   vec    <- vec[subind]
   mlgtab <- mlg.matrix(pop)
   if(!is.null(mlgsub)){
-    mlgtab <- mlgtab[, mlgsub]
+    mlgsubnames <- paste("MLG", mlgsub, sep = ".")
+    matches <- mlgsubnames %in% colnames(mlgtab)
+    if (!all(matches)){
+      rejects <- mlgsub[!matches]
+      mlgsubnames  <- mlgsubnames[matches]
+      warning(mlg_sub_warning(rejects))
+    }
+    mlgtab <- mlgtab[, mlgsubnames, drop = FALSE]
     mlgs   <- 1:ncol(mlgtab)
     names(mlgs) <- colnames(mlgtab)
   }

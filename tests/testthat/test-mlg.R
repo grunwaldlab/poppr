@@ -49,6 +49,7 @@ test_that("mlg.crosspop will work with subsetted genclone objects", {
 
   expect_that(x <- mlg.crosspop(Athena, quiet = TRUE), equals(expected_output))
   expect_that(y <- mlg.crosspop(Athena, indexreturn = TRUE), equals(expected_mlgout))
+  expect_warning(z <- mlg.crosspop(Athena, mlgsub = c(14, 2:5)), "The following multilocus genotypes are not defined in this dataset: 2, 3, 4, 5")
 })
 
 

@@ -141,3 +141,9 @@ negative_branch_warning <- function(){
 							 "(1994)")
 	return(msg)
 }
+
+mlg_sub_warning <- function(mlgs){
+  msg <- paste0("The following multilocus genotypes are not defined in this ",
+                "dataset: ", paste(mlgs, collapse = ", "))
+  return(msg)
+}
