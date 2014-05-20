@@ -1577,12 +1577,14 @@ And that, is how you subset your data with poppr!
 \subsection{Clone-censor data sets \{Attack of the clone correction\}}
 \label{data.manip:cc}
 
-\tab\tab Clone correction refers to the ability of keeping one observation of each MLG in a given population (or sub-population). Clone correcting can be
+\tab\tab Clone correction refers to the ability of keeping one observation of
+each MLG in a given population (or sub-population). Clone correcting can be
 hazardous if its done by hand (even on small data sets) and it requires a
 defined population hierarchy to get relevant results. \Poppr{} has a clone
-correcting function that that will correct down to the lowest level of any defined
-population hierarchy. Note that clone correction in \poppr{} is sensitive to
-missing data, as it treats all missing data as a single extra allele.
+correcting function that that will correct down to the lowest level of any
+defined population hierarchy. Note that clone correction in \poppr{} is
+sensitive to missing data, as it treats all missing data as a single extra
+allele.
 
 This function will create new data sets, but it is also utilized by the function
 \cmdlink{summary:poppr}{poppr}natively.
