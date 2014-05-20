@@ -51,8 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Poppr 1.1.0.99: An R package for genetic analysis of populations with
-mixed (clonal/sexual) reproduction}
+\title{Data import and manipulation in Poppr version 1.1.0.99}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -92,14 +91,15 @@ print_command <- function(funk){
 
 \maketitle 
 \begin{abstract} 
-\includegraphics[height = 5mm, keepaspectratio=true]{jalapeno-poppers}\Poppr{} provides open-source, cross-platform tools
-for quick analysis of population genetic data enabling focus on data analysis
-and interpretation. While there are a plethora of packages for population
-genetic analysis, few are able to offer quick and easy analysis of populations
-with mixed reproductive modes. \Poppr{}'s main advantage is the ease of use and
-integration with other packages such as \adegenet{} and \textit{vegan},
-including support for novel methods such as clone correction, multilocus
-genotype analysis, calculation of Bruvo's distance and the index of association.
+\includegraphics[height = 5mm, keepaspectratio=true]{jalapeno-poppers}\Poppr{}
+provides open-source, cross-platform tools for quick analysis of population
+genetic data enabling focus on data analysis and interpretation. While there are
+a plethora of packages for population genetic analysis, few are able to offer
+quick and easy analysis of populations with mixed reproductive modes. \Poppr{}'s
+main advantage is the ease of use and integration with other packages such as
+\adegenet{} and \textit{vegan}, including support for novel methods such as
+clone correction, multilocus genotype analysis, calculation of Bruvo's distance
+and the index of association.
 \end{abstract} 
 % Inserting the \Poppr{} logo here 
 
@@ -161,6 +161,11 @@ The real power of \poppr{} is in the data manipulation and analytic tools.
 censor, and subset data sets. With \poppr{} you can also quickly calculate
 Bruvo's distance, the index of association, and easily determine which
 multilocus genotypes are shared across populations.
+
+This vignette will cover all of the material you need to know to efficiently
+analyze data in \poppr{}. For information on methods of analysis (eg. index of
+association, distance measures, AMOVA, ...), please read
+the manual pages provided for each function.
 
 %-----------------------------------------------------------------------------%
 %
@@ -394,8 +399,9 @@ The fields you see in the output include:
   \cite{Agapow:2001}
 \end{itemize}
 
-These fields are further described in section\seclink{summary}{I know what you
-did last summary table}at the end of this vignette.
+These fields are further described in the function \texttt{poppr}. You can
+access the help page for \texttt{poppr} by typing \texttt{?poppr} in your R
+console.
 
 One thing to note about this output is the \texttt{NaN} in the column labeled
 \texttt{SE}. In R, \texttt{NaN} means ``Not a number''. This is produced from
@@ -889,8 +895,8 @@ the \adegenet{} ``Getting Started'' manual.
 
 The other slot is a place in the genind object that can be used to store useful
 information about the data. We saw earlier that it could store demographic
-information, now let's explore a different example.\seclink{distance:bruvo}{Bruvo's 
-distance}is based off of a stepwise mutation model for microsatellites. This 
+information, now let's explore a different example. Bruvo's 
+distance is based off of a stepwise mutation model for microsatellites. This 
 requires us to know the length of the repeat of each locus. We could store the
 repeat lengths in a separate variable in our R environment, but we are at risk
 of losing that. One wa to prevent it from being lost would be to place it in the
@@ -1586,8 +1592,8 @@ defined population hierarchy. Note that clone correction in \poppr{} is
 sensitive to missing data, as it treats all missing data as a single extra
 allele.
 
-This function will create new data sets, but it is also utilized by the function
-\cmdlink{summary:poppr}{poppr}natively.
+This function will create new data sets, but it is also utilized by the functions
+ \texttt{poppr} and \texttt{poppr.amova} natively.
 
 \subsubsection{Function: clonecorrect}
 \label{data.manip:cc:clonecorrect}
@@ -1941,8 +1947,7 @@ the alleles have a 1 in 4 chance of being chosen.
 Note that you have the same genotypes after shuffling, so at each locus, you
 will maintain the same allelic frequencies and heterozygosity. So, in this
 sample, you will only see a homozygote with allele 2. This also ensures that the
-P-values associated with $I_A$ and $\bar{r}_d$ are exactly the same (for an
-explanation, see the end of\seclink{index:iard:ia}{Function: ia}in this manual).
+P-values associated with $I_A$ and $\bar{r}_d$ are exactly the same.
 Unfortunately, if you are trying to simulate a sexual population, this does not
 make much biological sense as it \textbf{assumes that alleles are not independently
 assorting within individuals.}
@@ -1954,7 +1959,7 @@ assorting within individuals.}
 These shuffling schemes have been implemented for the index of association, but
 there may be other summary statistics you can use \texttt{shufflepop} for. All
 you have to do is use the function \texttt{replicate}. Let's use
-average\seclink{index:bruvo}{Bruvo's distance}with the first population of the
+average Bruvo's distance with the first population of the
 data set \texttt{nancycats} as an example:
 <<shuffle_bd>>=
 data(nancycats)
@@ -2236,9 +2241,7 @@ legend('topleft', legend="observed", col="red", lty = 1)
 \label{data.manip:informloci}
 \tab\tab Phylogenetically uninformative loci are those that have only one
 sample differentiating from the rest. This can lead to biased results when
-using multilocus analyses such as the index of association
-(See\seclink{index:iard}{The missing linkage
-disequilibrium}and\seclink{summary}{I know what you did last summary table}).
+using multilocus analyses such as the index of association \cite{Brown:1980,Smith:1993}.
 These nuisance loci can be removed with the following function.
 \subsubsection{Function: informloci}
 \label{data.manip:informloci:informloci}
@@ -2547,7 +2550,7 @@ The minimum value from the \textit{base} function \texttt{rowSums()} of the
 table represents the minimum common sample size of all populations defined in
 the table. Setting the ``sample" flag draws the horizontal and vertical lines
 you see on the graph. The intersections of these lines correspond to the numbers
-you would find if you ran the function\cmdlink{summary:poppr}{poppr}on this data
+you would find if you ran the function \texttt{poppr} on this data
 set (under the column ``\texttt{eMLG}").
 
 %-----------------------------------------------------------------------------%
@@ -2755,1264 +2758,1264 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 %
 %=============================================================================%
 %=============================================================================%
-\section{Data Analysis}
-\label{index}
+% \section{Data Analysis}
+% \label{index}
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Calculating the index of association, $I_A$ and $\bar{r}_d$ \{the missing linkage disequilibrium\}}
-\label{index:iard}
-
-\tab\tab The index of association was originally developed as a measure of
-multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to
-detect signatures of sexual reproduction and population structure
-\cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with
-the number of loci, and was not suitable to comparisons across studies
-\cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for
-this scaling and forces the index to lie between 0 (linkage equilibrium) and 1
-(full disequilibrium). $I_A$ has previously been implemented in a couple of
-programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN}
-\cite{Haubold:2000}. While both of these programs are still available for
-download, \textit{multilocus} is no longer actively supported, and
-\textit{LIAN}, despite its speed, is only appropriate for haplotypic data. Both
-of these programs each require one specific file format, and, until
-recently\footnote{LIAN 3.6 allows the user to run multiple contiguous data sets
-within a single file or across multiple files. It is impossible to run
-MULTILOCUS in batch.}, neither of these programs had an internal ability to run
-in batch across multiple populations within a file or multiple files within a
-directory in the same way that poppr can (see footnote).
-
-It is important to note that for this algorithm, all missing values are treated
-in the same way as \textit{multilocus} in that all missing alleles are imputed
-to be the same as the alleles they are being compared to. Depending on the
-percent missing data in your data set, this might influence the statistic. If
-you have a lot of missing data, consider using the \texttt{missing} flag in this
-function.
-\subsubsection{Function: ia}
-\label{index:iard:ia}
-
-\tab\tab This function is a quick look at a single data set. It can do almost
-everything that \texttt{poppr} can do except for sorting through populations.
-\begin{quote}
-Default Command:
-<<ia_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "ia"
-print_command(funk)
-@
-% \texttt{ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
-%     hist = TRUE)}
-\end{quote}
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{sample -} You should use this flag whenever you want to
-  reshuffle your data set. Indicate how many times you want to reshuffle your
-  data set to obtain a P-value.
-  \item \texttt{method -} a number from 1 to 4 indicating the sampling method:
-  \begin{enumerate}
-    \item permutation over alleles.
-    \item parametric bootstrap.
-    \item non-parametric bootstrap.
-    \item \textit{multilocus} style permutation \cite{Agapow:2001}.
-  \end{enumerate}
-  The methods are detailed
-  in\cmdlink{data.manip:shuffle:shufflepop}{shufflepop.}
-  \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the
-  screen as the sampling progresses. If \texttt{FALSE} will produce a progress
-  bar.
-  \item \texttt{missing -} This will preprocess your missing values. It is set
-  to ignore missing data, so that they do not contribute to the distance
-  measure. It can also be set to \texttt{"loci", "geno", "zero", or "mean"}. For
-  details, see\seclink{data.manip:missing:missingno}{missingno.}
-  \item \texttt{hist -} This will produce a pair of histograms for each
-  population showing the distribution of $I_A$ and $\bar{r}_d$ across the
-  sampled data sets, and plot the observed value as a single vertical line.
-  \item \texttt{valuereturn -} If set to \texttt{TRUE} and the number of samples
-  is greater than zero, it will return all values generated from the permuted
-  data.
-\end{itemize}
-Running the analysis is as simple as this:
-<<ia_demo>>=
-ia(nancycats)
-@
-We can use \texttt{popsub} to subset for specific populations. Here, we'll also
-demonstrate the sampling flag and show you what the histogram looks like.
-<<ia_demo_sampling_dummy, eval=FALSE>>=
-set.seed(1009)
-ia(popsub(nancycats, 5), sample=999)
-@
-<<ia_demo_sampling, echo=FALSE>>=
-set.seed(1009)
-simplenan <- ia(popsub(nancycats, 5))
-cat("|================================================================================| 100%\n")
-c(simplenan[1], p.Ia = 0.572, simplenan[2], p.rD = 0.572)
-@
-
-This analysis produced the histograms you see below. What these histograms
-represent are 999 resamplings of the data under the null hypothesis ($H_0$) of
-sexual reproduction. The way that $H_0$ is created is determined by the sampling
-method chosen. In this case, the method was to shuffle genotypes at each locus
-to simulate unlinked loci. Since the P = 0.572, we would fail to reject $H_0$
-and we therefore might conclude that this population is sexually reproducing
-\cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$
-  calculated from 999 resamplings of population 5 from the data set
-  ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as
-  vertical blue lines overlaid on the distributions. The ticks at the bottom of
-  each histogram represent individual observations.}
-  \label{ia_demo_fig}
-<<fig.width=8, fig.height=8, echo=FALSE, eval=TRUE, figs.only=TRUE, resolution=300>>=
-set.seed(1009)
-nan5 <- ia(popsub(nancycats, 5), sample=999, quiet=TRUE)
-@
-\end{figure}
-%\newpage
-
-If we wanted to, we could also have set the flag \texttt{valuereturn = TRUE} to
-get back our permuted data if we wanted to make our own histograms (we'll set
-the number of samples to 9 for demonstrative purposes):
-
-<<ia_demo_sampling_vr_dummy, eval = FALSE>>=
-set.seed(1009)
-ia(popsub(nancycats, 5), sample = 9, hist = FALSE, valuereturn = TRUE)
-@
-
-<<ia_demo_sampling_vr, echo = FALSE>>=
-cat("|================================================================================| 100%\n")
-structure(list(index = structure(c(-0.0475399533129828, 0.5, 
--0.00600425397248417, 0.5), .Names = c("Ia", "p.Ia", "rbarD", 
-"p.rD")), samples = structure(list(Ia = c(-0.174180206794681, 
-0.110998135909168, -0.0516575036742681, -0.227057548622598, -0.290794613187196, 
-0.17142682029909, 0.127426390403491, -0.0489769895090723, -0.0100523130577507
-), rbarD = c(-0.022056780840299, 0.0142082562146926, -0.00661071136361462, 
--0.0289477478354951, -0.0366851757977678, 0.0217644448059182, 
-0.0160542108673502, -0.00622397887147145, -0.00126986051456087
-)), .Names = c("Ia", "rbarD"), row.names = c(NA, -9L), class = "data.frame")), .Names = c("index", 
-"samples"))
-@
-
-
-There, are, of course a couple of caveats that need to be mentioned regarding
-our P-values. First, while we have equivalent P-values for $I_A$ and
-$\bar{r}_d$, they might not always be equal due to the difference in
-calculation. Details about that can be found in the Appendix
-section\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.}Second, the
-P-values are calculated by comparing how many permuted values are greater than
-or equal to the observed value. This includes the observed value (which is why
-setting the randomizations to 999 will give you a round P-value) which means
-that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number
-of permutations you select. Take for example this population of a clonal root
-rot pathogen, \textit{Aphanomyces euteiches}:
-<<ia_Aeut_ex, eval=FALSE>>=
-data(Aeut)
-set.seed(1001)
-ia(popsub(Aeut, 1), sample=999, method=2, quiet=TRUE, hist=FALSE)
-@
-<<ia_Aeut_ex_real, echo=FALSE>>=
-data(Aeut)
-set.seed(1001)
-A.dum <- ia(popsub(Aeut, 1))
-c(A.dum[1], p.Ia = 0.001, A.dum[2], p.rD = 0.001)
-@
-If you want to be able to report $P < 0.001$ in this situation, then you can
-simply increase the number in sample: \texttt{sample = 1999}
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%-----------------------------------------------------------------------------%
-%
-%-----------------------------------------------------------------------------%
-\subsection{Genetic distances \{may I have distance?\}}
-\label{index:gendist}
-
-\tab\tab Genetic distances are great tools for analyzing diversity in
-populations as they are the basis for creating dendrograms with bootstrap
-support and also for AMOVA. This section will simply present different genetic
-distances along with a few notes about them. Most of these distances are derived
-from the \textit{ade4} and \adegenet packages, where they were implemented as
-distances between populations. \Poppr extends the implementation to individuals
-as well (with the exception of Bruvo's distance).
-
-\begin{table}[ht]
-\centering
-\begin{tabular}{llll}
-  \hline
- Method & Function & Assumption & Euclidean \\ 
-  \hline
-\seclink{distance:dissimilarity}{Provesti} & \texttt{provesti.dist} & - & No \\
- & \texttt{diss.dist} & & \\
-\seclink{distance:nei}{Nei} & \texttt{nei.dist} & Infinite Alleles & No \\
- & & Genetic Drift & \\
-\seclink{distance:edwards}{Edwards} & \texttt{edwards.dist} & Genetic Drift & Yes \\
-\seclink{distance:reynolds}{Reynolds} & \texttt{reynolds.dist} & Genetic Drift & Yes \\
-\seclink{distance:rogers}{Rogers} & \texttt{rogers.dist} & - & Yes \\
-\seclink{distance:bruvo}{Bruvo} & \texttt{bruvo.dist} & Stepwise Mutation & No \\
-   \hline
-\end{tabular}
-\end{table}
-
-Note on these distances: It is valuable for the user to know which distance is
-appropriate for use within his/her system. All of these distances except for
-Bruvo's distance are based on allele frequencies. Bruvo's distance takes into
-account the value of the allele, and thus may be more appropriate for questions
-of finding clonal descendents as opposed to a distance that will estimate the
-number of mutations that occured.
-
-Currently only Bruvo's distance and Provesti's distance perform as expected with
-polyploid data. The other distances appear to give spurious results.
-
-All of the distances are based on the table found in
-a\seclink{intro:genind}{genind object.}I have translated the following from math
-jargon into English with a few minor modifications:
-
-\begin{quote}
-Let \textbf{A} a table containing allelic frequencies with $t$ populations or
-individuals (rows) and $m$ alleles (columns).\\
-Let $\nu$ be the number of loci. The locus $j$ gets $m(j)$ alleles. 
-
-
-\begin{equation}
-  m=\sum_{j=1}^{\nu} m(j)
-\end{equation}
-\end{quote}
-
-
-Again, this is describing the table present in the\seclink{intro:genind}{genind
-object} where, instead of having the number of columns equal the number of loci,
-the number of columns equals the number of observed alleles in the entire data
-set. So, if you had a data set with 5 loci that had 2 alleles each, your table
-would have ten columns. Of course, codominant loci like microsatellites have
-varying numbers of alleles.
-
-
-\begin{quote}
-For the row $i$ and the modality $k$ of the variable $j$, notice the value
-
-\begin{equation}
-  a_{ijk}\\ (1 \leq i \leq t,\\ 1 \leq j \leq \nu,\\ 1 \leq k \leq m(j))
-\end{equation}
-
-the value of the initial table.
-
-\begin{equation}
-  a_{ij\cdot}=\sum_{k=1}^{m(j)}a_{ijk} 
-\end{equation}
-
-and 
-
-\begin{equation}
-  p_{ijk}=\frac{a_{ijk}}{a_{ij\cdot}}
-\end{equation}
-\end{quote}
-
-The above couple of equations are basically defining the allele frequency
-($p_{ijk}$). Remember that $i$ is individual, $j$ is locus, and $k$ is allele.
-The following continutes to describe properties of the table:
-
-\begin{equation}
- p_{ij\cdot}=\sum_{k=1}^{m(j)}p_{ijk}=1
-\end{equation}
-The sum of all allele frequencies for a single population (or individual) at a 
-single locus is one.
-
-\begin{equation}
-p_{i{\cdot}\cdot}=\sum_{j=1}^{\nu}p_{ij\cdot}=\nu
-\end{equation}
-The sum of all allele frequences over all loci is equal to the number of loci.
- 
-\begin{equation}
-p_{{\cdot}{\cdot}\cdot}=\sum_{j=1}^{\nu}p_{i{\cdot}\cdot}=t\nu
-\end{equation}
-The the sum of the entire table is the sum of all loci multiplied by the number 
-of populations (or individuals).
-
-
-%
-%-----------------------------------------------------------------------------%
-%
-
-\subsubsection{Non-Euclidean distances}
-\label{index:gendist:neu}
-Dissimilarity distance
-\label{distance:dissimilarity}
-
-One of the least known distances and yet more conceptually satisfying is
-Provesti's (Also spelled Prevosti) distance. It's conceptually satisfying
-because it can be thought of as a percentage of dissimilar sites between two
-individuals or populations or the absolute genetic distance. It is implemented
-in two functions, \texttt{provesti.dist} and \texttt{diss.dist}.
-
-\label{distance:provesti}
-\begin{equation}
-  D_{P}(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  |p_{ajk} - p_{bjk}|
-\end{equation}
-Note: for AFLP data, the $2$ is dropped. 
-
-
-Nei's distance
-\label{distance:nei}
-\begin{equation}
-  D_1(a,b)= -\ln(\frac{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  p_{ajk} p_{bjk}}{\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  {(p_{ajk}) }^2}\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  {(p_{bjk})}^2}})
-\end{equation}
-
-\subsubsection{Euclidean distance}
-\label{index:gendist:eu}
-
-Edward's Angular distance
-\label{distance:edwards}
-\begin{equation}
-  D_2(a,b)=\sqrt{1-\frac{1}{\nu} \sum_{k=1}^{\nu}
-  \sum_{j=1}^{m(k)} \sqrt{p_{ajk}  p_{bjk}}}
-\end{equation}
-
-Reynold's Coancestry distance
-\label{distance:reynolds}
-\begin{equation}
-  D_3(a,b)=\sqrt{\frac{\sum_{k=1}^{\nu}
-  \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}{2 \sum_{k=1}^{\nu} (1-
-  \sum_{j=1}^{m(k)}p_{ajk} p_{bjk})}}
-\end{equation}
-
-
-Roger's distance 
-\label{distance:rogers}
-\begin{equation}
-  D_4(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
-  \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}
-\end{equation}
-
-\subsubsection{Bruvo's distance for microsatellites}
-\label{index:gendist:bruvo}
-
-This is based off of a specific model where it is necessary to specify the
-repeat lengths of the markers at each locus. Eg a repeat of $(CAT)^n$ would have
-a repeat length of 3.
-\label{distance:bruvo}
-
-
-Comparing all distances (WIP)
-
-<<mantel>>=
-data(nancycats)
-nancy9 <- popsub(nancycats, 9)
-repeats <- rep(2, 9)
-pro_nan <- provesti.dist(nancy9)
-nei_nan <- nei.dist(nancy9)
-edw_nan <- edwards.dist(nancy9)
-rey_nan <- reynolds.dist(nancy9)
-rog_nan <- rogers.dist(nancy9)
-bru_nan <- bruvo.dist(nancy9, replen = repeats)
-distlist <- list(Provesti = pro_nan,
-                 Nei = nei_nan,
-                 Edwards = edw_nan,
-                 Reynolds = rey_nan,
-                 Rogers = rog_nan,
-                 Bruvo = bru_nan)
-combs <- combn(x = 1:length(distlist), m = 2)
-mtest <- apply(combs, 2, function(x) mantel.randtest(distlist[[x[1]]], distlist[[x[2]]])$obs)
-attr(mtest, "class") <- "dist"
-attr(mtest, "Size") <- 6
-attr(mtest, "Labels") <- names(distlist)
-mtest <- as.matrix(mtest)
-diag(mtest) <- 1
-library(reshape2)
-library(ggplot2)
-ggplot(melt(mtest)) + geom_tile(aes_string(x = "Var1", y = "Var2", fill = "value"))
-@
-
-
-\subsection{Bootstrap analysis \{give `em the boot(strap)\}}
-\label{index:boot}
-\subsubsection{Bootstrapping any distance}
-\label{index:boot:any}
-\subsubsection{Bootstrapping Bruvo's Distance}
-\label{index:boot:bruvo}
-This is optimized for Bruvo's distance. 
-
-\subsection{Minimum spanning networks \{nothing but net(works)\}}
-
-\subsection{Analysis of MOlecular VAriance \{Come here! AMOVA here!\}}
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%-----------------------------------------------------------------------------%
-%
-%-----------------------------------------------------------------------------%
-\subsection{Going the distance \{dissimilarity distance\}}
-\label{index:dist}
-\tab\tab Since \poppr{} is still in its infancy, the number of distance measures
-it can offer are few. Bruvo's distance is well supported and allows you to
-quickly visualize your data, but it only allows for microsatellites. The index
-of association, above, utilizes a discreet dissimilarity distance matrix. It is
-with this matrix that we have constructed a relative dissimilarity distance
-where the distance is the ratio of the number of dissimilarities to the number
-of dissimilarities possible. The number of dissimilarities possible is the
-number of loci multiplied by the ploidy, so if you have 10 loci from a diploid
-population, then there are 20 dissimilarities possible. For details, see
-equations (\ref{eq:ia_d}) and (\ref{eq:ia_D})
-in\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.}
-
-\subsubsection{Function: diss.dist}
-\label{index:dist:diss.dist}
-
-\tab\tab Use this function to calculate relative dissimilarity between
-individuals and return a distance matrix for use in creating cladograms or
-minimum spanning networks. A note: missing alleles will be imputed to be the
-same as the challenging allele, decreasing the distance between some
-individuals. If you want to consider all missing data as special alleles, treat
-your data with \texttt{missingno(pop, type = "zero")} beforehand.
-
-\begin{quote}
-Default Command:
-<<diss.dist_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "diss.dist"
-print_command(funk)
-@
-% \texttt{diss.dist(pop)}
-\end{quote}
-
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object. 
-\end{itemize}
-Since we have a data set that we know is very clonal, let's analyze the
-\textit{A. euteiches} data set \cite{Grunwald:2006} and create a heatmap to
-visualize the degree of difference between populations.
-<<diss_dist, eval=FALSE>>=
-data(Aeut)
-A.dist <- diss.dist(Aeut)
-heatmap(as.matrix(A.dist), symm=TRUE)
-@
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize Heatmap representation of a dissimilarity distance for
-  the data set ``Aeut"}
-  \label{diss_heat_map}
-<<echo=FALSE, resolution=300>>=
-data(Aeut)
-A.dist <- diss.dist(Aeut)
-heatmap(as.matrix(A.dist), symm=TRUE)
-@
-\end{figure}
-\newpage
-%-----------------------------------------------------------------------------%
-%
-%-----------------------------------------------------------------------------%
-\subsection{Bruvo's distance \{step by stepwise mutation\}}
-\label{index:bruvo}
-
-\tab\tab Bruvo's distance is a genetic distance measure for microsatellite
-markers utilizing a stepwise mutation model that allows for differing ploidy
-levels \cite{Bruvo:2004}. As \textit{adegenet's} \texttt{genind} object has an
-all or none approach to missing data, any genotypes not exhibiting full ploidy
-will be treated as missing. This means that only non-special cases will be
-considered for the calculation and missing data will be ignored
-\cite{Bruvo:2004}.
-
-This is true only if missing data is treated as missing when importing to
-\adegenet{}. If missing data in the initial data frame has missing
-microsatellite alleles coded as 0, then the genind object will not treat them as
-missing (unless the genotype has no alleles in it). An example adapted from the
-\adegenet{} ``Getting Started" vignette shows how this can be done:
-
-<<cheating>>=
-set.seed(5001)
-temp <- lapply(1:30, function(i) sample(0:9, 4, replace=TRUE))
-temp <- sapply(temp, paste, collapse = "/")
-temp <- matrix(temp, nrow=10, dimnames=list(paste("ind",1:10), paste("loc",1:3)))
-temp 
-obj <- df2genind(temp, ploidy=4, sep="/")
-pop(obj) <- paste("ind", 1:10)
-@
-
-We will save this object for a later demonstration of the addition and loss
-models of Bruvo's distance. It is important to note that this is a distance
-between individuals, not populations, unlike Nei's 1978 distance
-\cite{Nei:1978}. For distances between populations, see the \adegenet{} function
-\texttt{dist.genpop}
-
-\subsubsection{Function: bruvo.dist}
-\label{index:bruvo:bruvo.dist}
-
-\tab\tab Bruvo's distance requires knowledge of the repeat lengths of each
-locus, so take care to read the description below.
-\begin{quote}
-Default Command:
-<<bruvo.dist_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "bruvo.dist"
-print_command(funk)
-@
-% \texttt{bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)}
-\end{quote}
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{replen -} This is a vector of numbers indicating the repeat
-  length for each locus in your sample. If you have two dinucleotide repeats and
-  five tetranucleotide repeats, you would put \texttt{c(2,2,4,4,4,4,4)} in this
-  field. If you have imported data where that represents the raw number of
-  steps, all you would have to type is \texttt{rep(1, n)}, replacing $n$ with
-  the number of loci in your sample. It is important that you place something in
-  this field because this function will attempt to estimate the repeat length
-  based on the minimum difference of the alleles represented; with variability
-  of position calls, relying on this estimation is NOT recommended.
-  \item \texttt{add -} For missing data: use the genome addition model
-  (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
-  distance.})
-  \item \texttt{loss -} For missing data: use the genome loss model
-  (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
-  distance.})
-\end{itemize}
-
-To illustrate why it is important to specify the repeat lengths, let's imagine a
-locus that contains 5 alleles and the true repeat length is 4. Note that Bruvo's
-distance between alleles is calculated as $1 - 2^{-[x]}$, where $x$ is the
-difference in repeat lengths:
-<<replen_example1>>=
-locus1 <- c(244, 248, 256, 240, 236)
-locus1/4
-1 - 2^-dist(locus1/4)
-@
-We can see that the distance between them ranges from 1 to 5. Let's say, that we
-accidentally wrote 2 or 8 instead of 4:
-<<replen_example2>>=
-locus1/2
-1 - 2^-dist(locus1/2) # Distance increase
-
-locus1/8
-1 - 2^-dist(locus1/8) # Distance decrease
-@
-While we will still get results from this analysis with the incorrect repeat
-length, they will be inherently wrong as they do not represent the true
-distance. That being said, it's important to note that the repeat lengths we
-represent for the rest of the manual are not known by the authors, but are used
-as a simple example.
-
-This function will return a distance matrix (displaying the smallest population
-in the data set ``nancycats"):
-<<bruvo_matrix>>=
-dist9 <- bruvo.dist(popsub(nancycats, 9), replen=rep(1,9))
-dist9
-@
-
-You can visualize this better with a simple heatmap:
-%\newpage
-
-<<bruvo_heat, eval = FALSE>>=
-heatmap(as.matrix(dist9), symm=TRUE)
-@
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize Heatmap representation of Bruvo's distance for
-  population 9 of the data set ``nancycats"}
-  \label{bruvo_heat_map}
-<<resolution=300, echo = FALSE>>=
-heatmap(as.matrix(dist9), symm=TRUE)
-@
-\end{figure}
-%\newpage
-
-Let's take a closer look at the two individuals, N113 and N111. They seem to
-have large distances between everyone else and themselves. The names and columns
-of the matrix contain the names of individuals, but not the population
-information. We can make a comparison of Bruvo's distance across populations
-easier by editing the ``Labels" attribute of the distance object. Let's take a
-look at the labels attribute using the \texttt{attr()} command. <<attrLabels>>=
-attr(dist9, "Labels")
-@
-Remember that they all came from population 9, so let's append that to each
-label using the \texttt{paste()} command.
-<<attrLabel_replace>>=
-dist9.attr <- attr(dist9, "Labels")
-attr(dist9, "Labels") <- paste(rep("P09", 9), dist9.attr)
-dist9
-@
-Now we can see that all of the labels are corresponding to population 9. Let's
-calculate Bruvo's distance between populations 8 and 9.
-<<popcompare_bruvo1, eval=FALSE>>=
-dist9to8 <- bruvo.dist(popsub(nancycats, 8:9), replen=rep(1,9))
-dist9to8.attr <- attr(dist9to8, "Labels")
-nan9to8pop <- nancycats@pop[nancycats@pop %in% c("P08", "P09")]
-attr(dist9to8, "Labels") <- paste(nan9to8pop, dist9to8.attr)
-heatmap(as.matrix(dist9to8), symm=TRUE)
-@
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize Heatmap representation of Bruvo's distance for
-  populations 8 and 9 of the data set ``nancycats"}
-  \label{bruvo_heat_map_8to9}
-<<popcompare_bruvo2, echo=FALSE, resolution=300>>=
-dist9to8 <- bruvo.dist(popsub(nancycats, 8:9), replen=rep(1,9))
-dist9to8.attr <- attr(dist9to8, "Labels")
-nan9to8pop <- nancycats@pop[nancycats@pop %in% c("P08", "P09")]
-attr(dist9to8, "Labels") <- paste(nan9to8pop, dist9to8.attr)
-heatmap(as.matrix(dist9to8), symm=TRUE)
-@
-\end{figure}
-
-Remember N113 and N111? Take a look at where they fall on the heatmap. They
-don't cluster together with population 9 anymore, but somewhere in population 8.
-% \newpage
-
-%-----------------------------------------------------------------------------%
-%
-%-----------------------------------------------------------------------------%
-\subsection{See the forest for the trees \{visualizing distances with dendrograms and networks\}}
-\label{index:trees}
-
-\tab\tab Staring at a raw distance matrix might be able to tell you something
-about your data, but it also might be able to ruin your eyesight. In this
-section, we present functions to display this data in trees and networks.
-
-\subsubsection{Function: bruvo.boot}
-\label{index:trees:bruvo.boot}
-
-\tab\tab This function provides the ability to draw a dendrogram based on
-Bruvo's distance including bootstrap support.
-\begin{quote}
-Default Command:
-<<bruvo.boot_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "bruvo.boot"
-print_command(funk)
-@
-% \texttt{bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
-\end{quote}
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{replen -} see \texttt{bruvo.dist}, above.
-  \item \texttt{add -} For missing data: use the genome addition model
-  (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
-  distance.})
-  \item \texttt{loss -} For missing data: use the genome loss model
-  (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
-  distance.})
-  \item \texttt{sample -} How many bootstraps do you want to perform?
-  \item \texttt{tree -} Two trees are available, Neighbor-Joining \texttt{"nj"}
-  or UPGMA \texttt{"upgma"}.
-  \item \texttt{showtree -} if \texttt{TRUE}, a tree will be plotted
-  automatically.
-  \item \texttt{cutoff -} This is a number between 0 and 100 indicating the
-  cutoff value for the bootstrap nodelables. If you only wanted to see the the
-  boostrap values for nodes that were present more than 75\% of the time, you
-  would use \texttt{cutoff = 75}. If you don't put anything for this parameter,
-  all values will be shown.
-  \item \texttt{quiet -} if \texttt{quiet = TRUE}, no standard messages will be
-  printed to screen. If \texttt{quiet = FALSE} (default), then a progress bar
-  and standard message will be printed to the screen.
-\end{itemize}
-
-For this example, let's set the cutoff to 50\%.
-<<bruvo_boot, eval=FALSE>>=
-set.seed(410)
-nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, cutoff=50)
-@
-<<progbar, echo=FALSE>>=
-cat("\nBootstrapping...\n(note: calculation of node labels can take a while even after the progress bar is full)\n\n")
-cat("|================================================================================| 100%\n")
-@
-\begin{figure}[h!]
-  \centering
-  \caption{\footnotesize UPGMA Tree of Bruvo's distance for population 9 of the
-  data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent
-  percentage of bootstrap replicates that contained that node.}
-  \label{bruvo_upgma}
-%  \includegraphics{bruvo_upgma.png}
-
-<<bruvo_tree, echo=FALSE, resolution=300>>=
- set.seed(410)
- nan9tree <- phangorn::upgma(bruvo.dist(popsub(nancycats, 8:9), replen = rep(1, 9)))
- nan9tree$node.labels <- c(100, NA, NA, NA, NA, 64, NA, NA, NA, NA, NA, 80, NA,
-                           62, NA, 52, NA, NA)
- nan9tree$tip.label <- indNames(popsub(nancycats, 8:9))
-#  ape::plot.phylo(nan9tree, show.node.label=TRUE)
-#  ape::axisPhylo(3)
- poppr:::poppr.plot.phylo(nan9tree, "upgma")
-@
-
-\end{figure}
-\newpage
-\subsubsection{Function: greycurve}
-\label{index:trees:greycurve}
-\tab\tab Use this function to display a gradient of grey values based on user-
-defined parameters. The following functions will display a minimum spanning
-network that utilize a grey scale to display the weight of the lines (referred
-to as ``edges") that connect two or more individuals. The darker the line the
-closer the distance. Since this is based off of a linear grey scale, what
-happens when you have a distance matrix comprised of values all below 0.2 or all
-above 0.8?
-
-With linear grey scaling, it becomes very difficult to detect the differences in
-these ranges. The following function allows you to visualize and manipulate a
-gradient from black to white so that you can use it in \poppr{}'s msn functions
-below to maximize the visual differences in your data.
-
-\begin{quote}
-Default Command:
-<<greycurve_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "greycurve"
-print_command(funk)
-@
-% \texttt{greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)}
-\end{quote}
-
-
-This function does not return any values. It will print a visual gradient from
-black to white horizontally. On this gradient, it will plot the adjustment curve
-(in opposing grey values), yellow horizontal lines bounding the maximum and
-minimum values, and the equation used to calculate the correction in red. By
-default it will use a sequence from 1 to 0 to plot the curve, but you can use
-any sequence. Let's take 1000 random normal draws:
-
-<<greycurve_rnorm>>=
-set.seed(9999)
-xnorm <- rnorm(1000)
-@
-
-
-%\newpage
-First, we'll see what happens when we change the weight parameter.
-\begin{figure}[h!]
-\begin{minipage}[b]{0.45\linewidth}
-\centering
-\caption{\footnotesize Default for \texttt{greycurve()}, weighted for small
-values.}
-<<greycurve_normal, out.width='\\linewidth'>>=
-greycurve(xnorm)
-@
-\end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[b]{0.45\linewidth}
-\centering
-\caption{\footnotesize weighting for large values.}
-<<greywidth_inverse, out.width='\\linewidth'>>=
-greycurve(xnorm, gweight = 2)
-@
-\end{minipage}
-\end{figure}
-
-If you change the adjustment parameter, \texttt{gadj}, the shape of the curve
-will change, and if you change the limit parameter, \texttt{glim}, the bounds of
-the curve will change.
-
-This function also will plot scalebars for use with minimum spanning networks
-produced in previous versions of poppr. Just use the scalebar argument and you
-will get a scalebar using the quantiles from the data and a scalebar with the
-data smoothed from the minimum to the maximum.
-
-\begin{figure}[h!]
-\begin{minipage}[b]{0.45\linewidth}
-\centering
-\caption{\footnotesize We can see that more data lies around zero (as expected
-with a random normal distribution)}
-<<greycurve_small_heavy, out.width='\\linewidth'>>=
-greycurve(xnorm, scalebar = TRUE)
-@
-\end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[b]{0.45\linewidth}
-\centering
-\caption{\footnotesize Same as the figure on the left, but weighting heavily
-toward larger values.}
-<<greywidth_large_heavy, out.width='\\linewidth'>>=
-greycurve(xnorm, gweight=2, scalebar = TRUE)
-@
-\end{minipage}
-\end{figure}
-\newpage
-
-\subsubsection{Function: bruvo.msn}
-\label{index:trees:bruvo.msn}
-\tab\tab This function will automatically draw a minimum spanning network of
-MLGs based on Bruvo's distance. It's important to note that this will
-recalculate Bruvo's distance each time it is run, but the amount of time it
-takes to run is on the order of seconds. It will return a list containing the
-network, the populations and the related colors in the network so you can export
-or redraw it with the legend if you wanted to using the package \textit{igraph}
-(type \texttt{help("plot.igraph")} for details).
-\begin{quote}
-Default Command:
-<<bruvo.msn_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "bruvo.msn"
-print_command(funk)
-@
-% \texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\ 
-%   \tab sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, \\
-%   \tab glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
-% }
-\end{quote}
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{replen -} see \texttt{bruvo.dist}, above.
-  \item \texttt{add -} For missing data: use the genome addition model
-  (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
-  distance.})
-  \item \texttt{loss -} For missing data: use the genome loss model
-  (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
-  distance.})
-  \item \texttt{palette -} this is a \textbf{function} definining a color
-  palette to use. The default is \texttt{topo.colors}. There are different
-  palettes, which you can search by typing \texttt{?rainbow}. If you want a
-  custom color palette, an easy way is to use the function
-  \texttt{colorRampPalette}.
-  \item \texttt{sublist -} The populations you wish to analyze. This defaults to
-  ``All". See section \ref{data.manip:divide:popsub} for details.
-  \item \texttt{blacklist -} Populations you do not want to include in the
-  graph. See section \ref{data.manip:divide:popsub} for details.
-  \item \texttt{vertex.label -} This is an option that is passed on to
-  \textit{igraph}'s \texttt{plot} function. \Poppr{} has added two arguments
-  specific to \poppr{}. If you want to label the graph with the multilocus
-  genotypes from the whole data set, use the argument \texttt{vertex.label =
-  "mlg"}. If you want to display the representative individual names, you can
-  use the argument \texttt{vertex.label = "inds"}. I say representative
-  individual names because, only one representative from each MLG will be
-  present in the clone corrected data set used to calculate the distance. For no
-  labels, you can choose \texttt{vertex.label = NA}.
-  \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will
-  be converted to greyscale based on Bruvo's distance. If two nodes are closely
-  related, the edge will appear darker. The limits of the scale can be set by
-  the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors
-  will be black.
-  \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets
-  you set the limits of the grey scaling based on R's internal \texttt{grey}
-  function. For example, if you wanted a maximum of 50\% white saturation (for
-  use if you have distantly related nodes) and a minimum of 1\%, you would use
-  \texttt{glim = c(0.01, 0.5)}.
-  \item \texttt{gadj -} This is an integer greater than zero used to adjust the
-  scaling factor for the grey curve. Since very small changes in the grey scale
-  are not easily precieved, it's useful to be able to adjust the grey scale to
-  be able to show you the weights of each edge. For example, a population with
-  most weights less than 0.3, you might want to set \texttt{gadj = 10} to
-  exaggerate the grey scale.
-  \item \texttt{gweight -} If \texttt{gweight = 1}, the grey scale adjustment
-  will be weighted towards separating out smaller values of Bruvo's distance. If
-  \texttt{gweight = 2}, the grey scale ajustment will be weighted towards
-  separating out larger values of Bruvo's distance.
-  \item \texttt{wscale -} If this is set to \texttt{TRUE}, edge widths will be
-  displayed corresponding to Bruvo's distance in that thicker edges will
-  represent a smaller distance between nodes. If this is set to \texttt{FALSE},
-  all edges will be set to a width of 2.
-  \item \texttt{... -} This is a placeholder for any other arguments that you
-  want to supply to \textit{igraph}. Useful arguments are
-  \texttt{vertex.label.cex} to adjust the size of the labels,
-  \texttt{vertex.label.dist} to adjust the position of the labels, and
-  \texttt{vertex.label.color} to adjust the color of the labels.
-\end{itemize}
-
-Often, minimum spanning networks are the preferred way to visualize Bruvo's
-distance. \Poppr{} offers an easy way to plot these. For a demonstration, let's
-analyze a simulated data set of 50 individuals from populations that reproduce
-at a 99.9\% rate of clonal reproduction.
-
-<<bruvo_msn_code, eval=FALSE>>=
-data(partial_clone)
-set.seed(9005)
-pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
-          vertex.label.dist=-0.5, palette=colorRampPalette(c("blue", "yellow")))
-@
-\begin{figure}[ht!]
-  \centering
-  \caption{\footnotesize Minimum Spanning Network representing 4 simulated
-  populations. Each node represents a different multi locus genotype (MLG). Node
-  sizes and colors correspond to the number of individuals and population
-  membership, respectively. Edge thickness and color are proportional to Bruvo's
-  distance. Edge lengths are arbitrary.}
-  \label{mst_bruvo}
-<<bruvo_msn, resolution=300, echo=FALSE, out.width='0.8\\linewidth'>>=
-data(partial_clone)
-set.seed(9005)
-pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
-          vertex.label.dist=-0.5, palette=colorRampPalette(c("blue", "yellow")))
-@
-\end{figure}
-\setkeys{Gin}{width=0.5\textwidth}
-
-The output, as mentioned earlier, is a list containing the graph constructed via
-the \textit{igraph} package, a vector of the population names and a vector of
-colors representing the populations.
-<<bruvo_msn_igraph>>=
-library(igraph)
-pc.msn
-@
-
-Note that the thickness of the edges (the lines that are connecting the dots) is
-representative of relatedness between individuals, but the lengths do not
-necessarily mean anything due to the fact that with a larger data sets,
-displaying lengths proportional to relatedness would be impossible to draw on a
-2D surface. Interpreting these data would show that MLG 9 has 5 individuals from
-all four populations and that it is most closely related to MLG 7, whereas the
-most distantly related connection exists between MLG 25 and MLG 26.
-
-%\newpage
-Since a graph can be represented in many ways, you might want to play around
-with different layouts using the \texttt{layout()} function in \textit{igraph}.
-Type \texttt{help("layout", package = igraph)} for details. Below is the code
-for reconstructing the previous graph using the output:
-<<bruvo_msn_reconstruct, eval=FALSE>>=
-set.seed(9005)
-library(igraph)
-plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3, 
-     vertex.label.cex=0.7, vertex.label.dist=-0.5,)
-legend(-1.55, 1, bty = "n", cex = 0.75, legend = pc.msn$populations, 
-       title = "Populations", fill = pc.msn$colors, border = NULL)
-@
-
-\subsubsection{Function: poppr.msn}
-\label{index:trees:poppr.msn}
-
-\tab\tab Use this function to draw a minimum spanning network from your data set
-and a distance matrix derived from your data set. Since there are hundreds of
-distances that can be calculated for genetic data, and since I want to be able
-to graduate at some point in this decade, functions to automatically calculate
-distances and draw the minimum spanning networks will be few and far between.
-This function is an attempt to meet the user halfway and draw a minimum spanning
-network provided that the user has supplied two things:
-\begin{enumerate}
-  \item A distance matrix over all individuals.
-  \item The original data set containing demographic information.
-\end{enumerate}
-
-That's it. For the most part, this function is functionally the same as
-\texttt{bruvo.msn}, except that instead of being exclusive to microsatellite
-markers, you can now visualize distances in any marker type provided that you
-have the two items listed above.
-
-\begin{quote}
-Default Command:
-<<poppr.msn_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "poppr.msn"
-print_command(funk)
-@
-% \texttt{poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",\\ 
-%   \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
-%   \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
-% }
-\end{quote}
-\begin{itemize}
-  \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{distmat -} a dissimilarity distance matrix derived from your data with distances between zero and one.
-  \item \texttt{palette -} this is a \textbf{function} definining a color
-  palette to use. The default is \texttt{topo.colors}. There are different
-  palettes, which you can search by typing \texttt{?rainbow}. If you want a
-  custom color palette, an easy way is to use the function
-  \texttt{colorRampPalette}.
-  \item \texttt{sublist -} The populations you wish to analyze. This defaults to
-  ``All".
-  \item \texttt{blacklist -} Populations you do not want to include in the
-  graph.
-  \item \texttt{vertex.label -} This is an option that is passed on to
-  \textit{igraph}'s \texttt{plot} function. \Poppr{} has added two arguments
-  specific to \poppr{}. If you want to label the graph with the multilocus
-  genotypes from the whole data set, use the argument \texttt{vertex.label =
-  "mlg"}. If you want to display the representative individual names, you can
-  use the argument \texttt{vertex.label = "inds"}. I say representative
-  individual names because, only one representative from each MLG will be
-  present in the clone corrected data set used to calculate the distance. For no
-  labels, you can choose \texttt{vertex.label = NA}.
-  \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will
-  be converted to greyscale based on the distance. If two nodes are closely
-  related, the edge will appear darker. The limits of the scale can be set by
-  the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors
-  will be black.
-  \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets
-  you set the limits of the grey scaling based on R's internal \texttt{grey}
-  function. For example, if you wanted a maximum of 50\% white saturation (for
-  use if you have distantly related nodes) and a minimum of 1\%, you would use
-  \texttt{glim = c(0.01, 0.5)}.
-  \item \texttt{gadj -} This is an integer greater than zero used to adjust the
-  scaling factor for the grey curve. Since very small changes in the grey scale
-  are not easily precieved, it's useful to be able to adjust the grey scale to
-  be able to show you the weights of each edge. For example, a population with
-  most weights less than 0.3, you might want to set \texttt{gadj = 10} to
-  exaggerate the grey scale.
-  \item \texttt{gweight -} If \texttt{gweight = 1}, the grey scale adjustment
-  will be weighted towards separating out smaller values of the distance. If
-  \texttt{gweight = 2}, the grey scale ajustment will be weighted towards
-  separating out larger values of Bruvo's distance.
-  \item \texttt{wscale -} If this is set to \texttt{TRUE}, edge widths will be
-  displayed corresponding to Bruvo's distance in that thicker edges will
-  represent a smaller distance between nodes. If this is set to \texttt{FALSE},
-  all edges will be set to a width of 2.
-  \item \texttt{... -} This is a placeholder for any other arguments that you
-  want to supply to \textit{igraph}. Useful arguments are
-  \texttt{vertex.label.cex} to adjust the size of the labels,
-  \texttt{vertex.label.dist} to adjust the position of the labels, and
-  \texttt{vertex.label.color} to adjust the color of the labels.
-\end{itemize}
-
-Since we have the ability, let's visualize the \textit{A. euteiches} data set
-\cite{Grunwald:2006}.
-<<poppr_msn, eval=FALSE>>=
-data(Aeut)
-A.dist <- diss.dist(Aeut)
-set.seed(9005)
-A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
-@
-
-\begin{figure}[ht!]
-  \centering
-  \caption{\footnotesize Minimum Spanning Network representing 4 simulated
-  populations. Each node represents a different multi locus genotype (MLG). Node
-  sizes and colors correspond to the number of individuals and population
-  membership, respectively. Edge thickness and color are proportional to Bruvo's
-  distance. Edge lengths are arbitrary.}
-  \label{mst_poppr}
-<<poppr_msn_fig, resolution=300, echo=FALSE, out.width='0.8\\linewidth'>>=
-data(Aeut)
-A.dist <- diss.dist(Aeut)
-set.seed(9005)
-A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
-@
-\end{figure}
-\newpage
-%\subsubsection{Gory details} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%=============================================================================%
-%=============================================================================%
-%
-%
-%
-%=============================================================================%
-%=============================================================================%
-\section{Diversity table \{I know what you did last summary table\}}
-\label{summary}
-
-\tab\tab Remember the summary function that you used to get all the diversity
-statistics in section \ref{intro:qstart}? In this section, we will flesh out all
-that you can do with this function. This was the very first function that was
-written for \poppr{} to make it easy for the user to manipulate and summarize
-the data in one function.
-%-----------------------------------------------------------------------------%
-%
-%-----------------------------------------------------------------------------%
-\subsection{Function: poppr}
-\label{summary:poppr}
-
-\tab\tab This function is quite daunting with all its possibilities. You have
-the option to subset your data for specific populations, correct for missing
-data, and clone correct. With each of these possibilities, comes the need to
-provide all the arguments for their various functions.
-\begin{quote}
-Default Command:
-<<poppr_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "poppr"
-print_command(funk)
-@
-% \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
-%         \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, \\
-%         \tab clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", \\
-%         \tab hist = TRUE, minsamp = 10)}
-\end{quote}
-\begin{itemize}
-  \item \texttt{dat -} A \texttt{genind} object, \texttt{genclone} object, or a
-  path to a file on your machine that contains genetix, structure, fstat,
-  genpop, or genalex formatted data.
-  \item \texttt{total -} This is also a synonym for ``pooled". This will
-  calculate all diversity statistics on the entire data set if set to
-  \texttt{TRUE} or if there is no population structure.
-  \item \emph{popsub functions:} See section \ref{data.manip:divide}
-  \begin{description}
-    \item[sublist -] A list of populations you want to include in your analysis.
-    \item[blacklist -] A list of populations you want to exclude from your
-    analysis.
-  \end{description}
-  \item \emph{shufflepop functions:} See section \ref{data.manip:shuffle} \\
-  Note that this only affects the calculation for $I_A$ and $\bar r_d$.
-  \begin{description}
-    \item[sample -] The number of samples you desire (eg. 999)
-    \item[method -] Which sampling method? 1: permute, 2: parametric bootstrap,
-    3: non-parametric bootstrap, 4: multilocus.
-  \end{description}
-  \item \emph{missingno functions:} See Section \ref{data.manip:missing} \\ Note
-  that all analyses in this function ignore/impute missing data by default.
-    \begin{description}
-      \item[missing -] How to deal with missing data. This feeds into the
-      \texttt{type} flag of \texttt{missingno}.
-      \item[cutoff -] Allowable percentage of missing data per genotype or
-      locus.
-    \end{description}
-  \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the
-  screen as the sampling progresses. If \texttt{FALSE} (default) a progress bar
-  will be produced.
-  \item \emph{clonecorrect functions:} See section \ref{data.manip:cc}
-  \begin{description}
-    \item[clonecorrect -] if this is set to \texttt{TRUE}, then you will need to
-    set the next two parameters.
-    \item[hier -] A list of the population hierarchy, or names of columns in the
-    data frame noted below.
-    \item[dfname -] A data frame in the \texttt{@other} slot of the
-    \texttt{genind} object containing all of the population factors in different
-    columns. For an example, see sections \ref{data.manip:hier} and
-    \ref{data.manip:cc}.
-    \item[keep -] A vector of integers as indexes for the \texttt{hier} flag
-    indicating which levels of the hierarchy you want to analyze. See section
-    \ref{data.manip:cc} for details.
-  \end{description}
-  \item \texttt{hist -} if \texttt{TRUE}, a histogram of distributions of $I_A$
-  and $\bar r_d$ will be displayed with each population if there is sampling.
-  \item \texttt{minsamp -} The minimum number of individuals you want to use to
-  calculate the expected number of MLGs. The default is set to 10.
-\end{itemize}
-
-This function produces a table that contains the population name, number of
-individuals observed, number of MLGs observed, number of MLGs expected at the
-lowest common sampling size within the data set \cite{Hurlbert:1971}
-\cite{Heck:1975}, the Shannon-Wiener index \cite{Shannon:1948}, Stoddart and
-Taylor's index for expected MLGs \cite{Stoddart:1988}, Nei's 1987 genotypic
-diversity \cite{Nei:1978}, evenness
-\cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}, the index of
-association \cite{Brown:1980}\cite{Smith:1993}, the standardized index of
-association \cite{Agapow:2001}, and the file name. Most of these indices are
-calculated by converting the population into an MLG table with
-\texttt{mlg.table} (see section \ref{mlg:table}) and using the \textit{vegan}
-package's \texttt{diversity} function (To see details, type
-\texttt{?vegan::diversity} into the R console).
-
-To begin, let's revisit our example data set of \textit{Aphanomyces euteiches}
-\cite{Grunwald:2006}.
-<<Aeut_rehash>>=
-data(Aeut)
-poppr(Aeut)
-@
-OK, so we were able to get a table out of this. Now let's see what happens when
-we do some sampling to see if this is reproducing clonally or not. We will turn
-quiet on and the histogram off to save space.
-<<Aeut_sample, eval=FALSE>>=
-poppr(Aeut, sample=999, hist=FALSE, quiet=TRUE)
-@
-<<Aeut_sample_show, echo=FALSE>>=
-none1 <- poppr(Aeut, hist=FALSE, quiet=TRUE)
-cbind(none1[1:10],list(p.Ia = rep(0.001, 3)), none1[11], list(p.rD = rep(0.001, 3)), none1[12])
-@
-From now on, we'll set \texttt{quiet = TRUE} to save space on our vignette.
-Let's clone correct at different levels to see if that affects the index of
-association. First, we'll clone correct at the sub population level.
-<<Aeut_cc_sub_show, eval=FALSE>>=
-poppr(Aeut, sample=999, clonecorrect=TRUE, hier=c("Pop","Subpop"), 
-      dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
-@
-<<Aeut_cc_sub, echo=FALSE>>=
-sub1 <- poppr(Aeut, clonecorrect=TRUE, hier=c("Pop","Subpop"), dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
-cbind(sub1[1:10],list(p.Ia = rep(0.001, 3)), sub1[11], list(p.rD = rep(0.001, 3)), sub1[12])
-@
-And at the population level.
-<<Aeut_cc_pop_show, eval=FALSE>>=
-poppr(Aeut, sample=999, clonecorrect=TRUE, hier="Pop", 
-      dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
-@
-<<Aeut_cc_pop, echo=FALSE>>=
-pop1 <- poppr(Aeut, sample=0, clonecorrect=TRUE, hier="Pop", dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
-cbind(pop1[1:10],list(p.Ia = rep(0.001, 3)), pop1[11], list(p.rD = rep(0.001, 3)), pop1[12])
-@
-As you can see, clone correction doesn't always have to involve creation of new
-data sets!
-
-You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal
-to each other. This will always be the case with the sampling method utilized in
-method 4 \cite{Agapow:2001}. Here, we show examples where they are not equal and
-why it's okay.
-<<nancy_example_show, eval=FALSE>>=
-set.seed(2002)
-poppr(nancycats, sublist=5:6, total=FALSE, sample=999, method=2, quiet=TRUE, hist=FALSE)
-@
-<<nancy_example_eval, echo=FALSE>>=
-set.seed(2001)
-nan_ex <- poppr(nancycats, sublist=5:6, total=FALSE, sample=0, method=2, quiet=TRUE, hist=FALSE)
-cbind(nan_ex[1:10],list(p.Ia = c(0.576, 0.070), nan_ex[11], list(p.rD = c(0.576, 0.071), nan_ex[12])))
-@
-The reason why the P-values would be different is described at the end of
-section \ref{index:iard:ia}. The differences in P-values are normally not very
-far off. It's important to note this because of what can happen in extremely
-clonal populations. You can end up with a large enough sample size consisting of
-very few MLGs. Upon shuffling using method 4, you find that there are very few
-values of $I_A$ and $\bar r_d$ that can be obtained. Observe with this simulated
-data set:
-<<simulated_dist, eval=FALSE>>=
-set.seed(2004)
-poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=4, quiet=TRUE)
-@
-<<simulated_dist_out, echo=FALSE>>=
-set.seed(2004)
-sim_ex <- poppr(system.file("files/simulated.dat", package="poppr"), sample=0, method=4, quiet=TRUE, hist=FALSE)
-cbind(sim_ex[1:10],list(p.Ia = c(0.09), sim_ex[11], list(p.rD = c(0.09), sim_ex[12])))
-@
-
-Take a look a these two histograms. The number of ways you can recombine the
-data with the default sampling method is very small. Other sampling methods
-could give a more theoretical distribution. Let's try the parametric bootstrap
-(For details, see section \ref{data.manip:shuffle}).
-
-\begin{figure}[h!]
-\begin{minipage}[b]{0.5\linewidth}
-\centering
-\caption{\footnotesize Output of multilocus-style sampling. Note the multimodal distribution.}
-  \label{simulated_dist_fig}
-  \includegraphics{simulated_dist_fig.pdf}
-\end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[b]{0.5\linewidth}
-\centering
-  \caption{\footnotesize Output for parametric bootstrap sampling.}
-  \label{simulated_param_fig}
-  \includegraphics{simulated_param_fig.pdf}
-\end{minipage}
-\end{figure}
-
-
-
-
-
+% \subsection{Calculating the index of association, $I_A$ and $\bar{r}_d$ \{the missing linkage disequilibrium\}}
+% \label{index:iard}
+
+% \tab\tab The index of association was originally developed as a measure of
+% multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to
+% detect signatures of sexual reproduction and population structure
+% \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with
+% the number of loci, and was not suitable to comparisons across studies
+% \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for
+% this scaling and forces the index to lie between 0 (linkage equilibrium) and 1
+% (full disequilibrium). $I_A$ has previously been implemented in a couple of
+% programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN}
+% \cite{Haubold:2000}. While both of these programs are still available for
+% download, \textit{multilocus} is no longer actively supported, and
+% \textit{LIAN}, despite its speed, is only appropriate for haplotypic data. Both
+% of these programs each require one specific file format, and, until
+% recently\footnote{LIAN 3.6 allows the user to run multiple contiguous data sets
+% within a single file or across multiple files. It is impossible to run
+% MULTILOCUS in batch.}, neither of these programs had an internal ability to run
+% in batch across multiple populations within a file or multiple files within a
+% directory in the same way that poppr can (see footnote).
+
+% It is important to note that for this algorithm, all missing values are treated
+% in the same way as \textit{multilocus} in that all missing alleles are imputed
+% to be the same as the alleles they are being compared to. Depending on the
+% percent missing data in your data set, this might influence the statistic. If
+% you have a lot of missing data, consider using the \texttt{missing} flag in this
+% function.
+% \subsubsection{Function: ia}
+% \label{index:iard:ia}
+
+% \tab\tab This function is a quick look at a single data set. It can do almost
+% everything that \texttt{poppr} can do except for sorting through populations.
+% \begin{quote}
+% Default Command:
+% <<ia_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "ia"
+% print_command(funk)
+% @
+% % \texttt{ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
+% %     hist = TRUE)}
+% \end{quote}
+% \begin{itemize}
+%   \item \texttt{pop -} a \texttt{genind} object.
+%   \item \texttt{sample -} You should use this flag whenever you want to
+%   reshuffle your data set. Indicate how many times you want to reshuffle your
+%   data set to obtain a P-value.
+%   \item \texttt{method -} a number from 1 to 4 indicating the sampling method:
+%   \begin{enumerate}
+%     \item permutation over alleles.
+%     \item parametric bootstrap.
+%     \item non-parametric bootstrap.
+%     \item \textit{multilocus} style permutation \cite{Agapow:2001}.
+%   \end{enumerate}
+%   The methods are detailed
+%   in\cmdlink{data.manip:shuffle:shufflepop}{shufflepop.}
+%   \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the
+%   screen as the sampling progresses. If \texttt{FALSE} will produce a progress
+%   bar.
+%   \item \texttt{missing -} This will preprocess your missing values. It is set
+%   to ignore missing data, so that they do not contribute to the distance
+%   measure. It can also be set to \texttt{"loci", "geno", "zero", or "mean"}. For
+%   details, see\seclink{data.manip:missing:missingno}{missingno.}
+%   \item \texttt{hist -} This will produce a pair of histograms for each
+%   population showing the distribution of $I_A$ and $\bar{r}_d$ across the
+%   sampled data sets, and plot the observed value as a single vertical line.
+%   \item \texttt{valuereturn -} If set to \texttt{TRUE} and the number of samples
+%   is greater than zero, it will return all values generated from the permuted
+%   data.
+% \end{itemize}
+% Running the analysis is as simple as this:
+% <<ia_demo>>=
+% ia(nancycats)
+% @
+% We can use \texttt{popsub} to subset for specific populations. Here, we'll also
+% demonstrate the sampling flag and show you what the histogram looks like.
+% <<ia_demo_sampling_dummy, eval=FALSE>>=
+% set.seed(1009)
+% ia(popsub(nancycats, 5), sample=999)
+% @
+% <<ia_demo_sampling, echo=FALSE>>=
+% set.seed(1009)
+% simplenan <- ia(popsub(nancycats, 5))
+% cat("|================================================================================| 100%\n")
+% c(simplenan[1], p.Ia = 0.572, simplenan[2], p.rD = 0.572)
+% @
+
+% This analysis produced the histograms you see below. What these histograms
+% represent are 999 resamplings of the data under the null hypothesis ($H_0$) of
+% sexual reproduction. The way that $H_0$ is created is determined by the sampling
+% method chosen. In this case, the method was to shuffle genotypes at each locus
+% to simulate unlinked loci. Since the P = 0.572, we would fail to reject $H_0$
+% and we therefore might conclude that this population is sexually reproducing
+% \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
 % \begin{figure}[h!]
 %   \centering
-%   \caption{\footnotesize Output of multilocus-style sampling. Note the multi-
-%   modal distribution.}
-%   \label{simulated_dist_fig}
-%   \includegraphics{simulated_dist_fig.png}
-% % <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
-% % set.seed(2004)
-% % der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE, hist=TRUE)
-% % @
+%   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$
+%   calculated from 999 resamplings of population 5 from the data set
+%   ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as
+%   vertical blue lines overlaid on the distributions. The ticks at the bottom of
+%   each histogram represent individual observations.}
+%   \label{ia_demo_fig}
+% <<fig.width=8, fig.height=8, echo=FALSE, eval=TRUE, figs.only=TRUE, resolution=300>>=
+% set.seed(1009)
+% nan5 <- ia(popsub(nancycats, 5), sample=999, quiet=TRUE)
+% @
+% \end{figure}
+% %\newpage
+
+% If we wanted to, we could also have set the flag \texttt{valuereturn = TRUE} to
+% get back our permuted data if we wanted to make our own histograms (we'll set
+% the number of samples to 9 for demonstrative purposes):
+
+% <<ia_demo_sampling_vr_dummy, eval = FALSE>>=
+% set.seed(1009)
+% ia(popsub(nancycats, 5), sample = 9, hist = FALSE, valuereturn = TRUE)
+% @
+
+% <<ia_demo_sampling_vr, echo = FALSE>>=
+% cat("|================================================================================| 100%\n")
+% structure(list(index = structure(c(-0.0475399533129828, 0.5, 
+% -0.00600425397248417, 0.5), .Names = c("Ia", "p.Ia", "rbarD", 
+% "p.rD")), samples = structure(list(Ia = c(-0.174180206794681, 
+% 0.110998135909168, -0.0516575036742681, -0.227057548622598, -0.290794613187196, 
+% 0.17142682029909, 0.127426390403491, -0.0489769895090723, -0.0100523130577507
+% ), rbarD = c(-0.022056780840299, 0.0142082562146926, -0.00661071136361462, 
+% -0.0289477478354951, -0.0366851757977678, 0.0217644448059182, 
+% 0.0160542108673502, -0.00622397887147145, -0.00126986051456087
+% )), .Names = c("Ia", "rbarD"), row.names = c(NA, -9L), class = "data.frame")), .Names = c("index", 
+% "samples"))
+% @
+
+
+% There, are, of course a couple of caveats that need to be mentioned regarding
+% our P-values. First, while we have equivalent P-values for $I_A$ and
+% $\bar{r}_d$, they might not always be equal due to the difference in
+% calculation. Details about that can be found in the Appendix
+% section\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.}Second, the
+% P-values are calculated by comparing how many permuted values are greater than
+% or equal to the observed value. This includes the observed value (which is why
+% setting the randomizations to 999 will give you a round P-value) which means
+% that the lowest P-value you will ever have is $1/(n+1)$ where $n$ is the number
+% of permutations you select. Take for example this population of a clonal root
+% rot pathogen, \textit{Aphanomyces euteiches}:
+% <<ia_Aeut_ex, eval=FALSE>>=
+% data(Aeut)
+% set.seed(1001)
+% ia(popsub(Aeut, 1), sample=999, method=2, quiet=TRUE, hist=FALSE)
+% @
+% <<ia_Aeut_ex_real, echo=FALSE>>=
+% data(Aeut)
+% set.seed(1001)
+% A.dum <- ia(popsub(Aeut, 1))
+% c(A.dum[1], p.Ia = 0.001, A.dum[2], p.rD = 0.001)
+% @
+% If you want to be able to report $P < 0.001$ in this situation, then you can
+% simply increase the number in sample: \texttt{sample = 1999}
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %-----------------------------------------------------------------------------%
+% %
+% %-----------------------------------------------------------------------------%
+% \subsection{Genetic distances \{may I have distance?\}}
+% \label{index:gendist}
+
+% \tab\tab Genetic distances are great tools for analyzing diversity in
+% populations as they are the basis for creating dendrograms with bootstrap
+% support and also for AMOVA. This section will simply present different genetic
+% distances along with a few notes about them. Most of these distances are derived
+% from the \textit{ade4} and \adegenet packages, where they were implemented as
+% distances between populations. \Poppr extends the implementation to individuals
+% as well (with the exception of Bruvo's distance).
+
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{llll}
+%   \hline
+%  Method & Function & Assumption & Euclidean \\ 
+%   \hline
+% \seclink{distance:dissimilarity}{Provesti} & \texttt{provesti.dist} & - & No \\
+%  & \texttt{diss.dist} & & \\
+% \seclink{distance:nei}{Nei} & \texttt{nei.dist} & Infinite Alleles & No \\
+%  & & Genetic Drift & \\
+% \seclink{distance:edwards}{Edwards} & \texttt{edwards.dist} & Genetic Drift & Yes \\
+% \seclink{distance:reynolds}{Reynolds} & \texttt{reynolds.dist} & Genetic Drift & Yes \\
+% \seclink{distance:rogers}{Rogers} & \texttt{rogers.dist} & - & Yes \\
+% \seclink{distance:bruvo}{Bruvo} & \texttt{bruvo.dist} & Stepwise Mutation & No \\
+%    \hline
+% \end{tabular}
+% \end{table}
+
+% Note on these distances: It is valuable for the user to know which distance is
+% appropriate for use within his/her system. All of these distances except for
+% Bruvo's distance are based on allele frequencies. Bruvo's distance takes into
+% account the value of the allele, and thus may be more appropriate for questions
+% of finding clonal descendents as opposed to a distance that will estimate the
+% number of mutations that occured.
+
+% Currently only Bruvo's distance and Provesti's distance perform as expected with
+% polyploid data. The other distances appear to give spurious results.
+
+% All of the distances are based on the table found in
+% a\seclink{intro:genind}{genind object.}I have translated the following from math
+% jargon into English with a few minor modifications:
+
+% \begin{quote}
+% Let \textbf{A} a table containing allelic frequencies with $t$ populations or
+% individuals (rows) and $m$ alleles (columns).\\
+% Let $\nu$ be the number of loci. The locus $j$ gets $m(j)$ alleles. 
+
+
+% \begin{equation}
+%   m=\sum_{j=1}^{\nu} m(j)
+% \end{equation}
+% \end{quote}
+
+
+% Again, this is describing the table present in the\seclink{intro:genind}{genind
+% object} where, instead of having the number of columns equal the number of loci,
+% the number of columns equals the number of observed alleles in the entire data
+% set. So, if you had a data set with 5 loci that had 2 alleles each, your table
+% would have ten columns. Of course, codominant loci like microsatellites have
+% varying numbers of alleles.
+
+
+% \begin{quote}
+% For the row $i$ and the modality $k$ of the variable $j$, notice the value
+
+% \begin{equation}
+%   a_{ijk}\\ (1 \leq i \leq t,\\ 1 \leq j \leq \nu,\\ 1 \leq k \leq m(j))
+% \end{equation}
+
+% the value of the initial table.
+
+% \begin{equation}
+%   a_{ij\cdot}=\sum_{k=1}^{m(j)}a_{ijk} 
+% \end{equation}
+
+% and 
+
+% \begin{equation}
+%   p_{ijk}=\frac{a_{ijk}}{a_{ij\cdot}}
+% \end{equation}
+% \end{quote}
+
+% The above couple of equations are basically defining the allele frequency
+% ($p_{ijk}$). Remember that $i$ is individual, $j$ is locus, and $k$ is allele.
+% The following continutes to describe properties of the table:
+
+% \begin{equation}
+%  p_{ij\cdot}=\sum_{k=1}^{m(j)}p_{ijk}=1
+% \end{equation}
+% The sum of all allele frequencies for a single population (or individual) at a 
+% single locus is one.
+
+% \begin{equation}
+% p_{i{\cdot}\cdot}=\sum_{j=1}^{\nu}p_{ij\cdot}=\nu
+% \end{equation}
+% The sum of all allele frequences over all loci is equal to the number of loci.
+ 
+% \begin{equation}
+% p_{{\cdot}{\cdot}\cdot}=\sum_{j=1}^{\nu}p_{i{\cdot}\cdot}=t\nu
+% \end{equation}
+% The the sum of the entire table is the sum of all loci multiplied by the number 
+% of populations (or individuals).
+
+
+% %
+% %-----------------------------------------------------------------------------%
+% %
+
+% \subsubsection{Non-Euclidean distances}
+% \label{index:gendist:neu}
+% Dissimilarity distance
+% \label{distance:dissimilarity}
+
+% One of the least known distances and yet more conceptually satisfying is
+% Provesti's (Also spelled Prevosti) distance. It's conceptually satisfying
+% because it can be thought of as a percentage of dissimilar sites between two
+% individuals or populations or the absolute genetic distance. It is implemented
+% in two functions, \texttt{provesti.dist} and \texttt{diss.dist}.
+
+% \label{distance:provesti}
+% \begin{equation}
+%   D_{P}(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+%   |p_{ajk} - p_{bjk}|
+% \end{equation}
+% Note: for AFLP data, the $2$ is dropped. 
+
+
+% Nei's distance
+% \label{distance:nei}
+% \begin{equation}
+%   D_1(a,b)= -\ln(\frac{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+%   p_{ajk} p_{bjk}}{\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+%   {(p_{ajk}) }^2}\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+%   {(p_{bjk})}^2}})
+% \end{equation}
+
+% \subsubsection{Euclidean distance}
+% \label{index:gendist:eu}
+
+% Edward's Angular distance
+% \label{distance:edwards}
+% \begin{equation}
+%   D_2(a,b)=\sqrt{1-\frac{1}{\nu} \sum_{k=1}^{\nu}
+%   \sum_{j=1}^{m(k)} \sqrt{p_{ajk}  p_{bjk}}}
+% \end{equation}
+
+% Reynold's Coancestry distance
+% \label{distance:reynolds}
+% \begin{equation}
+%   D_3(a,b)=\sqrt{\frac{\sum_{k=1}^{\nu}
+%   \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}{2 \sum_{k=1}^{\nu} (1-
+%   \sum_{j=1}^{m(k)}p_{ajk} p_{bjk})}}
+% \end{equation}
+
+
+% Roger's distance 
+% \label{distance:rogers}
+% \begin{equation}
+%   D_4(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
+%   \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}
+% \end{equation}
+
+% \subsubsection{Bruvo's distance for microsatellites}
+% \label{index:gendist:bruvo}
+
+% This is based off of a specific model where it is necessary to specify the
+% repeat lengths of the markers at each locus. Eg a repeat of $(CAT)^n$ would have
+% a repeat length of 3.
+% \label{distance:bruvo}
+
+
+% Comparing all distances (WIP)
+
+% <<mantel>>=
+% data(nancycats)
+% nancy9 <- popsub(nancycats, 9)
+% repeats <- rep(2, 9)
+% pro_nan <- provesti.dist(nancy9)
+% nei_nan <- nei.dist(nancy9)
+% edw_nan <- edwards.dist(nancy9)
+% rey_nan <- reynolds.dist(nancy9)
+% rog_nan <- rogers.dist(nancy9)
+% bru_nan <- bruvo.dist(nancy9, replen = repeats)
+% distlist <- list(Provesti = pro_nan,
+%                  Nei = nei_nan,
+%                  Edwards = edw_nan,
+%                  Reynolds = rey_nan,
+%                  Rogers = rog_nan,
+%                  Bruvo = bru_nan)
+% combs <- combn(x = 1:length(distlist), m = 2)
+% mtest <- apply(combs, 2, function(x) mantel.randtest(distlist[[x[1]]], distlist[[x[2]]])$obs)
+% attr(mtest, "class") <- "dist"
+% attr(mtest, "Size") <- 6
+% attr(mtest, "Labels") <- names(distlist)
+% mtest <- as.matrix(mtest)
+% diag(mtest) <- 1
+% library(reshape2)
+% library(ggplot2)
+% ggplot(melt(mtest)) + geom_tile(aes_string(x = "Var1", y = "Var2", fill = "value"))
+% @
+
+
+% \subsection{Bootstrap analysis \{give `em the boot(strap)\}}
+% \label{index:boot}
+% \subsubsection{Bootstrapping any distance}
+% \label{index:boot:any}
+% \subsubsection{Bootstrapping Bruvo's Distance}
+% \label{index:boot:bruvo}
+% This is optimized for Bruvo's distance. 
+
+% \subsection{Minimum spanning networks \{nothing but net(works)\}}
+
+% \subsection{Analysis of MOlecular VAriance \{Come here! AMOVA here!\}}
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %-----------------------------------------------------------------------------%
+% %
+% %-----------------------------------------------------------------------------%
+% \subsection{Going the distance \{dissimilarity distance\}}
+% \label{index:dist}
+% \tab\tab Since \poppr{} is still in its infancy, the number of distance measures
+% it can offer are few. Bruvo's distance is well supported and allows you to
+% quickly visualize your data, but it only allows for microsatellites. The index
+% of association, above, utilizes a discreet dissimilarity distance matrix. It is
+% with this matrix that we have constructed a relative dissimilarity distance
+% where the distance is the ratio of the number of dissimilarities to the number
+% of dissimilarities possible. The number of dissimilarities possible is the
+% number of loci multiplied by the ploidy, so if you have 10 loci from a diploid
+% population, then there are 20 dissimilarities possible. For details, see
+% equations (\ref{eq:ia_d}) and (\ref{eq:ia_D})
+% in\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.}
+
+% \subsubsection{Function: diss.dist}
+% \label{index:dist:diss.dist}
+
+% \tab\tab Use this function to calculate relative dissimilarity between
+% individuals and return a distance matrix for use in creating cladograms or
+% minimum spanning networks. A note: missing alleles will be imputed to be the
+% same as the challenging allele, decreasing the distance between some
+% individuals. If you want to consider all missing data as special alleles, treat
+% your data with \texttt{missingno(pop, type = "zero")} beforehand.
+
+% \begin{quote}
+% Default Command:
+% <<diss.dist_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "diss.dist"
+% print_command(funk)
+% @
+% % \texttt{diss.dist(pop)}
+% \end{quote}
+
+% \begin{itemize}
+%   \item \texttt{pop -} a \texttt{genind} object. 
+% \end{itemize}
+% Since we have a data set that we know is very clonal, let's analyze the
+% \textit{A. euteiches} data set \cite{Grunwald:2006} and create a heatmap to
+% visualize the degree of difference between populations.
+% <<diss_dist, eval=FALSE>>=
+% data(Aeut)
+% A.dist <- diss.dist(Aeut)
+% heatmap(as.matrix(A.dist), symm=TRUE)
+% @
+% \begin{figure}[h!]
+%   \centering
+%   \caption{\footnotesize Heatmap representation of a dissimilarity distance for
+%   the data set ``Aeut"}
+%   \label{diss_heat_map}
+% <<echo=FALSE, resolution=300>>=
+% data(Aeut)
+% A.dist <- diss.dist(Aeut)
+% heatmap(as.matrix(A.dist), symm=TRUE)
+% @
+% \end{figure}
+% \newpage
+% %-----------------------------------------------------------------------------%
+% %
+% %-----------------------------------------------------------------------------%
+% \subsection{Bruvo's distance \{step by stepwise mutation\}}
+% \label{index:bruvo}
+
+% \tab\tab Bruvo's distance is a genetic distance measure for microsatellite
+% markers utilizing a stepwise mutation model that allows for differing ploidy
+% levels \cite{Bruvo:2004}. As \textit{adegenet's} \texttt{genind} object has an
+% all or none approach to missing data, any genotypes not exhibiting full ploidy
+% will be treated as missing. This means that only non-special cases will be
+% considered for the calculation and missing data will be ignored
+% \cite{Bruvo:2004}.
+
+% This is true only if missing data is treated as missing when importing to
+% \adegenet{}. If missing data in the initial data frame has missing
+% microsatellite alleles coded as 0, then the genind object will not treat them as
+% missing (unless the genotype has no alleles in it). An example adapted from the
+% \adegenet{} ``Getting Started" vignette shows how this can be done:
+
+% <<cheating>>=
+% set.seed(5001)
+% temp <- lapply(1:30, function(i) sample(0:9, 4, replace=TRUE))
+% temp <- sapply(temp, paste, collapse = "/")
+% temp <- matrix(temp, nrow=10, dimnames=list(paste("ind",1:10), paste("loc",1:3)))
+% temp 
+% obj <- df2genind(temp, ploidy=4, sep="/")
+% pop(obj) <- paste("ind", 1:10)
+% @
+
+% We will save this object for a later demonstration of the addition and loss
+% models of Bruvo's distance. It is important to note that this is a distance
+% between individuals, not populations, unlike Nei's 1978 distance
+% \cite{Nei:1978}. For distances between populations, see the \adegenet{} function
+% \texttt{dist.genpop}
+
+% \subsubsection{Function: bruvo.dist}
+% \label{index:bruvo:bruvo.dist}
+
+% \tab\tab Bruvo's distance requires knowledge of the repeat lengths of each
+% locus, so take care to read the description below.
+% \begin{quote}
+% Default Command:
+% <<bruvo.dist_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "bruvo.dist"
+% print_command(funk)
+% @
+% % \texttt{bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)}
+% \end{quote}
+% \begin{itemize}
+%   \item \texttt{pop -} a \texttt{genind} object.
+%   \item \texttt{replen -} This is a vector of numbers indicating the repeat
+%   length for each locus in your sample. If you have two dinucleotide repeats and
+%   five tetranucleotide repeats, you would put \texttt{c(2,2,4,4,4,4,4)} in this
+%   field. If you have imported data where that represents the raw number of
+%   steps, all you would have to type is \texttt{rep(1, n)}, replacing $n$ with
+%   the number of loci in your sample. It is important that you place something in
+%   this field because this function will attempt to estimate the repeat length
+%   based on the minimum difference of the alleles represented; with variability
+%   of position calls, relying on this estimation is NOT recommended.
+%   \item \texttt{add -} For missing data: use the genome addition model
+%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   distance.})
+%   \item \texttt{loss -} For missing data: use the genome loss model
+%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   distance.})
+% \end{itemize}
+
+% To illustrate why it is important to specify the repeat lengths, let's imagine a
+% locus that contains 5 alleles and the true repeat length is 4. Note that Bruvo's
+% distance between alleles is calculated as $1 - 2^{-[x]}$, where $x$ is the
+% difference in repeat lengths:
+% <<replen_example1>>=
+% locus1 <- c(244, 248, 256, 240, 236)
+% locus1/4
+% 1 - 2^-dist(locus1/4)
+% @
+% We can see that the distance between them ranges from 1 to 5. Let's say, that we
+% accidentally wrote 2 or 8 instead of 4:
+% <<replen_example2>>=
+% locus1/2
+% 1 - 2^-dist(locus1/2) # Distance increase
+
+% locus1/8
+% 1 - 2^-dist(locus1/8) # Distance decrease
+% @
+% While we will still get results from this analysis with the incorrect repeat
+% length, they will be inherently wrong as they do not represent the true
+% distance. That being said, it's important to note that the repeat lengths we
+% represent for the rest of the manual are not known by the authors, but are used
+% as a simple example.
+
+% This function will return a distance matrix (displaying the smallest population
+% in the data set ``nancycats"):
+% <<bruvo_matrix>>=
+% dist9 <- bruvo.dist(popsub(nancycats, 9), replen=rep(1,9))
+% dist9
+% @
+
+% You can visualize this better with a simple heatmap:
+% %\newpage
+
+% <<bruvo_heat, eval = FALSE>>=
+% heatmap(as.matrix(dist9), symm=TRUE)
+% @
+% \begin{figure}[h!]
+%   \centering
+%   \caption{\footnotesize Heatmap representation of Bruvo's distance for
+%   population 9 of the data set ``nancycats"}
+%   \label{bruvo_heat_map}
+% <<resolution=300, echo = FALSE>>=
+% heatmap(as.matrix(dist9), symm=TRUE)
+% @
+% \end{figure}
+% %\newpage
+
+% Let's take a closer look at the two individuals, N113 and N111. They seem to
+% have large distances between everyone else and themselves. The names and columns
+% of the matrix contain the names of individuals, but not the population
+% information. We can make a comparison of Bruvo's distance across populations
+% easier by editing the ``Labels" attribute of the distance object. Let's take a
+% look at the labels attribute using the \texttt{attr()} command. <<attrLabels>>=
+% attr(dist9, "Labels")
+% @
+% Remember that they all came from population 9, so let's append that to each
+% label using the \texttt{paste()} command.
+% <<attrLabel_replace>>=
+% dist9.attr <- attr(dist9, "Labels")
+% attr(dist9, "Labels") <- paste(rep("P09", 9), dist9.attr)
+% dist9
+% @
+% Now we can see that all of the labels are corresponding to population 9. Let's
+% calculate Bruvo's distance between populations 8 and 9.
+% <<popcompare_bruvo1, eval=FALSE>>=
+% dist9to8 <- bruvo.dist(popsub(nancycats, 8:9), replen=rep(1,9))
+% dist9to8.attr <- attr(dist9to8, "Labels")
+% nan9to8pop <- nancycats@pop[nancycats@pop %in% c("P08", "P09")]
+% attr(dist9to8, "Labels") <- paste(nan9to8pop, dist9to8.attr)
+% heatmap(as.matrix(dist9to8), symm=TRUE)
+% @
+% \begin{figure}[h!]
+%   \centering
+%   \caption{\footnotesize Heatmap representation of Bruvo's distance for
+%   populations 8 and 9 of the data set ``nancycats"}
+%   \label{bruvo_heat_map_8to9}
+% <<popcompare_bruvo2, echo=FALSE, resolution=300>>=
+% dist9to8 <- bruvo.dist(popsub(nancycats, 8:9), replen=rep(1,9))
+% dist9to8.attr <- attr(dist9to8, "Labels")
+% nan9to8pop <- nancycats@pop[nancycats@pop %in% c("P08", "P09")]
+% attr(dist9to8, "Labels") <- paste(nan9to8pop, dist9to8.attr)
+% heatmap(as.matrix(dist9to8), symm=TRUE)
+% @
+% \end{figure}
+
+% Remember N113 and N111? Take a look at where they fall on the heatmap. They
+% don't cluster together with population 9 anymore, but somewhere in population 8.
+% % \newpage
+
+% %-----------------------------------------------------------------------------%
+% %
+% %-----------------------------------------------------------------------------%
+% \subsection{See the forest for the trees \{visualizing distances with dendrograms and networks\}}
+% \label{index:trees}
+
+% \tab\tab Staring at a raw distance matrix might be able to tell you something
+% about your data, but it also might be able to ruin your eyesight. In this
+% section, we present functions to display this data in trees and networks.
+
+% \subsubsection{Function: bruvo.boot}
+% \label{index:trees:bruvo.boot}
+
+% \tab\tab This function provides the ability to draw a dendrogram based on
+% Bruvo's distance including bootstrap support.
+% \begin{quote}
+% Default Command:
+% <<bruvo.boot_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "bruvo.boot"
+% print_command(funk)
+% @
+% % \texttt{bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE)}
+% \end{quote}
+% \begin{itemize}
+%   \item \texttt{pop -} a \texttt{genind} object.
+%   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
+%   \item \texttt{add -} For missing data: use the genome addition model
+%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   distance.})
+%   \item \texttt{loss -} For missing data: use the genome loss model
+%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   distance.})
+%   \item \texttt{sample -} How many bootstraps do you want to perform?
+%   \item \texttt{tree -} Two trees are available, Neighbor-Joining \texttt{"nj"}
+%   or UPGMA \texttt{"upgma"}.
+%   \item \texttt{showtree -} if \texttt{TRUE}, a tree will be plotted
+%   automatically.
+%   \item \texttt{cutoff -} This is a number between 0 and 100 indicating the
+%   cutoff value for the bootstrap nodelables. If you only wanted to see the the
+%   boostrap values for nodes that were present more than 75\% of the time, you
+%   would use \texttt{cutoff = 75}. If you don't put anything for this parameter,
+%   all values will be shown.
+%   \item \texttt{quiet -} if \texttt{quiet = TRUE}, no standard messages will be
+%   printed to screen. If \texttt{quiet = FALSE} (default), then a progress bar
+%   and standard message will be printed to the screen.
+% \end{itemize}
+
+% For this example, let's set the cutoff to 50\%.
+% <<bruvo_boot, eval=FALSE>>=
+% set.seed(410)
+% nan9tree <- bruvo.boot(popsub(nancycats, 8:9), replen=rep(1,9), sample=1000, cutoff=50)
+% @
+% <<progbar, echo=FALSE>>=
+% cat("\nBootstrapping...\n(note: calculation of node labels can take a while even after the progress bar is full)\n\n")
+% cat("|================================================================================| 100%\n")
+% @
+% \begin{figure}[h!]
+%   \centering
+%   \caption{\footnotesize UPGMA Tree of Bruvo's distance for population 9 of the
+%   data set ``nancycats" with 1000 Bootstrap Replicates. Node labels represent
+%   percentage of bootstrap replicates that contained that node.}
+%   \label{bruvo_upgma}
+% %  \includegraphics{bruvo_upgma.png}
+
+% <<bruvo_tree, echo=FALSE, resolution=300>>=
+%  set.seed(410)
+%  nan9tree <- phangorn::upgma(bruvo.dist(popsub(nancycats, 8:9), replen = rep(1, 9)))
+%  nan9tree$node.labels <- c(100, NA, NA, NA, NA, 64, NA, NA, NA, NA, NA, 80, NA,
+%                            62, NA, 52, NA, NA)
+%  nan9tree$tip.label <- indNames(popsub(nancycats, 8:9))
+% #  ape::plot.phylo(nan9tree, show.node.label=TRUE)
+% #  ape::axisPhylo(3)
+%  poppr:::poppr.plot.phylo(nan9tree, "upgma")
+% @
+
+% \end{figure}
+% \newpage
+% \subsubsection{Function: greycurve}
+% \label{index:trees:greycurve}
+% \tab\tab Use this function to display a gradient of grey values based on user-
+% defined parameters. The following functions will display a minimum spanning
+% network that utilize a grey scale to display the weight of the lines (referred
+% to as ``edges") that connect two or more individuals. The darker the line the
+% closer the distance. Since this is based off of a linear grey scale, what
+% happens when you have a distance matrix comprised of values all below 0.2 or all
+% above 0.8?
+
+% With linear grey scaling, it becomes very difficult to detect the differences in
+% these ranges. The following function allows you to visualize and manipulate a
+% gradient from black to white so that you can use it in \poppr{}'s msn functions
+% below to maximize the visual differences in your data.
+
+% \begin{quote}
+% Default Command:
+% <<greycurve_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "greycurve"
+% print_command(funk)
+% @
+% % \texttt{greycurve(glim = c(0, 0.8), gadj = 3, gweight = 1)}
+% \end{quote}
+
+
+% This function does not return any values. It will print a visual gradient from
+% black to white horizontally. On this gradient, it will plot the adjustment curve
+% (in opposing grey values), yellow horizontal lines bounding the maximum and
+% minimum values, and the equation used to calculate the correction in red. By
+% default it will use a sequence from 1 to 0 to plot the curve, but you can use
+% any sequence. Let's take 1000 random normal draws:
+
+% <<greycurve_rnorm>>=
+% set.seed(9999)
+% xnorm <- rnorm(1000)
+% @
+
+
+% %\newpage
+% First, we'll see what happens when we change the weight parameter.
+% \begin{figure}[h!]
+% \begin{minipage}[b]{0.45\linewidth}
+% \centering
+% \caption{\footnotesize Default for \texttt{greycurve()}, weighted for small
+% values.}
+% <<greycurve_normal, out.width='\\linewidth'>>=
+% greycurve(xnorm)
+% @
+% \end{minipage}
+% \hspace{0.5cm}
+% \begin{minipage}[b]{0.45\linewidth}
+% \centering
+% \caption{\footnotesize weighting for large values.}
+% <<greywidth_inverse, out.width='\\linewidth'>>=
+% greycurve(xnorm, gweight = 2)
+% @
+% \end{minipage}
+% \end{figure}
+
+% If you change the adjustment parameter, \texttt{gadj}, the shape of the curve
+% will change, and if you change the limit parameter, \texttt{glim}, the bounds of
+% the curve will change.
+
+% This function also will plot scalebars for use with minimum spanning networks
+% produced in previous versions of poppr. Just use the scalebar argument and you
+% will get a scalebar using the quantiles from the data and a scalebar with the
+% data smoothed from the minimum to the maximum.
+
+% \begin{figure}[h!]
+% \begin{minipage}[b]{0.45\linewidth}
+% \centering
+% \caption{\footnotesize We can see that more data lies around zero (as expected
+% with a random normal distribution)}
+% <<greycurve_small_heavy, out.width='\\linewidth'>>=
+% greycurve(xnorm, scalebar = TRUE)
+% @
+% \end{minipage}
+% \hspace{0.5cm}
+% \begin{minipage}[b]{0.45\linewidth}
+% \centering
+% \caption{\footnotesize Same as the figure on the left, but weighting heavily
+% toward larger values.}
+% <<greywidth_large_heavy, out.width='\\linewidth'>>=
+% greycurve(xnorm, gweight=2, scalebar = TRUE)
+% @
+% \end{minipage}
 % \end{figure}
 % \newpage
 
+% \subsubsection{Function: bruvo.msn}
+% \label{index:trees:bruvo.msn}
+% \tab\tab This function will automatically draw a minimum spanning network of
+% MLGs based on Bruvo's distance. It's important to note that this will
+% recalculate Bruvo's distance each time it is run, but the amount of time it
+% takes to run is on the order of seconds. It will return a list containing the
+% network, the populations and the related colors in the network so you can export
+% or redraw it with the legend if you wanted to using the package \textit{igraph}
+% (type \texttt{help("plot.igraph")} for details).
+% \begin{quote}
+% Default Command:
+% <<bruvo.msn_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "bruvo.msn"
+% print_command(funk)
+% @
+% % \texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\ 
+% %   \tab sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, \\
+% %   \tab glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
+% % }
+% \end{quote}
+% \begin{itemize}
+%   \item \texttt{pop -} a \texttt{genind} object.
+%   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
+%   \item \texttt{add -} For missing data: use the genome addition model
+%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   distance.})
+%   \item \texttt{loss -} For missing data: use the genome loss model
+%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   distance.})
+%   \item \texttt{palette -} this is a \textbf{function} definining a color
+%   palette to use. The default is \texttt{topo.colors}. There are different
+%   palettes, which you can search by typing \texttt{?rainbow}. If you want a
+%   custom color palette, an easy way is to use the function
+%   \texttt{colorRampPalette}.
+%   \item \texttt{sublist -} The populations you wish to analyze. This defaults to
+%   ``All". See section \ref{data.manip:divide:popsub} for details.
+%   \item \texttt{blacklist -} Populations you do not want to include in the
+%   graph. See section \ref{data.manip:divide:popsub} for details.
+%   \item \texttt{vertex.label -} This is an option that is passed on to
+%   \textit{igraph}'s \texttt{plot} function. \Poppr{} has added two arguments
+%   specific to \poppr{}. If you want to label the graph with the multilocus
+%   genotypes from the whole data set, use the argument \texttt{vertex.label =
+%   "mlg"}. If you want to display the representative individual names, you can
+%   use the argument \texttt{vertex.label = "inds"}. I say representative
+%   individual names because, only one representative from each MLG will be
+%   present in the clone corrected data set used to calculate the distance. For no
+%   labels, you can choose \texttt{vertex.label = NA}.
+%   \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will
+%   be converted to greyscale based on Bruvo's distance. If two nodes are closely
+%   related, the edge will appear darker. The limits of the scale can be set by
+%   the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors
+%   will be black.
+%   \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets
+%   you set the limits of the grey scaling based on R's internal \texttt{grey}
+%   function. For example, if you wanted a maximum of 50\% white saturation (for
+%   use if you have distantly related nodes) and a minimum of 1\%, you would use
+%   \texttt{glim = c(0.01, 0.5)}.
+%   \item \texttt{gadj -} This is an integer greater than zero used to adjust the
+%   scaling factor for the grey curve. Since very small changes in the grey scale
+%   are not easily precieved, it's useful to be able to adjust the grey scale to
+%   be able to show you the weights of each edge. For example, a population with
+%   most weights less than 0.3, you might want to set \texttt{gadj = 10} to
+%   exaggerate the grey scale.
+%   \item \texttt{gweight -} If \texttt{gweight = 1}, the grey scale adjustment
+%   will be weighted towards separating out smaller values of Bruvo's distance. If
+%   \texttt{gweight = 2}, the grey scale ajustment will be weighted towards
+%   separating out larger values of Bruvo's distance.
+%   \item \texttt{wscale -} If this is set to \texttt{TRUE}, edge widths will be
+%   displayed corresponding to Bruvo's distance in that thicker edges will
+%   represent a smaller distance between nodes. If this is set to \texttt{FALSE},
+%   all edges will be set to a width of 2.
+%   \item \texttt{... -} This is a placeholder for any other arguments that you
+%   want to supply to \textit{igraph}. Useful arguments are
+%   \texttt{vertex.label.cex} to adjust the size of the labels,
+%   \texttt{vertex.label.dist} to adjust the position of the labels, and
+%   \texttt{vertex.label.color} to adjust the color of the labels.
+% \end{itemize}
+
+% Often, minimum spanning networks are the preferred way to visualize Bruvo's
+% distance. \Poppr{} offers an easy way to plot these. For a demonstration, let's
+% analyze a simulated data set of 50 individuals from populations that reproduce
+% at a 99.9\% rate of clonal reproduction.
+
+% <<bruvo_msn_code, eval=FALSE>>=
+% data(partial_clone)
+% set.seed(9005)
+% pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
+%           vertex.label.dist=-0.5, palette=colorRampPalette(c("blue", "yellow")))
+% @
+% \begin{figure}[ht!]
+%   \centering
+%   \caption{\footnotesize Minimum Spanning Network representing 4 simulated
+%   populations. Each node represents a different multi locus genotype (MLG). Node
+%   sizes and colors correspond to the number of individuals and population
+%   membership, respectively. Edge thickness and color are proportional to Bruvo's
+%   distance. Edge lengths are arbitrary.}
+%   \label{mst_bruvo}
+% <<bruvo_msn, resolution=300, echo=FALSE, out.width='0.8\\linewidth'>>=
+% data(partial_clone)
+% set.seed(9005)
+% pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
+%           vertex.label.dist=-0.5, palette=colorRampPalette(c("blue", "yellow")))
+% @
+% \end{figure}
+% \setkeys{Gin}{width=0.5\textwidth}
+
+% The output, as mentioned earlier, is a list containing the graph constructed via
+% the \textit{igraph} package, a vector of the population names and a vector of
+% colors representing the populations.
+% <<bruvo_msn_igraph>>=
+% library(igraph)
+% pc.msn
+% @
+
+% Note that the thickness of the edges (the lines that are connecting the dots) is
+% representative of relatedness between individuals, but the lengths do not
+% necessarily mean anything due to the fact that with a larger data sets,
+% displaying lengths proportional to relatedness would be impossible to draw on a
+% 2D surface. Interpreting these data would show that MLG 9 has 5 individuals from
+% all four populations and that it is most closely related to MLG 7, whereas the
+% most distantly related connection exists between MLG 25 and MLG 26.
+
+% %\newpage
+% Since a graph can be represented in many ways, you might want to play around
+% with different layouts using the \texttt{layout()} function in \textit{igraph}.
+% Type \texttt{help("layout", package = igraph)} for details. Below is the code
+% for reconstructing the previous graph using the output:
+% <<bruvo_msn_reconstruct, eval=FALSE>>=
+% set.seed(9005)
+% library(igraph)
+% plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3, 
+%      vertex.label.cex=0.7, vertex.label.dist=-0.5,)
+% legend(-1.55, 1, bty = "n", cex = 0.75, legend = pc.msn$populations, 
+%        title = "Populations", fill = pc.msn$colors, border = NULL)
+% @
+
+% \subsubsection{Function: poppr.msn}
+% \label{index:trees:poppr.msn}
+
+% \tab\tab Use this function to draw a minimum spanning network from your data set
+% and a distance matrix derived from your data set. Since there are hundreds of
+% distances that can be calculated for genetic data, and since I want to be able
+% to graduate at some point in this decade, functions to automatically calculate
+% distances and draw the minimum spanning networks will be few and far between.
+% This function is an attempt to meet the user halfway and draw a minimum spanning
+% network provided that the user has supplied two things:
+% \begin{enumerate}
+%   \item A distance matrix over all individuals.
+%   \item The original data set containing demographic information.
+% \end{enumerate}
+
+% That's it. For the most part, this function is functionally the same as
+% \texttt{bruvo.msn}, except that instead of being exclusive to microsatellite
+% markers, you can now visualize distances in any marker type provided that you
+% have the two items listed above.
+
+% \begin{quote}
+% Default Command:
+% <<poppr.msn_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "poppr.msn"
+% print_command(funk)
+% @
+% % \texttt{poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",\\ 
+% %   \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
+% %   \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
+% % }
+% \end{quote}
+% \begin{itemize}
+%   \item \texttt{pop -} a \texttt{genind} object.
+%   \item \texttt{distmat -} a dissimilarity distance matrix derived from your data with distances between zero and one.
+%   \item \texttt{palette -} this is a \textbf{function} definining a color
+%   palette to use. The default is \texttt{topo.colors}. There are different
+%   palettes, which you can search by typing \texttt{?rainbow}. If you want a
+%   custom color palette, an easy way is to use the function
+%   \texttt{colorRampPalette}.
+%   \item \texttt{sublist -} The populations you wish to analyze. This defaults to
+%   ``All".
+%   \item \texttt{blacklist -} Populations you do not want to include in the
+%   graph.
+%   \item \texttt{vertex.label -} This is an option that is passed on to
+%   \textit{igraph}'s \texttt{plot} function. \Poppr{} has added two arguments
+%   specific to \poppr{}. If you want to label the graph with the multilocus
+%   genotypes from the whole data set, use the argument \texttt{vertex.label =
+%   "mlg"}. If you want to display the representative individual names, you can
+%   use the argument \texttt{vertex.label = "inds"}. I say representative
+%   individual names because, only one representative from each MLG will be
+%   present in the clone corrected data set used to calculate the distance. For no
+%   labels, you can choose \texttt{vertex.label = NA}.
+%   \item \texttt{gscale -} If this is set to \texttt{TRUE}, the edge color will
+%   be converted to greyscale based on the distance. If two nodes are closely
+%   related, the edge will appear darker. The limits of the scale can be set by
+%   the argument \texttt{glim}. If this is set to \texttt{FALSE}, all edge colors
+%   will be black.
+%   \item \texttt{glim -} This is a vector of numbers between 0 and 1. This lets
+%   you set the limits of the grey scaling based on R's internal \texttt{grey}
+%   function. For example, if you wanted a maximum of 50\% white saturation (for
+%   use if you have distantly related nodes) and a minimum of 1\%, you would use
+%   \texttt{glim = c(0.01, 0.5)}.
+%   \item \texttt{gadj -} This is an integer greater than zero used to adjust the
+%   scaling factor for the grey curve. Since very small changes in the grey scale
+%   are not easily precieved, it's useful to be able to adjust the grey scale to
+%   be able to show you the weights of each edge. For example, a population with
+%   most weights less than 0.3, you might want to set \texttt{gadj = 10} to
+%   exaggerate the grey scale.
+%   \item \texttt{gweight -} If \texttt{gweight = 1}, the grey scale adjustment
+%   will be weighted towards separating out smaller values of the distance. If
+%   \texttt{gweight = 2}, the grey scale ajustment will be weighted towards
+%   separating out larger values of Bruvo's distance.
+%   \item \texttt{wscale -} If this is set to \texttt{TRUE}, edge widths will be
+%   displayed corresponding to Bruvo's distance in that thicker edges will
+%   represent a smaller distance between nodes. If this is set to \texttt{FALSE},
+%   all edges will be set to a width of 2.
+%   \item \texttt{... -} This is a placeholder for any other arguments that you
+%   want to supply to \textit{igraph}. Useful arguments are
+%   \texttt{vertex.label.cex} to adjust the size of the labels,
+%   \texttt{vertex.label.dist} to adjust the position of the labels, and
+%   \texttt{vertex.label.color} to adjust the color of the labels.
+% \end{itemize}
+
+% Since we have the ability, let's visualize the \textit{A. euteiches} data set
+% \cite{Grunwald:2006}.
+% <<poppr_msn, eval=FALSE>>=
+% data(Aeut)
+% A.dist <- diss.dist(Aeut)
+% set.seed(9005)
+% A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
+% @
+
+% \begin{figure}[ht!]
+%   \centering
+%   \caption{\footnotesize Minimum Spanning Network representing 4 simulated
+%   populations. Each node represents a different multi locus genotype (MLG). Node
+%   sizes and colors correspond to the number of individuals and population
+%   membership, respectively. Edge thickness and color are proportional to Bruvo's
+%   distance. Edge lengths are arbitrary.}
+%   \label{mst_poppr}
+% <<poppr_msn_fig, resolution=300, echo=FALSE, out.width='0.8\\linewidth'>>=
+% data(Aeut)
+% A.dist <- diss.dist(Aeut)
+% set.seed(9005)
+% A.msn <- poppr.msn(Aeut, A.dist, vertex.label=NA, palette=rainbow, gadj=15)
+% @
+% \end{figure}
+% \newpage
+% %\subsubsection{Gory details} 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %=============================================================================%
+% %=============================================================================%
+% %
+% %
+% %
+% %=============================================================================%
+% %=============================================================================%
+% \section{Diversity table \{I know what you did last summary table\}}
+% \label{summary}
+
+% \tab\tab Remember the summary function that you used to get all the diversity
+% statistics in section \ref{intro:qstart}? In this section, we will flesh out all
+% that you can do with this function. This was the very first function that was
+% written for \poppr{} to make it easy for the user to manipulate and summarize
+% the data in one function.
+% %-----------------------------------------------------------------------------%
+% %
+% %-----------------------------------------------------------------------------%
+% \subsection{Function: poppr}
+% \label{summary:poppr}
+
+% \tab\tab This function is quite daunting with all its possibilities. You have
+% the option to subset your data for specific populations, correct for missing
+% data, and clone correct. With each of these possibilities, comes the need to
+% provide all the arguments for their various functions.
+% \begin{quote}
+% Default Command:
+% <<poppr_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "poppr"
+% print_command(funk)
+% @
+% % \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
+% %         \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, \\
+% %         \tab clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", \\
+% %         \tab hist = TRUE, minsamp = 10)}
+% \end{quote}
+% \begin{itemize}
+%   \item \texttt{dat -} A \texttt{genind} object, \texttt{genclone} object, or a
+%   path to a file on your machine that contains genetix, structure, fstat,
+%   genpop, or genalex formatted data.
+%   \item \texttt{total -} This is also a synonym for ``pooled". This will
+%   calculate all diversity statistics on the entire data set if set to
+%   \texttt{TRUE} or if there is no population structure.
+%   \item \emph{popsub functions:} See section \ref{data.manip:divide}
+%   \begin{description}
+%     \item[sublist -] A list of populations you want to include in your analysis.
+%     \item[blacklist -] A list of populations you want to exclude from your
+%     analysis.
+%   \end{description}
+%   \item \emph{shufflepop functions:} See section \ref{data.manip:shuffle} \\
+%   Note that this only affects the calculation for $I_A$ and $\bar r_d$.
+%   \begin{description}
+%     \item[sample -] The number of samples you desire (eg. 999)
+%     \item[method -] Which sampling method? 1: permute, 2: parametric bootstrap,
+%     3: non-parametric bootstrap, 4: multilocus.
+%   \end{description}
+%   \item \emph{missingno functions:} See Section \ref{data.manip:missing} \\ Note
+%   that all analyses in this function ignore/impute missing data by default.
+%     \begin{description}
+%       \item[missing -] How to deal with missing data. This feeds into the
+%       \texttt{type} flag of \texttt{missingno}.
+%       \item[cutoff -] Allowable percentage of missing data per genotype or
+%       locus.
+%     \end{description}
+%   \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the
+%   screen as the sampling progresses. If \texttt{FALSE} (default) a progress bar
+%   will be produced.
+%   \item \emph{clonecorrect functions:} See section \ref{data.manip:cc}
+%   \begin{description}
+%     \item[clonecorrect -] if this is set to \texttt{TRUE}, then you will need to
+%     set the next two parameters.
+%     \item[hier -] A list of the population hierarchy, or names of columns in the
+%     data frame noted below.
+%     \item[dfname -] A data frame in the \texttt{@other} slot of the
+%     \texttt{genind} object containing all of the population factors in different
+%     columns. For an example, see sections \ref{data.manip:hier} and
+%     \ref{data.manip:cc}.
+%     \item[keep -] A vector of integers as indexes for the \texttt{hier} flag
+%     indicating which levels of the hierarchy you want to analyze. See section
+%     \ref{data.manip:cc} for details.
+%   \end{description}
+%   \item \texttt{hist -} if \texttt{TRUE}, a histogram of distributions of $I_A$
+%   and $\bar r_d$ will be displayed with each population if there is sampling.
+%   \item \texttt{minsamp -} The minimum number of individuals you want to use to
+%   calculate the expected number of MLGs. The default is set to 10.
+% \end{itemize}
+
+% This function produces a table that contains the population name, number of
+% individuals observed, number of MLGs observed, number of MLGs expected at the
+% lowest common sampling size within the data set \cite{Hurlbert:1971}
+% \cite{Heck:1975}, the Shannon-Wiener index \cite{Shannon:1948}, Stoddart and
+% Taylor's index for expected MLGs \cite{Stoddart:1988}, Nei's 1987 genotypic
+% diversity \cite{Nei:1978}, evenness
+% \cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}, the index of
+% association \cite{Brown:1980}\cite{Smith:1993}, the standardized index of
+% association \cite{Agapow:2001}, and the file name. Most of these indices are
+% calculated by converting the population into an MLG table with
+% \texttt{mlg.table} (see section \ref{mlg:table}) and using the \textit{vegan}
+% package's \texttt{diversity} function (To see details, type
+% \texttt{?vegan::diversity} into the R console).
+
+% To begin, let's revisit our example data set of \textit{Aphanomyces euteiches}
+% \cite{Grunwald:2006}.
+% <<Aeut_rehash>>=
+% data(Aeut)
+% poppr(Aeut)
+% @
+% OK, so we were able to get a table out of this. Now let's see what happens when
+% we do some sampling to see if this is reproducing clonally or not. We will turn
+% quiet on and the histogram off to save space.
+% <<Aeut_sample, eval=FALSE>>=
+% poppr(Aeut, sample=999, hist=FALSE, quiet=TRUE)
+% @
+% <<Aeut_sample_show, echo=FALSE>>=
+% none1 <- poppr(Aeut, hist=FALSE, quiet=TRUE)
+% cbind(none1[1:10],list(p.Ia = rep(0.001, 3)), none1[11], list(p.rD = rep(0.001, 3)), none1[12])
+% @
+% From now on, we'll set \texttt{quiet = TRUE} to save space on our vignette.
+% Let's clone correct at different levels to see if that affects the index of
+% association. First, we'll clone correct at the sub population level.
+% <<Aeut_cc_sub_show, eval=FALSE>>=
+% poppr(Aeut, sample=999, clonecorrect=TRUE, hier=c("Pop","Subpop"), 
+%       dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
+% @
+% <<Aeut_cc_sub, echo=FALSE>>=
+% sub1 <- poppr(Aeut, clonecorrect=TRUE, hier=c("Pop","Subpop"), dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
+% cbind(sub1[1:10],list(p.Ia = rep(0.001, 3)), sub1[11], list(p.rD = rep(0.001, 3)), sub1[12])
+% @
+% And at the population level.
+% <<Aeut_cc_pop_show, eval=FALSE>>=
+% poppr(Aeut, sample=999, clonecorrect=TRUE, hier="Pop", 
+%       dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
+% @
+% <<Aeut_cc_pop, echo=FALSE>>=
+% pop1 <- poppr(Aeut, sample=0, clonecorrect=TRUE, hier="Pop", dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
+% cbind(pop1[1:10],list(p.Ia = rep(0.001, 3)), pop1[11], list(p.rD = rep(0.001, 3)), pop1[12])
+% @
+% As you can see, clone correction doesn't always have to involve creation of new
+% data sets!
+
+% You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal
+% to each other. This will always be the case with the sampling method utilized in
+% method 4 \cite{Agapow:2001}. Here, we show examples where they are not equal and
+% why it's okay.
+% <<nancy_example_show, eval=FALSE>>=
+% set.seed(2002)
+% poppr(nancycats, sublist=5:6, total=FALSE, sample=999, method=2, quiet=TRUE, hist=FALSE)
+% @
+% <<nancy_example_eval, echo=FALSE>>=
+% set.seed(2001)
+% nan_ex <- poppr(nancycats, sublist=5:6, total=FALSE, sample=0, method=2, quiet=TRUE, hist=FALSE)
+% cbind(nan_ex[1:10],list(p.Ia = c(0.576, 0.070), nan_ex[11], list(p.rD = c(0.576, 0.071), nan_ex[12])))
+% @
+% The reason why the P-values would be different is described at the end of
+% section \ref{index:iard:ia}. The differences in P-values are normally not very
+% far off. It's important to note this because of what can happen in extremely
+% clonal populations. You can end up with a large enough sample size consisting of
+% very few MLGs. Upon shuffling using method 4, you find that there are very few
+% values of $I_A$ and $\bar r_d$ that can be obtained. Observe with this simulated
+% data set:
+% <<simulated_dist, eval=FALSE>>=
+% set.seed(2004)
+% poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=4, quiet=TRUE)
+% @
+% <<simulated_dist_out, echo=FALSE>>=
+% set.seed(2004)
+% sim_ex <- poppr(system.file("files/simulated.dat", package="poppr"), sample=0, method=4, quiet=TRUE, hist=FALSE)
+% cbind(sim_ex[1:10],list(p.Ia = c(0.09), sim_ex[11], list(p.rD = c(0.09), sim_ex[12])))
+% @
+
+% Take a look a these two histograms. The number of ways you can recombine the
+% data with the default sampling method is very small. Other sampling methods
+% could give a more theoretical distribution. Let's try the parametric bootstrap
+% (For details, see section \ref{data.manip:shuffle}).
 
 % \begin{figure}[h!]
-%   \centering
+% \begin{minipage}[b]{0.5\linewidth}
+% \centering
+% \caption{\footnotesize Output of multilocus-style sampling. Note the multimodal distribution.}
+%   \label{simulated_dist_fig}
+%   \includegraphics{simulated_dist_fig.pdf}
+% \end{minipage}
+% \hspace{0.5cm}
+% \begin{minipage}[b]{0.5\linewidth}
+% \centering
 %   \caption{\footnotesize Output for parametric bootstrap sampling.}
 %   \label{simulated_param_fig}
-%   \includegraphics{simulated_param_fig.png}
-% % <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
-% % set.seed(2004)
-% % der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=3, quiet=TRUE)
-% % @
+%   \includegraphics{simulated_param_fig.pdf}
+% \end{minipage}
 % \end{figure}
 
-As you can see, the distribution is much closer to a distribution we would
-expect if this were a small sample of a larger population.
+
+
+
+
+% % \begin{figure}[h!]
+% %   \centering
+% %   \caption{\footnotesize Output of multilocus-style sampling. Note the multi-
+% %   modal distribution.}
+% %   \label{simulated_dist_fig}
+% %   \includegraphics{simulated_dist_fig.png}
+% % % <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
+% % % set.seed(2004)
+% % % der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=1, quiet=TRUE, hist=TRUE)
+% % % @
+% % \end{figure}
+% % \newpage
+
+
+% % \begin{figure}[h!]
+% %   \centering
+% %   \caption{\footnotesize Output for parametric bootstrap sampling.}
+% %   \label{simulated_param_fig}
+% %   \includegraphics{simulated_param_fig.png}
+% % % <<fig=TRUE, echo=FALSE, resolution=300, figs.only=TRUE, width=8, height=8>>=
+% % % set.seed(2004)
+% % % der <- poppr(system.file("files/simulated.dat", package="poppr"), sample=999, method=3, quiet=TRUE)
+% % % @
+% % \end{figure}
+
+% As you can see, the distribution is much closer to a distribution we would
+% expect if this were a small sample of a larger population.
 
 
 %=============================================================================%
@@ -4024,6 +4027,20 @@ expect if this were a small sample of a larger population.
 %=============================================================================%
 \section{Appendix}
 \label{appendix}
+
+\subsection{Afterward}
+
+Since the initial version of poppr, this manual has gone through many revisions
+and with the ever expanding function repertoire, updating this manual to contain
+all of the functions for analysis would have rendered it unwieldy. As many of
+the analysis functions are unrelated, we felt that it was better to allow the
+user to explore the options available through the use of the R documentation
+pages. It was fun writing the manual, but all things have their limits, and
+asking users to digest a $>80$ page manual was ridiculous. In the future, we
+will be writing a book on resources for population genetic analyses in R.
+
+Cheers,\\
+Zhian N. Kamvar
 
 \subsection{General hierarchy method use}
 \label{appendix:hier:method}
@@ -4097,217 +4114,217 @@ affecting your object.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Algorithmic Details}
-\label{appendix:algorithm}
-\subsubsection{$I_A$ and $\bar r_d$}
-\label{appendix:algorithm:iard}
+% \subsection{Algorithmic Details}
+% \label{appendix:algorithm}
+% \subsubsection{$I_A$ and $\bar r_d$}
+% \label{appendix:algorithm:iard}
 
-\tab \tab The index of association was originally developed by A.H.D. Brown
-analyzing population structure of wheat \cite{Brown:1980}. It has been widely
-used as a tool to detect clonal reproduction within populations
-\cite{Smith:1993}. Populations whose members are undergoing sexual reproduction,
-whether it be selfing or out-crossing, will produce gametes via meiosis, and
-thus have a chance to shuffle alleles in the next generation. Populations whose
-members are undergoing clonal reproduction, however, generally do so via
-mitosis. This means that the most likely mechanism for a change in genotype is
-via mutation. The rate of mutation varies from species to species, but it is
-rarely sufficiently high to approximate a random shuffling of alleles. The index
-of association is a calculation based on the ratio of the variance of the raw
-number of differences between individuals and the sum of those variances over
-each locus \cite{Smith:1993}. You can also think of it as the observed variance
-over the expected variance. If they  are the same, then the index is zero after
-subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
-\begin{equation}
-\label{eq:I_A}
-I_A = \frac{V_O}{V_E}-1
-\end{equation}
-Since the distance is more or less a binary distance, any sort of marker can be
-used for this analysis. In the calculation, phase is not considered, and any
-difference increases the distance between two individuals. Consider the
-genotypes of the dummy data frame we created earlier:
-<<echo=FALSE>>=
-df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
-                      locus2=c("201/201", "202/203", "203/204"), 
-                      locus3=c("301/302", "301/303", "304/305")))
-df
-@
-Now, consider the first locus represented in the genind object:
-<<echo=FALSE>>=
-dfg <- df2genind(df, sep="/")
-dfg@tab[, 1:3]
-@
-Remember that each column represents a different allele and that each entry in
-the table represents the fraction of the genotype made up by that allele at that
-locus. Notice also that the sum of the rows all equal one. \Poppr{} uses this to
-calculate distances by simply taking the sum of the absolute values of the
-differences between rows.
+% \tab \tab The index of association was originally developed by A.H.D. Brown
+% analyzing population structure of wheat \cite{Brown:1980}. It has been widely
+% used as a tool to detect clonal reproduction within populations
+% \cite{Smith:1993}. Populations whose members are undergoing sexual reproduction,
+% whether it be selfing or out-crossing, will produce gametes via meiosis, and
+% thus have a chance to shuffle alleles in the next generation. Populations whose
+% members are undergoing clonal reproduction, however, generally do so via
+% mitosis. This means that the most likely mechanism for a change in genotype is
+% via mutation. The rate of mutation varies from species to species, but it is
+% rarely sufficiently high to approximate a random shuffling of alleles. The index
+% of association is a calculation based on the ratio of the variance of the raw
+% number of differences between individuals and the sum of those variances over
+% each locus \cite{Smith:1993}. You can also think of it as the observed variance
+% over the expected variance. If they  are the same, then the index is zero after
+% subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
+% \begin{equation}
+% \label{eq:I_A}
+% I_A = \frac{V_O}{V_E}-1
+% \end{equation}
+% Since the distance is more or less a binary distance, any sort of marker can be
+% used for this analysis. In the calculation, phase is not considered, and any
+% difference increases the distance between two individuals. Consider the
+% genotypes of the dummy data frame we created earlier:
+% <<echo=FALSE>>=
+% df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
+%                       locus2=c("201/201", "202/203", "203/204"), 
+%                       locus3=c("301/302", "301/303", "304/305")))
+% df
+% @
+% Now, consider the first locus represented in the genind object:
+% <<echo=FALSE>>=
+% dfg <- df2genind(df, sep="/")
+% dfg@tab[, 1:3]
+% @
+% Remember that each column represents a different allele and that each entry in
+% the table represents the fraction of the genotype made up by that allele at that
+% locus. Notice also that the sum of the rows all equal one. \Poppr{} uses this to
+% calculate distances by simply taking the sum of the absolute values of the
+% differences between rows.
 
-The calculation for the distance between two individuals at a single locus with
-$a$ allelic states and a ploidy of $k$ is as follows\footnote{Individuals with
-Presence / Absence data will have the $k/2$ term dropped.}:
-\begin{equation}
-\label{eq:ia_d}
-d = \displaystyle \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid
-\end{equation}
-<<>>=
-abs(dfg@tab[1, 1:3] - dfg@tab[2, 1:3])
-abs(dfg@tab[1, 1:3] - dfg@tab[3, 1:3])
-abs(dfg@tab[2, 1:3] - dfg@tab[3, 1:3])
-@
-As you can see, these values of $d$ at locus one add up to 2, 2, and 1, respectively.
+% The calculation for the distance between two individuals at a single locus with
+% $a$ allelic states and a ploidy of $k$ is as follows\footnote{Individuals with
+% Presence / Absence data will have the $k/2$ term dropped.}:
+% \begin{equation}
+% \label{eq:ia_d}
+% d = \displaystyle \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid
+% \end{equation}
+% <<>>=
+% abs(dfg@tab[1, 1:3] - dfg@tab[2, 1:3])
+% abs(dfg@tab[1, 1:3] - dfg@tab[3, 1:3])
+% abs(dfg@tab[2, 1:3] - dfg@tab[3, 1:3])
+% @
+% As you can see, these values of $d$ at locus one add up to 2, 2, and 1, respectively.
 
-To find the total number of differences between two individuals over all loci,
-you just take $d$ over $m$ loci, a value we'll call $D$:
+% To find the total number of differences between two individuals over all loci,
+% you just take $d$ over $m$ loci, a value we'll call $D$:
 
-\begin{equation}
-\label{eq:ia_D}
-D = \displaystyle \sum_{i=1}^{m} d_i
-\end{equation}
+% \begin{equation}
+% \label{eq:ia_D}
+% D = \displaystyle \sum_{i=1}^{m} d_i
+% \end{equation}
 
-These values are calculated over all possible combinations of individuals in the
-data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{}m$
-values of $d$ and ${n \choose 2}$ values of $D$. Calculating the observed
-variances is fairly straightforward (modified from Agapow and Burt, 2001)
-\cite{Agapow:2001}:
+% These values are calculated over all possible combinations of individuals in the
+% data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{}m$
+% values of $d$ and ${n \choose 2}$ values of $D$. Calculating the observed
+% variances is fairly straightforward (modified from Agapow and Burt, 2001)
+% \cite{Agapow:2001}:
 
-\begin{equation}
-\label{eq:V_O}
-V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n \choose 2}}
-\end{equation}
+% \begin{equation}
+% \label{eq:V_O}
+% V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n \choose 2}}
+% \end{equation}
 
-Calculating the expected variance is the sum of each of the variances of the
-individual loci. The calculation at a single locus, $j$ is the same as the
-previous equation, substituting values of $D$ for $d$ \cite{Agapow:2001}:
+% Calculating the expected variance is the sum of each of the variances of the
+% individual loci. The calculation at a single locus, $j$ is the same as the
+% previous equation, substituting values of $D$ for $d$ \cite{Agapow:2001}:
 
-\begin{equation}
-\label{eq:var_j}
-var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n \choose 2}}
-\end{equation}
+% \begin{equation}
+% \label{eq:var_j}
+% var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n \choose 2}}
+% \end{equation}
 
-The expected variance is then the sum of all the variances over all $m$ loci
-\cite{Agapow:2001}:
+% The expected variance is then the sum of all the variances over all $m$ loci
+% \cite{Agapow:2001}:
 
-\begin{equation}
-\label{eq:V_E}
-V_E = \displaystyle \sum_{j=1}^{m} var_j
-\end{equation}
+% \begin{equation}
+% \label{eq:V_E}
+% V_E = \displaystyle \sum_{j=1}^{m} var_j
+% \end{equation}
 
-Now you can plug the sums of equations (\ref{eq:V_O}) and (\ref{eq:V_E}) into
-equation (\ref{eq:I_A}) to get the index of association. Of course, Agapow and
-Burt showed that this index increases steadily with the number of loci, so they
-came up with an approximation that is widely used, $\bar r_d$
-\cite{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}.
-The equation is as follows, utilizing equations (\ref{eq:V_O}),
-(\ref{eq:var_j}), and (\ref{eq:V_E}) \cite{Agapow:2001}:
+% Now you can plug the sums of equations (\ref{eq:V_O}) and (\ref{eq:V_E}) into
+% equation (\ref{eq:I_A}) to get the index of association. Of course, Agapow and
+% Burt showed that this index increases steadily with the number of loci, so they
+% came up with an approximation that is widely used, $\bar r_d$
+% \cite{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}.
+% The equation is as follows, utilizing equations (\ref{eq:V_O}),
+% (\ref{eq:var_j}), and (\ref{eq:V_E}) \cite{Agapow:2001}:
 
-\begin{equation}
-\label{eq:r_d}
-\bar{r_d} = \frac{V_O - V_E}
-{2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
-\end{equation}
+% \begin{equation}
+% \label{eq:r_d}
+% \bar{r_d} = \frac{V_O - V_E}
+% {2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
+% \end{equation}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Bruvo's distance}
-\label{appendix:algorithm:bruvo}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Bruvo's distance}
+% \label{appendix:algorithm:bruvo}
 
-\tab \tab Bruvo's distance between two individuals calculates the minimum
-distance across all combinations of possible pairs of alleles at a single locus
-and then averaging that distance across all loci \cite{Bruvo:2004}. The distance
-between each pair of alleles is calculated as \cite{Bruvo:2004}:
+% \tab \tab Bruvo's distance between two individuals calculates the minimum
+% distance across all combinations of possible pairs of alleles at a single locus
+% and then averaging that distance across all loci \cite{Bruvo:2004}. The distance
+% between each pair of alleles is calculated as \cite{Bruvo:2004}:
 
-\begin{equation}
-\label{eq:m_x}
-m_x = 2^{-\mid x \mid}
-\end{equation}
+% \begin{equation}
+% \label{eq:m_x}
+% m_x = 2^{-\mid x \mid}
+% \end{equation}
 
-\begin{equation}
-\label{eq:d_a}
-d_a = 1 - m_x
-\end{equation}
+% \begin{equation}
+% \label{eq:d_a}
+% d_a = 1 - m_x
+% \end{equation}
 
-Where $x$ is the number of steps between each allele. So, let's say we were
-comparing two haploid $(k = 1)$ individuals with alleles 228 and 244 at a locus
-that had a tetranucleotide repeat pattern (CATG$)^n$. The number of steps for
-each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The
-number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance
-at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For
-samples with higher ploidy ($k$), there would be $k$ such distances of which we
-would need to take the sum \cite{Bruvo:2004}.
+% Where $x$ is the number of steps between each allele. So, let's say we were
+% comparing two haploid $(k = 1)$ individuals with alleles 228 and 244 at a locus
+% that had a tetranucleotide repeat pattern (CATG$)^n$. The number of steps for
+% each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The
+% number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance
+% at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For
+% samples with higher ploidy ($k$), there would be $k$ such distances of which we
+% would need to take the sum \cite{Bruvo:2004}.
 
-\begin{equation}
-\label{eq:s_i}
-s_i = \displaystyle \sum_{a=1}^{k} d_a
-\end{equation}
+% \begin{equation}
+% \label{eq:s_i}
+% s_i = \displaystyle \sum_{a=1}^{k} d_a
+% \end{equation}
 
-Unfortunately, it's not as simple as that since we do not assume to know phase.
-Because of this, we need to take all possible combinations of alleles into
-account. This means that we will have $k^2$ values of $d_a$, when we only want
-$k$. How do we know which $k$ distances we want? We will have to invoke
-parsimony for this and attempt to take the minimum sum of the alleles, of which
-there are $k!$ possibilities \cite{Bruvo:2004}:
+% Unfortunately, it's not as simple as that since we do not assume to know phase.
+% Because of this, we need to take all possible combinations of alleles into
+% account. This means that we will have $k^2$ values of $d_a$, when we only want
+% $k$. How do we know which $k$ distances we want? We will have to invoke
+% parsimony for this and attempt to take the minimum sum of the alleles, of which
+% there are $k!$ possibilities \cite{Bruvo:2004}:
 
-\begin{equation}
-\label{eq:d_l}
-d_l = \frac{\left(\displaystyle \min_{i \dotsc k!} s_i\right)}{k}
-\end{equation}
+% \begin{equation}
+% \label{eq:d_l}
+% d_l = \frac{\left(\displaystyle \min_{i \dotsc k!} s_i\right)}{k}
+% \end{equation}
 
-Finally, after all of this, we can get the average distance over all loci
-\cite{Bruvo:2004}.
+% Finally, after all of this, we can get the average distance over all loci
+% \cite{Bruvo:2004}.
 
-\begin{equation}
-\label{eq:D}
-D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
-\end{equation}
+% \begin{equation}
+% \label{eq:D}
+% D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
+% \end{equation}
 
-This is calculated over all possible combinations of individuals and results in
-a lower triangle distance matrix over all individuals.
+% This is calculated over all possible combinations of individuals and results in
+% a lower triangle distance matrix over all individuals.
 
-\subsubsection{Special Cases of Bruvo's distance}
-\label{appendix:algorithm:bruvospecial}
-\tab\tab As shown in the above section, ploidy is irrelevant with respect to
-calculation of Bruvo's distance. However, since it makes a comparison between
-all alleles at a locus, it only makes sense that the two loci need to have the
-same ploidy level. Unfortunately for polyploids, it's often difficult to fully
-separate distinct alleles at each locus, so you end up with genotypes that
-appear to have a lower ploidy level than the organism \cite{Bruvo:2004}.
+% \subsubsection{Special Cases of Bruvo's distance}
+% \label{appendix:algorithm:bruvospecial}
+% \tab\tab As shown in the above section, ploidy is irrelevant with respect to
+% calculation of Bruvo's distance. However, since it makes a comparison between
+% all alleles at a locus, it only makes sense that the two loci need to have the
+% same ploidy level. Unfortunately for polyploids, it's often difficult to fully
+% separate distinct alleles at each locus, so you end up with genotypes that
+% appear to have a lower ploidy level than the organism \cite{Bruvo:2004}.
 
-To help deal with these situatons, Bruvo has suggested three methods for dealing
-with these differences in ploidy levels \cite{Bruvo:2004}:
-\begin{itemize}
-  \item{Infinite Model -} The simplest way to deal with it is to count all
-  missing alleles as infinitely large so that the distance between it and
-  anything else is 1. Aside from this being computationally simple, it will tend
-  to inflate distances between individuals.
-  \item{Genome Addition Model -} If it is suspected that the organism has gone
-  through a recent genome expansion, the missing alleles will be replace with
-  all possible combinations of the observed alleles in the shorter genotype. For
-  example, if there is a genotype of [69, 70, 0, 0] where 0 is a missing allele,
-  the possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69,
-  70, 70, 70]. The resulting distances are then averaged over the number of
-  comparisons.
-  \item{Genome Loss Model -} This is similar to the genome addition model,
-  except that it assumes that there was a recent genome reduction event and uses
-  the observed values in the full genotype to fill the missing values in the
-  short genotype. As with the Genome Addition Model, the resulting distances are
-  averaged over the number of comparisons.
-  \item{Combination Model -} Combine and average the genome addition and loss
-  models.
-\end{itemize}
+% To help deal with these situatons, Bruvo has suggested three methods for dealing
+% with these differences in ploidy levels \cite{Bruvo:2004}:
+% \begin{itemize}
+%   \item{Infinite Model -} The simplest way to deal with it is to count all
+%   missing alleles as infinitely large so that the distance between it and
+%   anything else is 1. Aside from this being computationally simple, it will tend
+%   to inflate distances between individuals.
+%   \item{Genome Addition Model -} If it is suspected that the organism has gone
+%   through a recent genome expansion, the missing alleles will be replace with
+%   all possible combinations of the observed alleles in the shorter genotype. For
+%   example, if there is a genotype of [69, 70, 0, 0] where 0 is a missing allele,
+%   the possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69,
+%   70, 70, 70]. The resulting distances are then averaged over the number of
+%   comparisons.
+%   \item{Genome Loss Model -} This is similar to the genome addition model,
+%   except that it assumes that there was a recent genome reduction event and uses
+%   the observed values in the full genotype to fill the missing values in the
+%   short genotype. As with the Genome Addition Model, the resulting distances are
+%   averaged over the number of comparisons.
+%   \item{Combination Model -} Combine and average the genome addition and loss
+%   models.
+% \end{itemize}
 
-As mentioned above, the infinite model is biased, but it is not nearly as
-computationally intensive as either of the other models. The reason for this is
-that both of the addition and loss models requires replacement of alleles and
-recalculation of Bruvo's distance. The number of replacements required is equal
-to the multiset coefficient: $\left({n \choose k}\right) == {(n-k+1) \choose k}$
-where $n$ is the number of potential replacements and $k$ is the number of
-alleles to be replaced. So, for the example given above, The genome addition
-model would require $\left({2 \choose 2}\right) = 3$ calculations of Bruvo's
-distance, whereas the genome loss model would require $\left({4 \choose
-2}\right) = 10$ calculations.
+% As mentioned above, the infinite model is biased, but it is not nearly as
+% computationally intensive as either of the other models. The reason for this is
+% that both of the addition and loss models requires replacement of alleles and
+% recalculation of Bruvo's distance. The number of replacements required is equal
+% to the multiset coefficient: $\left({n \choose k}\right) == {(n-k+1) \choose k}$
+% where $n$ is the number of potential replacements and $k$ is the number of
+% alleles to be replaced. So, for the example given above, The genome addition
+% model would require $\left({2 \choose 2}\right) = 3$ calculations of Bruvo's
+% distance, whereas the genome loss model would require $\left({4 \choose
+% 2}\right) = 10$ calculations.
 
-To reduce the number of calcuations and assumptions otherwise, Bruvo's distance
-will be calculated using the largest observed ploidy. This means that when
-comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
+% To reduce the number of calcuations and assumptions otherwise, Bruvo's distance
+% will be calculated using the largest observed ploidy. This means that when
+% comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
 
 %-----------------------------------------------------------------------------%
 %
@@ -4448,19 +4465,6 @@ image since it is based off of vector graphics.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Todo}
-
-\begin{itemize}
-  \item locus\_table
-  \item amova
-  \item private\_alleles
-  \item anyboot
-  \item *.dist
-\end{itemize}
-
-%-----------------------------------------------------------------------------%
-%
-%-----------------------------------------------------------------------------%
 \subsection{Table of Functions}
 \label{appendix:funk}
 
@@ -4507,8 +4511,8 @@ to its definition and description.
 \texttt{splitcombine*} & Manipulates population hierarchy *Deprecated\\ 
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Distances}}\\
-\cmdlink{index:bruvo:bruvo.dist}{bruvo.dist} & Bruvo's distance \\
-\cmdlink{index:dist:diss.dist}{diss.dist} & Absolute genetic distance (see \texttt{provesti.dist}) \\
+\texttt{bruvo.dist} & Bruvo's distance \\
+\texttt{diss.dist} & Absolute genetic distance (see \texttt{provesti.dist}) \\
 \texttt{nei.dist} & Nei's 1978 genetic distance \\
 \texttt{rogers.dist} & Rogers' euclidean distance \\
 \texttt{reynolds.dist} & Reynolds' coancestry distance \\
@@ -4517,30 +4521,30 @@ to its definition and description.
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Bootstrapping}}\\
 \texttt{aboot} & Creates a bootstrapped dendrogram for any distance measure \\
-\cmdlink{index:trees:bruvo.boot}{bruvo.boot} & Produces dendrograms with bootstrap support\\
+\texttt{bruvo.boot} & Produces dendrograms with bootstrap support\\
  & based on Bruvo's distance \\
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Analysis}}\\
 \texttt{poppr.amova} & Analysis of Molecular Variance (as implemented in ade4) \\
-\cmdlink{index:iard:ia}{ia} & Calculates the index of association \\
+\texttt{ia} & Calculates the index of association \\
 \cmdlink{mlg:mlg:mlg}{mlg} & Calculates the number of multilocus genotypes \\
 \cmdlink{mlg:cross:mlg.crosspop}{mlg.crosspop} & Finds all multilocus genotypes that cross populations \\
 \cmdlink{mlg:table:mlg.table}{mlg.table} & Returns a table of populations by multilocus genotypes \\
 \cmdlink{mlg:mix:mlg.vector}{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\ 
  & each individual \\
-\cmdlink{summary:poppr}{poppr} & Returns a diversity table by population \\
-\cmdlink{summary:poppr}{poppr.all} & Returns a diversity table by population for all compatible files specified \\
+\texttt{poppr} & Returns a diversity table by population \\
+\texttt{poppr.all} & Returns a diversity table by population for all compatible files specified \\
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Visualization}}\\
 \texttt{plot\_poppr\_msn} & Plots minimum spanning networks produced in poppr with\\
  & scale bar and legend \\
-\cmdlink{index:trees:greycurve}{greycurve} & Helper to determine the appropriate parameters for adjusting the\\
+\texttt{greycurve} & Helper to determine the appropriate parameters for adjusting the\\
  & grey level for msn functions \\
-\cmdlink{index:trees:bruvo.msn}{bruvo.msn} & Produces minimum spanning networks based off Bruvo's distance\\
+\texttt{bruvo.msn} & Produces minimum spanning networks based off Bruvo's distance\\
  & colored by population \\
-\cmdlink{index:trees:poppr.msn}{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\  
+\texttt{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\  
  & matrix related to the data \\
-\cmdlink{function:info-table}{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
+\texttt{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
 \hline
 
 \end{longtable}
