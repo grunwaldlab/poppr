@@ -40,7 +40,8 @@ poppr.amova(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   slot defining the population hierarchy. Defaults to
   \code{"population_hierarchy"}}
 
-\item{sep}{What character is used to separate the popualtion hierarchy?}
+\item{sep}{A single character used to separate the hierarchical levels. This
+defaults to "_".}
 
 \item{missing}{specify method of correcting for missing data utilizing
   options given in the function \code{\link{missingno}}. Default is

@@ -109,7 +109,8 @@
 #'   slot defining the population hierarchy. Defaults to
 #'   \code{"population_hierarchy"}
 #'   
-#' @param sep What character is used to separate the popualtion hierarchy?
+#' @param sep A single character used to separate the hierarchical levels. This
+#' defaults to "_".
 #'   
 #' @param missing specify method of correcting for missing data utilizing
 #'   options given in the function \code{\link{missingno}}. Default is

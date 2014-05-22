@@ -529,7 +529,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 }
 
 #==============================================================================#
-#' Split a or combine items within a data frame in \code{\link{genind}} objects.
+#' Split a or combine items within a data frame in \code{\link{genind}} objects (DEPRECATED).
 #'
 #' Often, one way a lot of file formats fail is that they do not allow multiple
 #' population hierarchies. This can be circumvented, however, by coding all of
@@ -562,12 +562,18 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' @return a \code{\link{genind}} object with a modified data frame in the
 #' \code{\link{other}} slot.
 #'
-#' @note The separator field is sensitive to regular expressions. If you do not
-#' know what those are, please use the default underscore to separate your
-#' populations. Use \code{fixed = TRUE} to ignore regular expressions.  
-#' If you do not set the \code{hier} flag for the split method, your new data
-#' frame will have the names "comb", "h1", "h2" and so on; for the combine
-#' method, your data frame will return the first column of your data frame.
+#' @note 
+#' This function has been deprecated and replaced by functions like
+#' \code{\link{splithierarchy}}. Please consider using the
+#' \code{\linkS4class{genclone}} object for storing hierarchies. 
+#'
+#' The separator
+#' field is sensitive to regular expressions. If you do not know what those are,
+#' please use the default underscore to separate your populations. Use \code{fixed
+#' = TRUE} to ignore regular expressions. If you do not set the \code{hier} flag
+#' for the split method, your new data frame will have the names "comb", "h1", "h2"
+#' and so on; for the combine method, your data frame will return the first column
+#' of your data frame.
 #'
 #' @export
 #' @author Zhian N. Kamvar
