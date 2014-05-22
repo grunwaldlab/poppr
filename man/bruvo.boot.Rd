@@ -31,26 +31,20 @@ nodelabels.}
 (between 0 and 100).}
 
 \item{quiet}{\code{logical} defaults to \code{FALSE}. If \code{TRUE}, a
-progress bar and messages will be supressed.}
+progress bar and messages will be suppressed.}
 
 \item{...}{any argument to be passed on to \code{\link{boot.phylo}}. eg.
 \code{quiet = TRUE}.}
 }
 \value{
-a tree with nodelables
+a tree of class phylo with nodelables
 }
 \description{
 Create a tree using Bruvo's Distance with non-parametric bootstrapping.
 }
 \note{
-This function calculates bruvo's distance for non-special cases (ie.
-the ploidy and all alleles are known). Currently there is no way to import
-polyploid partial heterozygote data into adegenet. For Bruvo's Distance
-concerning special cases, see the package \code{polysat}.
-Missing data is ignored, but be sure that missing data is NOT set to 0 in the
-genind object. This is not easy to detect and will result in an error. Please
-use any other method in \code{\link{na.replace}} or \code{\link{missingno}}.
-
+\strong{Please refer to the documentation for bruvo.dist for details
+on the algorithm.}
 If the user does not provide a vector of appropriate length for \code{replen}
 , it will be estimated by taking the minimum difference among represented
 alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION.
@@ -69,7 +63,7 @@ ssr <- rep(2, 9)
 bruvo.boot(popsub(nancycats, 1), replen = ssr)
 }
 \author{
-Javier F. Tabima, Zhian N. Kamvar
+Zhian N. Kamvar, Javier F. Tabima
 }
 \references{
 Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
@@ -77,7 +71,7 @@ simple method for the calculation of microsatellite genotype distances irrespect
 of ploidy level. Molecular Ecology, 13(7):2101-2106, 2004.
 }
 \seealso{
-\code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
+\code{\link{bruvo.dist}}, \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
 \code{\link{boot.phylo}}, \code{\link{nodelabels}}, \code{\link{na.replace}},
 \code{\link{missingno}}.
 }
