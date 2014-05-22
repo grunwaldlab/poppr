@@ -36,21 +36,91 @@ ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 \subsection{If no sampling has occured:}{ A named number vector of
   length 2 giving the Index of Association, "Ia"; and the Standardized Index
   of Association, "rbarD" } \subsection{If there is sampling:}{ A a named
-  number vector of length 4 with the following values: \itemize{\item{Ia}{numeric. The
-  index of association.} \item{p.Ia}{A number indicating the p-value
-  resulting from a one-sided permutation test based on the number of samples
-  indicated in the original call.} \item{rbarD}{numeric. The standardized
-  index of association.} \item{p.rD}{A factor indicating the p-value
-  resutling from a one-sided permutation test based on the number of samples
-  indicated in the original call.}} } \subsection{If there is sampling and
-  valureturn = TRUE}{ A list with the following elements: \item{index}{The
-  above vector} \item{samples}{A data frame with s by 2 column data frame
-  where s is the number of samples defined. The columns are for the values of
-  Ia and rbarD, respectively.}}
+  number vector of length 4 with the following values: \itemize{\item{Ia -
+  }{numeric. The index of association.} \item{p.Ia - }{A number indicating
+  the p-value resulting from a one-sided permutation test based on the number
+  of samples indicated in the original call.} \item{rbarD - }{numeric. The
+  standardized index of association.} \item{p.rD - }{A factor indicating the
+  p-value resutling from a one-sided permutation test based on the number of
+  samples indicated in the original call.}} } \subsection{If there is
+  sampling and valureturn = TRUE}{ A list with the following
+  elements:\itemize{ \item{index}{The above vector} \item{samples}{A data
+  frame with s by 2 column data frame where s is the number of samples
+  defined. The columns are for the values of Ia and rbarD, respectively.}}}
 }
 \description{
 Calculate the Index of Association and Standardized Index of Association.
 Obtain p-values from one-sided permutation tests.
+}
+\details{
+The index of association was originally developed by A.H.D. Brown
+  analyzing population structure of wheat (Brown, 1980). It has been widely
+  used as a tool to detect clonal reproduction within populations .
+  Populations whose members are undergoing sexual reproduction, whether it be
+  selfing or out-crossing, will produce gametes via meiosis, and thus have a
+  chance to shuffle alleles in the next generation. Populations whose members
+  are undergoing clonal reproduction, however, generally do so via mitosis.
+  This means that the most likely mechanism for a change in genotype is via
+  mutation. The rate of mutation varies from species to species, but it is
+  rarely sufficiently high to approximate a random shuffling of alleles. The
+  index of association is a calculation based on the ratio of the variance of
+  the raw number of differences between individuals and the sum of those
+  variances over each locus . You can also think of it as the observed
+  variance over the expected variance. If they  are the same, then the index
+  is zero after subtracting one (from Maynard-Smith, 1993): \deqn{I_A =
+  \frac{V_O}{V_E}-1}{Ia = Vo/Ve} Since the distance is more or less a binary
+  distance, any sort of marker can be used for this analysis. In the
+  calculation, phase is not considered, and any difference increases the
+  distance between two individuals. Remember that each column represents a
+  different allele and that each entry in the table represents the fraction
+  of the genotype made up by that allele at that locus. Notice also that the
+  sum of the rows all equal one. Poppr uses this to calculate distances by
+  simply taking the sum of the absolute values of the differences between
+  rows.
+
+  The calculation for the distance between two individuals at a single locus
+  with \emph{a} allelic states and a ploidy of \emph{k} is as follows (except
+  for Presence/Absence data): \deqn{ d = \displaystyle
+  \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid }{d = (k/2)*sum(abs(indAi - indBi))}
+  To find the total number of differences
+  between two individuals over all loci, you just take \emph{d} over \emph{m}
+  loci, a value we'll call \emph{D}:
+
+  \deqn{D = \displaystyle \sum_{i=1}^{m} d_i }{D = sum(di)}
+
+  These values are calculated over all possible combinations of individuals
+  in the data set, \eqn{{n \choose 2}}{choose(n, 2)} after which you end up
+  with \eqn{{n \choose 2}\cdot{}m}{choose(n, 2) * m}. values of \emph{d} and
+  \eqn{{n \choose 2}}{choose(n, 2)} values of \emph{D}. Calculating the
+  observed variances is fairly straightforward (modified from Agapow and
+  Burt, 2001):
+
+  \deqn{ V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 -
+  \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n
+  \choose 2}}}{Vo = var(D)}
+
+  Calculating the expected variance is the sum of each of the variances of
+  the individual loci. The calculation at a single locus, \emph{j} is the
+  same as the previous equation, substituting values of \emph{D} for
+  \emph{d}:
+
+  \deqn{ var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 -
+  \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n
+  \choose 2}} }{Varj = var(dj)}
+
+  The expected variance is then the sum of all the variances over all
+  \emph{m} loci:
+
+  \deqn{ V_E = \displaystyle \sum_{j=1}^{m} var_j }{Ve = sum(var(dj))}
+
+  Agapow and Burt showed that \eqn{I_A}{Ia} increases steadily with the
+  number of loci, so they came up with an approximation that is widely used,
+  \eqn{\bar r_d}{rbarD}. For the derivation, see the manual for
+  \emph{multilocus}.
+
+  \deqn{ \bar{r_d} = \frac{V_O - V_E} {2\displaystyle
+  \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
+  }{rbarD = (Vo - Ve)/(2*sum(sum(sqrt(var(dj)*var(dk))))}
 }
 \examples{
 data(nancycats)
