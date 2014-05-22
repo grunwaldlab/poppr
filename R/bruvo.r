@@ -51,97 +51,97 @@
 #==============================================================================#
 #
 #' Calculate the average Bruvo's Distance over all loci in a population.
-#'
+#' 
 #' @param pop a \code{\link{genind}} object
-#'
+#'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
-#' nucleotide repeats for each microsatellite locus.
-#' 
-#' @param add if \code{TRUE}, genotypes with zero values will be treated under
-#' the genome addition model presented in Bruvo et al. 2004.
-#' 
-#' @param loss if \code{TRUE}, genotypes with zero values will be treated under
-#' the genome loss model presented in Bruvo et al. 2004.
-#'
+#'   nucleotide repeats for each microsatellite locus.
+#'   
+#' @param add if \code{TRUE}, genotypes with zero values will be treated under 
+#'   the genome addition model presented in Bruvo et al. 2004.
+#'   
+#' @param loss if \code{TRUE}, genotypes with zero values will be treated under 
+#'   the genome loss model presented in Bruvo et al. 2004.
+#'   
 #' @return a \code{distance matrix}
-#'
+#'   
 #' @seealso \code{\link{nancycats}}
-#'
-#' @note The result of both \code{add = TRUE} and \code{loss = TRUE} is that
-#' the distance is averaged over both values. If both are set to \code{FALSE},
-#' then the infinite alleles model is used. For genotypes with all missing
-#' values, the result will be NA. 
-#'
-#' If the user does not provide a vector of appropriate length for \code{replen}
-#' , it will be estimated by taking the minimum difference among represented
-#' alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION. 
+#'   
+#' @note The result of both \code{add = TRUE} and \code{loss = TRUE} is that the
+#'   distance is averaged over both values. If both are set to \code{FALSE}, 
+#'   then the infinite alleles model is used. For genotypes with all missing 
+#'   values, the result will be NA.
+#'   
+#'   If the user does not provide a vector of appropriate length for
+#'   \code{replen} , it will be estimated by taking the minimum difference among
+#'   represented alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS
+#'   ESTIMATION.
+#'   
+#' @details Ploidy is irrelevant with respect to calculation of Bruvo's
+#' distance. However, since it makes a comparison between all alleles at a
+#' locus, it only makes sense that the two loci need to have the same ploidy
+#' level. Unfortunately for polyploids, it's often difficult to fully separate
+#' distinct alleles at each locus, so you end up with genotypes that appear to
+#' have a lower ploidy level than the organism.
 #' 
-#' @details 
-#' Ploidy is irrelevant with respect to
-#' calculation of Bruvo's distance. However, since it makes a comparison between
-#' all alleles at a locus, it only makes sense that the two loci need to have the
-#' same ploidy level. Unfortunately for polyploids, it's often difficult to fully
-#' separate distinct alleles at each locus, so you end up with genotypes that
-#' appear to have a lower ploidy level than the organism.
-#'
-#' To help deal with these situations, Bruvo has suggested three methods for dealing
-#' with these differences in ploidy levels:
-#' \itemize{ \item Infinite Model - The simplest way to deal with it is to count
-#' all missing alleles as infinitely large so that the distance between it and 
-#' anything else is 1. Aside from this being computationally simple, it will
-#' tend to \strong{inflate distances between individuals}. \item Genome Addition
-#' Model - If it is suspected that the organism has gone through a recent genome
-#' expansion, \strong{the missing alleles will be replace with all possible
-#' combinations of the observed alleles in the shorter genotype}. For example,
-#' if there is a genotype of [69, 70, 0, 0] where 0 is a missing allele, the
-#' possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69, 70,
-#' 70, 70]. The resulting distances are then averaged over the number of 
-#' comparisons. \item Genome Loss Model - This is similar to the genome addition
-#' model, except that it assumes that there was a recent genome reduction event
-#' and uses \strong{the observed values in the full genotype to fill the missing
-#' values in the short genotype}. As with the Genome Addition Model, the
-#' resulting distances are averaged over the number of comparisons. \item
-#' Combination Model - Combine and average the genome addition and loss models.
-#' }
-#' As mentioned above, the infinite model is biased, but it is not nearly as 
-#' computationally intensive as either of the other models. The reason for this
-#' is that both of the addition and loss models requires replacement of alleles
+#' To help deal with these situations, Bruvo has suggested three methods for 
+#' dealing with these differences in ploidy levels: \itemize{ \item Infinite
+#' Model - The simplest way to deal with it is to count all missing alleles as
+#' infinitely large so that the distance between it and anything else is 1.
+#' Aside from this being computationally simple, it will tend to \strong{inflate
+#' distances between individuals}. \item Genome Addition Model - If it is
+#' suspected that the organism has gone through a recent genome expansion,
+#' \strong{the missing alleles will be replace with all possible combinations of
+#' the observed alleles in the shorter genotype}. For example, if there is a
+#' genotype of [69, 70, 0, 0] where 0 is a missing allele, the possible
+#' combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69, 70, 70, 70].
+#' The resulting distances are then averaged over the number of comparisons.
+#' \item Genome Loss Model - This is similar to the genome addition model,
+#' except that it assumes that there was a recent genome reduction event and
+#' uses \strong{the observed values in the full genotype to fill the missing 
+#' values in the short genotype}. As with the Genome Addition Model, the 
+#' resulting distances are averaged over the number of comparisons. \item 
+#' Combination Model - Combine and average the genome addition and loss models. 
+#' } As mentioned above, the infinite model is biased, but it is not nearly as 
+#' computationally intensive as either of the other models. The reason for this 
+#' is that both of the addition and loss models requires replacement of alleles 
 #' and recalculation of Bruvo's distance. The number of replacements required is
-#' equal to the multiset coefficient: \deqn{\left({n \choose k}\right) ==
-#' {(n+k-1) \choose k}}{choose(n-k+1, k)} where \emph{n} is the number of
-#' potential replacements and \emph{k} is the number of alleles to be replaced.
-#' So, for the example given above, The genome addition model would require
-#' \deqn{\left({2 \choose 2}\right) = 3}{choose(2+2-1, 2) == 3} calculations of
-#' Bruvo's distance, whereas the genome loss model would require \deqn{\left({4
+#' equal to the multiset coefficient: \deqn{\left({n \choose k}\right) == 
+#' {(n+k-1) \choose k}}{choose(n-k+1, k)} where \emph{n} is the number of 
+#' potential replacements and \emph{k} is the number of alleles to be replaced. 
+#' So, for the example given above, The genome addition model would require 
+#' \deqn{\left({2 \choose 2}\right) = 3}{choose(2+2-1, 2) == 3} calculations of 
+#' Bruvo's distance, whereas the genome loss model would require \deqn{\left({4 
 #' \choose 2}\right) = 10}{choose(4+2-1, 2) == 10} calculations.
 #' 
-#' To reduce the number of calculations and assumptions otherwise, Bruvo's distance
-#' will be calculated using the largest observed ploidy. This means that when
-#' comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
-#'
+#' To reduce the number of calculations and assumptions otherwise, Bruvo's 
+#' distance will be calculated using the largest observed ploidy. This means 
+#' that when comparing [69,70,71,0] and [59,60,0,0], they will be treated as 
+#' triploids.
+#' 
 #' @export
 #' @author Zhian N. Kamvar
-#'
-#' @references
-#' Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
-#' simple method for the calculation of microsatellite genotype distances irrespective
-#' of ploidy level. Molecular Ecology, 13(7):2101-2106, 2004.
-#'
+#'   
+#' @references Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
+#' Hinrich Schulenburg. A simple method for the calculation of microsatellite
+#' genotype distances irrespective of ploidy level. Molecular Ecology,
+#' 13(7):2101-2106, 2004.
+#' 
 #' @seealso \code{\link{bruvo.boot}}, \code{\link{bruvo.msn}}
-#'
+#'   
 #' @examples
 #' # Please note that the data presented is assuming that the nancycat dataset 
 #' # contains all dinucleotide repeats, it most likely is not an accurate
 #' # representation of the data.
-#'
+#' 
 #' # Load the nancycats dataset and construct the repeat vector.
 #' data(nancycats)
 #' ssr <- rep(2, 9)
 #' 
 #' # Analyze the 1st population in nancycats
-#'
+#' 
 #' bruvo.dist(popsub(nancycats, 1), replen = ssr)
-#'
+#' 
 #' # View each population as a heatmap.
 #' \dontrun{
 #' sapply(nancycats$pop.names, function(x) 
@@ -172,69 +172,70 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #==============================================================================#
 #
 #' Create a tree using Bruvo's Distance with non-parametric bootstrapping.
-#'
+#' 
 #' @param pop a \code{\link{genind}} object
-#'
+#'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
-#' nucleotide repeats for each microsatellite locus.
-#' 
-#' @param add if \code{TRUE}, genotypes with zero values will be treated under
-#' the genome addition model presented in Bruvo et al. 2004.
-#' 
-#' @param loss if \code{TRUE}, genotypes with zero values will be treated under
-#' the genome loss model presented in Bruvo et al. 2004.
-#'
-#' @param sample an \code{integer} indicated the number of bootstrap replicates
-#' desired.
-#'
-#' @param tree choose between "nj" for neighbor-joining and "upgma" for a upgma
-#' tree to be produced.
-#'
-#' @param showtree \code{logical} if \code{TRUE}, a tree will be plotted with
-#' nodelabels.
-#' 
-#' @param cutoff \code{integer} the cutoff value for bootstrap node label values 
-#' (between 0 and 100).
-#' 
-#' @param quiet \code{logical} defaults to \code{FALSE}. If \code{TRUE}, a
-#' progress bar and messages will be suppressed.
-#' 
-#' @param ... any argument to be passed on to \code{\link{boot.phylo}}. eg.
-#' \code{quiet = TRUE}.
-#'
+#'   nucleotide repeats for each microsatellite locus.
+#'   
+#' @param add if \code{TRUE}, genotypes with zero values will be treated under 
+#'   the genome addition model presented in Bruvo et al. 2004.
+#'   
+#' @param loss if \code{TRUE}, genotypes with zero values will be treated under 
+#'   the genome loss model presented in Bruvo et al. 2004.
+#'   
+#' @param sample an \code{integer} indicated the number of bootstrap replicates 
+#'   desired.
+#'   
+#' @param tree choose between "nj" for neighbor-joining and "upgma" for a upgma 
+#'   tree to be produced.
+#'   
+#' @param showtree \code{logical} if \code{TRUE}, a tree will be plotted with 
+#'   nodelabels.
+#'   
+#' @param cutoff \code{integer} the cutoff value for bootstrap node label values
+#'   (between 0 and 100).
+#'   
+#' @param quiet \code{logical} defaults to \code{FALSE}. If \code{TRUE}, a 
+#'   progress bar and messages will be suppressed.
+#'   
+#' @param ... any argument to be passed on to \code{\link{boot.phylo}}. eg. 
+#'   \code{quiet = TRUE}.
+#'   
 #' @return a tree of class phylo with nodelables
-#'
-#' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
-#' \code{\link{boot.phylo}}, \code{\link{nodelabels}}, \code{\link{na.replace}},
-#' \code{\link{missingno}}.
-#'
-#' @note \strong{Please refer to the documentation for bruvo.dist for details
-#' on the algorithm.}
-#' If the user does not provide a vector of appropriate length for \code{replen}
-#' , it will be estimated by taking the minimum difference among represented
-#' alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION. 
-#'
+#'   
+#' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
+#'   \code{\link{upgma}}, \code{\link{nj}}, \code{\link{boot.phylo}}, 
+#'   \code{\link{nodelabels}}, \code{\link{na.replace}}, 
+#'   \code{\link{missingno}}.
+#'   
+#' @note \strong{Please refer to the documentation for bruvo.dist for details on
+#'   the algorithm.} If the user does not provide a vector of appropriate length
+#'   for \code{replen} , it will be estimated by taking the minimum difference
+#'   among represented alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON
+#'   THIS ESTIMATION.
+#'   
 #' @export
 #' @author Zhian N. Kamvar, Javier F. Tabima
-#'
-#' @references
-#' Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
-#' simple method for the calculation of microsatellite genotype distances irrespective
-#' of ploidy level. Molecular Ecology, 13(7):2101-2106, 2004.
-#'
+#'   
+#' @references Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
+#' Hinrich Schulenburg. A simple method for the calculation of microsatellite
+#' genotype distances irrespective of ploidy level. Molecular Ecology,
+#' 13(7):2101-2106, 2004.
+#' 
 #' @examples
 #' # Please note that the data presented is assuming that the nancycat dataset 
 #' # contains all dinucleotide repeats, it most likely is not an accurate
 #' # representation of the data.
-#'
+#' 
 #' # Load the nancycats dataset and construct the repeat vector.
 #' data(nancycats)
 #' ssr <- rep(2, 9)
 #' 
 #' # Analyze the 1st population in nancycats
-#'
+#' 
 #' bruvo.boot(popsub(nancycats, 1), replen = ssr)
-#'
+#' 
 #==============================================================================#
 #' @importFrom phangorn upgma midpoint
 #' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize 
@@ -301,7 +302,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #
 #' Create minimum spanning network of selected populations using Bruvo's 
 #' distance.
-#'
+#' 
 #' @param pop a \code{\link{genind}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
@@ -314,8 +315,8 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   the genome loss model presented in Bruvo et al. 2004.
 #'   
 #' @param palette a \code{function} defining the color palette to be used to 
-#'   color the populations on the graph. It defaults to
-#'   \code{\link{topo.colors}}, but you can easily create new schemes by using
+#'   color the populations on the graph. It defaults to 
+#'   \code{\link{topo.colors}}, but you can easily create new schemes by using 
 #'   \code{\link{colorRampPalette}} (see examples for details)
 #'   
 #' @param sublist a \code{vector} of population names or indexes that the user 
@@ -325,16 +326,16 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   wishes to discard. Default to \code{NULL}
 #'   
 #' @param vertex.label a \code{vector} of characters to label each vertex. There
-#'   are two defaults: \code{"MLG"} will label the nodes with the multilocus
-#'   genotype from the original data set and \code{"inds"} will label the nodes
+#'   are two defaults: \code{"MLG"} will label the nodes with the multilocus 
+#'   genotype from the original data set and \code{"inds"} will label the nodes 
 #'   with the representative individual names.
 #'   
 #' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
-#'   of the edges proportional to Bruvo's distance, with the lines becoming
+#'   of the edges proportional to Bruvo's distance, with the lines becoming 
 #'   darker for more related nodes. See \code{\link{greycurve}} for details.
 #'   
 #' @param glim "grey limit". Two numbers between zero and one. They determine 
-#'   the upper and lower limits for the \code{\link{gray}} function. Default is
+#'   the upper and lower limits for the \code{\link{gray}} function. Default is 
 #'   0 (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
 #'   
 #' @param gadj "grey adjust". a positive \code{integer} greater than zero that 
@@ -342,54 +343,52 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   represent that weight. See \code{\link{greycurve}} for details.
 #'   
 #' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale 
-#'   will be weighted to emphasize the differences between closely related
-#'   nodes. If it is 2, the grey scale will be weighted to emphasize the
-#'   differences between more distantly related nodes. See
+#'   will be weighted to emphasize the differences between closely related 
+#'   nodes. If it is 2, the grey scale will be weighted to emphasize the 
+#'   differences between more distantly related nodes. See 
 #'   \code{\link{greycurve}} for details.
 #'   
 #' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be 
-#'   scaled proportional to Bruvo's distance, with the lines 
-#'   becoming thicker for more related nodes.
+#'   scaled proportional to Bruvo's distance, with the lines becoming thicker
+#'   for more related nodes.
 #'   
-#' @param showplot logical. If \code{TRUE}, the graph will be plotted. If
+#' @param showplot logical. If \code{TRUE}, the graph will be plotted. If 
 #'   \code{FALSE}, it will simply be returned.
 #'   
 #' @param ... any other arguments that could go into plot.igraph
 #'   
-#' @return \item{graph}{a minimum spanning network with nodes corresponding to
-#' MLGs within the data set. Colors of the nodes represent population
-#' membership. Width and color of the edges represent distance.} 
-#' \item{populations}{a vector of the population names corresponding to the 
-#' vertex colors} \item{colors}{a vector of the hexadecimal representations of
-#' the colors used in the vertex colors}
-#' 
-#' @note \itemize{
-#' \item \strong{Please see the documentation for bruvo.boot for details on the
-#' algorithm}. 
-#'  \item The edges of these graphs may cross each other if the graph becomes too
-#' large.
-#' \item The nodes in the graph represent multilocus genotypes. The colors of the
-#' nodes are representative of population membership. It is not uncommon to see
-#' different populations containing the same multilocus genotype.}
-#' 
+#' @return \item{graph}{a minimum spanning network with nodes corresponding to 
+#'   MLGs within the data set. Colors of the nodes represent population 
+#'   membership. Width and color of the edges represent distance.} 
+#'   \item{populations}{a vector of the population names corresponding to the 
+#'   vertex colors} \item{colors}{a vector of the hexadecimal representations of
+#'   the colors used in the vertex colors}
+#'   
+#' @note \itemize{ \item \strong{Please see the documentation for bruvo.boot for
+#'   details on the algorithm}. \item The edges of these graphs may cross each
+#'   other if the graph becomes too large. \item The nodes in the graph
+#'   represent multilocus genotypes. The colors of the nodes are representative
+#'   of population membership. It is not uncommon to see different populations
+#'   containing the same multilocus genotype.}
+#'   
 #' @details The minimum spanning network generated by this function is generated
-#' via igraph's \code{\link[igraph]{minimum.spanning.tree}}. The resultant graph
-#' produced can be plotted using igraph functions, or the entire object can be
-#' plotted using the function \code{\link{plot_poppr_msn}}, which will give the
-#' user a scale bar and the option to layout your data. 
+#'   via igraph's \code{\link[igraph]{minimum.spanning.tree}}. The resultant
+#'   graph produced can be plotted using igraph functions, or the entire object
+#'   can be plotted using the function \code{\link{plot_poppr_msn}}, which will
+#'   give the user a scale bar and the option to layout your data.
 #'   
 #' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
-#'   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{minimum.spanning.tree}}
+#'   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{minimum.spanning.tree}} 
 #'   \code{\link{bruvo.boot}}, \code{\link{greycurve}}
 #'   
 #' @export
 #' @author Zhian N. Kamvar, Javier F. Tabima
 #' @aliases msn.bruvo
-#' @references Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
-#' Hinrich Schulenburg. A simple method for the calculation of microsatellite
-#' genotype distances irrespective of ploidy level. Molecular Ecology,
-#' 13(7):2101-2106, 2004.
-#'
+#' @references Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and 
+#'   Hinrich Schulenburg. A simple method for the calculation of microsatellite 
+#'   genotype distances irrespective of ploidy level. Molecular Ecology, 
+#'   13(7):2101-2106, 2004.
+#'   
 #' @examples
 #' 
 #' # Load the data set.

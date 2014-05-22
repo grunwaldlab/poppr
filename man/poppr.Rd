@@ -9,8 +9,9 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   keep = 1, hist = TRUE, minsamp = 10, legend = FALSE)
 }
 \arguments{
-\item{dat}{a \code{\linkS4class{genind}} object OR a \code{\linkS4class{genclone}}
-  object OR any fstat, structure, genetix, genpop, or genalex formatted file.}
+\item{dat}{a \code{\linkS4class{genind}} object OR a
+  \code{\linkS4class{genclone}} object OR any fstat, structure, genetix,
+  genpop, or genalex formatted file.}
 
 \item{total}{default \code{TRUE}. Should indecies be calculated for the
   combined populations represented in the entire file?}
@@ -50,16 +51,14 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   and \code{dfname} parameters, or the user will potentially get undesired
   results. see \code{\link{clonecorrect}} for details.}
 
-\item{hier}{\itemize{
-  \item \strong{for genind objects} - a
-  \code{numeric or character} vector OR a hierarchical formula. This is the
-  list of columns within a data frame (specified in \code{dfname}) in the
-  'other' slot of the \code{\link{genind}} object. The list should indicate
-  the population hierarchy to be used for clone correction \item \strong{for
-  genclone objects} - a \code{formula} indicating the hierarchical levels to
-  be used. The hierarchies should be present in the \code{hierarchy} slot.
-  See \code{\link{sethierarchy}} for details.
-  }}
+\item{hier}{\itemize{ \item \strong{for genind objects} - a \code{numeric or
+  character} vector OR a hierarchical formula. This is the list of columns
+  within a data frame (specified in \code{dfname}) in the 'other' slot of the
+  \code{\link{genind}} object. The list should indicate the population
+  hierarchy to be used for clone correction \item \strong{for genclone
+  objects} - a \code{formula} indicating the hierarchical levels to be used.
+  The hierarchies should be present in the \code{hierarchy} slot. See
+  \code{\link{sethierarchy}} for details. }}
 
 \item{dfname}{a \code{character string}. This is the name of the data frame
   or heirarchy containing the vectors of the population hierarchy within the

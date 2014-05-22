@@ -8,50 +8,45 @@ ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} object OR any fstat, structure, genetix,
-genpop, or genalex formatted files.}
+  genpop, or genalex formatted files.}
 
 \item{sample}{an integer indicating the number of permutations desired (eg
-999).}
+  999).}
 
 \item{method}{an integer from 1 to 4 indicating the sampling method desired.
-see \code{\link{shufflepop}} for details.}
+  see \code{\link{shufflepop}} for details.}
 
 \item{quiet}{Should the function print anything to the screen while it is
-performing calculations?
+  performing calculations?
 
-\code{TRUE} prints nothing.
+  \code{TRUE} prints nothing.
 
-\code{FALSE} (defualt) will print the population name and progress bar.}
+  \code{FALSE} (defualt) will print the population name and progress bar.}
 
 \item{missing}{a character string. see \code{\link{missingno}} for details.}
 
 \item{hist}{\code{logical} if \code{TRUE}, a histogram will be printed for
-each population if there is sampling.}
+  each population if there is sampling.}
 
 \item{valuereturn}{\code{logical} if \code{TRUE}, the index values from the
   reshuffled data is returned. If \code{FALSE} (default), the index is
   returned with associated p-values in a 4 element numeric vector.}
 }
 \value{
-\emph{If no sampling has occured:}
-
-A named number vector of length 2 giving the Index of Association, "Ia"; and
-the Standardized Index of Association, "rbarD"
-
-\emph{If there is sampling:}
-
-A a named number vector of length 4 with the following values:
-\item{Ia}{numeric. The index of association.} \item{p.Ia}{A number indicating
-the p-value resulting from a one-sided permutation test based on the number
-of samples indicated in the original call.} \item{rbarD}{numeric. The
-standardized index of association.} \item{p.rD}{A factor indicating the
-p-value resutling from a one-sided permutation test based on the number of
-samples indicated in the original call.}
-
-\emph{If there is sampling and valureturn = TRUE} A list with the following
-elements: \item{index}{The above vector} \item{samples}{A data frame with s
-by 2 column data frame where s is the number of samples defined. The columns
-are for the values of Ia and rbarD, respectively.}
+\subsection{If no sampling has occured:}{ A named number vector of
+  length 2 giving the Index of Association, "Ia"; and the Standardized Index
+  of Association, "rbarD" } \subsection{If there is sampling:}{ A a named
+  number vector of length 4 with the following values: \itemize{\item{Ia}{numeric. The
+  index of association.} \item{p.Ia}{A number indicating the p-value
+  resulting from a one-sided permutation test based on the number of samples
+  indicated in the original call.} \item{rbarD}{numeric. The standardized
+  index of association.} \item{p.rD}{A factor indicating the p-value
+  resutling from a one-sided permutation test based on the number of samples
+  indicated in the original call.}} } \subsection{If there is sampling and
+  valureturn = TRUE}{ A list with the following elements: \item{index}{The
+  above vector} \item{samples}{A data frame with s by 2 column data frame
+  where s is the number of samples defined. The columns are for the values of
+  Ia and rbarD, respectively.}}
 }
 \description{
 Calculate the Index of Association and Standardized Index of Association.
@@ -79,17 +74,18 @@ Zhian N. Kamvar
 }
 \references{
 Paul-Michael Agapow and Austin Burt. Indices of multilocus
-linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102, 2001
+  linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102,
+  2001
 
-A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural
-populations of hordeum spontaneum. \emph{Genetics}, 96(2):523-536, 1980.
+  A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural
+  populations of hordeum spontaneum. \emph{Genetics}, 96(2):523-536, 1980.
 
-J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria?
-Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
+  J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria?
+  Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
 }
 \seealso{
 \code{\link{poppr}}, \code{\link{missingno}},
-\code{\link{import2genind}},
-\code{\link{read.genalex}}, \code{\link{clonecorrect}}
+  \code{\link{import2genind}}, \code{\link{read.genalex}},
+  \code{\link{clonecorrect}}
 }
 

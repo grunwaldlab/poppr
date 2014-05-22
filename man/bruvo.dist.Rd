@@ -9,13 +9,13 @@ bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
 \item{pop}{a \code{\link{genind}} object}
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
-nucleotide repeats for each microsatellite locus.}
+  nucleotide repeats for each microsatellite locus.}
 
 \item{add}{if \code{TRUE}, genotypes with zero values will be treated under
-the genome addition model presented in Bruvo et al. 2004.}
+  the genome addition model presented in Bruvo et al. 2004.}
 
 \item{loss}{if \code{TRUE}, genotypes with zero values will be treated under
-the genome loss model presented in Bruvo et al. 2004.}
+  the genome loss model presented in Bruvo et al. 2004.}
 }
 \value{
 a \code{distance matrix}
@@ -24,33 +24,32 @@ a \code{distance matrix}
 Calculate the average Bruvo's Distance over all loci in a population.
 }
 \details{
-Ploidy is irrelevant with respect to
-calculation of Bruvo's distance. However, since it makes a comparison between
-all alleles at a locus, it only makes sense that the two loci need to have the
-same ploidy level. Unfortunately for polyploids, it's often difficult to fully
-separate distinct alleles at each locus, so you end up with genotypes that
-appear to have a lower ploidy level than the organism.
+Ploidy is irrelevant with respect to calculation of Bruvo's
+distance. However, since it makes a comparison between all alleles at a
+locus, it only makes sense that the two loci need to have the same ploidy
+level. Unfortunately for polyploids, it's often difficult to fully separate
+distinct alleles at each locus, so you end up with genotypes that appear to
+have a lower ploidy level than the organism.
 
-To help deal with these situations, Bruvo has suggested three methods for dealing
-with these differences in ploidy levels:
-\itemize{ \item Infinite Model - The simplest way to deal with it is to count
-all missing alleles as infinitely large so that the distance between it and
-anything else is 1. Aside from this being computationally simple, it will
-tend to \strong{inflate distances between individuals}. \item Genome Addition
-Model - If it is suspected that the organism has gone through a recent genome
-expansion, \strong{the missing alleles will be replace with all possible
-combinations of the observed alleles in the shorter genotype}. For example,
-if there is a genotype of [69, 70, 0, 0] where 0 is a missing allele, the
-possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69, 70,
-70, 70]. The resulting distances are then averaged over the number of
-comparisons. \item Genome Loss Model - This is similar to the genome addition
-model, except that it assumes that there was a recent genome reduction event
-and uses \strong{the observed values in the full genotype to fill the missing
+To help deal with these situations, Bruvo has suggested three methods for
+dealing with these differences in ploidy levels: \itemize{ \item Infinite
+Model - The simplest way to deal with it is to count all missing alleles as
+infinitely large so that the distance between it and anything else is 1.
+Aside from this being computationally simple, it will tend to \strong{inflate
+distances between individuals}. \item Genome Addition Model - If it is
+suspected that the organism has gone through a recent genome expansion,
+\strong{the missing alleles will be replace with all possible combinations of
+the observed alleles in the shorter genotype}. For example, if there is a
+genotype of [69, 70, 0, 0] where 0 is a missing allele, the possible
+combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69, 70, 70, 70].
+The resulting distances are then averaged over the number of comparisons.
+\item Genome Loss Model - This is similar to the genome addition model,
+except that it assumes that there was a recent genome reduction event and
+uses \strong{the observed values in the full genotype to fill the missing
 values in the short genotype}. As with the Genome Addition Model, the
 resulting distances are averaged over the number of comparisons. \item
 Combination Model - Combine and average the genome addition and loss models.
-}
-As mentioned above, the infinite model is biased, but it is not nearly as
+} As mentioned above, the infinite model is biased, but it is not nearly as
 computationally intensive as either of the other models. The reason for this
 is that both of the addition and loss models requires replacement of alleles
 and recalculation of Bruvo's distance. The number of replacements required is
@@ -62,19 +61,21 @@ So, for the example given above, The genome addition model would require
 Bruvo's distance, whereas the genome loss model would require \deqn{\left({4
 \choose 2}\right) = 10}{choose(4+2-1, 2) == 10} calculations.
 
-To reduce the number of calculations and assumptions otherwise, Bruvo's distance
-will be calculated using the largest observed ploidy. This means that when
-comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
+To reduce the number of calculations and assumptions otherwise, Bruvo's
+distance will be calculated using the largest observed ploidy. This means
+that when comparing [69,70,71,0] and [59,60,0,0], they will be treated as
+triploids.
 }
 \note{
-The result of both \code{add = TRUE} and \code{loss = TRUE} is that
-the distance is averaged over both values. If both are set to \code{FALSE},
-then the infinite alleles model is used. For genotypes with all missing
-values, the result will be NA.
+The result of both \code{add = TRUE} and \code{loss = TRUE} is that the
+  distance is averaged over both values. If both are set to \code{FALSE},
+  then the infinite alleles model is used. For genotypes with all missing
+  values, the result will be NA.
 
-If the user does not provide a vector of appropriate length for \code{replen}
-, it will be estimated by taking the minimum difference among represented
-alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS ESTIMATION.
+  If the user does not provide a vector of appropriate length for
+  \code{replen} , it will be estimated by taking the minimum difference among
+  represented alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS
+  ESTIMATION.
 }
 \examples{
 # Please note that the data presented is assuming that the nancycat dataset
@@ -99,9 +100,10 @@ heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 Zhian N. Kamvar
 }
 \references{
-Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich Schulenburg. A
-simple method for the calculation of microsatellite genotype distances irrespective
-of ploidy level. Molecular Ecology, 13(7):2101-2106, 2004.
+Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
+Hinrich Schulenburg. A simple method for the calculation of microsatellite
+genotype distances irrespective of ploidy level. Molecular Ecology,
+13(7):2101-2106, 2004.
 }
 \seealso{
 \code{\link{nancycats}}
