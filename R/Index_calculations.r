@@ -56,8 +56,9 @@
 #' \code{\link{read.genalex}} for details).
 #' 
 #' 
-#' @param dat a \code{\linkS4class{genind}} object OR a \code{\linkS4class{genclone}} 
-#'   object OR any fstat, structure, genetix, genpop, or genalex formatted file.
+#' @param dat a \code{\linkS4class{genind}} object OR a
+#'   \code{\linkS4class{genclone}} object OR any fstat, structure, genetix,
+#'   genpop, or genalex formatted file.
 #'   
 #' @param total default \code{TRUE}. Should indecies be calculated for the 
 #'   combined populations represented in the entire file?
@@ -71,12 +72,12 @@
 #'   
 #' @param sample an integer indicating the number of permutations desired to 
 #'   obtain p-values. Sampling will shuffle genotypes at each locus to simulate 
-#'   a panmictic population using the observed genotypes. Calculating the
-#'   p-value includes the observed statistics, so set your sample number to one
-#'   off for a round p-value (eg. \code{sample = 999} will give you p = 0.001
+#'   a panmictic population using the observed genotypes. Calculating the 
+#'   p-value includes the observed statistics, so set your sample number to one 
+#'   off for a round p-value (eg. \code{sample = 999} will give you p = 0.001 
 #'   and \code{sample = 1000} will give you p = 0.000999001).
 #'   
-#' @param method an integer from 1 to 4 indicating the method of sampling
+#' @param method an integer from 1 to 4 indicating the method of sampling 
 #'   desired. see \code{\link{shufflepop}} for details.
 #'   
 #' @param missing how should missing data be treated? \code{"zero"} and 
@@ -86,28 +87,25 @@
 #'   \code{\link{missingno}} for more information.
 #'   
 #' @param cutoff \code{numeric} a number from 0 to 1 indicating the percent 
-#'   missing data allowed for analysis. This is to be used in conjunction with
+#'   missing data allowed for analysis. This is to be used in conjunction with 
 #'   the flag \code{missing} (see \code{\link{missingno}} for details)
 #'   
 #' @param quiet Should the function print anything to the screen while it is 
 #'   performing calculations? \code{TRUE} prints nothing, \code{FALSE} (defualt)
 #'   will print the population name and a progress bar.
 #'   
-#' @param clonecorrect default \code{FALSE}. must be used with the \code{hier}
-#'   and \code{dfname} parameters, or the user will potentially get undesired
+#' @param clonecorrect default \code{FALSE}. must be used with the \code{hier} 
+#'   and \code{dfname} parameters, or the user will potentially get undesired 
 #'   results. see \code{\link{clonecorrect}} for details.
 #'   
-#' @param hier 
-#' \itemize{
-#'   \item \strong{for genind objects} - a 
-#'   \code{numeric or character} vector OR a hierarchical formula. This is the 
-#'   list of columns within a data frame (specified in \code{dfname}) in the 
-#'   'other' slot of the \code{\link{genind}} object. The list should indicate 
-#'   the population hierarchy to be used for clone correction \item \strong{for 
-#'   genclone objects} - a \code{formula} indicating the hierarchical levels to 
-#'   be used. The hierarchies should be present in the \code{hierarchy} slot. 
-#'   See \code{\link{sethierarchy}} for details.
-#'   }
+#' @param hier \itemize{ \item \strong{for genind objects} - a \code{numeric or
+#'   character} vector OR a hierarchical formula. This is the list of columns
+#'   within a data frame (specified in \code{dfname}) in the 'other' slot of the
+#'   \code{\link{genind}} object. The list should indicate the population
+#'   hierarchy to be used for clone correction \item \strong{for genclone
+#'   objects} - a \code{formula} indicating the hierarchical levels to be used.
+#'   The hierarchies should be present in the \code{hierarchy} slot. See
+#'   \code{\link{sethierarchy}} for details. }
 #'   
 #' @param dfname a \code{character string}. This is the name of the data frame 
 #'   or heirarchy containing the vectors of the population hierarchy within the 
@@ -129,24 +127,24 @@
 #'   \code{FALSE}
 #'   
 #' @return \item{Pop}{A vector indicating the pouplation factor} \item{N}{An 
-#'   integer vector indicating the number of individuals/isolates in the
-#'   specified population.} \item{MLG}{An integer vector indicating the number
-#'   of multilocus genotypes found in the specified poupulation, (see:
-#'   \code{\link{mlg}})} \item{eMLG}{The expected number of MLG at the lowest
-#'   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The
-#'   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner
+#'   integer vector indicating the number of individuals/isolates in the 
+#'   specified population.} \item{MLG}{An integer vector indicating the number 
+#'   of multilocus genotypes found in the specified poupulation, (see: 
+#'   \code{\link{mlg}})} \item{eMLG}{The expected number of MLG at the lowest 
+#'   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The 
+#'   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner 
 #'   Diversity index} \item{G}{Stoddard and Taylor's Index} \item{Hexp}{Expected
-#'   heterozygosity or Nei's 1987 genotypic diversity corrected for sample
-#'   size.} \item{E.5}{Evenness} \item{Ia}{A numeric vector giving the value of
-#'   the Index of Association for each population factor, (see
+#'   heterozygosity or Nei's 1987 genotypic diversity corrected for sample 
+#'   size.} \item{E.5}{Evenness} \item{Ia}{A numeric vector giving the value of 
+#'   the Index of Association for each population factor, (see 
 #'   \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating the p-value for
 #'   Ia from the number of reshufflings indicated in \code{sample}. Lowest value
-#'   is 1/n where n is the number of observed values.} \item{rbarD}{A numeric
-#'   vector giving the value of the Standardized Index of Association for each
-#'   population factor, (see \code{\link{ia}}).} \item{p.rD}{A numeric vector
-#'   indicating the p-value for rbarD from the number of reshufflings indicated
-#'   in \code{sample}. Lowest value is 1/n where n is the number of observed
-#'   values.} \item{File}{A vector indicating the name of the original data
+#'   is 1/n where n is the number of observed values.} \item{rbarD}{A numeric 
+#'   vector giving the value of the Standardized Index of Association for each 
+#'   population factor, (see \code{\link{ia}}).} \item{p.rD}{A numeric vector 
+#'   indicating the p-value for rbarD from the number of reshufflings indicated 
+#'   in \code{sample}. Lowest value is 1/n where n is the number of observed 
+#'   values.} \item{File}{A vector indicating the name of the original data 
 #'   file.}
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
@@ -194,7 +192,7 @@
 #'   J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
 #'   Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
 #'   
-#'   J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
+#'   J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and 
 #'   prediction in samples. Genetics, 118(4):705-11, 1988.
 #'   
 #'   
@@ -373,67 +371,140 @@ poppr.all <- function(filelist, ...){
 #
 #' Index of Association
 #' 
-#' Calculate the Index of Association and Standardized Index of Association.
-#' Obtain p-values from one-sided permutation tests. 
+#' Calculate the Index of Association and Standardized Index of Association. 
+#' Obtain p-values from one-sided permutation tests.
 #' 
 #' @param pop a \code{\link{genind}} object OR any fstat, structure, genetix, 
-#' genpop, or genalex formatted files.
-#'
-#' @param sample an integer indicating the number of permutations desired (eg
-#' 999).
-#'
-#' @param method an integer from 1 to 4 indicating the sampling method desired.
-#' see \code{\link{shufflepop}} for details. 
-#'
-#' @param quiet Should the function print anything to the screen while it is
-#' performing calculations? 
-#'
-#' \code{TRUE} prints nothing.
-#'
-#' \code{FALSE} (defualt) will print the population name and progress bar.
-#'
+#'   genpop, or genalex formatted files.
+#'   
+#' @param sample an integer indicating the number of permutations desired (eg 
+#'   999).
+#'   
+#' @param method an integer from 1 to 4 indicating the sampling method desired. 
+#'   see \code{\link{shufflepop}} for details.
+#'   
+#' @param quiet Should the function print anything to the screen while it is 
+#'   performing calculations?
+#'   
+#'   \code{TRUE} prints nothing.
+#'   
+#'   \code{FALSE} (defualt) will print the population name and progress bar.
+#'   
 #' @param missing a character string. see \code{\link{missingno}} for details.
-#'
-#' @param hist \code{logical} if \code{TRUE}, a histogram will be printed for
-#' each population if there is sampling.
-#' 
-#' @param valuereturn \code{logical} if \code{TRUE}, the index values from the
-#'   reshuffled data is returned. If \code{FALSE} (default), the index is
+#'   
+#' @param hist \code{logical} if \code{TRUE}, a histogram will be printed for 
+#'   each population if there is sampling.
+#'   
+#' @param valuereturn \code{logical} if \code{TRUE}, the index values from the 
+#'   reshuffled data is returned. If \code{FALSE} (default), the index is 
 #'   returned with associated p-values in a 4 element numeric vector.
 #'   
-#' @return \emph{If no sampling has occured:}
+#' @return \subsection{If no sampling has occured:}{ A named number vector of
+#'   length 2 giving the Index of Association, "Ia"; and the Standardized Index
+#'   of Association, "rbarD" } \subsection{If there is sampling:}{ A a named
+#'   number vector of length 4 with the following values: \itemize{\item{Ia - }{numeric. The
+#'   index of association.} \item{p.Ia - }{A number indicating the p-value
+#'   resulting from a one-sided permutation test based on the number of samples
+#'   indicated in the original call.} \item{rbarD - }{numeric. The standardized
+#'   index of association.} \item{p.rD - }{A factor indicating the p-value
+#'   resutling from a one-sided permutation test based on the number of samples
+#'   indicated in the original call.}} } \subsection{If there is sampling and
+#'   valureturn = TRUE}{ A list with the following elements:\itemize{ \item{index}{The
+#'   above vector} \item{samples}{A data frame with s by 2 column data frame
+#'   where s is the number of samples defined. The columns are for the values of
+#'   Ia and rbarD, respectively.}}}
+#'   
+#' @details 
+#' The index of association was originally developed by A.H.D. Brown
+#' analyzing population structure of wheat \cite{Brown:1980}. It has been widely
+#' used as a tool to detect clonal reproduction within populations
+#' \cite{Smith:1993}. Populations whose members are undergoing sexual reproduction,
+#' whether it be selfing or out-crossing, will produce gametes via meiosis, and
+#' thus have a chance to shuffle alleles in the next generation. Populations whose
+#' members are undergoing clonal reproduction, however, generally do so via
+#' mitosis. This means that the most likely mechanism for a change in genotype is
+#' via mutation. The rate of mutation varies from species to species, but it is
+#' rarely sufficiently high to approximate a random shuffling of alleles. The index
+#' of association is a calculation based on the ratio of the variance of the raw
+#' number of differences between individuals and the sum of those variances over
+#' each locus \cite{Smith:1993}. You can also think of it as the observed variance
+#' over the expected variance. If they  are the same, then the index is zero after
+#' subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
+#' \deqn{
+#' I_A = \frac{V_O}{V_E}-1
+#' }{Ia = Vo/Ve}
+#' Since the distance is more or less a binary distance, any sort of marker can be
+#' used for this analysis. In the calculation, phase is not considered, and any
+#' difference increases the distance between two individuals.
+#'   Remember that each column represents a different allele and that each entry in
+#' the table represents the fraction of the genotype made up by that allele at that
+#' locus. Notice also that the sum of the rows all equal one. Poppr uses this to
+#' calculate distances by simply taking the sum of the absolute values of the
+#' differences between rows.
 #' 
-#' A named number vector of length 2 giving the Index of Association, "Ia"; and
-#' the Standardized Index of Association, "rbarD"
+#' The calculation for the distance between two individuals at a single locus with
+#' \emph{a} allelic states and a ploidy of \emph{k} is as follows (except for Presence/Absence data):
+#' \deqn{
+#' d = \displaystyle \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid
+#' }
+#' To find the total number of differences between two individuals over all loci,
+#' you just take $d$ over $m$ loci, a value we'll call $D$:
 #' 
-#' \emph{If there is sampling:}
+#' \deqn{
+#' D = \displaystyle \sum_{i=1}^{m} d_i
+#' }
 #' 
-#' A a named number vector of length 4 with the following values: 
-#' \item{Ia}{numeric. The index of association.} \item{p.Ia}{A number indicating
-#' the p-value resulting from a one-sided permutation test based on the number
-#' of samples indicated in the original call.} \item{rbarD}{numeric. The
-#' standardized index of association.} \item{p.rD}{A factor indicating the
-#' p-value resutling from a one-sided permutation test based on the number of
-#' samples indicated in the original call.}
+#' These values are calculated over all possible combinations of individuals in the
+#' data set, \eqn{{n \choose 2}}{choose(n, 2)} after which you end up with \eqn{{n \choose 2}\cdot{}m}{choose(n, 2) * m}.
+#' values of \emph{d} and \eqn{{n \choose 2}}{choose(n, 2)} values of \emph{D}. Calculating the observed
+#' variances is fairly straightforward (modified from Agapow and Burt, 2001):
 #' 
-#' \emph{If there is sampling and valureturn = TRUE} A list with the following
-#' elements: \item{index}{The above vector} \item{samples}{A data frame with s
-#' by 2 column data frame where s is the number of samples defined. The columns
-#' are for the values of Ia and rbarD, respectively.}
-#'
+#' \deqn{
+#' V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n \choose 2}}
+#' }
+#' 
+#' Calculating the expected variance is the sum of each of the variances of the
+#' individual loci. The calculation at a single locus, $j$ is the same as the
+#' previous equation, substituting values of \emph{D} for \emph{d} \cite{Agapow:2001}:
+#' 
+#' \deqn{
+#' var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n \choose 2}}
+#' }
+#' 
+#' The expected variance is then the sum of all the variances over all \emph{m} loci:
+#' 
+#' \deqn{
+#' V_E = \displaystyle \sum_{j=1}^{m} var_j
+#' }
+#' 
+#' Now you can plug the sums of equations (\ref{eq:V_O}) and (\ref{eq:V_E}) into
+#' equation (\ref{eq:I_A}) to get the index of association. Of course, Agapow and
+#' Burt showed that this index increases steadily with the number of loci, so they
+#' came up with an approximation that is widely used, $\bar r_d$
+#' \cite{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}.
+#' The equation is as follows, utilizing equations (\ref{eq:V_O}),
+#' (\ref{eq:var_j}), and (\ref{eq:V_E}) \cite{Agapow:2001}:
+#' 
+#' \begin{equation}
+#' \label{eq:r_d}
+#' \bar{r_d} = \frac{V_O - V_E}
+#' {2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
+#' \end{equation}
+#'   
 #' @references  Paul-Michael Agapow and Austin Burt. Indices of multilocus 
-#' linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102, 2001
-#' 
-#' A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-#' populations of hordeum spontaneum. \emph{Genetics}, 96(2):523-536, 1980.
-#'
-#' J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria?
-#' Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
-#'
-#' @seealso \code{\link{poppr}}, \code{\link{missingno}},
-#' \code{\link{import2genind}},
-#' \code{\link{read.genalex}}, \code{\link{clonecorrect}}
-#' 
+#'   linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102,
+#'   2001
+#'   
+#'   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
+#'   populations of hordeum spontaneum. \emph{Genetics}, 96(2):523-536, 1980.
+#'   
+#'   J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
+#'   Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
+#'   
+#' @seealso \code{\link{poppr}}, \code{\link{missingno}}, 
+#'   \code{\link{import2genind}}, \code{\link{read.genalex}},
+#'   \code{\link{clonecorrect}}
+#'   
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
@@ -446,7 +517,7 @@ poppr.all <- function(filelist, ...){
 #' layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
 #' hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
 #' hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
-#'
+#' 
 #' # Get the index for each population.
 #' lapply(seppop(nancycats), ia)
 #' # With sampling
