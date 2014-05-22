@@ -91,15 +91,14 @@ print_command <- function(funk){
 
 \maketitle 
 \begin{abstract} 
-\includegraphics[height = 5mm, keepaspectratio=true]{jalapeno-poppers}\Poppr{}
-provides open-source, cross-platform tools for quick analysis of population
-genetic data enabling focus on data analysis and interpretation. While there are
-a plethora of packages for population genetic analysis, few are able to offer
-quick and easy analysis of populations with mixed reproductive modes. \Poppr{}'s
-main advantage is the ease of use and integration with other packages such as
-\adegenet{} and \textit{vegan}, including support for novel methods such as
-clone correction, multilocus genotype analysis, calculation of Bruvo's distance
-and the index of association.
+\Poppr{} provides open-source, cross-platform tools for quick analysis of
+population genetic data enabling focus on data analysis and interpretation.
+While there are a plethora of packages for population genetic analysis, few are
+able to offer quick and easy analysis of populations with mixed reproductive
+modes. \Poppr{}'s main advantage is the ease of use and integration with other
+packages such as \adegenet{} and \textit{vegan}, including support for novel
+methods such as clone correction, multilocus genotype analysis, calculation of
+Bruvo's distance and the index of association.
 \end{abstract} 
 % Inserting the \Poppr{} logo here 
 
@@ -164,8 +163,8 @@ multilocus genotypes are shared across populations.
 
 This vignette will cover all of the material you need to know to efficiently
 analyze data in \poppr{}. For information on methods of analysis (eg. index of
-association, distance measures, AMOVA, ...), please read
-the manual pages provided for each function.
+association, distance measures, AMOVA, ...), please read the manual pages
+provided for each function.
 
 %-----------------------------------------------------------------------------%
 %
@@ -4030,17 +4029,26 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 
 \subsection{Afterward}
 
-Since the initial version of poppr, this manual has gone through many revisions
-and with the ever expanding function repertoire, updating this manual to contain
-all of the functions for analysis would have rendered it unwieldy. As many of
-the analysis functions are unrelated, we felt that it was better to allow the
-user to explore the options available through the use of the R documentation
-pages. It was fun writing the manual, but all things have their limits, and
-asking users to digest a $>80$ page manual was ridiculous. In the future, we
-will be writing a book on resources for population genetic analyses in R.
+Writing this manual to \poppr{}has been fun, but I have realized that it is not
+always in the user's best intrest to peruse a 80+ page manual in order to figure
+out how to run analysis of the index of association. At >22,000 words, this
+manual was less of a manual and more of a novella. 
 
+As of spring 2014, Drs. Niklaus J. Gr\"unwald, Sydney E. Everhart, and I have 
+co-authored a primer on using R for population genetic analysis. It is located
+\href{http://grunwaldlab.cgrb.oregonstate.edu/popgen}{here} and the source code
+can be found \href{https://github.com/grunwaldlab/Population_Genetics_in_R}{on
+our github site}. This primer allows me to dispense of all the details regarding
+data analysis and thus, this primer is more focused on getting your data into 
+\poppr{}and efficiently manipulating it. I hope you have had as much fun reading
+this as I have had writing it. As always, if you have any questions, feel free
+to send a message to the \poppr{}forum at
+\url{http://groups.google.com/group/poppr}
+
+\noindent
 Cheers,\\
-Zhian N. Kamvar
+Zhian N. Kamvar\\
+May 21, 2014
 
 \subsection{General hierarchy method use}
 \label{appendix:hier:method}
