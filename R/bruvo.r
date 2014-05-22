@@ -84,7 +84,7 @@
 #' separate distinct alleles at each locus, so you end up with genotypes that
 #' appear to have a lower ploidy level than the organism.
 #'
-#' To help deal with these situatons, Bruvo has suggested three methods for dealing
+#' To help deal with these situations, Bruvo has suggested three methods for dealing
 #' with these differences in ploidy levels:
 #' \itemize{ \item Infinite Model - The simplest way to deal with it is to count
 #' all missing alleles as infinitely large so that the distance between it and 
@@ -115,7 +115,7 @@
 #' Bruvo's distance, whereas the genome loss model would require \deqn{\left({4
 #' \choose 2}\right) = 10}{choose(4+2-1, 2) == 10} calculations.
 #' 
-#' To reduce the number of calcuations and assumptions otherwise, Bruvo's distance
+#' To reduce the number of calculations and assumptions otherwise, Bruvo's distance
 #' will be calculated using the largest observed ploidy. This means that when
 #' comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
 #'
