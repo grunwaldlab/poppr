@@ -1,0 +1,354 @@
+\documentclass[letterpaper]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0, 0, 0}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.502,0,0.502}{\textbf{#1}}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.651,0.522,0}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{1,0.502,0}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{1,0,0.502}{\textbf{#1}}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.733,0.475,0.467}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.502,0.502,0.753}{\textbf{#1}}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0.502,0.753}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0,0.267,0.4}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+%\VignetteIndexEntry{Algorightms and Equations}
+%\VignetteEngine{knitr::knitr}
+\usepackage{graphicx}
+\usepackage[colorlinks = true,
+            urlcolor = blue,
+            citecolor = blue,
+            linkcolor = blue]{hyperref}
+\usepackage{array}
+\usepackage{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[utf8]{inputenc} % for UTF-8/single quotes from sQuote()
+\usepackage{fullpage}
+\usepackage{mathtools}
+\usepackage{makeidx}
+\usepackage{longtable}
+
+% for bold symbols in mathmode
+\usepackage{bm}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\tab}{\hspace*{1em}}
+\newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
+\newcommand{\cmdlink}[2]{
+  \texttt{\hyperref[#1]{#2}}
+}
+\newcommand{\seclink}[2]{
+  \textsc{\hyperref[#1]{#2}}
+}
+
+\newcommand{\poppr}{\textit{poppr}}
+\newcommand{\Poppr}{\textit{Poppr}}
+\newcommand{\adegenet}{\textit{adegenet}}
+\newcommand{\Adegenet}{\textit{Adegenet}}
+\newcommand{\tline}{
+  \noindent
+  \rule{\textwidth}{1pt}
+  \par
+}
+\newcommand{\bline}{
+  \noindent
+  \rule{\textwidth}{1pt}
+  \kern1pt
+}
+
+\newcommand{\jala}{
+  \includegraphics[height = 5mm, keepaspectratio=true]{jalapeno-poppers}
+}
+
+\newcommand{\revjala}{
+  \scalebox{-1}[1]{\jala{}}
+}
+
+\title{Algorithms and equations utilized in poppr version 1.1.0.99}
+\author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
+Department of Botany and Plant Pathology, Oregon State University, Corvallis,
+OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
+Corvallis, OR}}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+
+
+
+\begin{document}
+% Set the width of figures.
+\setkeys{Gin}{width=0.5\textwidth}
+
+
+
+\maketitle
+
+\begin{abstract}
+This vignette is focused on simply explaining the different algorithms utilized
+in calculations such as the index of association and different distance measures.
+Many of these are previously described in other papers and it would be prudent
+to cite them properly if they are used.
+\end{abstract}
+
+\begin{figure}[b]   
+  \centering
+  \label{logo}   
+  \includegraphics{popprlogo} 
+\end{figure} 
+
+\newpage 
+\begingroup
+  \hypersetup{linkcolor=black} 
+  \tableofcontents 
+\endgroup 
+
+\section{The Index of Association}
+\label{indexassoc}
+
+The index of association was originally developed by A.H.D. Brown analyzing
+population structure of wheat \cite{Brown:1980}. It has been widely used as a
+tool to detect clonal reproduction within populations \cite{Smith:1993}.
+Populations whose members are undergoing sexual reproduction, whether it be
+selfing or out-crossing, will produce gametes via meiosis, and thus have a
+chance to shuffle alleles in the next generation. Populations whose members are
+undergoing clonal reproduction, however, generally do so via mitosis.
+
+This means that the most likely mechanism for a change in genotype is via
+mutation. The rate of mutation varies from species to species, but it is rarely
+sufficiently high to approximate a random shuffling of alleles. The index of
+association is a calculation based on the ratio of the variance of the raw
+number of differences between individuals and the sum of those variances over
+each locus \cite{Smith:1993}. It can also be thought of as the observed variance
+over the expected variance. If both variances are equal, then the index is zero
+after subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
+\begin{equation}
+\label{eq:I_A}
+I_A = \frac{V_O}{V_E}-1
+\end{equation}
+Any sort of marker can be used for this analysis as it only counts differences
+between pairs of samples. This can be thought of as a distance whose maximum is
+equal to the number of loci multiplied by the ploidy of the sample. This can be
+calculated using Kronecker's delta, or, in the case of \poppr{}, absolute genetic
+distance. 
+% <<echo=FALSE>>=
+% df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
+%                       locus2=c("201/201", "202/203", "203/204"), 
+%                       locus3=c("301/302", "301/303", "304/305")))
+% df
+% @
+% Now, consider the first locus represented in the genind object:
+% <<echo=FALSE>>=
+% dfg <- df2genind(df, sep="/")
+% dfg@tab[, 1:3]
+% @
+Remember that in \poppr{}, genetic data is stored in a table where the rows
+represent samples and the columns represent potential allelic states grouped by
+locus. Notice also that the sum of the rows all equal one. \Poppr{} uses this to
+calculate distances by simply taking the sum of the absolute values of the
+differences between rows.
+
+The calculation for the distance between two individuals at a single locus with
+$a$ allelic states and a ploidy of $k$ is as follows\footnote{Individuals with
+Presence / Absence data will have the $k/2$ term dropped.}:
+\begin{equation}
+\label{eq:ia_d}
+d = \displaystyle \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid
+\end{equation}
+% <<>>=
+% abs(dfg@tab[1, 1:3] - dfg@tab[2, 1:3])
+% abs(dfg@tab[1, 1:3] - dfg@tab[3, 1:3])
+% abs(dfg@tab[2, 1:3] - dfg@tab[3, 1:3])
+% @
+As you can see, these values of $d$ at locus one add up to 2, 2, and 1, respectively.
+
+To find the total number of differences between two individuals over all loci,
+you just take $d$ over $m$ loci, a value we'll call $D$:
+
+\begin{equation}
+\label{eq:ia_D}
+D = \displaystyle \sum_{i=1}^{m} d_i
+\end{equation}
+
+These values are calculated over all possible combinations of individuals in the
+data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{}m$
+values of $d$ and ${n \choose 2}$ values of $D$. Calculating the observed
+variances is fairly straightforward (modified from Agapow and Burt, 2001)
+\cite{Agapow:2001}:
+
+\begin{equation}
+\label{eq:V_O}
+V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n \choose 2}}
+\end{equation}
+
+Calculating the expected variance is the sum of each of the variances of the
+individual loci. The calculation at a single locus, $j$ is the same as the
+previous equation, substituting values of $D$ for $d$ \cite{Agapow:2001}:
+
+\begin{equation}
+\label{eq:var_j}
+var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n \choose 2}}
+\end{equation}
+
+The expected variance is then the sum of all the variances over all $m$ loci
+\cite{Agapow:2001}:
+
+\begin{equation}
+\label{eq:V_E}
+V_E = \displaystyle \sum_{j=1}^{m} var_j
+\end{equation}
+
+Now you can plug the sums of equations (\ref{eq:V_O}) and (\ref{eq:V_E}) into
+equation (\ref{eq:I_A}) to get the index of association. Of course, Agapow and
+Burt showed that this index increases steadily with the number of loci, so they
+came up with an approximation that is widely used, $\bar r_d$
+\cite{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}.
+The equation is as follows, utilizing equations (\ref{eq:V_O}),
+(\ref{eq:var_j}), and (\ref{eq:V_E}) \cite{Agapow:2001}:
+
+\begin{equation}
+\label{eq:r_d}
+\bar{r_d} = \frac{V_O - V_E}
+{2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bruvo's distance}
+\label{bruvo}
+
+Bruvo's distance between two individuals calculates the minimum
+distance across all combinations of possible pairs of alleles at a single locus
+and then averaging that distance across all loci \cite{Bruvo:2004}. The distance
+between each pair of alleles is calculated as \cite{Bruvo:2004}:
+
+\begin{equation}
+\label{eq:m_x}
+m_x = 2^{-\mid x \mid}
+\end{equation}
+
+\begin{equation}
+\label{eq:d_a}
+d_a = 1 - m_x
+\end{equation}
+
+Where $x$ is the number of steps between each allele. So, let's say we were
+comparing two haploid $(k = 1)$ individuals with alleles 228 and 244 at a locus
+that had a tetranucleotide repeat pattern (CATG$)^n$. The number of steps for
+each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The
+number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance
+at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For
+samples with higher ploidy ($k$), there would be $k$ such distances of which we
+would need to take the sum \cite{Bruvo:2004}.
+
+\begin{equation}
+\label{eq:s_i}
+s_i = \displaystyle \sum_{a=1}^{k} d_a
+\end{equation}
+
+Unfortunately, it's not as simple as that since we do not assume to know phase.
+Because of this, we need to take all possible combinations of alleles into
+account. This means that we will have $k^2$ values of $d_a$, when we only want
+$k$. How do we know which $k$ distances we want? We will have to invoke
+parsimony for this and attempt to take the minimum sum of the alleles, of which
+there are $k!$ possibilities \cite{Bruvo:2004}:
+
+\begin{equation}
+\label{eq:d_l}
+d_l = \frac{\left(\displaystyle \min_{i \dotsc k!} s_i\right)}{k}
+\end{equation}
+
+Finally, after all of this, we can get the average distance over all loci
+\cite{Bruvo:2004}.
+
+\begin{equation}
+\label{eq:D}
+D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
+\end{equation}
+
+This is calculated over all possible combinations of individuals and results in
+a lower triangle distance matrix over all individuals.
+
+\subsection{Special Cases of Bruvo's distance}
+\label{appendix:algorithm:bruvospecial}
+As shown in the above section, ploidy is irrelevant with respect to
+calculation of Bruvo's distance. However, since it makes a comparison between
+all alleles at a locus, it only makes sense that the two loci need to have the
+same ploidy level. Unfortunately for polyploids, it's often difficult to fully
+separate distinct alleles at each locus, so you end up with genotypes that
+appear to have a lower ploidy level than the organism \cite{Bruvo:2004}.
+
+To help deal with these situatons, Bruvo has suggested three methods for dealing
+with these differences in ploidy levels \cite{Bruvo:2004}:
+\begin{itemize}
+  \item{Infinite Model -} The simplest way to deal with it is to count all
+  missing alleles as infinitely large so that the distance between it and
+  anything else is 1. Aside from this being computationally simple, it will tend
+  to inflate distances between individuals.
+  \item{Genome Addition Model -} If it is suspected that the organism has gone
+  through a recent genome expansion, the missing alleles will be replace with
+  all possible combinations of the observed alleles in the shorter genotype. For
+  example, if there is a genotype of [69, 70, 0, 0] where 0 is a missing allele,
+  the possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69,
+  70, 70, 70]. The resulting distances are then averaged over the number of
+  comparisons.
+  \item{Genome Loss Model -} This is similar to the genome addition model,
+  except that it assumes that there was a recent genome reduction event and uses
+  the observed values in the full genotype to fill the missing values in the
+  short genotype. As with the Genome Addition Model, the resulting distances are
+  averaged over the number of comparisons.
+  \item{Combination Model -} Combine and average the genome addition and loss
+  models.
+\end{itemize}
+
+As mentioned above, the infinite model is biased, but it is not nearly as
+computationally intensive as either of the other models. The reason for this is
+that both of the addition and loss models requires replacement of alleles and
+recalculation of Bruvo's distance. The number of replacements required is equal
+to the multiset coefficient: $\left({n \choose k}\right) == {(n-k+1) \choose k}$
+where $n$ is the number of potential replacements and $k$ is the number of
+alleles to be replaced. So, for the example given above, The genome addition
+model would require $\left({2 \choose 2}\right) = 3$ calculations of Bruvo's
+distance, whereas the genome loss model would require $\left({4 \choose
+2}\right) = 10$ calculations.
+
+To reduce the number of calculations and assumptions otherwise, Bruvo's distance
+will be calculated using the largest observed ploidy. This means that when
+comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
+
+\bibliographystyle{plain}
+\bibliography{poppr_man}
+\end{document}
