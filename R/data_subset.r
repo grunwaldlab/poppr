@@ -42,94 +42,105 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-#
-# The clone correct function will need a parameter for the lowest population
-# level in order to keep at least one individual represented in each population.
-# It takes a popper object and will return a poppr object.
-#
-#' Remove potential bias caused by cloned genotypes in genind object.
+#' Remove potential bias caused by cloned genotypes in genind or genclone 
+#' object.
 #' 
-#' This function removes any duplicated multi locus genotypes from any specified
+#' This function removes any duplicated multilocus genotypes from any specified 
 #' population hierarchy.
-#'
+#' 
 #' @param pop a \code{\link{genind}} object
-#'
-#' @param hier a \code{numeric or character list}. This is the list of vectors
-#' within a data frame (specified in \code{dfname}) in the 'other' slot of the
-#' \code{\link{genind}} object. The list should indicate the population
-#' hierarchy to be used for clone correction.
-#'
-#' @param dfname a \code{character string}. This is the name of the data frame
-#' or list containing the vectors of the population hierarchy within the
-#' \code{other} slot of the \code{\link{genind}} object. 
-#'
-#' @param combine \code{logical}. When set to TRUE, the heirarchy will be
-#' combined to create a new population for the genind object.
-#'
-#' @param keep \code{integer}. When \code{combine} is set to \code{FALSE}, you
-#' can use this flag to choose the levels of your population hierarchy. For
-#' example: if your clone correction hierarchy is set to "Pop", "Subpop", and 
-#' "Year", and you want to analyze your populations with respect to year, you 
-#' can set \code{keep = c(1,3)}.
-#' 
-#' @return a clone corrected \code{\link{genind}} object. 
-#' 
-#' @note 
-#' This function will clone correct to the population level indicated in
-#' the \code{pop} slot of the \code{\link{genind}} object if there is no data
-#' frame specified in dfname. If there is no population structure and there is
-#' no specified data frame, it will clone correct the entire
-#' \code{\link{genind}} object. 
-#' 
-#'
+#'   
+#' @param hier a hierarchical formula or numeric vector. In a 
+#'   \code{\linkS4class{genclone}} object, this will define the columns of the 
+#'   data frame in the hierarchy slot to use. In a \code{\linkS4class{genind}} 
+#'   object, the data frame must exist within the \code{\link[adegenet]{other}} 
+#'   slot and the user must define the name of the data frame with the parameter
+#'   \code{dfname}
+#'   
+#' @param dfname a \code{character string}. \strong{Only for genind objects} 
+#'   This is the name of the data frame or list containing the vectors of the 
+#'   population hierarchy within the \code{other} slot of the 
+#'   \code{\link{genind}} object.
+#'   
+#' @param combine \code{logical}. When set to TRUE, the heirarchy will be 
+#'   combined to create a new population for the clone corrected genind or 
+#'   genclone object.
+#'   
+#' @param keep \code{integer}. When \code{combine} is set to \code{FALSE}, you 
+#'   can use this flag to choose the levels of your population hierarchy. For 
+#'   example: if your clone correction hierarchy is set to "Pop", "Subpop", and 
+#'   "Year", and you want to analyze your populations with respect to year, you 
+#'   can set \code{keep = c(1,3)}.
+#'   
+#' @return a clone corrected \code{\linkS4class{genclone}} or
+#'   \code{\linkS4class{genind}} object.
+#'   
+#' @details This function will clone correct based on the hierarchical level 
+#'   provided. To clone correct indiscriminantly of hierarchical structure, set 
+#'   \code{hier = NA}. It is recommended to use this function with 
+#'   \code{\linkS4class{genclone}} objects as they have a specific slot for 
+#'   hierarchies. If you wish to use this function on a 
+#'   \code{\linkS4class{genind}} object, see below.
+#'   
+#' @note \subsection{For genind objects}{ \code{\linkS4class{genind}} objects do
+#'   not have a specific slot for hierarchies and thus require the user to
+#'   specfy the hierarchical levels in a data frame within the
+#'   \code{\link[adegenet]{other}} slot. If there is no data frame indicating
+#'   population hierarchy, then clone correction will occur on the population
+#'   factor that is set in the \code{\link[adegenet]{pop}} slot.}
+#'   
+#'   
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
 #' # LOAD A. euteiches data set
 #' data(Aeut)
 #' 
+#' # Redefine it as a genclone object
+#' Aeut <- as.genclone(Aeut, hier = other(Aeut)$population_hierarchy[-1])
+#' 
 #' # Check the number of multilocus genotypes
 #' mlg(Aeut)
 #' Aeut$pop.names
 #' 
 #' # Clone correct at the population level.
-#' Aeut.pop <- clonecorrect(Aeut, hier="Pop")
+#' Aeut.pop <- clonecorrect(Aeut, hier= ~Pop)
 #' mlg(Aeut.pop)
 #' Aeut.pop$pop.names
 #' 
 #' \dontrun{
 #' # Clone correct at the subpopulation level with respect to population and
 #' # combine.
-#' Aeut.subpop <- clonecorrect(Aeut, hier=c("Pop", "Subpop"), combine=TRUE)
+#' Aeut.subpop <- clonecorrect(Aeut, hier=~Pop/Subpop, combine=TRUE)
 #' mlg(Aeut.subpop)
 #' Aeut.subpop$pop.names
 #' 
 #' # Do the same, but set to the population level.
-#' Aeut.subpop2 <- clonecorrect(Aeut, hier=c("Pop", "Subpop"), keep=1)
+#' Aeut.subpop2 <- clonecorrect(Aeut, hier=~Pop/Subpop, keep=1)
 #' mlg(Aeut.subpop2)
 #' Aeut.subpop2$pop.names
 #' 
 #' # LOAD H3N2 dataset
 #' data(H3N2)
-#'
+#' 
 #' # Extract only the individuals located in China
-#' country <- clonecorrect(H3N2, hier=c("country"), dfname="x")
-#'
+#' country <- clonecorrect(H3N2, hier= ~country, dfname="x")
+#' 
 #' # How many isolates did we have from China before clone correction?
 #' length(which(other(H3N2)$x$country=="China")) # 155
-#'
+#' 
 #' # How many unique isolates from China after clone correction?
 #' length(which(other(country)$x$country=="China")) # 79
 #' 
 #' # Something a little more complicated. (This could take a few minutes on
 #' # slower computers)
-#'
+#' 
 #' # setting the hierarchy to be Country > Year > Month  
-#' c.y.m <- clonecorrect(H3N2, hier=c("year","month","country"), dfname="x")
-#'
+#' c.y.m <- clonecorrect(H3N2, hier= ~year/month/country, dfname="x")
+#' 
 #' # How many isolates in the original data set?
 #' length(other(H3N2)$x$country) # 1903
-#'
+#' 
 #' # How many after we clone corrected for country, year, and month?
 #' length(other(c.y.m)$x$country) # 1190
 #' }
@@ -227,13 +238,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 
 
 #==============================================================================#
-# subset a population with a combination of sublists and blacklists. Either one
-# is optional, and the default is to do nothing. The structure will allow the
-# user to select a range of populations and exclude a small number of them
-# without having to use the total. 
-# eg pop <- popsub(gid, sublist=1:50, blacklist=c(17, 33))
-# 
-#' Subset a \code{\link{genind}} object by population
+#' Subset a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object by population
 #' 
 #' Create a new dataset with specified populations or exclude specified
 #' populations from the dataset.
