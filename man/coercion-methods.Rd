@@ -37,6 +37,7 @@ Aeut.gc
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{splithierarchy}}
+\code{\link{splithierarchy}}, \code{\linkS4class{genclone}},
+  \code{\link{read.genalex}}
 }
 

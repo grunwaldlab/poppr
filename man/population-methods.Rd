@@ -27,7 +27,7 @@ genclone object.
 data(Aeut)
 Aeut.gc <- new('genclone', Aeut, other(Aeut)$population_hierarchy)
 
-# Notice that there are two hierarchies, Pop and Subpop
+# Notice that there are two hierarchical levels, Pop and Subpop
 Aeut.gc
 
 # Currently set on just Pop
