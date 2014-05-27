@@ -42,28 +42,29 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-#' Shuffle individuals in a \code{\linkS4{genclone}} or \code{\linkS4{genind}}
-#' object independently over each locus.
+#' Shuffle individuals in a \code{\linkS4class{genclone}} or
+#' \code{\linkS4class{genind}} object independently over each locus.
 #' 
-#' @param pop a \code{\linkS4{genclone}} or \code{\linkS4{genind}} object
+#' @param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'   object
 #'   
 #' @param method an integer between 1 and 4. See details below.
 #'   
-#' @return a \code{\linkS4{genclone}} or \code{\linkS4{genind}} object shuffled
-#'   by a specified method
+#' @return a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object
+#'   shuffled by a specified method
 #'   
 #' @details This function will shuffle each locus in the data set independently 
 #'   of one another, rendering them essentially unlinked. The following methods 
-#'   are available to shuffle your data: \enumerate{ \item \strong{Permute
-#'   Alleles} This will redistribute all alleles in the sample throughout the
-#'   locus. Missing data is fixed in place. This maintains allelic structure,
-#'   but heterozygosity is variable. \item \strong{Parametric Bootstrap} This
+#'   are available to shuffle your data: \enumerate{ \item \strong{Permute 
+#'   Alleles} This will redistribute all alleles in the sample throughout the 
+#'   locus. Missing data is fixed in place. This maintains allelic structure, 
+#'   but heterozygosity is variable. \item \strong{Parametric Bootstrap} This 
 #'   will redistribute available alleles within the locus based on their allelic
 #'   frequencies. This means that both the allelic state and heterozygosity will
-#'   vary. The resulting data set will not have missing data. \item
-#'   \strong{Non-Parametric Bootstrap} This will shuffle the allelic state for
-#'   each individual. Missing data is fixed in place. \item \strong{Multilocus
-#'   Style Permutation} This will shuffle the genotypes at each locus,
+#'   vary. The resulting data set will not have missing data. \item 
+#'   \strong{Non-Parametric Bootstrap} This will shuffle the allelic state for 
+#'   each individual. Missing data is fixed in place. \item \strong{Multilocus 
+#'   Style Permutation} This will shuffle the genotypes at each locus, 
 #'   maintaining the heterozygosity and allelic structure. }
 #'   
 #'   
