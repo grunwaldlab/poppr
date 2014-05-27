@@ -508,7 +508,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 #'   Missing data is accounted for on a per-population level.\cr
 #'   Ploidy is accounted for on a per-individual level.
 #'   
-#'   \strong{For type = 'missing'}\cr
+#'   \subsection{For type = 'missing'}{
 #'   This data is potentially useful for identifying areas of systematic missing
 #'   data. There are a few caveats to be aware of. \itemize{ \item
 #'   \strong{Regarding counts of missing data}: Each count represents the number
@@ -517,12 +517,12 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 #'   locus. \item \strong{Regarding percentage missing data}: This percentage is
 #'   \strong{relative to the population and locus}, not ot the enitre data set.
 #'   The last colum, "mean" represents the average percent of the population
-#'   with missing data per locus. } 
-#'   \strong{For type = 'ploidy'}\cr
+#'   with missing data per locus. }} 
+#'   \subsection{For type = 'ploidy'}{
 #'   This option is useful for data that has been imported with mixed ploidies.
 #'   It will summarize the relative levels of ploidy per individual per locus.
 #'   This is simply based off of observed alleles and does not provide any
-#'   further estimates.
+#'   further estimates.}
 #'   
 #' @export
 #' @keywords missing ploidy
@@ -723,42 +723,6 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 
 
 #==============================================================================#
-#Function to plot the minimum spanning network obtained from poppr.msn or 
-#bruvo.msn. This is in development. At the moment, it's purpose is to plot all 
-#of the individual names that are assigned to a node. 
-#
-# usage: plot_poppr_msn(x, poppr_msn)
-#
-# x: a genind object
-#
-# poppr_msn: the output from a poppr.msn or bruvo.msn function
-#
-# gadj: the grey adjustment factor
-#
-# glim: grey limit
-# 
-# gweight: -1 for greater distances, 1 for shorter distances
-# 
-# inds: a character vector containing names of individuals you want to label on
-# the graph. set to "none" or any character that doesn't exist in your data for
-# no labels
-# 
-# quantiles: TRUE if you want the grey scale to be plotted using the raw data. 
-# FALSE if you want the range from minimum to maximum plotted.
-# 
-# nodelab: when there are no inds labeled, this will label nodes with the number
-# of individuals greater than or equal to this number.
-# 
-# cutoff: remove edges greater than or equal to the cutoff value
-# 
-# Example:
-#
-# library(poppr)
-# source('poppr_plot_msn.r')
-# data(partial_clone)
-# pc.msn <- bruvo.msn(partial_clone, replen = rep(1, 10)) 
-# plot_poppr_msn(partial_clone, pc.msn, vertex.label.color = "firebrick",
-# vertex.label.font = 2)
 #' Plot minimum spanning networks produced in poppr.
 #' 
 #' This function allows you to take the output of poppr.msn and bruvo.msn and 
@@ -809,9 +773,9 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   provide a scale bar and it did not provide the user a simple way of 
 #'   manipulating the layout or labels. This function allows the user to 
 #'   manipulate many facets of graph creation, making the creation of minimum 
-#'   spanning networks ever so slightly more user friendly. Note that this
-#'   function will only plot individual names, not MLG names since the naming
-#'   convention for those are arbitrary. This will also not give the user the
+#'   spanning networks ever so slightly more user friendly. Note that this 
+#'   function will only plot individual names, not MLG names since the naming 
+#'   convention for those are arbitrary. This will also not give the user the 
 #'   option to remove the shading or widths of the edges as they are informative
 #'   to the distance.
 #'   
@@ -819,21 +783,21 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   The source data must also have the same population structure as the graph. 
 #'   Every other parameter has a default setting.
 #'   
-#'   Parameter details: \itemize{ \item \code{inds} This will take in the name 
-#'   of a query individual in your data set and will use that to query any other
-#'   individuals that share multilocus genotypes and label their node on the 
-#'   graph. The default is to label all the nodes, but you can set it to a name 
-#'   that doesn't exist to label none of the nodes. \item \code{nodelab} If a 
-#'   node is not labeled by individual, this will label the size of the nodes 
-#'   greater than or equal to this value. If you don't want to label the size of
-#'   the nodes, simply set this to a very high number. \item \code{cutoff} This 
-#'   is useful for when you want to investigate groups of multilocus genotypes 
-#'   separated by a specific distance or if you have two distinct populations 
-#'   and you want to physically separate them in your network. \item 
-#'   \code{beforecut} This is an indicator useful if you want to maintain the 
-#'   same position of the nodes before and after removing edges with the
-#'   \code{cutoff} argument. This works best if you set a seed before you run
-#'   the function.}
+#'   \subsection{Parameter details}{ \itemize{ \item \code{inds} This will take
+#'   in the name of a query individual in your data set and will use that to
+#'   query any other individuals that share multilocus genotypes and label their
+#'   node on the graph. The default is to label all the nodes, but you can set
+#'   it to a name that doesn't exist to label none of the nodes. \item
+#'   \code{nodelab} If a node is not labeled by individual, this will label the
+#'   size of the nodes greater than or equal to this value. If you don't want to
+#'   label the size of the nodes, simply set this to a very high number. \item
+#'   \code{cutoff} This is useful for when you want to investigate groups of
+#'   multilocus genotypes separated by a specific distance or if you have two
+#'   distinct populations and you want to physically separate them in your
+#'   network. \item \code{beforecut} This is an indicator useful if you want to
+#'   maintain the same position of the nodes before and after removing edges
+#'   with the \code{cutoff} argument. This works best if you set a seed before
+#'   you run the function.}}
 #' 
 #' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 #' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}

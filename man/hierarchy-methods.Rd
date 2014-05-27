@@ -91,7 +91,7 @@ essentially do the same thing except that the assignment method (the one with
 the "\code{<-}") will modify the object in place whereas the non-assignment
 method will not modify the original object. Due to convention, everything
 right of the assignment is termed \code{value}. To avoid confusion, here is a
-guide: \enumerate{ \item \strong{sethierarchy()} This will be a
+guide: \itemize{ \item \strong{sethierarchy()} This will be a
 \code{\link{data.frame}} that defines the hierarchy for each individual in
 the rows. \item \strong{namehierarchy()} This will be either a
 \code{\link{vector}} or a \code{\link{formula}} that will define the names.

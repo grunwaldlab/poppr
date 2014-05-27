@@ -59,7 +59,7 @@ genclone object
 Missing data is accounted for on a per-population level.\cr
   Ploidy is accounted for on a per-individual level.
 
-  \strong{For type = 'missing'}\cr
+  \subsection{For type = 'missing'}{
   This data is potentially useful for identifying areas of systematic missing
   data. There are a few caveats to be aware of. \itemize{ \item
   \strong{Regarding counts of missing data}: Each count represents the number
@@ -68,12 +68,12 @@ Missing data is accounted for on a per-population level.\cr
   locus. \item \strong{Regarding percentage missing data}: This percentage is
   \strong{relative to the population and locus}, not ot the enitre data set.
   The last colum, "mean" represents the average percent of the population
-  with missing data per locus. }
-  \strong{For type = 'ploidy'}\cr
+  with missing data per locus. }}
+  \subsection{For type = 'ploidy'}{
   This option is useful for data that has been imported with mixed ploidies.
   It will summarize the relative levels of ploidy per individual per locus.
   This is simply based off of observed alleles and does not provide any
-  further estimates.
+  further estimates.}
 }
 \examples{
 data(nancycats)

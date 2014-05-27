@@ -79,21 +79,21 @@ The previous incarnation of msn plotting in poppr simply plotted the
   The source data must also have the same population structure as the graph.
   Every other parameter has a default setting.
 
-  Parameter details: \itemize{ \item \code{inds} This will take in the name
-  of a query individual in your data set and will use that to query any other
-  individuals that share multilocus genotypes and label their node on the
-  graph. The default is to label all the nodes, but you can set it to a name
-  that doesn't exist to label none of the nodes. \item \code{nodelab} If a
-  node is not labeled by individual, this will label the size of the nodes
-  greater than or equal to this value. If you don't want to label the size of
-  the nodes, simply set this to a very high number. \item \code{cutoff} This
-  is useful for when you want to investigate groups of multilocus genotypes
-  separated by a specific distance or if you have two distinct populations
-  and you want to physically separate them in your network. \item
-  \code{beforecut} This is an indicator useful if you want to maintain the
-  same position of the nodes before and after removing edges with the
-  \code{cutoff} argument. This works best if you set a seed before you run
-  the function.}
+  \subsection{Parameter details}{ \itemize{ \item \code{inds} This will take
+  in the name of a query individual in your data set and will use that to
+  query any other individuals that share multilocus genotypes and label their
+  node on the graph. The default is to label all the nodes, but you can set
+  it to a name that doesn't exist to label none of the nodes. \item
+  \code{nodelab} If a node is not labeled by individual, this will label the
+  size of the nodes greater than or equal to this value. If you don't want to
+  label the size of the nodes, simply set this to a very high number. \item
+  \code{cutoff} This is useful for when you want to investigate groups of
+  multilocus genotypes separated by a specific distance or if you have two
+  distinct populations and you want to physically separate them in your
+  network. \item \code{beforecut} This is an indicator useful if you want to
+  maintain the same position of the nodes before and after removing edges
+  with the \code{cutoff} argument. This works best if you set a seed before
+  you run the function.}}
 }
 \examples{
 # Using a data set of the Aphanomyces eutieches root rot pathogen.
