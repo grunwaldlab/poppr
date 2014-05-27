@@ -151,6 +151,7 @@ diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
 #'   that \code{\link{diss.dist}} is optimized for a larger number of
 #'   individuals (n > 125) at the cost of required memory.
 #' 
+#' @seealso \code{\link{aboot}} \code{\link{diss.dist}} \code{\link{poppr.amova}}
 #' @rdname genetic_distance
 #' @keywords nei rogers rodgers reynolds coancestry edwards angular provesti
 #' @export
@@ -321,7 +322,7 @@ provesti.dist <- function(x){
 
 
 #==============================================================================#
-#' Calculate a dendrogram with bootstrap support using any distance applicable
+#' Calculate a dendrogram with bootstrap support using any distance applicable 
 #' to genind or genclone objects.
 #' 
 #' @param x a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.
@@ -332,41 +333,50 @@ provesti.dist <- function(x){
 #' @param distance a character or function defining the distance to be applied 
 #'   to x. Defaults to \code{\link{nei.dist}}.
 #'   
-#' @param sample An integer representing the number of bootstrap replicates
+#' @param sample An integer representing the number of bootstrap replicates 
 #'   Default is 100.
 #'   
 #' @param cutoff An integer from 0 to 100 setting the cutoff value to return the
 #'   bootstrap values on the nodes. Default is 0.
 #'   
-#' @param showtree If \code{TRUE} (Default), a dendrogram will be plotted. If
+#' @param showtree If \code{TRUE} (Default), a dendrogram will be plotted. If 
 #'   \code{FALSE}, nothing will be plotted.
 #'   
-#' @param missing any method to be used by \code{\link{missingno}}: "mean"
+#' @param missing any method to be used by \code{\link{missingno}}: "mean" 
 #'   (default), "zero", "loci", "genotype", or "ignore".
-#'
+#'   
 #' @param quiet if \code{FALSE} (Default), a progress bar will be printed to 
-#' screen. 
+#'   screen.
 #'   
 #' @param ... any parameters to be passed off to the distance method.
 #'   
 #' @return an object of class \code{\link[ape]{phylo}}.
 #'   
-#' @details This function utilizes an internal class called
-#' \code{\linkS4class{bootgen}} that allows bootstrapping of objects that
-#' inherit the genind class. This is necessary due to the fact that columns in
-#' the genind matrix are defined as alleles and are thus interrelated. This
-#' function will specifically bootstrap loci so that results are biologically
-#' relevant. With this function, the user can also define a custom distance to
-#' be performed on the genind or genclone object.
-#' 
+#' @details This function utilizes an internal class called 
+#'   \code{\linkS4class{bootgen}} that allows bootstrapping of objects that 
+#'   inherit the genind class. This is necessary due to the fact that columns in
+#'   the genind matrix are defined as alleles and are thus interrelated. This 
+#'   function will specifically bootstrap loci so that results are biologically 
+#'   relevant. With this function, the user can also define a custom distance to
+#'   be performed on the genind or genclone object.
+#'   
 #' @note \code{\link{provesti.dist}} and \code{\link{diss.dist}} are exactly the
-#'   same, but \code{\link{diss.dist}} scales better for large numbers of
-#'   individuals (n > 125) at the cost of required memory.
-#' 
-#' @seealso \code{\link{nei.dist}} \code{\link{edwards.dist}}
-#'   \code{\link{rogers.dist}} \code{\link{reynolds.dist}}
-#'   \code{\link{provesti.dist}} \code{\link{diss.dist}}
-#'   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}}
+#'   same, but \code{\link{diss.dist}} scales better for large numbers of 
+#'   individuals (n > 125) at the cost of required memory. \subsection{missing 
+#'   data}{Missing data is not allowed by many of the distances. Thus, one of 
+#'   the first steps of this function is to treat missing data by setting it to 
+#'   the average allele frequency in the data set. If you are using a distance 
+#'   that can handle missing data (Provesti's distance), you can set 
+#'   \code{missing = "ignore"} to allow the distance function to handle any 
+#'   missing data. See \code{\link{missingno}} for details on missing
+#'   data.}\subsection{Bruvo's Distance}{While calculation of Bruvo's distance
+#'   is possible with this function, it is optimized in the function
+#'   \code{\link{bruvo.boot}}.}
+#'   
+#' @seealso \code{\link{nei.dist}} \code{\link{edwards.dist}} 
+#'   \code{\link{rogers.dist}} \code{\link{reynolds.dist}} 
+#'   \code{\link{provesti.dist}} \code{\link{diss.dist}} 
+#'   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}} 
 #'   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
 #'   
 #' @export

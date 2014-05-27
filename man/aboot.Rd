@@ -30,7 +30,7 @@ aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
   (default), "zero", "loci", "genotype", or "ignore".}
 
 \item{quiet}{if \code{FALSE} (Default), a progress bar will be printed to
-screen.}
+  screen.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }
@@ -43,17 +43,26 @@ to genind or genclone objects.
 }
 \details{
 This function utilizes an internal class called
-\code{\linkS4class{bootgen}} that allows bootstrapping of objects that
-inherit the genind class. This is necessary due to the fact that columns in
-the genind matrix are defined as alleles and are thus interrelated. This
-function will specifically bootstrap loci so that results are biologically
-relevant. With this function, the user can also define a custom distance to
-be performed on the genind or genclone object.
+  \code{\linkS4class{bootgen}} that allows bootstrapping of objects that
+  inherit the genind class. This is necessary due to the fact that columns in
+  the genind matrix are defined as alleles and are thus interrelated. This
+  function will specifically bootstrap loci so that results are biologically
+  relevant. With this function, the user can also define a custom distance to
+  be performed on the genind or genclone object.
 }
 \note{
 \code{\link{provesti.dist}} and \code{\link{diss.dist}} are exactly the
   same, but \code{\link{diss.dist}} scales better for large numbers of
-  individuals (n > 125) at the cost of required memory.
+  individuals (n > 125) at the cost of required memory. \subsection{missing
+  data}{Missing data is not allowed by many of the distances. Thus, one of
+  the first steps of this function is to treat missing data by setting it to
+  the average allele frequency in the data set. If you are using a distance
+  that can handle missing data (Provesti's distance), you can set
+  \code{missing = "ignore"} to allow the distance function to handle any
+  missing data. See \code{\link{missingno}} for details on missing
+  data.}\subsection{Bruvo's Distance}{While calculation of Bruvo's distance
+  is possible with this function, it is optimized in the function
+  \code{\link{bruvo.boot}}.}
 }
 \examples{
 data(nancycats)

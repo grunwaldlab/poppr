@@ -54,6 +54,9 @@ rodnan <- rogers.dist(nan9)
 reynan <- reynolds.dist(nan9)
 pronan <- provesti.dist(nan9)
 }
+\seealso{
+\code{\link{aboot}} \code{\link{diss.dist}} \code{\link{poppr.amova}}
+}
 \keyword{angular}
 \keyword{coancestry}
 \keyword{edwards}
