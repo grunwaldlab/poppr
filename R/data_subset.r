@@ -243,7 +243,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 #' Create a new dataset with specified populations or exclude specified
 #' populations from the dataset.
 #' 
-#' @param gid a \code{\link{genind}} object.
+#' @param gid a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
 #' 
 #' @param sublist a \code{vector} of population names or indexes that the user
 #' wishes to keep. Default to "ALL".
@@ -367,48 +367,42 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 }
 
 #==============================================================================#
-# missigno simply applies one of four methods to deal with missing data.
-# default is to remove missing loci. 
-#' How to deal with missing data in a genind object.
-#' 
-#' missingno gives the user four options to deal with missing data.
+#'How to deal with missing data in a genind object.
 #'
-#' @param pop a \code{\link{genind}} object.
+#'missingno gives the user four options to deal with missing data.
 #'
-#' @param type a \code{character} string: can be "zero", "mean", "loci", or "geno"
-#' (see \code{Details} for definitions).]
-#' 
-#' @param cutoff \code{numeric}. A number from 0 to 1 indicating the allowable
-#' rate of missing data in either genotypes or loci. This will be ignored for
-#' \code{type} values of \code{"mean"} or \code{"zero"}.
-#' 
-#' @param quiet if \code{TRUE}, it will print to the screen the action performed.
-#'
-#' @section Details: The default way that functions in \code{poppr} deal with
-#' missing data is to simply ignore it. These methods provide a way to deal with
-#' systematic missing data and to give a wrapper for \code{adegenet}'s \code{
-#' \link{na.replace}} function. ALL OF THESE ARE TO BE USED WITH CAUTION.
-#'
-#' \strong{\code{"loci"}} - removes all loci containing missing data in the entire data
-#' set. 
-#'
-#' \strong{\code{"genotype"}} - removes any genotypes/isolates/individuals with missing data.
-#'
-#' \strong{\code{"mean"}} - replaces all NA's with the mean of the alleles for the entire
-#' data set.
-#'
-#' \strong{\code{"zero"}} or \strong{\code{"0"}} - replaces all NA's with "0". 
-#' Introduces more diversity.
-#'
-#' @return a \code{\link{genind}} object.
-#'
-#' @note
-#' \emph{"wild missingno appeared!"}
-#'
-#' @seealso \code{\link{na.replace}}, \code{\link{poppr}}
-#'
-#' @export
-#' @author Zhian N. Kamvar
+#'@param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'  object.
+#'  
+#'@param type a \code{character} string: can be "ignore", "zero", "mean", 
+#'  "loci", or "geno" (see \code{Details} for definitions).]
+#'  
+#'@param cutoff \code{numeric}. A number from 0 to 1 indicating the allowable 
+#'  rate of missing data in either genotypes or loci. This will be ignored for 
+#'  \code{type} values of \code{"mean"} or \code{"zero"}.
+#'  
+#'@param quiet if \code{TRUE}, it will print to the screen the action performed.
+#'  
+#'@details These methods provide a way to deal with systematic missing data and
+#'  to give a wrapper for \code{adegenet}'s \code{ \link{na.replace}} function.
+#'  ALL OF THESE ARE TO BE USED WITH CAUTION.
+#'  
+#'  \subsection{Treatment types}{ \itemize{ \item{\code{"ignore"} - does not 
+#'  remove or replace missing data.} \item{\code{"loci"} - removes all loci 
+#'  containing missing data in the entire data set. } \item{\code{"genotype"} - 
+#'  removes any genotypes/isolates/individuals with missing data.} 
+#'  \item{\code{"mean"} - replaces all NA's with the mean of the alleles for the
+#'  entire data set.} \item{\code{"zero"} or \code{"0"} - replaces all NA's with
+#'  "0". Introduces more diversity.}}}
+#'@return a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
+#'  
+#'@note \emph{"wild missingno appeared!"}
+#'  
+#'@seealso \code{\link{na.replace}}, \code{\link{poppr}},
+#'  \code{\link{poppr.amova}}, \code{\link{nei.dist}}, \code{\link{aboot}}
+#'  
+#'@export
+#'@author Zhian N. Kamvar
 #' @examples
 #'
 #' data(nancycats)
@@ -715,43 +709,45 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
 #' Remove all non-phylogentically informative loci
 #' 
 #' This function will facilitate in removing phylogenetically uninformative loci
-#' from a \code{\link{genind}} object. The user can specify what is meant by
-#' phylogenetically uninformative with a specification of the cutoff percentage.
-#' Any loci under the cutoff will be removed. For convenience's sake, the
-#' default cutoff is set to 2 individuals.
+#' from a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
+#' The user can specify what is meant by phylogenetically uninformative with a
+#' specification of the cutoff percentage. Any loci under the cutoff will be
+#' removed. For convenience's sake, the default cutoff is set to 2 individuals.
 #' 
-#' @param pop a \code{\link{genind}} object.
-#' 
-#' @param cutoff \code{numeric}. This is a number from 0 to 1 representing the
-#' minimum percentage of differentiating individuals. Defaults is 2 individuals.
-#'
-#' @param quiet \code{logical}. When \code{quiet = TRUE}, messages indicating
-#' the loci removed will be printed to screen. When \code{quiet = FALSE}, 
-#' nothing will be printed to screen.
-#' 
+#' @param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'   object.
+#'   
+#' @param cutoff \code{numeric}. This is a number from 0 to 1 representing the 
+#'   minimum percentage of differentiating individuals. Defaults is 2
+#'   individuals.
+#'   
+#' @param quiet \code{logical}. When \code{quiet = TRUE}, messages indicating 
+#'   the loci removed will be printed to screen. When \code{quiet = FALSE}, 
+#'   nothing will be printed to screen.
+#'   
 #' @return A \code{genind} object with user-defined informative loci.
-#'
-#' @note This will have a few side effects that affect certain analyses. First,
-#' the number of multilocus genotypes might be reduced due to the reduced number
-#' of markers. Second, if you plan on using this data for analysis of the index
-#' of association, be sure to use the standardized version (rbarD) that corrects
-#' for the number of observed loci. 
-#'
+#'   
+#' @note This will have a few side effects that affect certain analyses. First, 
+#'   the number of multilocus genotypes might be reduced due to the reduced
+#'   number of markers. Second, if you plan on using this data for analysis of
+#'   the index of association, be sure to use the standardized version (rbarD)
+#'   that corrects for the number of observed loci.
+#'   
 #' @examples
 #' # Load the data set H3N2
 #' data(H3N2)
 #' pop(H3N2) <- H3N2$other$x$country
 #' Nepal <- popsub(H3N2, "Nepal")
-#'
+#' 
 #' # Using the default 2 individuals.
 #' N.inform <- informloci(Nepal)
-#'
+#' 
 #' # 5 individuals.
 #' N.informfive <- informloci(Nepal, cutoff = 5/nInd(Nepal))
-#'
+#' 
 #' # 10 individuals. Too many. Gives warning.
 #' N.informten <- informloci(Nepal, cutoff = 10/nInd(Nepal))
-#'
+#' 
 #' # Decimate (10%)
 #' N.informdecimated <- informloci(Nepal, cutoff = 0.1)
 #' @export

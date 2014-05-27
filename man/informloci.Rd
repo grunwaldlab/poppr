@@ -6,31 +6,33 @@
 informloci(pop, cutoff = 2/nInd(pop), quiet = FALSE)
 }
 \arguments{
-\item{pop}{a \code{\link{genind}} object.}
+\item{pop}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+  object.}
 
 \item{cutoff}{\code{numeric}. This is a number from 0 to 1 representing the
-minimum percentage of differentiating individuals. Defaults is 2 individuals.}
+  minimum percentage of differentiating individuals. Defaults is 2
+  individuals.}
 
 \item{quiet}{\code{logical}. When \code{quiet = TRUE}, messages indicating
-the loci removed will be printed to screen. When \code{quiet = FALSE},
-nothing will be printed to screen.}
+  the loci removed will be printed to screen. When \code{quiet = FALSE},
+  nothing will be printed to screen.}
 }
 \value{
 A \code{genind} object with user-defined informative loci.
 }
 \description{
 This function will facilitate in removing phylogenetically uninformative loci
-from a \code{\link{genind}} object. The user can specify what is meant by
-phylogenetically uninformative with a specification of the cutoff percentage.
-Any loci under the cutoff will be removed. For convenience's sake, the
-default cutoff is set to 2 individuals.
+from a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
+The user can specify what is meant by phylogenetically uninformative with a
+specification of the cutoff percentage. Any loci under the cutoff will be
+removed. For convenience's sake, the default cutoff is set to 2 individuals.
 }
 \note{
 This will have a few side effects that affect certain analyses. First,
-the number of multilocus genotypes might be reduced due to the reduced number
-of markers. Second, if you plan on using this data for analysis of the index
-of association, be sure to use the standardized version (rbarD) that corrects
-for the number of observed loci.
+  the number of multilocus genotypes might be reduced due to the reduced
+  number of markers. Second, if you plan on using this data for analysis of
+  the index of association, be sure to use the standardized version (rbarD)
+  that corrects for the number of observed loci.
 }
 \examples{
 # Load the data set H3N2
