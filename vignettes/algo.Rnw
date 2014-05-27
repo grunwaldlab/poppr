@@ -265,7 +265,7 @@ The equation is as follows, utilizing equations (\ref{eq:V_O}),
 \begin{equation}
 \label{eq:r_d}
 \bar{r}_d = \frac{V_O - V_E}
-{2\displaystyle \sum_{j=1}^{m\nu}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
+{2\displaystyle \sum_{j=1}^{\nu}\displaystyle \sum_{k \neq j}^{\nu}\sqrt{var_j\cdot{}var_k}}
 \end{equation}
 
 \section{Genetic distances}
@@ -410,7 +410,7 @@ same ploidy level. Unfortunately for polyploids, it's often difficult to fully
 separate distinct alleles at each locus, so you end up with genotypes that
 appear to have a lower ploidy level than the organism \cite{Bruvo:2004}.
 
-To help deal with these situatons, Bruvo has suggested three methods for dealing
+To help deal with these situations, Bruvo has suggested three methods for dealing
 with these differences in ploidy levels \cite{Bruvo:2004}:
 \begin{itemize}
   \item{Infinite Model -} The simplest way to deal with it is to count all
@@ -448,11 +448,17 @@ To reduce the number of calculations and assumptions otherwise, Bruvo's distance
 will be calculated using the largest observed ploidy. This means that when
 comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
 
-\subsection{Example}
+\subsection{Tree topology}
 
-As these distances can affect data in different ways, it might be important
-to see what kind of trees they produce. To demonstrate, we will use 5 diploid
-samples at a single locus demonstrating a range of possibilities:
+All of these distances were designed for analysis of populations. When applying
+them to individuals, we must change our interpretations. For example, with Nei's
+distance, branch lengths increase linearly with mutation
+\cite{nei1972genetic,nei1978estimation}. When to populations share no alleles,
+then the distance becomes infinite. However, we expect two individuals to
+segregate for different alleles more often than entire populations, thus we
+would expect exaggerated internal branch lengths separating clades. To
+demonstrate the effect of the different distances on tree topology, we will use
+5 diploid samples at a single locus demonstrating a range of possibilities:
 
 \begin{table}[ht]
 \centering
@@ -476,8 +482,9 @@ dat.df <- data.frame(Genotype = c("1/1", "1/2", "2/3", "3/4", "4/4"))
 dat <- as.genclone(df2genind(dat.df, sep = "/", ind.names = dat.df[[1]]))
 @
 
-We will now compute the distances, construct a neighbor joining dendrogram with
-the package \textit{ape}, and plot it.
+We will now compute the distances and construct neighbor-joining dendrograms
+using the package \textit{ape}. This allows us to see the effect of the
+different distance measures on the tree topology.
 
 <<>>=
 distances <- c("Nei", "Rogers", "Edwards", "Reynolds", "Provesti")
@@ -486,6 +493,8 @@ dists <- lapply(distances, function(x){
   DISTFUN(dat)
 })
 names(dists) <- distances
+
+# Adding Bruvo's distance at the end because we need to specify repeat length.
 dists$Bruvo <- bruvo.dist(dat, replen = 1)
 library(ape)
 par(mfrow = c(2, 3))
@@ -494,6 +503,47 @@ x <- lapply(names(dists), function(x){
   add.scale.bar(lcol = "red")
 })
 @
+
+\section{AMOVA}
+
+AMOVA in \poppr{} acts as a wrapper for the \textit{ade4} implementation, which is
+an implementation of Excoffier's original formulation \cite{excoffier1992analysis}.
+As the calculation relies on a genetic distance matrix, \poppr{} calculates the 
+distance matrix as the number of differing sites between two genotypes. This is
+equivalent to Provesti's distance multiplied by the ploidy and number of loci. 
+This is also equivalent to Kronecker's delta as presented in \cite{excoffier1992analysis}. 
+
+\section{Genotypic Diversity}
+
+Many of the calculations of genotypic diversity exist within the package \textit{vegan} in the \texttt{diversity}
+function. Descriptions of most of the calculations can be found in the paper by Gr\"unwald et al \cite{Grunwald:2003}.
+
+\subsection{Rarefaction, Shannon - Wiener, Stoddard and Taylor indices}
+
+Stoddart and Taylor's index is also known as Inverse Simpson's index.
+A detailed description of these can be found in the ``Diversity'' vignette in \textit{vegan}. You can access it by typing \texttt{vignette("diversity-vegan")}
+
+\subsection{Evenness ($E_{5}$)}
+This is simply calculated as 
+
+\begin{equation}
+E_{5} = \frac{(1/\lambda) - 1}{e^{H}}
+\end{equation}
+
+Where $1/\lambda$ is Stoddard and Taylor's index and $H$ is Shannon diversity.
+
+\subsection{Hexp}
+
+This one was cited as Nei's expected heterozygosity, but it has become clear
+that it is not so. The calculation is as follows \cite{Agapow:2001}:
+
+\begin{equation}
+H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
+\end{equation}
+\noindent
+Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
+genotypes observed and $N$ is the sample size. Essentially, it's a correction
+for Simpson's index by sample size.
 
 \bibliographystyle{plain}
 \bibliography{poppr_man}

@@ -54,7 +54,7 @@ computationally intensive as either of the other models. The reason for this
 is that both of the addition and loss models requires replacement of alleles
 and recalculation of Bruvo's distance. The number of replacements required is
 equal to the multiset coefficient: \eqn{\left({n \choose k}\right) ==
-{(n+k-1) \choose k}}{choose(n-k+1, k)} where \emph{n} is the number of
+{(n+k-1) \choose k}}{choose(n+k-1, k)} where \emph{n} is the number of
 potential replacements and \emph{k} is the number of alleles to be replaced.
 So, for the example given above, The genome addition model would require
 \eqn{\left({2 \choose 2}\right) = 3}{choose(2+2-1, 2) == 3} calculations of
