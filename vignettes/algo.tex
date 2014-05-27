@@ -326,18 +326,18 @@ as well (with the exception of Bruvo's distance).
 \begin{table}[ht]
 \centering
 \caption{Distance measures and their respective assumptions}
-\begin{tabular}{llll}
+\begin{tabular}{lllll}
   \hline
- Method & Function & Assumption & Euclidean \\ 
+ Method & Function & Assumption & Euclidean & Citation\\ 
   \hline
-Provesti & \texttt{provesti.dist} & - & No \\
- & \texttt{diss.dist} & & \\
-Nei & \texttt{nei.dist} & Infinite Alleles & No \\
- & & Genetic Drift & \\
-Edwards & \texttt{edwards.dist} & Genetic Drift & Yes \\
-Reynolds & \texttt{reynolds.dist} & Genetic Drift & Yes \\
-Rogers & \texttt{rogers.dist} & - & Yes \\
-Bruvo & \texttt{bruvo.dist} & Stepwise Mutation & No \\
+Provesti & \texttt{provesti.dist} & - & No & \cite{prevosti1975distances}\\
+ & \texttt{diss.dist} & & & \\
+Nei & \texttt{nei.dist} & Infinite Alleles & No & \cite{nei1972genetic, nei1978estimation}\\
+ & & Genetic Drift & & \\
+Edwards & \texttt{edwards.dist} & Genetic Drift & Yes & \cite{edwards1971distances}\\
+Reynolds & \texttt{reynolds.dist} & Genetic Drift & Yes & \cite{reynolds1983estimation}\\
+Rogers & \texttt{rogers.dist} & - & Yes & \cite{rogers1972measures}\\
+Bruvo & \texttt{bruvo.dist} & Stepwise Mutation & No & \cite{Bruvo:2004}\\
    \hline
 \end{tabular}
 \end{table}
