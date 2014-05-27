@@ -248,12 +248,12 @@ locus. Notice also that the sum of the rows all equal one. \Poppr{} uses this to
 calculate distances by simply taking the sum of the absolute values of the
 differences between rows.
 
-The calculation for the distance between two individuals at a single locus with
-$k$ allelic states and a ploidy of $l$ is as follows\footnote{Individuals with
-Presence / Absence data will have the $l/2$ term dropped.}:
+The calculation for the distance between two individuals at a single locus $j$
+with $m(j)$ allelic states and a ploidy of $l$ is as follows\footnote{Individuals
+with Presence / Absence data will have the $l/2$ term dropped.}:
 \begin{equation}
 \label{eq:ia_d}
-  d(a,b)=\frac{l}{2} \sum_{j=1}^{k}
+  d(a,b)=\frac{l}{2} \sum_{k=1}^{m(j)}
   |p_{ajk} - p_{bjk}|
 \end{equation}
 
@@ -279,7 +279,7 @@ variances is fairly straightforward (modified from Agapow and Burt, 2001)
 
 \begin{equation}
 \label{eq:V_O}
-V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n \choose 2}}
+V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{\left(\displaystyle\sum_{i=1}^{n \choose 2} D_{i}\right)^2}{{n \choose 2}}}{{n \choose 2}}
 \end{equation}
 
 Calculating the expected variance is the sum of each of the variances of the
@@ -288,7 +288,7 @@ previous equation, substituting values of $D$ for $d$ \cite{Agapow:2001}:
 
 \begin{equation}
 \label{eq:var_j}
-var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n \choose 2}}
+var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{\left(\displaystyle\sum_{i=1}^{n \choose 2} d_i\right)^2}{{n \choose 2}}}{{n \choose 2}}
 \end{equation}
 
 The expected variance is then the sum of all the variances over all $\nu$ loci
@@ -344,12 +344,12 @@ Bruvo & \texttt{bruvo.dist} & Stepwise Mutation & No & \cite{Bruvo:2004}\\
 
 \subsection{Distances that assume genetic drift}
 \subsubsection{Nei's 1978 Distance}
-
+\label{distance:nei}
 \begin{equation}
-  D_{Nei}(a,b)= -\ln(\frac{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  D_{Nei}(a,b)= -\ln\left(\frac{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
   p_{ajk} p_{bjk}}{\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
   {(p_{ajk}) }^2}\sqrt{\sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
-  {(p_{bjk})}^2}})
+  {(p_{bjk})}^2}}\right)
 \end{equation}
 
 Note: if comparing individuals in \poppr{}, those that do not share any alleles
@@ -360,23 +360,23 @@ distance than the largest observed less than $\infty$.
 \subsubsection{Edwards' angular distance}
 \label{distance:edwards}
 \begin{equation}
-  D_2(a,b)=\sqrt{1-\frac{1}{\nu} \sum_{k=1}^{\nu}
+  D_{Edwards}(a,b)=\sqrt{1-\frac{1}{\nu} \sum_{k=1}^{\nu}
   \sum_{j=1}^{m(k)} \sqrt{p_{ajk}  p_{bjk}}}
 \end{equation}
 
 \subsubsection{Reynolds' coancestry distance}
 \label{distance:reynolds}
 \begin{equation}
-  D_3(a,b)=\sqrt{\frac{\sum_{k=1}^{\nu}
-  \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}{2 \sum_{k=1}^{\nu} (1-
-  \sum_{j=1}^{m(k)}p_{ajk} p_{bjk})}}
+  D_{Reynolds}(a,b)=\sqrt{\frac{\sum_{k=1}^{\nu}
+  \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}{2 \sum_{k=1}^{\nu} \left(1-
+  \sum_{j=1}^{m(k)}p_{ajk} p_{bjk}\right)}}
 \end{equation}
 
 \subsection{Distances without assumptions}
 \subsubsection{Rogers' distance}
 \label{distance:rogers}
 \begin{equation}
-  D_4(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
+  D_{Rogers}(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
   \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}
 \end{equation}
 
@@ -384,7 +384,7 @@ distance than the largest observed less than $\infty$.
 \subsubsection{Provesti's absolute genetic distance}
 \label{distance:provesti}
 \begin{equation}
-  D_{P}(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  D_{Provesti}(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
   |p_{ajk} - p_{bjk}|
 \end{equation}
 Note: for AFLP data, the $2$ is dropped. 
@@ -432,17 +432,17 @@ there are $k!$ possibilities \cite{Bruvo:2004}:
 
 \begin{equation}
 \label{eq:d_l}
-d_l = \frac{\left(\displaystyle \min_{i \dotsc k!} s_i\right)}{k}
+d_l = \frac{1}{k}\left(\min_{i \dotsc k!} s_i\right)
 \end{equation}
-
+\noindent
 Finally, after all of this, we can get the average distance over all loci
 \cite{Bruvo:2004}.
 
 \begin{equation}
 \label{eq:D}
-D = \frac{\displaystyle \sum_{i=1}^l d_i}{l}
+D = \frac{1}{l}\sum_{i=1}^l d_i
 \end{equation}
-
+\noindent
 This is calculated over all possible combinations of individuals and results in
 a lower triangle distance matrix over all individuals.
 
@@ -569,19 +569,22 @@ different distance measures on the tree topology.
 
 \section{AMOVA}
 
-AMOVA in \poppr{} acts as a wrapper for the \textit{ade4} implementation, which is
-an implementation of Excoffier's original formulation \cite{excoffier1992analysis}.
-As the calculation relies on a genetic distance matrix, \poppr{} calculates the 
-distance matrix as the number of differing sites between two genotypes. This is
-equivalent to Provesti's distance multiplied by the ploidy and number of loci. 
-This is also equivalent to Kronecker's delta as presented in \cite{excoffier1992analysis}. 
+AMOVA in \poppr{} acts as a wrapper for the \textit{ade4} implementation, which
+is an implementation of Excoffier's original formulation
+\cite{excoffier1992analysis}. As the calculation relies on a genetic distance
+matrix, \poppr{} calculates the distance matrix as the number of differing sites
+between two genotypes using equation \ref{eq:ia_D}. This is equivalent to
+Provesti's distance multiplied by the ploidy and number of loci. This is also
+equivalent to Kronecker's delta as presented in \cite{excoffier1992analysis}. It
+should also be mentioned that at this moment, it is not possible to calculate
+AMOVA on polyploid data.
 
 \section{Genotypic Diversity}
 
 Many of the calculations of genotypic diversity exist within the package \textit{vegan} in the \texttt{diversity}
 function. Descriptions of most of the calculations can be found in the paper by Gr\"unwald et al \cite{Grunwald:2003}.
 
-\subsection{Rarefaction, Shannon - Wiener, Stoddard and Taylor indices}
+\subsection{Rarefaction, Shannon - Wiener, Stoddart and Taylor indices}
 
 Stoddart and Taylor's index is also known as Inverse Simpson's index.
 A detailed description of these can be found in the ``Diversity'' vignette in \textit{vegan}. You can access it by typing \texttt{vignette("diversity-vegan")}
@@ -593,7 +596,7 @@ This is simply calculated as
 E_{5} = \frac{(1/\lambda) - 1}{e^{H}}
 \end{equation}
 
-Where $1/\lambda$ is Stoddard and Taylor's index and $H$ is Shannon diversity.
+Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity \cite{Stoddart:1988,Shannon:1948}.
 
 \subsection{Hexp}
 
@@ -605,8 +608,8 @@ H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
 \end{equation}
 \noindent
 Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
-genotypes observed and $N$ is the sample size. Essentially, it's a correction
-for Simpson's index by sample size.
+genotypes observed and $N$ is the sample size. Essentially, it's an unbiased
+estimator for the Simpson index.
 
 \bibliographystyle{plain}
 \bibliography{poppr_man}
