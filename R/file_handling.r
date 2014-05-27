@@ -146,44 +146,56 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' 
 #' read.genalex will read in a genalex-formatted file that has been exported in 
 #' a comma separated format and will parse most types of genalex data. The 
-#' output is a \code{\link{genind}} object.
+#' output is a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' object.
 #' 
 #' @param genalex a *.csv file exported from genalex
 #'   
 #' @param ploidy indicate the ploidy of the dataset
 #'   
 #' @param geo indicates the presence of geographic data in the file. This data 
-#'   will be included in a data frame labeled \code{xy} in
+#'   will be included in a data frame labeled \code{xy} in 
 #'   the\code{\link{other}} slot.
 #'   
 #' @param region indicates the presence of regional data in the file.
 #'   
-#' @param genclone should the output be a genclone object? Defaults to
+#' @param genclone should the output be a genclone object? Defaults to 
 #'   \code{TRUE}
 #'   
-#' @param sep A character specifying the column separator of the data. Defaults
+#' @param sep A character specifying the column separator of the data. Defaults 
 #'   to ",".
-#' 
-#' @return A \code{\link{genind}} object.
+#'   
+#' @return A \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'   object.
 #'   
 #' @note This function cannot handle raw allele frequency data.
 #'   
-#'   The resulting genind object will have a data frame in the \code{other} slot
-#'   called \code{population_hierarchy}. This will contain a column for your
-#'   population data and a column for your Regional data if you have set the
-#'   flag.
-#'   
 #'   In the case that there are duplicated names within the file, this function 
 #'   will assume separate individuals and rename each one to a sequence of 
-#'   integers from 1 to the number of individuals. A vector of the original
+#'   integers from 1 to the number of individuals. A vector of the original 
 #'   names will be saved in the \code{other} slot under \code{original_names}.
 #'   
-#'   FOR POLYPLOID (> 2n) DATA SETS: Adegenet's genind object has an all-or-none
-#'   approach to missing data. If a sample has missing data at a particular
-#'   locus, then the entire locus is considered missing. This works for diploids
-#'   and haploids where allelic dosage is unambiguous. For polyploids this poses
-#'   a problem as much of the data set would be transformed into missing data.
-#'   With this function, I have created a workaround.
+#'   
+#' @details \subsection{if \code{genclone = FALSE}}{ The resulting genind object
+#'   will have a data frame in the \code{other} slot called 
+#'   \code{population_hierarchy}. This will contain a column for your population
+#'   data and a column for your Regional data if you have set the flag.}
+#'   
+#'   \subsection{if \code{genclone = TRUE}}{ The resulting genclone object will 
+#'   have a single hierarchical level defined in the hierarchy slot. This will
+#'   be called "Pop" and will reflect the population factor defined in the
+#'   genalex input. If \code{region = TRUE}, a second column will be inserted
+#'   and labeled "Region". If you have more than two hierarchical levels within
+#'   your data set, you should run the command \code{\link{splithierarchy}} on
+#'   your data set to define the unique hierarchical levels. }
+#'   
+#'   \subsection{FOR POLYPLOID (> 2n) DATA SETS}{ Adegenet's genind object has
+#'   an all-or-none approach to missing data. If a sample has missing data at a 
+#'   particular locus, then the entire locus is considered missing. This works
+#'   for diploids and haploids where allelic dosage is unambiguous. For
+#'   polyploids this poses a problem as much of the data set would be
+#'   transformed into missing data. With this function, I have created a
+#'   workaround.
 #'   
 #'   When importing polyploid data sets, missing data is scored as "0" and kept 
 #'   within the genind object as an extra allele. This will break most analyses 
@@ -191,21 +203,22 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #'   properly with these data sets as multilocus genotype analysis is agnostic
 #'   of ploidy and we have written both Bruvo's distance and the index of
 #'   association in such a way as to be able to handle polyploids presented in
-#'   this manner.
-#'   
+#'   this manner.}
 #' 
-#' @seealso \code{\link{clonecorrect}}, \code{\link{genind}}
-#'
+#' 
+#' @seealso \code{\link{clonecorrect}}, \code{\linkS4class{genclone}} or
+#'   \code{\linkS4class{genind}}
+#'   
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
 #' 
 #' \dontrun{
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
-#'
+#' 
 #' genalex2 <- read.genalex("genalex2.csv", geo=TRUE)
 #' # A genalex file with geographic coordinate data.
-#'
+#' 
 #' genalex3 <- read.genalex("genalex3.csv", region=TRUE) 
 #' # A genalex file with regional information.
 #' 
@@ -376,11 +389,12 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
 
 #==============================================================================#
 #' Exporting data from genind objects to genalex formatted *.csv files.
-#'
-#' genind2genalex will export a genind object to a *.csv file formatted for use
-#' in genalex. 
-#'
-#' @param pop a \code{\link{genind}} object.
+#' 
+#' genind2genalex will export a genclone or genind object to a *.csv file
+#' formatted for use in genalex.
+#' 
+#' @param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'   object.
 #'   
 #' @param filename a string indicating the name and/or path of the file you wish
 #'   to create.
@@ -391,12 +405,12 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
 #' @param geo \code{logical} Default is \code{FALSE}. If it is set to 
 #'   \code{TRUE}, the resulting file will have two columns for geographic data.
 #'   
-#' @param geodf \code{character} Since the \code{other} slot in the adegenet
-#'   object can contain many different items, you must specify the name of the
+#' @param geodf \code{character} Since the \code{other} slot in the adegenet 
+#'   object can contain many different items, you must specify the name of the 
 #'   data frame in the \code{other} slot containing your geographic coordinates.
 #'   It defaults to "xy".
 #'   
-#' @param sep a character specifying what character to use to separate columns.
+#' @param sep a character specifying what character to use to separate columns. 
 #'   Defaults to ",".
 #'   
 #' @note If you enter a file name that exists, that file will be overwritten. If
@@ -404,9 +418,10 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
 #'   file as a single population lableled "Pop". Likewise, if you don't have any
 #'   labels for your individuals, they will be labeled as "ind1" through 
 #'   "ind\emph{N}", with \emph{N} being the size of your population.
-#'
-#' @seealso \code{\link{clonecorrect}}, \code{\link{genind}}
-#'
+#'   
+#' @seealso \code{\link{clonecorrect}}, \code{\linkS4class{genclone}} or
+#'   \code{\linkS4class{genind}}
+#'   
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples

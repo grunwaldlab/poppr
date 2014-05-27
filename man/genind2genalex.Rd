@@ -7,7 +7,8 @@ genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE,
   geodf = "xy", sep = ",")
 }
 \arguments{
-\item{pop}{a \code{\link{genind}} object.}
+\item{pop}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+  object.}
 
 \item{filename}{a string indicating the name and/or path of the file you wish
   to create.}
@@ -27,8 +28,8 @@ genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE,
   Defaults to ",".}
 }
 \description{
-genind2genalex will export a genind object to a *.csv file formatted for use
-in genalex.
+genind2genalex will export a genclone or genind object to a *.csv file
+formatted for use in genalex.
 }
 \note{
 If you enter a file name that exists, that file will be overwritten. If
@@ -47,6 +48,7 @@ genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{clonecorrect}}, \code{\link{genind}}
+\code{\link{clonecorrect}}, \code{\linkS4class{genclone}} or
+  \code{\linkS4class{genind}}
 }
 
