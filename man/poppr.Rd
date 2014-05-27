@@ -105,7 +105,7 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 This function allows the user to quickly view indicies of heterozygosity,
 evenness, and inbreeding to aid in the decision of a path to further analyze
 a specified dataset. It natively takes \code{\linkS4class{genind}} and
-\code{\linkS4class{genclone}} formatted files, but can convert any raw data
+\code{\linkS4class{genclone}} objects, but can convert any raw data
 formats that adegenet can take (fstat, structure, genetix, and genpop) as
 well as genalex files exported into a csv format (see
 \code{\link{read.genalex}} for details).
