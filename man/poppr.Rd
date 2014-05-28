@@ -13,8 +13,8 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   \code{\linkS4class{genclone}} object OR any fstat, structure, genetix,
   genpop, or genalex formatted file.}
 
-\item{total}{default \code{TRUE}. Should indecies be calculated for the
-  combined populations represented in the entire file?}
+\item{total}{When \code{TRUE} (default), indices will be calculated for the
+  pooled populations.}
 
 \item{sublist}{a list of character strings or integers to indicate specific
   population names (located in \code{$pop.names} within the
@@ -43,37 +43,38 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   missing data allowed for analysis. This is to be used in conjunction with
   the flag \code{missing} (see \code{\link{missingno}} for details)}
 
-\item{quiet}{Should the function print anything to the screen while it is
-  performing calculations? \code{TRUE} prints nothing, \code{FALSE} (defualt)
-  will print the population name and a progress bar.}
+\item{quiet}{\code{FALSE} (defualt) will display a progress bar for each
+  population analyzed.}
 
 \item{clonecorrect}{default \code{FALSE}. must be used with the \code{hier}
   and \code{dfname} parameters, or the user will potentially get undesired
   results. see \code{\link{clonecorrect}} for details.}
 
-\item{hier}{\itemize{ \item \strong{for genind objects} - a \code{numeric or
-  character} vector OR a hierarchical formula. This is the list of columns
-  within a data frame (specified in \code{dfname}) in the 'other' slot of the
+\item{hier}{\itemize{ \item \strong{for genclone objects} - a \code{formula}
+  indicating the hierarchical levels to be used. The hierarchies should be
+  present in the \code{hierarchy} slot. See \code{\link{sethierarchy}} for
+  details. \item \strong{for genind objects} - a \code{numeric or character}
+  vector OR a hierarchical formula. This is the list of columns within a data
+  frame (specified in \code{dfname}) in the 'other' slot of the
   \code{\link{genind}} object. The list should indicate the population
-  hierarchy to be used for clone correction \item \strong{for genclone
-  objects} - a \code{formula} indicating the hierarchical levels to be used.
-  The hierarchies should be present in the \code{hierarchy} slot. See
-  \code{\link{sethierarchy}} for details. }}
+  hierarchy to be used for clone correction.  }}
 
-\item{dfname}{a \code{character string}. This is the name of the data frame
-  or heirarchy containing the vectors of the population hierarchy within the
-  \code{other} slot of the \code{\link{genind}} object.}
+\item{dfname}{a \code{character string}. (Only for genind objects) This is
+  the name of the data frame or heirarchy containing the vectors of the
+  population hierarchy within the \code{other} slot of the
+  \code{\link{genind}} object.}
 
 \item{keep}{an \code{integer}. This indicates the levels of the population
   hierarchy you wish to keep after clone correcting your data sets. To
   combine the hierarchy, just set keep from 1 to the length of your
   hierarchy. see \code{\link{clonecorrect}} for details.}
 
-\item{hist}{\code{logical} if \code{TRUE} a histogram will be produced for
-  each population.}
+\item{hist}{\code{logical} if \code{TRUE} (default) and \code{sampling > 0},
+  a histogram will be produced for each population.}
 
 \item{minsamp}{an \code{integer} indicating the minimum number of individuals
-  to resample for rarefaction analysis.}
+  to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for
+  details.}
 
 \item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend
   describing the resulting table columns will be printed. Defaults to
@@ -105,10 +106,10 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 This function allows the user to quickly view indicies of heterozygosity,
 evenness, and inbreeding to aid in the decision of a path to further analyze
 a specified dataset. It natively takes \code{\linkS4class{genind}} and
-\code{\linkS4class{genclone}} objects, but can convert any raw data
-formats that adegenet can take (fstat, structure, genetix, and genpop) as
-well as genalex files exported into a csv format (see
-\code{\link{read.genalex}} for details).
+\code{\linkS4class{genclone}} objects, but can convert any raw data formats
+that adegenet can take (fstat, structure, genetix, and genpop) as well as
+genalex files exported into a csv format (see \code{\link{read.genalex}} for
+details).
 }
 \examples{
 data(nancycats)

@@ -81,7 +81,7 @@ The index of association was originally developed by A.H.D. Brown
   The calculation for the distance between two individuals at a single locus
   with \emph{a} allelic states and a ploidy of \emph{k} is as follows (except
   for Presence/Absence data): \deqn{ d = \displaystyle
-  \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid }{d = (k/2)*sum(abs(indAi - indBi))}
+  \frac{k}{2}\sum_{i=1}^{a} \mid A_{i} - B_{i}\mid }{d(A,B) = (k/2)*sum(abs(Ai - Bi))}
   To find the total number of differences
   between two individuals over all loci, you just take \emph{d} over \emph{m}
   loci, a value we'll call \emph{D}:

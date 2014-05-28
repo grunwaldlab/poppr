@@ -42,26 +42,23 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-# The calculation of the Index of Association and standardized Index of 
-# Association.
-#' 
 #' Produce a basic summary table for population genetic analyses.
 #' 
 #' This function allows the user to quickly view indicies of heterozygosity, 
 #' evenness, and inbreeding to aid in the decision of a path to further analyze 
 #' a specified dataset. It natively takes \code{\linkS4class{genind}} and 
-#' \code{\linkS4class{genclone}} objects, but can convert any raw data 
-#' formats that adegenet can take (fstat, structure, genetix, and genpop) as 
-#' well as genalex files exported into a csv format (see 
-#' \code{\link{read.genalex}} for details).
+#' \code{\linkS4class{genclone}} objects, but can convert any raw data formats
+#' that adegenet can take (fstat, structure, genetix, and genpop) as well as
+#' genalex files exported into a csv format (see \code{\link{read.genalex}} for
+#' details).
 #' 
 #' 
-#' @param dat a \code{\linkS4class{genind}} object OR a
-#'   \code{\linkS4class{genclone}} object OR any fstat, structure, genetix,
+#' @param dat a \code{\linkS4class{genind}} object OR a 
+#'   \code{\linkS4class{genclone}} object OR any fstat, structure, genetix, 
 #'   genpop, or genalex formatted file.
 #'   
-#' @param total default \code{TRUE}. Should indecies be calculated for the 
-#'   combined populations represented in the entire file?
+#' @param total When \code{TRUE} (default), indices will be calculated for the
+#'   pooled populations.
 #'   
 #' @param sublist a list of character strings or integers to indicate specific 
 #'   population names (located in \code{$pop.names} within the 
@@ -90,37 +87,38 @@
 #'   missing data allowed for analysis. This is to be used in conjunction with 
 #'   the flag \code{missing} (see \code{\link{missingno}} for details)
 #'   
-#' @param quiet Should the function print anything to the screen while it is 
-#'   performing calculations? \code{TRUE} prints nothing, \code{FALSE} (defualt)
-#'   will print the population name and a progress bar.
+#' @param quiet \code{FALSE} (defualt) will display a progress bar for each
+#'   population analyzed.
 #'   
 #' @param clonecorrect default \code{FALSE}. must be used with the \code{hier} 
 #'   and \code{dfname} parameters, or the user will potentially get undesired 
 #'   results. see \code{\link{clonecorrect}} for details.
 #'   
-#' @param hier \itemize{ \item \strong{for genind objects} - a \code{numeric or
-#'   character} vector OR a hierarchical formula. This is the list of columns
-#'   within a data frame (specified in \code{dfname}) in the 'other' slot of the
-#'   \code{\link{genind}} object. The list should indicate the population
-#'   hierarchy to be used for clone correction \item \strong{for genclone
-#'   objects} - a \code{formula} indicating the hierarchical levels to be used.
-#'   The hierarchies should be present in the \code{hierarchy} slot. See
-#'   \code{\link{sethierarchy}} for details. }
+#' @param hier \itemize{ \item \strong{for genclone objects} - a \code{formula} 
+#'   indicating the hierarchical levels to be used. The hierarchies should be 
+#'   present in the \code{hierarchy} slot. See \code{\link{sethierarchy}} for 
+#'   details. \item \strong{for genind objects} - a \code{numeric or character} 
+#'   vector OR a hierarchical formula. This is the list of columns within a data
+#'   frame (specified in \code{dfname}) in the 'other' slot of the 
+#'   \code{\link{genind}} object. The list should indicate the population 
+#'   hierarchy to be used for clone correction.  }
 #'   
-#' @param dfname a \code{character string}. This is the name of the data frame 
-#'   or heirarchy containing the vectors of the population hierarchy within the 
-#'   \code{other} slot of the \code{\link{genind}} object.
+#' @param dfname a \code{character string}. (Only for genind objects) This is
+#'   the name of the data frame or heirarchy containing the vectors of the
+#'   population hierarchy within the \code{other} slot of the
+#'   \code{\link{genind}} object.
 #'   
 #' @param keep an \code{integer}. This indicates the levels of the population 
 #'   hierarchy you wish to keep after clone correcting your data sets. To 
 #'   combine the hierarchy, just set keep from 1 to the length of your 
 #'   hierarchy. see \code{\link{clonecorrect}} for details.
 #'   
-#' @param hist \code{logical} if \code{TRUE} a histogram will be produced for 
-#'   each population.
+#' @param hist \code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
+#'   a histogram will be produced for each population.
 #'   
 #' @param minsamp an \code{integer} indicating the minimum number of individuals
-#'   to resample for rarefaction analysis.
+#'   to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for
+#'   details.
 #'   
 #' @param legend \code{logical}. When this is set to \code{TRUE}, a legend 
 #'   describing the resulting table columns will be printed. Defaults to 
@@ -314,7 +312,6 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
 }
 
 #==============================================================================#
-# This will process a list of files given by filelist
 #' Process a list of files with poppr
 #'
 #' poppr.all is a wrapper function that will loop through a list of files from
@@ -438,7 +435,7 @@ poppr.all <- function(filelist, ...){
 #'   The calculation for the distance between two individuals at a single locus 
 #'   with \emph{a} allelic states and a ploidy of \emph{k} is as follows (except
 #'   for Presence/Absence data): \deqn{ d = \displaystyle 
-#'   \frac{k}{2}\sum_{i=1}^{a} \mid ind_{Ai} - ind_{Bi}\mid }{d = (k/2)*sum(abs(indAi - indBi))} 
+#'   \frac{k}{2}\sum_{i=1}^{a} \mid A_{i} - B_{i}\mid }{d(A,B) = (k/2)*sum(abs(Ai - Bi))} 
 #'   To find the total number of differences 
 #'   between two individuals over all loci, you just take \emph{d} over \emph{m}
 #'   loci, a value we'll call \emph{D}:
