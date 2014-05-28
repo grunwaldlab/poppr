@@ -175,3 +175,20 @@ mlg_sub_warning <- function(mlgs){
                 "dataset: ", paste(mlgs, collapse = ", "))
   return(msg)
 }
+
+
+#' Tools for analysys of populations with clonal, partially clonal, and/or
+#' sexual reproduction.
+#' 
+#' Poppr provides tools for population genetic analysis that include genotypic
+#' diveristy measures, genetic distances with bootstrap support, native
+#' organization and handling of population hierarchies, and clone correction.
+#' 
+#' This package documentation is in progress.
+#' 
+#' @references Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for
+#' genetic analysis of populations with clonal, partially clonal, and/or sexual
+#' reproduction. PeerJ 2:e281 http://dx.doi.org/10.7717/peerj.281
+#' @name poppr-package
+#' @docType package
+NULL
