@@ -3,7 +3,7 @@ poppr 1.1.0.99
 NEW FEATURES
 * Polyploids are now supported in poppr. Many functions in adegenet will unfortunately break. All functions in poppr should be able to work with polyploids.
 * Calculations of Bruvo's distance now features correction for missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
-* `diss.dist` now has options to return raw distaces, similarity distances, and a matrix instead of a dist object.
+* `diss.dist` now has options to return raw distances, similarity distances, and a matrix instead of a dist object.
 * `read.genalex` now has the option to import as a genclone object. This is the default action.
 * `poppr.all` will be able to analyze lists of genind or genclone objects.
 * `ia` now has the argument valuereturn which will return the sampled data.
@@ -24,6 +24,11 @@ NEW FUNCTIONS
 * `*.dist` functions will calculate Nei's distance, Rogers' Distance, Edwards' Distance, Reynolds' Distance, and Provestis' Distance.
 * `aboot` will allow the user to create bootstrapped dendrograms for ANY distance that can be calculated on genind or genpop objects.
 * `plot_poppr_msn` will plot minimum spanning networks produced with poppr. 
+* `private_alleles` will give information about the presence of private alleles within a genind or genclone object. 
+
+NEW DATA SETS
+* Pinf - a data set of 86 isolates from different populations of the late blight pathogen, Phytophthora infestans.
+* monpop - a large data set of 694 Monilinia fructicola isolates from a single orchard over three years.
 
 NEW CAR
 * Not really.
@@ -34,12 +39,14 @@ NAMESPACE CHANGES
 
 IMPROVEMENTS
 * default shuffling algorithm has been implemented in C to increase speed.
-* output of the mlg functions are now represented as integers to decrease thier size in memory.
+* output of the mlg functions are now represented as integers to decrease their size in memory.
 * `mlg.matrix` is now calculated faster utilizing R's internal tabulating capabilities.
 * The function `poppr` will no longer return rounded results, but rather is printed with three significant digits.
 
 MISC
 * Added unit tests.
+* The poppr user manual has been shortened to only include instructions on data manipulation. 
+* A new vignette, "Algorithms and Equations" gives algorithmic details for calculations performed in poppr. 
 
 poppr 1.0.7
 ===========
@@ -60,7 +67,7 @@ MISC
 poppr 1.0.5
 ===========
 NOTABLE CHANGE
-* The default shuffling algorithm for calculating the index of association has changed from multilocus-style sampling to permutation of alleles. All of the 4 methods are available, but new assignments are as follows: Method 1: permute alleles, Method 2: parametric bootstrap, Method 3: non-parametric bootstrap, Method 4: Multilocus-style sampling. Previously, Multilocus was 1 and the rest followed in the same order. There should be no compatability issues with this change. Functions affected: `ia`, `poppr` `shufflepop`
+* The default shuffling algorithm for calculating the index of association has changed from multilocus-style sampling to permutation of alleles. All of the 4 methods are available, but new assignments are as follows: Method 1: permute alleles, Method 2: parametric bootstrap, Method 3: non-parametric bootstrap, Method 4: Multilocus-style sampling. Previously, Multilocus was 1 and the rest followed in the same order. There should be no compatibility issues with this change. Functions affected: `ia`, `poppr` `shufflepop`
 
 BUG FIX
 * Bootstrapping algorithm for `bruvo.boot` function was not shuffling the repeat lengths for each locus resulting in potentially erroneous bootstrap support values. This has been fixed by implementing an internal S4 class that will allow direct bootstrapping of the data and repeat lengths together.
@@ -76,7 +83,7 @@ poppr 1.0.4
 ===========
 BUG FIX
 * A previous error where bootstrap values greater than 100 were reported from `bruvo.boot` on UPGMA trees has been fixed. 
-* Fixed correction of negative branch lenghts using Kuhner and Felsenstein (1994) normalization for NJ trees.
+* Fixed correction of negative branch lengths using Kuhner and Felsenstein (1994) normalization for NJ trees.
 
 MISC
 * github repository for poppr has changed from github.com/poppr/poppr to github.com/grunwaldlab/poppr
