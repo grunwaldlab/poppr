@@ -3,7 +3,7 @@
 \name{Aeut}
 \alias{Aeut}
 \title{Oomycete root rot pathogen \emph{Aphanomyces euteiches} AFLP data}
-\format{a \code{\link{genind}} object with two popualations containing a data
+\format{a \code{\link{genind}} object with two populations containing a data
   frame in the \code{other} slot called \code{population_hierarchy}. This
   data frame gives indices of the populations and subpopulations for the data
   set.}

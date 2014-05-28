@@ -5,7 +5,7 @@
 \title{Simulated data illustrating a Minimum Spanning Network based on Bruvo's
 Distance}
 \format{a \code{\link{genind}} object with 50 individuals, 10 loci, and four
-  popualations.}
+  populations.}
 \usage{
 data(partial_clone)
 }

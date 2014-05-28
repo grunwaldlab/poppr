@@ -50,7 +50,7 @@
 #' @description The Aeut dataset consists of 187 isolates of the Oomycete root 
 #'   rot pathogen, \emph{Aphanomyces euteiches} collected from two different 
 #'   fields in NW Oregon and W Washington, USA.
-#' @format a \code{\link{genind}} object with two popualations containing a data
+#' @format a \code{\link{genind}} object with two populations containing a data
 #'   frame in the \code{other} slot called \code{population_hierarchy}. This
 #'   data frame gives indices of the populations and subpopulations for the data
 #'   set.
@@ -71,7 +71,7 @@ NULL
 #'   assigned post-hoc and are simply present for the purposes of demonstrating
 #'   a minimum spanning network with Bruvo's distance.
 #' @format a \code{\link{genind}} object with 50 individuals, 10 loci, and four 
-#'   popualations.
+#'   populations.
 #' @references Bo Peng and Christopher Amos (2008) Forward-time simulations of 
 #'   nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11):
 #'   1408-1409.
