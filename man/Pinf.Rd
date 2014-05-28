@@ -3,7 +3,7 @@
 \name{Pinf}
 \alias{Pinf}
 \title{Phytophthora infestans data from Mexico and South America.}
-\format{a \code{\linkS4class{genclone}} object with 2 population hierarchies
+\format{a \code{\linkS4class{genclone}} object with 2 hierarchical levels
   called "Continent" and "Country" that contain 2 and 4 populations,
   respectively.}
 \usage{

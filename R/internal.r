@@ -86,13 +86,42 @@ NULL
 #' @description The Pinf data set contains 86 isolates genotyped over 11 
 #'   microsatellite loci collected from Mexico, Peru, Columbia, and Ecuador.
 #'   This is a subset of the data used for the reference below.
-#' @format a \code{\linkS4class{genclone}} object with 2 population hierarchies
+#' @format a \code{\linkS4class{genclone}} object with 2 hierarchical levels
 #'   called "Continent" and "Country" that contain 2 and 4 populations,
 #'   respectively.
 #' @references Goss EM, Tabima JF, Cooke DEL, Restrepo S, Fry WE, Forbes GA,
 #'   Fieland VJ, Cardenas M and Grünwald NJ (2014). “The Irish famine pathogen
 #'   Phytophthora infestans originated in central Mexico rather than the Andes.”
 #'   Proceedings of the National Academy of Sciences, ##(3), pp. in press.
+#==============================================================================#
+NULL
+#==============================================================================#
+#' Peach brown rot pathogen \emph{Monilinia fructicola}
+#' 
+#' @name monpop
+#' @docType data
+#' @usage data(monpop)
+#' @description This is microsatellite data for a population of the haploid 
+#'   plant pathogen \emph{Monilinia fructicola} that causes disease within peach
+#'   tree canopies (Everhart & Scherm, 2014). Entire populations within trees
+#'   were sampled across 3 years (2009, 2010, and 2011) in a total of four
+#'   trees, where one tree was sampled in all three years, for a total of 6
+#'   within-tree populations. Within each year, samples in the spring were taken
+#'   from affected blossoms (termed “BB” for blossom blight) and in late summer
+#'   from affected fruits (termed “FR” for fruit rot). There are a total of 694 
+#'   isolates with 65 to 173 isolates within each canopy population that were 
+#'   characterized using a set of 13 microsatellite markers.
+#' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
+#'   coded into one population factor. These are named "Tree", "Year", and 
+#'   "Symptom"
+#' @references SE Everhart, H Scherm, (2014) Fine-scale genetic structure of 
+#'   Monilinia fructicola during brown rot epidemics within individual peach 
+#'   tree canopies. Phytopathology ## (#) submitted
+#' @examples
+#' data(monpop)
+#' splithierarchy(monpop) <- ~Tree/Year/Symptom
+#' setpop(monpop) <- ~Symptom/Year
+#' monpop
 #==============================================================================#
 NULL
 #==============================================================================#
