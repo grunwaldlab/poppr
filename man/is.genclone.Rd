@@ -9,7 +9,10 @@ is.genclone(x)
 \item{x}{a genclone object}
 }
 \description{
-Note that a \linkS4class{genclone} object will always be a valid
+Check for validity of a genclone object
+}
+\note{
+a \linkS4class{genclone} object will always be a valid
 \linkS4class{genind} object.
 }
 \examples{

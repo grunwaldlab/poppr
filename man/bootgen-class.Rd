@@ -26,4 +26,5 @@ Virtual Class \code{"\linkS4class{gen}"}.
 \author{
 Zhian N. Kamvar
 }
+\keyword{internal}
 

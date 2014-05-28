@@ -25,7 +25,7 @@ genclone object.
 }
 \examples{
 data(Aeut)
-Aeut.gc <- new('genclone', Aeut, other(Aeut)$population_hierarchy)
+Aeut.gc <- as.genclone(Aeut)
 
 # Notice that there are two hierarchical levels, Pop and Subpop
 Aeut.gc

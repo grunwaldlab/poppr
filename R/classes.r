@@ -173,6 +173,7 @@ subset_mlgtable <- function(tab, hierarchy, df){
 #' @slot replen repeat length of microsatellite loci
 #' @slot ploidy the ploidy of the data set
 #' @slot ind.names names of individuals in matrix rows.
+#' @keywords internal
 #' @author Zhian N. Kamvar
 #' @import methods
 #==============================================================================#
@@ -209,6 +210,7 @@ setClass(
 #'   locus where each element in the vector represents the index for a specific
 #'   allele.
 #' @slot names a vector containing names of the observed samples.
+#' @keywords internal
 #' @author Zhian N. Kamvar
 #' @import methods
 #==============================================================================#

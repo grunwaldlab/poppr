@@ -256,7 +256,7 @@ setMethod(
 #==============================================================================#
 #' Check for validity of a genclone object
 #' 
-#' Note that a \linkS4class{genclone} object will always be a valid 
+#' @note a \linkS4class{genclone} object will always be a valid 
 #' \linkS4class{genind} object.
 #' 
 #' @export
@@ -952,7 +952,7 @@ setMethod(
 #' @examples
 #' 
 #' data(Aeut)
-#' Aeut.gc <- new('genclone', Aeut, other(Aeut)$population_hierarchy)
+#' Aeut.gc <- as.genclone(Aeut)
 #' 
 #' # Notice that there are two hierarchical levels, Pop and Subpop
 #' Aeut.gc 

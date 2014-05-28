@@ -22,4 +22,5 @@ be equal to (ploidy)*(number of loci)}
 \author{
 Zhian N. Kamvar
 }
+\keyword{internal}
 
