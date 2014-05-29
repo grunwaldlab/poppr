@@ -481,7 +481,7 @@ poppr.all <- function(filelist, ...){
 #'   2001
 #'   
 #'   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-#'   populations of hordeum spontaneum. \emph{Genetics}, 96(2):523-536, 1980.
+#'   populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536, 1980.
 #'   
 #'   J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
 #'   Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.

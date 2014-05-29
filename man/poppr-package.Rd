@@ -62,6 +62,7 @@ that all functions in \pkg{\link[adegenet]{adegenet}} are also available.
 \item \code{\link{informloci}} - Detects and removes phylogenetically uninformative loci
 \item \code{\link{popsub}} - Subsets genind objects by population
 \item \code{\link{shufflepop}} - Shuffles genotypes at each locus using four different shuffling algorithms
+\item \code{\link{recode_polyploids}} - recode polyploid data sets with missing alleles imported as "0"
 }
 }
 
