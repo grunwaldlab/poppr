@@ -1,5 +1,5 @@
 \documentclass[letterpaper]{article}
-%\VignetteIndexEntry{Poppr User Manual}
+%\VignetteIndexEntry{Data import and manipulation}
 %\VignetteEngine{knitr::knitr}
 \usepackage{graphicx}
 \usepackage[colorlinks = true,

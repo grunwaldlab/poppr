@@ -2,19 +2,41 @@
 \docType{package}
 \name{poppr-package}
 \alias{poppr-package}
-\title{Tools for analyses of populations with clonal, partially clonal, and/or
-sexual reproduction.}
+\title{The \pkg{poppr} R package.}
 \description{
-Poppr provides tools for population genetic analysis that include genotypic
-diveristy measures, genetic distances with bootstrap support, native
-organization and handling of population hierarchies, and clone correction.
+\pkg{Poppr} provides tools for population genetic analysis that
+include genotypic diveristy measures, genetic distances with bootstrap
+support, native organization and handling of population hierarchies, and
+clone correction.
+
+To cite \pkg{poppr}, please use \code{citation("poppr")}. When referring to
+\pkg{poppr} in your manuscript, please use lower case unless it occurs at the
+beginning of a sentence.
 }
 \details{
-To cite poppr, please use \code{citation("poppr")}. When referring to poppr
-in your manuscript, please use lower case unless it occurs at the beginning
-of a sentence.
+This package relies on the \pkg{\link[adegenet]{adegenet}} package.
+It was built around the \code{\linkS4class{genind}} object, which stores
+genetic information in a table of allele frequencies. \pkg{Poppr} has
+extended this object into a new object called \code{\linkS4class{genclone}}.
+This object tracks clones and organizes different population hierarchical
+levels.
 
-This package documentation is in progress.
+\subsection{Documentation}{ Documentation is available for any function by
+typing \code{?function_name} in the R console. Essential functions for
+manipulating data are detailed within the \emph{Data import and manipulation}
+vignette (\code{vignette("poppr_manual", package = "poppr")}) and details on
+algorithms used in \pkg{poppr} are within the \emph{Algorithms and equations}
+vignette (\code{vignette("algo", package = "poppr")}). }
+
+\subsection{Getting help}{ If you have a specific question or issue with
+\pkg{poppr}, feel free to contribute to the google group at
+\url{https://groups.google.com/forum/#!forum/poppr}. If you find a bug and
+are a github user, you can submit bug reports at
+\url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a message
+on the groups.}
+
+Below are descriptions and links to functions found in \pkg{poppr}. Be aware
+that all functions in \pkg{\link[adegenet]{adegenet}} are also available.
 }
 \section{Data import/export}{
 
@@ -75,6 +97,7 @@ This package documentation is in progress.
 \item \code{\link{mlg.vector}} - Returns a vector of a numeric multilocus genotype assignment for each individual
 \item \code{\link{poppr}} - Returns a diversity table by population
 \item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
+\item \code{\link{private_alleles}} - Tabulates the occurences of alleles that only occur in one population.
 }
 }
 
@@ -88,9 +111,14 @@ This package documentation is in progress.
 \item \code{\link{info_table}} - Creates a heatmap representing missing data or observed ploidy
 }
 }
+\author{
+Zhian N. Kamvar, Javier F. Tabima, Niklaus J. Grünwald
+
+Maintainer: Zhian N. Kamvar
+}
 \references{
 Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for
 genetic analysis of populations with clonal, partially clonal, and/or sexual
-reproduction. PeerJ 2:e281 http://dx.doi.org/10.7717/peerj.281
+reproduction. PeerJ 2:e281 \url{http://dx.doi.org/10.7717/peerj.281}
 }
 
