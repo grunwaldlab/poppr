@@ -885,13 +885,15 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' @export
 #' @examples
 #' data(Pinf)
+#' iPinf <- recode_polyploids(Pinf)
 #' 
 #' # Obtaining basic summaries. Note the heterozygosity measures.
 #' summary(Pinf)
 #' summary(iPinf)
-#' library(ape)
 #' 
 #' \dontrun{
+#' library(ape)
+#' 
 #' # Removing missing data. 
 #' Pinf <- missingno(Pinf, "geno", cutoff = 0)
 #' iPinf <- recode_polyploids(Pinf)

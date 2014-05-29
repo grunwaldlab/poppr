@@ -78,13 +78,15 @@ distance, it only made sense to attempt something beyond single use.
 }
 \examples{
 data(Pinf)
+iPinf <- recode_polyploids(Pinf)
 
 # Obtaining basic summaries. Note the heterozygosity measures.
 summary(Pinf)
 summary(iPinf)
-library(ape)
 
 \dontrun{
+library(ape)
+
 # Removing missing data.
 Pinf <- missingno(Pinf, "geno", cutoff = 0)
 iPinf <- recode_polyploids(Pinf)
