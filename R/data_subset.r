@@ -812,5 +812,129 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
     return(pop[, loc = names(pop@loc.names[locivals])])
   }
 }
+# A function designed to remove padding zeroes from genind objects. This is
+# necessary to calculate frequency-based statistics. The zeroes paradigm is
+# still useful for calculation of the index of association and Bruvo's distance
+#==============================================================================#
+#' Recode polyploid microsatellite data for use in frequency based statistics.
+#' 
+#' As the genind object requires ploidy to be consistent across loci, a 
+#' workaround to importing polyploid data was to code missing alleles as "0" 
+#' (for microsatellite data sets). The advantage of this is that users would be 
+#' able to calculate Bruvo's Distance, the index of association, and genotypic 
+#' diversity statistics. The tradeoff was the fact that this broke all other 
+#' analyses as they relied on allele frequencies and the missing alleles are 
+#' treated as extra alleles. This function removes those alleles and returns a 
+#' \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object where 
+#' allele frequencies are coded based on the number of alleles observed at a 
+#' single locus per individual. See the examples for more details.
+#' 
+#' @param poly a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'   object that has a ploidy of >2
+#' @param newploidy an \code{integer}. This gives the user the option to reset
+#'   the ploidy of the data set. It's default is set to the ploidy of the
+#'   incoming data set.
+#'   
+#' @return a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
+#'   object.
+#'   
+#' @details The genind object has two caveats that make it difficult to work 
+#'   with polyploid data sets: \enumerate{\item ploidy must be constant
+#'   throughout the data set \item missing data is treated as "all-or-none"} In
+#'   an ideal world, polyploid genotypes would be just as unambigouous as
+#'   diploid or haploid genotypes. Unfortunately, the world we live in is far
+#'   from ideal and a genotype of AB in a tetraploid organism could be AAAB,
+#'   AABB, or ABBB. In order to get polyploid data in to \pkg{adegenet} or
+#'   \pkg{poppr}, we must code all loci to have the same number of allelic
+#'   states as the ploidy or largest observed heterozygote (if ploidy is
+#'   unknown). The way to do this is to insert zeroes to pad the alleles. So, to
+#'   import two genotypes of:
+#' \tabular{rrrr}{
+#' NA \tab 20 \tab 23 \tab 24\cr
+#' 20 \tab 24 \tab 26 \tab 43
+#' } 
+#' they should be coded as: 
+#' \tabular{rrrr}{
+#'  0 \tab 20 \tab 23 \tab 24\cr
+#' 20 \tab 24 \tab 26 \tab 43
+#' } 
+#' This zero is treated as an extra allele and is represented in the genind object as so:
+#' \tabular{rrrrrr}{
+#' \strong{0} \tab \strong{20} \tab \strong{23} \tab \strong{24} \tab \strong{26} \tab \strong{43}\cr
+#' 0.25 \tab 0.25 \tab 0.25 \tab 0.25 \tab 0.00 \tab 0.00\cr
+#' 0.00 \tab 0.25 \tab 0.00 \tab 0.25 \tab 0.25 \tab 0.25
+#' }
+#' 
+#'   A homozygote would have the \strong{0} column at a value of 0.75. This
+#'   function remidies this problem by removing the zero column and rescaling the allele
+#'   frequencies to those observed. The above table would become:
+#' \tabular{rrrrr}{
+#' \strong{20} \tab \strong{23} \tab \strong{24} \tab \strong{26} \tab \strong{43}\cr
+#' 0.333 \tab 0.333 \tab 0.333 \tab 0.00 \tab 0.00\cr
+#' 0.25 \tab 0.00 \tab 0.25 \tab 0.25 \tab 0.25
+#' }
+#' 
+#' With this, the user is able to calculate frequency based statistics on the
+#' data set.
+#' 
+#' @note This is an approximation, and a bad one at that. \pkg{Poppr} was not
+#' originally intended for polyploids, but with the inclusion of Bruvo's
+#' distance, it only made sense to attempt something beyond single use.
+#' 
+#' As was mentioned before, Bruvo's distance, the index of association, and 
+#' genotypic diversity statistics will work perfectly fine with the non-recoded 
+#' data. Recoded data will not work with Bruvo's distance or the index of 
+#' association.
+#' 
+#' @author Zhian N. Kamvar
+#' @export
+#' @examples
+#' data(Pinf)
+#' # Removing missing data. 
+#' Pinf <- missingno(Pinf, "geno", cutoff = 0)
+#' iPinf <- recode_polyploids(Pinf)
+#' library(ape)
+#' 
+#' # Calculating Rogers' distance. 
+#' rog <- rogers.dist(Pinf)
+#' irog <- rogers.dist(iPinf)
+#' 
+#' # We will now plot neighbor joining trees. Note the decreased distance in the
+#' # original data.
+#' plot(nj(rog), type = "unrooted", show.tip.label = FALSE)
+#' add.scale.bar(lcol = "red")
+#' plot(nj(irog), type = "unrooted", show.tip.label = FALSE)
+#' add.scale.bar(lcol = "red")
+#==============================================================================#
+recode_polyploids <- function(poly, newploidy = poly@ploidy){
+  if (!is.genind(poly)){
+    stop("input must be a genind object.")
+  } else if (!test_zeroes(poly)){
+    warning("Input is not a polyploid data set, returning original.")
+    return(poly)
+  }
+  MAT <- truenames(poly)$tab
+  fac <- poly@loc.fac
+  zerocols <- as.numeric(unlist(poly@all.names)) == 0 #!duplicated(fac)
+  newfac <- fac[!zerocols]
+  loci <- lapply(split(MAT, fac[col(MAT)]), matrix, nrow = nInd(poly))
+  loci <- lapply(1:length(loci), function(x){
+    locus <- loci[[x]]
+    alleles <- as.numeric(poly@all.names[[x]])
+    return(locus[, alleles > 0])
+  })
+  loci <- lapply(loci, function(mat) t(apply(mat, 1, function(x) x/sum(x))))
+  newMAT <- matrix(nrow = nInd(poly), ncol = length(newfac))
+  newMAT[] <- unlist(loci)
+  colnames(newMAT) <- colnames(MAT)[!zerocols]
+  rownames(newMAT) <- rownames(MAT)
+  newgen <- genind(newMAT, pop = pop(poly), ploidy = newploidy, type = poly@type)
+  newgen@other <- poly@other
+  if (is.genclone(poly)){
+    newgen <- new('genclone', newgen, poly@hierarchy, poly@mlg)
+  }
+  return(newgen)
+}
+
 
 
