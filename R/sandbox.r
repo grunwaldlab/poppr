@@ -58,33 +58,6 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
   return(x)
 }
 
-# A function designed to remove padding zeroes from genind objects. This is
-# necessary to calculate frequency-based statistics. The zeroes paradigm is
-# still useful for calculation of the index of association and Bruvo's distance
-recode_polyploids <- function(poly, newploidy = poly@ploidy){
-  MAT <- truenames(poly)$tab
-  fac <- poly@loc.fac
-  zerocols <- as.numeric(unlist(poly@all.names)) == 0#!duplicated(fac)
-  newfac <- fac[!zerocols]
-  loci <- lapply(split(MAT, fac[col(MAT)]), matrix, nrow = nInd(poly))
-  loci <- lapply(1:length(loci), function(x){
-    locus <- loci[[x]]
-    alleles <- as.numeric(poly@all.names[[x]])
-    return(locus[, alleles > 0])
-  })
-  loci <- lapply(loci, function(mat) t(apply(mat, 1, function(x) x/sum(x))))
-  newMAT <- matrix(nrow = nInd(poly), ncol = length(newfac))
-  newMAT[] <- unlist(loci)
-  colnames(newMAT) <- colnames(MAT)[!zerocols]
-  rownames(newMAT) <- rownames(MAT)
-  newgen <- genind(newMAT, pop = pop(poly), ploidy = newploidy, type = poly@type)
-  newgen@other <- poly@other
-  if (is.genclone(poly)){
-    newgen <- new('genclone', newgen, poly@hierarchy, poly@mlg)
-  }
-  return(newgen)
-}
-
 gen2polysat <- function(gen, newploidy = gen@ploidy){
   if (!require(polysat)){
     stop("User needs polysat installed")

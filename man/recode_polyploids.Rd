@@ -74,17 +74,20 @@ This is an approximation, and a bad one at that. \pkg{Poppr} was not
 originally intended for polyploids, but with the inclusion of Bruvo's
 distance, it only made sense to attempt something beyond single use.
 
-As was mentioned before, Bruvo's distance, the index of association, and
-genotypic diversity statistics will work perfectly fine with the non-recoded
-data. Recoded data will not work with Bruvo's distance or the index of
-association.
+\strong{Do not use recoded data with Bruvo's distance or the index of association.}
 }
 \examples{
 data(Pinf)
+
+# Obtaining basic summaries. Note the heterozygosity measures.
+summary(Pinf)
+summary(iPinf)
+library(ape)
+
+\dontrun{
 # Removing missing data.
 Pinf <- missingno(Pinf, "geno", cutoff = 0)
 iPinf <- recode_polyploids(Pinf)
-library(ape)
 
 # Calculating Rogers' distance.
 rog <- rogers.dist(Pinf)
@@ -96,6 +99,7 @@ plot(nj(rog), type = "unrooted", show.tip.label = FALSE)
 add.scale.bar(lcol = "red")
 plot(nj(irog), type = "unrooted", show.tip.label = FALSE)
 add.scale.bar(lcol = "red")
+}
 }
 \author{
 Zhian N. Kamvar

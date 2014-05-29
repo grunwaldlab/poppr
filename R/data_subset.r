@@ -812,9 +812,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
     return(pop[, loc = names(pop@loc.names[locivals])])
   }
 }
-# A function designed to remove padding zeroes from genind objects. This is
-# necessary to calculate frequency-based statistics. The zeroes paradigm is
-# still useful for calculation of the index of association and Bruvo's distance
+
 #==============================================================================#
 #' Recode polyploid microsatellite data for use in frequency based statistics.
 #' 
@@ -881,19 +879,22 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' originally intended for polyploids, but with the inclusion of Bruvo's
 #' distance, it only made sense to attempt something beyond single use.
 #' 
-#' As was mentioned before, Bruvo's distance, the index of association, and 
-#' genotypic diversity statistics will work perfectly fine with the non-recoded 
-#' data. Recoded data will not work with Bruvo's distance or the index of 
-#' association.
+#' \strong{Do not use recoded data with Bruvo's distance or the index of association.}
 #' 
 #' @author Zhian N. Kamvar
 #' @export
 #' @examples
 #' data(Pinf)
+#' 
+#' # Obtaining basic summaries. Note the heterozygosity measures.
+#' summary(Pinf)
+#' summary(iPinf)
+#' library(ape)
+#' 
+#' \dontrun{
 #' # Removing missing data. 
 #' Pinf <- missingno(Pinf, "geno", cutoff = 0)
 #' iPinf <- recode_polyploids(Pinf)
-#' library(ape)
 #' 
 #' # Calculating Rogers' distance. 
 #' rog <- rogers.dist(Pinf)
@@ -905,6 +906,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' add.scale.bar(lcol = "red")
 #' plot(nj(irog), type = "unrooted", show.tip.label = FALSE)
 #' add.scale.bar(lcol = "red")
+#' }
 #==============================================================================#
 recode_polyploids <- function(poly, newploidy = poly@ploidy){
   if (!is.genind(poly)){
@@ -913,7 +915,11 @@ recode_polyploids <- function(poly, newploidy = poly@ploidy){
     warning("Input is not a polyploid data set, returning original.")
     return(poly)
   }
-  MAT <- truenames(poly)$tab
+  if (!is.null(pop(poly))){
+    MAT <- truenames(poly)$tab    
+  } else {
+    MAT <- truenames(poly)
+  }
   fac <- poly@loc.fac
   zerocols <- as.numeric(unlist(poly@all.names)) == 0 #!duplicated(fac)
   newfac <- fac[!zerocols]
