@@ -754,6 +754,57 @@ still import your data using R's \texttt{read.table} along with
 \texttt{df2genind} from \adegenet{}. For more information, see \adegenet{}'s
 ``Getting Started" vignette.
 
+\subsubsection{About polyploid data}
+\label{intro:import:polyploid}
+
+\tab\tab With diploid or haploid data, genotypes are unambiguous. It is often
+clear when it is homozygous or heterozygous. With polyploid data, genotypes can
+be ambiguous. For example, a tetraploid individual with the apparent genotype of
+\textbf{A/B} could actually have one of three genotypes: \textbf{A/A/A/B},
+\textbf{A/A/B/B}, or \textbf{A/B/B/B}. This ambiguity prevents a researcher from
+accurately calling all alleles present. In \adegenet{}, it was previously
+difficult to import polyploid data because of this ambiguity as data was
+required to be unambiguous or missing.
+
+A solution to this problem is to code missing alleles as ``0''. An example of
+this is found within the \texttt{Pinf} data set in \poppr{}.
+
+<<pinf_show>>=
+data(Pinf)
+Pinf
+Pinfdf <- genind2df(Pinf, sep = "/")
+tail(Pinfdf[10:12])
+@
+\noindent
+We see a data set of tetraploid individuals where some genotypes appear diploid
+(\texttt{\Sexpr{Pinfdf[85, 10]}}) and some appear triploid
+(\texttt{\Sexpr{Pinfdf[86, 10]}}). The tetraploid genotype is padded with zeroes
+to make up the difference in ploidy.
+
+\begin{center}
+  \fcolorbox{light-gray}{salmon}{
+    \begin{minipage}[t]{0.8\textwidth}
+      {\begin{center} \jala{}\jala{} \textbf{WARNING}\revjala{}\revjala{}\end{center}}
+      Treat polyploid data with care. Please read this section carefully and
+      consult the help pages for all functions mentioned here.
+    \end{minipage}
+  }
+\end{center}
+
+This method allows \textsc{Bruvo's Distance} \cite{Bruvo:2004} and the
+\textsc{Index of Association} \cite{Brown:1980,Smith:1993,Agapow:2001} to work
+with polyploids. A side effect, unfortunately is that the extra zeroes appear as
+extra alleles. As this affects all frequency-based statistics (except for the
+ones noted above), the user should reformat their data set with the function
+\texttt{recode\_polyploids}, which will remove the zeroes and recode the allele
+frequencies to the observed frequencies.
+
+<<pinf_recode>>=
+Pinf_rc <- recode_polyploids(Pinf)
+Pinfrcdf <- genind2df(Pinf_rc, sep = "/")
+tail(Pinfrcdf[10:12])
+@
+
 \subsubsection{Function: genind2genalex}
 \label{intro:import:genind2genalex}
 
@@ -4517,7 +4568,7 @@ to its definition and description.
 \cmdlink{data.manip:divide:popsub}{popsub} & Subsets genind objects by population \\
 \cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
 \texttt{splitcombine*} & Manipulates population hierarchy *Deprecated\\
-\texttt{recode\_polyploids} &  recode polyploid data sets with missing alleles imported as ``0''\\
+\cmdlink{intro:import:polyploid}{recode\_polyploids} &  recode polyploid data sets with missing alleles imported as ``0''\\
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Distances}}\\
 \texttt{bruvo.dist} & Bruvo's distance \\
