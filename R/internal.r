@@ -1215,23 +1215,6 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss
 }
 
 #==============================================================================#
-# The unexported print.amova from ade4
-#
-# Public functions utilizing this function:
-# # ade4_amova
-#
-# Internal functions utilizing this function:
-# # none
-#==============================================================================#
-print.amova <- function(x, full = FALSE, ...){
-  if (full == TRUE){
-    print(x)
-  } else {
-    print(x[-((length(x) - 2):length(x))]) 
-  }
-}
-
-#==============================================================================#
 # A function for creating a population hierarchy using a formula and data frame
 # 
 # hier = a nested formula such as ~ A/B/C where C is nested within B, which is
