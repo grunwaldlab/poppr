@@ -15,7 +15,7 @@ install:
   - "[ ! -d ~/R ] && mkdir ~/R"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
-  - Rscript -e 'install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph", "reshape", "seqinr", "testthat", "knitr"), repos="http://cran.at.r-project.org")'
+  - Rscript -e 'install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph", "reshape", "seqinr", "testthat", "knitr", "polysat"), repos="http://cran.at.r-project.org")'
 
 # run tests
 script:

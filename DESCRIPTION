@@ -3,7 +3,7 @@ Type: Package
 Title: an R package for genetic analysis of populations with mixed
     reproduction
 Version: 1.1.0.99
-Date: 2014-06-04
+Date: 2014-06-10
 Author: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>, Javier F. Tabima
     <tabimaj@onid.orst.edu>, Niklaus J. Grunwald
     <grunwaln@science.oregonstate.edu>
@@ -29,5 +29,6 @@ Imports:
     reshape2
 Suggests:
     testthat,
-    knitr
+    knitr,
+    polysat
 License: GPL-2
