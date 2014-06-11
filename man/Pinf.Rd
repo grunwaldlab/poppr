@@ -15,9 +15,10 @@ The Pinf data set contains 86 isolates genotyped over 11
   This is a subset of the data used for the reference below.
 }
 \references{
-Goss EM, Tabima JF, Cooke DEL, Restrepo S, Fry WE, Forbes GA,
-  Fieland VJ, Cardenas M and Grünwald NJ (2014). “The Irish famine pathogen
-  \emph{Phytophthora infestans} originated in central Mexico rather than the Andes.”
-  Proceedings of the National Academy of Sciences, ##(3), pp. in press.
+Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia
+  Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha
+  Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen
+  \emph{Phytophthora infestans} originated in central Mexico rather than the Andes."
+  Proceedings of the National Academy of Sciences (2014): 201401884.
 }
 

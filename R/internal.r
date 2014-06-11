@@ -89,10 +89,11 @@ NULL
 #' @format a \code{\linkS4class{genclone}} object with 2 hierarchical levels
 #'   called "Continent" and "Country" that contain 2 and 4 populations,
 #'   respectively.
-#' @references Goss EM, Tabima JF, Cooke DEL, Restrepo S, Fry WE, Forbes GA,
-#'   Fieland VJ, Cardenas M and Grünwald NJ (2014). “The Irish famine pathogen
-#'   \emph{Phytophthora infestans} originated in central Mexico rather than the Andes.”
-#'   Proceedings of the National Academy of Sciences, ##(3), pp. in press.
+#' @references Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia
+#'   Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha
+#'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen
+#'   \emph{Phytophthora infestans} originated in central Mexico rather than the Andes."
+#'   Proceedings of the National Academy of Sciences (2014): 201401884.
 #==============================================================================#
 NULL
 #==============================================================================#
