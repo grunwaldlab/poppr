@@ -106,12 +106,7 @@ Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
 Corvallis, OR}}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-
-
-
-
 \begin{document}
-
 
 
 \maketitle
@@ -531,7 +526,6 @@ Genotype \\
 \end{kframe}
 \end{knitrout}
 
-
 We will now compute the distances and construct neighbor-joining dendrograms
 using the package \textit{ape}. This allows us to see the effect of the
 different distance measures on the tree topology.
@@ -540,20 +534,19 @@ different distance measures on the tree topology.
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{distances} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"Nei"}\hlstd{,} \hlstr{"Rogers"}\hlstd{,} \hlstr{"Edwards"}\hlstd{,} \hlstr{"Reynolds"}\hlstd{,} \hlstr{"Provesti"}\hlstd{)}
-\hlstd{dists} \hlkwb{<-} \hlkwd{lapply}\hlstd{(distances,} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{) \{}
-    \hlstd{DISTFUN} \hlkwb{<-} \hlkwd{match.fun}\hlstd{(}\hlkwd{paste}\hlstd{(}\hlkwd{tolower}\hlstd{(x),} \hlstr{"dist"}\hlstd{,} \hlkwc{sep} \hlstd{=} \hlstr{"."}\hlstd{))}
-    \hlkwd{DISTFUN}\hlstd{(dat)}
+\hlstd{dists} \hlkwb{<-} \hlkwd{lapply}\hlstd{(distances,} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)\{}
+  \hlstd{DISTFUN} \hlkwb{<-} \hlkwd{match.fun}\hlstd{(}\hlkwd{paste}\hlstd{(}\hlkwd{tolower}\hlstd{(x),} \hlstr{"dist"}\hlstd{,} \hlkwc{sep} \hlstd{=} \hlstr{"."}\hlstd{))}
+  \hlkwd{DISTFUN}\hlstd{(dat)}
 \hlstd{\})}
 \hlkwd{names}\hlstd{(dists)} \hlkwb{<-} \hlstd{distances}
 
-\hlcom{# Adding Bruvo's distance at the end because we need to specify repeat}
-\hlcom{# length.}
+\hlcom{# Adding Bruvo's distance at the end because we need to specify repeat length.}
 \hlstd{dists}\hlopt{$}\hlstd{Bruvo} \hlkwb{<-} \hlkwd{bruvo.dist}\hlstd{(dat,} \hlkwc{replen} \hlstd{=} \hlnum{1}\hlstd{)}
 \hlkwd{library}\hlstd{(ape)}
 \hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{3}\hlstd{))}
-\hlstd{x} \hlkwb{<-} \hlkwd{lapply}\hlstd{(}\hlkwd{names}\hlstd{(dists),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{) \{}
-    \hlkwd{plot}\hlstd{(}\hlkwd{nj}\hlstd{(dists[[x]]),} \hlkwc{main} \hlstd{= x,} \hlkwc{type} \hlstd{=} \hlstr{"unrooted"}\hlstd{)}
-    \hlkwd{add.scale.bar}\hlstd{(}\hlkwc{lcol} \hlstd{=} \hlstr{"red"}\hlstd{)}
+\hlstd{x} \hlkwb{<-} \hlkwd{lapply}\hlstd{(}\hlkwd{names}\hlstd{(dists),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)\{}
+  \hlkwd{plot}\hlstd{(}\hlkwd{nj}\hlstd{(dists[[x]]),} \hlkwc{main} \hlstd{= x,} \hlkwc{type} \hlstd{=} \hlstr{"unrooted"}\hlstd{)}
+  \hlkwd{add.scale.bar}\hlstd{(}\hlkwc{lcol} \hlstd{=} \hlstr{"red"}\hlstd{)}
 \hlstd{\})}
 \end{alltt}
 \end{kframe}
@@ -565,7 +558,6 @@ different distance measures on the tree topology.
 
 
 \end{knitrout}
-
 
 \section{AMOVA}
 
@@ -611,6 +603,6 @@ Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
 genotypes observed and $N$ is the sample size. Essentially, it's an unbiased
 estimator for the Simpson index.
 
-\bibliographystyle{plain}
+\bibliographystyle{pnas.bst}
 \bibliography{poppr_man}
 \end{document}

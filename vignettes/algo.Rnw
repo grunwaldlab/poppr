@@ -548,6 +548,6 @@ Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
 genotypes observed and $N$ is the sample size. Essentially, it's an unbiased
 estimator for the Simpson index.
 
-\bibliographystyle{plain}
+\bibliographystyle{pnas.bst}
 \bibliography{poppr_man}
 \end{document}
