@@ -108,9 +108,16 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE){
   }
   out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
   colnames(out) <- 1:(nloci-1)
+  outmeans <- colMeans(out)
+  outmax <- apply(out, 2, max)
+  outperc <- round(100*(outmeans/mlg(gen, quiet = TRUE)), 1)
   outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
   aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
   outplot <- ggplot(outmelt) + geom_boxplot(aesthetics) + 
+             geom_smooth(aes_string(x = "factor(NumLoci)", y = "MLG", group = 1), 
+                         method = "loess") + 
+             annotate("text", x = 1:length(outmeans), y = outmax, 
+                      label = paste0(" ",outperc, "%"), vjust = -1) + 
              labs(list(title = paste("Genotype Accumulation Curve for", datacall[2]), 
                        y = "Number of Multilocus Genotypes",
                        x = "Number of loci sampled")) + theme_bw()
