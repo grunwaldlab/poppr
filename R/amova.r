@@ -241,7 +241,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
   if (is.null(dist)){
-    xdist <- sqrt(diss.dist(clonecorrect(x, hier = NA), frac = FALSE))
+    xdist <- sqrt(diss.dist(clonecorrect(x, hier = NA), percent = FALSE))
   } else {
     datalength <- choose(nInd(x), 2)
     mlgs       <- mlg(x, quiet = TRUE)

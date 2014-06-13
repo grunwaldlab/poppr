@@ -3,7 +3,7 @@
 \alias{diss.dist}
 \title{Calculate a distance matrix based on relative dissimilarity}
 \usage{
-diss.dist(x, diff = TRUE, frac = TRUE, mat = FALSE)
+diss.dist(x, diff = TRUE, percent = TRUE, mat = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{genind}} object.}
@@ -12,7 +12,7 @@ diss.dist(x, diff = TRUE, frac = TRUE, mat = FALSE)
 differences between individuals. \code{FALSE} will count the number of
 similarities. Default set to \code{TRUE}}
 
-\item{frac}{\code{logical}. Should the distance be represented from 0 to 1?
+\item{percent}{\code{logical}. Should the distance be represented from 0 to 1?
 Default set to \code{TRUE}. \code{FALSE} will return the distance represented
 as integers from 1 to n where n is the number of loci*ploidy.}
 

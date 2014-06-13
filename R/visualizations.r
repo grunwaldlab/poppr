@@ -946,3 +946,85 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
   par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
   par(oma=c(0,0,0,0)) # Figure margins
 }
+
+
+#==============================================================================#
+#' Produce a genotype accumulation curve
+#' 
+#' GA curves are useful for determinining the minimum number of loci necessary 
+#' to discriminate between individuals in a population. This function will
+#' randomly sample loci without replacement and count the number of multilocus
+#' genotypes observed.
+#' 
+#' @param gen a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'   object.
+#'   
+#' @param sample an \code{integer} defining the number of times loci will be
+#'   resampled.
+#'   
+#' @param quiet if \code{FALSE}, a progress bar will be displayed. If
+#'   \code{TRUE}, nothing is printed to screen as the function runs.
+#'   
+#' @param thresh a number from 0 to 1. This will draw a line at this fraction of
+#'   multilocus genotypes.
+#'   
+#' @return a matrix of integers showing the results of each randomization.
+#'   Columns represent the number of loci sampled and rows represent an
+#'   independent sample.
+#'   
+#' @author Zhian N. Kamvar
+#' @export
+#' @examples
+#' data(nancycats)
+#' nan_geno <- genotype_curve(nancycats)
+#' \dontrun{
+#' # With AFLP data, it is often necessary to include more markers for resolution
+#' data(Aeut)
+#' Ageno <- genotype_curve(Aeut)
+#' 
+#' # Many microsatellite data sets have hypervariable markers
+#' data(microbov)
+#' mgeno <- geotype_curve(microbov)
+#' 
+#' # This data set has been pre filtered
+#' data(monpop)
+#' mongeno <- genotype_curve(monpop)}
+#==============================================================================#
+
+genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
+  datacall <- match.call()
+  if (!is.genind(gen)){
+    stop(paste(datacall[2], "must be a genind object"))
+  }
+  genloc <- as.loci(gen)
+  if (!is.null(pop(gen))){
+    genloc <- genloc[-1]
+  }
+  nloci  <- nLoc(gen)
+  if (!quiet){
+    cat("Calculating genotype accumulation for", nloci - 1, "loci...\n")
+    progbar <- txtProgressBar(style = 3)
+  } else {
+    progbar <- NULL
+  }
+  out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
+  colnames(out) <- 1:(nloci-1)
+  threshdf <- data.frame(x = mlg(gen, quiet = TRUE)*thresh)
+  outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
+  aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
+  outplot <- ggplot(outmelt) + geom_boxplot(aesthetics) + 
+             labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
+                       y = "Number of multilocus genotypes",
+                       x = "Number of loci sampled")) 
+  if (!is.null(thresh)){
+    outbreaks <- sort(c(seq(min(out), max(out), length.out = 5), threshdf$x))
+    outplot <- outplot + geom_hline(aes_string(yintercept = "x"), 
+                                    data = threshdf, color = "red", type = 2) + 
+                         annotate("text", x = 1, y = threshdf$x, vjust = -1, 
+                                  label = paste0(" ", thresh*100, "%"), 
+                                  color = "red") +
+                         scale_y_continuous(breaks = outbreaks)
+  }
+  print(outplot)
+  return(out)
+}

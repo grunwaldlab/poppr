@@ -82,53 +82,8 @@ new_graph_pops <- function(graph, dat, color){
   return(graph)
 }
 
-get_sample_mlg <- function(size, samp, nloci, gen, progbar){
-  if (!is.null(progbar)){
-    setTxtProgressBar(progbar, size/(nloci-1))
-  }
-  out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
-  return(out)
-}
 
-genotype_curve <- function(gen, sample = 100, quiet = FALSE, horiz = 0.9){
-  datacall <- match.call()
-  if (!is.genind(gen)){
-    stop(paste(datacall[2], "must be a genind object"))
-  }
-  genloc <- as.loci(gen)
-  if (!is.null(pop(gen))){
-    genloc <- genloc[-1]
-  }
-  nloci  <- nLoc(gen)
-  if (!quiet){
-    cat("Calculating genotype accumulation for", nloci - 1, "loci...\n")
-    progbar <- txtProgressBar(style = 3)
-  } else {
-    progbar <- NULL
-  }
-  out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
-  colnames(out) <- 1:(nloci-1)
-#   outmeans <- colMeans(out)
-#   outmax <- apply(out, 2, max)
-#   outperc <- round(100*(outmeans/mlg(gen, quiet = TRUE)), 1)
-  horizdf <- data.frame(x = mlg(gen, quiet = TRUE)*horiz)
-  outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
-  aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
-  outplot <- ggplot(outmelt) + geom_boxplot(aesthetics) + 
-             labs(list(title = paste("Genotype Accumulation Curve for", datacall[2]), 
-                       y = "Number of Multilocus Genotypes",
-                       x = "Number of loci sampled")) 
-  if (!is.null(horiz)){
-    outplot <- outplot + geom_hline(aes_string(yintercept = "x"), 
-                                    data = horizdf, color = "red", type = 2) + 
-                         annotate("text", x = 1, y = horizdf$x, vjust = -1, 
-                                  label = paste0(" ", horiz*100, "%"), 
-                                  color = "red") +
-                         scale_y_continuous(breaks = sort(c(seq(min(out), max(out), length.out = 5), horizdf$x)))
-  }
-  print(outplot)
-  return(out)
-}
+
 
 #==============================================================================#
 # An attempt at making the shuffling schemes handle polyploid data better.

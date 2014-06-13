@@ -57,7 +57,7 @@
 #' differences between individuals. \code{FALSE} will count the number of 
 #' similarities. Default set to \code{TRUE}
 #' 
-#' @param frac \code{logical}. Should the distance be represented from 0 to 1?
+#' @param percent \code{logical}. Should the distance be represented from 0 to 1?
 #' Default set to \code{TRUE}. \code{FALSE} will return the distance represented
 #' as integers from 1 to n where n is the number of loci*ploidy.
 #' 
@@ -84,7 +84,7 @@
 #' @export
 #==============================================================================#
 
-diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
+diss.dist <- function(x, diff=TRUE, percent=TRUE, mat=FALSE){
   stopifnot(is.genind(x))
   ploid     <- ploidy(x)
   ind.names <- x@ind.names
@@ -112,7 +112,7 @@ diss.dist <- function(x, diff=TRUE, frac=TRUE, mat=FALSE){
   dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
   colnames(dist.mat)            <- ind.names
   rownames(dist.mat)            <- ind.names
-  if (frac){
+  if (percent){
     dist.mat <- dist.mat/(numLoci*ploid)
   }
   dist.mat <- as.dist(dist.mat)

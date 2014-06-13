@@ -1793,3 +1793,21 @@ print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
                              "MLG =", length(mlgt))))
   }
 }
+
+#==============================================================================#
+# Internal function for resampling loci for genotype accumulation curve.
+#
+# Public functions utilizing this function:
+# genotype_curve
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+get_sample_mlg <- function(size, samp, nloci, gen, progbar){
+  if (!is.null(progbar)){
+    setTxtProgressBar(progbar, size/(nloci-1))
+  }
+  out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
+  return(out)
+}
+
