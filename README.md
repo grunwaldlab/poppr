@@ -61,11 +61,7 @@ To install this package from github, make sure you have the following:
     OR [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
 - [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
 
-First, install the required dependencies:
-
-```s
-install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
-```
+For Linux users, make sure that the function `getOption("unzip")` returns `"unzip"` or `"internal"`. If it doesn't, then run options(unzip = "internal").
 
 Now you can use the `install_github()` function:
 
@@ -77,7 +73,7 @@ install_github(repo = "grunwaldlab/poppr")
 library(poppr)
 ```
 
-#### For the bleeding edge development version:
+#### For the bleeding edge (development) version:
 
 ```s
 library(devtools)
