@@ -90,7 +90,7 @@ get_sample_mlg <- function(size, samp, nloci, gen, progbar){
   return(out)
 }
 
-genotype_curve <- function(gen, sample = 100, quiet = FALSE){
+genotype_curve <- function(gen, sample = 100, quiet = FALSE, horiz = 0.9){
   datacall <- match.call()
   if (!is.genind(gen)){
     stop(paste(datacall[2], "must be a genind object"))
@@ -108,19 +108,24 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE){
   }
   out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
   colnames(out) <- 1:(nloci-1)
-  outmeans <- colMeans(out)
-  outmax <- apply(out, 2, max)
-  outperc <- round(100*(outmeans/mlg(gen, quiet = TRUE)), 1)
+#   outmeans <- colMeans(out)
+#   outmax <- apply(out, 2, max)
+#   outperc <- round(100*(outmeans/mlg(gen, quiet = TRUE)), 1)
+  horizdf <- data.frame(x = mlg(gen, quiet = TRUE)*horiz)
   outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
   aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
   outplot <- ggplot(outmelt) + geom_boxplot(aesthetics) + 
-             geom_smooth(aes_string(x = "factor(NumLoci)", y = "MLG", group = 1), 
-                         method = "loess") + 
-             annotate("text", x = 1:length(outmeans), y = outmax, 
-                      label = paste0(" ",outperc, "%"), vjust = -1) + 
              labs(list(title = paste("Genotype Accumulation Curve for", datacall[2]), 
                        y = "Number of Multilocus Genotypes",
-                       x = "Number of loci sampled")) + theme_bw()
+                       x = "Number of loci sampled")) 
+  if (!is.null(horiz)){
+    outplot <- outplot + geom_hline(aes_string(yintercept = "x"), 
+                                    data = horizdf, color = "red", type = 2) + 
+                         annotate("text", x = 1, y = horizdf$x, vjust = -1, 
+                                  label = paste0(" ", horiz*100, "%"), 
+                                  color = "red") +
+                         scale_y_continuous(breaks = sort(c(seq(min(out), max(out), length.out = 5), horizdf$x)))
+  }
   print(outplot)
   return(out)
 }
