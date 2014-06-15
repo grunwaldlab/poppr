@@ -1019,10 +1019,10 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
   if (!is.null(thresh)){
     outbreaks <- sort(c(seq(min(out), max(out), length.out = 5), threshdf$x))
     outplot <- outplot + geom_hline(aes_string(yintercept = "x"), 
-                                    data = threshdf, color = "red", type = 2) + 
+                                    data = threshdf, color = "red", linetype = 2) + 
                          annotate("text", x = 1, y = threshdf$x, vjust = -1, 
-                                  label = paste0(" ", thresh*100, "%"), 
-                                  color = "red") +
+                                  label = paste0(thresh*100, "%"), 
+                                  color = "red", hjust = 0) +
                          scale_y_continuous(breaks = outbreaks)
   }
   print(outplot)
