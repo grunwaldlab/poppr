@@ -682,25 +682,29 @@ jackbootplot <- function(df, obs.df){
   dfrbarDnull <- df[df$variable == Indexfac[2] & df$Distribution == "null", ]
   dfIaalt <- df[df$variable == Indexfac[1] & df$Distribution != "null", ]
   dfrbarDalt <- df[df$variable == Indexfac[2] & df$Distribution != "null", ]
-  distplot <- ggplot(df, aes_string(x = "value", fill = "Distribution")) +
-              geom_histogram(alpha = 0.5, position = "identity", 
-                             data = dfIanull)+#,
-                             # binwidth=diff(range(dfIanull$value))/30) +
-              geom_histogram(alpha = 0.5, position = "identity", 
-                             data = dfrbarDnull)+#,
-                             # binwidth=diff(range(dfrbarDnull$value))/30) +
-              geom_histogram(alpha = 0.5, position = "identity", 
-                             data = dfIaalt)+#,
-                             # binwidth=diff(range(dfIaalt$value))/30) +
-              geom_histogram(alpha = 0.5, position = "identity", 
-                             data = dfrbarDalt)+#,
-                             # binwidth=diff(range(dfrbarDalt$value))/30) +
-
-              geom_rug(alpha = 0.5, aes_string(color = "Distribution")) +
-              facet_grid(" ~ variable", scales = "free_x", labeller = label_parsed) + theme_classic() +
-              geom_vline(data = obs.df, aes_string(xintercept = "value", 
-                                                   group = "variable"), 
-                         linetype = "dashed") 
+   distplot <- ggplot(df, aes_string(y = "value", x = "Distribution")) +
+                geom_violin(aes_string(fill = "Distribution")) + 
+                geom_boxplot(alpha = 0.25, width = 0.125) +
+                
+#               geom_histogram(alpha = 0.5, position = "identity", 
+#                              data = dfIanull)+#,
+#                              # binwidth=diff(range(dfIanull$value))/30) +
+#               geom_histogram(alpha = 0.5, position = "identity", 
+#                              data = dfrbarDnull)+#,
+#                              # binwidth=diff(range(dfrbarDnull$value))/30) +
+#               geom_histogram(alpha = 0.5, position = "identity", 
+#                              data = dfIaalt)+#,
+#                              # binwidth=diff(range(dfIaalt$value))/30) +
+#               geom_histogram(alpha = 0.5, position = "identity", 
+#                              data = dfrbarDalt)+#,
+#                              # binwidth=diff(range(dfrbarDalt$value))/30) +
+# 
+#               geom_rug(alpha = 0.5, aes_string(color = "Distribution")) +
+               facet_grid(" ~ variable", scales = "free", labeller = label_parsed) + theme_classic() +
+               geom_hline(data = obs.df, aes_string(yintercept = "value", group = "variable"), linetype = 2)
+#               geom_vline(data = obs.df, aes_string(xintercept = "value", 
+#                                                    group = "variable"), 
+#                          linetype = "dashed") 
   return(distplot)      
 }
 
