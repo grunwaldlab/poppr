@@ -621,43 +621,6 @@ jack.pair_diffs <- function(pop, numLoci, np)
   return(temp.d.vector)
 }
 
-# Function jackcomp is not fully thought out yet. Right now, it is unclear what 
-# the application for this could be. The idea behind it is that if you randomly
-# sampled half of the individuals from your population, how does that affect the
-# index of association? This
-#
-#
-
-jackcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.58730158730159){
-  inds <- nInd(pop)
-  half <- round(inds/divisor)
-  cat("Creating Null Distribution...\t")
-  null <- ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
-    hist = FALSE, method = method)
-  cat("Alternative Distribution...\t")
-  if(pop@type == "codom"){
-    popx <- seploc(pop)
-  }
-  else{
-    popx <- pop
-  }
-  alt <- jack.ia(popx, sample, type = pop@type, divisor)
-  # library(reshape)
-  mnull <- melt(null$sample)
-  malt <- melt(alt)
-  mnull$Distribution <- "null"
-  malt$Distribution <- "alternative"
-  dat <- rbind(mnull, malt)
-  cat("Creating Plots\n")
-  obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
-  distplot <- jackbootplot(dat, obs.df) + 
-              ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, 
-                            "Individuals,", half, "Sampled for Alt.")
-                     ) +
-              theme(strip.text = element_text(size = rel(2)))
-  #print(distplot)
-  return(list(observed = null$index, null_samples = null$samples, alt_samples = alt, plot = distplot))
-}
 
 jackbootplot <- function(df, obs.df){
   Indexfac <- c("I[A]","bar(r)[d]")
@@ -693,100 +656,12 @@ jackbootplot <- function(df, obs.df){
   return(distplot)      
 }
 
-#==============================================================================#
-# This will perform a bootstrap analysis using the resulting distance matrix
-# produced from pair_diffs(). Since the matrix is values of pairwise comparisons,
-# the method of bootstrapping involves a few steps in order to resort the matrix.
-#==============================================================================#
-old.bootia <- function(pop, inds, iterations, comb){
-  V <- jack.Ia.Rd(pop) # calculate matrix. rows = inds, cols = loci
-  
-  bootit <- function(V, inds, comb){
-    #set.seed(9000)
-    sam <- sample(inds, replace = TRUE) 
-    #print(head(sam))
-    
-    
-    # Indicating which columns contain ONLY values included in `sam`.
-    uneak <- colSums(matrix(comb %in% sam, nrow = 2)) > 1
-    samcomb <- comb[, uneak, drop = FALSE]
-    
-    comsam <- combn(sam, 2)
-    compast <- vapply(1:ncol(comsam), function(x) paste(sort(comsam[, x]), collapse = ""), "a")
-    sampast <- vapply(1:ncol(samcomb), function(x) paste(sort(samcomb[, x]), collapse = ""), "a")
-    inds <- vapply(sampast, function(x) sum(compast %in% x), 1)
-    samdump <- rep(as.numeric(names(inds)), inds)  
-    
-    # Now we have to subset the vector. Adding the duplicated comparisons will
-    # not complete the entire data set, so the rest has to be filled in with 
-    # zeroes, since that's the value one would obtain from comparisons to self.
-    V[1:length(samdump), ] <- V[samdump, ]
-    V[-(1:length(samdump)), ] <- 0
-    
-    # Calculate necessary vectors and send them to be calculated into Ia and rd.
-    V <- list(d.vector = colSums(V), 
-          d2.vector = colSums(V^2), 
-          D.vector = rowSums(V)
-          )
-    return(jack.calc(V, ncol(comb)))
-  }
-  comb <- combn(inds, 2) # matrix of pairwise indexes.
-  
-  # Labelling the columns of this matrix provides tractability. When we subset
-  # it, we will know where those subsetted columns came from. 
-  colnames(comb) <- 1:ncol(comb)
-	sample.data <- vapply(1:iterations, function(x) bootit(V, inds, comb), c(pi, pi))
-	rownames(sample.data) <- c("Ia", "rbarD")
-	return(data.frame(t(sample.data)))
-}
-
-
-bootia <- function(x, pop, inds, quiet = TRUE, method = 1, progbar, samps){
-  pop <- pop[sample(inds, replace = TRUE), ]
-  pop@ind.names <- paste("ind", 1:inds)
-  if (!quiet & !is.null(progbar)){
-    setTxtProgressBar(progbar, x/samps)
-  }
-  return(.ia(pop, quiet = TRUE))
-} 
-
-bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
-  inds <- nInd(pop)
-  cat("Creating Null Distribution...\t")
-  null <- ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
-    hist = FALSE, method = method)
-  cat("Alternative Distribution...\t")
-  alt <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
-  #if(pop@type == "codom"){
-  #  popx <- seploc(pop)
-  #}
-  #else{
-  #  popx <- pop
-  #}
-  #alt <- bootia(popx, inds, sample)
-  alt <- data.frame(t(alt))
-  # library(reshape)
-  mnull <- melt(null$sample)
-  malt <- melt(alt)
-  mnull$Distribution <- "null"
-  malt$Distribution <- "alternative"
-  dat <- rbind(mnull, malt)
-  cat("Creating Plots\n")
-  obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
-  distplot <-distplot <- jackbootplot(dat, obs.df) + 
-              ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, 
-                            "Individuals, Method: Bootstrap")
-                     ) +
-              theme(strip.text = element_text(size = rel(2)))
-  #print(distplot)
-  return(list(observed = null$index, null_samples = null$samples, alt_samples = alt, plot = distplot))
-}
-
 #' @importFrom reshape2 melt
 
-jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.587302){
+jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 0.63^-1){
   inds <- nInd(pop)
   message("Null Distribution...")
+
   null <- ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
              hist = FALSE, method = method)
   if(pop@type == "codom"){
@@ -795,6 +670,7 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
   else{
     popx <- pop
   }
+
   message("Alternative Distribution (Bootstrap)...")
   if(!quiet){
     bootbar <- txtProgressBar(style = 3)
@@ -802,13 +678,13 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
     bootbar <- NULL
   }
   jackbar <- bootbar
-  #altboot <- vapply(1:sample, bootia, numeric(2), pop, inds, quiet, method, bootbar, sample)
-  #altboot <- data.frame(t(altboot))
+
   altboot <- boot.ia(popx, sample, bootbar)
+
   message("Alternative Distribution (Jack Knife)...")
   half <- round(inds/divisor)
   altjack <- jack.ia(popx, sample, type = pop@type, divisor, jackbar)  
-  # library(reshape)
+
   mnull <- melt(null$sample, measure.vars = c("Ia", "rbarD"))
   bmalt <- melt(altboot, measure.vars = c("Ia", "rbarD"))
   jmalt <- melt(altjack, measure.vars = c("Ia", "rbarD"))
