@@ -559,7 +559,37 @@ getinds <- function(x){
 
 
 
-jack.ia <- function(pop, iterations, type = type, divisor = 2){ 
+boot.ia <- function(gid, iterations, type = type, divisor = 2, progbar){ 
+  if(!is.list(gid)){
+    N <- nInd(gid)
+  }
+  else{
+    N <- nInd(gid[[1]])
+  }
+  np  <- choose(N, 2)
+  dis <- 1:np
+  dis <-  make_attributes(dis, N, 1:N, "dist", call("dist"))
+  mat <- as.matrix(dis)
+  V    <- jack.Ia.Rd(gid)
+  bootrun <- function(x, V, N, np, mat, progbar, iterations){
+    if (!is.null(progbar)){
+      setTxtProgressBar(progbar, x/iterations)
+    }
+    inds <- sample(N, replace = TRUE)
+    newInds <- as.vector(as.dist(mat[inds, inds])) 
+
+    newV <- V[newInds, ]
+    V    <- list(d.vector  = colSums(newV), 
+                 d2.vector = colSums(newV * newV), 
+                 D.vector  = rowSums(newV)
+                )
+    IarD <- jack.calc(V, np)
+  }
+  sample.data <- vapply(1:iterations, bootrun, numeric(2), V, N, np, mat, progbar, iterations)
+  rownames(sample.data) <- c("Ia", "rbarD")
+  return(data.frame(t(sample.data)))
+}
+jack.ia <- function(pop, iterations, type = type, divisor = 2, progbar){ 
   if(!is.list(pop)){
     inds <- nInd(pop)
   }
@@ -569,8 +599,10 @@ jack.ia <- function(pop, iterations, type = type, divisor = 2){
   half <- round(inds/divisor)
   np <- choose(half, 2)    
   V <- jack.Ia.Rd(pop)
-	funrun <- function(V, inds = 10, half = 5, np = 10){
-	
+	funrun <- function(x, V, inds = 10, half = 5, np = 10, progbar, iterations){
+	  if (!is.null(progbar)){
+      setTxtProgressBar(progbar, x/iterations)
+    }
 	  samp <- sample(inds, half)
     comb <- combn(inds, 2) # pairwise vector
     jackvec <- colSums(matrix(comb %in% samp, nrow = 2)) > 1
@@ -581,7 +613,7 @@ jack.ia <- function(pop, iterations, type = type, divisor = 2){
               )
     IarD <- jack.calc(V, np)
 	}
-	sample.data <- vapply(1:iterations, function(x) funrun(V, inds = inds, half = half, np = np), c(pi, pi))
+	sample.data <- vapply(1:iterations, funrun, numeric(2), V, inds = inds, half = half, np = np, progbar, iterations)
 	rownames(sample.data) <- c("Ia", "rbarD")
 	return(data.frame(t(sample.data)))
 }
@@ -700,7 +732,7 @@ jackbootplot <- function(df, obs.df){
 #                              # binwidth=diff(range(dfrbarDalt$value))/30) +
 # 
 #               geom_rug(alpha = 0.5, aes_string(color = "Distribution")) +
-               facet_grid(" ~ variable", scales = "free", labeller = label_parsed) + theme_classic() +
+               facet_grid(" ~ variable", scales = "free", labeller = label_parsed) +
                geom_hline(data = obs.df, aes_string(yintercept = "value", group = "variable"), linetype = 2)
 #               geom_vline(data = obs.df, aes_string(xintercept = "value", 
 #                                                    group = "variable"), 
@@ -756,10 +788,13 @@ old.bootia <- function(pop, inds, iterations, comb){
 }
 
 
-bootia <- function(pop, inds, quiet = TRUE, method = 1){
+bootia <- function(x, pop, inds, quiet = TRUE, method = 1, progbar, samps){
   pop <- pop[sample(inds, replace = TRUE), ]
   pop@ind.names <- paste("ind", 1:inds)
-  return(.ia(pop, quiet = quiet))
+  if (!quiet & !is.null(progbar)){
+    setTxtProgressBar(progbar, x/samps)
+  }
+  return(.ia(pop, quiet = TRUE))
 } 
 
 bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
@@ -798,31 +833,37 @@ bootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1){
 
 jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 1.587302){
   inds <- nInd(pop)
-  cat("Creating Null Distribution...\t")
+  message("Null Distribution...")
   null <- ia(pop, sample = sample, valuereturn = TRUE, quiet = quiet, 
-    hist = FALSE, method = method)
+             hist = FALSE, method = method)
   if(pop@type == "codom"){
     popx <- seploc(pop)
   }
   else{
     popx <- pop
   }
-  cat("Alternative Distribution (Bootstrap)...\t")
-  altboot <- vapply(1:sample, function(x) bootia(pop, inds, quiet, method), c(pi, pi))
-  altboot <- data.frame(t(altboot))
-  #altboot <- bootia(popx, inds, sample)
-  cat("Alternative Distribution (Jack Knife)...\t")
+  message("Alternative Distribution (Bootstrap)...")
+  if(!quiet){
+    bootbar <- txtProgressBar(style = 3)
+  } else {
+    bootbar <- NULL
+  }
+  jackbar <- bootbar
+  #altboot <- vapply(1:sample, bootia, numeric(2), pop, inds, quiet, method, bootbar, sample)
+  #altboot <- data.frame(t(altboot))
+  altboot <- boot.ia(popx, sample, type = pop@type, divisor, bootbar)
+  message("Alternative Distribution (Jack Knife)...")
   half <- round(inds/divisor)
-  altjack <- jack.ia(popx, sample, type = pop@type, divisor)  
+  altjack <- jack.ia(popx, sample, type = pop@type, divisor, jackbar)  
   # library(reshape)
-  mnull <- melt(null$sample)
-  bmalt <- melt(altboot)
-  jmalt <- melt(altjack)
+  mnull <- melt(null$sample, measure.vars = c("Ia", "rbarD"))
+  bmalt <- melt(altboot, measure.vars = c("Ia", "rbarD"))
+  jmalt <- melt(altjack, measure.vars = c("Ia", "rbarD"))
   mnull$Distribution <- "null"
   bmalt$Distribution <- "bootstrap"
   jmalt$Distribution <- "jack knife"
   dat <- rbind(mnull, bmalt, jmalt)
-  cat("Creating Plots\n")
+  message("Creating Plots")
   obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
   distplot <-distplot <- jackbootplot(dat, obs.df) + 
               ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, 
@@ -838,9 +879,6 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
 
 
 
-
-
-
 ################################################################################
 #################### Zhian's Functions above ###################################
 ################################################################################
@@ -852,67 +890,6 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
 ################################################################################
 #################### Javier's Functions below ##################################
 ################################################################################
-
-genoid.bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, 
-                              sample = 100,  tree = "upgma", showtree = TRUE, 
-                              cutoff = NULL,  quiet = FALSE, ...){
-  # This attempts to make sure the data is true microsatellite data. It will
-  # reject snp and aflp data. 
-  if(pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
-    stop("\nThis dataset does not appear to be microsatellite data. Bruvo's Distance can only be applied for true microsatellites.")
-  }
-  ploid <- ploidy(pop)
-  # Bruvo's distance depends on the knowledge of the repeat length. If the user
-  # does not provide the repeat length, it can be estimated by the smallest
-  # repeat difference greater than 1. This is not a preferred method. 
-  if (length(replen) != length(pop@loc.names)){
-    replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
-    #    replen <- rep(replen[1], numLoci)
-    warning("\n\nRepeat length vector for loci is not equal to the number of loci represented.\nEstimating repeat lengths from data:\n", immediate.=TRUE)
-    cat(replen,"\n\n")
-  }
-  # This controlls for the user correcting missing data using "mean". 
-  if(any(!pop@tab,10 %in% c(0,((1:ploid)/ploid), 1, NA))){
-    pop@tab[!pop@tab %in% c(0,((1:ploid)/ploid), 1, NA)] <- NA
-  }
-  # Converting the genind object into a matrix with each allele separated by "/"
-  bar <- as.matrix(genind2df(pop, sep="/", usepop = FALSE))
-  # The bruvo algorithm will ignore missing data, coded as 0.
-  bar[bar %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
-  # stopifnot(require(phangorn))
-  # Steps: Create initial tree and then use boot.phylo to perform bootstrap
-  # analysis, and then place the support labels on the tree.
-  if(tree == "upgma"){
-    newfunk <- match.fun(upgma)
-  }
-  else if(tree == "nj"){
-    newfunk <- match.fun(nj)
-  }
-  tre <- newfunk(phylo.bruvo.dist(bar, replen=replen, ploid=ploid, add = add, loss = loss))
-  if (any (tre$edge.length < 0)){
-    tre$edge.length[tre$edge.length < 0] <- 0
-  }
-  if(quiet == FALSE){
-    cat("\nBootstrapping... (note: calculation of node labels can take a while even after the progress bar is full)\n\n")
-  }
-  bp <- boot.phylo(tre, bar, FUN = function (x) newfunk(phylo.bruvo.dist(x, replen = replen, ploid = ploid, add = add, loss = loss)), B = sample, quiet = quiet, ...)
-  tre$node.labels <- round(((bp / sample)*100))
-#  if (!is.null(cutoff)){
-#    if (cutoff < 1 | cutoff > 100){
-#      cat("Cutoff value must be between 0 and 100.\n")
-#      cutoff<- as.numeric(readline(prompt = "Choose a new cutoff value between 0 and 100:\n"))
-#    }
-    tre$node.labels[tre$node.labels < cutoff] <- NA
-#  }
-  tre$tip.label <- pop@ind.names
-#  if(showtree == TRUE){
-#    plot(tre, show.node.label=TRUE)
-#  }
-#  if(tree=="upgma"){
-#    axisPhylo(3)
-#  }
-  return(tre)
-}
 
 javier<-function(x){
   cat ("http://www.youtube.com/watch?v=1-ctsxVXvO0")
