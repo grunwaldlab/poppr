@@ -544,29 +544,37 @@ boot.ia <- function(gid, iterations, progbar){
 }
 jack.ia <- function(pop, iterations, type = type, divisor = 2, progbar){ 
   if(!is.list(pop)){
-    inds <- nInd(pop)
+    N <- nInd(pop)
   }
   else{
-    inds <- nInd(pop[[1]])
+    N <- nInd(pop[[1]])
   }
-  half <- round(inds/divisor)
-  np <- choose(half, 2)    
+  # Step 1, make a distance matrix defining the indices for the pairwise 
+  # distance matrix of loci.
+  np  <- choose(N, 2)
+  dis <- 1:np
+  dis <-  make_attributes(dis, N, 1:N, "dist", call("dist"))
+  mat <- as.matrix(dis)
+  half <- round(N/divisor)
+  np <- choose(half, 2) 
+
   V <- jack.Ia.Rd(pop)
-	funrun <- function(x, V, inds = 10, half = 5, np = 10, progbar, iterations){
+	funrun <- function(x, V, N = 10, half = 5, np = 10, progbar, iterations){
 	  if (!is.null(progbar)){
       setTxtProgressBar(progbar, x/iterations)
     }
-	  samp <- sample(inds, half)
-    comb <- combn(inds, 2) # pairwise vector
-    jackvec <- colSums(matrix(comb %in% samp, nrow = 2)) > 1
 
-    V <- list(d.vector = colSums(V[jackvec, ]), 
-              d2.vector = colSums(V[jackvec, ]^2), 
-              D.vector = rowSums(V[jackvec, ])
-              )
+    inds    <- sample(N, half)
+    newInds <- as.vector(as.dist(mat[inds, inds])) 
+
+    newV <- V[newInds, ]
+    V    <- list(d.vector  = colSums(newV), 
+                 d2.vector = colSums(newV * newV), 
+                 D.vector  = rowSums(newV)
+                )
     IarD <- jack.calc(V, np)
 	}
-	sample.data <- vapply(1:iterations, funrun, numeric(2), V, inds = inds, half = half, np = np, progbar, iterations)
+	sample.data <- vapply(1:iterations, funrun, numeric(2), V, N, half = half, np = np, progbar, iterations)
 	rownames(sample.data) <- c("Ia", "rbarD")
 	return(data.frame(t(sample.data)))
 }
@@ -622,17 +630,26 @@ jack.pair_diffs <- function(pop, numLoci, np)
 }
 
 
-jackbootplot <- function(df, obs.df){
+jackbootplot <- function(df, obs.df, index = c("rd", "ia", "both"), obsline = TRUE){
+  ARGS <- c("rd", "ia", "both")
+  index <- match.arg(index, ARGS)
   Indexfac <- c("I[A]","bar(r)[d]")
   levels(df$variable) <- Indexfac
   obs.df$variable <- Indexfac
-  dfIanull <- df[df$variable == Indexfac[1] & df$Distribution == "null", ]
-  dfrbarDnull <- df[df$variable == Indexfac[2] & df$Distribution == "null", ]
-  dfIaalt <- df[df$variable == Indexfac[1] & df$Distribution != "null", ]
-  dfrbarDalt <- df[df$variable == Indexfac[2] & df$Distribution != "null", ]
-   distplot <- ggplot(df, aes_string(y = "value", x = "Distribution")) +
+  if (index == "rd"){
+    df     <- df[df$variable == "bar(r)[d]", ]
+    obs.df <- obs.df[obs.df$variable == "bar(r)[d]", ]
+  } else if (index == "ia"){
+    df     <- df[df$variable == "I[A]", ]
+    obs.df <- obs.df[obs.df$variable == "I[A]", ]
+  }
+#   dfIanull <- df[df$variable == Indexfac[1] & df$Distribution == "null", ]
+#   dfrbarDnull <- df[df$variable == Indexfac[2] & df$Distribution == "null", ]
+#   dfIaalt <- df[df$variable == Indexfac[1] & df$Distribution != "null", ]
+#   dfrbarDalt <- df[df$variable == Indexfac[2] & df$Distribution != "null", ]
+  distplot <- ggplot(df, aes_string(y = "value", x = "Distribution")) +
                 geom_violin(aes_string(fill = "Distribution")) + 
-                geom_boxplot(alpha = 0.25, width = 0.125) +
+                geom_boxplot(alpha = 0.25, width = 0.125)
                 
 #               geom_histogram(alpha = 0.5, position = "identity", 
 #                              data = dfIanull)+#,
@@ -648,8 +665,15 @@ jackbootplot <- function(df, obs.df){
 #                              # binwidth=diff(range(dfrbarDalt$value))/30) +
 # 
 #               geom_rug(alpha = 0.5, aes_string(color = "Distribution")) +
-               facet_grid(" ~ variable", scales = "free", labeller = label_parsed) +
-               geom_hline(data = obs.df, aes_string(yintercept = "value", group = "variable"), linetype = 2)
+  if (index == "both"){
+    distplot <- distplot + facet_grid(" ~ variable", scales = "free", 
+                                      labeller = label_parsed) 
+  } 
+  if (obsline){
+    aesth <- aes_string(yintercept = "value", group = "variable") 
+    distplot <- distplot + geom_hline(aesth, data = obs.df, linetype = 2)
+  }
+               
 #               geom_vline(data = obs.df, aes_string(xintercept = "value", 
 #                                                    group = "variable"), 
 #                          linetype = "dashed") 
@@ -658,7 +682,11 @@ jackbootplot <- function(df, obs.df){
 
 #' @importFrom reshape2 melt
 
-jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 0.63^-1){
+jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, 
+                         divisor = 0.63^-1, plotindex = "rd"){
+  ARGS <- c("rd", "ia", "both")
+  plotindex <- match.arg(plotindex, ARGS)
+  
   inds <- nInd(pop)
   message("Null Distribution...")
 
@@ -694,11 +722,18 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
   dat <- rbind(mnull, bmalt, jmalt)
   message("Creating Plots")
   obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
-  distplot <-distplot <- jackbootplot(dat, obs.df) + 
+  distplot <- jackbootplot(dat, obs.df, plotindex) + 
               ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, 
                             "Individuals,", half, "Sampled for Jack knife")
-                     ) +
-              theme(strip.text = element_text(size = rel(2)))
+                     )
+  if (plotindex == "both"){
+    distplot <- distplot + theme(strip.text = element_text(size = rel(2)))    
+  } else if (plotindex == "rd"){
+    distplot <- distplot + ylab(expression(bar(r)[d]))
+  } else {
+    distplot <- distplot + ylab(expression(I[A]))
+  }
+
   #print(distplot)
   return(list(observed = null$index, null_samples = null$samples, 
               alt_samples_boot = altboot, alt_samples_jack = altjack, 
