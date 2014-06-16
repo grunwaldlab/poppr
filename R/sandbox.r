@@ -492,99 +492,52 @@ getinds <- function(x){
   return(indices)
 }
 
+#==============================================================================#
+# This function is designed to randomly sample individuals with replacement
+# and recalculate the index of association for each iteration. 
+#==============================================================================#
 
-# brian.ia <- function(pop, sample=0, valuereturn = FALSE, method=1, 
-#                      quiet="minimal", missing="ignore",hist=TRUE){
-#   METHODS = c("multilocus", "permute alleles", "parametric bootstrap",
-#       "non-parametric bootstrap")
-#   namelist <- NULL
-#   namelist$population <- ifelse(length(levels(pop@pop)) > 1 | 
-#                                 is.null(pop@pop), "Total", pop@pop.names)
-#   namelist$File <- as.character(pop@call[2])
-#   popx <- pop
-#   missing <- toupper(missing)
-#   type <- pop@type
-#   if(type=="PA"){
-#     .Ia.Rd <- .PA.Ia.Rd
-#   }
-#   else {
-#     popx <- seploc(popx)
-#   }
-
-#   # if there are less than three individuals in the population, the calculation
-#   # does not proceed. 
-#   if (nInd(pop) < 3){
-#     IarD <- as.numeric(c(NA,NA))
-#     names(IarD) <- c("Ia", "rbarD")
-#     if(sample==0){
-#       return(IarD)
-#     }
-#     else{
-#       IarD <- as.numeric(rep(NA,4))
-#       names(IarD) <- c("Ia","p.Ia","rbarD","p.rD")
-#       return(IarD)
-#     }
-#   }
-#   IarD <- .Ia.Rd(popx, missing)
-#   names(IarD) <- c("Ia", "rbarD")
-#   # no sampling, it will simply return two named numbers.
-#   if (sample==0){
-#     Iout <- IarD
-#     result <- NULL
-#   }
-#   # sampling will perform the iterations and then return a data frame indicating
-#   # the population, index, observed value, and p-value. It will also produce a 
-#   # histogram.
-#   else{
-#     Iout <- NULL 
-#     idx <- as.data.frame(list(Index=names(IarD)))
-#     samp <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
-#     samp2 <- rbind(samp, IarD)
-#     p.val <- ia.pval(index="Ia", samp2, IarD[1])
-#     p.val[2] <- ia.pval(index="rbarD", samp2, IarD[2])
-#     if(hist == TRUE){
-#       poppr.plot(samp, observed=IarD, pop=namelist$population,
-#                         file=namelist$File, pval=p.val, N=nrow(pop@tab))
-#     }
-#     result <- 1:4
-#     result[c(1,3)] <- IarD
-#     result[c(2,4)] <- p.val
-#     names(result) <- c("Ia","p.Ia","rbarD","p.rD")
-#     if (valuereturn == TRUE){
-#       return(list(index = final(Iout, result), samples = samp))
-#     }
-#   }  
-#   return(final(Iout, result))
-# }
-
-
-
-boot.ia <- function(gid, iterations, type = type, divisor = 2, progbar){ 
+boot.ia <- function(gid, iterations, progbar){ 
   if(!is.list(gid)){
     N <- nInd(gid)
   }
   else{
     N <- nInd(gid[[1]])
   }
+  # Step 1, make a distance matrix defining the indices for the pairwise 
+  # distance matrix of loci.
   np  <- choose(N, 2)
   dis <- 1:np
   dis <-  make_attributes(dis, N, 1:N, "dist", call("dist"))
   mat <- as.matrix(dis)
+
+  # Step 2, calculate the pairwise distances for each locus. 
   V    <- jack.Ia.Rd(gid)
+
   bootrun <- function(x, V, N, np, mat, progbar, iterations){
     if (!is.null(progbar)){
       setTxtProgressBar(progbar, x/iterations)
     }
+    # Step 3, sample individuals with replacement and subset distance matrix
+    # from step 1.
     inds <- sample(N, replace = TRUE)
     newInds <- as.vector(as.dist(mat[inds, inds])) 
+    
+    # Find the number of zeroes in from the distance matrix. This will be the
+    # number of duplicated genotypes.
+    zeroes <- length(inds == 0)
 
+    # Step 5: subset the pairwise locus matrix.
     newV <- V[newInds, ]
     V    <- list(d.vector  = colSums(newV), 
                  d2.vector = colSums(newV * newV), 
-                 D.vector  = rowSums(newV)
+                 D.vector  = c(rowSums(newV), rep(0, zeroes))
                 )
+
+    # Step 6: Calculate the index of association.
     IarD <- jack.calc(V, np)
   }
+
   sample.data <- vapply(1:iterations, bootrun, numeric(2), V, N, np, mat, progbar, iterations)
   rownames(sample.data) <- c("Ia", "rbarD")
   return(data.frame(t(sample.data)))
@@ -851,7 +804,7 @@ jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, divisor = 
   jackbar <- bootbar
   #altboot <- vapply(1:sample, bootia, numeric(2), pop, inds, quiet, method, bootbar, sample)
   #altboot <- data.frame(t(altboot))
-  altboot <- boot.ia(popx, sample, type = pop@type, divisor, bootbar)
+  altboot <- boot.ia(popx, sample, bootbar)
   message("Alternative Distribution (Jack Knife)...")
   half <- round(inds/divisor)
   altjack <- jack.ia(popx, sample, type = pop@type, divisor, jackbar)  
