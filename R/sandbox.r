@@ -492,11 +492,33 @@ getinds <- function(x){
   return(indices)
 }
 
+#==============================================================================#
+# bootjack is a function that will calculate values of the index of association
+# after sampling with or without replacement. The purpose of this function is
+# to help determine distributions of I_A under non-random mating by creating 
+# exact copies of samples by sampling with replacement and also to derive a
+# distribution of the data by sampling a subset of the data (63% by default)
+# without replacement. 
+#
+# Since the data itself is not being changed, we can use the distances observed.
+# These distances are calculated per-locus and presented in a matrix (V) with the
+# number of columns equal to the number of loci and the number of rows equal to
+# choose(N, 2) where N is the number of samples in the data set. Sampling has
+# been optimized with this strategy by first creating a lower triangle distance
+# matrix containing indices from 1 to choose(N, 2). This is then converted to a
+# square matrix (mat) and subset after sampling with or without replacement. The
+# remaining indices in the distance matrix is used to subset the distance-per-
+# locus matrix (V). Calculations are then performed on this matrix. It must be
+# noted that for sampling with replacement, duplicated indices must be
+# supplemented with rows of zeroes to indicate no distance.  
+#==============================================================================#
 bootjack <- function(gid, iterations = 999, half = NULL, progbar = NULL){
   if (!is.list(gid)){
     N <- nInd(gid)
+    numLoci <- nLoc(gid)
   } else {
     N <- nInd(gid[[1]])
+    numLoci <- length(gid)
   }
   # Step 1, make a distance matrix defining the indices for the pairwise 
   # distance matrix of loci.
@@ -505,26 +527,26 @@ bootjack <- function(gid, iterations = 999, half = NULL, progbar = NULL){
   dis <- make_attributes(dis, N, 1:N, "dist", call("dist"))
   mat <- as.matrix(dis)
   # Step 2, calculate the pairwise distances for each locus. 
-  V    <- jack.Ia.Rd(gid)
+  V   <- jack.pair_diffs(gid, numLoci, np)
   if (!is.null(half)){
     np <- choose(half, 2)
     sample.data <- vapply(1:iterations, jackrun, numeric(2), V, mat, N, half, 
-                          np = np, progbar, iterations)
+                          np, progbar, iterations)
   } else {
-    sample.data <- vapply(1:iterations, bootrun, numeric(2), V, N, np, mat, 
+    sample.data <- vapply(1:iterations, bootrun, numeric(2), V, mat, N, np, 
                           progbar, iterations)
   }
   rownames(sample.data) <- c("Ia", "rbarD")
   return(data.frame(t(sample.data)))
 }
 
-bootrun <- function(x, V, N, np, mat, progbar, iterations){
+bootrun <- function(count, V, mat, N, np, progbar, iterations){
   if (!is.null(progbar)){
-    setTxtProgressBar(progbar, x/iterations)
+    setTxtProgressBar(progbar, count/iterations)
   }
   # Step 3, sample individuals with replacement and subset distance matrix
   # from step 1.
-  inds <- sample(N, replace = TRUE)
+  inds    <- sample(N, replace = TRUE)
   newInds <- as.vector(as.dist(mat[inds, inds])) 
   
   # Find the number of zeroes in from the distance matrix. This will be the
@@ -541,9 +563,9 @@ bootrun <- function(x, V, N, np, mat, progbar, iterations){
   return(jack.calc(V, np))
 }
 
-jackrun <- function(x, V, mat, N = 10, half = 5, np = 10, progbar, iterations){
+jackrun <- function(count, V, mat, N, half, np, progbar, iterations){
   if (!is.null(progbar)){
-    setTxtProgressBar(progbar, x/iterations)
+    setTxtProgressBar(progbar, count/iterations)
   }
 
   inds    <- sample(N, half)
@@ -555,72 +577,6 @@ jackrun <- function(x, V, mat, N = 10, half = 5, np = 10, progbar, iterations){
                D.vector  = rowSums(newV)
               )
   return(jack.calc(V, np))
-}
-#==============================================================================#
-# This function is designed to randomly sample individuals with replacement
-# and recalculate the index of association for each iteration. 
-#==============================================================================#
-
-boot.ia <- function(gid, iterations, progbar){ 
-  if (!is.list(gid)){
-    N <- nInd(gid)
-  } else {
-    N <- nInd(gid[[1]])
-  }
-  # Step 1, make a distance matrix defining the indices for the pairwise 
-  # distance matrix of loci.
-  np  <- choose(N, 2)
-  dis <- 1:np
-  dis <-  make_attributes(dis, N, 1:N, "dist", call("dist"))
-  mat <- as.matrix(dis)
-
-  # Step 2, calculate the pairwise distances for each locus. 
-  V    <- jack.Ia.Rd(gid)
-
-  
-
-  
-  rownames(sample.data) <- c("Ia", "rbarD")
-  return(data.frame(t(sample.data)))
-}
-jack.ia <- function(pop, iterations, half, progbar){ 
-  if (!is.list(pop)){
-    N <- nInd(pop)
-  } else {
-    N <- nInd(pop[[1]])
-  }
-  # Step 1, make a distance matrix defining the indices for the pairwise 
-  # distance matrix of loci.
-  np  <- choose(N, 2)
-  dis <- 1:np
-  dis <- make_attributes(dis, N, 1:N, "dist", call("dist"))
-  mat <- as.matrix(dis)
-  np  <- choose(half, 2) 
-
-  V   <- jack.Ia.Rd(pop)
-	
-	sample.data <- vapply(1:iterations, funrun, numeric(2), V, N, half = half, 
-                        np = np, progbar, iterations)
-	rownames(sample.data) <- c("Ia", "rbarD")
-	return(data.frame(t(sample.data)))
-}
-
-jack.Ia.Rd <- function (pop){
-
-  vard.vector <- NULL
-  if(!is.list(pop)){
-    numLoci <- nLoc(pop)
-    numIsolates <- nInd(pop)
-  } else {
-    numLoci <- length(pop)
-    numIsolates <- length(pop[[1]]@ind.names)
-  }
-  np <- choose(numIsolates, 2)
-  if (np < 2) {
-    return(as.numeric(c(NaN, NaN)))
-  }
-  V <- jack.pair_diffs(pop, numLoci, np)
-  return(V)
 }
 
 jack.calc <- function(V, np){
@@ -715,16 +671,12 @@ jackbootcomp <- function(pop, sample = 999, quiet = FALSE, method = 1,
   message("Alternative Distribution (Jack Knife)...")
   half    <- round(inds*jack)
   altjack <- bootjack(popx, sample, half, jackbar)  
-
-  mnull <- melt(null$sample, measure.vars = c("Ia", "rbarD"))
-  bmalt <- melt(altboot, measure.vars = c("Ia", "rbarD"))
-  jmalt <- melt(altjack, measure.vars = c("Ia", "rbarD"))
-  mnull$Distribution <- "null"
-  bmalt$Distribution <- "bootstrap"
-  jmalt$Distribution <- "jack knife"
-  dat <- rbind(mnull, bmalt, jmalt)
+  datlist <- list(null = null$sample, bootstrap = altboot, `jack knife` = altjack)
+  dat           <- melt(datlist, measure.vars = c("Ia", "rbarD"))
+  names(dat)[3] <- "Distribution"
   message("Creating Plots")
-  obs.df <- data.frame(list(variable = names(null$samples), value = null$index[c(1,3)]))
+  obs.df   <- data.frame(list(variable = names(null$samples), 
+                              value = null$index[c(1,3)]))
   distplot <- jackbootplot(dat, obs.df, plotindex) + 
               ggtitle(paste("Data:", deparse(substitute(pop)), "\n", inds, 
                             "Individuals,", half, "Sampled for Jack knife")
@@ -736,8 +688,6 @@ jackbootcomp <- function(pop, sample = 999, quiet = FALSE, method = 1,
   } else {
     distplot <- distplot + ylab(expression(I[A]))
   }
-
-  #print(distplot)
   return(list(observed = null$index, null_samples = null$samples, 
               alt_samples_boot = altboot, alt_samples_jack = altjack, 
               plot = distplot)
