@@ -520,13 +520,13 @@ bootjack <- function(gid, iterations = 999, half = NULL, progbar = NULL){
     N <- nInd(gid[[1]])
     numLoci <- length(gid)
   }
-  # Step 1, make a distance matrix defining the indices for the pairwise 
+  # Step 1: make a distance matrix defining the indices for the pairwise 
   # distance matrix of loci.
   np  <- choose(N, 2)
   dis <- 1:np
   dis <- make_attributes(dis, N, 1:N, "dist", call("dist"))
   mat <- as.matrix(dis)
-  # Step 2, calculate the pairwise distances for each locus. 
+  # Step 2: calculate the pairwise distances for each locus. 
   V   <- jack.pair_diffs(gid, numLoci, np)
   if (!is.null(half)){
     np <- choose(half, 2)
@@ -540,17 +540,29 @@ bootjack <- function(gid, iterations = 999, half = NULL, progbar = NULL){
   return(data.frame(t(sample.data)))
 }
 
+#------------------------------------------------------------------------------#
+# Variables for bootrun and jackrun
+#
+# count      = the current iteration
+# V          = the matrix of pairwise distances per locus
+# mat        = square matrix containing indices for V
+# N          = number of observations in data set
+# half       = the number of observations to be sampled without replacement
+# np         = choose(N, 2)
+# progbar    = a progress bar object
+# iterations = the number of total samples
+#------------------------------------------------------------------------------#
 bootrun <- function(count, V, mat, N, np, progbar, iterations){
   if (!is.null(progbar)){
     setTxtProgressBar(progbar, count/iterations)
   }
-  # Step 3, sample individuals with replacement and subset distance matrix
+  # Step 3: sample individuals with replacement and subset distance matrix
   # from step 1.
   inds    <- sample(N, replace = TRUE)
   newInds <- as.vector(as.dist(mat[inds, inds])) 
   
-  # Find the number of zeroes in from the distance matrix. This will be the
-  # number of duplicated genotypes.
+  # Step 4: Find the number of zeroes in from the distance matrix. This will be 
+  # the number of duplicated genotypes.
   zeroes <- length(inds == 0)
 
   # Step 5: subset the pairwise locus matrix.
