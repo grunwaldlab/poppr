@@ -4426,7 +4426,7 @@ of the Aeut data set.
 library(poppr)
 library(ggplot2)
 data(Aeut)
-mlg.table(Aeut, sublist = "Athena")
+Athena.tab <- mlg.table(Aeut, sublist = "Athena")
 p <- last_plot()
 @
 
@@ -4442,11 +4442,18 @@ the call allows us to show the result immediately.)
 We could also change the title
 
 <<Aeut_MLG_title>>=
-(pbt <- pb + ggtitle("Distribution of MLGs for the Athena population"))
+(pbt <- pb + ggtitle("Distribution of multilocus genotypes for the Athena population")) + xlab("Multilocus genotype")
 @
 
 This allows you to produce publication quality graphs directly in R. Please see
-Hadley Wickham's \textit{ggplot2} package for more details \cite{ggplot2}.
+Hadley Wickham's \textit{ggplot2} package for more details \cite{ggplot2}. Note
+that if you don't like using \textit{ggplot2}, you can access the data in the
+ggplot2 object and plot the data yourself:
+
+<<Aeut_MLG_data>>=
+head(p$data)
+@
+
 
 %-----------------------------------------------------------------------------%
 %
