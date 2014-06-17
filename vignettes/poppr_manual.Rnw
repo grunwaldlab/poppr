@@ -4411,6 +4411,46 @@ affecting your object.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
+\subsection{Manipulating Graphics}
+
+\Poppr{} utilizes \textit{ggplot2} to produce many of its graphs. One advantage
+it gives the user is the ability to manipulate these graphs. With base R graphs,
+the only manipulation that can be performed is by adding elements to the graph.
+It is a static image. The ggplot graphs are actually represented as objects in
+your R environment. We can use the function \texttt{last\_plot()} from
+\textit{ggplot2} to be able to grab the plot that was plotted last in our
+window. Let's illustrate this using a MLG bar graph from the Athena population
+of the Aeut data set.
+
+<<Aeut_MLG_Ahena>>=
+library(poppr)
+library(ggplot2)
+data(Aeut)
+mlg.table(Aeut, sublist = "Athena")
+p <- last_plot()
+@
+
+We've captured our plot using \texttt{last\_plot()} and now we can manipulate
+it. Let's say we didn't like the scale going from blue to black and we wanted
+make it monotone without a color guide. (NOTE: the () around
+the call allows us to show the result immediately.)
+
+<<Aeut_MLG_black>>=
+(pb <- p + scale_fill_continuous(low = "black", high = "black", guide = "none"))
+@
+
+We could also change the title
+
+<<Aeut_MLG_title>>=
+(pbt <- pb + ggtitle("Distribution of MLGs for the Athena population"))
+@
+
+This allows you to produce publication quality graphs directly in R. Please see
+Hadley Wickham's \textit{ggplot2} package for more details \cite{ggplot2}.
+
+%-----------------------------------------------------------------------------%
+%
+%-----------------------------------------------------------------------------%
 \subsection{Exporting Graphics}
 \label{appendix:graphics}
 \tab\tab R has the ability to produce nice graphics from most any type of data,
@@ -4629,6 +4669,8 @@ to its definition and description.
 \texttt{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\  
  & matrix related to the data \\
 \texttt{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
+\texttt{genotype\_curve} & Creates a series of boxplots demonstrating how many loci are\\
+ & needed to represent the diversity of your data.\\
 \hline
 
 \end{longtable}

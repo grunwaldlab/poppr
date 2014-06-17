@@ -110,6 +110,7 @@ that all functions in \pkg{\link[adegenet]{adegenet}} are also available.
 \item \code{\link{bruvo.msn}} - Produces minimum spanning networks based off Bruvo’s distance colored by population
 \item \code{\link{poppr.msn}} - Produces a minimum spanning network for any pairwise distance matrix related to the data
 \item \code{\link{info_table}} - Creates a heatmap representing missing data or observed ploidy
+\item \code{\link{genotype_curve}} - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data.
 }
 }
 \author{
