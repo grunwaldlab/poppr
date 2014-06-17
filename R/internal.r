@@ -1754,8 +1754,8 @@ test_zeroes <- function(x){
 mlg_barplot <- function(mlgt){
 
   # create a data frame that ggplot2 can read.
-  mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 
-                                count = rep(mlgt, mlgt)), 
+  mlgt.df <- as.data.frame(list(MLG   = colnames(mlgt), 
+                                count = as.vector(mlgt)), 
                            stringsAsFactors = FALSE)
 
   # Organize the data frame by count in descending order.
@@ -1764,8 +1764,8 @@ mlg_barplot <- function(mlgt){
   mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
 
   # plot it
-  return(ggplot(mlgt.df, aes_string(x = "MLG")) + 
-         geom_bar(aes_string(fill = "count"), position="identity"))
+  return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
+         geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
 }
 
 #==============================================================================#
