@@ -492,16 +492,79 @@ getinds <- function(x){
   return(indices)
 }
 
+bootjack <- function(gid, iterations = 999, half = NULL, progbar = NULL){
+  if (!is.list(gid)){
+    N <- nInd(gid)
+  } else {
+    N <- nInd(gid[[1]])
+  }
+  # Step 1, make a distance matrix defining the indices for the pairwise 
+  # distance matrix of loci.
+  np  <- choose(N, 2)
+  dis <- 1:np
+  dis <- make_attributes(dis, N, 1:N, "dist", call("dist"))
+  mat <- as.matrix(dis)
+  # Step 2, calculate the pairwise distances for each locus. 
+  V    <- jack.Ia.Rd(gid)
+  if (!is.null(half)){
+    np <- choose(half, 2)
+    sample.data <- vapply(1:iterations, jackrun, numeric(2), V, mat, N, half, 
+                          np = np, progbar, iterations)
+  } else {
+    sample.data <- vapply(1:iterations, bootrun, numeric(2), V, N, np, mat, 
+                          progbar, iterations)
+  }
+  rownames(sample.data) <- c("Ia", "rbarD")
+  return(data.frame(t(sample.data)))
+}
+
+bootrun <- function(x, V, N, np, mat, progbar, iterations){
+  if (!is.null(progbar)){
+    setTxtProgressBar(progbar, x/iterations)
+  }
+  # Step 3, sample individuals with replacement and subset distance matrix
+  # from step 1.
+  inds <- sample(N, replace = TRUE)
+  newInds <- as.vector(as.dist(mat[inds, inds])) 
+  
+  # Find the number of zeroes in from the distance matrix. This will be the
+  # number of duplicated genotypes.
+  zeroes <- length(inds == 0)
+
+  # Step 5: subset the pairwise locus matrix.
+  newV <- V[newInds, ]
+  V    <- list(d.vector  = colSums(newV), 
+               d2.vector = colSums(newV * newV), 
+               D.vector  = c(rowSums(newV), rep(0, zeroes))
+              )
+  # Step 6: Calculate the index of association.
+  return(jack.calc(V, np))
+}
+
+jackrun <- function(x, V, mat, N = 10, half = 5, np = 10, progbar, iterations){
+  if (!is.null(progbar)){
+    setTxtProgressBar(progbar, x/iterations)
+  }
+
+  inds    <- sample(N, half)
+  newInds <- as.vector(as.dist(mat[inds, inds])) 
+
+  newV <- V[newInds, ]
+  V    <- list(d.vector  = colSums(newV), 
+               d2.vector = colSums(newV * newV), 
+               D.vector  = rowSums(newV)
+              )
+  return(jack.calc(V, np))
+}
 #==============================================================================#
 # This function is designed to randomly sample individuals with replacement
 # and recalculate the index of association for each iteration. 
 #==============================================================================#
 
 boot.ia <- function(gid, iterations, progbar){ 
-  if(!is.list(gid)){
+  if (!is.list(gid)){
     N <- nInd(gid)
-  }
-  else{
+  } else {
     N <- nInd(gid[[1]])
   }
   # Step 1, make a distance matrix defining the indices for the pairwise 
@@ -514,67 +577,30 @@ boot.ia <- function(gid, iterations, progbar){
   # Step 2, calculate the pairwise distances for each locus. 
   V    <- jack.Ia.Rd(gid)
 
-  bootrun <- function(x, V, N, np, mat, progbar, iterations){
-    if (!is.null(progbar)){
-      setTxtProgressBar(progbar, x/iterations)
-    }
-    # Step 3, sample individuals with replacement and subset distance matrix
-    # from step 1.
-    inds <- sample(N, replace = TRUE)
-    newInds <- as.vector(as.dist(mat[inds, inds])) 
-    
-    # Find the number of zeroes in from the distance matrix. This will be the
-    # number of duplicated genotypes.
-    zeroes <- length(inds == 0)
+  
 
-    # Step 5: subset the pairwise locus matrix.
-    newV <- V[newInds, ]
-    V    <- list(d.vector  = colSums(newV), 
-                 d2.vector = colSums(newV * newV), 
-                 D.vector  = c(rowSums(newV), rep(0, zeroes))
-                )
-
-    # Step 6: Calculate the index of association.
-    IarD <- jack.calc(V, np)
-  }
-
-  sample.data <- vapply(1:iterations, bootrun, numeric(2), V, N, np, mat, progbar, iterations)
+  
   rownames(sample.data) <- c("Ia", "rbarD")
   return(data.frame(t(sample.data)))
 }
-jack.ia <- function(pop, iterations, type = type, divisor = 2, progbar){ 
-  if(!is.list(pop)){
+jack.ia <- function(pop, iterations, half, progbar){ 
+  if (!is.list(pop)){
     N <- nInd(pop)
-  }
-  else{
+  } else {
     N <- nInd(pop[[1]])
   }
   # Step 1, make a distance matrix defining the indices for the pairwise 
   # distance matrix of loci.
   np  <- choose(N, 2)
   dis <- 1:np
-  dis <-  make_attributes(dis, N, 1:N, "dist", call("dist"))
+  dis <- make_attributes(dis, N, 1:N, "dist", call("dist"))
   mat <- as.matrix(dis)
-  half <- round(N/divisor)
-  np <- choose(half, 2) 
+  np  <- choose(half, 2) 
 
-  V <- jack.Ia.Rd(pop)
-	funrun <- function(x, V, N = 10, half = 5, np = 10, progbar, iterations){
-	  if (!is.null(progbar)){
-      setTxtProgressBar(progbar, x/iterations)
-    }
-
-    inds    <- sample(N, half)
-    newInds <- as.vector(as.dist(mat[inds, inds])) 
-
-    newV <- V[newInds, ]
-    V    <- list(d.vector  = colSums(newV), 
-                 d2.vector = colSums(newV * newV), 
-                 D.vector  = rowSums(newV)
-                )
-    IarD <- jack.calc(V, np)
-	}
-	sample.data <- vapply(1:iterations, funrun, numeric(2), V, N, half = half, np = np, progbar, iterations)
+  V   <- jack.Ia.Rd(pop)
+	
+	sample.data <- vapply(1:iterations, funrun, numeric(2), V, N, half = half, 
+                        np = np, progbar, iterations)
 	rownames(sample.data) <- c("Ia", "rbarD")
 	return(data.frame(t(sample.data)))
 }
@@ -608,8 +634,7 @@ jack.calc <- function(V, np){
   return(c(Ia, rbarD))
 }
 
-jack.pair_diffs <- function(pop, numLoci, np)
-{
+jack.pair_diffs <- function(pop, numLoci, np){
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
   if(!is.list(pop)){
     ploid <- 2
@@ -631,11 +656,12 @@ jack.pair_diffs <- function(pop, numLoci, np)
 
 
 jackbootplot <- function(df, obs.df, index = c("rd", "ia", "both"), obsline = TRUE){
-  ARGS <- c("rd", "ia", "both")
-  index <- match.arg(index, ARGS)
-  Indexfac <- c("I[A]","bar(r)[d]")
+  ARGS                <- c("rd", "ia", "both")
+  index               <- match.arg(index, ARGS)
+  Indexfac            <- c("I[A]","bar(r)[d]")
   levels(df$variable) <- Indexfac
-  obs.df$variable <- Indexfac
+  obs.df$variable     <- Indexfac
+
   if (index == "rd"){
     df     <- df[df$variable == "bar(r)[d]", ]
     obs.df <- obs.df[obs.df$variable == "bar(r)[d]", ]
@@ -643,47 +669,25 @@ jackbootplot <- function(df, obs.df, index = c("rd", "ia", "both"), obsline = TR
     df     <- df[df$variable == "I[A]", ]
     obs.df <- obs.df[obs.df$variable == "I[A]", ]
   }
-#   dfIanull <- df[df$variable == Indexfac[1] & df$Distribution == "null", ]
-#   dfrbarDnull <- df[df$variable == Indexfac[2] & df$Distribution == "null", ]
-#   dfIaalt <- df[df$variable == Indexfac[1] & df$Distribution != "null", ]
-#   dfrbarDalt <- df[df$variable == Indexfac[2] & df$Distribution != "null", ]
+
   distplot <- ggplot(df, aes_string(y = "value", x = "Distribution")) +
                 geom_violin(aes_string(fill = "Distribution")) + 
                 geom_boxplot(alpha = 0.25, width = 0.125)
-                
-#               geom_histogram(alpha = 0.5, position = "identity", 
-#                              data = dfIanull)+#,
-#                              # binwidth=diff(range(dfIanull$value))/30) +
-#               geom_histogram(alpha = 0.5, position = "identity", 
-#                              data = dfrbarDnull)+#,
-#                              # binwidth=diff(range(dfrbarDnull$value))/30) +
-#               geom_histogram(alpha = 0.5, position = "identity", 
-#                              data = dfIaalt)+#,
-#                              # binwidth=diff(range(dfIaalt$value))/30) +
-#               geom_histogram(alpha = 0.5, position = "identity", 
-#                              data = dfrbarDalt)+#,
-#                              # binwidth=diff(range(dfrbarDalt$value))/30) +
-# 
-#               geom_rug(alpha = 0.5, aes_string(color = "Distribution")) +
   if (index == "both"){
-    distplot <- distplot + facet_grid(" ~ variable", scales = "free", 
+    distplot <- distplot + facet_grid("variable ~ .", scales = "free", 
                                       labeller = label_parsed) 
   } 
   if (obsline){
-    aesth <- aes_string(yintercept = "value", group = "variable") 
+    aesth    <- aes_string(yintercept = "value", group = "variable") 
     distplot <- distplot + geom_hline(aesth, data = obs.df, linetype = 2)
   }
-               
-#               geom_vline(data = obs.df, aes_string(xintercept = "value", 
-#                                                    group = "variable"), 
-#                          linetype = "dashed") 
   return(distplot)      
 }
 
 #' @importFrom reshape2 melt
 
 jackbootcomp <- function(pop, sample = 999, quiet = FALSE, method = 1, 
-                         divisor = 0.63^-1, plotindex = "rd"){
+                         jack = 0.63, plotindex = "rd"){
   ARGS <- c("rd", "ia", "both")
   plotindex <- match.arg(plotindex, ARGS)
   
@@ -694,8 +698,7 @@ jackbootcomp <- function(pop, sample = 999, quiet = FALSE, method = 1,
              hist = FALSE, method = method)
   if(pop@type == "codom"){
     popx <- seploc(pop)
-  }
-  else{
+  } else {
     popx <- pop
   }
 
@@ -707,11 +710,11 @@ jackbootcomp <- function(pop, sample = 999, quiet = FALSE, method = 1,
   }
   jackbar <- bootbar
 
-  altboot <- boot.ia(popx, sample, bootbar)
+  altboot <- bootjack(popx, sample, half = NULL, bootbar)
 
   message("Alternative Distribution (Jack Knife)...")
-  half <- round(inds/divisor)
-  altjack <- jack.ia(popx, sample, type = pop@type, divisor, jackbar)  
+  half    <- round(inds*jack)
+  altjack <- bootjack(popx, sample, half, jackbar)  
 
   mnull <- melt(null$sample, measure.vars = c("Ia", "rbarD"))
   bmalt <- melt(altboot, measure.vars = c("Ia", "rbarD"))
