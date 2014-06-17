@@ -682,7 +682,7 @@ jackbootplot <- function(df, obs.df, index = c("rd", "ia", "both"), obsline = TR
 
 #' @importFrom reshape2 melt
 
-jackbootcomp <- function(pop, sample = 999, quiet = TRUE, method = 1, 
+jackbootcomp <- function(pop, sample = 999, quiet = FALSE, method = 1, 
                          divisor = 0.63^-1, plotindex = "rd"){
   ARGS <- c("rd", "ia", "both")
   plotindex <- match.arg(plotindex, ARGS)
