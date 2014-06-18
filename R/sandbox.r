@@ -47,6 +47,28 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
+
+read_allele_columns <- function(x, ploidy = 2){
+  #return(x)
+  clm <- ncol(x)
+  if (length(ploidy) == 1){
+    if (clm %% ploidy == 0){
+      ploidy <- rep(ploidy, clm/ploidy)
+    } else{
+      stop("ploidy specified does not match number of columns.")
+    }
+  }
+  loci  <- first_allele_col(ploidy)
+  x2 <- x[, loci]
+  lapply(1:length(loci), function(a) x2[, a] <<-
+           pop_combiner(x, hier = loci[a]:(loci[a]+ploidy[a]-1), sep = "/"))
+  x2[apply(x2, 2, function(na) grepl("NA", na))] <- NA
+  return(x2)
+}
+
+first_allele_col <- function(ploidies) cumsum(ploidies) - ploidies + 1
+
+
 #==============================================================================#
 # Create a population hierarchy in a genind object if one is not there.
 #==============================================================================#
