@@ -49,12 +49,11 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 
 
 read_allele_columns <- function(x, ploidy = 2){
-  #return(x)
   clm <- ncol(x)
   if (length(ploidy) == 1){
     if (clm %% ploidy == 0){
       ploidy <- rep(ploidy, clm/ploidy)
-    } else{
+    } else {
       stop("ploidy specified does not match number of columns.")
     }
   }
@@ -74,14 +73,15 @@ first_allele_col <- function(ploidies) cumsum(ploidies) - ploidies + 1
 # right number of alleles.
 add_zeroes <- function(x, ploidy = 3){
   extras <- ploidy - vapply(strsplit(x, "/"), length, 69)
-  vapply(1:length(extras), function(y){
-    if(extras[y] > 0){
-      return(paste(c(rep(0, extras[y]), x[y]), collapse = "/"))
-    }
-    else{
-      return(x[y])
-    }
-  }, "out")
+  vapply(1:length(extras), zero_adder, character(1), extras, x)
+}
+
+zero_adder <- function(index, extras, df){
+  if(extras[index] > 0){
+    return(paste(c(rep(0, extras[index]), df[index]), collapse = "/"))
+  } else {
+    return(df[index])
+  }
 }
 #==============================================================================#
 # Create a population hierarchy in a genind object if one is not there.
