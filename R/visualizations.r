@@ -395,7 +395,12 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
                          palette = palette, showplot = showplot, ...))
   }
   # Obtaining population information for all MLGs
-  mlg.cp <- mlg.crosspop(pop, mlgsub = sort(unique(mlgs)), quiet=TRUE)
+  if (is.genclone(pop)){
+    subs <- sort(unique(mlgs))
+  } else {
+    subs <- 1:mlg(pop, quiet = TRUE)
+  }
+  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
 
   names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
   # This will determine the size of the nodes based on the number of individuals
