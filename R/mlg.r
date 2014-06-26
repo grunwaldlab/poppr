@@ -73,6 +73,7 @@
 #'
 #' @param total \code{logical} If \code{TRUE}, a row containing the sum of all
 #' represented MLGs is appended to the matrix produced by mlg.table.
+#' 
 #'
 #' @seealso \code{\link{diversity}} \code{\link{popsub}}
 #' @author Zhian N. Kamvar
@@ -91,6 +92,8 @@
 #' atab
 #' # See where multilocus genotypes cross populations
 #' acrs <- mlg.crosspop(Aeut) # MLG.59: (2 inds) Athena Mt. Vernon
+#' # See which individuals belong to each MLG
+#' agroup <- mlg.group(Aeut)
 #' 
 #' \dontrun{
 #' 
@@ -397,4 +400,33 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     rownames(mlg.dup) <- NULL
   }
   return(mlg.dup)
+}
+
+
+
+#==============================================================================#
+#' @rdname mlg
+# Grouping individuals by multilocus genotype
+#
+# Create a vector of individual names per multilocus genotype. 
+#
+# @param gid a \code{\link{genind}} object.
+# 
+#' @return a list of multilocus genotypes with the associated individual names per MLG
+#'
+#' 
+#' @export
+# @examples
+# data(Aeut)
+# mlg.group(Aeut)
+#==============================================================================#
+
+
+mlg.group <- function (gid){
+  if (!is.genind(gid)){
+    stop(paste(substitute(gid), "is not a genind object"))
+  }
+  ctab <- table(gid$ind.names,mlg.vector(gid))
+  m.g <- apply(ctab,MARGIN = 2,FUN = function (y) names(y[y>0]))
+  return (m.g)
 }

@@ -101,8 +101,8 @@ test_that("mlg.group Aeut works", {
                                                                             "103", "104", "105", "106", "107", "108", "109", "110", "111", 
                                                                             "112", "113", "114", "115", "116", "117", "118", "119"))
 
-  expect_that(x <- poppr:::mlg.group(Aeut), equals(expected_output))
-  expect_that(x <- length(poppr:::mlg.group(Aeut)), equals(length(unique(mlg.vector(Aeut)))))
+  expect_that(x <-mlg.group(Aeut), equals(expected_output))
+  expect_that(x <- length(mlg.group(Aeut)), equals(length(unique(mlg.vector(Aeut)))))
   expect_that(x <- names(mlg.group(Aeut)[118]), equals("118"))
   expect_that(x <- names(mlg.group(Aeut)[1]), equals("1"))
   })
@@ -138,8 +138,8 @@ test_that("mlg.group Pinf works", {
                                                                                       "68", "69", "71", "72", "74", "75", "77", "79", "80", "83", "84", 
                                                                                       "93", "94", "95", "96", "97", "98", "99", "104", "105", "106", 
                                                                                       "109", "110", "115", "116", "117"))
-  expect_that(x <- poppr:::mlg.group(Pinf), equals(expected_output))
-  expect_that(x <- length(poppr:::mlg.group(Pinf)), equals(length(unique(mlg.vector(Pinf)))))
+  expect_that(x <-mlg.group(Pinf), equals(expected_output))
+  expect_that(x <- length(mlg.group(Pinf)), equals(length(unique(mlg.vector(Pinf)))))
   expect_that(x <- names(mlg.group(Pinf)[72]), equals("117"))
   expect_that(x <- names(mlg.group(Pinf)[1]), equals("1"))
 })
