@@ -457,7 +457,12 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   }
   # Obtaining population information for all MLGs
   cpop <- pop[.clonecorrector(pop), ]
-  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
+  if (is.genclone(pop)){
+    subs <- sort(unique(pop@mlg))
+  } else {
+    subs <- sort(unique(other(pop)$mlg.vec)) 
+  }
+  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
   if (is.genclone(pop)){
     mlgs <- pop@mlg
     cmlg <- cpop@mlg
