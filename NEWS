@@ -26,6 +26,7 @@ NEW FUNCTIONS
 * `plot_poppr_msn` will plot minimum spanning networks produced with poppr. 
 * `private_alleles` will give information about the presence of private alleles within a genind or genclone object. 
 * `genotype_curve` will create a genotype accumulation curve for increasing number of loci.
+* `mlg.group` will return a list indicating the samples belonging to a specific multilocus genotype.
 
 NEW DATA SETS
 * Pinf - a data set of 86 isolates from different populations of the late blight pathogen, Phytophthora infestans.
