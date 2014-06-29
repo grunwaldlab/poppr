@@ -93,7 +93,7 @@ atab
 acrs <- mlg.crosspop(Aeut) # MLG.59: (2 inds) Athena Mt. Vernon
 # See which individuals belong to each MLG
 aid <- mlg.id(Aeut)
-aid["59"]
+aid["59"] # individuals 159 and 57
 
 \dontrun{
 
