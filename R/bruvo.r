@@ -496,18 +496,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color   <- palette(length(pop@pop.names))
-  # if(gscale == TRUE){
-  #   E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-  #                                    show=FALSE))
-  # } else {
-  #   E(mst)$color <- rep("black", length(E(mst)$weight))
-  # }
-  
-  # edgewidth <- 2
-  # if (wscale==TRUE){
-  #   edgewidth <- make_edge_width(mst)
-  # }
-  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  mst     <- update_edge_scales(mst, wscale, gscale, glim, gadj)
 
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])

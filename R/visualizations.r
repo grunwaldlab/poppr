@@ -404,7 +404,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
   names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
   # This will determine the size of the nodes based on the number of individuals
-  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
+  # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
@@ -430,20 +430,6 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   color   <- palette(length(pop@pop.names))
   
   ###### Edge adjustments ######
-  # Grey Scale Adjustment weighting towards more diverse or similar populations.
-  # if (gscale == TRUE){
-  #   E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-  #                                    show=FALSE))
-  # } else {
-  #   E(mst)$color <- rep("black", length(E(mst)$weight))
-  # }
-  
-  # # Width scale adjustment to avoid extremely large widths.
-  # # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
-  # edgewidth <- 2
-  # if (wscale==TRUE){
-  #   edgewidth <- make_edge_width(mst)
-  # }
   mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   
   # This creates a list of colors corresponding to populations.
@@ -455,7 +441,6 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
            title = "Populations", fill=color, border=NULL)
   }
-  # E(mst)$width     <- edgewidth
   V(mst)$size      <- mlg.number
   V(mst)$shape     <- "pie"
   V(mst)$pie       <- mlg.cp
@@ -887,7 +872,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.
   # Highlighting only the names of the submitted genotypes and the matching
   # isolates.
   x.mlg <- mlg.vector(x)
-  labs <- unique(x.mlg)
+  labs  <- unique(x.mlg)
   # The labels in the graph are organized by MLG, so we will use that to extract
   # the names we need.
   if (length(inds) == 1 & toupper(inds[1]) == "ALL"){

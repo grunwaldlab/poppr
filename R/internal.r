@@ -1162,25 +1162,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
       vertex.label <- cpop$ind.names
     }
   } 
-  
-  # # Adjust the color of the edges.
-  # if (gscale == TRUE){
-  #   E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-  #                                    show=FALSE))
-  # } else {
-  #   E(mst)$color <- rep("black", length(E(mst)$weight))
-  # }
-  
-  # # Adjust the widths of the edges
-  # edgewidth <- 2
-  # if (wscale == TRUE){
-  #   edgewidth <- 1/(E(mst)$weight)
-  #   if (any(E(mst)$weight < 0.08)){
-  #     edgewidth <- 1/(E(mst)$weight + 0.08)
-  #   }
-  # }
   mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
-  
   populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
   
   # Plot everything
