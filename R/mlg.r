@@ -93,7 +93,8 @@
 #' # See where multilocus genotypes cross populations
 #' acrs <- mlg.crosspop(Aeut) # MLG.59: (2 inds) Athena Mt. Vernon
 #' # See which individuals belong to each MLG
-#' agroup <- mlg.group(Aeut)
+#' aid <- mlg.id(Aeut)
+#' aid["59"] # individuals 159 and 57
 #' 
 #' \dontrun{
 #' 
@@ -406,27 +407,18 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
 
 #==============================================================================#
 #' @rdname mlg
-# Grouping individuals by multilocus genotype
-#
-# Create a vector of individual names per multilocus genotype. 
-#
-# @param gid a \code{\link{genind}} object.
-# 
 #' @return a list of multilocus genotypes with the associated individual names per MLG
 #'
 #' 
 #' @export
-# @examples
-# data(Aeut)
-# mlg.group(Aeut)
 #==============================================================================#
 
 
-mlg.group <- function (gid){
-  if (!is.genind(gid)){
-    stop(paste(substitute(gid), "is not a genind object"))
+mlg.id <- function (pop){
+  if (!is.genind(pop)){
+    stop(paste(substitute(pop), "is not a genind or genclone object"))
   }
-  ctab <- table(gid$ind.names,mlg.vector(gid))
-  m.g <- apply(ctab,MARGIN = 2,FUN = function (y) names(y[y>0]))
-  return (m.g)
+  ctab <- table(pop$ind.names, mlg.vector(pop))
+  m.g <- apply(ctab, MARGIN = 2, FUN = function (y) names(y[y > 0]))
+  return(m.g)
 }

@@ -2,7 +2,7 @@
 \name{mlg}
 \alias{mlg}
 \alias{mlg.crosspop}
-\alias{mlg.group}
+\alias{mlg.id}
 \alias{mlg.table}
 \alias{mlg.vector}
 \title{Create counts, vectors, and matrices of multilocus genotypes.}
@@ -17,7 +17,7 @@ mlg.vector(pop)
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
 
-mlg.group(gid)
+mlg.id(pop)
 }
 \arguments{
 \item{pop}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.}
@@ -92,7 +92,8 @@ atab
 # See where multilocus genotypes cross populations
 acrs <- mlg.crosspop(Aeut) # MLG.59: (2 inds) Athena Mt. Vernon
 # See which individuals belong to each MLG
-agroup <- mlg.group(Aeut)
+aid <- mlg.id(Aeut)
+aid["59"]
 
 \dontrun{
 
