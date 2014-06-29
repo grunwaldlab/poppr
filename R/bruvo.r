@@ -496,27 +496,28 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color   <- palette(length(pop@pop.names))
-  if(gscale == TRUE){
-    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-                                     show=FALSE))
-  } else {
-    E(mst)$color <- rep("black", length(E(mst)$weight))
-  }
+  # if(gscale == TRUE){
+  #   E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
+  #                                    show=FALSE))
+  # } else {
+  #   E(mst)$color <- rep("black", length(E(mst)$weight))
+  # }
   
-  edgewidth <- 2
-  if (wscale==TRUE){
-    edgewidth <- make_edge_width(mst)
-  }
+  # edgewidth <- 2
+  # if (wscale==TRUE){
+  #   edgewidth <- make_edge_width(mst)
+  # }
+  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   if (showplot){
-    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+    plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
     legend(-1.55, 1, bty = "n", cex = 0.75, legend = pop$pop.names, 
            title = "Populations", fill = color, border = NULL)
   }
-  E(mst)$width     <- edgewidth
   V(mst)$size      <- mlg.number
   V(mst)$shape     <- "pie"
   V(mst)$pie       <- mlg.cp

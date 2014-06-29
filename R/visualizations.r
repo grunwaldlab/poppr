@@ -376,7 +376,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(pop, sublist, blacklist)
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
-    pop <- popsub(pop, sublist, blacklist)
+    pop    <- popsub(pop, sublist, blacklist)
   }
   cpop <- pop[.clonecorrector(pop), ]
   if (is.genclone(pop)){
@@ -431,30 +431,31 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   ###### Edge adjustments ######
   # Grey Scale Adjustment weighting towards more diverse or similar populations.
-  if (gscale == TRUE){
-    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-                                     show=FALSE))
-  } else {
-    E(mst)$color <- rep("black", length(E(mst)$weight))
-  }
+  # if (gscale == TRUE){
+  #   E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
+  #                                    show=FALSE))
+  # } else {
+  #   E(mst)$color <- rep("black", length(E(mst)$weight))
+  # }
   
-  # Width scale adjustment to avoid extremely large widths.
-  # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
-  edgewidth <- 2
-  if (wscale==TRUE){
-    edgewidth <- make_edge_width(mst)
-  }
+  # # Width scale adjustment to avoid extremely large widths.
+  # # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
+  # edgewidth <- 2
+  # if (wscale==TRUE){
+  #   edgewidth <- make_edge_width(mst)
+  # }
+  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   if (showplot){
-    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+    plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
     legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
            title = "Populations", fill=color, border=NULL)
   }
-  E(mst)$width     <- edgewidth
+  # E(mst)$width     <- edgewidth
   V(mst)$size      <- mlg.number
   V(mst)$shape     <- "pie"
   V(mst)$pie       <- mlg.cp
@@ -743,6 +744,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   popualtion.
 #'   
 #' @inheritParams greycurve
+#' 
+#' @inheritParams poppr.msn
 #'   
 #' @param inds a character vector indicating which individual names to label
 #'   nodes with. See details.
@@ -848,8 +851,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
-plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
-                           gweight = 1, inds = "ALL", quantiles = TRUE, 
+plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.8),
+                           gweight = 1, wscale = TRUE, inds = "ALL", quantiles = TRUE, 
                            nodelab = 2, cutoff = NULL, palette = NULL,
                            layfun = layout.auto, beforecut = FALSE, ...){
   if (!is.genind(x)){
@@ -861,6 +864,9 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
   if (!is.null(palette)){
     poppr_msn <- update_poppr_graph(poppr_msn, palette)
   }
+  # Making sure incoming data matches so that the individual names match.
+  x <- popsub(x, sublist = poppr_msn$populations)
+  
   if (beforecut){
     LAYFUN <- match.fun(layfun)
     lay <- LAYFUN(poppr_msn$graph)
@@ -876,8 +882,7 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
   wmin    <- min(weights)
   wmax    <- max(weights)
   gadj    <- ifelse(gweight == 1, gadj, -gadj)
-  E(poppr_msn$graph)$color <- gray(adjustcurve(weights, glim=glim,
-                                               correction=gadj,show=FALSE))
+  poppr_msn$graph <- update_edge_scales(poppr_msn$graph, wscale, gscale, glim, gadj)
   
   # Highlighting only the names of the submitted genotypes and the matching
   # isolates.
