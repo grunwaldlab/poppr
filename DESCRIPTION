@@ -3,7 +3,7 @@ Type: Package
 Title: an R package for genetic analysis of populations with mixed
     reproduction
 Version: 1.1.0.99
-Date: 2014-06-26
+Date: 2014-06-29
 Author: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>, Javier F. Tabima
     <tabimaj@onid.orst.edu>, Niklaus J. Grunwald
     <grunwaln@science.oregonstate.edu>
