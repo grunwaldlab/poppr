@@ -2,6 +2,7 @@
 \name{mlg}
 \alias{mlg}
 \alias{mlg.crosspop}
+\alias{mlg.filter}
 \alias{mlg.table}
 \alias{mlg.vector}
 \title{Create counts, vectors, and matrices of multilocus genotypes.}
@@ -12,6 +13,8 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   bar = TRUE, total = FALSE, quiet = FALSE)
 
 mlg.vector(pop)
+
+mlg.filter(pop, threshold)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -45,6 +48,8 @@ with \code{\link{ggplot}}.}
 
 \item{total}{\code{logical} If \code{TRUE}, a row containing the sum of all
 represented MLGs is appended to the matrix produced by mlg.table.}
+
+\item{threshold}{the desired minimum distance between distinct genotypes.}
 }
 \value{
 an integer of the number of multilocus genotypes within the sample.
@@ -54,6 +59,9 @@ indicating populations.
 
 a numeric vector naming the multilocus genotype of each individual in
 the dataset.
+
+a numeric vector naming the multilocus genotype of each individual in
+the dataset. Each genotype is at least the specified distance apart.
 
 a \code{list} containing vectors of population names for each MLG.
 }
@@ -71,6 +79,12 @@ The numbers of \code{mlg.vector} will not match up with the sequence of
 new genotypes found because sorting takes place within the algorithm before
 the genotypes are called so that the number of comparisons is \eqn{n-1}
 instead of \eqn{\frac{n(n-1)}{2}}.
+
+\code{mlg.fvector} makes use of \code{mlg.vector} grouping prior to
+applying the given threshold. Genotype numbers returned by \code{mlg.fvector}
+represent the lowest numbered genotype (as returned by \code{mlg.vector}) in
+in each new multilocus genotype. Therefore \code{mlg.fvector} and
+\code{mlg.vector} return the same vector when threshold is set to 0 or less.
 }
 \examples{
 # Load the data set
