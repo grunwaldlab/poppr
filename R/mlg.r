@@ -317,6 +317,48 @@ mlg.vector <- function(pop){
 
 #==============================================================================#
 #' @rdname mlg
+# Clonally Filtered Multilocus Genotype Vector
+#
+# Create a vector of multilocus genotype indecies filtered by minimum distance. 
+#
+# @param pop a \code{\link{genind}} object.
+# @param threshold the desired minimum distance between distinct genotypes.
+# 
+#' @return a numeric vector naming the multilocus genotype of each individual in
+#' the dataset. Each genotype is at least the specified distance apart.
+#'
+#' @note \code{mlg.fvector} makes use of \code{mlg.vector} grouping prior to
+#' applying the given threshold. Genotype numbers returned by \code{mlg.fvector} 
+#' represent the lowest numbered genotype (as returned by \code{mlg.vector}) in
+#' in each new multilocus genotype. Therefore \code{mlg.fvector} and
+#' \code{mlg.vector} return the same vector when threshold is set to 0 or less.
+#' 
+#' @export
+# @examples
+# mat1 <- matrix(ncol=5, 25:1)
+# mat1 <- rbind(mat1, mat1)
+# mat <- matrix(nrow=10, ncol=5, paste(mat1,mat1,sep="/"))
+# mat.gid <- df2genind(mat, sep="/")
+# mlg.fvector(mat.gid,0.2)
+# mlg.table(mat.gid)
+#==============================================================================#
+
+mlg.fvector <- function(pop, threshold){
+
+  # This will return a vector indicating the multilocus genotypes after applying
+  # a minimum required distance threshold between multilocus genotypes.
+
+  dist <- diss.dist(pop)
+  dist <- as.matrix(dist)
+  basemlg <- mlg.vector(pop)
+  
+  resultvec <- .Call("farthest_neighbor", dist, basemlg, threshold) 
+  
+  return(resultvec)
+}
+
+#==============================================================================#
+#' @rdname mlg
 # Multilocus Genotypes Across Populations
 #
 # Show which multilocus genotypes exist accross populations. 
