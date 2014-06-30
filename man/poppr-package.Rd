@@ -96,6 +96,7 @@ that all functions in \pkg{\link[adegenet]{adegenet}} are also available.
 \item \code{\link{mlg.crosspop}} - Finds all multilocus genotypes that cross populations
 \item \code{\link{mlg.table}} - Returns a table of populations by multilocus genotypes
 \item \code{\link{mlg.vector}} - Returns a vector of a numeric multilocus genotype assignment for each individual
+\item \code{\link{mlg.id}} - Finds all individuals associated with a single multilocus genotype
 \item \code{\link{poppr}} - Returns a diversity table by population
 \item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
 \item \code{\link{private_alleles}} - Tabulates the occurences of alleles that only occur in one population.
