@@ -50,17 +50,27 @@ with \code{\link{ggplot}}.}
 represented MLGs is appended to the matrix produced by mlg.table.}
 }
 \value{
-an integer of the number of multilocus genotypes within the sample.
-
+\subsection{mlg}{
+an integer describing the number of multilocus genotypes observed.
+}
+\subsection{mlg.table}{
 a matrix with columns indicating unique multilocus genotypes and rows
 indicating populations.
-
+}
+\subsection{mlg.vector}{
 a numeric vector naming the multilocus genotype of each individual in
-the dataset.
-
-a \code{list} containing vectors of population names for each MLG.
-
-a list of multilocus genotypes with the associated individual names per MLG
+  the dataset.
+}
+\subsection{mlg.crosspop}{
+\itemize{
+\item{default}{ a \code{list} where each element contains a named integer vector representing the number of individuals represented from each population in that MLG}
+\item{\code{indexreturn = TRUE}}{ a \code{vector} of integers defining the multilocus genotypes that have individuals crossing populations}
+\item{\code{df = TRUE}}{ A long form data frame with the columns: MLG, Population, Count. Useful for graphing with ggplot2}
+}
+}
+\subsection{mlg.id}{
+a list of multilocus genotypes with the associated individual names per MLG.
+}
 }
 \description{
 Create counts, vectors, and matrices of multilocus genotypes.
@@ -68,29 +78,31 @@ Create counts, vectors, and matrices of multilocus genotypes.
 \note{
 The resulting matrix of \code{mlg.table} can be used for analysis with
 the \code{\link{vegan}} package.
-The names of the multilocus genotypes represented will be those from
-the entire dataset. If you wish to view those relative to a subsetted
-dataset, you can use \code{mlg.table(popsub(pop, ...))}.
 
-The numbers of \code{mlg.vector} will not match up with the sequence of
-new genotypes found because sorting takes place within the algorithm before
-the genotypes are called so that the number of comparisons is \eqn{n-1}
-instead of \eqn{\frac{n(n-1)}{2}}.
+mlg.vector will recalculate the mlg vector for
+  \code{\linkS4class{genind}} objects and will return the contents of the mlg
+  slot in \code{\linkS4class{genclone}} objects. This means that MLGs will be
+  different for subsetted \code{\linkS4class{genind}} objects.
 }
 \examples{
 # Load the data set
 data(Aeut)
+
 # Investigate the number of multilocus genotypes.
 amlg <- mlg(Aeut)
 amlg # 119
+
 # show the multilocus genotype vector
 avec <- mlg.vector(Aeut)
 avec
+
 # Get a table
 atab <- mlg.table(Aeut, bar = FALSE)
 atab
+
 # See where multilocus genotypes cross populations
 acrs <- mlg.crosspop(Aeut) # MLG.59: (2 inds) Athena Mt. Vernon
+
 # See which individuals belong to each MLG
 aid <- mlg.id(Aeut)
 aid["59"] # individuals 159 and 57
@@ -145,6 +157,6 @@ new.H <- H3N2[H.vec \%in\% inds, ]
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{diversity}} \code{\link{popsub}}
+\code{\link[vegan]{diversity}} \code{\link{popsub}}
 }
 
