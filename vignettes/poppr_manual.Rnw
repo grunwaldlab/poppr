@@ -295,7 +295,7 @@ will have to toggle to this window}:
   \centering
   \caption{\footnotesize \footnotesize A popup window as it appears in OSX (Mountain Lion).}
   \label{getfile window}
-  \includegraphics{getfile.png}
+  \includegraphics{getfile}
 \end{figure}
 \newpage
 \begin{center}
