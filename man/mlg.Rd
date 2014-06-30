@@ -14,7 +14,7 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 
 mlg.vector(pop)
 
-mlg.filter(pop, threshold)
+mlg.filter(pop, threshold = 0, distance = "nei.dist", ...)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -49,7 +49,13 @@ with \code{\link{ggplot}}.}
 \item{total}{\code{logical} If \code{TRUE}, a row containing the sum of all
 represented MLGs is appended to the matrix produced by mlg.table.}
 
-\item{threshold}{the desired minimum distance between distinct genotypes.}
+\item{threshold}{the desired minimum distance between distinct genotypes.
+Defaults to 0, which will only merge identical genotypes}
+
+\item{distance}{a character or function defining the distance to be applied
+to pop. Defaults to \code{\link{nei.dist}}.}
+
+\item{...}{any parameters to be passed off to the distance method.}
 }
 \value{
 an integer of the number of multilocus genotypes within the sample.

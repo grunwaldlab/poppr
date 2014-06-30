@@ -321,9 +321,13 @@ mlg.vector <- function(pop){
 #
 # Create a vector of multilocus genotype indecies filtered by minimum distance. 
 #
-# @param pop a \code{\link{genind}} object.
+# @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.
 #' @param threshold the desired minimum distance between distinct genotypes.
-# 
+#'   Defaults to 0, which will only merge identical genotypes
+#' @param distance a character or function defining the distance to be applied 
+#'   to pop. Defaults to \code{\link{nei.dist}}.
+#' @param ... any parameters to be passed off to the distance method.
+#' 
 #' @return a numeric vector naming the multilocus genotype of each individual in
 #' the dataset. Each genotype is at least the specified distance apart.
 #'
@@ -335,12 +339,13 @@ mlg.vector <- function(pop){
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold){
+mlg.filter <- function(pop, threshold=0, distance="nei.dist", ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
 
-  dist <- diss.dist(pop)
+  DISTFUN <- match.fun(distance)
+  dist <- DISTFUN(pop, ...)
   dist <- as.matrix(dist)
   basemlg <- mlg.vector(pop)
   
