@@ -66,8 +66,9 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   double tmp_max;     // Used in finding the closest cluster
   int closest_pair[2]; // Used in finding pair of clusters closest together
   int** cluster_matrix;
-  int** cluster_distance_matrix;
+  double** cluster_distance_matrix;
   int* cluster_size; // Size of each cluster
+  int* out_vector; // A copy of Rout for internal use
 
   SEXP Rout;
   SEXP Rdim;
@@ -81,7 +82,7 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   num_mlgs = num_individuals;
   // Allocate empty matrix for storing clusters
   cluster_matrix = (int**)malloc(num_mlgs * sizeof(int*));
-  cluster_distance_matrix = (int**)malloc(num_mlgs * sizeof(int*));
+  cluster_distance_matrix = (double**)malloc(num_mlgs * sizeof(double*));
   if(cluster_matrix == NULL || cluster_distance_matrix == NULL)
   {
     // TODO: Throw error and exit
@@ -90,17 +91,28 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   {
     cluster_matrix[i] = (int*)malloc(num_individuals * sizeof(int));
     memset(cluster_matrix[i], -1, sizeof(int)*num_individuals);
-    cluster_distance_matrix[i] = (int*)malloc(num_individuals * sizeof(int));
-    memset(cluster_distance_matrix[i], -1, sizeof(int)*num_individuals);
+    cluster_distance_matrix[i] = (double*)malloc(num_individuals * sizeof(double));
     if(cluster_matrix[i] == NULL || cluster_distance_matrix[i] == NULL)
     {
       // TODO: Throw error and exit
+    }
+    for(int j = 0; j < num_individuals; j++)
+    {
+      // Using this instead of memset to preserve sentinel value
+      cluster_distance_matrix[i][j] = -1.0;
     }
   }
   // Allocate memory for storing sizes of each cluster
   // calloc clears the memory allocated to 0s
   cluster_size = (int*)calloc(num_mlgs, sizeof(int));
   if(cluster_size == NULL)
+  {
+    // TODO: Throw error and exit
+  }
+  // Allocate memory for storing cluster assignments
+  // calloc clears the memory allocated to 0s
+  out_vector = (int*)calloc(num_individuals, sizeof(int));
+  if(out_vector == NULL)
   {
     // TODO: Throw error and exit
   }
@@ -114,7 +126,9 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   for(int i = 0; i < num_individuals; i++)
   {
     cur_mlg = INTEGER(mlg)[i]; // Get the initial cluster of this individual / Casts as int implicitly
-    // Insert base 1 index of individual in the next open cell for its cluster  
+    // Insert index of individual in the result vector  
+    out_vector[i] = cur_mlg-1;    
+    // Then add this individual to the next open slot in its cluster
     cluster_matrix[cur_mlg-1][cluster_size[cur_mlg-1]] = i;
     cluster_size[cur_mlg-1]++;
 
@@ -124,6 +138,7 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
       num_clusters++;
     }
   }
+  num_mlgs = num_clusters;
 
   // Main processing loop.
   // Finds the two closest cluster
@@ -133,76 +148,72 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   min_cluster_distance = -1;
   while(min_cluster_distance < thresh && num_clusters > 1)
   {
-    // Fill the distance matrix from cluster to cluster
-    // Merge the two with the smallest distance and refill the matrix
-    //  until the smallest distance is greater than the threshold 
     min_cluster_distance = -1;
     closest_pair[0] = -1;
     closest_pair[1] = -1;
-    // Step through each cluster
-    // Upon completion the above three variables will hold:
-    //  the min distance between two clusters
-    //  the two clusters which are closest together
-    for(int i_cluster = 0; i_cluster < num_mlgs; i_cluster++)
+    // Fill the distance matrix with the new distances between each cluster
+    for(int i = 0; i < num_individuals; i++)
     {
-      tmp_max = -1;
-        
-      // Step through each subsequent cluster
-      for(int j_cluster = i_cluster+1; j_cluster < num_mlgs; j_cluster++)
+      for(int j = i+1; j < num_individuals; j++)
       {
-        // Step through each individual in the i_cluster cluster until an empty spot is found
-        for(int k_individual = 0; k_individual < num_individuals && cluster_matrix[i_cluster][k_individual] != -1; k_individual++)
+        if(out_vector[i] != out_vector[j])
         {
-          int k_individual_val = cluster_matrix[i_cluster][k_individual];
-          // Step through each individual in this cluster as well
-          for(int l_individual = 0; l_individual < num_individuals && cluster_matrix[j_cluster][l_individual] != -1; l_individual++)
+          if(REAL(dist)[(i)*num_individuals + (j)] > cluster_distance_matrix[out_vector[i]][out_vector[j]])
           {
-            int l_individual_val = cluster_matrix[j_cluster][l_individual];
-            // Index into the dist matrix using partial c-style indexing
-            if(REAL(dist)[k_individual_val*num_individuals+l_individual_val] > tmp_max)
-            {
-              tmp_max = REAL(dist)[k_individual_val*num_individuals + l_individual_val];
-            }
+            cluster_distance_matrix[out_vector[i]][out_vector[j]] = REAL(dist)[(i)*num_individuals + (j)];
           }
-        }
-        // Check to see if this cluster could be the closest
-        // Make sure not to count empty clusters (tmp_max ~= -1)
-        if(tmp_max > -0.5 && (tmp_max < min_cluster_distance || min_cluster_distance < 0))
+        } 
+      }
+    }
+    for(int i = 0; i < num_mlgs; i++)
+    {
+      for(int j = 0; j < num_mlgs; j++)
+      {
+        if((cluster_distance_matrix[i][j] < min_cluster_distance && cluster_distance_matrix[i][j] > -0.5)
+           || min_cluster_distance < -.05 && cluster_distance_matrix[i][j] > -0.5)
         {
-          // i_cluster and j_cluster are, for now, marked for merging 
-          min_cluster_distance = tmp_max;
-          closest_pair[0] = i_cluster;
-          closest_pair[1] = j_cluster;
+          min_cluster_distance = cluster_distance_matrix[i][j];
+          closest_pair[0] = i;
+          closest_pair[1] = j;
         }
       }
     }
     // Merge the two closest clusters together into the lower numbered cluster
     //  if they are within the threshold distance from each other
-    if(min_cluster_distance < thresh)
+    if(min_cluster_distance < 0 || closest_pair[0] < 0 || closest_pair[1] < 0)
     {
-      for(int i = 0; i < cluster_size[closest_pair[1]]; i++)
+      printf("\nThe data resulted in a negative distance or cluster id. Please check your data.\n");
+      num_clusters = 0;
+    }
+    else if(min_cluster_distance < thresh)
+    {
+      for(int i = 0; i < cluster_size[closest_pair[1]] && cluster_matrix[closest_pair[1]][i] > -1; i++)
       {
+        // Change the assignment for this individual in the result vector
+        out_vector[cluster_matrix[closest_pair[1]][i]] = closest_pair[0];
+        // Then update the cluster_matrix and cluster_size given the moved individual
         cluster_matrix[closest_pair[0]][cluster_size[closest_pair[0]]] = cluster_matrix[closest_pair[1]][i];
         cluster_matrix[closest_pair[1]][i] = -1;
         cluster_size[closest_pair[0]]++;
       }
       cluster_size[closest_pair[1]] = 0;
       num_clusters--;
+      // Erase the distance entries for all pairings containing the old cluster
+      for(int i = 0; i < num_individuals; i++)
+      {
+        cluster_distance_matrix[closest_pair[1]][i] = -1.0;
+        cluster_distance_matrix[i][closest_pair[1]] = -1.0;
+      }
     }
   }
 
   // Fill return vector
-  for(int i = 0; i < num_mlgs; i++)
+  for(int i = 0; i < num_individuals; i++)
   {
-    for(int j = 0; j < num_individuals && cluster_matrix[i][j] > -0.5; j++)
-    {
-      // Each element of Rout should contain that individual's new mlg
-      INTEGER(Rout)[cluster_matrix[i][j]] = i+1;
-    }
+    INTEGER(Rout)[i] = out_vector[i]+1;
   }
-  
 
-  // Free memory allocated for cluster_matrix
+  // Free memory allocated for the various arrays and matrices
   for(int i = 0; i < num_mlgs; i++)
   { 
     free(cluster_matrix[i]);
@@ -211,6 +222,7 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   free(cluster_matrix);
   free(cluster_distance_matrix);
   free(cluster_size);
+  free(out_vector);
   UNPROTECT(1);
   
   return Rout;
