@@ -2693,6 +2693,14 @@ the 22 individuals.
 indNames(virus)[UGNN_match]
 @
 
+Note that there is an alternative way to list individuals matching specific MLGs using the function \texttt{mlg.id}. This function will return a list where each element represents a unique MLG. You can use this data to find out which individuals correspond to specific MLGs. Each element in the list is named with the MLG, but the index does not necessarily match up, so it is important to convert your query MLGs to strings:
+\label{mlg:mix:mlg.id}
+<<mlg.id>>=
+virus.id <- mlg.id(virus)
+virus.id[as.character(UGNN)]
+@
+
+
 We can also use the vector of MLGs to
 subset\cmdlink{mlg:table:mlg.table}{mlg.table} with the \texttt{mlgsub} flag.
 <<mlgsub_flag, eval=FALSE>>=
@@ -4103,7 +4111,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 
 \subsection{Afterward}
 
-Writing this manual to \poppr{}has been fun, but I have realized that it is not
+Writing this manual to \poppr{} has been fun, but I have realized that it is not
 always in the user's best intrest to peruse a 80+ page manual in order to figure
 out how to run analysis of the index of association. At \textgreater22,000 words, this
 manual was less of a manual and more of a novella. 
@@ -4662,6 +4670,7 @@ to its definition and description.
 \cmdlink{mlg:table:mlg.table}{mlg.table} & Returns a table of populations by multilocus genotypes \\
 \cmdlink{mlg:mix:mlg.vector}{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\ 
  & each individual \\
+\cmdlink{mlg:mix:mlg.id}{mlg.id} & Identifies individuals associated with each MLG \\
 \texttt{poppr} & Returns a diversity table by population \\
 \texttt{poppr.all} & Returns a diversity table by population for all compatible files specified \\
 \texttt{private\_alleles} & Tabulates the occurrences of alleles that only occur in one population\\
