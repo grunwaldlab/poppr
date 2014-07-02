@@ -45,15 +45,19 @@
 
 SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
 {
+  // This function uses a farthest neighbor clustering algorithm to
+  // condense a set of multilocus genotypes into a potentially smaller
+  // set. Clusters closer than threshold apart will be merged together,
+  // and the process will repeat until no remaining clusters are close
+  // enough to be merged.
 
-  // TODO: More descriptive header
-  // TODO: Make unit tests
   // TODO: Input validation
   // TODO: Give the option of nearest, farthest, and average neighbor
 
   // Assumptions:
   //  dist is an n by n matrix containing distances between individuals
   //  mlg is a vector of length n containing mlg assignments
+  //  length(unique(mlg)) is at most n and at least 1
   //  threshold is a real
   //  mlg is a vector of integers
   //  dist is a matrix of reals
@@ -64,7 +68,6 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   int cur_mlg;  // Temporary number used for tracking mlgs
   double thresh; // Threshold for distance under which mlgs are clones
   double min_cluster_distance; // Used in finding the closest cluster pairing
-  double tmp_max;     // Used in finding the closest cluster
   int closest_pair[2]; // Used in finding pair of clusters closest together
   int** cluster_matrix;
   double** cluster_distance_matrix;
@@ -141,7 +144,8 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
       {
         if(out_vector[i] != out_vector[j])
         {
-          if(ISNA(REAL(dist)[i*num_individuals + j]) || ISNAN(REAL(dist)[i*num_individuals + j]))
+          if(ISNA(REAL(dist)[i*num_individuals + j]) || ISNAN(REAL(dist)[i*num_individuals + j]) 
+            || !R_FINITE(REAL(dist)[i*num_individuals + j]))
           {
             error("Data set contains missing or invalid distances. Please check your data.\n");
           }

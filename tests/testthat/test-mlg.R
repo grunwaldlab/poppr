@@ -144,3 +144,30 @@ test_that("mlg.group Pinf works", {
   expect_that(x <- names(mlg.group(Pinf)[1]), equals("1"))
 })
 
+test_that("multilocus genotype filtering functions correctly", {
+  data(Aeut, package = "poppr")
+  data(partial_clone, package = "poppr")
+  data(nancycats, package = "adegenet")
+  amlg <- mlg.vector(Aeut)
+  pmlg <- mlg.vector(partial_clone)
+  nmlg <- mlg.vector(nancycats)
+ 
+  # No clustering should happen if the threshold is set to 0
+  expect_that(length(unique(amlg)), equals(length(unique(mlg.filter(Aeut,0,distance="diss.dist")))))
+  expect_that(length(unique(pmlg)), equals(length(unique(mlg.filter(partial_clone,0,distance="diss.dist")))))
+  expect_that(length(unique(nmlg)), equals(length(unique(mlg.filter(nancycats,0,distance="diss.dist")))))
+  # All clusters should be merged for an arbitrarily large threshold
+  expect_that(1, equals(length(unique(mlg.filter(Aeut,10000,distance="diss.dist")))))
+  expect_that(1, equals(length(unique(mlg.filter(partial_clone,10000,distance="diss.dist")))))
+  expect_that(1, equals(length(unique(mlg.filter(nancycats,10000,distance="diss.dist")))))
+  # The different methods of passing distance should produce the same results
+  adis <- diss.dist(missingno(Aeut,"mean",quiet=TRUE))
+  pdis <- diss.dist(missingno(partial_clone,"mean",quiet=TRUE))
+  ndis <- diss.dist(missingno(nancycats,"mean",quiet=TRUE))
+  expect_that(mlg.filter(Aeut,0.3,missing="mean",distance=adis), equals(mlg.filter(Aeut,0.3,missing="mean",distance=diss.dist)))
+  expect_that(mlg.filter(Aeut,0.3,missing="mean",distance=adis), equals(mlg.filter(Aeut,0.3,missing="mean",distance="diss.dist")))
+  expect_that(mlg.filter(nancycats,0.3,missing="mean",distance=ndis), equals(mlg.filter(nancycats,0.3,missing="mean",distance=diss.dist)))
+  expect_that(mlg.filter(nancycats,0.3,missing="mean",distance=ndis), equals(mlg.filter(nancycats,0.3,missing="mean",distance="diss.dist")))
+  expect_that(mlg.filter(partial_clone,0.3,missing="mean",distance=pdis), equals(mlg.filter(partial_clone,0.3,missing="mean",distance=diss.dist)))
+  expect_that(mlg.filter(partial_clone,0.3,missing="mean",distance=pdis), equals(mlg.filter(partial_clone,0.3,missing="mean",distance="diss.dist")))
+})
