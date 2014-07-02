@@ -317,6 +317,30 @@ mlg.vector <- function(pop){
 
 #==============================================================================#
 #' @rdname mlg
+# Distance Matrix Storage Function
+#
+# Helper function used to store data between function calls.
+#
+#' @param v used in \code{.mlg.filter.store()$set(v)} to store object v
+#' 
+#' @return a function like \code{.mlg.filter.distance_store} and
+#'  \code{.mlg.filter.parameter_store} with attributes $set(v) and $get()
+#'  which store data globaly, allowing access between function calls.
+#' 
+#' @export
+#==============================================================================#
+.mlg.filter.store <- function(){
+  last_value <- NULL
+  list(
+    get = function() {last_value},
+    set = function(v) {last_value <<- v }
+  )
+}
+.mlg.filter.distance_store <- .mlg.filter.store()
+.mlg.filter.parameter_store <- .mlg.filter.store()
+
+#==============================================================================#
+#' @rdname mlg
 # Clonally Filtered Multilocus Genotype Vector
 #
 # Create a vector of multilocus genotype indecies filtered by minimum distance. 
@@ -326,8 +350,15 @@ mlg.vector <- function(pop){
 #'   Defaults to 0, which will only merge identical genotypes
 #' @param missing any method to be used by \code{\link{missingno}}: "mean" 
 #'   (default), "zero", "loci", "genotype", or "ignore".
+#' @param memory whether this function should remember the last distance matrix
+#'   it generated. (default) TRUE will attempt to reuse the last distance matrix 
+#'   if the other parameters are the same. FALSE will ignore any stored matrices 
+#'   and not store any it generates. "ERASE" will remove any previously stored 
+#'   distance matrices and not store any it generates.
 #' @param distance a character or function defining the distance to be applied 
-#'   to pop. Defaults to \code{\link{nei.dist}}.
+#'   to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing
+#'   distances between individuals (such as the output of \code{\link{nei.dist}})
+#'   is also accepted for this parameter.
 #' @param ... any parameters to be passed off to the distance method.
 #' 
 #' @return a numeric vector naming the multilocus genotype of each individual in
@@ -341,22 +372,56 @@ mlg.vector <- function(pop){
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0, missing="mean", distance="nei.dist", ...){
+mlg.filter <- function(pop, threshold=0, missing="mean", memory=TRUE, distance="nei.dist", ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
 
-  pop <- missingno(pop,missing) 
+  pop <- missingno(pop,missing,quiet=TRUE) 
+  
+  set_last_par <- function(v) .mlg.filter.parameter_store$set(v)
+  get_last_par <- function() .mlg.filter.parameter_store$get()
+  set_last_dis <- function(v) .mlg.filter.distance_store$set(v)
+  get_last_dis <- function() .mlg.filter.distance_store$get()
 
-  DISTFUN <- match.fun(distance)
-  dist <- DISTFUN(pop, ...)
-  dist <- as.matrix(dist)
+  if(is.character(distance) || is.function(distance))
+  {
+    if(memory==TRUE && identical(c(pop,distance,...),get_last_par()))
+    {
+      dis <- get_last_dis()
+    }
+    else
+    {
+      DISTFUN <- match.fun(distance)
+      dis <- DISTFUN(pop, ...)
+      dis <- as.matrix(dis)
+      if(memory==TRUE)
+      {
+        set_last_par(c(pop,distance,...))
+        set_last_dis(dis)
+      }
+      else if(memory=="ERASE")
+      {
+        set_last_par(NULL)
+        set_last_dis(NULL)
+      }
+    }
+  }
+  else
+  {
+    # Treating distance as a distance table
+    # Warning: Missing data in distance matrix or data uncorrelated with pop may produce unexpected results.
+    dis <- as.matrix(distance)
+  }
+
   basemlg <- mlg.vector(pop)
   
-  resultvec <- .Call("farthest_neighbor", dist, basemlg, threshold) 
+  resultvec <- .Call("farthest_neighbor", dis, basemlg, threshold) 
   
   return(resultvec)
 }
+
+
 
 #==============================================================================#
 #' @rdname mlg
