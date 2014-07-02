@@ -49,6 +49,7 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   // TODO: More descriptive header
   // TODO: Make unit tests
   // TODO: Input validation
+  // TODO: Give the option of nearest, farthest, and average neighbor
 
   // Assumptions:
   //  dist is an n by n matrix containing distances between individuals
@@ -81,41 +82,23 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   // TODO: Limit memory usage by counting initial mlgs from mlg
   num_mlgs = num_individuals;
   // Allocate empty matrix for storing clusters
-  cluster_matrix = (int**)malloc(num_mlgs * sizeof(int*));
-  cluster_distance_matrix = (double**)malloc(num_mlgs * sizeof(double*));
-  if(cluster_matrix == NULL || cluster_distance_matrix == NULL)
-  {
-    // TODO: Throw error and exit
-  }
+  cluster_matrix = R_Calloc(num_mlgs, int*);
+  cluster_distance_matrix = R_Calloc(num_mlgs, double*);
   for(int i = 0; i < num_mlgs; i++)
   {
-    cluster_matrix[i] = (int*)malloc(num_individuals * sizeof(int));
-    memset(cluster_matrix[i], -1, sizeof(int)*num_individuals);
-    cluster_distance_matrix[i] = (double*)malloc(num_individuals * sizeof(double));
-    if(cluster_matrix[i] == NULL || cluster_distance_matrix[i] == NULL)
-    {
-      // TODO: Throw error and exit
-    }
+    cluster_matrix[i] = R_Calloc(num_individuals, int);
+    cluster_distance_matrix[i] = R_Calloc(num_individuals, double);
     for(int j = 0; j < num_individuals; j++)
     {
       // Using this instead of memset to preserve sentinel value
       cluster_distance_matrix[i][j] = -1.0;
+      cluster_matrix[i][j] = -1;
     }
   }
   // Allocate memory for storing sizes of each cluster
-  // calloc clears the memory allocated to 0s
-  cluster_size = (int*)calloc(num_mlgs, sizeof(int));
-  if(cluster_size == NULL)
-  {
-    // TODO: Throw error and exit
-  }
+  cluster_size = R_Calloc(num_mlgs, int);
   // Allocate memory for storing cluster assignments
-  // calloc clears the memory allocated to 0s
-  out_vector = (int*)calloc(num_individuals, sizeof(int));
-  if(out_vector == NULL)
-  {
-    // TODO: Throw error and exit
-  }
+  out_vector = R_Calloc(num_individuals, int);
 
   // Fill initial clustering matrix via mlg
   // Steps through mlg.
@@ -158,7 +141,11 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
       {
         if(out_vector[i] != out_vector[j])
         {
-          if(REAL(dist)[(i)*num_individuals + (j)] > cluster_distance_matrix[out_vector[i]][out_vector[j]])
+          if(ISNA(REAL(dist)[i*num_individuals + j]) || ISNAN(REAL(dist)[i*num_individuals + j]))
+          {
+            error("Data set contains missing or invalid distances. Please check your data.\n");
+          }
+          else if(REAL(dist)[(i)*num_individuals + (j)] > cluster_distance_matrix[out_vector[i]][out_vector[j]])
           {
             cluster_distance_matrix[out_vector[i]][out_vector[j]] = REAL(dist)[(i)*num_individuals + (j)];
           }
@@ -170,7 +157,7 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
       for(int j = 0; j < num_mlgs; j++)
       {
         if((cluster_distance_matrix[i][j] < min_cluster_distance && cluster_distance_matrix[i][j] > -0.5)
-           || min_cluster_distance < -.05 && cluster_distance_matrix[i][j] > -0.5)
+           || (min_cluster_distance < -.05 && cluster_distance_matrix[i][j] > -0.5))
         {
           min_cluster_distance = cluster_distance_matrix[i][j];
           closest_pair[0] = i;
@@ -182,7 +169,7 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
     //  if they are within the threshold distance from each other
     if(min_cluster_distance < 0 || closest_pair[0] < 0 || closest_pair[1] < 0)
     {
-      printf("\nThe data resulted in a negative distance or cluster id. Please check your data.\n");
+      warning("\nThe data resulted in a negative or invalid distance or cluster id. Result vector is incomplete.\n");
       num_clusters = 0;
     }
     else if(min_cluster_distance < thresh)
@@ -216,13 +203,13 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   // Free memory allocated for the various arrays and matrices
   for(int i = 0; i < num_mlgs; i++)
   { 
-    free(cluster_matrix[i]);
-    free(cluster_distance_matrix[i]);
+    R_Free(cluster_matrix[i]);
+    R_Free(cluster_distance_matrix[i]);
   }
-  free(cluster_matrix);
-  free(cluster_distance_matrix);
-  free(cluster_size);
-  free(out_vector);
+  R_Free(cluster_matrix);
+  R_Free(cluster_distance_matrix);
+  R_Free(cluster_size);
+  R_Free(out_vector);
   UNPROTECT(1);
   
   return Rout;

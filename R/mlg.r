@@ -324,6 +324,8 @@ mlg.vector <- function(pop){
 # @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.
 #' @param threshold the desired minimum distance between distinct genotypes.
 #'   Defaults to 0, which will only merge identical genotypes
+#' @param missing any method to be used by \code{\link{missingno}}: "mean" 
+#'   (default), "zero", "loci", "genotype", or "ignore".
 #' @param distance a character or function defining the distance to be applied 
 #'   to pop. Defaults to \code{\link{nei.dist}}.
 #' @param ... any parameters to be passed off to the distance method.
@@ -339,10 +341,12 @@ mlg.vector <- function(pop){
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0, distance="nei.dist", ...){
+mlg.filter <- function(pop, threshold=0, missing="mean", distance="nei.dist", ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
+
+  pop <- missingno(pop,missing) 
 
   DISTFUN <- match.fun(distance)
   dist <- DISTFUN(pop, ...)
