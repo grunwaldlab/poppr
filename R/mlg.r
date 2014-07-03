@@ -75,7 +75,7 @@
 #' represented MLGs is appended to the matrix produced by mlg.table.
 #'
 #' @seealso \code{\link{diversity}} \code{\link{popsub}}
-#' @author Zhian N. Kamvar
+#' @author Zhian N. Kamvar, Jonah Brooks
 #' @examples
 #'
 #' # Load the data set
@@ -316,18 +316,17 @@ mlg.vector <- function(pop){
 }
 
 #==============================================================================#
-#' @rdname mlg
+# @rdname mlg
 # Distance Matrix Storage Function
 #
 # Helper function used to store data between function calls.
 #
-#' @param v used in \code{.mlg.filter.store()$set(v)} to store object v
-#' 
-#' @return a function like \code{.mlg.filter.distance_store} and
-#'  \code{.mlg.filter.parameter_store} with attributes $set(v) and $get()
-#'  which store data globaly, allowing access between function calls.
-#' 
-#' @export
+# @param v used in \code{.mlg.filter.store()$set(v)} to store object v
+# 
+# @return a function like \code{.mlg.filter.distance_store} and
+#  \code{.mlg.filter.parameter_store} with attributes $set(v) and $get()
+#  which store data globaly, allowing access between function calls.
+# 
 #==============================================================================#
 .mlg.filter.store <- function(){
   last_value <- NULL
@@ -379,7 +378,7 @@ mlg.vector <- function(pop){
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0, missing="mean", memory=TRUE, algorithm="farthest_neighbor", distance="nei.dist", ...){
+mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=TRUE, algorithm="farthest_neighbor", distance="nei.dist", ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
@@ -422,8 +421,36 @@ mlg.filter <- function(pop, threshold=0, missing="mean", memory=TRUE, algorithm=
   }
 
   basemlg <- mlg.vector(pop)
-  algo <- tolower(algorithm)  
 
+  # Input validation before passing arguments to C
+    #  dist is an n by n matrix containing distances between individuals
+  if((!is.numeric(dis) && !is.integer(dis)) || dim(dis)[1] != dim(dis)[2])
+  {
+    stop("Distance matrix must be a square matrix of numeric or integer values.")
+  } 
+    #  mlg is a vector of length n containing mlg assignments
+  if((!is.numeric(basemlg) && !is.integer(basemlg)) || length(basemlg) != dim(dis)[1])
+  {
+    stop("MLG must contain one numeric or integer entry for each individual in the population.")
+  }
+    # Threshold must be something that can cast to numeric
+  if(!is.numeric(threshold) && !is.integer(threshold))
+  {
+    stop("Threshold must be a numeric or integer value")
+  } 
+
+  # Cast parameters to proper types before passing them to C
+  dis_dim <- dim(dis)
+  dis <- as.numeric(dis)
+  dim(dis) <- dis_dim # Turn it back into a matrix
+  threshold <- as.numeric(threshold)
+  algo <- tolower(as.character(algorithm))
+  if(!isTRUE(all.equal(basemlg,as.integer(basemlg))))
+  {
+    warning("MLG contains non-integer values. MLGs differing only in decimal values will be merged.")
+  }
+  basemlg <- as.integer(basemlg)
+  
   resultvec <- .Call("neighbor_clustering", dis, basemlg, threshold, algo) 
   
   return(resultvec)

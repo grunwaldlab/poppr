@@ -57,7 +57,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   // distance between all pairs of points in two clusters, then merges
   // the pair of clusters with the smallest average distance.
 
-  // TODO: Input validation
+  // Note: Input validation is handled in the R wrapper function.
+  //  Take care if calling this function directly.
 
   // Assumptions:
   //  dist is an n by n matrix containing distances between individuals
