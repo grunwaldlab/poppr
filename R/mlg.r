@@ -327,10 +327,9 @@ mlg.vector <- function(pop){
 #' @param missing any method to be used by \code{\link{missingno}}: "mean" 
 #'   (default), "zero", "loci", "genotype", or "ignore".
 #' @param memory whether this function should remember the last distance matrix
-#'   it generated. (default) TRUE will attempt to reuse the last distance matrix 
-#'   if the other parameters are the same. FALSE will ignore any stored matrices 
-#'   and not store any it generates. "ERASE" will remove any previously stored 
-#'   distance matrices and not store any it generates.
+#'   it generated. TRUE will attempt to reuse the last distance matrix 
+#'   if the other parameters are the same. (default) FALSE will ignore any stored 
+#'   matrices and not store any it generates.
 #' @param algorithm determines the type of clustering to be done.
 #'   (default) "farthest_neighbor" merges clusters based on the maximum distance
 #'   between points in either cluster. This is the strictest of the three.
@@ -355,29 +354,11 @@ mlg.vector <- function(pop){
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=TRUE, algorithm="farthest_neighbor", distance="nei.dist", ...){
+mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", distance="nei.dist", ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
 
-  if(memory=="ERASE")
-  {
-    .last.value.param$set(NULL)
-    .last.value.dist$set(NULL)
-    cat("mlg.filter function memory cleared.\n") 
-    
-    # Handle the special case of mlg.filter(NULL,memory="ERASE")
-    if(is.null(pop))
-    {
-      ############################################
-      ###### RETURNS NA and exits function #######
-      ############################################
-      return(NA)
-    }
-  }
-
-
-  
   if(!is.genclone(pop) && !is.genind(pop))
   {
     stop("No genclone or genind object was provided.")

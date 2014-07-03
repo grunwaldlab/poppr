@@ -14,7 +14,7 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 
 mlg.vector(pop)
 
-mlg.filter(pop, threshold = 0, missing = "mean", memory = TRUE,
+mlg.filter(pop, threshold = 0, missing = "mean", memory = FALSE,
   algorithm = "farthest_neighbor", distance = "nei.dist", ...)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
@@ -57,10 +57,9 @@ Defaults to 0, which will only merge identical genotypes}
 (default), "zero", "loci", "genotype", or "ignore".}
 
 \item{memory}{whether this function should remember the last distance matrix
-it generated. (default) TRUE will attempt to reuse the last distance matrix
-if the other parameters are the same. FALSE will ignore any stored matrices
-and not store any it generates. "ERASE" will remove any previously stored
-distance matrices and not store any it generates.}
+it generated. TRUE will attempt to reuse the last distance matrix
+if the other parameters are the same. (default) FALSE will ignore any stored
+matrices and not store any it generates.}
 
 \item{algorithm}{determines the type of clustering to be done.
 (default) "farthest_neighbor" merges clusters based on the maximum distance
