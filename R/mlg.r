@@ -316,29 +316,6 @@ mlg.vector <- function(pop){
 }
 
 #==============================================================================#
-# @rdname mlg
-# Distance Matrix Storage Function
-#
-# Helper function used to store data between function calls.
-#
-# @param v used in \code{.mlg.filter.store()$set(v)} to store object v
-# 
-# @return a function like \code{.mlg.filter.distance_store} and
-#  \code{.mlg.filter.parameter_store} with attributes $set(v) and $get()
-#  which store data globaly, allowing access between function calls.
-# 
-#==============================================================================#
-.mlg.filter.store <- function(){
-  last_value <- NULL
-  list(
-    get = function() {last_value},
-    set = function(v) {last_value <<- v }
-  )
-}
-.mlg.filter.distance_store <- .mlg.filter.store()
-.mlg.filter.parameter_store <- .mlg.filter.store()
-
-#==============================================================================#
 #' @rdname mlg
 # Clonally Filtered Multilocus Genotype Vector
 #
@@ -383,18 +360,36 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=TRUE, algorith
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
 
+  if(memory=="ERASE")
+  {
+    .last.value.param$set(NULL)
+    .last.value.dist$set(NULL)
+    cat("mlg.filter function memory cleared.\n") 
+    
+    # Handle the special case of mlg.filter(NULL,memory="ERASE")
+    if(is.null(pop))
+    {
+      ############################################
+      ###### RETURNS NA and exits function #######
+      ############################################
+      return(NA)
+    }
+  }
+
+
+  
+  if(!is.genclone(pop) && !is.genind(pop))
+  {
+    stop("No genclone or genind object was provided.")
+  }
+
   pop <- missingno(pop,missing,quiet=TRUE) 
   
-  set_last_par <- function(v) .mlg.filter.parameter_store$set(v)
-  get_last_par <- function() .mlg.filter.parameter_store$get()
-  set_last_dis <- function(v) .mlg.filter.distance_store$set(v)
-  get_last_dis <- function() .mlg.filter.distance_store$get()
-
   if(is.character(distance) || is.function(distance))
   {
-    if(memory==TRUE && identical(c(pop,distance,...),get_last_par()))
+    if(memory==TRUE && identical(c(pop,distance,...),.last.value.param$get()))
     {
-      dis <- get_last_dis()
+      dis <- .last.value.dist$get()
     }
     else
     {
@@ -403,13 +398,8 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=TRUE, algorith
       dis <- as.matrix(dis)
       if(memory==TRUE)
       {
-        set_last_par(c(pop,distance,...))
-        set_last_dis(dis)
-      }
-      else if(memory=="ERASE")
-      {
-        set_last_par(NULL)
-        set_last_dis(NULL)
+        .last.value.param$set(c(pop,distance,...))
+        .last.value.dist$set(dis)
       }
     }
   }
