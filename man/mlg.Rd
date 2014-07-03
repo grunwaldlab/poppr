@@ -18,7 +18,7 @@ mlg.vector(pop)
 .mlg.filter.store()
 
 mlg.filter(pop, threshold = 0, missing = "mean", memory = TRUE,
-  distance = "nei.dist", ...)
+  algorithm = "farthest_neighbor", distance = "nei.dist", ...)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -66,6 +66,14 @@ it generated. (default) TRUE will attempt to reuse the last distance matrix
 if the other parameters are the same. FALSE will ignore any stored matrices
 and not store any it generates. "ERASE" will remove any previously stored
 distance matrices and not store any it generates.}
+
+\item{algorithm}{determines the type of clustering to be done.
+(default) "farthest_neighbor" merges clusters based on the maximum distance
+between points in either cluster. This is the strictest of the three.
+"nearest_neighbor" merges clusters based on the minimum distance between
+points in either cluster. This is the loosest of the three.
+"average_neighbor" merges clusters based on the average distance between
+every pair of points between clusters.}
 
 \item{distance}{a character or function defining the distance to be applied
 to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing

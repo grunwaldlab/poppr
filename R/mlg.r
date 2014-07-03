@@ -355,6 +355,13 @@ mlg.vector <- function(pop){
 #'   if the other parameters are the same. FALSE will ignore any stored matrices 
 #'   and not store any it generates. "ERASE" will remove any previously stored 
 #'   distance matrices and not store any it generates.
+#' @param algorithm determines the type of clustering to be done.
+#'   (default) "farthest_neighbor" merges clusters based on the maximum distance
+#'   between points in either cluster. This is the strictest of the three.
+#'   "nearest_neighbor" merges clusters based on the minimum distance between
+#'   points in either cluster. This is the loosest of the three.
+#'   "average_neighbor" merges clusters based on the average distance between
+#'   every pair of points between clusters.
 #' @param distance a character or function defining the distance to be applied 
 #'   to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing
 #'   distances between individuals (such as the output of \code{\link{nei.dist}})
@@ -372,7 +379,7 @@ mlg.vector <- function(pop){
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0, missing="mean", memory=TRUE, distance="nei.dist", ...){
+mlg.filter <- function(pop, threshold=0, missing="mean", memory=TRUE, algorithm="farthest_neighbor", distance="nei.dist", ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
@@ -415,8 +422,9 @@ mlg.filter <- function(pop, threshold=0, missing="mean", memory=TRUE, distance="
   }
 
   basemlg <- mlg.vector(pop)
-  
-  resultvec <- .Call("farthest_neighbor", dis, basemlg, threshold) 
+  algo <- tolower(algorithm)  
+
+  resultvec <- .Call("neighbor_clustering", dis, basemlg, threshold, algo) 
   
   return(resultvec)
 }

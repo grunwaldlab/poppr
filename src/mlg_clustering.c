@@ -43,16 +43,21 @@
 #include <string.h>
 #include <stdlib.h>
 
-SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
+SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
 {
-  // This function uses a farthest neighbor clustering algorithm to
+  // This function uses various clustering algorithms to
   // condense a set of multilocus genotypes into a potentially smaller
   // set. Clusters closer than threshold apart will be merged together,
   // and the process will repeat until no remaining clusters are close
-  // enough to be merged.
+  // enough to be merged. Farthest Neighbor clustering is the strictest,
+  // (clustering only groups whose extremes are nearest) and is therefore 
+  // used as the default. Nearest Neighbor is the least strict, and is
+  // prone to linking vastly different individuals into the same cluster
+  // if there is a path between them. Average Neighbor takes the average
+  // distance between all pairs of points in two clusters, then merges
+  // the pair of clusters with the smallest average distance.
 
   // TODO: Input validation
-  // TODO: Give the option of nearest, farthest, and average neighbor
 
   // Assumptions:
   //  dist is an n by n matrix containing distances between individuals
@@ -73,10 +78,12 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
   double** cluster_distance_matrix;
   int* cluster_size; // Size of each cluster
   int* out_vector; // A copy of Rout for internal use
+  char algo;  // Used for storing the first letter of algorithm
 
   SEXP Rout;
   SEXP Rdim;
 
+  algo = *CHAR(STRING_ELT(algorithm,0));
   thresh = REAL(threshold)[0];
   Rdim = getAttrib(dist, R_DimSymbol);
   num_individuals = INTEGER(Rdim)[0]; // dist is a square matrix
@@ -149,8 +156,33 @@ SEXP farthest_neighbor(SEXP dist, SEXP mlg, SEXP threshold)
           {
             error("Data set contains missing or invalid distances. Please check your data.\n");
           }
+          else if(algo=='n' && (REAL(dist)[(i)*num_individuals + (j)] < cluster_distance_matrix[out_vector[i]][out_vector[j]]
+                                || cluster_distance_matrix[out_vector[i]][out_vector[j]] < -0.5))
+          { // Nearest Neighbor clustering
+            cluster_distance_matrix[out_vector[i]][out_vector[j]] = REAL(dist)[(i)*num_individuals + (j)];
+          }
+          else if(algo=='a')
+          { // Average Neighbor clustering
+            // The average distance will be sum(D(xi,yi))/(|x|*|y|)
+            // Since |x| and |y| are constant for now, that term can be moved into the sum
+            // Which lets us add the elements in one at a time divided by the product of cluster sizes
+            if(cluster_size[i]*cluster_size[j] != 0)
+            {
+              if(cluster_distance_matrix[out_vector[i]][out_vector[j]] < -0.5)
+              { // This is the first pair to be considered between these two clusters
+                double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
+                cluster_distance_matrix[out_vector[i]][out_vector[j]] = portion;
+              }
+              else
+              { 
+                double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
+                cluster_distance_matrix[out_vector[i]][out_vector[j]] += portion;
+              }
+            }
+          }
           else if(REAL(dist)[(i)*num_individuals + (j)] > cluster_distance_matrix[out_vector[i]][out_vector[j]])
-          {
+          { // Farthest Neighbor clustering
+            // This is the default, so it will execute even if the algorithm argument is invalid
             cluster_distance_matrix[out_vector[i]][out_vector[j]] = REAL(dist)[(i)*num_individuals + (j)];
           }
         } 
