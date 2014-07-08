@@ -161,6 +161,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
                                 || cluster_distance_matrix[out_vector[i]][out_vector[j]] < -0.5))
           { // Nearest Neighbor clustering
             cluster_distance_matrix[out_vector[i]][out_vector[j]] = REAL(dist)[(i)*num_individuals + (j)];
+            cluster_distance_matrix[out_vector[j]][out_vector[i]] = REAL(dist)[(i)*num_individuals + (j)];
           }
           else if(algo=='a')
           { // Average Neighbor clustering
@@ -173,11 +174,13 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
               { // This is the first pair to be considered between these two clusters
                 double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
                 cluster_distance_matrix[out_vector[i]][out_vector[j]] = portion;
+                cluster_distance_matrix[out_vector[j]][out_vector[i]] = portion;
               }
               else
               { 
                 double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
                 cluster_distance_matrix[out_vector[i]][out_vector[j]] += portion;
+                cluster_distance_matrix[out_vector[j]][out_vector[i]] += portion;
               }
             }
           }
@@ -185,6 +188,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
           { // Farthest Neighbor clustering
             // This is the default, so it will execute even if the algorithm argument is invalid
             cluster_distance_matrix[out_vector[i]][out_vector[j]] = REAL(dist)[(i)*num_individuals + (j)];
+            cluster_distance_matrix[out_vector[j]][out_vector[i]] = REAL(dist)[(i)*num_individuals + (j)];
           }
         } 
       }
@@ -230,6 +234,33 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
       }
     }
   }
+
+
+  // TODO: Remove this test code
+  for(int i = 0; i < num_mlgs; i++)
+  {
+    int printed = 0;
+    for(int j = 0; j < num_mlgs; j++)
+    {
+      if(i == j && cluster_size[i]>0 && cluster_size[j]>0)
+      {
+        printf("0.000000\t");
+        printed=1;
+      }
+      if(cluster_distance_matrix[i][j] > -0.5 )
+      {
+        printf("%f\t",cluster_distance_matrix[i][j]);
+        printed = 1;
+      }
+    }
+    if(printed)
+    {
+      printf("\n");
+      printed=0;
+    }
+  }
+  // END: Test code
+
 
   // Fill return vector
   for(int i = 0; i < num_individuals; i++)
