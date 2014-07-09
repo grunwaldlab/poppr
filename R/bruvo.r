@@ -492,7 +492,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     }
   }
   ###### Color schemes #######  
-  # The pallete is determined by what the user types in the argument. It can be 
+  # The palette is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color   <- palette(length(pop@pop.names))

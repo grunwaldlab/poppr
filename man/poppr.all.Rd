@@ -15,7 +15,7 @@ see \code{\link{poppr}}
 }
 \description{
 poppr.all is a wrapper function that will loop through a list of files from
-the workind directory, execute \code{\link{poppr}}, and concatenate the
+the working directory, execute \code{\link{poppr}}, and concatenate the
 output into one data frame.
 }
 \examples{

@@ -87,7 +87,7 @@
 #'   missing data allowed for analysis. This is to be used in conjunction with 
 #'   the flag \code{missing} (see \code{\link{missingno}} for details)
 #'   
-#' @param quiet \code{FALSE} (defualt) will display a progress bar for each
+#' @param quiet \code{FALSE} (default) will display a progress bar for each
 #'   population analyzed.
 #'   
 #' @param clonecorrect default \code{FALSE}. must be used with the \code{hier} 
@@ -140,7 +140,7 @@
 #'   is 1/n where n is the number of observed values.} \item{rbarD}{A numeric 
 #'   vector giving the value of the Standardized Index of Association for each 
 #'   population factor, (see \code{\link{ia}}).} \item{p.rD}{A numeric vector 
-#'   indicating the p-value for rbarD from the number of reshufflings indicated 
+#'   indicating the p-value for rbarD from the number of reshuffles indicated 
 #'   in \code{sample}. Lowest value is 1/n where n is the number of observed 
 #'   values.} \item{File}{A vector indicating the name of the original data 
 #'   file.}
@@ -155,7 +155,7 @@
 #'   2001
 #'   
 #'   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-#'   populations of hordeum spontaneum. \emph{Genetics}, 96(2):523-536, 1980.
+#'   populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536, 1980.
 #'   
 #'   Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
 #'   E. Fry. Analysis of genotypic diversity data for populations of 
@@ -315,7 +315,7 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
 #' Process a list of files with poppr
 #'
 #' poppr.all is a wrapper function that will loop through a list of files from
-#' the workind directory, execute \code{\link{poppr}}, and concatenate the
+#' the working directory, execute \code{\link{poppr}}, and concatenate the
 #' output into one data frame.
 #'
 #' @param filelist a list of files in the current working directory
@@ -400,10 +400,10 @@ poppr.all <- function(filelist, ...){
 #'   the p-value resulting from a one-sided permutation test based on the number
 #'   of samples indicated in the original call.} \item{rbarD - }{numeric. The
 #'   standardized index of association.} \item{p.rD - }{A factor indicating the
-#'   p-value resutling from a one-sided permutation test based on the number of
+#'   p-value resulting from a one-sided permutation test based on the number of
 #'   samples indicated in the original call.}} } \subsection{If there is
 #'   sampling and valureturn = TRUE}{ A list with the following
-#'   elements:\itemize{ \item{index}{The above vector} \item{samples}{A data
+#'   elements: \itemize{ \item{index}{The above vector} \item{samples}{A data
 #'   frame with s by 2 column data frame where s is the number of samples
 #'   defined. The columns are for the values of Ia and rbarD, respectively.}}}
 #'   
@@ -672,7 +672,7 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 }
 
 #==============================================================================#
-#' Tablulate alleles the occur in only one population. 
+#' Tabulate alleles the occur in only one population. 
 #' 
 #' @param gid a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
 #'   object.
