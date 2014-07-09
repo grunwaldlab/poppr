@@ -42,6 +42,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
+#include <omp.h>
 
 SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
 {
@@ -65,7 +66,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   //  mlg is a vector of length n containing mlg assignments
   //  length(unique(mlg)) is at most n and at least 1
   //  threshold is a real
-  //  mlg is a vector of integers
+  //  mlg is a vector of integers with max value of n
   //  dist is a matrix of reals
 
   int num_individuals; // n above; total number of individuals
@@ -77,8 +78,11 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   int closest_pair[2]; // Used in finding pair of clusters closest together
   int** cluster_matrix;
   double** cluster_distance_matrix;
+  //omp_lock_t** cluster_distance_locks;
   int* cluster_size; // Size of each cluster
   int* out_vector; // A copy of Rout for internal use
+  double* dist_ij; // Variables to store distances inside loops
+  double* dist_ji;
   char algo;  // Used for storing the first letter of algorithm
 
   SEXP Rout;
@@ -90,20 +94,37 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   num_individuals = INTEGER(Rdim)[0]; // dist is a square matrix
   PROTECT(Rout = allocVector(INTSXP, num_individuals));  
 
-  // TODO: Limit memory usage by counting initial mlgs from mlg
-  num_mlgs = num_individuals;
+  // Find the MLG with the highest index value
+  // and use it as the number of MLGs in the data set 
+  num_mlgs = 0;
+  for(int i = 0; i < num_individuals; i++)
+  {
+    if(INTEGER(mlg)[i] > num_mlgs)
+    {
+      num_mlgs = INTEGER(mlg)[i];
+    }
+  }
+  if(num_mlgs == 0)
+  {
+    num_mlgs = num_individuals;
+  }
+  
   // Allocate empty matrix for storing clusters
   cluster_matrix = R_Calloc(num_mlgs, int*);
   cluster_distance_matrix = R_Calloc(num_mlgs, double*);
+  //cluster_distance_locks = R_Calloc(num_mlgs, omp_lock_t*);
+
   for(int i = 0; i < num_mlgs; i++)
   {
     cluster_matrix[i] = R_Calloc(num_individuals, int);
     cluster_distance_matrix[i] = R_Calloc(num_individuals, double);
+    //cluster_distance_locks[i] = R_Calloc(num_individuals, omp_lock_t);
     for(int j = 0; j < num_individuals; j++)
     {
       // Using this instead of memset to preserve sentinel value
       cluster_distance_matrix[i][j] = -1.0;
       cluster_matrix[i][j] = -1;
+      //omp_init_lock(&cluster_distance_locks[i][j]);
     }
   }
   // Allocate memory for storing sizes of each cluster
@@ -132,7 +153,6 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
       num_clusters++;
     }
   }
-  num_mlgs = num_clusters;
 
   // Main processing loop.
   // Finds the two closest cluster
@@ -148,48 +168,56 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
     // Fill the distance matrix with the new distances between each cluster
     for(int i = 0; i < num_individuals; i++)
     {
+      // Parallel statistics for H3N2 data set
+      //    With Parallel: 60 seconds // No locks, so not usable
+      //    Without:       66 seconds
+      //    With Locks:    123 seconds
+      //    Outer With Locks: 110 seconds
+      //#pragma omp parallel for \
+        //shared(dist,out_vector,cluster_distance_matrix,cluster_size,algo) \
+        //private(dist_ij,dist_ji)
       for(int j = i+1; j < num_individuals; j++)
       {
         if(out_vector[i] != out_vector[j])
         {
+          dist_ij = &(cluster_distance_matrix[out_vector[i]][out_vector[j]]);
+          dist_ji = &(cluster_distance_matrix[out_vector[j]][out_vector[i]]);
+          //omp_set_lock(&cluster_distance_locks[out_vector[i]][out_vector[j]]);
           if(ISNA(REAL(dist)[i*num_individuals + j]) || ISNAN(REAL(dist)[i*num_individuals + j]) 
             || !R_FINITE(REAL(dist)[i*num_individuals + j]))
           {
             error("Data set contains missing or invalid distances. Please check your data.\n");
           }
-          else if(algo=='n' && (REAL(dist)[(i)*num_individuals + (j)] < cluster_distance_matrix[out_vector[i]][out_vector[j]]
-                                || cluster_distance_matrix[out_vector[i]][out_vector[j]] < -0.5))
+          else if(algo=='n' && (REAL(dist)[(i)*num_individuals + (j)] < *(dist_ij)) || *(dist_ij) < -0.5)
           { // Nearest Neighbor clustering
-            cluster_distance_matrix[out_vector[i]][out_vector[j]] = REAL(dist)[(i)*num_individuals + (j)];
-            cluster_distance_matrix[out_vector[j]][out_vector[i]] = REAL(dist)[(i)*num_individuals + (j)];
+            *dist_ij = REAL(dist)[(i)*num_individuals + (j)];
+            *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
           }
           else if(algo=='a')
           { // Average Neighbor clustering
             // The average distance will be sum(D(xi,yi))/(|x|*|y|)
             // Since |x| and |y| are constant for now, that term can be moved into the sum
             // Which lets us add the elements in one at a time divided by the product of cluster sizes
-            if(cluster_size[i]*cluster_size[j] != 0)
-            {
-              if(cluster_distance_matrix[out_vector[i]][out_vector[j]] < -0.5)
-              { // This is the first pair to be considered between these two clusters
-                double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
-                cluster_distance_matrix[out_vector[i]][out_vector[j]] = portion;
-                cluster_distance_matrix[out_vector[j]][out_vector[i]] = portion;
-              }
-              else
-              { 
-                double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
-                cluster_distance_matrix[out_vector[i]][out_vector[j]] += portion;
-                cluster_distance_matrix[out_vector[j]][out_vector[i]] += portion;
-              }
+            if(*dist_ij < -0.5)
+            { // This is the first pair to be considered between these two clusters
+              double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
+              *dist_ij = portion;
+              *dist_ji = portion;
+            }
+            else
+            { 
+              double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
+              *dist_ij += portion;
+              *dist_ji += portion;
             }
           }
-          else if(REAL(dist)[(i)*num_individuals + (j)] > cluster_distance_matrix[out_vector[i]][out_vector[j]])
+          else if(REAL(dist)[(i)*num_individuals + (j)] > *dist_ij)
           { // Farthest Neighbor clustering
             // This is the default, so it will execute even if the algorithm argument is invalid
-            cluster_distance_matrix[out_vector[i]][out_vector[j]] = REAL(dist)[(i)*num_individuals + (j)];
-            cluster_distance_matrix[out_vector[j]][out_vector[i]] = REAL(dist)[(i)*num_individuals + (j)];
+            *dist_ij = REAL(dist)[(i)*num_individuals + (j)];
+            *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
           }
+          //omp_unset_lock(&cluster_distance_locks[out_vector[i]][out_vector[j]]);
         } 
       }
     }
@@ -227,7 +255,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
       cluster_size[closest_pair[1]] = 0;
       num_clusters--;
       // Erase the distance entries for all pairings containing the old cluster
-      for(int i = 0; i < num_individuals; i++)
+      for(int i = 0; i < num_mlgs; i++)
       {
         cluster_distance_matrix[closest_pair[1]][i] = -1.0;
         cluster_distance_matrix[i][closest_pair[1]] = -1.0;
@@ -246,9 +274,17 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   { 
     R_Free(cluster_matrix[i]);
     R_Free(cluster_distance_matrix[i]);
+
+    //for(int j = 0; j < num_individuals; j++)
+    //{
+      //omp_destroy_lock(&cluster_distance_locks[i][j]);
+    //}
+    //R_Free(cluster_distance_locks[i]);
+
   }
   R_Free(cluster_matrix);
   R_Free(cluster_distance_matrix);
+  //R_Free(cluster_distance_locks);
   R_Free(cluster_size);
   R_Free(out_vector);
   UNPROTECT(1);
