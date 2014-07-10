@@ -859,8 +859,16 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.
     lay <- match.fun(layfun)
   }
   # delete.edges      <- match.fun(igraph::delete.edges)
-  edge_above_cutoff <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
-  poppr_msn$graph   <- delete.edges(poppr_msn$graph, edge_above_cutoff)
+  if (!is.null(cutoff) & !is.na(cutoff)){
+    if (all(cutoff < E(poppr_msn$graph)$weight)){
+      msg <- paste0("Cutoff value (", cutoff, ") is below the minimum observed",
+                    " distance. Edges will not be removed.")
+      warning(msg)
+    } else {
+      E_above_cutoff  <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
+      poppr_msn$graph <- delete.edges(poppr_msn$graph, E_above_cutoff)
+    }
+  }
   # Adjusting color scales. This will replace any previous scaling contained in
   # poppr_msn.
   weights <- E(poppr_msn$graph)$weight
