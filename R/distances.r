@@ -45,22 +45,19 @@
 #' Calculate a distance matrix based on relative dissimilarity
 #' 
 #' diss.dist uses the same discreet dissimilarity matrix utilized by the index 
-#' of association (see \code{\link{ia}} for details). It returns a distance 
-#' reflecting a ratio of the number of observed differences by the number of 
-#' possible differences. Eg. two individuals who share half of the same alleles 
-#' will have a distance of 0.5. This function can analyze distances for any 
-#' marker system.
+#' of association (see \code{\link{ia}} for details). By default, it returns a
+#' distance reflecting the number of allelic differences between two
+#' individuals. When \code{percent = TRUE}, it returns a ratio of the number of
+#' observed differences by the number of possible differences. Eg. two
+#' individuals who share half of the same alleles will have a distance of 0.5.
+#' This function can analyze distances for any marker system.
 #' 
 #' @param x a \code{\link{genind}} object.
 #'   
-#' @param diff \code{logical}. If \code{TRUE}, this will count the number of 
-#'   differences between individuals. \code{FALSE} will count the number of 
-#'   similarities. Default set to \code{TRUE}
-#'   
-#' @param percent \code{logical}. Should the distance be represented as a
-#'   percent? If set to \code{FALSE} (default), the distance will be reflected
-#'   as the number of alleles differing between to individuals. When set to
-#'   \code{TRUE}, These will be divided by the ploidy multiplied  by the number
+#' @param percent \code{logical}. Should the distance be represented as a 
+#'   percent? If set to \code{FALSE} (default), the distance will be reflected 
+#'   as the number of alleles differing between to individuals. When set to 
+#'   \code{TRUE}, These will be divided by the ploidy multiplied  by the number 
 #'   of loci.
 #'   
 #' @param mat \code{logical}. Return a matrix object. Default set to 
@@ -69,8 +66,9 @@
 #' @return Pairwise distances between individuals present in the genind object.
 #' @author Zhian N. Kamvar
 #'   
-#' @note This is exactly the same as \code{\link{provesti.dist}}, except that it
-#'   performs better for large numbers of individuals (n > 125).
+#' @note When \code{percent = TRUE}, this is exactly the same as
+#'   \code{\link{provesti.dist}}, except that it performs better for large
+#'   numbers of individuals (n > 125) at the cost of avaliable memory.
 #'   
 #' @examples
 #' 
@@ -86,7 +84,7 @@
 #' @export
 #==============================================================================#
 
-diss.dist <- function(x, diff=TRUE, percent=FALSE, mat=FALSE){
+diss.dist <- function(x, percent=FALSE, mat=FALSE){
   stopifnot(is.genind(x))
   ploid     <- ploidy(x)
   ind.names <- x@ind.names
@@ -95,21 +93,13 @@ diss.dist <- function(x, diff=TRUE, percent=FALSE, mat=FALSE){
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
   numLoci   <- length(x@loc.names)
   type      <- x@type
-  if(type == "PA"){
+  if (type == "PA"){
     dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
     ploid <- 1
   } else {
     x <- seploc(x)
     dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
                             numeric(np))
-  }
-#   if (!alleles & type == "codom"){
-#     dist_by_locus[dist_by_locus > 0] <- 1
-#     ploid <- 1
-#   }
-  if (!diff){
-    max_dist      <- numLoci*ploid
-    dist_by_locus <- max_dist - dist_by_locus
   }
   dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
   colnames(dist.mat)            <- ind.names
