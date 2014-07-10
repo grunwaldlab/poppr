@@ -259,7 +259,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 #' from the population.
 #' 
 #' @return A \code{genind} object or a matrix.
-#'
+#' @author Zhian N. Kamvar
 #' @examples
 #' # Load the dataset microbov.
 #' data(microbov)
@@ -306,8 +306,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
   if (is.null(names(popnames))){
     if (length(popnames) == length(levels(gid@pop))){
       names(popnames) <- levels(gid@pop)
-    }
-    else{
+    } else {
       stop("Population names do not match population factors.")
     }
   }
@@ -318,20 +317,17 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     # If both the sublist and blacklist are numeric or character.
     if (is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
       sublist <- sublist[!sublist %in% blacklist]
-    }
-    
-    # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-    else if (is.numeric(sublist) & class(blacklist) == "character"){
+    } else if (is.numeric(sublist) & class(blacklist) == "character"){
+      # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
       sublist <- sublist[sublist %in% which(!popnames %in% blacklist)]
     } else {
       # no sublist specified. Ideal situation
       if(all(popnames %in% sublist)){
         sublist <- sublist[-blacklist]
-      }
-      # weird situation where the user will specify a certain sublist, yet index
-      # the blacklist numerically. Interpreted as an index of populations in the
-      # whole data set as opposed to the sublist.
-      else{
+      } else {
+        # weird situation where the user will specify a certain sublist, yet
+        # index the blacklist numerically. Interpreted as an index of
+        # populations in the whole data set as opposed to the sublist.
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
         sublist <- sublist[!sublist %in% popnames[blacklist]]
       }
@@ -375,7 +371,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #'  object.
 #'  
 #'@param type a \code{character} string: can be "ignore", "zero", "mean", 
-#'  "loci", or "geno" (see \code{Details} for definitions).]
+#'  "loci", or "geno" (see \code{Details} for definitions).
 #'  
 #'@param cutoff \code{numeric}. A number from 0 to 1 indicating the allowable 
 #'  rate of missing data in either genotypes or loci. This will be ignored for 
@@ -709,16 +705,16 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
 #' Remove all non-phylogentically informative loci
 #' 
 #' This function will facilitate in removing phylogenetically uninformative loci
-#' from a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
-#' The user can specify what is meant by phylogenetically uninformative with a
-#' specification of the cutoff percentage. Any loci under the cutoff will be
+#' from a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object. 
+#' The user can specify what is meant by phylogenetically uninformative with a 
+#' specification of the cutoff percentage. Any loci under the cutoff will be 
 #' removed. For convenience's sake, the default cutoff is set to 2 individuals.
 #' 
-#' @param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' @param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
 #'   object.
 #'   
 #' @param cutoff \code{numeric}. This is a number from 0 to 1 representing the 
-#'   minimum percentage of differentiating individuals. Defaults is 2
+#'   minimum percentage of differentiating individuals. Defaults is 2 
 #'   individuals.
 #'   
 #' @param quiet \code{logical}. When \code{quiet = TRUE}, messages indicating 
@@ -727,12 +723,17 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
 #'   
 #' @return A \code{genind} object with user-defined informative loci.
 #'   
-#' @note This will have a few side effects that affect certain analyses. First, 
-#'   the number of multilocus genotypes might be reduced due to the reduced
-#'   number of markers. Second, if you plan on using this data for analysis of
-#'   the index of association, be sure to use the standardized version (rbarD)
-#'   that corrects for the number of observed loci.
+#' @details This function works by analyzing the genotypes at each locus. This
+#'   has the effect that if a locus has fixed heterozygotes for two alleles, it
+#'   will be removed as all individuals are invariant.
 #'   
+#' @note This will have a few side effects that affect certain analyses. First, 
+#'   the number of multilocus genotypes might be reduced due to the reduced 
+#'   number of markers. Second, if you plan on using this data for analysis of 
+#'   the index of association, be sure to use the standardized version (rbarD) 
+#'   that corrects for the number of observed loci.
+#'  
+#' @author Zhian N. Kamvar
 #' @examples
 #' # Load the data set H3N2
 #' data(H3N2)
@@ -754,11 +755,11 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
 #==============================================================================#
 #' @importFrom pegas as.loci
 informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
-  if(!is.genind(pop)){
+  if (!is.genind(pop)){
     stop("This function only works on genind objects.")
   }
   MLG <- mlg(pop, quiet = TRUE)
-  if(MLG < 3){
+  if (MLG < 3){
     if(!isTRUE(quiet)){
       cat("Not enough multilocus genotypes to be meaningful.\n")
     }
@@ -766,10 +767,10 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
   }
   cutoff <- ifelse(cutoff > 0.5, 1 - cutoff, cutoff)
   min_ind = round(cutoff*nInd(pop))
-  if(!isTRUE(quiet)){
+  if (!isTRUE(quiet)){
     cat("cutoff value:", cutoff*100, "percent (",min_ind,"individuals ).\n")
   }
-  if(pop@type == "PA"){
+  if (pop@type == "PA"){
     # cutoff applies to too many or too few typed individuals in AFLP cases.
     locivals <- apply(pop@tab, 2, sum) %in% min_ind:(nInd(pop) - min_ind)
     if(!isTRUE(quiet)){
@@ -784,26 +785,22 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
       }
     }
     return(pop[, locivals])
-  }
-  else{
+  } else {
     # as.loci will put the population factor first when creating the data frame.
-    if(is.null(pop@pop)){
+    if (is.null(pop@pop)){
       locivals <- apply(as.loci(pop), 2, test_table, min_ind, nInd(pop))
-    }
-    else{
+    } else {
       locivals <- apply(as.loci(pop)[-1], 2, test_table, min_ind, nInd(pop))
     }
-    if(!isTRUE(quiet)){
-      if(all(locivals == TRUE)){
+    if (!isTRUE(quiet)){
+      if (all(locivals == TRUE)){
         cat("No sites found with fewer than", min_ind, 
             "different individuals.\n", fill = 80)
-      }
-      else if(sum(locivals) < 2){
+      } else if (sum(locivals) < 2){
         cat("Fewer than 2 loci found informative. Perhaps you should choose a",
              "lower cutoff value?\nReturning with no changes.\n")
             return(pop)
-      }
-      else{
+      } else {
         cat(sum(!locivals), "uninformative", 
             ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
             pop@loc.names[!locivals],"\n", fill = 80)
@@ -819,7 +816,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' As the genind object requires ploidy to be consistent across loci, a 
 #' workaround to importing polyploid data was to code missing alleles as "0" 
 #' (for microsatellite data sets). The advantage of this is that users would be 
-#' able to calculate Bruvo's Distance, the index of association, and genotypic 
+#' able to calculate Bruvo's distance, the index of association, and genotypic 
 #' diversity statistics. The tradeoff was the fact that this broke all other 
 #' analyses as they relied on allele frequencies and the missing alleles are 
 #' treated as extra alleles. This function removes those alleles and returns a 

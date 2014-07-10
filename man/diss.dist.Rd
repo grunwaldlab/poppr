@@ -3,21 +3,23 @@
 \alias{diss.dist}
 \title{Calculate a distance matrix based on relative dissimilarity}
 \usage{
-diss.dist(x, diff = TRUE, percent = TRUE, mat = FALSE)
+diss.dist(x, diff = TRUE, percent = FALSE, mat = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{genind}} object.}
 
 \item{diff}{\code{logical}. If \code{TRUE}, this will count the number of
-differences between individuals. \code{FALSE} will count the number of
-similarities. Default set to \code{TRUE}}
+  differences between individuals. \code{FALSE} will count the number of
+  similarities. Default set to \code{TRUE}}
 
-\item{percent}{\code{logical}. Should the distance be represented from 0 to 1?
-Default set to \code{TRUE}. \code{FALSE} will return the distance represented
-as integers from 1 to n where n is the number of loci*ploidy.}
+\item{percent}{\code{logical}. Should the distance be represented as a
+  percent? If set to \code{FALSE} (default), the distance will be reflected
+  as the number of alleles differing between to individuals. When set to
+  \code{TRUE}, These will be divided by the ploidy multiplied  by the number
+  of loci.}
 
 \item{mat}{\code{logical}. Return a matrix object. Default set to
-\code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object.}
+  \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object.}
 }
 \value{
 Pairwise distances between individuals present in the genind object.
@@ -31,8 +33,8 @@ will have a distance of 0.5. This function can analyze distances for any
 marker system.
 }
 \note{
-This is exactly the same as \code{\link{provesti.dist}}, except that
-it performs better for large numbers of individuals (n > 125).
+This is exactly the same as \code{\link{provesti.dist}}, except that it
+  performs better for large numbers of individuals (n > 125).
 }
 \examples{
 # A simple example. Let's analyze the mean distance among populations of A.

@@ -12,13 +12,14 @@ read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 \item{ploidy}{indicate the ploidy of the dataset}
 
 \item{geo}{indicates the presence of geographic data in the file. This data
-  will be included in a data frame labeled \code{xy} in
-  the\code{\link{other}} slot.}
+  will be included in a data frame labeled \code{xy} in the
+  \code{\link{other}} slot.}
 
 \item{region}{indicates the presence of regional data in the file.}
 
-\item{genclone}{should the output be a genclone object? Defaults to
-  \code{TRUE}}
+\item{genclone}{when \code{TRUE} (default), the output will be a
+  \code{\linkS4class{genclone}} object. When \code{FALSE}, the output will be
+  a \code{\linkS4class{genind}} object}
 
 \item{sep}{A character specifying the column separator of the data. Defaults
   to ",".}
@@ -57,11 +58,14 @@ object.
 
   When importing polyploid data sets, missing data is scored as "0" and kept
   within the genind object as an extra allele. This will break most analyses
-  relying on allele frequencies. All of the functions in poppr will work
+  relying on allele frequencies*. All of the functions in poppr will work
   properly with these data sets as multilocus genotype analysis is agnostic
   of ploidy and we have written both Bruvo's distance and the index of
   association in such a way as to be able to handle polyploids presented in
-  this manner.}
+  this manner.
+
+  * To restore functionality of analyses relying on allele frequencies, use
+  the \code{\link{recode_polyploids}} function.}
 }
 \note{
 This function cannot handle raw allele frequency data.
@@ -89,7 +93,7 @@ genalex4 <- read.genalex("genalex4.csv", region=TRUE, geo=TRUE)
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{clonecorrect}}, \code{\linkS4class{genclone}} or
-  \code{\linkS4class{genind}}
+\code{\link{clonecorrect}}, \code{\linkS4class{genclone}},
+  \code{\linkS4class{genind}}, \code{\link{recode_polyploids}}
 }
 

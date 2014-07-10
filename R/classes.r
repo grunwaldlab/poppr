@@ -47,7 +47,7 @@
 #' Genclone class
 #' 
 #' Genclone is an S4 class that extends the \code{\linkS4class{genind}}
-#' from the \emph{\link{adegenet}} package. It will have all of the same
+#' from the \pkg{\link{adegenet}} package. It will have all of the same
 #' attributes as the \code{\linkS4class{genind}}, but it will contain two
 #' extra slots that will help retain information about population hierarchies
 #' and multilocus genotypes.
@@ -58,14 +58,14 @@
 #' @details The genclone class will allow for more optimized methods of clone
 #' correcting and analyzing data over multiple levels of population hierarchy.
 #' 
-#' Previously, for hierarchical analysis to work in a \code{\link{genind}}
+#' Previously, for hierarchical analysis to work in a \code{\link{genind}} 
 #' object, the user had to place a data frame in the \code{\link{other}} slot of
 #' the object. The suggested name of the data frame was 
-#' \code{population_hierarchy}, and this was used to be able to store the
-#' hierarchical information inside the object so that the user did not have to
-#' keep track of that information. This method worked, but it became apparent
-#' that this method of doing things became a bit confusing to the user as the
-#' method for changing the population of an object became:
+#' \code{population_hierarchy}, and this was used to be able to store the 
+#' hierarchical information inside the object so that the user did not have to 
+#' keep track of that information. This method worked, but it became apparent 
+#' that it was a bit confusing to the user as the method for changing the
+#' population of an object became:
 #' 
 #' \code{pop(object) <- other(object)$population_hierarchy$population_name}
 #' 
@@ -88,7 +88,7 @@
 #' @slot mlg a vector representing multilocus genotypes for the data set.
 #' @slot hierarchy a data frame containing hierarchical levels.
 #' @author Zhian N. Kamvar
-#' @seealso \code{\link{sethierarchy}} \code{\link{setpop}} 
+#' @seealso \code{\link{as.genclone}} \code{\link{sethierarchy}} \code{\link{setpop}} 
 #' \code{\linkS4class{genind}} 
 #' @import methods
 #==============================================================================#

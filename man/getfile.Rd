@@ -11,10 +11,10 @@ multiple files found in the directory. This is useful in conjunction with
 \code{\link{poppr.all}}.}
 
 \item{pattern}{a \code{\link{regex}} pattern for use while
-\code{multFile==TRUE}.}
+\code{multi == TRUE}. This will grab all files matching this pattern.}
 
-\item{combine}{\code{logical}. When this is set to \code{TRUE}, the
-\code{\$files} vector will have the path appended to them. When it is set to
+\item{combine}{\code{logical}. When this is set to \code{TRUE} (default), the
+\code{$files} vector will have the path appended to them. When it is set to
 \code{FALSE}, it will have the basename.}
 }
 \value{
@@ -35,9 +35,7 @@ the user to choose a specified file regardless of path.
 x <- getfile()
 poppr(x$files)
 
-
-
-y <- getfile(multFile=TRUE, pattern="^.+?dat$")
+y <- getfile(multi=TRUE, pattern="^.+?dat$")
 #useful for reading in multiple FSTAT formatted files.
 
 yfiles <- poppr.all(y$files)

@@ -15,28 +15,32 @@ beginning of a sentence.
 }
 \details{
 This package relies on the \pkg{\link[adegenet]{adegenet}} package.
-It was built around the \code{\linkS4class{genind}} object, which stores
-genetic information in a table of allele frequencies. \pkg{Poppr} has
-extended this object into a new object called \code{\linkS4class{genclone}}.
-This object tracks clones and organizes different population hierarchical
-levels.
+  It was built around the \code{\linkS4class{genind}} object, which stores
+  genetic information in a table of allele frequencies. \pkg{Poppr} has
+  extended this object into a new object called
+  \code{\linkS4class{genclone}}. This object tracks clones and organizes
+  different population hierarchical levels.
 
-\subsection{Documentation}{ Documentation is available for any function by
-typing \code{?function_name} in the R console. Essential functions for
-manipulating data are detailed within the \emph{Data import and manipulation}
-vignette (\code{vignette("poppr_manual", package = "poppr")}) and details on
-algorithms used in \pkg{poppr} are within the \emph{Algorithms and equations}
-vignette (\code{vignette("algo", package = "poppr")}). }
+  \subsection{Documentation}{ Documentation is available for any function by
+  typing \code{?function_name} in the R console. Essential functions for
+  manipulating data are detailed within the \emph{Data import and
+  manipulation} vignette (\code{vignette("poppr_manual", package = "poppr")})
+  and details on algorithms used in \pkg{poppr} are within the
+  \emph{Algorithms and equations} vignette (\code{vignette("algo", package =
+  "poppr")}). Examples of analyses are available in a primer written by
+  Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E. Everhart at
+  \url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
 
-\subsection{Getting help}{ If you have a specific question or issue with
-\pkg{poppr}, feel free to contribute to the google group at
-\url{https://groups.google.com/forum/#!forum/poppr}. If you find a bug and
-are a github user, you can submit bug reports at
-\url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a message
-on the groups.}
+  \subsection{Getting help}{ If you have a specific question or issue with
+  \pkg{poppr}, feel free to contribute to the google group at
+  \url{https://groups.google.com/forum/#!forum/poppr}. If you find a bug and
+  are a github user, you can submit bug reports at
+  \url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a
+  message on the groups.}
 
-Below are descriptions and links to functions found in \pkg{poppr}. Be aware
-that all functions in \pkg{\link[adegenet]{adegenet}} are also available.
+  Below are descriptions and links to functions found in \pkg{poppr}. Be
+  aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
+  available.
 }
 \section{Data import/export}{
 
