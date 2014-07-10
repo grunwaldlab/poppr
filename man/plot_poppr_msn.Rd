@@ -80,12 +80,10 @@ The previous incarnation of msn plotting in poppr simply plotted the
   manipulate many facets of graph creation, making the creation of minimum
   spanning networks ever so slightly more user friendly. Note that this
   function will only plot individual names, not MLG names since the naming
-  convention for those are arbitrary. This will also not give the user the
-  option to remove the shading or widths of the edges as they are informative
-  to the distance.
+  convention for those are arbitrary.
 
   This function must have both the source data and the output msn to work.
-  The source data must also have the same population structure as the graph.
+  The source data must contain the same population structure as the graph.
   Every other parameter has a default setting.
 
   \subsection{Parameter details}{ \itemize{ \item \code{inds} This will take
