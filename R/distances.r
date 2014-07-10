@@ -86,7 +86,7 @@
 #' @export
 #==============================================================================#
 
-diss.dist <- function(x, diff=TRUE, percent=TRUE, mat=FALSE){
+diss.dist <- function(x, diff=TRUE, percent=FALSE, mat=FALSE){
   stopifnot(is.genind(x))
   ploid     <- ploidy(x)
   ind.names <- x@ind.names

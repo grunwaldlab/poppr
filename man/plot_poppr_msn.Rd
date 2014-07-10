@@ -107,7 +107,8 @@ The previous incarnation of msn plotting in poppr simply plotted the
 \examples{
 # Using a data set of the Aphanomyces eutieches root rot pathogen.
 data(Aeut)
-amsn <- poppr.msn(Aeut, diss.dist(Aeut), showplot = FALSE)
+adist <- diss.dist(Aeut, percent = TRUE)
+amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
 
 # Default
 library(igraph) # To get all the layouts.
@@ -132,7 +133,8 @@ plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "sim 20")
 
 # Something pretty
 data(microbov)
-micmsn <- poppr.msn(microbov, diss.dist(microbov), showplot = FALSE)
+mdist <- diss.dist(microbov, percent = TRUE)
+micmsn <- poppr.msn(microbov, mdist, showplot = FALSE)
 
 plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
   quantiles = FALSE)

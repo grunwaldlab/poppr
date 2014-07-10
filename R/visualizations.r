@@ -802,7 +802,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' @examples
 #' # Using a data set of the Aphanomyces eutieches root rot pathogen.
 #' data(Aeut)
-#' amsn <- poppr.msn(Aeut, diss.dist(Aeut), showplot = FALSE)
+#' adist <- diss.dist(Aeut, percent = TRUE)
+#' amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
 #' 
 #' # Default
 #' library(igraph) # To get all the layouts.
@@ -827,7 +828,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' 
 #' # Something pretty
 #' data(microbov)
-#' micmsn <- poppr.msn(microbov, diss.dist(microbov), showplot = FALSE)
+#' mdist <- diss.dist(microbov, percent = TRUE)
+#' micmsn <- poppr.msn(microbov, mdist, showplot = FALSE)
 #' 
 #' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", 
 #'   quantiles = FALSE)
@@ -859,7 +861,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.
     lay <- match.fun(layfun)
   }
   # delete.edges      <- match.fun(igraph::delete.edges)
-  if (!is.null(cutoff) & !is.na(cutoff)){
+  if (!is.null(cutoff) && !is.na(cutoff)){
     if (all(cutoff < E(poppr_msn$graph)$weight)){
       msg <- paste0("Cutoff value (", cutoff, ") is below the minimum observed",
                     " distance. Edges will not be removed.")

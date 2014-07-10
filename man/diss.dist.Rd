@@ -3,7 +3,7 @@
 \alias{diss.dist}
 \title{Calculate a distance matrix based on relative dissimilarity}
 \usage{
-diss.dist(x, diff = TRUE, percent = TRUE, mat = FALSE)
+diss.dist(x, diff = TRUE, percent = FALSE, mat = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{genind}} object.}

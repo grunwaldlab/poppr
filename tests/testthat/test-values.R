@@ -19,10 +19,10 @@ test_that("Dissimilarity distance works as expected.", {
   nanmat <- diss.dist(nan1, mat = TRUE)
   expect_that(diss.dist(nan1), is_a("dist"))
   expect_that(nanmat, is_a("matrix"))
-  expect_that(diss.dist(nan1, mat = TRUE, percent = FALSE), equals(nanmat*2*9))
-  expect_that(nanmat[2, 1], equals(0.222222222222222))
-  #expect_that(diss.dist(nan1, mat = TRUE, percent = TRUE), equals((nanmat/2)/9))
-  #expect_that(nanmat[2, 1], equals(4))
+  #expect_that(diss.dist(nan1, mat = TRUE, percent = FALSE), equals(nanmat*2*9))
+  #expect_that(nanmat[2, 1], equals(0.222222222222222))
+  expect_that(diss.dist(nan1, mat = TRUE, percent = TRUE), equals((nanmat/2)/9))
+  expect_that(nanmat[2, 1], equals(4))
 })
 
 test_that("Index of association works as expected.", {
