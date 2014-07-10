@@ -78,7 +78,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   int closest_pair[2]; // Used in finding pair of clusters closest together
   int** cluster_matrix;
   double** cluster_distance_matrix;
-  //omp_lock_t** cluster_distance_locks;
+  double*** private_distance_matrix;
+  omp_lock_t** cluster_distance_locks;
   int* cluster_size; // Size of each cluster
   int* out_vector; // A copy of Rout for internal use
   double* dist_ij; // Variables to store distances inside loops
@@ -112,25 +113,45 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   // Allocate empty matrix for storing clusters
   cluster_matrix = R_Calloc(num_mlgs, int*);
   cluster_distance_matrix = R_Calloc(num_mlgs, double*);
-  //cluster_distance_locks = R_Calloc(num_mlgs, omp_lock_t*);
+  cluster_distance_locks = R_Calloc(num_mlgs, omp_lock_t*);
 
   for(int i = 0; i < num_mlgs; i++)
   {
     cluster_matrix[i] = R_Calloc(num_individuals, int);
     cluster_distance_matrix[i] = R_Calloc(num_individuals, double);
-    //cluster_distance_locks[i] = R_Calloc(num_individuals, omp_lock_t);
+    cluster_distance_locks[i] = R_Calloc(num_individuals, omp_lock_t);
     for(int j = 0; j < num_individuals; j++)
     {
       // Using this instead of memset to preserve sentinel value
       cluster_distance_matrix[i][j] = -1.0;
       cluster_matrix[i][j] = -1;
-      //omp_init_lock(&cluster_distance_locks[i][j]);
+      omp_init_lock(&cluster_distance_locks[i][j]);
     }
   }
   // Allocate memory for storing sizes of each cluster
   cluster_size = R_Calloc(num_mlgs, int);
   // Allocate memory for storing cluster assignments
   out_vector = R_Calloc(num_individuals, int);
+
+
+  #pragma omp parallel \
+      shared(num_individuals,num_mlgs)
+  {
+    #pragma omp single
+    {
+      private_distance_matrix = R_Calloc(omp_get_num_threads(), double**);
+    }
+    // All threads execute this loop
+    private_distance_matrix[omp_get_thread_num()] = R_Calloc(num_mlgs, double*);
+    for(int i = 0; i < num_mlgs; i++)
+    {
+      private_distance_matrix[omp_get_thread_num()][i] = R_Calloc(num_individuals, double);
+      for(int j = 0; j < num_individuals; j++)
+      {
+        private_distance_matrix[omp_get_thread_num()][i][j] = -1.0;
+      }
+    }
+  } // End parallel
 
   // Fill initial clustering matrix via mlg
   // Steps through mlg.
@@ -166,61 +187,118 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
     closest_pair[0] = -1;
     closest_pair[1] = -1;
     // Fill the distance matrix with the new distances between each cluster
-    for(int i = 0; i < num_individuals; i++)
+    #pragma omp parallel private(dist_ij, dist_ji) \
+      shared(out_vector,dist,thresh,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix)
     {
-      // Parallel statistics for H3N2 data set
-      //    With Parallel: 60 seconds // No locks, so not usable
-      //    Without:       66 seconds
-      //    With Locks:    123 seconds
-      //    Outer With Locks: 110 seconds
-      //#pragma omp parallel for \
-        //shared(dist,out_vector,cluster_distance_matrix,cluster_size,algo) \
-        //private(dist_ij,dist_ji)
-      for(int j = i+1; j < num_individuals; j++)
+      for(int i = 0; i < num_individuals; i++)
       {
-        if(out_vector[i] != out_vector[j])
+        // Parallel statistics for H3N2 data set
+        //    No Locks:      50 seconds // New method. No locks, so unusable
+        //    With Parallel: 60 seconds // No locks, so not usable
+        //    With Critical: 65 seconds // Private matrices and critical section should make this safe
+        //    Serial:       66 seconds
+        //    With Locks:    90 seconds // New style of threading
+        //    With Locks:    123 seconds
+        //    Outer With Locks: 110 seconds
+        //#pragma omp parallel for schedule(guided) \
+        //  shared(dist,out_vector,private_distance_matrix,cluster_size,algo) \
+        //  private(dist_ij,dist_ji)
+        if(omp_get_thread_num() == out_vector[i] % omp_get_num_threads())
         {
-          dist_ij = &(cluster_distance_matrix[out_vector[i]][out_vector[j]]);
-          dist_ji = &(cluster_distance_matrix[out_vector[j]][out_vector[i]]);
-          //omp_set_lock(&cluster_distance_locks[out_vector[i]][out_vector[j]]);
-          if(ISNA(REAL(dist)[i*num_individuals + j]) || ISNAN(REAL(dist)[i*num_individuals + j]) 
-            || !R_FINITE(REAL(dist)[i*num_individuals + j]))
+          for(int j = i+1; j < num_individuals; j++)
           {
-            error("Data set contains missing or invalid distances. Please check your data.\n");
+            if(out_vector[i] != out_vector[j])
+            {
+              dist_ij = &(private_distance_matrix[omp_get_thread_num()][out_vector[i]][out_vector[j]]);
+              dist_ji = &(private_distance_matrix[omp_get_thread_num()][out_vector[j]][out_vector[i]]);
+              //omp_set_lock(&cluster_distance_locks[out_vector[i]][out_vector[j]]);
+              //omp_set_lock(&cluster_distance_locks[out_vector[j]][out_vector[i]]);
+              if(ISNA(REAL(dist)[i*num_individuals + j]) || ISNAN(REAL(dist)[i*num_individuals + j]) 
+                || !R_FINITE(REAL(dist)[i*num_individuals + j]))
+              {
+                error("Data set contains missing or invalid distances. Please check your data.\n");
+              }
+              else if(algo=='n' && ((REAL(dist)[(i)*num_individuals + (j)] < *dist_ij) || *dist_ij < -0.5))
+              { // Nearest Neighbor clustering
+                *dist_ij = REAL(dist)[(i)*num_individuals + (j)];
+                *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
+              }
+              else if(algo=='a')
+              { // Average Neighbor clustering
+                // The average distance will be sum(D(xi,yi))/(|x|*|y|)
+                // Since |x| and |y| are constant for now, that term can be moved into the sum
+                // Which lets us add the elements in one at a time divided by the product of cluster sizes
+                if(*dist_ij < -0.5)
+                { // This is the first pair to be considered between these two clusters
+                  double portion = REAL(dist)[i*num_individuals+j] / (double)(cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
+                  *dist_ij = portion;
+                  *dist_ji = portion;
+                }
+                else
+                { 
+                  double portion = REAL(dist)[i*num_individuals+j] / (double)(cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
+                  *dist_ij += portion;
+                  *dist_ji += portion;
+                }
+              }
+              else if(REAL(dist)[(i)*num_individuals + (j)] > *dist_ij)
+              { // Farthest Neighbor clustering
+                // This is the default, so it will execute even if the algorithm argument is invalid
+                *dist_ij = REAL(dist)[(i)*num_individuals + (j)];
+                *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
+                //printf("\n%f\n",private_distance_matrix[i][j]);
+              }
+              //omp_unset_lock(&cluster_distance_locks[out_vector[i]][out_vector[j]]);
+              //omp_unset_lock(&cluster_distance_locks[out_vector[j]][out_vector[i]]);
+            } 
           }
-          else if(algo=='n' && (REAL(dist)[(i)*num_individuals + (j)] < *(dist_ij)) || *(dist_ij) < -0.5)
-          { // Nearest Neighbor clustering
-            *dist_ij = REAL(dist)[(i)*num_individuals + (j)];
-            *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
-          }
-          else if(algo=='a')
-          { // Average Neighbor clustering
-            // The average distance will be sum(D(xi,yi))/(|x|*|y|)
-            // Since |x| and |y| are constant for now, that term can be moved into the sum
-            // Which lets us add the elements in one at a time divided by the product of cluster sizes
-            if(*dist_ij < -0.5)
-            { // This is the first pair to be considered between these two clusters
-              double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
-              *dist_ij = portion;
-              *dist_ji = portion;
-            }
-            else
-            { 
-              double portion = REAL(dist)[i*num_individuals+j] / (cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
-              *dist_ij += portion;
-              *dist_ji += portion;
-            }
-          }
-          else if(REAL(dist)[(i)*num_individuals + (j)] > *dist_ij)
-          { // Farthest Neighbor clustering
-            // This is the default, so it will execute even if the algorithm argument is invalid
-            *dist_ij = REAL(dist)[(i)*num_individuals + (j)];
-            *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
-          }
-          //omp_unset_lock(&cluster_distance_locks[out_vector[i]][out_vector[j]]);
-        } 
+        }
       }
-    }
+      // Merge the private distance matrices back into the global distance matrix 
+      #pragma omp critical
+      for(int i = 0; i < num_mlgs; i++)
+      {
+        for(int j = 0; j < num_mlgs; j++)
+        {
+          if(cluster_size[i] * cluster_size[j] != 0)
+          {
+            if(algo=='n')
+            { // Min every element with this thread's distances
+              if(private_distance_matrix[omp_get_thread_num()][i][j] > -0.5)
+              {
+                if(cluster_distance_matrix[i][j] < -0.5)
+                {
+                  cluster_distance_matrix[i][j] = private_distance_matrix[omp_get_thread_num()][i][j];
+                }
+                else
+                { // Set the value to the min of the stored value and this thread's value
+                  cluster_distance_matrix[i][j] = (private_distance_matrix[omp_get_thread_num()][i][j] < cluster_distance_matrix[i][j]) ? (private_distance_matrix[omp_get_thread_num()][i][j]) : (cluster_distance_matrix[i][j]);
+                }
+              }
+            }
+            else if(algo=='a')
+            {
+              if(private_distance_matrix[omp_get_thread_num()][i][j] > -0.5)
+              {
+                if(cluster_distance_matrix[i][j] < -0.5)
+                {
+                  cluster_distance_matrix[i][j] = private_distance_matrix[omp_get_thread_num()][i][j];
+                }
+                else
+                {
+                  cluster_distance_matrix[i][j] += private_distance_matrix[omp_get_thread_num()][i][j];
+                }
+              }
+            }
+            else // Or algo=='f'
+            { // Max every element with this thread's distances
+              cluster_distance_matrix[i][j] = (private_distance_matrix[omp_get_thread_num()][i][j] > cluster_distance_matrix[i][j]) ? (private_distance_matrix[omp_get_thread_num()][i][j]) : (cluster_distance_matrix[i][j]);
+            }
+          }
+        }
+      } // End critical section
+    
+    } // End parallel
     for(int i = 0; i < num_mlgs; i++)
     {
       for(int j = 0; j < num_mlgs; j++)
@@ -232,6 +310,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
           closest_pair[0] = i;
           closest_pair[1] = j;
         }
+        // Erase this distance to prepare for the next loop
+        cluster_distance_matrix[i][j] = -1.0;
       }
     }
     // Merge the two closest clusters together into the lower numbered cluster
@@ -269,22 +349,31 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
     INTEGER(Rout)[i] = out_vector[i]+1;
   }
 
+  #pragma omp parallel
+  {
+    for(int i = 0; i < num_mlgs; i++)
+    {
+      R_Free(private_distance_matrix[omp_get_thread_num()][i]);
+    }
+    R_Free(private_distance_matrix[omp_get_thread_num()]);
+  } // End parallel
+  R_Free(private_distance_matrix);
   // Free memory allocated for the various arrays and matrices
   for(int i = 0; i < num_mlgs; i++)
   { 
     R_Free(cluster_matrix[i]);
     R_Free(cluster_distance_matrix[i]);
 
-    //for(int j = 0; j < num_individuals; j++)
-    //{
-      //omp_destroy_lock(&cluster_distance_locks[i][j]);
-    //}
-    //R_Free(cluster_distance_locks[i]);
+    for(int j = 0; j < num_individuals; j++)
+    {
+      omp_destroy_lock(&cluster_distance_locks[i][j]);
+    }
+    R_Free(cluster_distance_locks[i]);
 
   }
   R_Free(cluster_matrix);
   R_Free(cluster_distance_matrix);
-  //R_Free(cluster_distance_locks);
+  R_Free(cluster_distance_locks);
   R_Free(cluster_size);
   R_Free(out_vector);
   UNPROTECT(1);
