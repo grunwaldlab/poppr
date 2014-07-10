@@ -132,7 +132,6 @@ Bruvo's distance and the index of association.
 \subsection{Purpose}
 \label{intro:purpose}
 
-
 \Poppr{} is an R package with convenient functions for analysis of
 genetic data with mixed modes of reproduction including sexual and clonal
 reproduction. While there are many R packages in CRAN and other repositories
@@ -161,11 +160,39 @@ censor, and subset data sets. With \poppr{} you can also quickly calculate
 Bruvo's distance, the index of association, and easily determine which
 multilocus genotypes are shared across populations.
 
+\subsection{Resources}
+
 This vignette will cover all of the material you need to know to efficiently
 analyze data in \poppr{}. For information on methods of analysis (eg. index of
 association, distance measures, AMOVA, ...), please read the manual pages
 provided for each function.
 
+As \poppr{} expanded from version 1.0, the vignette also expanded to be 80+ 
+pages. As a result, it became clear that over 22,000 was less of a manual and 
+more of a novella with a terrible plot. To remedy this, this vignette will focus
+only on data manipulation and a separate vignette, ``algo", has been written
+to give algorithmic details of analyses introduced with \poppr{}. 
+
+As of spring 2014, Drs. Niklaus J. Gr\"unwald, Sydney E. Everhart, and I have 
+co-authored a primer on using R for population genetic analysis. It is located
+\href{http://grunwaldlab.cgrb.oregonstate.edu/popgen}{here} and the source code
+can be found \href{https://github.com/grunwaldlab/Population_Genetics_in_R}{on
+our github site}. 
+
+\subsection{Getting Help}
+
+If you have any questions or feedback, feel free to send a message to the \poppr{} forum at \url{http://groups.google.com/group/poppr}. You can submit bug reports
+there or on our github site: \url{https://github.com/grunwaldlab/poppr}
+
+\subsection{Acknowledgements}
+
+Much thanks goes to Sydney E. Everhart for alpha testing, beta testing, feature
+requests, proofreading, data contribution, and moral support throught the writing
+of this package and manual. Thanks also to Brian Knaus, Ignazio Carbone, David Cooke,
+Corine Schoebel, Jane Stewart, and Zaid Abdo for beta testing and feedback. 
+
+Two new data sets in \poppr{} were provided by Erica Goss (\texttt{Pinf}) and 
+Sydney E. Everhart (\texttt{monpop}).
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -4108,29 +4135,6 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 %=============================================================================%
 \section{Appendix}
 \label{appendix}
-
-\subsection{Afterward}
-
-Writing this manual to \poppr{} has been fun, but I have realized that it is not
-always in the user's best intrest to peruse a 80+ page manual in order to figure
-out how to run analysis of the index of association. At \textgreater22,000 words, this
-manual was less of a manual and more of a novella. 
-
-As of spring 2014, Drs. Niklaus J. Gr\"unwald, Sydney E. Everhart, and I have 
-co-authored a primer on using R for population genetic analysis. It is located
-\href{http://grunwaldlab.cgrb.oregonstate.edu/popgen}{here} and the source code
-can be found \href{https://github.com/grunwaldlab/Population_Genetics_in_R}{on
-our github site}. This primer allows me to dispense of all the details regarding
-data analysis and thus, this primer is more focused on getting your data into 
-\poppr{} and efficiently manipulating it. I hope you have had as much fun reading
-this as I have had writing it. As always, if you have any questions, feel free
-to send a message to the \poppr{} forum at
-\url{http://groups.google.com/group/poppr}
-
-\noindent
-Cheers,\\
-Zhian N. Kamvar\\
-May 21, 2014
 
 \subsection{General hierarchy method use}
 \label{appendix:hier:method}

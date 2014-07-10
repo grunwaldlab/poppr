@@ -1,9 +1,9 @@
 poppr 1.1.0.99
 ===========
 NEW FEATURES
-* Polyploids are now supported in poppr. Many functions in adegenet will unfortunately break. All functions in poppr should be able to work with polyploids.
+* Polyploids with ambiguous genotypes are now supported in poppr. See documentation for `recode_polyploids` for details. 
 * Calculations of Bruvo's distance now features correction for missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
-* `diss.dist` now has options to return raw distances, similarity distances, and a matrix instead of a dist object.
+* `diss.dist` now has options to return raw distances and a matrix instead of a dist object.
 * `read.genalex` now has the option to import as a genclone object. This is the default action.
 * `poppr.all` will be able to analyze lists of genind or genclone objects.
 * `ia` now has the argument valuereturn which will return the sampled data.
@@ -25,8 +25,9 @@ NEW FUNCTIONS
 * `aboot` will allow the user to create bootstrapped dendrograms for ANY distance that can be calculated on genind or genpop objects.
 * `plot_poppr_msn` will plot minimum spanning networks produced with poppr. 
 * `private_alleles` will give information about the presence of private alleles within a genind or genclone object. 
+* `recode_polyploids` will take in a polyploid genind/genclone object (with missing alleles coded as extra zero-value allele) and recode them to have frequencies relative to the observed number of alleles.
 * `genotype_curve` will create a genotype accumulation curve for increasing number of loci.
-* `mlg.group` will return a list indicating the samples belonging to a specific multilocus genotype.
+* `mlg.id` will return a list indicating the samples belonging to a specific multilocus genotype.
 
 NEW DATA SETS
 * Pinf - a data set of 86 isolates from different populations of the late blight pathogen, Phytophthora infestans.

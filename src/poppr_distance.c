@@ -408,7 +408,7 @@ int fact(int x)
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	DEPRECIATED
+	DEPRECATED
 
 	This will calculate bruvo's distance between two individuals. 
 	All that needs to be done from here is to have it do the pairwise
