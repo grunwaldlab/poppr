@@ -79,7 +79,6 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   int** cluster_matrix;
   double** cluster_distance_matrix;
   double*** private_distance_matrix;
-  omp_lock_t** cluster_distance_locks;
   int* cluster_size; // Size of each cluster
   int* out_vector; // A copy of Rout for internal use
   double* dist_ij; // Variables to store distances inside loops
@@ -113,19 +112,16 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   // Allocate empty matrix for storing clusters
   cluster_matrix = R_Calloc(num_mlgs, int*);
   cluster_distance_matrix = R_Calloc(num_mlgs, double*);
-  cluster_distance_locks = R_Calloc(num_mlgs, omp_lock_t*);
 
   for(int i = 0; i < num_mlgs; i++)
   {
     cluster_matrix[i] = R_Calloc(num_individuals, int);
     cluster_distance_matrix[i] = R_Calloc(num_individuals, double);
-    cluster_distance_locks[i] = R_Calloc(num_individuals, omp_lock_t);
     for(int j = 0; j < num_individuals; j++)
     {
       // Using this instead of memset to preserve sentinel value
       cluster_distance_matrix[i][j] = -1.0;
       cluster_matrix[i][j] = -1;
-      omp_init_lock(&cluster_distance_locks[i][j]);
     }
   }
   // Allocate memory for storing sizes of each cluster
@@ -211,8 +207,6 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
             {
               dist_ij = &(private_distance_matrix[omp_get_thread_num()][out_vector[i]][out_vector[j]]);
               dist_ji = &(private_distance_matrix[omp_get_thread_num()][out_vector[j]][out_vector[i]]);
-              //omp_set_lock(&cluster_distance_locks[out_vector[i]][out_vector[j]]);
-              //omp_set_lock(&cluster_distance_locks[out_vector[j]][out_vector[i]]);
               if(ISNA(REAL(dist)[i*num_individuals + j]) || ISNAN(REAL(dist)[i*num_individuals + j]) 
                 || !R_FINITE(REAL(dist)[i*num_individuals + j]))
               {
@@ -248,8 +242,6 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
                 *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
                 //printf("\n%f\n",private_distance_matrix[i][j]);
               }
-              //omp_unset_lock(&cluster_distance_locks[out_vector[i]][out_vector[j]]);
-              //omp_unset_lock(&cluster_distance_locks[out_vector[j]][out_vector[i]]);
             } 
           }
         }
@@ -349,7 +341,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
     INTEGER(Rout)[i] = out_vector[i]+1;
   }
 
-  #pragma omp parallel
+  #pragma omp parallel shared(num_mlgs)
   {
     for(int i = 0; i < num_mlgs; i++)
     {
@@ -363,17 +355,9 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   { 
     R_Free(cluster_matrix[i]);
     R_Free(cluster_distance_matrix[i]);
-
-    for(int j = 0; j < num_individuals; j++)
-    {
-      omp_destroy_lock(&cluster_distance_locks[i][j]);
-    }
-    R_Free(cluster_distance_locks[i]);
-
   }
   R_Free(cluster_matrix);
   R_Free(cluster_distance_matrix);
-  R_Free(cluster_distance_locks);
   R_Free(cluster_size);
   R_Free(out_vector);
   UNPROTECT(1);
