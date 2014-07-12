@@ -2,7 +2,7 @@ poppr 1.1.0.99
 ===========
 NEW FEATURES
 * Polyploids with ambiguous genotypes are now supported in poppr. See documentation for `recode_polyploids` for details. 
-* Calculations of Bruvo's distance now features correction for missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
+* Calculations of Bruvo's distance now features correction for partial missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
 * `diss.dist` now has options to return raw distances and a matrix instead of a dist object.
 * `read.genalex` now has the option to import as a genclone object. This is the default action.
 * `poppr.all` will be able to analyze lists of genind or genclone objects.
@@ -30,8 +30,8 @@ NEW FUNCTIONS
 * `mlg.id` will return a list indicating the samples belonging to a specific multilocus genotype.
 
 NEW DATA SETS
-* Pinf - a data set of 86 isolates from different populations of the late blight pathogen, Phytophthora infestans.
-* monpop - a large data set of 694 Monilinia fructicola isolates from a single orchard over three years.
+* Pinf - a data set of 86 isolates from different populations of the late blight pathogen, Phytophthora infestans. Provided by Erica Goss
+* monpop - a large data set of 694 Monilinia fructicola isolates from a single orchard over three years. Provided by Sydney E. Everhart
 
 NEW CAR
 * Not really.
