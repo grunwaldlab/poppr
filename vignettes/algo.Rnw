@@ -453,7 +453,7 @@ comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
 All of these distances were designed for analysis of populations. When applying
 them to individuals, we must change our interpretations. For example, with Nei's
 distance, branch lengths increase linearly with mutation
-\cite{nei1972genetic,nei1978estimation}. When to populations share no alleles,
+\cite{nei1972genetic,nei1978estimation}. When two populations share no alleles,
 then the distance becomes infinite. However, we expect two individuals to
 segregate for different alleles more often than entire populations, thus we
 would expect exaggerated internal branch lengths separating clades. To
