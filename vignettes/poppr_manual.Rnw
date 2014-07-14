@@ -61,12 +61,13 @@ Corvallis, OR}}
 % Set the width of figures.
 \setkeys{Gin}{width=0.5\textwidth}
 
-<<include=FALSE>>=
-thm <- knit_theme$get("acid")
-knit_theme$set(thm)
-opts_chunk$set(concordance=TRUE)
-opts_chunk$set(size = 'footnotesize', message = FALSE, warning = FALSE)
-opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'asis')
+<<echo=FALSE, warning=FALSE>>=
+knitr::opts_knit$set(out.format = "latex")
+thm <- knitr::knit_theme$get("acid")
+knitr::knit_theme$set(thm)
+knitr::opts_chunk$set(concordance=TRUE)
+knitr::opts_chunk$set(size = 'footnotesize', message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'asis')
 @
 
 <<poppr_funk, eval = TRUE, echo = FALSE>>=
