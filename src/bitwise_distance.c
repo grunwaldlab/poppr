@@ -60,6 +60,12 @@
 // TODO: Write an R wrapper function
 // TODO: Write more R functions that make use of the data this spits out
 // TODO: Handle missing data, either in this file or in the R wrapper.
+// TODO: Make unit tests for the R function, including a test to make sure
+//       x <- new("genlight", lapply(1:50, function(i) sample(c(0,1,2), 1e6, prob=c(.25, .5, .25), replace=TRUE)))
+//       mean(bitwise.dist(x)) is roughly around .625
+//       mean(bitwise.dist(x,diff=FALSE)) is roughly .375
+//       mean(bitwise.dist(x,percent=FALSE)) is roughly 625000
+//       and so on
 
 // TODO: DO NOT USE unsigned int for this. Find a type that is explicitly 32 bits.
 // Or, since the raw data comes out in 8bit chunks, we could do it that way.
@@ -143,6 +149,17 @@ SEXP bitwise_distance(SEXP genlight)
       // Finally, loop through all the chunks of SNPs for these genotypes
       for(k = 0; k < XLENGTH(R_chr1_1); k++) 
       {
+        // TODO: Check for NA value here, then handle by either
+        //       setting all 4 to 0 (or 1), or by setting them opposite
+        //       depending on whether we want to force a difference or match
+        //        Or... genlight already does something to these missing values
+        //        which means this needs to be handled in R? 
+        //        Or or, I can access the NA.posi lists and handle it that way
+        //       If I have NA.posi passed in, I can iterate through genotypes in that
+        //       at the same time as through the other lists, then step through the list
+        //       of missing positions every time one is found (ie, j == missing[cur])
+        //       while handling the missing value in some way.
+        //       ... Otherwise the missing values are replaced by 0's.
         set_1.c1 = (unsigned int)RAW(R_chr1_1)[k];
         set_1.c2 = (unsigned int)RAW(R_chr1_2)[k];
         set_2.c1 = (unsigned int)RAW(R_chr2_1)[k];

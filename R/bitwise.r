@@ -52,42 +52,46 @@
 #' @rdname bitwise_distance
 #'
 #' @param x a genlight object. 
+#'
+#' @param diff \code{logical}. If \code{TRUE}, this will count the number of 
+#' differences between individuals. \code{FALSE} will count the number of  
+#' similarities. Default set to \code{TRUE} 
+#'  
+#' @param percent \code{logical}. Should the distance be represented from 0 to 1? 
+#' Default set to \code{TRUE}. \code{FALSE} will return the distance represented 
+#' as integers from 1 to n where n is the number of loci. 
+#'  
+#' @param mat \code{logical}. Return a matrix object. Default set to  
+#' \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object. 
 #' 
 #' @return Pairwise distances between individuals present in the genlight object.
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
 #==============================================================================#
-bitwise.dist <- function(x){
-  # TODO: Set these as parameters and allow for returning a dist object, etc
-  mat <- TRUE
-  diff <- TRUE
-  percent <- FALSE
-
+bitwise.dist <- function(x, diff=TRUE, percent=TRUE, mat=FALSE){
   # TODO: Find some stopifnot(is.genlight(x)) equivalent
-  stopifnot(min(ploidy(x)) == 2 && max(ploidy(x)) == 2)
+  stopifnot(ploidy(x) == 2)
   ploid     <- 2
   ind.names <- x@ind.names
   inds      <- length(x@gen)
-  np        <- choose(inds, 2)
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
-  numLoci   <- length(x@gen[[1]]@snp[[1]])
+  numPairs   <- length(x@gen[[1]]@snp[[1]])*8
 
   pairwise_dist <- .Call("bitwise_distance", x)
   
   if (!diff){
-    pairwise_dist <- numLoci - pairwise_dist
+    pairwise_dist <- numPairs - pairwise_dist
   }
   dist.mat <- pairwise_dist
-  dim(dist.mat) = c(inds,inds)
+  dim(dist.mat) <- c(inds,inds)
   colnames(dist.mat)            <- ind.names
   rownames(dist.mat)            <- ind.names
   if (percent){
-    dist.mat <- as.numeric(dist.mat)/(numLoci)
+    dist.mat <- dist.mat/(numPairs)
   }
   if (mat == FALSE){
-    # TODO: Convert dist.mat to a dist object
-    # dist.mat <- as.dist(dist.mat)
+    dist.mat <- as.dist(dist.mat)
   }
   return(dist.mat)
 }
