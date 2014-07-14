@@ -44,12 +44,22 @@
 #include <stdlib.h>
 #include <omp.h>
 
+// TODO: Questions:
+//          Where do we want the wrapper function? Distances.r? Something new?
+//          Do we want to handle missing data in this function, or in the wrapper?
+//          How do we want to handle the missing data? Always match? Never match? Population mean? 
+//          Should it be in rdname genetic_distance, or something else?
+
+// Assumptions:
+//  All genotypes have the same number of SNPs available.
+//  All SNPs are diploid.
 
 // TODO: Informative header
 // TODO: Clean up the comments and code to make it more readable
 // TODO: Parallelize it if need be. It would be trivial to parallelize, but it's already pretty fast.
 // TODO: Write an R wrapper function
 // TODO: Write more R functions that make use of the data this spits out
+// TODO: Handle missing data, either in this file or in the R wrapper.
 
 // TODO: DO NOT USE unsigned int for this. Find a type that is explicitly 32 bits.
 // Or, since the raw data comes out in 8bit chunks, we could do it that way.
@@ -74,8 +84,15 @@ unsigned int get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
 int get_zeros(unsigned int sim_set);
 int get_difference(struct zygosity *z1, struct zygosity *z2);
 
-// TODO: What do I want to send in to this? Can I send everything for two individuals at once?
-// TODO: Or everything about everyone?
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates the pairwise differences between samples in a genlight object. The
+distances represent the number of sites between individuals which differ in 
+zygosity.
+
+Input: A genlight object containing samples of diploids.
+Output: A distance matrix representing the number of differences in zygosity
+        between each sample.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP bitwise_distance(SEXP genlight)
 {
   SEXP R_out;
@@ -111,8 +128,7 @@ SEXP bitwise_distance(SEXP genlight)
     distance_matrix[i] = R_Calloc(num_gens,int);
   }
 
-  // Loop through every genotype (in the future nest this) 
-  // Store XLENGTH(R_gen) so it doesn't have to do that every loop
+  // Loop through every genotype 
   for(i = 0; i < num_gens; i++)
   {
     R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
@@ -158,8 +174,16 @@ SEXP bitwise_distance(SEXP genlight)
   return R_out;
 }
 
-// Function that takes a zygosity struct with two 32bit binary sets (c1 and c2, one for each chromosome)
-// fills the three other 32 bit sets (cx, ca, cn, representing the presence of each type of site zygosity)
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates the zygosity at each location of a given section. The zygosity struct
+must have c1 and c2 filled before calling this function.
+
+Input: A zygosity struct pointer with c1 and c2 filled for the given section.
+Output: None. Fills the cx, ca, and cn values in the provided struct to indicate
+        heterozygous, homozygous dominant, and homozygous recessive sites respectively,
+        where 1's in each string represent the presence of that zygosity and 0's
+        represent a different zygosity.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 void fill_zygosity(struct zygosity *ind)
 {
   ind->cx = ind->c1 ^ ind->c2;  // Bitwise Exclusive OR provides 1's only at heterozygous sites
@@ -168,8 +192,15 @@ void fill_zygosity(struct zygosity *ind)
 }
 
 
-// Function that takes two zygosity structs (one for each individual)
-// and returns a 32 bit similarity string (sites that contain the same zygosity are set to 1)
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Finds the locations at which two samples have differing zygosity.
+
+Input: Two zygosity struct pointers with c1 and c2 filled, each representing the
+       same section from two samples.
+Output: An unsigned int representing a binary string of differences between the
+        two samples in the given section. 0's represent a difference in zygosity
+        at that location and 1's represent matching zygosity.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 unsigned int get_similarity_set(struct zygosity *ind1, struct zygosity *ind2)
 {
 
@@ -190,6 +221,16 @@ unsigned int get_similarity_set(struct zygosity *ind1, struct zygosity *ind2)
 
 // Function that takes a similarity set and returns the number of different states
 // (it takes an unsigned int and returns the number of 0's)
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates the number of zeros in a binary string. Used by get_difference to
+find the number of differences between two samples in a given section.
+
+Input: An unsigned int representing a binary string of differences between samples
+       where 1's are matches and 0's are differences.
+Output: The number of zeros in the argument value, representing the number of 
+        differences between the two samples in the location used to generate
+        the sim_set.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 int get_zeros(unsigned int sim_set)
 {
   int zeros = 0;
@@ -210,8 +251,16 @@ int get_zeros(unsigned int sim_set)
   return zeros;
 }
 
-// Function takes two unfilled zygosity structs (with only their c1 and c2 values filled)
-// and returns the number of sites at which they differ
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Counts the number of differences between two partially filled zygosity structs.
+c1 and c2 must be filled in both structs prior to calling this function.
+
+Input: Two zygosity struct pointers representing the two sections to be compared.
+       c1 and c2 must be filled in both structs.
+Output: The number of locations in the given section that have differing zygosity
+        between the two samples.
+        cx, ca, and cn will be filled in both structs as a byproduct of this function.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 int get_difference(struct zygosity *z1, struct zygosity *z2)
 {
   int dif = 0;
