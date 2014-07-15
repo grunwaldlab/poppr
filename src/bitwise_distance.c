@@ -67,27 +67,20 @@
 //       mean(bitwise.dist(x,percent=FALSE)) is roughly 625000
 //       and so on
 
-// TODO: DO NOT USE unsigned int for this. Find a type that is explicitly 32 bits.
-// Or, since the raw data comes out in 8bit chunks, we could do it that way.
-// Regardless, it should be standardized and documented. At the moment it is processing
-// 8 bits at a time (since that is how the genlight object's list spits it out)
-// but that can be changed later if needed. If nothing else, it needs to be firmly set
-// across this file.
-
 struct zygosity
 {
-  unsigned int c1;  // A 32 bit fragment of one chromosome
-  unsigned int c2;  // The corresponding fragment from the outer chromosome
+  char c1;  // A 32 bit fragment of one chromosome
+  char c2;  // The corresponding fragment from the outer chromosome
 
-  unsigned int cx;  // Heterozygous sites are indicated by 1's
-  unsigned int ca;  // Homozygous dominant sites are indicated by 1's
-  unsigned int cn;  // Homozygous recessive sites are indicated by 1's
+  char cx;  // Heterozygous sites are indicated by 1's
+  char ca;  // Homozygous dominant sites are indicated by 1's
+  char cn;  // Homozygous recessive sites are indicated by 1's
 };
 
 
 void fill_zygosity(struct zygosity *ind);
-unsigned int get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
-int get_zeros(unsigned int sim_set);
+char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
+int get_zeros(char sim_set);
 int get_difference(struct zygosity *z1, struct zygosity *z2);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,13 +96,21 @@ SEXP bitwise_distance(SEXP genlight)
 {
   SEXP R_out;
   SEXP R_gen_symbol;
-  SEXP R_chr_symbol;
+  SEXP R_chr_symbol;  
+  SEXP R_nap_symbol;
   SEXP R_gen;
   int num_gens;
   SEXP R_chr1_1;
   SEXP R_chr1_2;
   SEXP R_chr2_1;
   SEXP R_chr2_2;
+  SEXP R_nap1;
+  SEXP R_nap2;
+  int next_missing_index_i;
+  int next_missing_index_j;
+  int next_missing_i;
+  int next_missing_j;
+  char mask;
   struct zygosity set_1;
   struct zygosity set_2;
   int i;
@@ -118,11 +119,13 @@ SEXP bitwise_distance(SEXP genlight)
 
   int** distance_matrix;
   int cur_distance;
+  char tmp_sim_set;
 
   
-  PROTECT(R_gen_symbol = install("gen")); // I can do this in-line as well. It doesn't seem to be an issue.
+  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
   PROTECT(R_chr_symbol = install("snp"));
-  
+  PROTECT(R_nap_symbol = install("NA.posi"));  
+
   // This will be a LIST of type LIST:RAW
   R_gen = getAttrib(genlight, R_gen_symbol);
   num_gens = XLENGTH(R_gen);
@@ -134,11 +137,19 @@ SEXP bitwise_distance(SEXP genlight)
     distance_matrix[i] = R_Calloc(num_gens,int);
   }
 
+  next_missing_index_i = 0;
+  next_missing_index_j = 0;
+  next_missing_i = 0;
+  next_missing_j = 0;
+  mask = 0;
+  tmp_sim_set = 0;
+
   // Loop through every genotype 
   for(i = 0; i < num_gens; i++)
   {
     R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
     R_chr1_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1); // Chromosome 2
+    R_nap1 = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
     // Loop through every other genotype
     for(j = 0; j < i; j++)
     {
@@ -146,26 +157,45 @@ SEXP bitwise_distance(SEXP genlight)
       // These will be arrays of type RAW
       R_chr2_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,j),R_chr_symbol),0); // Chromosome 1
       R_chr2_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,j),R_chr_symbol),1); // Chromosome 2
+      R_nap2 = getAttrib(VECTOR_ELT(R_gen,j),R_nap_symbol); // Vector of the indices of missing values
+      next_missing_index_j = 0; // Next set of chromosomes start back at index 0
+      next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1; //Compensate for Rs 1 based indexing
+      next_missing_index_i = 0;
+      next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
       // Finally, loop through all the chunks of SNPs for these genotypes
       for(k = 0; k < XLENGTH(R_chr1_1); k++) 
       {
-        // TODO: Check for NA value here, then handle by either
-        //       setting all 4 to 0 (or 1), or by setting them opposite
-        //       depending on whether we want to force a difference or match
-        //        Or... genlight already does something to these missing values
-        //        which means this needs to be handled in R? 
-        //        Or or, I can access the NA.posi lists and handle it that way
-        //       If I have NA.posi passed in, I can iterate through genotypes in that
-        //       at the same time as through the other lists, then step through the list
-        //       of missing positions every time one is found (ie, j == missing[cur])
-        //       while handling the missing value in some way.
-        //       ... Otherwise the missing values are replaced by 0's.
-        set_1.c1 = (unsigned int)RAW(R_chr1_1)[k];
-        set_1.c2 = (unsigned int)RAW(R_chr1_2)[k];
-        set_2.c1 = (unsigned int)RAW(R_chr2_1)[k];
-        set_2.c2 = (unsigned int)RAW(R_chr2_2)[k];
+        set_1.c1 = (char)RAW(R_chr1_1)[k];
+        set_1.c2 = (char)RAW(R_chr1_2)[k];
+        fill_zygosity(&set_1);
+
+        set_2.c1 = (char)RAW(R_chr2_1)[k];
+        set_2.c2 = (char)RAW(R_chr2_2)[k];
+        fill_zygosity(&set_2);
+
+        tmp_sim_set = get_similarity_set(&set_1,&set_2);
+
+        // Check for missing values and force them to match
+        while(next_missing_index_i < XLENGTH(R_nap1) && next_missing_i < (k+1)*8 && next_missing_i >= (k*8) )
+        {
+          // Handle missing bit in both chromosomes and both samples with mask
+          mask = 1 << (next_missing_i%8); // -1 to compensate for Rs 1 based indexing         
+          tmp_sim_set |= mask; // Force the missing bit to match
+          next_missing_index_i++; 
+          next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+        }       
+        // Repeat for j
+        while(next_missing_index_j < XLENGTH(R_nap2) && next_missing_j < (k+1)*8 && next_missing_j >= (k*8))
+        {
+          // Handle missing bit in both chromosomes and both samples with mask
+          mask = 1 << (next_missing_j%8);
+          tmp_sim_set |= mask; // Force the missing bit to match
+          next_missing_index_j++;
+          next_missing_j = (int)INTEGER(R_nap1)[next_missing_index_j] - 1;
+        }       
+
         // Add the distance from this word into the total between these two genotypes
-        cur_distance += get_difference(&set_1,&set_2);
+        cur_distance += get_zeros(tmp_sim_set);
       }
       // Store the distance between these two genotypes in the distance matrix
       distance_matrix[i][j] = cur_distance;
@@ -187,7 +217,7 @@ SEXP bitwise_distance(SEXP genlight)
     R_Free(distance_matrix[i]);
   }
   R_Free(distance_matrix);
-  UNPROTECT(3); 
+  UNPROTECT(4); 
   return R_out;
 }
 
@@ -214,17 +244,17 @@ Finds the locations at which two samples have differing zygosity.
 
 Input: Two zygosity struct pointers with c1 and c2 filled, each representing the
        same section from two samples.
-Output: An unsigned int representing a binary string of differences between the
+Output: A char representing a binary string of differences between the
         two samples in the given section. 0's represent a difference in zygosity
         at that location and 1's represent matching zygosity.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-unsigned int get_similarity_set(struct zygosity *ind1, struct zygosity *ind2)
+char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2)
 {
 
-  unsigned int s;   // The similarity values to be returned
-  unsigned int sx;  // 1's wherever both are heterozygous
-  unsigned int sa;  // 1's wherever both are homozygous dominant
-  unsigned int sn;  // 1's wherever both are homozygous recessive
+  char s;   // The similarity values to be returned
+  char sx;  // 1's wherever both are heterozygous
+  char sa;  // 1's wherever both are homozygous dominant
+  char sn;  // 1's wherever both are homozygous recessive
 
   sx = ind1->cx & ind2->cx;
   sa = ind1->ca & ind2->ca;
@@ -236,24 +266,22 @@ unsigned int get_similarity_set(struct zygosity *ind1, struct zygosity *ind2)
 }
 
 
-// Function that takes a similarity set and returns the number of different states
-// (it takes an unsigned int and returns the number of 0's)
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the number of zeros in a binary string. Used by get_difference to
 find the number of differences between two samples in a given section.
 
-Input: An unsigned int representing a binary string of differences between samples
+Input: A char representing a binary string of differences between samples
        where 1's are matches and 0's are differences.
 Output: The number of zeros in the argument value, representing the number of 
         differences between the two samples in the location used to generate
         the sim_set.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-int get_zeros(unsigned int sim_set)
+int get_zeros(char sim_set)
 {
   int zeros = 0;
   int tmp_set = sim_set;
   // TODO: Standardize the number of bits used in everything to get rid of this magic number
-  int digits = 8; //sizeof(unsigned int);
+  int digits = 8; //sizeof(char);
   int i;
 
   for(i = 0; i < digits; i++)
