@@ -31,5 +31,5 @@ Suggests:
     testthat,
     knitr,
     polysat
-License: GPL-2
+License: GPL-2 | GPL-3
 VignetteBuilder: knitr
