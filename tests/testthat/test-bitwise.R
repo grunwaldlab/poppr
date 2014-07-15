@@ -1,0 +1,16 @@
+context("Bitwise distance calculations")
+
+test_that("bitwise_distance.c produces reasonable results", {
+  dat <- lapply(1:50, function(i) sample(c(0,1,2,NA), 1e4, prob=c(.03,.03,.03, .91), replace=TRUE))
+  z <- new("genlight",dat)
+  missing_match <- bitwise.dist(z,missing_match=TRUE)
+  mean_missing_match <- mean(missing_match)
+  expected_mean_match <- (1 - (.03*.94*3 + .91))
+  missing_nomatch <- bitwise.dist(z,missing_match=FALSE)
+  mean_missing_nomatch <- mean(missing_nomatch)
+  expected_mean_nomatch <- (1 - (.03**2*3))
+  expect_that((mean_missing_match < expected_mean_match + 2*sd(missing_match)), equals(TRUE))
+  expect_that((mean_missing_match > expected_mean_match - 2*sd(missing_match)), equals(TRUE) )
+  expect_that((mean_missing_nomatch < expected_mean_nomatch + 2*sd(missing_nomatch)), equals(TRUE))
+  expect_that((mean_missing_nomatch > expected_mean_nomatch - 2*sd(missing_nomatch)), equals(TRUE)) 
+ })

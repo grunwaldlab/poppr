@@ -44,28 +44,11 @@
 #include <stdlib.h>
 #include <omp.h>
 
-// TODO: Questions:
-//          Where do we want the wrapper function? Distances.r? Something new?
-//          Do we want to handle missing data in this function, or in the wrapper?
-//          How do we want to handle the missing data? Always match? Never match? Population mean? 
-//          Should it be in rdname genetic_distance, or something else?
-
 // Assumptions:
 //  All genotypes have the same number of SNPs available.
 //  All SNPs are diploid.
 
-// TODO: Informative header
-// TODO: Clean up the comments and code to make it more readable
-// TODO: Parallelize it if need be. It would be trivial to parallelize, but it's already pretty fast.
-// TODO: Write an R wrapper function
 // TODO: Write more R functions that make use of the data this spits out
-// TODO: Handle missing data, either in this file or in the R wrapper.
-// TODO: Make unit tests for the R function, including a test to make sure
-//       x <- new("genlight", lapply(1:50, function(i) sample(c(0,1,2), 1e6, prob=c(.25, .5, .25), replace=TRUE)))
-//       mean(bitwise.dist(x)) is roughly around .625
-//       mean(bitwise.dist(x,diff=FALSE)) is roughly .375
-//       mean(bitwise.dist(x,percent=FALSE)) is roughly 625000
-//       and so on
 
 struct zygosity
 {
