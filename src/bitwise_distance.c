@@ -191,7 +191,7 @@ SEXP bitwise_distance(SEXP genlight)
           mask = 1 << (next_missing_j%8);
           tmp_sim_set |= mask; // Force the missing bit to match
           next_missing_index_j++;
-          next_missing_j = (int)INTEGER(R_nap1)[next_missing_index_j] - 1;
+          next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
         }       
 
         // Add the distance from this word into the total between these two genotypes
