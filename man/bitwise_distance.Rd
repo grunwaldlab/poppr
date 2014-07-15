@@ -4,14 +4,10 @@
 \title{Calculate a distance matrix comparing samples based on the number of alleles
 that differ in zygosity.}
 \usage{
-bitwise.dist(x, diff = TRUE, percent = TRUE, mat = FALSE)
+bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE)
 }
 \arguments{
 \item{x}{a genlight object.}
-
-\item{diff}{\code{logical}. If \code{TRUE}, this will count the number of
-differences between individuals. \code{FALSE} will count the number of
-similarities. Default set to \code{TRUE}}
 
 \item{percent}{\code{logical}. Should the distance be represented from 0 to 1?
 Default set to \code{TRUE}. \code{FALSE} will return the distance represented
@@ -19,6 +15,11 @@ as integers from 1 to n where n is the number of loci.}
 
 \item{mat}{\code{logical}. Return a matrix object. Default set to
 \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object.}
+
+\item{missing_match}{\code{logical}. Determines whether two samples differing
+by missing data in a location should be counted as matching at that location.
+Default set to \code{TRUE}, which forces missing data to match with anything.
+\code{FALSE} forces missing data to not match with any other information.}
 }
 \value{
 Pairwise distances between individuals present in the genlight object.

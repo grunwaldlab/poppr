@@ -92,7 +92,7 @@ Input: A genlight object containing samples of diploids.
 Output: A distance matrix representing the number of differences in zygosity
         between each sample.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP bitwise_distance(SEXP genlight)
+SEXP bitwise_distance(SEXP genlight, SEXP missing)
 {
   SEXP R_out;
   SEXP R_gen_symbol;
@@ -110,6 +110,7 @@ SEXP bitwise_distance(SEXP genlight)
   int next_missing_index_j;
   int next_missing_i;
   int next_missing_j;
+  int missing_match;
   char mask;
   struct zygosity set_1;
   struct zygosity set_2;
@@ -143,6 +144,7 @@ SEXP bitwise_distance(SEXP genlight)
   next_missing_j = 0;
   mask = 0;
   tmp_sim_set = 0;
+  missing_match = asLogical(missing);
 
   // Loop through every genotype 
   for(i = 0; i < num_gens; i++)
@@ -151,6 +153,10 @@ SEXP bitwise_distance(SEXP genlight)
     R_chr1_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1); // Chromosome 2
     R_nap1 = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
     // Loop through every other genotype
+    #pragma omp parallel for \
+      private(j,cur_distance,R_chr2_1,R_chr2_2,R_nap2,next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,\
+              set_1,set_2,tmp_sim_set, k, mask) \
+      shared(R_nap1, i, distance_matrix)
     for(j = 0; j < i; j++)
     {
       cur_distance = 0;
@@ -180,7 +186,14 @@ SEXP bitwise_distance(SEXP genlight)
         {
           // Handle missing bit in both chromosomes and both samples with mask
           mask = 1 << (next_missing_i%8); // -1 to compensate for Rs 1 based indexing         
-          tmp_sim_set |= mask; // Force the missing bit to match
+          if(missing_match)
+          {
+            tmp_sim_set |= mask; // Force the missing bit to match
+          }
+          else
+          {
+            tmp_sim_set &= ~mask; // Force the missing bit to not match
+          }
           next_missing_index_i++; 
           next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
         }       
@@ -189,7 +202,14 @@ SEXP bitwise_distance(SEXP genlight)
         {
           // Handle missing bit in both chromosomes and both samples with mask
           mask = 1 << (next_missing_j%8);
-          tmp_sim_set |= mask; // Force the missing bit to match
+          if(missing_match)
+          {
+            tmp_sim_set |= mask; // Force the missing bit to match
+          }
+          else
+          {
+            tmp_sim_set &= ~mask; // Force the missing bit to not match
+          }
           next_missing_index_j++;
           next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
         }       
@@ -200,7 +220,7 @@ SEXP bitwise_distance(SEXP genlight)
       // Store the distance between these two genotypes in the distance matrix
       distance_matrix[i][j] = cur_distance;
       distance_matrix[j][i] = cur_distance;
-    }
+    } // End parallel
   } 
 
   // Fill the output matrix

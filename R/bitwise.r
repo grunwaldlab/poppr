@@ -53,36 +53,33 @@
 #'
 #' @param x a genlight object. 
 #'
-#' @param diff \code{logical}. If \code{TRUE}, this will count the number of 
-#' differences between individuals. \code{FALSE} will count the number of  
-#' similarities. Default set to \code{TRUE} 
-#'  
 #' @param percent \code{logical}. Should the distance be represented from 0 to 1? 
 #' Default set to \code{TRUE}. \code{FALSE} will return the distance represented 
 #' as integers from 1 to n where n is the number of loci. 
 #'  
 #' @param mat \code{logical}. Return a matrix object. Default set to  
 #' \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object. 
+#'
+#' @param missing_match \code{logical}. Determines whether two samples differing
+#' by missing data in a location should be counted as matching at that location.
+#' Default set to \code{TRUE}, which forces missing data to match with anything. 
+#' \code{FALSE} forces missing data to not match with any other information. 
 #' 
 #' @return Pairwise distances between individuals present in the genlight object.
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
 #==============================================================================#
-bitwise.dist <- function(x, diff=TRUE, percent=TRUE, mat=FALSE){
-  # TODO: Find some stopifnot(is.genlight(x)) equivalent
+bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE){
+  stopifnot(class(x)[1] == "genlight")
   stopifnot(ploidy(x) == 2)
   ploid     <- 2
   ind.names <- x@ind.names
   inds      <- length(x@gen)
-  dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
   numPairs   <- length(x@gen[[1]]@snp[[1]])*8
 
-  pairwise_dist <- .Call("bitwise_distance", x)
+  pairwise_dist <- .Call("bitwise_distance", x, missing_match)
   
-  if (!diff){
-    pairwise_dist <- numPairs - pairwise_dist
-  }
   dist.mat <- pairwise_dist
   dim(dist.mat) <- c(inds,inds)
   colnames(dist.mat)            <- ind.names
