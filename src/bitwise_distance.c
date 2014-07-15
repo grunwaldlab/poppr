@@ -89,6 +89,9 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
   SEXP R_chr2_2;
   SEXP R_nap1;
   SEXP R_nap2;
+  int nap1_length;
+  int nap2_length;
+  int chr_length;
   int next_missing_index_i;
   int next_missing_index_j;
   int next_missing_i;
@@ -127,6 +130,9 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
   next_missing_j = 0;
   mask = 0;
   tmp_sim_set = 0;
+  nap1_length = 0;
+  nap2_length = 0;
+  chr_length = 0;
   missing_match = asLogical(missing);
 
   // Loop through every genotype 
@@ -134,12 +140,14 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
   {
     R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
     R_chr1_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1); // Chromosome 2
+    chr_length = XLENGTH(R_chr1_1);
     R_nap1 = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
+    nap1_length = XLENGTH(R_nap1);
     // Loop through every other genotype
     #pragma omp parallel for \
       private(j,cur_distance,R_chr2_1,R_chr2_2,R_nap2,next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,\
-              set_1,set_2,tmp_sim_set, k, mask) \
-      shared(R_nap1, i, distance_matrix)
+              set_1,set_2,tmp_sim_set, k, mask, nap2_length) \
+      shared(R_nap1, nap1_length, i, distance_matrix)
     for(j = 0; j < i; j++)
     {
       cur_distance = 0;
@@ -147,12 +155,13 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
       R_chr2_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,j),R_chr_symbol),0); // Chromosome 1
       R_chr2_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,j),R_chr_symbol),1); // Chromosome 2
       R_nap2 = getAttrib(VECTOR_ELT(R_gen,j),R_nap_symbol); // Vector of the indices of missing values
+      nap2_length = XLENGTH(R_nap2);
       next_missing_index_j = 0; // Next set of chromosomes start back at index 0
       next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1; //Compensate for Rs 1 based indexing
       next_missing_index_i = 0;
       next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
       // Finally, loop through all the chunks of SNPs for these genotypes
-      for(k = 0; k < XLENGTH(R_chr1_1); k++) 
+      for(k = 0; k < chr_length; k++) 
       {
         set_1.c1 = (char)RAW(R_chr1_1)[k];
         set_1.c2 = (char)RAW(R_chr1_2)[k];
@@ -165,7 +174,7 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
         tmp_sim_set = get_similarity_set(&set_1,&set_2);
 
         // Check for missing values and force them to match
-        while(next_missing_index_i < XLENGTH(R_nap1) && next_missing_i < (k+1)*8 && next_missing_i >= (k*8) )
+        while(next_missing_index_i < nap1_length && next_missing_i < (k+1)*8 && next_missing_i >= (k*8) )
         {
           // Handle missing bit in both chromosomes and both samples with mask
           mask = 1 << (next_missing_i%8); // -1 to compensate for Rs 1 based indexing         
@@ -181,7 +190,7 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
           next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
         }       
         // Repeat for j
-        while(next_missing_index_j < XLENGTH(R_nap2) && next_missing_j < (k+1)*8 && next_missing_j >= (k*8))
+        while(next_missing_index_j < nap2_length && next_missing_j < (k+1)*8 && next_missing_j >= (k*8))
         {
           // Handle missing bit in both chromosomes and both samples with mask
           mask = 1 << (next_missing_j%8);
