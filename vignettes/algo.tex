@@ -70,11 +70,11 @@
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
 \newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
-\newcommand{\cmdlink}[2]{
-  \texttt{\hyperref[#1]{#2}}
+\newcommand{\cmdlink}[2]{%
+  \texttt{\hyperref[#1]{#2}}%
 }
-\newcommand{\seclink}[2]{
-  \textsc{\hyperref[#1]{#2}}
+\newcommand{\seclink}[2]{%
+  \textsc{\hyperref[#1]{#2}}%
 }
 
 \newcommand{\poppr}{\textit{poppr}}
@@ -314,8 +314,8 @@ Genetic distances are great tools for analyzing diversity in
 populations as they are the basis for creating dendrograms with bootstrap
 support and also for AMOVA. This section will simply present different genetic
 distances along with a few notes about them. Most of these distances are derived
-from the \textit{ade4} and \adegenet packages, where they were implemented as
-distances between populations. \Poppr extends the implementation to individuals
+from the \textit{ade4} and \adegenet{} packages, where they were implemented as
+distances between populations. \Poppr{} extends the implementation to individuals
 as well (with the exception of Bruvo's distance).
 
 \begin{table}[ht]
