@@ -74,9 +74,9 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE){
   stopifnot(class(x)[1] == "genlight")
   stopifnot(ploidy(x) == 2)
   ploid     <- 2
-  ind.names <- x@ind.names
-  inds      <- length(x@gen)
-  numPairs   <- length(x@gen[[1]]@snp[[1]])*8
+  ind.names <- indNames(x)
+  inds      <- nInd(x)
+  numPairs   <- nLoc(x)
 
   pairwise_dist <- .Call("bitwise_distance", x, missing_match)
   

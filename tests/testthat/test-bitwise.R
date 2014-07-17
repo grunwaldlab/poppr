@@ -1,16 +1,14 @@
 context("Bitwise distance calculations")
 
 test_that("bitwise_distance.c produces reasonable results", {
-  dat <- lapply(1:50, function(i) sample(c(0,1,2,NA), 1e4, prob=c(.03,.03,.03, .91), replace=TRUE))
+  dat <- list(c(2,2,2,2,2,2,2,2,2,0),c(1,1,1,0,0,0,0,0,0,2),c(2,2,2,2,2,2,2,2,2,2),c(2,2,2,2,2,2,2,2,2,0),c(2,NA,NA,NA,NA,NA,NA,NA,NA,NA))
   z <- new("genlight",dat)
-  missing_match <- bitwise.dist(z,missing_match=TRUE)
-  mean_missing_match <- mean(missing_match)
-  expected_mean_match <- (1 - (.03*.94*3 + .91))
-  missing_nomatch <- bitwise.dist(z,missing_match=FALSE)
-  mean_missing_nomatch <- mean(missing_nomatch)
-  expected_mean_nomatch <- (1 - (.03**2*3))
-  expect_that((mean_missing_match < expected_mean_match + 2*sd(missing_match)), equals(TRUE))
-  expect_that((mean_missing_match > expected_mean_match - 2*sd(missing_match)), equals(TRUE) )
-  expect_that((mean_missing_nomatch < expected_mean_nomatch + 2*sd(missing_nomatch)), equals(TRUE))
-  expect_that((mean_missing_nomatch > expected_mean_nomatch - 2*sd(missing_nomatch)), equals(TRUE)) 
+  missing_match <- bitwise.dist(z,missing_match=TRUE,mat=TRUE)
+  dim(missing_match) <- NULL
+  expected_match <- c(0.0, 1.0, 0.1, 0.0, 0.0, 1.0, 0.0, 0.9, 1.0, 0.1, 0.1, 0.9, 0.0, 0.1, 0.0, 0.0, 1.0, 0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0)
+  missing_nomatch <- bitwise.dist(z,missing_match=FALSE,mat=TRUE)
+  dim(missing_nomatch) <- NULL
+  expected_nomatch <- c(0.0, 1.0, 0.1, 0.0, 0.9, 1.0, 0.0, 0.9, 1.0, 1.0, 0.1, 0.9, 0.0, 0.1, 0.9, 0.0, 1.0, 0.1, 0.0, 0.9, 0.9, 1.0, 0.9, 0.9, 0.0)
+  expect_that(missing_match, is_equivalent_to(expected_match))
+  expect_that(missing_nomatch, is_equivalent_to(expected_nomatch))
  })

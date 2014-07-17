@@ -48,11 +48,12 @@
 //  All genotypes have the same number of SNPs available.
 //  All SNPs are diploid.
 
+// TODO: Add support of non-diploids
 // TODO: Write more R functions that make use of the data this spits out
 
 struct zygosity
 {
-  char c1;  // A 32 bit fragment of one chromosome
+  char c1;  // A 32 bit fragment of one chromosome  
   char c2;  // The corresponding fragment from the outer chromosome
 
   char cx;  // Heterozygous sites are indicated by 1's
@@ -60,7 +61,18 @@ struct zygosity
   char cn;  // Homozygous recessive sites are indicated by 1's
 };
 
+struct locus
+{
+  int d;  // Number of dominant alleles found at this locus across genotypes
+  int r;  // Number of recessive alleles found at this locus across genotypes
+  int h;  // Number of genotypes that are heterozygous at this locus
+  int n;  // Number of genotypes that contributed data to this struct  
 
+};
+
+SEXP bitwise_distance(SEXP genlight, SEXP missing);
+SEXP bitwise_frequency(SEXP genlight);
+void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
 char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
 int get_zeros(char sim_set);
@@ -177,7 +189,7 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
         while(next_missing_index_i < nap1_length && next_missing_i < (k+1)*8 && next_missing_i >= (k*8) )
         {
           // Handle missing bit in both chromosomes and both samples with mask
-          mask = 1 << (next_missing_i%8); // -1 to compensate for Rs 1 based indexing         
+          mask = 1 << (next_missing_i%8); 
           if(missing_match)
           {
             tmp_sim_set |= mask; // Force the missing bit to match
@@ -232,6 +244,125 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
   UNPROTECT(4); 
   return R_out;
 }
+
+
+SEXP bitwise_frequency(SEXP genlight)
+{
+  SEXP R_out;
+
+  
+
+  UNPROTECT(1);
+  
+}
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Fills an array of struct locus objects based on allelic frequencies found in
+the provided genlight object.
+
+Input: A pointer to an array of locus objects to be filled.
+        NOTE: This array MUST have a length equal to the number of loci found
+        in each genotype in the genlight object.
+       A genlight object from which the alleles and loci can be gathered.
+Output: None. Fills in the allelic frequencies and other information found in
+        each locus struct.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+void fill_loci(struct locus *loc, SEXP genlight)
+{ 
+  // ~Pseudo code~
+  // for each genotype in genlight
+    // for each locus group in genotype
+      // zyg.c1 = locus[0]
+      // zyg.c2 = locus[1]
+      // fill_zygosity(&zyg) // Find zygosity at each site in locus
+      // for each bit in locus group 
+        // if not missing
+          // // Exactly one of the next three lines will add 1 (or 2) to its respective counter
+            // Add 1 to h if this is a heterozygous site
+          // loc[locus*8+bit].h += (zyg.cx & (1<<bit)) >> bit // Or is that 1 << 7-bit ?
+            // Add 1 to dominant if this is heterozygous or 2 if this is homozygous dominant
+          // loc[locus*8+bit].d += ((zyg.cx & (1<<bit)) >> bit) + 2 * (zyg.ca & (1<<bit)) 
+            // Add 1 to recessive if this is heterozygous or 2 if this is homozygous recessive
+          // loc[locus*8+bit].r += ((zyg.cx & (1<<bit)) >> bit) + 2 * (zyg.cn & (1<<bit)) 
+            // Add 1 to the number of contributing genotypes regardless of what else was added
+          // loc[locus*8+bit].n += 1
+
+  struct zygosity zyg;
+  SEXP R_gen_symbol;
+  SEXP R_chr_symbol;  
+  SEXP R_nap_symbol;
+  SEXP R_gen;
+  int num_gens;
+  SEXP R_chr1_1;
+  SEXP R_chr1_2;
+  SEXP R_nap1;
+  int nap1_length;
+  int chr_length;
+  int next_missing_index_i;
+  int next_missing_i;
+  int i;
+  int bit;
+  int locus;
+
+  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
+  PROTECT(R_chr_symbol = install("snp"));
+  PROTECT(R_nap_symbol = install("NA.posi"));  
+
+  // This will be a LIST of type LIST:RAW
+  R_gen = getAttrib(genlight, R_gen_symbol);
+  num_gens = XLENGTH(R_gen);
+  
+  next_missing_index_i = 0;
+  next_missing_i = 0;
+  nap1_length = 0;
+  chr_length = 0;
+
+  // Loop through every genotype 
+  for(i = 0; i < num_gens; i++)
+  {
+    R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
+    R_chr1_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1); // Chromosome 2
+    chr_length = XLENGTH(R_chr1_1);
+    R_nap1 = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
+    nap1_length = XLENGTH(R_nap1);
+    next_missing_index_i = 0;
+    next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+    // Loop through all the chunks of SNPs in this genotype
+    for(locus = 0; locus < chr_length; locus++) 
+    {
+      zyg.c1 = (char)RAW(R_chr1_1)[locus];
+      zyg.c2 = (char)RAW(R_chr1_2)[locus];
+      fill_zygosity(&zyg);
+      
+      // TODO: Find a way to parallelize either here or the locus loop.
+      //       Unfortunately, next_missing_i complicates this.
+      for(bit = 0; bit < 8; bit++)
+      {
+        // if not missing
+        if(next_missing_i != locus*8+bit)
+        { 
+          // Exactly one of the next three lines will add 1 (or 2) to its respective counter
+          loc[locus*8+bit].h += (zyg.cx & (1<<bit)) >> bit; // Or is that 1 << 7-bit ?
+          loc[locus*8+bit].d += ((zyg.cx & (1<<bit)) >> bit) + 2 * (zyg.ca & (1<<bit)); 
+          loc[locus*8+bit].r += ((zyg.cx & (1<<bit)) >> bit) + 2 * (zyg.cn & (1<<bit)); 
+          loc[locus*8+bit].n += 1;
+        }
+        else
+        {
+          if(next_missing_index_i < nap1_length-1)
+          {
+            next_missing_index_i++;
+            next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+          }
+        }
+      }
+    }
+  } 
+
+  UNPROTECT(3);
+}
+
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the zygosity at each location of a given section. The zygosity struct
@@ -292,7 +423,6 @@ int get_zeros(char sim_set)
 {
   int zeros = 0;
   int tmp_set = sim_set;
-  // TODO: Standardize the number of bits used in everything to get rid of this magic number
   int digits = 8; //sizeof(char);
   int i;
 
