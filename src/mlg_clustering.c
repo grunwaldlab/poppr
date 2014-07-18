@@ -83,6 +83,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   int* out_vector; // A copy of Rout for internal use
   double* dist_ij; // Variables to store distances inside loops
   double* dist_ji;
+  int thread_id;
+  int num_threads;
   char algo;  // Used for storing the first letter of algorithm
 
   SEXP Rout;
@@ -131,24 +133,28 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
 
 
   #pragma omp parallel \
-      shared(num_individuals,num_mlgs)
+      shared(num_threads)
   {
     #pragma omp single
     {
-      private_distance_matrix = R_Calloc(omp_get_num_threads(), double**);
-    }
-    // All threads execute this loop
-    private_distance_matrix[omp_get_thread_num()] = R_Calloc(num_mlgs, double*);
-    for(int i = 0; i < num_mlgs; i++)
-    {
-      private_distance_matrix[omp_get_thread_num()][i] = R_Calloc(num_individuals, double);
-      for(int j = 0; j < num_individuals; j++)
-      {
-        private_distance_matrix[omp_get_thread_num()][i][j] = -1.0;
-      }
+      num_threads = omp_get_num_threads();
     }
   } // End parallel
 
+  private_distance_matrix = R_Calloc(num_threads, double**);
+  for(int i = 0; i < num_threads; i++)
+  {
+    private_distance_matrix[i] = R_Calloc(num_mlgs, double*);
+    for(int j = 0; j < num_mlgs; j++)
+    {
+      private_distance_matrix[i][j] = R_Calloc(num_individuals, double);
+      for(int k = 0; k < num_individuals; k++)
+      {
+        private_distance_matrix[i][j][k] = -1.0;
+      }
+    }
+  }
+  
   // Fill initial clustering matrix via mlg
   // Steps through mlg.
   // Adds the index of each individual to cluster_matrix
@@ -183,9 +189,10 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
     closest_pair[0] = -1;
     closest_pair[1] = -1;
     // Fill the distance matrix with the new distances between each cluster
-    #pragma omp parallel private(dist_ij, dist_ji) \
-      shared(out_vector,dist,thresh,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix)
+    #pragma omp parallel private(dist_ij, dist_ji, thread_id) \
+      shared(out_vector,dist,thresh,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix,num_threads)
     {
+      thread_id = omp_get_thread_num();
       for(int i = 0; i < num_individuals; i++)
       {
         // Parallel statistics for H3N2 data set
@@ -199,14 +206,14 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
         //#pragma omp parallel for schedule(guided) \
         //  shared(dist,out_vector,private_distance_matrix,cluster_size,algo) \
         //  private(dist_ij,dist_ji)
-        if(omp_get_thread_num() == out_vector[i] % omp_get_num_threads())
+        if(thread_id == out_vector[i] % num_threads)
         {
           for(int j = i+1; j < num_individuals; j++)
           {
             if(out_vector[i] != out_vector[j])
             {
-              dist_ij = &(private_distance_matrix[omp_get_thread_num()][out_vector[i]][out_vector[j]]);
-              dist_ji = &(private_distance_matrix[omp_get_thread_num()][out_vector[j]][out_vector[i]]);
+              dist_ij = &(private_distance_matrix[thread_id][out_vector[i]][out_vector[j]]);
+              dist_ji = &(private_distance_matrix[thread_id][out_vector[j]][out_vector[i]]);
               if(ISNA(REAL(dist)[i*num_individuals + j]) || ISNAN(REAL(dist)[i*num_individuals + j]) 
                 || !R_FINITE(REAL(dist)[i*num_individuals + j]))
               {
@@ -256,35 +263,35 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
           {
             if(algo=='n')
             { // Min every element with this thread's distances
-              if(private_distance_matrix[omp_get_thread_num()][i][j] > -0.5)
+              if(private_distance_matrix[thread_id][i][j] > -0.5)
               {
                 if(cluster_distance_matrix[i][j] < -0.5)
                 {
-                  cluster_distance_matrix[i][j] = private_distance_matrix[omp_get_thread_num()][i][j];
+                  cluster_distance_matrix[i][j] = private_distance_matrix[thread_id][i][j];
                 }
                 else
                 { // Set the value to the min of the stored value and this thread's value
-                  cluster_distance_matrix[i][j] = (private_distance_matrix[omp_get_thread_num()][i][j] < cluster_distance_matrix[i][j]) ? (private_distance_matrix[omp_get_thread_num()][i][j]) : (cluster_distance_matrix[i][j]);
+                  cluster_distance_matrix[i][j] = (private_distance_matrix[thread_id][i][j] < cluster_distance_matrix[i][j]) ? (private_distance_matrix[thread_id][i][j]) : (cluster_distance_matrix[i][j]);
                 }
               }
             }
             else if(algo=='a')
             {
-              if(private_distance_matrix[omp_get_thread_num()][i][j] > -0.5)
+              if(private_distance_matrix[thread_id][i][j] > -0.5)
               {
                 if(cluster_distance_matrix[i][j] < -0.5)
                 {
-                  cluster_distance_matrix[i][j] = private_distance_matrix[omp_get_thread_num()][i][j];
+                  cluster_distance_matrix[i][j] = private_distance_matrix[thread_id][i][j];
                 }
                 else
                 {
-                  cluster_distance_matrix[i][j] += private_distance_matrix[omp_get_thread_num()][i][j];
+                  cluster_distance_matrix[i][j] += private_distance_matrix[thread_id][i][j];
                 }
               }
             }
             else // Or algo=='f'
             { // Max every element with this thread's distances
-              cluster_distance_matrix[i][j] = (private_distance_matrix[omp_get_thread_num()][i][j] > cluster_distance_matrix[i][j]) ? (private_distance_matrix[omp_get_thread_num()][i][j]) : (cluster_distance_matrix[i][j]);
+              cluster_distance_matrix[i][j] = (private_distance_matrix[thread_id][i][j] > cluster_distance_matrix[i][j]) ? (private_distance_matrix[thread_id][i][j]) : (cluster_distance_matrix[i][j]);
             }
           }
         }
@@ -341,14 +348,14 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
     INTEGER(Rout)[i] = out_vector[i]+1;
   }
 
-  #pragma omp parallel shared(num_mlgs)
+  for(int i = 0; i < num_threads; i++)
   {
-    for(int i = 0; i < num_mlgs; i++)
+    for(int j = 0; j < num_mlgs; j++)
     {
-      R_Free(private_distance_matrix[omp_get_thread_num()][i]);
+      R_Free(private_distance_matrix[i][j]);
     }
-    R_Free(private_distance_matrix[omp_get_thread_num()]);
-  } // End parallel
+    R_Free(private_distance_matrix[i]);
+  }
   R_Free(private_distance_matrix);
   // Free memory allocated for the various arrays and matrices
   for(int i = 0; i < num_mlgs; i++)
