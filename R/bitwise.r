@@ -64,13 +64,20 @@
 #' by missing data in a location should be counted as matching at that location.
 #' Default set to \code{TRUE}, which forces missing data to match with anything. 
 #' \code{FALSE} forces missing data to not match with any other information. 
+#'
+#' @param threads The maximum number of parallel threads to be used within this
+#'   function. A value of 0 (default) will attempt to use as many threads as there
+#'   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
+#'   the function to run serially, which may increase stability on some systems.
+#'   Other values may be specified, but should be used with caution.
+#'
 #' 
 #' @return Pairwise distances between individuals present in the genlight object.
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
 #==============================================================================#
-bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE){
+bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads=0){
   stopifnot(class(x)[1] == "genlight")
   stopifnot(ploidy(x) == 2)
   ploid     <- 2
@@ -78,7 +85,16 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE){
   inds      <- nInd(x)
   numPairs   <- nLoc(x)
 
-  pairwise_dist <- .Call("bitwise_distance", x, missing_match)
+  # Threads must be something that can cast to integer
+  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  {
+    stop("Threads must be a non-negative numeric or integer value")
+  }
+
+  # Cast parameters to proper types before passing them to C
+  threads <- as.integer(threads)
+
+  pairwise_dist <- .Call("bitwise_distance", x, missing_match, threads)
   
   dist.mat <- pairwise_dist
   dim(dist.mat) <- c(inds,inds)

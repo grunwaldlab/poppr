@@ -15,7 +15,8 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 mlg.vector(pop)
 
 mlg.filter(pop, threshold = 0, missing = "mean", memory = FALSE,
-  algorithm = "farthest_neighbor", distance = "nei.dist", ...)
+  algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
+  ...)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -73,6 +74,12 @@ every pair of points between clusters.}
 to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing
 distances between individuals (such as the output of \code{\link{nei.dist}})
 is also accepted for this parameter.}
+
+\item{threads}{The maximum number of parallel threads to be used within this
+function. A value of 0 (default) will attempt to use as many threads as there
+are available cores/CPUs. In most cases this is ideal. A value of 1 will force
+the function to run serially, which may increase stability on some systems.
+Other values may be specified, but should be used with caution.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }

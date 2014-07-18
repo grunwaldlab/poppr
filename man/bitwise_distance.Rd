@@ -4,7 +4,8 @@
 \title{Calculate a distance matrix comparing samples based on the number of alleles
 that differ in zygosity.}
 \usage{
-bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE)
+bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
+  threads = 0)
 }
 \arguments{
 \item{x}{a genlight object.}
@@ -20,6 +21,12 @@ as integers from 1 to n where n is the number of loci.}
 by missing data in a location should be counted as matching at that location.
 Default set to \code{TRUE}, which forces missing data to match with anything.
 \code{FALSE} forces missing data to not match with any other information.}
+
+\item{threads}{The maximum number of parallel threads to be used within this
+  function. A value of 0 (default) will attempt to use as many threads as there
+  are available cores/CPUs. In most cases this is ideal. A value of 1 will force
+  the function to run serially, which may increase stability on some systems.
+  Other values may be specified, but should be used with caution.}
 }
 \value{
 Pairwise distances between individuals present in the genlight object.

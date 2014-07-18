@@ -70,7 +70,7 @@ struct locus
 
 };
 
-SEXP bitwise_distance(SEXP genlight, SEXP missing);
+SEXP bitwise_distance(SEXP genlight, SEXP missing, SEXP requested_threads);
 void fill_Pgen(double *pgen, struct locus *loc, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
@@ -87,7 +87,7 @@ Input: A genlight object containing samples of diploids.
 Output: A distance matrix representing the number of differences in zygosity
         between each sample.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP bitwise_distance(SEXP genlight, SEXP missing)
+SEXP bitwise_distance(SEXP genlight, SEXP missing, SEXP requested_threads)
 {
   SEXP R_out;
   SEXP R_gen_symbol;
@@ -109,6 +109,7 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
   int next_missing_i;
   int next_missing_j;
   int missing_match;
+  int num_threads;
   char mask;
   struct zygosity set_1;
   struct zygosity set_2;
@@ -135,6 +136,18 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
   {
     distance_matrix[i] = R_Calloc(num_gens,int);
   }
+
+  // Set the number of threads to be used in each omp parallel region
+  if(INTEGER(requested_threads)[0] == 0)
+  {
+    num_threads = omp_get_max_threads();
+  }
+  else
+  {
+    num_threads = INTEGER(requested_threads)[0];
+  }
+  omp_set_num_threads(num_threads);
+
 
   next_missing_index_i = 0;
   next_missing_index_j = 0;

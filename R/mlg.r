@@ -341,6 +341,11 @@ mlg.vector <- function(pop){
 #'   to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing
 #'   distances between individuals (such as the output of \code{\link{nei.dist}})
 #'   is also accepted for this parameter.
+#' @param threads The maximum number of parallel threads to be used within this
+#'   function. A value of 0 (default) will attempt to use as many threads as there
+#'   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
+#'   the function to run serially, which may increase stability on some systems.
+#'   Other values may be specified, but should be used with caution.
 #' @param ... any parameters to be passed off to the distance method.
 #' 
 #' @return a numeric vector naming the multilocus genotype of each individual in
@@ -354,7 +359,7 @@ mlg.vector <- function(pop){
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", distance="nei.dist", ...){
+mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", distance="nei.dist", threads=0, ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
@@ -409,6 +414,11 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   {
     stop("Threshold must be a numeric or integer value")
   } 
+    # Threads must be something that can cast to integer
+  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  {
+    stop("Threads must be a non-negative numeric or integer value")
+  } 
 
   # Cast parameters to proper types before passing them to C
   dis_dim <- dim(dis)
@@ -416,13 +426,14 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   dim(dis) <- dis_dim # Turn it back into a matrix
   threshold <- as.numeric(threshold)
   algo <- tolower(as.character(algorithm))
+  threads <- as.integer(threads)
   if(!isTRUE(all.equal(basemlg,as.integer(basemlg))))
   {
     warning("MLG contains non-integer values. MLGs differing only in decimal values will be merged.")
   }
   basemlg <- as.integer(basemlg)
   
-  resultvec <- .Call("neighbor_clustering", dis, basemlg, threshold, algo) 
+  resultvec <- .Call("neighbor_clustering", dis, basemlg, threshold, algo, threads) 
   
   return(resultvec)
 }

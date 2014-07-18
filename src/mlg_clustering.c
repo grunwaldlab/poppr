@@ -44,7 +44,7 @@
 #include <stdlib.h>
 #include <omp.h>
 
-SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
+SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads)
 {
   // This function uses various clustering algorithms to
   // condense a set of multilocus genotypes into a potentially smaller
@@ -131,15 +131,16 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm)
   // Allocate memory for storing cluster assignments
   out_vector = R_Calloc(num_individuals, int);
 
-
-  #pragma omp parallel \
-      shared(num_threads)
+  // Set the number of threads to be used in each omp parallel region
+  if(INTEGER(requested_threads)[0] == 0)
   {
-    #pragma omp single
-    {
-      num_threads = omp_get_num_threads();
-    }
-  } // End parallel
+    num_threads = omp_get_max_threads();
+  }
+  else
+  {
+    num_threads = INTEGER(requested_threads)[0];
+  }
+  omp_set_num_threads(num_threads);
 
   private_distance_matrix = R_Calloc(num_threads, double**);
   for(int i = 0; i < num_threads; i++)
