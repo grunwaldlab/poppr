@@ -93,7 +93,7 @@ NULL
 #'   Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha
 #'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen
 #'   \emph{Phytophthora infestans} originated in central Mexico rather than the Andes."
-#'   Proceedings of the National Academy of Sciences (2014): 201401884.
+#'   Proceedings of the National Academy of Sciences 111:8791–8796.
 #==============================================================================#
 NULL
 #==============================================================================#
@@ -117,7 +117,7 @@ NULL
 #'   "Symptom"
 #' @references SE Everhart, H Scherm, (2014) Fine-scale genetic structure of 
 #'   \emph{Monilinia fructicola} during brown rot epidemics within individual peach 
-#'   tree canopies. Phytopathology ## (#) submitted
+#'   tree canopies. Phytopathology, submitted
 #' @examples
 #' data(monpop)
 #' splithierarchy(monpop) <- ~Tree/Year/Symptom

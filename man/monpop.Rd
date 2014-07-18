@@ -30,6 +30,6 @@ monpop
 \references{
 SE Everhart, H Scherm, (2014) Fine-scale genetic structure of
   \emph{Monilinia fructicola} during brown rot epidemics within individual peach
-  tree canopies. Phytopathology ## (#) submitted
+  tree canopies. Phytopathology, submitted
 }
 

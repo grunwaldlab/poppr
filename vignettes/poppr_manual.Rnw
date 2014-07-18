@@ -192,8 +192,17 @@ requests, proofreading, data contribution, and moral support throught the writin
 of this package and manual. Thanks also to Brian Knaus, Ignazio Carbone, David Cooke,
 Corine Schoebel, Jane Stewart, and Zaid Abdo for beta testing and feedback. 
 
-Two new data sets in \poppr{} were provided by Erica Goss (\texttt{Pinf}) and 
-Sydney E. Everhart (\texttt{monpop}).
+The following data sets are included in \poppr{}: \texttt{Pinf} \cite{goss2014irish}, \texttt{monpop} (Sydney E. Everhart, unpublished),
+\texttt{Aeut} \cite{Grunwald:2006}
+
+\subsection{Citation}
+
+To cite \poppr{}, please type:
+
+<<popprcite>>=
+citation(package = "poppr")
+@
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
