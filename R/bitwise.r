@@ -79,8 +79,11 @@
 #==============================================================================#
 bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads=0){
   stopifnot(class(x)[1] == "genlight")
-  stopifnot(ploidy(x) == 2)
-  ploid     <- 2
+  # Stop if the ploidy of the genlight object is not consistent
+  stopifnot(min(ploidy(x)) == max(ploidy(x))) 
+  # Stop if the ploidy of the genlight object is not haploid or diploid
+  stopifnot(min(ploidy(x)) == 2 || min(ploidy(x)) == 1)
+  ploid     <- min(ploidy(x))
   ind.names <- indNames(x)
   inds      <- nInd(x)
   numPairs   <- nLoc(x)
@@ -94,8 +97,14 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
   # Cast parameters to proper types before passing them to C
   threads <- as.integer(threads)
 
-  pairwise_dist <- .Call("bitwise_distance", x, missing_match, threads)
-  
+  if (ploid == 1)
+  {
+    pairwise_dist <- .Call("bitwise_distance_haploid", x, missing_match, threads)
+  }
+  else
+  {
+    pairwise_dist <- .Call("bitwise_distance_diploid", x, missing_match, threads)
+  }
   dist.mat <- pairwise_dist
   dim(dist.mat) <- c(inds,inds)
   colnames(dist.mat)            <- ind.names

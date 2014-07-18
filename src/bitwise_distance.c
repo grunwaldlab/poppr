@@ -70,7 +70,8 @@ struct locus
 
 };
 
-SEXP bitwise_distance(SEXP genlight, SEXP missing, SEXP requested_threads);
+SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
+SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 void fill_Pgen(double *pgen, struct locus *loc, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
@@ -80,6 +81,170 @@ int get_difference(struct zygosity *z1, struct zygosity *z2);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the pairwise differences between samples in a genlight object. The
+distances represent the number of sites between individuals which differ.
+
+Input: A genlight object containing samples of happloids.
+Output: A distance matrix representing the number of differences between each sample.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads)
+{
+  SEXP R_out;
+  SEXP R_gen_symbol;
+  SEXP R_chr_symbol;  
+  SEXP R_nap_symbol;
+  SEXP R_gen;
+  int num_gens;
+  SEXP R_chr1_1;
+  SEXP R_chr2_1;
+  SEXP R_nap1;
+  SEXP R_nap2;
+  int nap1_length;
+  int nap2_length;
+  int chr_length;
+  int next_missing_index_i;
+  int next_missing_index_j;
+  int next_missing_i;
+  int next_missing_j;
+  int missing_match;
+  int num_threads;
+  char mask;
+  int i;
+  int j;
+  int k;
+
+  int** distance_matrix;
+  int cur_distance;
+  char tmp_sim_set;
+
+  
+  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
+  PROTECT(R_chr_symbol = install("snp"));
+  PROTECT(R_nap_symbol = install("NA.posi"));  
+
+  // This will be a LIST of type LIST:RAW
+  R_gen = getAttrib(genlight, R_gen_symbol);
+  num_gens = XLENGTH(R_gen);
+
+  PROTECT(R_out = allocVector(INTSXP, num_gens*num_gens));
+  distance_matrix = R_Calloc(num_gens,int*);
+  for(i = 0; i < num_gens; i++)
+  {
+    distance_matrix[i] = R_Calloc(num_gens,int);
+  }
+
+  // Set the number of threads to be used in each omp parallel region
+  if(INTEGER(requested_threads)[0] == 0)
+  {
+    num_threads = omp_get_max_threads();
+  }
+  else
+  {
+    num_threads = INTEGER(requested_threads)[0];
+  }
+  omp_set_num_threads(num_threads);
+
+
+  next_missing_index_i = 0;
+  next_missing_index_j = 0;
+  next_missing_i = 0;
+  next_missing_j = 0;
+  mask = 0;
+  tmp_sim_set = 0;
+  nap1_length = 0;
+  nap2_length = 0;
+  chr_length = 0;
+  missing_match = asLogical(missing);
+
+  // Loop through every genotype 
+  for(i = 0; i < num_gens; i++)
+  {
+    R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
+    chr_length = XLENGTH(R_chr1_1);
+    R_nap1 = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
+    nap1_length = XLENGTH(R_nap1);
+    // Loop through every other genotype
+    #pragma omp parallel for \
+      private(j,cur_distance,R_chr2_1,R_nap2,next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,\
+              tmp_sim_set, k, mask, nap2_length) \
+      shared(R_nap1, nap1_length, i, distance_matrix)
+    for(j = 0; j < i; j++)
+    {
+      cur_distance = 0;
+      // These will be arrays of type RAW
+      R_chr2_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,j),R_chr_symbol),0); // Chromosome 1
+      R_nap2 = getAttrib(VECTOR_ELT(R_gen,j),R_nap_symbol); // Vector of the indices of missing values
+      nap2_length = XLENGTH(R_nap2);
+      next_missing_index_j = 0; // Next set of chromosomes start back at index 0
+      next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1; //Compensate for Rs 1 based indexing
+      next_missing_index_i = 0;
+      next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+      // Finally, loop through all the chunks of SNPs for these genotypes
+      for(k = 0; k < chr_length; k++) 
+      {
+        // Find the sites where the two individuals differ. 1's for match, 0's for different
+        tmp_sim_set = ~((char)RAW(R_chr1_1)[k] ^ (char)RAW(R_chr2_1)[k]);
+
+        // Check for missing values and force them to match
+        while(next_missing_index_i < nap1_length && next_missing_i < (k+1)*8 && next_missing_i >= (k*8) )
+        {
+          // Handle missing bit in both chromosomes and both samples with mask
+          mask = 1 << (next_missing_i%8); 
+          if(missing_match)
+          {
+            tmp_sim_set |= mask; // Force the missing bit to match
+          }
+          else
+          {
+            tmp_sim_set &= ~mask; // Force the missing bit to not match
+          }
+          next_missing_index_i++; 
+          next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+        }       
+        // Repeat for j
+        while(next_missing_index_j < nap2_length && next_missing_j < (k+1)*8 && next_missing_j >= (k*8))
+        {
+          // Handle missing bit in both chromosomes and both samples with mask
+          mask = 1 << (next_missing_j%8);
+          if(missing_match)
+          {
+            tmp_sim_set |= mask; // Force the missing bit to match
+          }
+          else
+          {
+            tmp_sim_set &= ~mask; // Force the missing bit to not match
+          }
+          next_missing_index_j++;
+          next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
+        }       
+
+        // Add the distance from this word into the total between these two genotypes
+        cur_distance += get_zeros(tmp_sim_set);
+      }
+      // Store the distance between these two genotypes in the distance matrix
+      distance_matrix[i][j] = cur_distance;
+      distance_matrix[j][i] = cur_distance;
+    } // End parallel
+  } 
+
+  // Fill the output matrix
+  for(i = 0; i < num_gens; i++)
+  {
+    for(j = 0; j < num_gens; j++)
+    {
+      INTEGER(R_out)[i*num_gens+j] = distance_matrix[i][j];
+    }
+  }
+
+  for(i = 0; i < num_gens; i++)
+  {
+    R_Free(distance_matrix[i]);
+  }
+  R_Free(distance_matrix);
+  UNPROTECT(4); 
+  return R_out;
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates the pairwise differences between samples in a genlight object. The
 distances represent the number of sites between individuals which differ in 
 zygosity.
 
@@ -87,7 +252,7 @@ Input: A genlight object containing samples of diploids.
 Output: A distance matrix representing the number of differences in zygosity
         between each sample.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP bitwise_distance(SEXP genlight, SEXP missing, SEXP requested_threads)
+SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads)
 {
   SEXP R_out;
   SEXP R_gen_symbol;
