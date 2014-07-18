@@ -71,7 +71,7 @@ struct locus
 };
 
 SEXP bitwise_distance(SEXP genlight, SEXP missing);
-SEXP bitwise_frequency(SEXP genlight);
+void fill_Pgen(double *pgen, struct locus *loc, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
 char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
@@ -246,14 +246,44 @@ SEXP bitwise_distance(SEXP genlight, SEXP missing)
 }
 
 
-SEXP bitwise_frequency(SEXP genlight)
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Fills an array of doubles with the Pgen value associated with each individual
+found in the genlight object. These values represent the probability of each
+individual having been produced via random mating of the population, as estimated
+by the samples present in the genlight object
+
+Input: A pointer to an array of doubles to be filled.
+        NOTE: This array MUST have a length equal to the number of genotypes found
+        in each in the genlight object.
+       A pointer to an array of struct locus objects that hold the values need
+       A genlight object from which the individual genotypes can be obtained.
+Output: None. Fills in the array of doubles with the Pgen value of each individual
+        genotype in the genlight object.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+void fill_Pgen(double *pgen, struct locus *loc, SEXP genlight)
 {
-  SEXP R_out;
 
-  
+  // Note that this may need to be done logarithmically to avoid underflowing the doubles
 
-  UNPROTECT(1);
-  
+  // Allocate memory for the struct array, als
+  // Call fill_loci to get allelic frequency information
+  // for each genotype
+    // set product to 1
+    // set heterozygotes to 0
+    // for each locus group
+      // for each bit in locus group
+        // if genotype is heterozygous at this site
+          // add one to heterzygotes
+          // product *= dominants * recessives / n + -1 * dominants * recessives * ( 1 - h / (2*dominants*recessives))
+        // else the genotype is homozygous dominant
+          // product *= dominants*dominants / n + (dominants/n) * (1 - dominants/n) * ( 1 - h / (2*dominants*recessives))
+        // else the genotype is homozygous recessive
+          // product *= recessives*recessives / n + (recessives/n) * (1 - recessives/n) * ( 1 - h / (2*dominants*recessives))
+    // Copy product into pgen[genotype]
+
+
+  // Free memory allocated for the structs
+
 }
 
 
