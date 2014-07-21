@@ -56,9 +56,9 @@ struct zygosity
   char c1;  // A 32 bit fragment of one chromosome  
   char c2;  // The corresponding fragment from the outer chromosome
 
-  char cx;  // Heterozygous sites are indicated by 1's
-  char ca;  // Homozygous dominant sites are indicated by 1's
-  char cn;  // Homozygous recessive sites are indicated by 1's
+  char ch;  // Heterozygous sites are indicated by 1's
+  char cd;  // Homozygous dominant sites are indicated by 1's
+  char cr;  // Homozygous recessive sites are indicated by 1's
 };
 
 struct locus
@@ -72,7 +72,7 @@ struct locus
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads);
-void fill_Pgen(double *pgen, struct locus *loc, SEXP genlight);
+void fill_Pgen(double *pgen, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
 char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
@@ -423,6 +423,30 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
   return R_out;
 }
 
+// TODO: Erase the following test code
+
+SEXP get_pgen_one(SEXP genlight)
+{
+
+  SEXP R_out;
+  SEXP R_gen_symbol;
+  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
+  double *pgens;
+
+  pgens = R_Calloc( XLENGTH(getAttrib(genlight, R_gen_symbol)), double);
+  PROTECT(R_out = allocVector(REALSXP,1));
+
+  fill_Pgen(pgens,genlight);    
+
+  REAL(R_out)[0] = (pgens[0]);
+
+  R_Free(pgens);
+  UNPROTECT(2);
+  return R_out;
+}
+
+// END: Test code
+
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Fills an array of doubles with the Pgen value associated with each individual
@@ -438,29 +462,108 @@ Input: A pointer to an array of doubles to be filled.
 Output: None. Fills in the array of doubles with the Pgen value of each individual
         genotype in the genlight object.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-void fill_Pgen(double *pgen, struct locus *loc, SEXP genlight)
+void fill_Pgen(double *pgen, SEXP genlight)
 {
 
+  double log_product;
+  int heterozygotes;
+  int num_loci;
+  int num_gens;
+  int chr_length;
+  struct locus* loci; 
+  struct locus* loc;
+  struct zygosity zyg;
+  SEXP R_gen;
+  SEXP R_gen_symbol;
+  SEXP R_chr_symbol;
+  SEXP R_loc_symbol;
+  SEXP R_chr1;
+  SEXP R_chr2;
+
+  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
+  PROTECT(R_loc_symbol = install("n.loc"));
+  PROTECT(R_chr_symbol = install("snp"));
+
+  R_gen = getAttrib(genlight, R_gen_symbol);
+  num_gens = XLENGTH(R_gen);
+  num_loci = INTEGER(getAttrib(genlight, R_loc_symbol))[0];
+  
   // Note that this may need to be done logarithmically to avoid underflowing the doubles
 
-  // Allocate memory for the struct array, als
+  // Allocate memory for the array of locus struct
+  // TODO: Do we want to do this allocation in here, or pass in in as the header says we are?
+  loci = R_Calloc(num_loci,struct locus);
   // Call fill_loci to get allelic frequency information
+  printf("Filling Loci!\n");
+  fill_loci(loci, genlight);
+  printf("Loci Filled!\n");
   // for each genotype
-    // set product to 1
+  for(int i = 0; i < num_gens; i++)
+  {
+    R_chr1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0);
+    R_chr2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1);
+    chr_length = XLENGTH(R_chr1);
+    // set log_product to 0
+    log_product = 0;
     // set heterozygotes to 0
+    heterozygotes = 0;
     // for each locus group
-      // for each bit in locus group
+    printf("Commencing locilic analysis of genotype %d!\n",i);
+    // TODO: only loop through the loci GROUPS not each locus (ie, loci not sites)
+    for(int j = 0; j < chr_length; j++)
+    {
+      printf("Group %d, loci %d through %d of %d, under investigation!!\n",j,j*8,j*8+7,num_loci);
+      // Find zygosity for each site in this locus
+      zyg.c1 = (char)RAW(R_chr1)[j];
+      zyg.c2 = (char)RAW(R_chr2)[j];
+      fill_zygosity(&zyg);
+
+      // pseudo code for the next loop
+      // for each bit in locus
         // if genotype is heterozygous at this site
           // add one to heterzygotes
-          // product *= dominants * recessives / n + -1 * dominants * recessives * ( 1 - h / (2*dominants*recessives))
+          // log_product *= dominants * recessives / n * (h / (2*dominants*recessives))
         // else the genotype is homozygous dominant
-          // product *= dominants*dominants / n + (dominants/n) * (1 - dominants/n) * ( 1 - h / (2*dominants*recessives))
+          // log_product *= dominants*dominants / n^2 * (2 - n*h / (2*dominants*recessives))
         // else the genotype is homozygous recessive
-          // product *= recessives*recessives / n + (recessives/n) * (1 - recessives/n) * ( 1 - h / (2*dominants*recessives))
-    // Copy product into pgen[genotype]
-
+          // log_product *= recessives*recessives / n^2 * (2 - n*h / (2*dominants*recessives))
+      // end for
+  
+      for(int k = 0; k < 8 && j*8+k < num_loci; k++)
+      {
+        loc = &loci[j*8 + k];
+        if(((zyg.ch >> k) & 1) == 1)
+        {
+          // handle each heterozygous site in this locus
+          heterozygotes += 1;
+          log_product += (log(loc->d) + log(loc->r)) - (log(loc->n)) + (log(loc->h)) - (log(2)+log(loc->d)+log(loc->r));
+          printf("Heterozygoat!! Product is now %f!!! %d,%d,%d,%d\n",log_product,loc->d,loc->r,loc->h,loc->n);
+        }
+        else if(((zyg.cd >> k) & 1) == 1)
+        {
+          // handle each homozygous dominant site in this locus
+          log_product += (log(loc->d) + log(loc->d)) - (log(loc->n) + log(loc->n)) + log(2 - loc->n*loc->h / (2*loc->d*loc->r));
+          printf("Dominant goat!! Product is currently %f!!! %d,%d,%d,%d\n",log_product,loc->d,loc->d,loc->h,loc->n);
+        }
+        else if(((zyg.cr >> k) & 1) == 1)
+        {
+          // handle each homozygous recessive site in this locus
+          log_product += (log(loc->r) + log(loc->r)) - (log(loc->n) + log(loc->n)) + log(2 - loc->n*loc->h / (2*loc->d*loc->r));;
+          printf("Recessive goat!! Product is currently %f!!! %d,%d,%d,%d\n",log_product,loc->r,loc->r,loc->h,loc->n);
+        }
+        else
+        {
+          // Error
+          printf("...seriously, what kind of goat /IS/ this?!\n");
+        }
+      }
+    }
+    pgen[i] = exp(log_product + log(pow(2,heterozygotes)));
+  }
 
   // Free memory allocated for the structs
+  R_Free(loci);
+  UNPROTECT(3);
 
 }
 
@@ -488,20 +591,22 @@ void fill_loci(struct locus *loc, SEXP genlight)
         // if not missing
           // // Exactly one of the next three lines will add 1 (or 2) to its respective counter
             // Add 1 to h if this is a heterozygous site
-          // loc[locus*8+bit].h += (zyg.cx & (1<<bit)) >> bit // Or is that 1 << 7-bit ?
+          // loc[locus*8+bit].h += (zyg.ch & (1<<bit)) >> bit // Or is that 1 << 7-bit ?
             // Add 1 to dominant if this is heterozygous or 2 if this is homozygous dominant
-          // loc[locus*8+bit].d += ((zyg.cx & (1<<bit)) >> bit) + 2 * (zyg.ca & (1<<bit)) 
+          // loc[locus*8+bit].d += ((zyg.ch & (1<<bit)) >> bit) + 2 * (zyg.cd & (1<<bit)) 
             // Add 1 to recessive if this is heterozygous or 2 if this is homozygous recessive
-          // loc[locus*8+bit].r += ((zyg.cx & (1<<bit)) >> bit) + 2 * (zyg.cn & (1<<bit)) 
+          // loc[locus*8+bit].r += ((zyg.ch & (1<<bit)) >> bit) + 2 * (zyg.cr & (1<<bit)) 
             // Add 1 to the number of contributing genotypes regardless of what else was added
           // loc[locus*8+bit].n += 1
 
   struct zygosity zyg;
   SEXP R_gen_symbol;
+  SEXP R_loc_symbol;
   SEXP R_chr_symbol;  
   SEXP R_nap_symbol;
   SEXP R_gen;
   int num_gens;
+  int num_loci;
   SEXP R_chr1_1;
   SEXP R_chr1_2;
   SEXP R_nap1;
@@ -511,15 +616,17 @@ void fill_loci(struct locus *loc, SEXP genlight)
   int next_missing_i;
   int i;
   int bit;
-  int locus;
+  int byte;
 
   PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
+  PROTECT(R_loc_symbol = install("n.loc"));
   PROTECT(R_chr_symbol = install("snp"));
   PROTECT(R_nap_symbol = install("NA.posi"));  
 
   // This will be a LIST of type LIST:RAW
   R_gen = getAttrib(genlight, R_gen_symbol);
   num_gens = XLENGTH(R_gen);
+  num_loci = INTEGER(getAttrib(genlight, R_loc_symbol))[0];
   
   next_missing_index_i = 0;
   next_missing_i = 0;
@@ -537,24 +644,24 @@ void fill_loci(struct locus *loc, SEXP genlight)
     next_missing_index_i = 0;
     next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
     // Loop through all the chunks of SNPs in this genotype
-    for(locus = 0; locus < chr_length; locus++) 
+    for(byte = 0; byte < chr_length; byte++) 
     {
-      zyg.c1 = (char)RAW(R_chr1_1)[locus];
-      zyg.c2 = (char)RAW(R_chr1_2)[locus];
+      zyg.c1 = (char)RAW(R_chr1_1)[byte];
+      zyg.c2 = (char)RAW(R_chr1_2)[byte];
       fill_zygosity(&zyg);
       
       // TODO: Find a way to parallelize either here or the locus loop.
       //       Unfortunately, next_missing_i complicates this.
-      for(bit = 0; bit < 8; bit++)
+      for(bit = 0; bit < 8 && byte*8+bit < num_loci; bit++)
       {
         // if not missing
-        if(next_missing_i != locus*8+bit)
+        if(next_missing_i != byte*8+bit)
         { 
           // Exactly one of the next three lines will add 1 (or 2) to its respective counter
-          loc[locus*8+bit].h += (zyg.cx & (1<<bit)) >> bit; // Or is that 1 << 7-bit ?
-          loc[locus*8+bit].d += ((zyg.cx & (1<<bit)) >> bit) + 2 * (zyg.ca & (1<<bit)); 
-          loc[locus*8+bit].r += ((zyg.cx & (1<<bit)) >> bit) + 2 * (zyg.cn & (1<<bit)); 
-          loc[locus*8+bit].n += 1;
+          loc[byte*8+bit].h += (zyg.ch >> bit) & 1;
+          loc[byte*8+bit].d += ((zyg.ch >> bit) & 1) + 2 * ((zyg.cd >> bit) & 1); 
+          loc[byte*8+bit].r += ((zyg.ch >> bit) & 1) + 2 * ((zyg.cr >> bit) & 1); 
+          loc[byte*8+bit].n += 1;
         }
         else
         {
@@ -568,7 +675,7 @@ void fill_loci(struct locus *loc, SEXP genlight)
     }
   } 
 
-  UNPROTECT(3);
+  UNPROTECT(4);
 }
 
 
@@ -577,16 +684,16 @@ Calculates the zygosity at each location of a given section. The zygosity struct
 must have c1 and c2 filled before calling this function.
 
 Input: A zygosity struct pointer with c1 and c2 filled for the given section.
-Output: None. Fills the cx, ca, and cn values in the provided struct to indicate
+Output: None. Fills the ch, cd, and cr values in the provided struct to indicate
         heterozygous, homozygous dominant, and homozygous recessive sites respectively,
         where 1's in each string represent the presence of that zygosity and 0's
         represent a different zygosity.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 void fill_zygosity(struct zygosity *ind)
 {
-  ind->cx = ind->c1 ^ ind->c2;  // Bitwise Exclusive OR provides 1's only at heterozygous sites
-  ind->ca = ind->c1 & ind->c2;  // Bitwise AND provides 1's only at homozygous dominant sites
-  ind->cn = ~(ind->c1 | ind->c2); // Bitwise NOR provides 1's only at homozygous recessive sites
+  ind->ch = ind->c1 ^ ind->c2;  // Bitwise Exclusive OR provides 1's only at heterozygous sites
+  ind->cd = ind->c1 & ind->c2;  // Bitwise AND provides 1's only at homozygous dominant sites
+  ind->cr = ~(ind->c1 | ind->c2); // Bitwise NOR provides 1's only at homozygous recessive sites
 }
 
 
@@ -607,9 +714,9 @@ char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2)
   char sa;  // 1's wherever both are homozygous dominant
   char sn;  // 1's wherever both are homozygous recessive
 
-  sx = ind1->cx & ind2->cx;
-  sa = ind1->ca & ind2->ca;
-  sn = ind1->cn & ind2->cn;
+  sx = ind1->ch & ind2->ch;
+  sa = ind1->cd & ind2->cd;
+  sn = ind1->cr & ind2->cr;
 
   s = sx | sa | sn; // 1's wherever both individuals share the same zygosity  
 
