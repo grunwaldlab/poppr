@@ -539,7 +539,7 @@ Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity \c
 \subsection{Hexp}
 
 This one was cited as Nei's expected heterozygosity, but it has become clear
-that it is not so. The calculation is as follows \cite{Agapow:2001}:
+that it is not so. It was implemented in \poppr{} as it was in \textit{multilocus} \cite{Agapow:2001}. The calculation is as follows:
 
 \begin{equation}
 H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
