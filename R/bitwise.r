@@ -48,8 +48,8 @@
 #' This function does pairwise comparisons between diploid samples in a genlight
 #' object. The number representing the distance between two samples is equal to
 #' the number of alleles in the samples that do not have the same zygosity.
-#' 
-#' @rdname bitwise_distance
+#'
+#' @name bitwise
 #'
 #' @param x a genlight object. 
 #'
@@ -118,3 +118,40 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
   return(dist.mat)
 }
 
+
+
+#==============================================================================#
+#' Calculates and returns a vector of Pgen values for the given genlight object.
+#' Each element represents the probability that the individual at that element
+#' would have been produced via random mating using estimates derived from the
+#' genotypes present in the genlight object.
+#'
+#' @rdname bitwise
+#'
+#' @param x a genlight object. 
+#' 
+#' @param percent a \code{logical} to determine whether the values should be returned
+#'  as percentages or logarithms of percentages. \code{FALSE} is the default, and 
+#'  returns the logarithmic values rather than the percentage values. This option has
+#'  a much larger range and is highly recommended. \code{TRUE} returns the percentage
+#'  chance for each genotype to be produced via random mating, rather than the log
+#'  equivalent.
+#' 
+#' @return A vector containing one Pgen value for each genotype in the genlight object.
+#' @author Zhian N. Kamvar, Jonah Brooks
+#' 
+#' @export
+#==============================================================================#
+bitwise.pgen <- function(x, percent) {
+  stopifnot(class(x)[1] == "genlight")
+
+  pgen_vector <- .Call("get_pgen_vector",x)
+
+  if(percent)
+  {
+    pgen_vector <- exp(pgen_vector)
+  }
+
+  return(pgen_vector);
+
+}

@@ -63,15 +63,16 @@ struct zygosity
 
 struct locus
 {
-  int d;  // Number of dominant alleles found at this locus across genotypes
-  int r;  // Number of recessive alleles found at this locus across genotypes
-  int h;  // Number of genotypes that are heterozygous at this locus
-  int n;  // Number of genotypes that contributed data to this struct  
+  double d;  // Number of dominant alleles found at this locus across genotypes
+  double r;  // Number of recessive alleles found at this locus across genotypes
+  double h;  // Number of genotypes that are heterozygous at this locus
+  double n;  // Number of genotypes that contributed data to this struct  
 
 };
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads);
+SEXP get_pgen_vector(SEXP genlight);
 void fill_Pgen(double *pgen, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
@@ -243,6 +244,7 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
   UNPROTECT(4); 
   return R_out;
 }
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the pairwise differences between samples in a genlight object. The
 distances represent the number of sites between individuals which differ in 
@@ -423,29 +425,36 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
   return R_out;
 }
 
-// TODO: Erase the following test code
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates and returns a vector of Pgen values for the given genlight object.
 
-SEXP get_pgen_one(SEXP genlight)
+Input: A genlight object containing samples of diploids.
+Output: A vector containing the Pgen value of each genotype in the genlight object.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+SEXP get_pgen_vector(SEXP genlight)
 {
 
   SEXP R_out;
   SEXP R_gen_symbol;
   PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
   double *pgens;
+  int num_gens;
 
-  pgens = R_Calloc( XLENGTH(getAttrib(genlight, R_gen_symbol)), double);
-  PROTECT(R_out = allocVector(REALSXP,1));
+  num_gens = XLENGTH(getAttrib(genlight, R_gen_symbol));
+  pgens = R_Calloc(num_gens, double);
+  PROTECT(R_out = allocVector(REALSXP,num_gens));
 
   fill_Pgen(pgens,genlight);    
 
-  REAL(R_out)[0] = (pgens[0]);
+  for(int i = 0; i < num_gens; i++)
+  {
+    REAL(R_out)[i] = (pgens[i]);
+  }
 
   R_Free(pgens);
   UNPROTECT(2);
   return R_out;
 }
-
-// END: Test code
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -459,8 +468,8 @@ Input: A pointer to an array of doubles to be filled.
         in each in the genlight object.
        A pointer to an array of struct locus objects that hold the values need
        A genlight object from which the individual genotypes can be obtained.
-Output: None. Fills in the array of doubles with the Pgen value of each individual
-        genotype in the genlight object.
+Output: None. Fills in the array of doubles with the log of the Pgen value of each 
+        individual genotype in the genlight object.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 void fill_Pgen(double *pgen, SEXP genlight)
 {
@@ -494,9 +503,7 @@ void fill_Pgen(double *pgen, SEXP genlight)
   // TODO: Do we want to do this allocation in here, or pass in in as the header says we are?
   loci = R_Calloc(num_loci,struct locus);
   // Call fill_loci to get allelic frequency information
-  printf("Filling Loci!\n");
   fill_loci(loci, genlight);
-  printf("Loci Filled!\n");
   // for each genotype
   for(int i = 0; i < num_gens; i++)
   {
@@ -508,11 +515,9 @@ void fill_Pgen(double *pgen, SEXP genlight)
     // set heterozygotes to 0
     heterozygotes = 0;
     // for each locus group
-    printf("Commencing locilic analysis of genotype %d!\n",i);
     // TODO: only loop through the loci GROUPS not each locus (ie, loci not sites)
     for(int j = 0; j < chr_length; j++)
     {
-      printf("Group %d, loci %d through %d of %d, under investigation!!\n",j,j*8,j*8+7,num_loci);
       // Find zygosity for each site in this locus
       zyg.c1 = (char)RAW(R_chr1)[j];
       zyg.c2 = (char)RAW(R_chr2)[j];
@@ -522,11 +527,14 @@ void fill_Pgen(double *pgen, SEXP genlight)
       // for each bit in locus
         // if genotype is heterozygous at this site
           // add one to heterzygotes
-          // log_product *= dominants * recessives / n * (h / (2*dominants*recessives))
+          // product *= dominants * recessives / 4n^2 + (-1*dominants*recessives/4n^2 * (1 - h*4n / (2*dominants*recessives)))
+          // product *= h/2n
         // else the genotype is homozygous dominant
-          // log_product *= dominants*dominants / n^2 * (2 - n*h / (2*dominants*recessives))
+          // product *= dominants*dominants / 4n^2 + ((dominants/2n) * (1 - dominants/2n) * (1 - h*4n / (2*dominants*recessives)))
+          // product *= (rd + dh - 2nh)/(2rn)
         // else the genotype is homozygous recessive
-          // log_product *= recessives*recessives / n^2 * (2 - n*h / (2*dominants*recessives))
+          // product *= recessives*recessives / 4n^2 + ((recessives/2n) * (1 - recessives/2n) * (1 -  h*4n / (2*dominants*recessives)))
+          // product *= (rd + rh - 2nh)/(2dn)
       // end for
   
       for(int k = 0; k < 8 && j*8+k < num_loci; k++)
@@ -536,29 +544,28 @@ void fill_Pgen(double *pgen, SEXP genlight)
         {
           // handle each heterozygous site in this locus
           heterozygotes += 1;
-          log_product += (log(loc->d) + log(loc->r)) - (log(loc->n)) + (log(loc->h)) - (log(2)+log(loc->d)+log(loc->r));
-          printf("Heterozygoat!! Product is now %f!!! %d,%d,%d,%d\n",log_product,loc->d,loc->r,loc->h,loc->n);
+          log_product += log(loc->h) - log(loc->n); // - log(2) + log(2)  // Pgen(f)
+          //log_product += log(loc->d) - log(2*(loc->n)) + log(loc->r) - log(2*(loc->n)) + log(2);  // Pgen
         }
         else if(((zyg.cd >> k) & 1) == 1)
         {
           // handle each homozygous dominant site in this locus
-          log_product += (log(loc->d) + log(loc->d)) - (log(loc->n) + log(loc->n)) + log(2 - loc->n*loc->h / (2*loc->d*loc->r));
-          printf("Dominant goat!! Product is currently %f!!! %d,%d,%d,%d\n",log_product,loc->d,loc->d,loc->h,loc->n);
+          log_product += log( (loc->r)*(loc->d) + (loc->d)*(loc->h) - (2*(loc->n))*(loc->h) ) - log( 2*(loc->r)*(loc->n) ); // Pgen(f)
+          //log_product += log(loc->d) + log(loc->d) - log(2*(loc->n)) - log(2*(loc->n)); // Pgen
         }
         else if(((zyg.cr >> k) & 1) == 1)
         {
           // handle each homozygous recessive site in this locus
-          log_product += (log(loc->r) + log(loc->r)) - (log(loc->n) + log(loc->n)) + log(2 - loc->n*loc->h / (2*loc->d*loc->r));;
-          printf("Recessive goat!! Product is currently %f!!! %d,%d,%d,%d\n",log_product,loc->r,loc->r,loc->h,loc->n);
+          log_product += log( (loc->r)*(loc->d) + (loc->r)*(loc->h) - (2*(loc->n))*(loc->h) ) - log( 2*(loc->d)*(loc->n) ); // Pgen(f)
+          //log_product += log(loc->r) + log(loc->r) - log(2*(loc->n)) - log(2*(loc->n)); // Pgen
         }
         else
         {
           // Error
-          printf("...seriously, what kind of goat /IS/ this?!\n");
         }
       }
     }
-    pgen[i] = exp(log_product + log(pow(2,heterozygotes)));
+    pgen[i] = log_product;
   }
 
   // Free memory allocated for the structs
