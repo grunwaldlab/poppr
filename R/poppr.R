@@ -87,6 +87,7 @@
 #' \item \code{\link{poppr}} - Returns a diversity table by population
 #' \item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
 #' \item \code{\link{private_alleles}} - Tabulates the occurences of alleles that only occur in one population.
+#' \item \code{\link{locus_table}} - Creates a table of summary statistics per locus.
 #' }
 #' @section Visulalization:
 #' \itemize{

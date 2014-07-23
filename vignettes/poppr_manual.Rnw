@@ -4688,6 +4688,7 @@ to its definition and description.
 \texttt{poppr} & Returns a diversity table by population \\
 \texttt{poppr.all} & Returns a diversity table by population for all compatible files specified \\
 \texttt{private\_alleles} & Tabulates the occurrences of alleles that only occur in one population\\
+\texttt{locus\_table} & Creates a table of summary statistics per locus\\
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Visualization}}\\
 \texttt{plot\_poppr\_msn} & Plots minimum spanning networks produced in poppr with\\
