@@ -310,8 +310,8 @@ Bruvo & \texttt{bruvo.dist} & Stepwise Mutation & No & \cite{Bruvo:2004}\\
 
 Note: if comparing individuals in \poppr{}, those that do not share any alleles
 normally receive a distance of $\infty$. As you cannot draw a dendrogram with 
-infinite branch lengths, these are converted to an order of magnitude higher
-distance than the largest observed less than $\infty$.
+infinite branch lengths, infinite values are converted to a value that is equal
+to an order of magnitude greater than the largest finite value.
 
 \subsubsection{Edwards' angular distance}
 \label{distance:edwards}
