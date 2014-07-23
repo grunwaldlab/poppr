@@ -515,20 +515,22 @@ matrix, \poppr{} calculates the distance matrix as the number of differing sites
 between two genotypes using equation \ref{eq:ia_D}. This is equivalent to
 Provesti's distance multiplied by the ploidy and number of loci. This is also
 equivalent to Kronecker's delta as presented in \cite{excoffier1992analysis}. It
-should also be mentioned that at this moment, it is not possible to calculate
-AMOVA on polyploid data.
+should also be mentioned that \textbf{at this moment, it is not possible to calculate
+AMOVA on polyploid data.}
 
 \section{Genotypic Diversity}
 
 Many of the calculations of genotypic diversity exist within the package \textit{vegan} in the \texttt{diversity}
-function. Descriptions of most of the calculations can be found in the paper by Gr\"unwald et al \cite{Grunwald:2003}.
+function. Descriptions of most calculations can be found in the paper by Gr\"unwald et al \cite{Grunwald:2003}.
 
-\subsection{Rarefaction, Shannon - Wiener, Stoddart and Taylor indices}
+\subsection{Rarefaction, Shannon-Wiener, Stoddart and Taylor indices}
 
 Stoddart and Taylor's index is also known as Inverse Simpson's index.
 A detailed description of these can be found in the ``Diversity'' vignette in \textit{vegan}. You can access it by typing \texttt{vignette("diversity-vegan")}
 
 \subsection{Evenness ($E_{5}$)}
+Evenness ($E_{5}$) is essentially the ratio of the number of abundant genotypes to the number of rarer genotypes.
+
 This is simply calculated as 
 
 \begin{equation}
@@ -539,16 +541,14 @@ Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity \c
 
 \subsection{Hexp}
 
-This one was cited as Nei's expected heterozygosity, but it has become clear
-that it is not so. It was implemented in \poppr{} as it was in \textit{multilocus} \cite{Agapow:2001}. The calculation is as follows:
+Essentially, $H_{exp}$ is an analog of Nei's expected heterozygosity and is equivalent to an unbiased estimator for Simpson's index. It was implemented in \poppr{} as it was previously in \textit{multilocus} \cite{Agapow:2001}. The calculation is as follows:
 
 \begin{equation}
 H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
 \end{equation}
 \noindent
 Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
-genotypes observed and $N$ is the sample size. Essentially, it's an unbiased
-estimator for the Simpson index.
+genotypes observed and $N$ is the sample size. 
 
 \bibliographystyle{pnas.bst}
 \bibliography{poppr_man}
