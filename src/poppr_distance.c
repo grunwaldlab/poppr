@@ -442,9 +442,21 @@ polysat_bruvo() == poppr_bruvo()
 ==============================================================================*/
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
-	int i, j, counter = 0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
-		add_indicator = *add, genos[2][p], zerocatch[2], zero_ind[2][p],
-		zerodiff;
+	int i;
+	int j;
+	int counter = 0;
+	int n = 2;
+	int p = *nall;
+	int w = *woo;
+	int loss_indicator = *loss;
+	int add_indicator = *add;
+	int genos[2][p];
+	int zerocatch[2];
+	int zero_ind[2][p];
+	int zerodiff;
+	// int i, j, counter = 0, n = 2, p = *nall, w = *woo, loss_indicator = *loss, 
+	// 	add_indicator = *add, genos[2][p], zerocatch[2], zero_ind[2][p],
+	// 	zerodiff;
 	double dist[p][p], da, minn = 100, *distp;
 	// reconstruct the genotype table.
 	zerocatch[0] = 0;
