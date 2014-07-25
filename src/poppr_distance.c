@@ -451,8 +451,9 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	int loss_indicator = *loss; // 1 if the genome loss model should be used
 	int add_indicator = *add;   // 1 if the genome addition model should be used
 
-	int genos[2][p];    // array to store the genotypes
-	
+	int *genos;    // array to store the genotypes
+	genos = R_Calloc(2*p, int);
+
 	int zerocatch[2]; 	// 2 element array to store the number of missing 
 					  	// alleles in each genotype. 
 	
@@ -485,7 +486,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 				//printf("#");
 				zero_ind[i][zerocatch[i] - 1] = j;
 			}
-			genos[i][j] = in[counter++];
+			genos[i*p + j] = in[counter++];
 			//printf("%d\t", genos[i][j]);
 		}
 		//printf("\n");
@@ -542,13 +543,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 				zero_counter = zerocatch[larger];
 				for (j = 0; j < p; j++)
 				{
-					if (genos[i][j] == 0 && zero_counter > 0)
+					if (genos[i*p + j] == 0 && zero_counter > 0)
 					{
 						zero_counter--;
 					}
 					else
 					{
-						new_geno[counter++] = genos[i][j];
+						new_geno[counter++] = genos[i*p + j];
 					}
 				}
 			}
@@ -602,7 +603,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	{
 		for(i = 0; i < p; i++)
 		{
-			dist[i][j] = 1 - pow(2, -abs(genos[0][i] - genos[1][j]));
+			dist[i][j] = 1 - pow(2, -abs(genos[0*p + i] - genos[1*p + j]));
 		}
 	}
 	// This avoids warning: assignment from incompatible pointer type
@@ -617,7 +618,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int loss_tracker = 0;
 		double genome_add_sum = 0;
 		double genome_loss_sum = 0;
-		genop = (int *) &genos;
+		genop = genos;
 		if (zerocatch[0] > 0) // The rows contain the zero value
 		{
 			miss_ind = 0;
@@ -628,7 +629,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int short_counter = 0;
 		for (i = 0; i < p; i++)
 		{
-			if (genos[miss_ind][i] > 0)
+			if (genos[miss_ind*p + i] > 0)
 			{
 				short_inds[short_counter++] = i;
 			}
@@ -710,6 +711,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int comparison_factor = loss_indicator + add_indicator;
 		return (genome_add_sum + genome_loss_sum)/(p*comparison_factor);
 	}
+	R_Free(genos);
 	return mindist(w, p, perm, distp)/p;
 }
 
