@@ -442,22 +442,29 @@ polysat_bruvo() == poppr_bruvo()
 ==============================================================================*/
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
-	int i;
-	int j;
-	int counter = 0;
-	int n = 2;
-	int p = *nall;
-	int w = *woo;
-	int loss_indicator = *loss;
-	int add_indicator = *add;
-	int genos[2][p];
-	int zerocatch[2];
-	int zero_ind[2][p];
-	int zerodiff;
-	double dist[p][p];
-	double da;
-	double minn = 100;
-	double *distp;
+	int i; 
+	int j; 
+	int counter = 0;    // counter used for building arrays
+	int n = 2;          // number of individuals
+	int p = *nall;      // number of alleles
+	int w = *woo;       // number of permutations = p * p!
+	int loss_indicator = *loss; // 1 if the genome loss model should be used
+	int add_indicator = *add;   // 1 if the genome addition model should be used
+
+	int genos[2][p];    // array to store the genotypes
+	
+	int zerocatch[2]; 	// 2 element array to store the number of missing 
+					  	// alleles in each genotype. 
+	
+	int zero_ind[2][p]; // array to store the indices of the missing data for
+						// each genotype
+	
+	int zerodiff;      	// used to check the amount of missing data different 
+				       	// between the two genotypes
+	
+	double dist[p][p]; 	// array to store the distance
+	double *distp;     	// pointer for the dist array	
+	double minn = 100; 	// The minimum distance 
 
 	// double dist[p][p], da, minn = 100, *distp;
 	// reconstruct the genotype table.
@@ -493,8 +500,14 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	==========================================================================*/
 	if (zerocatch[0] > 0 && zerocatch[1] > 0)
 	{
-		int smaller = 0, larger = 1, reduction = 0, i, j,
-			zero_counter, *perm_array, *new_genop;
+		int smaller = 0;
+		int larger = 1;
+		int reduction = 0; 
+		int i;
+		int j;
+		int zero_counter;
+		int *perm_array;
+		int *new_genop;
 
 		if (zerodiff == 0)
 		{
@@ -542,7 +555,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			new_genop = (int *) &new_geno;
 		
 			minn = test_bruvo_dist(new_genop, &reduction, perm_array, &w, 
-											&loss_indicator, &add_indicator);
+									&loss_indicator, &add_indicator);
 			free(perm_array);
 		}
 
@@ -589,16 +602,21 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	{
 		for(i = 0; i < p; i++)
 		{
-			da = 1 - pow(2, -abs(genos[0][i] - genos[1][j]));
-			dist[i][j] = da;
+			dist[i][j] = 1 - pow(2, -abs(genos[0][i] - genos[1][j]));
 		}
 	}
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *) &dist;
 	if(zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
-		int *genop, ind, miss_ind = 1, z, tracker = 0, loss_tracker = 0;// full_ind = 0;
-		double genome_add_sum = 0, genome_loss_sum = 0;
+		int *genop; // pointer to the genotype array
+		int ind;    // 
+		int miss_ind = 1;
+		int z;
+		int tracker = 0;
+		int loss_tracker = 0;
+		double genome_add_sum = 0;
+		double genome_loss_sum = 0;
 		genop = (int *) &genos;
 		if (zerocatch[0] > 0) // The rows contain the zero value
 		{
@@ -606,7 +624,8 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			//full_ind = 1; 
 		}
 		ind = zero_ind[miss_ind][0];
-		int short_inds[zerocatch[miss_ind]], short_counter = 0;
+		int short_inds[zerocatch[miss_ind]];
+		int short_counter = 0;
 		for (i = 0; i < p; i++)
 		{
 			if (genos[miss_ind][i] > 0)
@@ -650,7 +669,8 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if (add_indicator == 1)
 		{
-			int *pzero_ind, *pshort_inds;
+			int *pzero_ind;
+			int *pshort_inds;
 			pzero_ind = (int *) &zero_ind[miss_ind];
 			pshort_inds = (int *) &short_inds;
 			for (i = 0; i < p - zerocatch[miss_ind]; i++)
@@ -814,7 +834,8 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
 		int *loss_tracker)
 {
-	int i, full_ind;
+	int i; 
+	int full_ind;
 	full_ind = 1 + (0 - miss_ind);
 	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
 		genos[full_ind*nalleles + curr_allele];
@@ -903,8 +924,12 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 
 double mindist(int perms, int alleles, int *perm, double *dist)
 {
-	int i, j, w = perms, p = alleles, counter = 0;
-	double res = 0, minn = 100;
+	int i, j;
+	int w = perms;
+	int p = alleles;
+	int counter = 0;
+	double res = 0;
+	double minn = 100;
 	for(i = 0; i < w; i += p)
 	{
 		for(j = 0; j < p; j++)
