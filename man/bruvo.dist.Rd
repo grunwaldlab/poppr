@@ -63,9 +63,9 @@ Ploidy is irrelevant with respect to calculation of Bruvo's
   \choose 2}\right) = 10}{choose(4+2-1, 2) == 10} calculations.
 
   To reduce the number of calculations and assumptions otherwise, Bruvo's
-  distance will be calculated using the largest observed ploidy. This means
-  that when comparing [69,70,71,0] and [59,60,0,0], they will be treated as
-  triploids.
+  distance will be calculated using the largest observed ploidy in pairwise
+  comparisons. This means that when comparing [69,70,71,0] and [59,60,0,0],
+  they will be treated as triploids.
 }
 \note{
 The result of both \code{add = TRUE} and \code{loss = TRUE} is that the

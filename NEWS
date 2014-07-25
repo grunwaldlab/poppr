@@ -1,4 +1,7 @@
-poppr 1.1.0.99
+poppr 1.1.1.99
+===========
+
+poppr 1.1.0
 ===========
 NEW FEATURES
 * Polyploids with ambiguous genotypes are now supported in poppr. See documentation for `recode_polyploids` for details. 
