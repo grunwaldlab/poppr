@@ -60,71 +60,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		int *tracker);
 		
 		
-		
-SEXP raw_pairdiffs(SEXP mat, SEXP ploidy)
-{
-	char binary_diffs, homozygote;
-	int count, row, col, bitcount, hz, a1, a2, ht;//, derp, i, j, k;
-	//SEXP Rout;
-	SEXP Rdim;
-	//SEXP dvector;
-	//SEXP Dvector;
-	Rdim = getAttrib(mat, R_DimSymbol);
-	row = INTEGER(Rdim)[0];
-	col = INTEGER(Rdim)[1];
-	/*
-	ploidy = coerceVector(ploidy, INTSXP);
-	PROTECT(dvector = allocVector(dvector, col));
-	PROTECT(Dvector = allocVector(Dvector, ((row*(row-1)/2))));
-	//mat = coerceVector(mat, RAWSXP);
-	for(i = 0; i < row - 1; i+ploidy)
-	{
-		for(j = i+ploidy; j < row; j+ploidy)
-		{
-			count = 0;
-			for(k = 0; k < col; k++)
-			{
-				binary_diffs = RAW(mat)[i+col*ploidy+k] ^ RAW(mat)[j+col*ploidy+k];
-				for(bitcount = 7; bitcount >= 0; bitcount--)
-				{
-					dvector[count] += (binary_diffs >> bitcount) & 0x01;
-				}
-				count++;
-			}
-		}
-	}
-*/
 
-	for(count = 0; count < row*col; count++)
-	{
-		if(count < (row*col)-1 && count % 2 == 0)
-		{
-			binary_diffs = RAW(mat)[count] ^ RAW(mat)[count+1];
-			homozygote = RAW(mat)[count] & RAW(mat)[count+1];
-		}
-		else
-		{
-			goto out;
-		}
-		for(bitcount = 7; bitcount >= 0; bitcount--)
-		{
-			//printf("Genotype:\t\t%d\n", (RAW(mat)[count] >> bitcount) & 0x01);
-			if(count < (row*col)-1)
-			{
-				hz = (homozygote >> bitcount) & 0x01;
-				a1 = (RAW(mat)[count] >> bitcount) & 0x01;
-				a2 = (RAW(mat)[count + 1] >> bitcount) & 0x01;
-				ht = (binary_diffs >> bitcount) & 0x01;
-				Rprintf("%d AND %d:\t%d\t\t", a1, a2, hz);
-				Rprintf("%d XOR %d:\t%d\t\t", a1, a2, ht);
-				Rprintf("RESULT:\t%d\n", hz+ht);						
-			}
-		}
-		out:
-		Rprintf("\n");
-	}
-	return R_NilValue;
-}
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the root product of pairwise comparisons of each of the variances of
 each locus.
