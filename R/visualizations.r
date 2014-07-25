@@ -168,7 +168,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
                        data = infodata[infodata[["Index"]] == Indexfac[2], ], 
                        position="identity",
                        binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))/30) + 
-        geom_rug() + 
+        geom_rug(alpha = 0.5) + #theme(legend.position = "none") + 
         # The label for the observed line is a bit more difficult to code as
         # it has the ability to appear anywhere on the chart. Here, I'm
         # forcing it to flip to one side or the other based on which side of
@@ -201,7 +201,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
                        data = infodata[infodata[["Index"]] == Indexfac[2], ], 
                        position="identity",
                        binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))/30) + 
-        geom_rug() + 
+        geom_rug(alpha = 0.5) + #theme(legend.position = "none") + 
         # Positioning the observed line and labeling it.
         geom_vline(aes_string(xintercept = "Observed"), data = obsdata, color="blue", 
                    show_guide=TRUE, linetype="dashed") +
@@ -238,65 +238,68 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' matrix.
 #'
 #' @param pop a \code{\link{genind}} object
-#'
+#'   
 #' @param distmat a distance matrix that has been derived from your data set.
-#' 
-#' @param palette a \code{function} defining the color palette to be used to
-#' color the populations on the graph. It defaults to \code{\link{topo.colors}},
-#' but you can easily create new schemes by using \code{\link{colorRampPalette}}
-#' (see examples for details)
-#' 
-#' @param sublist a \code{vector} of population names or indexes that the user
-#' wishes to keep. Default to "ALL".
-#'
+#'   
+#' @param palette a \code{function} defining the color palette to be used to 
+#'   color the populations on the graph. It defaults to
+#'   \code{\link{topo.colors}}, but you can easily create new schemes by using
+#'   \code{\link{colorRampPalette}} (see examples for details)
+#'   
+#' @param sublist a \code{vector} of population names or indexes that the user 
+#'   wishes to keep. Default to "ALL".
+#'   
 #' @param blacklist a \code{vector} of population names or indexes that the user
-#' wishes to discard. Default to \code{NULL}
-#' 
+#'   wishes to discard. Default to \code{NULL}
+#'   
 #' @param vertex.label a \code{vector} of characters to label each vertex. There
-#' are two defaults: \code{"MLG"} will label the nodes with the multilocus genotype
-#' from the original data set and \code{"inds"} will label the nodes with the 
-#' representative individual names.
-#' 
+#'   are two defaults: \code{"MLG"} will label the nodes with the multilocus
+#'   genotype from the original data set and \code{"inds"} will label the nodes
+#'   with the representative individual names.
+#'   
 #' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
-#' of the edges proportional to the observed distance, with the lines becoming 
-#' darker for more related nodes. See \code{\link{greycurve}} for details.
-#' 
+#'   of the edges proportional to the observed distance, with the lines becoming
+#'   darker for more related nodes. See \code{\link{greycurve}} for details.
+#'   
 #' @param glim "grey limit". Two numbers between zero and one. They determine 
-#' the upper and lower limits for the \code{\link{gray}} function. Default is 0
-#' (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
-#' 
-#' @param gadj "grey adjust". a positive \code{integer} greater than zero that
-#' will serve as the exponent to the edge weight to scale the grey value to
-#' represent that weight. See \code{\link{greycurve}} for details.
-#' 
-#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale
-#' will be weighted to emphasize the differences between closely related nodes.
-#' If it is 2, the grey scale will be weighted to emphasize the differences
-#' between more distantly related nodes. See \code{\link{greycurve}} for details.
-#' 
-#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be
-#' scaled proportional to the inverse of the observed distance , with the lines 
-#' becoming thicker for more related nodes.
-#' 
+#'   the upper and lower limits for the \code{\link{gray}} function. Default is
+#'   0 (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
+#'   
+#' @param gadj "grey adjust". a positive \code{integer} greater than zero that 
+#'   will serve as the exponent to the edge weight to scale the grey value to 
+#'   represent that weight. See \code{\link{greycurve}} for details.
+#'   
+#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale 
+#'   will be weighted to emphasize the differences between closely related
+#'   nodes. If it is 2, the grey scale will be weighted to emphasize the
+#'   differences between more distantly related nodes. See
+#'   \code{\link{greycurve}} for details.
+#'   
+#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be 
+#'   scaled proportional to the inverse of the observed distance , with the
+#'   lines becoming thicker for more related nodes.
+#'   
+#' @param showplot logical. If \code{TRUE}, the graph will be plotted. If
+#'   \code{FALSE}, it will simply be returned.
+#'   
 #' @param ... any other arguments that could go into plot.igraph
-#'
-#' @return 
-#' \item{graph}{a minimum spanning network with nodes corresponding to MLGs within
-#' the data set. Colors of the nodes represent population membership. Width and
-#' color of the edges represent distance.}
-#' \item{populations}{a vector of the population names corresponding to the 
-#' vertex colors}
-#' \item{colors}{a vector of the hexadecimal representations of the colors used
-#' in the vertex colors}
-#' 
+#'   
+#' @return \item{graph}{a minimum spanning network with nodes corresponding to 
+#'   MLGs within the data set. Colors of the nodes represent population 
+#'   membership. Width and color of the edges represent distance.} 
+#'   \item{populations}{a vector of the population names corresponding to the 
+#'   vertex colors} \item{colors}{a vector of the hexadecimal representations of
+#'   the colors used in the vertex colors}
+#'   
 #' @note The edges of these graphs may cross each other if the graph becomes too
-#' large. 
-#'
-#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
-#' \code{\link{nodelabels}}, \code{\link{na.replace}}, \code{\link{missingno}}, 
-#' \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
+#'   large.
+#'   
+#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}}, 
+#'   \code{\link{nodelabels}}, \code{\link{na.replace}},
+#'   \code{\link{missingno}}, \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
 #' 
 #' @export
+#' @aliases msn.poppr
 #' @author Javier F. Tabima, Zhian N. Kamvar
 #' @examples
 #' 
@@ -334,11 +337,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 poppr.msn <- function (pop, distmat, palette = topo.colors, 
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale=TRUE, ...){
-  # require(igraph)
-  # if(!require(igraph)){
-  #   stop("You must have the igraph library installed to use this function.\n")
-  # }
+                       wscale=TRUE, showplot = TRUE, ...){
   if (class(distmat) != "dist"){
     if (is.matrix(distmat)){
       if (any(nInd(pop) != dim(distmat))){
@@ -354,12 +353,21 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
-  pop$other$mlg.vec <- mlg.vector(pop)
+  if (!is.genclone(pop)){
+    # Storing the MLG vector into the genind object
+    pop$other$mlg.vec <- mlg.vector(pop)  
+  }
   bclone <- as.matrix(distmat)
+
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+    if (is.genclone(pop)){
+      mlgs <- pop@mlg
+    } else {
+      mlgs <- pop$other$mlg.vec
+    }
+    bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette))
@@ -368,28 +376,39 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(pop, sublist, blacklist)
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
-    pop <- popsub(pop, sublist, blacklist)
+    pop    <- popsub(pop, sublist, blacklist)
   }
-  
+  cpop <- pop[.clonecorrector(pop), ]
+  if (is.genclone(pop)){
+    mlgs <- pop@mlg
+    cmlg <- cpop@mlg
+  } else {
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+  }
   # This will clone correct the incoming matrix. 
-  bclone <- bclone[!duplicated(pop$other$mlg.vec), !duplicated(pop$other$mlg.vec)]
+  bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
+                         palette = palette, showplot = showplot, ...))
   }
   # Obtaining population information for all MLGs
-  mlg.cp <- mlg.crosspop(pop, mlgsub=1:mlg(pop, quiet=TRUE), quiet=TRUE)
-  names(mlg.cp) <- paste0("MLG.", sort(unique(pop$other$mlg.vec)))
-  cpop <- pop[.clonecorrector(pop), ]
-  
+  if (is.genclone(pop)){
+    subs <- sort(unique(mlgs))
+  } else {
+    subs <- 1:mlg(pop, quiet = TRUE)
+  }
+  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
+
+  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
   # This will determine the size of the nodes based on the number of individuals
-  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
+  # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
   # Note: rank is used to correctly subset the data
-  mlg.number <- table(pop$other$mlg.vec)[rank(cpop$other$mlg.vec)]
-  mlg.cp     <- mlg.cp[rank(cpop$other$mlg.vec)]
+  mlg.number <- table(mlgs)[rank(cmlg)]
+  mlg.cp     <- mlg.cp[rank(cmlg)]
   rownames(bclone) <- cpop$pop
   colnames(bclone) <- cpop$pop
   
@@ -398,7 +417,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cpop$other$mlg.vec, sep="")
+      vertex.label <- paste("MLG.", cmlg, sep="")
     }
     else if(toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
@@ -411,37 +430,604 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   color   <- palette(length(pop@pop.names))
   
   ###### Edge adjustments ######
-  # Grey Scale Adjustment weighting towards more diverse or similar populations.
-  if (gscale == TRUE){
-    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-                                     show=FALSE))
-  } else {
-    E(mst)$color <- rep("black", length(E(mst)$weight))
-  }
-  
-  # Width scale adjustment to avoid extremely large widths.
-  # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
-  edgewidth <- 2
-  if (wscale==TRUE){
-    edgewidth <- 1/(E(mst)$weight)
-    if (any(E(mst)$weight < 0.08)){
-      edgewidth <- 1/(E(mst)$weight + 0.08)
-    }
-  }
+  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
-  
-  plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
-       vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
-       vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-  legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
-         title = "Populations", fill=color, border=NULL)
-  E(mst)$width     <- edgewidth
+  if (showplot){
+    plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
+         vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
+         vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
+    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
+           title = "Populations", fill=color, border=NULL)
+  }
   V(mst)$size      <- mlg.number
   V(mst)$shape     <- "pie"
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
   return(list(graph = mst, populations = pop$pop.names, colors = color))
+}
+
+
+#==============================================================================#
+#' Create a table summarizing missing data or ploidy information of a genind or
+#' genclone object
+#' 
+#' @param gen a \linkS4class{genind} or \linkS4class{genclone} object.
+#'   
+#' @param type \code{character}. What information should be returned. Choices
+#'   are "missing" (Default) and "ploidy". See Description.
+#'   
+#' @param percent \code{logical}. (ONLY FOR \code{type = 'missing'}) If
+#'   \code{TRUE} (default), table and plot will represent missing data as a
+#'   percentage of each cell. If \code{FALSE}, the table and plot will represent
+#'   missing data as raw counts. (See details)
+#'   
+#' @param plot \code{logical}. If \code{TRUE}, a simple heatmap will be 
+#'   produced. If \code{FALSE} (default), no heatmap will be produced.
+#'   
+#' @param df \code{logical}. If \code{TRUE}, the data will be returned as a long
+#'   form data frame. If \code{FALSE} (default), a matrix with samples in rows
+#'   and loci in columns will be returned.
+#'   
+#' @param returnplot \code{logical}. If \code{TRUE}, a list is returned with two
+#'   elements: \code{table} - the normal output and \code{plot} - the ggplot 
+#'   object. If \code{FALSE}, the table is returned.
+#'   
+#' @param low \code{character}. What color should represent no missing data or 
+#'   lowest observed ploidy? (default: "blue")
+#'   
+#' @param high \code{character}. What color should represent the highest amount 
+#'   of missing data or observed ploidy? (default: "red")
+#'   
+#' @param plotlab \code{logical}. (ONLY FOR \code{type = 'missing'}) If
+#'   \code{TRUE} (default), values of missing data greater than 0\% will be
+#'   plotted. If \code{FALSE}, the plot will appear unappended.
+#'   
+#' @param scaled \code{logical}. (ONLY FOR \code{type = 'missing'}) This is for
+#'   when \code{percent = TRUE}. If \code{TRUE} (default), the color specified
+#'   in \code{high} will represent the highest observed value of missing data.
+#'   If \code{FALSE}, the color specified in \code{high} will represent 100\%.
+#'   
+#' @return a matrix, data frame (\code{df = TRUE}), or a list (\code{returnplot 
+#'   = TRUE}) representing missing data per population (\code{type = 'missing'})
+#'   or ploidy per individual (\code{type = 'ploidy'}) in a \linkS4class{genind}
+#'   or \linkS4class{genclone} object.
+#' 
+#' @details 
+#'   Missing data is accounted for on a per-population level.\cr
+#'   Ploidy is accounted for on a per-individual level.
+#'   
+#'   \subsection{For type = 'missing'}{
+#'   This data is potentially useful for identifying areas of systematic missing
+#'   data. There are a few caveats to be aware of. \itemize{ \item
+#'   \strong{Regarding counts of missing data}: Each count represents the number
+#'   of individuals with missing data at each locus. The last column, "mean" can
+#'   be thought of as the average number of individuals with missing data per
+#'   locus. \item \strong{Regarding percentage missing data}: This percentage is
+#'   \strong{relative to the population and locus}, not ot the enitre data set.
+#'   The last colum, "mean" represents the average percent of the population
+#'   with missing data per locus. }} 
+#'   \subsection{For type = 'ploidy'}{
+#'   This option is useful for data that has been imported with mixed ploidies.
+#'   It will summarize the relative levels of ploidy per individual per locus.
+#'   This is simply based off of observed alleles and does not provide any
+#'   further estimates.}
+#'   
+#' @export
+#' @keywords missing ploidy
+#' @author Zhian N. Kamvar
+#' @examples
+#' data(nancycats)
+#' nancy.miss <- info_table(nancycats, plot = TRUE, type = "missing")
+#' data(Pinf)
+#' Pinf.ploid <- info_table(Pinf, plot = TRUE, type = "ploidy")
+#' 
+#==============================================================================#
+info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot = FALSE, 
+                       df = FALSE, returnplot = FALSE, low = "blue", 
+                       high = "red", plotlab = TRUE, scaled = TRUE){
+  datalabel <- as.character(match.call()[2])
+  ARGS      <- c("missing", "ploidy")
+  type      <- match.arg(type, ARGS)
+
+  if (type == "missing"){
+
+    valname    <- "Missing"
+    pops       <- seppop(gen, drop = FALSE)
+    pops$Total <- gen
+    inds       <- 1
+    if (percent){
+      inds <- c(table(pop(gen)), nInd(gen))
+    }
+    data_table <- matrix(0, nrow = nLoc(gen) + 1, ncol = length(pops))
+    data_table[1:nLoc(gen), ] <- vapply(pops, number_missing_locus, numeric(nLoc(gen)), 1)
+    data_table[-nrow(data_table), ] <- t(apply(data_table[-nrow(data_table), ], 1, "/", inds))
+    data_table[nrow(data_table), ]  <- colMeans(data_table[-nrow(data_table), ])
+    rownames(data_table)         <- c(gen@loc.names, "Mean")
+    colnames(data_table)         <- names(pops)
+    dimnames(data_table) <- list(Locus = c(gen@loc.names, "Mean"), Population = names(pops))
+    if (all(data_table == 0)){
+      cat("No Missing Data Found!")
+      return(NULL)
+    }
+    if (plot){
+      data_df      <- melt(data_table, value.name = valname)
+      leg_title    <- valname
+      data_df[1:2] <- data.frame(lapply(data_df[1:2], 
+                                       function(x) factor(x, levels = unique(x))))
+      plotdf <- textdf <- data_df
+      if (percent) {
+        plotdf$Missing <- round(plotdf$Missing*100, 2)
+        textdf$Missing <- paste(plotdf$Missing, "%")
+        miss           <- "0 %"
+        title          <- paste("Percent missing data per locus and population of", 
+                                datalabel)
+        leg_title      <- paste("Percent", leg_title)
+        if(!scaled){
+          lims <- c(0, 100)
+        }
+      } else {
+        textdf$Missing <- round(textdf$Missing, 2)
+        miss           <- 0
+        title          <- paste("Missing data per locus and population of", 
+                                datalabel)
+      }
+      if (scaled | !percent){
+        lims <- c(0, max(plotdf$Missing))
+      }
+      linedata <- data.frame(list(yint = 1.5, xint = nrow(data_table) - 0.5))
+      textdf$Missing <- ifelse(textdf$Missing == miss, "", textdf$Missing)
+      plotdf$Missing[plotdf$Locus == "Mean" & plotdf$Population == "Total"] <- NA
+
+      outplot <- ggplot(plotdf, aes_string(x = "Locus", y = "Population")) + 
+        geom_tile(aes_string(fill = valname)) +
+        labs(list(title = title, x = "Locus", y = "Population")) +
+        labs(fill = leg_title) + 
+        scale_fill_gradient(low = low, high = high, na.value = "white", 
+                            limits = lims) +
+        geom_hline(aes_string(yintercept = "yint"), data = linedata) + 
+        geom_vline(aes_string(xintercept = "xint"), data = linedata) 
+      if (plotlab){
+        outplot <- outplot + geom_text(aes_string(label = valname), 
+                                       data = textdf)
+      }
+      outplot <- outplot +
+        theme_classic() + 
+        scale_x_discrete(expand = c(0, -1)) + 
+        scale_y_discrete(expand = c(0, -1), 
+                         limits = rev(unique(plotdf$Population))) + 
+        theme(axis.text.x = element_text(size = 10, angle = -45, 
+                                         hjust = 0, vjust = 1)) 
+      print(outplot)
+    }
+
+  } else if (type == "ploidy"){
+
+    valname <- "Observed_Ploidy"
+    if (gen@ploidy <= 2){
+      warning("This function is meant for polyploid data.")
+      data_table <- matrix(gen@ploidy, nrow = nInd(gen), ncol = nLoc(gen))
+      missing <- propTyped(gen, "both") == 0
+      data_table[missing] <- NA
+    } else {
+      data_table <- get_local_ploidy(gen)
+    }
+    dimnames(data_table) <- list(Samples = indNames(gen), Loci = locNames(gen))
+    if (plot){
+      data_df <- melt(data_table, value.name = valname)
+      data_df[1:2] <- data.frame(lapply(data_df[1:2], 
+                                       function(x) factor(x, levels = unique(x))))
+      vars <- aes_string(x = "Loci", y = "Samples", fill = valname)
+
+      mytheme <- theme_classic() +  
+                 theme(axis.text.x = element_text(size = 10, angle = -45, 
+                                                  hjust = 0, vjust = 1)) 
+
+      title <- paste("Observed ploidy of", datalabel)
+      outplot <- ggplot(data_df) + geom_tile(vars) + 
+                   scale_fill_gradient(low = low, high = high) + 
+                   scale_x_discrete(expand = c(0, -1)) + 
+                   scale_y_discrete(expand = c(0, -1), 
+                                    limits = rev(unique(data_df$Samples))) + 
+                   labs(list(title = title, x = "Locus", y = "Sample", 
+                             fill = "Observed\nPloidy")) +
+                   mytheme 
+
+      print(outplot)
+    }
+  } 
+  if (df){
+    if(!exists("data_df")){
+      data_df <- melt(data_table, value.name = valname)
+    }
+    data_table <- data_df
+  } else {
+    if (type == "missing"){
+      data_table <- t(data_table)
+    }
+    class(data_table) <- c("locustable", "matrix")
+  }
+  if (returnplot & exists("outplot")){
+    data_table <- list(table = data_table, plot = outplot)
+  }
+  return(data_table)
+}
+
+#==============================================================================#
+#' Display a greyscale gradient adjusted to specific parameters
+#' 
+#' This function has one purpose. It is for deciding the appropriate scaling for
+#' a grey palette to be used for edge weights of a minimum spanning network.
+#'
+#'
+#' @param data a sequence of numbers to be converted to greyscale.
+#' 
+#' @param glim "grey limit". Two numbers between zero and one. They determine 
+#' the upper and lower limits for the \code{\link{gray}} function. Default is 0
+#' (black) and 0.8 (20\% black). 
+#' 
+#' @param gadj "grey adjust". a positive \code{integer} greater than zero that
+#' will serve as the exponent to the edge weight to scale the grey value to
+#' represent that weight.
+#' 
+#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale
+#' will be weighted to emphasize the differences between closely related nodes.
+#' If it is 2, the grey scale will be weighted to emphasize the differences
+#' between more distantly related nodes. 
+#'
+#' @param scalebar When this is set to \code{TRUE}, two scalebars will be
+#' plotted. The purpose of this is for adding a scale bar to minimum spanning
+#' networks produced in earlier versions of poppr. 
+#' 
+#' @return A plot displaying a grey gradient from 0.001 to 1 with minimum and 
+#' maximum values displayed as yellow lines, and an equation for the correction 
+#' displayed in red. 
+#' 
+#' @author Zhian N. Kamvar
+#'
+#' @examples
+#' # Normal grey curve with an adjustment of 3, an upper limit of 0.8, and
+#' # weighted towards smaller values.
+#' greycurve()
+#' \dontrun{
+#' # 1:1 relationship grey curve.
+#' greycurve(gadj=1, glim=1:0)
+#' 
+#' # Grey curve weighted towards larger values.
+#' greycurve(gweight=2)
+#' 
+#' # Same as the first, but the limit is 1.
+#' greycurve(glim=1:0)
+#' 
+#' # Setting the lower limit to 0.1 and weighting towards larger values.
+#' greycurve(glim=c(0.1,0.8), gweight=2)
+#' }
+#' @export
+#==============================================================================#
+greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8), 
+                      gadj = 3, gweight = 1, scalebar = FALSE){
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
+  adjustcurve(data, glim, correction=gadj, show = TRUE, scalebar = scalebar)
+}
+
+
+#==============================================================================#
+#' Plot minimum spanning networks produced in poppr.
+#' 
+#' This function allows you to take the output of poppr.msn and bruvo.msn and 
+#' customize the plot by labeling groups of individuals, size of nodes, and 
+#' adjusting the palette and scale bar.
+#' 
+#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#'   object from which \code{poppr_msn} was derived.
+#'   
+#' @param poppr_msn a \code{list} produced from either \code{\link{poppr.msn}}
+#'   or \code{\link{bruvo.msn}}. This list should contain a graph, a vector of
+#'   population names and a vector of hexadecimal color definitions for each
+#'   popualtion.
+#'   
+#' @inheritParams greycurve
+#' 
+#' @inheritParams poppr.msn
+#'   
+#' @param inds a character vector indicating which individual names to label
+#'   nodes with. See details.
+#'   
+#' @param quantiles \code{logical}. When set to \code{TRUE} (default), the scale
+#'   bar will be composed of the quantiles from the observed edge weights. When
+#'   set to \code{FALSE}, the scale bar will be composed of a smooth gradient
+#'   from the minimum edge weight to the maximum edge weight.
+#'   
+#' @param nodelab an \code{integer} specifying the smallest size of node to
+#'   label. See details.
+#'   
+#' @param cutoff a number indicating the longest distance to display in your
+#'   graph. This is performed by removing edges with weights greater than this
+#'   number.
+#'   
+#' @param palette a function or character corresponding to a specific palette 
+#'   you want to use to delimit your populations. The default is whatever
+#'   palette was used to produce the original graph.
+#'   
+#' @param layfun a function specifying the layout of nodes in your graph. It 
+#'   defaults to \code{\link[igraph]{layout.auto}}.
+#'   
+#' @param beforecut if \code{TRUE}, the layout of the graph will be computed
+#'   before any edges are removed with \code{cutoff}. If \code{FALSE} (Default),
+#'   the layout will be computed after any edges are removed.
+#'   
+#' @param ... any other parameters to be passed on to
+#'   \code{\link[igraph]{plot.igraph}}.
+#'   
+#' @details The previous incarnation of msn plotting in poppr simply plotted the
+#'   minimum spanning network with the legend of populations, but did not 
+#'   provide a scale bar and it did not provide the user a simple way of 
+#'   manipulating the layout or labels. This function allows the user to 
+#'   manipulate many facets of graph creation, making the creation of minimum 
+#'   spanning networks ever so slightly more user friendly. Note that this 
+#'   function will only plot individual names, not MLG names since the naming 
+#'   convention for those are arbitrary. 
+#'   
+#'   This function must have both the source data and the output msn to work. 
+#'   The source data must contain the same population structure as the graph. 
+#'   Every other parameter has a default setting.
+#'   
+#'   \subsection{Parameter details}{ \itemize{ \item \code{inds} This will take
+#'   in the name of a query individual in your data set and will use that to
+#'   query any other individuals that share multilocus genotypes and label their
+#'   node on the graph. The default is to label all the nodes, but you can set
+#'   it to a name that doesn't exist to label none of the nodes. \item
+#'   \code{nodelab} If a node is not labeled by individual, this will label the
+#'   size of the nodes greater than or equal to this value. If you don't want to
+#'   label the size of the nodes, simply set this to a very high number. \item
+#'   \code{cutoff} This is useful for when you want to investigate groups of
+#'   multilocus genotypes separated by a specific distance or if you have two
+#'   distinct populations and you want to physically separate them in your
+#'   network. \item \code{beforecut} This is an indicator useful if you want to
+#'   maintain the same position of the nodes before and after removing edges
+#'   with the \code{cutoff} argument. This works best if you set a seed before
+#'   you run the function.}}
+#' 
+#' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
+#' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
+#' \code{\link[igraph]{delete.edges}} \code{\link{palette}}
+#' 
+#' @author Zhian N. Kamvar
+#' @export
+#' 
+#' @examples
+#' # Using a data set of the Aphanomyces eutieches root rot pathogen.
+#' data(Aeut)
+#' adist <- diss.dist(Aeut, percent = TRUE)
+#' amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
+#' 
+#' # Default
+#' library(igraph) # To get all the layouts.
+#' set.seed(500)
+#' plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
+#' 
+#' # Removing link between populations and labelling no individuals
+#' set.seed(500)
+#' plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
+#' 
+#' # Labelling individual #57 because it is an MLG that crosses popualtions
+#' # Showing clusters of MLGS with at most 5% variation
+#' # Notice that the Mt. Vernon population appears to be more clonal
+#' set.seed(50) 
+#' plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57")
+#' 
+#' 
+#' \dontrun{
+#' data(partial_clone)
+#' pcmsn <- bruvo.msn(partial_clone, replen = rep(1, 10))
+#' plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "sim 20")
+#' 
+#' # Something pretty
+#' data(microbov)
+#' mdist <- diss.dist(microbov, percent = TRUE)
+#' micmsn <- poppr.msn(microbov, mdist, showplot = FALSE)
+#' 
+#' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", 
+#'   quantiles = FALSE)
+#' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", 
+#'   cutoff = 0.3, quantiles = FALSE)
+#' }
+#==============================================================================#
+#' @importFrom igraph layout.auto delete.edges
+plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.8),
+                           gweight = 1, wscale = TRUE, inds = "ALL", quantiles = TRUE, 
+                           nodelab = 2, cutoff = NULL, palette = NULL,
+                           layfun = layout.auto, beforecut = FALSE, ...){
+  if (!is.genind(x)){
+    stop(paste(substitute(x), "is not a genind or genclone object."))
+  }
+  if (!identical(names(poppr_msn), c("graph", "populations", "colors"))){
+    stop("graph not compatible")
+  }
+  if (!is.null(palette)){
+    poppr_msn <- update_poppr_graph(poppr_msn, palette)
+  }
+  # Making sure incoming data matches so that the individual names match.
+  x <- popsub(x, sublist = poppr_msn$populations)
+  
+  if (beforecut){
+    LAYFUN <- match.fun(layfun)
+    lay <- LAYFUN(poppr_msn$graph)
+  } else {
+    lay <- match.fun(layfun)
+  }
+  # delete.edges      <- match.fun(igraph::delete.edges)
+  if (!is.null(cutoff) && !is.na(cutoff)){
+    if (all(cutoff < E(poppr_msn$graph)$weight)){
+      msg <- paste0("Cutoff value (", cutoff, ") is below the minimum observed",
+                    " distance. Edges will not be removed.")
+      warning(msg)
+    } else {
+      E_above_cutoff  <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
+      poppr_msn$graph <- delete.edges(poppr_msn$graph, E_above_cutoff)
+    }
+  }
+  # Adjusting color scales. This will replace any previous scaling contained in
+  # poppr_msn.
+  weights <- E(poppr_msn$graph)$weight
+  wmin    <- min(weights)
+  wmax    <- max(weights)
+  gadj    <- ifelse(gweight == 1, gadj, -gadj)
+  poppr_msn$graph <- update_edge_scales(poppr_msn$graph, wscale, gscale, glim, gadj)
+  
+  # Highlighting only the names of the submitted genotypes and the matching
+  # isolates.
+  x.mlg <- mlg.vector(x)
+  labs  <- unique(x.mlg)
+  # The labels in the graph are organized by MLG, so we will use that to extract
+  # the names we need.
+  if (length(inds) == 1 & toupper(inds[1]) == "ALL"){
+    x.input <- unique(x.mlg)
+  } else {
+    x.input <- unique(x.mlg[x@ind.names %in% inds])
+  }
+  # Combine all the names that match with each particular MLG in x.input.
+  combined_names <- vapply(x.input, function(mlgname)
+                           paste(rev(x@ind.names[x.mlg == mlgname]),
+                                 collapse = "\n"),
+                           character(1))
+  # Remove labels that are not specified.
+  labs[which(!labs %in% x.input)] <- NA
+  labs[!is.na(labs)] <- combined_names
+  if (any(is.na(labs))){
+    sizelabs <- V(poppr_msn$graph)$size
+    sizelabs <- ifelse(sizelabs >= nodelab, sizelabs, NA)
+    labs     <- ifelse(is.na(labs), sizelabs, labs)
+  }
+  # Change the size of the vertices to a log scale.
+  vsize <- log(V(poppr_msn$graph)$size, base = 1.15) + 3
+  
+  # Plotting parameters.
+  def.par <- par(no.readonly = TRUE)
+  # Setting up the matrix for plotting. One Vertical panel of width 1 and height
+  # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
+  # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
+  layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
+         widths = c(1, 4), heights= c(4.5, 0.5))
+  # mar = bottom left top right
+  
+  ## LEGEND
+  par(mar = c(0, 0, 1, 0) + 0.5)
+  too_many_pops   <- as.integer(ceiling(length(x$pop.names)/30))
+  pops_correction <- ifelse(too_many_pops > 1, -1, 1)
+  yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
+  plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
+       main = 'POPULATION')
+  legend("topleft", bty = "n", cex = 1.2^pops_correction,
+         legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
+         ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
+  
+  ## PLOT
+  par(mar = c(0,0,0,0))
+  plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
+              layout = lay, ...)
+  
+  ## SCALE BAR
+  if (quantiles){
+    scales <- sort(weights)
+  } else {
+    scales <- seq(wmin, wmax, l = 1000)
+  }
+  greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
+  legend_image <- as.raster(matrix(greyscales, nrow=1))
+  par(mar = c(0, 1, 0, 1) + 0.5)
+  plot.new()
+  rasterImage(legend_image, 0, 0.5, 1, 1)
+  polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+  axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
+  text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
+  
+  # Return top level plot to defaults.
+  layout(matrix(c(1), ncol=1, byrow=T))
+  par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
+  par(oma=c(0,0,0,0)) # Figure margins
+}
+
+
+#==============================================================================#
+#' Produce a genotype accumulation curve
+#' 
+#' GA curves are useful for determinining the minimum number of loci necessary 
+#' to discriminate between individuals in a population. This function will
+#' randomly sample loci without replacement and count the number of multilocus
+#' genotypes observed.
+#' 
+#' @param gen a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'   object.
+#'   
+#' @param sample an \code{integer} defining the number of times loci will be
+#'   resampled.
+#'   
+#' @param quiet if \code{FALSE}, a progress bar will be displayed. If
+#'   \code{TRUE}, nothing is printed to screen as the function runs.
+#'   
+#' @param thresh a number from 0 to 1. This will draw a line at this fraction of
+#'   multilocus genotypes.
+#'   
+#' @return a matrix of integers showing the results of each randomization.
+#'   Columns represent the number of loci sampled and rows represent an
+#'   independent sample.
+#'   
+#' @author Zhian N. Kamvar
+#' @export
+#' @examples
+#' data(nancycats)
+#' nan_geno <- genotype_curve(nancycats)
+#' \dontrun{
+#' # With AFLP data, it is often necessary to include more markers for resolution
+#' data(Aeut)
+#' Ageno <- genotype_curve(Aeut)
+#' 
+#' # Many microsatellite data sets have hypervariable markers
+#' data(microbov)
+#' mgeno <- geotype_curve(microbov)
+#' 
+#' # This data set has been pre filtered
+#' data(monpop)
+#' mongeno <- genotype_curve(monpop)}
+#==============================================================================#
+
+genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
+  datacall <- match.call()
+  if (!is.genind(gen)){
+    stop(paste(datacall[2], "must be a genind object"))
+  }
+  genloc <- as.loci(gen)
+  if (!is.null(pop(gen))){
+    genloc <- genloc[-1]
+  }
+  nloci  <- nLoc(gen)
+  if (!quiet){
+    cat("Calculating genotype accumulation for", nloci - 1, "loci...\n")
+    progbar <- txtProgressBar(style = 3)
+  } else {
+    progbar <- NULL
+  }
+  out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
+  colnames(out) <- 1:(nloci-1)
+  threshdf <- data.frame(x = mlg(gen, quiet = TRUE)*thresh)
+  outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
+  aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
+  outplot <- ggplot(outmelt) + geom_boxplot(aesthetics) + 
+             labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
+                       y = "Number of multilocus genotypes",
+                       x = "Number of loci sampled")) 
+  if (!is.null(thresh)){
+    outbreaks <- sort(c(seq(min(out), max(out), length.out = 5), threshdf$x))
+    outplot <- outplot + geom_hline(aes_string(yintercept = "x"), 
+                                    data = threshdf, color = "red", linetype = 2) + 
+                         annotate("text", x = 1, y = threshdf$x, vjust = -1, 
+                                  label = paste0(thresh*100, "%"), 
+                                  color = "red", hjust = 0) +
+                         scale_y_continuous(breaks = outbreaks)
+  }
+  print(outplot)
+  return(out)
 }

@@ -1,3 +1,56 @@
+poppr 1.1.0
+===========
+NEW FEATURES
+* Polyploids with ambiguous genotypes are now supported in poppr. See documentation for `recode_polyploids` for details. 
+* Calculations of Bruvo's distance now features correction for partial missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
+* `diss.dist` now has options to return raw distances and a matrix instead of a dist object.
+* `read.genalex` now has the option to import as a genclone object. This is the default action.
+* `poppr.all` will be able to analyze lists of genind or genclone objects.
+* `ia` now has the argument valuereturn which will return the sampled data.
+* `[bruvo,poppr].msn` functions now give the user the choice to show the graph.
+* `bruvo.boot` has a cleaner plot style. 
+
+NEW DATA CLASSES
+* The `genclone` object is a new extension of the `genind` object from adegenet. This object contains slots containing population hierarchies and multilocus genotype definitions and will work with all analyses in adegenet and poppr. 
+
+NEW FUNCTIONS
+* [get,set,name,split,add]hierarchy - functions that will manipulate the hierarchy slot in a `genclone` object utilizing hierarchical formulae as arguments for simplification.
+* `setpop` will set the population of a `genclone` object utilizing model formulae regarding the hierarchy slot.
+* `as.genclone` will automatically convert genind objects to genclone objects.
+* `is.genclone` checks the validity of genclone objects.
+* `poppr.amova` will run amova on any hierarchical level. This also includes the feature to run amova on clone censored data sets. It utilizes the ade4 version of amova. 
+* `info_table` will calculate missing data per population per locus or ploidy per individual per locus and gives the user the option to visualize this as a heatmap.
+* `locus_table` will calculate diversity and evenness statistics over all loci in a genind or genclone object.
+* `*.dist` functions will calculate Nei's distance, Rogers' Distance, Edwards' Distance, Reynolds' Distance, and Provestis' Distance.
+* `aboot` will allow the user to create bootstrapped dendrograms for ANY distance that can be calculated on genind or genpop objects.
+* `plot_poppr_msn` will plot minimum spanning networks produced with poppr. 
+* `private_alleles` will give information about the presence of private alleles within a genind or genclone object. 
+* `recode_polyploids` will take in a polyploid genind/genclone object (with missing alleles coded as extra zero-value allele) and recode them to have frequencies relative to the observed number of alleles.
+* `genotype_curve` will create a genotype accumulation curve for increasing number of loci.
+* `mlg.id` will return a list indicating the samples belonging to a specific multilocus genotype.
+
+NEW DATA SETS
+* Pinf - a data set of 86 isolates from different populations of the late blight pathogen, Phytophthora infestans. Provided by Erica Goss
+* monpop - a large data set of 694 Monilinia fructicola isolates from a single orchard over three years. Provided by Sydney E. Everhart
+
+NEW CAR
+* Not really.
+
+NAMESPACE CHANGES
+* poppr no longer depends on pegas.
+* ade4 and reshape2 are now explicitly required.
+
+IMPROVEMENTS
+* default shuffling algorithm has been implemented in C to increase speed.
+* output of the mlg functions are now represented as integers to decrease their size in memory.
+* `mlg.matrix` is now calculated faster utilizing R's internal tabulating capabilities.
+* The function `poppr` will no longer return rounded results, but rather is printed with three significant digits.
+
+MISC
+* Added unit tests.
+* The poppr user manual has been shortened to only include instructions on data manipulation. 
+* A new vignette, "Algorithms and Equations" gives algorithmic details for calculations performed in poppr. 
+
 poppr 1.0.7
 ===========
 UPDATE
@@ -17,7 +70,7 @@ MISC
 poppr 1.0.5
 ===========
 NOTABLE CHANGE
-* The default shuffling algorithm for calculating the index of association has changed from multilocus-style sampling to permutation of alleles. All of the 4 methods are available, but new assignments are as follows: Method 1: permute alleles, Method 2: parametric bootstrap, Method 3: non-parametric bootstrap, Method 4: Multilocus-style sampling. Previously, Multilocus was 1 and the rest followed in the same order. There should be no compatability issues with this change. Functions affected: `ia`, `poppr` `shufflepop`
+* The default shuffling algorithm for calculating the index of association has changed from multilocus-style sampling to permutation of alleles. All of the 4 methods are available, but new assignments are as follows: Method 1: permute alleles, Method 2: parametric bootstrap, Method 3: non-parametric bootstrap, Method 4: Multilocus-style sampling. Previously, Multilocus was 1 and the rest followed in the same order. There should be no compatibility issues with this change. Functions affected: `ia`, `poppr` `shufflepop`
 
 BUG FIX
 * Bootstrapping algorithm for `bruvo.boot` function was not shuffling the repeat lengths for each locus resulting in potentially erroneous bootstrap support values. This has been fixed by implementing an internal S4 class that will allow direct bootstrapping of the data and repeat lengths together.
@@ -33,7 +86,7 @@ poppr 1.0.4
 ===========
 BUG FIX
 * A previous error where bootstrap values greater than 100 were reported from `bruvo.boot` on UPGMA trees has been fixed. 
-* Fixed correction of negative branch lenghts using Kuhner and Felsenstein (1994) normalization for NJ trees.
+* Fixed correction of negative branch lengths using Kuhner and Felsenstein (1994) normalization for NJ trees.
 
 MISC
 * github repository for poppr has changed from github.com/poppr/poppr to github.com/grunwaldlab/poppr

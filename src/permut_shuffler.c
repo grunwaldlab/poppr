@@ -94,3 +94,112 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
 	return Rout;
 }
 
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A slightly faster method of permuting alleles at a locus. 
+
+Inputs:
+	locus - The matrix to be permuted. Used for reference.
+	alleles - a vector of integers from 0 to n alleles indicating the matrix cols
+	allele_freq - 1/ploidy
+	ploidy - self explanitory
+	ploidvec - a vector describing the ploidy of each sample. 
+	zero_col - An integer describing the column that contains the padding zero
+			   for the ploidy.
+
+Outputs;
+	Rout - the permuted matrix. 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+SEXP new_permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy,
+	SEXP ploidvec, SEXP zero_col)
+{
+	int rows, cols, i, j, count = 0, ploid, p, miss = 0, zc;
+	SEXP Rout;
+	SEXP Rdim;
+	Rdim = getAttrib(locus, R_DimSymbol);
+	rows = INTEGER(Rdim)[0]; 
+	cols = INTEGER(Rdim)[1]; 
+	PROTECT(Rout = allocMatrix(REALSXP, rows, cols));
+	alleles = coerceVector(alleles, INTSXP);
+	ploidy = coerceVector(ploidy, INTSXP);
+	ploid = INTEGER(ploidy)[0];
+	ploidvec = coerceVector(ploidvec, INTSXP);
+	zc = INTEGER(zero_col)[0];
+	double *loc = REAL(locus), *outmat = REAL(Rout), *afreq = REAL(allele_freq);
+	int *alle = INTEGER(alleles), *pv = INTEGER(ploidvec);
+	for(i = 0; i < rows; i++)
+	{
+		// loop through all columns first and initialize
+		for(j = 0; j < cols; j++) 
+		{
+			// maintain missing values
+			if (ISNA(loc[i + j*rows]))
+			{
+				outmat[i + j*rows] = loc[i + j*rows]; 
+				miss = 1;
+			}
+			else
+			{
+				if (j == zc)
+				{
+					outmat[i + j*rows] = *(afreq) * (ploid - pv[i]);
+				}
+				else
+				{
+					outmat[i + j*rows] = 0.0; 
+				}
+			}
+		}
+		if (miss == 1)
+		{
+			miss = 0;		 
+		}
+		else
+		{
+			// permute the alleles by adding the allele frequency
+			for(p = 0; p < pv[i]; p++)
+			{
+				outmat[i + alle[count++]*rows] += *(afreq);
+			}
+		}
+	}
+	UNPROTECT(1);
+	return Rout;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Method for expanding indices for bootstrapping. Only slightly faster than R
+version, but seems to scale better.
+
+Inputs:
+	indices - cumulative sum of the number of alleles at each locus.
+	length - number of loci
+
+Outputs;
+	res - a list the same length as the number of loci with continuous numbers. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+SEXP expand_indices(SEXP indices, SEXP length) {
+	SEXP res;
+	SEXP tempvec;
+	int rows, i, j, *ind = INTEGER(indices);
+	int max, min = 1;
+	rows = INTEGER(length)[0];
+	PROTECT(res = allocVector(VECSXP, rows));
+	for (i = 0; i < rows; i++)
+	{
+		max = ind[i];
+		int veclength = 1 + max - min;
+		PROTECT(tempvec = allocVector(INTSXP, veclength));
+		for (j = 0; j < veclength ; j++)
+		{
+			INTEGER(tempvec)[j] = min + j;
+		}
+		SET_VECTOR_ELT(res, i, tempvec);
+		UNPROTECT(1);
+		min = ind[i] + 1;
+	}
+	UNPROTECT(1);
+	return res;
+}

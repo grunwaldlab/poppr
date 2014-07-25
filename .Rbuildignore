@@ -4,3 +4,6 @@
 ^\.gitignore$
 ^\.travis.yml$
 ^\.Rhistory$
+^vignettes/*.bbl$
+^vignettes/*.log$
+^vignettes/*.toc$

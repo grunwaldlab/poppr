@@ -22,7 +22,6 @@ poppr_manual-subnor.pdf
 poppr_manual-bruvo.msn.pdf
 poppr_manual.tex
 poppr_manual.log
-poppr_manual.pdf
 poppr_manual.toc
 poppr_manual.bbl
 poppr_manual.synctex.gz
@@ -58,4 +57,6 @@ poppr_manual-112.pdf
 *.bbl
 *.toc
 *.log
-figure
+*.blg
+figures/
+figure/
