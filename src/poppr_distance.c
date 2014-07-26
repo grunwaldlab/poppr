@@ -498,15 +498,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 					return minn;
 				}
 				zerocatch[i] += 1;
-				//Rprintf("[%d]", zerocatch[i] - 1);
+				Rprintf("[%d]", zerocatch[i] - 1);
 				zero_ind[i][zerocatch[i] - 1] = j;
 			}
 			genos[i*p + j] = in[counter++];
-			//Rprintf("%d\t", genos[i*p + j]);
+			Rprintf("%d\t", genos[i*p + j]);
 		}
-		//Rprintf("\n");
+		Rprintf("\n");
 	}
-	//Rprintf("\n");
+	Rprintf("\n");
 	zerodiff = abs(zerocatch[0] - zerocatch[1]);
 	/*==========================================================================
 	* Removing superfluous zeroes from the data. This is in the case that both
@@ -579,13 +579,23 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
 	// in the columns.
+	Rprintf("\n \t");
+	for (i = 0; i < p; i++)
+	{
+		Rprintf("%d\t", genos[i]);
+	}
+	Rprintf("\n");
 	for(j = 0; j < p; j++)
 	{
+		Rprintf("%d\t", genos[p + j]);
 		for(i = 0; i < p; i++)
 		{
 			dist[i][j] = 1 - pow(2, -abs(genos[0*p + i] - genos[1*p + j]));
+			Rprintf("%.2f\t", dist[i][j]);
 		}
+		Rprintf("\n");
 	}
+	Rprintf("\n");
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *) &dist;
 	if(zerocatch[0] > 0 || zerocatch[1] > 0)
