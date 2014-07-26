@@ -46,7 +46,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo);
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
-double mindist(int perms, int alleles, int *perm, double *dist);
+double mindist(int perms, int alleles, int *perm, double *dist, int add_indicator);
 void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
 	int inds, int curr_ind, double *genome_add_sum, int *tracker);
@@ -651,7 +651,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 					}						
 				}
 			}
-			return mindist(w, p, perm, distp)/p;
+			return mindist(w, p, perm, distp, 0)/p;
 		}
 		/*======================================================================
 		*	GENOME ADDITION MODEL
@@ -672,7 +672,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 				genome_add_calc(w, p, perm, distp, zerocatch[miss_ind],
 					pzero_ind, 0, miss_ind, pshort_inds, p-zerocatch[miss_ind], 
 					i, &genome_add_sum, &tracker);
-				Rprintf("current add sum = %.6f\n", genome_add_sum/p);
+				Rprintf("current add sum = %.6f\n", genome_add_sum);
 			}
 		}
 		/*======================================================================
@@ -710,7 +710,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	}
 	else 
 	{
-		minn = mindist(w, p, perm, distp)/p;
+		minn = mindist(w, p, perm, distp, 0)/p;
 	}
 	R_Free(genos);
 	// R_Free(dist);
@@ -792,7 +792,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double *dist,
 		}
 		else
 		{
-			*genome_add_sum += mindist(perms, alleles, perm, dist);
+			*genome_add_sum += mindist(perms, alleles, perm, dist, 1);
 			*tracker += 1;
 			if (zeroes == 1 || i == inds - 1)
 			{
@@ -926,7 +926,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 // Multiset coefficient: fact(n+k-1)/(fact(k)*fact(n-1))
 */
 
-double mindist(int perms, int alleles, int *perm, double *dist)
+double mindist(int perms, int alleles, int *perm, double *dist, int add_indicator)
 {
 	int i, j;
 	int w = perms;
@@ -934,15 +934,33 @@ double mindist(int perms, int alleles, int *perm, double *dist)
 	int counter = 0;
 	double res = 0;
 	double minn = 100;
+
+	if (add_indicator == 1)
+	{
+		Rprintf("Minimum Distances\n");
+		for (i = 0; i < alleles; i++)
+		{
+			for (j = 0; j < alleles; j++)
+			{
+				Rprintf("%.4f\t", dist[i + p*j]);
+			}
+			Rprintf("\n");
+		}
+	}
+
+
 	for(i = 0; i < w; i += p)
 	{
 		for(j = 0; j < p; j++)
 		{
 			if (j == 0)
 			{
-				res = dist[*(perm + counter++) + p*j];
+				res = dist[*(perm + counter) + p*j];
+				Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
+				counter++;
 				if(res > minn)
 				{
+					Rprintf("Bound\n");
 					j = p;
 					counter = i + w/p;
 					i = counter;
@@ -950,7 +968,9 @@ double mindist(int perms, int alleles, int *perm, double *dist)
 			}
 			else
 			{
-				res += dist[*(perm + counter++) + p*j];
+				res += dist[*(perm + counter) + p*j];
+				Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
+				counter++;
 				if(j < p-1 && res > minn)
 				{				
 					counter += (p-j-1);
@@ -958,6 +978,7 @@ double mindist(int perms, int alleles, int *perm, double *dist)
 				}
 			}
 		}
+		Rprintf("\n");
 		/*	Checking if the new calculated distance is smaller than the smallest
 		 distance seen. */
 		if ( res < minn )
