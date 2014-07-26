@@ -451,6 +451,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	int loss_indicator = *loss; // 1 if the genome loss model should be used
 	int add_indicator = *add;   // 1 if the genome addition model should be used
 
+	// int genos[2][p];
 	int *genos;    // array to store the genotypes
 	genos = R_Calloc(2*p, int);
 
@@ -464,6 +465,8 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 				       	// between the two genotypes
 	
 	double dist[p][p]; 	// array to store the distance
+	// double *dist;
+	// R_Calloc(p*p, double);
 	double *distp;     	// pointer for the dist array	
 	double minn = 100; 	// The minimum distance 
 
@@ -476,7 +479,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		for(j = 0; j < p; j++)
 		{
 			// Catch missing data here.
-			if(in[counter] == 0)
+			if (in[counter] == 0)
 			{
 				if (zerocatch[i] == p - 1)
 				{
@@ -516,7 +519,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		}
 		else
 		{
-			if(zerocatch[0] < zerocatch[1])
+			if (zerocatch[0] < zerocatch[1])
 			{
 				smaller = 1;
 				larger = 0;
@@ -712,6 +715,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		return (genome_add_sum + genome_loss_sum)/(p*comparison_factor);
 	}
 	R_Free(genos);
+	// R_Free(dist);
 	return mindist(w, p, perm, distp)/p;
 }
 
