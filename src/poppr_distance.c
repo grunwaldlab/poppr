@@ -70,7 +70,10 @@ Output: A vector of length n*(n-1)/2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP pairwise_covar(SEXP pair_vec)
 {
-	int I, i, j, count;
+	int I;
+	int i;
+	int j;
+	int count;
 	SEXP Rout;
 	I = length(pair_vec);
 	pair_vec = coerceVector(pair_vec, REALSXP);
@@ -100,7 +103,12 @@ Output: A vector of length n*(n-1)/2
 SEXP pairdiffs(SEXP freq_mat)
 {
 
-	int I, J, i, j, z, count;
+	int I;
+	int J;
+	int i;
+	int j;
+	int z;
+	int count;
 	double P;
 	SEXP Rout;
 	SEXP Rdim;
@@ -140,7 +148,9 @@ permuto will return a vector of all permutations needed for bruvo's distance.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP permuto(SEXP perm)
 {
-	int permutations, i, per;
+	int permutations;
+	int i;
+	int per;
 	SEXP Rval;
 	/* 
 		IMPORTANT: INITIALIZE THE COUNTER. THE POINTER IS NOT RELEASED FROM
@@ -149,7 +159,8 @@ SEXP permuto(SEXP perm)
 	perm_count = 0;
 	perm = coerceVector(perm, INTSXP);
 	per = INTEGER(perm)[0];
-	int allele_array[per];
+	int *allele_array;
+	allele_array = R_Calloc(per, int);
 	permutations = fact(per)*per;
 	for(i = 0; i < per; i++)
 	{
@@ -158,6 +169,7 @@ SEXP permuto(SEXP perm)
 	PROTECT(Rval = allocVector(INTSXP, permutations));
 	permute(allele_array, 0, per-1, INTEGER(Rval));
 	UNPROTECT(1);
+	R_Free(allele_array);
 	return Rval;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
