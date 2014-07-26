@@ -651,7 +651,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 					}						
 				}
 			}
-			return mindist(w, p, perm, distp, 0)/p;
+			goto finalcalc;
 		}
 		/*======================================================================
 		*	GENOME ADDITION MODEL
@@ -710,7 +710,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	}
 	else 
 	{
-		minn = mindist(w, p, perm, distp, 0)/p;
+		finalcalc: minn = mindist(w, p, perm, dist, 0)/p;
 	}
 	R_Free(genos);
 	// R_Free(dist);
