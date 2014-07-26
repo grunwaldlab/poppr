@@ -195,7 +195,7 @@ with missing data. In the wrapping R function, 100s will be converted to NAs
 and then the average over all loci will be taken. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP loss, SEXP add)
+SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP add, SEXP loss)
 {
 	int A, P, *pA, *pP;
 	SEXP Rval;
@@ -217,7 +217,7 @@ SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP loss, SEXP a
     
 }
 
-SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_loss, SEXP m_add)
+SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss)
 {
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	I = number of rows in bruvo_mat
@@ -441,9 +441,9 @@ poppr_bruvo <- function(){
 
 polysat_bruvo <- function(){
   return(c(Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=FALSE),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=FALSE),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=F, add=T),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=T, add=T)
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=TRUE),
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=TRUE, add=FALSE),
+Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=TRUE, add=TRUE)
 ))
 }
 
