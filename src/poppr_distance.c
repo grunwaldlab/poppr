@@ -579,23 +579,23 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
 	// in the columns.
-	Rprintf("\n \t");
-	for (i = 0; i < p; i++)
-	{
-		Rprintf("%d\t", genos[i]);
-	}
-	Rprintf("\n");
+	// Rprintf("\n \t");
+	// for (i = 0; i < p; i++)
+	// {
+	// 	Rprintf("%d\t", genos[i]);
+	// }
+	// Rprintf("\n");
 	for(j = 0; j < p; j++)
 	{
-		Rprintf("%d\t", genos[p + j]);
+		// Rprintf("%d\t", genos[p + j]);
 		for(i = 0; i < p; i++)
 		{
 			dist[i][j] = 1 - pow(2, -abs(genos[0*p + i] - genos[1*p + j]));
-			Rprintf("%.2f\t", dist[i][j]);
+			// Rprintf("%.2f\t", dist[i][j]);
 		}
-		Rprintf("\n");
+		// Rprintf("\n");
 	}
-	Rprintf("\n");
+	// Rprintf("\n");
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *) &dist;
 	if (zerocatch[0] > 0 || zerocatch[1] > 0)
@@ -606,6 +606,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int z;
 		int tracker = 0;
 		int loss_tracker = 0;
+		int comparison_factor = 1;
 		double genome_add_sum = 0;
 		double genome_loss_sum = 0;
 		genop = genos;
@@ -631,6 +632,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if(loss_indicator != 1 && add_indicator != 1)
 		{
+			Rprintf("TO INFINITY!\n");
 			for (z = 0; z < zerocatch[miss_ind]; z++)
 			{
 				ind = zero_ind[miss_ind][z];
@@ -660,6 +662,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if (add_indicator == 1)
 		{
+			Rprintf("ADD!\n");
 			int *pzero_ind;
 			int *pshort_inds;
 			pzero_ind = (int *) &zero_ind[miss_ind];
@@ -669,6 +672,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 				genome_add_calc(w, p, perm, distp, zerocatch[miss_ind],
 					pzero_ind, 0, miss_ind, pshort_inds, p-zerocatch[miss_ind], 
 					i, &genome_add_sum, &tracker);
+				Rprintf("current add sum = %.6f\n", genome_add_sum/p);
 			}
 		}
 		/*======================================================================
@@ -679,6 +683,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if (loss_indicator == 1)
 		{
+			Rprintf("LOSS!\n");
 			int *pzero_ind;
 			pzero_ind = (int *) &zero_ind[miss_ind];
 			for (i = 0; i < p; i++)
@@ -697,8 +702,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			loss_tracker = 1;
 		}
 		genome_loss_sum = genome_loss_sum/loss_tracker;
+		Rprintf("LOSS SUM: %.6f\n", genome_loss_sum/p);
 		genome_add_sum = genome_add_sum/tracker;
-		int comparison_factor = loss_indicator + add_indicator;
+		Rprintf("ADD SUM: %.6f\n", genome_add_sum/p);
+		comparison_factor = loss_indicator + add_indicator;
 		minn = (genome_add_sum + genome_loss_sum)/(p*comparison_factor);
 	}
 	else 
