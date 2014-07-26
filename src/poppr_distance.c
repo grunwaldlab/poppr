@@ -498,15 +498,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 					return minn;
 				}
 				zerocatch[i] += 1;
-				//printf("#");
+				//Rprintf("[%d]", zerocatch[i] - 1);
 				zero_ind[i][zerocatch[i] - 1] = j;
 			}
 			genos[i*p + j] = in[counter++];
-			//printf("%d\t", genos[i][j]);
+			//Rprintf("%d\t", genos[i*p + j]);
 		}
-		//printf("\n");
+		//Rprintf("\n");
 	}
-	//printf("\n");
+	//Rprintf("\n");
 	zerodiff = abs(zerocatch[0] - zerocatch[1]);
 	/*==========================================================================
 	* Removing superfluous zeroes from the data. This is in the case that both
@@ -523,7 +523,8 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int j;
 		int zero_counter;
 		int *perm_array;
-		int *new_genop;
+		int *new_geno;
+		int *new_alleles;
 
 		if (zerodiff == 0)
 		{
@@ -538,76 +539,40 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			}
 			reduction = p - (zerocatch[smaller] - zerodiff);
 		}
-		int del = 1;
-		if (del > 0)
-		{		
-			int new_alleles[reduction];
-			for (i = 0; i < reduction; i++)
-			{
-				new_alleles[i] = i;
-			}
-			w = fact(reduction) * reduction;
-			perm_array = (int *) malloc(w * sizeof(int));
-			perm_count = 0;
-			permute(new_alleles, 0, reduction - 1, perm_array);
-			// rebuild the array and make a pointer.
-			int new_geno[reduction*n];
-			counter = 0;
-			for (i=0; i < n; i++)
-			{
-				zero_counter = zerocatch[larger];
-				for (j = 0; j < p; j++)
-				{
-					if (genos[i*p + j] == 0 && zero_counter > 0)
-					{
-						zero_counter--;
-					}
-					else
-					{
-						new_geno[counter++] = genos[i*p + j];
-					}
-				}
-			}
-			new_genop = (int *) &new_geno;
-		
-			minn = test_bruvo_dist(new_genop, &reduction, perm_array, &w, 
-									&loss_indicator, &add_indicator);
-			free(perm_array);
-		}
-
-		/*	Questions of the proper way of permuting this arise: 
-		*	1.	If both of the genotypes are of equal length, but the user wants
-		*		a non genome - addition model, how do we undertake that?
-		*		should we simply run all combinations of both genotypes
-		*		separately?
-		*	2.	If one genotype is longer than the other, should we fill the
-		*		larger or smaller genotype, or possibly, should we fill both and
-		* 		do a similar procedure as I described above? 
-
-
-		else
+	
+		new_alleles = R_Calloc(reduction, int);
+		for (i = 0; i < reduction; i++)
 		{
-			int fill_tracker = 0, *pzero_ind, large_inds[p - zerocatch[larger]], 
-				large_counter = 0, *plarge_inds;
-			double res = 0;
-			pzero_ind = (int *) &zero_ind[larger];
-			plarge_inds = (int *) &large_inds;
-			for (i = 0; i < p; i++)
+			new_alleles[i] = i;
+		}
+		w = fact(reduction) * reduction;
+		perm_array = R_Calloc(w, int);
+		perm_count = 0;
+		permute(new_alleles, 0, reduction - 1, perm_array);
+		// rebuild the array and make a pointer.
+		new_geno = R_Calloc(reduction*n, int);
+		counter = 0;
+		for (i=0; i < n; i++)
+		{
+			zero_counter = zerocatch[larger];
+			for (j = 0; j < p; j++)
 			{
-				if (genos[larger][i] > 0)
+				if (genos[i*p + j] == 0 && zero_counter > 0)
 				{
-					large_inds[large_counter++] = i;
+					zero_counter--;
+				}
+				else
+				{
+					new_geno[counter++] = genos[i*p + j];
 				}
 			}
-			for (i = 0; i < reduction; i++)
-			{
-				fill_short_geno(in, p, perm, woo, loss, add, zerocatch[larger], 
-					pzero_ind, 0, larger, plarge_inds, reduction, i, &res, 
-					&fill_tracker);
-			}
-			minn = res/fill_tracker;
 		}
-    */
+	
+		minn = test_bruvo_dist(new_geno, &reduction, perm_array, &w, 
+								&loss_indicator, &add_indicator);
+		R_Free(perm_array);
+		R_Free(new_geno);
+		R_Free(new_alleles);
 		return minn;
 	}
 
