@@ -598,7 +598,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	Rprintf("\n");
 	// This avoids warning: assignment from incompatible pointer type
 	distp = (double *) &dist;
-	if(zerocatch[0] > 0 || zerocatch[1] > 0)
+	if (zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
 		int *genop; // pointer to the genotype array
 		int ind;    // 
@@ -699,11 +699,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		genome_loss_sum = genome_loss_sum/loss_tracker;
 		genome_add_sum = genome_add_sum/tracker;
 		int comparison_factor = loss_indicator + add_indicator;
-		return (genome_add_sum + genome_loss_sum)/(p*comparison_factor);
+		minn = (genome_add_sum + genome_loss_sum)/(p*comparison_factor);
+	}
+	else 
+	{
+		minn = mindist(w, p, perm, distp)/p;
 	}
 	R_Free(genos);
 	// R_Free(dist);
-	return mindist(w, p, perm, distp)/p;
+	return minn;
 }
 
 
