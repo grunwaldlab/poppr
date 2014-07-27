@@ -594,7 +594,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		if (add_indicator == 1)
 		{
 			int* short_inds;
-			short_inds = R_Calloc(zerocatch[miss_ind], int);
+			short_inds = R_Calloc(p - zerocatch[miss_ind], int);
 			int short_counter = 0;
 			for (i = 0; i < p; i++)
 			{
