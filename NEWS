@@ -1,8 +1,9 @@
 poppr 1.1.1.99
 ===========
 BUG FIX
-* Fixed bug where the loss and add options for Bruvo's distance were switched.
-* Fixed illegal memory access error by UBSAN. Made memory management of internal C functions more sane.
+* Fixed bug where the loss and add options for Bruvo's distance were switched. 
+* Fixed illegal memory access error by UBSAN. Made memory management of internal C functions more sane. (Addresses issue #2).
+* Fixed directional quotes and em-dashes produced by Mavericks (Addresses issue #3).
 
 poppr 1.1.0
 ===========
