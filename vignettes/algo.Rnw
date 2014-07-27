@@ -550,6 +550,6 @@ H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
 Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
 genotypes observed and $N$ is the sample size. 
 
-\bibliographystyle{pnas.bst}
+\bibliographystyle{plain}
 \bibliography{poppr_man}
 \end{document}
