@@ -357,11 +357,8 @@ int fact(int x)
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	DEPRECATED
-
-	This will calculate bruvo's distance between two individuals. 
-	All that needs to be done from here is to have it do the pairwise
-	calculations. 
+	Bruvo's Distance implementing Addition, Loss, and Infinite models for
+	imputation of missing data.
 
 	NOTE: The input needs to be divided by the repeat length beforehand for this
 	to work. 
@@ -369,68 +366,13 @@ int fact(int x)
 	in: a matrix of two individuals
 	out: a double value that will be the output from bruvo's distance.
 	n: number of individuals(2)
-	nall / p: number of alleles
+	nall: number of alleles
 	perm: a vector from the permn function in R
 	woo: p * p!
-	minn: is a rolling counter of the minimum between allele compairsons.
+	loss: TRUE/FALSE: impute under genome loss model.
+	add: TRUE/FALSE: impute under genome addition model. 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-double bruvo_dist(int *in, int *nall, int *perm, int *woo)
-{
-	int i, j, counter=0, n = 2, p = *nall, w = *woo, genos[2][p];
-	double dist[p][p], da, res = 0, minn=100;
-	// reconstruct the genotype table.
-	for(i=0; i < n; i++)
-	{
-		for(j = 0; j < p; j++)
-		{
-			// Missing data will return with distance of 100
-			if(in[counter] == 0)
-			{
-				return minn;
-			}
-			else
-			{
-				genos[i][j] = in[counter++];
-			}
-		}
-	}
-
-	// Construct distance matrix of 1 - 2^{-|x|}
-	for(j = 0; j < p; j++)
-	{
-		for(i=0; i < p; i++)
-		{
-			da = 1- pow(2 , -abs(genos[0][i] - genos[1][j]));
-			dist[i][j] = da;
-		}
-	}
-
-	//	Calculate the smallest s, which is the minimum distance among alleles.
-	for(i = 0; i < w; i += p)
-	{
-		for(j = 0; j < p; j++)
-		{
-			if (j == 0)
-			{
-				res = dist[*perm++][j];
-			}
-			else
-			{
-				res += dist[*perm++][j];
-			}
-		}
-		/*	Checking if the new calculated distance is smaller than the smallest
-			distance seen. */
-		if ( res < minn )
-		{
-			minn = res;
-		}
-	}
-	return minn/p;
-}
-
-/*	Test code comparing current status to polysat's Bruvo2.distance:
+	Test code comparing current status to polysat's Bruvo2.distance:
 ================================================================================
 poppr_bruvo <- function(){ 
   return(c(.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0),
@@ -464,7 +406,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	int loss_indicator = *loss; // 1 if the genome loss model should be used
 	int add_indicator = *add;   // 1 if the genome addition model should be used
 
-	// int genos[2][p];
 	int *genos;    // array to store the genotypes
 	genos = R_Calloc(2*p, int);
 
@@ -556,7 +497,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		perm_array = R_Calloc(w, int);
 		perm_count = 0;
 		permute(new_alleles, 0, reduction - 1, perm_array);
-		// rebuild the array and make a pointer.
 		new_geno = R_Calloc(reduction*n, int);
 		counter = 0;
 		for (i=0; i < n; i++)
@@ -601,7 +541,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 
 	if (zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
-		int ind;    // 
+		int ind;    
 		int miss_ind = 1;
 		int z;
 		int tracker = 0;
