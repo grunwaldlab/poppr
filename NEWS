@@ -1,4 +1,4 @@
-poppr 1.1.1.99
+poppr 1.1.1
 ===========
 BUG FIX
 * Fixed bug where the loss and add options for Bruvo's distance were switched. 
