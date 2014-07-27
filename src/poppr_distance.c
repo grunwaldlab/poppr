@@ -472,9 +472,13 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	int zerocatch[2]; 	// 2 element array to store the number of missing 
 					  	// alleles in each genotype. 
 	
-	int zero_ind[2][p]; // array to store the indices of the missing data for
+	//int zero_ind[2][p]; // array to store the indices of the missing data for
 						// each genotype
-	
+	int** zero_ind;
+	zero_ind = R_Calloc(2, int*);
+	zero_ind[0] = R_Calloc(p, int);
+	zero_ind[1] = R_Calloc(p, int);
+
 	int zerodiff;      	// used to check the amount of missing data different 
 				       	// between the two genotypes
 	
@@ -665,13 +669,14 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		if (add_indicator == 1)
 		{
 			Rprintf("ADD!\n");
-			int *pzero_ind;
-			pzero_ind = (int *) &zero_ind[miss_ind];
+			// int *zero_ind[miss_ind];
+			int replacements = 0;
+			replacements = p - zerocatch[miss_ind];
 			print_distmat(dist, genop, p);
-			for (i = 0; i < p - zerocatch[miss_ind]; i++)
+			for (i = 0; i < replacements; i++)
 			{
 				genome_add_calc(w, p, perm, dist, zerocatch[miss_ind],
-					pzero_ind, 0, miss_ind, short_inds, p-zerocatch[miss_ind], 
+					zero_ind[miss_ind], 0, miss_ind, short_inds, replacements, 
 					i, &genome_add_sum, &tracker, genop);
 				Rprintf("current add sum = %.6f\n", genome_add_sum);
 			}
@@ -686,12 +691,12 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		if (loss_indicator == 1)
 		{
 			Rprintf("LOSS!\n");
-			int *pzero_ind;
-			pzero_ind = (int *) &zero_ind[miss_ind];
+			// int *zero_ind[miss_ind];
+			
 			for (i = 0; i < p; i++)
 			{
 				genome_loss_calc(genop, p, perm, w, &loss_indicator, 
-					&add_indicator, pzero_ind, 0, zerocatch[miss_ind], 
+					&add_indicator, zero_ind[miss_ind], 0, zerocatch[miss_ind], 
 					miss_ind, i, &genome_loss_sum, &loss_tracker);
 			}
 		}
@@ -720,6 +725,9 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		R_Free(dist[i]);
 	}
 	R_Free(dist);
+	R_Free(zero_ind[0]);
+	R_Free(zero_ind[1]);
+	R_Free(zero_ind);
 	return minn;
 }
 
@@ -765,16 +773,14 @@ void genome_add_calc(int perms, int alleles, int *perm, double **dist,
 	{
 		for (j = 0; j < alleles; j++)
 		{
-			dist[zero_ind[curr_zero]][j] = 
-				dist[replacement[curr_ind]][j];
+			dist[zero_ind[curr_zero]][j] = dist[replacement[curr_ind]][j];
 		}
 	}
 	else
 	{
 		for (j = 0; j < alleles; j++)
 		{
-			dist[j][zero_ind[curr_zero]] = 
-				dist[j][replacement[curr_ind]];	
+			dist[j][zero_ind[curr_zero]] = dist[j][replacement[curr_ind]];	
 		}
 	}
 	//==========================================================================
