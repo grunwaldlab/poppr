@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 1.1.0}
+\title{Algorithms and equations utilized in poppr version 1.1.1}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -550,6 +550,6 @@ H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
 Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
 genotypes observed and $N$ is the sample size. 
 
-\bibliographystyle{pnas.bst}
+\bibliographystyle{plain}
 \bibliography{poppr_man}
 \end{document}
