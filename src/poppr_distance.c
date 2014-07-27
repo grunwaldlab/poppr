@@ -46,9 +46,9 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo);
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
-double addmindist(int perms, int alleles, int *perm, double *dist, int *genos);
-double mindist(int perms, int alleles, int *perm, double *dist);
-void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
+double addmindist(int perms, int alleles, int *perm, double **dist, int *genos);
+double mindist(int perms, int alleles, int *perm, double **dist);
+void genome_add_calc(int perms, int alleles, int *perm, double **dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
 	int inds, int curr_ind, double *genome_add_sum, int *tracker, int *genos);
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
@@ -59,6 +59,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
 		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
 		int *tracker);
+void print_distmat(double** dist, int* genos, int p);
 		
 		
 
@@ -477,13 +478,17 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	int zerodiff;      	// used to check the amount of missing data different 
 				       	// between the two genotypes
 	
-	double dist[p][p]; 	// array to store the distance
-	// double *dist;
-	// R_Calloc(p*p, double);
-	double *distp;     	// pointer for the dist array	
+	// double dist[p][p]; 	// array to store the distance
+	double** dist;
+	dist = R_Calloc(p, double*);
+	for (i = 0; i < p; i++)
+	{
+		dist[i] = R_Calloc(p, double);
+	}
+	// double **dist;     	// pointer for the dist array	
 	double minn = 100; 	// The minimum distance 
 
-	// double dist[p][p], da, minn = 100, *distp;
+	// double dist[p][p], da, minn = 100, **dist;
 	// reconstruct the genotype table.
 	zerocatch[0] = 0;
 	zerocatch[1] = 0;
@@ -580,25 +585,19 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
 	// in the columns.
-	// Rprintf("\n \t");
-	// for (i = 0; i < p; i++)
-	// {
-	// 	Rprintf("%d\t", genos[i]);
-	// }
-	// Rprintf("\n");
+
 	for(j = 0; j < p; j++)
 	{
-		// Rprintf("%d\t", genos[p + j]);
 		for(i = 0; i < p; i++)
 		{
-			dist[i][j] = 1 - pow(2, -abs(genos[0*p + i] - genos[1*p + j]));
-			// Rprintf("%.2f\t", dist[i][j]);
+			dist[j][i] = 1 - pow(2, -abs(genos[0*p + i] - genos[1*p + j]));
 		}
-		// Rprintf("\n");
 	}
-	// Rprintf("\n");
 	// This avoids warning: assignment from incompatible pointer type
-	distp = (double *) &dist;
+	// dist = (double *) &dist;
+	Rprintf("DISTANCE:");
+	print_distmat(dist, genos, p);
+
 	if (zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
 		int *genop; // pointer to the genotype array
@@ -637,7 +636,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			for (z = 0; z < zerocatch[miss_ind]; z++)
 			{
 				ind = zero_ind[miss_ind][z];
-				if (zerocatch[0] > 0)
+				if (zerocatch[0] < 0)
 				{
 					for (j = 0; j < p; j++)
 					{
@@ -668,9 +667,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			int *pshort_inds;
 			pzero_ind = (int *) &zero_ind[miss_ind];
 			pshort_inds = (int *) &short_inds;
+			print_distmat(dist, genop, p);
 			for (i = 0; i < p - zerocatch[miss_ind]; i++)
 			{
-				genome_add_calc(w, p, perm, distp, zerocatch[miss_ind],
+				genome_add_calc(w, p, perm, dist, zerocatch[miss_ind],
 					pzero_ind, 0, miss_ind, pshort_inds, p-zerocatch[miss_ind], 
 					i, &genome_add_sum, &tracker, genop);
 				Rprintf("current add sum = %.6f\n", genome_add_sum);
@@ -711,10 +711,14 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	}
 	else 
 	{
-		finalcalc: minn = mindist(w, p, perm, distp)/p;
+		finalcalc: minn = mindist(w, p, perm, dist)/p;
 	}
 	R_Free(genos);
-	// R_Free(dist);
+	for (i = 0; i < p; i++)
+	{
+		R_Free(dist[i]);
+	}
+	R_Free(dist);
 	return minn;
 }
 
@@ -730,7 +734,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 *	perms - number of permutations (passed to mindist)
 *	alleles - number of maximum alleles (also passed to mindist)
 *	*perm - permutation array (passed to mindist)
-*	*dist - distance matrix to be manipulated (also passed to mindist)
+*	**dist - distance matrix to be manipulated (also passed to mindist)
 *	
 *	zeroes - number of zeroes present in the shorter genotype.
 *	*zero_ind - array containing indices of the zero values of the short geno
@@ -744,31 +748,32 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 *	*genome_add_sum - pointer to the total number of the genome addition model.
 *	*tracker - pointer to counter for the number of calculations for addition. 
 ==============================================================================*/
-void genome_add_calc(int perms, int alleles, int *perm, double *dist, 
+void genome_add_calc(int perms, int alleles, int *perm, double **dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
 	int inds, int curr_ind, double *genome_add_sum, int *tracker, int *genos)
 {
-	int i,j;
+	int i;
+	int j;
 	//==========================================================================
 	// Part 1: fill one row/column of the matrix.
 	// Note that we don't have the format of the 2D array here, so we are
 	// cheating a little bit. Instead of indexing by dist[i][j] over p columns,
-	// we use dist[i + p*j]. It works. 
+	// we use dist[i][j]. It works. 
 	//==========================================================================
 	if(miss_ind > 0)
 	{
 		for (j = 0; j < alleles; j++)
 		{
-			dist[zero_ind[curr_zero] + alleles*j] = 
-				dist[replacement[curr_ind] + alleles*j];
+			dist[zero_ind[curr_zero]][j] = 
+				dist[replacement[curr_ind]][j];
 		}
 	}
 	else
 	{
 		for (j = 0; j < alleles; j++)
 		{
-			dist[j + alleles*zero_ind[curr_zero]] = 
-				dist[j + alleles*replacement[curr_ind]];	
+			dist[j][zero_ind[curr_zero]] = 
+				dist[j][replacement[curr_ind]];	
 		}
 	}
 	//==========================================================================
@@ -927,7 +932,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 // Multiset coefficient: fact(n+k-1)/(fact(k)*fact(n-1))
 */
 
-double mindist(int perms, int alleles, int *perm, double *dist)
+double mindist(int perms, int alleles, int *perm, double **dist)
 {
 	int i, j;
 	int w = perms;
@@ -942,7 +947,7 @@ double mindist(int perms, int alleles, int *perm, double *dist)
 		{
 			if (j == 0)
 			{
-				res = dist[*(perm + counter) + p*j];
+				res = dist[*(perm + counter)][j];
 				// Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
 				counter++;
 				if(res > minn)
@@ -955,7 +960,7 @@ double mindist(int perms, int alleles, int *perm, double *dist)
 			}
 			else
 			{
-				res += dist[*(perm + counter) + p*j];
+				res += dist[*(perm + counter)][j];
 				// Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
 				counter++;
 				if(j < p-1 && res > minn)
@@ -976,7 +981,7 @@ double mindist(int perms, int alleles, int *perm, double *dist)
 	return minn;
 }
 
-double addmindist(int perms, int alleles, int *perm, double *dist, int *genos)
+double addmindist(int perms, int alleles, int *perm, double **dist, int *genos)
 {
 	int i, j;
 	int w = perms;
@@ -987,30 +992,14 @@ double addmindist(int perms, int alleles, int *perm, double *dist, int *genos)
 
 
 	Rprintf("Minimum Distances\n \t");
-	for (i = 0; i < alleles; i++)
-	{
-		Rprintf("%d\t", genos[i]);
-	}
-	Rprintf("\n");
-	for (i = 0; i < alleles; i++)
-	{
-		Rprintf("%d\t", genos[i+alleles]);
-		for (j = 0; j < alleles; j++)
-		{
-			Rprintf("%.4f\t", dist[i + p*j]);
-		}
-		Rprintf("\n");
-	}
-
-
-
+	print_distmat(dist, genos, p);
 	for(i = 0; i < w; i += p)
 	{
 		for(j = 0; j < p; j++)
 		{
 			if (j == 0)
 			{
-				res = dist[*(perm + counter) + p*j];
+				res = dist[*(perm + counter)][j];
 				Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
 				counter++;
 				if(res > minn)
@@ -1023,7 +1012,7 @@ double addmindist(int perms, int alleles, int *perm, double *dist, int *genos)
 			}
 			else
 			{
-				res += dist[*(perm + counter) + p*j];
+				res += dist[*(perm + counter)][j];
 				Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
 				counter++;
 				if(j < p-1 && res > minn)
@@ -1043,3 +1032,27 @@ double addmindist(int perms, int alleles, int *perm, double *dist, int *genos)
 	}
 	return minn;
 }
+
+void print_distmat(double** dist, int* genos, int p)
+{
+	int i;
+	int j;
+
+	Rprintf("\n \t");
+	for (i = 0; i < p; i++)
+	{
+		Rprintf("%d\t", genos[i]);
+	}
+	Rprintf("\n");
+	for (i = 0; i < p; i++)
+	{
+		Rprintf("%d\t", genos[i+p]);
+		for (j = 0; j < p; j++)
+		{
+			Rprintf("%.4f\t", dist[i][j]);
+		}
+		Rprintf("\n");
+	}
+	return;
+}
+
