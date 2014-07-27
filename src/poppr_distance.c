@@ -583,14 +583,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	}
 
 	// Construct distance matrix of 1 - 2^{-|x|}.
-	// This is constructed column by column. Genotype 1 in the rows. Genotype 2
-	// in the columns.
+	// This is constructed column by column. 
+	// Genotype 1: COLUMNS
+	// Genotype 2: ROWS
 
-	for(j = 0; j < p; j++)
+	for(i = 0; i < p; i++)
 	{
-		for(i = 0; i < p; i++)
+		for(j = 0; j < p; j++)
 		{
-			dist[j][i] = 1 - pow(2, -abs(genos[0*p + i] - genos[1*p + j]));
+			dist[i][j] = 1 - pow(2, -abs(genos[0*p + j] - genos[1*p + i]));
 		}
 	}
 	// This avoids warning: assignment from incompatible pointer type
@@ -607,6 +608,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int tracker = 0;
 		int loss_tracker = 0;
 		int comparison_factor = 1;
+		int* short_inds;
 		double genome_add_sum = 0;
 		double genome_loss_sum = 0;
 		genop = genos;
@@ -616,7 +618,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			//full_ind = 1; 
 		}
 		ind = zero_ind[miss_ind][0];
-		int short_inds[zerocatch[miss_ind]];
+		short_inds = R_Calloc(zerocatch[miss_ind], int);
 		int short_counter = 0;
 		for (i = 0; i < p; i++)
 		{
@@ -664,17 +666,16 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		{
 			Rprintf("ADD!\n");
 			int *pzero_ind;
-			int *pshort_inds;
 			pzero_ind = (int *) &zero_ind[miss_ind];
-			pshort_inds = (int *) &short_inds;
 			print_distmat(dist, genop, p);
 			for (i = 0; i < p - zerocatch[miss_ind]; i++)
 			{
 				genome_add_calc(w, p, perm, dist, zerocatch[miss_ind],
-					pzero_ind, 0, miss_ind, pshort_inds, p-zerocatch[miss_ind], 
+					pzero_ind, 0, miss_ind, short_inds, p-zerocatch[miss_ind], 
 					i, &genome_add_sum, &tracker, genop);
 				Rprintf("current add sum = %.6f\n", genome_add_sum);
 			}
+			R_Free(short_inds);
 		}
 		/*======================================================================
 		*	GENOME LOSS MODEL
