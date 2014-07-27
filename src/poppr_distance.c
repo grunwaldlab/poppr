@@ -547,7 +547,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int tracker = 0;
 		int loss_tracker = 0;
 		int comparison_factor = 1;
-		int* short_inds;
 		double genome_add_sum = 0;
 		double genome_loss_sum = 0;
 
@@ -556,15 +555,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			miss_ind = 0;
 		}
 		ind = zero_ind[miss_ind][0];
-		short_inds = R_Calloc(zerocatch[miss_ind], int);
-		int short_counter = 0;
-		for (i = 0; i < p; i++)
-		{
-			if (genos[miss_ind*p + i] > 0)
-			{
-				short_inds[short_counter++] = i;
-			}
-		}
+
 		/*======================================================================
 		*	INFINITE MODEL
 		*	Infinite model will simply replace the distance of the comparisons
@@ -602,6 +593,16 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if (add_indicator == 1)
 		{
+			int* short_inds;
+			short_inds = R_Calloc(zerocatch[miss_ind], int);
+			int short_counter = 0;
+			for (i = 0; i < p; i++)
+			{
+				if (genos[miss_ind*p + i] > 0)
+				{
+					short_inds[short_counter++] = i;
+				}
+			}	
 			// Rprintf("ADD!\n");
 			int replacements = 0;
 			replacements = p - zerocatch[miss_ind];
