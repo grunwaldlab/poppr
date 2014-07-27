@@ -46,11 +46,10 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo);
 double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
-double addmindist(int perms, int alleles, int *perm, double **dist, int *genos);
 double mindist(int perms, int alleles, int *perm, double **dist);
 void genome_add_calc(int perms, int alleles, int *perm, double **dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
-	int inds, int curr_ind, double *genome_add_sum, int *tracker, int *genos);
+	int inds, int curr_ind, double *genome_add_sum, int *tracker);
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
@@ -506,15 +505,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 					return minn;
 				}
 				zerocatch[i] += 1;
-				Rprintf("[%d]", zerocatch[i] - 1);
+				// Rprintf("[%d]", zerocatch[i] - 1);
 				zero_ind[i][zerocatch[i] - 1] = j;
 			}
 			genos[i*p + j] = in[counter++];
-			Rprintf("%d\t", genos[i*p + j]);
+			// Rprintf("%d\t", genos[i*p + j]);
 		}
-		Rprintf("\n");
+		// Rprintf("\n");
 	}
-	Rprintf("\n");
+	// Rprintf("\n");
 	zerodiff = abs(zerocatch[0] - zerocatch[1]);
 	/*==========================================================================
 	* Removing superfluous zeroes from the data. This is in the case that both
@@ -597,12 +596,11 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		}
 	}
 
-	Rprintf("DISTANCE:");
-	print_distmat(dist, genos, p);
+	// Rprintf("DISTANCE:");
+	// print_distmat(dist, genos, p);
 
 	if (zerocatch[0] > 0 || zerocatch[1] > 0)
 	{
-		int *genop; // pointer to the genotype array
 		int ind;    // 
 		int miss_ind = 1;
 		int z;
@@ -612,7 +610,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int* short_inds;
 		double genome_add_sum = 0;
 		double genome_loss_sum = 0;
-		genop = genos;
+
 		if (zerocatch[0] > 0) // The columns contain the zero value
 		{
 			miss_ind = 0;
@@ -634,7 +632,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if(loss_indicator != 1 && add_indicator != 1)
 		{
-			Rprintf("TO INFINITY!\n");
+			// Rprintf("TO INFINITY!\n");
 			for (z = 0; z < zerocatch[miss_ind]; z++)
 			{
 				ind = zero_ind[miss_ind][z];
@@ -664,17 +662,16 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if (add_indicator == 1)
 		{
-			Rprintf("ADD!\n");
-			// int *zero_ind[miss_ind];
+			// Rprintf("ADD!\n");
 			int replacements = 0;
 			replacements = p - zerocatch[miss_ind];
-			print_distmat(dist, genop, p);
+			// print_distmat(dist, genos, p);
 			for (i = 0; i < replacements; i++)
 			{
 				genome_add_calc(w, p, perm, dist, zerocatch[miss_ind],
 					zero_ind[miss_ind], 0, miss_ind, short_inds, replacements, 
-					i, &genome_add_sum, &tracker, genop);
-				Rprintf("current add sum = %.6f\n", genome_add_sum);
+					i, &genome_add_sum, &tracker);
+				// Rprintf("current add sum = %.6f\n", genome_add_sum);
 			}
 			R_Free(short_inds);
 		}
@@ -686,12 +683,10 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if (loss_indicator == 1)
 		{
-			Rprintf("LOSS!\n");
-			// int *zero_ind[miss_ind];
-			
+			// Rprintf("LOSS!\n");
 			for (i = 0; i < p; i++)
 			{
-				genome_loss_calc(genop, p, perm, w, &loss_indicator, 
+				genome_loss_calc(genos, p, perm, w, &loss_indicator, 
 					&add_indicator, zero_ind[miss_ind], 0, zerocatch[miss_ind], 
 					miss_ind, i, &genome_loss_sum, &loss_tracker);
 			}
@@ -705,9 +700,9 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			loss_tracker = 1;
 		}
 		genome_loss_sum = genome_loss_sum/loss_tracker;
-		Rprintf("LOSS SUM: %.6f\n", genome_loss_sum/p);
+		// Rprintf("LOSS SUM: %.6f\n", genome_loss_sum/p);
 		genome_add_sum = genome_add_sum/tracker;
-		Rprintf("ADD SUM: %.6f\n", genome_add_sum/p);
+		// Rprintf("ADD SUM: %.6f\n", genome_add_sum/p);
 		comparison_factor = loss_indicator + add_indicator;
 		minn = (genome_add_sum + genome_loss_sum)/(p*comparison_factor);
 	}
@@ -755,7 +750,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 ==============================================================================*/
 void genome_add_calc(int perms, int alleles, int *perm, double **dist, 
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
-	int inds, int curr_ind, double *genome_add_sum, int *tracker, int *genos)
+	int inds, int curr_ind, double *genome_add_sum, int *tracker)
 {
 	int i;
 	int j;
@@ -793,7 +788,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double **dist,
 		{
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
 				++curr_zero, miss_ind, replacement, inds, i, genome_add_sum, 
-				tracker, genos);
+				tracker);
 			if (curr_zero == zeroes - 1)
 			{
 				return;
@@ -801,7 +796,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double **dist,
 		}
 		else
 		{
-			*genome_add_sum += addmindist(perms, alleles, perm, dist, genos);
+			*genome_add_sum += mindist(perms, alleles, perm, dist);
 			*tracker += 1;
 			if (zeroes == 1 || i == inds - 1)
 			{
@@ -970,58 +965,6 @@ double mindist(int perms, int alleles, int *perm, double **dist)
 				}
 			}
 		}
-		/*	Checking if the new calculated distance is smaller than the smallest
-		 distance seen. */
-		if ( res < minn )
-		{
-			minn = res;
-		}
-	}
-	return minn;
-}
-
-double addmindist(int perms, int alleles, int *perm, double **dist, int *genos)
-{
-	int i, j;
-	int w = perms;
-	int p = alleles;
-	int counter = 0;
-	double res = 0;
-	double minn = 100;
-
-
-	Rprintf("Minimum Distances\n \t");
-	print_distmat(dist, genos, p);
-	for(i = 0; i < w; i += p)
-	{
-		for(j = 0; j < p; j++)
-		{
-			if (j == 0)
-			{
-				res = dist[*(perm + counter)][j];
-				Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
-				counter++;
-				if(res > minn)
-				{
-					Rprintf("Bound\n");
-					j = p;
-					counter = i + w/p;
-					i = counter;
-				}				
-			}
-			else
-			{
-				res += dist[*(perm + counter)][j];
-				Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
-				counter++;
-				if(j < p-1 && res > minn)
-				{				
-					counter += (p-j-1);
-					j = p;
-				}
-			}
-		}
-		Rprintf("\n");
 		/*	Checking if the new calculated distance is smaller than the smallest
 		 distance seen. */
 		if ( res < minn )
