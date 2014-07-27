@@ -593,28 +593,30 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if (add_indicator == 1)
 		{
-			int* short_inds;
-			short_inds = R_Calloc(p - zerocatch[miss_ind], int);
+			int* replacements;
+			int Nobs; // Number of observed alleles in the shorter genotype
+			Nobs = p - zerocatch[miss_ind];
+			replacements = R_Calloc(Nobs, int);
 			int short_counter = 0;
+			// fill the replacements array with the indices of the replacement
+			// distances.
 			for (i = 0; i < p; i++)
 			{
 				if (genos[miss_ind*p + i] > 0)
 				{
-					short_inds[short_counter++] = i;
+					replacements[short_counter++] = i;
 				}
 			}	
 			// Rprintf("ADD!\n");
-			int replacements = 0;
-			replacements = p - zerocatch[miss_ind];
 			// print_distmat(dist, genos, p);
-			for (i = 0; i < replacements; i++)
+			for (i = 0; i < Nobs; i++)
 			{
 				genome_add_calc(w, p, perm, dist, zerocatch[miss_ind],
-					zero_ind[miss_ind], 0, miss_ind, short_inds, replacements, 
+					zero_ind[miss_ind], 0, miss_ind, replacements, Nobs, 
 					i, &genome_add_sum, &tracker);
 				// Rprintf("current add sum = %.6f\n", genome_add_sum);
 			}
-			R_Free(short_inds);
+			R_Free(replacements);
 		}
 		/*======================================================================
 		*	GENOME LOSS MODEL
