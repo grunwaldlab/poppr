@@ -471,10 +471,9 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 
 	int zerocatch[2]; 	// 2 element array to store the number of missing 
 					  	// alleles in each genotype. 
-	
-	//int zero_ind[2][p]; // array to store the indices of the missing data for
+	 
+	int** zero_ind;     // array to store the indices of the missing data for
 						// each genotype
-	int** zero_ind;
 	zero_ind = R_Calloc(2, int*);
 	zero_ind[0] = R_Calloc(p, int);
 	zero_ind[1] = R_Calloc(p, int);
@@ -482,17 +481,16 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 	int zerodiff;      	// used to check the amount of missing data different 
 				       	// between the two genotypes
 	
-	// double dist[p][p]; 	// array to store the distance
-	double** dist;
+
+	double** dist; 	    // array to store the distance
 	dist = R_Calloc(p, double*);
 	for (i = 0; i < p; i++)
 	{
 		dist[i] = R_Calloc(p, double);
 	}
-	// double **dist;     	// pointer for the dist array	
+
 	double minn = 100; 	// The minimum distance 
 
-	// double dist[p][p], da, minn = 100, **dist;
 	// reconstruct the genotype table.
 	zerocatch[0] = 0;
 	zerocatch[1] = 0;
@@ -598,8 +596,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			dist[i][j] = 1 - pow(2, -abs(genos[0*p + j] - genos[1*p + i]));
 		}
 	}
-	// This avoids warning: assignment from incompatible pointer type
-	// dist = (double *) &dist;
+
 	Rprintf("DISTANCE:");
 	print_distmat(dist, genos, p);
 
@@ -616,10 +613,9 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		double genome_add_sum = 0;
 		double genome_loss_sum = 0;
 		genop = genos;
-		if (zerocatch[0] > 0) // The rows contain the zero value
+		if (zerocatch[0] > 0) // The columns contain the zero value
 		{
 			miss_ind = 0;
-			//full_ind = 1; 
 		}
 		ind = zero_ind[miss_ind][0];
 		short_inds = R_Calloc(zerocatch[miss_ind], int);
@@ -955,11 +951,9 @@ double mindist(int perms, int alleles, int *perm, double **dist)
 			if (j == 0)
 			{
 				res = dist[*(perm + counter)][j];
-				// Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
 				counter++;
 				if(res > minn)
 				{
-					// Rprintf("Bound\n");
 					j = p;
 					counter = i + w/p;
 					i = counter;
@@ -968,7 +962,6 @@ double mindist(int perms, int alleles, int *perm, double **dist)
 			else
 			{
 				res += dist[*(perm + counter)][j];
-				// Rprintf("dist[%d][%d]: %.2f\t", *(perm + counter), j, res);
 				counter++;
 				if(j < p-1 && res > minn)
 				{				
@@ -977,7 +970,6 @@ double mindist(int perms, int alleles, int *perm, double **dist)
 				}
 			}
 		}
-		// Rprintf("\n");
 		/*	Checking if the new calculated distance is smaller than the smallest
 		 distance seen. */
 		if ( res < minn )
