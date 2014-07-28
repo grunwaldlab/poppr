@@ -354,6 +354,12 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   
 #' @param showplot logical. If \code{TRUE}, the graph will be plotted. If 
 #'   \code{FALSE}, it will simply be returned.
+#'
+#' @param include.ties logical. If \code{TRUE}, the graph will include all
+#'   edges that were arbitrarily passed over in favor of another edge of equal
+#'   weight. If \code{FALSE}, which is the default, one edge will be arbitrarily 
+#'   selected when two or more edges are tied, resulting in a pure minimum spanning
+#'   network. 
 #'   
 #' @param ... any other arguments that could go into plot.igraph
 #'   
@@ -435,7 +441,8 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale = TRUE, showplot = TRUE, ...){
+                       wscale = TRUE, showplot = TRUE,
+                       include.ties = FALSE,  ...){
 
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   if (!is.genclone(pop)){
@@ -483,7 +490,15 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
   mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
-  
+
+  # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+  if(include.ties){
+    tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
+    if(length(tied_edges) > 0){
+      mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+    }
+  }
+
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
       vertex.label <- paste0("MLG.", cmlg)

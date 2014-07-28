@@ -7,7 +7,8 @@ matrix.}
 \usage{
 poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",
   blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
-  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE, ...)
+  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE,
+  include.ties = FALSE, ...)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} object}
@@ -54,6 +55,12 @@ poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",
 
 \item{showplot}{logical. If \code{TRUE}, the graph will be plotted. If
   \code{FALSE}, it will simply be returned.}
+
+\item{include.ties}{logical. If \code{TRUE}, the graph will include all
+  edges that were arbitrarily passed over in favor of another edge of equal
+  weight. If \code{FALSE}, which is the default, one edge will be arbitrarily
+  selected when two or more edges are tied, resulting in a pure minimum spanning
+  network.}
 
 \item{...}{any other arguments that could go into plot.igraph}
 }

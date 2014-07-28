@@ -282,6 +282,12 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' @param showplot logical. If \code{TRUE}, the graph will be plotted. If
 #'   \code{FALSE}, it will simply be returned.
 #'   
+#' @param include.ties logical. If \code{TRUE}, the graph will include all
+#'   edges that were arbitrarily passed over in favor of another edge of equal
+#'   weight. If \code{FALSE}, which is the default, one edge will be arbitrarily 
+#'   selected when two or more edges are tied, resulting in a pure minimum spanning
+#'   network. 
+#'
 #' @param ... any other arguments that could go into plot.igraph
 #'   
 #' @return \item{graph}{a minimum spanning network with nodes corresponding to 
@@ -337,7 +343,8 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 poppr.msn <- function (pop, distmat, palette = topo.colors, 
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale=TRUE, showplot = TRUE, ...){
+                       wscale=TRUE, showplot = TRUE, 
+                       include.ties=FALSE, ...){
   if (class(distmat) != "dist"){
     if (is.matrix(distmat)){
       if (any(nInd(pop) != dim(distmat))){
@@ -414,6 +421,14 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
   mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+
+  # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+  if(include.ties){
+    tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
+    if(length(tied_edges) > 0){
+      mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+    }
+  }
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
