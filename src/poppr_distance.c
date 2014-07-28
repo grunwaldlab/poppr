@@ -420,14 +420,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 
 	int zerodiff;      	// used to check the amount of missing data different 
 				       	// between the two genotypes
-	
-
-	double** dist; 	    // array to store the distance
-	dist = R_Calloc(p, double*);
-	for (i = 0; i < p; i++)
-	{
-		dist[i] = R_Calloc(p, double);
-	}
 
 	double minn = 100; 	// The minimum distance 
 
@@ -520,9 +512,15 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		R_Free(perm_array);
 		R_Free(new_geno);
 		R_Free(new_alleles);
-		return minn;
+		goto finalsteps;
 	}
 
+	double** dist; 	    // array to store the distance
+	dist = R_Calloc(p, double*);
+	for (i = 0; i < p; i++)
+	{
+		dist[i] = R_Calloc(p, double);
+	}
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. 
 	// Genotype 1: COLUMNS
@@ -659,7 +657,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		R_Free(dist[i]);
 	}
 	R_Free(dist);
-	R_Free(zero_ind[0]);
+	finalsteps: R_Free(zero_ind[0]);
 	R_Free(zero_ind[1]);
 	R_Free(zero_ind);
 	return minn;
