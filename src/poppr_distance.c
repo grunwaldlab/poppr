@@ -42,8 +42,8 @@
 #include <string.h>
 #include <stdlib.h>
 int perm_count;
-double bruvo_dist(int *in, int *nall, int *perm, int *woo);
-double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
+
+double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
 double mindist(int perms, int alleles, int *perm, double **dist);
@@ -211,7 +211,7 @@ SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP add, SEXP lo
 	b_mat = coerceVector(b_mat, INTSXP);
 	permutations = coerceVector(permutations, INTSXP);
 	PROTECT(Rval = allocVector(REALSXP, 1));
-	REAL(Rval)[0] = test_bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations),
+	REAL(Rval)[0] = bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations),
                                     pP, INTEGER(loss), INTEGER(add));
 	UNPROTECT(1);
 	return Rval;
@@ -278,7 +278,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add,
 					INTEGER(pair_matrix)[z] = INTEGER(bruvo_mat)[j+(a+z-A)*I];
 				}
 				// Calculating Bruvo's distance over these two. 
-				REAL(Rval)[count++] = test_bruvo_dist(INTEGER(pair_matrix), pA,
+				REAL(Rval)[count++] = bruvo_dist(INTEGER(pair_matrix), pA,
 					INTEGER(permutations), pP, INTEGER(m_loss), INTEGER(m_add));
 			}
 		}
@@ -395,7 +395,7 @@ polysat_bruvo()
 poppr_bruvo()
 polysat_bruvo() == poppr_bruvo()
 ==============================================================================*/
-double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
+double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
 	int i; 
 	int j; 
@@ -420,14 +420,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 
 	int zerodiff;      	// used to check the amount of missing data different 
 				       	// between the two genotypes
-	
-
-	double** dist; 	    // array to store the distance
-	dist = R_Calloc(p, double*);
-	for (i = 0; i < p; i++)
-	{
-		dist[i] = R_Calloc(p, double);
-	}
 
 	double minn = 100; 	// The minimum distance 
 
@@ -515,14 +507,20 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			}
 		}
 	
-		minn = test_bruvo_dist(new_geno, &reduction, perm_array, &w, 
+		minn = bruvo_dist(new_geno, &reduction, perm_array, &w, 
 								&loss_indicator, &add_indicator);
 		R_Free(perm_array);
 		R_Free(new_geno);
 		R_Free(new_alleles);
-		return minn;
+		goto finalsteps;
 	}
 
+	double** dist; 	    // array to store the distance
+	dist = R_Calloc(p, double*);
+	for (i = 0; i < p; i++)
+	{
+		dist[i] = R_Calloc(p, double);
+	}
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. 
 	// Genotype 1: COLUMNS
@@ -547,7 +545,6 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		int tracker = 0;
 		int loss_tracker = 0;
 		int comparison_factor = 1;
-		int* short_inds;
 		double genome_add_sum = 0;
 		double genome_loss_sum = 0;
 
@@ -556,15 +553,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 			miss_ind = 0;
 		}
 		ind = zero_ind[miss_ind][0];
-		short_inds = R_Calloc(zerocatch[miss_ind], int);
-		int short_counter = 0;
-		for (i = 0; i < p; i++)
-		{
-			if (genos[miss_ind*p + i] > 0)
-			{
-				short_inds[short_counter++] = i;
-			}
-		}
+
 		/*======================================================================
 		*	INFINITE MODEL
 		*	Infinite model will simply replace the distance of the comparisons
@@ -602,18 +591,30 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		======================================================================*/
 		if (add_indicator == 1)
 		{
+			int* replacements;
+			int Nobs; // Number of observed alleles in the shorter genotype
+			Nobs = p - zerocatch[miss_ind];
+			replacements = R_Calloc(Nobs, int);
+			int short_counter = 0;
+			// fill the replacements array with the indices of the replacement
+			// distances.
+			for (i = 0; i < p; i++)
+			{
+				if (genos[miss_ind*p + i] > 0)
+				{
+					replacements[short_counter++] = i;
+				}
+			}	
 			// Rprintf("ADD!\n");
-			int replacements = 0;
-			replacements = p - zerocatch[miss_ind];
 			// print_distmat(dist, genos, p);
-			for (i = 0; i < replacements; i++)
+			for (i = 0; i < Nobs; i++)
 			{
 				genome_add_calc(w, p, perm, dist, zerocatch[miss_ind],
-					zero_ind[miss_ind], 0, miss_ind, short_inds, replacements, 
+					zero_ind[miss_ind], 0, miss_ind, replacements, Nobs, 
 					i, &genome_add_sum, &tracker);
 				// Rprintf("current add sum = %.6f\n", genome_add_sum);
 			}
-			R_Free(short_inds);
+			R_Free(replacements);
 		}
 		/*======================================================================
 		*	GENOME LOSS MODEL
@@ -656,7 +657,7 @@ double test_bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *
 		R_Free(dist[i]);
 	}
 	R_Free(dist);
-	R_Free(zero_ind[0]);
+	finalsteps: R_Free(zero_ind[0]);
 	R_Free(zero_ind[1]);
 	R_Free(zero_ind);
 	return minn;
@@ -696,9 +697,6 @@ void genome_add_calc(int perms, int alleles, int *perm, double **dist,
 	int j;
 	//==========================================================================
 	// Part 1: fill one row/column of the matrix.
-	// Note that we don't have the format of the 2D array here, so we are
-	// cheating a little bit. Instead of indexing by dist[i][j] over p columns,
-	// we use dist[i][j]. It works. 
 	//==========================================================================
 	if(miss_ind > 0)
 	{
@@ -801,7 +799,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		}
 		else
 		{
-			*genome_loss_sum += test_bruvo_dist(genos, &nalleles, perm_array, 
+			*genome_loss_sum += bruvo_dist(genos, &nalleles, perm_array, 
 				&woo, loss, add)*nalleles;
 			*loss_tracker += 1;
 			if (zeroes == 1 || i == nalleles - 1)
@@ -817,7 +815,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 /*==============================================================================
 * Notes for fill_short_geno: This will act much in the same way as
 * genome_loss_calc, except it will fill the shorter genotype with all possible
-* combinations of that genotype before sending it through test_bruvo_dist with
+* combinations of that genotype before sending it through bruvo_dist with
 * one full genotype. 
 *
 * Things that need to be set before running this:
@@ -834,7 +832,6 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		int *tracker)
 {
 	int i; //full_ind;
-	//full_ind = 1 + (0 - miss_ind);
 	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
 		genos[miss_ind*nalleles + replacement[curr_ind]];
 	for (i = curr_ind; i < inds; i++)
@@ -851,7 +848,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		}
 		else
 		{
-			*res += test_bruvo_dist(genos, &nalleles, perm_array, woo, loss, 
+			*res += bruvo_dist(genos, &nalleles, perm_array, woo, loss, 
 						add);
 			*tracker += 1;
 			if (zeroes == 1 || i == nalleles - 1)

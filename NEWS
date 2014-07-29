@@ -1,3 +1,9 @@
+poppr 1.1.2
+===========
+BUG FIX
+* Fixed memory allocation bug (Further addresses issue #2).
+* Memory allocated in C function bruvo_dist is now properly freed.
+
 poppr 1.1.1
 ===========
 BUG FIX
