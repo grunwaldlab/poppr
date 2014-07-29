@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Data import and manipulation in Poppr version 1.1.1.99}
+\title{Data import and manipulation in poppr version 1.1.2}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -197,9 +197,9 @@ The following data sets are included in \poppr{}: \texttt{Pinf} \cite{goss2014ir
 
 \subsection{Citation}
 
-To cite \poppr{}, please type:
+The formal publication for \poppr{} was published in the journal PeerJ: \url{http://peerj.com/articles/281/}. To cite \poppr{}, please type in your R console:
 
-<<popprcite>>=
+<<popprcite, eval = FALSE, size="normalsize">>=
 citation(package = "poppr")
 @
 
@@ -4706,7 +4706,6 @@ to its definition and description.
 
 \end{longtable}
 \end{center}
-
-\bibliographystyle{pnas.bst}
+\bibliographystyle{plain}
 \bibliography{poppr_man}
 \end{document}

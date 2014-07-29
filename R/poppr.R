@@ -62,18 +62,18 @@
 #' }
 #' @section Genetic distances:
 #' \itemize{
-#' \item \code{\link{bruvo.dist}} - Bruvo’s distance
+#' \item \code{\link{bruvo.dist}} - Bruvo's distance
 #' \item \code{\link{diss.dist}} - Absolute genetic distance (see provesti.dist)
-#' \item \code{\link{nei.dist}} - Nei’s 1978 genetic distance
-#' \item \code{\link{rogers.dist}} - Rogers’ euclidean distance
-#' \item \code{\link{reynolds.dist}} - Reynolds’ coancestry distance
-#' \item \code{\link{edwards.dist}} - Edwards’ angular distance
-#' \item \code{\link{provesti.dist}} - Provesti’s absolute genetic distance
+#' \item \code{\link{nei.dist}} - Nei's 1978 genetic distance
+#' \item \code{\link{rogers.dist}} - Rogers' euclidean distance
+#' \item \code{\link{reynolds.dist}} - Reynolds' coancestry distance
+#' \item \code{\link{edwards.dist}} - Edwards' angular distance
+#' \item \code{\link{provesti.dist}} - Provesti's absolute genetic distance
 #' }
 #' @section Bootstrapping:
 #' \itemize{
 #' \item \code{\link{aboot}} - Creates a bootstrapped dendrogram for any distance measure
-#' \item \code{\link{bruvo.boot}} - Produces dendrograms with bootstrap support based on Bruvo’s distance
+#' \item \code{\link{bruvo.boot}} - Produces dendrograms with bootstrap support based on Bruvo's distance
 #' }
 #' @section Analysis:
 #' \itemize{
@@ -93,7 +93,7 @@
 #' \itemize{
 #' \item \code{\link{plot_poppr_msn}} - Plots minimum spanning networks produced in poppr with scale bar and legend
 #' \item \code{\link{greycurve}} - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
-#' \item \code{\link{bruvo.msn}} - Produces minimum spanning networks based off Bruvo’s distance colored by population
+#' \item \code{\link{bruvo.msn}} - Produces minimum spanning networks based off Bruvo's distance colored by population
 #' \item \code{\link{poppr.msn}} - Produces a minimum spanning network for any pairwise distance matrix related to the data
 #' \item \code{\link{info_table}} - Creates a heatmap representing missing data or observed ploidy
 #' \item \code{\link{genotype_curve}} - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 

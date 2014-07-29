@@ -16,8 +16,8 @@ This is microsatellite data for a population of the haploid
   were sampled across 3 years (2009, 2010, and 2011) in a total of four
   trees, where one tree was sampled in all three years, for a total of 6
   within-tree populations. Within each year, samples in the spring were taken
-  from affected blossoms (termed “BB” for blossom blight) and in late summer
-  from affected fruits (termed “FR” for fruit rot). There are a total of 694
+  from affected blossoms (termed "BB" for blossom blight) and in late summer
+  from affected fruits (termed "FR" for fruit rot). There are a total of 694
   isolates with 65 to 173 isolates within each canopy population that were
   characterized using a set of 13 microsatellite markers.
 }

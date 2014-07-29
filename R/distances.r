@@ -155,49 +155,49 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 #' @keywords nei rogers rodgers reynolds coancestry edwards angular provesti
 #' @references
 #' Nei, M. (1972) Genetic distances between populations. American Naturalist,
-#' 106, 283–292. 
+#' 106, 283-292. 
 #' 
 #' Nei M. (1978) Estimation of average heterozygosity and genetic
-#' distance from a small number of individuals. Genetics, 23, 341–369. 
+#' distance from a small number of individuals. Genetics, 23, 341-369. 
 #' 
 #' Avise, J. C. (1994) Molecular markers, natural history and evolution. Chapman & Hall,
 #' London.
 #' 
 #' Edwards, A.W.F. (1971) Distance between populations on the basis of gene
-#' frequencies. Biometrics, 27, 873–881. 
+#' frequencies. Biometrics, 27, 873-881. 
 #' 
 #' Cavalli-Sforza L.L. and Edwards A.W.F.
 #' (1967) Phylogenetic analysis: models and estimation procedures. Evolution,
-#' 32, 550–570. 
+#' 32, 550-570. 
 #' 
 #' Hartl, D.L. and Clark, A.G. (1989) Principles of population
 #' genetics. Sinauer Associates, Sunderland, Massachussetts (p. 303).
 #' 
 #' Reynolds, J. B., B. S. Weir, and C. C. Cockerham. (1983) Estimation of the
 #' coancestry coefficient: basis for a short-term genetic distance. Genetics,
-#' 105, 767–779.
+#' 105, 767-779.
 #' 
 #' Rogers, J.S. (1972) Measures of genetic similarity and genetic distances.
-#' Studies in Genetics, Univ. Texas Publ., 7213, 145–153. 
+#' Studies in Genetics, Univ. Texas Publ., 7213, 145-153. 
 #' 
 #' Avise, J. C. (1994)
 #' Molecular markers, natural history and evolution. Chapman & Hall, London.
 #' 
 #' Prevosti A. (1974) La distancia genetica entre poblaciones. Miscellanea
-#' Alcobe, 68, 109–118. 
+#' Alcobe, 68, 109-118. 
 #' 
 #' Prevosti A., Oca\~na J. and Alonso G. (1975) Distances
 #' between populations of Drosophila subobscura, based on chromosome
-#' arrangements frequencies. Theoretical and Applied Genetics, 45, 231–241. 
+#' arrangements frequencies. Theoretical and Applied Genetics, 45, 231-241. 
 #' 
 #' For more information on dissimilarity indexes: 
 #' 
 #' Gower J. and Legendre P. (1986)
 #' Metric and Euclidean properties of dissimilarity coefficients. Journal of
-#' Classification, 3, 5–48 
+#' Classification, 3, 5-48 
 #' 
 #' Legendre P. and Legendre L. (1998) Numerical Ecology,
-#' Elsevier Science B.V. 20, pp274–288.
+#' Elsevier Science B.V. 20, pp274-288.
 #' @export
 #' @examples
 #' 

@@ -8,8 +8,8 @@ test_that("Bruvo's distance works as expected.", {
   addLOSS <- as.vector(bruvo.dist(testgid, add = FALSE, loss = TRUE))
   ADDLOSS <- as.vector(bruvo.dist(testgid, add = TRUE, loss = TRUE))
   expect_that(addloss, equals(0.46875000000000))
-  expect_that(ADDloss, equals(0.34374987334013))
-  expect_that(addLOSS, equals(0.458333164453506))
+  expect_that(addLOSS, equals(0.34374987334013))
+  expect_that(ADDloss, equals(0.458333164453506))
   expect_that(ADDLOSS, equals(0.401041518896818))
 })
 
