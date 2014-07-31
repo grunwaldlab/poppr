@@ -41,10 +41,10 @@ ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   the p-value resulting from a one-sided permutation test based on the number
   of samples indicated in the original call.} \item{rbarD - }{numeric. The
   standardized index of association.} \item{p.rD - }{A factor indicating the
-  p-value resutling from a one-sided permutation test based on the number of
+  p-value resulting from a one-sided permutation test based on the number of
   samples indicated in the original call.}} } \subsection{If there is
   sampling and valureturn = TRUE}{ A list with the following
-  elements:\itemize{ \item{index}{The above vector} \item{samples}{A data
+  elements: \itemize{ \item{index}{The above vector} \item{samples}{A data
   frame with s by 2 column data frame where s is the number of samples
   defined. The columns are for the values of Ia and rbarD, respectively.}}}
 }

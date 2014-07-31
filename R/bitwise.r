@@ -128,26 +128,26 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
 #'
 #' @rdname bitwise
 #'
-#' @param x a genlight object. 
-#' 
-#' @param percent a \code{logical} to determine whether the values should be returned
-#'  as percentages or logarithms of percentages. \code{FALSE} is the default, and 
-#'  returns the logarithmic values rather than the percentage values. This option has
-#'  a much larger range and is highly recommended. \code{TRUE} returns the percentage
-#'  chance for each genotype to be produced via random mating, rather than the log
+#  @param x a genlight object. 
+#'
+#' @param log a \code{logical} to determine whether the values should be returned 
+#'  as percentages or logarithms of percentages. \code{TRUE} is the default, and 
+#'  returns the logarithmic values rather than the percentage values. This option has 
+#'  a much larger range and is highly recommended. \code{FALSE} returns the percentage 
+#'  chance for each genotype to be produced via random mating, rather than the log 
 #'  equivalent.
-#' 
+#'
 #' @return A vector containing one Pgen value for each genotype in the genlight object.
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
 #==============================================================================#
-bitwise.pgen <- function(x, percent) {
+bitwise.pgen <- function(x, log=TRUE) {
   stopifnot(class(x)[1] == "genlight")
 
   pgen_vector <- .Call("get_pgen_vector",x)
 
-  if(percent)
+  if(log)
   {
     pgen_vector <- exp(pgen_vector)
   }

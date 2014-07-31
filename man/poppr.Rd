@@ -43,7 +43,7 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   missing data allowed for analysis. This is to be used in conjunction with
   the flag \code{missing} (see \code{\link{missingno}} for details)}
 
-\item{quiet}{\code{FALSE} (defualt) will display a progress bar for each
+\item{quiet}{\code{FALSE} (default) will display a progress bar for each
   population analyzed.}
 
 \item{clonecorrect}{default \code{FALSE}. must be used with the \code{hier}
@@ -97,7 +97,7 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   is 1/n where n is the number of observed values.} \item{rbarD}{A numeric
   vector giving the value of the Standardized Index of Association for each
   population factor, (see \code{\link{ia}}).} \item{p.rD}{A numeric vector
-  indicating the p-value for rbarD from the number of reshufflings indicated
+  indicating the p-value for rbarD from the number of reshuffles indicated
   in \code{sample}. Lowest value is 1/n where n is the number of observed
   values.} \item{File}{A vector indicating the name of the original data
   file.}
@@ -134,7 +134,7 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
   2001
 
   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural
-  populations of hordeum spontaneum. \emph{Genetics}, 96(2):523-536, 1980.
+  populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536, 1980.
 
   Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
   E. Fry. Analysis of genotypic diversity data for populations of

@@ -46,4 +46,7 @@ micbig <- popsub(microbov, blacklist=c("NDama", "Montbeliard"))
 miclrg <- popsub(microbov, sublist=c("BlondeAquitaine", "Charolais"))
 }
 }
+\author{
+Zhian N. Kamvar
+}
 

@@ -44,6 +44,9 @@ It is important to be careful with the interpretation of these
 Provesti's distance is identical to \code{\link{diss.dist}}, except
   that \code{\link{diss.dist}} is optimized for a larger number of
   individuals (n > 125) at the cost of required memory.
+
+  These distances were adapted from the \pkg{adegenet} function
+  \code{\link{dist.genpop}} to work with \code{\linkS4class{genind}} objects.
 }
 \examples{
 data(nancycats)
@@ -53,6 +56,57 @@ ednan <- edwards.dist(nan9)
 rodnan <- rogers.dist(nan9)
 reynan <- reynolds.dist(nan9)
 pronan <- provesti.dist(nan9)
+}
+\author{
+Zhian N. Kamvar (poppr adaptation)
+Thibaut Jombart (adegenet adaptation)
+Daniel Chessel (ade4)
+}
+\references{
+Nei, M. (1972) Genetic distances between populations. American Naturalist,
+106, 283-292.
+
+Nei M. (1978) Estimation of average heterozygosity and genetic
+distance from a small number of individuals. Genetics, 23, 341-369.
+
+Avise, J. C. (1994) Molecular markers, natural history and evolution. Chapman & Hall,
+London.
+
+Edwards, A.W.F. (1971) Distance between populations on the basis of gene
+frequencies. Biometrics, 27, 873-881.
+
+Cavalli-Sforza L.L. and Edwards A.W.F.
+(1967) Phylogenetic analysis: models and estimation procedures. Evolution,
+32, 550-570.
+
+Hartl, D.L. and Clark, A.G. (1989) Principles of population
+genetics. Sinauer Associates, Sunderland, Massachussetts (p. 303).
+
+Reynolds, J. B., B. S. Weir, and C. C. Cockerham. (1983) Estimation of the
+coancestry coefficient: basis for a short-term genetic distance. Genetics,
+105, 767-779.
+
+Rogers, J.S. (1972) Measures of genetic similarity and genetic distances.
+Studies in Genetics, Univ. Texas Publ., 7213, 145-153.
+
+Avise, J. C. (1994)
+Molecular markers, natural history and evolution. Chapman & Hall, London.
+
+Prevosti A. (1974) La distancia genetica entre poblaciones. Miscellanea
+Alcobe, 68, 109-118.
+
+Prevosti A., Oca\~na J. and Alonso G. (1975) Distances
+between populations of Drosophila subobscura, based on chromosome
+arrangements frequencies. Theoretical and Applied Genetics, 45, 231-241.
+
+For more information on dissimilarity indexes:
+
+Gower J. and Legendre P. (1986)
+Metric and Euclidean properties of dissimilarity coefficients. Journal of
+Classification, 3, 5-48
+
+Legendre P. and Legendre L. (1998) Numerical Ecology,
+Elsevier Science B.V. 20, pp274-288.
 }
 \seealso{
 \code{\link{aboot}} \code{\link{diss.dist}} \code{\link{poppr.amova}}

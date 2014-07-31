@@ -3,9 +3,10 @@
 \alias{plot_poppr_msn}
 \title{Plot minimum spanning networks produced in poppr.}
 \usage{
-plot_poppr_msn(x, poppr_msn, gadj = 3, glim = c(0, 0.8), gweight = 1,
-  inds = "ALL", quantiles = TRUE, nodelab = 2, cutoff = NULL,
-  palette = NULL, layfun = layout.auto, beforecut = FALSE, ...)
+plot_poppr_msn(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.8),
+  gweight = 1, wscale = TRUE, inds = "ALL", quantiles = TRUE,
+  nodelab = 2, cutoff = NULL, palette = NULL, layfun = layout.auto,
+  beforecut = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
@@ -57,6 +58,14 @@ the upper and lower limits for the \code{\link{gray}} function. Default is 0
 will be weighted to emphasize the differences between closely related nodes.
 If it is 2, the grey scale will be weighted to emphasize the differences
 between more distantly related nodes.}
+
+\item{gscale}{"grey scale". If this is \code{TRUE}, this will scale the color
+  of the edges proportional to the observed distance, with the lines becoming
+  darker for more related nodes. See \code{\link{greycurve}} for details.}
+
+\item{wscale}{"width scale". If this is \code{TRUE}, the edge widths will be
+  scaled proportional to the inverse of the observed distance , with the
+  lines becoming thicker for more related nodes.}
 }
 \description{
 This function allows you to take the output of poppr.msn and bruvo.msn and
@@ -71,12 +80,10 @@ The previous incarnation of msn plotting in poppr simply plotted the
   manipulate many facets of graph creation, making the creation of minimum
   spanning networks ever so slightly more user friendly. Note that this
   function will only plot individual names, not MLG names since the naming
-  convention for those are arbitrary. This will also not give the user the
-  option to remove the shading or widths of the edges as they are informative
-  to the distance.
+  convention for those are arbitrary.
 
   This function must have both the source data and the output msn to work.
-  The source data must also have the same population structure as the graph.
+  The source data must contain the same population structure as the graph.
   Every other parameter has a default setting.
 
   \subsection{Parameter details}{ \itemize{ \item \code{inds} This will take
@@ -98,7 +105,8 @@ The previous incarnation of msn plotting in poppr simply plotted the
 \examples{
 # Using a data set of the Aphanomyces eutieches root rot pathogen.
 data(Aeut)
-amsn <- poppr.msn(Aeut, diss.dist(Aeut), showplot = FALSE)
+adist <- diss.dist(Aeut, percent = TRUE)
+amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
 
 # Default
 library(igraph) # To get all the layouts.
@@ -123,7 +131,8 @@ plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "sim 20")
 
 # Something pretty
 data(microbov)
-micmsn <- poppr.msn(microbov, diss.dist(microbov), showplot = FALSE)
+mdist <- diss.dist(microbov, percent = TRUE)
+micmsn <- poppr.msn(microbov, mdist, showplot = FALSE)
 
 plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
   quantiles = FALSE)

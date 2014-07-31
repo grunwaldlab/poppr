@@ -10,7 +10,7 @@ missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE)
  object.}
 
 \item{type}{a \code{character} string: can be "ignore", "zero", "mean",
- "loci", or "geno" (see \code{Details} for definitions).]}
+ "loci", or "geno" (see \code{Details} for definitions).}
 
 \item{cutoff}{\code{numeric}. A number from 0 to 1 indicating the allowable
  rate of missing data in either genotypes or loci. This will be ignored for

@@ -52,7 +52,7 @@ test_that("mlg.crosspop will work with subsetted genclone objects", {
   expect_warning(z <- mlg.crosspop(Athena, mlgsub = c(14, 2:5)), "The following multilocus genotypes are not defined in this dataset: 2, 3, 4, 5")
 })
 
-test_that("mlg.group Aeut works", {
+test_that("mlg.id Aeut works", {
   data(Aeut, package = "poppr")
   expected_output <- structure(list(`1` = "55", `2` = c("101", "103"), `3` = "111", 
                                     `4` = "112", `5` = "110", `6` = "102", `7` = "20", `8` = "7", 
@@ -100,14 +100,15 @@ test_that("mlg.group Aeut works", {
                                                                             "93", "94", "95", "96", "97", "98", "99", "100", "101", "102", 
                                                                             "103", "104", "105", "106", "107", "108", "109", "110", "111", 
                                                                             "112", "113", "114", "115", "116", "117", "118", "119"))
-
-  expect_that(x <- poppr:::mlg.group(Aeut), equals(expected_output))
-  expect_that(x <- length(poppr:::mlg.group(Aeut)), equals(length(unique(mlg.vector(Aeut)))))
-  expect_that(x <- names(mlg.group(Aeut)[118]), equals("118"))
-  expect_that(x <- names(mlg.group(Aeut)[1]), equals("1"))
+  x    <- mlg.id(Aeut)
+  Avec <- mlg.vector(Aeut)
+  expect_that(x, equals(expected_output))
+  expect_that(length(x), equals(length(unique(Avec))))
+  expect_that(sapply(x, length), is_equivalent_to(as.vector(table(Avec))))
+  expect_that(names(x[1]), equals("1"))
   })
 
-test_that("mlg.group Pinf works", {
+test_that("mlg.id Pinf works", {
   data(Pinf, package = "poppr")
   expected_output <- structure(list(`1` = "PiEC06", `4` = "PiMX03", `5` = "PiMX04", 
                                     `6` = "PiMXT01", `7` = "PiPE03", `8` = "PiPE01", `10` = "PiPE07", 
@@ -138,10 +139,12 @@ test_that("mlg.group Pinf works", {
                                                                                       "68", "69", "71", "72", "74", "75", "77", "79", "80", "83", "84", 
                                                                                       "93", "94", "95", "96", "97", "98", "99", "104", "105", "106", 
                                                                                       "109", "110", "115", "116", "117"))
-  expect_that(x <- poppr:::mlg.group(Pinf), equals(expected_output))
-  expect_that(x <- length(poppr:::mlg.group(Pinf)), equals(length(unique(mlg.vector(Pinf)))))
-  expect_that(x <- names(mlg.group(Pinf)[72]), equals("117"))
-  expect_that(x <- names(mlg.group(Pinf)[1]), equals("1"))
+  x    <- mlg.id(Pinf)
+  Pvec <- mlg.vector(Pinf)
+  expect_that(x, equals(expected_output))
+  expect_that(length(x), equals(length(unique(Pvec))))
+  expect_that(sapply(x, length), is_equivalent_to(as.vector(table(Pvec))))
+  expect_that(names(x[1]), equals("1"))
 })
 
 test_that("multilocus genotype filtering functions correctly", {

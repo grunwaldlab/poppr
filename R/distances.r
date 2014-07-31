@@ -44,32 +44,32 @@
 #==============================================================================#
 #' Calculate a distance matrix based on relative dissimilarity
 #' 
-#' diss.dist uses the same discreet dissimilarity matrix utilized by the index
-#' of association (see \code{\link{ia}} for details). It returns a distance
-#' reflecting a ratio of the number of observed differences by the number of
-#' possible differences. Eg. two individuals who share half of the same alleles
-#' will have a distance of 0.5. This function can analyze distances for any
-#' marker system.
+#' diss.dist uses the same discreet dissimilarity matrix utilized by the index 
+#' of association (see \code{\link{ia}} for details). By default, it returns a
+#' distance reflecting the number of allelic differences between two
+#' individuals. When \code{percent = TRUE}, it returns a ratio of the number of
+#' observed differences by the number of possible differences. Eg. two
+#' individuals who share half of the same alleles will have a distance of 0.5.
+#' This function can analyze distances for any marker system.
 #' 
-#' @param x a \code{\link{genind}} object. 
-#' 
-#' @param diff \code{logical}. If \code{TRUE}, this will count the number of
-#' differences between individuals. \code{FALSE} will count the number of 
-#' similarities. Default set to \code{TRUE}
-#' 
-#' @param percent \code{logical}. Should the distance be represented from 0 to 1?
-#' Default set to \code{TRUE}. \code{FALSE} will return the distance represented
-#' as integers from 1 to n where n is the number of loci*ploidy.
-#' 
+#' @param x a \code{\link{genind}} object.
+#'   
+#' @param percent \code{logical}. Should the distance be represented as a 
+#'   percent? If set to \code{FALSE} (default), the distance will be reflected 
+#'   as the number of alleles differing between to individuals. When set to 
+#'   \code{TRUE}, These will be divided by the ploidy multiplied  by the number 
+#'   of loci.
+#'   
 #' @param mat \code{logical}. Return a matrix object. Default set to 
-#' \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object.
-#' 
+#'   \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object.
+#'   
 #' @return Pairwise distances between individuals present in the genind object.
 #' @author Zhian N. Kamvar
-#' 
-#' @note This is exactly the same as \code{\link{provesti.dist}}, except that
-#' it performs better for large numbers of individuals (n > 125). 
-#'
+#'   
+#' @note When \code{percent = TRUE}, this is exactly the same as
+#'   \code{\link{provesti.dist}}, except that it performs better for large
+#'   numbers of individuals (n > 125) at the cost of avaliable memory.
+#'   
 #' @examples
 #' 
 #' # A simple example. Let's analyze the mean distance among populations of A.
@@ -84,7 +84,7 @@
 #' @export
 #==============================================================================#
 
-diss.dist <- function(x, diff=TRUE, percent=TRUE, mat=FALSE){
+diss.dist <- function(x, percent=FALSE, mat=FALSE){
   stopifnot(is.genind(x))
   ploid     <- ploidy(x)
   ind.names <- x@ind.names
@@ -93,21 +93,13 @@ diss.dist <- function(x, diff=TRUE, percent=TRUE, mat=FALSE){
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
   numLoci   <- length(x@loc.names)
   type      <- x@type
-  if(type == "PA"){
+  if (type == "PA"){
     dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
     ploid <- 1
   } else {
     x <- seploc(x)
     dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
                             numeric(np))
-  }
-#   if (!alleles & type == "codom"){
-#     dist_by_locus[dist_by_locus > 0] <- 1
-#     ploid <- 1
-#   }
-  if (!diff){
-    max_dist      <- numLoci*ploid
-    dist_by_locus <- max_dist - dist_by_locus
   }
   dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
   colnames(dist.mat)            <- ind.names
@@ -150,10 +142,62 @@ diss.dist <- function(x, diff=TRUE, percent=TRUE, mat=FALSE){
 #' @note Provesti's distance is identical to \code{\link{diss.dist}}, except
 #'   that \code{\link{diss.dist}} is optimized for a larger number of
 #'   individuals (n > 125) at the cost of required memory.
+#'   
+#'   These distances were adapted from the \pkg{adegenet} function
+#'   \code{\link{dist.genpop}} to work with \code{\linkS4class{genind}} objects.
 #' 
 #' @seealso \code{\link{aboot}} \code{\link{diss.dist}} \code{\link{poppr.amova}}
 #' @rdname genetic_distance
+#' @author Zhian N. Kamvar (poppr adaptation)
+#' Thibaut Jombart (adegenet adaptation)
+#' Daniel Chessel (ade4)
+#'  
 #' @keywords nei rogers rodgers reynolds coancestry edwards angular provesti
+#' @references
+#' Nei, M. (1972) Genetic distances between populations. American Naturalist,
+#' 106, 283-292. 
+#' 
+#' Nei M. (1978) Estimation of average heterozygosity and genetic
+#' distance from a small number of individuals. Genetics, 23, 341-369. 
+#' 
+#' Avise, J. C. (1994) Molecular markers, natural history and evolution. Chapman & Hall,
+#' London.
+#' 
+#' Edwards, A.W.F. (1971) Distance between populations on the basis of gene
+#' frequencies. Biometrics, 27, 873-881. 
+#' 
+#' Cavalli-Sforza L.L. and Edwards A.W.F.
+#' (1967) Phylogenetic analysis: models and estimation procedures. Evolution,
+#' 32, 550-570. 
+#' 
+#' Hartl, D.L. and Clark, A.G. (1989) Principles of population
+#' genetics. Sinauer Associates, Sunderland, Massachussetts (p. 303).
+#' 
+#' Reynolds, J. B., B. S. Weir, and C. C. Cockerham. (1983) Estimation of the
+#' coancestry coefficient: basis for a short-term genetic distance. Genetics,
+#' 105, 767-779.
+#' 
+#' Rogers, J.S. (1972) Measures of genetic similarity and genetic distances.
+#' Studies in Genetics, Univ. Texas Publ., 7213, 145-153. 
+#' 
+#' Avise, J. C. (1994)
+#' Molecular markers, natural history and evolution. Chapman & Hall, London.
+#' 
+#' Prevosti A. (1974) La distancia genetica entre poblaciones. Miscellanea
+#' Alcobe, 68, 109-118. 
+#' 
+#' Prevosti A., Oca\~na J. and Alonso G. (1975) Distances
+#' between populations of Drosophila subobscura, based on chromosome
+#' arrangements frequencies. Theoretical and Applied Genetics, 45, 231-241. 
+#' 
+#' For more information on dissimilarity indexes: 
+#' 
+#' Gower J. and Legendre P. (1986)
+#' Metric and Euclidean properties of dissimilarity coefficients. Journal of
+#' Classification, 3, 5-48 
+#' 
+#' Legendre P. and Legendre L. (1998) Numerical Ecology,
+#' Elsevier Science B.V. 20, pp274-288.
 #' @export
 #' @examples
 #' 
@@ -406,13 +450,20 @@ provesti.dist <- function(x){
 #' # Rogers' distance
 #' arog <- aboot(Aeut, dist = rogers.dist, sample = 1000, cutoff = 50)
 #' 
+#' # This can also be run on genpop objects
+#' Aeut.gc <- as.genclone(Aeut, hierarchy=other(Aeut)$population_hierarchy[-1])
+#' setpop(Aeut.gc) <- ~Pop/Subpop
+#' Aeut.pop <- genind2genpop(Aeut.gc)
+#' set.seed(5000)
+#' aboot(Aeut.pop) # compare to Grunwald et al. 2006
+#' 
 #' }
 #==============================================================================#
 aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                      cutoff = 0, showtree = TRUE, missing = "mean", quiet = FALSE,
                      ...){
   if (is.genind(x)){
-    x <- missingno(x, missing)
+    x <- missingno(x, missing, cutoff = 0)
   }
   if (x@type == "PA"){
     xboot           <- x@tab

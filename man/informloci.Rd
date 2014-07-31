@@ -27,6 +27,11 @@ The user can specify what is meant by phylogenetically uninformative with a
 specification of the cutoff percentage. Any loci under the cutoff will be
 removed. For convenience's sake, the default cutoff is set to 2 individuals.
 }
+\details{
+This function works by analyzing the genotypes at each locus. This
+  has the effect that if a locus has fixed heterozygotes for two alleles, it
+  will be removed as all individuals are invariant.
+}
 \note{
 This will have a few side effects that affect certain analyses. First,
   the number of multilocus genotypes might be reduced due to the reduced
@@ -51,5 +56,8 @@ N.informten <- informloci(Nepal, cutoff = 10/nInd(Nepal))
 
 # Decimate (10\%)
 N.informdecimated <- informloci(Nepal, cutoff = 0.1)
+}
+\author{
+Zhian N. Kamvar
 }
 

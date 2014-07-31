@@ -19,6 +19,6 @@ Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia
   Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha
   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen
   \emph{Phytophthora infestans} originated in central Mexico rather than the Andes."
-  Proceedings of the National Academy of Sciences (2014): 201401884.
+  Proceedings of the National Academy of Sciences 111:8791-8796.
 }
 

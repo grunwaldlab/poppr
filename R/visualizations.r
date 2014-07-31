@@ -383,7 +383,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(pop, sublist, blacklist)
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
-    pop <- popsub(pop, sublist, blacklist)
+    pop    <- popsub(pop, sublist, blacklist)
   }
   cpop <- pop[.clonecorrector(pop), ]
   if (is.genclone(pop)){
@@ -411,7 +411,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
   names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
   # This will determine the size of the nodes based on the number of individuals
-  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
+  # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
@@ -426,7 +426,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if(include.ties){
     tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
     if(length(tied_edges) > 0){
-      mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+      mst <- igraph::add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
     }
   }
   
@@ -445,31 +445,17 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   color   <- palette(length(pop@pop.names))
   
   ###### Edge adjustments ######
-  # Grey Scale Adjustment weighting towards more diverse or similar populations.
-  if (gscale == TRUE){
-    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-                                     show=FALSE))
-  } else {
-    E(mst)$color <- rep("black", length(E(mst)$weight))
-  }
-  
-  # Width scale adjustment to avoid extremely large widths.
-  # by adding 0.08 to entries, the max width is 12.5 and the min is 0.9259259
-  edgewidth <- 2
-  if (wscale==TRUE){
-    edgewidth <- make_edge_width(mst)
-  }
+  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   if (showplot){
-    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color, 
+    plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
     legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
            title = "Populations", fill=color, border=NULL)
   }
-  E(mst)$width     <- edgewidth
   V(mst)$size      <- mlg.number
   V(mst)$shape     <- "pie"
   V(mst)$pie       <- mlg.cp
@@ -758,6 +744,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   popualtion.
 #'   
 #' @inheritParams greycurve
+#' 
+#' @inheritParams poppr.msn
 #'   
 #' @param inds a character vector indicating which individual names to label
 #'   nodes with. See details.
@@ -795,12 +783,10 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   manipulate many facets of graph creation, making the creation of minimum 
 #'   spanning networks ever so slightly more user friendly. Note that this 
 #'   function will only plot individual names, not MLG names since the naming 
-#'   convention for those are arbitrary. This will also not give the user the 
-#'   option to remove the shading or widths of the edges as they are informative
-#'   to the distance.
+#'   convention for those are arbitrary. 
 #'   
 #'   This function must have both the source data and the output msn to work. 
-#'   The source data must also have the same population structure as the graph. 
+#'   The source data must contain the same population structure as the graph. 
 #'   Every other parameter has a default setting.
 #'   
 #'   \subsection{Parameter details}{ \itemize{ \item \code{inds} This will take
@@ -829,7 +815,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' @examples
 #' # Using a data set of the Aphanomyces eutieches root rot pathogen.
 #' data(Aeut)
-#' amsn <- poppr.msn(Aeut, diss.dist(Aeut), showplot = FALSE)
+#' adist <- diss.dist(Aeut, percent = TRUE)
+#' amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
 #' 
 #' # Default
 #' library(igraph) # To get all the layouts.
@@ -854,7 +841,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' 
 #' # Something pretty
 #' data(microbov)
-#' micmsn <- poppr.msn(microbov, diss.dist(microbov), showplot = FALSE)
+#' mdist <- diss.dist(microbov, percent = TRUE)
+#' micmsn <- poppr.msn(microbov, mdist, showplot = FALSE)
 #' 
 #' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", 
 #'   quantiles = FALSE)
@@ -863,8 +851,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
-plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
-                           gweight = 1, inds = "ALL", quantiles = TRUE, 
+plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.8),
+                           gweight = 1, wscale = TRUE, inds = "ALL", quantiles = TRUE, 
                            nodelab = 2, cutoff = NULL, palette = NULL,
                            layfun = layout.auto, beforecut = FALSE, ...){
   if (!is.genind(x)){
@@ -876,6 +864,9 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
   if (!is.null(palette)){
     poppr_msn <- update_poppr_graph(poppr_msn, palette)
   }
+  # Making sure incoming data matches so that the individual names match.
+  x <- popsub(x, sublist = poppr_msn$populations)
+  
   if (beforecut){
     LAYFUN <- match.fun(layfun)
     lay <- LAYFUN(poppr_msn$graph)
@@ -883,21 +874,28 @@ plot_poppr_msn <- function(x, poppr_msn, gadj = 3, glim = c(0, 0.8),
     lay <- match.fun(layfun)
   }
   # delete.edges      <- match.fun(igraph::delete.edges)
-  edge_above_cutoff <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
-  poppr_msn$graph   <- delete.edges(poppr_msn$graph, edge_above_cutoff)
+  if (!is.null(cutoff) && !is.na(cutoff)){
+    if (all(cutoff < E(poppr_msn$graph)$weight)){
+      msg <- paste0("Cutoff value (", cutoff, ") is below the minimum observed",
+                    " distance. Edges will not be removed.")
+      warning(msg)
+    } else {
+      E_above_cutoff  <- E(poppr_msn$graph)[E(poppr_msn$graph)$weight >= cutoff]
+      poppr_msn$graph <- delete.edges(poppr_msn$graph, E_above_cutoff)
+    }
+  }
   # Adjusting color scales. This will replace any previous scaling contained in
   # poppr_msn.
   weights <- E(poppr_msn$graph)$weight
   wmin    <- min(weights)
   wmax    <- max(weights)
   gadj    <- ifelse(gweight == 1, gadj, -gadj)
-  E(poppr_msn$graph)$color <- gray(adjustcurve(weights, glim=glim,
-                                               correction=gadj,show=FALSE))
+  poppr_msn$graph <- update_edge_scales(poppr_msn$graph, wscale, gscale, glim, gadj)
   
   # Highlighting only the names of the submitted genotypes and the matching
   # isolates.
   x.mlg <- mlg.vector(x)
-  labs <- unique(x.mlg)
+  labs  <- unique(x.mlg)
   # The labels in the graph are organized by MLG, so we will use that to extract
   # the names we need.
   if (length(inds) == 1 & toupper(inds[1]) == "ALL"){

@@ -6,7 +6,7 @@
 \title{Genclone class}
 \description{
 Genclone is an S4 class that extends the \code{\linkS4class{genind}}
-from the \emph{\link{adegenet}} package. It will have all of the same
+from the \pkg{\link{adegenet}} package. It will have all of the same
 attributes as the \code{\linkS4class{genind}}, but it will contain two
 extra slots that will help retain information about population hierarchies
 and multilocus genotypes.
@@ -21,8 +21,8 @@ the object. The suggested name of the data frame was
 \code{population_hierarchy}, and this was used to be able to store the
 hierarchical information inside the object so that the user did not have to
 keep track of that information. This method worked, but it became apparent
-that this method of doing things became a bit confusing to the user as the
-method for changing the population of an object became:
+that it was a bit confusing to the user as the method for changing the
+population of an object became:
 
 \code{pop(object) <- other(object)$population_hierarchy$population_name}
 
@@ -53,7 +53,7 @@ Class \code{"\linkS4class{genind}"}, directly.
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{sethierarchy}} \code{\link{setpop}}
+\code{\link{as.genclone}} \code{\link{sethierarchy}} \code{\link{setpop}}
 \code{\linkS4class{genind}}
 }
 

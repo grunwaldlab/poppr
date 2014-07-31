@@ -172,7 +172,7 @@
 #' @references Excoffier, L., Smouse, P.E. and Quattro, J.M. (1992) Analysis of
 #' molecular variance inferred from metric distances among DNA haplotypes:
 #' application to human mitochondrial DNA restriction data. \emph{Genetics},
-#' \strong{131}, 479–491.
+#' \strong{131}, 479-491.
 #' 
 #' @seealso \code{\link[ade4]{amova}} \code{\link{clonecorrect}}
 #'   \code{\link{diss.dist}} \code{\link{missingno}}
@@ -233,7 +233,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (clonecorrect){
     x <- clonecorrect(x, hier = hier, keep = 1:length(all.vars(hier)))
   }
-  if (within & ploidy(x) > 1 & check_Hs(x)){
+  if (within & ploidy(x) == 2 & check_Hs(x)){
     hier <- update(hier, ~./Individual)
     x    <- pool_haplotypes(x, dfname = dfname)
   }

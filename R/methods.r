@@ -512,7 +512,7 @@ setMethod(
 #' @note The hierarchy must have the same number of rows as the number of 
 #'   observations in the genind object. If no hierarchy is defined, the function
 #'   will search for a data frame in the \code{\link{other}} slot called 
-#'   "population\_hierarchy" and set that as the hieararchy. If none is defined,
+#'   "population_hierarchy" and set that as the hieararchy. If none is defined,
 #'   the population will be set as the hierarchy under the label "Pop". Use the 
 #'   function \code{\link{splithierarchy}} to split up any population 
 #'   hierarchies that might be combined in the population factor.
@@ -645,7 +645,7 @@ setMethod(
 #' the "\code{<-}") will modify the object in place whereas the non-assignment 
 #' method will not modify the original object. Due to convention, everything 
 #' right of the assignment is termed \code{value}. To avoid confusion, here is a
-#' guide: \itemize{ \item \strong{sethierarchy()} This will be a 
+#' guide to the inputs: \itemize{ \item \strong{sethierarchy()} This will be a 
 #' \code{\link{data.frame}} that defines the hierarchy for each individual in 
 #' the rows. \item \strong{namehierarchy()} This will be either a 
 #' \code{\link{vector}} or a \code{\link{formula}} that will define the names. 

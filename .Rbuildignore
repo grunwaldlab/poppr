@@ -7,3 +7,4 @@
 ^vignettes/*.bbl$
 ^vignettes/*.log$
 ^vignettes/*.toc$
+^tools/*$

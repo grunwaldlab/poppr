@@ -20,12 +20,12 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\m}[1]{\mathbf{#1}}
 \newcommand{\tab}{\hspace*{1em}}
-\newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
-\newcommand{\cmdlink}[2]{
-  \texttt{\hyperref[#1]{#2}}
+\newcolumntype{H}{>{\setbox0=\hbox\bgroup} c<{\egroup}@{}}
+\newcommand{\cmdlink}[2]{%
+  \texttt{\hyperref[#1]{#2}}%
 }
-\newcommand{\seclink}[2]{
-  \textsc{\hyperref[#1]{#2}}
+\newcommand{\seclink}[2]{%
+  \textsc{\hyperref[#1]{#2}}%
 }
 
 \newcommand{\poppr}{\textit{poppr}}
@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Data import and manipulation in Poppr version 1.1.0.99}
+\title{Data import and manipulation in poppr version 1.0.6.99-767}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -61,12 +61,13 @@ Corvallis, OR}}
 % Set the width of figures.
 \setkeys{Gin}{width=0.5\textwidth}
 
-<<include=FALSE>>=
-thm <- knit_theme$get("acid")
-knit_theme$set(thm)
-opts_chunk$set(concordance=TRUE)
-opts_chunk$set(size = 'footnotesize', message = FALSE, warning = FALSE)
-opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'asis')
+<<echo=FALSE, warning=FALSE>>=
+knitr::opts_knit$set(out.format = "latex")
+thm <- knitr::knit_theme$get("acid")
+knitr::knit_theme$set(thm)
+knitr::opts_chunk$set(concordance=TRUE)
+knitr::opts_chunk$set(size = 'footnotesize', message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'asis')
 @
 
 <<poppr_funk, eval = TRUE, echo = FALSE>>=
@@ -132,7 +133,6 @@ Bruvo's distance and the index of association.
 \subsection{Purpose}
 \label{intro:purpose}
 
-
 \Poppr{} is an R package with convenient functions for analysis of
 genetic data with mixed modes of reproduction including sexual and clonal
 reproduction. While there are many R packages in CRAN and other repositories
@@ -161,10 +161,47 @@ censor, and subset data sets. With \poppr{} you can also quickly calculate
 Bruvo's distance, the index of association, and easily determine which
 multilocus genotypes are shared across populations.
 
+\subsection{Resources}
+
 This vignette will cover all of the material you need to know to efficiently
 analyze data in \poppr{}. For information on methods of analysis (eg. index of
 association, distance measures, AMOVA, ...), please read the manual pages
 provided for each function.
+
+As \poppr{} expanded from version 1.0, the vignette also expanded to be 80+ 
+pages. As a result, it became clear that over 22,000 was less of a manual and 
+more of a novella with a terrible plot. To remedy this, this vignette will focus
+only on data manipulation and a separate vignette, ``algo", has been written
+to give algorithmic details of analyses introduced with \poppr{}. 
+
+As of spring 2014, Drs. Niklaus J. Gr\"unwald, Sydney E. Everhart, and I have 
+co-authored a primer on using R for population genetic analysis. It is located
+\href{http://grunwaldlab.cgrb.oregonstate.edu/popgen}{here} and the source code
+can be found \href{https://github.com/grunwaldlab/Population_Genetics_in_R}{on
+our github site}. 
+
+\subsection{Getting Help}
+
+If you have any questions or feedback, feel free to send a message to the \poppr{} forum at \url{http://groups.google.com/group/poppr}. You can submit bug reports
+there or on our github site: \url{https://github.com/grunwaldlab/poppr}
+
+\subsection{Acknowledgements}
+
+Much thanks goes to Sydney E. Everhart for alpha testing, beta testing, feature
+requests, proofreading, data contribution, and moral support throught the writing
+of this package and manual. Thanks also to Brian Knaus, Ignazio Carbone, David Cooke,
+Corine Schoebel, Jane Stewart, and Zaid Abdo for beta testing and feedback. 
+
+The following data sets are included in \poppr{}: \texttt{Pinf} \cite{goss2014irish}, \texttt{monpop} (Sydney E. Everhart, unpublished),
+\texttt{Aeut} \cite{Grunwald:2006}
+
+\subsection{Citation}
+
+The formal publication for \poppr{} was published in the journal PeerJ: \url{http://peerj.com/articles/281/}. To cite \poppr{}, please type in your R console:
+
+<<popprcite, eval = FALSE, size="normalsize">>=
+citation(package = "poppr")
+@
 
 %-----------------------------------------------------------------------------%
 %
@@ -295,7 +332,7 @@ will have to toggle to this window}:
   \centering
   \caption{\footnotesize \footnotesize A popup window as it appears in OSX (Mountain Lion).}
   \label{getfile window}
-  \includegraphics{getfile.png}
+  \includegraphics{getfile}
 \end{figure}
 \newpage
 \begin{center}
@@ -360,7 +397,7 @@ those files.
 We will use \texttt{x\$files} to access the file. The \texttt{poppr()} function
 provides a simple first analysis of your data directly from the file on the your
 disk (For information on importing your data into R, see
-section\seclink{intro:import}{Get out of my dreams and into my R.})
+section \seclink{intro:import}{Get out of my dreams and into my R.})
 <<firstpoppr, eval=FALSE>>=
 popdata <- poppr(x$files)
 @
@@ -590,7 +627,7 @@ For ways of formatting a GenAlEx file, see the manual here:
 Below is an example of the GenAlEx format. We will use the data set called
 \texttt{microbov} from the \adegenet{} package to generate it. The data contains
 three demographic factors: Country, Species and Breed contained within the
-\texttt{@other} slot (detailed in\seclink{intro:genind:other}{The other slot}).
+\texttt{@other} slot (detailed in \seclink{intro:genind:other}{The other slot}).
 We will combine these and save the file to the desktop. Details of these
 functions are presented elsewhere in this manual.
 
@@ -624,7 +661,7 @@ data begins at row 4. Column A always contains individual names and column B
 defines the population of each individual. Notice here that the three
 demographic factors from the data have been concatenated with a ``\_''. This
 allows us to import more than one population factor to use as hierarchical
-levels in a\seclink{intro:genclone}{genclone object.}
+levels in a \seclink{intro:genclone}{genclone object.}
 
 \newpage
 
@@ -687,7 +724,7 @@ print_command(funk)
   Manual for details). If you have geographic information in your file, set this
   flag to \texttt{TRUE} and it will be included within the resulting genind
   object in the \texttt{@other} slot. (If you don't know what that is, don't
-  worry. It will be explained later in\seclink{intro:genind:other}{The other
+  worry. It will be explained later in \seclink{intro:genind:other}{The other
   slot.})
   \item \texttt{region -} To format your GenAlEx file to include regions, you
   can choose to include a separate column for regional data, or, since regional
@@ -697,7 +734,7 @@ print_command(funk)
   information will be stored in the \texttt{@other} slot of the resulting
   genind object or be incorporated into the hierarchy of the genclone object.
   \item \texttt{genclone -} This flag will convert your data into a
-  \texttt{genclone} object (see\seclink{intro:genclone}{Send in the clones}for
+  \texttt{genclone} object (see \seclink{intro:genclone}{Send in the clones} for
   more info).
   \item \texttt{sep -} The separator argument for columns in your data. It
   defaults to ``,".
@@ -1045,9 +1082,9 @@ you only are specifying one level.\\
 The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
 years nested within subpopulations, nested within populations. This allows the
 user to easily restructure the population hierarchy. Manipulation of the
-hierarchy is necessary for\seclink{data.manip:cc}{clone correction}and AMOVA
-analysis. See the section\seclink{data.manip:hier}{Can you take me
-hier(archy)}for more details on manipulation of hierarchies.
+hierarchy is necessary for \seclink{data.manip:cc}{clone correction} and AMOVA
+analysis. See the section \seclink{data.manip:hier}{Can you take me
+hier(archy)} for more details on manipulation of hierarchies.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1147,7 +1184,7 @@ populations.
 \subsection{Population hierarchy construction \{Can you take me hier(archy)?\}}
 \label{data.manip:hier}
 
-\tab\tab in \poppr{}, the\seclink{intro:genclone}{genclone}object contains a
+\tab\tab in \poppr{}, the \seclink{intro:genclone}{genclone} object contains a
 slot called \texttt{hierarchy}. This slot contains a data frame used to define
 hierarchical levels of population factors describing your data. The preferred
 way of defining these hierarchical levels is to concatenate them using `\_' and
@@ -1156,12 +1193,12 @@ use them to define a single population in your data before you import it into
 unmodified}, \ref{microbov modified}, and at
 \url{http://dx.doi.org/10.6084/m9.figshare.877104}.
 
-In this section, we will show you how to\seclink{data.manip:hier:define}{define}
-hierarchical levels,\seclink{data.manip:hier:view}{view}those levels to ensure
-that they are correctly defined,\seclink{data.manip:hier:manip}{manipulate} your
+In this section, we will show you how to \seclink{data.manip:hier:define}{define}
+hierarchical levels, \seclink{data.manip:hier:view}{view} those levels to ensure
+that they are correctly defined, \seclink{data.manip:hier:manip}{manipulate} your
 hierarchical levels by adding and renaming them, and use these levels
-to\seclink{data.manip:hier:setpop}{set the population}in
-your\seclink{intro:genclone}{genclone}object using the following methods:
+to \seclink{data.manip:hier:setpop}{set the population} in
+your \seclink{intro:genclone}{genclone} object using the following methods:
 
 % latex table generated in R 3.0.3 by xtable 1.7-3 package
 % Sat Mar 22 20:24:23 2014
@@ -1193,7 +1230,7 @@ your\seclink{intro:genclone}{genclone}object using the following methods:
 
       $\sim$Field/Year
 
-      Refer to\seclink{intro:genclone:access}{Accessing hierarchies}for more
+      Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
       details on how to access hierarchies.
     \end{minipage}
     }
@@ -1221,7 +1258,7 @@ aphan
 \noindent
 The supplemental information in the data defined two hierarchical leves, yet we
 only see one here labeled `Pop'. This is how populations are automatically
-defined when importing to a\seclink{intro:genclone}{genclone}object since it
+defined when importing to a \seclink{intro:genclone}{genclone} object since it
 does not know how many hierarchical levels you have defined. To define these
 levels present in the data set, we will need to split them up using the function
 \texttt{splithierarchy}:
@@ -1242,8 +1279,8 @@ If you have imported your data with a single population and want to add
 hierarchical levels separately, you can use the function \texttt{sethierarchy}
 with a data frame containing your hierarchical levels. For this example, we will
 use the data set \texttt{H3N2}, which contains SNP data from the H3N2 virus.
-This data set holds a data frame in the the\seclink{intro:genind:other}{other
-slot}that contains many variables including country, year, and month of
+This data set holds a data frame in the the \seclink{intro:genind:other}{other
+slot} that contains many variables including country, year, and month of
 collection. We will first load the data and write that data frame to a file on
 the desktop. 
 \label{data:virus}
@@ -1343,8 +1380,8 @@ head(gethierarchy(virus, ~country))
 \label{data.manip:hier:manip}
 
 Once we have our hierarchies set in place, we want to be able to rename and add
-to them. For this example, we will revisit the\seclink{data:virus}{virus
-example}from above. We have set the population hierarchy to be based on year and
+to them. For this example, we will revisit the \seclink{data:virus}{virus
+example} from above. We have set the population hierarchy to be based on year and
 country, but we've noticed that we left out month. And let's say that we
 accidentally overwrote the data object like this:
 <<virus_stupid>>=
@@ -1508,7 +1545,7 @@ info_table(nancycats, plot = TRUE)
 \label{function:info-table}
 
 We can see that locus \Sexpr{locNames(nancycats)[1]} has a lot of missing data.
-To demonstrate the function\cmdlink{data.manip:missing:missingno}{missingno}, we
+To demonstrate the function \cmdlink{data.manip:missing:missingno}{missingno}, we
 will zoom into the first five individuals at the first locus.
 <<nancy_indiv>>=
 nancycats$tab[1:5, 8:13]
@@ -1599,15 +1636,15 @@ print_command(funk)
   "pop\_x"}. One very useful thing about the blacklist is that it allows the
   user to be extremely paranoid about the data. You can set the blacklist to
   contain populations that are not even in your data set and it will still work!
-  \item \texttt{mat -} (see section\seclink{mlg}{Multilocus Genotype
-  Analysis}for more information) A matrix produced from
-  the\cmdlink{mlg:table:mlg.table}{mlg.table}function. This overrides the
+  \item \texttt{mat -} (see section \seclink{mlg}{Multilocus Genotype
+  Analysis} for more information) A matrix produced from
+  the \cmdlink{mlg:table:mlg.table}{mlg.table} function. This overrides the
   \textit{pop} argument and subsets this table instead.
 \end{itemize}
 \bline{}
 
-To demonstrate this tool, let's revisit the \seclink{data:virus}{virus}data set
-that we saw in\seclink{data.manip:hier:define}{Defining hierarchies.}Let's say
+To demonstrate this tool, let's revisit the \seclink{data:virus}{virus} data set
+that we saw in \seclink{data.manip:hier:define}{Defining hierarchies.} Let's say
 we wanted to analyze only the data in North America. To make sure we are all on
 the same page, we will reset the population factor to ``country".
 <<popsub_sublist>>=
@@ -1715,7 +1752,7 @@ print_command(funk)
 
 Let's look at ways to clone-correct our data. We'll look at our \textit{A.
 euteichies} data that we loaded earlier in the
-section\seclink{data.manip:hier}{Can you take me hier(archy)} since that data
+section \seclink{data.manip:hier}{Can you take me hier(archy)} since that data
 set is known to include clonal populations \cite{Grunwald:2006}. Try playing
 around with the data and see what different combinations of the \texttt{hier},
 and \texttt{keep} flags produce. Below, I will give three examples of clone
@@ -1753,7 +1790,7 @@ clonecorrect(aphan, hier = NA)
 \tab\tab A common null hypothesis for populations with mixed reproductive modes
 is panmixia, or to put it simply: lots of sex. \Poppr{} randomly shuffles data
 sets in order to calculate P-values for the index of association ($I_A$ and
-$\bar{r}_d$) \cite{Agapow:2001} using 4 different methods: 
+$\bar{r} _d$) \cite{Agapow:2001} using 4 different methods: 
 
 % latex table generated in R 3.1.0 by xtable 1.7-3 package
 % Fri May  2 23:17:17 2014
@@ -2020,7 +2057,7 @@ the alleles have a 1 in 4 chance of being chosen.
 Note that you have the same genotypes after shuffling, so at each locus, you
 will maintain the same allelic frequencies and heterozygosity. So, in this
 sample, you will only see a homozygote with allele 2. This also ensures that the
-P-values associated with $I_A$ and $\bar{r}_d$ are exactly the same.
+P-values associated with $I_A$ and $\bar{r} _d$ are exactly the same.
 Unfortunately, if you are trying to simulate a sexual population, this does not
 make much biological sense as it \textbf{assumes that alleles are not independently
 assorting within individuals.}
@@ -2372,14 +2409,14 @@ naninform <- informloci(nancycats, cutoff = 0.05)
 \section{Multilocus Genotype Analysis}
 \label{mlg}
 
-\tab\tab In populations with mixed sexual and clonal reproduction, it common to have multiple samples from the same population that have the same set of alleles at all loci. Here, we introduce tools for tracking MLGs within and across populations in\seclink{intro:genind}{genind}objects from the \adegenet{} package. We will be using the\seclink{data:virus}{virus}data set containing SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that genclone objects are optimal for these analyses. %-----------------------------------------------------------------------------%
+\tab\tab In populations with mixed sexual and clonal reproduction, it common to have multiple samples from the same population that have the same set of alleles at all loci. Here, we introduce tools for tracking MLGs within and across populations in \seclink{intro:genind}{genind} objects from the \adegenet{} package. We will be using the \seclink{data:virus}{virus} data set containing SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that genclone objects are optimal for these analyses. %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
 \subsection{How many multilocus genotypes are in our data set? \{Just a peek\}}
 \label{mlg:mlg}
 \tab\tab Counting the number of MLGs in a population is the
 first step for these analyses as they allow us to see how many clones
-exist. With the\seclink{intro:genclone}{genclone}object, This information is
+exist. With the \seclink{intro:genclone}{genclone} object, This information is
 already displayed when we view the object.
 <<view_mlg>>=
 virus
@@ -2425,9 +2462,9 @@ print_command(funk)
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{sublist -} Populations to include (Defaults to ``ALL''). 
-  see\cmdlink{data.manip:divide:popsub}{popsub.}
-  \item \texttt{blacklist -} Populations to exclude. see\cmdlink{data.manip:divide:popsub}{popsub.}
-  \item \texttt{mlgsub -} see\cmdlink{mlg:table:mlg.table}{mlg.table.}Only
+  see \cmdlink{data.manip:divide:popsub}{popsub.}
+  \item \texttt{blacklist -} Populations to exclude. see \cmdlink{data.manip:divide:popsub}{popsub.}
+  \item \texttt{mlgsub -} see \cmdlink{mlg:table:mlg.table}{mlg.table.} Only
   analyze specified MLGs. The vector for this flag can be produced by this
   function as you will see later in this vignette.
   \item \texttt{indexreturn -} return a vector of indices of MLGs. (You can
@@ -2513,9 +2550,9 @@ print_command(funk)
   \begin{itemize}
     \item \texttt{pop -} a \texttt{genind} object.
     \item \texttt{sublist -} Populations to include (Defaults to ``ALL'').
-    see\cmdlink{data.manip:divide:popsub}{popsub.}
+    see \cmdlink{data.manip:divide:popsub}{popsub.}
     \item \texttt{blacklist -} Populations to exclude.
-    see\cmdlink{data.manip:divide:popsub}{popsub.}
+    see \cmdlink{data.manip:divide:popsub}{popsub.}
     \item \texttt{mlgsub -} a vector containing the indices of MLGs you wish to
     subset your table with.
     \item \texttt{bar -} \texttt{TRUE} or \texttt{FALSE}. If  \texttt{TRUE}, a
@@ -2653,7 +2690,7 @@ v.tab[UGNN.list, UGNN]
 
 Now we can see that Norway has a higher incidence of nearly all of these MLGs.
 We can investigate the incidence of these MLGs throughout our data set. One
-thing that the\seclink{intro:genclone}{genclone}object keeps track of is a
+thing that the \seclink{intro:genclone}{genclone} object keeps track of is a
 single vector defining the unique multilocus genotypes within the data. These
 are represented as integers and can be accessed with \texttt{mlg.vector}. This
 is useful for finding MLGs that correspond to certain individuals or
@@ -2693,8 +2730,16 @@ the 22 individuals.
 indNames(virus)[UGNN_match]
 @
 
+Note that there is an alternative way to list individuals matching specific MLGs using the function \texttt{mlg.id}. This function will return a list where each element represents a unique MLG. You can use this data to find out which individuals correspond to specific MLGs. Each element in the list is named with the MLG, but the index does not necessarily match up, so it is important to convert your query MLGs to strings:
+\label{mlg:mix:mlg.id}
+<<mlg.id>>=
+virus.id <- mlg.id(virus)
+virus.id[as.character(UGNN)]
+@
+
+
 We can also use the vector of MLGs to
-subset\cmdlink{mlg:table:mlg.table}{mlg.table} with the \texttt{mlgsub} flag.
+subset \cmdlink{mlg:table:mlg.table}{mlg.table} with the \texttt{mlgsub} flag.
 <<mlgsub_flag, eval=FALSE>>=
 mlg.table(virus, mlgsub = UGNN, bar = TRUE)
 @
@@ -2836,7 +2881,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-% \subsection{Calculating the index of association, $I_A$ and $\bar{r}_d$ \{the missing linkage disequilibrium\}}
+% \subsection{Calculating the index of association, $I_A$ and $\bar{r} _d$ \{the missing linkage disequilibrium\}}
 % \label{index:iard}
 
 % \tab\tab The index of association was originally developed as a measure of
@@ -2844,7 +2889,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % detect signatures of sexual reproduction and population structure
 % \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with
 % the number of loci, and was not suitable to comparisons across studies
-% \cite{Agapow:2001}. To remedy this, $\bar{r}_d$ was developed that corrects for
+% \cite{Agapow:2001}. To remedy this, $\bar{r} _d$ was developed that corrects for
 % this scaling and forces the index to lie between 0 (linkage equilibrium) and 1
 % (full disequilibrium). $I_A$ has previously been implemented in a couple of
 % programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN}
@@ -2891,16 +2936,16 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 %     \item \textit{multilocus} style permutation \cite{Agapow:2001}.
 %   \end{enumerate}
 %   The methods are detailed
-%   in\cmdlink{data.manip:shuffle:shufflepop}{shufflepop.}
+%   in \cmdlink{data.manip:shuffle:shufflepop}{shufflepop.}
 %   \item \texttt{quiet -} If set to \texttt{TRUE}, nothing will be printed to the
 %   screen as the sampling progresses. If \texttt{FALSE} will produce a progress
 %   bar.
 %   \item \texttt{missing -} This will preprocess your missing values. It is set
 %   to ignore missing data, so that they do not contribute to the distance
 %   measure. It can also be set to \texttt{"loci", "geno", "zero", or "mean"}. For
-%   details, see\seclink{data.manip:missing:missingno}{missingno.}
+%   details, see \seclink{data.manip:missing:missingno}{missingno.}
 %   \item \texttt{hist -} This will produce a pair of histograms for each
-%   population showing the distribution of $I_A$ and $\bar{r}_d$ across the
+%   population showing the distribution of $I_A$ and $\bar{r} _d$ across the
 %   sampled data sets, and plot the observed value as a single vertical line.
 %   \item \texttt{valuereturn -} If set to \texttt{TRUE} and the number of samples
 %   is greater than zero, it will return all values generated from the permuted
@@ -2932,7 +2977,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
 % \begin{figure}[h!]
 %   \centering
-%   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r}_d$
+%   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r} _d$
 %   calculated from 999 resamplings of population 5 from the data set
 %   ``nancycats". The observed values of $I_A$ and $\bar r_d$ are represented as
 %   vertical blue lines overlaid on the distributions. The ticks at the bottom of
@@ -2971,9 +3016,9 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 
 % There, are, of course a couple of caveats that need to be mentioned regarding
 % our P-values. First, while we have equivalent P-values for $I_A$ and
-% $\bar{r}_d$, they might not always be equal due to the difference in
+% $\bar{r} _d$, they might not always be equal due to the difference in
 % calculation. Details about that can be found in the Appendix
-% section\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.}Second, the
+% section \seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r} _d$.} Second, the
 % P-values are calculated by comparing how many permuted values are greater than
 % or equal to the observed value. This includes the observed value (which is why
 % setting the randomizations to 999 will give you a round P-value) which means
@@ -3049,7 +3094,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % polyploid data. The other distances appear to give spurious results.
 
 % All of the distances are based on the table found in
-% a\seclink{intro:genind}{genind object.}I have translated the following from math
+% a \seclink{intro:genind}{genind object.} I have translated the following from math
 % jargon into English with a few minor modifications:
 
 % \begin{quote}
@@ -3064,7 +3109,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % \end{quote}
 
 
-% Again, this is describing the table present in the\seclink{intro:genind}{genind
+% Again, this is describing the table present in the \seclink{intro:genind}{genind
 % object} where, instead of having the number of columns equal the number of loci,
 % the number of columns equals the number of observed alleles in the entire data
 % set. So, if you had a data set with 5 loci that had 2 alleles each, your table
@@ -3082,7 +3127,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % the value of the initial table.
 
 % \begin{equation}
-%   a_{ij\cdot}=\sum_{k=1}^{m(j)}a_{ijk} 
+%   a_{ij\cdot}=\sum_{k=1}^{m(j)} a_{ijk} 
 % \end{equation}
 
 % and 
@@ -3097,18 +3142,18 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % The following continutes to describe properties of the table:
 
 % \begin{equation}
-%  p_{ij\cdot}=\sum_{k=1}^{m(j)}p_{ijk}=1
+%  p_{ij\cdot}=\sum_{k=1}^{m(j)} p_{ijk}=1
 % \end{equation}
 % The sum of all allele frequencies for a single population (or individual) at a 
 % single locus is one.
 
 % \begin{equation}
-% p_{i{\cdot}\cdot}=\sum_{j=1}^{\nu}p_{ij\cdot}=\nu
+% p_{i{\cdot}\cdot}=\sum_{j=1}^{\nu} p_{ij\cdot}=\nu
 % \end{equation}
 % The sum of all allele frequences over all loci is equal to the number of loci.
  
 % \begin{equation}
-% p_{{\cdot}{\cdot}\cdot}=\sum_{j=1}^{\nu}p_{i{\cdot}\cdot}=t\nu
+% p_{{\cdot}{\cdot}\cdot}=\sum_{j=1}^{\nu} p_{i{\cdot}\cdot}=t\nu
 % \end{equation}
 % The the sum of the entire table is the sum of all loci multiplied by the number 
 % of populations (or individuals).
@@ -3161,7 +3206,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % \begin{equation}
 %   D_3(a,b)=\sqrt{\frac{\sum_{k=1}^{\nu}
 %   \sum_{j=1}^{m(k)}{(p_{ajk} - p_{bjk})}^2}{2 \sum_{k=1}^{\nu} (1-
-%   \sum_{j=1}^{m(k)}p_{ajk} p_{bjk})}}
+%   \sum_{j=1}^{m(k)} p_{ajk} p_{bjk})}}
 % \end{equation}
 
 
@@ -3251,7 +3296,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % number of loci multiplied by the ploidy, so if you have 10 loci from a diploid
 % population, then there are 20 dissimilarities possible. For details, see
 % equations (\ref{eq:ia_d}) and (\ref{eq:ia_D})
-% in\seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r}_d$.}
+% in \seclink{appendix:algorithm:iard}{$I_A$ and $\bar{r} _d$.}
 
 % \subsubsection{Function: diss.dist}
 % \label{index:dist:diss.dist}
@@ -3356,10 +3401,10 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 %   based on the minimum difference of the alleles represented; with variability
 %   of position calls, relying on this estimation is NOT recommended.
 %   \item \texttt{add -} For missing data: use the genome addition model
-%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   (see \seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
 %   distance.})
 %   \item \texttt{loss -} For missing data: use the genome loss model
-%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   (see \seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
 %   distance.})
 % \end{itemize}
 
@@ -3480,10 +3525,10 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 %   \item \texttt{pop -} a \texttt{genind} object.
 %   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
 %   \item \texttt{add -} For missing data: use the genome addition model
-%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   (see \seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
 %   distance.})
 %   \item \texttt{loss -} For missing data: use the genome loss model
-%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   (see \seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
 %   distance.})
 %   \item \texttt{sample -} How many bootstraps do you want to perform?
 %   \item \texttt{tree -} Two trees are available, Neighbor-Joining \texttt{"nj"}
@@ -3643,10 +3688,10 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 %   \item \texttt{pop -} a \texttt{genind} object.
 %   \item \texttt{replen -} see \texttt{bruvo.dist}, above.
 %   \item \texttt{add -} For missing data: use the genome addition model
-%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   (see \seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
 %   distance.})
 %   \item \texttt{loss -} For missing data: use the genome loss model
-%   (see\seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
+%   (see \seclink{appendix:algorithm:bruvospecial}{Special cases of Bruvo's
 %   distance.})
 %   \item \texttt{palette -} this is a \textbf{function} definining a color
 %   palette to use. The default is \texttt{topo.colors}. There are different
@@ -4101,29 +4146,6 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 \section{Appendix}
 \label{appendix}
 
-\subsection{Afterward}
-
-Writing this manual to \poppr{}has been fun, but I have realized that it is not
-always in the user's best intrest to peruse a 80+ page manual in order to figure
-out how to run analysis of the index of association. At \textgreater22,000 words, this
-manual was less of a manual and more of a novella. 
-
-As of spring 2014, Drs. Niklaus J. Gr\"unwald, Sydney E. Everhart, and I have 
-co-authored a primer on using R for population genetic analysis. It is located
-\href{http://grunwaldlab.cgrb.oregonstate.edu/popgen}{here} and the source code
-can be found \href{https://github.com/grunwaldlab/Population_Genetics_in_R}{on
-our github site}. This primer allows me to dispense of all the details regarding
-data analysis and thus, this primer is more focused on getting your data into 
-\poppr{} and efficiently manipulating it. I hope you have had as much fun reading
-this as I have had writing it. As always, if you have any questions, feel free
-to send a message to the \poppr{} forum at
-\url{http://groups.google.com/group/poppr}
-
-\noindent
-Cheers,\\
-Zhian N. Kamvar\\
-May 21, 2014
-
 \subsection{General hierarchy method use}
 \label{appendix:hier:method}
 
@@ -4146,7 +4168,7 @@ hierarchies in genclone objects:
 \end{tabular}
 \end{table}
 \noindent
-NOTE: Refer to\seclink{intro:genclone:access}{Accessing hierarchies}for more
+NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
 details on how to access hierarchies.\\
 
 These functions all have a syntax that looks like this:
@@ -4264,7 +4286,7 @@ affecting your object.
 % \end{equation}
 
 % These values are calculated over all possible combinations of individuals in the
-% data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{}m$
+% data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{} m$
 % values of $d$ and ${n \choose 2}$ values of $D$. Calculating the observed
 % variances is fairly straightforward (modified from Agapow and Burt, 2001)
 % \cite{Agapow:2001}:
@@ -4302,7 +4324,7 @@ affecting your object.
 % \begin{equation}
 % \label{eq:r_d}
 % \bar{r_d} = \frac{V_O - V_E}
-% {2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}}
+% {2\displaystyle \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{} var_k}}
 % \end{equation}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4662,9 +4684,11 @@ to its definition and description.
 \cmdlink{mlg:table:mlg.table}{mlg.table} & Returns a table of populations by multilocus genotypes \\
 \cmdlink{mlg:mix:mlg.vector}{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\ 
  & each individual \\
+\cmdlink{mlg:mix:mlg.id}{mlg.id} & Identifies individuals associated with each MLG \\
 \texttt{poppr} & Returns a diversity table by population \\
 \texttt{poppr.all} & Returns a diversity table by population for all compatible files specified \\
 \texttt{private\_alleles} & Tabulates the occurrences of alleles that only occur in one population\\
+\texttt{locus\_table} & Creates a table of summary statistics per locus\\
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Visualization}}\\
 \texttt{plot\_poppr\_msn} & Plots minimum spanning networks produced in poppr with\\
@@ -4682,7 +4706,6 @@ to its definition and description.
 
 \end{longtable}
 \end{center}
-
-\bibliographystyle{pnas.bst}
+\bibliographystyle{plain}
 \bibliography{poppr_man}
 \end{document}

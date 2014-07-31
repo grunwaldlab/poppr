@@ -21,7 +21,7 @@ a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
 As the genind object requires ploidy to be consistent across loci, a
 workaround to importing polyploid data was to code missing alleles as "0"
 (for microsatellite data sets). The advantage of this is that users would be
-able to calculate Bruvo's Distance, the index of association, and genotypic
+able to calculate Bruvo's distance, the index of association, and genotypic
 diversity statistics. The tradeoff was the fact that this broke all other
 analyses as they relied on allele frequencies and the missing alleles are
 treated as extra alleles. This function removes those alleles and returns a

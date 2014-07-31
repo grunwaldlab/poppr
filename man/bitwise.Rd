@@ -9,7 +9,7 @@ that differ in zygosity.}
 bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
   threads = 0)
 
-bitwise.pgen(x, percent)
+bitwise.pgen(x, log = TRUE)
 }
 \arguments{
 \item{x}{a genlight object.}
@@ -32,12 +32,10 @@ Default set to \code{TRUE}, which forces missing data to match with anything.
   the function to run serially, which may increase stability on some systems.
   Other values may be specified, but should be used with caution.}
 
-\item{x}{a genlight object.}
-
-\item{percent}{a \code{logical} to determine whether the values should be returned
- as percentages or logarithms of percentages. \code{FALSE} is the default, and
+\item{log}{a \code{logical} to determine whether the values should be returned
+ as percentages or logarithms of percentages. \code{TRUE} is the default, and
  returns the logarithmic values rather than the percentage values. This option has
- a much larger range and is highly recommended. \code{TRUE} returns the percentage
+ a much larger range and is highly recommended. \code{FALSE} returns the percentage
  chance for each genotype to be produced via random mating, rather than the log
  equivalent.}
 }

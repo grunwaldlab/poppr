@@ -93,7 +93,7 @@ NULL
 #'   Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha
 #'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen
 #'   \emph{Phytophthora infestans} originated in central Mexico rather than the Andes."
-#'   Proceedings of the National Academy of Sciences (2014): 201401884.
+#'   Proceedings of the National Academy of Sciences 111:8791-8796.
 #==============================================================================#
 NULL
 #==============================================================================#
@@ -108,8 +108,8 @@ NULL
 #'   were sampled across 3 years (2009, 2010, and 2011) in a total of four
 #'   trees, where one tree was sampled in all three years, for a total of 6
 #'   within-tree populations. Within each year, samples in the spring were taken
-#'   from affected blossoms (termed “BB” for blossom blight) and in late summer
-#'   from affected fruits (termed “FR” for fruit rot). There are a total of 694 
+#'   from affected blossoms (termed "BB" for blossom blight) and in late summer
+#'   from affected fruits (termed "FR" for fruit rot). There are a total of 694 
 #'   isolates with 65 to 173 isolates within each canopy population that were 
 #'   characterized using a set of 13 microsatellite markers.
 #' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
@@ -117,7 +117,7 @@ NULL
 #'   "Symptom"
 #' @references SE Everhart, H Scherm, (2014) Fine-scale genetic structure of 
 #'   \emph{Monilinia fructicola} during brown rot epidemics within individual peach 
-#'   tree canopies. Phytopathology ## (#) submitted
+#'   tree canopies. Phytopathology, submitted
 #' @examples
 #' data(monpop)
 #' splithierarchy(monpop) <- ~Tree/Year/Symptom
@@ -934,10 +934,10 @@ rerange <- function(x){
 # This will scale the edge widths
 #
 # Public functions utilizing this function:
-# poppr.msn
+# none
 # 
 # Internal functions utilizing this function:
-# # none
+# # update_edge_scales
 #==============================================================================#
 
 make_edge_width <- function(mst){
@@ -948,6 +948,28 @@ make_edge_width <- function(mst){
   return(1/edgewidth)
 }
 
+#==============================================================================#
+# This will scale the edge widths and edge color for a graph
+#
+# Public functions utilizing this function:
+# poppr.msn bruvo.msn plot_poppr_msn
+# 
+# Internal functions utilizing this function:
+# # singlepop_msn
+#==============================================================================#
+update_edge_scales <- function(mst, wscale = TRUE, gscale = TRUE, glim, gadj){
+  if(gscale == TRUE){
+    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
+                                     show=FALSE))
+  } else {
+    E(mst)$color <- rep("black", length(E(mst)$weight))
+  }
+  E(mst)$width <- 2
+  if (wscale==TRUE){
+    E(mst)$width <- make_edge_width(mst)
+  }
+  return(mst)
+}
 
 #==============================================================================#
 # This will adjust the grey scale with respect to the edge weights for igraph.
@@ -1140,29 +1162,12 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
       vertex.label <- cpop$ind.names
     }
   } 
-  
-  # Adjust the color of the edges.
-  if (gscale == TRUE){
-    E(mst)$color <- gray(adjustcurve(E(mst)$weight, glim=glim, correction=gadj, 
-                                     show=FALSE))
-  } else {
-    E(mst)$color <- rep("black", length(E(mst)$weight))
-  }
-  
-  # Adjust the widths of the edges
-  edgewidth <- 2
-  if (wscale == TRUE){
-    edgewidth <- 1/(E(mst)$weight)
-    if (any(E(mst)$weight < 0.08)){
-      edgewidth <- 1/(E(mst)$weight + 0.08)
-    }
-  }
-  
+  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
   
   # Plot everything
   if (showplot){
-    plot.igraph(mst, edge.width = edgewidth, edge.color = E(mst)$color,  
+    plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color,  
                 vertex.label = vertex.label, vertex.size = mlg.number*3, 
                 vertex.color = palette(1),  ...)
     legend(-1.55,1,bty = "n", cex = 0.75, 
@@ -1171,7 +1176,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   }
   
   # Save variables and return plot.
-  E(mst)$width <- edgewidth
+  # E(mst)$width <- E(mst)$width
   V(mst)$size  <- mlg.number
   V(mst)$color <- palette(1)
   V(mst)$label <- vertex.label

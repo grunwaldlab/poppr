@@ -43,7 +43,9 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 .onAttach <- function(...) {
-  packageStartupMessage(paste("This is poppr version", utils::packageVersion("poppr")))
+  startupmsg <- paste("This is poppr version", utils::packageVersion("poppr"))
+  startupmsg <- paste0(startupmsg, ". To get started, type package?poppr")
+  packageStartupMessage(startupmsg)
   if (!interactive() || stats::runif(1) > 0.1) return()
 
   tips <- c(

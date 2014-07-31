@@ -3,6 +3,7 @@
 \alias{mlg}
 \alias{mlg.crosspop}
 \alias{mlg.filter}
+\alias{mlg.id}
 \alias{mlg.table}
 \alias{mlg.vector}
 \title{Create counts, vectors, and matrices of multilocus genotypes.}
@@ -20,6 +21,8 @@ mlg.filter(pop, threshold = 0, missing = "mean", memory = FALSE,
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
+
+mlg.id(pop)
 }
 \arguments{
 \item{pop}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.}
@@ -84,13 +87,27 @@ Other values may be specified, but should be used with caution.}
 \item{...}{any parameters to be passed off to the distance method.}
 }
 \value{
-an integer of the number of multilocus genotypes within the sample.
-
+\subsection{mlg}{
+an integer describing the number of multilocus genotypes observed.
+}
+\subsection{mlg.table}{
 a matrix with columns indicating unique multilocus genotypes and rows
 indicating populations.
-
+}
+\subsection{mlg.vector}{
 a numeric vector naming the multilocus genotype of each individual in
-the dataset.
+  the dataset.
+}
+\subsection{mlg.crosspop}{
+\itemize{
+\item{default}{ a \code{list} where each element contains a named integer vector representing the number of individuals represented from each population in that MLG}
+\item{\code{indexreturn = TRUE}}{ a \code{vector} of integers defining the multilocus genotypes that have individuals crossing populations}
+\item{\code{df = TRUE}}{ A long form data frame with the columns: MLG, Population, Count. Useful for graphing with ggplot2}
+}
+}
+\subsection{mlg.id}{
+a list of multilocus genotypes with the associated individual names per MLG.
+}
 
 a numeric vector naming the multilocus genotype of each individual in
 the dataset. Each genotype is at least the specified distance apart.
@@ -103,35 +120,40 @@ Create counts, vectors, and matrices of multilocus genotypes.
 \note{
 The resulting matrix of \code{mlg.table} can be used for analysis with
 the \code{\link{vegan}} package.
-The names of the multilocus genotypes represented will be those from
-the entire dataset. If you wish to view those relative to a subsetted
-dataset, you can use \code{mlg.table(popsub(pop, ...))}.
 
-The numbers of \code{mlg.vector} will not match up with the sequence of
-new genotypes found because sorting takes place within the algorithm before
-the genotypes are called so that the number of comparisons is \eqn{n-1}
-instead of \eqn{\frac{n(n-1)}{2}}.
+mlg.vector will recalculate the mlg vector for
+  \code{\linkS4class{genind}} objects and will return the contents of the mlg
+  slot in \code{\linkS4class{genclone}} objects. This means that MLGs will be
+  different for subsetted \code{\linkS4class{genind}} objects.
 
-\code{mlg.fvector} makes use of \code{mlg.vector} grouping prior to
-applying the given threshold. Genotype numbers returned by \code{mlg.fvector}
+\code{mlg.vector} makes use of \code{mlg.vector} grouping prior to
+applying the given threshold. Genotype numbers returned by \code{mlg.vector}
 represent the lowest numbered genotype (as returned by \code{mlg.vector}) in
-in each new multilocus genotype. Therefore \code{mlg.fvector} and
+in each new multilocus genotype. Therefore \code{mlg.vector} and
 \code{mlg.vector} return the same vector when threshold is set to 0 or less.
 }
 \examples{
 # Load the data set
 data(Aeut)
+
 # Investigate the number of multilocus genotypes.
 amlg <- mlg(Aeut)
 amlg # 119
+
 # show the multilocus genotype vector
 avec <- mlg.vector(Aeut)
 avec
+
 # Get a table
 atab <- mlg.table(Aeut, bar = FALSE)
 atab
+
 # See where multilocus genotypes cross populations
 acrs <- mlg.crosspop(Aeut) # MLG.59: (2 inds) Athena Mt. Vernon
+
+# See which individuals belong to each MLG
+aid <- mlg.id(Aeut)
+aid["59"] # individuals 159 and 57
 
 \dontrun{
 
@@ -183,6 +205,6 @@ new.H <- H3N2[H.vec \%in\% inds, ]
 Zhian N. Kamvar, Jonah Brooks
 }
 \seealso{
-\code{\link{diversity}} \code{\link{popsub}}
+\code{\link[vegan]{diversity}} \code{\link{popsub}}
 }
 

@@ -761,14 +761,3 @@ jackbootcomp <- function(pop, sample = 999, quiet = FALSE, method = 1,
 javier<-function(x){
   cat ("http://www.youtube.com/watch?v=1-ctsxVXvO0")
 }
-
-## Creating a Contingency table (Thanks Zhian!!!)
-
-mlg.group <- function (gid){
-  if (!is.genind(gid)){
-    stop(paste(substitute(gid), "is not a genind object"))
-  }
-  ctab <- table(gid$ind.names,mlg.vector(gid))
-  m.g <- apply(ctab,MARGIN = 2,FUN = function (y) names(y[y>0]))
-  return (m.g)
-}

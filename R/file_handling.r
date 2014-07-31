@@ -56,10 +56,10 @@
 #' \code{\link{poppr.all}}. 
 #'
 #' @param pattern a \code{\link{regex}} pattern for use while 
-#' \code{multFile==TRUE}.
+#' \code{multi == TRUE}. This will grab all files matching this pattern. 
 #' 
-#' @param combine \code{logical}. When this is set to \code{TRUE}, the
-#' \code{\$files} vector will have the path appended to them. When it is set to
+#' @param combine \code{logical}. When this is set to \code{TRUE} (default), the
+#' \code{$files} vector will have the path appended to them. When it is set to
 #' \code{FALSE}, it will have the basename. 
 #'
 #' @return \item{path}{a character string of the absolute path to the
@@ -73,10 +73,8 @@
 #'
 #' x <- getfile()
 #' poppr(x$files)
-#' 
-#' 
 #'
-#' y <- getfile(multFile=TRUE, pattern="^.+?dat$") 
+#' y <- getfile(multi=TRUE, pattern="^.+?dat$") 
 #' #useful for reading in multiple FSTAT formatted files.
 #'
 #' yfiles <- poppr.all(y$files)
@@ -146,7 +144,7 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' 
 #' read.genalex will read in a genalex-formatted file that has been exported in 
 #' a comma separated format and will parse most types of genalex data. The 
-#' output is a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' output is a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
 #' object.
 #' 
 #' @param genalex a *.csv file exported from genalex
@@ -154,18 +152,19 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' @param ploidy indicate the ploidy of the dataset
 #'   
 #' @param geo indicates the presence of geographic data in the file. This data 
-#'   will be included in a data frame labeled \code{xy} in 
-#'   the\code{\link{other}} slot.
+#'   will be included in a data frame labeled \code{xy} in the
+#'   \code{\link{other}} slot.
 #'   
 #' @param region indicates the presence of regional data in the file.
 #'   
-#' @param genclone should the output be a genclone object? Defaults to 
-#'   \code{TRUE}
+#' @param genclone when \code{TRUE} (default), the output will be a
+#'   \code{\linkS4class{genclone}} object. When \code{FALSE}, the output will be
+#'   a \code{\linkS4class{genind}} object
 #'   
 #' @param sep A character specifying the column separator of the data. Defaults 
 #'   to ",".
 #'   
-#' @return A \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' @return A \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
 #'   object.
 #'   
 #' @note This function cannot handle raw allele frequency data.
@@ -182,32 +181,35 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #'   data and a column for your Regional data if you have set the flag.}
 #'   
 #'   \subsection{if \code{genclone = TRUE}}{ The resulting genclone object will 
-#'   have a single hierarchical level defined in the hierarchy slot. This will
-#'   be called "Pop" and will reflect the population factor defined in the
-#'   genalex input. If \code{region = TRUE}, a second column will be inserted
-#'   and labeled "Region". If you have more than two hierarchical levels within
-#'   your data set, you should run the command \code{\link{splithierarchy}} on
+#'   have a single hierarchical level defined in the hierarchy slot. This will 
+#'   be called "Pop" and will reflect the population factor defined in the 
+#'   genalex input. If \code{region = TRUE}, a second column will be inserted 
+#'   and labeled "Region". If you have more than two hierarchical levels within 
+#'   your data set, you should run the command \code{\link{splithierarchy}} on 
 #'   your data set to define the unique hierarchical levels. }
 #'   
-#'   \subsection{FOR POLYPLOID (> 2n) DATA SETS}{ Adegenet's genind object has
+#'   \subsection{FOR POLYPLOID (> 2n) DATA SETS}{ Adegenet's genind object has 
 #'   an all-or-none approach to missing data. If a sample has missing data at a 
-#'   particular locus, then the entire locus is considered missing. This works
-#'   for diploids and haploids where allelic dosage is unambiguous. For
-#'   polyploids this poses a problem as much of the data set would be
-#'   transformed into missing data. With this function, I have created a
+#'   particular locus, then the entire locus is considered missing. This works 
+#'   for diploids and haploids where allelic dosage is unambiguous. For 
+#'   polyploids this poses a problem as much of the data set would be 
+#'   transformed into missing data. With this function, I have created a 
 #'   workaround.
 #'   
 #'   When importing polyploid data sets, missing data is scored as "0" and kept 
 #'   within the genind object as an extra allele. This will break most analyses 
-#'   relying on allele frequencies. All of the functions in poppr will work 
-#'   properly with these data sets as multilocus genotype analysis is agnostic
-#'   of ploidy and we have written both Bruvo's distance and the index of
-#'   association in such a way as to be able to handle polyploids presented in
-#'   this manner.}
-#' 
-#' 
-#' @seealso \code{\link{clonecorrect}}, \code{\linkS4class{genclone}} or
-#'   \code{\linkS4class{genind}}
+#'   relying on allele frequencies*. All of the functions in poppr will work 
+#'   properly with these data sets as multilocus genotype analysis is agnostic 
+#'   of ploidy and we have written both Bruvo's distance and the index of 
+#'   association in such a way as to be able to handle polyploids presented in 
+#'   this manner.
+#'   
+#'   * To restore functionality of analyses relying on allele frequencies, use
+#'   the \code{\link{recode_polyploids}} function.}
+#'   
+#'   
+#' @seealso \code{\link{clonecorrect}}, \code{\linkS4class{genclone}}, 
+#'   \code{\linkS4class{genind}}, \code{\link{recode_polyploids}}
 #'   
 #' @export
 #' @author Zhian N. Kamvar
