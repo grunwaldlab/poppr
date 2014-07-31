@@ -13,7 +13,7 @@ if echo "$vstring" | grep -q '\+'; then
     hash=`echo $pvstring | cut -f3 -d"|"`
 
     ## Erase trailing zeros from version
-    while echo $version | grep -q '\.0'; do
+    while echo $version | grep -q '\.0$'; do
 	version=`echo $version | sed 's/\.0$//'`
     done
 
