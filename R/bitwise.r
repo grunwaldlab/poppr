@@ -147,7 +147,7 @@ bitwise.pgen <- function(x, log=TRUE) {
 
   pgen_vector <- .Call("get_pgen_vector",x)
 
-  if(log)
+  if(!log)
   {
     pgen_vector <- exp(pgen_vector)
   }
