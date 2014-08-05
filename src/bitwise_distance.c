@@ -48,9 +48,6 @@
 //  All genotypes have the same number of SNPs available.
 //  All SNPs are diploid.
 
-// TODO: Add support of non-diploids
-// TODO: Write more R functions that make use of the data this spits out
-
 struct zygosity
 {
   char c1;  // A 32 bit fragment of one chromosome  
@@ -466,7 +463,6 @@ by the samples present in the genlight object
 Input: A pointer to an array of doubles to be filled.
         NOTE: This array MUST have a length equal to the number of genotypes found
         in each in the genlight object.
-       A pointer to an array of struct locus objects that hold the values need
        A genlight object from which the individual genotypes can be obtained.
 Output: None. Fills in the array of doubles with the log of the Pgen value of each 
         individual genotype in the genlight object.
@@ -500,7 +496,6 @@ void fill_Pgen(double *pgen, SEXP genlight)
   // Note that this may need to be done logarithmically to avoid underflowing the doubles
 
   // Allocate memory for the array of locus struct
-  // TODO: Do we want to do this allocation in here, or pass in in as the header says we are?
   loci = R_Calloc(num_loci,struct locus);
   // Call fill_loci to get allelic frequency information
   fill_loci(loci, genlight);

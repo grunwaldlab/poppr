@@ -377,7 +377,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
+                         palette = palette, include.ties = include.ties))
   }
   # This will subset both the population and the matrix. 
   if(sublist[1] != "ALL" | !is.null(blacklist)){
@@ -399,7 +399,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, ...))
+                         palette = palette, showplot = showplot, include.ties = include.ties, ...))
   }
   # Obtaining population information for all MLGs
   if (is.genclone(pop)){

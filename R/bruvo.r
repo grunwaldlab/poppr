@@ -453,7 +453,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
+                         palette = palette, include.ties = include.ties))
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
@@ -461,7 +461,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, ...))
+                         palette = palette, showplot = showplot, include.ties = include.ties, ...))
   }
   # Obtaining population information for all MLGs
   cpop <- pop[.clonecorrector(pop), ]
@@ -486,7 +486,9 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  bclone     <- bruvo.dist(cpop, replen=replen)
+  bclone     <- as.matrix(bruvo.dist(cpop, replen=replen))
+  rownames(bclone) <- cpop$pop
+  colnames(bclone) <- cpop$pop
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")

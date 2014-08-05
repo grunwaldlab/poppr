@@ -1132,7 +1132,7 @@ fix_negative_branch <- function(tre){
 
 
 singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gscale = TRUE, 
-                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, ...){
+                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, include.ties = FALSE, ...){
   # First, clone correct and get the number of individuals per MLG in order.
   cpop <- pop[.clonecorrector(pop), ]
   if (is.genclone(pop)){
@@ -1150,9 +1150,20 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
     distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
   }
   
+  rownames(distmat) <- cpop$pop
+  colnames(distmat) <- cpop$pop
+
   # Create the graphs.
   g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")
   mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+
+  # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+  if(include.ties){
+    tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(distmat),(.Machine$double.eps ^ 0.5))
+    if(length(tied_edges) > 0){
+      mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+    }
+  }
   
   # Create the vertex labels
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
