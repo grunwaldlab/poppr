@@ -44,7 +44,7 @@
 #include <stdlib.h>
 #include <omp.h>
 
-SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads)
+SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads, SEXP stats)
 {
   // This function uses various clustering algorithms to
   // condense a set of multilocus genotypes into a potentially smaller
@@ -73,6 +73,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   int num_clusters; // Number of clusters; updated upon merge
   int num_mlgs; // Number of clusters already present
   int cur_mlg;  // Temporary number used for tracking mlgs
+  int stat_flag; // 0 is stats is false, 1 if stats is true
   double thresh; // Threshold for distance under which mlgs are clones
   double min_cluster_distance; // Used in finding the closest cluster pairing
   int closest_pair[2]; // Used in finding pair of clusters closest together
@@ -90,6 +91,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   SEXP Rout;
   SEXP Rdim;
 
+  stat_flag = asInteger(stats);
   algo = *CHAR(STRING_ELT(algorithm,0));
   thresh = REAL(threshold)[0];
   Rdim = getAttrib(dist, R_DimSymbol);
@@ -323,6 +325,11 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     }
     else if(min_cluster_distance < thresh)
     {
+      // Print statistics on this merge if stat_flag is true
+      if(stat_flag)
+      {
+        Rprintf("%f, %d, ",min_cluster_distance, (cluster_size[closest_pair[0]] < cluster_size[closest_pair[1]]) ? cluster_size[closest_pair[0]] : cluster_size[closest_pair[1]]);
+      }
       for(int i = 0; i < cluster_size[closest_pair[1]] && cluster_matrix[closest_pair[1]][i] > -1; i++)
       {
         // Change the assignment for this individual in the result vector

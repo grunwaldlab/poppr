@@ -1132,9 +1132,16 @@ fix_negative_branch <- function(tre){
 
 
 singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gscale = TRUE, 
-                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, include.ties = FALSE, ...){
+                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, 
+                      include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
   # First, clone correct and get the number of individuals per MLG in order.
-  cpop <- pop[.clonecorrector(pop), ]
+  if(threshold > 0){
+    pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm)
+    cpop <- pop[if(is.na(-which(duplicated(pop$other$mlg.vec))[1])) which(!duplicated(pop$other$mlg.vec)) else -which(duplicated(pop$other$mlg.vec)) ,]
+  }
+  else {
+    cpop <- pop[.clonecorrector(pop), ]
+  }
   if (is.genclone(pop)){
     mlgs <- pop$mlg
     cmlg <- cpop$mlg

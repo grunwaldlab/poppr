@@ -510,7 +510,6 @@ void fill_Pgen(double *pgen, SEXP genlight)
     // set heterozygotes to 0
     heterozygotes = 0;
     // for each locus group
-    // TODO: only loop through the loci GROUPS not each locus (ie, loci not sites)
     for(int j = 0; j < chr_length; j++)
     {
       // Find zygosity for each site in this locus

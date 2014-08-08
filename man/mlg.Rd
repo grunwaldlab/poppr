@@ -17,7 +17,7 @@ mlg.vector(pop)
 
 mlg.filter(pop, threshold = 0, missing = "mean", memory = FALSE,
   algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
-  ...)
+  stats = FALSE, ...)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -83,6 +83,11 @@ function. A value of 0 (default) will attempt to use as many threads as there
 are available cores/CPUs. In most cases this is ideal. A value of 1 will force
 the function to run serially, which may increase stability on some systems.
 Other values may be specified, but should be used with caution.}
+
+\item{stats}{\code{logical} determining whether this function should print
+statistics as it merges clusters. If \code{TRUE}, the threshold at which
+each cluster was merged will be printed along with how many individuals were
+displaced in that merge. \code{FALSE}, which is the default, will print nothing.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }

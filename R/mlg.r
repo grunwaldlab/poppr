@@ -348,6 +348,10 @@ mlg.vector <- function(pop){
 #'   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
 #'   the function to run serially, which may increase stability on some systems.
 #'   Other values may be specified, but should be used with caution.
+#' @param stats \code{logical} determining whether this function should print
+#'   statistics as it merges clusters. If \code{TRUE}, the threshold at which
+#'   each cluster was merged will be printed along with how many individuals were
+#'   displaced in that merge. \code{FALSE}, which is the default, will print nothing.
 #' @param ... any parameters to be passed off to the distance method.
 #' 
 #' @return a numeric vector naming the multilocus genotype of each individual in
@@ -361,7 +365,8 @@ mlg.vector <- function(pop){
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", distance="nei.dist", threads=0, ...){
+mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", 
+                       distance="nei.dist", threads=0, stats=FALSE, ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
@@ -421,6 +426,11 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   {
     stop("Threads must be a non-negative numeric or integer value")
   } 
+    # Stats must be logical
+  if(!is.logical(stats))
+  {
+    stop("Stats must be a logical")
+  } 
 
   # Cast parameters to proper types before passing them to C
   dis_dim <- dim(dis)
@@ -435,7 +445,7 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   }
   basemlg <- as.integer(basemlg)
   
-  resultvec <- .Call("neighbor_clustering", dis, basemlg, threshold, algo, threads) 
+  resultvec <- .Call("neighbor_clustering", dis, basemlg, threshold, algo, threads, stats) 
   
   return(resultvec)
 }

@@ -362,6 +362,13 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   selected when two or more edges are tied, resulting in a pure minimum spanning
 #'   network. 
 #'   
+#' @param threshold numeric. If greater than the default value of 0.0, this will
+#'   be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'
+#' @param clustering.algorithm string. If \code{threshold} is greater than 0, this
+#'   this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'   For both of these arguments, see \code{\link{mlg.filter}} for more details.
+#'
 #' @param ... any other arguments that could go into plot.igraph
 #'   
 #' @return \item{graph}{a minimum spanning network with nodes corresponding to 
@@ -443,17 +450,23 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, showplot = TRUE,
-                       include.ties = FALSE,  ...){
+                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
 
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   if (!is.genclone(pop)){
     # Storing the MLG vector into the genind object
-    pop$other$mlg.vec <- mlg.vector(pop)  
+    if(threshold > 0){
+      pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm)  
+    }
+    else {
+      pop$other$mlg.vec <- mlg.vector(pop)  
+    }
   }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, include.ties = include.ties))
+                         palette = palette, include.ties = include.ties,
+                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
@@ -461,10 +474,16 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, include.ties = include.ties, ...))
+                         palette = palette, showplot = showplot, include.ties = include.ties,
+                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
   # Obtaining population information for all MLGs
-  cpop <- pop[.clonecorrector(pop), ]
+  if(threshold > 0){
+    cpop <- pop[if(is.na(-which(duplicated(pop$other$mlg.vec))[1])) which(!duplicated(pop$other$mlg.vec)) else -which(duplicated(pop$other$mlg.vec)) ,]
+  }
+  else {
+    cpop <- pop[.clonecorrector(pop), ]
+  }
   if (is.genclone(pop)){
     subs <- sort(unique(pop@mlg))
   } else {
