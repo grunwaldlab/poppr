@@ -70,7 +70,7 @@ struct locus
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP get_pgen_vector(SEXP genlight);
-void fill_Pgen(double *pgen, SEXP genlight);
+void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
 char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
@@ -431,25 +431,43 @@ Output: A vector containing the Pgen value of each genotype in the genlight obje
 SEXP get_pgen_vector(SEXP genlight)
 {
 
+  // TODO: Accept an interval, then use either 8 or num_loci as default when calling from R, never 0
+
   SEXP R_out;
   SEXP R_gen_symbol;
+  SEXP R_loc_symbol;
   PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
+  PROTECT(R_loc_symbol = install("n.loc"));
+  struct locus* loci; 
   double *pgens;
   int num_gens;
+  int num_loci;
+  int interval;
+  int size;
+  // Set the interval to calculate Pgen over every 8 loci
+  interval = 8;
 
   num_gens = XLENGTH(getAttrib(genlight, R_gen_symbol));
-  pgens = R_Calloc(num_gens, double);
-  PROTECT(R_out = allocVector(REALSXP,num_gens));
+  num_loci = INTEGER(getAttrib(genlight, R_loc_symbol))[0];
+  size = num_gens*ceil((double)num_loci/(double)interval);
+  pgens = R_Calloc(size, double);
+  PROTECT(R_out = allocVector(REALSXP,size));
 
-  fill_Pgen(pgens,genlight);    
+  // Allocate memory for the array of locus struct
+  loci = R_Calloc(num_loci,struct locus);
+  // Call fill_loci to get allelic frequency information
+  fill_loci(loci, genlight);
 
-  for(int i = 0; i < num_gens; i++)
+  fill_Pgen(pgens,loci,8,genlight);    
+
+  for(int i = 0; i < size; i++)
   {
     REAL(R_out)[i] = (pgens[i]);
   }
 
+  R_Free(loci);
   R_Free(pgens);
-  UNPROTECT(2);
+  UNPROTECT(3);
   return R_out;
 }
 
@@ -462,20 +480,23 @@ by the samples present in the genlight object
 
 Input: A pointer to an array of doubles to be filled.
         NOTE: This array MUST have a length equal to the number of genotypes found
-        in each in the genlight object.
+        in the genlight object times the number of loci divided by specified interval
+        ie, num_gens*ceil((double)num_loci/(double)interval)
+       A pointer to an array of allelic frequencies filled with fill_loci
+       THe number of loci which should be considered in each Pgen value 
        A genlight object from which the individual genotypes can be obtained.
 Output: None. Fills in the array of doubles with the log of the Pgen value of each 
         individual genotype in the genlight object.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-void fill_Pgen(double *pgen, SEXP genlight)
+void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
 {
 
   double log_product;
-  int heterozygotes;
   int num_loci;
   int num_gens;
   int chr_length;
-  struct locus* loci; 
+  int group;
+  int num_groups;
   struct locus* loc;
   struct zygosity zyg;
   SEXP R_gen;
@@ -492,24 +513,19 @@ void fill_Pgen(double *pgen, SEXP genlight)
   R_gen = getAttrib(genlight, R_gen_symbol);
   num_gens = XLENGTH(R_gen);
   num_loci = INTEGER(getAttrib(genlight, R_loc_symbol))[0];
+  num_groups = ceil((double)num_loci/(double)interval);
   
-  // Note that this may need to be done logarithmically to avoid underflowing the doubles
-
-  // Allocate memory for the array of locus struct
-  loci = R_Calloc(num_loci,struct locus);
-  // Call fill_loci to get allelic frequency information
-  fill_loci(loci, genlight);
   // for each genotype
   for(int i = 0; i < num_gens; i++)
   {
     R_chr1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0);
     R_chr2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1);
     chr_length = XLENGTH(R_chr1);
-    // set log_product to 0
+    // restart the log_product and group numbers
     log_product = 0;
-    // set heterozygotes to 0
-    heterozygotes = 0;
+    group = 0;
     // for each locus group
+  
     for(int j = 0; j < chr_length; j++)
     {
       // Find zygosity for each site in this locus
@@ -537,7 +553,6 @@ void fill_Pgen(double *pgen, SEXP genlight)
         if(((zyg.ch >> k) & 1) == 1)
         {
           // handle each heterozygous site in this locus
-          heterozygotes += 1;
           log_product += log(loc->h) - log(loc->n); // - log(2) + log(2)  // Pgen(f)
           //log_product += log(loc->d) - log(2*(loc->n)) + log(loc->r) - log(2*(loc->n)) + log(2);  // Pgen
         }
@@ -557,13 +572,16 @@ void fill_Pgen(double *pgen, SEXP genlight)
         {
           // Error
         }
+        if((group+1)*interval == j*8+k+1 || j*8+k+1 == num_loci)
+        {
+          pgen[i*num_groups + group] = log_product;
+          group++;
+          log_product = 0;
+        }
       }
     }
-    pgen[i] = log_product;
   }
 
-  // Free memory allocated for the structs
-  R_Free(loci);
   UNPROTECT(3);
 
 }

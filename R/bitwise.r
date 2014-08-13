@@ -49,8 +49,6 @@
 #' object. The number representing the distance between two samples is equal to
 #' the number of alleles in the samples that do not have the same zygosity.
 #'
-#' @name bitwise
-#'
 #' @param x a genlight object. 
 #'
 #' @param percent \code{logical}. Should the distance be represented from 0 to 1? 
@@ -87,7 +85,14 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
   ind.names <- indNames(x)
   inds      <- nInd(x)
   numPairs   <- nLoc(x)
-
+  # Ensure that every SNPbin object has data for all chromosomes
+  if(ploid == 2){
+    for(i in 1:length(x$gen)){
+      if(length(x$gen[[i]]$snp) == 1){
+        x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
+      }
+    }
+  }
   # Threads must be something that can cast to integer
   if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
   {
@@ -121,14 +126,15 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
 
 
 #==============================================================================#
-#' Calculates and returns a vector of Pgen values for the given genlight object.
-#' Each element represents the probability that the individual at that element
-#' would have been produced via random mating using estimates derived from the
-#' genotypes present in the genlight object.
+#' Calculates and returns a matrix of Pgen values for the given genlight object.
+#' Each column represents a genotype in the genlight objects, and each row
+#' represents a specific, sequential set of 8 base pairs. The values in each cell
+#' represent the Pgen value of the corresponding set of base pairs. These values
+#' indicate the probability of observing these alleles in a randomly mating 
+#' population using estimates derived from the genotypes present in the genlight 
+#' object.
 #'
-#' @rdname bitwise
-#'
-#  @param x a genlight object. 
+#' @param x a genlight object. 
 #'
 #' @param log a \code{logical} to determine whether the values should be returned 
 #'  as percentages or logarithms of percentages. \code{TRUE} is the default, and 
@@ -144,14 +150,31 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
 #==============================================================================#
 bitwise.pgen <- function(x, log=TRUE) {
   stopifnot(class(x)[1] == "genlight")
+  # Stop if the ploidy of the genlight object is not consistent
+  stopifnot(min(ploidy(x)) == max(ploidy(x))) 
+  # Stop if the ploidy of the genlight object is not diploid
+  stopifnot(min(ploidy(x)) == 2)
 
-  pgen_vector <- .Call("get_pgen_vector",x)
+  # Ensure that every SNPbin object has data for both chromosomes
+  for(i in 1:length(x$gen)){
+    if(length(x$gen[[i]]$snp) == 1){
+      x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
+    }
+  }
+  
+  # TODO: Support haploids
+  # TODO: Support genind and genclone objects
+
+  pgen_matrix <- .Call("get_pgen_vector",x)
 
   if(!log)
   {
-    pgen_vector <- exp(pgen_vector)
+    pgen_matrix <- exp(pgen_matrix)
   }
 
-  return(pgen_vector);
+  dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/8.0))
+
+  # Transpose matrix before returning for plotting purposes
+  return(t(pgen_matrix));
 
 }
