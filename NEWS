@@ -1,5 +1,8 @@
 poppr 1.1.2.99
 ===========
+BUG FIX
+* Fixed issue where monomorphic loci would cause an error in `recode_polyploids`
+
 
 poppr 1.1.2
 ===========
