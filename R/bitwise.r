@@ -165,7 +165,7 @@ bitwise.pgen <- function(x, log=TRUE) {
   # TODO: Support haploids
   # TODO: Support genind and genclone objects
 
-  pgen_matrix <- .Call("get_pgen_vector",x)
+  pgen_matrix <- .Call("get_pgen_matrix_genlight",x)
 
   if(!log)
   {

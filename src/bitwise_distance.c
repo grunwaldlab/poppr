@@ -69,7 +69,8 @@ struct locus
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads);
-SEXP get_pgen_vector(SEXP genlight);
+SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs);
+SEXP get_pgen_matrix_genlight(SEXP genlight);
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
@@ -423,12 +424,87 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Calculates and returns a vector of Pgen values for the given genlight object.
+Calculates and returns a matrix of Pgen values for each genotype and locu in
+the genind or genclone  object.
+
+Input: A genind or genclone object containing samples of diploids.
+       A frequency matrix constructed in R with makefreq(genind2genpop(genind)).
+Output: A matrix containing the Pgen value of each genotype at each locus.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs)
+{
+  SEXP R_out;
+  SEXP R_tab_symbol;
+  SEXP R_loc_symbol;
+  SEXP R_tab;
+  PROTECT(R_tab_symbol = install("tab")); // Used for accessing the named elements of the genind object
+  PROTECT(R_loc_symbol = install("loc.names"));
+  double *pgens;
+  int *indices;
+  int num_gens;
+  int num_loci;
+  int num_alleles;
+  int index;
+  int size;
+
+  R_tab = getAttrib(genind, R_tab_symbol); 
+  num_gens = INTEGER(getAttrib(R_tab, R_DimSymbol))[0];
+  num_alleles = INTEGER(getAttrib(R_tab, R_DimSymbol))[1];
+  num_loci = XLENGTH(getAttrib(genind, R_loc_symbol));
+  size = num_gens*num_loci;
+  pgens = R_Calloc(size, double);
+  indices = R_Calloc(size*2, int);
+  PROTECT(R_out = allocVector(REALSXP,size));
+
+  // TODO: Filter for missing data before sending it to this function
+  // TODO: Skip missing data when calculating these pgen values
+  // Fill indices with the indices of alleles found in each genotype
+  for(int i = 0; i < num_gens; i++)
+  {
+    index = 0;
+    for(int j = 0; j < num_alleles; j++)
+    {
+      // TODO: Don't check for these using equalities
+      if(REAL(R_tab)[i][j] == 1)
+      {
+        indices[i][index] = j;
+        indices[i][index+1] = j;
+        index += 2;
+      }
+      else if(REAL(R_tab)[i][j] == 0.5)
+      {
+        indices[i][index] = j;
+        index += 1;
+      }
+    }
+  } 
+
+  // TODO: Find a way to get the index for which population each genotype is in
+  // TODO: Implement the following pseudo-code:
+  //  for each genotype in genind:
+  //    for each locus in indices:
+  //      pgens[genotype][locus] = table[population(genotype)][index] * table[population(genotype)][index+1] ( * 2 if it's a heterozygote?)
+  //      index += 2
+
+  for(int i = 0; i < size; i++)
+  {
+    REAL(R_out)[i] = (pgens[i]);
+  }
+
+  R_Free(indices);
+  R_Free(pgens);
+  UNPROTECT(3);
+  return R_out;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates and returns a matrix of Pgen values for the given genlight object.
 
 Input: A genlight object containing samples of diploids.
-Output: A vector containing the Pgen value of each genotype in the genlight object.
+Output: A matrix containing the Pgen value of each locus in each genotype in the 
+        genlight object.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP get_pgen_vector(SEXP genlight)
+SEXP get_pgen_matrix_genlight(SEXP genlight)
 {
 
   // TODO: Accept an interval, then use either 8 or num_loci as default when calling from R, never 0
@@ -503,17 +579,26 @@ void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
   SEXP R_gen_symbol;
   SEXP R_chr_symbol;
   SEXP R_loc_symbol;
+  SEXP R_nap_symbol;
   SEXP R_chr1;
   SEXP R_chr2;
+  SEXP R_nap;
+  int nap_length;
+  int next_missing_index;
+  int next_missing;
 
   PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
   PROTECT(R_loc_symbol = install("n.loc"));
   PROTECT(R_chr_symbol = install("snp"));
+  PROTECT(R_nap_symbol = install("NA.posi"));  
 
   R_gen = getAttrib(genlight, R_gen_symbol);
   num_gens = XLENGTH(R_gen);
   num_loci = INTEGER(getAttrib(genlight, R_loc_symbol))[0];
   num_groups = ceil((double)num_loci/(double)interval);
+  nap_length = 0;
+  next_missing_index = 0;
+  next_missing = 0;
   
   // for each genotype
   for(int i = 0; i < num_gens; i++)
@@ -521,6 +606,10 @@ void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
     R_chr1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0);
     R_chr2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1);
     chr_length = XLENGTH(R_chr1);
+    R_nap = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
+    nap_length = XLENGTH(R_nap);
+    next_missing_index = 0;
+    next_missing = (int)INTEGER(R_nap)[next_missing_index] - 1; //Compensate for Rs 1 based indexing
     // restart the log_product and group numbers
     log_product = 0;
     group = 0;
@@ -549,28 +638,38 @@ void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
   
       for(int k = 0; k < 8 && j*8+k < num_loci; k++)
       {
-        loc = &loci[j*8 + k];
-        if(((zyg.ch >> k) & 1) == 1)
+        // Skip and missing data
+        if(next_missing_index < nap_length && next_missing != j*8+k)
         {
-          // handle each heterozygous site in this locus
-          log_product += log(loc->h) - log(loc->n); // - log(2) + log(2)  // Pgen(f)
-          //log_product += log(loc->d) - log(2*(loc->n)) + log(loc->r) - log(2*(loc->n)) + log(2);  // Pgen
+          loc = &loci[j*8 + k];
+          if(((zyg.ch >> k) & 1) == 1)
+          {
+            // handle each heterozygous site in this locus
+            log_product += log(loc->h) - log(loc->n); // - log(2) + log(2)  // Pgen(f)
+            //log_product += log(loc->d) - log(2*(loc->n)) + log(loc->r) - log(2*(loc->n)) + log(2);  // Pgen
+          }
+          else if(((zyg.cd >> k) & 1) == 1)
+          {
+            // handle each homozygous dominant site in this locus
+            log_product += log( (loc->r)*(loc->d) + (loc->d)*(loc->h) - (2*(loc->n))*(loc->h) ) - log( 2*(loc->r)*(loc->n) ); // Pgen(f)
+            //log_product += log(loc->d) + log(loc->d) - log(2*(loc->n)) - log(2*(loc->n)); // Pgen
+          }
+          else if(((zyg.cr >> k) & 1) == 1)
+          {
+            // handle each homozygous recessive site in this locus
+            log_product += log( (loc->r)*(loc->d) + (loc->r)*(loc->h) - (2*(loc->n))*(loc->h) ) - log( 2*(loc->d)*(loc->n) ); // Pgen(f)
+            //log_product += log(loc->r) + log(loc->r) - log(2*(loc->n)) - log(2*(loc->n)); // Pgen
+          }
+          else
+          {
+            // Error
+          }
         }
-        else if(((zyg.cd >> k) & 1) == 1)
+        else if(next_missing == j*8+k)
         {
-          // handle each homozygous dominant site in this locus
-          log_product += log( (loc->r)*(loc->d) + (loc->d)*(loc->h) - (2*(loc->n))*(loc->h) ) - log( 2*(loc->r)*(loc->n) ); // Pgen(f)
-          //log_product += log(loc->d) + log(loc->d) - log(2*(loc->n)) - log(2*(loc->n)); // Pgen
-        }
-        else if(((zyg.cr >> k) & 1) == 1)
-        {
-          // handle each homozygous recessive site in this locus
-          log_product += log( (loc->r)*(loc->d) + (loc->r)*(loc->h) - (2*(loc->n))*(loc->h) ) - log( 2*(loc->d)*(loc->n) ); // Pgen(f)
-          //log_product += log(loc->r) + log(loc->r) - log(2*(loc->n)) - log(2*(loc->n)); // Pgen
-        }
-        else
-        {
-          // Error
+          // Update the missing data variables in order to skip the next portion of missing data
+          next_missing_index++; 
+          next_missing = (int)INTEGER(R_nap)[next_missing_index] - 1;
         }
         if((group+1)*interval == j*8+k+1 || j*8+k+1 == num_loci)
         {
@@ -582,7 +681,7 @@ void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
     }
   }
 
-  UNPROTECT(3);
+  UNPROTECT(4);
 
 }
 
@@ -676,7 +775,7 @@ void fill_loci(struct locus *loc, SEXP genlight)
         // if not missing
         if(next_missing_i != byte*8+bit)
         { 
-          // Exactly one of the next three lines will add 1 (or 2) to its respective counter
+          // The following lines will add 1 (or 2) to whichever value(s) need to be increased, and 0 to the others
           loc[byte*8+bit].h += (zyg.ch >> bit) & 1;
           loc[byte*8+bit].d += ((zyg.ch >> bit) & 1) + 2 * ((zyg.cd >> bit) & 1); 
           loc[byte*8+bit].r += ((zyg.ch >> bit) & 1) + 2 * ((zyg.cr >> bit) & 1); 
