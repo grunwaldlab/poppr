@@ -149,32 +149,44 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
 #' @export
 #==============================================================================#
 bitwise.pgen <- function(x, log=TRUE) {
-  stopifnot(class(x)[1] == "genlight")
+  stopifnot(class(x)[1] == "genlight" || is.genind(x))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
   # Stop if the ploidy of the genlight object is not diploid
   stopifnot(min(ploidy(x)) == 2)
 
-  # Ensure that every SNPbin object has data for both chromosomes
-  for(i in 1:length(x$gen)){
-    if(length(x$gen[[i]]$snp) == 1){
-      x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
+  if(class(x)[1] == "genlight"){
+    # Ensure that every SNPbin object has data for both chromosomes
+    for(i in 1:length(x$gen)){
+      if(length(x$gen[[i]]$snp) == 1){
+        x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
+      }
     }
+    
+    # TODO: Support haploids
+
+    pgen_matrix <- .Call("get_pgen_matrix_genlight",x)
+
+    if(!log)
+    {
+      pgen_matrix <- exp(pgen_matrix)
+    }
+
+    dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/8.0))
   }
-  
-  # TODO: Support haploids
-  # TODO: Support genind and genclone objects
-
-  pgen_matrix <- .Call("get_pgen_matrix_genlight",x)
-
-  if(!log)
-  {
-    pgen_matrix <- exp(pgen_matrix)
+  else if(is.genind(x)){
+    pops <- pop(x)
+    freqs <- makefreq(genind2genpop(x))$tab
+    pgen_matrix <- .Call("get_pgen_matrix_genind",x,freqs,pops)
+    # TODO: calculate in log form in C, then convert back here.
+    if(log)
+    {
+      pgen_matrix <- log(pgen_matrix)
+    }
+    dim(pgen_matrix) <- c(dim(x$tab)[1],length(x$loc.names))
+    #TODO: Add the names of the loci as labels
   }
-
-  dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/8.0))
 
   # Transpose matrix before returning for plotting purposes
-  return(t(pgen_matrix));
-
+  return(pgen_matrix);
 }

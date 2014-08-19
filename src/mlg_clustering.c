@@ -224,8 +224,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
               }
               else if(algo=='n' && ((REAL(dist)[(i)*num_individuals + (j)] < *dist_ij) || *dist_ij < -0.5))
               { // Nearest Neighbor clustering
-                *dist_ij = REAL(dist)[(i)*num_individuals + (j)];
-                *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
+                *dist_ij = REAL(dist)[(i) + (j)*num_individuals];
+                *dist_ji = REAL(dist)[(i) + (j)*num_individuals];
               }
               else if(algo=='a')
               { // Average Neighbor clustering
@@ -234,13 +234,13 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
                 // Which lets us add the elements in one at a time divided by the product of cluster sizes
                 if(*dist_ij < -0.5)
                 { // This is the first pair to be considered between these two clusters
-                  double portion = REAL(dist)[i*num_individuals+j] / (double)(cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
+                  double portion = REAL(dist)[i + j*num_individuals] / (double)(cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
                   *dist_ij = portion;
                   *dist_ji = portion;
                 }
                 else
                 { 
-                  double portion = REAL(dist)[i*num_individuals+j] / (double)(cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
+                  double portion = REAL(dist)[i + j*num_individuals] / (double)(cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
                   *dist_ij += portion;
                   *dist_ji += portion;
                 }
@@ -248,8 +248,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
               else if(REAL(dist)[(i)*num_individuals + (j)] > *dist_ij)
               { // Farthest Neighbor clustering
                 // This is the default, so it will execute even if the algorithm argument is invalid
-                *dist_ij = REAL(dist)[(i)*num_individuals + (j)];
-                *dist_ji = REAL(dist)[(i)*num_individuals + (j)];
+                *dist_ij = REAL(dist)[(i) + (j)*num_individuals];
+                *dist_ji = REAL(dist)[(i) + (j)*num_individuals];
                 //printf("\n%f\n",private_distance_matrix[i][j]);
               }
             } 

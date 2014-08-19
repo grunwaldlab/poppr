@@ -91,13 +91,13 @@ SEXP msn_tied_edges(SEXP mst, SEXP bclone, SEXP epsi)
     for(int j = 0; j < num_vertices; j++)
     {
       // TODO: This doesn't seem to be working...
-      mn = ((mn < 0 || REAL(mst)[i*num_vertices+j] < mn) && REAL(mst)[i*num_vertices+j] > 0) ? (REAL(mst)[i*num_vertices+j]) : (mn);
+      mn = ((mn < 0 || REAL(mst)[i + j*num_vertices] < mn) && REAL(mst)[i + j*num_vertices] > 0) ? (REAL(mst)[i + j*num_vertices]) : (mn);
     }
     // Find all paths out of this vertex that are tied in length with the minimum
     for(int j = i+1; j < num_vertices; j++)
     {
       // Check for matching edges that do not already exist in this graph
-      if(fabs(REAL(bclone)[i*num_vertices+j] - mn) < asReal(epsi) && !(REAL(mst)[i*num_vertices+j] > 0))
+      if(fabs(REAL(bclone)[i + j*num_vertices] - mn) < asReal(epsi) && !(REAL(mst)[i + j*num_vertices] > 0))
       {
         if(num_edges+2 >= edges_size)
         {
