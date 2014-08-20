@@ -70,7 +70,7 @@ struct locus
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
-SEXP get_pgen_matrix_genlight(SEXP genlight);
+SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
@@ -576,7 +576,7 @@ Input: A genlight object containing samples of diploids.
 Output: A matrix containing the Pgen value of each locus in each genotype in the 
         genlight object.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP get_pgen_matrix_genlight(SEXP genlight)
+SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window)
 {
 
   // TODO: Accept an interval, then use either 8 or num_loci as default when calling from R, never 0
@@ -597,7 +597,7 @@ SEXP get_pgen_matrix_genlight(SEXP genlight)
   int interval;
   int size;
   // Set the interval to calculate Pgen over every 8 loci
-  interval = 8;
+  interval = INTEGER(window)[0];
 
   num_gens = XLENGTH(getAttrib(genlight, R_gen_symbol));
   num_loci = INTEGER(getAttrib(genlight, R_loc_symbol))[0];
@@ -618,7 +618,7 @@ SEXP get_pgen_matrix_genlight(SEXP genlight)
   // Call fill_loci to get allelic frequency information
   fill_loci(loci, genlight);
 
-  fill_Pgen(pgens,loci,8,genlight);    
+  fill_Pgen(pgens,loci,interval,genlight);    
 
   for(int i = 0; i < num_gens; i++)
   {

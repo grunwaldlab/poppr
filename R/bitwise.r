@@ -143,17 +143,35 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
 #'  chance for each genotype to be produced via random mating, rather than the log 
 #'  equivalent.
 #'
+#' @param by.pop a \code{logical} to determine whether allelic frequencies should
+#'  be calculated per population (\code{TRUE}, default) or across all populations
+#'  in the data (\code{FALSE}).
+#'
+#' @param window.size an \code{integer} to determine how many SNPs should be
+#'  included in each pgen calculation. The default is 1, causing every SNP to
+#'  have its own pgen value in the result matrix. Higher values can be used
+#'  to reduce matrix size, but may result in precision errors if pgen values are
+#'  too small. This argument only affects processing of genlight objects.
+#'
 #' @return A vector containing one Pgen value for each genotype in the genlight object.
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
 #==============================================================================#
-bitwise.pgen <- function(x, log=TRUE) {
+bitwise.pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
   stopifnot(class(x)[1] == "genlight" || is.genind(x))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
   # Stop if the ploidy of the genlight object is not diploid
   stopifnot(min(ploidy(x)) == 2)
+  # Warn if window size is unusable
+  if(!is.integer(window.size) && !is.numeric(window.size) && window.size <= 0){
+    warning("window.size must be a positive integer or numeric. Using default value of 1.")
+    window.size = as.integer(1)
+  }
+  else {
+    window.size = as.integer(window.size)
+  }
 
   if(class(x)[1] == "genlight"){
     # Ensure that every SNPbin object has data for both chromosomes
@@ -164,24 +182,33 @@ bitwise.pgen <- function(x, log=TRUE) {
     }
 
     # Ensure there is a population assignment for every genotype
-    if(is.null(x$pop)){
+    if(is.null(x$pop) || by.pop == FALSE){
       x$pop <- as.factor(rep(1,length(x$gen)))
     }   
  
     # TODO: Support haploids
 
-    pgen_matrix <- .Call("get_pgen_matrix_genlight",x)
+    pgen_matrix <- .Call("get_pgen_matrix_genlight",x,window.size)
 
     if(!log)
     {
       pgen_matrix <- exp(pgen_matrix)
     }
 
-    dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/8.0))
+    dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/window.size))
+    rownames(pgen_matrix)            <- x$ind.names
+    if(window.size == 1) {
+      colnames(pgen_matrix)          <- x$loc.names
+    }
   }
   else if(is.genind(x)){
+    # Ensure there is a population assignment for every genotype
+    if(is.null(x$pop) || by.pop == FALSE){
+      x$pop <- as.factor(rep(1,dim(x$tab)[1]))
+      x$pop.names <- as.character(1)
+    }   
     pops <- pop(x)
-    freqs <- makefreq(genind2genpop(x))$tab
+    freqs <- makefreq(genind2genpop(x,quiet=TRUE),quiet=TRUE)$tab
     pgen_matrix <- .Call("get_pgen_matrix_genind",x,freqs,pops)
     # TODO: calculate in log form in C, then convert back here.
     if(!log)
@@ -189,9 +216,11 @@ bitwise.pgen <- function(x, log=TRUE) {
       pgen_matrix <- exp(pgen_matrix)
     }
     dim(pgen_matrix) <- c(dim(x$tab)[1],length(x$loc.names))
-    #TODO: Add the names of the loci as labels
+    colnames(pgen_matrix)            <- x$loc.names
+    rownames(pgen_matrix)            <- x$ind.names
   }
-
-  # Transpose matrix before returning for plotting purposes
+  else{
+    stop("Object provided must be a genlight, genind, or genclone object.")
+  }
   return(pgen_matrix);
 }

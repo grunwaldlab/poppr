@@ -9,7 +9,7 @@ indicate the probability of observing these alleles in a randomly mating
 population using estimates derived from the genotypes present in the genlight
 object.}
 \usage{
-bitwise.pgen(x, log = TRUE)
+bitwise.pgen(x, log = TRUE, by.pop = TRUE, window.size = 1)
 }
 \arguments{
 \item{x}{a genlight object.}
@@ -20,6 +20,16 @@ bitwise.pgen(x, log = TRUE)
  a much larger range and is highly recommended. \code{FALSE} returns the percentage
  chance for each genotype to be produced via random mating, rather than the log
  equivalent.}
+
+\item{by.pop}{a \code{logical} to determine whether allelic frequencies should
+ be calculated per population (\code{TRUE}, default) or across all populations
+ in the data (\code{FALSE}).}
+
+\item{window.size}{an \code{integer} to determine how many SNPs should be
+ included in each pgen calculation. The default is 1, causing every SNP to
+ have its own pgen value in the result matrix. Higher values can be used
+ to reduce matrix size, but may result in precision errors if pgen values are
+ too small. This argument only affects processing of genlight objects.}
 }
 \value{
 A vector containing one Pgen value for each genotype in the genlight object.
