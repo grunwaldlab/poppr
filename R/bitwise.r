@@ -162,7 +162,12 @@ bitwise.pgen <- function(x, log=TRUE) {
         x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
       }
     }
-    
+
+    # Ensure there is a population assignment for every genotype
+    if(is.null(x$pop)){
+      x$pop <- as.factor(rep(1,length(x$gen)))
+    }   
+ 
     # TODO: Support haploids
 
     pgen_matrix <- .Call("get_pgen_matrix_genlight",x)
@@ -179,9 +184,9 @@ bitwise.pgen <- function(x, log=TRUE) {
     freqs <- makefreq(genind2genpop(x))$tab
     pgen_matrix <- .Call("get_pgen_matrix_genind",x,freqs,pops)
     # TODO: calculate in log form in C, then convert back here.
-    if(log)
+    if(!log)
     {
-      pgen_matrix <- log(pgen_matrix)
+      pgen_matrix <- exp(pgen_matrix)
     }
     dim(pgen_matrix) <- c(dim(x$tab)[1],length(x$loc.names))
     #TODO: Add the names of the loci as labels
