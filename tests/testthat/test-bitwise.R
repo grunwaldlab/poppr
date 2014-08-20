@@ -44,13 +44,13 @@ test_that("bitwise.pgen produces reasonable results", {
 
   x <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2))
   results_single_pop <- bitwise.pgen(x,log=FALSE)
-  expexted_single_pop <- structure(c(0.25, 0.5, 0.5, 0.25), .Dim = c(4L, 1L))
+  expected_single_pop <- structure(c(0.25, 0.5, 0.5, 0.25), .Dim = c(4L, 1L))
 
   y <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2))
   y$pop <- as.factor(1:4)
   results_multi_pop <- bitwise.pgen(y,log=FALSE)
-  expexted_multi_pop <- structure(c(1, 0.5, 0.5, 1), .Dim = c(4L, 1L))
+  expected_multi_pop <- structure(c(1, 0.5, 0.5, 1), .Dim = c(4L, 1L))
   
   expect_that(results_single_pop, is_equivalent_to(expected_single_pop))
-  expect_that(results_multi_pop, is_equivalent_to(expexted_multi_pop))
+  expect_that(results_multi_pop, is_equivalent_to(expected_multi_pop))
  })
