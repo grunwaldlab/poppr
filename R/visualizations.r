@@ -375,6 +375,11 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     else {
       pop$other$mlg.vec <- mlg.vector(pop)  
     }
+  } else {
+    # Updating MLG with filtered data
+    if(threshold > 0){
+      pop$mlg <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm)
+    }
   }
   bclone <- as.matrix(distmat)
 
@@ -421,11 +426,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
   # Obtaining population information for all MLGs
-  if (is.genclone(pop)){
-    subs <- sort(unique(mlgs))
-  } else {
-    subs <- 1:mlg(pop, quiet = TRUE)
-  }
+  subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
 
   names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))

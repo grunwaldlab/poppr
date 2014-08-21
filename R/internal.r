@@ -1136,7 +1136,19 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
   # First, clone correct and get the number of individuals per MLG in order.
   if(threshold > 0){
-    pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm)
+    if (!is.genclone(pop)) {
+      if (is.null(distmat) & !is.null(replen)){
+        pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)
+      } else {
+        pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen)
+      }
+    } else {
+      if (is.null(distmat) & !is.null(replen)){
+        pop$mlg <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)
+      } else {
+        pop$mlg <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen)
+      }
+    }
     cpop <- pop[if(is.na(-which(duplicated(pop$other$mlg.vec))[1])) which(!duplicated(pop$other$mlg.vec)) else -which(duplicated(pop$other$mlg.vec)) ,]
   }
   else {

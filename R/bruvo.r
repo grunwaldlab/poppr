@@ -456,10 +456,15 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   if (!is.genclone(pop)){
     # Storing the MLG vector into the genind object
     if(threshold > 0){
-      pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm)  
+      pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)  
     }
     else {
       pop$other$mlg.vec <- mlg.vector(pop)  
+    }
+  } else {
+    # Updating the MLG with filtered data
+    if(threshold > 0){
+      pop$mlg <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)  
     }
   }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
@@ -479,17 +484,11 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   }
   # Obtaining population information for all MLGs
   if(threshold > 0){
-    cpop <- pop[if(is.na(-which(duplicated(pop$other$mlg.vec))[1])) which(!duplicated(pop$other$mlg.vec)) else -which(duplicated(pop$other$mlg.vec)) ,]
+    cpop <- pop[if(length(-which(duplicated(pop$other$mlg.vec))==0)) which(!duplicated(pop$other$mlg.vec)) else -which(duplicated(pop$other$mlg.vec)) ,]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
   }
-  if (is.genclone(pop)){
-    subs <- sort(unique(pop@mlg))
-  } else {
-    subs <- 1:mlg(pop, quiet = TRUE)
-  }
-  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
   if (is.genclone(pop)){
     mlgs <- pop@mlg
     cmlg <- cpop@mlg
@@ -497,6 +496,8 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     mlgs <- pop$other$mlg.vec
     cmlg <- cpop$other$mlg.vec
   }
+  subs <- sort(unique(mlgs))
+  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
   names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
   
   # This will determine the size of the nodes based on the number of individuals
@@ -508,6 +509,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   bclone     <- as.matrix(bruvo.dist(cpop, replen=replen))
   rownames(bclone) <- cpop$pop
   colnames(bclone) <- cpop$pop
+  print(mlg.cp)
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
