@@ -42,7 +42,11 @@
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
+
+// Include openMP if compiled with an openMP compatible compiler
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads, SEXP stats)
 {
@@ -133,16 +137,24 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   // Allocate memory for storing cluster assignments
   out_vector = R_Calloc(num_individuals, int);
 
-  // Set the number of threads to be used in each omp parallel region
-  if(INTEGER(requested_threads)[0] == 0)
+  #ifdef _OPENMP
   {
-    num_threads = omp_get_max_threads();
+    // Set the number of threads to be used in each omp parallel region
+    if(INTEGER(requested_threads)[0] == 0)
+    {
+      num_threads = omp_get_max_threads();
+    }
+    else
+    {
+      num_threads = INTEGER(requested_threads)[0];
+    }
+    omp_set_num_threads(num_threads);
   }
-  else
+  #else
   {
-    num_threads = INTEGER(requested_threads)[0];
+    num_threads = 1;
   }
-  omp_set_num_threads(num_threads);
+  #endif
 
   private_distance_matrix = R_Calloc(num_threads, double**);
   for(int i = 0; i < num_threads; i++)
@@ -192,23 +204,23 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     closest_pair[0] = -1;
     closest_pair[1] = -1;
     // Fill the distance matrix with the new distances between each cluster
+    #ifdef _OPENMP
     #pragma omp parallel private(dist_ij, dist_ji, thread_id) \
       shared(out_vector,dist,thresh,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix,num_threads)
+    #endif
     {
-      thread_id = omp_get_thread_num();
+      #ifdef _OPENMP
+      {
+        thread_id = omp_get_thread_num();
+      }
+      #else
+      {
+        thread_id = 0;
+      }
+      #endif
       for(int i = 0; i < num_individuals; i++)
       {
-        // Parallel statistics for H3N2 data set
-        //    No Locks:      50 seconds // New method. No locks, so unusable
-        //    With Parallel: 60 seconds // No locks, so not usable
-        //    With Critical: 65 seconds // Private matrices and critical section should make this safe
-        //    Serial:       66 seconds
-        //    With Locks:    90 seconds // New style of threading
-        //    With Locks:    123 seconds
-        //    Outer With Locks: 110 seconds
-        //#pragma omp parallel for schedule(guided) \
-        //  shared(dist,out_vector,private_distance_matrix,cluster_size,algo) \
-        //  private(dist_ij,dist_ji)
+        // Divvy up the work via thread number and genotype assignment
         if(thread_id == out_vector[i] % num_threads)
         {
           for(int j = i+1; j < num_individuals; j++)
@@ -257,7 +269,9 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
         }
       }
       // Merge the private distance matrices back into the global distance matrix 
+      #ifdef _OPENMP
       #pragma omp critical
+      #endif
       for(int i = 0; i < num_mlgs; i++)
       {
         for(int j = 0; j < num_mlgs; j++)

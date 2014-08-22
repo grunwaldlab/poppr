@@ -42,7 +42,11 @@
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
+
+// Include openMP if the compiler supports it
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 // Assumptions:
 //  All genotypes have the same number of SNPs available.
@@ -131,17 +135,24 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
     distance_matrix[i] = R_Calloc(num_gens,int);
   }
 
-  // Set the number of threads to be used in each omp parallel region
-  if(INTEGER(requested_threads)[0] == 0)
+  #ifdef _OPENMP
   {
-    num_threads = omp_get_max_threads();
+    // Set the number of threads to be used in each omp parallel region
+    if(INTEGER(requested_threads)[0] == 0)
+    {
+      num_threads = omp_get_max_threads();
+    }
+    else
+    {
+      num_threads = INTEGER(requested_threads)[0];
+    }
+    omp_set_num_threads(num_threads);
   }
-  else
+  #else
   {
-    num_threads = INTEGER(requested_threads)[0];
+    num_threads = 1;
   }
-  omp_set_num_threads(num_threads);
-
+  #endif
 
   next_missing_index_i = -1;
   next_missing_index_j = -1;
@@ -162,10 +173,12 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
     R_nap1 = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
     nap1_length = XLENGTH(R_nap1);
     // Loop through every other genotype
+    #ifdef _OPENMP
     #pragma omp parallel for \
       private(j,cur_distance,R_chr2_1,R_nap2,next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,\
               tmp_sim_set, k, mask, nap2_length) \
       shared(R_nap1, nap1_length, i, distance_matrix)
+    #endif
     for(j = 0; j < i; j++)
     {
       cur_distance = 0;
@@ -318,17 +331,24 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
     distance_matrix[i] = R_Calloc(num_gens,int);
   }
 
-  // Set the number of threads to be used in each omp parallel region
-  if(INTEGER(requested_threads)[0] == 0)
+  #ifdef _OPENMP
   {
-    num_threads = omp_get_max_threads();
+    // Set the number of threads to be used in each omp parallel region
+    if(INTEGER(requested_threads)[0] == 0)
+    {
+      num_threads = omp_get_max_threads();
+    }
+    else
+    {
+      num_threads = INTEGER(requested_threads)[0];
+    }
+    omp_set_num_threads(num_threads);
   }
-  else
+  #else
   {
-    num_threads = INTEGER(requested_threads)[0];
+    num_threads = 1;
   }
-  omp_set_num_threads(num_threads);
-
+  #endif
 
   next_missing_index_i = 0;
   next_missing_index_j = 0;
@@ -350,10 +370,12 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
     R_nap1 = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
     nap1_length = XLENGTH(R_nap1);
     // Loop through every other genotype
+    #ifdef _OPENMP
     #pragma omp parallel for \
       private(j,cur_distance,R_chr2_1,R_chr2_2,R_nap2,next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,\
               set_1,set_2,tmp_sim_set, k, mask, nap2_length) \
       shared(R_nap1, nap1_length, i, distance_matrix)
+    #endif
     for(j = 0; j < i; j++)
     {
       cur_distance = 0;
