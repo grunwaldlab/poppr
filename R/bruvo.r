@@ -451,21 +451,13 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, showplot = TRUE,
                        include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
-
+  if(!is.genclone(pop)){
+    pop <- as.genclone(pop)
+  }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
-  if (!is.genclone(pop)){
-    # Storing the MLG vector into the genind object
-    if(threshold > 0){
-      pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)  
-    }
-    else {
-      pop$other$mlg.vec <- mlg.vector(pop)  
-    }
-  } else {
-    # Updating the MLG with filtered data
-    if(threshold > 0){
-      pop$mlg <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)  
-    }
+  # Updating the MLG with filtered data
+  if(threshold > 0){
+    pop$mlg <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)  
   }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
@@ -484,18 +476,13 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   }
   # Obtaining population information for all MLGs
   if(threshold > 0){
-    cpop <- pop[if(length(-which(duplicated(pop$other$mlg.vec))==0)) which(!duplicated(pop$other$mlg.vec)) else -which(duplicated(pop$other$mlg.vec)) ,]
+    cpop <- pop[if(length(-which(duplicated(pop$mlg))==0)) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
   }
-  if (is.genclone(pop)){
-    mlgs <- pop@mlg
-    cmlg <- cpop@mlg
-  } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
-  }
+  mlgs <- pop@mlg
+  cmlg <- cpop@mlg
   subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
   names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))

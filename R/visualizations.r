@@ -365,21 +365,13 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if (nInd(pop) != attr(distmat, "Size")){
     stop("The size of the distance matrix does not match the size of the data.\n")
   }
+  if(!is.genclone(pop)){
+    pop <- as.genclone(pop)
+  }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
-  # Storing the MLG vector into the genind object
-  if (!is.genclone(pop)){
-    # Storing the MLG vector into the genind object
-    if(threshold > 0){
-      pop$other$mlg.vec <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm)
-    }
-    else {
-      pop$other$mlg.vec <- mlg.vector(pop)  
-    }
-  } else {
-    # Updating MLG with filtered data
-    if(threshold > 0){
-      pop$mlg <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm)
-    }
+  # Updating MLG with filtered data
+  if(threshold > 0){
+    pop$mlg <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm)
   }
   bclone <- as.matrix(distmat)
 
@@ -404,18 +396,13 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     pop    <- popsub(pop, sublist, blacklist)
   }
   if(threshold > 0){
-    cpop <- pop[if(is.na(-which(duplicated(pop$other$mlg.vec))[1])) which(!duplicated(pop$other$mlg.vec)) else -which(duplicated(pop$other$mlg.vec)) ,]
+    cpop <- pop[if(is.na(-which(duplicated(pop$mlg))[1])) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
   }
-  if (is.genclone(pop)){
-    mlgs <- pop@mlg
-    cmlg <- cpop@mlg
-  } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
-  }
+  mlgs <- pop@mlg
+  cmlg <- cpop@mlg
   # This will clone correct the incoming matrix. 
   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   
