@@ -348,14 +348,18 @@ mlg.vector <- function(pop){
 #'   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
 #'   the function to run serially, which may increase stability on some systems.
 #'   Other values may be specified, but should be used with caution.
-#' @param stats \code{logical} determining whether this function should print
-#'   statistics as it merges clusters. If \code{TRUE}, the threshold at which
-#'   each cluster was merged will be printed along with how many individuals were
-#'   displaced in that merge. \code{FALSE}, which is the default, will print nothing.
+#' @param stats \code{logical} determining whether this function should return
+#'   statistics on cluster mergers. If \code{TRUE}, the threshold at which
+#'   each cluster was merged will be returned instead of the cluster assignment
+#'   vector. \code{FALSE}, which is the default, will return a vector of cluster
+#'   assignments, similar to that of \code{\link{mlg.vector}}
 #' @param ... any parameters to be passed off to the distance method.
 #' 
 #' @return a numeric vector naming the multilocus genotype of each individual in
-#' the dataset. Each genotype is at least the specified distance apart.
+#' the dataset. Each genotype is at least the specified distance apart, as 
+#' calculated by the selected algorithm. If stats is set to \code{TRUE}, this
+#' function will return the thresholds had which each cluster merger occured
+#' instead of the new cluster assignments.
 #'
 #' @note \code{mlg.vector} makes use of \code{mlg.vector} grouping prior to
 #' applying the given threshold. Genotype numbers returned by \code{mlg.vector} 
@@ -445,9 +449,16 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   }
   basemlg <- as.integer(basemlg)
   
-  resultvec <- .Call("neighbor_clustering", dis, basemlg, threshold, algo, threads, stats) 
+  result_list <- .Call("neighbor_clustering", dis, basemlg, threshold, algo, threads) 
   
-  return(resultvec)
+  # Cut out empty values from result_list[[2]]
+  result_list[[2]] <- result_list[[2]][result_list[[2]] > -.05]
+
+  if(stats){
+    return(result_list[[2]])
+  } else {
+    return(result_list[[1]])
+  }
 }
 
 

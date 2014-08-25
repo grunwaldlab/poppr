@@ -84,10 +84,11 @@ are available cores/CPUs. In most cases this is ideal. A value of 1 will force
 the function to run serially, which may increase stability on some systems.
 Other values may be specified, but should be used with caution.}
 
-\item{stats}{\code{logical} determining whether this function should print
-statistics as it merges clusters. If \code{TRUE}, the threshold at which
-each cluster was merged will be printed along with how many individuals were
-displaced in that merge. \code{FALSE}, which is the default, will print nothing.}
+\item{stats}{\code{logical} determining whether this function should return
+statistics on cluster mergers. If \code{TRUE}, the threshold at which
+each cluster was merged will be returned instead of the cluster assignment
+vector. \code{FALSE}, which is the default, will return a vector of cluster
+assignments, similar to that of \code{\link{mlg.vector}}}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }
@@ -115,7 +116,10 @@ a list of multilocus genotypes with the associated individual names per MLG.
 }
 
 a numeric vector naming the multilocus genotype of each individual in
-the dataset. Each genotype is at least the specified distance apart.
+the dataset. Each genotype is at least the specified distance apart, as
+calculated by the selected algorithm. If stats is set to \code{TRUE}, this
+function will return the thresholds had which each cluster merger occured
+instead of the new cluster assignments.
 
 a \code{list} containing vectors of population names for each MLG.
 }

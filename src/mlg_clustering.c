@@ -48,7 +48,7 @@
 #include <omp.h>
 #endif
 
-SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads, SEXP stats)
+SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads)
 {
   // This function uses various clustering algorithms to
   // condense a set of multilocus genotypes into a potentially smaller
@@ -77,7 +77,6 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   int num_clusters; // Number of clusters; updated upon merge
   int num_mlgs; // Number of clusters already present
   int cur_mlg;  // Temporary number used for tracking mlgs
-  int stat_flag; // 0 is stats is false, 1 if stats is true
   double thresh; // Threshold for distance under which mlgs are clones
   double min_cluster_distance; // Used in finding the closest cluster pairing
   int closest_pair[2]; // Used in finding pair of clusters closest together
@@ -93,14 +92,15 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   char algo;  // Used for storing the first letter of algorithm
 
   SEXP Rout;
+  SEXP Rout_vects;
+  SEXP Rout_stats;
   SEXP Rdim;
 
-  stat_flag = asInteger(stats);
   algo = *CHAR(STRING_ELT(algorithm,0));
   thresh = REAL(threshold)[0];
   Rdim = getAttrib(dist, R_DimSymbol);
   num_individuals = INTEGER(Rdim)[0]; // dist is a square matrix
-  PROTECT(Rout = allocVector(INTSXP, num_individuals));  
+  PROTECT(Rout_vects = allocVector(INTSXP, num_individuals));  
 
   // Find the MLG with the highest index value
   // and use it as the number of MLGs in the data set 
@@ -117,12 +117,16 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     num_mlgs = num_individuals;
   }
   
+  PROTECT(Rout_stats = allocVector(REALSXP, num_mlgs));  
+  PROTECT(Rout = CONS(Rout_vects, CONS(Rout_stats, R_NilValue))); 
+
   // Allocate empty matrix for storing clusters
   cluster_matrix = R_Calloc(num_mlgs, int*);
   cluster_distance_matrix = R_Calloc(num_mlgs, double*);
 
   for(int i = 0; i < num_mlgs; i++)
   {
+    REAL(Rout_stats)[i] = -1;
     cluster_matrix[i] = R_Calloc(num_individuals, int);
     cluster_distance_matrix[i] = R_Calloc(num_individuals, double);
     for(int j = 0; j < num_individuals; j++)
@@ -262,7 +266,6 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
                 // This is the default, so it will execute even if the algorithm argument is invalid
                 *dist_ij = REAL(dist)[(i) + (j)*num_individuals];
                 *dist_ji = REAL(dist)[(i) + (j)*num_individuals];
-                //printf("\n%f\n",private_distance_matrix[i][j]);
               }
             } 
           }
@@ -341,11 +344,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     }
     else if(min_cluster_distance < thresh)
     {
-      // Print statistics on this merge if stat_flag is true
-      if(stat_flag)
-      {
-        Rprintf("%f, %d, ",min_cluster_distance, (cluster_size[closest_pair[0]] < cluster_size[closest_pair[1]]) ? cluster_size[closest_pair[0]] : cluster_size[closest_pair[1]]);
-      }
+      // Store the distance at which this merge occurred 
+      REAL(Rout_stats)[num_mlgs-num_clusters] = min_cluster_distance;
       for(int i = 0; i < cluster_size[closest_pair[1]] && cluster_matrix[closest_pair[1]][i] > -1; i++)
       {
         // Change the assignment for this individual in the result vector
@@ -369,7 +369,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   // Fill return vector
   for(int i = 0; i < num_individuals; i++)
   {
-    INTEGER(Rout)[i] = out_vector[i]+1;
+    INTEGER(Rout_vects)[i] = out_vector[i]+1;
   }
 
   for(int i = 0; i < num_threads; i++)
@@ -391,7 +391,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   R_Free(cluster_distance_matrix);
   R_Free(cluster_size);
   R_Free(out_vector);
-  UNPROTECT(1);
+  UNPROTECT(3);
   
   return Rout;
 }
