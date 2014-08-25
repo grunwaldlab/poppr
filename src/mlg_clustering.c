@@ -311,6 +311,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
               cluster_distance_matrix[i][j] = (private_distance_matrix[thread_id][i][j] > cluster_distance_matrix[i][j]) ? (private_distance_matrix[thread_id][i][j]) : (cluster_distance_matrix[i][j]);
             }
           }
+          // Reset private distance matrix for next loop
+          private_distance_matrix[thread_id][i][j] = -1;
         }
       } // End critical section
     
