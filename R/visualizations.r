@@ -423,18 +423,22 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
+  bclone <- as.matrix(bclone)
   rownames(bclone) <- cpop$pop
   colnames(bclone) <- cpop$pop
   
   g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
-  mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
-
-  # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
-  if(include.ties){
-    tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
-    if(length(tied_edges) > 0){
-      mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+  if(length(cpop@mlg) > 1){
+    mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+    # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+    if(include.ties){
+      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
+      if(length(tied_edges) > 0){
+        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+      }
     }
+  } else {
+    mst <- minimum.spanning.tree(g)
   }
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
@@ -451,9 +455,11 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   palette <- match.fun(palette)
   color   <- palette(length(pop@pop.names))
   
-  ###### Edge adjustments ######
-  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
-  
+  if(length(cpop@mlg) > 1){
+    ###### Edge adjustments ######
+    mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  }
+ 
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   if (showplot){
