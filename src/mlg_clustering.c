@@ -128,12 +128,16 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   {
     REAL(Rout_stats)[i] = -1;
     cluster_matrix[i] = R_Calloc(num_individuals, int);
-    cluster_distance_matrix[i] = R_Calloc(num_individuals, double);
     for(int j = 0; j < num_individuals; j++)
     {
       // Using this instead of memset to preserve sentinel value
-      cluster_distance_matrix[i][j] = -1.0;
       cluster_matrix[i][j] = -1;
+    }
+    cluster_distance_matrix[i] = R_Calloc(num_mlgs, double);
+    for(int j = 0; j < num_mlgs; j++)
+    {
+      // Using this instead of memset to preserve sentinel value
+      cluster_distance_matrix[i][j] = -1.0;
     }
   }
   // Allocate memory for storing sizes of each cluster
@@ -166,8 +170,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     private_distance_matrix[i] = R_Calloc(num_mlgs, double*);
     for(int j = 0; j < num_mlgs; j++)
     {
-      private_distance_matrix[i][j] = R_Calloc(num_individuals, double);
-      for(int k = 0; k < num_individuals; k++)
+      private_distance_matrix[i][j] = R_Calloc(num_mlgs, double);
+      for(int k = 0; k < num_mlgs; k++)
       {
         private_distance_matrix[i][j][k] = -1.0;
       }
@@ -209,8 +213,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     closest_pair[1] = -1;
     // Fill the distance matrix with the new distances between each cluster
     #ifdef _OPENMP
-    #pragma omp parallel private(dist_ij, dist_ji, thread_id) \
-      shared(out_vector,dist,thresh,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix,num_threads)
+    #pragma omp parallel private(dist_ij, dist_ji, thread_id) shared(out_vector,dist,thresh,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix,num_threads)
     #endif
     {
       #ifdef _OPENMP
@@ -310,8 +313,12 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
               }
             }
             else // Or algo=='f'
-            { // Max every element with this thread's distances
-              cluster_distance_matrix[i][j] = (private_distance_matrix[thread_id][i][j] > cluster_distance_matrix[i][j]) ? (private_distance_matrix[thread_id][i][j]) : (cluster_distance_matrix[i][j]);
+            { 
+              if(private_distance_matrix[thread_id][i][j] > -0.5)
+              {
+                // Max every element with this thread's distances
+                cluster_distance_matrix[i][j] = (private_distance_matrix[thread_id][i][j] > cluster_distance_matrix[i][j]) ? (private_distance_matrix[thread_id][i][j]) : (cluster_distance_matrix[i][j]);
+              }
             }
           }
           // Reset private distance matrix for next loop
