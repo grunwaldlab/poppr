@@ -158,7 +158,7 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
 #' 
 #' @export
 #==============================================================================#
-bitwise.pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
+pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
   stopifnot(class(x)[1] == "genlight" || is.genind(x))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 

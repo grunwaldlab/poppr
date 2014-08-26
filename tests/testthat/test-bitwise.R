@@ -27,7 +27,7 @@ test_that("bitwise.dist produces reasonable results", {
   expect_that(missing_nomatch, is_equivalent_to(expected_nomatch))
  })
 
-test_that("bitwise.pgen produces reasonable results", {
+test_that("pgen produces reasonable results", {
 
 # Required to circumvent a windows specific error in adegenet
   if ((.Platform)$OS.type == "windows"){
@@ -43,15 +43,15 @@ test_that("bitwise.pgen produces reasonable results", {
   }
 
   single_pop <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2))
-  results_single_pop <- bitwise.pgen(single_pop,log=FALSE)
+  results_single_pop <- pgen(single_pop,log=FALSE)
   expected_single_pop <- structure(c(0.25, 0.5, 0.5, 0.25), .Dim = c(4L, 1L))
 
   multi_pop <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2))
   multi_pop$pop <- as.factor(1:4)
-  results_multi_pop <- bitwise.pgen(multi_pop,log=FALSE)
+  results_multi_pop <- pgen(multi_pop,log=FALSE)
   expected_multi_pop <- structure(c(1, 0.5, 0.5, 1), .Dim = c(4L, 1L))
  
   expect_that(results_single_pop, is_equivalent_to(expected_single_pop))
   expect_that(results_multi_pop, is_equivalent_to(expected_multi_pop))
-  expect_that(bitwise.pgen(multi_pop,log=FALSE,by.pop=FALSE), is_equivalent_to(expected_single_pop))
+  expect_that(pgen(multi_pop,log=FALSE,by.pop=FALSE), is_equivalent_to(expected_single_pop))
  })
