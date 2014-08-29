@@ -371,19 +371,27 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Updating MLG with filtered data
   if(threshold > 0){
-    pop$mlg <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm)
+    filter.stats <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm,stats="ALL")
+    pop$mlg <- filter.stats[[1]]
+    bclone <- filter.stats[[3]]
+  } else {
+    bclone <- as.matrix(distmat)
   }
-  bclone <- as.matrix(distmat)
 
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    if (is.genclone(pop)){
-      mlgs <- pop@mlg
-    } else {
-      mlgs <- pop$other$mlg.vec
+    mlgs <- pop@mlg
+    if(threshold > 0){
+      cpop <- pop[if(length(-which(duplicated(pop$mlg))==0)) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
     }
-    bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+    else {
+      cpop <- pop[.clonecorrector(pop), ]
+      # This will clone correct the incoming matrix. 
+      bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+    }
+    rownames(bclone) <- cpop$ind.names
+    colnames(bclone) <- cpop$ind.names
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, include.ties = include.ties,
@@ -395,16 +403,18 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
     pop    <- popsub(pop, sublist, blacklist)
   }
+  mlgs <- pop@mlg
   if(threshold > 0){
-    cpop <- pop[if(is.na(-which(duplicated(pop$mlg))[1])) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
+    cpop <- pop[if(length(-which(duplicated(pop$mlg))==0)) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
+    # This will clone correct the incoming matrix. 
+    bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   }
-  mlgs <- pop@mlg
+  rownames(bclone) <- cpop$ind.names
+  colnames(bclone) <- cpop$ind.names
   cmlg <- cpop@mlg
-  # This will clone correct the incoming matrix. 
-  bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
@@ -424,8 +434,6 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
   bclone <- as.matrix(bclone)
-  rownames(bclone) <- cpop$pop
-  colnames(bclone) <- cpop$pop
   
   g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
   if(length(cpop@mlg) > 1){

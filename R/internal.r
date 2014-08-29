@@ -1140,10 +1140,11 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   # First, clone correct and get the number of individuals per MLG in order.
   if(threshold > 0){
     if (is.null(distmat) & !is.null(replen)){
-      pop$mlg <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)
+      filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
     } else {
-      pop$mlg <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen)
+      filter.stats <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
     }
+    pop$mlg <- filter.stats[[1]]
     cpop <- pop[if(is.na(-which(duplicated(pop$mlg))[1])) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
   }
   else {
@@ -1153,15 +1154,17 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   cmlg <- cpop$mlg
   mlg.number <- table(mlgs)[rank(cmlg)]
   
-  # Calculate distance matrix if not supplied (Bruvo's distance)
-  if (is.null(distmat) & !is.null(replen)){
-    distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
+  if(threshold > 0){
+    distmat <- filter.stats[[3]]
+  } else {
+    # Calculate distance matrix if not supplied (Bruvo's distance)
+    if (is.null(distmat) & !is.null(replen)){
+      distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
+    }
   }
   if(class(distmat) != "matrix"){
     distmat <- as.matrix(distmat)
   } 
-  rownames(distmat) <- cpop$pop
-  colnames(distmat) <- cpop$pop
 
   # Create the graphs.
   g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")

@@ -457,7 +457,8 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Updating the MLG with filtered data
   if(threshold > 0){
-    pop$mlg <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen)  
+    filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+    pop$mlg <- filter.stats[[1]]  
   }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
@@ -493,9 +494,11 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  bclone     <- as.matrix(bruvo.dist(cpop, replen=replen))
-  rownames(bclone) <- cpop$pop
-  colnames(bclone) <- cpop$pop
+  if(threshold > 0){
+    bclone <- filter.stats[[3]]
+  } else {
+    bclone <- as.matrix(bruvo.dist(cpop, replen=replen))
+  }
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
@@ -527,7 +530,6 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   if(length(cpop@mlg) > 1){ 
     mst     <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   }
-
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
   if (showplot){

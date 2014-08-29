@@ -348,11 +348,13 @@ mlg.vector <- function(pop){
 #'   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
 #'   the function to run serially, which may increase stability on some systems.
 #'   Other values may be specified, but should be used with caution.
-#' @param stats \code{logical} determining whether this function should return
-#'   statistics on cluster mergers. If \code{TRUE}, the threshold at which
-#'   each cluster was merged will be returned instead of the cluster assignment
-#'   vector. \code{FALSE}, which is the default, will return a vector of cluster
-#'   assignments, similar to that of \code{\link{mlg.vector}}
+#' @param stats determines which statistics this function should return on cluster 
+#'   mergers. If (default) "MLGs", this function will return a vector of cluster
+#'   assignments, similar to that of \code{\link{mlg.vector}}. If "thresholds", 
+#'   the threshold at which each cluster was merged will be returned instead of 
+#'   the cluster assignment. "distances" will return a distance matrix of the new
+#'   distances between each new cluster. Finally, "all" will return a list of 
+#'   all three.
 #' @param ... any parameters to be passed off to the distance method.
 #' 
 #' @return a numeric vector naming the multilocus genotype of each individual in
@@ -370,7 +372,7 @@ mlg.vector <- function(pop){
 #' @export
 #==============================================================================#
 mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", 
-                       distance="nei.dist", threads=0, stats=FALSE, ...){
+                       distance="nei.dist", threads=0, stats="MLGs", ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
@@ -431,9 +433,9 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
     stop("Threads must be a non-negative numeric or integer value")
   } 
     # Stats must be logical
-  if(!is.logical(stats))
+  if(!is.character(stats) || !( toupper(stats) %in% c("MLGS", "THRESHOLDS", "DISTANCES", "ALL")))
   {
-    stop("Stats must be a logical")
+    stop("Stats must be a character string for MLGS, THRESHOLDS, DISTANCES, or ALL")
   } 
 
   # Cast parameters to proper types before passing them to C
@@ -453,10 +455,23 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   
   # Cut out empty values from result_list[[2]]
   result_list[[2]] <- result_list[[2]][result_list[[2]] > -.05]
+  # Format result_list[[3]]
+  mlgs <- unique(result_list[[1]])
+  dists <- result_list[[3]]
+  dists <- dists[mlgs,mlgs]
+  if(length(mlgs) > 1){
+    rownames(dists) <- mlgs
+    colnames(dists) <- mlgs
+  }
+  result_list[[3]] <- dists
 
-  if(stats){
+  if(toupper(stats) == "ALL"){
+    return(result_list)
+  } else if(toupper(stats) == "THRESHOLDS") {
     return(result_list[[2]])
-  } else {
+  } else if(toupper(stats) == "DISTANCES") {
+    return(result_list[[3]])
+  } else { # toupper(stats) == "MLGS")
     return(result_list[[1]])
   }
 }

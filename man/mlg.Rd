@@ -17,7 +17,7 @@ mlg.vector(pop)
 
 mlg.filter(pop, threshold = 0, missing = "mean", memory = FALSE,
   algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
-  stats = FALSE, ...)
+  stats = "MLGs", ...)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -84,11 +84,13 @@ are available cores/CPUs. In most cases this is ideal. A value of 1 will force
 the function to run serially, which may increase stability on some systems.
 Other values may be specified, but should be used with caution.}
 
-\item{stats}{\code{logical} determining whether this function should return
-statistics on cluster mergers. If \code{TRUE}, the threshold at which
-each cluster was merged will be returned instead of the cluster assignment
-vector. \code{FALSE}, which is the default, will return a vector of cluster
-assignments, similar to that of \code{\link{mlg.vector}}}
+\item{stats}{determines which statistics this function should return on cluster
+mergers. If (default) "MLGs", this function will return a vector of cluster
+assignments, similar to that of \code{\link{mlg.vector}}. If "thresholds",
+the threshold at which each cluster was merged will be returned instead of
+the cluster assignment. "distances" will return a distance matrix of the new
+distances between each new cluster. Finally, "all" will return a list of
+all three.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }

@@ -48,7 +48,7 @@ gend_single <- new("genind"
 no_ties <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3), c(0, 
 1, 2), c(1, 0, 2), c(0, 1, 2), c(0, 0, 0, 1, 3), c(0, 1, 2, 3, 
 3), list(c(1, 0, 1), structure(list(), .Names = character(0)), 
-    structure(list(name = c("P1", "P2", "P3", "P4"), size = c(1L, 
+    structure(list(name = c("1", "2", "3", "4"), size = c(1L, 
     1L, 1L, 1L), shape = c("pie", "pie", "pie", "pie"), pie = list(
         structure(1L, .Names = "1"), structure(1L, .Names = "2"), 
         structure(1L, .Names = "3"), structure(1L, .Names = "4")), 
@@ -66,19 +66,20 @@ no_ties <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3), c(0,
 no_ties_single <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3), c(0, 
 1, 2), c(1, 0, 2), c(0, 1, 2), c(0, 0, 0, 1, 3), c(0, 1, 2, 3, 
 3), list(c(1, 0, 1), structure(list(), .Names = character(0)), 
-    structure(list(size = c(1L, 1L, 1L, 1L), color = c("#4C00FFFF", 
-    "#4C00FFFF", "#4C00FFFF", "#4C00FFFF"), label = c("MLG.3", 
-    "MLG.4", "MLG.2", "MLG.1")), .Names = c("size", "color", 
-    "label")), structure(list(weight = c(0.125, 0.125, 0.125), 
-        color = c("#434343", "#434343", "#434343"), width = c(8, 
-        8, 8)), .Names = c("weight", "color", "width")))), class = "igraph"), 
-    populations = NA, colors = "#4C00FFFF"), .Names = c("graph", 
-"populations", "colors"))
+    structure(list(name = c("1", "2", "3", "4"), size = c(1L, 
+    1L, 1L, 1L), color = c("#4C00FFFF", "#4C00FFFF", "#4C00FFFF", 
+    "#4C00FFFF"), label = c("MLG.3", "MLG.4", "MLG.2", "MLG.1"
+    )), .Names = c("name", "size", "color", "label")), structure(list(
+        weight = c(0.125, 0.125, 0.125), color = c("#434343", 
+        "#434343", "#434343"), width = c(8, 8, 8)), .Names = c("weight", 
+    "color", "width")))), class = "igraph"), populations = NA, 
+    colors = "#4C00FFFF"), .Names = c("graph", "populations", 
+"colors"))
 
 ties <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3, 1), 
     c(0, 1, 2, 0), c(3, 1, 0, 2), c(3, 0, 1, 2), c(0, 0, 1, 2, 
     4), c(0, 2, 3, 4, 4), list(c(1, 0, 1), structure(list(), .Names = character(0)), 
-        structure(list(name = c("P1", "P2", "P3", "P4"), size = c(1L, 
+        structure(list(name = c("1", "2", "3", "4"), size = c(1L, 
         1L, 1L, 1L), shape = c("pie", "pie", "pie", "pie"), pie = list(
             structure(1L, .Names = "1"), structure(1L, .Names = "2"), 
             structure(1L, .Names = "3"), structure(1L, .Names = "4")), 
@@ -93,15 +94,16 @@ ties <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3, 1),
 "#00E5FFFF", "#00FF4DFF", "#FFFF00FF")), .Names = c("graph", 
 "populations", "colors"))
 
-ties_single <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3), c(0, 
-1, 2), c(1, 0, 2), c(0, 1, 2), c(0, 0, 0, 1, 3), c(0, 1, 2, 3, 
-3), list(c(1, 0, 1), structure(list(), .Names = character(0)), 
-    structure(list(size = c(1L, 1L, 1L, 1L), color = c("#4C00FFFF", 
-    "#4C00FFFF", "#4C00FFFF", "#4C00FFFF"), label = c("MLG.3", 
-    "MLG.4", "MLG.2", "MLG.1")), .Names = c("size", "color", 
-    "label")), structure(list(weight = c(0.125, 0.125, 0.125), 
-        color = c("#434343", "#434343", "#434343"), width = c(8, 
-        8, 8)), .Names = c("weight", "color", "width")))), class = "igraph"), 
+ties_single <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3, 1), 
+    c(0, 1, 2, 0), c(3, 1, 0, 2), c(3, 0, 1, 2), c(0, 0, 1, 2, 
+    4), c(0, 2, 3, 4, 4), list(c(1, 0, 1), structure(list(), .Names = character(0)), 
+        structure(list(name = c("1", "2", "3", "4"), size = c(1L, 
+        1L, 1L, 1L), color = c("#4C00FFFF", "#4C00FFFF", "#4C00FFFF", 
+        "#4C00FFFF"), label = c("MLG.3", "MLG.4", "MLG.2", "MLG.1"
+        )), .Names = c("name", "size", "color", "label")), structure(list(
+            weight = c(0.125, 0.125, 0.125, 0.125), color = c("#434343", 
+            "#434343", "#434343", "#434343"), width = c(8, 8, 
+            8, 8)), .Names = c("weight", "color", "width")))), class = "igraph"), 
     populations = NA, colors = "#4C00FFFF"), .Names = c("graph", 
 "populations", "colors"))
 
@@ -124,9 +126,9 @@ expect_that(bruvo.msn(gend_single, replen=c(1,1)), equals(no_ties_single))
 set.seed(9005)
 expect_that(bruvo.msn(gend_single, replen=c(1,1), include.ties = TRUE), equals(ties_single))
 set.seed(9005)
-expect_that(poppr.msn(gend_single, distmat=bruvo.dist(gend,replen=c(1,1))), equals(no_ties_single))
+expect_that(poppr.msn(gend_single, distmat=bruvo.dist(gend_single,replen=c(1,1))), equals(no_ties_single))
 set.seed(9005)
-expect_that(poppr.msn(gend_single, distmat=bruvo.dist(gend,replen=c(1,1)), include.ties = TRUE), equals(ties_single))
+expect_that(poppr.msn(gend_single, distmat=bruvo.dist(gend_single,replen=c(1,1)), include.ties = TRUE), equals(ties_single))
 
 
 
