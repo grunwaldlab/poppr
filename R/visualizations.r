@@ -732,33 +732,42 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' 
 #' @inheritParams poppr.msn
 #'   
-#' @param inds a character vector indicating which individual names to label
-#'   nodes with. See details.
 #'   
-#' @param quantiles \code{logical}. When set to \code{TRUE} (default), the scale
-#'   bar will be composed of the quantiles from the observed edge weights. When
-#'   set to \code{FALSE}, the scale bar will be composed of a smooth gradient
-#'   from the minimum edge weight to the maximum edge weight.
 #'   
-#' @param nodelab an \code{integer} specifying the smallest size of node to
+#' @param nodebase a \code{numeric} indicating what base logarithm should be
+#'   used to scale the node sizes. Defaults to 1.15. See details.
+#'   
+#' @param nodelab an \code{integer} specifying the smallest size of node to 
 #'   label. See details.
 #'   
-#' @param cutoff a number indicating the longest distance to display in your
-#'   graph. This is performed by removing edges with weights greater than this
+#' @param inds a \code{character} or \code{numeric} vector indicating which
+#'   samples or multilocus genotypes to label on the graph. See details.
+#'   
+#' @param mlg \code{logical} When \code{TRUE}, the nodes will be labeled by
+#'   multilocus genotype. When \code{FALSE} (default), nodes will be labeled by
+#'   sample names.
+#'   
+#' @param quantiles \code{logical}. When set to \code{TRUE} (default), the scale
+#'   bar will be composed of the quantiles from the observed edge weights. When 
+#'   set to \code{FALSE}, the scale bar will be composed of a smooth gradient 
+#'   from the minimum edge weight to the maximum edge weight.
+#'   
+#' @param cutoff a number indicating the longest distance to display in your 
+#'   graph. This is performed by removing edges with weights greater than this 
 #'   number.
 #'   
 #' @param palette a function or character corresponding to a specific palette 
-#'   you want to use to delimit your populations. The default is whatever
+#'   you want to use to delimit your populations. The default is whatever 
 #'   palette was used to produce the original graph.
 #'   
 #' @param layfun a function specifying the layout of nodes in your graph. It 
 #'   defaults to \code{\link[igraph]{layout.auto}}.
 #'   
-#' @param beforecut if \code{TRUE}, the layout of the graph will be computed
+#' @param beforecut if \code{TRUE}, the layout of the graph will be computed 
 #'   before any edges are removed with \code{cutoff}. If \code{FALSE} (Default),
 #'   the layout will be computed after any edges are removed.
 #'   
-#' @param ... any other parameters to be passed on to
+#' @param ... any other parameters to be passed on to 
 #'   \code{\link[igraph]{plot.igraph}}.
 #'   
 #' @details The previous incarnation of msn plotting in poppr simply plotted the
@@ -766,29 +775,36 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   provide a scale bar and it did not provide the user a simple way of 
 #'   manipulating the layout or labels. This function allows the user to 
 #'   manipulate many facets of graph creation, making the creation of minimum 
-#'   spanning networks ever so slightly more user friendly. Note that this 
-#'   function will only plot individual names, not MLG names since the naming 
-#'   convention for those are arbitrary. 
+#'   spanning networks ever so slightly more user friendly. 
 #'   
 #'   This function must have both the source data and the output msn to work. 
 #'   The source data must contain the same population structure as the graph. 
 #'   Every other parameter has a default setting.
 #'   
-#'   \subsection{Parameter details}{ \itemize{ \item \code{inds} This will take
-#'   in the name of a query individual in your data set and will use that to
-#'   query any other individuals that share multilocus genotypes and label their
-#'   node on the graph. The default is to label all the nodes, but you can set
-#'   it to a name that doesn't exist to label none of the nodes. \item
-#'   \code{nodelab} If a node is not labeled by individual, this will label the
-#'   size of the nodes greater than or equal to this value. If you don't want to
-#'   label the size of the nodes, simply set this to a very high number. \item
-#'   \code{cutoff} This is useful for when you want to investigate groups of
-#'   multilocus genotypes separated by a specific distance or if you have two
-#'   distinct populations and you want to physically separate them in your
-#'   network. \item \code{beforecut} This is an indicator useful if you want to
-#'   maintain the same position of the nodes before and after removing edges
-#'   with the \code{cutoff} argument. This works best if you set a seed before
-#'   you run the function.}}
+#'   \subsection{Parameter details}{ \itemize{ \item \code{inds} By default, the
+#'   graph will label each node (circle) with all of the samples (individuals)
+#'   that are contained within that node. As each node represents a single
+#'   multilocus genotype (MLG) or individuals (n >= 1), this argument is
+#'   designed to allow you to slectively label the nodes based on query of
+#'   sample name or MLG number. If the option \code{mlg = TRUE}, the multilocus
+#'   genotype assignment will be used to label the node. If you do not want to
+#'   label the nodes by individual or multilocus genotype, simply set this to a
+#'   name that doesn't exist in your data. \item \code{nodebase} The nodes
+#'   (circles) on the graph represent different multilocus genotypes. The size
+#'   of the nodes represent the number of individuals. Since nodes can contain
+#'   any number of individuals, the size of the nodes are transformed on a log
+#'   base 1.15 scale. This allows the large nodes not to overwhelm the graph. If
+#'   your nodes are too big, you can use this to adjust the log base so that
+#'   your nodes are represented. \item \code{nodelab} If a node is not labeled
+#'   by individual, this will label the size of the nodes greater than or equal
+#'   to this value. If you don't want to label the size of the nodes, simply set
+#'   this to a very high number. \item \code{cutoff} This is useful for when you
+#'   want to investigate groups of multilocus genotypes separated by a specific
+#'   distance or if you have two distinct populations and you want to physically
+#'   separate them in your network. \item \code{beforecut} This is an indicator
+#'   useful if you want to maintain the same position of the nodes before and
+#'   after removing edges with the \code{cutoff} argument. This works best if
+#'   you set a seed before you run the function.}}
 #' 
 #' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 #' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
@@ -808,7 +824,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 #' 
-#' # Removing link between populations and labelling no individuals
+#' # Removing link between populations (cutoff = 0.2) and labelling no individuals
 #' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
 #' 
@@ -822,7 +838,15 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' \dontrun{
 #' data(partial_clone)
 #' pcmsn <- bruvo.msn(partial_clone, replen = rep(1, 10))
+#' 
+#' # Labelling the samples contained in multilocus genotype 9
+#' plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = 9)
+#' 
+#' # Doing the same thing, but using one of the sample names as input.
 #' plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "sim 20")
+#' 
+#' # Note that this is case sensitive. Nothing is labeled. 
+#' plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "Sim 20")
 #' 
 #' # Something pretty
 #' data(microbov)
@@ -836,10 +860,12 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
-plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.8),
-                           gweight = 1, wscale = TRUE, inds = "ALL", quantiles = TRUE, 
-                           nodelab = 2, cutoff = NULL, palette = NULL,
-                           layfun = layout.auto, beforecut = FALSE, ...){
+plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, 
+                           glim = c(0, 0.8), gweight = 1, wscale = TRUE, 
+                           nodebase = 1.15, nodelab = 2, inds = "ALL", 
+                           mlg = FALSE, quantiles = TRUE, cutoff = NULL, 
+                           palette = NULL, layfun = layout.auto, 
+                           beforecut = FALSE, ...){
   if (!is.genind(x)){
     stop(paste(substitute(x), "is not a genind or genclone object."))
   }
@@ -877,32 +903,50 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, glim = c(0, 0.
   gadj    <- ifelse(gweight == 1, gadj, -gadj)
   poppr_msn$graph <- update_edge_scales(poppr_msn$graph, wscale, gscale, glim, gadj)
   
-  # Highlighting only the names of the submitted genotypes and the matching
-  # isolates.
   x.mlg <- mlg.vector(x)
   labs  <- unique(x.mlg)
-  # The labels in the graph are organized by MLG, so we will use that to extract
-  # the names we need.
+  
+
+  # Highlighting only the names of the submitted genotypes and the matching
+  # isolates.
+  
+  # The labels in the graph are organized by MLG, so we will use that to
+  # extract the names we need.
   if (length(inds) == 1 & toupper(inds[1]) == "ALL"){
     x.input <- unique(x.mlg)
-  } else {
+  } else if (is.character(inds)){
     x.input <- unique(x.mlg[x@ind.names %in% inds])
+  } else if (is.numeric(inds)){
+    x.input <- unique(x.mlg[x.mlg %in% inds])
   }
-  # Combine all the names that match with each particular MLG in x.input.
-  combined_names <- vapply(x.input, function(mlgname)
-                           paste(rev(x@ind.names[x.mlg == mlgname]),
-                                 collapse = "\n"),
-                           character(1))
+  
   # Remove labels that are not specified.
   labs[which(!labs %in% x.input)] <- NA
-  labs[!is.na(labs)] <- combined_names
+
+  if (!isTRUE(mlg)){
+    # Combine all the names that match with each particular MLG in x.input.
+    combined_names <- vapply(x.input, function(mlgname)
+                             paste(rev(x@ind.names[x.mlg == mlgname]),
+                                   collapse = "\n"),
+                             character(1))
+    labs[!is.na(labs)] <- combined_names
+  } else {
+    labs[!is.na(labs)] <- paste("MLG", labs[!is.na(labs)], sep = ".")
+  }
   if (any(is.na(labs))){
     sizelabs <- V(poppr_msn$graph)$size
     sizelabs <- ifelse(sizelabs >= nodelab, sizelabs, NA)
     labs     <- ifelse(is.na(labs), sizelabs, labs)
   }
+
   # Change the size of the vertices to a log scale.
-  vsize <- log(V(poppr_msn$graph)$size, base = 1.15) + 3
+  if (nodebase == 1){
+    nodebase <- 1.15
+    nodewarn <- paste0("Cannot set nodebase = 1:\n",
+      "Log base 1 is undefined, reverting to nodebase = 1.15")
+    warning(nodewarn)
+  }
+  vsize <- log(V(poppr_msn$graph)$size, base = nodebase) + 3
   
   # Plotting parameters.
   def.par <- par(no.readonly = TRUE)
