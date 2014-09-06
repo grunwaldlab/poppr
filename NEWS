@@ -3,6 +3,9 @@ poppr 1.1.2.99
 BUG FIX
 * Fixed issue where monomorphic loci would cause an error in `recode_polyploids`
 
+NEW FEATURES
+* Added new arguments to `plot_poppr_msn` to allow for easier manipulation of node sizes and of labeling.
+
 
 poppr 1.1.2
 ===========
