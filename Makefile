@@ -5,6 +5,13 @@ PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename `pwd`)
 DATE	:= $(shell date +%F)
 VERSION := $(shell ./tools/convertversion.sh)
+UNAME := $(shell uname -s)
+
+ifeq ($(UNAME),Darwin)
+	WGET := curl -O
+else
+	WGET := WGET
+endif
 
 all: update check clean
 
@@ -43,7 +50,7 @@ update:
 
 checkdevel: build
 	cd ..;\
-	wget ftp://ftp.stat.math.ethz.ch/Software/R/R-devel.tar.gz;\
+	$(WGET) ftp://ftp.stat.math.ethz.ch/Software/R/R-devel.tar.gz;\
 	tar -xzvf R-devel.tar.gz;\
 	cd R-devel;\
 	./configure;\
