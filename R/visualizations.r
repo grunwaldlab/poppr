@@ -369,13 +369,19 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     pop <- as.genclone(pop)
   }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
+  
+  bclone <- as.matrix(distmat)
+  # This will subset both the population and the matrix. 
+  if(sublist[1] != "ALL" | !is.null(blacklist)){
+    sublist_blacklist <- sub_index(pop, sublist, blacklist)
+    bclone <- bclone[sublist_blacklist, sublist_blacklist]
+    pop    <- popsub(pop, sublist, blacklist)
+  }
   # Updating MLG with filtered data
   if(threshold > 0){
-    filter.stats <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm,stats="ALL")
+    filter.stats <- mlg.filter(pop,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
     pop$mlg <- filter.stats[[1]]
     bclone <- filter.stats[[3]]
-  } else {
-    bclone <- as.matrix(distmat)
   }
 
   # The clone correction of the matrix needs to be done at this step if there
@@ -396,12 +402,6 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, include.ties = include.ties,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
-  }
-  # This will subset both the population and the matrix. 
-  if(sublist[1] != "ALL" | !is.null(blacklist)){
-    sublist_blacklist <- sub_index(pop, sublist, blacklist)
-    bclone <- bclone[sublist_blacklist, sublist_blacklist]
-    pop    <- popsub(pop, sublist, blacklist)
   }
   mlgs <- pop@mlg
   if(threshold > 0){

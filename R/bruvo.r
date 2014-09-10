@@ -455,6 +455,11 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     pop <- as.genclone(pop)
   }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
+
+  if (sublist[1] != "ALL" | !is.null(blacklist)){
+    pop <- popsub(pop, sublist, blacklist)
+  }
+
   # Updating the MLG with filtered data
   if(threshold > 0){
     filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
@@ -465,9 +470,6 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, include.ties = include.ties,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
-  }
-  if (sublist[1] != "ALL" | !is.null(blacklist)){
-    pop <- popsub(pop, sublist, blacklist)
   }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
