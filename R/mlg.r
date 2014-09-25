@@ -353,8 +353,8 @@ mlg.vector <- function(pop){
 #'   assignments, similar to that of \code{\link{mlg.vector}}. If "thresholds", 
 #'   the threshold at which each cluster was merged will be returned instead of 
 #'   the cluster assignment. "distances" will return a distance matrix of the new
-#'   distances between each new cluster. Finally, "all" will return a list of 
-#'   all three.
+#'   distances between each new cluster. If "sizes", the size of each remaining
+#'   cluster will be returned. Finally, "all" will return a list of all 4.
 #' @param ... any parameters to be passed off to the distance method.
 #' 
 #' @return a numeric vector naming the multilocus genotype of each individual in
@@ -471,6 +471,8 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
     return(result_list[[2]])
   } else if(toupper(stats) == "DISTANCES") {
     return(result_list[[3]])
+  } else if(toupper(stats) == "SIZES") {
+    return(result_list[[4]])
   } else { # toupper(stats) == "MLGS")
     return(result_list[[1]])
   }

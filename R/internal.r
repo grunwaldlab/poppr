@@ -1146,17 +1146,10 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
     }
     pop$mlg <- filter.stats[[1]]
     cpop <- pop[if(is.na(-which(duplicated(pop$mlg))[1])) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
+    distmat <- filter.stats[[3]]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
-  }
-  mlgs <- pop$mlg
-  cmlg <- cpop$mlg
-  mlg.number <- table(mlgs)[rank(cmlg)]
-  
-  if(threshold > 0){
-    distmat <- filter.stats[[3]]
-  } else {
     # Calculate distance matrix if not supplied (Bruvo's distance)
     if (is.null(distmat) & !is.null(replen)){
       distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
@@ -1165,6 +1158,9 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   if(class(distmat) != "matrix"){
     distmat <- as.matrix(distmat)
   } 
+  mlgs <- pop$mlg
+  cmlg <- cpop$mlg
+  mlg.number <- table(mlgs)[rank(cmlg)]
 
   # Create the graphs.
   g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")

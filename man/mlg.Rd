@@ -89,8 +89,8 @@ mergers. If (default) "MLGs", this function will return a vector of cluster
 assignments, similar to that of \code{\link{mlg.vector}}. If "thresholds",
 the threshold at which each cluster was merged will be returned instead of
 the cluster assignment. "distances" will return a distance matrix of the new
-distances between each new cluster. Finally, "all" will return a list of
-all three.}
+distances between each new cluster. If "sizes", the size of each remaining
+cluster will be returned. Finally, "all" will return a list of all 4.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }

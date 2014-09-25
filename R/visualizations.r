@@ -377,61 +377,47 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
     pop    <- popsub(pop, sublist, blacklist)
   }
-  # Updating MLG with filtered data
-  if(threshold > 0){
-    filter.stats <- mlg.filter(pop,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
-    pop$mlg <- filter.stats[[1]]
-    bclone <- filter.stats[[3]]
-  }
 
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    mlgs <- pop@mlg
-    if(threshold > 0){
-      cpop <- pop[if(length(-which(duplicated(pop$mlg))==0)) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
-    }
-    else {
-      cpop <- pop[.clonecorrector(pop), ]
-      # This will clone correct the incoming matrix. 
-      bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
-    }
-    rownames(bclone) <- cpop$ind.names
-    colnames(bclone) <- cpop$ind.names
-    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+    return(singlepop_msn(pop, vertex.label, distmat = as.matrix(distmat), gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, include.ties = include.ties,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
-  mlgs <- pop@mlg
+
   if(threshold > 0){
-    cpop <- pop[if(length(-which(duplicated(pop$mlg))==0)) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
+    # Updating MLG with filtered data
+    filter.stats <- mlg.filter(pop,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
+    pop$mlg <- filter.stats[[1]]
+    cpop <- pop
+    cpop <- cpop[if(length(-which(duplicated(cpop$mlg))==0)) which(!duplicated(cpop$mlg)) else -which(duplicated(cpop$mlg)) ,]
+    # Preserve MLG membership of individuals
+    mlg.number <- table(filter.stats[[1]])[rank(cpop@mlg)]
+    
+    bclone <- filter.stats[[3]]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
+    # This will determine the size of the nodes based on the number of individuals
+    # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
+    # give us the numbers and the population information in the correct order.
+    # Note: rank is used to correctly subset the data
+    mlg.number <- table(pop$mlg)[rank(cpop$mlg)]
     # This will clone correct the incoming matrix. 
-    bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+    bclone <- bclone[!duplicated(pop$mlg), !duplicated(pop$mlg)]
   }
   rownames(bclone) <- cpop$ind.names
   colnames(bclone) <- cpop$ind.names
+  mlgs <- pop@mlg
   cmlg <- cpop@mlg
   
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, include.ties = include.ties,
-                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
-  }
   # Obtaining population information for all MLGs
   subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
 
-  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
-  # This will determine the size of the nodes based on the number of individuals
-  # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
-  # give us the numbers and the population information in the correct order.
-  # Note: rank is used to correctly subset the data
-  mlg.number <- table(mlgs)[rank(cmlg)]
+  names(mlg.cp) <- paste0("MLG.", sort(unique(cmlg)))
   mlg.cp     <- mlg.cp[rank(cmlg)]
   bclone <- as.matrix(bclone)
   

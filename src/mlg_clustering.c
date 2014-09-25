@@ -95,6 +95,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   SEXP Rout_vects;
   SEXP Rout_stats;
   SEXP Rout_dists;
+  SEXP Rout_sizes;
   SEXP Rdim;
 
   algo = *CHAR(STRING_ELT(algorithm,0));
@@ -120,7 +121,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   
   PROTECT(Rout_stats = allocVector(REALSXP, num_mlgs));  
   PROTECT(Rout_dists = allocMatrix(REALSXP, num_mlgs, num_mlgs));
-  PROTECT(Rout = CONS(Rout_vects, CONS(Rout_stats, CONS(Rout_dists, R_NilValue)))); 
+  PROTECT(Rout_sizes = allocVector(INTSXP,  num_mlgs));
+  PROTECT(Rout = CONS(Rout_vects, CONS(Rout_stats, CONS(Rout_dists, CONS(Rout_sizes, R_NilValue))))); 
 
   // Allocate empty matrix for storing clusters
   cluster_matrix = R_Calloc(num_mlgs, int*);
@@ -129,6 +131,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   for(int i = 0; i < num_mlgs; i++)
   {
     REAL(Rout_stats)[i] = -1;
+    INTEGER(Rout_sizes)[i] = -1;
     cluster_matrix[i] = R_Calloc(num_individuals, int);
     for(int j = 0; j < num_individuals; j++)
     {
@@ -180,7 +183,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     }
   }
   
-  // Fill initial clustering matrix via mlg
+  // Fill initial clustering matrix via mlg and get starting cluster sizes
   // Steps through mlg.
   // Adds the index of each individual to cluster_matrix
   // Increments the cluster size for each individual added
@@ -300,6 +303,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   fill_distance_matrix(cluster_distance_matrix,private_distance_matrix,out_vector,cluster_size,dist,algo,num_individuals,num_mlgs,num_threads);
   for(int i = 0; i < num_mlgs; i++)
   {
+    // Fill return sizes
+    INTEGER(Rout_sizes)[i] = cluster_size[i];
     for(int j = 0; j < num_mlgs; j++)
     {
       if(i == j)
@@ -335,7 +340,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   R_Free(cluster_distance_matrix);
   R_Free(cluster_size);
   R_Free(out_vector);
-  UNPROTECT(4);
+  UNPROTECT(5);
   
   return Rout;
 }

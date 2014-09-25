@@ -460,29 +460,24 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     pop <- popsub(pop, sublist, blacklist)
   }
 
-  # Updating the MLG with filtered data
-  if(threshold > 0){
-    filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
-    pop$mlg <- filter.stats[[1]]  
-  }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, include.ties = include.ties,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, include.ties = include.ties,
-                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
-  }
-  # Obtaining population information for all MLGs
+
+  # Updating the MLG with filtered data
   if(threshold > 0){
+    filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+    pop$mlg <- filter.stats[[1]]  
+    # Obtaining population information for all MLGs
     cpop <- pop[if(length(-which(duplicated(pop$mlg))==0)) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
+    bclone <- filter.stats[[3]]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
+    bclone <- as.matrix(bruvo.dist(cpop, replen=replen))
   }
   mlgs <- pop@mlg
   cmlg <- cpop@mlg
@@ -496,11 +491,6 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  if(threshold > 0){
-    bclone <- filter.stats[[3]]
-  } else {
-    bclone <- as.matrix(bruvo.dist(cpop, replen=replen))
-  }
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
