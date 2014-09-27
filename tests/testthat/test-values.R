@@ -13,6 +13,16 @@ test_that("Bruvo's distance works as expected.", {
   expect_that(ADDLOSS, equals(0.401041518896818))
 })
 
+test_that("Infinite Alleles Model works.",{
+  x <- structure(list(V3 = c("228/236/242", "000/211/226"), 
+                      V6 = c("190/210/214", "000/190/203")), 
+                 .Names = c("V3", "V6"), row.names = c("1", "2"), 
+                 class = "data.frame")
+  gid <- df2genind(x, sep = "/", ploidy = 3)
+  res <- bruvo.dist(gid, replen = c(2/10000,2/10000), add = FALSE, loss = FALSE)
+  expect_that(as.numeric(res), equals(0.833333333333333))
+})
+
 test_that("Dissimilarity distance works as expected.", {
   data(nancycats, package = "adegenet")
   nan1 <- popsub(nancycats, 1)
