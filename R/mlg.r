@@ -433,9 +433,9 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
     stop("Threads must be a non-negative numeric or integer value")
   } 
     # Stats must be logical
-  if(!is.character(stats) || !( toupper(stats) %in% c("MLGS", "THRESHOLDS", "DISTANCES", "ALL")))
+  if(!is.character(stats) || !( toupper(stats) %in% c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")))
   {
-    stop("Stats must be a character string for MLGS, THRESHOLDS, DISTANCES, or ALL")
+    stop("Stats must be a character string for MLGS, THRESHOLDS, DISTANCES, SIZES, or ALL")
   } 
 
   # Cast parameters to proper types before passing them to C

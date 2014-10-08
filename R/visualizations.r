@@ -381,9 +381,9 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, distmat = as.matrix(distmat), gscale = gscale, 
+    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, include.ties = include.ties,
+                         palette = palette, include.ties = include.ties, showplot=showplot,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
 
