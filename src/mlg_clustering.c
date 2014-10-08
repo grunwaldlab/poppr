@@ -247,7 +247,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
       // Store the distance at which this merge occurred 
       REAL(Rout_stats)[num_mlgs-num_clusters] = min_cluster_distance;
 
-/*
+
       // Determine which cluster should "survive" the merger, and which should be consumed
       //  closest_pair[0] will survive, and closest_pair[1] will move to closest_pair[0]
       // TODO: Pass an argument that decides how this is done: largest first, smallest mean distance, largest mean pgen, etc      
@@ -273,7 +273,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
         closest_pair[0] = closest_pair[1];
         closest_pair[1] = tmp;
       }
-*/
+
       for(int i = 0; i < cluster_size[closest_pair[1]] && cluster_matrix[closest_pair[1]][i] > -1; i++)
       {
         // Change the assignment for this individual in the result vector
