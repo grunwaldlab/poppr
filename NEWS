@@ -3,6 +3,7 @@ poppr 1.1.2.99
 BUG FIX
 * Fixed issue where monomorphic loci would cause an error in `recode_polyploids`
 * Fixed logical error that would cause The infinite alleles model of Bruvo's distance to inflate the distance. (Found by Michael Metzger. Addresses issue #5).
+* Fixed issue for neighbor-joining trees where the internal function to fix negative branch lengths was accidentally shuffling the corrected branches. Addresses issue #11.
 
 NEW FEATURES
 * Added new arguments to `plot_poppr_msn` to allow for easier manipulation of node sizes and of labeling.
