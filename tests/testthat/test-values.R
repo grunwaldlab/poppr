@@ -51,6 +51,12 @@ test_that("Internal function fix_negative_branch works as expected.", {
             Diag = FALSE, Upper = FALSE, Labels = 1:12, method = "Bruvo")
   the_tree <- ape::nj(the_distance)
   fix_tree <- poppr:::fix_negative_branch(the_tree)
-  expect_true(all(fix_tree$edge.length >= 0))
+  # Not all branch lengths are positive
+  expect_false(min(the_tree$edge.length) >= 0)
+  # After fix, all branch lengths are positive
+  expect_true(min(fix_tree$edge.length) >= 0)
+  # The difference from fixed and unfixed is unfixed. This indicates that the
+  # clones were set to zero and the fix set the branch lengths in the correct 
+  # order.
   expect_equivalent(min(fix_tree$edge.length - the_tree$edge.length), min(the_tree$edge.length))
 })
