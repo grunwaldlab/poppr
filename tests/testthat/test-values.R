@@ -51,5 +51,6 @@ test_that("Internal function fix_negative_branch works as expected.", {
             Diag = FALSE, Upper = FALSE, Labels = 1:12, method = "Bruvo")
   the_tree <- ape::nj(the_distance)
   fix_tree <- poppr:::fix_negative_branch(the_tree)
+  expect_true(all(fix_tree$edge.length >= 0))
   expect_equivalent(min(fix_tree$edge.length - the_tree$edge.length), min(the_tree$edge.length))
 })
