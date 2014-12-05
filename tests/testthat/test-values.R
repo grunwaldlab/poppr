@@ -40,3 +40,16 @@ test_that("Index of association works as expected.", {
   res <- c(Ia = 14.3707995986407, rbarD = 0.270617053778004)
   expect_that(ia(Aeut), equals(res))
 })
+
+test_that("Internal function fix_negative_branch works as expected.", {
+  the_distance <- structure(c(0, 0.05, 0, 0, 0.05, 0, 0.05, 0.075, 0.05, 0.05, 
+            0.075, 0.05, 0, 0, 0.05, 0, 0.05, 0.075, 0.05, 0.05, 0.075, 0.05, 
+            0.05, 0, 0.05, 0, 0.05, 0.1, 0, 0.05, 0, 0.05, 0, 0.05, 0.075, 
+            0.05, 0.05, 0.075, 0.05, 0, 0.05, 0.075, 0.05, 0.05, 0.075, 0.05, 
+            0, 0.05, 0.1, 0, 0.05, 0.05, 0.075, 0.05, 0.05, 0.075, 0.05, 
+            0.1, 0, 0.05, 0.125, 0.05, 0, 0.1, 0.125, 0.05), Size = 12L, class = "dist", 
+            Diag = FALSE, Upper = FALSE, Labels = 1:12, method = "Bruvo")
+  the_tree <- ape::nj(the_distance)
+  fix_tree <- poppr:::fix_negative_branch(the_tree)
+  expect_equivalent(min(fix_tree$edge.length - the_tree$edge.length), min(the_tree$edge.length))
+})

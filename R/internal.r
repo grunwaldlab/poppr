@@ -1113,8 +1113,9 @@ fix_negative_branch <- function(tre){
   index.table <- all.edges[order(all.edges[, "parent"]), ]
   # Loop to change the NJ branch length
   for (i in (unique(index.table[, "parent"]))){
-    fork <- index.table[, "length"][index.table[, "parent"] == i]
-    index.table[, "length"][index.table[, "length"] == i] <- abs(fork) + min(fork)      
+    the_parents <- index.table[, "parent"] == i
+    fork <- index.table[, "length"][the_parents]
+    index.table[, "length"][the_parents] <- abs(fork) + min(fork)      
   }
   # replacing the branch length for each negative value in the total table
   name_match <- match(rownames(index.table), rownames(all.lengths))
