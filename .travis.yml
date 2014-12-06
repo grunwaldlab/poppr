@@ -20,7 +20,7 @@ on_failure:
 notifications:
   email:
     on_success: change
-    on_failure: change
+    on_failure: always
 env:
   global:
     - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"
