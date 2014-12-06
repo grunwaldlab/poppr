@@ -55,5 +55,5 @@ checkdevel: build
 	cd R-devel;\
 	./configure;\
 	make;\
-	bin/./R -e 'install.packages(c("colorspace", "stringr", "RColorBrewer", "dichromat", "munsell", "labeling", "ade4", "network", "permute", "plyr", "digest", "gtable", "reshape2", "scales", "proto", "rgl", "quadprog", "adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph", "seqinr", "testthat", "knitr", "polysat", "caTools", "xtable"), repos="http://cran.at.r-project.org", lib = "library")';\
+	bin/./R -e Rscript -e 'library(devtools); library(methods); options(repos=c(CRAN="http://cran.rstudio.com")); install_deps("../poppr", dependencies = TRUE)';\
 	bin/./R CMD check ../$(PKGNAME)_$(VERSION).tar.gz --as-cran
