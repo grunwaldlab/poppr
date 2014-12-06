@@ -11,8 +11,8 @@ genind object and offers the following implementations:
 - drawing of dendrograms with bootstrap support for genetic distances
 - drawing of minimum spanning networks for genetic distances
 - calculation of the index of association 
-(![equation](http://latex.codecogs.com/gif.latex?I_A))
-or (![equation](http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d))
+(<img src="http://latex.codecogs.com/gif.latex?I_A" alt = "Index of association">)
+or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standardized index of association">)
 - batch processing on any server that has R ( &ge; 2.15.1) installed
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")

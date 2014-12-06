@@ -926,7 +926,7 @@ recode_polyploids <- function(poly, newploidy = poly@ploidy){
   loci <- lapply(1:length(loci), function(x){
     locus <- loci[[x]]
     alleles <- as.numeric(poly@all.names[[x]])
-    return(locus[, alleles > 0])
+    return(locus[, alleles > 0, drop = FALSE])
   })
   loci <- lapply(loci, function(mat) t(apply(mat, 1, function(x) x/sum(x))))
   newMAT <- matrix(nrow = nInd(poly), ncol = length(newfac))
