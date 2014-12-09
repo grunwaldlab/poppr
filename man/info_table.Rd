@@ -38,7 +38,7 @@ info_table(gen, type = c("missing", "ploidy"), percent = TRUE,
 
 \item{plotlab}{\code{logical}. (ONLY FOR \code{type = 'missing'}) If
   \code{TRUE} (default), values of missing data greater than 0\% will be
-  plotted. If \code{FALSE}, the plot will appear unappended.}
+  plotted. If \code{FALSE}, the plot will appear un-appended.}
 
 \item{scaled}{\code{logical}. (ONLY FOR \code{type = 'missing'}) This is for
   when \code{percent = TRUE}. If \code{TRUE} (default), the color specified
@@ -66,8 +66,8 @@ Missing data is accounted for on a per-population level.\cr
   of individuals with missing data at each locus. The last column, "mean" can
   be thought of as the average number of individuals with missing data per
   locus. \item \strong{Regarding percentage missing data}: This percentage is
-  \strong{relative to the population and locus}, not ot the enitre data set.
-  The last colum, "mean" represents the average percent of the population
+  \strong{relative to the population and locus}, not to the entire data set.
+  The last column, "mean" represents the average percent of the population
   with missing data per locus. }}
   \subsection{For type = 'ploidy'}{
   This option is useful for data that has been imported with mixed ploidies.

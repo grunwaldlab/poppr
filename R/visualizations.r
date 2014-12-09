@@ -483,7 +483,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 #'   
 #' @param plotlab \code{logical}. (ONLY FOR \code{type = 'missing'}) If
 #'   \code{TRUE} (default), values of missing data greater than 0\% will be
-#'   plotted. If \code{FALSE}, the plot will appear unappended.
+#'   plotted. If \code{FALSE}, the plot will appear un-appended.
 #'   
 #' @param scaled \code{logical}. (ONLY FOR \code{type = 'missing'}) This is for
 #'   when \code{percent = TRUE}. If \code{TRUE} (default), the color specified
@@ -506,8 +506,8 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 #'   of individuals with missing data at each locus. The last column, "mean" can
 #'   be thought of as the average number of individuals with missing data per
 #'   locus. \item \strong{Regarding percentage missing data}: This percentage is
-#'   \strong{relative to the population and locus}, not ot the enitre data set.
-#'   The last colum, "mean" represents the average percent of the population
+#'   \strong{relative to the population and locus}, not to the entire data set.
+#'   The last column, "mean" represents the average percent of the population
 #'   with missing data per locus. }} 
 #'   \subsection{For type = 'ploidy'}{
 #'   This option is useful for data that has been imported with mixed ploidies.
@@ -785,7 +785,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   graph will label each node (circle) with all of the samples (individuals)
 #'   that are contained within that node. As each node represents a single
 #'   multilocus genotype (MLG) or individuals (n >= 1), this argument is
-#'   designed to allow you to slectively label the nodes based on query of
+#'   designed to allow you to selectively label the nodes based on query of
 #'   sample name or MLG number. If the option \code{mlg = TRUE}, the multilocus
 #'   genotype assignment will be used to label the node. If you do not want to
 #'   label the nodes by individual or multilocus genotype, simply set this to a
@@ -828,7 +828,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
 #' 
-#' # Labelling individual #57 because it is an MLG that crosses popualtions
+#' # Labelling individual #57 because it is an MLG that crosses populations
 #' # Showing clusters of MLGS with at most 5% variation
 #' # Notice that the Mt. Vernon population appears to be more clonal
 #' set.seed(50) 

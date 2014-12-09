@@ -95,7 +95,7 @@ The previous incarnation of msn plotting in poppr simply plotted the
   graph will label each node (circle) with all of the samples (individuals)
   that are contained within that node. As each node represents a single
   multilocus genotype (MLG) or individuals (n >= 1), this argument is
-  designed to allow you to slectively label the nodes based on query of
+  designed to allow you to selectively label the nodes based on query of
   sample name or MLG number. If the option \code{mlg = TRUE}, the multilocus
   genotype assignment will be used to label the node. If you do not want to
   label the nodes by individual or multilocus genotype, simply set this to a
@@ -131,7 +131,7 @@ plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 set.seed(500)
 plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
 
-# Labelling individual #57 because it is an MLG that crosses popualtions
+# Labelling individual #57 because it is an MLG that crosses populations
 # Showing clusters of MLGS with at most 5\% variation
 # Notice that the Mt. Vernon population appears to be more clonal
 set.seed(50)

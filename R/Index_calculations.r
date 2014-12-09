@@ -392,7 +392,7 @@ poppr.all <- function(filelist, ...){
 #'   reshuffled data is returned. If \code{FALSE} (default), the index is 
 #'   returned with associated p-values in a 4 element numeric vector.
 #'   
-#' @return \subsection{If no sampling has occured:}{ A named number vector of 
+#' @return \subsection{If no sampling has occurred:}{ A named number vector of 
 #'   length 2 giving the Index of Association, "Ia"; and the Standardized Index 
 #'   of Association, "rbarD" } \subsection{If there is sampling:}{ A a named 
 #'   number vector of length 4 with the following values: \itemize{\item{Ia -
@@ -444,7 +444,7 @@ poppr.all <- function(filelist, ...){
 #'   
 #'   These values are calculated over all possible combinations of individuals 
 #'   in the data set, \eqn{{n \choose 2}}{choose(n, 2)} after which you end up 
-#'   with \eqn{{n \choose 2}\cdot{}m}{choose(n, 2) * m}. values of \emph{d} and 
+#'   with \eqn{{n \choose 2}\cdot{}m}{choose(n, 2) * m} values of \emph{d} and 
 #'   \eqn{{n \choose 2}}{choose(n, 2)} values of \emph{D}. Calculating the 
 #'   observed variances is fairly straightforward (modified from Agapow and 
 #'   Burt, 2001):
@@ -472,7 +472,7 @@ poppr.all <- function(filelist, ...){
 #'   \eqn{\bar r_d}{rbarD}. For the derivation, see the manual for
 #'   \emph{multilocus}.
 #'   
-#'   \deqn{ \bar{r_d} = \frac{V_O - V_E} {2\displaystyle 
+#'   \deqn{ \bar r_d = \frac{V_O - V_E} {2\displaystyle 
 #'   \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}} 
 #'   }{rbarD = (Vo - Ve)/(2*sum(sum(sqrt(var(dj)*var(dk))))}
 #'   

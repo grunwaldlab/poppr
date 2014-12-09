@@ -37,7 +37,7 @@ Often, one way a lot of file formats fail is that they do not allow multiple
 population hierarchies. This can be circumvented, however, by coding all of
 the hierarchies in one string in the input file with a common separator (eg.
 "_"). \code{splitcombine} will be able to recognise those separators and
-create a data frame of all the population structures for whatever subsetting
+create a data frame of all the population structures for whatever sub-setting
 you might need.
 }
 \note{

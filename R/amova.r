@@ -83,7 +83,7 @@
 #'   object
 #'   
 #' @param hier a hierarchical \code{\link{formula}} that defines your population
-#'   hieararchy. (e.g.: ~Population/Subpopulation). \strong{See Details below.}
+#'   hierarchy. (e.g.: ~Population/Subpopulation). \strong{See Details below.}
 #'   
 #' @param clonecorrect \code{logical} if \code{TRUE}, the data set will be clone
 #'   corrected with respect to the lowest level of the hierarchy. The default is
