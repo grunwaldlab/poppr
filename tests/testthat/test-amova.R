@@ -21,3 +21,20 @@ test_that("Amova returns published values", {
 															4.22855500416477, 
 															15.593761991347)))
 	})
+test_that("AMOVA handles subsetted genclone objects", {
+	data(Aeut, package = "poppr")
+	agc <- as.genclone(Aeut)
+	Athena <- popsub(agc, "Athena")
+	Athena.mlg <- mlg.vector(Athena)
+	agc.mlg <- mlg.vector(agc)
+	Athena.AMOVA <- poppr.amova(Athena, ~Subpop, quiet = TRUE)
+
+	# All MLGs are represented
+	expect_false(anyNA(match(1:max(agc.mlg), agc.mlg)))
+
+	# Some MLGS are missing
+	expect_true(anyNA(match(1:max(Athena.mlg), Athena.mlg)))
+
+	#AMOVA will still work on the data set with missing MLGs
+	expect_that(class(Athena.AMOVA), equals("amova"))	
+	})
