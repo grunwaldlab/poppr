@@ -213,8 +213,9 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   }
   mlgtab <- mlg.matrix(pop)
   if (!is.null(mlgsub)){
-    mlgtab <- mlgtab[, mlgsub]
-    mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), ]
+    mlgsub <- paste("MLG", mlgsub, sep = ".")
+    mlgtab <- mlgtab[, mlgsub, drop = FALSE]
+    mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), , drop = FALSE]
     pop <- popsub(pop, sublist=rownames(mlgtab))
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
