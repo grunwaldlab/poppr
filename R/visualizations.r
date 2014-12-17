@@ -427,7 +427,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color   <- palette(length(pop@pop.names))
+  color   <- setNames(palette(length(pop@pop.names)), pop@pop.names)
   
   ###### Edge adjustments ######
   mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)

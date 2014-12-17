@@ -3,11 +3,11 @@ Type: Package
 Title: Genetic Analysis of Populations With Mixed Reproduction
 Version: 1.1.2.99-37
 Date: 2014-12-09
-Authors@R: c(person(c("Zhian", "N"), "Kamvar", role = c("cre", "aut"),
+Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "kamvarz@science.oregonstate.edu"),
-    person(c("Javier", "F"), "Tabima", role = "aut",
+    person(c("Javier", "F."), "Tabima", role = "aut",
     email = "tabimaj@onid.orst.edu"),
-    person(c("Niklaus", "J"), "Grunwald", role = "ths",
+    person(c("Niklaus", "J."), "Grunwald", role = "ths",
     email = "grunwaln@science.oregonstate.edu"))
 Maintainer: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>
 Encoding: UTF-8
