@@ -3,6 +3,8 @@ poppr 1.1.2.99
 BUG FIX
 * Fixed issue where monomorphic loci would cause an error in `recode_polyploids`
 * Fixed logical error that would cause The infinite alleles model of Bruvo's distance to inflate the distance. (Found by Michael Metzger. Addresses issue #5).
+* AMOVA can now take subset genclone objects (Addresses issue #7).
+* in mlg.table, the mlgsub argument will not subset by name instead of index (fixed in #7).
 * Fixed issue for neighbor-joining trees where the internal function to fix negative branch lengths was accidentally shuffling the corrected branches. Addresses issue #11.
 
 NEW FEATURES

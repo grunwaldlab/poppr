@@ -1652,9 +1652,9 @@ make_attributes <- function(d, nlig, labs, method, matched_call){
 #==============================================================================#
 update_poppr_graph <- function(graphlist, PALETTE){
   PALETTE <- match.fun(PALETTE)
-  lookup  <- data.frame(old    = graphlist$colors, 
-                       update = PALETTE(length(graphlist$colors)), 
-                       stringsAsFactors = FALSE)
+  lookup  <- data.frame(old    = graphlist$populations, 
+                        update = PALETTE(length(graphlist$populations)), 
+                        stringsAsFactors = FALSE)
   if (nrow(lookup) > 1){
     colorlist                    <- V(graphlist$graph)$pie.color
     V(graphlist$graph)$pie.color <- lapply(colorlist, update_colors, lookup)
@@ -1663,6 +1663,7 @@ update_poppr_graph <- function(graphlist, PALETTE){
     V(graphlist$graph)$color <- rep(PALETTE(1), length(colorlist))
   }
   graphlist$colors <- lookup[[2]]
+  names(graphlist$colors) <- graphlist$populations
   return(graphlist)
 }
 
@@ -1676,8 +1677,13 @@ update_poppr_graph <- function(graphlist, PALETTE){
 # # update_poppr_graph
 #==============================================================================#
 update_colors <- function(colorvec, lookup){
-  x <- vapply(1:length(colorvec), update_single_color, "a", lookup, colorvec)
-  return(x)
+  #   x <- vapply(1:length(colorvec), update_single_color, colorvec, lookup, colorvec)
+  #   return(x)
+  pops     <- lookup[[1]]
+  update   <- lookup[[2]]
+  names(update) <- pops
+  matching <- match(names(colorvec), pops)
+  return(update[matching[!is.na(matching)]])
 }
 #==============================================================================#
 # Function used to update colors in poppr msn 
