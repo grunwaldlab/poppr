@@ -2,7 +2,7 @@ Package: poppr
 Type: Package
 Title: an R package for genetic analysis of populations with mixed
     reproduction
-Version: 1.1.2.99-73
+Version: 1.1.2.99-74
 Date: 2014-12-19
 Author: Zhian N. Kamvar <kamvarz@science.oregonstate.edu>, Javier F. Tabima
     <tabimaj@onid.orst.edu>, Niklaus J. Grunwald
