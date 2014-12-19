@@ -317,11 +317,12 @@ mlg.vector <- function(pop){
   return(countvec2)
 }
 
+
 #==============================================================================#
 #' @rdname mlg
-# Clonally Filtered Multilocus Genotype Vector
+# Statistics on Clonal Filtering of Genotype Data
 #
-# Create a vector of multilocus genotype indecies filtered by minimum distance. 
+# Calculates and returns various statistics on possible clonal lineages. 
 #
 # @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.
 #' @param threshold the desired minimum distance between distinct genotypes.
@@ -349,12 +350,12 @@ mlg.vector <- function(pop){
 #'   the function to run serially, which may increase stability on some systems.
 #'   Other values may be specified, but should be used with caution.
 #' @param stats determines which statistics this function should return on cluster 
-#'   mergers. If (default) "MLGs", this function will return a vector of cluster
+#'   mergers. If "MLGs", this function will return a vector of cluster
 #'   assignments, similar to that of \code{\link{mlg.vector}}. If "thresholds", 
 #'   the threshold at which each cluster was merged will be returned instead of 
 #'   the cluster assignment. "distances" will return a distance matrix of the new
 #'   distances between each new cluster. If "sizes", the size of each remaining
-#'   cluster will be returned. Finally, "all" will return a list of all 4.
+#'   cluster will be returned. Finally, "all" (default) will return a list of all 4.
 #' @param ... any parameters to be passed off to the distance method.
 #' 
 #' @return a numeric vector naming the multilocus genotype of each individual in
@@ -363,16 +364,12 @@ mlg.vector <- function(pop){
 #' function will return the thresholds had which each cluster merger occured
 #' instead of the new cluster assignments.
 #'
-#' @note \code{mlg.vector} makes use of \code{mlg.vector} grouping prior to
-#' applying the given threshold. Genotype numbers returned by \code{mlg.vector} 
-#' represent the lowest numbered genotype (as returned by \code{mlg.vector}) in
-#' in each new multilocus genotype. Therefore \code{mlg.vector} and
-#' \code{mlg.vector} return the same vector when threshold is set to 0 or less.
+#' @note Thresholds or distances greater than 2^53 may produce unexpected results.
 #' 
 #' @export
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", 
-                       distance="nei.dist", threads=0, stats="MLGs", ...){
+mlg.stats <- function(pop, threshold=2^53, missing="mean", memory=FALSE, algorithm="farthest_neighbor", 
+                       distance="nei.dist", threads=0, stats="ALL", ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
@@ -432,7 +429,7 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   {
     stop("Threads must be a non-negative numeric or integer value")
   } 
-    # Stats must be logical
+    # Stats must be valid
   if(!is.character(stats) || !( toupper(stats) %in% c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")))
   {
     stop("Stats must be a character string for MLGS, THRESHOLDS, DISTANCES, SIZES, or ALL")
@@ -465,17 +462,140 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   }
   result_list[[3]] <- dists
 
-  if(toupper(stats) == "ALL"){
-    return(result_list)
+  if(toupper(stats) == "MLGS"){
+    return(result_list[[1]])
   } else if(toupper(stats) == "THRESHOLDS") {
     return(result_list[[2]])
   } else if(toupper(stats) == "DISTANCES") {
     return(result_list[[3]])
   } else if(toupper(stats) == "SIZES") {
     return(result_list[[4]])
-  } else { # toupper(stats) == "MLGS")
-    return(result_list[[1]])
+  } else { # toupper(stats) == "ALL")
+    return(result_list)
   }
+}
+
+#==============================================================================#
+#' @rdname mlg
+# Clonally Filtered Multilocus Lineage
+#
+# Fill the MLL field of a genclone object based on minimum distance between lineages.
+#
+# @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.
+# @param threshold the desired minimum distance between distinct genotypes.
+#   Defaults to 0, which will only merge identical genotypes
+# @param missing any method to be used by \code{\link{missingno}}: "mean" 
+#   (default), "zero", "loci", "genotype", or "ignore".
+# @param memory whether this function should remember the last distance matrix
+#   it generated. TRUE will attempt to reuse the last distance matrix 
+#   if the other parameters are the same. (default) FALSE will ignore any stored 
+#   matrices and not store any it generates.
+# @param algorithm determines the type of clustering to be done.
+#   (default) "farthest_neighbor" merges clusters based on the maximum distance
+#   between points in either cluster. This is the strictest of the three.
+#   "nearest_neighbor" merges clusters based on the minimum distance between
+#   points in either cluster. This is the loosest of the three.
+#   "average_neighbor" merges clusters based on the average distance between
+#   every pair of points between clusters.
+# @param distance a character or function defining the distance to be applied 
+#   to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing
+#   distances between individuals (such as the output of \code{\link{nei.dist}})
+#   is also accepted for this parameter.
+# @param threads The maximum number of parallel threads to be used within this
+#   function. A value of 0 (default) will attempt to use as many threads as there
+#   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
+#   the function to run serially, which may increase stability on some systems.
+#   Other values may be specified, but should be used with caution.
+# @param ... any parameters to be passed off to the distance method.
+#' 
+#' @return a \link{genclone} object with the mll field updated to contain a numeric 
+#' vector naming the suspected multilocus lineage of each individual in
+#' the dataset. Each lineage is at least the specified distance apart, as 
+#' calculated by the selected algorithm.
+#'
+#' @note \code{mlg.filter} makes use of \code{mlg.vector} grouping prior to
+#' applying the given threshold. Therefore \code{mlg.vector} and
+#' \code{mlg.vector} return the same vector when threshold is set to 0 or less.
+#' 
+#' @export
+#==============================================================================#
+mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", 
+                       distance="nei.dist", threads=0, ...) {
+
+  if(!is.genclone(pop) && !is.genind(pop))
+  {
+    stop("No genclone or genind object was provided.")
+  }
+
+  pop <- missingno(pop,missing,quiet=TRUE) 
+  
+  if(is.character(distance) || is.function(distance))
+  {
+    if(memory==TRUE && identical(c(pop,distance,...),.last.value.param$get()))
+    {
+      dis <- .last.value.dist$get()
+    }
+    else
+    {
+      DISTFUN <- match.fun(distance)
+      dis <- DISTFUN(pop, ...)
+      dis <- as.matrix(dis)
+      if(memory==TRUE)
+      {
+        .last.value.param$set(c(pop,distance,...))
+        .last.value.dist$set(dis)
+      }
+    }
+  }
+  else
+  {
+    # Treating distance as a distance table
+    # Warning: Missing data in distance matrix or data uncorrelated with pop may produce unexpected results.
+    dis <- as.matrix(distance)
+  }
+
+  basemlg <- mlg.vector(pop)
+
+  # Input validation before passing arguments to C
+    #  dist is an n by n matrix containing distances between individuals
+  if((!is.numeric(dis) && !is.integer(dis)) || dim(dis)[1] != dim(dis)[2])
+  {
+    stop("Distance matrix must be a square matrix of numeric or integer values.")
+  } 
+    #  mlg is a vector of length n containing mlg assignments
+  if((!is.numeric(basemlg) && !is.integer(basemlg)) || length(basemlg) != dim(dis)[1])
+  {
+    stop("MLG must contain one numeric or integer entry for each individual in the population.")
+  }
+    # Threshold must be something that can cast to numeric
+  if(!is.numeric(threshold) && !is.integer(threshold))
+  {
+    stop("Threshold must be a numeric or integer value")
+  } 
+    # Threads must be something that can cast to integer
+  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  {
+    stop("Threads must be a non-negative numeric or integer value")
+  } 
+
+  # Cast parameters to proper types before passing them to C
+  dis_dim <- dim(dis)
+  dis <- as.numeric(dis)
+  dim(dis) <- dis_dim # Turn it back into a matrix
+  threshold <- as.numeric(threshold)
+  algo <- tolower(as.character(algorithm))
+  threads <- as.integer(threads)
+  if(!isTRUE(all.equal(basemlg,as.integer(basemlg))))
+  {
+    warning("MLG contains non-integer values. MLGs differing only in decimal values will be merged.")
+  }
+  basemlg <- as.integer(basemlg)
+  
+  result_list <- .Call("neighbor_clustering", dis, basemlg, threshold, algo, threads) 
+  
+  genreturn <- as.genclone(pop)
+  genreturn@mll <- result_list[[1]]
+  return(genreturn)
 }
 
 

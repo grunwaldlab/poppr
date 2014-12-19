@@ -4,6 +4,7 @@
 \alias{mlg.crosspop}
 \alias{mlg.filter}
 \alias{mlg.id}
+\alias{mlg.stats}
 \alias{mlg.table}
 \alias{mlg.vector}
 \title{Create counts, vectors, and matrices of multilocus genotypes.}
@@ -15,9 +16,13 @@ mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 
 mlg.vector(pop)
 
+mlg.stats(pop, threshold = 2^53, missing = "mean", memory = FALSE,
+  algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
+  stats = "ALL", ...)
+
 mlg.filter(pop, threshold = 0, missing = "mean", memory = FALSE,
   algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
-  stats = "MLGs", ...)
+  ...)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -85,12 +90,12 @@ the function to run serially, which may increase stability on some systems.
 Other values may be specified, but should be used with caution.}
 
 \item{stats}{determines which statistics this function should return on cluster
-mergers. If (default) "MLGs", this function will return a vector of cluster
+mergers. If "MLGs", this function will return a vector of cluster
 assignments, similar to that of \code{\link{mlg.vector}}. If "thresholds",
 the threshold at which each cluster was merged will be returned instead of
 the cluster assignment. "distances" will return a distance matrix of the new
 distances between each new cluster. If "sizes", the size of each remaining
-cluster will be returned. Finally, "all" will return a list of all 4.}
+cluster will be returned. Finally, "all" (default) will return a list of all 4.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }
@@ -123,6 +128,11 @@ calculated by the selected algorithm. If stats is set to \code{TRUE}, this
 function will return the thresholds had which each cluster merger occured
 instead of the new cluster assignments.
 
+a \link{genclone} object with the mll field updated to contain a numeric
+vector naming the suspected multilocus lineage of each individual in
+the dataset. Each lineage is at least the specified distance apart, as
+calculated by the selected algorithm.
+
 a \code{list} containing vectors of population names for each MLG.
 }
 \description{
@@ -137,10 +147,10 @@ mlg.vector will recalculate the mlg vector for
   slot in \code{\linkS4class{genclone}} objects. This means that MLGs will be
   different for subsetted \code{\linkS4class{genind}} objects.
 
-\code{mlg.vector} makes use of \code{mlg.vector} grouping prior to
-applying the given threshold. Genotype numbers returned by \code{mlg.vector}
-represent the lowest numbered genotype (as returned by \code{mlg.vector}) in
-in each new multilocus genotype. Therefore \code{mlg.vector} and
+Thresholds or distances greater than 2^53 may produce unexpected results.
+
+\code{mlg.filter} makes use of \code{mlg.vector} grouping prior to
+applying the given threshold. Therefore \code{mlg.vector} and
 \code{mlg.vector} return the same vector when threshold is set to 0 or less.
 }
 \examples{

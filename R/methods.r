@@ -274,6 +274,31 @@ is.genclone <- function(x){
 }
 
 #==============================================================================#
+#' Updates old genclone objects to the new format
+#'
+#' Returns an updated genclone object containing a default mll slot.
+#' 
+#' @export
+#' @rdname genclone.update
+#' @param x a genclone object 
+#' @author Jonah C. Brooks
+#' @examples
+#' data(Pinf)
+#' Pinf <- genclone.update(Pinf)
+#' Pinf$mll
+#==============================================================================#
+genclone.update <- function(x){
+    if(is.genclone(x)){
+        x <- tryCatch( {x$mll; return(x)},
+                  warning = function(w) {x$mll <- x$mlg; return(x)},
+                  error = function(e) {x$mll <- x$mlg; return(x)}
+        )
+    }
+    return(x)
+}
+
+
+#==============================================================================#
 #' Methods used for the genclone object
 #' 
 #' Default methods for subsetting genclone objects. 
@@ -296,6 +321,7 @@ setMethod(
     if (missing(i)) i <- TRUE
     if (missing(j)) j <- TRUE
     mlg       <- slot(x, "mlg")[i]
+    mll       <- slot(x, "mll")[i]
     hierarchy <- slot(x, "hierarchy")[i, , drop = FALSE]
     ## The following is lifted directly from the adegenet source code as
     ## callNextMethod() was throwing the error:
@@ -339,7 +365,7 @@ setMethod(
     }
 
     res <- genind(tab, pop=pop, prevcall=prevcall, ploidy=x@ploidy, type=x@type)
-    res <- new("genclone", res, hierarchy, mlg)
+    res <- new("genclone", res, hierarchy, mlg, mll)
   
     ## handle 'other' slot
     nOther     <- length(x@other)
@@ -381,17 +407,21 @@ setMethod(
 #' hierarchy will be created from the population factor.
 #' @param mlg a vector where each element assigns the multilocus genotype of
 #' that individual in the data set. 
+#' @param mll a vector where each element assigns the multilocus lineage of
+#' that individual in the data set. 
 #' @keywords internal
 #==============================================================================#
 setMethod(      
   f = "initialize",
   signature("genclone"),
-  definition = function(.Object, gen, hierarchy, mlg){
+  definition = function(.Object, gen, hierarchy, mlg, mll){
     if (missing(gen)){
       gen <- new("genind")
       if (missing(mlg)) mlg <- 0
+      if (missing(mll)) mll <- 0
     } else {
       if (missing(mlg)) mlg <- mlg.vector(gen)
+      if (missing(mll)) mll <- mlg
     }
     if (missing(hierarchy)){
       if (is.null(pop(gen))){
@@ -407,6 +437,7 @@ setMethod(
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
     slot(.Object, "mlg")       <- mlg
     slot(.Object, "hierarchy") <- hierarchy
+    slot(.Object, "mll")       <- mlg # mll = mlg before filtering
     return(.Object)
   }
 )
@@ -425,10 +456,11 @@ setMethod(
     nind   <- nInd(object)
     type   <- ifelse(object@type == "PA", "dominant", "codominant")
     nmlg   <- length(unique(object@mlg))
+    nmll   <- length(unique(object@mll))
     nloc   <- nLoc(object)
     npop   <- ifelse(is.null(object@pop), 0, length(object@pop.names))
     hier   <- length(object@hierarchy)
-    chars  <- nchar(c(nmlg, nind, nloc, hier, npop))
+    chars  <- nchar(c(nmlg, nmll, nind, nloc, hier, npop))
     ltab   <- max(chars) - chars
     ltab   <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
     pops   <- object@pop.names
@@ -443,15 +475,16 @@ setMethod(
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
       ltab[1], nmlg, "multilocus genotypes\n",
-      ltab[2], nind, ploid, "individuals\n", 
-      ltab[3], nloc, type, "loci\n\n"
+      ltab[2], nmll, "multilocus lineages\n",
+      ltab[3], nind, ploid, "individuals\n", 
+      ltab[4], nloc, type, "loci\n\n"
       )
     pophier <- ifelse(hier > 1, "levels -", "level -")
     if (hier == 0) pophier <- "levels."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
-    cat("", ltab[4], hier, "hierarchical", pophier, hiernames, fill = TRUE)
-    cat("", ltab[5], npop, "populations", popdef, pops, fill = TRUE)
+    cat("", ltab[5], hier, "hierarchical", pophier, hiernames, fill = TRUE)
+    cat("", ltab[6], npop, "populations", popdef, pops, fill = TRUE)
     
   })
 
@@ -473,10 +506,11 @@ setMethod(
     nind  <- nInd(x)
     type  <- ifelse(x@type == "PA", "dominant", "codominant")
     nmlg  <- length(unique(x@mlg))
+    nmll  <- length(unique(x@mll))
     nloc  <- nLoc(x)
     npop  <- ifelse(is.null(x@pop), 0, length(x@pop.names))
     hier  <- length(x@hierarchy)
-    chars <- nchar(c(nmlg, nind, nloc, hier, npop))
+    chars <- nchar(c(nmlg, nmll, nind, nloc, hier, npop))
     ltab  <- max(chars) - chars
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops  <- x@pop.names
@@ -485,15 +519,16 @@ setMethod(
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
       ltab[1], nmlg, "multilocus genotypes\n",
-      ltab[2], nind, ploid, "individuals\n", 
-      ltab[3], nloc, type, "loci\n\n"
+      ltab[2], nmll, "multilocus lineages\n",
+      ltab[3], nind, ploid, "individuals\n", 
+      ltab[4], nloc, type, "loci\n\n"
       )
     pophier <- ifelse(hier > 1, "levels -", "level -")
     if (hier == 0) pophier <- "levels."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
-    cat("", ltab[4], hier, "hierarchical", pophier, hiernames, fill = TRUE)
-    cat("", ltab[5], npop, "populations", popdef, pops, fill = TRUE)
+    cat("", ltab[5], hier, "hierarchical", pophier, hiernames, fill = TRUE)
+    cat("", ltab[6], npop, "populations", popdef, pops, fill = TRUE)
   })
 
 #==============================================================================#
@@ -561,10 +596,11 @@ setMethod(
   signature(x = "genclone"),
   definition = function(x, ...){
     mlg       <- x@mlg
+    mll       <- x@mll
     hierarchy <- x@hierarchy
     listx     <- callNextMethod()
     if (is.genind(listx[[1]])){
-      listx <- lapply(listx, function(gid) new("genclone", gid, hierarchy, mlg))
+      listx <- lapply(listx, function(gid) new("genclone", gid, hierarchy, mlg, mll))
     }
     return(listx)
   })

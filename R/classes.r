@@ -86,6 +86,7 @@
 #' @aliases genclone
 #' @export
 #' @slot mlg a vector representing multilocus genotypes for the data set.
+#' @slot mll a vector representing multilocus lineages for the data set.
 #' @slot hierarchy a data frame containing hierarchical levels.
 #' @author Zhian N. Kamvar
 #' @seealso \code{\link{as.genclone}} \code{\link{sethierarchy}} \code{\link{setpop}} 
@@ -95,6 +96,7 @@
 setClass("genclone", 
          contains = "genind",
          representation = representation(mlg = "numeric", 
+                                         mll = "numeric",
                                          hierarchy = "data.frame"),
 )
 

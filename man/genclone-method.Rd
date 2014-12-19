@@ -10,7 +10,7 @@
 \S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., loc = NULL,
   treatOther = TRUE, quiet = TRUE, drop = FALSE)
 
-\S4method{initialize}{genclone}(.Object, gen, hierarchy, mlg)
+\S4method{initialize}{genclone}(.Object, gen, hierarchy, mlg, mll)
 
 \S4method{show}{genclone}(object)
 
@@ -42,6 +42,9 @@ population assignments of individual i in the data set. If this is empty, the
 hierarchy will be created from the population factor.}
 
 \item{mlg}{a vector where each element assigns the multilocus genotype of
+that individual in the data set.}
+
+\item{mll}{a vector where each element assigns the multilocus lineage of
 that individual in the data set.}
 
 \item{object}{a genclone object}
