@@ -98,7 +98,7 @@
 #' }
 #'
 #' @seealso \code{\link[vegan]{diversity}} \code{\link{popsub}}
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
 #'
 #' # Load the data set
@@ -319,12 +319,13 @@ mlg.vector <- function(pop){
 
 
 #==============================================================================#
-#' @rdname mlg
+#' @name mlg.filter
+#' @title mlg.filter
 # Statistics on Clonal Filtering of Genotype Data
 #
 # Calculates and returns various statistics on possible clonal lineages. 
 #
-# @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.
+#' @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.
 #' @param threshold the desired minimum distance between distinct genotypes.
 #'   Defaults to 0, which will only merge identical genotypes
 #' @param missing any method to be used by \code{\link{missingno}}: "mean" 
@@ -358,11 +359,14 @@ mlg.vector <- function(pop){
 #'   cluster will be returned. Finally, "all" (default) will return a list of all 4.
 #' @param ... any parameters to be passed off to the distance method.
 #' 
-#' @return a numeric vector naming the multilocus genotype of each individual in
+#' @return 
+#' \subsection{mlg.stats} {
+#' a numeric vector naming the multilocus genotype of each individual in
 #' the dataset. Each genotype is at least the specified distance apart, as 
 #' calculated by the selected algorithm. If stats is set to \code{TRUE}, this
 #' function will return the thresholds had which each cluster merger occured
 #' instead of the new cluster assignments.
+#' }
 #'
 #' @note Thresholds or distances greater than 2^53 may produce unexpected results.
 #' 
@@ -476,7 +480,7 @@ mlg.stats <- function(pop, threshold=2^53, missing="mean", memory=FALSE, algorit
 }
 
 #==============================================================================#
-#' @rdname mlg
+#' @rdname mlg.filter
 # Clonally Filtered Multilocus Lineage
 #
 # Fill the MLL field of a genclone object based on minimum distance between lineages.
@@ -508,10 +512,13 @@ mlg.stats <- function(pop, threshold=2^53, missing="mean", memory=FALSE, algorit
 #   Other values may be specified, but should be used with caution.
 # @param ... any parameters to be passed off to the distance method.
 #' 
-#' @return a \link{genclone} object with the mll field updated to contain a numeric 
+#' @return 
+#' \subsection{mlg.filter}{
+#' a \link{genclone} object with the mll field updated to contain a numeric 
 #' vector naming the suspected multilocus lineage of each individual in
 #' the dataset. Each lineage is at least the specified distance apart, as 
 #' calculated by the selected algorithm.
+#' }
 #'
 #' @note \code{mlg.filter} makes use of \code{mlg.vector} grouping prior to
 #' applying the given threshold. Therefore \code{mlg.vector} and
