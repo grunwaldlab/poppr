@@ -899,7 +899,7 @@ The resulting \texttt{genind} object would contain a matrix that has 3 rows and
 represents a separate allele, each row represents an individual and each color
 represents a different locus. 
 
-<<ex_data_picture, echo = FALSE>>=
+<<ex_data_picture, echo = FALSE, fig.width=14, fig.height=4, out.width="7in", out.height = "2in">>=
 library(adegenet)
 df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
                       locus2=c("201/201", "202/203", "203/204"), 
@@ -907,10 +907,11 @@ df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"),
 dat <- df2genind(df, sep="/")$tab
 tdat <- dat
 tdat[] <- 1
-barplot(tdat, axes = FALSE)
+x <- barplot(tdat, axes = FALSE, axisnames = FALSE)
 barplot(rep(3, 12), col = rep(rainbow(3, alpha = 0.5), 3:5), axes = FALSE, add = TRUE)
 axis(2, at = 1:3 - 0.5, labels = 1:3, tick = FALSE)
-axis(3, at = c(2, 6.125, 11.5), labels = names(df), tick = FALSE)
+axis(3, at = x, labels = colnames(tdat), tick = FALSE)
+axis(1, at = c(2, 6.125, 11.5), labels = names(df), tick = FALSE)
 @
 \noindent
 When we look at the data derived from table \ref{example_table}, we see that we
@@ -2639,10 +2640,11 @@ for (i in 2:7) {
     print(res[[i]])
 }
 @
-<<mlgrare2, eval=FALSE>>=
+<<mlgrare2, eval=FALSE, tidy=FALSE>>=
 library(vegan)
 H.year <- mlg.table(virus, bar=FALSE)
-rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
+rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), 
+          border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
 \begin{figure}[h!]
   \centering
