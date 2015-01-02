@@ -69,7 +69,7 @@
 #' @author Zhian N. Kamvar
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' x <- getfile()
 #' poppr(x$files)
@@ -215,7 +215,7 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' @author Zhian N. Kamvar
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 #' 
 #' genalex2 <- read.genalex("genalex2.csv", geo=TRUE)
@@ -236,7 +236,8 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
   gencall  <- match.call()
 
   all.info <- strsplit(readLines(genalex, n = 2), sep)
-  gena     <- read.table(genalex, sep = sep, header = TRUE, skip = 2, 
+  cskip    <- ifelse("connection" %in% class(genalex), 0, 2)
+  gena     <- read.table(genalex, sep = sep, header = TRUE, skip = cskip, 
                          stringsAsFactors = FALSE, check.names = FALSE)
   num.info <- as.numeric(all.info[[1]])
   pop.info <- all.info[[2]][-c(1:3)]
@@ -374,7 +375,7 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
   res.gid@call <- gencall
   
   # Keep the name if it's a URL
-  if (length(grep("://", genalex)) < 1){
+  if (length(grep("://", genalex)) < 1 & !"connection" %in% class(genalex)){
     res.gid@call[2] <- basename(genalex)
   }
   if (region){
@@ -427,7 +428,7 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' data(nancycats)
 #' genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 #' }

@@ -64,17 +64,17 @@ Now you can use the `install_github()` function:
 #### For the latest stable release:    
 
 ```s
-library(devtools)
+library("devtools")
 install_github(repo = "grunwaldlab/poppr")
-library(poppr)
+library("poppr")
 ```
 
 #### For the bleeding edge (development) version:
 
 ```s
-library(devtools)
+library("devtools")
 install_github(repo = "grunwaldlab/poppr", ref = "devel")
-library(poppr)
+library("poppr")
 ```
 
 ## Help / Documentation

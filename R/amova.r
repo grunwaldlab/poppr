@@ -187,7 +187,7 @@
 #' amova.test <- randtest(amova.result) # Test for significance
 #' plot(amova.test)
 #' amova.test
-#' \dontrun{
+#' \donttest{
 #' amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
 #' amova.cc.result
 #' amova.cc.test <- randtest(amova.cc.result)
@@ -217,7 +217,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       if (!all(hiers %in% names(other(x)[[dfname]]))){
         hier_incompatible_warning(hiers, df)
       }
-      x <- splitcombine(x, hier = hiers, dfname = dfname, method = 2)
+      suppressWarnings(x <- splitcombine(x, hier = hiers, dfname = dfname, method = 2))
     } else {
       pop(x) <- other(x)[[dfname]][[full_hier]]
     }

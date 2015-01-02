@@ -310,9 +310,10 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' # Graph it.
 #' A.msn <- poppr.msn(Aeut, A.dist, gadj=15, vertex.label=NA)
 #' 
-#' \dontrun{
+#' \donttest{
 #' # Set subpopulation structure.
-#' Aeut.sub <- splitcombine(Aeut, method=2, hier=c("Pop", "Subpop"))
+#' Aeut.sub <- as.genclone(Aeut)
+#' setpop(Aeut.sub) <- ~Pop/Subpop
 #' 
 #' # Plot respective to the subpopulation structure
 #' As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA)
@@ -325,12 +326,14 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' micro.dist <- diss.dist(microbov)
 #' micro.msn <- poppr.msn(microbov, diss.dist(microbov), vertex.label=NA)
 #' 
-#' Let's plot it and show where individuals have < 15% of their genotypes 
+#' # Let's plot it and show where individuals have < 15% of their genotypes 
 #' different.
 #' 
-#' plot.igraph(micro.msn$graph, edge.label = ifelse(E(micro.msn$graph)$weight < 0.15, 
-#' round(E(micro.msn$graph)$weight, 3), NA), vertex.size=2, edge.label.color="red")
-#' 
+#' edge_weight <- E(micro.msn$graph)$weight
+#' edge_labels <- ifelse(edge_weight < 0.15, round(edge_weight, 3), NA)
+#' plot.igraph(micro.msn$graph, edge.label = edge_labels, vertex.size = 2, 
+#' edge.label.color = "red")
+#'
 #' }
 #' 
 #==============================================================================#
@@ -691,7 +694,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
 #' # Normal grey curve with an adjustment of 3, an upper limit of 0.8, and
 #' # weighted towards smaller values.
 #' greycurve()
-#' \dontrun{
+#' \donttest{
 #' # 1:1 relationship grey curve.
 #' greycurve(gadj=1, glim=1:0)
 #' 
@@ -820,10 +823,11 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
 #' 
 #' # Default
-#' library(igraph) # To get all the layouts.
+#' library("igraph") # To get all the layouts.
 #' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 #' 
+#' \donttest{
 #' # Removing link between populations (cutoff = 0.2) and labelling no individuals
 #' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
@@ -835,7 +839,6 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57")
 #' 
 #' 
-#' \dontrun{
 #' data(partial_clone)
 #' pcmsn <- bruvo.msn(partial_clone, replen = rep(1, 10))
 #' 
@@ -1024,7 +1027,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' @examples
 #' data(nancycats)
 #' nan_geno <- genotype_curve(nancycats)
-#' \dontrun{
+#' \donttest{
 #' # With AFLP data, it is often necessary to include more markers for resolution
 #' data(Aeut)
 #' Ageno <- genotype_curve(Aeut)

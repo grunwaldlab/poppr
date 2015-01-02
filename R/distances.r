@@ -77,7 +77,7 @@
 #' 
 #' data(Aeut)
 #' mean(diss.dist(popsub(Aeut, 1)))
-#' \dontrun{
+#' \donttest{
 #' mean(diss.dist(popsub(Aeut, 2)))
 #' mean(diss.dist(Aeut))
 #' }
@@ -440,7 +440,7 @@ provesti.dist <- function(x){
 #' bindist <- function(x) dist(x$tab, method = "binary")
 #' binnan <- aboot(nan9, dist = bindist)
 #' 
-#' \dontrun{
+#' \donttest{
 #' # AFLP data
 #' data(Aeut)
 #' 
