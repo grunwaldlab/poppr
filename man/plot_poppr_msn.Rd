@@ -128,6 +128,7 @@ library("igraph") # To get all the layouts.
 set.seed(500)
 plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 
+\donttest{
 # Removing link between populations (cutoff = 0.2) and labelling no individuals
 set.seed(500)
 plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
@@ -139,7 +140,6 @@ set.seed(50)
 plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57")
 
 
-\dontrun{
 data(partial_clone)
 pcmsn <- bruvo.msn(partial_clone, replen = rep(1, 10))
 

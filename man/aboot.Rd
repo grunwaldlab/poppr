@@ -78,7 +78,7 @@ set.seed(9999)
 bindist <- function(x) dist(x$tab, method = "binary")
 binnan <- aboot(nan9, dist = bindist)
 
-\dontrun{
+\donttest{
 # AFLP data
 data(Aeut)
 

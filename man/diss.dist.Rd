@@ -41,7 +41,7 @@ When \code{percent = TRUE}, this is exactly the same as
 
 data(Aeut)
 mean(diss.dist(popsub(Aeut, 1)))
-\dontrun{
+\donttest{
 mean(diss.dist(popsub(Aeut, 2)))
 mean(diss.dist(Aeut))
 }

@@ -55,7 +55,7 @@ and so on; for the combine method, your data frame will return the first column
 of your data frame.
 }
 \examples{
-\dontrun{
+\donttest{
 # Method 1: Splitting.
 Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 
@@ -68,7 +68,6 @@ Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
 
 # Much better!
 Aeut$pop.names
-}
 
 # Method 2: Combining.
 
@@ -78,7 +77,6 @@ H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
 
 # Checking to make sure they were actually combined.
 head(H.comb$other$x$year_country)
-\dontrun{
 # Creating new data frame in the object to mess around with.
 H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
 

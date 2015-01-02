@@ -38,7 +38,7 @@ head(pop(Aeut.gc))
 setpop(Aeut.gc) <- ~Pop/Subpop
 head(pop(Aeut.gc))
 
-\dontrun{
+\donttest{
 
 # Can be used to create objects as well.
 Aeut.old <- setpop(Aeut.gc, ~Pop)

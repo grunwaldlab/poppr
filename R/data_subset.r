@@ -108,7 +108,7 @@
 #' mlg(Aeut.pop)
 #' Aeut.pop$pop.names
 #' 
-#' \dontrun{
+#' \donttest{
 #' # Clone correct at the subpopulation level with respect to population and
 #' # combine.
 #' Aeut.subpop <- clonecorrect(Aeut, hier=~Pop/Subpop, combine=TRUE)
@@ -196,7 +196,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   
   # Combining the population factor by the hierarchy
   if(!is.genclone(pop)){
-    pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier)
+    suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier))
   }
   cpop <- length(pop$pop.names)
   
@@ -267,7 +267,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 #' # Analyze only the populations with exactly 50 individuals
 #' mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), blacklist=c(3,4,13,14))
 #'
-#' \dontrun{
+#' \donttest{
 #' # Analyze the first 10 populations, except for "Bazadais"
 #' mic.10 <- popsub(microbov, sublist=1:10, blacklist="Bazadais")
 #' 
@@ -573,7 +573,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Method 1: Splitting.
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 #' 
@@ -586,7 +586,6 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' 
 #' # Much better!
 #' Aeut$pop.names
-#' }
 #'
 #' # Method 2: Combining.
 #' 
@@ -596,7 +595,6 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' 
 #' # Checking to make sure they were actually combined.
 #' head(H.comb$other$x$year_country)
-#' \dontrun{
 #' # Creating new data frame in the object to mess around with. 
 #' H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
 #' 
@@ -918,7 +916,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' summary(Pinf)
 #' summary(iPinf)
 #' 
-#' \dontrun{
+#' \donttest{
 #' library("ape")
 #' 
 #' # Removing missing data. 

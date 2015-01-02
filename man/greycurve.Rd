@@ -40,7 +40,7 @@ a grey palette to be used for edge weights of a minimum spanning network.
 # Normal grey curve with an adjustment of 3, an upper limit of 0.8, and
 # weighted towards smaller values.
 greycurve()
-\dontrun{
+\donttest{
 # 1:1 relationship grey curve.
 greycurve(gadj=1, glim=1:0)
 

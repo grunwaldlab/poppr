@@ -85,7 +85,7 @@ iPinf <- recode_polyploids(Pinf)
 summary(Pinf)
 summary(iPinf)
 
-\dontrun{
+\donttest{
 library("ape")
 
 # Removing missing data.

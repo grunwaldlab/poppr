@@ -69,7 +69,7 @@
 #' @author Zhian N. Kamvar
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' x <- getfile()
 #' poppr(x$files)
@@ -215,7 +215,7 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #' @author Zhian N. Kamvar
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 #' 
 #' genalex2 <- read.genalex("genalex2.csv", geo=TRUE)
@@ -428,7 +428,7 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' data(nancycats)
 #' genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 #' }

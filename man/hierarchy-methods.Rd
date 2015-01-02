@@ -134,7 +134,7 @@ namehierarchy(microgc) <- ~Country/Breed/Species
 # let's see what the hierarchy looks like by Species and Breed:
 head(gethierarchy(microgc, ~Breed/Species))
 
-\dontrun{
+\donttest{
 # Load our data set and convert it to a genclone object.
 Aeut.gc <- read.genalex(system.file("files/rootrot.csv", package = "poppr"))
 

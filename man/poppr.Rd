@@ -116,7 +116,7 @@ details).
 data(nancycats)
 poppr(nancycats)
 
-\dontrun{
+\donttest{
 poppr(nancycats, sample=99, total=FALSE, quiet=FALSE)
 
 # Note: this is a larger data set that could take a couple of minutes to run

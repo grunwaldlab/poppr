@@ -40,7 +40,7 @@ If you enter a file name that exists, that file will be overwritten. If
   "ind\emph{N}", with \emph{N} being the size of your population.
 }
 \examples{
-\dontrun{
+\donttest{
 data(nancycats)
 genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 }

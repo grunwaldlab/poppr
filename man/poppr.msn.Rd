@@ -82,9 +82,10 @@ A.dist <- diss.dist(Aeut)
 # Graph it.
 A.msn <- poppr.msn(Aeut, A.dist, gadj=15, vertex.label=NA)
 
-\dontrun{
+\donttest{
 # Set subpopulation structure.
-Aeut.sub <- splitcombine(Aeut, method=2, hier=c("Pop", "Subpop"))
+Aeut.sub <- as.genclone(Aeut)
+setpop(Aeut.sub) <- ~Pop/Subpop
 
 # Plot respective to the subpopulation structure
 As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA)
@@ -97,11 +98,13 @@ data(microbov)
 micro.dist <- diss.dist(microbov)
 micro.msn <- poppr.msn(microbov, diss.dist(microbov), vertex.label=NA)
 
-Let's plot it and show where individuals have < 15\% of their genotypes
+# Let's plot it and show where individuals have < 15\% of their genotypes
 different.
 
-plot.igraph(micro.msn$graph, edge.label = ifelse(E(micro.msn$graph)$weight < 0.15,
-round(E(micro.msn$graph)$weight, 3), NA), vertex.size=2, edge.label.color="red")
+edge_weight <- E(micro.msn$graph)$weight
+edge_labels <- ifelse(edge_weight < 0.15, round(edge_weight, 3), NA)
+plot.igraph(micro.msn$graph, edge.label = edge_labels, vertex.size = 2,
+edge.label.color = "red")
 
 }
 }

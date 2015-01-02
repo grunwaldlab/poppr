@@ -36,7 +36,7 @@ data(microbov)
 # Analyze only the populations with exactly 50 individuals
 mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), blacklist=c(3,4,13,14))
 
-\dontrun{
+\donttest{
 # Analyze the first 10 populations, except for "Bazadais"
 mic.10 <- popsub(microbov, sublist=1:10, blacklist="Bazadais")
 

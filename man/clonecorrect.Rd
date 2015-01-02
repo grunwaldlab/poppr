@@ -73,7 +73,7 @@ Aeut.pop <- clonecorrect(Aeut, hier= ~Pop)
 mlg(Aeut.pop)
 Aeut.pop$pop.names
 
-\dontrun{
+\donttest{
 # Clone correct at the subpopulation level with respect to population and
 # combine.
 Aeut.subpop <- clonecorrect(Aeut, hier=~Pop/Subpop, combine=TRUE)
