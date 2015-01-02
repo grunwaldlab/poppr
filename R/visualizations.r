@@ -820,7 +820,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
 #' 
 #' # Default
-#' library(igraph) # To get all the layouts.
+#' library("igraph") # To get all the layouts.
 #' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 #' 

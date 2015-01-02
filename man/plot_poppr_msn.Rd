@@ -124,7 +124,7 @@ adist <- diss.dist(Aeut, percent = TRUE)
 amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
 
 # Default
-library(igraph) # To get all the layouts.
+library("igraph") # To get all the layouts.
 set.seed(500)
 plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 

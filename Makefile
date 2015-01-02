@@ -55,5 +55,5 @@ checkdevel: build
 	cd R-devel;\
 	./configure;\
 	make;\
-	bin/./R -e Rscript -e 'library(devtools); library(methods); options(repos=c(CRAN="http://cran.rstudio.com")); install_deps("../poppr", dependencies = TRUE)';\
+	bin/./R -e Rscript -e 'library("devtools"); library("methods"); options(repos=c(CRAN="http://cran.rstudio.com")); install_deps("../poppr", dependencies = TRUE)';\
 	bin/./R CMD check ../$(PKGNAME)_$(VERSION).tar.gz --as-cran

@@ -32,7 +32,7 @@ setpop(Pinf) <- ~Country # Set the population to be at the country level
 private_alleles(Pinf)
 \dontrun{
 # An example of how this data can be displayed.
-library(ggplot2)
+library("ggplot2")
 Pinfpriv <- private_alleles(Pinf, report = "data.frame")
 ggplot(Pinfpriv) + geom_tile(aes(x = population, y = allele, fill = count))
 }

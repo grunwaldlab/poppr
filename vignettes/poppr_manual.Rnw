@@ -274,14 +274,14 @@ install.packages("devtools")
 Now you can execute the command \texttt{install\_github} with the user and 
 repository name:
 <<install_github, eval = FALSE>>=
-library(devtools)
+library("devtools")
 install_github(repo = "grunwaldlab/poppr")
 @
 
 If you are the adventurous type and are willing to test out unreleased versions 
 of the package, you can also install the development version:
 <<install_devel, eval = FALSE>>=
-library(devtools)
+library("devtools")
 install_github(repo = "grunwaldlab/poppr", ref = "devel")
 @
 Users who install this version do so at their own risk. Since it is a
@@ -314,12 +314,12 @@ Importing a file into R involves you knowing the path to your file and then
 typing that into R's console. \texttt{getfile()} will help provide a point and
 click interface for selecting a file. There are two steps:
 <<echo=FALSE>>=
-library(poppr)
+library("poppr")
 x <- list(files="/path/to/R/poppr/files/rootrot.csv", path="/path/to/R/poppr/files")
 @
 Tell your computer to search R's library to find the \poppr{} and load the package:
 <<getfilefunk, eval=FALSE>>=
-library(poppr)
+library("poppr")
 @
 After that, you can use \texttt{getfile()}
 <<getfilefunk2, eval=FALSE>>=
@@ -632,7 +632,7 @@ We will combine these and save the file to the desktop. Details of these
 functions are presented elsewhere in this manual.
 
 <<microsave, eval=FALSE>>=
-library(poppr)
+library("poppr")
 data(microbov)
 microbov <- as.genclone(microbov)
 sethierarchy(microbov) <- data.frame(other(microbov))
@@ -900,7 +900,7 @@ represents a separate allele, each row represents an individual and each color
 represents a different locus. 
 
 <<ex_data_picture, echo = FALSE, fig.width=14, fig.height=4, out.width="7in", out.height = "2in">>=
-library(adegenet)
+library("adegenet")
 df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
                       locus2=c("201/201", "202/203", "203/204"), 
                       locus3=c("301/302", "301/303", "304/305")))
@@ -1011,7 +1011,7 @@ and the subplots represent the subpopulation. Let's take a look at what the
 \texttt{genind} object looks like:
 
 <<show_genind>>=
-library(poppr)
+library("poppr")
 data(Aeut)
 Aeut
 @
@@ -1539,7 +1539,7 @@ Let's take a look at what this does by focusing in on areas with missing data.
 We'll use the data set \texttt{nancycats} as an example. Using the \poppr{}
 function \texttt{info\_table}, we can assess missing data within populations.
 <<initializing_poppr, out.width=".8\\linewidth", fig.height = 6, fig.width = 10>>=
-library(poppr)
+library("poppr")
 data(nancycats)
 info_table(nancycats, plot = TRUE)
 @
@@ -2641,7 +2641,7 @@ for (i in 2:7) {
 }
 @
 <<mlgrare2, eval=FALSE, tidy=FALSE>>=
-library(vegan)
+library("vegan")
 H.year <- mlg.table(virus, bar=FALSE)
 rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), 
           border = NA, fill = NA, font = 2, cex = 1, col = "blue")
@@ -2651,7 +2651,7 @@ rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)),
   \caption{\footnotesize An example of a rarefaction curve produced using a MLG table.}
   \label{rarecurve}
 <<mlgrareplot, echo=FALSE, results='hide'>>=
-# library(vegan)
+# library("vegan")
 H.year <- mlg.table(virus, bar=FALSE)
 vegan::rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
@@ -2866,7 +2866,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 %   \label{mlgtable2}
 % <<ggplotchart, resolution=300>>=
 % df2 <- df[df$MLG %in% v.max, ]
-% library(ggplot2)
+% library("ggplot2")
 % qplot(y=MLG, x=Population, data=df2, color=Count, size=Count) +
 %       theme(axis.text.x = element_text(size = 10, angle = -45, hjust = 0))
 % @
@@ -3253,8 +3253,8 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % attr(mtest, "Labels") <- names(distlist)
 % mtest <- as.matrix(mtest)
 % diag(mtest) <- 1
-% library(reshape2)
-% library(ggplot2)
+% library("reshape2")
+% library("ggplot2")
 % ggplot(melt(mtest)) + geom_tile(aes_string(x = "Var1", y = "Var2", fill = "value"))
 % @
 
@@ -3776,7 +3776,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % the \textit{igraph} package, a vector of the population names and a vector of
 % colors representing the populations.
 % <<bruvo_msn_igraph>>=
-% library(igraph)
+% library("igraph")
 % pc.msn
 % @
 
@@ -3795,7 +3795,7 @@ mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
 % for reconstructing the previous graph using the output:
 % <<bruvo_msn_reconstruct, eval=FALSE>>=
 % set.seed(9005)
-% library(igraph)
+% library("igraph")
 % plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3, 
 %      vertex.label.cex=0.7, vertex.label.dist=-0.5,)
 % legend(-1.55, 1, bty = "n", cex = 0.75, legend = pc.msn$populations, 
@@ -4447,8 +4447,8 @@ window. Let's illustrate this using a MLG bar graph from the Athena population
 of the Aeut data set.
 
 <<Aeut_MLG_Ahena>>=
-library(poppr)
-library(ggplot2)
+library("poppr")
+library("ggplot2")
 data(Aeut)
 Athena.tab <- mlg.table(Aeut, sublist = "Athena")
 p <- last_plot()

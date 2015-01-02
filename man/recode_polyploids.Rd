@@ -86,7 +86,7 @@ summary(Pinf)
 summary(iPinf)
 
 \dontrun{
-library(ape)
+library("ape")
 
 # Removing missing data.
 Pinf <- missingno(Pinf, "geno", cutoff = 0)
