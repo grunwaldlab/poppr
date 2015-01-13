@@ -86,7 +86,7 @@
 #' 
 #' # Permute Alleles: maintain allelic state; heterozygosity varies.
 #' summary(shufflepop(Zebu, method=1))
-#' \donttest{
+#' \dontrun{
 #' # Parametric Bootstrap: do not maintain allelic state or heterozygosity
 #' summary(shufflepop(Zebu, method=2))
 #' 

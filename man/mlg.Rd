@@ -108,7 +108,7 @@ acrs <- mlg.crosspop(Aeut) # MLG.59: (2 inds) Athena Mt. Vernon
 aid <- mlg.id(Aeut)
 aid["59"] # individuals 159 and 57
 
-\donttest{
+\dontrun{
 
 # A simple example. 10 individuals, 5 genotypes.
 mat1 <- matrix(ncol=5, 25:1)

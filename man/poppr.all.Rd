@@ -20,7 +20,7 @@ the working directory, execute \code{\link{poppr}}, and concatenate the
 output into one data frame.
 }
 \examples{
-\donttest{
+\dontrun{
 # Obtain a list of fstat files from a directory.
 x <- getfile(multi=TRUE, pattern="^.+?dat$")
 

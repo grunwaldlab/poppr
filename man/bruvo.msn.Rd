@@ -100,7 +100,7 @@ data(nancycats)
 # View populations 8 and 9 with default colors.
 bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 vertex.label.cex=0.7, vertex.label.dist=0.4)
-\donttest{
+\dontrun{
 # View heat colors.
 bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 palette=heat.colors, vertex.label.cex=0.7, vertex.label.dist=0.4)

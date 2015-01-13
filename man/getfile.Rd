@@ -31,7 +31,7 @@ If the user is working in a GUI environment, a window will pop up, allowing
 the user to choose a specified file regardless of path.
 }
 \examples{
-\donttest{
+\dontrun{
 
 x <- getfile()
 poppr(x$files)

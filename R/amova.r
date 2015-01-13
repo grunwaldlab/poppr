@@ -187,7 +187,7 @@
 #' amova.test <- randtest(amova.result) # Test for significance
 #' plot(amova.test)
 #' amova.test
-#' \donttest{
+#' \dontrun{
 #' amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
 #' amova.cc.result
 #' amova.cc.test <- randtest(amova.cc.result)

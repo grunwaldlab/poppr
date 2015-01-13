@@ -108,7 +108,7 @@
 #' mlg(Aeut.pop)
 #' Aeut.pop$pop.names
 #' 
-#' \donttest{
+#' \dontrun{
 #' # Clone correct at the subpopulation level with respect to population and
 #' # combine.
 #' Aeut.subpop <- clonecorrect(Aeut, hier=~Pop/Subpop, combine=TRUE)
@@ -267,7 +267,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 #' # Analyze only the populations with exactly 50 individuals
 #' mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), blacklist=c(3,4,13,14))
 #'
-#' \donttest{
+#' \dontrun{
 #' # Analyze the first 10 populations, except for "Bazadais"
 #' mic.10 <- popsub(microbov, sublist=1:10, blacklist="Bazadais")
 #' 
@@ -573,7 +573,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Method 1: Splitting.
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 #' 
@@ -916,7 +916,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' summary(Pinf)
 #' summary(iPinf)
 #' 
-#' \donttest{
+#' \dontrun{
 #' library("ape")
 #' 
 #' # Removing missing data. 
