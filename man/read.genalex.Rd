@@ -77,7 +77,7 @@ This function cannot handle raw allele frequency data.
   names will be saved in the \code{other} slot under \code{original_names}.
 }
 \examples{
-\donttest{
+\dontrun{
 Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 
 genalex2 <- read.genalex("genalex2.csv", geo=TRUE)

@@ -198,7 +198,7 @@
 #' data(nancycats)
 #' poppr(nancycats)
 #' 
-#' \donttest{
+#' \dontrun{
 #' poppr(nancycats, sample=99, total=FALSE, quiet=FALSE)
 #' 
 #' # Note: this is a larger data set that could take a couple of minutes to run
@@ -328,7 +328,7 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Obtain a list of fstat files from a directory.
 #' x <- getfile(multi=TRUE, pattern="^.+?dat$")
 #'
@@ -496,7 +496,7 @@ poppr.all <- function(filelist, ...){
 #' data(nancycats)
 #' ia(nancycats)
 #' 
-#' \donttest{
+#' \dontrun{
 #' # Get the indices back and plot them using base R graphics:
 #' nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
 #' layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
@@ -695,7 +695,7 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #' data(Pinf) # Load P. infestans data.
 #' setpop(Pinf) <- ~Country # Set the population to be at the country level
 #' private_alleles(Pinf)
-#' \donttest{
+#' \dontrun{
 #' # An example of how this data can be displayed.
 #' library("ggplot2")
 #' Pinfpriv <- private_alleles(Pinf, report = "data.frame")

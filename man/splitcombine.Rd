@@ -55,7 +55,7 @@ and so on; for the combine method, your data frame will return the first column
 of your data frame.
 }
 \examples{
-\donttest{
+\dontrun{
 # Method 1: Splitting.
 Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 

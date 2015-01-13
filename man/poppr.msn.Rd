@@ -82,7 +82,7 @@ A.dist <- diss.dist(Aeut)
 # Graph it.
 A.msn <- poppr.msn(Aeut, A.dist, gadj=15, vertex.label=NA)
 
-\donttest{
+\dontrun{
 # Set subpopulation structure.
 Aeut.sub <- as.genclone(Aeut)
 setpop(Aeut.sub) <- ~Pop/Subpop

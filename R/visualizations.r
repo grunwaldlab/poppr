@@ -310,7 +310,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' # Graph it.
 #' A.msn <- poppr.msn(Aeut, A.dist, gadj=15, vertex.label=NA)
 #' 
-#' \donttest{
+#' \dontrun{
 #' # Set subpopulation structure.
 #' Aeut.sub <- as.genclone(Aeut)
 #' setpop(Aeut.sub) <- ~Pop/Subpop
@@ -694,7 +694,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
 #' # Normal grey curve with an adjustment of 3, an upper limit of 0.8, and
 #' # weighted towards smaller values.
 #' greycurve()
-#' \donttest{
+#' \dontrun{
 #' # 1:1 relationship grey curve.
 #' greycurve(gadj=1, glim=1:0)
 #' 
@@ -827,7 +827,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
 #' 
-#' \donttest{
+#' \dontrun{
 #' # Removing link between populations (cutoff = 0.2) and labelling no individuals
 #' set.seed(500)
 #' plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
@@ -1027,7 +1027,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' @examples
 #' data(nancycats)
 #' nan_geno <- genotype_curve(nancycats)
-#' \donttest{
+#' \dontrun{
 #' # With AFLP data, it is often necessary to include more markers for resolution
 #' data(Aeut)
 #' Ageno <- genotype_curve(Aeut)

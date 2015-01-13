@@ -33,7 +33,7 @@ genotypes observed.
 \examples{
 data(nancycats)
 nan_geno <- genotype_curve(nancycats)
-\donttest{
+\dontrun{
 # With AFLP data, it is often necessary to include more markers for resolution
 data(Aeut)
 Ageno <- genotype_curve(Aeut)

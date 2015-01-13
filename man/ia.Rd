@@ -127,7 +127,7 @@ The index of association was originally developed by A.H.D. Brown
 data(nancycats)
 ia(nancycats)
 
-\donttest{
+\dontrun{
 # Get the indices back and plot them using base R graphics:
 nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
 layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))

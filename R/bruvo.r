@@ -144,7 +144,7 @@
 #' bruvo.dist(popsub(nancycats, 1), replen = ssr)
 #' 
 #' # View each population as a heatmap.
-#' \donttest{
+#' \dontrun{
 #' sapply(nancycats$pop.names, function(x) 
 #' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 #' }
@@ -398,7 +398,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' # View populations 8 and 9 with default colors. 
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' vertex.label.cex=0.7, vertex.label.dist=0.4)
-#' \donttest{
+#' \dontrun{
 #' # View heat colors.
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette=heat.colors, vertex.label.cex=0.7, vertex.label.dist=0.4)
