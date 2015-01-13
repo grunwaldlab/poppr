@@ -627,10 +627,11 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
       mytheme <- theme_classic() +  
                  theme(axis.text.x = element_text(size = 10, angle = -45, 
                                                   hjust = 0, vjust = 1)) 
-
+      legvars <- unique(data_df[[valname]])
       title <- paste("Observed ploidy of", datalabel)
       outplot <- ggplot(data_df) + geom_tile(vars) + 
-                   scale_fill_gradient(low = low, high = high) + 
+                   scale_fill_gradient(low = low, high = high, guide = "legend", 
+                                       breaks = legvars) + 
                    scale_x_discrete(expand = c(0, -1)) + 
                    scale_y_discrete(expand = c(0, -1), 
                                     limits = rev(unique(data_df$Samples))) + 
@@ -642,7 +643,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
     }
   } 
   if (df){
-    if(!exists("data_df")){
+    if (!exists("data_df")){
       data_df <- melt(data_table, value.name = valname)
     }
     data_table <- data_df

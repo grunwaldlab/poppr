@@ -11,6 +11,9 @@ NEW FEATURES
 * Added new arguments to `plot_poppr_msn` to allow for easier manipulation of node sizes and of labeling.
 * read.genalex can now take read text connections as input. Addresses issue #8
 
+MISC
+* info_table will print a discrete scale as opposed to colorbar when type = "ploidy"
+
 poppr 1.1.2
 ===========
 BUG FIX
