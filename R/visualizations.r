@@ -643,7 +643,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
     }
   } 
   if (df){
-    if(!exists("data_df")){
+    if (!exists("data_df")){
       data_df <- melt(data_table, value.name = valname)
     }
     data_table <- data_df
