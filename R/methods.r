@@ -343,7 +343,7 @@ setMethod(
     }
 
     res <- genind(tab, pop=pop, prevcall=prevcall, ploidy=x@ploidy, type=x@type)
-    res <- new("genclone", res, hierarchy, mlg)
+    res <- new("genclone", res, hierarchy, mlg, mlgclass = FALSE)
   
     ## handle 'other' slot
     nOther     <- length(x@other)
@@ -385,12 +385,14 @@ setMethod(
 #' hierarchy will be created from the population factor.
 #' @param mlg a vector where each element assigns the multilocus genotype of
 #' that individual in the data set. 
+#' @param mlgclass a logical value specifying whether or not to translate the
+#' mlg object into an MLG class object. 
 #' @keywords internal
 #==============================================================================#
 setMethod(      
   f = "initialize",
   signature("genclone"),
-  definition = function(.Object, gen, hierarchy, mlg){
+  definition = function(.Object, gen, hierarchy, mlg, mlgclass = TRUE){
     if (missing(gen)){
       gen <- new("genind")
       if (missing(mlg)) mlg <- 0
@@ -409,7 +411,10 @@ setMethod(
 
     # No 'initialize' method for genind objects...
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
-    slot(.Object, "mlg")       <- new("MLG", mlg) # mlg
+
+    if (mlgclass) mlg <- new("MLG", mlg)
+
+    slot(.Object, "mlg")       <- mlg
     slot(.Object, "hierarchy") <- hierarchy
     return(.Object)
   }

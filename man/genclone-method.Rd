@@ -11,7 +11,7 @@
 \S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., loc = NULL,
   treatOther = TRUE, quiet = TRUE, drop = FALSE)
 
-\S4method{initialize}{genclone}(.Object, gen, hierarchy, mlg)
+\S4method{initialize}{genclone}(.Object, gen, hierarchy, mlg, mlgclass = TRUE)
 
 \S4method{show}{genclone}(object)
 
@@ -44,6 +44,9 @@ hierarchy will be created from the population factor.}
 
 \item{mlg}{a vector where each element assigns the multilocus genotype of
 that individual in the data set.}
+
+\item{mlgclass}{a logical value specifying whether or not to translate the
+mlg object into an MLG class object.}
 
 \item{object}{a genclone object}
 
