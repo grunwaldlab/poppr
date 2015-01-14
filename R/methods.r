@@ -48,7 +48,7 @@
 # BOOTGEN METHODS
 #------------------------------------------------------------------------------#
 ################################################################################
-
+setGeneric("print")
 #==============================================================================#
 #' Methods used for the bootgen object. 
 #' 
@@ -405,7 +405,7 @@ setMethod(
 
     # No 'initialize' method for genind objects...
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
-    slot(.Object, "mlg")       <- mlg
+    slot(.Object, "mlg")       <- new("MLG", mlg) # mlg
     slot(.Object, "hierarchy") <- hierarchy
     return(.Object)
   }
