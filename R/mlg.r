@@ -181,7 +181,7 @@ mlg <- function(pop, quiet=FALSE){
     stop(paste(substitute(pop), "is not a genind object"))
   }
   if (is.genclone(pop)){
-    out <- length(unique(pop@mlg))
+    out <- length(unique(pop@mlg[]))
   } else {
     if(nrow(pop@tab) == 1){
       out <- 1
@@ -276,7 +276,7 @@ mlg.vector <- function(pop){
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
   if (is.genclone(pop)){
-    return(pop@mlg)
+    return(pop@mlg[])
   }
   xtab <- pop@tab
   # concatenating each genotype into one long string.
@@ -330,7 +330,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     return(0)
   }
   if (is.genclone(pop)){
-    vec <- pop@mlg
+    vec <- pop@mlg[]
   } else {
     vec <- mlg.vector(pop) 
   }

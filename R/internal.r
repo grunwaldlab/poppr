@@ -225,7 +225,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
 
 .clonecorrector <- function(x){
   if (is.genclone(x)){
-    is_duplicated <- duplicated(x@mlg)
+    is_duplicated <- duplicated(x@mlg[])
   } else {
     is_duplicated <- duplicated(x@tab[, 1:ncol(x@tab)])
   }
@@ -485,7 +485,7 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 #==============================================================================#
 mlg.matrix <- function(x){
   if (is.genclone(x)){
-    mlgvec <- x@mlg
+    mlgvec <- x@mlg[]
   } else {
     mlgvec <- mlg.vector(x)
   }
