@@ -48,7 +48,7 @@
 # BOOTGEN METHODS
 #------------------------------------------------------------------------------#
 ################################################################################
-setGeneric("print")
+
 #==============================================================================#
 #' Methods used for the bootgen object. 
 #' 
@@ -295,7 +295,11 @@ setMethod(
   definition = function(x, i, j, ..., loc=NULL, treatOther=TRUE, quiet=TRUE, drop = FALSE){
     if (missing(i)) i <- TRUE
     if (missing(j)) j <- TRUE
-    mlg       <- slot(x, "mlg")[i]
+    if (class(slot(x, "mlg")) %in% "MLG"){
+      mlg <- slot(x, "mlg")[i, all = TRUE]
+    } else {
+      mlg <- slot(x, "mlg")[i]  
+    }
     hierarchy <- slot(x, "hierarchy")[i, , drop = FALSE]
     ## The following is lifted directly from the adegenet source code as
     ## callNextMethod() was throwing the error:
@@ -455,6 +459,7 @@ setMethod(
     
   })
 
+setGeneric("print")
 #==============================================================================#
 #' @rdname genclone-method
 #' @export
