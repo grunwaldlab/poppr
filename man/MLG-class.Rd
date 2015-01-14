@@ -15,18 +15,16 @@ A class to store multilocus genotypes in genclone objects.
 
 \item{\code{visible}}{a character specifying which MLG type is to be displayed and accessed.}
 
-\item{\code{dist}}{a function to calculate the genetic distance for collapsing MLGs.}
+\item{\code{distname}}{the name of the distance function used to collapse mlgs.}
 
-\item{\code{distname}}{the name of the distance function}
-
-\item{\code{Two}}{numbers specifying the cutoff value for expanding and collapsing
+\item{\code{cutoff}}{Two numbers specifying the cutoff value for expanding and collapsing
 MLGs.}
 }}
 \author{
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{as.genclone}} \code{\link{sethierarchy}} \code{\link{setpop}}
-\code{\linkS4class{genind}}
+\code{\linkS4class{genclone}}
 }
+\keyword{internal}
 
