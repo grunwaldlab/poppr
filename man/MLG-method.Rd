@@ -15,7 +15,7 @@
 \usage{
 \S4method{initialize}{MLG}(.Object, mlg)
 
-\S4method{[}{MLG,ANY,ANY,ANY}(x, i)
+\S4method{[}{MLG,ANY,ANY,ANY}(x, i, j, ..., all = FALSE, drop = TRUE)
 
 \S4method{[}{MLG,ANY,ANY,ANY}(x, i, j) <- value
 
@@ -49,6 +49,11 @@ that individual in the data set.}
  \item "custom"
 }}
 
+\item{...}{passed on to summary methods}
+
+\item{all}{a logical value indicating whether or not to return the subset of
+all MLG values or only the numeric.}
+
 \item{value}{the vector of MLGs to replace. \strong{For internal use only}.}
 
 \item{object}{an MLG object.}
@@ -58,8 +63,6 @@ that individual in the data set.}
 \item{e2}{a number}
 
 \item{digits}{the number of digits to retain}
-
-\item{...}{passed on to summary methods}
 
 \item{na.rm}{passed on to summary methods}
 }

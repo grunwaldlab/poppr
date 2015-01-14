@@ -5,9 +5,8 @@
 #==============================================================================#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Below are methods for the MLG class. I will break up the sections into generic
-# methods that are needed for them to make sense in the R world, custom generic
-# methods that aren't generic in R, but need to be to make these work, and
-# finally a new method specifically for this object.
+# methods that are needed for them to make sense in the R world and custom
+# generic methods that aren't generic in R, but need to be to make these work.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #==============================================================================#
 
@@ -37,13 +36,14 @@ setMethod(
   signature("MLG"),
   definition = function(.Object, mlg){
     if (is.vector(mlg)){
-      mlg <- list(expanded = mlg, original = mlg, 
-                  contracted = mlg, custom = rep(NA, length(mlg)))
+      mlg <- data.frame(list(expanded = mlg, original = mlg, 
+                  contracted = mlg, custom = factor(mlg)))
+    } else if (class(mlg) %in% "MLG"){
+      return(mlg)  
     }
     slot(.Object, "cutoff")   <- c(expanded = 0.0, contracted = 0.0) 
     slot(.Object, "mlg")      <- mlg
     slot(.Object, "visible")  <- "original"
-    slot(.Object, "dist")     <- nei.dist
     slot(.Object, "distname") <- "nei.dist"
     return(.Object)
   }
@@ -53,12 +53,23 @@ setMethod(
 #' @rdname MLG-method
 #' @param x an MLG object
 #' @param i a vector of integers or logical values to index the MLG vector.
+#' @param all a logical value indicating whether or not to return the subset of
+#' all MLG values or only the numeric.
 #==============================================================================#
 setMethod(
   f = "[",
   signature = "MLG",
-  definition = function(x, i){
-    return(x@mlg[[x@visible]][i])
+  definition = function(x, i, j, ..., all = FALSE, drop = TRUE){
+    if (missing(i)) i <- TRUE
+
+    if (missing(j) & all){ # Retain the state of the MLG object, 
+      x@mlg <- x@mlg[i, ]  # but return the subset rows.
+      return(x)
+    } else if (missing(j)){
+      j <- x@visible
+    }
+    
+    return(x@mlg[i, j, ..., drop = drop])
   }
 )
 
@@ -77,17 +88,9 @@ setReplaceMethod(
   f = "[",
   signature = "MLG",
   definition = function(x, i, j, value){
-    
-    if (j != "custom" & !is.numeric(value)){
-      stop("can't set this manually")
-    } else if (j == "custom"){
-      if (is.null(i)){
-        i <- 1:length(x@mlg[["original"]])
-      }
-      x@mlg[[j]][i] <- value
-    } else {
-      x@mlg[[j]] <- value
-    }
+    if (missing(j)) j <- x@visible
+    if (missing(i)) i <- TRUE
+    x@mlg[i, j] <- value
     return(x)
   }
 )
@@ -126,9 +129,6 @@ setMethod(
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # MATH METHODS
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
-
-
 
 #==============================================================================#
 #' @rdname MLG-method
@@ -178,18 +178,11 @@ setMethod(
 
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # SHOULD BE BUT AREN'T GENERIC METHODS
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-
-
-
-
-#' @export
 setGeneric("unique")
-
 #==============================================================================#
 #' Unique and Duplicated implementations for MLG objects
 #' 
@@ -203,112 +196,77 @@ setGeneric("unique")
 #' @keywords internal
 #' @docType methods
 #==============================================================================#
-unique.MLG <- function(x, incomparables = FALSE, ...){
-  unique(x@mlg[[x@visible]], incomparables, ...)
-}
-
 setMethod(
   f = "unique",
   signature("MLG"),
-  definition = unique.MLG
+  definition = function(x, incomparables = FALSE, ...){
+    unique(x@mlg[[x@visible]], incomparables, ...)
+  }
 )
+
+setGeneric("duplicated")
 #==============================================================================#
 #' @rdname unique-methods
 #' @aliases duplicated,MLG-method
 #' @export
 #' @docType methods
 #==============================================================================#
-duplicated.MLG <- function(x, incomparables = FALSE, ...){
-  duplicated(x@mlg[[x@visible]], incomparables, ...)
-}
-
-#' @export
-setGeneric("duplicated")
-
 setMethod(
   f = "duplicated",
   signature("MLG"),
-  definition = duplicated.MLG
+  definition = function(x, incomparables = FALSE, ...){
+    duplicated(x@mlg[[x@visible]], incomparables, ...)
+  } 
 )
 
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-# NEW METHODS
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
-
-
+setGeneric("levels")
 
 #==============================================================================#
-#' Access and manipluate multilocus genotypes or lineages
+#' Unique and Duplicated implementations for MLG objects
 #' 
-#' The MLG object in a \linkS4class{genclone} object contains 4 vectors to give
-#' the user flexibility of MLG assignment. 
+#' internal use
 #' 
-#' @rdname mll-methods
-#' @aliases setmlg,MLG-method
+#' @rdname levels-methods
+#' @aliases levels,MLG-method
 #' @param x an MLG object
-#' @param value one of the 4 possible MLG types.
-#' 
-#' @details
-#' The four possible MLG types:
-#' 
-#' \itemize{
-#' \item "original" - Strict definition of MLGs. Sensitive to small changes in 
-#' data and missing data.
-#' \item "contracted" - aka Multilocus Lineages. These MLGs are collapsed into 
-#' groups given a certain genetic distance, cutoff value, and algorithm
-#' \item "expanded" - Expanded multilocus genotype groups for when there are too
-#' few loci. Psex is caluclated and mlgs are split into new MLGs based on a given
-#' pvalue cutoff of Psex.
-#' \item "custom" - User defined MLGs
-#' }
-#' 
+#' @return a character vector showing the levels of custom MLGs or NULL if the
+#' visible slot is not set to "custom"
+#' @export
+#' @keywords internal
+#' @docType methods
+#==============================================================================#
+setMethod(
+  f = "levels",
+  signature("MLG"),
+  definition = function(x){
+    return(levels(x[]))  
+  }
+)
+
+setGeneric("levels<-")
+
+#==============================================================================#
+#' @rdname levels-methods
+#' @aliases levels<-,MLG-method
 #' @export
 #' @docType methods
 #==============================================================================#
-setmlg <- function(x, value = NULL){
-  standardGeneric("setmlg")
-} 
-
-#' @export
-setGeneric("setmlg")
-
 setMethod(
-  f = "setmlg",
-  signature(x = "MLG"),
+  f = "levels<-",
+  signature("MLG"),
   definition = function(x, value){
-    if (!is.null(value)){
-      ARGS  <- c("expanded", "original", "contracted", "custom")
-      value <- match.arg(value, ARGS)
-      x@visible <- value
+    if (x@visible != "custom"){
+      warning("Cannot assign levels unless you have custom MLGs.", .immediate = TRUE)
+    } else {
+      levels(x@mlg[[x@visible]]) <- value
     }
     return(x)
   }
 )
 
-#==============================================================================#
-#' @rdname mll-methods
-#' @aliases setmlg<-,MLG-method
-#' @export
-#' @docType methods
-#==============================================================================#
-"setmlg<-" <- function(x, value = NULL){
-  standardGeneric("setmlg<-")
-} 
 
-#' @export
-setGeneric("setmlg<-")
 
-setMethod(
-  f = "setmlg<-",
-  signature(x = "MLG"),
-  definition = function(x, value){
-    return(setmlg(x, value))
-  }
-)
+
 
 
 
