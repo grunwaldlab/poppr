@@ -196,7 +196,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   
   # Combining the population factor by the hierarchy
   if(!is.genclone(pop)){
-    pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier)
+    suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier))
   }
   cpop <- length(pop$pop.names)
   
@@ -530,7 +530,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' population hierarchies. This can be circumvented, however, by coding all of
 #' the hierarchies in one string in the input file with a common separator (eg.
 #' "_"). \code{splitcombine} will be able to recognise those separators and
-#' create a data frame of all the population structures for whatever subsetting
+#' create a data frame of all the population structures for whatever sub-setting
 #' you might need. 
 #'
 #' @param pop a \code{\link{genind}} object.
@@ -586,7 +586,6 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' 
 #' # Much better!
 #' Aeut$pop.names
-#' }
 #'
 #' # Method 2: Combining.
 #' 
@@ -596,7 +595,6 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' 
 #' # Checking to make sure they were actually combined.
 #' head(H.comb$other$x$year_country)
-#' \dontrun{
 #' # Creating new data frame in the object to mess around with. 
 #' H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
 #' 
@@ -606,6 +604,36 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' }
 #==============================================================================#
 splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=1, setpopulation=TRUE, fixed=TRUE){
+  
+  # As this function is deprecated, the following lines will attempt to give the
+  # user equivalent code in poppr >v.1.1.0 
+  ##########
+  sccall <- substitute(pop)
+  depmsg <- paste0("Use:\n'", sccall, " <- as.genclone(", sccall, ", hier = ")
+  if (method == 1){
+    newhier <- paste0("other(", sccall, ")$", dfname, "[1]")
+    if (!is.numeric(hier)){
+      newform <- paste0("~", paste(hier, collapse = "/"))
+      sugg <- paste0(newhier, "); splithierarchy(", sccall, ") <- ", newform, "'\n")
+    } else {
+      sugg <- paste0(newhier, ")' and 'splithierarchy'\n")
+    }
+  } else {
+    newhier <- paste0("other(", sccall, ")$", dfname)
+    if (!is.numeric(hier)){
+      newform <- paste0("~", paste(hier, collapse = "/"))
+      sugg <- paste0(newhier, "); setpop(", sccall, ") <- ", newform, "'\n")
+    } else {
+      sugg <- paste0(newhier, ")' and 'setpop'\n") 
+    }
+  }
+  dmsg <- c("'splitcombine' is deprecated.\n\n",
+            paste0(depmsg, sugg), "\n",
+            "See help(\"genclone\"), help(\"setpop\"), ",
+            "and help(\"splithierarchy\") for details.")
+  .Deprecated("genclone", package = "poppr", dmsg)
+  ###########
+  
   if (!is.genind(pop)){
     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
   }
@@ -889,7 +917,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' summary(iPinf)
 #' 
 #' \dontrun{
-#' library(ape)
+#' library("ape")
 #' 
 #' # Removing missing data. 
 #' Pinf <- missingno(Pinf, "geno", cutoff = 0)

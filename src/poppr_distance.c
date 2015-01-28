@@ -565,7 +565,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 			for (z = 0; z < zerocatch[miss_ind]; z++)
 			{
 				ind = zero_ind[miss_ind][z];
-				if (zerocatch[0] < 0)
+				if (zerocatch[0] == 0)
 				{
 					for (j = 0; j < p; j++)
 					{

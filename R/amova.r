@@ -61,8 +61,8 @@
 # x            = a genind object
 # hier         = a formula such as ~Pop/Subpop
 # clonecorrect = This refers to clone correction of the final output relative to
-#                The lowest hierararchical level. FALSE
-# within       = should witin individual variation be calculated? TRUE
+#                The lowest hierarchical level. FALSE
+# within       = should within individual variation be calculated? TRUE
 # dist         = A user provided distance matrix NULL
 # squared      = Is the distance matrix squared? TRUE
 # correction   = A correction for non-euclidean distances provided by ade4.
@@ -83,7 +83,7 @@
 #'   object
 #'   
 #' @param hier a hierarchical \code{\link{formula}} that defines your population
-#'   hieararchy. (e.g.: ~Population/Subpopulation). \strong{See Details below.}
+#'   hierarchy. (e.g.: ~Population/Subpopulation). \strong{See Details below.}
 #'   
 #' @param clonecorrect \code{logical} if \code{TRUE}, the data set will be clone
 #'   corrected with respect to the lowest level of the hierarchy. The default is
@@ -217,7 +217,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       if (!all(hiers %in% names(other(x)[[dfname]]))){
         hier_incompatible_warning(hiers, df)
       }
-      x <- splitcombine(x, hier = hiers, dfname = dfname, method = 2)
+      suppressWarnings(x <- splitcombine(x, hier = hiers, dfname = dfname, method = 2))
     } else {
       pop(x) <- other(x)[[dfname]][[full_hier]]
     }
@@ -279,7 +279,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       }
     }
   }
-  xtab    <- t(mlg.matrix(x))
-  xtab    <- as.data.frame(xtab[unique(mlg.vector(x)), ])
+  xtab    <- t(mlg.table(x, bar = FALSE, quiet = TRUE, mlgsub = unique(mlg.vector(x))))
+  xtab    <- as.data.frame(xtab)
   return(ade4::amova(samples = xtab, distances = xdist, structures = xstruct))
 }

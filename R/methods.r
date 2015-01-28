@@ -320,8 +320,11 @@ setMethod(
   definition = function(x, i, j, ..., loc=NULL, treatOther=TRUE, quiet=TRUE, drop = FALSE){
     if (missing(i)) i <- TRUE
     if (missing(j)) j <- TRUE
-    mlg       <- slot(x, "mlg")[i]
-    mll       <- slot(x, "mll")[i]
+    if (class(slot(x, "mlg")) %in% "MLG"){
+      mlg <- slot(x, "mlg")[i, all = TRUE]
+    } else {
+      mlg <- slot(x, "mlg")[i]  
+    }
     hierarchy <- slot(x, "hierarchy")[i, , drop = FALSE]
     ## The following is lifted directly from the adegenet source code as
     ## callNextMethod() was throwing the error:
@@ -365,7 +368,7 @@ setMethod(
     }
 
     res <- genind(tab, pop=pop, prevcall=prevcall, ploidy=x@ploidy, type=x@type)
-    res <- new("genclone", res, hierarchy, mlg, mll)
+    res <- new("genclone", res, hierarchy, mlg, mlgclass = FALSE)
   
     ## handle 'other' slot
     nOther     <- length(x@other)
@@ -407,14 +410,14 @@ setMethod(
 #' hierarchy will be created from the population factor.
 #' @param mlg a vector where each element assigns the multilocus genotype of
 #' that individual in the data set. 
-#' @param mll a vector where each element assigns the multilocus lineage of
-#' that individual in the data set. 
+#' @param mlgclass a logical value specifying whether or not to translate the
+#' mlg object into an MLG class object. 
 #' @keywords internal
 #==============================================================================#
 setMethod(      
   f = "initialize",
   signature("genclone"),
-  definition = function(.Object, gen, hierarchy, mlg, mll){
+  definition = function(.Object, gen, hierarchy, mlg, mlgclass = TRUE){
     if (missing(gen)){
       gen <- new("genind")
       if (missing(mlg)) mlg <- 0
@@ -435,6 +438,9 @@ setMethod(
 
     # No 'initialize' method for genind objects...
     lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
+
+    if (mlgclass) mlg <- new("MLG", mlg)
+
     slot(.Object, "mlg")       <- mlg
     slot(.Object, "hierarchy") <- hierarchy
     slot(.Object, "mll")       <- mlg # mll = mlg before filtering
@@ -488,6 +494,7 @@ setMethod(
     
   })
 
+setGeneric("print")
 #==============================================================================#
 #' @rdname genclone-method
 #' @export

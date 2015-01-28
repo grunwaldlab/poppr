@@ -225,7 +225,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
 
 .clonecorrector <- function(x){
   if (is.genclone(x)){
-    is_duplicated <- duplicated(x@mlg)
+    is_duplicated <- duplicated(x@mlg[])
   } else {
     is_duplicated <- duplicated(x@tab[, 1:ncol(x@tab)])
   }
@@ -485,7 +485,7 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 #==============================================================================#
 mlg.matrix <- function(x){
   if (is.genclone(x)){
-    mlgvec <- x@mlg
+    mlgvec <- x@mlg[]
   } else {
     mlgvec <- mlg.vector(x)
   }
@@ -1100,22 +1100,28 @@ test_table <- function(loc, min_ind, n){
 #==============================================================================#
 
 fix_negative_branch <- function(tre){
-  # Creating a dataframe from the tree information: Tree edges and edge length
-  all.lengths <- data.frame(tre$edge,tre$edge.length)
+  # Creating a matrix from the tree information: Tree edges and edge length
+  all.lengths <- matrix(c(tre$edge, tre$edge.length), ncol = 3,
+                        dimnames = list(1:length(tre$edge.length), 
+                                        c("parent", "child", "length")
+                        ))
   # Looking at the edges that are zero.
   zero.edges  <- all.lengths[tre$edge.length < 0, ]
   # Checking which negative edges are included in all the edges
-  all.edges   <- all.lengths[all.lengths$X1 %in% zero.edges$X1, ]
+  all.edges   <- all.lengths[all.lengths[, "parent"] %in% zero.edges[, "parent"], ]
   # Ordering all the edges
-  index.table <- all.edges[order(all.edges[,1]), ]
+  index.table <- all.edges[order(all.edges[, "parent"]), ]
   # Loop to change the NJ branch length
-  for (i in (unique(index.table$X1))){
-    index.table$tre.edge.length[index.table$X1 == i] <- abs(index.table$tre.edge.length[index.table$X1 == i]) + min(index.table$tre.edge.length[index.table$X1 == i])
+  for (i in (unique(index.table[, "parent"]))){
+    the_parents <- index.table[, "parent"] == i
+    fork <- index.table[, "length"][the_parents]
+    index.table[, "length"][the_parents] <- abs(fork) + min(fork)      
   }
   # replacing the branch length for each negative value in the total table
-  all.lengths$tre.edge.length[rownames(all.lengths) %in% rownames(index.table)] <- index.table$tre.edge.length
+  name_match <- match(rownames(index.table), rownames(all.lengths))
+  all.lengths[, "length"][name_match] <- index.table[, "length"]
   # replacing the branch lengths to the original tree
-  tre$edge.length <- all.lengths$tre.edge.length
+  tre$edge.length <- all.lengths[, "length"]
   return(tre)
 }
 
@@ -1672,9 +1678,9 @@ make_attributes <- function(d, nlig, labs, method, matched_call){
 #==============================================================================#
 update_poppr_graph <- function(graphlist, PALETTE){
   PALETTE <- match.fun(PALETTE)
-  lookup  <- data.frame(old    = graphlist$colors, 
-                       update = PALETTE(length(graphlist$colors)), 
-                       stringsAsFactors = FALSE)
+  lookup  <- data.frame(old    = graphlist$populations, 
+                        update = PALETTE(length(graphlist$populations)), 
+                        stringsAsFactors = FALSE)
   if (nrow(lookup) > 1){
     colorlist                    <- V(graphlist$graph)$pie.color
     V(graphlist$graph)$pie.color <- lapply(colorlist, update_colors, lookup)
@@ -1683,6 +1689,7 @@ update_poppr_graph <- function(graphlist, PALETTE){
     V(graphlist$graph)$color <- rep(PALETTE(1), length(colorlist))
   }
   graphlist$colors <- lookup[[2]]
+  names(graphlist$colors) <- graphlist$populations
   return(graphlist)
 }
 
@@ -1696,8 +1703,13 @@ update_poppr_graph <- function(graphlist, PALETTE){
 # # update_poppr_graph
 #==============================================================================#
 update_colors <- function(colorvec, lookup){
-  x <- vapply(1:length(colorvec), update_single_color, "a", lookup, colorvec)
-  return(x)
+  #   x <- vapply(1:length(colorvec), update_single_color, colorvec, lookup, colorvec)
+  #   return(x)
+  pops     <- lookup[[1]]
+  update   <- lookup[[2]]
+  names(update) <- pops
+  matching <- match(names(colorvec), pops)
+  return(update[matching[!is.na(matching)]])
 }
 #==============================================================================#
 # Function used to update colors in poppr msn 

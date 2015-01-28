@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 1.1.2.99-74}
+\title{Algorithms and equations utilized in poppr version 1.1.2.99-63}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -479,7 +479,7 @@ Genotype \\
 \end{table}
 
 <<>>=
-library(poppr)
+library("poppr")
 dat.df <- data.frame(Genotype = c("1/1", "1/2", "2/3", "3/4", "4/4"))
 dat <- as.genclone(df2genind(dat.df, sep = "/", ind.names = dat.df[[1]]))
 @
@@ -498,7 +498,7 @@ names(dists) <- distances
 
 # Adding Bruvo's distance at the end because we need to specify repeat length.
 dists$Bruvo <- bruvo.dist(dat, replen = 1)
-library(ape)
+library("ape")
 par(mfrow = c(2, 3))
 x <- lapply(names(dists), function(x){ 
   plot(nj(dists[[x]]), main = x, type = "unrooted") 

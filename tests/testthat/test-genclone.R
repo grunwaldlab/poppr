@@ -15,7 +15,7 @@ test_that("A genclone object contains a genind object", {
 	expect_that(partial_clone@ploidy, is_identical_to(pc@ploidy))
 	expect_that(partial_clone@type, is_identical_to(pc@type))
 	expect_that(partial_clone@other, is_identical_to(pc@other))
-	expect_that(pc@mlg, is_identical_to(mlg.vector(partial_clone)))
+	expect_that(pc@mlg[], is_identical_to(mlg.vector(partial_clone)))
 })
 
 test_that("Hierarchy methods work for genclone objects.", {

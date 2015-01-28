@@ -47,7 +47,7 @@ If you want the absolute latest version of *poppr*, see about installing from gi
 
 ### Stable and Development versions
 
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=master)](https://travis-ci.org/grunwaldlab/poppr?branch=master)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=devel)](https://travis-ci.org/grunwaldlab/poppr?branch=devel)
 
 If the image above says "Passing", then that means it should be safe to install with the latest version of R. If it does not say "Passing", I am probably trying to fix whatever problem is causing it as fast as I can.
 
@@ -64,17 +64,17 @@ Now you can use the `install_github()` function:
 #### For the latest stable release:    
 
 ```s
-library(devtools)
+library("devtools")
 install_github(repo = "grunwaldlab/poppr")
-library(poppr)
+library("poppr")
 ```
 
 #### For the bleeding edge (development) version:
 
 ```s
-library(devtools)
+library("devtools")
 install_github(repo = "grunwaldlab/poppr", ref = "devel")
-library(poppr)
+library("poppr")
 ```
 
 ## Help / Documentation
