@@ -32,9 +32,11 @@ aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
   (default), "zero", "loci", "genotype", or "ignore".}
 
 \item{mcutoff}{a value between 0 (default) and 1 defining the percentage of
- tolerable missing data.}
+  tolerable missing data if the \code{missing} parameter is set to "loci" or
+  "genotype". This should only be set if the distance metric can handle
+  missing data.}
 
-\item{quiet}{if \code{FALSE} (Default), a progress bar will be printed to
+\item{quiet}{if \code{FALSE} (default), a progress bar will be printed to
   screen.}
 
 \item{...}{any parameters to be passed off to the distance method.}

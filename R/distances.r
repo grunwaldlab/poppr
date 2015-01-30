@@ -397,10 +397,12 @@ provesti.dist <- function(x){
 #' @param missing any method to be used by \code{\link{missingno}}: "mean" 
 #'   (default), "zero", "loci", "genotype", or "ignore".
 #'   
-#' @param mcutoff a value between 0 (default) and 1 defining the percentage of
-#'  tolerable missing data. 
+#' @param mcutoff a value between 0 (default) and 1 defining the percentage of 
+#'   tolerable missing data if the \code{missing} parameter is set to "loci" or
+#'   "genotype". This should only be set if the distance metric can handle
+#'   missing data.
 #'   
-#' @param quiet if \code{FALSE} (Default), a progress bar will be printed to 
+#' @param quiet if \code{FALSE} (default), a progress bar will be printed to 
 #'   screen.
 #'   
 #' @param ... any parameters to be passed off to the distance method.
