@@ -85,9 +85,13 @@
 #==============================================================================#
 
 diss.dist <- function(x, percent=FALSE, mat=FALSE){
-  stopifnot(is.genind(x))
-  ploid     <- ploidy(x)
-  ind.names <- x@ind.names
+  stopifnot(is(x, "gen"))
+  ploid     <- x@ploidy
+  if (is(x, "bootgen")){
+    ind.names <- x@names
+  } else {
+    ind.names <- x@ind.names
+  }
   inds      <- nrow(x@tab)
   np        <- choose(inds, 2)
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
@@ -96,7 +100,11 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
   if (type == "PA"){
     dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
     ploid <- 1
-  } else {
+  } else if (is(x, "bootgen")){
+    dist_by_locus <- vapply(1:numLoci, function(i){
+      .Call("pairdiffs", get_gen_mat(x[, i]))*(ploid/2)
+    }, numeric(np))
+  } else {  
     x <- seploc(x)
     dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
                             numeric(np))
@@ -389,6 +397,9 @@ provesti.dist <- function(x){
 #' @param missing any method to be used by \code{\link{missingno}}: "mean" 
 #'   (default), "zero", "loci", "genotype", or "ignore".
 #'   
+#' @param mcutoff a value between 0 (default) and 1 defining the percentage of
+#'  tolerable missing data. 
+#'   
 #' @param quiet if \code{FALSE} (Default), a progress bar will be printed to 
 #'   screen.
 #'   
@@ -460,10 +471,10 @@ provesti.dist <- function(x){
 #' }
 #==============================================================================#
 aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
-                     cutoff = 0, showtree = TRUE, missing = "mean", quiet = FALSE,
-                     ...){
+                  cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
+                  quiet = FALSE, ...){
   if (is.genind(x)){
-    x <- missingno(x, missing, cutoff = 0)
+    x <- missingno(x, missing, quiet = quiet, cutoff = mcutoff)
   }
   if (x@type == "PA"){
     xboot           <- x@tab

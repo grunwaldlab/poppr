@@ -7,7 +7,8 @@
 to genind or genclone objects.}
 \usage{
 aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
-  cutoff = 0, showtree = TRUE, missing = "mean", quiet = FALSE, ...)
+  cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
+  quiet = FALSE, ...)
 }
 \arguments{
 \item{x}{a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.}
@@ -29,6 +30,9 @@ aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
 
 \item{missing}{any method to be used by \code{\link{missingno}}: "mean"
   (default), "zero", "loci", "genotype", or "ignore".}
+
+\item{mcutoff}{a value between 0 (default) and 1 defining the percentage of
+ tolerable missing data.}
 
 \item{quiet}{if \code{FALSE} (Default), a progress bar will be printed to
   screen.}
