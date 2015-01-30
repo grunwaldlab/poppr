@@ -14,3 +14,10 @@ test_that("dist.genpop matches distance", {
 	expect_that(as.vector(dist.genpop(nanpop, method = 4)), equals(rogers))
 	expect_that(as.vector(dist.genpop(nanpop, method = 5)), equals(provesti))
 })
+
+test_that("aboot works with diss.dist", {
+  data(nancycats, package = "adegenet")
+  nan1 <- popsub(nancycats, 9)
+  ab <- aboot(nan1, dist = diss.dist, sample = 2, quiet = TRUE, showtree = FALSE)
+  expect_that(class(ab), equals("phylo"))
+})
