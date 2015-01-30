@@ -455,6 +455,7 @@ setMethod(
     
   })
 
+setGeneric("print")
 #==============================================================================#
 #' @rdname genclone-method
 #' @export
