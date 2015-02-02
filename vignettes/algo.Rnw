@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 1.1.2.99-55}
+\title{Algorithms and equations utilized in poppr version 1.1.2.99-56}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -449,6 +449,27 @@ To reduce the number of calculations and assumptions otherwise, Bruvo's distance
 will be calculated using the largest observed ploidy in pairwise comparisons. 
 This means that when
 comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
+
+\subsubsection{Choosing a model}
+\label{appendix:algorithm:bruvomodel}
+By default, the implementation of Bruvo's distance in \poppr{} will utilize the
+combination model. This is implemented by setting both the \texttt{add} and 
+\texttt{loss} arguments to \texttt{TRUE}. For other models use the following 
+table for reference:
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll}
+  \hline
+Model & Arguments \\
+  \hline
+Infinite & \texttt{add = FALSE, loss = FALSE} \\
+Genome Addition & \texttt{add = TRUE, loss = FALSE} \\
+Genome Loss & \texttt{add = FALSE, loss = TRUE} \\
+Combination (default) & \texttt{add = TRUE, loss = TRUE} \\
+  \hline
+\end{tabular}
+\end{table}
 
 \subsection{Tree topology}
 
