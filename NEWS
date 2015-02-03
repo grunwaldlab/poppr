@@ -1,4 +1,4 @@
-poppr 1.1.2.99
+poppr 1.1.3
 ===========
 NEW FEATURES
 * new arguments to `plot_poppr_msn` to allow for easier manipulation of node sizes and of labeling
