@@ -1,3 +1,8 @@
+poppr 1.1.4
+===========
+BUG FIX
+* Fixed an internal bug that fails only on Windows OS.
+
 poppr 1.1.3
 ===========
 NEW FEATURES
@@ -9,12 +14,12 @@ BUG FIX
 * Fixed issue where monomorphic loci would cause an error in `recode_polyploids`
 * Fixed logical error that would cause The infinite alleles model of Bruvo's distance to inflate the distance. (Found by Michael Metzger. Addresses issue #5).
 * AMOVA can now take subset genclone objects (Addresses issue #7).
-* in mlg.table, the mlgsub argument will now subset by name instead of index (fixed in #7).
+* in `mlg.table`, the mlgsub argument will now subset by name instead of index (fixed in #7).
 * Fixed issue for neighbor-joining trees where the internal function to fix negative branch lengths was accidentally shuffling the corrected branches. Addresses issue #11.
-* diss.dist can now be used with aboot
+* `diss.dist` can now be used with `aboot`
 
 MISC
-* info_table will print a discrete scale as opposed to colorbar when type = "ploidy"
+* `info_table` will print a discrete scale as opposed to colorbar when type = "ploidy"
 * attempted to make model choices for Bruvo's distance more clear in the documentation
 
 poppr 1.1.2
