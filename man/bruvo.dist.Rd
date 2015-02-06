@@ -10,7 +10,8 @@ bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
 \item{pop}{a \code{\link{genind}} object}
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
-  nucleotide repeats for each microsatellite locus.}
+  nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT)
+  repeat would have a repelen value of 3.}
 
 \item{add}{if \code{TRUE}, genotypes with zero values will be treated under
   the genome addition model presented in Bruvo et al. 2004. See the
