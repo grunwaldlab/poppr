@@ -52,11 +52,11 @@ cluster will be returned. Finally, "all" will return a list of all 4.}
 \item{...}{any parameters to be passed off to the distance method.}
 }
 \value{
-\subsection{mlg.stats} {
+\subsection{mlg.stats}{
 a numeric vector naming the multilocus genotype of each individual in
 the dataset. Each genotype is at least the specified distance apart, as
 calculated by the selected algorithm. If stats is set to \code{TRUE}, this
-function will return the thresholds had which each cluster merger occured
+function will return the thresholds had which each cluster merger occurred
 instead of the new cluster assignments.
 }
 }

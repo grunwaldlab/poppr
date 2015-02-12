@@ -5,7 +5,7 @@ test_that("graph colors are correctly converted", {
   data(partial_clone)
   pc <- partial_clone[1:11]
   g <- bruvo.msn(pc, replen = rep(1, 10), showplot = FALSE)
-  gu <- update_poppr_graph(g, "rainbow")
+  gu <- poppr:::update_poppr_graph(g, "rainbow")
   gpc <- V(g$graph)$pie.color
   gupc <- V(gu$graph)$pie.color
   expect_equal(names(unlist(gpc)), names(unlist(gupc)))
