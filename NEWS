@@ -6,6 +6,7 @@ poppr 1.1.4
 BUG FIX
 * Fixed an internal bug that fails only on Windows OS.
 
+<<<<<<< HEAD
 NEW FEATURES
 * `mlg.filter` has been added. This function allows users to automatically cluster genotypes in genind or genclone objects based on a user specified minimum distance.
 * `bitwise.dist` has been added. This function calculates distances between individuals in a genlight object.
@@ -14,6 +15,8 @@ NEW FEATURES
 * Users can also now choose to display all tied edges in graphs generated using `bruvo.msn` and `poppr.msn`.
 * Added new arguments to `plot_poppr_msn` to allow for easier manipulation of node sizes and of labeling.
 
+=======
+>>>>>>> FETCH_HEAD
 poppr 1.1.3
 ===========
 NEW FEATURES
