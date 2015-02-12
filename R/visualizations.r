@@ -393,11 +393,11 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if(threshold > 0){
     # Updating MLG with filtered data
     filter.stats <- mlg.filter(pop,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
-    pop$mlg <- filter.stats[[1]]
+    pop$mlg[,"contracted"] <- filter.stats[[1]]
     cpop <- pop
-    cpop <- cpop[if(length(-which(duplicated(cpop$mlg))==0)) which(!duplicated(cpop$mlg)) else -which(duplicated(cpop$mlg)) ,]
+    cpop <- cpop[if(length(-which(duplicated(cpop$mlg[,"contracted"]))==0)) which(!duplicated(cpop$mlg[,"contracted"])) else -which(duplicated(cpop$mlg[,"contracted"])) ,]
     # Preserve MLG membership of individuals
-    mlg.number <- table(filter.stats[[1]])[rank(cpop@mlg)]
+    mlg.number <- table(filter.stats[[1]])[rank(cpop@mlg[,"contracted"])]
     
     bclone <- filter.stats[[3]]
   }
@@ -407,14 +407,14 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
     # give us the numbers and the population information in the correct order.
     # Note: rank is used to correctly subset the data
-    mlg.number <- table(pop$mlg)[rank(cpop$mlg)]
+    mlg.number <- table(pop$mlg[,"contracted"])[rank(cpop$mlg[,"contracted"])]
     # This will clone correct the incoming matrix. 
-    bclone <- bclone[!duplicated(pop$mlg), !duplicated(pop$mlg)]
+    bclone <- bclone[!duplicated(pop$mlg[,"contracted"]), !duplicated(pop$mlg[,"contracted"])]
   }
   rownames(bclone) <- cpop$ind.names
   colnames(bclone) <- cpop$ind.names
-  mlgs <- pop@mlg
-  cmlg <- cpop@mlg
+  mlgs <- pop@mlg[,"contracted"]
+  cmlg <- cpop@mlg[]
   
   # Obtaining population information for all MLGs
   subs <- sort(unique(mlgs))
@@ -425,7 +425,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   bclone <- as.matrix(bclone)
   
   g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
-  if(length(cpop@mlg) > 1){
+  if(length(cpop@mlg[]) > 1){
     mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
     # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
     if(include.ties){
@@ -452,7 +452,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   palette <- match.fun(palette)
   color   <- setNames(palette(length(pop@pop.names)), pop@pop.names)
   
-  if(length(cpop@mlg) > 1){
+  if(length(cpop@mlg[]) > 1){
     ###### Edge adjustments ######
     mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   }

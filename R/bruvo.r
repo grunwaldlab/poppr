@@ -57,25 +57,19 @@
 #' @param pop a \code{\link{genind}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
-#'   nucleotide repeats for each microsatellite locus.
+#'   nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT) 
+#'   repeat would have a repelen value of 3.  
 #'   
 #' @param add if \code{TRUE}, genotypes with zero values will be treated under 
-#'   the genome addition model presented in Bruvo et al. 2004.
+#'   the genome addition model presented in Bruvo et al. 2004. See the
+#'   \strong{Note} section for options.
 #'   
 #' @param loss if \code{TRUE}, genotypes with zero values will be treated under 
-#'   the genome loss model presented in Bruvo et al. 2004.
+#'   the genome loss model presented in Bruvo et al. 2004. See the
+#'   \strong{Note} section for options.
 #'   
-#' @return a \code{distance matrix}
+#' @return an object of class \code{\link{dist}}
 #'   
-#' @note The result of both \code{add = TRUE} and \code{loss = TRUE} is that the
-#'   distance is averaged over both values. If both are set to \code{FALSE}, 
-#'   then the infinite alleles model is used. For genotypes with all missing 
-#'   values, the result will be NA.
-#'   
-#'   If the user does not provide a vector of appropriate length for 
-#'   \code{replen} , it will be estimated by taking the minimum difference among
-#'   represented alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON THIS 
-#'   ESTIMATION.
 #'   
 #' @details Ploidy is irrelevant with respect to calculation of Bruvo's 
 #'   distance. However, since it makes a comparison between all alleles at a 
@@ -85,40 +79,55 @@
 #'   have a lower ploidy level than the organism.
 #'   
 #'   To help deal with these situations, Bruvo has suggested three methods for 
-#'   dealing with these differences in ploidy levels: \itemize{ \item Infinite 
-#'   Model - The simplest way to deal with it is to count all missing alleles as
-#'   infinitely large so that the distance between it and anything else is 1. 
-#'   Aside from this being computationally simple, it will tend to 
-#'   \strong{inflate distances between individuals}. \item Genome Addition Model
-#'   - If it is suspected that the organism has gone through a recent genome 
-#'   expansion, \strong{the missing alleles will be replace with all possible 
-#'   combinations of the observed alleles in the shorter genotype}. For example,
-#'   if there is a genotype of [69, 70, 0, 0] where 0 is a missing allele, the 
-#'   possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69, 70,
-#'   70, 70]. The resulting distances are then averaged over the number of 
-#'   comparisons. \item Genome Loss Model - This is similar to the genome 
-#'   addition model, except that it assumes that there was a recent genome 
-#'   reduction event and uses \strong{the observed values in the full genotype 
-#'   to fill the missing values in the short genotype}. As with the Genome 
-#'   Addition Model, the resulting distances are averaged over the number of 
-#'   comparisons. \item Combination Model - Combine and average the genome 
-#'   addition and loss models. } As mentioned above, the infinite model is 
-#'   biased, but it is not nearly as computationally intensive as either of the 
-#'   other models. The reason for this is that both of the addition and loss 
-#'   models requires replacement of alleles and recalculation of Bruvo's 
-#'   distance. The number of replacements required is equal to the multiset 
-#'   coefficient: \eqn{\left({n \choose k}\right) == {(n+k-1) \choose 
-#'   k}}{choose(n+k-1, k)} where \emph{n} is the number of potential 
-#'   replacements and \emph{k} is the number of alleles to be replaced. So, for 
-#'   the example given above, The genome addition model would require 
-#'   \eqn{\left({2 \choose 2}\right) = 3}{choose(2+2-1, 2) == 3} calculations of
-#'   Bruvo's distance, whereas the genome loss model would require \eqn{\left({4
-#'   \choose 2}\right) = 10}{choose(4+2-1, 2) == 10} calculations.
+#'   dealing with these differences in ploidy levels: \itemize{ \item
+#'   \strong{Infinite Model} - The simplest way to deal with it is to count all
+#'   missing alleles as infinitely large so that the distance between it and
+#'   anything else is 1. Aside from this being computationally simple, it will
+#'   tend to \strong{inflate distances between individuals}. \item
+#'   \strong{Genome Addition Model} - If it is suspected that the organism has
+#'   gone through a recent genome expansion, \strong{the missing alleles will be
+#'   replace with all possible combinations of the observed alleles in the
+#'   shorter genotype}. For example, if there is a genotype of [69, 70, 0, 0]
+#'   where 0 is a missing allele, the possible combinations are: [69, 70, 69,
+#'   69], [69, 70, 69, 70], and [69, 70, 70, 70]. The resulting distances are
+#'   then averaged over the number of comparisons. \item \strong{Genome Loss
+#'   Model} - This is similar to the genome addition model, except that it
+#'   assumes that there was a recent genome reduction event and uses \strong{the
+#'   observed values in the full genotype to fill the missing values in the
+#'   short genotype}. As with the Genome Addition Model, the resulting distances
+#'   are averaged over the number of comparisons. \item \strong{Combination
+#'   Model} - Combine and average the genome addition and loss models. } As
+#'   mentioned above, the infinite model is biased, but it is not nearly as
+#'   computationally intensive as either of the other models. The reason for
+#'   this is that both of the addition and loss models requires replacement of
+#'   alleles and recalculation of Bruvo's distance. The number of replacements
+#'   required is equal to the multiset coefficient: \eqn{\left({n \choose
+#'   k}\right) == {(n+k-1) \choose k}}{choose(n+k-1, k)} where \emph{n} is the
+#'   number of potential replacements and \emph{k} is the number of alleles to
+#'   be replaced. So, for the example given above, The genome addition model
+#'   would require \eqn{\left({2 \choose 2}\right) = 3}{choose(2+2-1, 2) == 3}
+#'   calculations of Bruvo's distance, whereas the genome loss model would
+#'   require \eqn{\left({4 \choose 2}\right) = 10}{choose(4+2-1, 2) == 10}
+#'   calculations.
 #'   
 #'   To reduce the number of calculations and assumptions otherwise, Bruvo's 
-#'   distance will be calculated using the largest observed ploidy in pairwise
-#'   comparisons. This means that when comparing [69,70,71,0] and [59,60,0,0],
+#'   distance will be calculated using the largest observed ploidy in pairwise 
+#'   comparisons. This means that when comparing [69,70,71,0] and [59,60,0,0], 
 #'   they will be treated as triploids.
+#'   
+#' @note \subsection{Model Choice}{ The \code{add} and \code{loss} arguments 
+#'   modify the model choice accordingly: \itemize{ \item \strong{Infitine 
+#'   Model:}  \code{add = FALSE, loss = FALSE} \item \strong{Genome Addition 
+#'   Model:}  \code{add = TRUE, loss = FALSE} \item \strong{Genome Loss Model:} 
+#'   \code{add = FALSE, loss = TRUE} \item \strong{Combination Model}
+#'   \emph{(DEFAULT):}  \code{add = TRUE, loss = TRUE} } Details of each model
+#'   choice are described in the \strong{Details} section, above. Additionally,
+#'   genotypes containing all missing values at a locus will return a value of
+#'   \code{NA} and not contribute to the average across loci. }
+#'   \subsection{Repeat Lengths}{ If the user does not provide a vector of 
+#'   appropriate length for \code{replen} , it will be estimated by taking the 
+#'   minimum difference among represented alleles at each locus. IT IS NOT 
+#'   RECOMMENDED TO RELY ON THIS ESTIMATION. }
 #'   
 #' @export
 #' @author Zhian N. Kamvar
@@ -470,17 +479,17 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # Updating the MLG with filtered data
   if(threshold > 0){
     filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
-    pop$mlg <- filter.stats[[1]]  
+    pop$mlg[,"contracted"] <- filter.stats[[1]]  
     # Obtaining population information for all MLGs
-    cpop <- pop[if(length(-which(duplicated(pop$mlg))==0)) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
+    cpop <- pop[if(length(-which(duplicated(pop$mlg[,"contracted"]))==0)) which(!duplicated(pop$mlg[,"contracted"])) else -which(duplicated(pop$mlg[,"contracted"])) ,]
     bclone <- filter.stats[[3]]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
     bclone <- as.matrix(bruvo.dist(cpop, replen=replen))
   }
-  mlgs <- pop@mlg
-  cmlg <- cpop@mlg
+  mlgs <- pop@mlg[,"contracted"]
+  cmlg <- cpop@mlg[]
   subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
   names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
@@ -494,7 +503,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
-  if(length(cpop@mlg) > 1){ 
+  if(length(cpop@mlg[]) > 1){ 
     mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
     # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
     if(include.ties){
@@ -519,7 +528,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color   <- setNames(palette(length(pop@pop.names)), pop@pop.names)
-  if(length(cpop@mlg) > 1){ 
+  if(length(cpop@mlg[]) > 1){ 
     mst     <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   }
 

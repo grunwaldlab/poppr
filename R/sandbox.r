@@ -94,18 +94,18 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
   return(x)
 }
 
-gen2polysat <- function(gen, newploidy = gen@ploidy){
-  if (!require(polysat)){
-    stop("User needs polysat installed")
-  }
-  gen   <- recode_polyploids(gen, newploidy)
-  gendf <- genind2df(gen, sep = "/", usepop = FALSE)
-  gendf <- lapply(gendf, strsplit, "/")
-  gendf <- lapply(gendf, lapply, as.numeric)
-  ambig <- new("genambig", samples = indNames(gen), loci = locNames(gen))
-  lapply(names(gendf), function(x) Genotypes(ambig, loci = x) <<- gendf[[x]])
-  return(ambig)
-}
+# gen2polysat <- function(gen, newploidy = gen@ploidy){
+#   if (!require(polysat)){
+#     stop("User needs polysat installed")
+#   }
+#   gen   <- recode_polyploids(gen, newploidy)
+#   gendf <- genind2df(gen, sep = "/", usepop = FALSE)
+#   gendf <- lapply(gendf, strsplit, "/")
+#   gendf <- lapply(gendf, lapply, as.numeric)
+#   ambig <- new("genambig", samples = indNames(gen), loci = locNames(gen))
+#   lapply(names(gendf), function(x) Genotypes(ambig, loci = x) <<- gendf[[x]])
+#   return(ambig)
+# }
 
 
 new_graph_pops <- function(graph, dat, color){

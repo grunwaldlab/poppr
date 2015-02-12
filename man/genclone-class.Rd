@@ -44,8 +44,6 @@ retain that information no matter how we subset the data set.
 \describe{
 \item{\code{mlg}}{a vector representing multilocus genotypes for the data set.}
 
-\item{\code{mll}}{a vector representing multilocus lineages for the data set.}
-
 \item{\code{hierarchy}}{a data frame containing hierarchical levels.}
 }}
 \section{Extends}{

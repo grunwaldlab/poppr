@@ -1150,8 +1150,8 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
     } else {
       filter.stats <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
     }
-    pop$mlg <- filter.stats[[1]]
-    cpop <- pop[if(is.na(-which(duplicated(pop$mlg))[1])) which(!duplicated(pop$mlg)) else -which(duplicated(pop$mlg)) ,]
+    pop$mlg[,"contracted"] <- filter.stats[[1]]
+    cpop <- pop[if(is.na(-which(duplicated(pop$mlg[,"contracted"]))[1])) which(!duplicated(pop$mlg[,"contracted"])) else -which(duplicated(pop$mlg[,"contracted"])) ,]
     distmat <- filter.stats[[3]]
   }
   else {
@@ -1164,13 +1164,13 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   if(class(distmat) != "matrix"){
     distmat <- as.matrix(distmat)
   } 
-  mlgs <- pop$mlg
-  cmlg <- cpop$mlg
+  mlgs <- pop$mlg[,"contracted"]
+  cmlg <- cpop$mlg[]
   mlg.number <- table(mlgs)[rank(cmlg)]
 
   # Create the graphs.
   g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")
-  if(length(cpop@mlg) > 1){
+  if(length(cpop@mlg[]) > 1){
     mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
 
     # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
@@ -1192,7 +1192,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
       vertex.label <- cpop$ind.names
     }
   } 
-  if(length(cpop@mlg) > 1){
+  if(length(cpop@mlg[]) > 1){
     mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   }
   populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)

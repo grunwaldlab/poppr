@@ -100,7 +100,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 1.1.2}
+\title{Algorithms and equations utilized in poppr version 1.1.2.99-55}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -489,6 +489,27 @@ will be calculated using the largest observed ploidy in pairwise comparisons.
 This means that when
 comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
 
+\subsubsection{Choosing a model}
+\label{appendix:algorithm:bruvomodel}
+By default, the implementation of Bruvo's distance in \poppr{} will utilize the
+combination model. This is implemented by setting both the \texttt{add} and 
+\texttt{loss} arguments to \texttt{TRUE}. For other models use the following 
+table for reference:
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll}
+  \hline
+Model & Arguments \\
+  \hline
+Infinite & \texttt{add = FALSE, loss = FALSE} \\
+Genome Addition & \texttt{add = TRUE, loss = FALSE} \\
+Genome Loss & \texttt{add = FALSE, loss = TRUE} \\
+Combination (default) & \texttt{add = TRUE, loss = TRUE} \\
+  \hline
+\end{tabular}
+\end{table}
+
 \subsection{Tree topology}
 
 All of these distances were designed for analysis of populations. When applying
@@ -520,7 +541,7 @@ Genotype \\
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(poppr)}
+\hlkwd{library}\hlstd{(}\hlstr{"poppr"}\hlstd{)}
 \hlstd{dat.df} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwc{Genotype} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"1/1"}\hlstd{,} \hlstr{"1/2"}\hlstd{,} \hlstr{"2/3"}\hlstd{,} \hlstr{"3/4"}\hlstd{,} \hlstr{"4/4"}\hlstd{))}
 \hlstd{dat} \hlkwb{<-} \hlkwd{as.genclone}\hlstd{(}\hlkwd{df2genind}\hlstd{(dat.df,} \hlkwc{sep} \hlstd{=} \hlstr{"/"}\hlstd{,} \hlkwc{ind.names} \hlstd{= dat.df[[}\hlnum{1}\hlstd{]]))}
 \end{alltt}
@@ -543,7 +564,7 @@ different distance measures on the tree topology.
 
 \hlcom{# Adding Bruvo's distance at the end because we need to specify repeat length.}
 \hlstd{dists}\hlopt{$}\hlstd{Bruvo} \hlkwb{<-} \hlkwd{bruvo.dist}\hlstd{(dat,} \hlkwc{replen} \hlstd{=} \hlnum{1}\hlstd{)}
-\hlkwd{library}\hlstd{(ape)}
+\hlkwd{library}\hlstd{(}\hlstr{"ape"}\hlstd{)}
 \hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{3}\hlstd{))}
 \hlstd{x} \hlkwb{<-} \hlkwd{lapply}\hlstd{(}\hlkwd{names}\hlstd{(dists),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)\{}
   \hlkwd{plot}\hlstd{(}\hlkwd{nj}\hlstd{(dists[[x]]),} \hlkwc{main} \hlstd{= x,} \hlkwc{type} \hlstd{=} \hlstr{"unrooted"}\hlstd{)}
@@ -552,7 +573,7 @@ different distance measures on the tree topology.
 \end{alltt}
 \end{kframe}
 
-{\centering \includegraphics[width=0.95\linewidth]{figure/unnamed-chunk-3} 
+{\centering \includegraphics[width=0.95\linewidth]{figure/unnamed-chunk-3-1} 
 
 }
 
