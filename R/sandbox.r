@@ -119,7 +119,14 @@ new_graph_pops <- function(graph, dat, color){
 }
 
 
-
+new.poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
+                           observed = observed, file="file", N=NA, 
+                           index = "rbarD"){
+  binw <- diff(range(sample[[index]])/30)
+  thePlot <- ggplot(sample, aes_string(paste0("x = ", index)))
+  thePlot <- thePlot + geom_histogram(binwidth = binw)
+  return(thePlot)
+}
 
 #==============================================================================#
 # An attempt at making the shuffling schemes handle polyploid data better.
