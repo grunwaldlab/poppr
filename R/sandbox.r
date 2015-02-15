@@ -120,11 +120,34 @@ new_graph_pops <- function(graph, dat, color){
 
 
 new.poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
-                           observed = observed, file="file", N=NA, 
-                           index = "rbarD"){
-  binw <- diff(range(sample[[index]])/30)
-  thePlot <- ggplot(sample, aes_string(paste0("x = ", index)))
-  thePlot <- thePlot + geom_histogram(binwidth = binw)
+                           observed = c(Ia = 0, rbarD = 0), file="file",
+                           N=NA, index = "rbarD"){
+  srange <- range(sample[[index]])
+  labs <- c(Ia = "I[A]", rbarD = "bar(r)[d]")
+  binw <- diff(srange/30)
+  if (all(observed[index] > srange)){
+    xval <- observed[index]
+    just <- 1.1
+  } else {
+    maxobsmin <- c(srange[1], observed[index], srange[2])
+    xjust <- which.max(abs(diff(maxobsmin)))
+    xval <- srange[xjust]
+    just <- ifelse(xjust < 2, 0, 1)     
+  }
+  obslab <- paste0("observed:\n", labs[index], ":", signif(observed[index], 2))
+  thePlot <- ggplot(sample, aes_string(x = index))
+  thePlot <- thePlot + 
+    geom_histogram(binwidth = binw, position = "identity") +
+    geom_rug() + 
+    geom_vline(xintercept = observed[index], color = "blue", linetype = 2) +
+    annotate(geom = "text", x = xval, y = Inf, color = "blue",
+             label = obslab, vjust = 2, hjust = just, parse = TRUE)
+  
+  if (index == "rbarD"){
+    thePlot <- thePlot + xlab(expression(paste(bar(r)[d])))
+  } else if (index == "Ia"){
+    thePlot <- thePlot + xlab(expression(paste(I[A])))
+  }
   return(thePlot)
 }
 
