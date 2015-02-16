@@ -140,7 +140,9 @@ new.poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   }
   obslab  <- paste(labs[index], ":", signif(observed[index], 3), sep = "")
   plab    <- paste("p =", signif(pval[index], 3))
-  thePlot <- ggplot(sample, aes_string(x = index))
+  suppressMessages(ggdata  <- melt(sample))
+  ggdata  <- ggdata[ggdata$variable == index, ] 
+  thePlot <- ggplot(ggdata, aes_string(x = "value"))
   thePlot <- thePlot + 
     geom_histogram(binwidth = binw, position = "identity") +
     geom_rug() + 
