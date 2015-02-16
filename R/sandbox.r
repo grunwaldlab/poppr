@@ -119,11 +119,15 @@ new_graph_pops <- function(graph, dat, color){
 }
 
 
-new.poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
-                           observed = c(Ia = 0, rbarD = 0), file="file",
-                           N=NA, index = "rbarD"){
+new.poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05), 
+                           pop = NULL, file = NULL, N = NULL,
+                           observed = c(Ia = 0, rbarD = 0), 
+                           index = c("rbarD", "Ia")){
+  INDEX_ARGS <- c("rbarD", "Ia")
+  index  <- match.arg(index, INDEX_ARGS)
   srange <- range(sample[[index]])
-  labs <- c(Ia = "I[A]", rbarD = "bar(r)[d]")
+  labs   <- c(Ia = "I[A]", rbarD = "bar(r)[d]")
+  names(pval) <- names(labs)
   binw <- diff(srange/30)
   if (all(observed[index] > srange)){
     xval <- observed[index]
@@ -131,24 +135,41 @@ new.poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
   } else {
     maxobsmin <- c(srange[1], observed[index], srange[2])
     xjust <- which.max(abs(diff(maxobsmin)))
-    xval <- srange[xjust]
-    just <- ifelse(xjust < 2, 0, 1)     
+    xval  <- srange[xjust]
+    just  <- ifelse(xjust < 2, 0, 1)     
   }
-  obslab <- paste0("observed:\n", labs[index], ":", signif(observed[index], 2))
+  obslab  <- paste(labs[index], ":", signif(observed[index], 3), sep = "")
+  plab    <- paste("p =", signif(pval[index], 3))
   thePlot <- ggplot(sample, aes_string(x = index))
   thePlot <- thePlot + 
     geom_histogram(binwidth = binw, position = "identity") +
     geom_rug() + 
     geom_vline(xintercept = observed[index], color = "blue", linetype = 2) +
-    annotate(geom = "text", x = xval, y = Inf, color = "blue",
-             label = obslab, vjust = 2, hjust = just, parse = TRUE)
-  
+    annotate(geom = "text", x = xval, y = Inf, label = obslab, color = "blue", 
+             vjust = 2, hjust = just, parse = TRUE) + 
+    annotate(geom = "text", x = xval, y = Inf, label = plab, color = "blue", 
+             vjust = 4, hjust = just)
   if (index == "rbarD"){
     thePlot <- thePlot + xlab(expression(paste(bar(r)[d])))
   } else if (index == "Ia"){
     thePlot <- thePlot + xlab(expression(paste(I[A])))
   }
+  plot_title <- ifelse(is.null(pop), "", paste0("Population:", pop))
+  plot_title <- ifelse(is.null(N), paste0(plot_title, ""), 
+                       paste(plot_title, paste("N:", N), sep = "\n"))
+  plot_title <- ifelse(is.null(file), paste0(plot_title, ""), 
+                       paste(plot_title, paste("Data:", file), sep = "\n"))
+  perms      <- paste("Permutations:", length(sample[[index]]))
+  plot_title <- paste(plot_title, perms, sep = "\n")
+  thePlot    <- thePlot + ggtitle(plot_title)
   return(thePlot)
+}
+
+#' @method plot ialist
+#' @export
+plot.ialist <- function(x, y = NULL, ..., index = "rbarD"){
+  new.poppr.plot(x$samples, pval = x$index[c(2, 4)], file = substitute(x),
+                 observed = x$index[c(1, 3)], index = index, ...)
 }
 
 #==============================================================================#
