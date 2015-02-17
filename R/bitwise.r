@@ -76,15 +76,32 @@
 #' @export
 #==============================================================================#
 bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads=0){
-  stopifnot(class(x)[1] == "genlight")
+  stopifnot(class(x)[1] %in% c("genlight", "genclone", "genind"))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
   # Stop if the ploidy of the genlight object is not haploid or diploid
   stopifnot(min(ploidy(x)) == 2 || min(ploidy(x)) == 1)
+
   ploid     <- min(ploidy(x))
   ind.names <- indNames(x)
   inds      <- nInd(x)
   numPairs   <- nLoc(x)
+
+  # Use Provesti if this is a genclone or genind object
+  if(class(x)[1] != "genlight"){
+    dist.mat <- provesti.dist(x)
+    if (percent == FALSE){
+      dist.mat <- dist.mat*ploid*numPairs
+    }
+    if (mat == TRUE){
+      dist.mat <- as.matrix(dist.mat)
+    }
+    # Return this matrix and exit function
+    return(dist.mat)
+  }
+
+  # Continue function for genlight objects
+
   # Ensure that every SNPbin object has data for all chromosomes
   if(ploid == 2){
     for(i in 1:length(x$gen)){
