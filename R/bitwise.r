@@ -241,3 +241,25 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
   }
   return(pgen_matrix);
 }
+
+
+
+#==============================================================================#
+#' Determines whether openMP is support on this system.
+#'
+#' @return FALSE if openMP is not supported, TRUE if it is
+#' @author Zhian N. Kamvar, Jonah Brooks
+#' 
+#' @export
+#==============================================================================#
+check_openMP_support <- function(){
+
+  supported <- .Call("omp_test")
+
+  if(supported == 0) {
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+
+}
