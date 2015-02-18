@@ -252,7 +252,7 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
 #' 
 #' @export
 #==============================================================================#
-check_openMP_support <- function(){
+poppr_has_parallel <- function(){
 
   supported <- .Call("omp_test")
 
