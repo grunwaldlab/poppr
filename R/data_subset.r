@@ -224,7 +224,8 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
       setpop(pop) <- newformula
     } else {
       if(length(keep) > 1){
-        pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
+        #pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
+        suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier[keep]))
       }
       else{
         pop(pop) <- pop$other[[dfname]][[hier[keep]]]
