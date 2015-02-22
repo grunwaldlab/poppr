@@ -47,6 +47,36 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
                        pop = NULL, file = NULL, N = NULL,
                        observed = c(Ia = 0, rbarD = 0), 
                        index = c("rbarD", "Ia")){
+  INDEX_ARGS <- c("rbarD", "Ia")
+  index      <- match.arg(index, INDEX_ARGS)
+  if (!class(sample) %in% "ialist" & class(sample) %in% "list"){
+    suppressMessages(ggsamps <- melt(lapply(sample, "[[", "samples")))
+    ggvals <- vapply(sample, "[[", numeric(4), "index")
+    names(dimnames(ggvals)) <- c("index", "population")
+    suppressMessages(ggvals <- melt(ggvals))
+    ggsamps <- ggsamps[ggsamps$variable == index, ]
+    ggvals  <- ggvals[grep(ifelse(index == "Ia", "I", "D"), ggvals$index), ]
+    ggindex <- ggvals[ggvals$index == index, ]
+    ggpval  <- ggvals[ggvals$index == ifelse(index == "Ia", "p.Ia", "p.rD"), ]
+    names(ggsamps)[3] <- "population"
+    ggsamps$population <- factor(ggsamps$population, names(sample))
+    srange  <- range(ggsamps$value, na.rm = TRUE)
+    binw    <- diff(srange/30)
+    plot_title <- make_poppr_plot_title(sample[[1]][["samples"]][[index]], 
+                                        file = file)
+    thePlot <- ggplot(ggsamps, aes_string(x = "value", group = "population")) +
+      geom_histogram(binwidth = binw, position = "identity") +
+      geom_vline(aes_string(xintercept = "value"), color = "blue", linetype = 2,
+                 data = ggindex) +
+      facet_wrap(~population, scales = "free_x") +
+      ggtitle(plot_title)
+    if (index == "rbarD"){
+      thePlot <- thePlot + xlab(expression(paste(bar(r)[d])))
+    } else if (index == "Ia"){
+      thePlot <- thePlot + xlab(expression(paste(I[A])))
+    }
+    return(thePlot)
+  }
   plot_title <- make_poppr_plot_title(sample[[index]], file, N, pop)
   if (all(is.nan(sample$rbarD))){
     oops <- ggplot(as.data.frame(list(x=-10:9)), aes_string(x = "x")) + 
@@ -60,8 +90,6 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
       ggtitle(plot_title)
     return(oops)
   }
-  INDEX_ARGS <- c("rbarD", "Ia")
-  index  <- match.arg(index, INDEX_ARGS)
   if (any(is.na(sample[[index]]))){
     sample[[index]][is.na(sample[[index]])] <- mean(sample[[index]], na.rm=TRUE)
   }
