@@ -58,6 +58,13 @@ print.ialist <- function(x, ...){
   }
 }
 
+#' @method plot ialist
+#' @export
+plot.ialist <- function(x, y = NULL, ..., index = "rbarD"){
+  poppr.plot(x$samples, pval = x$index[c(2, 4)], file = substitute(x),
+             observed = x$index[c(1, 3)], index = index, ...)
+}
+
 #' @method print amova
 #' @export
 print.amova <- function(x, full = FALSE, ...) 

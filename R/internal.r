@@ -667,7 +667,7 @@ final <- function(Iout, result){
 #==============================================================================#
 
 .ia <- function(pop, sample=0, method=1, quiet=FALSE, namelist=NULL, 
-                missing="ignore", hist=TRUE){
+                missing="ignore", hist=TRUE, index = "rbarD"){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   if(pop@type!="PA"){
@@ -714,12 +714,12 @@ final <- function(Iout, result){
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
-      poppr.plot(samp, observed=IarD, pop=namelist$population,
-                        file=namelist$File, pval=p.val, N=nrow(pop@tab))
+      print(poppr.plot(samp, observed=IarD, pop=namelist$population, index = index,
+                       file=namelist$File, pval=p.val, N=nrow(pop@tab)))
     }
     result <- 1:4
-    result[c(1,3)] <- IarD
-    result[c(2,4)] <- p.val
+    result[c(1, 3)] <- IarD
+    result[c(2, 4)] <- p.val
     names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
   } 
   return(final(Iout, result))
@@ -1828,3 +1828,22 @@ get_sample_mlg <- function(size, samp, nloci, gen, progbar){
   return(out)
 }
 
+#==============================================================================#
+# Internal function for creating title for index of association histogram.
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # poppr.plot
+#==============================================================================#
+make_poppr_plot_title <- function(samp, file = NULL, N = NULL, pop = NULL){
+  plot_title <- ifelse(is.null(pop), "", paste0("Population:", pop))
+  plot_title <- ifelse(is.null(N), paste0(plot_title, ""), 
+                       paste(plot_title, paste("N:", N), sep = "\n"))
+  plot_title <- ifelse(is.null(file), paste0(plot_title, ""), 
+                       paste(plot_title, paste("Data:", file), sep = "\n"))
+  perms      <- paste("Permutations:", length(samp))
+  plot_title <- paste(plot_title, perms, sep = "\n")
+  return(plot_title)
+}
