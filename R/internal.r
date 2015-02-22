@@ -700,7 +700,7 @@ final <- function(Iout, result){
   }
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
-  if (sample==0){
+  if (sample == 0){
     Iout   <- IarD
     result <- NULL
   }
@@ -721,6 +721,9 @@ final <- function(Iout, result){
     result[c(1, 3)] <- IarD
     result[c(2, 4)] <- p.val
     names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
+    iaobj <- list(index = final(Iout, result), samples = samp)
+    class(iaobj) <- "ialist"
+    return(iaobj)
   } 
   return(final(Iout, result))
 }

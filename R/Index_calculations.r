@@ -284,15 +284,27 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
     N.rare  <- suppressWarnings(rarefy(pop.mat, raremax, se=TRUE))
-    IaList  <- NULL
-    invisible(lapply(sublist, function(x){ 
-      namelist <- list(File = namelist$File, population = x)
-      IaList   <<- rbind(IaList, 
-                       .ia(poplist[[x]], sample=sample, method=method, 
-                        quiet=quiet, missing=missing, namelist=namelist, 
-                        hist=hist) 
-                       )
-      })) 
+    IaList  <- lapply(sublist, function(x){
+                      namelist <- list(file = namelist$File, population = x)
+                      .ia(poplist[[x]], sample = sample, method = method, 
+                          quiet = quiet, missing = missing, hist = FALSE,
+                          namelist = namelist)
+    })
+    names(IaList) <- sublist
+    if (sample > 0){
+      print(poppr.plot(sample = IaList, file = namelist$File))
+      IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
+    } else {
+      IaList <- t(as.data.frame(IaList))
+    }
+#     invisible(lapply(sublist, function(x){ 
+#       namelist <- list(File = namelist$File, population = x)
+#       IaList   <<- rbind(IaList, 
+#                        .ia(poplist[[x]], sample=sample, method=method, 
+#                         quiet=quiet, missing=missing, namelist=namelist, 
+#                         hist=hist) 
+#                        )
+#       })) 
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, 
                                G=G, Hexp=Hexp, E.5=E.5, IaList, 
