@@ -292,19 +292,20 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
     })
     names(IaList) <- sublist
     if (sample > 0){
-      print(poppr.plot(sample = IaList, file = namelist$File))
+      classtest <- summary(IaList)
+      classless <- !classtest[, "Class"] %in% "ialist"
+      if (any(classless)){
+        no_class_pops <- paste(names(IaList[classless]), collapse = ", ")
+        msg    <- paste0("values for ", no_class_pops, 
+                         " could not be plotted.\n")
+        IaList[classless] <- lapply(IaList[classless], function(x) list(index = x))
+        warning(msg, call. = FALSE)
+      }
+      try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
       IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
     } else {
       IaList <- t(as.data.frame(IaList))
     }
-#     invisible(lapply(sublist, function(x){ 
-#       namelist <- list(File = namelist$File, population = x)
-#       IaList   <<- rbind(IaList, 
-#                        .ia(poplist[[x]], sample=sample, method=method, 
-#                         quiet=quiet, missing=missing, namelist=namelist, 
-#                         hist=hist) 
-#                        )
-#       })) 
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, 
                                G=G, Hexp=Hexp, E.5=E.5, IaList, 
