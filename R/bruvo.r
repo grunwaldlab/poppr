@@ -485,7 +485,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   if(threshold > 0){
     filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
     # TODO: The following two lines should be a product of mlg.filter
-    pop$mlg$visible <- "contracted"
+    pop$mlg@visible <- "contracted"
     pop$mlg[] <- filter.stats[[1]]  
     # Obtaining population information for all MLGs
     cpop <- pop[if(length(-which(duplicated(pop$mlg[]))==0)) which(!duplicated(pop$mlg[])) else -which(duplicated(pop$mlg[])) ,]

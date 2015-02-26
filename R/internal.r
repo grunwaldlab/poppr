@@ -1143,6 +1143,12 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   if(!is.genclone(pop)){
     pop <- as.genclone(pop)
   }
+
+  if (class(pop$mlg) != "MLG"){
+    # Froce pop$mlg to be class MLG
+    pop$mlg <- new("MLG", pop$mlg)
+  }
+
   # First, clone correct and get the number of individuals per MLG in order.
   if(threshold > 0){
     if (is.null(distmat) & !is.null(replen)){
@@ -1150,8 +1156,10 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
     } else {
       filter.stats <- mlg.filter(pop,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
     }
-    pop$mlg[,"contracted"] <- filter.stats[[1]]
-    cpop <- pop[if(is.na(-which(duplicated(pop$mlg[,"contracted"]))[1])) which(!duplicated(pop$mlg[,"contracted"])) else -which(duplicated(pop$mlg[,"contracted"])) ,]
+     # TODO: The following two lines should be a product of mlg.filter
+    pop$mlg@visible <- "contracted"
+    pop$mlg[] <- filter.stats[[1]]
+    cpop <- pop[if(is.na(-which(duplicated(pop$mlg[]))[1])) which(!duplicated(pop$mlg[])) else -which(duplicated(pop$mlg[])) ,]
     distmat <- filter.stats[[3]]
   }
   else {
@@ -1164,7 +1172,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   if(class(distmat) != "matrix"){
     distmat <- as.matrix(distmat)
   } 
-  mlgs <- pop$mlg[,"contracted"]
+  mlgs <- pop$mlg[]
   cmlg <- cpop$mlg[]
   mlg.number <- table(mlgs)[rank(cmlg)]
 

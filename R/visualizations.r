@@ -390,14 +390,21 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
 
+  if (class(pop$mlg) != "MLG"){
+    # Froce pop$mlg to be class MLG
+    pop$mlg <- new("MLG", pop$mlg)
+  }
+
   if(threshold > 0){
     # Updating MLG with filtered data
     filter.stats <- mlg.filter(pop,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
-    pop$mlg[,"contracted"] <- filter.stats[[1]]
+    # TODO: The following two lines should be a product of mlg.filter
+    pop$mlg@visible <- "contracted"
+    pop$mlg[] <- filter.stats[[1]]
     cpop <- pop
-    cpop <- cpop[if(length(-which(duplicated(cpop$mlg[,"contracted"]))==0)) which(!duplicated(cpop$mlg[,"contracted"])) else -which(duplicated(cpop$mlg[,"contracted"])) ,]
+    cpop <- cpop[if(length(-which(duplicated(cpop$mlg[]))==0)) which(!duplicated(cpop$mlg[])) else -which(duplicated(cpop$mlg[])) ,]
     # Preserve MLG membership of individuals
-    mlg.number <- table(filter.stats[[1]])[rank(cpop@mlg[,"contracted"])]
+    mlg.number <- table(filter.stats[[1]])[rank(cpop@mlg[])]
     
     bclone <- filter.stats[[3]]
   }
@@ -407,13 +414,13 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
     # give us the numbers and the population information in the correct order.
     # Note: rank is used to correctly subset the data
-    mlg.number <- table(pop$mlg[,"contracted"])[rank(cpop$mlg[,"contracted"])]
+    mlg.number <- table(pop$mlg[])[rank(cpop$mlg[])]
     # This will clone correct the incoming matrix. 
-    bclone <- bclone[!duplicated(pop$mlg[,"contracted"]), !duplicated(pop$mlg[,"contracted"])]
+    bclone <- bclone[!duplicated(pop$mlg[]), !duplicated(pop$mlg[])]
   }
   rownames(bclone) <- cpop$ind.names
   colnames(bclone) <- cpop$ind.names
-  mlgs <- pop@mlg[,"contracted"]
+  mlgs <- pop@mlg[]
   cmlg <- cpop@mlg[]
   
   # Obtaining population information for all MLGs
