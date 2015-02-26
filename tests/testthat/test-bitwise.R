@@ -31,6 +31,8 @@ skip_on_cran()
 
 test_that("pgen produces reasonable results", {
 
+skip_on_cran()
+
 # Required to circumvent a windows specific error in adegenet
   if ((.Platform)$OS.type == "windows"){
     mclapply <- function (X, FUN, ..., mc.preschedule = TRUE, mc.set.seed = TRUE,
