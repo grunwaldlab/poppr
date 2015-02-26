@@ -476,19 +476,26 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
 
+  if (class(pop$mlg) != "MLG"){
+    # Froce pop$mlg to be class MLG
+    pop$mlg <- new("MLG", pop$mlg)
+  }
+
   # Updating the MLG with filtered data
   if(threshold > 0){
     filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
-    pop$mlg[,"contracted"] <- filter.stats[[1]]  
+    # TODO: The following two lines should be a product of mlg.filter
+    pop$mlg$visible <- "contracted"
+    pop$mlg[] <- filter.stats[[1]]  
     # Obtaining population information for all MLGs
-    cpop <- pop[if(length(-which(duplicated(pop$mlg[,"contracted"]))==0)) which(!duplicated(pop$mlg[,"contracted"])) else -which(duplicated(pop$mlg[,"contracted"])) ,]
+    cpop <- pop[if(length(-which(duplicated(pop$mlg[]))==0)) which(!duplicated(pop$mlg[])) else -which(duplicated(pop$mlg[])) ,]
     bclone <- filter.stats[[3]]
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
     bclone <- as.matrix(bruvo.dist(cpop, replen=replen))
   }
-  mlgs <- pop@mlg[,"contracted"]
+  mlgs <- pop@mlg[]
   cmlg <- cpop@mlg[]
   subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
