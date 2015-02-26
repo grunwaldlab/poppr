@@ -2,6 +2,8 @@ context("Bitwise distance and pgen calculations")
 
 test_that("bitwise.dist produces reasonable results", {
 
+skip_on_cran()
+
 # Required to circumvent a windows specific error in adegenet
   if ((.Platform)$OS.type == "windows"){
     mclapply <- function (X, FUN, ..., mc.preschedule = TRUE, mc.set.seed = TRUE,
