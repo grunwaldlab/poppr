@@ -2,6 +2,7 @@ language: r
 
 os:
   - linux
+  - osx
 
 apt_packages:
   - latex-xcolor
