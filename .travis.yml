@@ -1,21 +1,15 @@
-# Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
+language: r 
 
-language: c
+os:
+  - linux
+  - osx
 
-before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - chmod 755 ./travis-tool.sh
-  - sudo add-apt-repository -y ppa:texlive-backports/ppa
-  - ./travis-tool.sh bootstrap
-  - sudo apt-get install latex-xcolor
+apt_packages:
+  - latex-xcolor
+  - texlive-latex3 # attempt to fix mathtools.sty not found error
 
-install:
-  - ./travis-tool.sh install_deps
-
-script: ./travis-tool.sh run_tests
-
-on_failure:
-  - ./travis-tool.sh dump_logs
+r_packages:
+  - devtools
 
 notifications:
   email:

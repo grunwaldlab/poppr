@@ -1109,11 +1109,11 @@ fix_negative_branch <- function(tre){
                                         c("parent", "child", "length")
                         ))
   # Looking at the edges that are zero.
-  zero.edges  <- all.lengths[tre$edge.length < 0, ]
+  zero.edges  <- all.lengths[tre$edge.length < 0, , drop = FALSE]
   # Checking which negative edges are included in all the edges
-  all.edges   <- all.lengths[all.lengths[, "parent"] %in% zero.edges[, "parent"], ]
+  all.edges   <- all.lengths[all.lengths[, "parent"] %in% zero.edges[, "parent"], , drop = FALSE]
   # Ordering all the edges
-  index.table <- all.edges[order(all.edges[, "parent"]), ]
+  index.table <- all.edges[order(all.edges[, "parent"]), , drop = FALSE]
   # Loop to change the NJ branch length
   for (i in (unique(index.table[, "parent"]))){
     the_parents <- index.table[, "parent"] == i
@@ -1294,7 +1294,7 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   }
   smallest  <- df[[levs[length(levs)]]]
   smallinds <- !duplicated(smallest)
-  newdf     <- df[smallinds, ]
+  newdf     <- df[smallinds, , drop = FALSE]
   newdf     <- newdf[-length(levs)]
   if (length(newdf) > 1){
     factlist <- lapply(newdf, function(x) factor(x, unique(x)))
@@ -1403,7 +1403,7 @@ pool_haplotypes <- function(x, dfname = "population_hierarchy"){
   ploidy        <- ploidy(x)
   df            <- other(x)[[dfname]]
   df$Individual <- indNames(x)
-  df            <- df[rep(1:nrow(df), ploidy), ]
+  df            <- df[rep(1:nrow(df), ploidy), , drop = FALSE]
   newx          <- repool(separate_haplotypes(x))
   pop(newx)     <- df$Individual
   other(newx)[[dfname]] <- df
@@ -1780,7 +1780,7 @@ mlg_barplot <- function(mlgt){
 
   # Organize the data frame by count in descending order.
   rearranged <- order(mlgt.df$count, decreasing = TRUE)
-  mlgt.df <- mlgt.df[rearranged, ]
+  mlgt.df <- mlgt.df[rearranged, , drop = FALSE]
   mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
 
   # plot it
