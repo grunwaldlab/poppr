@@ -643,8 +643,7 @@ setMethod(
 #' Add levels to your population hierarchy. If you have extra hierarchical
 #' levels you want to add to your population hierarchy, you can use this method
 #' to do so. You can input a data frame or a vector, but if you put in a vector,
-#' you have the option to name it (if you are using the functional version and
-#' not the assignment version). }}
+#' you have the option to name it . }}
 #' 
 #' \subsection{Argument Specifics}{
 #' 
@@ -873,7 +872,7 @@ setMethod(
 #' @aliases splithierarchy<-,genclone-method
 #' @docType methods
 #==============================================================================#
-"splithierarchy<-" <- function(x, value){
+"splithierarchy<-" <- function(x, sep = "_", value){
   standardGeneric("splithierarchy<-")
 }  
 
@@ -883,8 +882,8 @@ setGeneric("splithierarchy<-")
 setMethod(
   f = "splithierarchy<-",
   signature(x = "genclone"),
-  definition = function(x, value){
-    return(splithierarchy(x, value))
+  definition = function(x, sep = "_", value){
+    return(splithierarchy(x, value, sep))
   })
 
 #==============================================================================#
@@ -929,7 +928,7 @@ setMethod(
 #' @aliases addhierarchy<-,genclone-method
 #' @docType methods
 #==============================================================================#
-"addhierarchy<-" <- function(x, value){
+"addhierarchy<-" <- function(x, name = "NEW", value){
   standardGeneric("addhierarchy<-")
 }  
 
@@ -939,8 +938,8 @@ setGeneric("addhierarchy<-")
 setMethod(
   f = "addhierarchy<-",
   signature(x = "genclone"),
-  definition = function(x, value){
-    return(addhierarchy(x, value))
+  definition = function(x, name = "NEW", value){
+    return(addhierarchy(x, value, name))
   })
 
 

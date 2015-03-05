@@ -34,11 +34,11 @@ namehierarchy(x) <- value
 
 splithierarchy(x, value, sep = "_")
 
-splithierarchy(x) <- value
+splithierarchy(x, sep = "_") <- value
 
 addhierarchy(x, value, name = "NEW")
 
-addhierarchy(x) <- value
+addhierarchy(x, name = "NEW") <- value
 }
 \arguments{
 \item{x}{a genclone object}
@@ -80,8 +80,7 @@ column in it. See the rootrot example below. \item \strong{addhierarchy()} -
 Add levels to your population hierarchy. If you have extra hierarchical
 levels you want to add to your population hierarchy, you can use this method
 to do so. You can input a data frame or a vector, but if you put in a vector,
-you have the option to name it (if you are using the functional version and
-not the assignment version). }}
+you have the option to name it . }}
 
 \subsection{Argument Specifics}{
 
