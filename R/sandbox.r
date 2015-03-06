@@ -51,45 +51,83 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 #' 
 #' @param z a table of integers representing counts of MLGs (columns) per 
 #' population (rows)
+#' @param ... functions to calculate row-wise diversity statistics. If these are left blank, then the results are left as H, G, Hexp, and E.5
+#' 
+#' @note This internal function will act as a method through which bootstrapping
+#' and basic stats generation can happen. It's not terribly elegant as there
+#' is a lot of code copying happening, but it works now.
 #' 
 #' @return a numeric matrix with 4 columns giving the following statistics for 
 #'   each population: \itemize{\item H - Shannon Diversity \item G Stoddart and
 #'   Taylor's Diveristy (inverse Simpson's) \item unbiased Simpson Diversity \eqn{(N/(N-1))*(1 - D)} \item E.5 evenness}
-#' @export
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
 #' data(Pinf)
 #' tab <- mlg.table(Pinf, bar = FALSE)
 #' get_stats(tab)
-get_stats <- function(z){
-  mat <- matrix(nrow = nrow(z), ncol = 4, 
-                dimnames = list(Pop = rownames(z), 
-                                Index = c("H", "G", "Hexp", "E.5")
-                )
-  )
-  N     <- rowSums(z)
-  H     <- vegan::diversity(z)
-  G     <- vegan::diversity(z, "inv")
-  Simp  <- vegan::diversity(z, "simp")
-  nei   <- (N/(N-1)) * Simp
-  E.5   <- (G - 1)/(exp(H) -1)
-  mat[] <- c(H, G, nei, E.5)
+get_stats <- function(z, ...){
+  ARGS    <- list(...)
+  numargs <- length(ARGS)
+  if (numargs > 0){
+    argnames <- names(ARGS)
+    if (is.null(dim(z))){
+      mat <- setNames(vector(mode = "numeric", length = numargs), argnames)
+      for (i in argnames){
+        if (i == "E.5" && all(c("G", "H") %in% argnames[1:which(argnames == i)])){
+          mat[i] <- (mat["G"] - 1)/(exp(mat["H"]) - 1)
+        } else {
+          mat[i] <- ARGS[[i]](z)
+        }
+      }
+    } else {
+      mat <- matrix(nrow = nrow(z), ncol = numargs, 
+                    dimnames = list(Pop = rownames(z), Index = argnames)
+      )
+      for (i in argnames){
+        if (i == "E.5" && all(c("G", "H") %in% argnames[1:which(argnames == i)])){
+          mat[, i] <- (mat[, "G"] - 1)/(exp(mat[, "H"]) - 1)
+        } else {
+          mat[, i] <- ARGS[[i]](z)
+        }
+      }
+    }
+  } else {
+    if (!is.matrix(z)){
+      mat <- setNames(vector(length = 4, mode = "numeric"), 
+                      c("H", "G", "Hexp", "E.5"))
+    } else {
+      mat <- matrix(nrow = nrow(z), ncol = 4, 
+                    dimnames = list(Pop = rownames(z), 
+                                    Index = c("H", "G", "Hexp", "E.5")
+                                   )
+                   )
+    }
+    N     <- rowSums(z)
+    H     <- vegan::diversity(z)
+    G     <- vegan::diversity(z, "inv")
+    Simp  <- vegan::diversity(z, "simp")
+    nei   <- (N/(N-1)) * Simp
+    E.5   <- (G - 1)/(exp(H) -1)
+    mat[] <- c(H, G, nei, E.5)
+  }
   return(mat)
 }
 
 
-boot_stats <- function(x, i){
-  res        <- numeric(4)
-  names(res) <- c("H", "G", "Hexp", "E.5")
-  z     <- table(x[i])
-  N     <- sum(z)
-  H     <- vegan::diversity(z)
-  G     <- vegan::diversity(z, "inv")
-  Simp  <- vegan::diversity(z, "simp")
-  nei   <- (N/(N-1)) * Simp
-  E.5   <- (G - 1)/(exp(H) -1)
-  res[] <- c(H, G, nei, E.5)
+boot_stats <- function(x, i, ...){
+  z   <- tabulate(x[i])
+  res <- get_stats(z, ...)
+#   res        <- numeric(4)
+#   names(res) <- c("H", "G", "Hexp", "E.5")
+#   z     <- table(x[i])
+#   N     <- sum(z)
+#   H     <- vegan::diversity(z)
+#   G     <- vegan::diversity(z, "inv")
+#   Simp  <- vegan::diversity(z, "simp")
+#   nei   <- (N/(N-1)) * Simp
+#   E.5   <- (G - 1)/(exp(H) -1)
+#   res[] <- c(H, G, nei, E.5)
   return(res)
 }
 
@@ -165,7 +203,11 @@ get_all_ci <- function(res, ci = 95){
 #' system.time(boot_ci(tab, 10000L))
 #' }
 #' 
-boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, ...){
+boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, 
+                    FUN = list(H = vegan::diversity,
+                               G = function(x) vegan::diversity(x, "inv"),
+                               N = function(x){if (is.matrix(x)){rowSums(x)} else {sum(x)}},
+                               E.5 = function(x) (vegan::diversity(x) - 1)/(vegan::diversity(x, "inv") - 1)), ...){
   if (!is.matrix(tab) & is.genind(tab)){
     tab <- mlg.table(tab, total = total, bar = FALSE)
   }
