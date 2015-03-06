@@ -47,6 +47,150 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
+#' Produce a table of diversity statistics
+#' 
+#' @param z a table of integers representing counts of MLGs (columns) per 
+#' population (rows)
+#' 
+#' @return a numeric matrix with 4 columns giving the following statistics for 
+#'   each population: \itemize{\item H - Shannon Diversity \item G Stoddart and
+#'   Taylor's Diveristy (inverse Simpson's) \item unbiased Simpson Diversity \eqn{(N/(N-1))*(1 - D)} \item E.5 evenness}
+#' @export
+#' @author Zhian N. Kamvar
+#' @examples
+#' library(poppr)
+#' data(Pinf)
+#' tab <- mlg.table(Pinf, bar = FALSE)
+#' get_stats(tab)
+get_stats <- function(z){
+  mat <- matrix(nrow = nrow(z), ncol = 4, 
+                dimnames = list(Pop = rownames(z), 
+                                Index = c("H", "G", "Hexp", "E.5")
+                )
+  )
+  N     <- rowSums(z)
+  H     <- vegan::diversity(z)
+  G     <- vegan::diversity(z, "inv")
+  Simp  <- vegan::diversity(z, "simp")
+  nei   <- (N/(N-1)) * Simp
+  E.5   <- (G - 1)/(exp(H) -1)
+  mat[] <- c(H, G, nei, E.5)
+  return(mat)
+}
+
+
+boot_stats <- function(x, i){
+  res        <- numeric(4)
+  names(res) <- c("H", "G", "Hexp", "E.5")
+  z     <- table(x[i])
+  N     <- sum(z)
+  H     <- vegan::diversity(z)
+  G     <- vegan::diversity(z, "inv")
+  Simp  <- vegan::diversity(z, "simp")
+  nei   <- (N/(N-1)) * Simp
+  E.5   <- (G - 1)/(exp(H) -1)
+  res[] <- c(H, G, nei, E.5)
+  return(res)
+}
+
+extract_samples <- function(x) rep(1:length(x), x)
+
+#' Perform a bootstrap analysis on diversity statistics
+#' 
+#' @param tab a table produced from the \pkg{poppr} function \code{\link[poppr]{mlg.table}}. MLGs in columns and populations in rows
+#' @param n an integer > 0 specifying the number of bootstrap replicates to perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
+#' @param ... other parameters passed on to \code{\link[boot]{boot}}.
+#' 
+#' @return a list of objects of class "boot". 
+#' @seealso \code{\link{boot_ci}}
+#' @export
+#' @author Zhian N. Kamvar
+#' @examples
+#' library(poppr)
+#' data(Pinf)
+#' tab <- mlg.table(Pinf, bar = FALSE)
+#' do_boot(tab, 10L)
+#' \dontrun{
+#' # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
+#' system.time(do_boot(tab, 10000L, parallel = "multicore", ncpus = 4L))
+#' system.time(do_boot(tab, 10000L))
+#' }
+#' @importFrom boot boot
+do_boot <- function(tab, n, ...){
+  res <- apply(tab, 1, function(x) boot::boot(extract_samples(x), boot_stats, n, ...))
+  return(res)
+}
+
+get_ci <- function(x, lb, ub){
+  res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)
+  return(res)
+}
+
+get_all_ci <- function(res, ci = 95){
+  lower_bound  <- (100 - ci)/200
+  upper_bound  <- 1 - lower_bound
+  funval       <- matrix(numeric(8), nrow = 2)
+  CI           <- vapply(res, FUN = get_ci, FUN.VALUE = funval, 
+                         lower_bound, upper_bound)
+  dCI          <- dimnames(CI)
+  dimnames(CI) <- list(CI    = dCI[[1]], 
+                       Index = c("H", "G", "Hexp", "E.5"),
+                       Pop   = dCI[[3]])
+  
+  return(CI)
+}
+
+#' Perform bootstrap statistics, calculate and plot confidence intervals.
+#' 
+#' @param tab a genind object OR a matrix produced from \code{\link[poppr]{mlg.table}}.
+#' @param n an integer defining the number of bootstrap replicates (defaults to 1000).
+#' @param ci the percent for confidence interval.
+#' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if \code{tab} is a genind object.
+#' @param ... parameters to be passed on to \code{\link[boot]{boot}}
+#' 
+#' @return an array of 3 dimensions giving the lower and upper bound, the index
+#' measured, and the population. This also prints barplots for each population
+#' faceted by each index using \pkg{ggplot2}. This plot can be retrieved by using
+#' \code{p <- last_plot()}
+#' 
+#' @export
+#' @author Zhian N. Kamvar
+#' @examples
+#' library(poppr)
+#' data(Pinf)
+#' boot_ci(Pinf, n = 100)
+#' \dontrun{
+#' # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
+#' system.time(boot_ci(tab, 10000L, parallel = "multicore", ncpus = 4L))
+#' system.time(boot_ci(tab, 10000L))
+#' }
+#' 
+boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, ...){
+  if (!is.matrix(tab) & is.genind(tab)){
+    tab <- mlg.table(tab, total = total, bar = FALSE)
+  }
+  res  <- do_boot(tab, n, ...)
+  orig <- get_stats(tab)
+  orig <- melt(orig)
+  orig$Pop <- factor(orig$Pop)
+  CI   <- get_all_ci(res, ci = ci)
+  samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
+  dimnames(samp) <- list(NULL, 
+                         Index = c("H", "G", "Hexp", "E.5"),
+                         Pop = rownames(tab))
+  sampmelt <- melt(samp)
+  sampmelt$Pop <- factor(sampmelt$Pop)
+  pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
+    geom_boxplot() + 
+    geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 
+               size = 5, pch = 16, data = orig) +
+    xlab("Population") + labs(color = "Observed") +
+    facet_wrap(~Index, scales = "free_y") + myTheme
+  print(pl)
+  return(CI)
+}
+
+myTheme <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 read_allele_columns <- function(x, ploidy = 2){
   clm <- ncol(x)
