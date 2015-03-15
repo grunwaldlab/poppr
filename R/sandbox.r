@@ -62,34 +62,40 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 #' data(Pinf)
 #' tab <- mlg.table(Pinf, bar = FALSE)
 #' get_stats(tab)
-get_stats <- function(z){
-  mat <- matrix(nrow = nrow(z), ncol = 4, 
-                dimnames = list(Pop = rownames(z), 
-                                Index = c("H", "G", "Hexp", "E.5")
-                )
-  )
-  N     <- rowSums(z)
-  H     <- vegan::diversity(z)
-  G     <- vegan::diversity(z, "inv")
-  Simp  <- vegan::diversity(z, "simp")
-  nei   <- (N/(N-1)) * Simp
-  E.5   <- (G - 1)/(exp(H) -1)
-  mat[] <- c(H, G, nei, E.5)
-  return(mat)
+get_stats <- function(z, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
+  
+  E.5 <- function(x){
+    H <- vegan::diversity(x)
+    G <- vegan::diversity(x, "inv")
+    (G - 1)/(exp(H) - 1)
+  }
+  BASIC_FUNS <- list(H = vegan::diversity,
+                     G = function(x) vegan::diversity(x, "inv"),
+                     simp = function(x) vegan::diversity(x, "simp"),
+                     E.5 = E.5)
+  FUNS   <- c(BASIC_FUNS, list(...))
+  STATS <- names(FUNS)
+  STATS <- STATS[c(H, G, simp, E5, rep(TRUE, length(list(...))))]
+  
+  boot <- is.null(dim(z))
+  
+  nrows <- ifelse(boot, 1, nrow(z))
+  if (boot){
+    dims <- list(NULL, Index = STATS)
+  } else {
+    dims <- list(Pop = rownames(z), Index = STATS)
+  }
+  
+  mat <- matrix(nrow = nrows, ncol = length(STATS), dimnames = dims)
+  for (i in STATS){
+    mat[, i] <- FUNS[[i]](z)
+  }
+  return(drop(mat))
 }
 
 #' @importFrom vegan diversity
-boot_stats <- function(x, i){
-  res        <- numeric(4)
-  names(res) <- c("H", "G", "Hexp", "E.5")
-  z     <- table(x[i])
-  N     <- sum(z)
-  H     <- vegan::diversity(z)
-  G     <- vegan::diversity(z, "inv")
-  Simp  <- vegan::diversity(z, "simp")
-  nei   <- (N/(N-1)) * Simp
-  E.5   <- (G - 1)/(exp(H) -1)
-  res[] <- c(H, G, nei, E.5)
+boot_stats <- function(x, i, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
+  res <- get_stats(tabulate(x[i]), H, G, simp, E5, ...)
   return(res)
 }
 
@@ -116,8 +122,10 @@ extract_samples <- function(x) rep(1:length(x), x)
 #' system.time(do_boot(tab, 10000L))
 #' }
 #' @importFrom boot boot
-do_boot <- function(tab, n, ...){
-  res <- apply(tab, 1, function(x) boot::boot(extract_samples(x), boot_stats, n, ...))
+do_boot <- function(tab, n, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
+  res <- apply(tab, 1, function(x){
+    boot::boot(extract_samples(x), boot_stats, n, H = H, G = G, simp = simp, E5 = E5, ...)
+  })
   return(res)
 }
 
