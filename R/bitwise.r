@@ -49,7 +49,7 @@
 #' object. The number representing the distance between two samples is equal to
 #' the number of alleles in the samples that do not have the same zygosity.
 #'
-#' @param x a genlight object. 
+#' @param x a genlight, genind, or genclone object. 
 #'
 #' @param percent \code{logical}. Should the distance be represented from 0 to 1? 
 #' Default set to \code{TRUE}. \code{FALSE} will return the distance represented 
@@ -261,5 +261,42 @@ poppr_has_parallel <- function(){
   } else {
     return(TRUE)
   }
+
+}
+
+
+
+#==============================================================================#
+#' Calculate the index of association between samples in a genlight object.
+#' 
+#' TODO: Add description of method
+#'
+#' @param x a genlight object. 
+#'
+#' @param indices A vector of integers indicating which loci should be
+#'   sampled while calculating the index of association. If NULL (default),
+#'   all loci will be used.
+#'
+#' @param threads The maximum number of parallel threads to be used within this
+#'   function. A value of 0 (default) will attempt to use as many threads as there
+#'   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
+#'   the function to run serially, which may increase stability on some systems.
+#'   Other values may be specified, but should be used with caution.
+#'
+#' @return Index of association representing the samples in this genlight object.
+#' @author Zhian N. Kamvar, Jonah Brooks
+#' 
+#' @export
+#==============================================================================#
+bitwise.IA <- function(x, indices=NULL, threads=0){
+  stopifnot(class(x)[1] == "genlight")
+
+  #TODO: Validate the arguments
+
+  #TODO: Allow for automated index generation, such as random or window based
+
+  #TODO: Call C function and return
+
+  return(0)
 
 }

@@ -73,6 +73,7 @@ struct locus
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads);
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
@@ -476,6 +477,44 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
   UNPROTECT(4); 
   return R_out;
 }
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates the index of association of a genlight object of diploids.
+
+Input: A genlight object containing samples of diploids.
+       A boolean representing whether or not missing values should match. 
+       A vector of locus indices to be used in the calculations
+Output: The index of association for this genlight object over the specified loci
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads)
+{
+
+  //TODO: Validate input
+  //TODO: Create variables
+  //TODO: Protect output variable
+  //TODO: Allocate arrays
+
+  //TODO: Fetch one loci chunk to count its length, or assume they are all 32 or less
+  //TODO: Parallelize for loop over loci chunks of that length // Or all loci, then parallelize inside
+    //TODO: Loop over all samples
+      //TODO: Loop over all other samples
+        //TODO: Make and fill zygosity structs
+        //TODO: Make distance variable D=0
+        //TODO: Call and store as S the similarity set between those
+        //TODO: Or together the two structs' H fields, store as Hor
+        //TODO: Loop through i=0 to loci_chunk_length
+          //TODO: If (S>i)&1 != 0 // If they are not the same at this loci
+            //TODO: D++
+            //TODO: If (Hor>i)&1 == 0 // If neither of them are heterozygotes at this loci
+              //TODO: D++
+          //TODO: M[i+chunk_num*chunk_length] += D
+          //TODO: M2[i+chunk_num*chunk_length] += D*D
+
+
+}
+
+
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates and returns a matrix of Pgen values for each genotype and loci in

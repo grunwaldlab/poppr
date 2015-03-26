@@ -9,7 +9,7 @@ bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
   threads = 0)
 }
 \arguments{
-\item{x}{a genlight object.}
+\item{x}{a genlight, genind, or genclone object.}
 
 \item{percent}{\code{logical}. Should the distance be represented from 0 to 1?
 Default set to \code{TRUE}. \code{FALSE} will return the distance represented
