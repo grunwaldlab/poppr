@@ -72,7 +72,7 @@ struct locus
 };
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
-SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads);
+SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
@@ -82,6 +82,8 @@ void fill_zygosity(struct zygosity *ind);
 char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
 int get_zeros(char sim_set);
 int get_difference(struct zygosity *z1, struct zygosity *z2);
+int get_distance(struct zygosity *z1, struct zygosity *z2);
+int get_distance_custom(char sim_set, struct zygosity *z1, struct zygosity *z2);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the pairwise differences between samples in a genlight object. The
@@ -282,7 +284,7 @@ Input: A genlight object containing samples of diploids.
 Output: A distance matrix representing the number of differences in zygosity
         between each sample.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_threads)
+SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
 {
   SEXP R_out;
   SEXP R_gen_symbol;
@@ -304,6 +306,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
   int next_missing_i;
   int next_missing_j;
   int missing_match;
+  int only_differences;
   int num_threads;
   char mask;
   struct zygosity set_1;
@@ -361,6 +364,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
   nap2_length = 0;
   chr_length = 0;
   missing_match = asLogical(missing);
+  only_differences = asLogical(differences_only);
 
   // Loop through every genotype 
   for(i = 0; i < num_gens; i++)
@@ -452,7 +456,14 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP requested_thread
         }       
 
         // Add the distance from this word into the total between these two genotypes
-        cur_distance += get_zeros(tmp_sim_set);
+        if(only_differences)
+        {
+          cur_distance += get_zeros(tmp_sim_set);
+        }
+        else
+        {
+          cur_distance += get_distance_custom(tmp_sim_set,&set_1,&set_2);
+        }
       }
       // Store the distance between these two genotypes in the distance matrix
       distance_matrix[i][j] = cur_distance;
@@ -484,7 +495,8 @@ Calculates the index of association of a genlight object of diploids.
 
 Input: A genlight object containing samples of diploids.
        A boolean representing whether or not missing values should match. 
-       A vector of locus indices to be used in the calculations
+       A vector of locus indices to be used in the calculations.
+       An integer representing the number of threads to be used.
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads)
@@ -1067,3 +1079,59 @@ int get_difference(struct zygosity *z1, struct zygosity *z2)
 }
 
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Counts the distance between two partially filled zygosity structs.
+c1 and c2 must be filled in both structs prior to calling this function.
+
+Input: Two zygosity struct pointers representing the two sections to be compared.
+       c1 and c2 must be filled in both structs.
+Output: The total distance between two samples, such that DD/rr are a distance 
+        of 2, and Dr/rr are a distance of 1
+        cx, ca, and cn will be filled in both structs as a byproduct of this function.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+int get_distance(struct zygosity *z1, struct zygosity *z2)
+{
+  int dist = 0;
+  char Hor;
+  char S;
+  char ch_dist;
+  fill_zygosity(z1);
+  fill_zygosity(z2);
+
+  S = get_similarity_set(z1,z2);
+  Hor = z1->ch | z2->ch;
+
+  ch_dist = Hor | S;  // Force ones everywhere they are the same
+  dist = get_zeros(S);  // Add one distance for every non-shared zygosity
+  dist += get_zeros(ch_dist); // Add another one for every difference that has no heterozygotes
+
+  return dist;
+}
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Counts the distance between two partially filled zygosity structs, using a custom
+similarity set.
+c1 and c2 must be filled in both structs prior to calling this function.
+
+Input: A char representing the similarity set between two zygosity structs
+       Two filled zygosity struct pointers representing the two sections to be compared.
+Output: The total distance between two samples, such that DD/rr are a distance 
+        of 2, and Dr/rr are a distance of 1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+int get_distance_custom(char sim_set, struct zygosity *z1, struct zygosity *z2)
+{
+  int dist = 0;
+  char Hor;
+  char S;
+  char ch_dist;
+
+  S = sim_set;
+  Hor = z1->ch | z2->ch;
+
+  ch_dist = Hor | S;  // Force ones everywhere they are the same
+  dist = get_zeros(S);  // Add one distance for every non-shared zygosity
+  dist += get_zeros(ch_dist); // Add another one for every difference that has no heterozygotes
+
+  return dist;
+}

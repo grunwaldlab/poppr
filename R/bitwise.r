@@ -63,6 +63,10 @@
 #' Default set to \code{TRUE}, which forces missing data to match with anything. 
 #' \code{FALSE} forces missing data to not match with any other information. 
 #'
+#' @param differences_only \code{logical}. Determines whether the matrix should
+#' count differences or distances. For instance, 0 to 2 would be a distance of 2
+#' but a difference of 1.
+#'
 #' @param threads The maximum number of parallel threads to be used within this
 #'   function. A value of 0 (default) will attempt to use as many threads as there
 #'   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
@@ -75,7 +79,7 @@
 #' 
 #' @export
 #==============================================================================#
-bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads=0){
+bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differences_only=FALSE, threads=0){
   stopifnot(class(x)[1] %in% c("genlight", "genclone", "genind"))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
@@ -125,14 +129,21 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, threads
   }
   else
   {
-    pairwise_dist <- .Call("bitwise_distance_diploid", x, missing_match, threads)
+    pairwise_dist <- .Call("bitwise_distance_diploid", x, missing_match, differences_only, threads)
   }
   dist.mat <- pairwise_dist
   dim(dist.mat) <- c(inds,inds)
   colnames(dist.mat)            <- ind.names
   rownames(dist.mat)            <- ind.names
   if (percent){
-    dist.mat <- dist.mat/(numPairs)
+    if(differences_only)
+    {
+      dist.mat <- dist.mat/(numPairs)
+    }
+    else
+    {
+      dist.mat <- dist.mat/(numPairs*ploid)
+    }
   }
   if (mat == FALSE){
     dist.mat <- as.dist(dist.mat)

@@ -2,7 +2,7 @@ context("Bitwise distance and pgen calculations")
 
 test_that("bitwise.dist produces reasonable results", {
 
-skip_on_cran()
+#skip_on_cran()
 
 # Required to circumvent a windows specific error in adegenet
   if ((.Platform)$OS.type == "windows"){
@@ -19,14 +19,24 @@ skip_on_cran()
 
   dat <- list(c(2,2,2,2,2,2,2,2,2,0),c(1,1,1,0,0,0,0,0,0,2),c(2,2,2,2,2,2,2,2,2,2),c(2,2,2,2,2,2,2,2,2,0),c(2,NA,NA,NA,NA,NA,NA,NA,NA,NA))
   z <- new("genlight",dat)
-  missing_match <- bitwise.dist(z,missing_match=TRUE,mat=TRUE)
-  dim(missing_match) <- NULL
-  expected_match <- c(0.0, 1.0, 0.1, 0.0, 0.0, 1.0, 0.0, 0.9, 1.0, 0.1, 0.1, 0.9, 0.0, 0.1, 0.0, 0.0, 1.0, 0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0)
-  missing_nomatch <- bitwise.dist(z,missing_match=FALSE,mat=TRUE)
-  dim(missing_nomatch) <- NULL
-  expected_nomatch <- c(0.0, 1.0, 0.1, 0.0, 0.9, 1.0, 0.0, 0.9, 1.0, 1.0, 0.1, 0.9, 0.0, 0.1, 0.9, 0.0, 1.0, 0.1, 0.0, 0.9, 0.9, 1.0, 0.9, 0.9, 0.0)
-  expect_that(missing_match, is_equivalent_to(expected_match))
-  expect_that(missing_nomatch, is_equivalent_to(expected_nomatch))
+  
+  missing_match_dif <- bitwise.dist(z,missing_match=TRUE,mat=TRUE,differences_only=TRUE)
+  dim(missing_match_dif) <- NULL
+  expected_match_dif <- c(0.0, 1.0, 0.1, 0.0, 0.0, 1.0, 0.0, 0.9, 1.0, 0.1, 0.1, 0.9, 0.0, 0.1, 0.0, 0.0, 1.0, 0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0)
+  missing_nomatch_dif <- bitwise.dist(z,missing_match=FALSE,mat=TRUE, differences_only=TRUE)
+  dim(missing_nomatch_dif) <- NULL
+  expected_nomatch_dif <- c(0.0, 1.0, 0.1, 0.0, 0.9, 1.0, 0.0, 0.9, 1.0, 1.0, 0.1, 0.9, 0.0, 0.1, 0.9, 0.0, 1.0, 0.1, 0.0, 0.9, 0.9, 1.0, 0.9, 0.9, 0.0)
+  expect_that(missing_match_dif, is_equivalent_to(expected_match_dif))
+  expect_that(missing_nomatch_dif, is_equivalent_to(expected_nomatch_dif))
+  
+  missing_match_dist <- bitwise.dist(z,missing_match=TRUE,mat=TRUE,differences_only=FALSE)
+  dim(missing_match_dist) <- NULL
+  expected_match_dist <- c(0.0, 17.0/20.0, 2.0/20.0, 0.0, 0.0, 17.0/20.0, 0.0, 15.0/20.0, 17.0/20.0, 1.0/20.0, 2.0/20.0, 15.0/20.0, 0.0, 2.0/20.0, 0.0, 0.0, 17.0/20.0, 2.0/20.0, 0.0, 0.0, 0.0, 1.0/20.0, 0.0, 0.0, 0.0)
+  #missing_nomatch <- bitwise.dist(z,missing_match=FALSE,mat=TRUE,differences_only=FALSE)
+  #dim(missing_nomatch) <- NULL
+  #expected_nomatch <- c(0.0, 1.0, 0.1, 0.0, 0.9, 1.0, 0.0, 0.9, 1.0, 1.0, 0.1, 0.9, 0.0, 0.1, 0.9, 0.0, 1.0, 0.1, 0.0, 0.9, 0.9, 1.0, 0.9, 0.9, 0.0)
+  expect_that(missing_match_dist, is_equivalent_to(expected_match_dist))
+  #expect_that(missing_nomatch, is_equivalent_to(expected_nomatch))
  })
 
 test_that("pgen produces reasonable results", {

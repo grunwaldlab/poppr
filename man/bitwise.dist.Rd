@@ -6,7 +6,7 @@
 that differ in zygosity.}
 \usage{
 bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
-  threads = 0)
+  differences_only = FALSE, threads = 0)
 }
 \arguments{
 \item{x}{a genlight, genind, or genclone object.}
@@ -22,6 +22,10 @@ as integers from 1 to n where n is the number of loci.}
 by missing data in a location should be counted as matching at that location.
 Default set to \code{TRUE}, which forces missing data to match with anything.
 \code{FALSE} forces missing data to not match with any other information.}
+
+\item{differences_only}{\code{logical}. Determines whether the matrix should
+count differences or distances. For instance, 0 to 2 would be a distance of 2
+but a difference of 1.}
 
 \item{threads}{The maximum number of parallel threads to be used within this
   function. A value of 0 (default) will attempt to use as many threads as there
