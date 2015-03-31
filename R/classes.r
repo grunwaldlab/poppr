@@ -86,7 +86,6 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #' @aliases genclone
 #' @export
 #' @slot mlg a vector representing multilocus genotypes for the data set.
-#' @slot hierarchy a data frame containing hierarchical levels.
 #' @author Zhian N. Kamvar
 #' @seealso \code{\link{as.genclone}} \code{\link{sethierarchy}} \code{\link{setpop}} 
 #' \code{\linkS4class{genind}} 
@@ -94,8 +93,7 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #==============================================================================#
 setClass("genclone", 
          contains = "genind",
-         representation = representation(mlg = "mlgORnumeric",
-                                         hierarchy = "data.frame"),
+         representation = representation(mlg = "mlgORnumeric"),
 )
 
 # valid.genclone <- function(object){
