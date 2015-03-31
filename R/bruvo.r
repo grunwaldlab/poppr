@@ -174,6 +174,9 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   }
   bruvomat  <- new('bruvomat', pop, replen)
   funk_call <- match.call()
+  if (length(add) != 1 || !is.logical(add) || length(loss) != 1 || !is.logical(loss)){
+    stop("add and loss flags must be either TRUE or FALSE. Please check your input.")
+  }
   dist.mat  <- bruvos_distance(bruvomat, funk_call = funk_call, add, loss)
   return(dist.mat)
 }
@@ -453,7 +456,8 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     pop$other$mlg.vec <- mlg.vector(pop)  
   }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
+    return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
+                         replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette))
   }
@@ -461,7 +465,8 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     pop <- popsub(pop, sublist, blacklist)
   }
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
+    return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
+                         replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, showplot = showplot, ...))
   }
@@ -488,7 +493,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  bclone     <- bruvo.dist(cpop, replen=replen)
+  bclone     <- bruvo.dist(cpop, replen = replen, add = add, loss = loss)
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
