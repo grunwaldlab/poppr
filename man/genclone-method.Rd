@@ -8,10 +8,9 @@
 \alias{show,genclone-method}
 \title{Methods used for the genclone object}
 \usage{
-\S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., loc = NULL,
-  treatOther = TRUE, quiet = TRUE, drop = FALSE)
+\S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{initialize}{genclone}(.Object, gen, hierarchy, mlg, mlgclass = TRUE)
+\S4method{initialize}{genclone}(.Object, gen, mlg, mlgclass = TRUE)
 
 \S4method{show}{genclone}(object)
 
@@ -26,21 +25,11 @@
 
 \item{...}{passed on to the \code{\linkS4class{genind}} object.}
 
-\item{loc}{passed on to \code{\linkS4class{genind}} object.}
-
-\item{treatOther}{passed on to \code{\linkS4class{genind}} object.}
-
-\item{quiet}{passed on to \code{\linkS4class{genind}} object.}
-
 \item{drop}{set to \code{FALSE}}
 
 \item{.Object}{a character, "genclone"}
 
 \item{gen}{\code{"\linkS4class{genind}"} object}
-
-\item{hierarchy}{a data frame where each row i represents the different
-population assignments of individual i in the data set. If this is empty, the
-hierarchy will be created from the population factor.}
 
 \item{mlg}{a vector where each element assigns the multilocus genotype of
 that individual in the data set.}
@@ -49,6 +38,12 @@ that individual in the data set.}
 mlg object into an MLG class object.}
 
 \item{object}{a genclone object}
+
+\item{loc}{passed on to \code{\linkS4class{genind}} object.}
+
+\item{treatOther}{passed on to \code{\linkS4class{genind}} object.}
+
+\item{quiet}{passed on to \code{\linkS4class{genind}} object.}
 
 \item{x}{a genclone object}
 

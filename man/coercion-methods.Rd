@@ -6,13 +6,11 @@
 \alias{as.genclone,genind-method}
 \title{Create a genclone object from a genind object.}
 \usage{
-as.genclone(x, hierarchy = NULL)
+as.genclone(x)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
 object}
-
-\item{hierarchy}{a data frame representing the population hierarchy.}
 }
 \description{
 Wrapper for genclone initializer.
@@ -31,7 +29,7 @@ data(Aeut)
 Aeut
 Aeut.gc <- as.genclone(Aeut)
 Aeut.gc
-Aeut.gc <- as.genclone(Aeut, other(Aeut)$population_hierarchy[-1])
+Aeut.gc <- as.genclone(Aeut)
 Aeut.gc
 }
 \author{
