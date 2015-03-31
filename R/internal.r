@@ -1140,8 +1140,10 @@ fix_negative_branch <- function(tre){
 #==============================================================================#
 
 
-singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gscale = TRUE, 
-                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, ...){
+singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE, 
+                          loss = TRUE, distmat = NULL, gscale = TRUE, 
+                          glim = c(0, 0.8), gadj = 3, wscale = TRUE, 
+                          palette = topo.colors, showplot = TRUE, ...){
   # First, clone correct and get the number of individuals per MLG in order.
   cpop <- pop[.clonecorrector(pop), ]
   if (is.genclone(pop)){
@@ -1156,7 +1158,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   
   # Calculate distance matrix if not supplied (Bruvo's distance)
   if (is.null(distmat) & !is.null(replen)){
-    distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
+    distmat <- as.matrix(bruvo.dist(cpop, replen = replen, add = add, loss = loss))
   }
   
   # Create the graphs.
@@ -1202,7 +1204,8 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
 # # singlepop_msn
 #==============================================================================#
 
-bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss = TRUE){
+bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, 
+                            loss = TRUE){
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
   replen <- bruvomat@replen
