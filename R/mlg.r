@@ -280,8 +280,7 @@ mlg.vector <- function(pop){
   }
   xtab <- pop@tab
   # concatenating each genotype into one long string.
-  xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ]*pop@ploidy, 
-                                                    collapse = ""), "string")
+  xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ], collapse = ""), "string")
   # creating a new vector to store the counts of unique genotypes.
   countvec <- vector(length = length(xsort), mode = "integer")
   # sorting the genotypes ($x) and preserving the index ($xi). 
