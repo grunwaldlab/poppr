@@ -102,18 +102,18 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
     ploid <- 1
   } else if (is(x, "bootgen")){
     dist_by_locus <- vapply(1:numLoci, function(i){
-      .Call("pairdiffs", get_gen_mat(x[, i]))*(ploid/2)
+      .Call("pairdiffs", get_gen_mat(x[, i]))/2
     }, numeric(np))
   } else {  
     x <- seploc(x)
-    dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
+    dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)/2,
                             numeric(np))
   }
   dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
   colnames(dist.mat)            <- ind.names
   rownames(dist.mat)            <- ind.names
   if (percent){
-    dist.mat <- dist.mat/(numLoci*ploid)
+    dist.mat <- dist.mat/(numLoci * max(ploid))
   }
   dist.mat <- as.dist(dist.mat)
   if (mat == TRUE){
