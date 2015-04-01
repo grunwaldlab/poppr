@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Data import and manipulation in poppr version 1.1.4.99-54}
+\title{Data import and manipulation in poppr version 1.1.4.99-55}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -182,22 +182,27 @@ our github site}.
 
 \subsection{Getting Help}
 
-If you have any questions or feedback, feel free to send a message to the \poppr{} forum at \url{http://groups.google.com/group/poppr}. You can submit bug reports
-there or on our github site: \url{https://github.com/grunwaldlab/poppr}
+If you have any questions or feedback, feel free to send a message to the
+\poppr{} forum at \url{http://groups.google.com/group/poppr}. You can submit bug
+reports there or on our github site: \url{https://github.com/grunwaldlab/poppr}
 
 \subsection{Acknowledgements}
 
 Much thanks goes to Sydney E. Everhart for alpha testing, beta testing, feature
-requests, proofreading, data contribution, and moral support throught the writing
-of this package and manual. Thanks also to Brian Knaus, Ignazio Carbone, David Cooke,
-Corine Schoebel, Jane Stewart, and Zaid Abdo for beta testing and feedback. 
+requests, proofreading, data contribution, and moral support throught the
+writing of this package and manual. Thanks also to Brian Knaus, Ignazio Carbone,
+David Cooke, Corine Schoebel, Jane Stewart, and Zaid Abdo for beta testing and
+feedback.
 
-The following data sets are included in \poppr{}: \texttt{Pinf} \cite{goss2014irish}, \texttt{monpop} (Sydney E. Everhart, unpublished),
+The following data sets are included in \poppr{}: \texttt{Pinf}
+\cite{goss2014irish}, \texttt{monpop} (Sydney E. Everhart, unpublished),
 \texttt{Aeut} \cite{Grunwald:2006}
 
 \subsection{Citation}
 
-The formal publication for \poppr{} was published in the journal PeerJ: \url{http://peerj.com/articles/281/}. To cite \poppr{}, please type in your R console:
+The formal publication for \poppr{} was published in the journal PeerJ:
+\url{http://peerj.com/articles/281/}. To cite \poppr{}, please type in your R
+console:
 
 <<popprcite, eval = FALSE, size="normalsize">>=
 citation(package = "poppr")
@@ -635,8 +640,8 @@ functions are presented elsewhere in this manual.
 library("poppr")
 data(microbov)
 microbov <- as.genclone(microbov)
-sethierarchy(microbov) <- data.frame(other(microbov))
-setpop(microbov) <- ~coun/breed/spe
+strata(microbov) <- data.frame(other(microbov))
+setPop(microbov) <- ~coun/breed/spe
 genind2genalex(microbov, file="~/Desktop/microbov.csv")
 @
 <<microsave_message, echo=FALSE>>=
@@ -1043,7 +1048,7 @@ c(is.genind(Aeut), is.genclone(Aeut), is.genind(agc), is.genclone(agc))
 c(nInd(Aeut), nInd(agc))
 @
 
-<<setpop>>=
+<<setPop>>=
 # We'll look at the population names
 Aeut$pop.names
 
@@ -1055,7 +1060,7 @@ Aeut$pop.names
 
 # genclone way:
 agc
-setpop(agc) <- ~Pop/Subpop
+setPop(agc) <- ~Pop/Subpop
 agc
 
 # Notice that you only see the first and last three population names.
@@ -1198,7 +1203,7 @@ In this section, we will show you how to \seclink{data.manip:hier:define}{define
 hierarchical levels, \seclink{data.manip:hier:view}{view} those levels to ensure
 that they are correctly defined, \seclink{data.manip:hier:manip}{manipulate} your
 hierarchical levels by adding and renaming them, and use these levels
-to \seclink{data.manip:hier:setpop}{set the population} in
+to \seclink{data.manip:hier:setPop}{set the population} in
 your \seclink{intro:genclone}{genclone} object using the following methods:
 
 % latex table generated in R 3.0.3 by xtable 1.7-3 package
@@ -1209,11 +1214,11 @@ your \seclink{intro:genclone}{genclone} object using the following methods:
   \hline
  Method & Function & Input & Result\\ 
   \hline
- split & \cmdlink{data.manip:hier:define:split}{splithierarchy} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{sethierarchy} & data frame & new hierarchical levels\\ 
- get & \cmdlink{data.manip:hier:view}{gethierarchy} & formula & data frame\\ 
- name & \cmdlink{data.manip:hier:manip:name}{namehierarchy} & formula & new hierarchical level names\\ 
- add & \cmdlink{data.manip:hier:manip:add}{addhierarchy} & vector or data frame & new hierarchical level\\
+ split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
+ set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchical levels\\ 
+ get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\ 
+ name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchical level names\\ 
+ add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
 \end{table}
@@ -1253,7 +1258,7 @@ aphan <- read.genalex("http://files.figshare.com/1314228/rootrot.csv")
 aphan
 @
 <<aphan_figshare, echo = FALSE>>=
-aphan <- namehierarchy(sethierarchy(agc, gethierarchy(agc, ~Pop_Subpop)), ~Pop)
+aphan <- nameStrata(strata(agc, strata(agc, ~Pop_Subpop)), ~Pop)
 aphan
 @
 \noindent
@@ -1262,22 +1267,22 @@ only see one here labeled `Pop'. This is how populations are automatically
 defined when importing to a \seclink{intro:genclone}{genclone} object since it
 does not know how many hierarchical levels you have defined. To define these
 levels present in the data set, we will need to split them up using the function
-\texttt{splithierarchy}:
+\texttt{splitStrata}:
 \label{data.manip:hier:define:split}
 <<aphan_split>>=
-splithierarchy(aphan) <- ~field/sample
+splitStrata(aphan) <- ~field/sample
 aphan
 @
 \noindent
 Now we have sucessfully defined our hierarchies. If you have imported your data
-in this manner, you may skip to the \seclink{data.manip:hier:setpop}{setting
+in this manner, you may skip to the \seclink{data.manip:hier:setPop}{setting
 population hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, or
 \seclink{data.manip:hier:manip}{manipulating hierarchical levels.}
 
 \bline{}
 
 If you have imported your data with a single population and want to add
-hierarchical levels separately, you can use the function \texttt{sethierarchy}
+hierarchical levels separately, you can use the function \texttt{strata}
 with a data frame containing your hierarchical levels. For this example, we will
 use the data set \texttt{H3N2}, which contains SNP data from the H3N2 virus.
 This data set holds a data frame in the the \seclink{intro:genind:other}{other
@@ -1307,13 +1312,13 @@ names(virus_info)
 @
 
 From here we will convert our genind object to a genclone object and use
-\texttt{sethierarchy} to define the hierarchical levels with the table we just
+\texttt{strata} to define the hierarchical levels with the table we just
 imported.
 
 \label{data.manip:hier:define:set}
-<<H3N2_sethierarchy>>=
+<<H3N2_strata>>=
 virus <- as.genclone(H3N2) # Converting it to a genclone object.
-sethierarchy(virus) <- virus_info # Setting the hierarchy
+strata(virus) <- virus_info # Setting the hierarchy
 virus
 @
 \noindent
@@ -1321,17 +1326,17 @@ In this data, levels such as host and segment are unimportant levels because
 they are all the same. Let's say that we are only interested in year and country.
 To make things easier to view, we will set the hierarchical levels to these two
 columns:
-<<H3N2_sethierarchy_again>>=
-sethierarchy(virus) <- virus_info[c("country", "year")]
+<<H3N2_strata_again>>=
+strata(virus) <- virus_info[c("country", "year")]
 virus
 @
 
 Notice that there are no populations defined. Now that we have the hierarchical
 levels in place, we can use it to define the population hierarchy. We will use
-the function \texttt{setpop} to define the population as year with respect to
+the function \texttt{setPop} to define the population as year with respect to
 country:
 <<H3N2_set_country>>=
-setpop(virus) <- ~year/country
+setPop(virus) <- ~year/country
 virus
 @
 
@@ -1340,12 +1345,12 @@ virus
 
 If you wanted to view your hierarchies to make sure that you made no spelling
 errors in your population definitions, you can extract the data frame from your
-genclone object by using the function \texttt{gethierarchy}:
+genclone object by using the function \texttt{strata}:
 
 \begin{quote}
 Default Command:
-<<gethierarchy_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "gethierarchy"
+<<strata_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "strata"
 print_command(funk)
 @
 \end{quote}
@@ -1358,8 +1363,8 @@ combined. Note, if you don't supply a formula argument, the data frame as it
 exists will be returned.
 
 <<aphan_hier_get>>=
-head(gethierarchy(aphan))
-head(gethierarchy(aphan, ~field/sample))
+head(strata(aphan))
+head(strata(aphan, ~field/sample))
 @
 
 If the hierarchical levels are not nested, or you simply want to use this
@@ -1367,14 +1372,14 @@ hierarchy for another data set, you might want to set the \textbf{combine} flag
 to \texttt{FALSE}. Let's use the virus data as an example:
 
 <<virus_get>>=
-head(gethierarchy(virus, ~year/country))
-head(gethierarchy(virus, ~year/country, combine = FALSE))
+head(strata(virus, ~year/country))
+head(strata(virus, ~year/country, combine = FALSE))
 @
 
 It will return only the levels you ask it to return:
 
 <<virus_onepop>>=
-head(gethierarchy(virus, ~country))
+head(strata(virus, ~country))
 @
 
 \subsubsection{Manipulating hierarchical levels}
@@ -1394,11 +1399,11 @@ If we were saving our script the whole time, we could just go back and retrieve
 the data frame, but that defeats the purpose of this section where we imagine
 that we've recieved new information and wanted to add it to our hierarchy. If we
 want to add this to our hierarchy, we just use the function
-\texttt{addhierarchy} defined as thus:
+\texttt{addStrata} defined as thus:
 \begin{quote}
 Default Command:
-<<addhierarchy_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "addhierarchy"
+<<addStrata_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "addStrata"
 print_command(funk)
 @
 \end{quote}
@@ -1406,27 +1411,27 @@ print_command(funk)
 We can use this function to add on a new column to the data frame.  
 \label{data.manip:hier:manip:add}
 <<virus_add_arg>>=
-addhierarchy(virus) <- virus_info 
+addStrata(virus) <- virus_info 
 virus
 @
 \noindent
 Notice that the new hierarchical level is simply labeled as \texttt{NEW}. We
 will customize the name of the hierarchical levels with the function
-\texttt{namehierarchy}. 
+\texttt{nameStrata}. 
 \label{data.manip:hier:manip:name}
 
 <<virus_name>>=
-namehierarchy(virus) <- ~country/year/month
+nameStrata(virus) <- ~country/year/month
 virus
 @
 \noindent
 Of course, perhaps a better way still would be to use a data frame:
 <<virus_add_df, eval = FALSE>>=
-addhierarchy(virus) <- data.frame(month = virus_info)
+addStrata(virus) <- data.frame(month = virus_info)
 @
 
 \subsubsection{Defining populations with hierarchies}
-\label{data.manip:hier:setpop}
+\label{data.manip:hier:setPop}
 
 Now that we have defined the hierarchical levels in the data set, setting the
 population hierarchy allows us to group our data according to the hierarchical
@@ -1434,7 +1439,7 @@ level of your choice. This is a necessary step. For this example, we will use a
 data set of \textit{Phytophthora infestans} collected from North America and
 South America.
 
-<<Pinf_setpop>>=
+<<Pinf_setPop>>=
 data(Pinf)
 Pinf
 @
@@ -1442,12 +1447,12 @@ Pinf
 Above we have two hierarchies for Continent and Country, but the
 populations only show Continent level populations. If we wanted to investigate
 each country separately, we would need to reset the population to be represented
-by Country. This can be done with the function \texttt{setpop}. This function
+by Country. This can be done with the function \texttt{setPop}. This function
 utilizes the defined population hierarchies to set the population. We'll use our
 data set above to illustrate this:
 
-<<Pinf_setpop2>>=
-setpop(Pinf) <- ~Country
+<<Pinf_setPop2>>=
+setPop(Pinf) <- ~Country
 Pinf # Now set by country
 @
 \noindent
@@ -1455,8 +1460,8 @@ The beauty about it is the fact that it will also combine all the hierarchical
 levels you want to use. Let's see when we ask it to set the population of
 Country with respect to Continent.
 
-<<Pinf_setpop_combine>>=
-setpop(Pinf) <- ~Continent/Country
+<<Pinf_setPop_combine>>=
+setPop(Pinf) <- ~Continent/Country
 Pinf
 @
 \noindent
@@ -1649,7 +1654,7 @@ that we saw in \seclink{data.manip:hier:define}{Defining hierarchies.} Let's say
 we wanted to analyze only the data in North America. To make sure we are all on
 the same page, we will reset the population factor to ``country".
 <<popsub_sublist>>=
-setpop(virus) <- ~country
+setPop(virus) <- ~country
 virus$pop.names # Only two countries from North America.
 vna <- popsub(virus, sublist=c("USA", "Canada"))
 vna$pop.names
@@ -2484,14 +2489,14 @@ print_command(funk)
 We can see what MLGs cross different populations and then give a
 vector that shows how many populations each one of those MLGs crosses.
 <<crosspop, eval=FALSE>>=
-setpop(virus) <- ~country
+setPop(virus) <- ~country
 v.dup <- mlg.crosspop(virus, quiet=TRUE)
 @
 Here is a snippet of what the output looks like when \texttt{quiet} is
 \texttt{FALSE}. It will print out the MLG name, the total number of individuals
 that make up that MLG, and the populations where that MLG can be found.
 <<crosspopout, echo=FALSE>>=
-setpop(virus) <- ~country
+setPop(virus) <- ~country
 v.dup <- structure(list(MLG.3 = structure(c(4L, 8L), .Names = c("USA", 
 "Denmark")), MLG.9 = structure(c(1L, 13L, 1L, 1L), .Names = c("Japan", 
 "USA", "Finland", "Denmark")), MLG.31 = structure(c(2L, 7L), .Names = c("Japan", 
@@ -2595,11 +2600,11 @@ number of expected MLGs for a given sample size. For more information, type
 For the sake of this example, instead of drawing a curve for each of the 37
 countries represented in this sample, let's set the hierarchical level to year.
 <<mlgrare1_dummy, eval = FALSE>>=
-setpop(virus) <- ~year
+setPop(virus) <- ~year
 summary(virus) # Check the data to make sure it's correct.
 @
 <<mlgrare1, echo = FALSE>>=
-setpop(virus) <- ~year
+setPop(virus) <- ~year
 res <- structure(list(N = 1903L, pop.eff = structure(c(158, 415, 399, 
 469, 462), .Names = c("2002", "2003", "2004", "2005", "2006")), 
     loc.nall = structure(c(3L, 3L, 4L, 2L, 4L, 2L, 3L, 2L, 4L, 
@@ -2676,7 +2681,7 @@ interesting data sets. Let's say we wanted to know which MLGs were duplicated
 across the regions of the United Kingdom, Germany, Netherlands, and Norway. All
 we have to do is use the \texttt{sublist} flag in the function:
 <<subcross>>=
-setpop(virus) <- ~country
+setPop(virus) <- ~country
 UGNN.list <- c("United Kingdom", "Germany", "Netherlands", "Norway")
 UGNN <- mlg.crosspop(virus, sublist=UGNN.list, indexreturn=TRUE)
 @
@@ -4161,11 +4166,11 @@ hierarchies in genclone objects:
   \hline
  Method & Function & Input & Result\\ 
   \hline
- split & \cmdlink{data.manip:hier:define:split}{splithierarchy} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{sethierarchy} & data frame & new hierarchy\\ 
- get & \cmdlink{data.manip:hier:view}{gethierarchy} & formula & data frame\\ 
- name & \cmdlink{data.manip:hier:manip:name}{namehierarchy} & formula & new hierarchy names\\ 
- add & \cmdlink{data.manip:hier:manip:add}{addhierarchy} & vector or data frame & new hierarchical level\\
+ split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
+ set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchy\\ 
+ get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\ 
+ name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchy names\\ 
+ add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
 \end{table}
@@ -4186,9 +4191,9 @@ Pinf
 @
 \noindent
 Let's say I wanted to change the hierarchy names to Spanish. I can do that using
-\texttt{namehierarchy}.
+\texttt{nameStrata}.
 <<Pinf_rename>>=
-elPinf <- namehierarchy(Pinf, ~continente/pais) # Don't forget the formula syntax!
+elPinf <- nameStrata(Pinf, ~continente/pais) # Don't forget the formula syntax!
 elPinf
 Pinf
 @
@@ -4198,7 +4203,7 @@ the names we want.
 
 Of course, it would be silly to create a new data set every time we wanted to do
 something like change names. This is why all of the above functions (with the
-exception of \texttt{gethierarchy}) all have the replacement syntax of:
+exception of \texttt{strata}) all have the replacement syntax of:
 <<hier_syntax_replace, eval = FALSE>>=
 FUNCTION(object) <- input
 @
@@ -4209,7 +4214,7 @@ This allows the object to be edited \textit{in place} and makes things generally
 easier. Let's revisit our previous example:
 <<Pinf_replace>>=
 Pinf
-namehierarchy(Pinf) <- ~continente/pais
+nameStrata(Pinf) <- ~continente/pais
 Pinf
 @
 While we will mainly be using the replacement syntax in this vignette, the 
@@ -4650,12 +4655,12 @@ to its definition and description.
 \cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Manipulation}}\\
-\cmdlink{data.manip:hier:setpop}{setpop} & Set the population using defined hierarchies\\
-\cmdlink{data.manip:hier:define}{splithierarchy} & Split a concatenated hierarchy imported as a population\\
-\cmdlink{data.manip:hier:define}{sethierarchy} & Define a population hierarchy of a genclone object\\
-\cmdlink{data.manip:hier:view}{gethierarchy} & Extract the hierarchy data frame\\
-\cmdlink{data.manip:hier:manip}{addhierarchy} & Add a vector or data frame to an existing hierarchy \\
-\cmdlink{data.manip:hier:manip}{namehierarchy} & Rename a population hierarchy\\
+\cmdlink{data.manip:hier:setPop}{setPop} & Set the population using defined hierarchies\\
+\cmdlink{data.manip:hier:define}{splitStrata} & Split a concatenated hierarchy imported as a population\\
+\cmdlink{data.manip:hier:define}{strata} & Define a population hierarchy of a genclone object\\
+\cmdlink{data.manip:hier:view}{strata} & Extract the hierarchy data frame\\
+\cmdlink{data.manip:hier:manip}{addStrata} & Add a vector or data frame to an existing hierarchy \\
+\cmdlink{data.manip:hier:manip}{nameStrata} & Rename a population hierarchy\\
 \cmdlink{data.manip:missing:missingno}{missingno} & Handles missing data \\
 \cmdlink{data.manip:cc:clonecorrect}{clonecorrect} & Clone censors at a specified population hierarchy \\
 \cmdlink{data.manip:informloci}{informloci} & Detects and removes phylogenetically uninformative loci \\
