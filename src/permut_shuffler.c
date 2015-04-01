@@ -41,7 +41,7 @@ A slightly faster method of permuting alleles at a locus.
 Inputs:
 	locus - The matrix to be permuted. Used for reference.
 	alleles - a vector of integers from 0 to n alleles indicating the matrix cols
-	allele_freq - 1/ploidy
+	# allele_freq - 1/ploidy
 	ploidy - self-explainitory
 
 Outputs;
@@ -49,17 +49,26 @@ Outputs;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
 {
-	int rows, cols, i, j, count = 0, ploid, p, miss = 0;
+	int rows;
+	int cols;
+	int i;
+	int j;
+	int count = 0;
+	int ploid;
+	int p;
+	int miss = 0;
 	SEXP Rout;
 	SEXP Rdim;
 	Rdim = getAttrib(locus, R_DimSymbol);
 	rows = INTEGER(Rdim)[0]; 
 	cols = INTEGER(Rdim)[1]; 
-	PROTECT(Rout = allocMatrix(REALSXP, rows, cols));
+	PROTECT(Rout = allocMatrix(INTSXP, rows, cols));
 	alleles = coerceVector(alleles, INTSXP);
 	ploidy = coerceVector(ploidy, INTSXP);
 	ploid = INTEGER(ploidy)[0];
-	double *loc = REAL(locus), *outmat = REAL(Rout), *afreq = REAL(allele_freq);
+	int *loc = INTEGER(locus);
+	int *outmat = INTEGER(Rout);
+	// double *afreq = REAL(allele_freq);
 	int *alle = INTEGER(alleles);
 	for(i = 0; i < rows; i++)
 	{
@@ -74,7 +83,7 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
 			}
 			else
 			{
-				outmat[i + j*rows] = 0.0; 
+				outmat[i + j*rows] = 0; 
 			}
 		}
 		if (miss == 1)
@@ -86,7 +95,7 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
 			// permute the alleles by adding the allele frequency
 			for(p = 0; p < ploid; p++)
 			{
-				outmat[i + alle[count++]*rows] += *(afreq);
+				outmat[i + alle[count++]*rows] += 1;
 			}
 		}
 	}
@@ -121,7 +130,7 @@ SEXP new_permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy,
 	Rdim = getAttrib(locus, R_DimSymbol);
 	rows = INTEGER(Rdim)[0]; 
 	cols = INTEGER(Rdim)[1]; 
-	PROTECT(Rout = allocMatrix(REALSXP, rows, cols));
+	PROTECT(Rout = allocMatrix(INTSXP, rows, cols));
 	alleles = coerceVector(alleles, INTSXP);
 	ploidy = coerceVector(ploidy, INTSXP);
 	ploid = INTEGER(ploidy)[0];
@@ -183,8 +192,12 @@ Outputs;
 SEXP expand_indices(SEXP indices, SEXP length) {
 	SEXP res;
 	SEXP tempvec;
-	int rows, i, j, *ind = INTEGER(indices);
-	int max, min = 1;
+	int rows;
+	int i;
+	int j;
+	int *ind = INTEGER(indices);
+	int max;
+	int min = 1;
 	rows = INTEGER(length)[0];
 	PROTECT(res = allocVector(VECSXP, rows));
 	for (i = 0; i < rows; i++)
