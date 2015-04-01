@@ -20,7 +20,7 @@ MailingList: http://groups.google.com/group/poppr
 BugReports: https://github.com/grunwaldlab/poppr/issues
 Depends:
     R (>= 2.15.1),
-    adegenet (>= 1.4-2)
+    adegenet (>= 2.0-0)
 Imports:
     vegan,
     ggplot2,
