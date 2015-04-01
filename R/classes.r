@@ -94,6 +94,7 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 setClass("genclone", 
          contains = "genind",
          representation = representation(mlg = "mlgORnumeric"),
+         prototype(mlg = integer(0))
 )
 
 # valid.genclone <- function(object){

@@ -272,6 +272,28 @@ is.genclone <- function(x){
   res <- (is(x, "genclone"))
   return(res)
 }
+#==============================================================================#
+#' @rdname genclone-method
+#' @param .Object a character, "genclone"
+#' @param gen \code{"\linkS4class{genind}"} object
+#' @param mlg a vector where each element assigns the multilocus genotype of
+#' that individual in the data set. 
+#' @param mlgclass a logical value specifying whether or not to translate the
+#' mlg object into an MLG class object. 
+#' @keywords internal
+#==============================================================================#
+setMethod(      
+  f = "initialize",
+  signature("genclone"),
+  definition = function(.Object, ..., mlg, mlgclass = TRUE){
+
+    .Object <- callNextMethod(.Object, ..., mlg = mlg)
+    if (missing(mlg)) mlg <- mlg.vector(.Object)
+    if (mlgclass)     mlg <- new("MLG", mlg)
+    slot(.Object, "mlg") <- mlg
+    return(.Object)
+  }
+)
 
 #==============================================================================#
 #' Methods used for the genclone object
@@ -292,11 +314,10 @@ is.genclone <- function(x){
 setMethod(
   f = "[",
   signature(x = "genclone", i = "ANY", j = "ANY", drop = "ANY"),
-  definition = function(x, i, j, ...){
-    mlg   <- x@mlg
-    x     <- callNextMethod()
-    x@mlg <- mlg[i]
-    return(x)
+  definition = function(x, i, j, ..., drop = FALSE){
+    if (missing(i)) i <- TRUE
+    x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
+    return(as.genclone(x, mlg[i]))
   }
 #   definition = function(x, i, j, ..., loc=NULL, treatOther=TRUE, quiet=TRUE, drop = FALSE){
 #     if (missing(i)) i <- TRUE
@@ -380,37 +401,6 @@ setMethod(
 # 
 #     return(res)
 #   }
-)
-
-#==============================================================================#
-#' @rdname genclone-method
-#' @param .Object a character, "genclone"
-#' @param gen \code{"\linkS4class{genind}"} object
-#' @param mlg a vector where each element assigns the multilocus genotype of
-#' that individual in the data set. 
-#' @param mlgclass a logical value specifying whether or not to translate the
-#' mlg object into an MLG class object. 
-#' @keywords internal
-#==============================================================================#
-setMethod(      
-  f = "initialize",
-  signature("genclone"),
-  definition = function(.Object, gen, mlg, mlgclass = TRUE){
-    if (missing(gen)){
-      gen <- new("genind")
-      if (missing(mlg)) mlg <- 0
-    } else {
-      if (missing(mlg)) mlg <- mlg.vector(gen)
-    }
-
-    # No 'initialize' method for genind objects...
-    lapply(names(gen), function(y) slot(.Object, y) <<- slot(gen, y))
-
-    if (mlgclass) mlg <- new("MLG", mlg)
-
-    slot(.Object, "mlg") <- mlg
-    return(.Object)
-  }
 )
 
 #==============================================================================#
@@ -527,6 +517,7 @@ setMethod(
 #' @aliases as.genclone,genind-method
 #' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} 
 #'   object
+#' @param ... arguments passed on to the \code{\linkS4class{genind}} constructor
 #' @docType methods
 #'   
 #' @note The hierarchy must have the same number of rows as the number of 
@@ -548,7 +539,7 @@ setMethod(
 #' Aeut.gc <- as.genclone(Aeut)
 #' Aeut.gc
 #==============================================================================#
-as.genclone <- function(x){
+as.genclone <- function(x, ...){
   standardGeneric("as.genclone")
 }
 
@@ -559,8 +550,16 @@ setGeneric("as.genclone")
 setMethod(
   f = "as.genclone",
   signature(x = "genind"),
-  definition = function(x){
-    new("genclone", x)
+  definition = function(x, ...){
+    theCall <- match.call()
+    if (!missing(x) && is.genind(x)){
+      res <- new("genclone", tab = tab(x), ploidy = ploidy(x), pop = pop(x), 
+                 type = x@type, prevcall = theCall, strata = x@strata, 
+                 hierarchy = x@hierarchy)
+    } else {
+      res <- new("genclone", ...)
+    }
+    return(res)
   })
 
 #==============================================================================#
@@ -569,11 +568,11 @@ setMethod(
 setMethod(
   f = "seploc",
   signature(x = "genclone"),
-  definition = function(x, ...){
+  definition = function(x, truenames=TRUE, res.type=c("genind", "matrix")){
     mlg       <- x@mlg
-    listx     <- callNextMethod()
+    listx     <- callNextMethod(x, truenames = truenames, res.type = res.type)
     if (is.genind(listx[[1]])){
-      listx <- lapply(listx, function(gid) new("genclone", gid, mlg))
+      listx <- lapply(listx, function(gid){gid@mlg <- mlg; return(gid)})
     }
     return(listx)
   })

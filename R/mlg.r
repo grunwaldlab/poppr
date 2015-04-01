@@ -180,7 +180,7 @@ mlg <- function(pop, quiet=FALSE){
   if (!is.genind(pop)){
     stop(paste(substitute(pop), "is not a genind object"))
   }
-  if (is.genclone(pop)){
+  if (is.genclone(pop) && length(pop@mlg) == nrow(pop@tab)){
     out <- length(unique(pop@mlg[]))
   } else {
     if(nrow(pop@tab) == 1){
@@ -275,7 +275,7 @@ mlg.vector <- function(pop){
   # Step 4: evaluate strings in sorted vector and increment to the respective 
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
-  if (is.genclone(pop)){
+  if (is.genclone(pop) && length(pop@mlg) == nrow(pop@tab)){
     return(pop@mlg[])
   }
   xtab <- pop@tab

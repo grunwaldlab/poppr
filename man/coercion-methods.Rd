@@ -6,11 +6,13 @@
 \alias{as.genclone,genind-method}
 \title{Create a genclone object from a genind object.}
 \usage{
-as.genclone(x)
+as.genclone(x, ...)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
 object}
+
+\item{...}{arguments passed on to the \code{\linkS4class{genind}} constructor}
 }
 \description{
 Wrapper for genclone initializer.
