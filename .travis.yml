@@ -13,7 +13,7 @@ r_packages:
 
 r_github_packages:
   - thibautjombart/adegenet
-  - emmanuelparadis/pegas
+  - emmanuelparadis/pegas/pegas
   - KlausVigo/phangorn
 
 notifications:
