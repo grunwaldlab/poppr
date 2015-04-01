@@ -130,7 +130,7 @@ application to human mitochondrial DNA restriction data. \emph{Genetics},
 \seealso{
 \code{\link[ade4]{amova}} \code{\link{clonecorrect}}
   \code{\link{diss.dist}} \code{\link{missingno}}
-  \code{\link[ade4]{is.euclid}} \code{\link{sethierarchy}}
+  \code{\link[ade4]{is.euclid}} \code{\link{strata}}
 }
 \keyword{amova}
 

@@ -176,7 +176,7 @@
 #' 
 #' @seealso \code{\link[ade4]{amova}} \code{\link{clonecorrect}}
 #'   \code{\link{diss.dist}} \code{\link{missingno}}
-#'   \code{\link[ade4]{is.euclid}} \code{\link{sethierarchy}}
+#'   \code{\link[ade4]{is.euclid}} \code{\link{strata}}
 #' @export
 #' @examples
 #' data(Aeut)
@@ -206,8 +206,8 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   full_hier <- parsed_hier[length(parsed_hier)]
   
   if (is.genclone(x)){
-    setpop(x) <- hier
-    other(x)[[dfname]] <- gethierarchy(x, hier, combine = FALSE)
+    setPop(x) <- hier
+    other(x)[[dfname]] <- strata(x, hier, combine = FALSE)
   } else {
     if (!dfname %in% names(other(x))){
       stop(paste(dfname, "is not present in the 'other' slot"))

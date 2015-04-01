@@ -30,7 +30,7 @@ population of an object became:
 That is a lot to keep track of. The new \strong{\code{hierarchy}} slot will
 allow the user to change the population factor with one function and a formula:
 
-\code{setpop(object) <- ~Population/Subpopulation}
+\code{setPop(object) <- ~Population/Subpopulation}
 
 making this become slightly more intuitive and tractable.
 
@@ -52,7 +52,7 @@ Class \code{"\linkS4class{genind}"}, directly.
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{as.genclone}} \code{\link{sethierarchy}} \code{\link{setpop}}
+\code{\link{as.genclone}} \code{\link{strata}} \code{\link{setPop}}
 \code{\linkS4class{genind}}
 }
 

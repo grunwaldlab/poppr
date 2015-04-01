@@ -54,7 +54,7 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 
 \item{hier}{\itemize{ \item \strong{for genclone objects} - a \code{formula}
   indicating the hierarchical levels to be used. The hierarchies should be
-  present in the \code{hierarchy} slot. See \code{\link{sethierarchy}} for
+  present in the \code{hierarchy} slot. See \code{\link{strata}} for
   details. \item \strong{for genind objects} - a \code{numeric or character}
   vector OR a hierarchical formula. This is the list of columns within a data
   frame (specified in \code{dfname}) in the 'other' slot of the

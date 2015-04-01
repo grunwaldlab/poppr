@@ -221,7 +221,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' \dontrun{
 #' # Set subpopulation structure.
 #' Aeut.sub <- as.genclone(Aeut)
-#' setpop(Aeut.sub) <- ~Pop/Subpop
+#' setPop(Aeut.sub) <- ~Pop/Subpop
 #' 
 #' # Plot respective to the subpopulation structure
 #' As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA)

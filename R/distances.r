@@ -465,7 +465,7 @@ provesti.dist <- function(x){
 #' 
 #' # This can also be run on genpop objects
 #' Aeut.gc <- as.genclone(Aeut, hierarchy=other(Aeut)$population_hierarchy[-1])
-#' setpop(Aeut.gc) <- ~Pop/Subpop
+#' setPop(Aeut.gc) <- ~Pop/Subpop
 #' Aeut.pop <- genind2genpop(Aeut.gc)
 #' set.seed(5000)
 #' aboot(Aeut.pop) # compare to Grunwald et al. 2006

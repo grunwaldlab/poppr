@@ -74,7 +74,7 @@ poppr_message <- function(){
 # present in the given data frame.
 #
 # Public functions utilizing this function:
-# # setpop gethierarchy poppr.amova
+# # setPop strata poppr.amova
 #
 # Internal functions utilizing this function:
 # # make_hierarchy make_ade_df

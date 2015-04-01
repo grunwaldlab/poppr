@@ -21,7 +21,7 @@ The hierarchy must have the same number of rows as the number of
   will search for a data frame in the \code{\link{other}} slot called
   "population_hierarchy" and set that as the hieararchy. If none is defined,
   the population will be set as the hierarchy under the label "Pop". Use the
-  function \code{\link{splithierarchy}} to split up any population
+  function \code{\link{splitStrata}} to split up any population
   hierarchies that might be combined in the population factor.
 }
 \examples{
@@ -36,7 +36,7 @@ Aeut.gc
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{splithierarchy}}, \code{\linkS4class{genclone}},
+\code{\link{splitStrata}}, \code{\linkS4class{genclone}},
   \code{\link{read.genalex}}
 }
 

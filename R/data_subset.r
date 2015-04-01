@@ -162,13 +162,13 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   }
   if (is.genclone(pop)){
     if (is.numeric(hier)){
-      hier <- names(gethierarchy(pop))[hier]
+      hier <- names(strata(pop))[hier]
       hierformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
     }
-    if (!all(hier %in% names(gethierarchy(pop)))){
-      stop(hier_incompatible_warning(hier, gethierarchy(pop)))
+    if (!all(hier %in% names(strata(pop)))){
+      stop(hier_incompatible_warning(hier, strata(pop)))
     }
-    setpop(pop) <- hierformula
+    setPop(pop) <- hierformula
   } else if (is.null(other(pop)[[dfname]])) {
     if(length(hier) == 1 & hier[1] == 1){
       if(length(levels(pop(pop))) == 1 | is.null(pop(pop))){
@@ -221,7 +221,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
     if (is.genclone(pop)){
       hier <- hier[keep]
       newformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
-      setpop(pop) <- newformula
+      setPop(pop) <- newformula
     } else {
       if(length(keep) > 1){
         pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
@@ -546,7 +546,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' @param hier a \code{vector} containing the population hierarchy you wish to
 #' split or combine. 
 #'
-#' @param setpopulation \code{logical}. if \code{TRUE}, the population of the
+#' @param setPopulation \code{logical}. if \code{TRUE}, the population of the
 #' resulting genind object will be that of the highest population structure
 #' (split method) or the combined populations (combine method).
 #'
@@ -559,7 +559,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #'
 #' @note 
 #' This function has been deprecated and replaced by functions like
-#' \code{\link{splithierarchy}}. Please consider using the
+#' \code{\link{splitStrata}}. Please consider using the
 #' \code{\linkS4class{genclone}} object for storing hierarchies. 
 #'
 #' The separator
@@ -603,7 +603,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
 #' H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
 #' }
 #==============================================================================#
-splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=1, setpopulation=TRUE, fixed=TRUE){
+splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=1, setPopulation=TRUE, fixed=TRUE){
   
   # As this function is deprecated, the following lines will attempt to give the
   # user equivalent code in poppr >v.1.1.0 
@@ -614,23 +614,23 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     newhier <- paste0("other(", sccall, ")$", dfname, "[1]")
     if (!is.numeric(hier)){
       newform <- paste0("~", paste(hier, collapse = "/"))
-      sugg <- paste0(newhier, "); splithierarchy(", sccall, ") <- ", newform, "'\n")
+      sugg <- paste0(newhier, "); splitStrata(", sccall, ") <- ", newform, "'\n")
     } else {
-      sugg <- paste0(newhier, ")' and 'splithierarchy'\n")
+      sugg <- paste0(newhier, ")' and 'splitStrata'\n")
     }
   } else {
     newhier <- paste0("other(", sccall, ")$", dfname)
     if (!is.numeric(hier)){
       newform <- paste0("~", paste(hier, collapse = "/"))
-      sugg <- paste0(newhier, "); setpop(", sccall, ") <- ", newform, "'\n")
+      sugg <- paste0(newhier, "); setPop(", sccall, ") <- ", newform, "'\n")
     } else {
-      sugg <- paste0(newhier, ")' and 'setpop'\n") 
+      sugg <- paste0(newhier, ")' and 'setPop'\n") 
     }
   }
   dmsg <- c("'splitcombine' is deprecated.\n\n",
             paste0(depmsg, sugg), "\n",
-            "See help(\"genclone\"), help(\"setpop\"), ",
-            "and help(\"splithierarchy\") for details.")
+            "See help(\"genclone\"), help(\"setPop\"), ",
+            "and help(\"splitStrata\") for details.")
   .Deprecated("genclone", package = "poppr", dmsg)
   ###########
   
@@ -703,7 +703,7 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     }
     
     # Set the population to the highest level of the hierarchy.
-    if(setpopulation == TRUE){
+    if(setPopulation == TRUE){
       hier <- ifelse(is.numeric(hier), as.character(hier), hier)
       pop(pop) <- pop$other[[dfname]][[hier[1]]]
       names(pop$pop.names) <- levels(pop$pop)
@@ -722,7 +722,7 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     # Combining the hierarchy. This will no longer give you numbers as names,
     # rather it will return the names.
     pop$other[[dfname]][[paste(names(pop$other[[dfname]][hier]), collapse=sep)]] <- newdf
-    if(setpopulation == TRUE){
+    if(setPopulation == TRUE){
       pop(pop) <- newdf
       names(pop$pop.names) <- levels(pop$pop)
     }

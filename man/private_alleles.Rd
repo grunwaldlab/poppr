@@ -28,7 +28,7 @@ Tabulate alleles the occur in only one population.
 }
 \examples{
 data(Pinf) # Load P. infestans data.
-setpop(Pinf) <- ~Country # Set the population to be at the country level
+setPop(Pinf) <- ~Country # Set the population to be at the country level
 private_alleles(Pinf)
 \dontrun{
 # An example of how this data can be displayed.

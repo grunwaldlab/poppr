@@ -96,7 +96,7 @@
 #'   
 #' @param hier \itemize{ \item \strong{for genclone objects} - a \code{formula} 
 #'   indicating the hierarchical levels to be used. The hierarchies should be 
-#'   present in the \code{hierarchy} slot. See \code{\link{sethierarchy}} for 
+#'   present in the \code{hierarchy} slot. See \code{\link{strata}} for 
 #'   details. \item \strong{for genind objects} - a \code{numeric or character} 
 #'   vector OR a hierarchical formula. This is the list of columns within a data
 #'   frame (specified in \code{dfname}) in the 'other' slot of the 
@@ -714,7 +714,7 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #' @examples
 #' 
 #' data(Pinf) # Load P. infestans data.
-#' setpop(Pinf) <- ~Country # Set the population to be at the country level
+#' setPop(Pinf) <- ~Country # Set the population to be at the country level
 #' private_alleles(Pinf)
 #' \dontrun{
 #' # An example of how this data can be displayed.

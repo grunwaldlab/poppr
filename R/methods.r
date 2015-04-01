@@ -534,10 +534,10 @@ setMethod(
 #'   will search for a data frame in the \code{\link{other}} slot called 
 #'   "population_hierarchy" and set that as the hieararchy. If none is defined,
 #'   the population will be set as the hierarchy under the label "Pop". Use the 
-#'   function \code{\link{splithierarchy}} to split up any population 
+#'   function \code{\link{splitStrata}} to split up any population 
 #'   hierarchies that might be combined in the population factor.
 #'   
-#' @seealso \code{\link{splithierarchy}}, \code{\linkS4class{genclone}},
+#' @seealso \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
 #'   \code{\link{read.genalex}}
 #' @author Zhian N. Kamvar
 #' @examples
@@ -585,7 +585,7 @@ setMethod(
 # #~ 
 # #~ @export 
 # #~ @rdname hierarchy-methods
-# #~ @aliases gethierarchy,genclone-method
+# #~ @aliases strata,genclone-method
 # #~ @param x a genclone object
 # #~ @param formula a nested formula indicating the order of the population
 # #~ hierarchy.
@@ -593,15 +593,15 @@ setMethod(
 # #~ formula argument. If it is \code{FALSE}, the levels will not be combined.
 # #~ @docType methods
 # #==============================================================================#
-# gethierarchy <- function(x, formula = NULL, combine = TRUE){
-#   standardGeneric("gethierarchy")
+# strata <- function(x, formula = NULL, combine = TRUE){
+#   standardGeneric("strata")
 # } 
 
 # #~ @export
-# setGeneric("gethierarchy")
+# setGeneric("strata")
 
 # setMethod(
-#   f = "gethierarchy",
+#   f = "strata",
 #   signature(x = "genclone"),
 #   definition = function(x, formula = NULL, combine = TRUE){
 #     if (is.null(formula)) return(x@hierarchy)
@@ -620,25 +620,25 @@ setMethod(
 # #==============================================================================#
 # #~ @export
 # #~ @rdname hierarchy-methods
-# #~ @aliases sethierarchy<-,genclone-method
+# #~ @aliases strata<-,genclone-method
 # #~ @param value a data frame OR vector OR formula (see details).
 # #~ @docType methods
 # #~   
 # #~ @details \subsection{Function Specifics}{ \itemize{ \item
-# #~ \strong{gethierarchy()} - This will retrieve the data from the
+# #~ \strong{strata()} - This will retrieve the data from the
 # #~ \emph{hierarchy} slot in the \linkS4class{genclone} object. You have the
 # #~ option to choose specific heirarchical levels using a formula (see below) and
 # #~ you can choose to combine the hierarchical levels (default) \item
-# #~ \strong{sethierarchy()} - Set or reset the hierarchical levels in your
-# #~ \linkS4class{genclone} object. \item \strong{namehierarchy()} - Rename the
-# #~ hierarchical levels. \item \strong{splithierarchy()} - This is conceptually
+# #~ \strong{strata()} - Set or reset the hierarchical levels in your
+# #~ \linkS4class{genclone} object. \item \strong{nameStrata()} - Rename the
+# #~ hierarchical levels. \item \strong{splitStrata()} - This is conceptually
 # #~ similar to the default method of \code{\link{splitcombine}}. It is often
 # #~ difficult to import files with several levels of hierarchy as most data
 # #~ formats do not allow unlimited population levels. This is circumvented by
 # #~ collapsing all hierarchical levels into a single population factor with a
 # #~ common separator for each observation. This function will then split those
 # #~ hierarchies for you, but it works best on a hierarchy that only has a single
-# #~ column in it. See the rootrot example below. \item \strong{addhierarchy()} -
+# #~ column in it. See the rootrot example below. \item \strong{addStrata()} -
 # #~ Add levels to your population hierarchy. If you have extra hierarchical
 # #~ levels you want to add to your population hierarchy, you can use this method
 # #~ to do so. You can input a data frame or a vector, but if you put in a vector,
@@ -648,18 +648,18 @@ setMethod(
 # #~ 
 # #~ These functions allow the user to seamlessly assign the hierarchical levels
 # #~ of their \code{\linkS4class{genclone}} object. Note that there are two ways
-# #~ of performing all methods (except for \code{gethierarchy()}). They
+# #~ of performing all methods (except for \code{strata()}). They
 # #~ essentially do the same thing except that the assignment method (the one with
 # #~ the "\code{<-}") will modify the object in place whereas the non-assignment 
 # #~ method will not modify the original object. Due to convention, everything 
 # #~ right of the assignment is termed \code{value}. To avoid confusion, here is a
-# #~ guide to the inputs: \itemize{ \item \strong{sethierarchy()} This will be a 
+# #~ guide to the inputs: \itemize{ \item \strong{strata()} This will be a 
 # #~ \code{\link{data.frame}} that defines the hierarchy for each individual in 
-# #~ the rows. \item \strong{namehierarchy()} This will be either a 
+# #~ the rows. \item \strong{nameStrata()} This will be either a 
 # #~ \code{\link{vector}} or a \code{\link{formula}} that will define the names. 
-# #~ \item \strong{splithierarchy()} This will be a \code{\link{formula}} argument
+# #~ \item \strong{splitStrata()} This will be a \code{\link{formula}} argument
 # #~ with the same number of levels as the hierarchy you wish to split. \item 
-# #~ \strong{addhierarchy()} This will be a \code{\link{vector}} or 
+# #~ \strong{addStrata()} This will be a \code{\link{vector}} or 
 # #~ \code{\link{data.frame}} with the same length as the number of individuals in
 # #~ your data. }}
 # #~ 
@@ -674,7 +674,7 @@ setMethod(
 # #~ hierarchies as other types of formulas (eg. 
 # #~ \code{~Country*City*Neighborhood}) might give spurious results.}
 # #~ 
-# #~ @seealso \code{\link{setpop}} \code{\link{genclone}}
+# #~ @seealso \code{\link{setPop}} \code{\link{genclone}}
 # #~   \code{\link{as.genclone}}
 # #~   
 # #~ @author Zhian N. Kamvar
@@ -690,46 +690,46 @@ setMethod(
 # #~ names(other(microgc))
 # #~ 
 # #~ # Let's set the hierarchy
-# #~ sethierarchy(microgc) <- data.frame(other(microgc))
+# #~ strata(microgc) <- data.frame(other(microgc))
 # #~ microgc
 # #~ 
 # #~ # And change the names so we know what they are
-# #~ namehierarchy(microgc) <- ~Country/Breed/Species
+# #~ nameStrata(microgc) <- ~Country/Breed/Species
 # #~ 
 # #~ # let's see what the hierarchy looks like by Species and Breed:
-# #~ head(gethierarchy(microgc, ~Breed/Species))
+# #~ head(strata(microgc, ~Breed/Species))
 # #~ 
 # #~ \dontrun{
 # #~ # Load our data set and convert it to a genclone object.
 # #~ Aeut.gc <- read.genalex(system.file("files/rootrot.csv", package = "poppr"))
 # #~ 
 # #~ # we can see the hierarchy is set to Population_Subpopulation.
-# #~ head(gethierarchy(Aeut.gc))
+# #~ head(strata(Aeut.gc))
 # #~ 
-# #~ # We can use splithierarchy() to split them.
-# #~ splithierarchy(Aeut.gc) <- ~Pop/Subpop
+# #~ # We can use splitStrata() to split them.
+# #~ splitStrata(Aeut.gc) <- ~Pop/Subpop
 # #~ Aeut.gc
-# #~ head(gethierarchy(Aeut.gc))
+# #~ head(strata(Aeut.gc))
 # #~ 
-# #~ # We can also use gethierarchy to combine the hierarchy.
-# #~ head(gethierarchy(Aeut.gc, ~Pop/Subpop))
+# #~ # We can also use strata to combine the hierarchy.
+# #~ head(strata(Aeut.gc, ~Pop/Subpop))
 # #~ 
 # #~ # We can also give it a more descriptive name. 
-# #~ namehierarchy(Aeut.gc) <- ~Population/Subpopulation
+# #~ nameStrata(Aeut.gc) <- ~Population/Subpopulation
 # #~ Aeut.gc
-# #~ Aeut.gc <- namehierarchy(Aeut.gc, ~Pop/Subpop)
+# #~ Aeut.gc <- nameStrata(Aeut.gc, ~Pop/Subpop)
 # #~ Aeut.gc
 # #~ }
 # #==============================================================================#
-# sethierarchy <- function(x, value){
-#   standardGeneric("sethierarchy")
+# strata <- function(x, value){
+#   standardGeneric("strata")
 # } 
 
 # #~ @export
-# setGeneric("sethierarchy")
+# setGeneric("strata")
 
 # setMethod(
-#   f = "sethierarchy",
+#   f = "strata",
 #   signature(x = "genclone"),
 #   definition = function(x, value){
 #     if (!inherits(value, "data.frame")){
@@ -746,38 +746,38 @@ setMethod(
 # #==============================================================================#
 # #~ @export 
 # #~ @rdname hierarchy-methods
-# #~ @aliases sethierarchy,genclone-method
+# #~ @aliases strata,genclone-method
 # #~ @docType methods
 # #==============================================================================#
-# "sethierarchy<-" <- function(x, value){
-#   standardGeneric("sethierarchy<-")
+# "strata<-" <- function(x, value){
+#   standardGeneric("strata<-")
 # }  
 
 # #~ @export
-# setGeneric("sethierarchy<-")
+# setGeneric("strata<-")
 
 # setMethod(
-#   f = "sethierarchy<-",
+#   f = "strata<-",
 #   signature(x = "genclone"),
 #   definition = function(x, value){
-#     return(sethierarchy(x, value))
+#     return(strata(x, value))
 #   })
 
 # #==============================================================================#
 # #~ @export 
 # #~ @rdname hierarchy-methods
-# #~ @aliases namehierarchy,genclone-method
+# #~ @aliases nameStrata,genclone-method
 # #~ @docType methods
 # #==============================================================================#
-# namehierarchy <- function(x, value){
-#   standardGeneric("namehierarchy")
+# nameStrata <- function(x, value){
+#   standardGeneric("nameStrata")
 # }  
 
 # #~ @export
-# setGeneric("namehierarchy")
+# setGeneric("nameStrata")
 
 # setMethod(
-#   f = "namehierarchy",
+#   f = "nameStrata",
 #   signature(x = "genclone"),
 #   definition = function(x, value){
 #     if (is.language(value)){
@@ -793,41 +793,41 @@ setMethod(
 # #==============================================================================#
 # #~ @export 
 # #~ @rdname hierarchy-methods
-# #~ @aliases namehierarchy<-,genclone-method
+# #~ @aliases nameStrata<-,genclone-method
 # #~ @docType methods
 # #==============================================================================#
-# "namehierarchy<-" <- function(x, value){
-#   standardGeneric("namehierarchy<-")
+# "nameStrata<-" <- function(x, value){
+#   standardGeneric("nameStrata<-")
 # }  
 
 # #~ @export
-# setGeneric("namehierarchy<-")
+# setGeneric("nameStrata<-")
 
 # setMethod(
-#   f = "namehierarchy<-",
+#   f = "nameStrata<-",
 #   signature(x = "genclone"),
 #   definition = function(x, value){
-#     return(namehierarchy(x, value))
+#     return(nameStrata(x, value))
 #   })
 
 # #==============================================================================#
 # #~ @export 
 # #~ @rdname hierarchy-methods
-# #~ @aliases splithierarchy,genclone-method
+# #~ @aliases splitStrata,genclone-method
 # #~ @docType methods
 # #~ @param sep a \code{character} indicating the character used to separate
 # #~ hierarchical levels. This defaults to "_".
 # #~ @importFrom reshape2 colsplit
 # #==============================================================================#
-# splithierarchy <- function(x, value, sep = "_"){
-#   standardGeneric("splithierarchy")
+# splitStrata <- function(x, value, sep = "_"){
+#   standardGeneric("splitStrata")
 # }  
 
 # #~ @export
-# setGeneric("splithierarchy")
+# setGeneric("splitStrata")
 
 # setMethod(
-#   f = "splithierarchy",
+#   f = "splitStrata",
 #   signature(x = "genclone"),
 #   definition = function(x, value, sep = "_"){
 #     if (is.language(value)){
@@ -868,40 +868,40 @@ setMethod(
 # #==============================================================================#
 # #~ @export 
 # #~ @rdname hierarchy-methods
-# #~ @aliases splithierarchy<-,genclone-method
+# #~ @aliases splitStrata<-,genclone-method
 # #~ @docType methods
 # #==============================================================================#
-# "splithierarchy<-" <- function(x, sep = "_", value){
-#   standardGeneric("splithierarchy<-")
+# "splitStrata<-" <- function(x, sep = "_", value){
+#   standardGeneric("splitStrata<-")
 # }  
 
 # #~ @export
-# setGeneric("splithierarchy<-")
+# setGeneric("splitStrata<-")
 
 # setMethod(
-#   f = "splithierarchy<-",
+#   f = "splitStrata<-",
 #   signature(x = "genclone"),
 #   definition = function(x, sep = "_", value){
-#     return(splithierarchy(x, value, sep))
+#     return(splitStrata(x, value, sep))
 #   })
 
 # #==============================================================================#
 # #~ @export 
 # #~ @rdname hierarchy-methods
-# #~ @aliases addhierarchy,genclone-method
-# #~ @param name an optional name argument for use with addhierarchy if supplying
+# #~ @aliases addStrata,genclone-method
+# #~ @param name an optional name argument for use with addStrata if supplying
 # #~   a vector. Defaults to "NEW".
 # #~ @docType methods
 # #==============================================================================#
-# addhierarchy <- function(x, value, name = "NEW"){
-#   standardGeneric("addhierarchy")
+# addStrata <- function(x, value, name = "NEW"){
+#   standardGeneric("addStrata")
 # }  
 
 # #~ @export
-# setGeneric("addhierarchy")
+# setGeneric("addStrata")
 
 # setMethod(
-#   f = "addhierarchy",
+#   f = "addStrata",
 #   signature(x = "genclone"),
 #   definition = function(x, value, name = "NEW"){
     
@@ -924,21 +924,21 @@ setMethod(
 # #==============================================================================#
 # #~ @export 
 # #~ @rdname hierarchy-methods
-# #~ @aliases addhierarchy<-,genclone-method
+# #~ @aliases addStrata<-,genclone-method
 # #~ @docType methods
 # #==============================================================================#
-# "addhierarchy<-" <- function(x, name = "NEW", value){
-#   standardGeneric("addhierarchy<-")
+# "addStrata<-" <- function(x, name = "NEW", value){
+#   standardGeneric("addStrata<-")
 # }  
 
 # #~ @export
-# setGeneric("addhierarchy<-")
+# setGeneric("addStrata<-")
 
 # setMethod(
-#   f = "addhierarchy<-",
+#   f = "addStrata<-",
 #   signature(x = "genclone"),
 #   definition = function(x, name = "NEW", value){
-#     return(addhierarchy(x, value, name))
+#     return(addStrata(x, value, name))
 #   })
 
 
@@ -954,7 +954,7 @@ setMethod(
 # #~ @param formula a nested formula indicating the order of the population
 # #~ hierarchy.
 # #~ @param value same as formula
-# #~ @aliases setpop,genclone-method
+# #~ @aliases setPop,genclone-method
 # #~ @docType methods 
 # #~ @author Zhian N. Kamvar
 # #~ @examples
@@ -969,23 +969,23 @@ setMethod(
 # #~ head(pop(Aeut.gc)) 
 # #~ 
 # #~ # setting the hierarchy to both Pop and Subpop
-# #~ setpop(Aeut.gc) <- ~Pop/Subpop 
+# #~ setPop(Aeut.gc) <- ~Pop/Subpop 
 # #~ head(pop(Aeut.gc))
 # #~ 
 # #~ \dontrun{
 # #~ 
 # #~ # Can be used to create objects as well.
-# #~ Aeut.old <- setpop(Aeut.gc, ~Pop) 
+# #~ Aeut.old <- setPop(Aeut.gc, ~Pop) 
 # #~ head(pop(Aeut.old))
 # #~ }
 # #==============================================================================#
-# setpop <- function(x, formula = NULL) standardGeneric("setpop")
+# setPop <- function(x, formula = NULL) standardGeneric("setPop")
 
 # #~ @export
-# setGeneric("setpop")
+# setGeneric("setPop")
 
 # setMethod(
-#   f = "setpop",
+#   f = "setPop",
 #   signature(x = "genclone"),
 #   definition = function(x, formula = NULL){
 #     if (is.null(formula) | !is.language(formula)){
@@ -1002,17 +1002,17 @@ setMethod(
 # #==============================================================================#
 # #~ @export
 # #~ @rdname population-methods
-# #~ @aliases setpop<-,genclone-method
+# #~ @aliases setPop<-,genclone-method
 # #~ @docType methods
 # #==============================================================================#
-# "setpop<-" <- function(x, value) standardGeneric("setpop<-")
+# "setPop<-" <- function(x, value) standardGeneric("setPop<-")
 
 # #~ @export
-# setGeneric("setpop<-")
+# setGeneric("setPop<-")
 
 # setMethod(
-#   f = "setpop<-",
+#   f = "setPop<-",
 #   signature(x = "genclone"),
 #   definition = function(x, value){
-#     return(setpop(x, value))
+#     return(setPop(x, value))
 #   })

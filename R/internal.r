@@ -120,8 +120,8 @@ NULL
 #'   tree canopies. Phytopathology, submitted
 #' @examples
 #' data(monpop)
-#' splithierarchy(monpop) <- ~Tree/Year/Symptom
-#' setpop(monpop) <- ~Symptom/Year
+#' splitStrata(monpop) <- ~Tree/Year/Symptom
+#' setPop(monpop) <- ~Symptom/Year
 #' monpop
 #==============================================================================#
 NULL
@@ -1247,7 +1247,7 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
 #
 # Public functions utilizing this function:
 #
-# # poppr.amova, setpop, gethierarchy
+# # poppr.amova, setPop, strata
 #
 # Internal functions utilizing this function:
 # # none

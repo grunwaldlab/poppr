@@ -5,7 +5,7 @@
 \title{Split a or combine items within a data frame in \code{\link{genind}} objects (DEPRECATED).}
 \usage{
 splitcombine(pop, method = 1, dfname = "population_hierarchy", sep = "_",
-  hier = 1, setpopulation = TRUE, fixed = TRUE)
+  hier = 1, setPopulation = TRUE, fixed = TRUE)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} object.}
@@ -21,7 +21,7 @@ first column.}
 \item{hier}{a \code{vector} containing the population hierarchy you wish to
 split or combine.}
 
-\item{setpopulation}{\code{logical}. if \code{TRUE}, the population of the
+\item{setPopulation}{\code{logical}. if \code{TRUE}, the population of the
 resulting genind object will be that of the highest population structure
 (split method) or the combined populations (combine method).}
 
@@ -43,7 +43,7 @@ you might need.
 }
 \note{
 This function has been deprecated and replaced by functions like
-\code{\link{splithierarchy}}. Please consider using the
+\code{\link{splitStrata}}. Please consider using the
 \code{\linkS4class{genclone}} object for storing hierarchies.
 
 The separator

@@ -46,7 +46,7 @@ object.
   be called "Pop" and will reflect the population factor defined in the
   genalex input. If \code{region = TRUE}, a second column will be inserted
   and labeled "Region". If you have more than two hierarchical levels within
-  your data set, you should run the command \code{\link{splithierarchy}} on
+  your data set, you should run the command \code{\link{splitStrata}} on
   your data set to define the unique hierarchical levels. }
 
   \subsection{FOR POLYPLOID (> 2n) DATA SETS}{ Adegenet's genind object has

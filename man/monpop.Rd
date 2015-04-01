@@ -24,8 +24,8 @@ This is microsatellite data for a population of the haploid
 }
 \examples{
 data(monpop)
-splithierarchy(monpop) <- ~Tree/Year/Symptom
-setpop(monpop) <- ~Symptom/Year
+splitStrata(monpop) <- ~Tree/Year/Symptom
+setPop(monpop) <- ~Symptom/Year
 monpop
 }
 \references{
