@@ -11,6 +11,11 @@ apt_packages:
 r_packages:
   - devtools
 
+r_github_packages:
+  - thibautjombart/adegenet
+  - emmanuelparadis/pegas
+  - KlausVigo/phangorn
+
 notifications:
   email:
     on_success: change
