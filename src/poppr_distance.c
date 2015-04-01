@@ -109,36 +109,36 @@ SEXP pairdiffs(SEXP freq_mat)
 	int i;
 	int j;
 	int z;
+	int P;
 	int count;
-	double P;
 	SEXP Rout;
 	SEXP Rdim;
 	SEXP pair_matrix;
 	Rdim = getAttrib(freq_mat, R_DimSymbol);
 	I = INTEGER(Rdim)[0]; // Rows
 	J = INTEGER(Rdim)[1]; // Columns
-	PROTECT(pair_matrix = allocVector(REALSXP, J*2));
+	PROTECT(pair_matrix = allocVector(INTSXP, J*2));
 	count = 0;
-	PROTECT(Rout = allocVector(REALSXP, I*(I-1)/2));
+	PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
 	for(i = 0; i < I-1; i++)
 	{
 		for(z = 0; z < J; z++)
 		{
-			REAL(pair_matrix)[z] = REAL(freq_mat)[i+(I)*z];
+			INTEGER(pair_matrix)[z] = INTEGER(freq_mat)[i+(I)*z];
 		}
 		for(j = i+1; j < I; j++)
 		{
 			P = 0;
 			for(z = 0; z < J; z++)
 			{
-				if(ISNA(REAL(pair_matrix)[0]) || ISNA(REAL(freq_mat)[j+(I)*z]))
+				if(ISNA(INTEGER(pair_matrix)[0]) || ISNA(INTEGER(freq_mat)[j+(I)*z]))
 				{
 					P = 0;
 					break;
 				}
-				P += fabs(REAL(pair_matrix)[z] - REAL(freq_mat)[j+(I)*z]);
+				P += abs(INTEGER(pair_matrix)[z] - INTEGER(freq_mat)[j+(I)*z]);
 			}
-			REAL(Rout)[count++] = P;
+			INTEGER(Rout)[count++] = P;
 		}
 	}
 	UNPROTECT(2);
