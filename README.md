@@ -47,7 +47,7 @@ If you want the absolute latest version of *poppr*, see about installing from gi
 
 ### Stable and Development versions
 
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=devel)](https://travis-ci.org/grunwaldlab/poppr?branch=master)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=adegenet-fix)](https://travis-ci.org/grunwaldlab/poppr?branch=adegenet-fix)
 
 If the image above says "Passing", then that means it should be safe to install with the latest version of R. If it does not say "Passing", I am probably trying to fix whatever problem is causing it as fast as I can.
 
