@@ -38,7 +38,7 @@ test_that("mlg.crosspop will work with subsetted genclone objects", {
   data(Aeut, package = "poppr")
   agc <- as.genclone(Aeut)
   Athena <- popsub(agc, "Athena")
-  setpop(Athena) <- ~Subpop
+  setPop(Athena) <- ~Subpop
   expected_output <- structure(list(MLG.13 = structure(c(1L, 1L), .Names = c("8", 
 "9")), MLG.23 = structure(c(1L, 1L), .Names = c("4", "6")), MLG.24 = structure(c(1L, 
 1L), .Names = c("9", "10")), MLG.32 = structure(c(1L, 1L), .Names = c("7", 

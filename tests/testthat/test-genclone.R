@@ -28,7 +28,7 @@ test_that("Hierarchy methods work for genclone objects.", {
   expect_that(strata(agc, value = strata(agcsplit)), equals(agcsplit))
   nameStrata(agcsplit) <- ~Field/Core
   expect_that(names(strata(agcsplit)), equals(c("Field", "Core")))
-  setpop(agc) <- ~Pop/Subpop
+  setPop(agc) <- ~Pop/Subpop
   expect_that(agc@pop.names, equals(c("Athena_1", "Athena_2", "Athena_3", 
                                       "Athena_4", "Athena_5", "Athena_6", 
                                       "Athena_7", "Athena_8", "Athena_9", 
