@@ -288,8 +288,10 @@ setMethod(
   definition = function(.Object, ..., mlg, mlgclass = TRUE){
 
     .Object <- callNextMethod(.Object, ..., mlg = mlg)
-    if (missing(mlg)) mlg <- mlg.vector(.Object)
-    if (mlgclass)     mlg <- new("MLG", mlg)
+    mlg <- mlg.vector(.Object)
+    if (mlgclass) {
+      mlg <- new("MLG", mlg)
+    }
     slot(.Object, "mlg") <- mlg
     return(.Object)
   }
@@ -569,16 +571,21 @@ setMethod(
 
 #==============================================================================#
 # Seploc method for genclone objects. 
+# Note that this is not the most efficient, but it is difficult to work around
+# the method for genind objects as they are forced to be genind objects later.
 #==============================================================================#
 setMethod(
   f = "seploc",
   signature(x = "genclone"),
-  definition = function(x, truenames=TRUE, res.type=c("genind", "matrix")){
-    mlg       <- x@mlg
-    listx     <- callNextMethod(x, truenames = truenames, res.type = res.type)
-    if (is.genind(listx[[1]])){
-      listx <- lapply(listx, function(gid){as.genclone(gid, mlg = mlg)})
+  definition = function(x, truenames = TRUE, res.type = c("genind", "matrix")){
+    ARGS <- c("genind", "matrix")
+    res.type <- match.arg(res.type, ARGS)
+    if (res.type == "matrix"){
+      listx <- lapply(split(tab(x), x@loc.fac), matrix, nrow = nInd(x))
+    } else {
+      listx <- lapply(locNames(x), function(i) x[loc = i])
     }
+    names(listx) <- locNames(x)
     return(listx)
   })
 # #==============================================================================#
