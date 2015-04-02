@@ -198,7 +198,10 @@ and then the average over all loci will be taken.
 
 SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP add, SEXP loss)
 {
-	int A, P, *pA, *pP;
+	int A;
+	int P;
+	int *pA;
+	int *pP;
 	SEXP Rval;
 	//SEXP Rdim;
 	P = length(permutations);
@@ -230,7 +233,16 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add,
 	
 	A matrix in R is built row by row. That's why there is a triple 'for' loop.
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-	int I, J, A, P, i, j, a, count = 0, *pA, *pP;//, add, loss, *padd, *ploss;
+	int I;
+	int J;
+	int A;
+	int P;
+	int i;
+	int j;
+	int a;
+	int count = 0;
+	int *pA;
+	int *pP;
 	//Initialization of R vectors.
 	SEXP Rdim;
 	SEXP Rval;
