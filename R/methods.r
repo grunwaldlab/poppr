@@ -181,7 +181,7 @@ setMethod(
     if (missing(replen)){
       replen <- vapply(gen@all.names, function(y) guesslengths(as.numeric(y)), 1)
     }
-    ploid <- ploidy(gen)
+    ploid <- max(ploidy(gen))
     # This controlls for the user correcting missing data using "mean". 
     if (any(!gen@tab %in% c((0:ploid)/ploid, NA))){
       gen@tab[!gen@tab %in% c((0:ploid)/ploid, NA)] <- NA
