@@ -581,7 +581,8 @@ setMethod(
     ARGS <- c("genind", "matrix")
     res.type <- match.arg(res.type, ARGS)
     if (res.type == "matrix"){
-      listx <- lapply(split(tab(x), x@loc.fac), matrix, nrow = nInd(x))
+      splitsville <- split(colnames(x@tab), x@loc.fac)
+      listx       <- lapply(splitsville, function(i) x@tab[, i, drop = FALSE])
     } else {
       listx <- lapply(locNames(x), function(i) x[loc = i])
     }
