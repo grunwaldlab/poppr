@@ -79,7 +79,7 @@
 #'   
 #' @param missing how should missing data be treated? \code{"zero"} and 
 #'   \code{"mean"} will set the missing values to those documented in 
-#'   \code{\link{na.replace}}. \code{"loci"} and \code{"geno"} will remove any 
+#'   \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any 
 #'   loci or genotypes with missing data, respectively (see 
 #'   \code{\link{missingno}} for more information.
 #'   

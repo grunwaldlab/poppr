@@ -219,7 +219,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #'   
 #' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
 #'   \code{\link{upgma}}, \code{\link{nj}}, \code{\link{boot.phylo}}, 
-#'   \code{\link{nodelabels}}, \code{\link{na.replace}}, 
+#'   \code{\link{nodelabels}}, \code{\link{tab}}, 
 #'   \code{\link{missingno}}.
 #'   
 #' @note \strong{Please refer to the documentation for bruvo.dist for details on

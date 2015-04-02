@@ -367,7 +367,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #'
 #'missingno gives the user four options to deal with missing data.
 #'
-#'@param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#'@param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
 #'  object.
 #'  
 #'@param type a \code{character} string: can be "ignore", "zero", "mean", 
@@ -379,8 +379,14 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #'  
 #'@param quiet if \code{TRUE}, it will print to the screen the action performed.
 #'  
-#'@details These methods provide a way to deal with systematic missing data and
-#'  to give a wrapper for \code{adegenet}'s \code{ \link{na.replace}} function.
+#'@param freq defaults to \code{FALSE}. This option is passed on to the
+#'  \code{\link[adegenet]{tab}} function. If \code{TRUE}, the matrix in the
+#'  genind object will be replaced by a numeric matrix (as opposed to integer).
+#'  THIS IS NOT RECOMMENDED. USE THE FUNCTION \code{\link[adegenet]{tab}}
+#'  instead.
+#'  
+#'@details These methods provide a way to deal with systematic missing data and 
+#'  to give a wrapper for \code{adegenet}'s \code{ \link{tab}} function. 
 #'  ALL OF THESE ARE TO BE USED WITH CAUTION.
 #'  
 #'  \subsection{Treatment types}{ \itemize{ \item{\code{"ignore"} - does not 
@@ -394,8 +400,8 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #'  
 #'@note \emph{"wild missingno appeared!"}
 #'  
-#'@seealso \code{\link{na.replace}}, \code{\link{poppr}},
-#'  \code{\link{poppr.amova}}, \code{\link{nei.dist}}, \code{\link{aboot}}
+#'@seealso \code{\link{tab}}, \code{\link{poppr}}, \code{\link{poppr.amova}},
+#'  \code{\link{nei.dist}}, \code{\link{aboot}}
 #'  
 #'@export
 #'@author Zhian N. Kamvar
@@ -417,12 +423,12 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #' ## N195 N197 N198 N199 N200 N201 N206 N182 N184 N186 N298 N299 N300 N301 N303 
 #' ## N282 N283 N288 N291 N292 N293 N294 N295 N296 N297 N281 N289 N290  
 #'
-#' # Replacing all NA with "0" (see na.replace in the adegenet package).
+#' # Replacing all NA with "0" (see tab in the adegenet package).
 #' nancy.0 <- missingno(nancycats, type = "0")
 #'
 #' ## Replaced 617 missing values 
 #' 
-#' # Replacing all NA with the mean of each column (see na.replace in the
+#' # Replacing all NA with the mean of each column (see tab in the
 #' # adegenet package).
 #' nancy.mean <- missingno(nancycats, type = "mean")
 #' 
@@ -438,7 +444,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #######
 #######
 #######
-missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
+missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FALSE){
   if(sum(is.na(pop@tab)) > 0){
     # removes any loci (columns) with missing values.
     MISSINGOPTS <- c("loci", "genotypes", "mean", "zero", "0", "ignore")
@@ -446,25 +452,15 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
     if (type == "ignore"){
       return(pop)
     }
-    navals      <- percent_missing(pop, type = type, cutoff = cutoff)
+    navals <- percent_missing(pop, type = type, cutoff = cutoff)
     if (type == "loci"){
       if(quiet != TRUE){
-        # if(all(naloci < 0)){
-        #   remloc <- pop@loc.names[which(cumsum(pop@loc.nall) %in% -naloci)]
-        #   cat("\n Found", sum(is.na(pop@tab)),"missing values.")
-        #   loci <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", "loci"))
-        #   cat("\n",loci,"contained missing values greater than",paste(cutoff*100,"%.",sep=""))
-        #   cat("\n Removing",loci,":", remloc,"\n", fill = 80)
-        # }
-        # else{
-        #   cat("\n No loci with missing values above",paste(cutoff*100,"%",sep=""),"found.\n")
-        # }
-        if (length(navals) == ncol(pop@tab)){
+        if (length(navals) == ncol(tab(pop))){
           cat("\n No loci with missing values above",
               paste0(cutoff*100,"%"),"found.\n")
         } else {
           remloc <- pop@loc.names[!cumsum(pop@loc.nall) %in% navals]
-          cat("\n Found", sum(is.na(pop@tab)),"missing values.")
+          cat("\n Found", sum(is.na(tab(pop))),"missing values.")
           loci   <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", 
                           "loci"))
           cat("\n", loci, "contained missing values greater than",
@@ -473,30 +469,14 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
         }
       }
       pop <- pop[, navals]
-    }  
-    # removes any genotypes (rows) with missing values.
-    else if (type == "genotypes"){
-      # nageno <- percent_missing(pop, type=type, cutoff=cutoff)
+    } else if (type == "genotypes"){
       if(quiet != TRUE){
-        # if(all(nageno < 0)){
-        #   remgeno <- pop@ind.names[-nageno]
-        #   cat("\n Found", sum(is.na(pop@tab)),"missing values.")
-        #   genotypes <- paste(length(remgeno), ifelse(length(remgeno) == 1, 
-        #                                              "genotype", "genotypes"))
-        #   cat("\n",genotypes,"contained missing values greater than",
-        #       paste(cutoff*100,"%.",sep=""))
-        #   cat("\n Removing",genotypes,":",remgeno,"\n", fill = 80)
-        # }
-        # else{
-        #   cat("\n No genotypes with missing values above",
-        #       paste(cutoff*100,"%",sep=""),"found.\n")
-        # }
         if (length(navals) == nInd(pop)){
           cat("\n No genotypes with missing values above",
               paste0(cutoff*100, "%"),"found.\n")
         } else {
           remgeno <- indNames(pop)[-navals]
-          cat("\n Found", sum(is.na(pop@tab)),"missing values.")
+          cat("\n Found", sum(is.na(tab(pop))),"missing values.")
           geno    <- paste(length(remgeno), ifelse(length(remgeno) == 1, 
                            "genotype", "genotypes"))
           cat("\n", geno, "contained missing values greater than",
@@ -507,15 +487,23 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE){
       pop <- pop[navals, ]
     }
     # changes all NA's to the mean of the column. NOT RECOMMENDED
+    freq_warning <- paste("Objects of class 'genind' must have integers in the",
+      "genotype matrix. Setting freq = TRUE will force the matrix to be numeric.",
+      "please see help('tab') for alternatives.")
     else if (type == "mean"){
-      pop <- na.replace(pop, "mean", quiet=quiet)
+      pop@tab <- tab(pop, freq = freq, NA.method = "mean", quiet=quiet)
+      if (freq){
+        warning(freq_warning)
+      }
     }
     # changes all NA's to 0. NOT RECOMMENDED. INTRODUCES MORE DIVERSITY.
     else if (type %in% c("zero","0")){
-      pop <- na.replace(pop, "0", quiet=quiet)
+      pop@tab <- tab(pop, freq = freq, NA.method = "0", quiet=quiet)
+      if (freq){
+        warning(freq_warning)
+      }
     }
-  }
-  else{
+  } else {
     if(quiet == FALSE){
       cat("\n No missing values detected.\n")
     }

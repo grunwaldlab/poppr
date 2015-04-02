@@ -203,7 +203,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #'   large.
 #'   
 #' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}}, 
-#'   \code{\link{nodelabels}}, \code{\link{na.replace}},
+#'   \code{\link{nodelabels}}, \code{\link{tab}},
 #'   \code{\link{missingno}}, \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
 #' 
 #' @export
