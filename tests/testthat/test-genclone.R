@@ -21,13 +21,13 @@ test_that("A genclone object contains a genind object", {
 test_that("Hierarchy methods work for genclone objects.", {
   data(Aeut, package = "poppr")
   agc <- as.genclone(Aeut)
-  expect_that(length(gethierarchy(agc)), equals(3))
+  expect_that(length(strata(agc)), equals(3))
   expect_that(agc@pop.names, equals(c(P1 = "Athena", P2 = "Mt. Vernon")))
-  expect_that({agcsplit <- splithierarchy(agc, ~Pop/Subpop)}, gives_warning())
-  expect_that(gethierarchy(agcsplit), equals(gethierarchy(agc, ~Pop/Subpop, combine = FALSE)))
-  expect_that(sethierarchy(agc, gethierarchy(agcsplit)), equals(agcsplit))
-  namehierarchy(agcsplit) <- ~Field/Core
-  expect_that(names(gethierarchy(agcsplit)), equals(c("Field", "Core")))
+  expect_that({agcsplit <- splitStrata(agc, ~Pop/Subpop)}, gives_warning())
+  expect_that(strata(agcsplit), equals(strata(agc, ~Pop/Subpop, combine = FALSE)))
+  expect_that(strata(agc, strata(agcsplit)), equals(agcsplit))
+  nameStrata(agcsplit) <- ~Field/Core
+  expect_that(names(strata(agcsplit)), equals(c("Field", "Core")))
   setpop(agc) <- ~Pop/Subpop
   expect_that(agc@pop.names, equals(c("Athena_1", "Athena_2", "Athena_3", 
                                       "Athena_4", "Athena_5", "Athena_6", 
