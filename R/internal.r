@@ -856,7 +856,7 @@ pair_diffs <- function(pop, numLoci, np)
 {
   ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab, PACKAGE = "poppr")*(ploid/2), 
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", tab(x), PACKAGE = "poppr")/2, 
                           temp.d.vector[, 1])
   d.vector  <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
@@ -1317,7 +1317,7 @@ make_ade_df <- function(hier, df, expanded = FALSE){
 # # none
 
 check_Hs <- function(x){
-  res <- any(x@tab > 0 & x@tab < 1, na.rm = TRUE)
+  res <- sweep(tab(x), 1, ploidy(x), function(x, y) any(x < y))
   return(res)
 }
 
