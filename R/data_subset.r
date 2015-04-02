@@ -496,7 +496,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
     }
     # changes all NA's to 0. NOT RECOMMENDED. INTRODUCES MORE DIVERSITY.
     else if (type %in% c("zero","0")){
-      pop@tab <- tab(pop, freq = freq, NA.method = "0", quiet=quiet)
+      pop@tab <- tab(pop, freq = freq, NA.method = "zero", quiet=quiet)
       if (freq){
         warning(freq_warning)
       }
