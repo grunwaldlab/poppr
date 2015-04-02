@@ -6,13 +6,17 @@
 \alias{as.genclone,genind-method}
 \title{Create a genclone object from a genind object.}
 \usage{
-as.genclone(x, ...)
+as.genclone(x, ..., mlg, mlgclass = TRUE)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
 object}
 
 \item{...}{arguments passed on to the \code{\linkS4class{genind}} constructor}
+
+\item{mlg}{an optional vector of multilocus genotypes as integers}
+
+\item{mlgclass}{should the mlg slot be of class MLG?}
 }
 \description{
 Wrapper for genclone initializer.

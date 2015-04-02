@@ -317,7 +317,8 @@ setMethod(
   definition = function(x, i, j, ..., drop = FALSE){
     if (missing(i)) i <- TRUE
     x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
-    return(as.genclone(x, mlg[i]))
+    x@mlg <- x@mlg[i]
+    return(x)
   }
 #   definition = function(x, i, j, ..., loc=NULL, treatOther=TRUE, quiet=TRUE, drop = FALSE){
 #     if (missing(i)) i <- TRUE
@@ -518,6 +519,8 @@ setMethod(
 #' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} 
 #'   object
 #' @param ... arguments passed on to the \code{\linkS4class{genind}} constructor
+#' @param mlg an optional vector of multilocus genotypes as integers
+#' @param mlgclass should the mlg slot be of class MLG?
 #' @docType methods
 #'   
 #' @note The hierarchy must have the same number of rows as the number of 
@@ -539,7 +542,7 @@ setMethod(
 #' Aeut.gc <- as.genclone(Aeut)
 #' Aeut.gc
 #==============================================================================#
-as.genclone <- function(x, ...){
+as.genclone <- function(x, ..., mlg, mlgclass = TRUE){
   standardGeneric("as.genclone")
 }
 
@@ -550,14 +553,16 @@ setGeneric("as.genclone")
 setMethod(
   f = "as.genclone",
   signature(x = "genind"),
-  definition = function(x, ...){
+  definition = function(x, ..., mlg, mlgclass = TRUE){
     theCall <- match.call()
     if (!missing(x) && is.genind(x)){
+      theOther <- x@other
       res <- new("genclone", tab = tab(x), ploidy = ploidy(x), pop = pop(x), 
                  type = x@type, prevcall = theCall, strata = x@strata, 
-                 hierarchy = x@hierarchy)
+                 hierarchy = x@hierarchy, mlg = mlg, mlgclass = mlgclass)
+      res@other <- theOther
     } else {
-      res <- new("genclone", ...)
+      res <- new("genclone", ..., mlg = mlg, mlgclass = mlgclass)
     }
     return(res)
   })
@@ -572,7 +577,7 @@ setMethod(
     mlg       <- x@mlg
     listx     <- callNextMethod(x, truenames = truenames, res.type = res.type)
     if (is.genind(listx[[1]])){
-      listx <- lapply(listx, function(gid){gid@mlg <- mlg; return(gid)})
+      listx <- lapply(listx, function(gid){as.genclone(gid, mlg = mlg)})
     }
     return(listx)
   })
