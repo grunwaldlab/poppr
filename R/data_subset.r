@@ -448,6 +448,9 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
   if(sum(is.na(pop@tab)) > 0){
     # removes any loci (columns) with missing values.
     MISSINGOPTS <- c("loci", "genotypes", "mean", "zero", "0", "ignore")
+    freq_warning <- paste("Objects of class 'genind' must have integers in the",
+      "genotype matrix. Setting freq = TRUE will force the matrix to be numeric.",
+      "please see help('tab') for alternatives.")
     type        <- match.arg(tolower(type), MISSINGOPTS)
     if (type == "ignore"){
       return(pop)
@@ -485,12 +488,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
         }
       }
       pop <- pop[navals, ]
-    }
-    # changes all NA's to the mean of the column. NOT RECOMMENDED
-    freq_warning <- paste("Objects of class 'genind' must have integers in the",
-      "genotype matrix. Setting freq = TRUE will force the matrix to be numeric.",
-      "please see help('tab') for alternatives.")
-    else if (type == "mean"){
+    } else if (type == "mean"){
       pop@tab <- tab(pop, freq = freq, NA.method = "mean", quiet=quiet)
       if (freq){
         warning(freq_warning)
@@ -502,7 +500,9 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
       if (freq){
         warning(freq_warning)
       }
-    }
+    } else {
+      cat("\nInvalid type.\n")
+    } 
   } else {
     if(quiet == FALSE){
       cat("\n No missing values detected.\n")

@@ -75,7 +75,7 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 \seealso{
 \code{\link{bruvo.dist}}, \code{\link{nancycats}},
   \code{\link{upgma}}, \code{\link{nj}}, \code{\link{boot.phylo}},
-  \code{\link{nodelabels}}, \code{\link{na.replace}},
+  \code{\link{nodelabels}}, \code{\link{tab}},
   \code{\link{missingno}}.
 }
 
