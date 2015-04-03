@@ -101,19 +101,19 @@
 #' 
 #' # Check the number of multilocus genotypes
 #' mlg(Aeut)
-#' Aeut$pop.names
+#' popNames(Aeut)
 #' 
 #' # Clone correct at the population level.
 #' Aeut.pop <- clonecorrect(Aeut, hier= ~Pop)
 #' mlg(Aeut.pop)
-#' Aeut.pop$pop.names
+#' Aeut.popNames(pop)
 #' 
 #' \dontrun{
 #' # Clone correct at the subpopulation level with respect to population and
 #' # combine.
 #' Aeut.subpop <- clonecorrect(Aeut, hier=~Pop/Subpop, combine=TRUE)
 #' mlg(Aeut.subpop)
-#' Aeut.subpop$pop.names
+#' Aeut.popNames(subpop)
 #' 
 #' # Do the same, but set to the population level.
 #' Aeut.subpop2 <- clonecorrect(Aeut, hier=~Pop/Subpop, keep=1)
@@ -198,7 +198,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   if(!is.genclone(pop)){
     suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier))
   }
-  cpop <- length(pop$pop.names)
+  cpop <- nPop(pop)
   
   # Steps for correction:
   # Subset by population factor.
@@ -229,7 +229,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
       else{
         pop(pop) <- pop$other[[dfname]][[hier[keep]]]
       }
-      names(pop$pop.names) <- levels(pop$pop)
+      names(popNames(pop)) <- levels(pop$pop)
     }
   }
   pop@call <- popcall
@@ -291,7 +291,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     return(gid)
   }
   orig_list <- sublist 
-  popnames <- gid@pop.names
+  popnames <- popNames(gid)
   if (toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
       return(gid)
@@ -304,8 +304,8 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
   if (is.null(names(popnames))){
-    if (length(popnames) == length(levels(gid@pop))){
-      names(popnames) <- levels(gid@pop)
+    if (length(popnames) == nPop(gid)){
+      names(popnames) <- popNames(gid)
     } else {
       stop("Population names do not match population factors.")
     }
@@ -345,8 +345,8 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     }
     sublist <- pop(gid) %in% sublist
     if (!any(sublist)){
-      if (!is.numeric(orig_list) & !any(gid@pop.names %in% orig_list)){
-        stop(unmatched_pops_warning(gid@pop.names, orig_list))
+      if (!is.numeric(orig_list) & !any(popNames(gid) %in% orig_list)){
+        stop(unmatched_pops_warning(popNames(gid), orig_list))
       } else {
         nothing_warn <- paste("Nothing present in the sublist.\n",
                             "Perhaps the sublist and blacklist arguments have",
@@ -566,14 +566,14 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
 #' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 #' 
 #' # We have 19 different "populations", but really, there is a hierarchy.
-#' Aeut$pop.names
+#' popNames(Aeut)
 #' 
 #' # Let's split them up. The default data frame from read.genalex is the same
 #' # as the default for this function. 
 #' Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
 #' 
 #' # Much better!
-#' Aeut$pop.names
+#' popNames(Aeut)
 #'
 #' # Method 2: Combining.
 #' 
@@ -694,7 +694,7 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     if(setPopulation == TRUE){
       hier <- ifelse(is.numeric(hier), as.character(hier), hier)
       pop(pop) <- pop$other[[dfname]][[hier[1]]]
-      names(pop$pop.names) <- levels(pop$pop)
+      names(popNames(pop)) <- levels(pop$pop)
     }
     return(pop)
   }
@@ -712,7 +712,7 @@ splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", 
     pop$other[[dfname]][[paste(names(pop$other[[dfname]][hier]), collapse=sep)]] <- newdf
     if(setPopulation == TRUE){
       pop(pop) <- newdf
-      names(pop$pop.names) <- levels(pop$pop)
+      names(popNames(pop)) <- levels(pop$pop)
     }
     return(pop)
   }

@@ -14,7 +14,7 @@
 
 \S4method{$}{bootgen}(x, name)
 
-\S4method{initialize}{bootgen}(.Object, gen)
+\S4method{initialize}{bootgen}(.Object, gen, na = "mean")
 }
 \arguments{
 \item{x}{a \code{"\linkS4class{bootgen}"} object}

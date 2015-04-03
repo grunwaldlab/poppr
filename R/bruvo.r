@@ -154,7 +154,7 @@
 #' 
 #' # View each population as a heatmap.
 #' \dontrun{
-#' sapply(nancycats$pop.names, function(x) 
+#' sapply(popNames(nancycats), function(x) 
 #' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 #' }
 #==============================================================================#
@@ -455,7 +455,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     # Storing the MLG vector into the genind object
     pop$other$mlg.vec <- mlg.vector(pop)  
   }
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+  if (is.null(pop(pop)) | nPop(pop) == 1){
     return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
                          replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
@@ -464,7 +464,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
   }
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+  if (is.null(pop(pop)) | nPop(pop) == 1){
     return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
                          replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
@@ -510,16 +510,16 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # The palette is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color   <- setNames(palette(length(pop@pop.names)), pop@pop.names)
+  color   <- setNames(palette(nPop(pop)), popNames(pop))
   mst     <- update_edge_scales(mst, wscale, gscale, glim, gadj)
 
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[popNames(pop) %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    legend(-1.55, 1, bty = "n", cex = 0.75, legend = pop$pop.names, 
+    legend(-1.55, 1, bty = "n", cex = 0.75, legend = popNames(pop), 
            title = "Populations", fill = color, border = NULL)
   }
   V(mst)$size      <- mlg.number
@@ -527,5 +527,5 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = pop$pop.names, colors = color))
+  return(list(graph = mst, populations = popNames(pop), colors = color))
 }

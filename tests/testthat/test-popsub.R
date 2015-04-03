@@ -7,7 +7,7 @@ test_that("subsetting needs a genind object", {
 test_that("sublist needs to match populations", {
   data(microbov, package = "adegenet")
   expect_error(popsub(microbov, "missingno"), 
-               poppr:::unmatched_pops_warning(microbov@pop.names, "missingno"))
+               poppr:::unmatched_pops_warning(popNames(microbov), "missingno"))
 })
 
 test_that("sum of the pops equal the whole", {

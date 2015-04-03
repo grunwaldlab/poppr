@@ -538,7 +538,7 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   
   namelist            <- NULL
   namelist$population <- ifelse(length(levels(pop@pop)) > 1 | 
-                                is.null(pop@pop), "Total", pop@pop.names)
+                                is.null(pop@pop), "Total", popNames(pop))
   namelist$File       <- as.character(match.call()[2])
   
   popx    <- pop

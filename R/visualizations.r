@@ -272,7 +272,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+  if (is.null(pop(pop)) | nPop(pop) == 1){
     if (is.genclone(pop)){
       mlgs <- pop@mlg
     } else {
@@ -300,7 +300,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # This will clone correct the incoming matrix. 
   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+  if (is.null(pop(pop)) | nPop(pop) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, showplot = showplot, ...))
@@ -338,18 +338,18 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color   <- setNames(palette(length(pop@pop.names)), pop@pop.names)
+  color   <- setNames(palette(nPop(pop)), popNames(pop))
   
   ###### Edge adjustments ######
   mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[popNames(pop) %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
+    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = popNames(pop), 
            title = "Populations", fill=color, border=NULL)
   }
   V(mst)$size      <- mlg.number
@@ -357,7 +357,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = pop$pop.names, colors = color))
+  return(list(graph = mst, populations = popNames(pop), colors = color))
 }
 
 
@@ -871,7 +871,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   
   ## LEGEND
   par(mar = c(0, 0, 1, 0) + 0.5)
-  too_many_pops   <- as.integer(ceiling(length(x$pop.names)/30))
+  too_many_pops   <- as.integer(ceiling(nPop(x)/30))
   pops_correction <- ifelse(too_many_pops > 1, -1, 1)
   yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
   plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',

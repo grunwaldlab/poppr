@@ -482,7 +482,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
     xboot           <- x@tab
     colnames(xboot) <- locNames(x)
     if (is.genpop(x)){
-      rownames(xboot) <- x@pop.names
+      rownames(xboot) <- popNames(x)
     } else {
       rownames(xboot) <- indNames(x)
     }
@@ -503,7 +503,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
   if (is.genind(x)){
     xtree$tip.label <- indNames(x)
   } else {
-    xtree$tip.label <- x@pop.names
+    xtree$tip.label <- popNames(x)
   }
   xtree$node.label <- nodelabs
   if (showtree){

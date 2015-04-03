@@ -442,12 +442,12 @@ genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE,
   }
   popcall <- match.call()
   #topline is for the number of loci, individuals, and populations.
-  topline <- c(nLoc(pop), nInd(pop), length(pop@pop.names))
+  topline <- c(nLoc(pop), nInd(pop), nPop(pop))
   popsizes <- table(pop@pop)
   # The sizes of the populations correspond to the second line, which is the pop
   # names. 
   topline <- c(topline, popsizes)
-  secondline <- c("", "", "", pop@pop.names)
+  secondline <- c("", "", "", popNames(pop))
   ploid <- ploidy(pop)
   # Constructing the locus names. GenAlEx separates the alleles of the loci, so
   # There is one locus name for every p ploidy columns you have.

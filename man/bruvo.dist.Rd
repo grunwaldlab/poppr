@@ -102,7 +102,7 @@ bruvo.dist(popsub(nancycats, 1), replen = ssr)
 
 # View each population as a heatmap.
 \dontrun{
-sapply(nancycats$pop.names, function(x)
+sapply(popNames(nancycats), function(x)
 heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 }
 }

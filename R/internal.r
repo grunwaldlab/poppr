@@ -423,15 +423,15 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
     }
     else {
       # filling the sublist with all of the population names.
-      sublist <- pop@pop.names 
+      sublist <- popNames(pop) 
     }
   }
 
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
-  if (is.null(names(pop@pop.names))){
-    if (length(pop@pop.names) == length(levels(pop@pop))){
-      names(pop@pop.names) <- levels(pop@pop)
+  if (is.null(names(popNames(pop)))){
+    if (nPop(pop) == length(levels(pop@pop))){
+      names(popNames(pop)) <- levels(pop@pop)
     }
     else{
       stop("Population names do not match population factors.")
@@ -445,26 +445,26 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       sublist <- sublist[!sublist %in% blacklist]
     } else if (is.numeric(sublist) & class(blacklist) == "character"){
     # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-      sublist <- sublist[sublist %in% which(!pop@pop.names %in% blacklist)]
+      sublist <- sublist[sublist %in% which(!popNames(pop) %in% blacklist)]
     } else {
       # no sublist specified. Ideal situation
-      if(all(pop@pop.names %in% sublist)){
+      if(all(popNames(pop) %in% sublist)){
         sublist <- sublist[-blacklist]
       } else {
       # weird situation where the user will specify a certain sublist, yet index
       # the blacklist numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
-        sublist <- sublist[!sublist %in% pop@pop.names[blacklist]]
+        sublist <- sublist[!sublist %in% popNames(pop)[blacklist]]
       }
     }
   }
 
   # subsetting the population. 
   if (is.numeric(sublist))
-    sublist <- names(pop@pop.names[sublist])
+    sublist <- names(popNames(pop)[sublist])
   else
-    sublist <- names(pop@pop.names[pop@pop.names %in% sublist])
+    sublist <- names(popNames(pop)[popNames(pop) %in% sublist])
   sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
   if(is.na(sublist[1])){
     warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
@@ -522,7 +522,7 @@ old.mlg.matrix <- function(x){
                                   function(a) mlg.mat[count, a] <<-
                                               mlg.mat[count, a] + 1L)
                          })
-    rownames(mlg.mat) <-x@pop.names
+    rownames(mlg.mat) <-popNames(x)
   } else {
     # if there are no populations to speak of.
     mlg.mat <- t(as.matrix(vector(length=mlgs, mode="numeric")))
@@ -1174,7 +1174,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE,
     }
   } 
   mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
-  populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
+  populations <- ifelse(is.null(pop(pop)), NA, popNames(pop))
   
   # Plot everything
   if (showplot){
@@ -1625,7 +1625,7 @@ get_gen_dist_labs <- function(x){
   if (is.genind(x)){
     labs <- indNames(x)
   } else if (is.genpop(x)){
-    labs <- x@pop.names
+    labs <- popNames(x)
   } else if (is(x, "bootgen")){
     labs <- names(x)
   } else {

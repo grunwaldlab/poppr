@@ -66,19 +66,19 @@ Aeut <- as.genclone(Aeut, hier = other(Aeut)$population_hierarchy[-1])
 
 # Check the number of multilocus genotypes
 mlg(Aeut)
-Aeut$pop.names
+popNames(Aeut)
 
 # Clone correct at the population level.
 Aeut.pop <- clonecorrect(Aeut, hier= ~Pop)
 mlg(Aeut.pop)
-Aeut.pop$pop.names
+Aeut.popNames(pop)
 
 \dontrun{
 # Clone correct at the subpopulation level with respect to population and
 # combine.
 Aeut.subpop <- clonecorrect(Aeut, hier=~Pop/Subpop, combine=TRUE)
 mlg(Aeut.subpop)
-Aeut.subpop$pop.names
+Aeut.popNames(subpop)
 
 # Do the same, but set to the population level.
 Aeut.subpop2 <- clonecorrect(Aeut, hier=~Pop/Subpop, keep=1)

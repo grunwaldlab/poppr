@@ -60,14 +60,14 @@ of your data frame.
 Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 
 # We have 19 different "populations", but really, there is a hierarchy.
-Aeut$pop.names
+popNames(Aeut)
 
 # Let's split them up. The default data frame from read.genalex is the same
 # as the default for this function.
 Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
 
 # Much better!
-Aeut$pop.names
+popNames(Aeut)
 
 # Method 2: Combining.
 

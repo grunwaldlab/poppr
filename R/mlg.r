@@ -220,7 +220,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
-    mlgtab <- mlgtab[unlist(vapply(pop@pop.names, 
+    mlgtab <- mlgtab[unlist(vapply(popNames(pop), 
                 function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
@@ -232,8 +232,8 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   # Dealing with the visualizations.
   if (bar){
     # If there is a population structure
-    if(!is.null(pop@pop.names)){
-      popnames <- pop@pop.names
+    if(!is.null(popNames(pop))){
+      popnames <- popNames(pop)
       if(total & nrow(mlgtab) > 1){
         popnames[length(popnames) + 1] <- "Total"
       }
@@ -350,7 +350,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
   } else {
     if (sublist[1] != "ALL" | !is.null(blacklist)){
       pop    <- popsub(pop, sublist, blacklist)
-      mlgtab <- mlgtab[unlist(vapply(pop@pop.names, 
+      mlgtab <- mlgtab[unlist(vapply(popNames(pop), 
                   function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
     }
     #mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]

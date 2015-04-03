@@ -345,12 +345,12 @@ setMethod(
     type   <- ifelse(object@type == "PA", "dominant", "codominant")
     nmlg   <- length(unique(object@mlg))
     nloc   <- nLoc(object)
-    npop   <- ifelse(is.null(object@pop), 0, length(object@pop.names))
+    npop   <- ifelse(is.null(object@pop), 0, nPop(object))
     strata <- length(object@strata)
     chars  <- nchar(c(nmlg, nind, nloc, strata, 1, npop))
     ltab   <- max(chars) - chars
     ltab   <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
-    pops   <- object@pop.names
+    pops   <- popNames(object)
     poplen <- length(pops)
     if (poplen > 7) 
       pops <- c(pops[1:3], "...", pops[(poplen-2):poplen])
@@ -404,12 +404,12 @@ setMethod(
     type  <- ifelse(x@type == "PA", "dominant", "codominant")
     nmlg  <- length(unique(x@mlg))
     nloc  <- nLoc(x)
-    npop  <- ifelse(is.null(x@pop), 0, length(x@pop.names))
+    npop  <- ifelse(is.null(x@pop), 0, nPop(x))
     strata  <- length(x@strata)
     chars <- nchar(c(nmlg, nind, nloc, strata, 1, npop))
     ltab  <- max(chars) - chars
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
-    pops  <- x@pop.names
+    pops  <- popNames(x)
     stratanames <- names(x@strata)
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
@@ -444,14 +444,6 @@ setMethod(
 #' @param mlg an optional vector of multilocus genotypes as integers
 #' @param mlgclass should the mlg slot be of class MLG?
 #' @docType methods
-#'   
-#' @note The hierarchy must have the same number of rows as the number of 
-#'   observations in the genind object. If no hierarchy is defined, the function
-#'   will search for a data frame in the \code{\link{other}} slot called 
-#'   "population_hierarchy" and set that as the hieararchy. If none is defined,
-#'   the population will be set as the hierarchy under the label "Pop". Use the 
-#'   function \code{\link{splitStrata}} to split up any population 
-#'   hierarchies that might be combined in the population factor.
 #'   
 #' @seealso \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
 #'   \code{\link{read.genalex}}
