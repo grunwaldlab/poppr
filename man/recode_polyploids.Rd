@@ -4,15 +4,15 @@
 \alias{recode_polyploids}
 \title{Recode polyploid microsatellite data for use in frequency based statistics.}
 \usage{
-recode_polyploids(poly, newploidy = poly@ploidy)
+recode_polyploids(poly, newploidy = FALSE)
 }
 \arguments{
 \item{poly}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
 object that has a ploidy of >2}
 
-\item{newploidy}{an \code{integer}. This gives the user the option to reset
-  the ploidy of the data set. It's default is set to the ploidy of the
-  incoming data set.}
+\item{newploidy}{if \code{FALSE} (default), the user-defined ploidy will stay
+  contstant. if \code{TRUE}, the ploidy for each sample will be determined by
+  the maximum ploidy observed for each genotype.}
 }
 \value{
 a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}

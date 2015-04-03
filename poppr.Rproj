@@ -16,5 +16,5 @@ BuildType: Package
 PackageInstallArgs: --no-multiarch --with-keep.source --install-tests
 PackageBuildArgs: --resave-data --compact-vignettes=gs+qpdf
 PackageBuildBinaryArgs: --html --latex
-PackageCheckArgs: --as-cran --no-vignettes --no-build-vignettes
+PackageCheckArgs: --no-vignettes --no-build-vignettes
 PackageRoxygenize: rd,collate,namespace
