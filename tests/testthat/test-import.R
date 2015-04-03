@@ -13,7 +13,7 @@ test_that("basic text connections work", {
 	A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134	149"
 	
 	gen <- read.genalex(textConnection(y), sep = "\t")
-	expect_equal(gen@tab, monpop[1:6, drop = TRUE]@tab)
+	expect_equivalent(gen@tab, monpop[1:6, drop = TRUE]@tab)
 })
 
 test_that("genclone objects can be saved and restored", {
