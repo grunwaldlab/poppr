@@ -6,7 +6,7 @@ test_that("recode_polyploids works as expected", {
 	testrec <- recode_polyploids(testgid)
 	expect_equal(testgid@ploidy, testrec@ploidy)
 	expect_equivalent(testgid@tab[2, -1], testrec@tab[2, ])
-	expect_equivalent(testrec@tab[1, ], c(1/3, 1/3, 1/3, 0, 0))
+	expect_equivalent(testrec@tab[1, ], c(1, 1, 1, 0, 0))
 })
 
 test_that("recode_polyploids won't take diploid data", {

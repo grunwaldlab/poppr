@@ -939,7 +939,8 @@ recode_polyploids <- function(poly, newploidy = FALSE){
   poly@loc.fac   <- fac[non_zero_cols_vector]
   poly@loc.nall  <- setNames(tabulate(poly@loc.fac), locNames(poly))
   poly@tab       <- MAT[, non_zero_cols_vector, drop = FALSE]
-  poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list)
+  poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list,
+                           SIMPLIFY = FALSE)
 
   if (newploidy){
     ploc         <- seploc(poly, res.type = "matrix")
