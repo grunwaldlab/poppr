@@ -4,11 +4,11 @@ test_that("A genclone object contains a genind object", {
 
 	data(partial_clone, package = "poppr")
 	pc <- as.genclone(partial_clone)
-	expect_that(slotNames(partial_clone), equals(slotNames(pc)[-c(1:2)]))
+	expect_that(slotNames(partial_clone), equals(slotNames(pc)[-1]))
 	expect_that(partial_clone@tab, equals(pc@tab))
 	expect_that(partial_clone@loc.names, is_identical_to(pc@loc.names))
 	expect_that(partial_clone@loc.nall, is_identical_to(pc@loc.nall))
-	expect_that(partial_clone@all.names, is_identical_to(pc@all.names))
+	expect_that(partial_clone@all.names, is_equivalent_to(pc@all.names))
 	expect_that(partial_clone@ind.names, is_identical_to(pc@ind.names))
 	expect_that(partial_clone@pop, is_identical_to(pc@pop))
 	expect_that(popNames(partial_clone), is_identical_to(popNames(pc)))
@@ -21,8 +21,9 @@ test_that("A genclone object contains a genind object", {
 test_that("Hierarchy methods work for genclone objects.", {
   data(Aeut, package = "poppr")
   agc <- as.genclone(Aeut)
+  strata(agc) <- other(agc)$population_hierarchy
   expect_that(length(strata(agc)), equals(3))
-  expect_that(popNames(agc), equals(c(P1 = "Athena", P2 = "Mt. Vernon")))
+  expect_that(popNames(agc), equals(c("Athena", "Mt. Vernon")))
   expect_that({agcsplit <- splitStrata(agc, ~Pop/Subpop)}, gives_warning())
   expect_that(strata(agcsplit), equals(strata(agc, ~Pop/Subpop, combine = FALSE)))
   expect_that(strata(agc, value = strata(agcsplit)), equals(agcsplit))
