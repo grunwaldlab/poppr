@@ -177,7 +177,13 @@ setMethod(
   f = "initialize",
   signature = "bruvomat",
   definition = function(.Object, gen, replen){
-    if (missing(gen)) gen <- new("genind")
+    if (missing(gen)){
+      slot(.Object, "mat")       <- matrix(0, 0, 0)
+      slot(.Object, "replen")    <- integer(0)
+      slot(.Object, "ploidy")    <- integer(0)
+      slot(.Object, "ind.names") <- character(0)
+      return(.Object)
+    }
     if (missing(replen)){
       replen <- vapply(gen@all.names, function(y) guesslengths(as.numeric(y)), 1)
     }
