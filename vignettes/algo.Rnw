@@ -523,7 +523,7 @@ library("ape")
 par(mfrow = c(2, 3))
 x <- lapply(names(dists), function(x){ 
   plot(nj(dists[[x]]), main = x, type = "unrooted") 
-  add.scale.bar(lcol = "red")
+  add.scale.bar(lcol = "red", length = 0.1)
 })
 @
 
