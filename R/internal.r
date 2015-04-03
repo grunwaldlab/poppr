@@ -1607,7 +1607,7 @@ get_gen_mat <- function(x){
   if (is.genpop(x) && x@type == "codom"){
     MAT  <- makefreq(x, missing = "mean", quiet = TRUE)
   } else {
-    MAT  <- x@tab
+    MAT  <- tab(x, freq = TRUE)
   }
   return(MAT)
 }
