@@ -842,9 +842,9 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' 
 #' @param poly a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
 #'   object that has a ploidy of >2
-#' @param newploidy an \code{integer}. This gives the user the option to reset
-#'   the ploidy of the data set. It's default is set to the ploidy of the
-#'   incoming data set.
+#' @param newploidy if \code{FALSE} (default), the user-defined ploidy will stay
+#'   contstant. if \code{TRUE}, the ploidy for each sample will be determined by
+#'   the maximum ploidy observed for each genotype.
 #'   
 #' @return a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
 #'   object.
@@ -923,7 +923,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
 #' add.scale.bar(lcol = "red")
 #' }
 #==============================================================================#
-recode_polyploids <- function(poly, newploidy = poly@ploidy){
+recode_polyploids <- function(poly, newploidy = FALSE){
   if (!is.genind(poly)){
     stop("input must be a genind object.")
   } else if (!test_zeroes(poly)){
@@ -940,6 +940,13 @@ recode_polyploids <- function(poly, newploidy = poly@ploidy){
   poly@loc.nall  <- setNames(tabulate(poly@loc.fac), locNames(poly))
   poly@tab       <- MAT[, non_zero_cols_vector, drop = FALSE]
   poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list)
+
+  if (newploidy){
+    ploc         <- seploc(poly, res.type = "matrix")
+    ploid_mat    <- vapply(ploc, FUN = apply, FUN.VALUE = integer(nInd(poly)), 
+                           MARGIN = 1, sum)
+    ploidy(poly) <- apply(ploid_mat, MARGIN = 1, max, na.rm = TRUE)
+  }
   return(poly)
 }
 
