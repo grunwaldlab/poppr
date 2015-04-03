@@ -930,31 +930,17 @@ recode_polyploids <- function(poly, newploidy = poly@ploidy){
     warning("Input is not a polyploid data set, returning original.")
     return(poly)
   }
-  if (!is.null(pop(poly))){
-    MAT <- truenames(poly)$tab    
-  } else {
-    MAT <- truenames(poly)
-  }
+  MAT <- tab(poly)
   fac <- poly@loc.fac
-  zerocols <- as.numeric(unlist(poly@all.names)) == 0 #!duplicated(fac)
-  newfac <- fac[!zerocols]
-  loci <- lapply(split(MAT, fac[col(MAT)]), matrix, nrow = nInd(poly))
-  loci <- lapply(1:length(loci), function(x){
-    locus <- loci[[x]]
-    alleles <- as.numeric(poly@all.names[[x]])
-    return(locus[, alleles > 0, drop = FALSE])
-  })
-  loci <- lapply(loci, function(mat) t(apply(mat, 1, function(x) x/sum(x))))
-  newMAT <- matrix(nrow = nInd(poly), ncol = length(newfac))
-  newMAT[] <- unlist(loci)
-  colnames(newMAT) <- colnames(MAT)[!zerocols]
-  rownames(newMAT) <- rownames(MAT)
-  newgen <- genind(newMAT, pop = pop(poly), ploidy = newploidy, type = poly@type)
-  newgen@other <- poly@other
-  if (is.genclone(poly)){
-    newgen <- new('genclone', newgen, poly@hierarchy, poly@mlg)
-  }
-  return(newgen)
+
+  non_zero_cols_list   <- lapply(poly@all.names, function(x) as.numeric(x) > 0)
+  non_zero_cols_vector <- unlist(non_zero_cols_list, use.names = FALSE)
+
+  poly@loc.fac   <- fac[non_zero_cols_vector]
+  poly@loc.nall  <- setNames(tabulate(poly@loc.fac), locNames(poly))
+  poly@tab       <- MAT[, non_zero_cols_vector, drop = FALSE]
+  poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list)
+  return(poly)
 }
 
 
