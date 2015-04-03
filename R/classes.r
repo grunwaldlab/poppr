@@ -180,9 +180,9 @@ setClass(
   ),
   prototype = prototype(
     mat = matrix(ncol = 0, nrow = 0),
-    replen = 0,
-    ploidy = 2,
-    ind.names = "none"
+    replen = integer(0),
+    ploidy = integer(0),
+    ind.names = character(0)
   )
 )
 
@@ -214,4 +214,10 @@ setClass("bootgen",
                           ploidy = "integer",
                           names = "vector", 
                           alllist = "list"),
+         prototype = prototype(
+          type = character(0),
+          ploidy = integer(0),
+          names = character(0),
+          alllist = list()
+          )
 )
