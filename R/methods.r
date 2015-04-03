@@ -158,6 +158,13 @@ setMethod(
     return(.Object)
   })
 
+setMethod(
+  f = "tab",
+  signature = "bootgen",
+  definition = function(x, freq = TRUE){ # freq is a dummy argument
+    return(x@tab)
+  })
+
 ################################################################################
 #------------------------------------------------------------------------------#
 # BRUVOMAT METHODS
