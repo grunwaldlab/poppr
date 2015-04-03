@@ -183,24 +183,27 @@ setMethod(
     }
     ploid <- max(ploidy(gen))
     # This controlls for the user correcting missing data using "mean". 
-    if (any(!gen@tab %in% c((0:ploid)/ploid, NA))){
-      gen@tab[!gen@tab %in% c((0:ploid)/ploid, NA)] <- NA
-    }
-    # This will check for data that has missing scored as "zero".
-    popcols <- ploid*nLoc(gen)
-    if (!any(is.na(gen@tab)) & any(rowSums(gen@tab, na.rm=TRUE) < nLoc(gen))){
-      mat1 <- as.matrix.data.frame(genind2df(gen, sep="/", usepop=FALSE))
-      mat1[mat1 %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
-      mat2 <- apply(mat1, 1, strsplit, "/")
-      mat3 <- apply(as.matrix(t(sapply(mat2, unlist))), 2, as.numeric)
-      vec1 <- suppressWarnings(as.numeric(unlist(mat3)))
-      pop  <- matrix(vec1, nrow=nInd(gen), ncol=popcols)
-    } else {
-      popdf <- genind2df(gen, oneColPerAll=TRUE, usepop=FALSE)
-      mat1  <- as.matrix.data.frame(popdf)
-      pop   <- suppressWarnings(matrix(as.numeric(mat1), ncol=popcols))
-    }
-    slot(.Object, "mat")       <- pop
+    # if (any(!gen@tab %in% c((0:ploid)/ploid, NA))){
+    #   gen@tab[!gen@tab %in% c((0:ploid)/ploid, NA)] <- NA
+    # }
+    # # This will check for data that has missing scored as "zero".
+    # popcols <- ploid*nLoc(gen)
+    # if (!any(is.na(gen@tab)) & any(rowSums(gen@tab, na.rm=TRUE) < nLoc(gen))){
+    #   mat1 <- as.matrix.data.frame(genind2df(gen, sep="/", usepop=FALSE))
+    #   mat1[mat1 %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
+    #   mat2 <- apply(mat1, 1, strsplit, "/")
+    #   mat3 <- apply(as.matrix(t(sapply(mat2, unlist))), 2, as.numeric)
+    #   vec1 <- suppressWarnings(as.numeric(unlist(mat3)))
+    #   pop  <- matrix(vec1, nrow=nInd(gen), ncol=popcols)
+    # } else {
+    #   popdf <- genind2df(gen, oneColPerAll=TRUE, usepop=FALSE)
+    #   mat1  <- as.matrix.data.frame(popdf)
+    #   pop   <- suppressWarnings(matrix(as.numeric(mat1), ncol=popcols))
+    # }
+    popdf <- genind2df(gen, sep = "/", usepop = FALSE)
+    mat   <- generate_bruvo_mat(popdf, maxploid = ploid, sep = "/", mat = TRUE)
+    mat[is.na(mat)] <- 0
+    slot(.Object, "mat")       <- mat
     slot(.Object, "replen")    <- replen
     slot(.Object, "ploidy")    <- ploid
     slot(.Object, "ind.names") <- indNames(gen)
