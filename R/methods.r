@@ -318,92 +318,10 @@ setMethod(
   signature(x = "genclone", i = "ANY", j = "ANY", drop = "ANY"),
   definition = function(x, i, j, ..., drop = FALSE){
     if (missing(i)) i <- TRUE
-    x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
+    x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
     x@mlg <- x@mlg[i]
     return(x)
   }
-#   definition = function(x, i, j, ..., loc=NULL, treatOther=TRUE, quiet=TRUE, drop = FALSE){
-#     if (missing(i)) i <- TRUE
-#     if (missing(j)) j <- TRUE
-#     if (class(slot(x, "mlg")) %in% "MLG"){
-#       mlg <- slot(x, "mlg")[i, all = TRUE]
-#     } else {
-#       mlg <- slot(x, "mlg")[i]  
-#     }
-#     hierarchy <- slot(x, "hierarchy")[i, , drop = FALSE]
-#     ## The following is lifted directly from the adegenet source code as
-#     ## callNextMethod() was throwing the error:
-#     ##
-#     ## Error in callNextMethod() : bad object found as method (class "function")
-#     ##
-#     ## The reason for this is the fact that the `genind` function calls
-#     ## `new("genind")` within the function. Because of this, using
-#     ## `callNextMethod()` returns a genind object instead of modifying the
-#     ## genclone object as it should. 
-#     pop <- NULL
-#     if (is.null(x@pop)) { 
-#       tab <- truenames(x) 
-#     } else {
-#       temp <- truenames(x)
-#       tab  <- temp$tab
-#       pop  <- temp$pop
-#       pop  <- factor(pop[i])
-#     }
-#     nrowx     <- nrow(x@tab)
-#     old.other <- other(x)
-# 
-#     ## handle loc argument
-#     if(!is.null(loc)){
-#       loc  <- as.character(loc)
-#       temp <- !loc %in% x@loc.fac
-#       if (any(temp)) { # si mauvais loci
-#         noloc <- paste(loc[temp], collapse = " ")
-#         warning(paste("the following specified loci do not exist:", noloc))
-#       } 
-#       j    <- x$loc.fac %in% loc
-#     } # end loc argument
-# 
-#     prevcall <- x@call
-#     tab      <- tab[i, j, ..., drop=FALSE]
-# 
-#     if(drop){
-#       allNb  <- apply(tab, 2, sum, na.rm=TRUE) # allele absolute frequencies
-#       toKeep <- (allNb > 1e-10)
-#       tab    <- tab[ , toKeep, drop=FALSE]
-#     }
-# 
-#     res <- genind(tab, pop=pop, prevcall=prevcall, ploidy=x@ploidy, type=x@type)
-#     res <- new("genclone", res, hierarchy, mlg, mlgclass = FALSE)
-#   
-#     ## handle 'other' slot
-#     nOther     <- length(x@other)
-#     namesOther <- names(x@other)
-#     counter    <- 0
-#     if (treatOther){
-#       f1 <- function(obj, n = nrowx){
-#         counter <<- counter + 1
-#         if (!is.null(dim(obj)) && nrow(obj) == n){ # if the element is a matrix-like obj
-#           obj <- obj[i , , drop=FALSE]
-#         } else if (length(obj) == n){ # if the element is not a matrix but has a length == n
-#           obj <- obj[i]
-#           if (is.factor(obj)){
-#             obj <- factor(obj)
-#           }
-#         } else {
-#           if (!quiet){
-#             warning(paste("cannot treat the object", namesOther[counter]))
-#           } 
-#         }
-#         return(obj)
-#       } # end f1
-# 
-#       res@other <- lapply(x@other, f1) # treat all elements
-#     } else {
-#       res@other <- old.other
-#     } # end treatOther
-# 
-#     return(res)
-#   }
 )
 
 #==============================================================================#
@@ -420,7 +338,8 @@ setMethod(
     if (length(ploid) > 1){
       ploid  <- paste(ploid, paste0("(", table(object@ploidy), ")"))
       ploid1 <- paste0(ploid[-length(ploid)], collapse = ", ")
-      ploid  <- paste0(ploid1, ", and ", ploid[length(ploid)])
+      sep    <- ifelse(length(ploid) > 2, ", ", " ")
+      ploid  <- paste0(ploid1, sep, "and ", ploid[length(ploid)])
     }
     nind   <- nInd(object)     
     type   <- ifelse(object@type == "PA", "dominant", "codominant")
@@ -472,13 +391,14 @@ setMethod(
   f = "print",
   signature("genclone"),
   definition = function(x, ...){
-    ploid <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
+    ploid  <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
     ploid  <- paste0(unique(ploid[x@ploidy]), "ploid")
     if (length(ploid) > 1){
-      ploid  <- paste(ploid, paste0("(",table(x@ploidy), ")"))
+      ploid  <- paste(ploid, paste0("(", table(x@ploidy), ")"))
       ploid1 <- paste0(ploid[-length(ploid)], collapse = ", ")
-      ploid  <- paste0(ploid1, ", and ", ploid[length(ploid)])
+      sep    <- ifelse(length(ploid) > 2, ", ", " ")
+      ploid  <- paste0(ploid1, sep, "and ", ploid[length(ploid)])
     }
     nind   <- nInd(x)     
     type  <- ifelse(x@type == "PA", "dominant", "codominant")
