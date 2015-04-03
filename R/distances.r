@@ -219,12 +219,13 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 #' 
 #==============================================================================#
 nei.dist <- function(x, warning = TRUE){
-  if (is(x, "gen"))
+  if (is(x, "gen")){
     MAT    <- get_gen_mat(x)
-  else if (length(dim(x)) == 2)
+  } else if (length(dim(x)) == 2){
     MAT <- x
-  else
+  } else {
     stop("Object must be a matrix or genind object")
+  }
   IDMAT <- MAT %*% t(MAT)
   vec   <- sqrt(diag(IDMAT))
   IDMAT <- IDMAT/vec[col(IDMAT)]
@@ -250,7 +251,7 @@ edwards.dist <- function(x){
   } else if (length(dim(x)) == 2){
     MAT  <- x
     nloc <- ncol(x)
-  } else{
+  } else {
     stop("Object must be a matrix or genind object")
   }
   MAT     <- sqrt(MAT)
@@ -280,14 +281,12 @@ rogers.dist <- function(x){
       loc.fac <- x@loc.fac
       nlig    <- nrow(x@tab)      
     }
-  }
-  else if (length(dim(x)) == 2){
+  } else if (length(dim(x)) == 2){
     MAT     <- x
     nloc    <- ncol(x)
     loc.fac <- factor(colnames(x), levels = colnames(x))
     nlig    <- nrow(x)
-  }
-  else{
+  } else {
     stop("Object must be a matrix or genind object")
   }
   # kX is a list of K=nloc matrices
@@ -309,12 +308,10 @@ reynolds.dist <- function(x){
   if (is(x, "gen")){ 
     MAT    <- get_gen_mat(x)
     nloc   <- length(x@loc.names)
-  }
-  else if (length(dim(x)) == 2){
+  } else if (length(dim(x)) == 2){
     MAT  <- x
     nloc <- ncol(x)
-  }
-  else{
+  } else {
     stop("Object must be a matrix or genind object")
   }
   denomi       <- MAT %*% t(MAT)
@@ -361,14 +358,8 @@ provesti.dist <- function(x){
   }
 
   d    <- unlist(lapply(w0, loca, nlig, MAT, nLoc))
-
   labs <- get_gen_dist_labs(x)
   d    <- make_attributes(d, nlig, labs, "Provesti", match.call())
-
-  # resmat <- matrix(numeric(0), nlig, nlig)
-  # resmat[lower.tri(resmat)] <- d
-  # d <- as.dist(resmat)
-  # attr(d, "Labels") <- labs
   return(d)
 }
 
@@ -475,9 +466,7 @@ provesti.dist <- function(x){
 aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                   cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
                   quiet = FALSE, ...){
-  if (is.genind(x)){
-    x <- missingno(x, missing, quiet = quiet, cutoff = mcutoff)
-  }
+  
   if (x@type == "PA"){
     xboot           <- x@tab
     colnames(xboot) <- locNames(x)
@@ -487,8 +476,23 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
       rownames(xboot) <- indNames(x)
     }
   } else {
-    xboot <- new("bootgen", x)
-  }
+    if (is.genind(x)){
+      if (missing %in% c("loci", "geno", "ignore")){
+        x <- missingno(x, missing, quiet = quiet, cutoff = mcutoff)
+        missing <- "asis"  
+      } 
+    }
+    if (as.character(substitute(distance)) %in% "diss.dist"){
+      xboot <- new("bootgen", x, na = missing, freq = FALSE)
+      if (!is.integer(xboot@tab)){
+        otab <- xboot@tab
+        xboot@tab <- matrix(as.integer(otab), nrow = nrow(otab),
+                            ncol = ncol(otab), dimnames = dimnames(otab))
+      }
+    } else{
+      xboot <- new("bootgen", x, na = missing, freq = TRUE)
+    }
+  } 
   ARGS     <- c("nj", "upgma")
   treearg  <- match.arg(tree, ARGS)
   treefunk <- tree_generator(treearg, distance, ...)

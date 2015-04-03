@@ -14,7 +14,7 @@
 
 \S4method{$}{bootgen}(x, name)
 
-\S4method{initialize}{bootgen}(.Object, gen, na = "mean")
+\S4method{initialize}{bootgen}(.Object, gen, na = "mean", freq = TRUE)
 }
 \arguments{
 \item{x}{a \code{"\linkS4class{bootgen}"} object}
@@ -30,6 +30,13 @@
 \item{.Object}{a character, "bootgen"}
 
 \item{gen}{a genind, genclone, or genpop object}
+
+\item{na}{how missing data should be treated. Default is "mean", averaging
+over other values in the matrix. Possible values are listed in
+\code{\link[adegenet]{tab}}.}
+
+\item{freq}{if \code{TRUE}, the matrix will be a genotype frequency matrix.
+If \code{FALSE}, the matrix will be allele counts.}
 }
 \description{
 This is not designed for user interaction.

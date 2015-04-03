@@ -124,11 +124,16 @@ setMethod(
 #' @rdname bootgen-methods
 #' @param .Object a character, "bootgen"
 #' @param gen a genind, genclone, or genpop object
+#' @param na how missing data should be treated. Default is "mean", averaging 
+#'   over other values in the matrix. Possible values are listed in 
+#'   \code{\link[adegenet]{tab}}.
+#' @param freq if \code{TRUE}, the matrix will be a genotype frequency matrix.
+#'   If \code{FALSE}, the matrix will be allele counts.
 #==============================================================================#
 setMethod(
   f = "initialize",
   signature = "bootgen",
-  definition = function(.Object, gen, na = "mean"){
+  definition = function(.Object, gen, na = "mean", freq = TRUE){
     if (missing(gen)){
       return(.Object)
     }
@@ -141,7 +146,7 @@ setMethod(
     }
     num_alleles                <- slot(gen, "loc.nall")
     num_loci                   <- length(num_alleles)
-    slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = TRUE)      
+    slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = freq)     
     slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")   
     slot(.Object, "loc.names") <- slot(gen, "loc.names") 
     slot(.Object, "loc.nall")  <- num_alleles  
