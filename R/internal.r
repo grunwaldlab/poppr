@@ -1764,8 +1764,8 @@ test_microsat <- function(x){
 #==============================================================================#
 test_zeroes <- function(x){
   if (test_microsat(x)){
-    allnames <- unlist(lapply(x@all.names, as.numeric))
-    if (any(allnames == 0) & x@ploidy > 2){
+    allnames <- as.numeric(unlist(x@all.names, use.names = FALSE))
+    if (any(allnames == 0) & any(x@ploidy > 2)){
       return(TRUE)
     }
   }
