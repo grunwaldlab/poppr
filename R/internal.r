@@ -1860,3 +1860,125 @@ make_poppr_plot_title <- function(samp, file = NULL, N = NULL, pop = NULL){
   plot_title <- paste(plot_title, perms, sep = "\n")
   return(plot_title)
 }
+
+#==============================================================================#
+# fill a single genotype with zeroes if the number of alleles is maxploid.
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # fill_zero_locus
+#==============================================================================#
+fill_zero <- function(x, maxploid, mat = FALSE){
+  if (length(x) < maxploid){
+    if (!mat){
+      zeroes <- paste(rep(0, maxploid - length(x)), collapse = "/")
+      res    <- paste(x, collapse = "/")
+      res    <- paste(zeroes, res, sep = "/")     
+    } else {
+      res <- c(rep(0.0, maxploid - length(x)), as.numeric(x))
+    }
+ 
+  } else {
+    if (!mat){
+      res <- paste(x, collapse = "/")
+    } else {
+      res <- as.numeric(x)
+    }
+  }
+  return(res)
+}
+
+#==============================================================================#
+# Fill short genotypes in a character vector with zeroes.
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # generate_bruvo_mat
+#==============================================================================#
+fill_zero_locus <- function(x, sep = "/", maxploid, mat = FALSE){
+  x <- strsplit(x, sep)
+  if (mat){
+    result <- numeric(maxploid)
+  } else {
+    result <- character(1)
+  }
+  return(t(vapply(x, fill_zero, result, maxploid, mat)))
+}
+
+#==============================================================================#
+# This will fill in zeroes from a data frame with uneven ploidy to force it to
+# have uniform ploidy.
+#
+# Example: 
+#               locus_1     locus_2
+# sample_1     25/91/20 15/33/10/55
+# sample_2  71/29/34/69          45
+# sample_3           24    23/83/25
+# sample_4     12/18/94           4
+# sample_5           68    15/54/57
+# sample_6     36/45/91    32/74/22
+# sample_7           72 22/27/70/75
+# sample_8       100/54          92
+# sample_9        62/50 17/11/62/50
+# sample_10       41/31    17/30/57
+#
+# Will become
+#
+#               locus_1     locus_2
+# sample_1   0/25/91/20 15/33/10/55
+# sample_2  71/29/34/69    0/0/0/45
+# sample_3     0/0/0/24  0/23/83/25
+# sample_4   0/12/18/94     0/0/0/4
+# sample_5     0/0/0/68  0/15/54/57
+# sample_6   0/36/45/91  0/32/74/22
+# sample_7     0/0/0/72 22/27/70/75
+# sample_8   0/0/100/54    0/0/0/92
+# sample_9    0/0/62/50 17/11/62/50
+# sample_10   0/0/41/31  0/17/30/57
+#
+# or, if mat = TRUE
+#
+#           locus_1.1 locus_1.2 locus_1.3 locus_1.4 locus_2.1 locus_2.2 locus_2.3 locus_2.4
+# sample_1          0        25        91        20        15        33        10        55
+# sample_2         71        29        34        69         0         0         0        45
+# sample_3          0         0         0        24         0        23        83        25
+# sample_4          0        12        18        94         0         0         0         4
+# sample_5          0         0         0        68         0        15        54        57
+# sample_6          0        36        45        91         0        32        74        22
+# sample_7          0         0         0        72        22        27        70        75
+# sample_8          0         0       100        54         0         0         0        92
+# sample_9          0         0        62        50        17        11        62        50
+# sample_10         0         0        41        31         0        17        30        57
+#
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+generate_bruvo_mat <- function(x, maxploid, sep = "/", mat = FALSE){
+  if (mat){
+    result <- matrix(numeric(nrow(x)*maxploid), ncol = maxploid, nrow = nrow(x))
+  } else {
+    result <- character(nrow(x))
+  }
+  res <- vapply(x, fill_zero_locus, result, sep, maxploid, mat)
+  if (length(dim(res)) > 2){
+    redim    <- dim(res)
+    dim(res) <- c(redim[1], redim[2]*redim[3])
+    xcols  <- colnames(x)
+    maxseq <- seq(maxploid)
+    colnames(res) <- vapply(xcols, FUN = paste, 
+                            FUN.VALUE = character(maxploid), maxseq, sep = ".")
+  } else {
+    colnames(res) <- colnames(x)
+  }
+  rownames(res) <- rownames(x)
+  return(res)
+}
+
