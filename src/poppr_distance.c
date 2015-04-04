@@ -118,25 +118,28 @@ SEXP pairdiffs(SEXP freq_mat)
 	I = INTEGER(Rdim)[0]; // Rows
 	J = INTEGER(Rdim)[1]; // Columns
 	PROTECT(pair_matrix = allocVector(INTSXP, J*2));
+	int* pairmat = INTEGER(pair_matrix);
+	int* inmat = INTEGER(freq_mat);
 	count = 0;
 	PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
+
 	for(i = 0; i < I-1; i++)
 	{
 		for(z = 0; z < J; z++)
 		{
-			INTEGER(pair_matrix)[z] = INTEGER(freq_mat)[i+(I)*z];
+			pairmat[z] = inmat[i+(I)*z];
 		}
 		for(j = i+1; j < I; j++)
 		{
 			P = 0;
 			for(z = 0; z < J; z++)
 			{
-				if(ISNA(INTEGER(pair_matrix)[0]) || ISNA(INTEGER(freq_mat)[j+(I)*z]))
+				if(pairmat[0] == NA_INTEGER || inmat[j + (I)*z] == NA_INTEGER)
 				{
 					P = 0;
 					break;
 				}
-				P += abs(INTEGER(pair_matrix)[z] - INTEGER(freq_mat)[j+(I)*z]);
+				P += abs(pairmat[z] - inmat[j + (I)*z]);
 			}
 			INTEGER(Rout)[count++] = P;
 		}
