@@ -36,6 +36,7 @@ test_that("multilocus genotype matrix matches mlg.vector and data", {
 
 test_that("mlg.crosspop will work with subsetted genclone objects", {
   data(Aeut, package = "poppr")
+  strata(Aeut) <- other(Aeut)$population_hierarchy
   agc <- as.genclone(Aeut)
   Athena <- popsub(agc, "Athena")
   setPop(Athena) <- ~Subpop
