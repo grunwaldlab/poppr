@@ -146,58 +146,57 @@
 #' }
 #==============================================================================#
 
-clonecorrect <- function(pop, hier=1, dfname="population_hierarchy", 
-                         combine = FALSE, keep = 1){
+clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   clonecall <- match.call()$pop
   if(!is.genind(pop)){
     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
   }
-  if (is.language(hier)){
-    hierformula <- hier
-    hier <- all.vars(hier)
+  if (is.language(strata)){
+    strataformula <- strata
+    strata        <- all.vars(strata)
   }
   popcall <- pop@call
-  if (is.na(hier[1])){
+  if (is.na(strata[1])){
     return(pop[.clonecorrector(pop), ])
   }
-  if (is.genclone(pop)){
-    if (is.numeric(hier)){
-      hier <- names(strata(pop))[hier]
-      hierformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
+  # if (is.genclone(pop)){
+    if (is.numeric(strata)){
+      strata        <- names(strata(pop))[strata]
+      strataformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
     }
-    if (!all(hier %in% names(strata(pop)))){
-      stop(hier_incompatible_warning(hier, strata(pop)))
+    if (!all(strata %in% names(strata(pop)))){
+      stop(hier_incompatible_warning(strata, strata(pop)))
     }
-    setPop(pop) <- hierformula
-  } else if (is.null(other(pop)[[dfname]])) {
-    if(length(hier) == 1 & hier[1] == 1){
-      if(length(levels(pop(pop))) == 1 | is.null(pop(pop))){
-        pop <- pop[.clonecorrector(pop), ]
-        return(pop)
-      }
-      else if(length(levels(pop(pop))) > 1){
-        other(pop)[[dfname]] <- as.data.frame(list(Pop = as.character(pop(pop))))
-        warning(paste("There is no data frame in ",
-                      paste(substitute(clonecall), collapse=""), 
-                      "@other called ",dfname,
-                      ".\nOne is being created from the population factor.", sep=""))
-      }
-    }
-    else{
-      stop(paste("There is no data frame in ",paste(substitute(clonecall), collapse=""), 
-                 "@other called ",dfname,".\n", sep=""))
-    }
-  }
+    setPop(pop) <- strataformula
+  # } else if (is.null(other(pop)[[dfname]])) {
+  #   if(length(strata) == 1 & strata[1] == 1){
+  #     if(length(levels(pop(pop))) == 1 | is.null(pop(pop))){
+  #       pop <- pop[.clonecorrector(pop), ]
+  #       return(pop)
+  #     }
+  #     else if(length(levels(pop(pop))) > 1){
+  #       other(pop)[[dfname]] <- as.data.frame(list(Pop = as.character(pop(pop))))
+  #       warning(paste("There is no data frame in ",
+  #                     paste(substitute(clonecall), collapse=""), 
+  #                     "@other called ",dfname,
+  #                     ".\nOne is being created from the population factor.", sep=""))
+  #     }
+  #   }
+  #   else{
+  #     stop(paste("There is no data frame in ",paste(substitute(clonecall), collapse=""), 
+  #                "@other called ",dfname,".\n", sep=""))
+  #   }
+  # }
   # Corrects the individual names of the object. This is fo the fact that the
   # clone corrector relies on the unique individual names for it to work.
   if(all(pop@ind.names == "")){
     pop@ind.names <- as.character(1:nInd(pop))
   }
   
-  # Combining the population factor by the hierarchy
-  if(!is.genclone(pop)){
-    suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier))
-  }
+  # Combining the population factor by the strataarchy
+  # if(!is.genclone(pop)){
+  #   suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, strata=strata))
+  # }
   cpop <- nPop(pop)
   
   # Steps for correction:
@@ -216,21 +215,21 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   
   if(!combine){
     # When the combine flag is not true, the default is to keep the first level
-    # of the hierarchy. The keep flag is a numeric vector corresponding to the
-    # hier flag indicating which levels the user wants to keep.
-    if (is.genclone(pop)){
-      hier <- hier[keep]
-      newformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
+    # of the strataarchy. The keep flag is a numeric vector corresponding to the
+    # strata flag indicating which levels the user wants to keep.
+    # if (is.genclone(pop)){
+      strata <- strata[keep]
+      newformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
       setPop(pop) <- newformula
-    } else {
-      if(length(keep) > 1){
-        pop <- splitcombine(pop, hier=hier[keep], method=2, dfname=dfname)
-      }
-      else{
-        pop(pop) <- pop$other[[dfname]][[hier[keep]]]
-      }
-      names(popNames(pop)) <- levels(pop$pop)
-    }
+    # } else {
+    #   if(length(keep) > 1){
+    #     pop <- splitcombine(pop, strata=strata[keep], method=2, dfname=dfname)
+    #   }
+    #   else{
+    #     pop(pop) <- pop$other[[dfname]][[strata[keep]]]
+    #   }
+    #   names(popNames(pop)) <- levels(pop$pop)
+    # }
   }
   pop@call <- popcall
   return(pop)
