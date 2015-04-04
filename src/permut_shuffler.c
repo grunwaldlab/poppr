@@ -47,14 +47,14 @@ Inputs:
 Outputs;
 	Rout - the permuted matrix. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
+SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP ploidy)
 {
 	int rows;
 	int cols;
 	int i;
 	int j;
 	int count = 0;
-	int ploid;
+	int* ploid;
 	int p;
 	int miss = 0;
 	SEXP Rout;
@@ -65,35 +65,32 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
 	PROTECT(Rout = allocMatrix(INTSXP, rows, cols));
 	alleles = coerceVector(alleles, INTSXP);
 	ploidy = coerceVector(ploidy, INTSXP);
-	ploid = INTEGER(ploidy)[0];
-	int *loc = INTEGER(locus);
-	int *outmat = INTEGER(Rout);
-	// double *afreq = REAL(allele_freq);
-	int *alle = INTEGER(alleles);
+	ploid = INTEGER(ploidy);
+	int* outmat = INTEGER(Rout);
+	int* alle = INTEGER(alleles);
 	for(i = 0; i < rows; i++)
 	{
 		// loop through all columns first and initialize
 		for(j = 0; j < cols; j++) 
 		{
-			// maintain missing values
-			if (ISNA(loc[i + j*rows]))
+			if (ploid[i] == 0) // maintain missing values and skip
 			{
-				outmat[i + j*rows] = loc[i + j*rows]; 
+				outmat[i + j*rows] = NA_INTEGER; 
 				miss = 1;
 			}
-			else
+			else // initialize to zero
 			{
-				outmat[i + j*rows] = 0; 
+				outmat[i + j*rows] = 0;
 			}
 		}
 		if (miss == 1)
 		{
-			miss = 0;		 
+			miss = 0;
 		}
 		else
 		{
-			// permute the alleles by adding the allele frequency
-			for(p = 0; p < ploid; p++)
+			// loop over the observed ploidy and assign that many alleles.
+			for(p = 0; p < ploid[i]; p++)
 			{
 				outmat[i + alle[count++]*rows] += 1;
 			}
@@ -104,79 +101,6 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy)
 }
 
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A slightly faster method of permuting alleles at a locus. 
-
-Inputs:
-	locus - The matrix to be permuted. Used for reference.
-	alleles - a vector of integers from 0 to n alleles indicating the matrix cols
-	allele_freq - 1/ploidy
-	ploidy - self explanitory
-	ploidvec - a vector describing the ploidy of each sample. 
-	zero_col - An integer describing the column that contains the padding zero
-			   for the ploidy.
-
-Outputs;
-	Rout - the permuted matrix. 
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-SEXP new_permute_shuff(SEXP locus, SEXP alleles, SEXP allele_freq, SEXP ploidy,
-	SEXP ploidvec, SEXP zero_col)
-{
-	int rows, cols, i, j, count = 0, ploid, p, miss = 0, zc;
-	SEXP Rout;
-	SEXP Rdim;
-	Rdim = getAttrib(locus, R_DimSymbol);
-	rows = INTEGER(Rdim)[0]; 
-	cols = INTEGER(Rdim)[1]; 
-	PROTECT(Rout = allocMatrix(INTSXP, rows, cols));
-	alleles = coerceVector(alleles, INTSXP);
-	ploidy = coerceVector(ploidy, INTSXP);
-	ploid = INTEGER(ploidy)[0];
-	ploidvec = coerceVector(ploidvec, INTSXP);
-	zc = INTEGER(zero_col)[0];
-	double *loc = REAL(locus), *outmat = REAL(Rout), *afreq = REAL(allele_freq);
-	int *alle = INTEGER(alleles), *pv = INTEGER(ploidvec);
-	for(i = 0; i < rows; i++)
-	{
-		// loop through all columns first and initialize
-		for(j = 0; j < cols; j++) 
-		{
-			// maintain missing values
-			if (ISNA(loc[i + j*rows]))
-			{
-				outmat[i + j*rows] = loc[i + j*rows]; 
-				miss = 1;
-			}
-			else
-			{
-				if (j == zc)
-				{
-					outmat[i + j*rows] = *(afreq) * (ploid - pv[i]);
-				}
-				else
-				{
-					outmat[i + j*rows] = 0.0; 
-				}
-			}
-		}
-		if (miss == 1)
-		{
-			miss = 0;		 
-		}
-		else
-		{
-			// permute the alleles by adding the allele frequency
-			for(p = 0; p < pv[i]; p++)
-			{
-				outmat[i + alle[count++]*rows] += *(afreq);
-			}
-		}
-	}
-	UNPROTECT(1);
-	return Rout;
-}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Method for expanding indices for bootstrapping. Only slightly faster than R
