@@ -66,6 +66,7 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP ploidy)
 	alleles = coerceVector(alleles, INTSXP);
 	ploidy = coerceVector(ploidy, INTSXP);
 	ploid = INTEGER(ploidy);
+	int* inmat = INTEGER(locus);
 	int* outmat = INTEGER(Rout);
 	int* alle = INTEGER(alleles);
 	for(i = 0; i < rows; i++)
@@ -73,7 +74,7 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP ploidy)
 		// loop through all columns first and initialize
 		for(j = 0; j < cols; j++) 
 		{
-			if (ploid[i] == 0) // maintain missing values and skip
+			if (inmat[i + j*rows] == NA_INTEGER) // skip missing values
 			{
 				outmat[i + j*rows] = NA_INTEGER; 
 				miss = 1;
