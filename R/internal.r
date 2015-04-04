@@ -1377,21 +1377,25 @@ hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
 # Internal functions utilizing this function:
 # # pool_haplotypes
 separate_haplotypes <- function(x){
-  ploidy        <- ploidy(x)
-  allele_list   <- unlist(lapply(x@all.names, nchar))
-  allele_length <- sum(allele_list)/length(allele_list)
-  if (!all(allele_list == allele_length)){
-    stop("not all alleles are of equal length.")
-  }
-  inds        <- indNames(x)
-  x.loc       <- as.loci(x)
+#   ploidy        <- max(ploidy(x))
+#   allele_list   <- nchar(unlist(x@all.names, use.names = FALSE))
+#   allele_length <- mean(allele_list) # sum(allele_list)/length(allele_list)
+#   if (!all(allele_list == allele_length)){
+#     stop("not all alleles are of equal length.")
+#   }
+#   inds        <- indNames(x)
+  x.loc       <- pegas::as.loci(x)
   loci_cols   <- attr(x.loc, "locicol")
-  pop_col     <- which(names(x.loc) == "population")
-  geno_length <- allele_length*ploidy + ploidy - 1
-  sep         <- which(1:geno_length %% (allele_length + 1) == 0)
-  sep         <- c(0, sep, geno_length + 1)
-  hap_fac     <- rep(1:ploidy, each = allele_length + 1)
-  allele_inds <- lapply(1:ploidy, function(i) c(sep[i] + 1, sep[i + 1] - 1))
+#   pop_col     <- which(names(x.loc) == "population")
+#   geno_length <- (allele_length * ploidy) + (ploidy - 1)
+#   sep         <- which(1:geno_length %% (allele_length + 1) == 0)
+#   sep         <- c(0, sep, geno_length + 1)
+#   hap_fac     <- rep(1:ploidy, each = allele_length + 1)
+#   allele_inds <- lapply(1:ploidy, function(i) c(sep[i] + 1, sep[i + 1] - 1))
+  sep_location <- lapply(x.loc[loci_cols], function(i) gregexpr("/", i))
+  sep_location <- matrix(unlist(sep_location, use.names = FALSE), nrow = nrow(x))
+  facstr       <- function(i) strlen(as.character(i))
+  geno_lengths <- vapply(x.loc[loci_cols], facstr, integer(nrow(x)))
   haplist     <- lapply(allele_inds, hap2genind, x.loc, loci_cols, inds, hap_fac)
   return(haplist)
 }
@@ -1409,14 +1413,17 @@ separate_haplotypes <- function(x){
 # # none
 #==============================================================================#
 ## Main Function. Lengthens the population hierarchy as well.
-pool_haplotypes <- function(x, dfname = "population_hierarchy"){
-  ploidy        <- ploidy(x)
-  df            <- other(x)[[dfname]]
-  df$Individual <- indNames(x)
+pool_haplotypes <- function(x){
+  ploidy <- max(ploidy(x))
+  if (is.null(strata(x))){
+    strata(x) <- data.frame(pop = pop(x))
+  }
+  addStrata(x)  <- data.frame(Individual = indNames(x))
+  df            <- strata(x)
   df            <- df[rep(1:nrow(df), ploidy), , drop = FALSE]
   newx          <- repool(separate_haplotypes(x))
-  pop(newx)     <- df$Individual
-  other(newx)[[dfname]] <- df
+  strata(newx)  <- df
+  setPop(newx)  <- ~Individual
   return(newx)
 }
 

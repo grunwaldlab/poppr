@@ -231,9 +231,9 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   # remove loci at cutoff
   # remove individuals at cutoff
   if (clonecorrect){
-    x <- clonecorrect(x, hier = hier, keep = 1:length(all.vars(hier)))
+    x <- clonecorrect(x, strata = hier, keep = 1:length(all.vars(hier)))
   }
-  if (within & ploidy(x) == 2 & check_Hs(x)){
+  if (within & all(ploidy(x) == 2) & check_Hs(x) & x@type != "PA"){
     hier <- update(hier, ~./Individual)
     x    <- pool_haplotypes(x, dfname = dfname)
   }
@@ -241,7 +241,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
   xstruct <- make_ade_df(hier, hierdf)
   if (is.null(dist)){
-    xdist <- sqrt(diss.dist(clonecorrect(x, hier = NA), percent = FALSE))
+    xdist <- sqrt(diss.dist(clonecorrect(x, strata = NA), percent = FALSE))
   } else {
     datalength <- choose(nInd(x), 2)
     mlgs       <- mlg(x, quiet = TRUE)
