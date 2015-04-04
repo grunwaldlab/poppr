@@ -300,7 +300,9 @@ setMethod(
   definition = function(.Object, ..., mlg, mlgclass = TRUE){
 
     .Object <- callNextMethod(.Object, ..., mlg = mlg)
-    mlg <- mlg.vector(.Object)
+    if (missing(mlg)){
+      mlg <- mlg.vector(.Object)      
+    } 
     if (mlgclass) {
       mlg <- new("MLG", mlg)
     }
@@ -483,6 +485,7 @@ setMethod(
     theCall <- match.call()
     if (!missing(x) && is.genind(x)){
       theOther <- x@other
+      if (missing(mlg)) mlg <- mlg.vector(x)
       res <- new("genclone", tab = tab(x), ploidy = ploidy(x), pop = pop(x), 
                  type = x@type, prevcall = theCall, strata = x@strata, 
                  hierarchy = x@hierarchy, mlg = mlg, mlgclass = mlgclass)
