@@ -46,48 +46,29 @@
 #' object.
 #' 
 #' This function removes any duplicated multilocus genotypes from any specified 
-#' population hierarchy.
+#' population strata.
 #' 
 #' @param pop a \code{\link{genind}} object
 #'   
-#' @param hier a hierarchical formula or numeric vector. In a 
-#'   \code{\linkS4class{genclone}} object, this will define the columns of the 
-#'   data frame in the hierarchy slot to use. In a \code{\linkS4class{genind}} 
-#'   object, the data frame must exist within the \code{\link[adegenet]{other}} 
-#'   slot and the user must define the name of the data frame with the parameter
-#'   \code{dfname}
+#' @param strata a hierarchical formula or numeric vector. This will define the columns of the 
+#'   data frame in the strata slot to use. 
 #'   
-#' @param dfname a \code{character string}. \strong{Only for genind objects} 
-#'   This is the name of the data frame or list containing the vectors of the 
-#'   population hierarchy within the \code{other} slot of the 
-#'   \code{\link{genind}} object.
-#'   
-#' @param combine \code{logical}. When set to TRUE, the heirarchy will be 
-#'   combined to create a new population for the clone corrected genind or 
+#' @param combine \code{logical}. When set to TRUE, the strata will be 
+#'   combined to create a new population for the clone-corrected genind or 
 #'   genclone object.
 #'   
 #' @param keep \code{integer}. When \code{combine} is set to \code{FALSE}, you 
-#'   can use this flag to choose the levels of your population hierarchy. For 
-#'   example: if your clone correction hierarchy is set to "Pop", "Subpop", and 
+#'   can use this flag to choose the levels of your population strata. For 
+#'   example: if your clone correction strata is set to "Pop", "Subpop", and 
 #'   "Year", and you want to analyze your populations with respect to year, you 
 #'   can set \code{keep = c(1,3)}.
 #'   
 #' @return a clone corrected \code{\linkS4class{genclone}} or
 #'   \code{\linkS4class{genind}} object.
 #'   
-#' @details This function will clone correct based on the hierarchical level 
-#'   provided. To clone correct indiscriminantly of hierarchical structure, set 
-#'   \code{hier = NA}. It is recommended to use this function with 
-#'   \code{\linkS4class{genclone}} objects as they have a specific slot for 
-#'   hierarchies. If you wish to use this function on a 
-#'   \code{\linkS4class{genind}} object, see below.
-#'   
-#' @note \subsection{For genind objects}{ \code{\linkS4class{genind}} objects do
-#'   not have a specific slot for hierarchies and thus require the user to
-#'   specfy the hierarchical levels in a data frame within the
-#'   \code{\link[adegenet]{other}} slot. If there is no data frame indicating
-#'   population hierarchy, then clone correction will occur on the population
-#'   factor that is set in the \code{\link[adegenet]{pop}} slot.}
+#' @details This function will clone correct based on the stratification 
+#'   provided. To clone correct indiscriminately of population structure, set 
+#'   \code{strata = NA}. 
 #'   
 #'   
 #' @export
@@ -97,52 +78,55 @@
 #' data(Aeut)
 #' 
 #' # Redefine it as a genclone object
-#' Aeut <- as.genclone(Aeut, hier = other(Aeut)$population_hierarchy[-1])
+#' Aeut <- as.genclone(Aeut)
+#' strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 #' 
 #' # Check the number of multilocus genotypes
 #' mlg(Aeut)
 #' popNames(Aeut)
 #' 
 #' # Clone correct at the population level.
-#' Aeut.pop <- clonecorrect(Aeut, hier= ~Pop)
+#' Aeut.pop <- clonecorrect(Aeut, strata =  ~Pop)
 #' mlg(Aeut.pop)
-#' Aeut.popNames(pop)
+#' popNames(Aeut.pop)
 #' 
 #' \dontrun{
 #' # Clone correct at the subpopulation level with respect to population and
 #' # combine.
-#' Aeut.subpop <- clonecorrect(Aeut, hier=~Pop/Subpop, combine=TRUE)
+#' Aeut.subpop <- clonecorrect(Aeut, strata = ~Pop/Subpop, combine=TRUE)
 #' mlg(Aeut.subpop)
-#' Aeut.popNames(subpop)
+#' popNames(Aeut.subpop)
 #' 
 #' # Do the same, but set to the population level.
-#' Aeut.subpop2 <- clonecorrect(Aeut, hier=~Pop/Subpop, keep=1)
+#' Aeut.subpop2 <- clonecorrect(Aeut, strata = ~Pop/Subpop, keep=1)
 #' mlg(Aeut.subpop2)
-#' Aeut.subpop2$pop.names
+#' popNames(Aeut.subpop2)
 #' 
 #' # LOAD H3N2 dataset
 #' data(H3N2)
 #' 
+#' strata(H3N2) <- other(H3N2)$x
+#'
 #' # Extract only the individuals located in China
-#' country <- clonecorrect(H3N2, hier= ~country, dfname="x")
+#' country <- clonecorrect(H3N2, strata =  ~country)
 #' 
 #' # How many isolates did we have from China before clone correction?
-#' length(which(other(H3N2)$x$country=="China")) # 155
+#' sum(strata(H3N2, ~country) == "China") # 155
 #' 
 #' # How many unique isolates from China after clone correction?
-#' length(which(other(country)$x$country=="China")) # 79
+#' sum(strata(country, ~country) == "China") # 79
 #' 
 #' # Something a little more complicated. (This could take a few minutes on
 #' # slower computers)
 #' 
 #' # setting the hierarchy to be Country > Year > Month  
-#' c.y.m <- clonecorrect(H3N2, hier= ~year/month/country, dfname="x")
+#' c.y.m <- clonecorrect(H3N2, strata =  ~year/month/country)
 #' 
 #' # How many isolates in the original data set?
-#' length(other(H3N2)$x$country) # 1903
+#' nInd(H3N2) # 1903
 #' 
 #' # How many after we clone corrected for country, year, and month?
-#' length(other(c.y.m)$x$country) # 1190
+#' nInd(c.y.m) # 1190
 #' }
 #==============================================================================#
 
@@ -159,49 +143,25 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   if (is.na(strata[1])){
     return(pop[.clonecorrector(pop), ])
   }
-  # if (is.genclone(pop)){
-    if (is.numeric(strata)){
-      strata        <- names(strata(pop))[strata]
-      strataformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
-    }
-    if (!all(strata %in% names(strata(pop)))){
-      stop(hier_incompatible_warning(strata, strata(pop)))
-    }
-    setPop(pop) <- strataformula
-  # } else if (is.null(other(pop)[[dfname]])) {
-  #   if(length(strata) == 1 & strata[1] == 1){
-  #     if(length(levels(pop(pop))) == 1 | is.null(pop(pop))){
-  #       pop <- pop[.clonecorrector(pop), ]
-  #       return(pop)
-  #     }
-  #     else if(length(levels(pop(pop))) > 1){
-  #       other(pop)[[dfname]] <- as.data.frame(list(Pop = as.character(pop(pop))))
-  #       warning(paste("There is no data frame in ",
-  #                     paste(substitute(clonecall), collapse=""), 
-  #                     "@other called ",dfname,
-  #                     ".\nOne is being created from the population factor.", sep=""))
-  #     }
-  #   }
-  #   else{
-  #     stop(paste("There is no data frame in ",paste(substitute(clonecall), collapse=""), 
-  #                "@other called ",dfname,".\n", sep=""))
-  #   }
-  # }
+  if (is.numeric(strata)){
+    strata        <- names(strata(pop))[strata]
+    strataformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
+  }
+  if (!all(strata %in% names(strata(pop)))){
+    stop(hier_incompatible_warning(strata, strata(pop)))
+  }
+  setPop(pop) <- strataformula
   # Corrects the individual names of the object. This is fo the fact that the
   # clone corrector relies on the unique individual names for it to work.
   if(all(pop@ind.names == "")){
     pop@ind.names <- as.character(1:nInd(pop))
   }
-  
-  # Combining the population factor by the strataarchy
-  # if(!is.genclone(pop)){
-  #   suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, strata=strata))
-  # }
+
   cpop <- nPop(pop)
   
   # Steps for correction:
   # Subset by population factor.
-  # Run subsetted population by the .clonecorrector
+  # Run subset population by the .clonecorrector
   # Profit!
   corWrecked <- function(x, pop){
     subbed <- popsub(pop, x) # population to be...corrected.
@@ -215,21 +175,11 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   
   if(!combine){
     # When the combine flag is not true, the default is to keep the first level
-    # of the strataarchy. The keep flag is a numeric vector corresponding to the
+    # of the strata. The keep flag is a numeric vector corresponding to the
     # strata flag indicating which levels the user wants to keep.
-    # if (is.genclone(pop)){
-      strata <- strata[keep]
-      newformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
-      setPop(pop) <- newformula
-    # } else {
-    #   if(length(keep) > 1){
-    #     pop <- splitcombine(pop, strata=strata[keep], method=2, dfname=dfname)
-    #   }
-    #   else{
-    #     pop(pop) <- pop$other[[dfname]][[strata[keep]]]
-    #   }
-    #   names(popNames(pop)) <- levels(pop$pop)
-    # }
+    strata <- strata[keep]
+    newformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
+    setPop(pop) <- newformula
   }
   pop@call <- popcall
   return(pop)
@@ -290,7 +240,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     return(gid)
   }
   orig_list <- sublist 
-  popnames <- popNames(gid)
+  popnames  <- popNames(gid)
   if (toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
       return(gid)
@@ -350,7 +300,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
         nothing_warn <- paste("Nothing present in the sublist.\n",
                             "Perhaps the sublist and blacklist arguments have",
                             "duplicate entries?\n",
-                            "Subsetting not taking place.")
+                            "Subset not taking place.")
         warning(nothing_warn)
         return(gid)
       }
@@ -458,11 +408,11 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
     if (type == "loci"){
       if(quiet != TRUE){
         if (length(navals) == ncol(tab(pop))){
-          cat("\n No loci with missing values above",
-              paste0(cutoff*100,"%"),"found.\n")
+          message("\n No loci with missing values above ",
+              paste0(cutoff*100,"%")," found.\n")
         } else {
           remloc <- pop@loc.names[!cumsum(pop@loc.nall) %in% navals]
-          cat("\n Found", sum(is.na(tab(pop))),"missing values.")
+          message("\n Found ", sum(is.na(tab(pop)))," missing values.")
           loci   <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", 
                           "loci"))
           cat("\n", loci, "contained missing values greater than",
@@ -474,11 +424,11 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
     } else if (type == "genotypes"){
       if(quiet != TRUE){
         if (length(navals) == nInd(pop)){
-          cat("\n No genotypes with missing values above",
-              paste0(cutoff*100, "%"),"found.\n")
+          message("\n No genotypes with missing values above ",
+              paste0(cutoff*100, "%")," found.\n")
         } else {
           remgeno <- indNames(pop)[-navals]
-          cat("\n Found", sum(is.na(tab(pop))),"missing values.")
+          message("\n Found ", sum(is.na(tab(pop)))," missing values.")
           geno    <- paste(length(remgeno), ifelse(length(remgeno) == 1, 
                            "genotype", "genotypes"))
           cat("\n", geno, "contained missing values greater than",
@@ -488,6 +438,9 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
       }
       pop <- pop[navals, ]
     } else if (type == "mean"){
+      if (!quiet){
+        message("\n Replaced ", sum(is.na(tab(pop)))," missing values.")
+      }
       pop@tab <- tab(pop, freq = freq, NA.method = "mean", quiet=quiet)
       if (freq){
         warning(freq_warning)
@@ -495,227 +448,231 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
     }
     # changes all NA's to 0. NOT RECOMMENDED. INTRODUCES MORE DIVERSITY.
     else if (type %in% c("zero","0")){
+      if (!quiet){
+        message("\n Replaced ", sum(is.na(tab(pop)))," missing values.")
+      }
       pop@tab <- tab(pop, freq = freq, NA.method = "zero", quiet=quiet)
+
       if (freq){
         warning(freq_warning)
       }
     } else {
-      cat("\nInvalid type.\n")
+      message("\nInvalid type.\n")
     } 
   } else {
     if(quiet == FALSE){
-      cat("\n No missing values detected.\n")
+      message("\n No missing values detected.\n")
     }
   }
   return(pop)
 }
 
-#==============================================================================#
-#' Split a or combine items within a data frame in \code{\link{genind}} objects (DEPRECATED).
-#'
-#' Often, one way a lot of file formats fail is that they do not allow multiple
-#' population hierarchies. This can be circumvented, however, by coding all of
-#' the hierarchies in one string in the input file with a common separator (eg.
-#' "_"). \code{splitcombine} will be able to recognise those separators and
-#' create a data frame of all the population structures for whatever sub-setting
-#' you might need. 
-#'
-#' @param pop a \code{\link{genind}} object.
-#'
-#' @param method an \code{integer}, 1 for splitting, 2 for combining.
-#'
-#' @param dfname the name of the data frame containing the population structure.
-#' for the splitting method, the combined population structure must be in the
-#' first column. 
-#'
-#' @param sep The separator used for separating or combining the data. See note.
-#'
-#' @param hier a \code{vector} containing the population hierarchy you wish to
-#' split or combine. 
-#'
-#' @param setPopulation \code{logical}. if \code{TRUE}, the population of the
-#' resulting genind object will be that of the highest population structure
-#' (split method) or the combined populations (combine method).
-#'
-#' @param fixed \code{logical}. An argument to be passed onto
-#' \code{\link{strsplit}}. If \code{TRUE}, \code{sep} must match exactly to the
-#' populations for the split method. 
-#'
-#' @return a \code{\link{genind}} object with a modified data frame in the
-#' \code{\link{other}} slot.
-#'
-#' @note 
-#' This function has been deprecated and replaced by functions like
-#' \code{\link{splitStrata}}. Please consider using the
-#' \code{\linkS4class{genclone}} object for storing hierarchies. 
-#'
-#' The separator
-#' field is sensitive to regular expressions. If you do not know what those are,
-#' please use the default underscore to separate your populations. Use \code{fixed
-#' = TRUE} to ignore regular expressions. If you do not set the \code{hier} flag
-#' for the split method, your new data frame will have the names "comb", "h1", "h2"
-#' and so on; for the combine method, your data frame will return the first column
-#' of your data frame.
-#'
-#' @export
-#' @author Zhian N. Kamvar
-#' @examples
-#' \dontrun{
-#' # Method 1: Splitting.
-#' Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
-#' 
-#' # We have 19 different "populations", but really, there is a hierarchy.
-#' popNames(Aeut)
-#' 
-#' # Let's split them up. The default data frame from read.genalex is the same
-#' # as the default for this function. 
-#' Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
-#' 
-#' # Much better!
-#' popNames(Aeut)
-#'
-#' # Method 2: Combining.
-#' 
-#' data(H3N2)
-#' # Create a new data set combining the population factors of year and country
-#' H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
-#' 
-#' # Checking to make sure they were actually combined.
-#' head(H.comb$other$x$year_country)
-#' # Creating new data frame in the object to mess around with. 
-#' H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
-#' 
-#' # Splitting those factors into their original components and setting the
-#' # population to year.
-#' H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
-#' }
-#==============================================================================#
-splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=1, setPopulation=TRUE, fixed=TRUE){
+# #==============================================================================#
+# #~ Split a or combine items within a data frame in \code{\link{genind}} objects (DEPRECATED).
+# #~
+# #~ Often, one way a lot of file formats fail is that they do not allow multiple
+# #~ population hierarchies. This can be circumvented, however, by coding all of
+# #~ the hierarchies in one string in the input file with a common separator (eg.
+# #~ "_"). \code{splitcombine} will be able to recognise those separators and
+# #~ create a data frame of all the population structures for whatever sub-setting
+# #~ you might need. 
+# #~
+# #~ @param pop a \code{\link{genind}} object.
+# #~
+# #~ @param method an \code{integer}, 1 for splitting, 2 for combining.
+# #~
+# #~ @param dfname the name of the data frame containing the population structure.
+# #~ for the splitting method, the combined population structure must be in the
+# #~ first column. 
+# #~
+# #~ @param sep The separator used for separating or combining the data. See note.
+# #~
+# #~ @param hier a \code{vector} containing the population hierarchy you wish to
+# #~ split or combine. 
+# #~
+# #~ @param setPopulation \code{logical}. if \code{TRUE}, the population of the
+# #~ resulting genind object will be that of the highest population structure
+# #~ (split method) or the combined populations (combine method).
+# #~
+# #~ @param fixed \code{logical}. An argument to be passed onto
+# #~ \code{\link{strsplit}}. If \code{TRUE}, \code{sep} must match exactly to the
+# #~ populations for the split method. 
+# #~
+# #~ @return a \code{\link{genind}} object with a modified data frame in the
+# #~ \code{\link{other}} slot.
+# #~
+# #~ @note 
+# #~ This function has been deprecated and replaced by functions like
+# #~ \code{\link{splitStrata}}. Please consider using the
+# #~ \code{\linkS4class{genclone}} object for storing hierarchies. 
+# #~
+# #~ The separator
+# #~ field is sensitive to regular expressions. If you do not know what those are,
+# #~ please use the default underscore to separate your populations. Use \code{fixed
+# #~ = TRUE} to ignore regular expressions. If you do not set the \code{hier} flag
+# #~ for the split method, your new data frame will have the names "comb", "h1", "h2"
+# #~ and so on; for the combine method, your data frame will return the first column
+# #~ of your data frame.
+# #~
+# #~ @export
+# #~ @author Zhian N. Kamvar
+# #~ @examples
+# #~ \dontrun{
+# #~ # Method 1: Splitting.
+# #~ Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
+# #~ 
+# #~ # We have 19 different "populations", but really, there is a hierarchy.
+# #~ popNames(Aeut)
+# #~ 
+# #~ # Let's split them up. The default data frame from read.genalex is the same
+# #~ # as the default for this function. 
+# #~ Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
+# #~ 
+# #~ # Much better!
+# #~ popNames(Aeut)
+# #~
+# #~ # Method 2: Combining.
+# #~ 
+# #~ data(H3N2)
+# #~ # Create a new data set combining the population factors of year and country
+# #~ H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
+# #~ 
+# #~ # Checking to make sure they were actually combined.
+# #~ head(H.comb$other$x$year_country)
+# #~ # Creating new data frame in the object to mess around with. 
+# #~ H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
+# #~ 
+# #~ # Splitting those factors into their original components and setting the
+# #~ # population to year.
+# #~ H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
+# #~ }
+# #==============================================================================#
+# splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=1, setPopulation=TRUE, fixed=TRUE){
   
-  # As this function is deprecated, the following lines will attempt to give the
-  # user equivalent code in poppr >v.1.1.0 
-  ##########
-  sccall <- substitute(pop)
-  depmsg <- paste0("Use:\n'", sccall, " <- as.genclone(", sccall, ", hier = ")
-  if (method == 1){
-    newhier <- paste0("other(", sccall, ")$", dfname, "[1]")
-    if (!is.numeric(hier)){
-      newform <- paste0("~", paste(hier, collapse = "/"))
-      sugg <- paste0(newhier, "); splitStrata(", sccall, ") <- ", newform, "'\n")
-    } else {
-      sugg <- paste0(newhier, ")' and 'splitStrata'\n")
-    }
-  } else {
-    newhier <- paste0("other(", sccall, ")$", dfname)
-    if (!is.numeric(hier)){
-      newform <- paste0("~", paste(hier, collapse = "/"))
-      sugg <- paste0(newhier, "); setPop(", sccall, ") <- ", newform, "'\n")
-    } else {
-      sugg <- paste0(newhier, ")' and 'setPop'\n") 
-    }
-  }
-  dmsg <- c("'splitcombine' is deprecated.\n\n",
-            paste0(depmsg, sugg), "\n",
-            "See help(\"genclone\"), help(\"setPop\"), ",
-            "and help(\"splitStrata\") for details.")
-  .Deprecated("genclone", package = "poppr", dmsg)
-  ###########
+#   # As this function is deprecated, the following lines will attempt to give the
+#   # user equivalent code in poppr >v.1.1.0 
+#   ##########
+#   sccall <- substitute(pop)
+#   depmsg <- paste0("Use:\n'", sccall, " <- as.genclone(", sccall, ", hier = ")
+#   if (method == 1){
+#     newhier <- paste0("other(", sccall, ")$", dfname, "[1]")
+#     if (!is.numeric(hier)){
+#       newform <- paste0("~", paste(hier, collapse = "/"))
+#       sugg <- paste0(newhier, "); splitStrata(", sccall, ") <- ", newform, "'\n")
+#     } else {
+#       sugg <- paste0(newhier, ")' and 'splitStrata'\n")
+#     }
+#   } else {
+#     newhier <- paste0("other(", sccall, ")$", dfname)
+#     if (!is.numeric(hier)){
+#       newform <- paste0("~", paste(hier, collapse = "/"))
+#       sugg <- paste0(newhier, "); setPop(", sccall, ") <- ", newform, "'\n")
+#     } else {
+#       sugg <- paste0(newhier, ")' and 'setPop'\n") 
+#     }
+#   }
+#   dmsg <- c("'splitcombine' is deprecated.\n\n",
+#             paste0(depmsg, sugg), "\n",
+#             "See help(\"genclone\"), help(\"setPop\"), ",
+#             "and help(\"splitStrata\") for details.")
+#   .Deprecated("genclone", package = "poppr", dmsg)
+#   ###########
   
-  if (!is.genind(pop)){
-    stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
-  }
-  if (!is.data.frame(pop$other[[dfname]])){
-    stop(paste("There is no data frame in ",paste(substitute(pop), collapse=""), "@other called ",dfname,".\n", sep=""))
-  }
-  METHODS = c("Split", "Combine")
-  if (all((1:2)!=method)) {
-    cat("1 = Split\n")
-    cat("2 = Combine\n")
-    cat("Select an integer (1 or 2): ")
-    method <- as.integer(readLines(n = 1))
-  }
-  if (all((1:2)!=method)) (stop ("Non convenient method number"))
-  # Splitting !
-  if(method == 1){
-    # Remember, this acts on the first column of the data frame.
-    # It will split the population factors in that data frame by sep. 
-    df <- pop_splitter(pop$other[[dfname]], sep=sep)
+#   if (!is.genind(pop)){
+#     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
+#   }
+#   if (!is.data.frame(pop$other[[dfname]])){
+#     stop(paste("There is no data frame in ",paste(substitute(pop), collapse=""), "@other called ",dfname,".\n", sep=""))
+#   }
+#   METHODS = c("Split", "Combine")
+#   if (all((1:2)!=method)) {
+#     cat("1 = Split\n")
+#     cat("2 = Combine\n")
+#     cat("Select an integer (1 or 2): ")
+#     method <- as.integer(readLines(n = 1))
+#   }
+#   if (all((1:2)!=method)) (stop ("Non convenient method number"))
+#   # Splitting !
+#   if(method == 1){
+#     # Remember, this acts on the first column of the data frame.
+#     # It will split the population factors in that data frame by sep. 
+#     df <- pop_splitter(pop$other[[dfname]], sep=sep)
     
-    # This makes sure that the length of the given hierarchy is the same as the
-    # hierarchy in the original population factor. It's renaming the original
-    # factor the population hierarchy separated by sep.
-    # eg. df: Pop_Subpop_Year, Pop, Subpop, Year
-    if(length(df) - 1 == length(hier)){
-      names(df) <- c(paste(hier, collapse=sep), hier)
-    }
-    # In the case that the number of columns added to the new df is the same
-    # as the number of hierarchies specified.
-    else if(length(df) - length(hier) == length(pop$other[[dfname]]) ){
-      names(df)[(length(df) - length(hier) + 1):length(df)] <- hier
-    }
+#     # This makes sure that the length of the given hierarchy is the same as the
+#     # hierarchy in the original population factor. It's renaming the original
+#     # factor the population hierarchy separated by sep.
+#     # eg. df: Pop_Subpop_Year, Pop, Subpop, Year
+#     if(length(df) - 1 == length(hier)){
+#       names(df) <- c(paste(hier, collapse=sep), hier)
+#     }
+#     # In the case that the number of columns added to the new df is the same
+#     # as the number of hierarchies specified.
+#     else if(length(df) - length(hier) == length(pop$other[[dfname]]) ){
+#       names(df)[(length(df) - length(hier) + 1):length(df)] <- hier
+#     }
 
-    # Checking to see if there was only one column in the original data frame
-    # This is necessary to avoid overwriting data.
-    if(length(pop$other[[dfname]] == 1)){
-      pop$other[[dfname]] <- df
-    }
+#     # Checking to see if there was only one column in the original data frame
+#     # This is necessary to avoid overwriting data.
+#     if(length(pop$other[[dfname]] == 1)){
+#       pop$other[[dfname]] <- df
+#     }
     
-    # If there are other columns in the data frame, we check to see if any of
-    # the names in the new data frame are the same. 
-    else if(any(names(pop$other[[dfname]]) %in% names(df[-1]))){
-      # Removing the combined column. It will remain the same.
-      df <- df[-1]
-      # Gathering the index of names that are the same as the split hierarchy.
-      dfcols <- which(names(pop$other[[dfname]]) %in% names(df))
+#     # If there are other columns in the data frame, we check to see if any of
+#     # the names in the new data frame are the same. 
+#     else if(any(names(pop$other[[dfname]]) %in% names(df[-1]))){
+#       # Removing the combined column. It will remain the same.
+#       df <- df[-1]
+#       # Gathering the index of names that are the same as the split hierarchy.
+#       dfcols <- which(names(pop$other[[dfname]]) %in% names(df))
       
-      # All the names are equal, so we replace those columns with the newly
-      # subsetted columns.
-      if(length(names(df)) == length(dfcols))
-        pop$other[[dfname]][dfcols] <- df
+#       # All the names are equal, so we replace those columns with the newly
+#       # subsetted columns.
+#       if(length(names(df)) == length(dfcols))
+#         pop$other[[dfname]][dfcols] <- df
       
-      # Not all columns match, so you replace the ones that do and then bind
-      # the new ones.
-      else{
-        popothernames <- which(names(df) %in% names(pop$other[[dfname]][dfcols]))
-        pop$other[[dfname]][dfcols] <- df[popothernames]
-        pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-dfcols])
-      }
-    }
+#       # Not all columns match, so you replace the ones that do and then bind
+#       # the new ones.
+#       else{
+#         popothernames <- which(names(df) %in% names(pop$other[[dfname]][dfcols]))
+#         pop$other[[dfname]][dfcols] <- df[popothernames]
+#         pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-dfcols])
+#       }
+#     }
     
-    # If there are no names in the new data frame that match the original,
-    # simply tack the new data frame on to the end. These will have the names
-    # h1, h2, h3, etc.
-    else{  
-      pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-1])
-    }
+#     # If there are no names in the new data frame that match the original,
+#     # simply tack the new data frame on to the end. These will have the names
+#     # h1, h2, h3, etc.
+#     else{  
+#       pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-1])
+#     }
     
-    # Set the population to the highest level of the hierarchy.
-    if(setPopulation == TRUE){
-      hier <- ifelse(is.numeric(hier), as.character(hier), hier)
-      pop(pop) <- pop$other[[dfname]][[hier[1]]]
-      names(popNames(pop)) <- levels(pop$pop)
-    }
-    return(pop)
-  }
+#     # Set the population to the highest level of the hierarchy.
+#     if(setPopulation == TRUE){
+#       hier <- ifelse(is.numeric(hier), as.character(hier), hier)
+#       pop(pop) <- pop$other[[dfname]][[hier[1]]]
+#       names(popNames(pop)) <- levels(pop$pop)
+#     }
+#     return(pop)
+#   }
   
-  # Combining !
-  else if(method == 2){
-    newdf <- pop_combiner(pop$other[[dfname]], hier=hier, sep=sep)
-    if(all(is.na(newdf))){
-      stop(paste("\n\nError in combining population factors.\nCheck your hier flag and make sure that the columns",paste(hier, collapse=" and "),
-                 "exist within the data frame called",dfname,
-                 "in the @other slot of your genind object.\n\n"))
-    }
-    # Combining the hierarchy. This will no longer give you numbers as names,
-    # rather it will return the names.
-    pop$other[[dfname]][[paste(names(pop$other[[dfname]][hier]), collapse=sep)]] <- newdf
-    if(setPopulation == TRUE){
-      pop(pop) <- newdf
-      names(popNames(pop)) <- levels(pop$pop)
-    }
-    return(pop)
-  }
-}
+#   # Combining !
+#   else if(method == 2){
+#     newdf <- pop_combiner(pop$other[[dfname]], hier=hier, sep=sep)
+#     if(all(is.na(newdf))){
+#       stop(paste("\n\nError in combining population factors.\nCheck your hier flag and make sure that the columns",paste(hier, collapse=" and "),
+#                  "exist within the data frame called",dfname,
+#                  "in the @other slot of your genind object.\n\n"))
+#     }
+#     # Combining the hierarchy. This will no longer give you numbers as names,
+#     # rather it will return the names.
+#     pop$other[[dfname]][[paste(names(pop$other[[dfname]][hier]), collapse=sep)]] <- newdf
+#     if(setPopulation == TRUE){
+#       pop(pop) <- newdf
+#       names(popNames(pop)) <- levels(pop$pop)
+#     }
+#     return(pop)
+#   }
+# }
 #==============================================================================#
 #' Remove all non-phylogentically informative loci
 #' 
