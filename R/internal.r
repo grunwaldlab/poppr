@@ -1328,77 +1328,117 @@ check_Hs <- function(x){
   return(res)
 }
 
+#==============================================================================#
 ## Obtains specific haplotypes from a genind object.
-## 
-## Arguments:
-##   inds      - indexes of the first and last characters defining the haplotype
-##   x         - the loci object
-##   loci_cols - the columns defining the loci
-##   ind_names - the sample names
-##   hap_fac   - a vector defining the haplotype. 
-##
-## Since the inds and hap_fac args are not intuitive, I should demonstrate.
-## Let's say we have a two individuals with two loci:
-##      1      2
-##   A: 10/20  30/40
-##   B: 15/15  25/10
-##
-## They have the haplotypes of 
-##   A1: 10 30 
-##   A2: 20 40 
-##   B1: 15 25
-##   B2: 15 10
-##
-## Each genotype at a locus is 5 characters long. To get the haplotypes, we need
-## to avoid the separator.
-## inds in this case will be c(1, 2) for the first haplotype and c(4, 5) for the
-## second haplotype and hap_fac will be c(1,1,1,2,2,2) for both.
-##
+#  
+# Arguments:
+#    index - name or index of locus
+#    locus - a data frame of genotypes
+#    sep_location - a matrix with the location of each separator
+#    geno_lengths - a matrix with the char lengths of each genotype
+#    first - when TRUE, the first haplotype is extracted, when FALSE, the second
+#
+# Returns:
+#   a character vector with a single locus haplotype for each sample. 
+#   
 # Public functions utilizing this function:
 # # none
 #
 # Internal functions utilizing this function:
 # # separate_haplotypes
-
-hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
-  new_ind_names <- paste(ind_names, hap_fac[inds[2]], sep = ".")
-  new_pop       <- rep(hap_fac[inds[2]], nrow(x))
-  x2 <- lapply(x[loci_cols], substr, inds[1], inds[2])
-  x2 <- data.frame(x2, stringsAsFactors = F)
-  x2 <- df2genind(x2, ploidy = 1, pop=new_pop, ind.names=new_ind_names)
-  return(x2)
+#==============================================================================#
+get_haplotype <- function(index, locus, sep_location, geno_lengths, first = TRUE){
+  if (first){
+    res <- substr(locus[[index]], 
+                  start = 1, 
+                  stop = sep_location[, index] - 1)
+  } else {
+    res <- substr(locus[[index]], 
+                  start = sep_location[, index] + 1,
+                  stop = geno_lengths[, index])
+  }
+  return(res)
 }
 
-## Secondary function. Transforms the genind object into a loci object and
-## collects information necessary to collect individual haplotypes.
-# Public functions utilizing this function:
+#==============================================================================#
+# Arguments:
+#   x a diploid genind object. 
+# 
+# Returns:
+#   list:
+#     loci_data    - a data frame of genotypes
+#     sep_location - a matrix with the location of each separator
+#     geno_lengths - a matrix with the char lengths of each genotype
+#
+# External functions utilizing this function:
 # # none
 #
 # Internal functions utilizing this function:
-# # pool_haplotypes
-separate_haplotypes <- function(x){
-#   ploidy        <- max(ploidy(x))
-#   allele_list   <- nchar(unlist(x@all.names, use.names = FALSE))
-#   allele_length <- mean(allele_list) # sum(allele_list)/length(allele_list)
-#   if (!all(allele_list == allele_length)){
-#     stop("not all alleles are of equal length.")
-#   }
-#   inds        <- indNames(x)
-  x.loc       <- pegas::as.loci(x)
-  loci_cols   <- attr(x.loc, "locicol")
-#   pop_col     <- which(names(x.loc) == "population")
-#   geno_length <- (allele_length * ploidy) + (ploidy - 1)
-#   sep         <- which(1:geno_length %% (allele_length + 1) == 0)
-#   sep         <- c(0, sep, geno_length + 1)
-#   hap_fac     <- rep(1:ploidy, each = allele_length + 1)
-#   allele_inds <- lapply(1:ploidy, function(i) c(sep[i] + 1, sep[i + 1] - 1))
-  sep_location <- lapply(x.loc[loci_cols], function(i) gregexpr("/", i))
-  sep_location <- matrix(unlist(sep_location, use.names = FALSE), nrow = nrow(x))
-  facstr       <- function(i) strlen(as.character(i))
-  geno_lengths <- vapply(x.loc[loci_cols], facstr, integer(nrow(x)))
-  haplist     <- lapply(allele_inds, hap2genind, x.loc, loci_cols, inds, hap_fac)
+# # separate_haplotypes
+#==============================================================================#
+haplotype_detector <- function(x){
+  x.loc        <- genind2df(x, sep = "/", usepop = FALSE)
+  facstr       <- function(i) nchar(as.character(i))
+  sep_location <- lapply(x.loc, function(i) regexpr("/", i))
+  sep_location <- matrix(unlist(sep_location, use.names = FALSE), 
+                         nrow = nrow(x.loc))
+  dimnames(sep_location) <- dimnames(x.loc)
+  geno_lengths <- vapply(x.loc, facstr, integer(nrow(x.loc)))
+  dimnames(geno_lengths) <- dimnames(sep_location)
+  haplist <- list(loci_data = x.loc, 
+                  sep_location = sep_location, 
+                  geno_lengths = geno_lengths)
   return(haplist)
 }
+
+#==============================================================================#
+# Arguments:
+#   x a diploid genind object. 
+# 
+# Returns:
+#   a matrix with n*2 rows where haplotypes are interleaved. This is to be 
+#   converted into a genind object. To explain what it looks like:
+#   
+#   if you have your genotypes arranged like so:
+#      L1   L2
+#   A  x/y  a/b
+#   B  z/z  c/a
+#   
+#   The result of this function would be to return a matrix that looks like:
+#        L1 L2
+#   A.1  x  a
+#   A.2  y  b
+#   B.1  z  c
+#   B.2  z  a
+#     
+# External functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # separate_haplotypes
+#==============================================================================#
+separate_haplotypes <- function(x){
+  haps      <- haplotype_detector(x)
+  the_loci  <- colnames(haps$sep_location)
+  ind_names <- rownames(haps$sep_location)
+  h1 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
+               haps$geno_lengths, first = TRUE)
+  h2 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
+               haps$geno_lengths, first = FALSE)
+  newnames <- paste(rep(ind_names, each = 2), 1:2, sep = ".")
+  outlength <- length(newnames)
+  outvec <- seq(outlength)
+  index1 <- outvec %% 2 == 1
+  index2 <- !index1
+  matdimnames <- list(newnames, the_loci)
+  hapmat <- matrix(NA_character_, nrow = outlength,
+                   ncol = length(the_loci), dimnames = matdimnames)
+  hapmat[index1, ] <- unlist(h1)
+  hapmat[index2, ] <- unlist(h2)
+  return(hapmat)
+}
+
+
 
 #==============================================================================#
 # Haplotype pooling. 
@@ -1420,9 +1460,8 @@ pool_haplotypes <- function(x){
   }
   addStrata(x)  <- data.frame(Individual = indNames(x))
   df            <- strata(x)
-  df            <- df[rep(1:nrow(df), ploidy), , drop = FALSE]
-  newx          <- repool(separate_haplotypes(x))
-  strata(newx)  <- df
+  df            <- df[rep(1:nrow(df), each = ploidy), , drop = FALSE]
+  newx          <- df2genind(separate_haplotypes(x), ploidy = 1, strata = df)
   setPop(newx)  <- ~Individual
   return(newx)
 }
