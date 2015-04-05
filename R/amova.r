@@ -104,11 +104,6 @@
 #'   (Default), \code{\link[ade4]{lingoes}}, and \code{\link[ade4]{cailliez}}.
 #'   See Details below.
 #'   
-#' @param dfname if the input data set is a \code{\linkS4class{genind}} object, 
-#'   specify the name of the data frame in the \code{\link[adegenet]{other}}
-#'   slot defining the population hierarchy. Defaults to
-#'   \code{"population_hierarchy"}
-#'   
 #' @param sep A single character used to separate the hierarchical levels. This
 #' defaults to "_".
 #'   
@@ -180,6 +175,7 @@
 #' @export
 #' @examples
 #' data(Aeut)
+#' strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 #' agc <- as.genclone(Aeut)
 #' agc
 #' amova.result <- poppr.amova(agc, ~Pop/Subpop)
@@ -198,7 +194,7 @@
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE, 
                         dist = NULL, squared = TRUE, correction = "quasieuclid", 
-                        dfname = "population_hierarchy", sep = "_", 
+                        sep = "_", 
                         missing = "loci", cutoff = 0.05, quiet = FALSE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   if (is.null(hier)) stop("A population hierarchy must be specified")
