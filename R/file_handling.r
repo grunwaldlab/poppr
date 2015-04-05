@@ -451,7 +451,7 @@ genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE,
   ploid <- ploidy(pop)
   # Constructing the locus names. GenAlEx separates the alleles of the loci, so
   # There is one locus name for every p ploidy columns you have.
-  if(ploid > 1 & pop@type == "codom"){
+  if(all(ploid > 1) & pop@type == "codom"){
     locnames <- unlist(strsplit(paste(pop@loc.names, 
                                       paste(rep(" ", ploidy(pop)-1), 
                                             collapse="/"), sep="/"),"/"))
