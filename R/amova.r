@@ -204,23 +204,14 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (is.null(hier)) stop("A population hierarchy must be specified")
   parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
   full_hier <- parsed_hier[length(parsed_hier)]
-  
-  if (is.genclone(x)){
-    setPop(x) <- hier
-    other(x)[[dfname]] <- strata(x, hier, combine = FALSE)
-  } else {
-    if (!dfname %in% names(other(x))){
-      stop(paste(dfname, "is not present in the 'other' slot"))
-    }
-    if (!full_hier %in% names(other(x)[[dfname]])){
-      hiers <- all.vars(hier)
-      if (!all(hiers %in% names(other(x)[[dfname]]))){
-        hier_incompatible_warning(hiers, df)
-      }
-      suppressWarnings(x <- splitcombine(x, hier = hiers, dfname = dfname, method = 2))
-    } else {
-      pop(x) <- other(x)[[dfname]][[full_hier]]
-    }
+
+  setPop(x) <- hier
+  if (clonecorrect){
+    x <- clonecorrect(x, strata = hier, keep = 1:length(all.vars(hier)))
+  }
+  if (within & all(ploidy(x) == 2) & check_Hs(x) & x@type != "PA"){
+    hier <- update(hier, ~./Individual)
+    x    <- pool_haplotypes(x)
   }
   # Treat missing data. This is a part I do not particularly like. The distance
   # matrix must be euclidean, but the dissimilarity distance will not allow
@@ -230,15 +221,8 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   # missing to mean of the columns: indiscreet distances.
   # remove loci at cutoff
   # remove individuals at cutoff
-  if (clonecorrect){
-    x <- clonecorrect(x, strata = hier, keep = 1:length(all.vars(hier)))
-  }
-  if (within & all(ploidy(x) == 2) & check_Hs(x) & x@type != "PA"){
-    hier <- update(hier, ~./Individual)
-    x    <- pool_haplotypes(x, dfname = dfname)
-  }
   x       <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
-  hierdf  <- make_hierarchy(hier, other(x)[[dfname]])
+  hierdf  <- strata(x, formula = hier)
   xstruct <- make_ade_df(hier, hierdf)
   if (is.null(dist)){
     xdist <- sqrt(diss.dist(clonecorrect(x, strata = NA), percent = FALSE))
@@ -279,7 +263,8 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       }
     }
   }
-  xtab    <- t(mlg.table(x, bar = FALSE, quiet = TRUE, mlgsub = unique(mlg.vector(x))))
+  allmlgs <- unique(mlg.vector(x))
+  xtab    <- t(mlg.table(x, bar = FALSE, quiet = TRUE, mlgsub = allmlgs))
   xtab    <- as.data.frame(xtab)
   return(ade4::amova(samples = xtab, distances = xdist, structures = xstruct))
 }
