@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 1.1.4.99-101}
+\title{Algorithms and equations utilized in poppr version 1.1.4.99-105}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,

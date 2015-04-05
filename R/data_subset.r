@@ -778,7 +778,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), quiet = FALSE){
             pop@loc.names[!locivals],"\n", fill = 80)
       }
     }
-    return(pop[, loc = names(pop@loc.names[locivals])])
+    return(pop[, loc = locNames(pop)[locivals]])
   }
 }
 
