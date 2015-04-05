@@ -2,6 +2,7 @@ context("Amova tests")
 
 test_that("Amova returns published values", {
 	data(Aeut, package = "poppr")
+  strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 	res   <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE)
 	rescc <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, clonecorrect = TRUE)
 	expect_that(res$componentsofcovariance[, 2], equals(c(70.0067859292295, 
@@ -23,6 +24,7 @@ test_that("Amova returns published values", {
 	})
 test_that("AMOVA handles subsetted genclone objects", {
 	data(Aeut, package = "poppr")
+  strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 	agc <- as.genclone(Aeut)
 	Athena <- popsub(agc, "Athena")
 	Athena.mlg <- mlg.vector(Athena)
