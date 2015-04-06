@@ -20,7 +20,7 @@ genotype_curve(gen, sample = 100, quiet = FALSE, thresh = 0.9)
   multilocus genotypes.}
 }
 \value{
-a matrix of integers showing the results of each randomization.
+(invisibly) a matrix of integers showing the results of each randomization.
   Columns represent the number of loci sampled and rows represent an
   independent sample.
 }
