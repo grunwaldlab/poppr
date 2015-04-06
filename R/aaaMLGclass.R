@@ -18,4 +18,13 @@ setClass("MLG",
          representation(visible = "character",
                         cutoff = "numeric",
                         distname = "character",
-                        mlg = "data.frame"))
+                        mlg = "data.frame"),
+         prototype(visible = character(0), cutoff = numeric(0), 
+         		   distname = character(0),
+         		   mlg = data.frame(expanded = numeric(0), 
+         		   					original = numeric(0), 
+              					    contracted = numeric(0), 
+              					    custom = factor(character(0))
+              					    )
+         		   )
+         )

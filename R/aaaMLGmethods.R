@@ -35,6 +35,9 @@ setMethod(
   f = "initialize",
   signature("MLG"),
   definition = function(.Object, mlg){
+    if (missing(mlg)){
+      return(.Object)
+    }
     if (is.vector(mlg)){
       mlg <- data.frame(list(expanded = mlg, original = mlg, 
                   contracted = mlg, custom = factor(mlg)))
@@ -103,6 +106,10 @@ setMethod(
   f = "show",
   signature("MLG"),
   definition = function(object){
+    if (nrow(object@mlg) == 0){
+      print("an empty MLG object")
+      return()
+    }
     cutoff <- ifelse(!object@visible %in% c("original", "custom"), 
                       paste(" mlgs with a cutoff of", object@cutoff[object@visible]),
                       " mlgs")
