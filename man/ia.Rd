@@ -134,9 +134,13 @@ ia(nancycats)
 \dontrun{
 # Get the indices back and plot them using base R graphics:
 nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
-layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
+layout(matrix(c(1,1,2,2), 2, 2, byrow = TRUE))
 hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
 hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
+layout(matrix(c(1,1,1,1), 1, 1))
+# You can also view them directly:
+plot(nansamp, index = "Ia")
+plot(nansamp, index = "rbarD")
 
 # Get the index for each population.
 lapply(seppop(nancycats), ia)

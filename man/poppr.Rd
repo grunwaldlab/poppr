@@ -51,10 +51,15 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   and \code{dfname} parameters, or the user will potentially get undesired
   results. see \code{\link{clonecorrect}} for details.}
 
-\item{keep}{an \code{integer}. This indicates the levels of the population
-  hierarchy you wish to keep after clone correcting your data sets. To
-  combine the hierarchy, just set keep from 1 to the length of your
-  hierarchy. see \code{\link{clonecorrect}} for details.}
+\item{strata}{\itemize{ \item \strong{for genclone objects} - a \code{formula}
+  indicating the hierarchical levels to be used. The hierarchies should be
+  present in the \code{strata} slot. See \code{\link{strata}} for
+  details.}}
+
+\item{keep}{an \code{integer}. This indicates which strata you wish to keep
+  after clone correcting your data sets. To combine strata, just set keep
+  from 1 to the number of straifications set in strata. see
+  \code{\link{clonecorrect}} for details.}
 
 \item{hist}{\code{logical} if \code{TRUE} (default) and \code{sampling > 0},
   a histogram will be produced for each population.}
@@ -69,15 +74,6 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 \item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend
   describing the resulting table columns will be printed. Defaults to
   \code{FALSE}}
-
-\item{hier}{\itemize{ \item \strong{for genclone objects} - a \code{formula}
-  indicating the hierarchical levels to be used. The hierarchies should be
-  present in the \code{hierarchy} slot. See \code{\link{strata}} for
-  details. \item \strong{for genind objects} - a \code{numeric or character}
-  vector OR a hierarchical formula. This is the list of columns within a data
-  frame (specified in \code{dfname}) in the 'other' slot of the
-  \code{\link{genind}} object. The list should indicate the population
-  hierarchy to be used for clone correction.  }}
 }
 \value{
 \item{Pop}{A vector indicating the pouplation factor} \item{N}{An

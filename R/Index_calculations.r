@@ -94,19 +94,15 @@
 #'   and \code{dfname} parameters, or the user will potentially get undesired 
 #'   results. see \code{\link{clonecorrect}} for details.
 #'   
-#' @param hier \itemize{ \item \strong{for genclone objects} - a \code{formula} 
+#' @param strata \itemize{ \item \strong{for genclone objects} - a \code{formula} 
 #'   indicating the hierarchical levels to be used. The hierarchies should be 
-#'   present in the \code{hierarchy} slot. See \code{\link{strata}} for 
-#'   details. \item \strong{for genind objects} - a \code{numeric or character} 
-#'   vector OR a hierarchical formula. This is the list of columns within a data
-#'   frame (specified in \code{dfname}) in the 'other' slot of the 
-#'   \code{\link{genind}} object. The list should indicate the population 
-#'   hierarchy to be used for clone correction.  }
+#'   present in the \code{strata} slot. See \code{\link{strata}} for 
+#'   details.}
 #'   
-#' @param keep an \code{integer}. This indicates the levels of the population 
-#'   hierarchy you wish to keep after clone correcting your data sets. To 
-#'   combine the hierarchy, just set keep from 1 to the length of your 
-#'   hierarchy. see \code{\link{clonecorrect}} for details.
+#' @param keep an \code{integer}. This indicates which strata you wish to keep
+#'   after clone correcting your data sets. To combine strata, just set keep
+#'   from 1 to the number of straifications set in strata. see
+#'   \code{\link{clonecorrect}} for details.
 #'   
 #' @param hist \code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
 #'   a histogram will be produced for each population.
@@ -512,9 +508,13 @@ poppr.all <- function(filelist, ...){
 #' \dontrun{
 #' # Get the indices back and plot them using base R graphics:
 #' nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
-#' layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
+#' layout(matrix(c(1,1,2,2), 2, 2, byrow = TRUE))
 #' hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
 #' hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
+#' layout(matrix(c(1,1,1,1), 1, 1))
+#' # You can also view them directly:
+#' plot(nansamp, index = "Ia")
+#' plot(nansamp, index = "rbarD")
 #' 
 #' # Get the index for each population.
 #' lapply(seppop(nancycats), ia)
