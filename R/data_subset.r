@@ -835,14 +835,18 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' allele frequencies are coded based on the number of alleles observed at a 
 #' single locus per individual. See the examples for more details.
 #' 
-#' @param poly a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
-#'   object that has a ploidy of >2
-#' @param newploidy if \code{FALSE} (default), the user-defined ploidy will stay
+#' @param poly a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
+#'   \code{\linkS4class{genpop}} object that has a ploidy of > 2
+#' @param newploidy for genind or genclone objects: if \code{FALSE} (default), the user-defined ploidy will stay
 #'   contstant. if \code{TRUE}, the ploidy for each sample will be determined by
 #'   the maximum ploidy observed for each genotype.
 #'   
-#' @return a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
-#'   object.
+#' @param addzero add zeroes onto genind or genclone objects with uneven ploidy?
+#' if \code{TRUE}, objects with uneven ploidies will have zeroes appended to all
+#' loci to allow conversion to genpop objects. Defaults to \code{FALSE}.
+#'   
+#' @return a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
+#'   \code{\linkS4class{genpop}} object.
 #'   
 #' @details The genind object has two caveats that make it difficult to work 
 #'   with polyploid data sets: \enumerate{\item ploidy must be constant
@@ -855,6 +859,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #'   states as the ploidy or largest observed heterozygote (if ploidy is
 #'   unknown). The way to do this is to insert zeroes to pad the alleles. So, to
 #'   import two genotypes of:
+#'
 #' \tabular{rrrr}{
 #' NA \tab 20 \tab 23 \tab 24\cr
 #' 20 \tab 24 \tab 26 \tab 43
@@ -867,17 +872,17 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' This zero is treated as an extra allele and is represented in the genind object as so:
 #' \tabular{rrrrrr}{
 #' \strong{0} \tab \strong{20} \tab \strong{23} \tab \strong{24} \tab \strong{26} \tab \strong{43}\cr
-#' 0.25 \tab 0.25 \tab 0.25 \tab 0.25 \tab 0.00 \tab 0.00\cr
-#' 0.00 \tab 0.25 \tab 0.00 \tab 0.25 \tab 0.25 \tab 0.25
+#' 1 \tab 1 \tab 1 \tab 1 \tab 0 \tab 0\cr
+#' 0 \tab 1 \tab 0 \tab 1 \tab 1 \tab 1
 #' }
 #' 
-#'   A homozygote would have the \strong{0} column at a value of 0.75. This
-#'   function remidies this problem by removing the zero column and rescaling the allele
-#'   frequencies to those observed. The above table would become:
+#'   This function remedies this problem by removing the zero column.
+#'   The above table would become:
+#'
 #' \tabular{rrrrr}{
 #' \strong{20} \tab \strong{23} \tab \strong{24} \tab \strong{26} \tab \strong{43}\cr
-#' 0.333 \tab 0.333 \tab 0.333 \tab 0.00 \tab 0.00\cr
-#' 0.25 \tab 0.00 \tab 0.25 \tab 0.25 \tab 0.25
+#' 1 \tab 1 \tab 1 \tab 0 \tab 0\cr
+#' 1 \tab 0 \tab 1 \tab 1 \tab 1
 #' }
 #' 
 #' With this, the user is able to calculate frequency based statistics on the
@@ -886,44 +891,59 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' @note This is an approximation, and a bad one at that. \pkg{Poppr} was not
 #' originally intended for polyploids, but with the inclusion of Bruvo's
 #' distance, it only made sense to attempt something beyond single use.
-#' 
-#' \strong{Do not use recoded data with Bruvo's distance or the index of association.}
-#' 
+#'
 #' @author Zhian N. Kamvar
 #' @export
 #' @examples
 #' data(Pinf)
 #' iPinf <- recode_polyploids(Pinf)
 #' 
-#' # Obtaining basic summaries. Note the heterozygosity measures.
-#' summary(Pinf)
-#' summary(iPinf)
+#' # Note that the difference between the number of alleles.
+#' Pinf@@loc.nall
+#' iPinf@@loc.nall
 #' 
 #' \dontrun{
 #' library("ape")
 #' 
 #' # Removing missing data. 
-#' Pinf <- missingno(Pinf, "geno", cutoff = 0)
-#' iPinf <- recode_polyploids(Pinf)
+#' setPop(Pinf) <- ~Country
 #' 
 #' # Calculating Rogers' distance. 
-#' rog <- rogers.dist(Pinf)
-#' irog <- rogers.dist(iPinf)
+#' rog <- rogers.dist(genind2genpop(Pinf))
+#' irog <- rogers.dist(recode_polyploids(genind2genpop(Pinf)))
 #' 
 #' # We will now plot neighbor joining trees. Note the decreased distance in the
 #' # original data.
-#' plot(nj(rog), type = "unrooted", show.tip.label = FALSE)
-#' add.scale.bar(lcol = "red")
-#' plot(nj(irog), type = "unrooted", show.tip.label = FALSE)
-#' add.scale.bar(lcol = "red")
+#' plot(nj(rog), type = "unrooted")
+#' add.scale.bar(lcol = "red", length = 0.02)
+#' plot(nj(irog), type = "unrooted")
+#' add.scale.bar(lcol = "red", length = 0.02)
 #' }
 #==============================================================================#
-recode_polyploids <- function(poly, newploidy = FALSE){
-  if (!is.genind(poly)){
+recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
+  if (!is.genind(poly) && !is.genpop(poly)){
     stop("input must be a genind object.")
-  } else if (!test_zeroes(poly)){
+  } else if (!test_zeroes(poly) && addzero == FALSE){
     warning("Input is not a polyploid data set, returning original.")
     return(poly)
+  }
+  if (addzero && is.genind(poly)){
+    
+    if (test_zeroes(poly)){
+      warning("addzero = TRUE, but data already has zeroes. Returning original.")
+      return(poly)
+    }
+    polydf   <- genind2df(poly, sep = "/", usepop = FALSE)
+    maxploid <- max(ploidy(poly))
+    polydf   <- generate_bruvo_mat(polydf, maxploid, sep = "/")
+    res      <- df2genind(polydf, sep = "/", ploidy = maxploid,
+                          pop = pop(poly), strata = strata(poly), 
+                          hierarchy = poly@hierarchy)
+    other(res) <- other(poly)
+    if (is.genclone(poly)){
+      res <- as.genclone(res, mlg = poly@mlg)
+    }
+    return(res)
   }
   MAT <- tab(poly)
   fac <- poly@loc.fac
@@ -937,7 +957,7 @@ recode_polyploids <- function(poly, newploidy = FALSE){
   poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list,
                            SIMPLIFY = FALSE)
 
-  if (newploidy){
+  if (newploidy && is.genind(poly)){
     ploc         <- seploc(poly, res.type = "matrix")
     ploid_mat    <- vapply(ploc, FUN = apply, FUN.VALUE = integer(nInd(poly)), 
                            MARGIN = 1, sum)
