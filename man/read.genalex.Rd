@@ -5,7 +5,7 @@
 \title{Importing data from genalex formatted *.csv files.}
 \usage{
 read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
-  genclone = TRUE, sep = ",")
+  genclone = TRUE, sep = ",", recode = FALSE)
 }
 \arguments{
 \item{genalex}{a *.csv file exported from genalex}
