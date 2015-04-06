@@ -1810,8 +1810,12 @@ test_microsat <- function(x){
 #==============================================================================#
 test_zeroes <- function(x){
   if (test_microsat(x)){
-    allnames <- as.numeric(unlist(x@all.names, use.names = FALSE))
-    if (any(allnames == 0) & any(x@ploidy > 2)){
+    
+    allnames  <- as.numeric(unlist(x@all.names, use.names = FALSE))
+    ploid     <- unique(ploidy(x))
+    ploidtest <- length(ploid) > 1 | any(x@ploidy > 2)
+
+    if (any(allnames == 0) && any(x@loc.nall > 2) && ploidtest){
       return(TRUE)
     }
   }
@@ -2023,6 +2027,9 @@ generate_bruvo_mat <- function(x, maxploid, sep = "/", mat = FALSE){
                             FUN.VALUE = character(maxploid), maxseq, sep = ".")
   } else {
     colnames(res) <- colnames(x)
+  }
+  if (!mat){
+    res[grep("NA", res)] <- NA_character_
   }
   rownames(res) <- rownames(x)
   return(res)
