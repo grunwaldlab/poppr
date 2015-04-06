@@ -413,15 +413,15 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
   if (!is.genind(pop)){
     stop("pop.subset requires a genind object\n")
   }
+  numList <- seq(nInd(pop))
   if (is.null(pop(pop))){
     warning("No population structure. Subsetting not taking place.")
-    return(1:length(pop@ind.names))
+    return(numList)
   }
   if(toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
-      return(1:length(pop@ind.names))
-    }
-    else {
+      return(numList)
+    } else {
       # filling the sublist with all of the population names.
       sublist <- popNames(pop) 
     }
@@ -429,14 +429,13 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
-  if (is.null(names(popNames(pop)))){
-    if (nPop(pop) == length(levels(pop@pop))){
-      names(popNames(pop)) <- levels(pop@pop)
-    }
-    else{
-      stop("Population names do not match population factors.")
-    }
-  }
+#   if (is.null(names(popNames(pop)))){
+#     if (nPop(pop) == length(levels(pop@pop))){
+#       names(popNames(pop)) <- levels(pop@pop)
+#     } else {
+#       stop("Population names do not match population factors.")
+#     }
+#   }
   
   # Treating anything present in blacklist.
   if (!is.null(blacklist)){
@@ -461,17 +460,19 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
   }
 
   # subsetting the population. 
-  if (is.numeric(sublist))
-    sublist <- names(popNames(pop)[sublist])
-  else
-    sublist <- names(popNames(pop)[popNames(pop) %in% sublist])
-  sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
-  if(is.na(sublist[1])){
-    warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
-    return(1:length(pop@ind.names))
+  if (is.numeric(sublist)){
+    sublist <- popNames(pop)[sublist]
+  } else{
+    sublist <- popNames(pop)[popNames(pop) %in% sublist]
   }
+  # sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
+  sublist <- pop(pop) %in% sublist
+  if (sum(sublist) == 0){
+    warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
+    return(seq(nInd(pop)))
+  } 
   #cat("Sublist:\n",sublist,"\n")
-  return(sublist)
+  return(numList[sublist])
 }
 
 
