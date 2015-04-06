@@ -271,7 +271,8 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 # states as well as the heterozygosity. 
 #==============================================================================#
 .both.shuff <- function(mat){
-  mat <- mat[sample(nrow(mat)), ]
+  typed <- which(!is.na(rowSums(mat)))
+  mat[typed, ] <- mat[sample(typed), ]
   return(mat)
 }
 
