@@ -460,7 +460,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
     colnames(data_table)         <- names(pops)
     dimnames(data_table) <- list(Locus = c(gen@loc.names, "Mean"), Population = names(pops))
     if (all(data_table == 0)){
-      cat("No Missing Data Found!")
+      message("No Missing Data Found!")
       return(NULL)
     }
     if (plot){
@@ -516,15 +516,9 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
 
   } else if (type == "ploidy"){
 
-    valname <- "Observed_Ploidy"
-    if (gen@ploidy <= 2){
-      warning("This function is meant for polyploid data.")
-      data_table <- matrix(gen@ploidy, nrow = nInd(gen), ncol = nLoc(gen))
-      missing <- propTyped(gen, "both") == 0
-      data_table[missing] <- NA
-    } else {
-      data_table <- get_local_ploidy(gen)
-    }
+    valname    <- "Observed_Ploidy"
+    data_table <- get_local_ploidy(gen)
+    
     dimnames(data_table) <- list(Samples = indNames(gen), Loci = locNames(gen))
     if (plot){
       data_df <- melt(data_table, value.name = valname)
@@ -927,7 +921,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' @param thresh a number from 0 to 1. This will draw a line at this fraction of
 #'   multilocus genotypes.
 #'   
-#' @return a matrix of integers showing the results of each randomization.
+#' @return (invisibly) a matrix of integers showing the results of each randomization.
 #'   Columns represent the number of loci sampled and rows represent an
 #'   independent sample.
 #'   
@@ -985,5 +979,5 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
                          scale_y_continuous(breaks = outbreaks)
   }
   print(outplot)
-  return(out)
+  return(invisible(out))
 }

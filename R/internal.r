@@ -176,8 +176,8 @@ extract.info <- function(x) {
 # Internal functions utilizing this function:
 # # new.poppr (in testing)
 #==============================================================================#
-process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=1,
-                            clonecorrect=FALSE, hier=c(1)){
+process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, 
+                         keep=1, clonecorrect=FALSE, strata=1){
   if (!is.genind(input)){
     x <- input
     if (toupper(.readExt(x)) == "CSV"){
@@ -194,7 +194,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
     input         <- missingno(input, type=missing, cutoff=cutoff, quiet=quiet)
     input@call    <- popcall
     if (clonecorrect == TRUE){
-      poplist    <- clonecorrect(input, strata = hier, keep = keep)
+      poplist    <- clonecorrect(input, strata = strata, keep = keep)
       input      <- poplist
       input@call <- popcall
     }
@@ -203,7 +203,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
     popcall   <- input@call
     input     <- missingno(input, type=missing, cutoff=cutoff, quiet=quiet)
     if (clonecorrect == TRUE){
-      poplist    <- clonecorrect(input, strata = hier, keep = keep)
+      poplist    <- clonecorrect(input, strata = strata, keep = keep)
       input      <- poplist
       input@call <- popcall
     }
@@ -600,8 +600,8 @@ old.mlg.matrix <- function(x){
 #
 #==============================================================================#
 
-.PA.pairwise.differences <- function(pop,numLoci,np, missing){  
-  temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
+.PA.pairwise.differences <- function(pop, numLoci, np, missing){  
+  temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = NA_real_)
   if( missing == "MEAN" ){
     # this will round all of the values if the missing indicator is "mean"  
     temp.d.vector <- vapply(seq(numLoci), 
@@ -621,10 +621,10 @@ old.mlg.matrix <- function(x){
       temp.d.vector[which(is.na(temp.d.vector))] <- 0
     }
   }
-  if (ploidy(pop) > 1){
+  if (max(ploidy(pop)) > 1){
     # multiplying by two is the proper way to evaluate P/A diploid data because
     # one cannot detect heterozygous loci (eg, a difference of 1).
-    temp.d.vector <- temp.d.vector*ploidy(pop)
+    temp.d.vector <- temp.d.vector * max(ploidy(pop))
     d.vector  <- as.vector(colSums(temp.d.vector))
     d2.vector <- as.vector(colSums(temp.d.vector^2))
     D.vector  <- as.vector(rowSums(temp.d.vector))
@@ -633,7 +633,7 @@ old.mlg.matrix <- function(x){
     d2.vector <- d.vector
     D.vector  <- as.vector(rowSums(temp.d.vector))
   }
-  vectors <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
+  vectors <- list(d.vector = d.vector, d2.vector = d2.vector, D.vector = D.vector)
   return(vectors)
 }
 
@@ -1774,13 +1774,12 @@ update_single_color <- function(x, lookup, colorvec){
 # # none
 #==============================================================================#
 get_local_ploidy <- function(x){
-  ploidy <- x@ploidy
-  stopifnot(ploidy > 2)
-  stopifnot(test_zeroes(x))
-  zerocol <- which(as.numeric(x@all.names[[1]]) == 0)
-  locs <- names(x@loc.names)
-  locmat <- vapply(1:nLoc(x), function(z) as.integer(round(ploidy - x[loc = locs[z]]@tab[, zerocol]*ploidy)), 
-                   integer(nInd(x)))
+  if (any(as.numeric(unlist(x@all.names, use.names = FALSE)) == 0)){
+    x <- recode_polyploids(x, newploidy = TRUE)    
+  }
+  tabx   <- tab(x)
+  cols   <- split(colnames(tabx), x@loc.fac)
+  locmat <- vapply(cols, function(i) rowSums(tabx[, i]), numeric(nInd(x)))
   return(locmat)
 }
 #==============================================================================#
