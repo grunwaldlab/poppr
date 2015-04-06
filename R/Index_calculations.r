@@ -103,11 +103,6 @@
 #'   \code{\link{genind}} object. The list should indicate the population 
 #'   hierarchy to be used for clone correction.  }
 #'   
-#' @param dfname a \code{character string}. (Only for genind objects) This is
-#'   the name of the data frame or heirarchy containing the vectors of the
-#'   population hierarchy within the \code{other} slot of the
-#'   \code{\link{genind}} object.
-#'   
 #' @param keep an \code{integer}. This indicates the levels of the population 
 #'   hierarchy you wish to keep after clone correcting your data sets. To 
 #'   combine the hierarchy, just set keep from 1 to the length of your 
@@ -220,7 +215,7 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
-                  clonecorrect = clonecorrect, hier = hier, dfname = dfname, 
+                  clonecorrect = clonecorrect, hier = hier,
                   keep = keep, quiet = TRUE)  
   # The namelist will contain information such as the filename and population
   # names so that they can easily be ported around.

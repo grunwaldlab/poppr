@@ -177,7 +177,7 @@ extract.info <- function(x) {
 # # new.poppr (in testing)
 #==============================================================================#
 process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=1,
-                            clonecorrect=FALSE, hier=c(1), dfname="hier"){
+                            clonecorrect=FALSE, hier=c(1)){
   if (!is.genind(input)){
     x <- input
     if (toupper(.readExt(x)) == "CSV"){
@@ -194,7 +194,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
     input         <- missingno(input, type=missing, cutoff=cutoff, quiet=quiet)
     input@call    <- popcall
     if (clonecorrect == TRUE){
-      poplist    <- clonecorrect(input, hier=hier, dfname=dfname, keep=keep)
+      poplist    <- clonecorrect(input, strata = hier, keep = keep)
       input      <- poplist
       input@call <- popcall
     }
@@ -203,7 +203,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
     popcall   <- input@call
     input     <- missingno(input, type=missing, cutoff=cutoff, quiet=quiet)
     if (clonecorrect == TRUE){
-      poplist    <- clonecorrect(input, hier=hier, dfname=dfname, keep=keep)
+      poplist    <- clonecorrect(input, strata = hier, keep = keep)
       input      <- poplist
       input@call <- popcall
     }
@@ -858,6 +858,7 @@ pair_diffs <- function(pop, numLoci, np)
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
   temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", tab(x), PACKAGE = "poppr")/2, 
                           temp.d.vector[, 1])
+  temp.d.vector <- ceiling(temp.d.vector)
   d.vector  <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
   D.vector  <- rowSums(temp.d.vector)

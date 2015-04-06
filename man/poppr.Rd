@@ -61,11 +61,6 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   \code{\link{genind}} object. The list should indicate the population
   hierarchy to be used for clone correction.  }}
 
-\item{dfname}{a \code{character string}. (Only for genind objects) This is
-  the name of the data frame or heirarchy containing the vectors of the
-  population hierarchy within the \code{other} slot of the
-  \code{\link{genind}} object.}
-
 \item{keep}{an \code{integer}. This indicates the levels of the population
   hierarchy you wish to keep after clone correcting your data sets. To
   combine the hierarchy, just set keep from 1 to the length of your
