@@ -360,7 +360,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     }
     type <- 'PA'
     res.gid <- df2genind(gena, ind.names = ind.vec, pop = pop.vec,
-                         ploidy = ploidy, type = type)
+                         ploidy = ploidy, type = type, ncode = 1)
   } else if (nloci == clm & !all(gena.mat %in% as.integer(-1:1))) {
     # Checking for haploid microsatellite data or SNP data
     if(any(gena.mat == "0")){
