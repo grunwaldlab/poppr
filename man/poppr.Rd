@@ -6,9 +6,8 @@
 \usage{
 poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE,
-  clonecorrect = FALSE, hier = 1, dfname = "population_hierarchy",
-  keep = 1, hist = TRUE, index = "rbarD", minsamp = 10,
-  legend = FALSE)
+  clonecorrect = FALSE, strata = 1, keep = 1, hist = TRUE,
+  index = "rbarD", minsamp = 10, legend = FALSE)
 }
 \arguments{
 \item{dat}{a \code{\linkS4class{genind}} object OR a
@@ -52,15 +51,6 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   and \code{dfname} parameters, or the user will potentially get undesired
   results. see \code{\link{clonecorrect}} for details.}
 
-\item{hier}{\itemize{ \item \strong{for genclone objects} - a \code{formula}
-  indicating the hierarchical levels to be used. The hierarchies should be
-  present in the \code{hierarchy} slot. See \code{\link{strata}} for
-  details. \item \strong{for genind objects} - a \code{numeric or character}
-  vector OR a hierarchical formula. This is the list of columns within a data
-  frame (specified in \code{dfname}) in the 'other' slot of the
-  \code{\link{genind}} object. The list should indicate the population
-  hierarchy to be used for clone correction.  }}
-
 \item{keep}{an \code{integer}. This indicates the levels of the population
   hierarchy you wish to keep after clone correcting your data sets. To
   combine the hierarchy, just set keep from 1 to the length of your
@@ -79,6 +69,15 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 \item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend
   describing the resulting table columns will be printed. Defaults to
   \code{FALSE}}
+
+\item{hier}{\itemize{ \item \strong{for genclone objects} - a \code{formula}
+  indicating the hierarchical levels to be used. The hierarchies should be
+  present in the \code{hierarchy} slot. See \code{\link{strata}} for
+  details. \item \strong{for genind objects} - a \code{numeric or character}
+  vector OR a hierarchical formula. This is the list of columns within a data
+  frame (specified in \code{dfname}) in the 'other' slot of the
+  \code{\link{genind}} object. The list should indicate the population
+  hierarchy to be used for clone correction.  }}
 }
 \value{
 \item{Pop}{A vector indicating the pouplation factor} \item{N}{An
@@ -122,7 +121,7 @@ poppr(nancycats, sample=99, total=FALSE, quiet=FALSE)
 # on slower computers.
 data(H3N2)
 poppr(H3N2, total=FALSE, sublist=c("Austria", "China", "USA"),
-				clonecorrect=TRUE, hier="country", dfname="x")
+				clonecorrect=TRUE, strata="country", dfname="x")
 }
 }
 \author{

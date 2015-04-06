@@ -203,20 +203,19 @@
 #' # on slower computers. 
 #' data(H3N2)
 #' poppr(H3N2, total=FALSE, sublist=c("Austria", "China", "USA"), 
-#' 				clonecorrect=TRUE, hier="country", dfname="x")
+#' 				clonecorrect=TRUE, strata="country", dfname="x")
 #' }
 #==============================================================================#
 #' @import adegenet ggplot2 vegan
-poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
-                  method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
-                  clonecorrect=FALSE, hier=1, dfname="population_hierarchy", 
-                  keep = 1, hist=TRUE, index = "rbarD", minsamp=10, 
-                  legend=FALSE){
-  METHODS = c("permute alleles", "parametric bootstrap",
+poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL, 
+                  sample = 0, method = 1, missing = "ignore", cutoff = 0.05, 
+                  quiet = FALSE, clonecorrect = FALSE, strata = 1, keep = 1, 
+                  hist = TRUE, index = "rbarD", minsamp = 10, legend = FALSE){
+  METHODS <- c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
-                  clonecorrect = clonecorrect, hier = hier,
-                  keep = keep, quiet = TRUE)  
+                    clonecorrect = clonecorrect, strata = strata,
+                    keep = keep, quiet = TRUE)  
   # The namelist will contain information such as the filename and population
   # names so that they can easily be ported around.
   namelist <- NULL
@@ -229,15 +228,13 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   } else {
     namelist$File <- basename(x$X)
   }
-  #poplist <- x$POPLIST
   if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
     dat           <- x$GENIND
     pop(dat)      <- NULL
     poplist       <- NULL
     poplist$Total <- dat
-  }
-  else{
-    dat <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
+  } else {
+    dat <- popsub(x$GENIND, sublist = sublist, blacklist = blacklist)
     if (any(levels(pop(dat)) == "")){
       levels(pop(dat))[levels(pop(dat)) == ""] <- "?"
       warning("missing population factor replaced with '?'")
@@ -248,7 +245,7 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   pop.mat <- mlg.matrix(dat)
   if (total==TRUE & !is.null(poplist) & length(poplist) > 1){
     poplist$Total <- dat
-    pop.mat <- rbind(pop.mat, colSums(pop.mat))
+    pop.mat       <- rbind(pop.mat, colSums(pop.mat))
   }
   sublist <- names(poplist)
   Iout    <- NULL
@@ -531,16 +528,16 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   
-  namelist            <- NULL
-  namelist$population <- ifelse(length(levels(pop@pop)) > 1 | 
-                                is.null(pop@pop), "Total", popNames(pop))
-  namelist$File       <- as.character(match.call()[2])
+  namelist <- list(population = ifelse(nPop(pop) > 1 | is.null(pop@pop), 
+                                       "Total", popNames(pop)),
+                   File = as.character(match.call()[2])
+                  )
   
   popx    <- pop
   missing <- toupper(missing)
   type    <- pop@type
   
-  if(type=="PA"){
+  if (type == "PA"){
     .Ia.Rd <- .PA.Ia.Rd
   } else {
     popx <- seploc(popx)
@@ -549,13 +546,11 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   # if there are less than three individuals in the population, the calculation
   # does not proceed. 
   if (nInd(pop) < 3){
-    IarD <- as.numeric(c(NA, NA))
-    names(IarD) <- c("Ia", "rbarD")
-    if (sample==0){
+    IarD <- setNames(as.numeric(c(NA, NA)), c("Ia", "rbarD"))
+    if (sample == 0){
       return(IarD)
     } else {
-      IarD <- as.numeric(rep(NA, 4))
-      names(IarD) <- c("Ia","p.Ia","rbarD","p.rD")
+      IarD <- setNames(as.numeric(rep(NA, 4)), c("Ia","p.Ia","rbarD","p.rD"))
       return(IarD)
     }
   }
@@ -571,20 +566,24 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   # the population, index, observed value, and p-value. It will also produce a 
   # histogram.
     Iout     <- NULL 
-    idx      <- as.data.frame(list(Index=names(IarD)))
-    samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
-    p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
-    p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
+    idx      <- data.frame(Index = names(IarD))
+    samp     <- .sampling(popx, sample, missing, quiet = quiet, type = type, 
+                          method = method)
+    p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)
+    p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)
+
     if (hist == TRUE){
-      print(poppr.plot(samp, observed=IarD, pop=namelist$population, index = index,
-                       file=namelist$File, pval=p.val, N=nrow(pop@tab)))
+      the_plot <- poppr.plot(samp, observed = IarD, pop = namelist$population, 
+                             index = index, file = namelist$File, pval = p.val, 
+                             N = nrow(pop@tab))
+      print(the_plot)
     }
-    result         <- 1:4
+    result <- setNames(vector(mode = "numeric", length = 4), 
+                       c("Ia","p.Ia","rbarD","p.rD"))
     result[c(1, 3)] <- IarD
     result[c(2, 4)] <- p.val
-    names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
     if (valuereturn == TRUE){
-      iaobj <- list(index = final(Iout, result), samples = samp)
+      iaobj        <- list(index = final(Iout, result), samples = samp)
       class(iaobj) <- "ialist"
       return(iaobj)
     } 
@@ -678,10 +677,10 @@ locus_table <- function(x, index = "simpson", lev = "allele",
     } else {
       msg <- "Stoddard and Taylor index"
     }
-    cat("\n", divs[1], "= Number of observed", paste0(divs[1], "s"))
-    cat("\n", divs[2], "=", msg)
-    cat("\n", divs[3], "= Nei's 1978 expected heterozygosity\n")
-    cat("------------------------------------------\n")
+    message("\n", divs[1], " = Number of observed ", paste0(divs[1], "s"), appendLF = FALSE)
+    message("\n", divs[2], " = ", msg, appendLF = FALSE)
+    message("\n", divs[3], " = Nei's 1978 expected heterozygosity\n", appendLF = FALSE)
+    message("------------------------------------------\n", appendLF = FALSE)
   }
   class(res) <- c("locustable", "matrix")
   return(res)
