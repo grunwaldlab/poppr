@@ -1,4 +1,6 @@
-## Welcome
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=adegenet-fix)](https://travis-ci.org/grunwaldlab/poppr?branch=adegenet-fix)
+
+## Welcome 
 
 Poppr is an R package designed for analysis of populations with mixed modes of 
 sexual and clonal reproduction. It is built around the framework of [adegenet's](http://adegenet.r-forge.r-project.org/)
@@ -46,10 +48,6 @@ If you want the absolute latest version of *poppr*, see about installing from gi
 ***
 
 ### Stable and Development versions
-
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=adegenet-fix)](https://travis-ci.org/grunwaldlab/poppr?branch=adegenet-fix)
-
-If the image above says "Passing", then that means it should be safe to install with the latest version of R. If it does not say "Passing", I am probably trying to fix whatever problem is causing it as fast as I can.
 
 To install this package from github, make sure you have the following:
 
