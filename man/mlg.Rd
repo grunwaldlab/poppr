@@ -13,7 +13,7 @@ mlg(pop, quiet = FALSE)
 mlg.table(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   bar = TRUE, total = FALSE, quiet = FALSE)
 
-mlg.vector(pop)
+mlg.vector(pop, reset = FALSE)
 
 mlg.crosspop(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   indexreturn = FALSE, df = FALSE, quiet = FALSE)
@@ -42,6 +42,9 @@ population.}
 
 \item{total}{\code{logical} If \code{TRUE}, a row containing the sum of all
 represented MLGs is appended to the matrix produced by mlg.table.}
+
+\item{reset}{logical. For genclone objects, the MLGs are defined by the input
+data, but they do not change if more or less information is added (i.e. loci are dropped). Setting \code{reset = TRUE} will recalculate MLGs. Default is \code{FALSE}, returning the MLGs defined in the @mlg slot.}
 
 \item{indexreturn}{\code{logical} If \code{TRUE}, a vector will be returned
 to index the columns of \code{mlg.table}.}

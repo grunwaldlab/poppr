@@ -253,6 +253,9 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
 
 #==============================================================================#
 #' @rdname mlg
+#' 
+#' @param reset logical. For genclone objects, the MLGs are defined by the input
+#' data, but they do not change if more or less information is added (i.e. loci are dropped). Setting \code{reset = TRUE} will recalculate MLGs. Default is \code{FALSE}, returning the MLGs defined in the @@mlg slot.
 #'   
 #' @note mlg.vector will recalculate the mlg vector for
 #'   \code{\linkS4class{genind}} objects and will return the contents of the mlg
@@ -262,7 +265,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
 #' @export
 #==============================================================================#
 
-mlg.vector <- function(pop){
+mlg.vector <- function(pop, reset = FALSE){
 
   # This will return a vector indicating the multilocus genotypes.
   # note that the genotype numbers will not match up with the original numbers,
@@ -275,7 +278,7 @@ mlg.vector <- function(pop){
   # Step 4: evaluate strings in sorted vector and increment to the respective 
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
-  if (is.genclone(pop) && length(pop@mlg) == nrow(pop@tab)){
+  if (!reset && is.genclone(pop) && length(pop@mlg) == nrow(pop@tab)){
     return(pop@mlg[])
   }
   xtab <- pop@tab
@@ -405,7 +408,5 @@ mlg.id <- function (pop){
   if (!is.genind(pop)){
     stop(paste(substitute(pop), "is not a genind or genclone object"))
   }
-  ctab <- table(pop$ind.names, mlg.vector(pop))
-  m.g <- apply(ctab, MARGIN = 2, FUN = function (y) names(y[y > 0]))
-  return(m.g)
+  return(split(indNames(pop), mlg.vector(pop)))
 }
