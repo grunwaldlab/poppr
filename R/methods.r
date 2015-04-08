@@ -322,6 +322,8 @@ setMethod(
 #' @param j a vector of numerics corresponding to the loci desired.
 #' @param ... passed on to the \code{\linkS4class{genind}} object.
 #' @param drop set to \code{FALSE}
+#' @param mlg.reset logical. Defaults to \code{FALSE}. If \code{TRUE}, the
+#' mlg vector will be reset 
 #' @param loc passed on to \code{\linkS4class{genind}} object.
 #' @param treatOther passed on to \code{\linkS4class{genind}} object.
 #' @param quiet passed on to \code{\linkS4class{genind}} object. 
@@ -330,10 +332,18 @@ setMethod(
 setMethod(
   f = "[",
   signature(x = "genclone", i = "ANY", j = "ANY", drop = "ANY"),
-  definition = function(x, i, j, ..., drop = FALSE){
+  definition = function(x, i, j, ..., mlg.reset = FALSE, drop = FALSE){
     if (missing(i)) i <- TRUE
     x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
-    x@mlg <- x@mlg[i]
+    if (!mlg.reset){
+      x@mlg <- x@mlg[i]
+    } else {
+      if (class(x@mlg)[1] != "MLG"){
+        x@mlg <- mlg.vector(x, reset = TRUE)        
+      } else {
+        x@mlg <- new("MLG", mlg.vector(x, reset = TRUE))
+      }
+    }
     return(x)
   }
 )

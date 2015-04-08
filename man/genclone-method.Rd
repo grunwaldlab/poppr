@@ -10,7 +10,8 @@
 \usage{
 \S4method{initialize}{genclone}(.Object, ..., mlg, mlgclass = TRUE)
 
-\S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{genclone,ANY,ANY,ANY}(x, i, j, ..., mlg.reset = FALSE,
+  drop = FALSE)
 
 \S4method{show}{genclone}(object)
 
@@ -32,6 +33,9 @@ mlg object into an MLG class object.}
 \item{i}{vector of numerics indicating number of individuals desired}
 
 \item{j}{a vector of numerics corresponding to the loci desired.}
+
+\item{mlg.reset}{logical. Defaults to \code{FALSE}. If \code{TRUE}, the
+mlg vector will be reset}
 
 \item{drop}{set to \code{FALSE}}
 

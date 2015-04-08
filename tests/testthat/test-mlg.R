@@ -1,9 +1,12 @@
 context("Multilocus genotype tests")
 
+data(Pinf, package = "poppr")
+data(Aeut, package = "poppr")
+data(partial_clone, package = "poppr")
+data(nancycats, package = "adegenet")
+
 test_that("multilocus genotype vector is same length as samples", {
-  data(Aeut, package = "poppr")
-  data(partial_clone, package = "poppr")
-  data(nancycats, package = "adegenet")
+
   amlg <- mlg.vector(Aeut)
   pmlg <- mlg.vector(partial_clone)
   nmlg <- mlg.vector(nancycats)
@@ -16,9 +19,6 @@ test_that("multilocus genotype vector is same length as samples", {
 })
 
 test_that("multilocus genotype matrix matches mlg.vector and data", {
-  data(Aeut, package = "poppr")
-  data(partial_clone, package = "poppr")
-  data(nancycats, package = "adegenet")
   aclone <- as.genclone(Aeut)
   atab   <- mlg.table(Aeut, bar = FALSE)
   ptab   <- mlg.table(partial_clone, bar = FALSE)
@@ -35,7 +35,6 @@ test_that("multilocus genotype matrix matches mlg.vector and data", {
 })
 
 test_that("mlg.crosspop will work with subsetted genclone objects", {
-  data(Aeut, package = "poppr")
   strata(Aeut) <- other(Aeut)$population_hierarchy
   agc <- as.genclone(Aeut)
   Athena <- popsub(agc, "Athena")
@@ -54,7 +53,6 @@ test_that("mlg.crosspop will work with subsetted genclone objects", {
 })
 
 test_that("mlg.id Aeut works", {
-  data(Aeut, package = "poppr")
   expected_output <- structure(list(`1` = "055", `2` = c("101", "103"), `3` = "111", 
                                     `4` = "112", `5` = "110", `6` = "102", `7` = "020", `8` = "007", 
                                     `9` = "068", `10` = "069", `11` = "073", `12` = "075", `13` = c("072", 
@@ -112,7 +110,6 @@ test_that("mlg.id Aeut works", {
   })
 
 test_that("mlg.id Pinf works", {
-  data(Pinf, package = "poppr")
   expected_output <- structure(list(`1` = structure("PiEC06", .Names = "09"), `4` = structure("PiMX03", .Names = "19"), 
                                     `5` = structure("PiMX04", .Names = "20"), `6` = structure("PiMXT01", .Names = "56"), 
                                     `7` = structure("PiPE03", .Names = "67"), `8` = structure("PiPE01", .Names = "65"), 
@@ -169,3 +166,13 @@ test_that("mlg.id Pinf works", {
   expect_that(names(x[1]), equals("1"))
 })
 
+test_that("subsetting and resetting MLGs works", {
+  pmlg <- mlg.vector(Pinf)
+  pres <- mlg.vector(Pinf, reset = TRUE)
+  fullmlg <- mlg(Pinf[loc = locNames(Pinf)[-c(1:5)]], quiet = TRUE)
+  realmlg <- mlg(Pinf[loc = locNames(Pinf)[-c(1:5)], mlg.reset = TRUE], quiet = TRUE)
+  expect_that(pmlg, equals(Pinf@mlg[]))
+  expect_that(pmlg, not(equals(pres)))
+  expect_that(Pinf[mlg.reset = TRUE]@mlg[], equals(pres))
+  expect_that(fullmlg, is_more_than(realmlg))
+})
