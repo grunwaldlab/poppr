@@ -146,7 +146,7 @@ format.
 \Poppr{} is designed to make analysis of populations with mixed reproductive
 modes more streamlined and user friendly so that the researcher using it can
 focus on data analysis and interpretation. \Poppr{} allows analysis of haploid
-and diploid dominant/co-dominant marker data including microsattelites, Single
+and diploid dominant/co-dominant marker data including microsatellites, Single
 Nucleotide Polymorphisms (SNP), and Amplified Fragment Length Polymorphisms
 (AFLP). To avoid creating yet another file format that is specific to a program,
 \poppr{} was created on the backbone of the popular R package \adegenet{} and
@@ -156,10 +156,27 @@ and Structure) and newly introduces compatibility with GenAlEx formatted files
 be further analyzed with \poppr{}.
 
 The real power of \poppr{} is in the data manipulation and analytic tools.
-\Poppr{} has the ability to define multiple population hierarchies, clone-
-censor, and subset data sets. With \poppr{} you can also quickly calculate
-Bruvo's distance, the index of association, and easily determine which
-multilocus genotypes are shared across populations.
+\Poppr{} has the ability to bootstrap, clone- censor, and subset data sets. With
+\poppr{} you can also quickly calculate Bruvo's distance, the index of
+association, and easily determine which multilocus genotypes are shared across
+populations.
+
+\subsection{A note about poppr version 2}
+
+In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
+an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
+
+\begin{enumerate}
+\item{\textbf{mlg}}{numeric classification of multilocus genotypes in the data set}
+\item{\textbf{hierarchy}}{storage of multiple population factors.}
+\end{enumerate}
+
+In particular, the \textbf{hierarchy} slot played a large role in providing a
+more tractable way of performing analyses such as clone-correction and AMOVA. In
+March of 2015, The \textbf{hierarchy} slot was ported to the \adegenet{}
+packaged and the name was changed to the \textbf{strata} slot. This means that
+code written before \poppr{} 2.0.0 might need some small changes. Please see the
+\textsc{Migrating from poppr version 1} vignette for more details.
 
 \subsection{Resources}
 
@@ -186,7 +203,7 @@ If you have any questions or feedback, feel free to send a message to the
 \poppr{} forum at \url{http://groups.google.com/group/poppr}. You can submit bug
 reports there or on our github site: \url{https://github.com/grunwaldlab/poppr}
 
-\subsection{Acknowledgements}
+\subsection{Acknowledgments}
 
 Much thanks goes to Sydney E. Everhart for alpha testing, beta testing, feature
 requests, proofreading, data contribution, and moral support throught the
@@ -461,157 +478,192 @@ as \texttt{NaN}.\\
 \label{intro:import}
 
 
-There are several ways of reading data into R. One way is using the function
-\texttt{getfile}.
-\subsubsection{Function: getfile}
-\label{intro:import:getfile}
-\tab\tab \texttt{getfile} gives the user an easy way to point R to the directory
-in which your data is stored. It is only meant for R GUIs such as Rstudio. Using
-this on the command line has little advantage over setting the working
-directory manually.\\
-\tline{}
-\begin{quote}
-Default Command:
-% \texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
-<<getfile_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "getfile"
-print_command(funk)
-@
-\end{quote}
+% There are several ways of reading data into R. One way is using the function
+% \texttt{getfile}.
+% \subsubsection{Function: getfile}
+% \label{intro:import:getfile}
+% \tab\tab \texttt{getfile} gives the user an easy way to point R to the directory
+% in which your data is stored. It is only meant for R GUIs such as Rstudio. Using
+% this on the command line has little advantage over setting the working
+% directory manually.\\
+% \tline{}
+% \begin{quote}
+% Default Command:
+% % \texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
+% <<getfile_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "getfile"
+% print_command(funk)
+% @
+% \end{quote}
+% \begin{itemize}
+%   \item \texttt{multi -} This is normally set to \texttt{FALSE}, meaning that it
+%   will only grab the file you selected. If it's \texttt{TRUE}, it will grab all
+%   files within the directory, constrained only by what you type into the
+%   \texttt{pattern} field.
+%   \item \texttt{pattern -} A pattern that you want to filter the files you get.
+%   This accepts regular expressions, so you must be careful with anything that is
+%   not an alphanumeric character.
+%   \item \texttt{combine -} This tells \texttt{getfile} to combine the path and
+%   all the files. This is set to \texttt{TRUE} by default so that you can access
+%   your files no matter what working directory you are in.
+% \end{itemize}
+% \bline{}
+
+% This method works for a single file, but let's say you had a lot of data sets
+% you wanted to import. Instead of doing these one-by-one, \texttt{getfile} has a
+% flag called \texttt{multi} telling the computer that you want to grab multiple
+% files in the folder:
+% <<multi_getfile, eval = FALSE>>=
+% x <- getfile(multi=TRUE)
+% @
+% A window would pop up again, and you should navigate to the same directory as
+% you had before, and select any of the files in that directory.
+% <<show_multi_getfile1,eval=FALSE>>=
+% x
+% @
+% <<show_multi_getfile,echo=FALSE>>=
+% x$files <- list.files(dirname(system.file("files/rootrot.csv", package="poppr")))
+% x$files <- paste(x$path, x$files, sep="/")
+% x
+% @
+% As you can see, now all of the files that existed in that directory are there!
+% Now you can look at all those files at once! We will use \texttt{poppr.all} to
+% produce a summary table for all of your files\footnote{These files do not need
+% to be similar in any way to do this analysis}. Let's set \texttt{digits = 2} to
+% only print 2 significant digits.
+% <<poppr.all, eval=FALSE>>=
+% all_files <- poppr.all(x$files)
+% print(all_files, digits = 2)
+% @
+% <<poppr.all_eval, echo=FALSE>>=
+% print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), 
+%                   system.file("files/rootrot2.csv", package="poppr"), 
+%                   system.file("files/simulated.dat", package="poppr"))), 
+%       digits = 2)
+% @
+
+% You've seen examples of how to use \texttt{getfile} to extract a single file and
+% all the files in a directory, but what if you wanted many files only of a
+% certain type or with a certain name? This is what you would use the
+% \texttt{pattern} argument for. For example, there are several data files with
+% different formats in the \adegenet{} folder in your R library. Let's take a look
+% at the names of these files.
+% \begin{center}
+%   \fcolorbox{light-gray}{salmon}{
+%     \begin{minipage}[t]{0.8\textwidth}
+%       \jala{} For the rest of this section, remember that every time you invoke
+%       \texttt{getfile()}, a window will pop up and you should select a file
+%       before hitting enter.
+%     \end{minipage}
+%   }
+% \end{center}
+% <<getfile_adegenet, eval=FALSE>>=
+% getfile(multi=TRUE)
+% @
+% Navigate to the \adegenet{} folder in your R library.
+% <<list_adegenet_files, echo=FALSE>>=
+% nancylist <- dir(dirname(system.file("files/nancycats.gtx",package="adegenet")))
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+
+% We can see that we have a mix of files with different formats. If we tried to
+% run all of these files using poppr, we would have a problem because some of the
+% file formats have no direct import into a \texttt{genind} object (*.fasta, or
+% *.snp), or just simply are not supported (eg. *.rda files). To filter these
+% files, use the \texttt{pattern} argument. Let's say we only wanted the files
+% that have the word ``nancy'' in them.
+% <<getfile_nancy,eval=FALSE>>=
+% getfile(multi=TRUE, pattern="nancy")
+% @
+% <<show_getfile_nancy, echo=FALSE>>=
+% nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="nancy")
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+% Now, let's exclude everything but genetix files (*.gtx).
+% <<getfile_gtx, eval=FALSE>>=
+% getfile(multi=TRUE, pattern="gtx")
+% @
+% <<show_getfile_gtx, echo=FALSE>>=
+% nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="gtx")
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+% Now, let's only get FSTAT files (*.dat)
+% <<getfile_dat, eval=FALSE>>=
+% getfile(multi=TRUE, pattern="dat")
+% @
+% <<show_getfile_dat, echo=FALSE>>=
+% nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="dat")
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+
+% Uh-oh. We've run into a problem. Three out of our four files are not FSTAT
+% files. Why did this happen? It happened because they happen to have
+% \texttt{"dat"} within their name. This problem can be solved, by using regular
+% expressions. If you are unfamiliar with regular expressions, you can think of
+% them as special characters that you can use to make your search pattern more
+% strict or more flexible. Since the topic of regular expressions can take up
+% several lectures, I will spare you the gory details. For this situation, the
+% only one you need to know is ``\texttt{\$}". The dollar sign indicates the end
+% of a word or string. If we want specific file extensions all we have to do is
+% add this to the end of the search term like so:
+% <<getfile_datend, eval=FALSE>>=
+% getfile(multi=TRUE, pattern="dat$")
+% @
+% <<show_getfile_datend, echo=FALSE>>=
+% nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="dat$")
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+% Now we have our FSTAT file!
+
+\subsubsection{How does R represent data? \{Objective: data\}}
+
+Working with data in R means that these data have to be stored inside an
+``object'', which is stored in the computer's memory. Because of this, it's
+important to know the difference between a \textbf{file} and an \textbf{object}.
+When anyone talking about importing a \textbf{file} into R, they are referring
+to a spreadsheet or text file that lives in a folder on your hard drive.
+Spreadsheet files (saved as *.csv files) are normally imported through the R
+function \texttt{read.table()}. The output of \texttt{read.table()} is a
+\texttt{data.frame}. A \texttt{data.frame} is an \textbf{object} represented in
+your computer's memory. This means that it only exists for as long as R is
+running. 
+
+The good thing about having objects stored in memory is that you can manipulate
+them in any way and not affect the source of those data. Since R is a scripted
+language (instead of point-and-click), any of your manipulations can be saved in
+a separate R file that can be easily adapted to new data. Of course, most data
+are not going to be entered into R manually. Usually they will be formatted in a
+manner that can be read by popular population genetics programs.
+
+As previously mentioned, since \poppr{} is based on \adegenet{}, it's possible
+to read in the following file formats into a \texttt{genind} object with the
+function \texttt{import2genind()}:
+
 \begin{itemize}
-  \item \texttt{multi -} This is normally set to \texttt{FALSE}, meaning that it
-  will only grab the file you selected. If it's \texttt{TRUE}, it will grab all
-  files within the directory, constrained only by what you type into the
-  \texttt{pattern} field.
-  \item \texttt{pattern -} A pattern that you want to filter the files you get.
-  This accepts regular expressions, so you must be careful with anything that is
-  not an alphanumeric character.
-  \item \texttt{combine -} This tells \texttt{getfile} to combine the path and
-  all the files. This is set to \texttt{TRUE} by default so that you can access
-  your files no matter what working directory you are in.
+  \item{\textsc{Fstat}}
+  \item{\textsc{Genepop}}
+  \item{\textsc{Genetix}}
+  \item{\textsc{Structure}}
 \end{itemize}
-\bline{}
 
-This method works for a single file, but let's say you had a lot of data sets
-you wanted to import. Instead of doing these one-by-one, \texttt{getfile} has a
-flag called \texttt{multi} telling the computer that you want to grab multiple
-files in the folder:
-<<multi_getfile, eval = FALSE>>=
-x <- getfile(multi=TRUE)
-@
-A window would pop up again, and you should navigate to the same directory as
-you had before, and select any of the files in that directory.
-<<show_multi_getfile1,eval=FALSE>>=
-x
-@
-<<show_multi_getfile,echo=FALSE>>=
-x$files <- list.files(dirname(system.file("files/rootrot.csv", package="poppr")))
-x$files <- paste(x$path, x$files, sep="/")
-x
-@
-As you can see, now all of the files that existed in that directory are there!
-Now you can look at all those files at once! We will use \texttt{poppr.all} to
-produce a summary table for all of your files\footnote{These files do not need
-to be similar in any way to do this analysis}. Let's set \texttt{digits = 2} to
-only print 2 significant digits.
-<<poppr.all, eval=FALSE>>=
-all_files <- poppr.all(x$files)
-print(all_files, digits = 2)
-@
-<<poppr.all_eval, echo=FALSE>>=
-print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), 
-                  system.file("files/rootrot2.csv", package="poppr"), 
-                  system.file("files/simulated.dat", package="poppr"))), 
-      digits = 2)
-@
+Here, we introduce a new way of importing data into a \texttt{genind} or
+\texttt{genclone} object.
 
-You've seen examples of how to use \texttt{getfile} to extract a single file and
-all the files in a directory, but what if you wanted many files only of a
-certain type or with a certain name? This is what you would use the
-\texttt{pattern} argument for. For example, there are several data files with
-different formats in the \adegenet{} folder in your R library. Let's take a look
-at the names of these files.
-\begin{center}
-  \fcolorbox{light-gray}{salmon}{
-    \begin{minipage}[t]{0.8\textwidth}
-      \jala{} For the rest of this section, remember that every time you invoke
-      \texttt{getfile()}, a window will pop up and you should select a file
-      before hitting enter.
-    \end{minipage}
-  }
-\end{center}
-<<getfile_adegenet, eval=FALSE>>=
-getfile(multi=TRUE)
-@
-Navigate to the \adegenet{} folder in your R library.
-<<list_adegenet_files, echo=FALSE>>=
-nancylist <- dir(dirname(system.file("files/nancycats.gtx",package="adegenet")))
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-
-We can see that we have a mix of files with different formats. If we tried to
-run all of these files using poppr, we would have a problem because some of the
-file formats have no direct import into a \texttt{genind} object (*.fasta, or
-*.snp), or just simply are not supported (eg. *.rda files). To filter these
-files, use the \texttt{pattern} argument. Let's say we only wanted the files
-that have the word ``nancy'' in them.
-<<getfile_nancy,eval=FALSE>>=
-getfile(multi=TRUE, pattern="nancy")
-@
-<<show_getfile_nancy, echo=FALSE>>=
-nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="nancy")
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-Now, let's exclude everything but genetix files (*.gtx).
-<<getfile_gtx, eval=FALSE>>=
-getfile(multi=TRUE, pattern="gtx")
-@
-<<show_getfile_gtx, echo=FALSE>>=
-nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="gtx")
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-Now, let's only get FSTAT files (*.dat)
-<<getfile_dat, eval=FALSE>>=
-getfile(multi=TRUE, pattern="dat")
-@
-<<show_getfile_dat, echo=FALSE>>=
-nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="dat")
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-
-Uh-oh. We've run into a problem. Three out of our four files are not FSTAT
-files. Why did this happen? It happened because they happen to have
-\texttt{"dat"} within their name. This problem can be solved, by using regular
-expressions. If you are unfamiliar with regular expressions, you can think of
-them as special characters that you can use to make your search pattern more
-strict or more flexible. Since the topic of regular expressions can take up
-several lectures, I will spare you the gory details. For this situation, the
-only one you need to know is ``\texttt{\$}". The dollar sign indicates the end
-of a word or string. If we want specific file extensions all we have to do is
-add this to the end of the search term like so:
-<<getfile_datend, eval=FALSE>>=
-getfile(multi=TRUE, pattern="dat$")
-@
-<<show_getfile_datend, echo=FALSE>>=
-nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="dat$")
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-Now we have our FSTAT file!
 \subsubsection{Function: read.genalex}
 \label{intro:import:read.genalex}
 
@@ -4376,7 +4428,7 @@ to its definition and description.
 \endlastfoot
 
 \multicolumn{2}{l}{\Large\textsc{Import/Export}}\\
-\cmdlink{intro:import:getfile}{getfile} & Provides a quick GUI to grab files for import \\
+\texttt{getfile} & Provides a quick GUI to grab files for import \\
 \cmdlink{intro:import:read.genalex}{read.genalex} & Read \textit{GenAlEx} formatted csv files to a genind object \\
 \cmdlink{intro:import:genind2genalex}{genind2genalex} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
 \cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\

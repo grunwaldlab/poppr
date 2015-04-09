@@ -100,7 +100,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 1.1.4.99-105}
+\title{Algorithms and equations utilized in poppr version 1.1.4.99-131}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -137,6 +137,12 @@ based on the same data structure, a matrix with samples in rows and alleles in
 columns. The number of columns is equal to the total number of alleles observed
 in the data set. Much of this description is derived from \adegenet{}'s
 \texttt{dist.genpop} manual page.
+
+\subsection{Caveat}
+
+The information here describes the data as it would be passed into the distance
+functions. Data represented in the genind objects are now counts of alleles
+instead of frequencies of alleles. Otherwise, these equations still hold. 
 
 \begin{quote}
 Let \textbf{A} be a table containing allelic frequencies with $t$
@@ -589,22 +595,25 @@ is an implementation of Excoffier's original formulation
 matrix, \poppr{} calculates the distance matrix as the number of differing sites
 between two genotypes using equation \ref{eq:ia_D}. This is equivalent to
 Provesti's distance multiplied by the ploidy and number of loci. This is also
-equivalent to Kronecker's delta as presented in \cite{excoffier1992analysis}. It
-should also be mentioned that \textbf{at this moment, it is not possible to calculate
-AMOVA on polyploid data.}
+equivalent to Kronecker's delta as presented in \cite{excoffier1992analysis}. As
+is the practice from \textsc{Arlequin}, within sample variance is calculated by
+default. Within sample variance can only be calculated on diploid data.
 
 \section{Genotypic Diversity}
 
-Many of the calculations of genotypic diversity exist within the package \textit{vegan} in the \texttt{diversity}
-function. Descriptions of most calculations can be found in the paper by Gr\"unwald et al \cite{Grunwald:2003}.
+Many of the calculations of genotypic diversity exist within the package
+\textit{vegan} in the \texttt{diversity} function. Descriptions of most
+calculations can be found in the paper by Gr\"unwald et al \cite{Grunwald:2003}.
 
 \subsection{Rarefaction, Shannon-Wiener, Stoddart and Taylor indices}
 
-Stoddart and Taylor's index is also known as Inverse Simpson's index.
-A detailed description of these can be found in the ``Diversity'' vignette in \textit{vegan}. You can access it by typing \texttt{vignette("diversity-vegan")}
+Stoddart and Taylor's index is also known as Inverse Simpson's index. A detailed
+description of these can be found in the ``Diversity'' vignette in
+\textit{vegan}. You can access it by typing \texttt{vignette("diversity-vegan")}
 
 \subsection{Evenness ($E_{5}$)}
-Evenness ($E_{5}$) is essentially the ratio of the number of abundant genotypes to the number of rarer genotypes.
+Evenness ($E_{5}$) is essentially the ratio of the number of abundant genotypes
+to the number of rarer genotypes.
 
 This is simply calculated as 
 
@@ -612,11 +621,15 @@ This is simply calculated as
 E_{5} = \frac{(1/\lambda) - 1}{e^{H}}
 \end{equation}
 
-Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity \cite{Stoddart:1988,Shannon:1948}.
+Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity
+\cite{Stoddart:1988,Shannon:1948}.
 
 \subsection{Hexp}
 
-Essentially, $H_{exp}$ is an analog of Nei's expected heterozygosity and is equivalent to an unbiased estimator for Simpson's index. It was implemented in \poppr{} as it was previously in \textit{multilocus} \cite{Agapow:2001}. The calculation is as follows:
+Essentially, $H_{exp}$ is an analog of Nei's expected heterozygosity and is
+equivalent to an unbiased estimator for Simpson's index. It was implemented in
+\poppr{} as it was previously in \textit{multilocus} \cite{Agapow:2001}. The
+calculation is as follows:
 
 \begin{equation}
 H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
