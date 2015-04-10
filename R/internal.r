@@ -667,7 +667,7 @@ final <- function(Iout, result){
 #==============================================================================#
 
 .ia <- function(pop, sample=0, method=1, quiet=FALSE, namelist=NULL, 
-                missing="ignore", hist=TRUE){
+                missing="ignore", hist=TRUE, index = "rbarD"){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   if(pop@type!="PA"){
@@ -700,7 +700,7 @@ final <- function(Iout, result){
   }
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
-  if (sample==0){
+  if (sample == 0){
     Iout   <- IarD
     result <- NULL
   }
@@ -714,13 +714,16 @@ final <- function(Iout, result){
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
-      poppr.plot(samp, observed=IarD, pop=namelist$population,
-                        file=namelist$File, pval=p.val, N=nrow(pop@tab))
+      print(poppr.plot(samp, observed=IarD, pop=namelist$population, index = index,
+                       file=namelist$File, pval=p.val, N=nrow(pop@tab)))
     }
     result <- 1:4
-    result[c(1,3)] <- IarD
-    result[c(2,4)] <- p.val
+    result[c(1, 3)] <- IarD
+    result[c(2, 4)] <- p.val
     names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
+    iaobj <- list(index = final(Iout, result), samples = samp)
+    class(iaobj) <- "ialist"
+    return(iaobj)
   } 
   return(final(Iout, result))
 }
@@ -1106,11 +1109,11 @@ fix_negative_branch <- function(tre){
                                         c("parent", "child", "length")
                         ))
   # Looking at the edges that are zero.
-  zero.edges  <- all.lengths[tre$edge.length < 0, ]
+  zero.edges  <- all.lengths[tre$edge.length < 0, , drop = FALSE]
   # Checking which negative edges are included in all the edges
-  all.edges   <- all.lengths[all.lengths[, "parent"] %in% zero.edges[, "parent"], ]
+  all.edges   <- all.lengths[all.lengths[, "parent"] %in% zero.edges[, "parent"], , drop = FALSE]
   # Ordering all the edges
-  index.table <- all.edges[order(all.edges[, "parent"]), ]
+  index.table <- all.edges[order(all.edges[, "parent"]), , drop = FALSE]
   # Loop to change the NJ branch length
   for (i in (unique(index.table[, "parent"]))){
     the_parents <- index.table[, "parent"] == i
@@ -1165,8 +1168,8 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   else {
     cpop <- pop[.clonecorrector(pop), ]
     # Calculate distance matrix if not supplied (Bruvo's distance)
-    if (is.null(distmat) & !is.null(replen)){
-      distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
+     if (is.null(distmat) & !is.null(replen)){
+        distmat <- as.matrix(bruvo.dist(cpop, replen = replen, add = add, loss = loss))
     }
   }
   if(class(distmat) != "matrix"){
@@ -1233,7 +1236,8 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
 # # singlepop_msn
 #==============================================================================#
 
-bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss = TRUE){
+bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, 
+                            loss = TRUE){
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
   replen <- bruvomat@replen
@@ -1325,7 +1329,7 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   }
   smallest  <- df[[levs[length(levs)]]]
   smallinds <- !duplicated(smallest)
-  newdf     <- df[smallinds, ]
+  newdf     <- df[smallinds, , drop = FALSE]
   newdf     <- newdf[-length(levs)]
   if (length(newdf) > 1){
     factlist <- lapply(newdf, function(x) factor(x, unique(x)))
@@ -1434,7 +1438,7 @@ pool_haplotypes <- function(x, dfname = "population_hierarchy"){
   ploidy        <- ploidy(x)
   df            <- other(x)[[dfname]]
   df$Individual <- indNames(x)
-  df            <- df[rep(1:nrow(df), ploidy), ]
+  df            <- df[rep(1:nrow(df), ploidy), , drop = FALSE]
   newx          <- repool(separate_haplotypes(x))
   pop(newx)     <- df$Individual
   other(newx)[[dfname]] <- df
@@ -1811,7 +1815,7 @@ mlg_barplot <- function(mlgt){
 
   # Organize the data frame by count in descending order.
   rearranged <- order(mlgt.df$count, decreasing = TRUE)
-  mlgt.df <- mlgt.df[rearranged, ]
+  mlgt.df <- mlgt.df[rearranged, , drop = FALSE]
   mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
 
   # plot it
@@ -1862,3 +1866,22 @@ get_sample_mlg <- function(size, samp, nloci, gen, progbar){
   return(out)
 }
 
+#==============================================================================#
+# Internal function for creating title for index of association histogram.
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # poppr.plot
+#==============================================================================#
+make_poppr_plot_title <- function(samp, file = NULL, N = NULL, pop = NULL){
+  plot_title <- ifelse(is.null(pop), "", paste0("Population:", pop))
+  plot_title <- ifelse(is.null(N), paste0(plot_title, ""), 
+                       paste(plot_title, paste("N:", N), sep = "\n"))
+  plot_title <- ifelse(is.null(file), paste0(plot_title, ""), 
+                       paste(plot_title, paste("Data:", file), sep = "\n"))
+  perms      <- paste("Permutations:", length(samp))
+  plot_title <- paste(plot_title, perms, sep = "\n")
+  return(plot_title)
+}

@@ -7,7 +7,8 @@
 poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE,
   clonecorrect = FALSE, hier = 1, dfname = "population_hierarchy",
-  keep = 1, hist = TRUE, minsamp = 10, legend = FALSE)
+  keep = 1, hist = TRUE, index = "rbarD", minsamp = 10,
+  legend = FALSE)
 }
 \arguments{
 \item{dat}{a \code{\linkS4class{genind}} object OR a
@@ -72,6 +73,9 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 
 \item{hist}{\code{logical} if \code{TRUE} (default) and \code{sampling > 0},
   a histogram will be produced for each population.}
+
+\item{index}{\code{character} Either "Ia" or "rbarD". If \code{hist = TRUE},
+  this will determine the index used for the visualization.}
 
 \item{minsamp}{an \code{integer} indicating the minimum number of individuals
   to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for

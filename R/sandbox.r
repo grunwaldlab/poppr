@@ -94,33 +94,6 @@ genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
   return(x)
 }
 
-# gen2polysat <- function(gen, newploidy = gen@ploidy){
-#   if (!require(polysat)){
-#     stop("User needs polysat installed")
-#   }
-#   gen   <- recode_polyploids(gen, newploidy)
-#   gendf <- genind2df(gen, sep = "/", usepop = FALSE)
-#   gendf <- lapply(gendf, strsplit, "/")
-#   gendf <- lapply(gendf, lapply, as.numeric)
-#   ambig <- new("genambig", samples = indNames(gen), loci = locNames(gen))
-#   lapply(names(gendf), function(x) Genotypes(ambig, loci = x) <<- gendf[[x]])
-#   return(ambig)
-# }
-
-
-new_graph_pops <- function(graph, dat, color){
-  cmlg       <- unique(mlg.vector(dat))
-  mlg.cp     <- mlg.crosspop(dat, mlgsub = 1:length(cmlg), quiet = TRUE)
-  mlg.cp     <- mlg.cp[rank(cmlg)]
-  mlg.color  <- lapply(mlg.cp, function(x) color[dat@pop.names %in% names(x)])
-  V(graph)$pie <- mlg.cp
-  V(graph)$pie.color <- mlg.color
-  return(graph)
-}
-
-
-
-
 #==============================================================================#
 # An attempt at making the shuffling schemes handle polyploid data better.
 #==============================================================================#

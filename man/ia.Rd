@@ -5,7 +5,7 @@
 \title{Index of Association}
 \usage{
 ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
-  hist = TRUE, valuereturn = FALSE)
+  hist = TRUE, index = "rbarD", valuereturn = FALSE)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} object OR any fstat, structure, genetix,
@@ -28,6 +28,10 @@ ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 
 \item{hist}{\code{logical} if \code{TRUE}, a histogram will be printed for
   each population if there is sampling.}
+
+\item{index}{\code{character} either "Ia" or "rbarD". If \code{hist = TRUE},
+  this indicates which index you want represented in the plot (default:
+  "rbarD").}
 
 \item{valuereturn}{\code{logical} if \code{TRUE}, the index values from the
   reshuffled data is returned. If \code{FALSE} (default), the index is

@@ -174,6 +174,9 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   }
   bruvomat  <- new('bruvomat', pop, replen)
   funk_call <- match.call()
+  if (length(add) != 1 || !is.logical(add) || length(loss) != 1 || !is.logical(loss)){
+    stop("add and loss flags must be either TRUE or FALSE. Please check your input.")
+  }
   dist.mat  <- bruvos_distance(bruvomat, funk_call = funk_call, add, loss)
   return(dist.mat)
 }
@@ -470,7 +473,8 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   }
 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, replen = replen, gscale = gscale, 
+    return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
+                         replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, include.ties = include.ties,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
@@ -483,7 +487,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
 
   # Updating the MLG with filtered data
   if(threshold > 0){
-    filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+    filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL", add = add, loss = loss)
     # TODO: The following two lines should be a product of mlg.filter
     pop$mlg@visible <- "contracted"
     pop$mlg[] <- filter.stats[[1]]  
@@ -493,7 +497,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   }
   else {
     cpop <- pop[.clonecorrector(pop), ]
-    bclone <- as.matrix(bruvo.dist(cpop, replen=replen))
+    bclone <- as.matrix(bruvo.dist(cpop, replen=replen, add = add, loss = loss))
   }
   mlgs <- pop@mlg[]
   cmlg <- cpop@mlg[]
