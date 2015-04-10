@@ -1085,6 +1085,13 @@ test_table <- function(loc, min_ind, n){
 #==============================================================================#
 # Normalize negative branch lenght by converting the negative branch to zero
 # and adding the negative value to the sibling branch.
+# 
+# This now has a few caveats: 
+#  1. If the parent branch contains a polytomy, then only the branch that is
+#  equal to the negative branch will be fixed.
+#  2. If there are branches that cannot be fixed (i.e., the absolute value of 
+#  the negative branch is greater than the value of the sibling), then it will 
+#  not be fixed.
 #
 # Public functions utilizing this function:
 # # bruvo.boot
@@ -1109,7 +1116,23 @@ fix_negative_branch <- function(tre){
   for (i in (unique(index.table[, "parent"]))){
     the_parents <- index.table[, "parent"] == i
     fork <- index.table[, "length"][the_parents]
-    index.table[, "length"][the_parents] <- abs(fork) + min(fork)      
+    # Check for polytomies
+    if (length(fork) > 2){
+      # Fix only siblings of equal magnitude.
+      forkinds <- abs(fork) == -min(fork)
+      fork     <- fork[forkinds]
+      fixed_lengths <- abs(fork) + min(fork)
+      # Check that branches are actually fixed.
+      if (all(fixed_lengths >= 0)){
+        index.table[, "length"][the_parents][forkinds] <- abs(fork) + min(fork)
+      }
+    } else { # No polytomies
+      fixed_lengths <- abs(fork) + min(fork)
+      # Check that branches are actually fixed.
+      if (all(fixed_lengths >= 0)){
+        index.table[, "length"][the_parents] <- abs(fork) + min(fork)
+      }
+    }
   }
   # replacing the branch length for each negative value in the total table
   name_match <- match(rownames(index.table), rownames(all.lengths))
