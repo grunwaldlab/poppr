@@ -382,13 +382,15 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
 
-  if(!is.genclone(pop) && !is.genind(pop))
+  if(!is.genclone(pop) && !is.genind(pop) && !is(pop, "genlight"))
   {
     stop("No genclone or genind object was provided.")
   }
 
-  pop <- missingno(pop,missing,quiet=TRUE) 
-  
+  if (is.genind(pop))
+  {
+    pop <- missingno(pop,missing,quiet=TRUE)     
+  }
   if(is.character(distance) || is.function(distance))
   {
     if(memory==TRUE && identical(c(pop,distance,...),.last.value.param$get()))
@@ -414,7 +416,15 @@ mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorit
     dis <- as.matrix(distance)
   }
 
-  basemlg <- mlg.vector(pop)
+  if (is.genind(pop))
+  {
+    basemlg <- mlg.vector(pop)
+  }
+  else
+  {
+    basemlg <- seq(nInd(pop))
+  }
+
 
   # Input validation before passing arguments to C
     #  dist is an n by n matrix containing distances between individuals
