@@ -109,9 +109,13 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
     dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
                             numeric(np))
   }
-  dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)
-  colnames(dist.mat)            <- ind.names
-  rownames(dist.mat)            <- ind.names
+  if (is.matrix(dist_by_locus)){
+    dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)    
+  } else {
+    dist.mat[lower.tri(dist.mat)] <- dist_by_locus
+  }
+  colnames(dist.mat) <- ind.names
+  rownames(dist.mat) <- ind.names
   if (percent){
     dist.mat <- dist.mat/(numLoci*ploid)
   }
