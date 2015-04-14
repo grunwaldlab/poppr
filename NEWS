@@ -4,6 +4,11 @@ NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
 * The function `poppr` will now plot all populations in a single facetted plot instead of one plot per population.
 
+BUG FIX
+* Fixed internal bug for fix_negative_branch when only one branch had a negative edge.
+* Fixed bug in `diss.dist` where a single locus would return an error.
+* Fixed bug in poppr.amova where a single locus would return an error due to `repool_haplotypes`.
+
 poppr 1.1.4
 ===========
 BUG FIX
