@@ -34,8 +34,8 @@ mlg object into an MLG class object.}
 
 \item{j}{a vector of numerics corresponding to the loci desired.}
 
-\item{mlg.reset}{logical. Defaults to \code{FALSE}. If \code{TRUE}, the
-mlg vector will be reset}
+\item{mlg.reset}{logical. Defaults to \code{FALSE}. If \code{TRUE}, the mlg
+vector will be reset}
 
 \item{drop}{set to \code{FALSE}}
 
