@@ -1402,6 +1402,9 @@ pool_haplotypes <- function(x, dfname = "population_hierarchy"){
   df$Individual <- indNames(x)
   df            <- df[rep(1:nrow(df), ploidy), , drop = FALSE]
   newx          <- repool(separate_haplotypes(x))
+  the_names     <- indNames(newx)
+  the_names     <- substr(the_names, 1, nchar(the_names) - 2)
+  df <- df[df$Individual %in% the_names, ]
   pop(newx)     <- df$Individual
   other(newx)[[dfname]] <- df
   return(newx)
