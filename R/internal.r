@@ -1577,7 +1577,7 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
   otherargs <- list(...)
   #print(otherargs)
   matchargs <- names(distargs)[names(distargs) %in% names(otherargs)]
-  distargs[matchargs] <- unlist(otherargs[matchargs])
+  distargs[matchargs] <- otherargs[matchargs]
   #print(distargs)
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
   treedist <- function(x){
