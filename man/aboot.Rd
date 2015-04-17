@@ -43,8 +43,8 @@ aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
 \item{root}{is the tree rooted? This is a parameter passed off to
   \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a
   rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like
-  neighbor-joining), it should be false. When set to \code{NULL}, the tree
-  will be considered rooted unless it is a neighbor-joining tree.}
+  neighbor-joining), it should be false. When set to \code{NULL} (default),
+  the tree will be considered unrooted unless it is a upgma tree.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }
@@ -106,8 +106,18 @@ Aeut.gc <- as.genclone(Aeut, hierarchy=other(Aeut)$population_hierarchy[-1])
 setpop(Aeut.gc) <- ~Pop/Subpop
 Aeut.pop <- genind2genpop(Aeut.gc)
 set.seed(5000)
-aboot(Aeut.pop) # compare to Grunwald et al. 2006
+aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
 
+# Utilizing other tree methods
+
+library("ape")
+
+aboot(Aeut.pop, tree = fastme.bal, sample = 1000)
+
+# Utilizing options in other tree methods
+
+myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
+aboot(Aeut.pop, tree = myFastME, sample = 1000)
 }
 }
 \seealso{

@@ -1473,7 +1473,7 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codo
 poppr.plot.phylo <- function(tree, type = "nj", root = FALSE){
   barlen <- min(median(tree$edge.length), 0.1)
   if (barlen < 0.1) barlen <- 0.01
-  if (grepl("nj", type) | !root){
+  if (!root && type != "upgma"){
     tree <- ladderize(tree)
   } 
   plot.phylo(tree, cex = 0.8, font = 2, adj = 0, xpd = TRUE, 

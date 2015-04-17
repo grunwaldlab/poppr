@@ -410,11 +410,11 @@ provesti.dist <- function(x){
 #' @param quiet if \code{FALSE} (default), a progress bar will be printed to 
 #'   screen.
 #'  
-#' @param root is the tree rooted? This is a parameter passed off to
-#'   \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a
-#'   rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like
-#'   neighbor-joining), it should be false. When set to \code{NULL}, the tree
-#'   will be considered rooted unless it is a neighbor-joining tree.
+#' @param root is the tree rooted? This is a parameter passed off to 
+#'   \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a 
+#'   rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like 
+#'   neighbor-joining), it should be false. When set to \code{NULL} (default),
+#'   the tree will be considered unrooted unless it is a upgma tree.
 #'   
 #' @param ... any parameters to be passed off to the distance method.
 #'   
@@ -479,8 +479,18 @@ provesti.dist <- function(x){
 #' setpop(Aeut.gc) <- ~Pop/Subpop
 #' Aeut.pop <- genind2genpop(Aeut.gc)
 #' set.seed(5000)
-#' aboot(Aeut.pop) # compare to Grunwald et al. 2006
+#' aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
 #' 
+#' # Utilizing other tree methods
+#' 
+#' library("ape")
+#' 
+#' aboot(Aeut.pop, tree = fastme.bal, sample = 1000)
+#' 
+#' # Utilizing options in other tree methods
+#' 
+#' myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
+#' aboot(Aeut.pop, tree = myFastME, sample = 1000)
 #' }
 #==============================================================================#
 aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
@@ -506,8 +516,9 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
     xtree <- fix_negative_branch(xtree)
     warning(negative_branch_warning())
   }
+  treechar <- paste(substitute(tree), collapse = "")
   if (is.null(root)){
-    root <- !grepl("nj", substitute(tree))
+    root <- grepl("upgma", treechar)
   }
   nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root, 
                          quiet = quiet)
@@ -520,7 +531,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
   }
   xtree$node.label <- nodelabs
   if (showtree){
-    poppr.plot.phylo(xtree, substitute(tree), root)
+    poppr.plot.phylo(xtree, treechar, root)
   }
   return(xtree)
 }
