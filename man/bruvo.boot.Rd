@@ -5,7 +5,8 @@
 \title{Create a tree using Bruvo's Distance with non-parametric bootstrapping.}
 \usage{
 bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
-  tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE, ...)
+  tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE,
+  root = NULL, ...)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} object}
@@ -33,6 +34,13 @@ bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 
 \item{quiet}{\code{logical} defaults to \code{FALSE}. If \code{TRUE}, a
   progress bar and messages will be suppressed.}
+
+\item{root}{\code{logical} This is a parameter passed on to
+  \code{\link[ape]{boot.phylo}}. If the \code{tree} argument produces a
+  rooted tree (e.g. "upgma"), then this value should be \code{TRUE}. If it
+  produces an unrooted tree (e.g. "nj"), then the value should be
+  \code{FALSE}. By default, it is set to \code{NULL}, which will assume a
+  rooted phylogeny unless the function name contains "nj".}
 
 \item{...}{any argument to be passed on to \code{\link{boot.phylo}}. eg.
   \code{quiet = TRUE}.}

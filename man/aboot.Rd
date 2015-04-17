@@ -8,13 +8,14 @@ to genind or genclone objects.}
 \usage{
 aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
   cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
-  quiet = FALSE, ...)
+  quiet = FALSE, root = NULL, ...)
 }
 \arguments{
 \item{x}{a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.}
 
-\item{tree}{one of "upgma" (Default) or "nj" defining the type of dendrogram
-  to be produced, UPGMA or Neighbor-Joining.}
+\item{tree}{a text string or function that can calculate a tree from a
+  distance matrix. Defaults to "upgma". Note that you must load the package
+  with the function for it to work.}
 
 \item{distance}{a character or function defining the distance to be applied
   to x. Defaults to \code{\link{nei.dist}}.}
@@ -38,6 +39,12 @@ aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
 
 \item{quiet}{if \code{FALSE} (default), a progress bar will be printed to
   screen.}
+
+\item{root}{is the tree rooted? This is a parameter passed off to
+  \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a
+  rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like
+  neighbor-joining), it should be false. When set to \code{NULL}, the tree
+  will be considered rooted unless it is a neighbor-joining tree.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }
