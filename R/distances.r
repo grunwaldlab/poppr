@@ -383,8 +383,9 @@ provesti.dist <- function(x){
 #' 
 #' @param x a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.
 #'   
-#' @param tree one of "upgma" (Default) or "nj" defining the type of dendrogram 
-#'   to be produced, UPGMA or Neighbor-Joining.
+#' @param tree a text string or function that can calculate a tree from a
+#'   distance matrix. Defaults to "upgma". Note that you must load the package
+#'   with the function for it to work.
 #'   
 #' @param distance a character or function defining the distance to be applied 
 #'   to x. Defaults to \code{\link{nei.dist}}.
@@ -408,6 +409,12 @@ provesti.dist <- function(x){
 #'   
 #' @param quiet if \code{FALSE} (default), a progress bar will be printed to 
 #'   screen.
+#'  
+#' @param root is the tree rooted? This is a parameter passed off to
+#'   \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a
+#'   rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like
+#'   neighbor-joining), it should be false. When set to \code{NULL}, the tree
+#'   will be considered rooted unless it is a neighbor-joining tree.
 #'   
 #' @param ... any parameters to be passed off to the distance method.
 #'   
@@ -478,7 +485,7 @@ provesti.dist <- function(x){
 #==============================================================================#
 aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                   cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
-                  quiet = FALSE, ...){
+                  quiet = FALSE, root = NULL, ...){
   if (is.genind(x)){
     x <- missingno(x, missing, quiet = quiet, cutoff = mcutoff)
   }
@@ -493,15 +500,17 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
   } else {
     xboot <- new("bootgen", x)
   }
-  ARGS     <- c("nj", "upgma")
-  treearg  <- match.arg(tree, ARGS)
-  treefunk <- tree_generator(treearg, distance, ...)
+  treefunk <- tree_generator(tree, distance, ...)
   xtree    <- treefunk(xboot)
   if (any(xtree$edge.len < 0)){
     xtree <- fix_negative_branch(xtree)
+    warning(negative_branch_warning())
   }
-  root     <- ifelse(treearg == "nj", FALSE, TRUE)
-  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root, quiet = quiet)
+  if (is.null(root)){
+    root <- !grepl("nj", substitute(tree))
+  }
+  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root, 
+                         quiet = quiet)
   nodelabs <- (nodelabs/sample)*100
   nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
   if (is.genind(x)){
@@ -511,7 +520,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
   }
   xtree$node.label <- nodelabs
   if (showtree){
-    poppr.plot.phylo(xtree, tree)
+    poppr.plot.phylo(xtree, substitute(tree), root)
   }
   return(xtree)
 }
