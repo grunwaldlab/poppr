@@ -119,11 +119,37 @@ setClass("genclone",
 # }
 # 
 # setValidity("genclone", valid.genclone)
-
+#==============================================================================#
+#' SNPclone class
+#' 
+#' SNPclone is an S4 class that extends the \code{\linkS4class{genlight}}
+#' from the \pkg{\link{adegenet}} package. It will have all of the same
+#' attributes as the \code{\linkS4class{genlight}}, but it will contain two
+#' extra slots that will help retain information about population hierarchies
+#' and multilocus genotypes.
+#' 
+#' @section Extends: 
+#' Class \code{"\linkS4class{genlight}"}, directly.
+#' 
+#' @details The snpclone class will allow for more optimized methods of clone
+#' correcting and analyzing data over multiple levels of population hierarchy.
+#' 
+#' 
+#' @name snpclone-class
+#' @rdname snpclone-class
+#' @aliases snpclone
+#' @export
+#' @slot mlg a vector representing multilocus genotypes for the data set.
+#' @slot hierarchy a data frame containing hierarchical levels.
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{as.snpclone}} \code{\link{sethierarchy}} \code{\link{setpop}} 
+#' \code{\linkS4class{genlight}} 
+#' @import methods
+#==============================================================================#
 setClass("snpclone",
          contains = "genlight",
          representation = representation(mlg = "mlgORnumeric",
-                                         hierarchy = "data.frame",
+                                         hierarchy = "data.frame"
                                          )
 )
 
