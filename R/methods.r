@@ -248,6 +248,168 @@ setMethod(
   }
 )
 
+
+################################################################################
+#------------------------------------------------------------------------------#
+# SNPCLONE METHODS
+#------------------------------------------------------------------------------#
+################################################################################
+#==============================================================================#
+#' Check for validity of a snpclone object
+#' 
+#' @note a \linkS4class{snpclone} object will always be a valid 
+#' \linkS4class{genlight} object.
+#' 
+#' @export
+#' @rdname is.snpclone
+#' @param x a snpclone object 
+#' @author Zhian N. Kamvar
+#' @examples
+#' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#' is.snpclone(x)
+#==============================================================================#
+is.snpclone <- function(x){
+  res <- (is(x, "snpclone"))
+  return(res)
+}
+
+#==============================================================================#
+#' Methods used for the snpclone object
+#' 
+#' Default methods for subsetting snpclone objects. 
+#' 
+#' @rdname snpclone-method
+#' @param x a snpclone object
+#' @param i vector of numerics indicating number of individuals desired
+#' @param j a vector of numerics corresponding to the loci desired.
+#' @param ... passed on to the \code{\linkS4class{genlight}} object.
+#' @param drop set to \code{FALSE} 
+#' @author Zhian N. Kamvar
+#==============================================================================#
+setMethod(
+  f = "[",
+  signature(x = "snpclone", i = "ANY", j = "ANY", drop = "ANY"),
+  definition = function(x, i, j, ..., drop = FALSE){
+    if (missing(i)) i <- TRUE
+    ismlgclass <- "MLG" %in% class(x@mlg)
+
+    if (ismlgclass){
+      mlg <- x@mlg[i, all = TRUE]
+    } else {
+      mlg <- x@mlg[i]
+    }
+    hierarchy <- x@hierarchy[i]
+
+    x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
+    if (!"snpclone" %in% class(x)){
+      x <- new("snpclone", x, hierarchy, mlg, mlgclass = ismlgclass)
+    } else {
+      x@mlg <- mlg
+      x@hierarchy <- hierarchy      
+    }
+
+    return(x)
+  })
+
+#==============================================================================#
+#' @rdname snpclone-method
+#' @param .Object a character, "snpclone"
+#' @param gen \code{"\linkS4class{genlight}"} object
+#' @param hierarchy a data frame where each row i represents the different
+#' population assignments of individual i in the data set. If this is empty, the
+#' hierarchy will be created from the population factor.
+#' @param mlg a vector where each element assigns the multilocus genotype of
+#' that individual in the data set. 
+#' @param mlgclass a logical value specifying whether or not to translate the
+#' mlg object into an MLG class object. 
+#' @keywords internal
+#==============================================================================#
+setMethod(      
+  f = "initialize",
+  signature("snpclone"),
+  definition = function(.Object, gen, hierarchy, mlg, mlgclass = TRUE){
+    if (missing(gen)){
+      gen <- new("genlight")
+    }
+    .Object <- callNextMethod(.Object)
+    invisible(lapply(slotNames(gen), function(x) slot(.Object, x) <<- slot(gen, x)))
+
+    if (missing(mlg)){
+      mlg <- mlg.vector(gen)      
+    }
+    if (missing(hierarchy)){
+      hierarchy <- data.frame()
+    }
+    if (mlgclass){
+      mlg <- new("MLG", mlg)
+    }
+    slot(.Object, "mlg")       <- mlg
+    slot(.Object, "hierarchy") <- hierarchy
+    return(.Object)
+  }
+)
+
+#==============================================================================#
+#' @rdname snpclone-method
+#' @param object a snpclone object
+#==============================================================================#
+setMethod(
+  f = "show", 
+  signature("snpclone"),
+  definition = function(object){
+    callNextMethod()
+    cat(length(unique(object@mlg[])), "multilocus genotypes")
+  }
+)
+#==============================================================================#
+#' Create a snpclone object from a genlight object.
+#' 
+#' Wrapper for snpclone initializer.
+#' 
+#' @export
+#' @rdname snpclone-coercion-methods
+#' @aliases as.snpclone,genlight-method
+#' @param x a \code{\linkS4class{genlight}} or \code{\linkS4class{snpclone}} 
+#'   object
+#' @param hierarchy a data frame representing the population hierarchy.
+#' @docType methods
+#'   
+#' @note The hierarchy must have the same number of rows as the number of 
+#'   observations in the genlight object. If no hierarchy is defined, the function
+#'   will search for a data frame in the \code{\link{other}} slot called 
+#'   "population_hierarchy" and set that as the hieararchy. If none is defined,
+#'   the population will be set as the hierarchy under the label "Pop". Use the 
+#'   function \code{\link{splithierarchy}} to split up any population 
+#'   hierarchies that might be combined in the population factor.
+#'   
+#' @author Zhian N. Kamvar
+#' @examples
+#' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#==============================================================================#
+as.snpclone <- function(x, hierarchy = NULL){
+  standardGeneric("as.snpclone")
+}
+
+#' @export
+setGeneric("as.snpclone")
+
+
+setMethod(
+  f = "as.snpclone",
+  signature(x = "genlight"),
+  definition = function(x, hierarchy){
+    if (missing(hierarchy)){
+      if ("population_hierarchy" %in% names(other(x))){
+        hierarchy   <- other(x)[["population_hierarchy"]]
+        newsnpclone <- new("snpclone", x, hierarchy)
+      } else {
+        newsnpclone <- new("snpclone", x)
+      }
+    } else {
+      newsnpclone   <- new("snpclone", x, hierarchy)
+    }
+    return(newsnpclone)
+  })
 ################################################################################
 #------------------------------------------------------------------------------#
 # GENCLONE METHODS
