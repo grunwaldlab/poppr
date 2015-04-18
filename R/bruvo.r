@@ -200,8 +200,8 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' @param sample an \code{integer} indicated the number of bootstrap replicates 
 #'   desired.
 #'   
-#' @param tree choose between "nj" for neighbor-joining and "upgma" for a upgma 
-#'   tree to be produced.
+#' @param tree any function that can generate a tree from a distance matrix.
+#'   Default is \code{\link[phangorn]{upgma}}.
 #'   
 #' @param showtree \code{logical} if \code{TRUE}, a tree will be plotted with 
 #'   nodelabels.
@@ -212,8 +212,16 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' @param quiet \code{logical} defaults to \code{FALSE}. If \code{TRUE}, a 
 #'   progress bar and messages will be suppressed.
 #'   
+#' @param root \code{logical} This is a parameter passed on to
+#'   \code{\link[ape]{boot.phylo}}. If the \code{tree} argument produces a
+#'   rooted tree (e.g. "upgma"), then this value should be \code{TRUE}. If it
+#'   produces an unrooted tree (e.g. "nj"), then the value should be
+#'   \code{FALSE}. By default, it is set to \code{NULL}, which will assume an
+#'   unrooted phylogeny unless the function name contains "upgma".
+#' 
 #' @param ... any argument to be passed on to \code{\link{boot.phylo}}. eg. 
 #'   \code{quiet = TRUE}.
+#'   
 #'   
 #' @return a tree of class phylo with nodelables
 #'   
@@ -222,11 +230,20 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #'   \code{\link{nodelabels}}, \code{\link{na.replace}}, 
 #'   \code{\link{missingno}}.
 #'   
+#' @details This function will calculate a tree based off of Bruvo's distance
+#'   and then utilize \code{\link[ape]{boot.phylo}} to randomly sample loci with
+#'   replacement, recalculate the tree, and tally up the bootstrap support
+#'   (measured in percent success). While this function can take any tree
+#'   function, it has native support for two algorithms: \code{\link[ape]{nj}}
+#'   and \code{\link[phangorn]{upgma}}. If you want to use any other functions,
+#'   you must load the package before you use them (see examples).
+#' 
 #' @note \strong{Please refer to the documentation for bruvo.dist for details on
 #'   the algorithm.} If the user does not provide a vector of appropriate length
 #'   for \code{replen} , it will be estimated by taking the minimum difference
 #'   among represented alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON
 #'   THIS ESTIMATION.
+#'   
 #'   
 #' @export
 #' @author Zhian N. Kamvar, Javier F. Tabima
@@ -249,6 +266,26 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' 
 #' bruvo.boot(popsub(nancycats, 1), replen = ssr)
 #' 
+#' \dontrun{
+#' 
+#' # Always load the library before you specify the function.
+#' library("ape")
+#' 
+#' # Estimate the tree based off of the BIONJ algorithm.
+#' 
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = bionj)
+#' 
+#' # Utilizing  balanced FastME
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = fastme.bal)
+#' 
+#' # To change parameters for the tree, wrap it in a function.
+#' # For example, let's build the tree without utilizing subtree-prune-regraft
+#' 
+#' myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = myFastME)
+#' 
+#' }
+#' 
 #==============================================================================#
 #' @importFrom phangorn upgma midpoint
 #' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize 
@@ -258,7 +295,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #   \     /
 bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, 
                         tree = "upgma", showtree = TRUE, cutoff = NULL, 
-                        quiet = FALSE, ...){
+                        quiet = FALSE, root = NULL, ...){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
@@ -274,14 +311,23 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   bootgen <- new('bruvomat', pop, replen)
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
-  if (tree == "upgma"){
-    root <- TRUE
-    newfunk <- match.fun(upgma)
-  } else if (tree == "nj"){
-    root <- FALSE
-    newfunk <- match.fun(nj)
+  treechar <- paste(as.character(substitute(tree)), collapse = "")
+  if ("upgma" %in% treechar){
+    treefun <- upgma
+  } else if ("nj" %in% treechar){
+    treefun <- nj
+  } else {
+    treefun <- match.fun(tree)    
   }
-  tre <- newfunk(bruvos_distance(bootgen, funk_call = match.call(), add = add, loss = loss))
+  bootfun <- function(x){
+    treefun(bruvos_distance(x, funk_call = match.call(), add = add, 
+                            loss = loss))
+  }
+
+  if (is.null(root)){
+    root <- grepl("upgma", treechar)
+  }
+  tre <- bootfun(bootgen)
   if (any (tre$edge.length < 0)){
     warning(negative_branch_warning(), immediate.=TRUE)
 	  tre <- fix_negative_branch(tre)
@@ -290,9 +336,6 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
     cat("\nBootstrapping...\n") 
     cat("(note: calculation of node labels can take a while even after") 
     cat(" the progress bar is full)\n\n")
-  }
-  bootfun <- function(x){
-    return(newfunk(bruvos_distance(x, funk_call = match.call(), add = add, loss = loss)))
   }
   bp <- boot.phylo(tre, bootgen, FUN = bootfun, B = sample, quiet = quiet, 
                    rooted = root, ...)
@@ -307,7 +350,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   }
   tre$tip.label <- pop@ind.names
   if (showtree == TRUE){
-    poppr.plot.phylo(tre, tree)
+    poppr.plot.phylo(tre, treechar, root)
   }
   return(tre)
 }
