@@ -117,7 +117,7 @@ NULL
 #'   "Symptom"
 #' @references SE Everhart, H Scherm, (2014) Fine-scale genetic structure of 
 #'   \emph{Monilinia fructicola} during brown rot epidemics within individual peach 
-#'   tree canopies. Phytopathology, submitted
+#'   tree canopies. Phytopathology 105:542-549 doi:10.1094/PHYTO-03-14-0088-R
 #' @examples
 #' data(monpop)
 #' splitStrata(monpop) <- ~Tree/Year/Symptom
@@ -1534,19 +1534,17 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codo
 # Private functions utilizing this function:
 # # nei.boot any.boot
 #==============================================================================#
-poppr.plot.phylo <- function(tree, type = "nj"){
-  ARGS <- c("nj", "upgma")
-  type <- match.arg(type, ARGS)
+poppr.plot.phylo <- function(tree, type = "nj", root = FALSE){
   barlen <- min(median(tree$edge.length), 0.1)
   if (barlen < 0.1) barlen <- 0.01
-  if (type == "nj"){
+  if (!root && type != "upgma"){
     tree <- ladderize(tree)
-  }
+  } 
   plot.phylo(tree, cex = 0.8, font = 2, adj = 0, xpd = TRUE, 
              label.offset = 0.0125)
   nodelabels(tree$node.label, adj = c(1.3, -0.5), frame = "n", cex = 0.8, 
              font = 3, xpd = TRUE)
-  if (type == "nj"){
+  if (type != "upgma"){
     add.scale.bar(lwd = 5, length = barlen)
   } else {
     axisPhylo(3)
@@ -1643,7 +1641,7 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
   otherargs <- list(...)
   #print(otherargs)
   matchargs <- names(distargs)[names(distargs) %in% names(otherargs)]
-  distargs[matchargs] <- unlist(otherargs[matchargs])
+  distargs[matchargs] <- otherargs[matchargs]
   #print(distargs)
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
   treedist <- function(x){
