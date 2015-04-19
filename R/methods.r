@@ -313,12 +313,12 @@ setMethod(
   #  hierarchy <- x@hierarchy[i]
 
     x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
-    if (!"snpclone" %in% class(x)){
-      x <- new("snpclone", x, hierarchy, mlg, mlgclass = ismlgclass)
-    } else {
+#    if (!"snpclone" %in% class(x)){
+#      x <- new("snpclone", x, hierarchy, mlg, mlgclass = ismlgclass)
+#    } else {
       x@mlg <- mlg
  #     x@hierarchy <- hierarchy      
-    }
+#    }
 
     return(x)
   })
