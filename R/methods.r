@@ -310,14 +310,14 @@ setMethod(
     } else {
       mlg <- x@mlg[i]
     }
-    hierarchy <- x@hierarchy[i]
+  #  hierarchy <- x@hierarchy[i]
 
     x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
     if (!"snpclone" %in% class(x)){
       x <- new("snpclone", x, hierarchy, mlg, mlgclass = ismlgclass)
     } else {
       x@mlg <- mlg
-      x@hierarchy <- hierarchy      
+ #     x@hierarchy <- hierarchy      
     }
 
     return(x)
@@ -356,7 +356,7 @@ setMethod(
       mlg <- new("MLG", mlg)
     }
     slot(.Object, "mlg")       <- mlg
-    slot(.Object, "hierarchy") <- hierarchy
+#    slot(.Object, "hierarchy") <- hierarchy
     return(.Object)
   }
 )
@@ -410,6 +410,7 @@ setMethod(
   f = "as.snpclone",
   signature(x = "genlight"),
   definition = function(x, hierarchy){
+    return(new("snpclone", x))
     if (missing(hierarchy)){
       if ("population_hierarchy" %in% names(other(x))){
         hierarchy   <- other(x)[["population_hierarchy"]]
