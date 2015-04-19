@@ -177,12 +177,13 @@ NULL
 #==============================================================================#
 
 mlg <- function(pop, quiet=FALSE){
-  if (!is.genind(pop)){
-    stop(paste(substitute(pop), "is not a genind object"))
+  if (!is(pop, "genlight") & !is(pop, "genind")){
+    stop(paste(substitute(pop), "is not a genind or genlight object"))
   }
-  if (is.genclone(pop) && length(pop@mlg) == nrow(pop@tab)){
+  if ((is.snpclone(pop) | is.genclone(pop)) && length(pop@mlg) == nrow(pop@tab)){
     out <- length(unique(pop@mlg[]))
   } else {
+    if (is(pop, "genlight")) return(nInd(pop))
     if(nrow(pop@tab) == 1){
       out <- 1
     }
@@ -278,8 +279,11 @@ mlg.vector <- function(pop, reset = FALSE){
   # Step 4: evaluate strings in sorted vector and increment to the respective 
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
-  if (!reset && is.genclone(pop) && length(pop@mlg) == nrow(pop@tab)){
+  if (!reset && (is.snpclone(pop) || is.genclone(pop)) && length(pop@mlg) == nrow(pop@tab)){
     return(pop@mlg[])
+  }
+  if (is(pop, "genlight")){
+    return(seq_len(nInd(pop)))
   }
   xtab <- pop@tab
   # concatenating each genotype into one long string.
