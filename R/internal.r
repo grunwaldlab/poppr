@@ -484,12 +484,16 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 # # none
 #==============================================================================#
 mlg.matrix <- function(x){
+  visible <- "original"
   if (is.genclone(x)){
     mlgvec <- x@mlg[]
+    if (is(x@mlg, "MLG")){
+      visible <- x@mlg@visible
+    }
   } else {
     mlgvec <- mlg.vector(x)
   }
-  mlgs   <- length(unique(mlgvec))
+  
   if (!is.null(pop(x))){
     mlg.mat <- table(pop(x), mlgvec)
   } else {
@@ -497,7 +501,11 @@ mlg.matrix <- function(x){
     rownames(mlg.mat) <- "Total"
   }
   names(attr(mlg.mat, "dimnames")) <- NULL
+  if (visible == "custom"){
+    return(mlg.mat)
+  }
   if (is.null(colnames(mlg.mat))){
+    mlgs <- length(unique(mlgvec))
     colnames(mlg.mat) <- 1:mlgs
   }
   colnames(mlg.mat) <- paste("MLG", colnames(mlg.mat), sep=".")
