@@ -9,3 +9,4 @@
 ^vignettes/*.toc$
 ^tools/*$
 ^\.travis\.yml$
+^vignettes/figure
