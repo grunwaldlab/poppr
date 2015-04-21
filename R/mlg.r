@@ -245,7 +245,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
       print(mlg_barplot(mlgtab) + 
         theme_classic() %+replace%
         theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
-        labs(title = paste("File:", as.character(pop@call[2]), "\nN =",
+        labs(title = paste("Data:", as.character(substitute(pop)), "\nN =",
                            sum(mlgtab), "MLG =", length(mlgtab))))
     }
   }
