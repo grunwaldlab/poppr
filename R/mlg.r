@@ -209,7 +209,7 @@ mlg <- function(pop, quiet=FALSE){
 #==============================================================================#
 mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE, 
                       total=FALSE, quiet=FALSE){  
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop("This function requires a genind object.")
   }
   mlgtab <- mlg.matrix(pop)
@@ -334,7 +334,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     return(0)
   }
   visible <- "original"
-  if (is.genclone(pop)){
+  if (is.genclone(pop) & !is(pop, "snpclone")){
     vec <- pop@mlg[]
     if (is(pop@mlg, "MLG")){
       visible <- pop@mlg@visible
