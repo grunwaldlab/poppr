@@ -274,7 +274,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # is only one or no populations. 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     if (is.genclone(pop)){
-      mlgs <- pop@mlg
+      mlgs <- pop@mlg[]
     } else {
       mlgs <- pop$other$mlg.vec
     }
@@ -291,8 +291,8 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   }
   cpop <- pop[.clonecorrector(pop), ]
   if (is.genclone(pop)){
-    mlgs <- pop@mlg
-    cmlg <- cpop@mlg
+    mlgs <- pop@mlg[]
+    cmlg <- cpop@mlg[]
   } else {
     mlgs <- pop$other$mlg.vec
     cmlg <- cpop$other$mlg.vec
@@ -312,8 +312,10 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     subs <- 1:mlg(pop, quiet = TRUE)
   }
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
+  if (is.numeric(mlgs)){
+    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+  }
 
-  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
   # give us the numbers and the population information in the correct order.
@@ -328,7 +330,11 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cmlg, sep="")
+      if (is.numeric(cmlg)){
+        vertex.label <- paste("MLG.", cmlg, sep="")        
+      } else {
+        vertex.label <- as.character(cmlg)
+      }
     }
     else if(toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
@@ -816,6 +822,9 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   poppr_msn$graph <- update_edge_scales(poppr_msn$graph, wscale, gscale, glim, gadj)
   
   x.mlg <- mlg.vector(x)
+  if (is.factor(x.mlg)){
+    x.mlg <- as.character(x.mlg)
+  }
   labs  <- unique(x.mlg)
   
 
@@ -842,8 +851,10 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
                                    collapse = "\n"),
                              character(1))
     labs[!is.na(labs)] <- combined_names
-  } else {
+  } else if (is.numeric(x.mlg)){
     labs[!is.na(labs)] <- paste("MLG", labs[!is.na(labs)], sep = ".")
+  } else {
+    labs <- as.character(labs)
   }
   if (any(is.na(labs))){
     sizelabs <- V(poppr_msn$graph)$size
