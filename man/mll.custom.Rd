@@ -4,12 +4,16 @@
 \name{mll.custom}
 \alias{mll.custom}
 \alias{mll.custom,genclone-method}
+\alias{mll.custom,snpclone-method}
 \alias{mll.custom<-}
 \alias{mll.custom<-,genclone-method}
+\alias{mll.custom<-,snpclone-method}
 \alias{mll.levels}
 \alias{mll.levels,genclone-method}
+\alias{mll.levels,snpclone-method}
 \alias{mll.levels<-}
 \alias{mll.levels<-,genclone-method}
+\alias{mll.levels<-,snpclone-method}
 \title{Define custom multilocus lineages}
 \usage{
 mll.custom(x, set = TRUE, value)

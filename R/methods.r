@@ -710,8 +710,7 @@ setMethod(
 #'   - user-defined MLGs }
 #'   
 #' @rdname mll-method
-#' @aliases mll,genclone-method
-#' @aliases mll,snpclone-method
+#' @aliases mll,genclone-method mll,snpclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
 #' @examples
@@ -760,8 +759,7 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname mll-method
-#' @aliases mll<-,genclone-method
-#' @aliases mll<-,snpclone-method
+#' @aliases mll<-,genclone-method mll<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "mll<-" <- function(x, value) standardGeneric("mll<-")
@@ -804,8 +802,7 @@ setMethod(
 #' 
 #' @return an object of the same type as x
 #' @rdname mll.custom
-#' @aliases mll.custom,genclone-method
-#' @aliases mll.custom,snpclone-method
+#' @aliases mll.custom,genclone-method mll.custom,snpclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
 #' @examples 
@@ -859,8 +856,7 @@ mll.custom.internal <- function(x, set = TRUE, value){
 
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.custom<-,genclone-method
-#' @aliases mll.custom<-,snpclone-method
+#' @aliases mll.custom<-,genclone-method mll.custom<-,snpclone-method
 #' @docType methods
 "mll.custom<-" <- function(x, set = TRUE, value) standardGeneric("mll.custom<-")
 
@@ -883,8 +879,7 @@ setMethod(
 
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.levels,genclone-method
-#' @aliases mll.levels,snpclone-method
+#' @aliases mll.levels,genclone-method mll.levels,snpclone-method
 #' @docType methods
 mll.levels <- function(x, set = TRUE, value) standardGeneric("mll.levels")
 
@@ -932,8 +927,7 @@ mll.levels.internal <- function(x, set = TRUE, value){
 
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.levels<-,genclone-method
-#' @aliases mll.levels<-,snpclone-method
+#' @aliases mll.levels<-,genclone-method mll.levels<-,snpclone-method
 #' @docType methods
 "mll.levels<-" <- function(x, set = TRUE, value) standardGeneric("mll.levels<-")
 

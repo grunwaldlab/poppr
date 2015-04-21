@@ -18,14 +18,14 @@ not used if x is not missing.}
 
 \item{parallel}{should the parallel package be used to construct the object?}
 
+\item{n.cores}{how many cores should be utilized? See documentation for
+\code{\linkS4class{genlight}} for details.}
+
 \item{mlg}{a vector of multilocus genotypes or an object of class MLG for the
 new snpclone object.}
 
 \item{mlgclass}{if \code{TRUE} (default), the multilocus genotypes will be
   represented as an \code{\linkS4class{MLG}} object.}
-
-\item{how}{many cores should be utilized? See documentation for
-\code{\linkS4class{genlight}} for details.}
 }
 \description{
 Wrapper for snpclone initializer.
