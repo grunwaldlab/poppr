@@ -298,7 +298,12 @@ setMethod(
     } else {
       mlg <- x@mlg[i]
     }
-    hierarchy <- x@hierarchy[i]
+    if (length(x@hierarchy) > 0){
+      hierarchy <- x@hierarchy[i]      
+    } else {
+      hierarchy <- x@hierarchy
+    }
+
 
     x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
     if (!"snpclone" %in% class(x)){

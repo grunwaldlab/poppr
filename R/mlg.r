@@ -249,7 +249,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
                            sum(mlgtab), "MLG =", length(mlgtab))))
     }
   }
-  mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
+  mlgtab <- mlgtab[, which(colSums(mlgtab) > 0), drop = FALSE]
   return(mlgtab)
 }
 

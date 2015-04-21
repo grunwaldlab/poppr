@@ -293,7 +293,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     return(gid)
   }
   orig_list <- sublist 
-  popnames <- gid@pop.names
+  popnames <- levels(pop(gid))
   if (toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
       return(gid)
@@ -306,8 +306,8 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
   if (is.null(names(popnames))){
-    if (length(popnames) == length(levels(gid@pop))){
-      names(popnames) <- levels(gid@pop)
+    if (length(popnames) == length(levels(pop(gid)))){
+      names(popnames) <- levels(pop(gid))
     } else {
       stop("Population names do not match population factors.")
     }
@@ -347,8 +347,8 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     }
     sublist <- pop(gid) %in% sublist
     if (!any(sublist)){
-      if (!is.numeric(orig_list) & !any(gid@pop.names %in% orig_list)){
-        stop(unmatched_pops_warning(gid@pop.names, orig_list))
+      if (!is.numeric(orig_list) & !any(popnames %in% orig_list)){
+        stop(unmatched_pops_warning(popnames, orig_list))
       } else {
         nothing_warn <- paste("Nothing present in the sublist.\n",
                             "Perhaps the sublist and blacklist arguments have",
@@ -359,7 +359,9 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
       }
     }
     gid <- gid[sublist, , drop = drop]
-    gid@call <- match.call()
+    if (is.genind(gid)) {
+      gid@call <- match.call()
+    }
     return(gid)
   }
 }

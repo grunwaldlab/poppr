@@ -224,7 +224,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
 #==============================================================================#
 
 .clonecorrector <- function(x){
-  if (is.genclone(x)){
+  if (is.genclone(x) | is(x, "snpclone")){
     is_duplicated <- duplicated(x@mlg[])
   } else {
     is_duplicated <- duplicated(x@tab[, 1:ncol(x@tab)])
@@ -423,13 +423,13 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
     }
     else {
       # filling the sublist with all of the population names.
-      sublist <- pop@pop.names 
+      sublist <- levels(pop(pop))
     }
   }
 
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
-  if (is.null(names(pop@pop.names))){
+  if (is.genind(pop) && is.null(names(pop@pop.names))){
     if (length(pop@pop.names) == length(levels(pop@pop))){
       names(pop@pop.names) <- levels(pop@pop)
     }
@@ -437,7 +437,7 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       stop("Population names do not match population factors.")
     }
   }
-  
+  popnames <- levels(pop(pop))
   # Treating anything present in blacklist.
   if (!is.null(blacklist)){
     # If both the sublist and blacklist are numeric or character.
@@ -445,27 +445,27 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       sublist <- sublist[!sublist %in% blacklist]
     } else if (is.numeric(sublist) & class(blacklist) == "character"){
     # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-      sublist <- sublist[sublist %in% which(!pop@pop.names %in% blacklist)]
+      sublist <- sublist[sublist %in% which(popnames %in% blacklist)]
     } else {
       # no sublist specified. Ideal situation
-      if(all(pop@pop.names %in% sublist)){
+      if(all(popnames %in% sublist)){
         sublist <- sublist[-blacklist]
       } else {
       # weird situation where the user will specify a certain sublist, yet index
       # the blacklist numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
-        sublist <- sublist[!sublist %in% pop@pop.names[blacklist]]
+        sublist <- sublist[!sublist %in% popnames[blacklist]]
       }
     }
   }
 
   # subsetting the population. 
   if (is.numeric(sublist))
-    sublist <- names(pop@pop.names[sublist])
+    sublist <- names(popnames[sublist])
   else
-    sublist <- names(pop@pop.names[pop@pop.names %in% sublist])
-  sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
+    sublist <- names(popnames[popnames %in% sublist])
+  sublist <- (1:length(pop(pop)))[pop(pop) %in% sublist]
   if(is.na(sublist[1])){
     warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
     return(1:length(pop@ind.names))
@@ -497,7 +497,7 @@ mlg.matrix <- function(x){
   if (!is.null(pop(x))){
     mlg.mat <- table(pop(x), mlgvec)
   } else {
-    mlg.mat <- matrix(table(mlgvec), nrow = 1)
+    mlg.mat <- t(as.matrix(table(mlgvec)))
     rownames(mlg.mat) <- "Total"
   }
   names(attr(mlg.mat, "dimnames")) <- NULL
