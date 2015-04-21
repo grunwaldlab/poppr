@@ -23,7 +23,7 @@ MLGs.}
 Zhian N. Kamvar
 }
 \seealso{
-\code{\linkS4class{genclone}}
+\code{\linkS4class{genclone}} \code{\link{mll}} \code{\linkS4class{snpclone}}
 }
 \keyword{internal}
 
