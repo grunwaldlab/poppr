@@ -132,8 +132,8 @@
 
 clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   clonecall <- match.call()$pop
-  if(!is.genind(pop)){
-    stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
+  if(!is.genind(pop) & !is(pop, "snpclone")){
+    stop(paste(paste(substitute(pop), collapse=""), "is not a genind or snpclone object.\n"))
   }
   if (is.language(strata)){
     strataformula <- strata
@@ -167,7 +167,7 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
     subbed <- popsub(pop, x) # population to be...corrected.
     subbed <- subbed[.clonecorrector(subbed), ] 
     # Return the indices based off of the individual names.
-    return(which(pop@ind.names %in% subbed@ind.names))
+    return(which(indNames(pop) %in% indNames(subbed)))
   }
   
   ccpop <- unlist(lapply(1:cpop, corWrecked, pop))
@@ -231,8 +231,8 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 
 popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 
-  if (!is.genind(gid)){
-    stop("popsub requires a genind object\n")
+  if (!is.genind(gid) | !is.genlight(gid)){
+    stop("popsub requires a genind or genlight object\n")
   }
   if (is.null(pop(gid))){
     if(sublist[1] != "ALL")

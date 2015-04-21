@@ -209,7 +209,7 @@ mlg <- function(pop, quiet=FALSE){
 #==============================================================================#
 mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE, 
                       total=FALSE, quiet=FALSE){  
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop("This function requires a genind object.")
   }
   mlgtab <- mlg.matrix(pop)
@@ -279,7 +279,7 @@ mlg.vector <- function(pop, reset = FALSE){
   # Step 4: evaluate strings in sorted vector and increment to the respective 
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
-  if (!reset && (is.snpclone(pop) || is.genclone(pop)) && length(pop@mlg) == nrow(pop@tab)){
+  if (!reset && (is.snpclone(pop) || is.genclone(pop)) && length(pop@mlg) == nInd(pop)){
     return(pop@mlg[])
   }
   if (is(pop, "genlight")){
