@@ -223,8 +223,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
-    mlgtab <- mlgtab[unlist(vapply(pop@pop.names, 
-                function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
+    mlgtab <- mlgtab[levels(pop(pop)), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
   if (total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
@@ -235,8 +234,8 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   # Dealing with the visualizations.
   if (bar){
     # If there is a population structure
-    if(!is.null(pop@pop.names)){
-      popnames <- pop@pop.names
+    if(!is.null(pop(pop))){
+      popnames <- levels(pop(pop))
       if(total & nrow(mlgtab) > 1){
         popnames[length(popnames) + 1] <- "Total"
       }
@@ -336,7 +335,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     return(0)
   }
   visible <- "original"
-  if (is.genclone(pop) & !is(pop, "snpclone")){
+  if (is.genclone(pop) | is(pop, "snpclone")){
     vec <- pop@mlg[]
     if (is(pop@mlg, "MLG")){
       visible <- pop@mlg@visible

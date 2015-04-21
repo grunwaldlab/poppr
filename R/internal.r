@@ -410,7 +410,7 @@ pop_combiner <- function(df, hier=c(1), sep="_"){
 # # none
 #==============================================================================#
 sub_index <- function(pop, sublist="ALL", blacklist=NULL){
-  if (!is.genind(pop) & !is(pop, "genclone")){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop("pop.subset requires a genind object\n")
   }
   if (is.null(pop(pop))){
