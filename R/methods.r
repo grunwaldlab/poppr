@@ -327,6 +327,7 @@ setMethod(
 #' that individual in the data set. 
 #' @param mlgclass a logical value specifying whether or not to translate the
 #' mlg object into an MLG class object. 
+#' @author Zhian N. Kamvar
 #' @keywords internal
 #==============================================================================#
 setMethod(      
@@ -1214,6 +1215,7 @@ setMethod(
 #' @aliases mll,genclone-method mll,snpclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
+#' @seealso \code{\link{mll.custom}} \code{\link{mlg.table}}
 #' @examples
 #' 
 #' data(partial_clone)
@@ -1312,11 +1314,18 @@ setMethod(
 #' @aliases mll.custom,genclone-method mll.custom,snpclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
+#' @seealso \code{\link{mll}} \code{\link{mlg.table}}
 #' @examples 
 #' data(partial_clone)
 #' pc <- as.genclone(partial_clone)
 #' mll.custom(pc) <- LETTERS[mll(pc)]
 #' mll(pc)
+#' 
+#' # Let's say we had a mistake and the A mlg was actually B. 
+#' mll.levels(pc)[mll.levels(pc) == "A"] <- "B"
+#' mll(pc)
+#' 
+#' # Set the MLL back to the original definition.
 #' mll(pc) <- "original"
 #' mll(pc)
 #==============================================================================#
