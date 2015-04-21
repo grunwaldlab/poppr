@@ -310,7 +310,6 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     if (is.genind(gid)){
       gid@call <- match.call()      
     }
-
     return(gid)
   }
 }

@@ -224,7 +224,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05,
 #==============================================================================#
 
 .clonecorrector <- function(x){
-  if (is.genclone(x)){
+  if (is.genclone(x) | is(x, "snpclone")){
     is_duplicated <- duplicated(x@mlg[])
   } else {
     is_duplicated <- duplicated(x@tab[, 1:ncol(x@tab)])
@@ -487,7 +487,7 @@ mlg.matrix <- function(x){
   if (!is.null(pop(x))){
     mlg.mat <- table(pop(x), mlgvec)
   } else {
-    mlg.mat <- matrix(table(mlgvec), nrow = 1)
+    mlg.mat <- t(as.matrix(table(mlgvec)))
     rownames(mlg.mat) <- "Total"
   }
   names(attr(mlg.mat, "dimnames")) <- NULL
