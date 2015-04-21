@@ -214,10 +214,12 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   }
   mlgtab <- mlg.matrix(pop)
   if (!is.null(mlgsub)){
-    mlgsub <- paste("MLG", mlgsub, sep = ".")
+    if (is.numeric(mlgsub)){
+      mlgsub <- paste("MLG", mlgsub, sep = ".")      
+    }
     mlgtab <- mlgtab[, mlgsub, drop = FALSE]
     mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), , drop = FALSE]
-    pop <- popsub(pop, sublist=rownames(mlgtab))
+    pop <- popsub(pop, sublist = rownames(mlgtab))
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
@@ -417,7 +419,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
 
 
 mlg.id <- function (pop){
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop(paste(substitute(pop), "is not a genind or genclone object"))
   }
   ctab <- table(pop$ind.names, mlg.vector(pop))

@@ -149,14 +149,14 @@
 clonecorrect <- function(pop, hier=1, dfname="population_hierarchy", 
                          combine = FALSE, keep = 1){
   clonecall <- match.call()$pop
-  if(!is.genind(pop)){
+  if(!is.genind(pop) & !is(pop, "snpclone")){
     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
   }
   if (is.language(hier)){
     hierformula <- hier
     hier <- all.vars(hier)
   }
-  popcall <- pop@call
+  if (is.genind(pop)) popcall <- match.call()
   if (is.na(hier[1])){
     return(pop[.clonecorrector(pop), ])
   }
@@ -195,7 +195,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   }
   
   # Combining the population factor by the hierarchy
-  if(!is.genclone(pop)){
+  if(!is.genclone(pop) & !is(pop, "snpclone")){
     suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier))
   }
   cpop <- length(pop$pop.names)
@@ -232,7 +232,9 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
       names(pop$pop.names) <- levels(pop$pop)
     }
   }
-  pop@call <- popcall
+  if (is.genind(pop)){
+    pop@call <- popcall    
+  }
   return(pop)
 }
 
@@ -282,7 +284,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 
 popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 
-  if (!is.genind(gid)){
+  if (!is.genind(gid) & !is(gid, "snpclone")){
     stop("popsub requires a genind object\n")
   }
   if (is.null(pop(gid))){

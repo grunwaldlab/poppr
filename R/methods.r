@@ -1206,7 +1206,7 @@ setMethod(
 #'   - user-defined MLGs }
 #'   
 #' @rdname mll-method
-#' @aliases mll,genclone-method
+#' @aliases mll,genclone-method mll,snpclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
 #' @examples
@@ -1241,10 +1241,27 @@ setMethod(
     return(mlg[, type])
   })
 
+setMethod(
+  f = "mll",
+  signature(x = "snpclone"),
+  definition = function(x, type = NULL){
+    mlg <- x@mlg
+    if (!"MLG" %in% class(mlg)){
+      return(mlg)
+    }
+    if (!is.null(type)){
+      TYPES <- c("original", "expanded", "contracted", "custom")
+      type <- match.arg(type, TYPES)
+    } else {
+      type <- mlg@visible
+    }
+    return(mlg[, type])
+  })
+
 #==============================================================================#
 #' @export
 #' @rdname mll-method
-#' @aliases mll<-,genclone-method
+#' @aliases mll<-,genclone-method mll<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "mll<-" <- function(x, value) standardGeneric("mll<-")
@@ -1255,6 +1272,16 @@ setGeneric("mll<-")
 setMethod(
   f = "mll<-",
   signature(x = "genclone"),
+  definition = function(x, value){
+    TYPES <- c("original", "expanded", "contracted", "custom")
+    value <- match.arg(value, TYPES)
+    x@mlg@visible <- value
+    return(x)
+  })
+
+setMethod(
+  f = "mll<-",
+  signature(x = "snpclone"),
   definition = function(x, value){
     TYPES <- c("original", "expanded", "contracted", "custom")
     value <- match.arg(value, TYPES)
@@ -1277,7 +1304,7 @@ setMethod(
 #' 
 #' @return an object of the same type as x
 #' @rdname mll.custom
-#' @aliases mll.custom,genclone-method
+#' @aliases mll.custom,genclone-method mll.custom,snpclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
 #' @examples 
@@ -1296,6 +1323,13 @@ setGeneric("mll.custom")
 setMethod(
   f = "mll.custom",
   signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+setMethod(
+  f = "mll.custom",
+  signature(x = "snpclone"),
   definition = function(x, set = TRUE, value){
     mll.custom.internal(x, set, value)
   })
@@ -1324,7 +1358,7 @@ mll.custom.internal <- function(x, set = TRUE, value){
 
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.custom<-,genclone-method
+#' @aliases mll.custom<-,genclone-method mll.custom<-,snpclone-method
 #' @docType methods
 "mll.custom<-" <- function(x, set = TRUE, value) standardGeneric("mll.custom<-")
 
@@ -1338,9 +1372,16 @@ setMethod(
     mll.custom.internal(x, set, value)
   })
 
+setMethod(
+  f = "mll.custom<-",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.levels,genclone-method
+#' @aliases mll.levels,genclone-method mll.levels,snpclone-method
 #' @docType methods
 mll.levels <- function(x, set = TRUE, value) standardGeneric("mll.levels")
 
@@ -1350,6 +1391,14 @@ setGeneric("mll.levels")
 setMethod(
   f = "mll.levels",
   signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+setMethod(
+  f = "mll.levels",
+  signature(x = "snpclone"),
   definition = function(x, set = TRUE, value){
     mll.levels.internal(x, set, value)
   }
@@ -1380,7 +1429,7 @@ mll.levels.internal <- function(x, set = TRUE, value){
 
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.levels<-,genclone-method
+#' @aliases mll.levels<-,genclone-method mll.levels<-,snpclone-method
 #' @docType methods
 "mll.levels<-" <- function(x, set = TRUE, value) standardGeneric("mll.levels<-")
 
@@ -1390,6 +1439,14 @@ setGeneric("mll.levels<-")
 setMethod(
   f = "mll.levels<-",
   signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+setMethod(
+  f = "mll.levels<-",
+  signature(x = "snpclone"),
   definition = function(x, set = TRUE, value){
     mll.levels.internal(x, set, value)
   }

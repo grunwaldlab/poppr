@@ -410,7 +410,7 @@ pop_combiner <- function(df, hier=c(1), sep="_"){
 # # none
 #==============================================================================#
 sub_index <- function(pop, sublist="ALL", blacklist=NULL){
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "genclone")){
     stop("pop.subset requires a genind object\n")
   }
   if (is.null(pop(pop))){
@@ -485,7 +485,7 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 #==============================================================================#
 mlg.matrix <- function(x){
   visible <- "original"
-  if (is.genclone(x)){
+  if (is.genclone(x) | is(x, "snpclone")){
     mlgvec <- x@mlg[]
     if (is(x@mlg, "MLG")){
       visible <- x@mlg@visible
