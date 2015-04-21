@@ -293,6 +293,10 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   if (is.genclone(pop)){
     mlgs <- pop@mlg[]
     cmlg <- cpop@mlg[]
+    if (!is.numeric(mlgs)){
+      mlgs <- as.character(mlgs)
+      cmlg <- as.character(cmlg)
+    }
   } else {
     mlgs <- pop$other$mlg.vec
     cmlg <- cpop$other$mlg.vec
