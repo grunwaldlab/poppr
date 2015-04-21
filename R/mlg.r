@@ -330,13 +330,15 @@ mlg.vector <- function(pop, reset = FALSE){
 #' @export
 #==============================================================================#
 
-mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexreturn=FALSE, df=FALSE, quiet=FALSE){
+mlg.crosspop <- function(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
+                         indexreturn = FALSE, df = FALSE, quiet = FALSE){
+
   if (length(sublist) == 1 & sublist[1] != "ALL" | is.null(pop(pop))){
     cat("Multiple populations are needed for this analysis.\n")
     return(0)
   }
   visible <- "original"
-  if (is.genclone(pop)){
+  if (is.genclone(pop) | is(pop, "snpclone")){
     vec <- pop@mlg[]
     if (is(pop@mlg, "MLG")){
       visible <- pop@mlg@visible
@@ -419,7 +421,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
 
 
 mlg.id <- function (pop){
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop(paste(substitute(pop), "is not a genind or genclone object"))
   }
   return(split(indNames(pop), mlg.vector(pop)))

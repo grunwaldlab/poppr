@@ -139,7 +139,7 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
     strataformula <- strata
     strata        <- all.vars(strata)
   }
-  popcall <- pop@call
+  if (is.genind(pop)) popcall <- match.call()
   if (is.na(strata[1])){
     return(pop[.clonecorrector(pop), ])
   }
@@ -181,7 +181,10 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
     newformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
     setPop(pop) <- newformula
   }
-  pop@call <- popcall
+  if (is.genind(pop)){
+    pop@call <- popcall    
+  }
+
   return(pop)
 }
 
@@ -306,7 +309,10 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
       }
     }
     gid <- gid[sublist, , drop = drop]
-    gid@call <- match.call()
+    if (is.genind(gid)){
+      gid@call <- match.call()      
+    }
+
     return(gid)
   }
 }
