@@ -156,9 +156,7 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   if(all(pop@ind.names == "")){
     pop@ind.names <- as.character(1:nInd(pop))
   }
-
-  cpop <- nPop(pop)
-  
+  cpop <- nPop(pop)  
   # Steps for correction:
   # Subset by population factor.
   # Run subset population by the .clonecorrector

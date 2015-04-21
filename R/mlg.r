@@ -214,15 +214,16 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   }
   mlgtab <- mlg.matrix(pop)
   if (!is.null(mlgsub)){
-    mlgsub <- paste("MLG", mlgsub, sep = ".")
+    if (is.numeric(mlgsub)){
+      mlgsub <- paste("MLG", mlgsub, sep = ".")      
+    }
     mlgtab <- mlgtab[, mlgsub, drop = FALSE]
     mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), , drop = FALSE]
-    pop <- popsub(pop, sublist=rownames(mlgtab))
+    pop <- popsub(pop, sublist = rownames(mlgtab))
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
-    mlgtab <- mlgtab[unlist(vapply(popNames(pop), 
-                function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
+    mlgtab <- mlgtab[popNames(pop), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
   if (total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
