@@ -689,3 +689,218 @@ setMethod(
     names(listx) <- locNames(x)
     return(listx)
   })
+
+
+
+#==============================================================================#
+#' Access and manipulate multilocus lineages.
+#' 
+#' The following methods allow the user to access and manipulate multilocus 
+#' lineages in genclone or snpclone objects.
+#' 
+#' @export
+#' @param x a \linkS4class{genclone} or \linkS4class{snpclone} object.
+#' @param type a character specifying "original", "contracted", or "custom"
+#'   defining they type of mlgs to return. Defaults to what is set in the
+#'   object.
+#' @param value a character specifying which mlg type is visible in the object.
+#'   See details.
+#'   
+#' @return an object of the same type as x.
+#' 
+#' @details \linkS4class{genclone} and \linkS4class{snpclone} objects have a
+#'   slot for an internal class of object called \linkS4class{MLG}. This class
+#'   allows the storage of flexible mll definitions: \itemize{ \item "original"
+#'   - naive mlgs defined by string comparison. This is default. \item
+#'   "contracted" - mlgs defined by a genetic distance threshold. \item "custom"
+#'   - user-defined MLGs }
+#'   
+#' @rdname mll-method
+#' @aliases mll,genclone-method
+#' @docType methods
+#' @author Zhian N. Kamvar
+#' @examples
+#' 
+#' data(partial_clone)
+#' pc <- as.genclone(partial_clone)
+#' mll(pc)
+#' mll(pc) <- "custom"
+#' mll(pc)
+#' mll.levels(pc) <- LETTERS
+#' mll(pc)
+#==============================================================================#
+mll <- function(x, type = NULL) standardGeneric("mll")
+
+#' @export
+setGeneric("mll")
+
+setMethod(
+  f = "mll",
+  signature(x = "genclone"),
+  definition = function(x, type = NULL){
+    mlg <- x@mlg
+    if (!"MLG" %in% class(mlg)){
+      return(mlg)
+    }
+    if (!is.null(type)){
+      TYPES <- c("original", "expanded", "contracted", "custom")
+      type <- match.arg(type, TYPES)
+    } else {
+      type <- mlg@visible
+    }
+    return(mlg[, type])
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll-method
+#' @aliases mll<-,genclone-method
+#' @docType methods
+#==============================================================================#
+"mll<-" <- function(x, value) standardGeneric("mll<-")
+
+#' @export
+setGeneric("mll<-")
+
+setMethod(
+  f = "mll<-",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    TYPES <- c("original", "expanded", "contracted", "custom")
+    value <- match.arg(value, TYPES)
+    x@mlg@visible <- value
+    return(x)
+  })
+
+#==============================================================================#
+#' Define custom multilocus lineages
+#' 
+#' This function will allow you to define custom multilocus lineages for your
+#' data set.
+#' 
+#' @export
+#' @param x a \linkS4class{genclone} or \linkS4class{snpclone} object.
+#' @param set logical. If \code{TRUE} (default), the visible mlls will be set to
+#' 'custom'. 
+#' @param value a vector that defines the multilocus lineages for your data.
+#' This can be a vector of ANYTHING that can be turned into a factor. 
+#' 
+#' @return an object of the same type as x
+#' @rdname mll.custom
+#' @aliases mll.custom,genclone-method
+#' @docType methods
+#' @author Zhian N. Kamvar
+#' @examples 
+#' data(partial_clone)
+#' pc <- as.genclone(partial_clone)
+#' mll.custom(pc) <- LETTERS[mll(pc)]
+#' mll(pc)
+#' mll(pc) <- "original"
+#' mll(pc)
+#==============================================================================#
+mll.custom <- function(x, set = TRUE, value) standardGeneric("mll.custom")
+
+#' @export
+setGeneric("mll.custom")
+
+setMethod(
+  f = "mll.custom",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+mll.custom.internal <- function(x, set = TRUE, value){
+  if (!is(x@mlg, "MLG")){
+    x@mlg <- new("MLG", x@mlg)
+  }
+  if (missing(value)){
+    return(x@mlg[, "custom"])
+  }
+  mlgs <- x@mlg
+  if (length(value) != length(mlgs)){
+    stop("value must be the same length as the mlls")
+  }
+  if (!is.factor(value)){
+    value <- factor(value)
+  }
+  if (set){
+    mlgs@visible <- "custom"
+  }
+  mlgs@mlg[, "custom"] <- value
+  x@mlg <- mlgs
+  return(x)
+}
+
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.custom<-,genclone-method
+#' @docType methods
+"mll.custom<-" <- function(x, set = TRUE, value) standardGeneric("mll.custom<-")
+
+#' @export
+setGeneric("mll.custom<-")
+
+setMethod(
+  f = "mll.custom<-",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.levels,genclone-method
+#' @docType methods
+mll.levels <- function(x, set = TRUE, value) standardGeneric("mll.levels")
+
+#' @export
+setGeneric("mll.levels")
+
+setMethod(
+  f = "mll.levels",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+mll.levels.internal <- function(x, set = TRUE, value){
+  if (!is(x@mlg, "MLG")){
+    x@mlg <- new("MLG", x)
+  }
+  mlgs <- x@mlg
+  if (missing(value)){
+    return(levels(mlgs))
+  }
+  if (length(value) != nlevels(mlgs@mlg[, "custom"])){
+    stop("value length should match the number of values in mlg")
+  }
+  if (set){
+    vis <- "custom"
+  } else {
+    vis <- mlgs@visible
+  }
+  mlgs@visible <- "custom"
+  levels(mlgs) <- value
+  x@mlg        <- mlgs
+  mll(x)       <- vis
+  return(x)
+}
+
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.levels<-,genclone-method
+#' @docType methods
+"mll.levels<-" <- function(x, set = TRUE, value) standardGeneric("mll.levels<-")
+
+#' @export
+setGeneric("mll.levels<-")
+
+setMethod(
+  f = "mll.levels<-",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)

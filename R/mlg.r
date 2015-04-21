@@ -335,46 +335,56 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
     cat("Multiple populations are needed for this analysis.\n")
     return(0)
   }
+  visible <- "original"
   if (is.genclone(pop)){
     vec <- pop@mlg[]
+    if (is(pop@mlg, "MLG")){
+      visible <- pop@mlg@visible
+    }
   } else {
     vec <- mlg.vector(pop) 
   }
   subind <- sub_index(pop, sublist, blacklist)
   vec    <- vec[subind]
   mlgtab <- mlg.matrix(pop)
+
   if (!is.null(mlgsub)){
-    mlgsubnames <- paste("MLG", mlgsub, sep = ".")
+    if (visible == "custom"){
+      mlgsubnames <- mlgsub
+    } else {
+      mlgsubnames <- paste("MLG", mlgsub, sep = ".")
+    }
     matches <- mlgsubnames %in% colnames(mlgtab)
+
     if (!all(matches)){
       rejects <- mlgsub[!matches]
       mlgsubnames  <- mlgsubnames[matches]
       warning(mlg_sub_warning(rejects))
     }
+    
     mlgtab <- mlgtab[, mlgsubnames, drop = FALSE]
-    mlgs   <- 1:ncol(mlgtab)
-    names(mlgs) <- colnames(mlgtab)
+    mlgs   <- setNames(1:ncol(mlgtab), colnames(mlgtab))
+  
   } else {
     if (sublist[1] != "ALL" | !is.null(blacklist)){
       pop    <- popsub(pop, sublist, blacklist)
-      mlgtab <- mlgtab[unlist(vapply(popNames(pop), 
-                  function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
+      mlgtab <- mlgtab[pop@pop.names, , drop = FALSE]
     }
-    #mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
-    # mlgs <- unlist(strsplit(names(which(colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1)), 
-    #                       "\\."))
-    # mlgs <- as.numeric(mlgs[!mlgs %in% "MLG"])
+
     mlgs <- colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1
     if (sum(mlgs) == 0){
       cat("No multilocus genotypes were detected across populations\n")
       return(0)
     }
-    #names(mlgs) <- paste("MLG", mlgs, sep=".")
-    if (indexreturn){
+  }
+  if (indexreturn){
+    if (visible == "custom"){
+      mlgout <- names(mlgs[mlgs])
+    } else {
       mlgout <- unlist(strsplit(names(mlgs[mlgs]), "\\."))
-      mlgout <- as.numeric(mlgout[!mlgout %in% "MLG"])
-      return(mlgout)
+      mlgout <- as.numeric(mlgout[!mlgout %in% "MLG"])        
     }
+    return(mlgout)
   }
   popop <- function(x, quiet=TRUE){
     popnames <- mlgtab[mlgtab[, x] > 0L, x]
