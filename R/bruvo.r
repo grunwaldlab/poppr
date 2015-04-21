@@ -522,13 +522,15 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   }
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
   if (is.genclone(pop)){
-    mlgs <- pop@mlg
-    cmlg <- cpop@mlg
+    mlgs <- pop@mlg[]
+    cmlg <- cpop@mlg[]
   } else {
     mlgs <- pop$other$mlg.vec
     cmlg <- cpop$other$mlg.vec
   }
-  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
+  if (is.numeric(mlgs)){
+    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+  }
   
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
@@ -544,7 +546,11 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cmlg)
+      if (is.numeric(cmlg)){
+        vertex.label <- paste0("MLG.", cmlg)        
+      } else {
+        vertex.label <- as.character(cmlg)
+      }
     } else if (toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
     }
