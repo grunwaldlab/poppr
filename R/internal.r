@@ -410,7 +410,7 @@ pop_combiner <- function(df, hier=c(1), sep="_"){
 # # none
 #==============================================================================#
 sub_index <- function(pop, sublist="ALL", blacklist=NULL){
-  if (!is.genind(pop) & !is(x, "genlight")){
+  if (!is.genind(pop) & !is(pop, "genlight")){
     stop("pop.subset requires a genind or genlight object\n")
   }
   numList <- seq(nInd(pop))

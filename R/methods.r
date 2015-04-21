@@ -366,7 +366,7 @@ setMethod(
 #' @param ... arguments to be passed on to the genlight constructor. These are
 #'   not used if x is not missing.
 #' @param parallel should the parallel package be used to construct the object?
-#' @param how many cores should be utilized? See documentation for
+#' @param n.cores how many cores should be utilized? See documentation for
 #'   \code{\linkS4class{genlight}} for details.
 #' @param mlg a vector of multilocus genotypes or an object of class MLG for the
 #'   new snpclone object.

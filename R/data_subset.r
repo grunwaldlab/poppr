@@ -231,7 +231,7 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 
 popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 
-  if (!is.genind(gid) | !is.genlight(gid)){
+  if (!is.genind(gid) & !is(gid, "genlight")){
     stop("popsub requires a genind or genlight object\n")
   }
   if (is.null(pop(gid))){
