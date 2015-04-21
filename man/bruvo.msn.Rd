@@ -6,13 +6,13 @@
 \title{Create minimum spanning network of selected populations using Bruvo's
 distance.}
 \usage{
-bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
+bruvo.msn(gid, replen = 1, add = TRUE, loss = TRUE,
   palette = topo.colors, sublist = "All", blacklist = NULL,
   vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3,
   gweight = 1, wscale = TRUE, showplot = TRUE, ...)
 }
 \arguments{
-\item{pop}{a \code{\link{genind}} object}
+\item{gid}{a \code{\link{genind}} object}
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
   nucleotide repeats for each microsatellite locus.}
@@ -128,7 +128,7 @@ vertex.label.dist=0.4, wscale=FALSE)
 # View with no scaling at all.
 bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds",
 palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7,
-vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
+vertex.label.dist=0.4, gscale=FALSE)
 
 # View the whole population, but without labels.
 bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)

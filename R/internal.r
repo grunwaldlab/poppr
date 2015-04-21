@@ -1162,28 +1162,28 @@ fix_negative_branch <- function(tre){
 #==============================================================================#
 
 
-singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE, 
+singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, 
                           loss = TRUE, distmat = NULL, gscale = TRUE, 
                           glim = c(0, 0.8), gadj = 3, wscale = TRUE, 
                           palette = topo.colors, showplot = TRUE, ...){
   # First, clone correct and get the number of individuals per MLG in order.
-  cpop <- pop[.clonecorrector(pop), ]
-  if (is.genclone(pop)){
-    mlgs <- pop$mlg[]
-    cmlg <- cpop$mlg[]
+  cgid <- gid[.clonecorrector(gid), ]
+  if (is.genclone(gid)){
+    mlgs <- gid$mlg[]
+    cmlg <- cgid$mlg[]
     if (is.numeric(mlgs)){
       mlgs <- as.character(mlgs)
       cmlg <- as.character(cmlg)
     }
   } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
+    mlgs <- gid$other$mlg.vec
+    cmlg <- cgid$other$mlg.vec
   }
   
   mlg.number <- table(mlgs)[rank(cmlg)]
   # Calculate distance matrix if not supplied (Bruvo's distance)
   if (is.null(distmat) & !is.null(replen)){
-    distmat <- as.matrix(bruvo.dist(cpop, replen = replen, add = add, loss = loss))
+    distmat <- as.matrix(bruvo.dist(cgid, replen = replen, add = add, loss = loss))
   }
   
   # Create the graphs.
@@ -1200,11 +1200,11 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE,
       }
 
     } else if(toupper(vertex.label) == "INDS") {
-      vertex.label <- cpop$ind.names
+      vertex.label <- cgid$ind.names
     }
   } 
   mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
-  populations <- ifelse(is.null(pop(pop)), NA, popNames(pop))
+  populations <- ifelse(is.null(pop(gid)), NA, popNames(gid))
   
   # Plot everything
   if (showplot){

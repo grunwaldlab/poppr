@@ -6,12 +6,12 @@
 \title{Create a minimum spanning network of selected populations using a distance
 matrix.}
 \usage{
-poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",
+poppr.msn(gid, distmat, palette = topo.colors, sublist = "All",
   blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
   0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE, ...)
 }
 \arguments{
-\item{pop}{a \code{\link{genind}} object}
+\item{gid}{a \code{\link{genind}} object}
 
 \item{distmat}{a distance matrix that has been derived from your data set.}
 
@@ -94,12 +94,14 @@ As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA)
 As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA, sublist=1:10)
 
 # Let's look at the structure of the microbov data set
+
+library("igraph")
 data(microbov)
-micro.dist <- diss.dist(microbov)
-micro.msn <- poppr.msn(microbov, diss.dist(microbov), vertex.label=NA)
+micro.dist <- diss.dist(microbov, percent = TRUE)
+micro.msn <- poppr.msn(microbov, micro.dist, vertex.label=NA)
 
 # Let's plot it and show where individuals have < 15\% of their genotypes
-different.
+# different.
 
 edge_weight <- E(micro.msn$graph)$weight
 edge_labels <- ifelse(edge_weight < 0.15, round(edge_weight, 3), NA)

@@ -145,7 +145,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' Create a minimum spanning network of selected populations using a distance
 #' matrix.
 #'
-#' @param pop a \code{\link{genind}} object
+#' @param gid a \code{\link{genind}} object
 #'   
 #' @param distmat a distance matrix that has been derived from your data set.
 #'   
@@ -230,12 +230,14 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA, sublist=1:10)
 #' 
 #' # Let's look at the structure of the microbov data set
+#'
+#' library("igraph")
 #' data(microbov)
-#' micro.dist <- diss.dist(microbov)
-#' micro.msn <- poppr.msn(microbov, diss.dist(microbov), vertex.label=NA)
+#' micro.dist <- diss.dist(microbov, percent = TRUE)
+#' micro.msn <- poppr.msn(microbov, micro.dist, vertex.label=NA)
 #' 
 #' # Let's plot it and show where individuals have < 15% of their genotypes 
-#' different.
+#' # different.
 #' 
 #' edge_weight <- E(micro.msn$graph)$weight
 #' edge_labels <- ifelse(edge_weight < 0.15, round(edge_weight, 3), NA)
@@ -245,13 +247,13 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' }
 #' 
 #==============================================================================#
-poppr.msn <- function (pop, distmat, palette = topo.colors, 
+poppr.msn <- function (gid, distmat, palette = topo.colors, 
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale=TRUE, showplot = TRUE, ...){
   if (class(distmat) != "dist"){
     if (is.matrix(distmat)){
-      if (any(nInd(pop) != dim(distmat))){
+      if (any(nInd(gid) != dim(distmat))){
         stop("The size of the distance matrix does not match the size of the data.\n")
       }
       distmat <- as.dist(distmat)
@@ -259,63 +261,63 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
       stop("The distance matrix is neither a dist object nor a matrix.\n")
     }
   }
-  if (nInd(pop) != attr(distmat, "Size")){
+  if (nInd(gid) != attr(distmat, "Size")){
     stop("The size of the distance matrix does not match the size of the data.\n")
   }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   # Storing the MLG vector into the genind object
-  if (!is.genclone(pop)){
+  if (!is.genclone(gid)){
     # Storing the MLG vector into the genind object
-    pop$other$mlg.vec <- mlg.vector(pop)  
+    gid$other$mlg.vec <- mlg.vector(gid)  
   }
   bclone <- as.matrix(distmat)
 
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
-  if (is.null(pop(pop)) | nPop(pop) == 1){
-    if (is.genclone(pop)){
-      mlgs <- pop@mlg[]
+  if (is.null(pop(gid)) | nPop(gid) == 1){
+    if (is.genclone(gid)){
+      mlgs <- gid@mlg[]
     } else {
-      mlgs <- pop$other$mlg.vec
+      mlgs <- gid$other$mlg.vec
     }
     bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
-    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+    return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette))
   }
   # This will subset both the population and the matrix. 
   if(sublist[1] != "ALL" | !is.null(blacklist)){
-    sublist_blacklist <- sub_index(pop, sublist, blacklist)
+    sublist_blacklist <- sub_index(gid, sublist, blacklist)
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
-    pop    <- popsub(pop, sublist, blacklist)
+    gid    <- popsub(gid, sublist, blacklist)
   }
-  cpop <- pop[.clonecorrector(pop), ]
-  if (is.genclone(pop)){
-    mlgs <- pop@mlg[]
-    cmlg <- cpop@mlg[]
+  cgid <- gid[.clonecorrector(gid), ]
+  if (is.genclone(gid)){
+    mlgs <- gid@mlg[]
+    cmlg <- cgid@mlg[]
     if (!is.numeric(mlgs)){
       mlgs <- as.character(mlgs)
       cmlg <- as.character(cmlg)
     }
   } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
+    mlgs <- gid$other$mlg.vec
+    cmlg <- cgid$other$mlg.vec
   }
   # This will clone correct the incoming matrix. 
   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   
-  if (is.null(pop(pop)) | nPop(pop) == 1){
-    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+  if (is.null(pop(gid)) | nPop(gid) == 1){
+    return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, showplot = showplot, ...))
   }
   # Obtaining population information for all MLGs
-  if (is.genclone(pop)){
+  if (is.genclone(gid)){
     subs <- sort(unique(mlgs))
   } else {
-    subs <- 1:mlg(pop, quiet = TRUE)
+    subs <- 1:mlg(gid, quiet = TRUE)
   }
-  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
+  mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
   if (is.numeric(mlgs)){
     names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
   }
@@ -326,8 +328,8 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  rownames(bclone) <- cpop$pop
-  colnames(bclone) <- cpop$pop
+  rownames(bclone) <- cgid$pop
+  colnames(bclone) <- cgid$pop
   
   g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
   mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
@@ -341,25 +343,25 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
       }
     }
     else if(toupper(vertex.label) == "INDS"){
-      vertex.label <- cpop$ind.names
+      vertex.label <- cgid$ind.names
     }
   }
   ###### Color schemes #######  
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color   <- setNames(palette(nPop(pop)), popNames(pop))
+  color   <- setNames(palette(nPop(gid)), popNames(gid))
   
   ###### Edge adjustments ######
   mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[popNames(pop) %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = popNames(pop), 
+    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = popNames(gid), 
            title = "Populations", fill=color, border=NULL)
   }
   V(mst)$size      <- mlg.number
@@ -367,7 +369,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = popNames(pop), colors = color))
+  return(list(graph = mst, populations = popNames(gid), colors = color))
 }
 
 
