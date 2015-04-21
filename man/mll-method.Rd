@@ -51,4 +51,7 @@ mll(pc)
 \author{
 Zhian N. Kamvar
 }
+\seealso{
+\code{\link{mll.custom}} \code{\link{mlg.table}}
+}
 

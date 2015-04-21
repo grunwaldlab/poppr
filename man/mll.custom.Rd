@@ -45,10 +45,19 @@ data(partial_clone)
 pc <- as.genclone(partial_clone)
 mll.custom(pc) <- LETTERS[mll(pc)]
 mll(pc)
+
+# Let's say we had a mistake and the A mlg was actually B.
+mll.levels(pc)[mll.levels(pc) == "A"] <- "B"
+mll(pc)
+
+# Set the MLL back to the original definition.
 mll(pc) <- "original"
 mll(pc)
 }
 \author{
 Zhian N. Kamvar
+}
+\seealso{
+\code{\link{mll}} \code{\link{mlg.table}}
 }
 

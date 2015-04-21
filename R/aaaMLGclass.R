@@ -11,7 +11,7 @@
 #' @slot cutoff Two numbers specifying the cutoff value for expanding and collapsing
 #' MLGs.
 #' @author Zhian N. Kamvar
-#' @seealso \code{\linkS4class{genclone}}
+#' @seealso \code{\linkS4class{genclone}} \code{\link{mll}} \code{\linkS4class{snpclone}}
 #' @keywords internal
 setClass("MLG", 
          representation(visible = "character",
