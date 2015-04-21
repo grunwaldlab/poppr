@@ -6,25 +6,29 @@
 \alias{as.snpclone,genlight-method}
 \title{Create a snpclone object from a genlight object.}
 \usage{
-as.snpclone(x, hierarchy = NULL)
+as.snpclone(x, ..., parallel = require("parallel"), n.cores = NULL, mlg,
+  mlgclass = TRUE)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genlight}} or \code{\linkS4class{snpclone}}
 object}
 
-\item{hierarchy}{a data frame representing the population hierarchy.}
+\item{...}{arguments to be passed on to the genlight constructor. These are
+not used if x is not missing.}
+
+\item{parallel}{should the parallel package be used to construct the object?}
+
+\item{mlg}{a vector of multilocus genotypes or an object of class MLG for the
+new snpclone object.}
+
+\item{mlgclass}{if \code{TRUE} (default), the multilocus genotypes will be
+  represented as an \code{\linkS4class{MLG}} object.}
+
+\item{how}{many cores should be utilized? See documentation for
+\code{\linkS4class{genlight}} for details.}
 }
 \description{
 Wrapper for snpclone initializer.
-}
-\note{
-The hierarchy must have the same number of rows as the number of
-  observations in the genlight object. If no hierarchy is defined, the function
-  will search for a data frame in the \code{\link{other}} slot called
-  "population_hierarchy" and set that as the hieararchy. If none is defined,
-  the population will be set as the hierarchy under the label "Pop". Use the
-  function \code{\link{splithierarchy}} to split up any population
-  hierarchies that might be combined in the population factor.
 }
 \examples{
 (x <- as.snpclone(glSim(100, 1e3, ploid=2)))

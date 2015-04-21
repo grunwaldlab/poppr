@@ -155,16 +155,14 @@ setValidity("genclone", valid.genclone)
 #' @aliases snpclone
 #' @export
 #' @slot mlg a vector representing multilocus genotypes for the data set.
-#' @slot hierarchy a data frame containing hierarchical levels.
 #' @author Zhian N. Kamvar
-#' @seealso \code{\link{as.snpclone}} \code{\link{sethierarchy}} \code{\link{setpop}} 
+#' @seealso \code{\link{as.snpclone}} \code{\linkS4class{genclone}} 
 #' \code{\linkS4class{genlight}} 
 #' @import methods
 #==============================================================================#
 setClass("snpclone",
          contains = "genlight",
-         representation = representation(mlg = "mlgORnumeric"
-                                         ),
+         representation = representation(mlg = "mlgORnumeric"),
          prototype = prototype(mlg = integer(0))
 )
 

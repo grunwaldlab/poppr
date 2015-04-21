@@ -9,7 +9,7 @@
 \usage{
 \S4method{[}{snpclone,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{initialize}{snpclone}(.Object, gen, hierarchy, mlg, mlgclass = TRUE)
+\S4method{initialize}{snpclone}(.Object, ..., mlg, mlgclass = TRUE)
 
 \S4method{show}{snpclone}(object)
 }
@@ -25,12 +25,6 @@
 \item{drop}{set to \code{FALSE}}
 
 \item{.Object}{a character, "snpclone"}
-
-\item{gen}{\code{"\linkS4class{genlight}"} object}
-
-\item{hierarchy}{a data frame where each row i represents the different
-population assignments of individual i in the data set. If this is empty, the
-hierarchy will be created from the population factor.}
 
 \item{mlg}{a vector where each element assigns the multilocus genotype of
 that individual in the data set.}
