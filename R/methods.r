@@ -1205,7 +1205,7 @@ setMethod(
 #'   "contracted" - mlgs defined by a genetic distance threshold. \item "custom"
 #'   - user-defined MLGs }
 #'   
-#' @rdname MLG-methods
+#' @rdname MLG-method
 #' @aliases MLG,genclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
@@ -1243,7 +1243,7 @@ setMethod(
 
 #==============================================================================#
 #' @export
-#' @rdname MLG-methods
+#' @rdname MLG-method
 #' @aliases MLG<-,genclone-method
 #' @docType methods
 #==============================================================================#

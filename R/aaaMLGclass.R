@@ -4,7 +4,6 @@
 #' 
 #' @name MLG-class
 #' @rdname MLG-class
-#' @aliases MLG
 #' @export
 #' @slot mlg a list containing four vectors, one for each type of MLG manipulation.
 #' @slot visible a character specifying which MLG type is to be displayed and accessed.
