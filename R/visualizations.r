@@ -263,7 +263,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' }
 #' 
 #==============================================================================#
-poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "original",
+poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "original",
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale=TRUE, showplot = TRUE, ...){
@@ -362,7 +362,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "origi
         vertex.label <- paste("MLG.", cmlg, sep="")        
       } else if (visible == "custom"){
         mll(pop) <- visible
-        vertex.label <- correlate_custom_mlgs(pop, mlg.compute)
+        vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
       } else {
         vertex.label <- paste0("MLG.", cmlg)
       }

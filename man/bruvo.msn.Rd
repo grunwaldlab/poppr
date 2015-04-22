@@ -6,12 +6,14 @@
 \title{Create minimum spanning network of selected populations using Bruvo's
 distance.}
 \usage{
-bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
+bruvo.msn(gid, replen = 1, add = TRUE, loss = TRUE,
   mlg.compute = "original", palette = topo.colors, sublist = "All",
   blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
   0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE, ...)
 }
 \arguments{
+\item{gid}{a \code{\link{genind}} object}
+
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
   nucleotide repeats for each microsatellite locus.}
 
@@ -67,8 +69,6 @@ bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
   \code{FALSE}, it will simply be returned.}
 
 \item{...}{any other arguments that could go into plot.igraph}
-
-\item{gid}{a \code{\link{genind}} object}
 }
 \value{
 \item{graph}{a minimum spanning network with nodes corresponding to

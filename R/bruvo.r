@@ -503,7 +503,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' }
 #==============================================================================#
 #' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph
-bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "original", 
+bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "original", 
                        palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
@@ -570,8 +570,8 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
       if (is.numeric(cmlg) && !classstat){
         vertex.label <- paste0("MLG.", cmlg)
       } else if (visible == "custom"){
-        mll(pop) <- visible
-        vertex.label <- correlate_custom_mlgs(pop, mlg.compute)
+        mll(gid) <- visible
+        vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
       } else {
         vertex.label <- paste0("MLG.", cmlg)
       }

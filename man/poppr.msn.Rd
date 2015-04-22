@@ -6,12 +6,14 @@
 \title{Create a minimum spanning network of selected populations using a distance
 matrix.}
 \usage{
-poppr.msn(pop, distmat, palette = topo.colors, mlg.compute = "original",
+poppr.msn(gid, distmat, palette = topo.colors, mlg.compute = "original",
   sublist = "All", blacklist = NULL, vertex.label = "MLG",
   gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1,
   wscale = TRUE, showplot = TRUE, ...)
 }
 \arguments{
+\item{gid}{a \code{\link{genind}} object}
+
 \item{distmat}{a distance matrix that has been derived from your data set.}
 
 \item{palette}{a \code{function} defining the color palette to be used to
@@ -60,8 +62,6 @@ poppr.msn(pop, distmat, palette = topo.colors, mlg.compute = "original",
   \code{FALSE}, it will simply be returned.}
 
 \item{...}{any other arguments that could go into plot.igraph}
-
-\item{gid}{a \code{\link{genind}} object}
 }
 \value{
 \item{graph}{a minimum spanning network with nodes corresponding to

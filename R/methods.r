@@ -507,7 +507,12 @@ setMethod(
     if (missing(i)) i <- TRUE
     x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
     if (!mlg.reset){
-      x@mlg <- x@mlg[i]
+      if (is(x@mlg, "MLG")){
+        x@mlg <- x@mlg[i, all = TRUE]
+      } else {
+        x@mlg <- x@mlg[i]
+      }
+      
     } else {
       if (class(x@mlg)[1] != "MLG"){
         x@mlg <- mlg.vector(x, reset = TRUE)        
