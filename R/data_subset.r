@@ -149,18 +149,18 @@
 clonecorrect <- function(pop, hier=1, dfname="population_hierarchy", 
                          combine = FALSE, keep = 1){
   clonecall <- match.call()$pop
-  if(!is.genind(pop)){
+  if(!is.genind(pop) & !is(pop, "snpclone")){
     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
   }
   if (is.language(hier)){
     hierformula <- hier
     hier <- all.vars(hier)
   }
-  popcall <- pop@call
+  if (is.genind(pop)) popcall <- match.call()
   if (is.na(hier[1])){
     return(pop[.clonecorrector(pop), ])
   }
-  if (is.genclone(pop)){
+  if (is.genclone(pop) | is(pop, "snpclone")){
     if (is.numeric(hier)){
       hier <- names(gethierarchy(pop))[hier]
       hierformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
@@ -195,10 +195,10 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   }
   
   # Combining the population factor by the hierarchy
-  if(!is.genclone(pop)){
+  if(!is.genclone(pop) & !is(pop, "snpclone")){
     suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier))
   }
-  cpop <- length(pop$pop.names)
+  cpop <- nlevels(pop(pop))
   
   # Steps for correction:
   # Subset by population factor.
@@ -218,7 +218,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
     # When the combine flag is not true, the default is to keep the first level
     # of the hierarchy. The keep flag is a numeric vector corresponding to the
     # hier flag indicating which levels the user wants to keep.
-    if (is.genclone(pop)){
+    if (is.genclone(pop) | is(pop, "snpclone")){
       hier <- hier[keep]
       newformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
       setpop(pop) <- newformula
@@ -233,7 +233,9 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
       names(pop$pop.names) <- levels(pop$pop)
     }
   }
-  pop@call <- popcall
+  if (is.genind(pop)){
+    pop@call <- popcall    
+  }
   return(pop)
 }
 
@@ -283,7 +285,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
 
 popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 
-  if (!is.genind(gid)){
+  if (!is.genind(gid) & !is(gid, "snpclone")){
     stop("popsub requires a genind object\n")
   }
   if (is.null(pop(gid))){
@@ -292,7 +294,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     return(gid)
   }
   orig_list <- sublist 
-  popnames <- gid@pop.names
+  popnames <- levels(pop(gid))
   if (toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
       return(gid)
@@ -305,8 +307,8 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
   if (is.null(names(popnames))){
-    if (length(popnames) == length(levels(gid@pop))){
-      names(popnames) <- levels(gid@pop)
+    if (length(popnames) == length(levels(pop(gid)))){
+      names(popnames) <- levels(pop(gid))
     } else {
       stop("Population names do not match population factors.")
     }
@@ -346,8 +348,8 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     }
     sublist <- pop(gid) %in% sublist
     if (!any(sublist)){
-      if (!is.numeric(orig_list) & !any(gid@pop.names %in% orig_list)){
-        stop(unmatched_pops_warning(gid@pop.names, orig_list))
+      if (!is.numeric(orig_list) & !any(popnames %in% orig_list)){
+        stop(unmatched_pops_warning(popnames, orig_list))
       } else {
         nothing_warn <- paste("Nothing present in the sublist.\n",
                             "Perhaps the sublist and blacklist arguments have",
@@ -358,7 +360,9 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
       }
     }
     gid <- gid[sublist, , drop = drop]
-    gid@call <- match.call()
+    if (is.genind(gid)) {
+      gid@call <- match.call()
+    }
     return(gid)
   }
 }

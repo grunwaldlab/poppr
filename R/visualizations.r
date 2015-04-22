@@ -148,6 +148,10 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' @param pop a \code{\link{genind}} object
 #'   
 #' @param distmat a distance matrix that has been derived from your data set.
+#' 
+#' @param mlg.compute if the multilocus genotypes are set to "custom" (see
+#'   \code{\link{mll.custom}} for details) in your genclone object, this will
+#'   specify which mlg level to calculate the nodes from. See details.
 #'   
 #' @param palette a \code{function} defining the color palette to be used to 
 #'   color the populations on the graph. It defaults to
@@ -212,6 +216,18 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #'   vertex colors} \item{colors}{a vector of the hexadecimal representations of
 #'   the colors used in the vertex colors}
 #'   
+#'   
+#' @details Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.
+#'   
 #' @note The edges of these graphs may cross each other if the graph becomes too
 #'   large.
 #'   
@@ -258,7 +274,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' }
 #' 
 #==============================================================================#
-poppr.msn <- function (pop, distmat, palette = topo.colors, 
+poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "original",
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale=TRUE, showplot = TRUE, 
@@ -282,6 +298,20 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   
   bclone <- as.matrix(distmat)
+
+  # # The clone correction of the matrix needs to be done at this step if there
+  # # is only one or no populations. 
+  # if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+  #   if (is.genclone(pop)){
+  #     mlgs <- mll(pop, mlg.compute)
+  #   } else {
+  #     mlgs <- pop$other$mlg.vec
+  #   }
+  #   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  #   return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+  #                        glim = glim, gadj = gadj, wscale = wscale, 
+  #                        palette = palette))
+  # }
   # This will subset both the population and the matrix. 
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(pop, sublist, blacklist)
@@ -291,6 +321,16 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
+  classstat <- (is.genclone(pop) | is(pop, "snpclone")) && is(pop@mlg, "MLG")
+  if (classstat){
+    visible <- pop@mlg@visible
+    mll(pop)  <- mlg.compute
+  }
+  # cpop <- pop[.clonecorrector(pop), ]
+
+  # # This will clone correct the incoming matrix. 
+  # bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
@@ -316,7 +356,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     
     bclone <- filter.stats[[3]]
   }
-  else {
+  else {  
     cpop <- pop[.clonecorrector(pop), ]
     # This will determine the size of the nodes based on the number of individuals
     # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
@@ -328,14 +368,24 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   }
   rownames(bclone) <- cpop$ind.names
   colnames(bclone) <- cpop$ind.names
-  mlgs <- pop@mlg[]
-  cmlg <- cpop@mlg[]
+  if (is.genclone(pop)){
+    mlgs <- mll(pop)
+    cmlg <- mll(cpop)
+    if (!is.numeric(mlgs)){
+      mlgs <- as.character(mlgs)
+      cmlg <- as.character(cmlg)
+    }
+  } else {
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+  }  
   
   # Obtaining population information for all MLGs
   subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
-
-  names(mlg.cp) <- paste0("MLG.", sort(unique(cmlg)))
+  if (is.numeric(mlgs)){
+    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+  }
   mlg.cp     <- mlg.cp[rank(cmlg)]
   bclone <- as.matrix(bclone)
   
@@ -355,7 +405,14 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cmlg, sep="")
+      if (is.numeric(cmlg) && !classstat){
+        vertex.label <- paste("MLG.", cmlg, sep="")        
+      } else if (visible == "custom"){
+        mll(pop) <- visible
+        vertex.label <- correlate_custom_mlgs(pop, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)
+      }
     }
     else if(toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
@@ -746,6 +803,18 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   useful if you want to maintain the same position of the nodes before and
 #'   after removing edges with the \code{cutoff} argument. This works best if
 #'   you set a seed before you run the function.}}
+#'   
+#'   \subsection{mlg.compute}{
+#'   Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.}
 #' 
 #' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 #' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
@@ -801,7 +870,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
-plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, 
+plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = "original",
                            glim = c(0, 0.8), gweight = 1, wscale = TRUE, 
                            nodebase = 1.15, nodelab = 2, inds = "ALL", 
                            mlg = FALSE, quantiles = TRUE, cutoff = NULL, 
@@ -845,7 +914,16 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   poppr_msn$graph <- update_edge_scales(poppr_msn$graph, wscale, gscale, glim, gadj)
   
   x.mlg <- mlg.vector(x)
-  labs  <- unique(x.mlg)
+  if (is.factor(x.mlg)){
+    x.mlg <- mll(x, mlg.compute)
+    custom <- TRUE
+    # labs <- unique(x.mlg)
+    labs  <- correlate_custom_mlgs(x, mlg.compute)
+  } else {
+    labs  <- unique(x.mlg)    
+    custom <- FALSE
+  }
+
   
 
   # Highlighting only the names of the submitted genotypes and the matching
@@ -862,7 +940,12 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   }
   
   # Remove labels that are not specified.
-  labs[which(!labs %in% x.input)] <- NA
+  if (!custom){
+    labs[!labs %in% x.input] <- NA    
+  } else {
+    labs[!labs %in% labs[as.character(x.input)]] <- NA
+  }
+
 
   if (!isTRUE(mlg)){
     # Combine all the names that match with each particular MLG in x.input.
@@ -871,8 +954,10 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
                                    collapse = "\n"),
                              character(1))
     labs[!is.na(labs)] <- combined_names
-  } else {
+  } else if (is.numeric(x.mlg) && !custom){
     labs[!is.na(labs)] <- paste("MLG", labs[!is.na(labs)], sep = ".")
+  } else {
+    labs <- as.character(labs)
   }
   if (any(is.na(labs))){
     sizelabs <- V(poppr_msn$graph)$size
