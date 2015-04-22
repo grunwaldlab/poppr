@@ -266,7 +266,6 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
 #'   
 #' @export
 #==============================================================================#
-
 mlg.vector <- function(pop, reset = FALSE){
 
   # This will return a vector indicating the multilocus genotypes.
@@ -285,10 +284,17 @@ mlg.vector <- function(pop, reset = FALSE){
   }
   if (is(pop, "genlight")){
     return(seq_len(nInd(pop)))
-  }
+  } 
   xtab <- pop@tab
   # concatenating each genotype into one long string.
   xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ], collapse = ""), "string")
+
+  # Interestingly enough, the methods below are only about 1% slower than using
+  # rank. Both are effectively equivalent, except that rank gives the rank of
+  # the order they were found. Since there is not much of a speedup and it would
+  # change the names of things, I decided not to change this.
+  # return(rank(xsort, ties.method = "min"))
+
   # creating a new vector to store the counts of unique genotypes.
   countvec <- vector(length = length(xsort), mode = "integer")
   # sorting the genotypes ($x) and preserving the index ($xi). 

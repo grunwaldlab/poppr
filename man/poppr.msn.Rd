@@ -6,19 +6,22 @@
 \title{Create a minimum spanning network of selected populations using a distance
 matrix.}
 \usage{
-poppr.msn(gid, distmat, palette = topo.colors, sublist = "All",
-  blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
-  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE, ...)
+poppr.msn(pop, distmat, palette = topo.colors, mlg.compute = "original",
+  sublist = "All", blacklist = NULL, vertex.label = "MLG",
+  gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1,
+  wscale = TRUE, showplot = TRUE, ...)
 }
 \arguments{
-\item{gid}{a \code{\link{genind}} object}
-
 \item{distmat}{a distance matrix that has been derived from your data set.}
 
 \item{palette}{a \code{function} defining the color palette to be used to
   color the populations on the graph. It defaults to
   \code{\link{topo.colors}}, but you can easily create new schemes by using
   \code{\link{colorRampPalette}} (see examples for details)}
+
+\item{mlg.compute}{if the multilocus genotypes are set to "custom" (see
+  \code{\link{mll.custom}} for details) in your genclone object, this will
+  specify which mlg level to calculate the nodes from. See details.}
 
 \item{sublist}{a \code{vector} of population names or indexes that the user
   wishes to keep. Default to "ALL".}
@@ -57,6 +60,8 @@ poppr.msn(gid, distmat, palette = topo.colors, sublist = "All",
   \code{FALSE}, it will simply be returned.}
 
 \item{...}{any other arguments that could go into plot.igraph}
+
+\item{gid}{a \code{\link{genind}} object}
 }
 \value{
 \item{graph}{a minimum spanning network with nodes corresponding to
@@ -69,6 +74,18 @@ poppr.msn(gid, distmat, palette = topo.colors, sublist = "All",
 \description{
 Create a minimum spanning network of selected populations using a distance
 matrix.
+}
+\details{
+Each node on the graph represents a different multilocus genotype.
+  The edges on the graph represent genetic distances that connect the
+  multilocus genotypes. In genclone objects, it is possible to set the
+  multilocus genotypes to a custom definition. This creates a problem for
+  clone correction, however, as it is very possible to define custom lineages
+  that are not monophyletic. When clone correction is performed on these
+  definitions, information is lost from the graph. To circumvent this, The
+  clone correction will be done via the computed multilocus genotypes, either
+  "original" or "contracted". This is specified in the \code{mlg.compute}
+  argument, above.
 }
 \note{
 The edges of these graphs may cross each other if the graph becomes too
