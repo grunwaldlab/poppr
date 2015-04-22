@@ -224,7 +224,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
 #==============================================================================#
 
 .clonecorrector <- function(x){
-  if (is.genclone(x)){
+  if (is.genclone(x) | is(x, "snpclone")){
     is_duplicated <- duplicated(x@mlg[])
   } else {
     is_duplicated <- duplicated(x@tab[, 1:ncol(x@tab)])
@@ -410,7 +410,7 @@ pop_combiner <- function(df, hier=c(1), sep="_"){
 # # none
 #==============================================================================#
 sub_index <- function(pop, sublist="ALL", blacklist=NULL){
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop("pop.subset requires a genind object\n")
   }
   if (is.null(pop(pop))){
@@ -423,13 +423,13 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
     }
     else {
       # filling the sublist with all of the population names.
-      sublist <- pop@pop.names 
+      sublist <- levels(pop(pop))
     }
   }
 
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
-  if (is.null(names(pop@pop.names))){
+  if (is.genind(pop) && is.null(names(pop@pop.names))){
     if (length(pop@pop.names) == length(levels(pop@pop))){
       names(pop@pop.names) <- levels(pop@pop)
     }
@@ -437,7 +437,7 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       stop("Population names do not match population factors.")
     }
   }
-  
+  popnames <- levels(pop(pop))
   # Treating anything present in blacklist.
   if (!is.null(blacklist)){
     # If both the sublist and blacklist are numeric or character.
@@ -445,27 +445,27 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       sublist <- sublist[!sublist %in% blacklist]
     } else if (is.numeric(sublist) & class(blacklist) == "character"){
     # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-      sublist <- sublist[sublist %in% which(!pop@pop.names %in% blacklist)]
+      sublist <- sublist[sublist %in% which(popnames %in% blacklist)]
     } else {
       # no sublist specified. Ideal situation
-      if(all(pop@pop.names %in% sublist)){
+      if(all(popnames %in% sublist)){
         sublist <- sublist[-blacklist]
       } else {
       # weird situation where the user will specify a certain sublist, yet index
       # the blacklist numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
-        sublist <- sublist[!sublist %in% pop@pop.names[blacklist]]
+        sublist <- sublist[!sublist %in% popnames[blacklist]]
       }
     }
   }
 
   # subsetting the population. 
   if (is.numeric(sublist))
-    sublist <- names(pop@pop.names[sublist])
+    sublist <- names(popnames[sublist])
   else
-    sublist <- names(pop@pop.names[pop@pop.names %in% sublist])
-  sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
+    sublist <- names(popnames[popnames %in% sublist])
+  sublist <- (1:length(pop(pop)))[pop(pop) %in% sublist]
   if(is.na(sublist[1])){
     warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
     return(1:length(pop@ind.names))
@@ -484,20 +484,28 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 # # none
 #==============================================================================#
 mlg.matrix <- function(x){
-  if (is.genclone(x)){
+  visible <- "original"
+  if (is.genclone(x) | is(x, "snpclone")){
     mlgvec <- x@mlg[]
+    if (is(x@mlg, "MLG")){
+      visible <- x@mlg@visible
+    }
   } else {
     mlgvec <- mlg.vector(x)
   }
-  mlgs   <- length(unique(mlgvec))
+  
   if (!is.null(pop(x))){
     mlg.mat <- table(pop(x), mlgvec)
   } else {
-    mlg.mat <- matrix(table(mlgvec), nrow = 1)
+    mlg.mat <- t(as.matrix(table(mlgvec)))
     rownames(mlg.mat) <- "Total"
   }
   names(attr(mlg.mat, "dimnames")) <- NULL
+  if (visible == "custom"){
+    return(mlg.mat)
+  }
   if (is.null(colnames(mlg.mat))){
+    mlgs <- length(unique(mlgvec))
     colnames(mlg.mat) <- 1:mlgs
   }
   colnames(mlg.mat) <- paste("MLG", colnames(mlg.mat), sep=".")
@@ -1143,19 +1151,28 @@ fix_negative_branch <- function(tre){
 singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE, 
                           loss = TRUE, distmat = NULL, gscale = TRUE, 
                           glim = c(0, 0.8), gadj = 3, wscale = TRUE, 
+                          mlg.compute = "original",
                           palette = topo.colors, showplot = TRUE, ...){
   # First, clone correct and get the number of individuals per MLG in order.
+  classstat <- (is.genclone(pop) | is(pop, "snpclone")) && is(pop@mlg, "MLG")
+  if (classstat){
+    visible <- pop@mlg@visible
+    mll(pop)  <- mlg.compute
+  }
   cpop <- pop[.clonecorrector(pop), ]
   if (is.genclone(pop)){
-    mlgs <- pop$mlg
-    cmlg <- cpop$mlg
-    mlg.number <- table(mlgs)[rank(cmlg)]
+    mlgs <- mll(pop)
+    cmlg <- mll(cpop)
+    if (!is.numeric(mlgs)){
+      mlgs <- as.character(mlgs)
+      cmlg <- as.character(cmlg)
+    }
   } else {
     mlgs <- pop$other$mlg.vec
     cmlg <- cpop$other$mlg.vec
-    mlg.number <- table(mlgs)[rank(cmlg)]
   }
   
+  mlg.number <- table(mlgs)[rank(cmlg)]
   # Calculate distance matrix if not supplied (Bruvo's distance)
   if (is.null(distmat) & !is.null(replen)){
     distmat <- as.matrix(bruvo.dist(cpop, replen = replen, add = add, loss = loss))
@@ -1168,12 +1185,20 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE,
   # Create the vertex labels
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cmlg)
+      if (is.numeric(cmlg) && !classstat){
+        vertex.label <- paste0("MLG.", cmlg)        
+      } else if (visible == "custom"){
+        mll(pop) <- visible
+        vertex.label <- correlate_custom_mlgs(pop, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)        
+      }
+
     } else if(toupper(vertex.label) == "INDS") {
       vertex.label <- cpop$ind.names
     }
   } 
-  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  mst         <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
   
   # Plot everything
@@ -1853,4 +1878,76 @@ make_poppr_plot_title <- function(samp, file = NULL, N = NULL, pop = NULL){
   perms      <- paste("Permutations:", length(samp))
   plot_title <- paste(plot_title, perms, sep = "\n")
   return(plot_title)
+}
+
+#==============================================================================#
+# Function to subset the custom MLGs by the computationally derived MLGs in the
+# data set. This is necessary due to the fact that minimum spanning networks
+# will clone correct before calculations, but this is performed on the visible
+# multilocus genotypes. for custom MLGs that may not be monophyletic, this 
+# results in observed networks that may be incorrect. 
+# 
+# A solution to this would simply be to label the multilocus genotypes with 
+# their custom labels, but collapse them with the computationally derived 
+# labels.
+# 
+# In order to parse these out, we have three possible situations we can think
+# of:
+# 
+#  1. computational MLGs match the custom MLGs: pretty easy, simply return the
+#     non-duplicated mlgs
+#  2. There are more computational MLG classes than custom MLGs. This is also
+#     fairly simple: return the custom MLGs censored by the computational MLGs
+#  3. More custom MLGs than computational MLGs. For labelling purposes, 
+#     the custom MLGs that occupy a single MLG should be concatenated in a 
+#     string.
+#  4. A mix of 2 and 3. Same strategy as 3.
+#  
+#  Input: a genclone or snpclone object with an MLG object in the @mlg slot
+#  Output: A string of clone-censored custom MLGs
+#
+# Public functions utilizing this function:
+# # bruvo.msn poppr.msn plot_poppr_msn
+#
+# Private functions utilizing this function
+# # singlepop_msn
+#==============================================================================#
+correlate_custom_mlgs <- function(x, by = "original", subset = TRUE){
+  if (!is.genclone(x) & !is(x, "snpclone")){
+    stop("needs a genclone or snpclone object")
+  }
+  if (!is(x@mlg, "MLG")){
+    stop("the @mlg slot needs to be of class MLG. This procedure is meaningless otherwise.")
+  }
+  the_mlgs <- x@mlg@mlg
+  customs  <- as.character(the_mlgs[["custom"]])
+  ncustom  <- nlevels(the_mlgs[["custom"]])
+  mlg_dup  <- !duplicated(the_mlgs[[by]])
+  ndup     <- sum(mlg_dup)
+  
+  # Create contingency table with custom genotypes in rows and computed in
+  # columns
+  cont_table <- table(customs, the_mlgs[[by]])
+  
+  # Create true/false table of MLG identity
+  i_table <- cont_table > 0
+  
+  # Count up the number of custom MLGs contained within each computed MLG.
+  check_less_custom <- colSums(i_table)
+  
+  if ((ndup == ncustom | ndup > ncustom) & all(check_less_custom == 1)){
+    if (!subset){
+      return(customs)
+    }
+    res        <- customs[mlg_dup]
+    names(res) <- the_mlgs[[by]][mlg_dup]
+    return(res)
+  }
+  
+  cust_names <- rownames(cont_table)
+  res <- apply(cont_table, 2, function(i) paste(cust_names[i > 0], collapse = "\n"))
+  if (!subset){
+    res <- res[as.character(as.character(the_mlgs[[by]]))]
+  }
+  return(res)
 }
