@@ -160,7 +160,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   if (is.na(hier[1])){
     return(pop[.clonecorrector(pop), ])
   }
-  if (is.genclone(pop)){
+  if (is.genclone(pop) | is(pop, "snpclone")){
     if (is.numeric(hier)){
       hier <- names(gethierarchy(pop))[hier]
       hierformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
@@ -198,7 +198,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
   if(!is.genclone(pop) & !is(pop, "snpclone")){
     suppressWarnings(pop <- splitcombine(pop, method=2, dfname=dfname, hier=hier))
   }
-  cpop <- length(pop$pop.names)
+  cpop <- nlevels(pop(pop))
   
   # Steps for correction:
   # Subset by population factor.
@@ -218,7 +218,7 @@ clonecorrect <- function(pop, hier=1, dfname="population_hierarchy",
     # When the combine flag is not true, the default is to keep the first level
     # of the hierarchy. The keep flag is a numeric vector corresponding to the
     # hier flag indicating which levels the user wants to keep.
-    if (is.genclone(pop)){
+    if (is.genclone(pop) | is(pop, "snpclone")){
       hier <- hier[keep]
       newformula <- as.formula(paste0("~", paste(hier, collapse = "/")))
       setpop(pop) <- newformula

@@ -4,8 +4,10 @@
 \name{setpop}
 \alias{setpop}
 \alias{setpop,genclone-method}
+\alias{setpop,snpclone-method}
 \alias{setpop<-}
 \alias{setpop<-,genclone-method}
+\alias{setpop<-,snpclone-method}
 \title{Manipulate the population factor of genclone objects.}
 \usage{
 setpop(x, formula = NULL)
