@@ -364,7 +364,20 @@ setMethod(
   signature("snpclone"),
   definition = function(object){
     callNextMethod()
-    cat(length(unique(object@mlg[])), "multilocus genotypes")
+    cat(" --- snpclone contents ---\n")
+    if (length(x@hierarchy) > 0){
+      hiernames <- names(x@hierarchy)
+      hierlen <- length(hiernames)
+      nameshow <- ifelse(hierlen > 6, 
+                         c(head(hiernames, 3), "...", tail(hiernames, 3)), 
+                         hiernames)
+      nameshow <- paste(nameshow, collapse = ", ")
+      cat(" @hierarchy:", "a data frame with", hierlen, 
+          "levels: (", nameshow, ")\n")
+    }
+    mlgtype <- ifelse(is(object@mlg, "MLG"), paste0(object@mlg@visible, " "), "")
+    mlgtype <- paste0(mlgtype, "multilocus genotypes")
+    cat(" @mlg:", length(unique(object@mlg[])), mlgtype)
   }
 )
 #==============================================================================#
