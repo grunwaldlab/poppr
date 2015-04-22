@@ -773,17 +773,7 @@ setMethod(
   f = "gethierarchy",
   signature(x = "genclone"),
   definition = function(x, formula = NULL, combine = TRUE){
-    if (is.null(formula)) return(x@hierarchy)
-    vars <- all.vars(formula)
-    if (any(!vars %in% names(x@hierarchy))){
-      stop(hier_incompatible_warning(vars, x@hierarchy))
-    }
-    if (combine){
-      hier <- make_hierarchy(formula, x@hierarchy)
-    } else {
-      hier <- x@hierarchy[all.vars(formula)]
-    }
-    invisible(return(hier))
+    gethierarchy.internal(x, formula, combine)
   })
 
 #==============================================================================#
@@ -901,15 +891,7 @@ setMethod(
   f = "sethierarchy",
   signature(x = "genclone"),
   definition = function(x, value){
-    if (!inherits(value, "data.frame")){
-      stop(paste(substitute(value), "is not a data frame"))
-    }
-    if (nrow(value) != nInd(x)){
-      stop("Number of rows in data frame not equal to number of individuals in object.")
-    }
-    value <- data.frame(lapply(value, function(f) factor(f, unique(f))))
-    x@hierarchy <- value
-    return(x)
+    sethierarchy.internal(x, value)
   })
 
 #==============================================================================#
@@ -929,7 +911,7 @@ setMethod(
   f = "sethierarchy<-",
   signature(x = "genclone"),
   definition = function(x, value){
-    return(sethierarchy(x, value))
+    return(sethierarchy.internal(x, value))
   })
 
 #==============================================================================#
@@ -949,14 +931,7 @@ setMethod(
   f = "namehierarchy",
   signature(x = "genclone"),
   definition = function(x, value){
-    if (is.language(value)){
-      value <- all.vars(value)
-    }
-    if (!is.vector(value) | length(value) != length(x@hierarchy)){
-      stop(paste("Hierarchy, needs a vector argument of length", length(x@hierarchy)))
-    }
-    names(x@hierarchy) <- value
-    return(x)
+    namehierarchy.internal(x, value)
   })
 
 #==============================================================================#
@@ -999,39 +974,7 @@ setMethod(
   f = "splithierarchy",
   signature(x = "genclone"),
   definition = function(x, value, sep = "_"){
-    if (is.language(value)){
-      # valterms <- attr(terms(value), "term.labels")
-      # valterms <- valterms[length(valterms)]
-      # valterms <- gsub(":", sep, valterms)
-      value    <- all.vars(value)
-    } else {
-      stop("value must be a formula.")
-    }
-    if (length(value) < 1){
-      stop("value must have more than one hierarchical level.")
-    }
-    hierarchy  <- x@hierarchy
-    if (length(hierarchy) > 1){
-      warning("Hierarchy must be length 1. Taking the first column.")
-      hierarchy <- hierarchy[1]
-    }
-    seps     <- gregexpr(sep, hierarchy[[1]])
-    sepmatch <- vapply(seps, function(val) all(as.integer(val) > 0), logical(1))
-    seps     <- vapply(seps, length, numeric(1))
-    all_seps_match <- all(sepmatch)
-    given_seps     <- length(value) - 1 
-    if (!all_seps_match | all(seps != given_seps)){
-      seps <- ifelse(all_seps_match, seps[1], 0) + 1
-      msg1 <- paste("\n  Data has", seps, ifelse(seps == 1, "level", "levels"),
-                    "of hierarchy with the separator", sep, ".")
-      msg2 <- paste("Here is the fist column of the data:", hierarchy[1, ])
-      stop(paste(msg1, "\n ", msg2))
-    }
-    x@hierarchy <- colsplit(as.character(hierarchy[[1]]), pattern = sep, value)
-    x@hierarchy <- data.frame(lapply(x@hierarchy, function(f) factor(f, levels = unique(f))))
-    # names(hierarchy) <- value
-    # x@hierarchy      <- hierarchy
-    return(x) 
+    splithierarchy.internal(x, value, sep) 
   })
 
 #==============================================================================#
@@ -1051,7 +994,7 @@ setMethod(
   f = "splithierarchy<-",
   signature(x = "genclone"),
   definition = function(x, sep = "_", value){
-    return(splithierarchy(x, value, sep))
+    return(splithierarchy.internal(x, value, sep))
   })
 
 #==============================================================================#
@@ -1073,21 +1016,7 @@ setMethod(
   f = "addhierarchy",
   signature(x = "genclone"),
   definition = function(x, value, name = "NEW"){
-    
-    hierarchy  <- x@hierarchy
-    if ((is.vector(value) | is.factor(value)) & length(value) == nrow(hierarchy)){
-      value <- factor(value, levels = unique(value))
-      NEW <- data.frame(value)
-      names(NEW) <- name
-      hierarchy <- cbind(hierarchy, NEW)
-    } else if (is.data.frame(value) && nrow(value) == nrow(hierarchy)){
-      value <- data.frame(lapply(value, function(f) factor(f, unique(f))))
-      hierarchy <- cbind(hierarchy, value)
-    } else {
-      stop("value must be a vector or data frame.")
-    }
-    x@hierarchy <- hierarchy
-    return(x) 
+    addhierarchy.internal(x, value, name)
   })
 
 #==============================================================================#
@@ -1107,7 +1036,7 @@ setMethod(
   f = "addhierarchy<-",
   signature(x = "genclone"),
   definition = function(x, name = "NEW", value){
-    return(addhierarchy(x, value, name))
+    return(addhierarchy.internal(x, value, name))
   })
 
 
@@ -1157,15 +1086,7 @@ setMethod(
   f = "setpop",
   signature(x = "genclone"),
   definition = function(x, formula = NULL){
-    if (is.null(formula) | !is.language(formula)){
-      stop(paste(substitute(formula), "must be a valid formula object."))
-    }
-    vars <- all.vars(formula)
-    if (!all(vars %in% names(x@hierarchy))){
-      stop(hier_incompatible_warning(vars, x@hierarchy))
-    }
-    pop(x) <- make_hierarchy(formula, x@hierarchy)[[length(vars)]]
-    return(x)
+    setpop.internal(x, formula)
   })
 
 #==============================================================================#
@@ -1183,7 +1104,7 @@ setMethod(
   f = "setpop<-",
   signature(x = "genclone"),
   definition = function(x, value){
-    return(setpop(x, value))
+    return(setpop.internal(x, value))
   })
 
 
@@ -1348,32 +1269,12 @@ setMethod(
     mll.custom.internal(x, set, value)
   })
 
-mll.custom.internal <- function(x, set = TRUE, value){
-  if (!is(x@mlg, "MLG")){
-    x@mlg <- new("MLG", x@mlg)
-  }
-  if (missing(value)){
-    return(x@mlg[, "custom"])
-  }
-  mlgs <- x@mlg
-  if (length(value) != length(mlgs)){
-    stop("value must be the same length as the mlls")
-  }
-  if (!is.factor(value)){
-    value <- factor(value)
-  }
-  if (set){
-    mlgs@visible <- "custom"
-  }
-  mlgs@mlg[, "custom"] <- value
-  x@mlg <- mlgs
-  return(x)
-}
-
+#==============================================================================#
 #' @export
 #' @rdname mll.custom
 #' @aliases mll.custom<-,genclone-method mll.custom<-,snpclone-method
 #' @docType methods
+#==============================================================================#
 "mll.custom<-" <- function(x, set = TRUE, value) standardGeneric("mll.custom<-")
 
 #' @export
@@ -1393,10 +1294,12 @@ setMethod(
     mll.custom.internal(x, set, value)
   })
 
+#==============================================================================#
 #' @export
 #' @rdname mll.custom
 #' @aliases mll.levels,genclone-method mll.levels,snpclone-method
 #' @docType methods
+#==============================================================================#
 mll.levels <- function(x, set = TRUE, value) standardGeneric("mll.levels")
 
 #' @export
@@ -1418,33 +1321,13 @@ setMethod(
   }
 )
 
-mll.levels.internal <- function(x, set = TRUE, value){
-  if (!is(x@mlg, "MLG")){
-    x@mlg <- new("MLG", x)
-  }
-  mlgs <- x@mlg
-  if (missing(value)){
-    return(levels(mlgs))
-  }
-  if (length(value) != nlevels(mlgs@mlg[, "custom"])){
-    stop("value length should match the number of values in mlg")
-  }
-  if (set){
-    vis <- "custom"
-  } else {
-    vis <- mlgs@visible
-  }
-  mlgs@visible <- "custom"
-  levels(mlgs) <- value
-  x@mlg        <- mlgs
-  mll(x)       <- vis
-  return(x)
-}
 
+#==============================================================================#
 #' @export
 #' @rdname mll.custom
 #' @aliases mll.levels<-,genclone-method mll.levels<-,snpclone-method
 #' @docType methods
+#==============================================================================#
 "mll.levels<-" <- function(x, set = TRUE, value) standardGeneric("mll.levels<-")
 
 #' @export
