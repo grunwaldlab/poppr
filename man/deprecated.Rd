@@ -31,7 +31,10 @@ namehierarchy(...)
 namehierarchy(...) <- value
 }
 \arguments{
-\item{...}{arguments to be passed on to adegenet \code{\link[adegenet]{strata}} methods.}
+\item{...}{arguments to be passed on to adegenet
+\code{\link[adegenet]{strata}} methods.}
+
+\item{value}{argument passed on to adegenet methods.}
 }
 \value{
 a deprecation message and the same return as the adegenet methods.
@@ -40,6 +43,14 @@ a deprecation message and the same return as the adegenet methods.
 These functions are deprecated as of \pkg{poppr} version 2.0 and have been
 moved to the \pkg{adegenet} package. See \code{\link[adegenet]{strata}} for
 details.
+}
+\section{Background}{
+
+  These functions origianlly appeared in \pkg{poppr} in July of 2014. In
+  March 2015, a request was made for them to be ported to the \pkg{adegenet}
+  package as part of the population genetics in R hackathon. The name of the
+  functions were moved from "hierarchy" to "strata" because it better
+  relfected the nature of the fields to contain any information possible.
 }
 \seealso{
 \code{\link[adegenet]{strata}}
