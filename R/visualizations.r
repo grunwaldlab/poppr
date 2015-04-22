@@ -290,7 +290,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "origi
   # is only one or no populations. 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     if (is.genclone(pop)){
-      mlgs <- mll(pop)
+      mlgs <- mll(pop, mlg.compute)
     } else {
       mlgs <- pop$other$mlg.vec
     }
