@@ -113,7 +113,7 @@ splithierarchy.internal <- function(x, value, sep = "_"){
     msg2 <- paste("Here is the fist column of the data:", hierarchy[1, ])
     stop(paste(msg1, "\n ", msg2))
   }
-  x@hierarchy <- colsplit(as.character(hierarchy[[1]]), pattern = sep, value)
+  x@hierarchy <- reshape2::colsplit(as.character(hierarchy[[1]]), pattern = sep, value)
   x@hierarchy <- data.frame(lapply(x@hierarchy, function(f) factor(f, levels = unique(f))))
   # names(hierarchy) <- value
   # x@hierarchy      <- hierarchy

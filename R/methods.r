@@ -686,7 +686,6 @@ setMethod(
   })
 
 
-
 #==============================================================================#
 #' Access and manipulate multilocus lineages.
 #' 

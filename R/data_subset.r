@@ -143,6 +143,7 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   if (is.na(strata[1])){
     return(pop[.clonecorrector(pop), ])
   }
+
   if (is.numeric(strata)){
     strata        <- names(strata(pop))[strata]
     strataformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
@@ -156,7 +157,9 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   if(all(pop@ind.names == "")){
     pop@ind.names <- as.character(1:nInd(pop))
   }
+
   cpop <- nPop(pop)  
+
   # Steps for correction:
   # Subset by population factor.
   # Run subset population by the .clonecorrector
