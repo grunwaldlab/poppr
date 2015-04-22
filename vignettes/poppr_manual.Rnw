@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Data import and manipulation in poppr version 1.1.4.99-158}
+\title{Data import and manipulation in poppr version 1.1.4.99-217}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -161,7 +161,11 @@ The real power of \poppr{} is in the data manipulation and analytic tools.
 association, and easily determine which multilocus genotypes are shared across
 populations.
 
-\subsection{A note about poppr version 1.1.4.99-158}
+<<<<<<< HEAD
+\subsection{A note about poppr version 1.1.4.99-217}
+=======
+\subsection{A note about poppr version 1.1.4.99-217}
+>>>>>>> adegenet-fix-mlg
 
 In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
 an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:

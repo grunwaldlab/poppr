@@ -359,7 +359,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' Create minimum spanning network of selected populations using Bruvo's 
 #' distance.
 #' 
-#' @param pop a \code{\link{genind}} object
+#' @param gid a \code{\link{genind}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus.
@@ -369,6 +369,10 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   
 #' @param loss if \code{TRUE}, genotypes with zero values will be treated under 
 #'   the genome loss model presented in Bruvo et al. 2004.
+#'   
+#' @param mlg.compute if the multilocus genotypes are set to "custom" (see
+#'   \code{\link{mll.custom}} for details) in your genclone object, this will
+#'   specify which mlg level to calculate the nodes from. See details.
 #'   
 #' @param palette a \code{function} defining the color palette to be used to 
 #'   color the populations on the graph. It defaults to 
@@ -432,10 +436,21 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   graph produced can be plotted using igraph functions, or the entire object
 #'   can be plotted using the function \code{\link{plot_poppr_msn}}, which will
 #'   give the user a scale bar and the option to layout your data.
+#'   \subsection{mlg.compute}{
+#'   Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.}
 #'   
 #' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
 #'   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{minimum.spanning.tree}} 
-#'   \code{\link{bruvo.boot}}, \code{\link{greycurve}}
+#'   \code{\link{bruvo.boot}}, \code{\link{greycurve}} \code{\link{poppr.msn}}
 #'   
 #' @export
 #' @author Zhian N. Kamvar, Javier F. Tabima
@@ -481,54 +496,62 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' # View with no scaling at all.
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7, 
-#' vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
+#' vertex.label.dist=0.4, gscale=FALSE)
 #' 
 #' # View the whole population, but without labels.
 #' bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)
 #' }
 #==============================================================================#
 #' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph
-bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
+bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "original", 
+                       palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, showplot = TRUE, ...){
 
   gadj <- ifelse(gweight == 1, gadj, -gadj)
-  if (!is.genclone(pop)){
+  if (!is.genclone(gid)){
     # Storing the MLG vector into the genind object
-    pop$other$mlg.vec <- mlg.vector(pop)  
+    gid$other$mlg.vec <- mlg.vector(gid)  
   }
-  if (is.null(pop(pop)) | nPop(pop) == 1){
-    return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
+  if (is.null(pop(gid)) | nPop(gid) == 1){
+    return(singlepop_msn(gid, vertex.label, add = add, loss = loss, 
                          replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette))
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
-    pop <- popsub(pop, sublist, blacklist)
+    gid <- popsub(gid, sublist, blacklist)
   }
-  if (is.null(pop(pop)) | nPop(pop) == 1){
-    return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
+  if (is.null(pop(gid)) | nPop(gid) == 1){
+    return(singlepop_msn(gid, vertex.label, add = add, loss = loss, 
                          replen = replen, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, showplot = showplot, ...))
   }
   # Obtaining population information for all MLGs
-  cpop <- pop[.clonecorrector(pop), ]
-  if (is.genclone(pop)){
-    subs <- sort(unique(pop@mlg))
-  } else {
-    subs <- 1:mlg(pop, quiet = TRUE)
+  classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
+  if (classstat){
+    visible <- gid@mlg@visible
+    mll(gid)  <- mlg.compute
   }
-  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
-  if (is.genclone(pop)){
-    mlgs <- pop@mlg
-    cmlg <- cpop@mlg
+  cgid <- gid[.clonecorrector(gid), ]
+  if (is.genclone(gid)){
+    subs <- sort(unique(gid@mlg))
   } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
+    subs <- 1:mlg(gid, quiet = TRUE)
   }
-  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
+  mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
+  if (is.genclone(gid)){
+    mlgs <- mll(gid)
+    cmlg <- mll(cgid)
+  } else {
+    mlgs <- gid$other$mlg.vec
+    cmlg <- cgid$other$mlg.vec
+  }
+  if (is.numeric(mlgs)){
+    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+  }
   
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
@@ -536,7 +559,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  bclone     <- bruvo.dist(cpop, replen = replen, add = add, loss = loss)
+  bclone     <- bruvo.dist(cgid, replen = replen, add = add, loss = loss)
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
@@ -544,25 +567,32 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cmlg)
+      if (is.numeric(cmlg) && !classstat){
+        vertex.label <- paste0("MLG.", cmlg)
+      } else if (visible == "custom"){
+        mll(gid) <- visible
+        vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)
+      }
     } else if (toupper(vertex.label) == "INDS"){
-      vertex.label <- cpop$ind.names
+      vertex.label <- cgid$ind.names
     }
   }
   ###### Color schemes #######  
   # The palette is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color   <- setNames(palette(nPop(pop)), popNames(pop))
+  color   <- setNames(palette(nPop(gid)), popNames(gid))
   mst     <- update_edge_scales(mst, wscale, gscale, glim, gadj)
 
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[popNames(pop) %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    legend(-1.55, 1, bty = "n", cex = 0.75, legend = popNames(pop), 
+    legend(-1.55, 1, bty = "n", cex = 0.75, legend = popNames(gid), 
            title = "Populations", fill = color, border = NULL)
   }
   V(mst)$size      <- mlg.number
@@ -570,5 +600,5 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = popNames(pop), colors = color))
+  return(list(graph = mst, populations = popNames(gid), colors = color))
 }
