@@ -515,7 +515,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)
 #' }
 #==============================================================================#
-#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph
+#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph add.edges
 bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "original", 
                        palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 

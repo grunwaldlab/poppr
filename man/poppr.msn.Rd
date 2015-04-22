@@ -6,18 +6,11 @@
 \title{Create a minimum spanning network of selected populations using a distance
 matrix.}
 \usage{
-<<<<<<< HEAD
-poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",
-  blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
-  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE,
-  include.ties = FALSE, threshold = 0,
-  clustering.algorithm = "farthest_neighbor", ...)
-=======
 poppr.msn(pop, distmat, palette = topo.colors, mlg.compute = "original",
   sublist = "All", blacklist = NULL, vertex.label = "MLG",
   gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1,
-  wscale = TRUE, showplot = TRUE, ...)
->>>>>>> grunwaldlab/devel
+  wscale = TRUE, showplot = TRUE, include.ties = FALSE, threshold = 0,
+  clustering.algorithm = "farthest_neighbor", ...)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} object}

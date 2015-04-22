@@ -7,16 +7,11 @@
 distance.}
 \usage{
 bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE,
-<<<<<<< HEAD
-  palette = topo.colors, sublist = "All", blacklist = NULL,
-  vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3,
-  gweight = 1, wscale = TRUE, showplot = TRUE, include.ties = FALSE,
-  threshold = 0, clustering.algorithm = "farthest_neighbor", ...)
-=======
   mlg.compute = "original", palette = topo.colors, sublist = "All",
   blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
-  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE, ...)
->>>>>>> grunwaldlab/devel
+  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE,
+  include.ties = FALSE, threshold = 0,
+  clustering.algorithm = "farthest_neighbor", ...)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} object}
