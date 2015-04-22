@@ -365,8 +365,8 @@ setMethod(
   definition = function(object){
     callNextMethod()
     cat(" --- snpclone contents ---\n")
-    if (length(x@hierarchy) > 0){
-      hiernames <- names(x@hierarchy)
+    if (length(object@hierarchy) > 0){
+      hiernames <- names(object@hierarchy)
       hierlen <- length(hiernames)
       nameshow <- ifelse(hierlen > 6, 
                          c(head(hiernames, 3), "...", tail(hiernames, 3)), 
