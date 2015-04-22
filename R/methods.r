@@ -858,32 +858,12 @@ setMethod(
     mll.custom.internal(x, set, value)
   })
 
-mll.custom.internal <- function(x, set = TRUE, value){
-  if (!is(x@mlg, "MLG")){
-    x@mlg <- new("MLG", x@mlg)
-  }
-  if (missing(value)){
-    return(x@mlg[, "custom"])
-  }
-  mlgs <- x@mlg
-  if (length(value) != length(mlgs)){
-    stop("value must be the same length as the mlls")
-  }
-  if (!is.factor(value)){
-    value <- factor(value)
-  }
-  if (set){
-    mlgs@visible <- "custom"
-  }
-  mlgs@mlg[, "custom"] <- value
-  x@mlg <- mlgs
-  return(x)
-}
-
+#==============================================================================#
 #' @export
 #' @rdname mll.custom
 #' @aliases mll.custom<-,genclone-method mll.custom<-,snpclone-method
 #' @docType methods
+#==============================================================================#
 "mll.custom<-" <- function(x, set = TRUE, value) standardGeneric("mll.custom<-")
 
 #' @export
@@ -903,10 +883,12 @@ setMethod(
     mll.custom.internal(x, set, value)
   })
 
+#==============================================================================#
 #' @export
 #' @rdname mll.custom
 #' @aliases mll.levels,genclone-method mll.levels,snpclone-method
 #' @docType methods
+#==============================================================================#
 mll.levels <- function(x, set = TRUE, value) standardGeneric("mll.levels")
 
 #' @export
@@ -928,33 +910,13 @@ setMethod(
   }
 )
 
-mll.levels.internal <- function(x, set = TRUE, value){
-  if (!is(x@mlg, "MLG")){
-    x@mlg <- new("MLG", x)
-  }
-  mlgs <- x@mlg
-  if (missing(value)){
-    return(levels(mlgs))
-  }
-  if (length(value) != nlevels(mlgs@mlg[, "custom"])){
-    stop("value length should match the number of values in mlg")
-  }
-  if (set){
-    vis <- "custom"
-  } else {
-    vis <- mlgs@visible
-  }
-  mlgs@visible <- "custom"
-  levels(mlgs) <- value
-  x@mlg        <- mlgs
-  mll(x)       <- vis
-  return(x)
-}
 
+#==============================================================================#
 #' @export
 #' @rdname mll.custom
 #' @aliases mll.levels<-,genclone-method mll.levels<-,snpclone-method
 #' @docType methods
+#==============================================================================#
 "mll.levels<-" <- function(x, set = TRUE, value) standardGeneric("mll.levels<-")
 
 #' @export
