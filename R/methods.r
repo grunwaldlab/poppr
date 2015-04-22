@@ -299,7 +299,7 @@ setMethod(
       mlg <- x@mlg[i]
     }
     if (length(x@hierarchy) > 0){
-      hierarchy <- x@hierarchy[i]      
+      hierarchy <- x@hierarchy[i, , drop = FALSE]      
     } else {
       hierarchy <- x@hierarchy
     }
@@ -754,7 +754,7 @@ setMethod(
 #' 
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases gethierarchy,genclone-method
+#' @aliases gethierarchy,genclone-method gethierarchy,snpclone-method
 #' @param x a genclone object
 #' @param formula a nested formula indicating the order of the population
 #' hierarchy.
@@ -776,10 +776,17 @@ setMethod(
     gethierarchy.internal(x, formula, combine)
   })
 
+setMethod(
+  f = "gethierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, formula = NULL, combine = TRUE){
+    gethierarchy.internal(x, formula, combine)
+  })
+
 #==============================================================================#
 #' @export
 #' @rdname hierarchy-methods
-#' @aliases sethierarchy<-,genclone-method
+#' @aliases sethierarchy<-,genclone-method sethierarchy<-,snpclone-method
 #' @param value a data frame OR vector OR formula (see details).
 #' @docType methods
 #'   
@@ -894,10 +901,17 @@ setMethod(
     sethierarchy.internal(x, value)
   })
 
+setMethod(
+  f = "sethierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    sethierarchy.internal(x, value)
+  })
+
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases sethierarchy,genclone-method
+#' @aliases sethierarchy,genclone-method sethierarchy,snpclone-method
 #' @docType methods
 #==============================================================================#
 "sethierarchy<-" <- function(x, value){
@@ -914,10 +928,17 @@ setMethod(
     return(sethierarchy.internal(x, value))
   })
 
+setMethod(
+  f = "sethierarchy<-",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    return(sethierarchy.internal(x, value))
+  })
+
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases namehierarchy,genclone-method
+#' @aliases namehierarchy,genclone-method namehierarchy,snpclone-method
 #' @docType methods
 #==============================================================================#
 namehierarchy <- function(x, value){
@@ -934,10 +955,17 @@ setMethod(
     namehierarchy.internal(x, value)
   })
 
+setMethod(
+  f = "namehierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    namehierarchy.internal(x, value)
+  })
+
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases namehierarchy<-,genclone-method
+#' @aliases namehierarchy<-,genclone-method namehierarchy<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "namehierarchy<-" <- function(x, value){
@@ -954,10 +982,17 @@ setMethod(
     return(namehierarchy(x, value))
   })
 
+setMethod(
+  f = "namehierarchy<-",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    return(namehierarchy(x, value))
+  })
+
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases splithierarchy,genclone-method
+#' @aliases splithierarchy,genclone-method splithierarchy,snpclone-method
 #' @docType methods
 #' @param sep a \code{character} indicating the character used to separate
 #' hierarchical levels. This defaults to "_".
@@ -977,10 +1012,17 @@ setMethod(
     splithierarchy.internal(x, value, sep) 
   })
 
+setMethod(
+  f = "splithierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, value, sep = "_"){
+    splithierarchy.internal(x, value, sep) 
+  })
+
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases splithierarchy<-,genclone-method
+#' @aliases splithierarchy<-,genclone-method splithierarchy<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "splithierarchy<-" <- function(x, sep = "_", value){
@@ -997,10 +1039,18 @@ setMethod(
     return(splithierarchy.internal(x, value, sep))
   })
 
+
+setMethod(
+  f = "splithierarchy<-",
+  signature(x = "snpclone"),
+  definition = function(x, sep = "_", value){
+    return(splithierarchy.internal(x, value, sep))
+  })
+
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases addhierarchy,genclone-method
+#' @aliases addhierarchy,genclone-method addhierarchy,snpclone-method
 #' @param name an optional name argument for use with addhierarchy if supplying
 #'   a vector. Defaults to "NEW".
 #' @docType methods
@@ -1019,10 +1069,17 @@ setMethod(
     addhierarchy.internal(x, value, name)
   })
 
+setMethod(
+  f = "addhierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, value, name = "NEW"){
+    addhierarchy.internal(x, value, name)
+  })
+
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases addhierarchy<-,genclone-method
+#' @aliases addhierarchy<-,genclone-method addhierarchy<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "addhierarchy<-" <- function(x, name = "NEW", value){
@@ -1039,6 +1096,12 @@ setMethod(
     return(addhierarchy.internal(x, value, name))
   })
 
+setMethod(
+  f = "addhierarchy<-",
+  signature(x = "snpclone"),
+  definition = function(x, name = "NEW", value){
+    return(addhierarchy.internal(x, value, name))
+  })
 
 #==============================================================================#
 #' Manipulate the population factor of genclone objects.
@@ -1052,7 +1115,7 @@ setMethod(
 #' @param formula a nested formula indicating the order of the population
 #' hierarchy.
 #' @param value same as formula
-#' @aliases setpop,genclone-method
+#' @aliases setpop,genclone-method setpop,snpclone-method
 #' @docType methods 
 #' @author Zhian N. Kamvar
 #' @examples
@@ -1089,10 +1152,16 @@ setMethod(
     setpop.internal(x, formula)
   })
 
+setMethod(
+  f = "setpop",
+  signature(x = "snpclone"),
+  definition = function(x, formula = NULL){
+    setpop.internal(x, formula)
+  })
 #==============================================================================#
 #' @export
 #' @rdname population-methods
-#' @aliases setpop<-,genclone-method
+#' @aliases setpop<-,genclone-method setpop<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "setpop<-" <- function(x, value) standardGeneric("setpop<-")
@@ -1107,6 +1176,12 @@ setMethod(
     return(setpop.internal(x, value))
   })
 
+setMethod(
+  f = "setpop<-",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    return(setpop.internal(x, value))
+  })
 
 
 #==============================================================================#

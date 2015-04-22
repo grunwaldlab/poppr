@@ -4,22 +4,31 @@
 \name{gethierarchy}
 \alias{addhierarchy}
 \alias{addhierarchy,genclone-method}
+\alias{addhierarchy,snpclone-method}
 \alias{addhierarchy<-}
 \alias{addhierarchy<-,genclone-method}
+\alias{addhierarchy<-,snpclone-method}
 \alias{gethierarchy}
 \alias{gethierarchy,genclone-method}
+\alias{gethierarchy,snpclone-method}
 \alias{namehierarchy}
 \alias{namehierarchy,genclone-method}
+\alias{namehierarchy,snpclone-method}
 \alias{namehierarchy<-}
 \alias{namehierarchy<-,genclone-method}
+\alias{namehierarchy<-,snpclone-method}
 \alias{sethierarchy}
 \alias{sethierarchy,genclone-method}
+\alias{sethierarchy,snpclone-method}
 \alias{sethierarchy<-}
 \alias{sethierarchy<-,genclone-method}
+\alias{sethierarchy<-,snpclone-method}
 \alias{splithierarchy}
 \alias{splithierarchy,genclone-method}
+\alias{splithierarchy,snpclone-method}
 \alias{splithierarchy<-}
 \alias{splithierarchy<-,genclone-method}
+\alias{splithierarchy<-,snpclone-method}
 \title{Access and manipulate the population hierarchy for genclone objects.}
 \usage{
 gethierarchy(x, formula = NULL, combine = TRUE)
