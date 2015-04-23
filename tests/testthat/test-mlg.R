@@ -174,3 +174,4 @@ test_that("multilocus genotype filtering functions correctly", {
   expect_that(mlg.filter(partial_clone,0.3,missing="mean",distance=pdis), equals(mlg.filter(partial_clone,0.3,missing="mean",distance=diss.dist)))
   expect_that(mlg.filter(partial_clone,0.3,missing="mean",distance=pdis), equals(mlg.filter(partial_clone,0.3,missing="mean",distance="diss.dist")))
 })
+

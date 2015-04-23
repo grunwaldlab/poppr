@@ -1436,3 +1436,222 @@ setMethod(
     mll.levels.internal(x, set, value)
   }
 )
+
+#==============================================================================#
+#' Statistics on Clonal Filtering of Genotype Data
+#' 
+#' Create a vector of multilocus genotype indices filtered by minimum distance.
+#'   
+#' @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#'   object.
+#' @param threshold the desired minimum distance between distinct genotypes. 
+#'   Defaults to 0, which will only merge identical genotypes
+#' @param missing any method to be used by \code{\link{missingno}}: "mean" 
+#'   (default), "zero", "loci", "genotype", or "ignore".
+#' @param memory whether this function should remember the last distance matrix 
+#'   it generated. TRUE will attempt to reuse the last distance matrix if the
+#'   other parameters are the same. (default) FALSE will ignore any stored 
+#'   matrices and not store any it generates.
+#' @param algorithm determines the type of clustering to be done. (default)
+#'   "farthest_neighbor" merges clusters based on the maximum distance between
+#'   points in either cluster. This is the strictest of the three. 
+#'   "nearest_neighbor" merges clusters based on the minimum distance between 
+#'   points in either cluster. This is the loosest of the three. 
+#'   "average_neighbor" merges clusters based on the average distance between 
+#'   every pair of points between clusters.
+#' @param distance a character or function defining the distance to be applied 
+#'   to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing 
+#'   distances between individuals (such as the output of
+#'   \code{\link{nei.dist}}) is also accepted for this parameter.
+#' @param threads The maximum number of parallel threads to be used within this 
+#'   function. A value of 0 (default) will attempt to use as many threads as
+#'   there are available cores/CPUs. In most cases this is ideal. A value of 1
+#'   will force the function to run serially, which may increase stability on
+#'   some systems. Other values may be specified, but should be used with
+#'   caution.
+#' @param stats determines which statistics this function should return on
+#'   cluster mergers. If (default) "MLGs", this function will return a vector of
+#'   cluster assignments, similar to that of \code{\link{mlg.vector}}. If
+#'   "thresholds", the threshold at which each cluster was merged will be
+#'   returned instead of the cluster assignment. "distances" will return a
+#'   distance matrix of the new distances between each new cluster. If "sizes",
+#'   the size of each remaining cluster will be returned. Finally, "all" will
+#'   return a list of all 4.
+#' @param ... any parameters to be passed off to the distance method.
+#' 
+#' @return 
+#' \subsection{mlg.stats}{
+#' a numeric vector naming the multilocus genotype of each individual in the
+#' dataset. Each genotype is at least the specified distance apart, as 
+#' calculated by the selected algorithm. If stats is set to \code{TRUE}, this 
+#' function will return the thresholds had which each cluster merger occurred 
+#' instead of the new cluster assignments.
+#' }
+#'
+#' @note \code{mlg.vector} makes use of \code{mlg.vector} grouping prior to 
+#'   applying the given threshold. Genotype numbers returned by
+#'   \code{mlg.vector} represent the lowest numbered genotype (as returned by
+#'   \code{mlg.vector}) in in each new multilocus genotype. Therefore
+#'   \code{mlg.vector} and \code{mlg.vector} return the same vector when
+#'   threshold is set to 0 or less.
+#' 
+#' @export
+#' @rdname mlg.filter
+#' @aliases mlg.filter,genclone-method mlg.filter,snpclone-method 
+#'   mlg.filter,genind-method mlg.filter,genlight-method
+#' @docType methods
+#' @examples 
+#' data(partial_clone)
+#' pc <- as.genclone(partial_clone) # convert to genclone object
+#' 
+#' # Get MLGs at threshold 0.05
+#' mlg.filter(pc, threshold = 0.05, distance = "nei.dist")
+#' pc # 26 mlgs
+#' 
+#' # Set MLGs at threshold 0.05
+#' mlg.filter(pc, distance = "nei.dist") <- 0.05
+#' pc # 25 mlgs
+#==============================================================================#
+mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, 
+                       algorithm="farthest_neighbor", 
+                       distance="nei.dist", threads=0, stats="MLGs", ...){
+  standardGeneric("mlg.filter")
+}
+
+#' @export
+setGeneric("mlg.filter")
+
+setMethod(
+  f = "mlg.filter",
+  signature(pop = "genind"),
+  definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
+                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        threads=0, stats="MLGs", ...){
+    mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
+                        threads, stats, ...) 
+  }
+)
+
+setMethod(
+  f = "mlg.filter",
+  signature(pop = "genlight"),
+  definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
+                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        threads=0, stats="MLGs", ...){
+    mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
+                        threads, stats, ...) 
+  }
+)
+
+setMethod(
+  f = "mlg.filter",
+  signature(pop = "genclone"),
+  definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
+                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        threads=0, stats="MLGs", ...){
+    callNextMethod()
+  }
+)  
+  
+setMethod(
+  f = "mlg.filter",
+  signature(pop = "snpclone"),
+  definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
+                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        threads=0, stats="MLGs", ...){
+    callNextMethod()
+  }
+)
+  
+#==============================================================================#
+#' @export
+#' @rdname mlg.filter
+#' @param value the threshold at which genotypes should be collapsed.
+#' @aliases mlg.filter<-,genclone-method mlg.filter<-,genind-method 
+#'   mlg.filter<-,snpclone-method mlg.filter<-,genlight-method
+#' @docType methods
+#==============================================================================#
+"mlg.filter<-" <- function(pop, missing = "mean", memory = FALSE, 
+                           algorithm = "farthest_neighbor", distance = "nei.dist",
+                           threads = 0, ..., value){
+  standardGeneric("mlg.filter<-")
+}
+
+#' @export
+setGeneric("mlg.filter<-")
+
+
+setMethod(
+  f = "mlg.filter<-",
+  signature(pop = "genind"),
+  definition = function(pop, missing = "mean", memory = FALSE, 
+                        algorithm = "farthest_neighbor", distance = "nei.dist",
+                        threads = 0, ..., value){
+    if (!is.genclone(pop)){
+      the_warning <- paste("mlg.filter<- only has an effect on genclone",
+                           "objects.\n", "If you want to utilize this",
+                           "functionality, please convert to a genclone object.\n",
+                           "No modifications are taking place.")
+      warning(the_warning, call. = FALSE)
+    } 
+      
+    return(pop)
+  }
+)
+
+setMethod(
+  f = "mlg.filter<-",
+  signature(pop = "genlight"),
+  definition = function(pop, missing = "mean", memory = FALSE, 
+                        algorithm = "farthest_neighbor", distance = "nei.dist",
+                        threads = 0, ..., value){
+    if (!is.genclone(pop)){
+      the_warning <- paste("mlg.filter<- only has an effect on snpclone",
+                           "objects.\n", "If you want to utilize this",
+                           "functionality, please convert to a snpclone object.\n",
+                           "No modifications are taking place.")
+      warning(the_warning, call. = FALSE)
+    } 
+    
+    return(pop)
+  }
+)
+
+setMethod(
+  f = "mlg.filter<-",
+  signature(pop = "genclone"),
+  definition = function(pop, missing = "mean", memory = FALSE, 
+                       algorithm = "farthest_neighbor", distance = "nei.dist",
+                       threads = 0, ..., value){
+    pop <- callNextMethod()
+    fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
+                                 distance, threads, stats = "MLGs", ...) 
+    mll(pop) <- "contracted"
+    pop@mlg[] <- fmlgs
+    pop@mlg@cutoff["contracted"] <- value
+    pop@mlg@distname <- substitute(distance)
+    pop@mlg@distargs <- list(...)
+    return(pop)
+  }
+)
+
+
+setMethod(
+  f = "mlg.filter<-",
+  signature(pop = "snpclone"),
+  definition = function(pop, missing = "mean", memory = FALSE, 
+                        algorithm = "farthest_neighbor", distance = "nei.dist",
+                        threads = 0, ..., value){
+    pop <- callNextMethod()
+    fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
+                                 distance, threads, stats = "MLGs", ...) 
+    mll(pop) <- "contracted"
+    pop@mlg[] <- fmlgs
+    pop@mlg@cutoff["contracted"] <- value
+    pop@mlg@distname <- substitute(distance)
+    pop@mlg@distargs <- list(...)
+    return(pop)
+  }
+)
+  
+  

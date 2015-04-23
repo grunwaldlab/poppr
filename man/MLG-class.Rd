@@ -2,6 +2,7 @@
 % Please edit documentation in R/aaaMLGclass.R
 \docType{class}
 \name{MLG-class}
+\alias{MLG}
 \alias{MLG-class}
 \title{MLG class}
 \description{
@@ -15,6 +16,8 @@ A class to store multilocus genotypes in genclone objects.
 \item{\code{visible}}{a character specifying which MLG type is to be displayed and accessed.}
 
 \item{\code{distname}}{the name of the distance function used to collapse mlgs.}
+
+\item{\code{distargs}}{the arguments provided to compute the distance function.}
 
 \item{\code{cutoff}}{Two numbers specifying the cutoff value for expanding and collapsing
 MLGs.}
