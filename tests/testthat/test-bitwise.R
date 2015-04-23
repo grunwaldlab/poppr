@@ -5,20 +5,20 @@ test_that("bitwise.dist produces reasonable results", {
 skip_on_cran()
 
 # Required to circumvent a windows specific error in adegenet
-  if ((.Platform)$OS.type == "windows"){
-    mclapply <- function (X, FUN, ..., mc.preschedule = TRUE, mc.set.seed = TRUE,
-      mc.silent = FALSE, mc.cores = 1L, mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE){
-        cores <- as.integer(mc.cores)
-        if (cores < 1L)
-          stop("'mc.cores' must be >= 1")
-        if (cores > 1L)
-          lapply(X, FUN, ...)
-      }
-  }
+# if ((.Platform)$OS.type == "windows"){
+#   mclapply <- function (X, FUN, ..., mc.preschedule = TRUE, mc.set.seed = TRUE,
+#     mc.silent = FALSE, mc.cores = 1L, mc.cleanup = TRUE,
+#     mc.allow.recursive = TRUE){
+#       cores <- as.integer(mc.cores)
+#       if (cores < 1L)
+#         stop("'mc.cores' must be >= 1")
+#       if (cores > 1L)
+#         lapply(X, FUN, ...)
+#     }
+# }
 
   dat <- list(c(2,2,2,2,2,2,2,2,2,0),c(1,1,1,0,0,0,0,0,0,2),c(2,2,2,2,2,2,2,2,2,2),c(2,2,2,2,2,2,2,2,2,0),c(2,NA,NA,NA,NA,NA,NA,NA,NA,NA))
-  z <- new("genlight",dat)
+  z <- new("genlight",dat, parallel = FALSE)
   
   missing_match_dif <- bitwise.dist(z,missing_match=TRUE,mat=TRUE,differences_only=TRUE)
   dim(missing_match_dif) <- NULL
@@ -44,23 +44,23 @@ test_that("pgen produces reasonable results", {
 skip_on_cran()
 
 # Required to circumvent a windows specific error in adegenet
-  if ((.Platform)$OS.type == "windows"){
-    mclapply <- function (X, FUN, ..., mc.preschedule = TRUE, mc.set.seed = TRUE,
-      mc.silent = FALSE, mc.cores = 1L, mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE){
-        cores <- as.integer(mc.cores)
-        if (cores < 1L)
-          stop("'mc.cores' must be >= 1")
-        if (cores > 1L)
-          lapply(X, FUN, ...)
-      }
-  }
+#   if ((.Platform)$OS.type == "windows"){
+#     mclapply <- function (X, FUN, ..., mc.preschedule = TRUE, mc.set.seed = TRUE,
+#       mc.silent = FALSE, mc.cores = 1L, mc.cleanup = TRUE,
+#       mc.allow.recursive = TRUE){
+#         cores <- as.integer(mc.cores)
+#         if (cores < 1L)
+#           stop("'mc.cores' must be >= 1")
+#         if (cores > 1L)
+#           lapply(X, FUN, ...)
+#       }
+#   }
 
-  single_pop <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2))
+  single_pop <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2), parallel = FALSE)
   results_single_pop <- pgen(single_pop,log=FALSE)
   expected_single_pop <- structure(c(0.25, 0.5, 0.5, 0.25), .Dim = c(4L, 1L))
 
-  multi_pop <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2))
+  multi_pop <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2), parallel = FALSE)
   multi_pop$pop <- as.factor(1:4)
   results_multi_pop <- pgen(multi_pop,log=FALSE)
   expected_multi_pop <- structure(c(1, 0.5, 0.5, 1), .Dim = c(4L, 1L))

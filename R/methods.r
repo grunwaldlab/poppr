@@ -248,6 +248,187 @@ setMethod(
   }
 )
 
+
+################################################################################
+#------------------------------------------------------------------------------#
+# SNPCLONE METHODS
+#------------------------------------------------------------------------------#
+################################################################################
+#==============================================================================#
+#' Check for validity of a snpclone object
+#' 
+#' @note a \linkS4class{snpclone} object will always be a valid 
+#' \linkS4class{genlight} object.
+#' 
+#' @export
+#' @rdname is.snpclone
+#' @param x a snpclone object 
+#' @author Zhian N. Kamvar
+#' @examples
+#' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#' is.snpclone(x)
+#==============================================================================#
+is.snpclone <- function(x){
+  res <- (is(x, "snpclone"))
+  return(res)
+}
+
+#==============================================================================#
+#' Methods used for the snpclone object
+#' 
+#' Default methods for subsetting snpclone objects. 
+#' 
+#' @rdname snpclone-method
+#' @param x a snpclone object
+#' @param i vector of numerics indicating number of individuals desired
+#' @param j a vector of numerics corresponding to the loci desired.
+#' @param ... passed on to the \code{\linkS4class{genlight}} object.
+#' @param drop set to \code{FALSE} 
+#' @author Zhian N. Kamvar
+#==============================================================================#
+setMethod(
+  f = "[",
+  signature(x = "snpclone", i = "ANY", j = "ANY", drop = "ANY"),
+  definition = function(x, i, j, ..., drop = FALSE){
+    if (missing(i)) i <- TRUE
+    ismlgclass <- "MLG" %in% class(x@mlg)
+
+    if (ismlgclass){
+      mlg <- x@mlg[i, all = TRUE]
+    } else {
+      mlg <- x@mlg[i]
+    }
+    if (length(x@hierarchy) > 0){
+      hierarchy <- x@hierarchy[i, , drop = FALSE]      
+    } else {
+      hierarchy <- x@hierarchy
+    }
+
+
+    x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
+    if (!"snpclone" %in% class(x)){
+      x <- new("snpclone", x, hierarchy, mlg, mlgclass = ismlgclass)
+    } else {
+      x@mlg <- mlg
+      x@hierarchy <- hierarchy      
+    }
+
+    return(x)
+  })
+
+#==============================================================================#
+#' @rdname snpclone-method
+#' @param .Object a character, "snpclone"
+#' @param gen \code{"\linkS4class{genlight}"} object
+#' @param hierarchy a data frame where each row i represents the different
+#' population assignments of individual i in the data set. If this is empty, the
+#' hierarchy will be created from the population factor.
+#' @param mlg a vector where each element assigns the multilocus genotype of
+#' that individual in the data set. 
+#' @param mlgclass a logical value specifying whether or not to translate the
+#' mlg object into an MLG class object. 
+#' @author Zhian N. Kamvar
+#' @keywords internal
+#==============================================================================#
+setMethod(      
+  f = "initialize",
+  signature("snpclone"),
+  definition = function(.Object, gen, hierarchy, mlg, mlgclass = TRUE){
+    if (missing(gen)){
+      gen <- new("genlight")
+    }
+    .Object <- callNextMethod(.Object)
+    invisible(lapply(slotNames(gen), function(x) slot(.Object, x) <<- slot(gen, x)))
+
+    if (missing(mlg)){
+      mlg <- mlg.vector(gen)      
+    }
+    if (missing(hierarchy)){
+      hierarchy <- data.frame()
+    }
+    if (mlgclass){
+      mlg <- new("MLG", mlg)
+    }
+    slot(.Object, "mlg")       <- mlg
+    slot(.Object, "hierarchy") <- hierarchy
+    return(.Object)
+  }
+)
+
+#==============================================================================#
+#' @rdname snpclone-method
+#' @param object a snpclone object
+#==============================================================================#
+setMethod(
+  f = "show", 
+  signature("snpclone"),
+  definition = function(object){
+    callNextMethod()
+    cat(" --- snpclone contents ---\n")
+    if (length(object@hierarchy) > 0){
+      hiernames <- names(object@hierarchy)
+      hierlen <- length(hiernames)
+      nameshow <- ifelse(hierlen > 6, 
+                         c(head(hiernames, 3), "...", tail(hiernames, 3)), 
+                         hiernames)
+      nameshow <- paste(nameshow, collapse = ", ")
+      cat(" @hierarchy:", "a data frame with", hierlen, 
+          "levels: (", nameshow, ")\n")
+    }
+    mlgtype <- ifelse(is(object@mlg, "MLG"), paste0(object@mlg@visible, " "), "")
+    mlgtype <- paste0(mlgtype, "multilocus genotypes")
+    cat(" @mlg:", length(unique(object@mlg[])), mlgtype)
+  }
+)
+#==============================================================================#
+#' Create a snpclone object from a genlight object.
+#' 
+#' Wrapper for snpclone initializer.
+#' 
+#' @export
+#' @rdname snpclone-coercion-methods
+#' @aliases as.snpclone,genlight-method
+#' @param x a \code{\linkS4class{genlight}} or \code{\linkS4class{snpclone}} 
+#'   object
+#' @param hierarchy a data frame representing the population hierarchy.
+#' @docType methods
+#'   
+#' @note The hierarchy must have the same number of rows as the number of 
+#'   observations in the genlight object. If no hierarchy is defined, the function
+#'   will search for a data frame in the \code{\link{other}} slot called 
+#'   "population_hierarchy" and set that as the hieararchy. If none is defined,
+#'   the population will be set as the hierarchy under the label "Pop". Use the 
+#'   function \code{\link{splithierarchy}} to split up any population 
+#'   hierarchies that might be combined in the population factor.
+#'   
+#' @author Zhian N. Kamvar
+#' @examples
+#' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#==============================================================================#
+as.snpclone <- function(x, hierarchy = NULL){
+  standardGeneric("as.snpclone")
+}
+
+#' @export
+setGeneric("as.snpclone")
+
+
+setMethod(
+  f = "as.snpclone",
+  signature(x = "genlight"),
+  definition = function(x, hierarchy){
+    if (missing(hierarchy)){
+      if ("population_hierarchy" %in% names(other(x))){
+        hierarchy   <- other(x)[["population_hierarchy"]]
+        newsnpclone <- new("snpclone", x, hierarchy)
+      } else {
+        newsnpclone <- new("snpclone", x)
+      }
+    } else {
+      newsnpclone   <- new("snpclone", x, hierarchy)
+    }
+    return(newsnpclone)
+  })
 ################################################################################
 #------------------------------------------------------------------------------#
 # GENCLONE METHODS
@@ -586,7 +767,7 @@ setMethod(
 #' 
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases gethierarchy,genclone-method
+#' @aliases gethierarchy,genclone-method gethierarchy,snpclone-method
 #' @param x a genclone object
 #' @param formula a nested formula indicating the order of the population
 #' hierarchy.
@@ -605,23 +786,20 @@ setMethod(
   f = "gethierarchy",
   signature(x = "genclone"),
   definition = function(x, formula = NULL, combine = TRUE){
-    if (is.null(formula)) return(x@hierarchy)
-    vars <- all.vars(formula)
-    if (any(!vars %in% names(x@hierarchy))){
-      stop(hier_incompatible_warning(vars, x@hierarchy))
-    }
-    if (combine){
-      hier <- make_hierarchy(formula, x@hierarchy)
-    } else {
-      hier <- x@hierarchy[all.vars(formula)]
-    }
-    invisible(return(hier))
+    gethierarchy.internal(x, formula, combine)
+  })
+
+setMethod(
+  f = "gethierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, formula = NULL, combine = TRUE){
+    gethierarchy.internal(x, formula, combine)
   })
 
 #==============================================================================#
 #' @export
 #' @rdname hierarchy-methods
-#' @aliases sethierarchy<-,genclone-method
+#' @aliases sethierarchy<-,genclone-method sethierarchy<-,snpclone-method
 #' @param value a data frame OR vector OR formula (see details).
 #' @docType methods
 #'   
@@ -733,21 +911,20 @@ setMethod(
   f = "sethierarchy",
   signature(x = "genclone"),
   definition = function(x, value){
-    if (!inherits(value, "data.frame")){
-      stop(paste(substitute(value), "is not a data frame"))
-    }
-    if (nrow(value) != nInd(x)){
-      stop("Number of rows in data frame not equal to number of individuals in object.")
-    }
-    value <- data.frame(lapply(value, function(f) factor(f, unique(f))))
-    x@hierarchy <- value
-    return(x)
+    sethierarchy.internal(x, value)
+  })
+
+setMethod(
+  f = "sethierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    sethierarchy.internal(x, value)
   })
 
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases sethierarchy,genclone-method
+#' @aliases sethierarchy,genclone-method sethierarchy,snpclone-method
 #' @docType methods
 #==============================================================================#
 "sethierarchy<-" <- function(x, value){
@@ -761,13 +938,20 @@ setMethod(
   f = "sethierarchy<-",
   signature(x = "genclone"),
   definition = function(x, value){
-    return(sethierarchy(x, value))
+    return(sethierarchy.internal(x, value))
+  })
+
+setMethod(
+  f = "sethierarchy<-",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    return(sethierarchy.internal(x, value))
   })
 
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases namehierarchy,genclone-method
+#' @aliases namehierarchy,genclone-method namehierarchy,snpclone-method
 #' @docType methods
 #==============================================================================#
 namehierarchy <- function(x, value){
@@ -781,20 +965,20 @@ setMethod(
   f = "namehierarchy",
   signature(x = "genclone"),
   definition = function(x, value){
-    if (is.language(value)){
-      value <- all.vars(value)
-    }
-    if (!is.vector(value) | length(value) != length(x@hierarchy)){
-      stop(paste("Hierarchy, needs a vector argument of length", length(x@hierarchy)))
-    }
-    names(x@hierarchy) <- value
-    return(x)
+    namehierarchy.internal(x, value)
+  })
+
+setMethod(
+  f = "namehierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    namehierarchy.internal(x, value)
   })
 
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases namehierarchy<-,genclone-method
+#' @aliases namehierarchy<-,genclone-method namehierarchy<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "namehierarchy<-" <- function(x, value){
@@ -811,10 +995,17 @@ setMethod(
     return(namehierarchy(x, value))
   })
 
+setMethod(
+  f = "namehierarchy<-",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    return(namehierarchy(x, value))
+  })
+
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases splithierarchy,genclone-method
+#' @aliases splithierarchy,genclone-method splithierarchy,snpclone-method
 #' @docType methods
 #' @param sep a \code{character} indicating the character used to separate
 #' hierarchical levels. This defaults to "_".
@@ -831,45 +1022,20 @@ setMethod(
   f = "splithierarchy",
   signature(x = "genclone"),
   definition = function(x, value, sep = "_"){
-    if (is.language(value)){
-      # valterms <- attr(terms(value), "term.labels")
-      # valterms <- valterms[length(valterms)]
-      # valterms <- gsub(":", sep, valterms)
-      value    <- all.vars(value)
-    } else {
-      stop("value must be a formula.")
-    }
-    if (length(value) < 1){
-      stop("value must have more than one hierarchical level.")
-    }
-    hierarchy  <- x@hierarchy
-    if (length(hierarchy) > 1){
-      warning("Hierarchy must be length 1. Taking the first column.")
-      hierarchy <- hierarchy[1]
-    }
-    seps     <- gregexpr(sep, hierarchy[[1]])
-    sepmatch <- vapply(seps, function(val) all(as.integer(val) > 0), logical(1))
-    seps     <- vapply(seps, length, numeric(1))
-    all_seps_match <- all(sepmatch)
-    given_seps     <- length(value) - 1 
-    if (!all_seps_match | all(seps != given_seps)){
-      seps <- ifelse(all_seps_match, seps[1], 0) + 1
-      msg1 <- paste("\n  Data has", seps, ifelse(seps == 1, "level", "levels"),
-                    "of hierarchy with the separator", sep, ".")
-      msg2 <- paste("Here is the fist column of the data:", hierarchy[1, ])
-      stop(paste(msg1, "\n ", msg2))
-    }
-    x@hierarchy <- colsplit(as.character(hierarchy[[1]]), pattern = sep, value)
-    x@hierarchy <- data.frame(lapply(x@hierarchy, function(f) factor(f, levels = unique(f))))
-    # names(hierarchy) <- value
-    # x@hierarchy      <- hierarchy
-    return(x) 
+    splithierarchy.internal(x, value, sep) 
+  })
+
+setMethod(
+  f = "splithierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, value, sep = "_"){
+    splithierarchy.internal(x, value, sep) 
   })
 
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases splithierarchy<-,genclone-method
+#' @aliases splithierarchy<-,genclone-method splithierarchy<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "splithierarchy<-" <- function(x, sep = "_", value){
@@ -883,13 +1049,21 @@ setMethod(
   f = "splithierarchy<-",
   signature(x = "genclone"),
   definition = function(x, sep = "_", value){
-    return(splithierarchy(x, value, sep))
+    return(splithierarchy.internal(x, value, sep))
+  })
+
+
+setMethod(
+  f = "splithierarchy<-",
+  signature(x = "snpclone"),
+  definition = function(x, sep = "_", value){
+    return(splithierarchy.internal(x, value, sep))
   })
 
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases addhierarchy,genclone-method
+#' @aliases addhierarchy,genclone-method addhierarchy,snpclone-method
 #' @param name an optional name argument for use with addhierarchy if supplying
 #'   a vector. Defaults to "NEW".
 #' @docType methods
@@ -905,27 +1079,20 @@ setMethod(
   f = "addhierarchy",
   signature(x = "genclone"),
   definition = function(x, value, name = "NEW"){
-    
-    hierarchy  <- x@hierarchy
-    if ((is.vector(value) | is.factor(value)) & length(value) == nrow(hierarchy)){
-      value <- factor(value, levels = unique(value))
-      NEW <- data.frame(value)
-      names(NEW) <- name
-      hierarchy <- cbind(hierarchy, NEW)
-    } else if (is.data.frame(value) && nrow(value) == nrow(hierarchy)){
-      value <- data.frame(lapply(value, function(f) factor(f, unique(f))))
-      hierarchy <- cbind(hierarchy, value)
-    } else {
-      stop("value must be a vector or data frame.")
-    }
-    x@hierarchy <- hierarchy
-    return(x) 
+    addhierarchy.internal(x, value, name)
+  })
+
+setMethod(
+  f = "addhierarchy",
+  signature(x = "snpclone"),
+  definition = function(x, value, name = "NEW"){
+    addhierarchy.internal(x, value, name)
   })
 
 #==============================================================================#
 #' @export 
 #' @rdname hierarchy-methods
-#' @aliases addhierarchy<-,genclone-method
+#' @aliases addhierarchy<-,genclone-method addhierarchy<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "addhierarchy<-" <- function(x, name = "NEW", value){
@@ -939,9 +1106,15 @@ setMethod(
   f = "addhierarchy<-",
   signature(x = "genclone"),
   definition = function(x, name = "NEW", value){
-    return(addhierarchy(x, value, name))
+    return(addhierarchy.internal(x, value, name))
   })
 
+setMethod(
+  f = "addhierarchy<-",
+  signature(x = "snpclone"),
+  definition = function(x, name = "NEW", value){
+    return(addhierarchy.internal(x, value, name))
+  })
 
 #==============================================================================#
 #' Manipulate the population factor of genclone objects.
@@ -955,7 +1128,7 @@ setMethod(
 #' @param formula a nested formula indicating the order of the population
 #' hierarchy.
 #' @param value same as formula
-#' @aliases setpop,genclone-method
+#' @aliases setpop,genclone-method setpop,snpclone-method
 #' @docType methods 
 #' @author Zhian N. Kamvar
 #' @examples
@@ -989,21 +1162,19 @@ setMethod(
   f = "setpop",
   signature(x = "genclone"),
   definition = function(x, formula = NULL){
-    if (is.null(formula) | !is.language(formula)){
-      stop(paste(substitute(formula), "must be a valid formula object."))
-    }
-    vars <- all.vars(formula)
-    if (!all(vars %in% names(x@hierarchy))){
-      stop(hier_incompatible_warning(vars, x@hierarchy))
-    }
-    pop(x) <- make_hierarchy(formula, x@hierarchy)[[length(vars)]]
-    return(x)
+    setpop.internal(x, formula)
   })
 
+setMethod(
+  f = "setpop",
+  signature(x = "snpclone"),
+  definition = function(x, formula = NULL){
+    setpop.internal(x, formula)
+  })
 #==============================================================================#
 #' @export
 #' @rdname population-methods
-#' @aliases setpop<-,genclone-method
+#' @aliases setpop<-,genclone-method setpop<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "setpop<-" <- function(x, value) standardGeneric("setpop<-")
@@ -1015,5 +1186,472 @@ setMethod(
   f = "setpop<-",
   signature(x = "genclone"),
   definition = function(x, value){
-    return(setpop(x, value))
+    return(setpop.internal(x, value))
   })
+
+setMethod(
+  f = "setpop<-",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    return(setpop.internal(x, value))
+  })
+
+
+#==============================================================================#
+#' Access and manipulate multilocus lineages.
+#' 
+#' The following methods allow the user to access and manipulate multilocus 
+#' lineages in genclone or snpclone objects.
+#' 
+#' @export
+#' @param x a \linkS4class{genclone} or \linkS4class{snpclone} object.
+#' @param type a character specifying "original", "contracted", or "custom"
+#'   defining they type of mlgs to return. Defaults to what is set in the
+#'   object.
+#' @param value a character specifying which mlg type is visible in the object.
+#'   See details.
+#'   
+#' @return an object of the same type as x.
+#' 
+#' @details \linkS4class{genclone} and \linkS4class{snpclone} objects have a
+#'   slot for an internal class of object called \linkS4class{MLG}. This class
+#'   allows the storage of flexible mll definitions: \itemize{ \item "original"
+#'   - naive mlgs defined by string comparison. This is default. \item
+#'   "contracted" - mlgs defined by a genetic distance threshold. \item "custom"
+#'   - user-defined MLGs }
+#'   
+#' @rdname mll-method
+#' @aliases mll,genclone-method mll,snpclone-method
+#' @docType methods
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{mll.custom}} \code{\link{mlg.table}}
+#' @examples
+#' 
+#' data(partial_clone)
+#' pc <- as.genclone(partial_clone)
+#' mll(pc)
+#' mll(pc) <- "custom"
+#' mll(pc)
+#' mll.levels(pc) <- LETTERS
+#' mll(pc)
+#==============================================================================#
+mll <- function(x, type = NULL) standardGeneric("mll")
+
+#' @export
+setGeneric("mll")
+
+setMethod(
+  f = "mll",
+  signature(x = "genclone"),
+  definition = function(x, type = NULL){
+    mlg <- x@mlg
+    if (!"MLG" %in% class(mlg)){
+      return(mlg)
+    }
+    if (!is.null(type)){
+      TYPES <- c("original", "expanded", "contracted", "custom")
+      type <- match.arg(type, TYPES)
+    } else {
+      type <- mlg@visible
+    }
+    return(mlg[, type])
+  })
+
+setMethod(
+  f = "mll",
+  signature(x = "snpclone"),
+  definition = function(x, type = NULL){
+    mlg <- x@mlg
+    if (!"MLG" %in% class(mlg)){
+      return(mlg)
+    }
+    if (!is.null(type)){
+      TYPES <- c("original", "expanded", "contracted", "custom")
+      type <- match.arg(type, TYPES)
+    } else {
+      type <- mlg@visible
+    }
+    return(mlg[, type])
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll-method
+#' @aliases mll<-,genclone-method mll<-,snpclone-method
+#' @docType methods
+#==============================================================================#
+"mll<-" <- function(x, value) standardGeneric("mll<-")
+
+#' @export
+setGeneric("mll<-")
+
+setMethod(
+  f = "mll<-",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    TYPES <- c("original", "expanded", "contracted", "custom")
+    value <- match.arg(value, TYPES)
+    x@mlg@visible <- value
+    return(x)
+  })
+
+setMethod(
+  f = "mll<-",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    TYPES <- c("original", "expanded", "contracted", "custom")
+    value <- match.arg(value, TYPES)
+    x@mlg@visible <- value
+    return(x)
+  })
+
+#==============================================================================#
+#' Define custom multilocus lineages
+#' 
+#' This function will allow you to define custom multilocus lineages for your
+#' data set.
+#' 
+#' @export
+#' @param x a \linkS4class{genclone} or \linkS4class{snpclone} object.
+#' @param set logical. If \code{TRUE} (default), the visible mlls will be set to
+#' 'custom'. 
+#' @param value a vector that defines the multilocus lineages for your data.
+#' This can be a vector of ANYTHING that can be turned into a factor. 
+#' 
+#' @return an object of the same type as x
+#' @rdname mll.custom
+#' @aliases mll.custom,genclone-method mll.custom,snpclone-method
+#' @docType methods
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{mll}} \code{\link{mlg.table}}
+#' @examples 
+#' data(partial_clone)
+#' pc <- as.genclone(partial_clone)
+#' mll.custom(pc) <- LETTERS[mll(pc)]
+#' mll(pc)
+#' 
+#' # Let's say we had a mistake and the A mlg was actually B. 
+#' mll.levels(pc)[mll.levels(pc) == "A"] <- "B"
+#' mll(pc)
+#' 
+#' # Set the MLL back to the original definition.
+#' mll(pc) <- "original"
+#' mll(pc)
+#==============================================================================#
+mll.custom <- function(x, set = TRUE, value) standardGeneric("mll.custom")
+
+#' @export
+setGeneric("mll.custom")
+
+setMethod(
+  f = "mll.custom",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+setMethod(
+  f = "mll.custom",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.custom<-,genclone-method mll.custom<-,snpclone-method
+#' @docType methods
+#==============================================================================#
+"mll.custom<-" <- function(x, set = TRUE, value) standardGeneric("mll.custom<-")
+
+#' @export
+setGeneric("mll.custom<-")
+
+setMethod(
+  f = "mll.custom<-",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+setMethod(
+  f = "mll.custom<-",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.levels,genclone-method mll.levels,snpclone-method
+#' @docType methods
+#==============================================================================#
+mll.levels <- function(x, set = TRUE, value) standardGeneric("mll.levels")
+
+#' @export
+setGeneric("mll.levels")
+
+setMethod(
+  f = "mll.levels",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+setMethod(
+  f = "mll.levels",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+
+#==============================================================================#
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.levels<-,genclone-method mll.levels<-,snpclone-method
+#' @docType methods
+#==============================================================================#
+"mll.levels<-" <- function(x, set = TRUE, value) standardGeneric("mll.levels<-")
+
+#' @export
+setGeneric("mll.levels<-")
+
+setMethod(
+  f = "mll.levels<-",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+setMethod(
+  f = "mll.levels<-",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+#==============================================================================#
+#' Statistics on Clonal Filtering of Genotype Data
+#' 
+#' Create a vector of multilocus genotype indices filtered by minimum distance.
+#'   
+#' @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#'   object.
+#' @param threshold the desired minimum distance between distinct genotypes. 
+#'   Defaults to 0, which will only merge identical genotypes
+#' @param missing any method to be used by \code{\link{missingno}}: "mean" 
+#'   (default), "zero", "loci", "genotype", or "ignore".
+#' @param memory whether this function should remember the last distance matrix 
+#'   it generated. TRUE will attempt to reuse the last distance matrix if the
+#'   other parameters are the same. (default) FALSE will ignore any stored 
+#'   matrices and not store any it generates.
+#' @param algorithm determines the type of clustering to be done. (default)
+#'   "farthest_neighbor" merges clusters based on the maximum distance between
+#'   points in either cluster. This is the strictest of the three. 
+#'   "nearest_neighbor" merges clusters based on the minimum distance between 
+#'   points in either cluster. This is the loosest of the three. 
+#'   "average_neighbor" merges clusters based on the average distance between 
+#'   every pair of points between clusters.
+#' @param distance a character or function defining the distance to be applied 
+#'   to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing 
+#'   distances between individuals (such as the output of
+#'   \code{\link{nei.dist}}) is also accepted for this parameter.
+#' @param threads The maximum number of parallel threads to be used within this 
+#'   function. A value of 0 (default) will attempt to use as many threads as
+#'   there are available cores/CPUs. In most cases this is ideal. A value of 1
+#'   will force the function to run serially, which may increase stability on
+#'   some systems. Other values may be specified, but should be used with
+#'   caution.
+#' @param stats determines which statistics this function should return on
+#'   cluster mergers. If (default) "MLGs", this function will return a vector of
+#'   cluster assignments, similar to that of \code{\link{mlg.vector}}. If
+#'   "thresholds", the threshold at which each cluster was merged will be
+#'   returned instead of the cluster assignment. "distances" will return a
+#'   distance matrix of the new distances between each new cluster. If "sizes",
+#'   the size of each remaining cluster will be returned. Finally, "all" will
+#'   return a list of all 4.
+#' @param ... any parameters to be passed off to the distance method.
+#' 
+#' @return 
+#' \subsection{mlg.stats}{
+#' a numeric vector naming the multilocus genotype of each individual in the
+#' dataset. Each genotype is at least the specified distance apart, as 
+#' calculated by the selected algorithm. If stats is set to \code{TRUE}, this 
+#' function will return the thresholds had which each cluster merger occurred 
+#' instead of the new cluster assignments.
+#' }
+#'
+#' @note \code{mlg.vector} makes use of \code{mlg.vector} grouping prior to 
+#'   applying the given threshold. Genotype numbers returned by
+#'   \code{mlg.vector} represent the lowest numbered genotype (as returned by
+#'   \code{mlg.vector}) in in each new multilocus genotype. Therefore
+#'   \code{mlg.vector} and \code{mlg.vector} return the same vector when
+#'   threshold is set to 0 or less.
+#' 
+#' @export
+#' @rdname mlg.filter
+#' @aliases mlg.filter,genclone-method mlg.filter,snpclone-method 
+#'   mlg.filter,genind-method mlg.filter,genlight-method
+#' @docType methods
+#' @examples 
+#' data(partial_clone)
+#' pc <- as.genclone(partial_clone) # convert to genclone object
+#' 
+#' # Get MLGs at threshold 0.05
+#' mlg.filter(pc, threshold = 0.05, distance = "nei.dist")
+#' pc # 26 mlgs
+#' 
+#' # Set MLGs at threshold 0.05
+#' mlg.filter(pc, distance = "nei.dist") <- 0.05
+#' pc # 25 mlgs
+#==============================================================================#
+mlg.filter <- function(pop, threshold=0.0, missing="mean", memory=FALSE, 
+                       algorithm="farthest_neighbor", 
+                       distance="nei.dist", threads=0, stats="MLGs", ...){
+  standardGeneric("mlg.filter")
+}
+
+#' @export
+setGeneric("mlg.filter")
+
+setMethod(
+  f = "mlg.filter",
+  signature(pop = "genind"),
+  definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
+                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        threads=0, stats="MLGs", ...){
+    mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
+                        threads, stats, ...) 
+  }
+)
+
+setMethod(
+  f = "mlg.filter",
+  signature(pop = "genlight"),
+  definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
+                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        threads=0, stats="MLGs", ...){
+    mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
+                        threads, stats, ...) 
+  }
+)
+
+setMethod(
+  f = "mlg.filter",
+  signature(pop = "genclone"),
+  definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
+                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        threads=0, stats="MLGs", ...){
+    callNextMethod()
+  }
+)  
+  
+setMethod(
+  f = "mlg.filter",
+  signature(pop = "snpclone"),
+  definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
+                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        threads=0, stats="MLGs", ...){
+    callNextMethod()
+  }
+)
+  
+#==============================================================================#
+#' @export
+#' @rdname mlg.filter
+#' @param value the threshold at which genotypes should be collapsed.
+#' @aliases mlg.filter<-,genclone-method mlg.filter<-,genind-method 
+#'   mlg.filter<-,snpclone-method mlg.filter<-,genlight-method
+#' @docType methods
+#==============================================================================#
+"mlg.filter<-" <- function(pop, missing = "mean", memory = FALSE, 
+                           algorithm = "farthest_neighbor", distance = "nei.dist",
+                           threads = 0, ..., value){
+  standardGeneric("mlg.filter<-")
+}
+
+#' @export
+setGeneric("mlg.filter<-")
+
+
+setMethod(
+  f = "mlg.filter<-",
+  signature(pop = "genind"),
+  definition = function(pop, missing = "mean", memory = FALSE, 
+                        algorithm = "farthest_neighbor", distance = "nei.dist",
+                        threads = 0, ..., value){
+    if (!is.genclone(pop)){
+      the_warning <- paste("mlg.filter<- only has an effect on genclone",
+                           "objects.\n", "If you want to utilize this",
+                           "functionality, please convert to a genclone object.\n",
+                           "No modifications are taking place.")
+      warning(the_warning, call. = FALSE)
+    } 
+      
+    return(pop)
+  }
+)
+
+setMethod(
+  f = "mlg.filter<-",
+  signature(pop = "genlight"),
+  definition = function(pop, missing = "mean", memory = FALSE, 
+                        algorithm = "farthest_neighbor", distance = "nei.dist",
+                        threads = 0, ..., value){
+    if (!is.genclone(pop)){
+      the_warning <- paste("mlg.filter<- only has an effect on snpclone",
+                           "objects.\n", "If you want to utilize this",
+                           "functionality, please convert to a snpclone object.\n",
+                           "No modifications are taking place.")
+      warning(the_warning, call. = FALSE)
+    } 
+    
+    return(pop)
+  }
+)
+
+setMethod(
+  f = "mlg.filter<-",
+  signature(pop = "genclone"),
+  definition = function(pop, missing = "mean", memory = FALSE, 
+                       algorithm = "farthest_neighbor", distance = "nei.dist",
+                       threads = 0, ..., value){
+    pop <- callNextMethod()
+    fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
+                                 distance, threads, stats = "MLGs", ...) 
+    mll(pop) <- "contracted"
+    pop@mlg[] <- fmlgs
+    pop@mlg@cutoff["contracted"] <- value
+    pop@mlg@distname <- substitute(distance)
+    pop@mlg@distargs <- list(...)
+    return(pop)
+  }
+)
+
+
+setMethod(
+  f = "mlg.filter<-",
+  signature(pop = "snpclone"),
+  definition = function(pop, missing = "mean", memory = FALSE, 
+                        algorithm = "farthest_neighbor", distance = "nei.dist",
+                        threads = 0, ..., value){
+    pop <- callNextMethod()
+    fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
+                                 distance, threads, stats = "MLGs", ...) 
+    mll(pop) <- "contracted"
+    pop@mlg[] <- fmlgs
+    pop@mlg@cutoff["contracted"] <- value
+    pop@mlg@distname <- substitute(distance)
+    pop@mlg@distargs <- list(...)
+    return(pop)
+  }
+)
+  
+  

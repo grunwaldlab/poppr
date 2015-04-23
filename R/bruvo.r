@@ -200,8 +200,8 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' @param sample an \code{integer} indicated the number of bootstrap replicates 
 #'   desired.
 #'   
-#' @param tree choose between "nj" for neighbor-joining and "upgma" for a upgma 
-#'   tree to be produced.
+#' @param tree any function that can generate a tree from a distance matrix.
+#'   Default is \code{\link[phangorn]{upgma}}.
 #'   
 #' @param showtree \code{logical} if \code{TRUE}, a tree will be plotted with 
 #'   nodelabels.
@@ -212,8 +212,16 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' @param quiet \code{logical} defaults to \code{FALSE}. If \code{TRUE}, a 
 #'   progress bar and messages will be suppressed.
 #'   
+#' @param root \code{logical} This is a parameter passed on to
+#'   \code{\link[ape]{boot.phylo}}. If the \code{tree} argument produces a
+#'   rooted tree (e.g. "upgma"), then this value should be \code{TRUE}. If it
+#'   produces an unrooted tree (e.g. "nj"), then the value should be
+#'   \code{FALSE}. By default, it is set to \code{NULL}, which will assume an
+#'   unrooted phylogeny unless the function name contains "upgma".
+#' 
 #' @param ... any argument to be passed on to \code{\link{boot.phylo}}. eg. 
 #'   \code{quiet = TRUE}.
+#'   
 #'   
 #' @return a tree of class phylo with nodelables
 #'   
@@ -222,11 +230,20 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #'   \code{\link{nodelabels}}, \code{\link{na.replace}}, 
 #'   \code{\link{missingno}}.
 #'   
+#' @details This function will calculate a tree based off of Bruvo's distance
+#'   and then utilize \code{\link[ape]{boot.phylo}} to randomly sample loci with
+#'   replacement, recalculate the tree, and tally up the bootstrap support
+#'   (measured in percent success). While this function can take any tree
+#'   function, it has native support for two algorithms: \code{\link[ape]{nj}}
+#'   and \code{\link[phangorn]{upgma}}. If you want to use any other functions,
+#'   you must load the package before you use them (see examples).
+#' 
 #' @note \strong{Please refer to the documentation for bruvo.dist for details on
 #'   the algorithm.} If the user does not provide a vector of appropriate length
 #'   for \code{replen} , it will be estimated by taking the minimum difference
 #'   among represented alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON
 #'   THIS ESTIMATION.
+#'   
 #'   
 #' @export
 #' @author Zhian N. Kamvar, Javier F. Tabima
@@ -249,6 +266,26 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' 
 #' bruvo.boot(popsub(nancycats, 1), replen = ssr)
 #' 
+#' \dontrun{
+#' 
+#' # Always load the library before you specify the function.
+#' library("ape")
+#' 
+#' # Estimate the tree based off of the BIONJ algorithm.
+#' 
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = bionj)
+#' 
+#' # Utilizing  balanced FastME
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = fastme.bal)
+#' 
+#' # To change parameters for the tree, wrap it in a function.
+#' # For example, let's build the tree without utilizing subtree-prune-regraft
+#' 
+#' myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = myFastME)
+#' 
+#' }
+#' 
 #==============================================================================#
 #' @importFrom phangorn upgma midpoint
 #' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize 
@@ -258,7 +295,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #   \     /
 bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, 
                         tree = "upgma", showtree = TRUE, cutoff = NULL, 
-                        quiet = FALSE, ...){
+                        quiet = FALSE, root = NULL, ...){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
@@ -274,14 +311,23 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   bootgen <- new('bruvomat', pop, replen)
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
-  if (tree == "upgma"){
-    root <- TRUE
-    newfunk <- match.fun(upgma)
-  } else if (tree == "nj"){
-    root <- FALSE
-    newfunk <- match.fun(nj)
+  treechar <- paste(as.character(substitute(tree)), collapse = "")
+  if ("upgma" %in% treechar){
+    treefun <- upgma
+  } else if ("nj" %in% treechar){
+    treefun <- nj
+  } else {
+    treefun <- match.fun(tree)    
   }
-  tre <- newfunk(bruvos_distance(bootgen, funk_call = match.call(), add = add, loss = loss))
+  bootfun <- function(x){
+    treefun(bruvos_distance(x, funk_call = match.call(), add = add, 
+                            loss = loss))
+  }
+
+  if (is.null(root)){
+    root <- grepl("upgma", treechar)
+  }
+  tre <- bootfun(bootgen)
   if (any (tre$edge.length < 0)){
     warning(negative_branch_warning(), immediate.=TRUE)
 	  tre <- fix_negative_branch(tre)
@@ -290,9 +336,6 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
     cat("\nBootstrapping...\n") 
     cat("(note: calculation of node labels can take a while even after") 
     cat(" the progress bar is full)\n\n")
-  }
-  bootfun <- function(x){
-    return(newfunk(bruvos_distance(x, funk_call = match.call(), add = add, loss = loss)))
   }
   bp <- boot.phylo(tre, bootgen, FUN = bootfun, B = sample, quiet = quiet, 
                    rooted = root, ...)
@@ -307,7 +350,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   }
   tre$tip.label <- pop@ind.names
   if (showtree == TRUE){
-    poppr.plot.phylo(tre, tree)
+    poppr.plot.phylo(tre, treechar, root)
   }
   return(tre)
 }
@@ -326,6 +369,10 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   
 #' @param loss if \code{TRUE}, genotypes with zero values will be treated under 
 #'   the genome loss model presented in Bruvo et al. 2004.
+#'   
+#' @param mlg.compute if the multilocus genotypes are set to "custom" (see
+#'   \code{\link{mll.custom}} for details) in your genclone object, this will
+#'   specify which mlg level to calculate the nodes from. See details.
 #'   
 #' @param palette a \code{function} defining the color palette to be used to 
 #'   color the populations on the graph. It defaults to 
@@ -402,10 +449,21 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   graph produced can be plotted using igraph functions, or the entire object
 #'   can be plotted using the function \code{\link{plot_poppr_msn}}, which will
 #'   give the user a scale bar and the option to layout your data.
+#'   \subsection{mlg.compute}{
+#'   Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.}
 #'   
 #' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
 #'   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{minimum.spanning.tree}} 
-#'   \code{\link{bruvo.boot}}, \code{\link{greycurve}}
+#'   \code{\link{bruvo.boot}}, \code{\link{greycurve}} \code{\link{poppr.msn}}
 #'   
 #' @export
 #' @author Zhian N. Kamvar, Javier F. Tabima
@@ -458,7 +516,8 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' }
 #==============================================================================#
 #' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph add.edges
-bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
+bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "original", 
+                       palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, showplot = TRUE,
@@ -479,12 +538,15 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
                          palette = palette, include.ties = include.ties,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
-
   if (class(pop$mlg) != "MLG"){
     # Froce pop$mlg to be class MLG
     pop$mlg <- new("MLG", pop$mlg)
   }
-
+  classstat <- (is.genclone(pop) | is(pop, "snpclone")) && is(pop@mlg, "MLG")
+  if (classstat){
+    visible <- pop@mlg@visible
+    mll(pop)  <- mlg.compute
+  }
   # Updating the MLG with filtered data
   if(threshold > 0){
     filter.stats <- mlg.filter(pop,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL", add = add, loss = loss)
@@ -494,16 +556,23 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
     # Obtaining population information for all MLGs
     cpop <- pop[if(length(-which(duplicated(pop$mlg[]))==0)) which(!duplicated(pop$mlg[])) else -which(duplicated(pop$mlg[])) ,]
     bclone <- filter.stats[[3]]
-  }
-  else {
+  } else {
     cpop <- pop[.clonecorrector(pop), ]
     bclone <- as.matrix(bruvo.dist(cpop, replen=replen, add = add, loss = loss))
   }
-  mlgs <- pop@mlg[]
-  cmlg <- cpop@mlg[]
+  if (is.genclone(pop)){
+    mlgs <- mll(pop)
+    cmlg <- mll(cpop)
+  } else {
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+  }
   subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
-  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
+  if (is.numeric(mlgs)){
+    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+  }
+
   
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
@@ -529,7 +598,14 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
 
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cmlg)
+      if (is.numeric(cmlg) && !classstat){
+        vertex.label <- paste0("MLG.", cmlg)
+      } else if (visible == "custom"){
+        mll(pop) <- visible
+        vertex.label <- correlate_custom_mlgs(pop, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)
+      }
     } else if (toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
     }
