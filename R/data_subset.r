@@ -132,17 +132,18 @@
 
 clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   clonecall <- match.call()$pop
-  if(!is.genind(pop)){
-    stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
+  if(!is.genind(pop) & !is(pop, "snpclone")){
+    stop(paste(paste(substitute(pop), collapse=""), "is not a genind or snpclone object.\n"))
   }
   if (is.language(strata)){
     strataformula <- strata
     strata        <- all.vars(strata)
   }
-  popcall <- pop@call
+  if (is.genind(pop)) popcall <- match.call()
   if (is.na(strata[1])){
     return(pop[.clonecorrector(pop), ])
   }
+
   if (is.numeric(strata)){
     strata        <- names(strata(pop))[strata]
     strataformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
@@ -157,8 +158,8 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
     pop@ind.names <- as.character(1:nInd(pop))
   }
 
-  cpop <- nPop(pop)
-  
+  cpop <- nPop(pop)  
+
   # Steps for correction:
   # Subset by population factor.
   # Run subset population by the .clonecorrector
@@ -167,7 +168,7 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
     subbed <- popsub(pop, x) # population to be...corrected.
     subbed <- subbed[.clonecorrector(subbed), ] 
     # Return the indices based off of the individual names.
-    return(which(pop@ind.names %in% subbed@ind.names))
+    return(which(indNames(pop) %in% indNames(subbed)))
   }
   
   ccpop <- unlist(lapply(1:cpop, corWrecked, pop))
@@ -181,7 +182,10 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
     newformula <- as.formula(paste0("~", paste(strata, collapse = "/")))
     setPop(pop) <- newformula
   }
-  pop@call <- popcall
+  if (is.genind(pop)){
+    pop@call <- popcall    
+  }
+
   return(pop)
 }
 
@@ -231,8 +235,8 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 
 popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 
-  if (!is.genind(gid)){
-    stop("popsub requires a genind object\n")
+  if (!is.genind(gid) & !is(gid, "genlight")){
+    stop("popsub requires a genind or genlight object\n")
   }
   if (is.null(pop(gid))){
     if(sublist[1] != "ALL")
@@ -305,8 +309,10 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
         return(gid)
       }
     }
-    gid <- gid[sublist, , drop = drop]
-    gid@call <- match.call()
+    gid <- gid[sublist, drop = drop]
+    if (is.genind(gid)){
+      gid@call <- match.call()      
+    }
     return(gid)
   }
 }

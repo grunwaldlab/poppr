@@ -177,12 +177,13 @@ NULL
 #==============================================================================#
 
 mlg <- function(pop, quiet=FALSE){
-  if (!is.genind(pop)){
-    stop(paste(substitute(pop), "is not a genind object"))
+  if (!is(pop, "genlight") & !is(pop, "genind")){
+    stop(paste(substitute(pop), "is not a genind or genlight object"))
   }
-  if (is.genclone(pop) && length(pop@mlg) == nrow(pop@tab)){
+  if ((is.snpclone(pop) | is.genclone(pop)) && length(pop@mlg) == nrow(pop@tab)){
     out <- length(unique(pop@mlg[]))
   } else {
+    if (is(pop, "genlight")) return(nInd(pop))
     if(nrow(pop@tab) == 1){
       out <- 1
     }
@@ -208,20 +209,21 @@ mlg <- function(pop, quiet=FALSE){
 #==============================================================================#
 mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE, 
                       total=FALSE, quiet=FALSE){  
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop("This function requires a genind object.")
   }
   mlgtab <- mlg.matrix(pop)
   if (!is.null(mlgsub)){
-    mlgsub <- paste("MLG", mlgsub, sep = ".")
+    if (is.numeric(mlgsub)){
+      mlgsub <- paste("MLG", mlgsub, sep = ".")      
+    }
     mlgtab <- mlgtab[, mlgsub, drop = FALSE]
     mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), , drop = FALSE]
-    pop <- popsub(pop, sublist=rownames(mlgtab))
+    pop <- popsub(pop, sublist = rownames(mlgtab))
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     pop <- popsub(pop, sublist, blacklist)
-    mlgtab <- mlgtab[unlist(vapply(popNames(pop), 
-                function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
+    mlgtab <- mlgtab[popNames(pop), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
   if (total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
@@ -243,11 +245,11 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
       print(mlg_barplot(mlgtab) + 
         theme_classic() %+replace%
         theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
-        labs(title = paste("File:", as.character(pop@call[2]), "\nN =",
+        labs(title = paste("Data:", as.character(substitute(pop)), "\nN =",
                            sum(mlgtab), "MLG =", length(mlgtab))))
     }
   }
-  mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
+  mlgtab <- mlgtab[, which(colSums(mlgtab) > 0), drop = FALSE]
   return(mlgtab)
 }
 
@@ -264,7 +266,6 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
 #'   
 #' @export
 #==============================================================================#
-
 mlg.vector <- function(pop, reset = FALSE){
 
   # This will return a vector indicating the multilocus genotypes.
@@ -278,12 +279,22 @@ mlg.vector <- function(pop, reset = FALSE){
   # Step 4: evaluate strings in sorted vector and increment to the respective 
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
-  if (!reset && is.genclone(pop) && length(pop@mlg) == nrow(pop@tab)){
+  if (!reset && (is.snpclone(pop) || is.genclone(pop)) && length(pop@mlg) == nInd(pop)){
     return(pop@mlg[])
   }
+  if (is(pop, "genlight")){
+    return(seq_len(nInd(pop)))
+  } 
   xtab <- pop@tab
   # concatenating each genotype into one long string.
   xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ], collapse = ""), "string")
+
+  # Interestingly enough, the methods below are only about 1% slower than using
+  # rank. Both are effectively equivalent, except that rank gives the rank of
+  # the order they were found. Since there is not much of a speedup and it would
+  # change the names of things, I decided not to change this.
+  # return(rank(xsort, ties.method = "min"))
+
   # creating a new vector to store the counts of unique genotypes.
   countvec <- vector(length = length(xsort), mode = "integer")
   # sorting the genotypes ($x) and preserving the index ($xi). 
@@ -326,51 +337,63 @@ mlg.vector <- function(pop, reset = FALSE){
 #' @export
 #==============================================================================#
 
-mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexreturn=FALSE, df=FALSE, quiet=FALSE){
+mlg.crosspop <- function(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
+                         indexreturn = FALSE, df = FALSE, quiet = FALSE){
+
   if (length(sublist) == 1 & sublist[1] != "ALL" | is.null(pop(pop))){
     cat("Multiple populations are needed for this analysis.\n")
     return(0)
   }
-  if (is.genclone(pop)){
+  visible <- "original"
+  if (is.genclone(pop) | is(pop, "snpclone")){
     vec <- pop@mlg[]
+    if (is(pop@mlg, "MLG")){
+      visible <- pop@mlg@visible
+    }
   } else {
     vec <- mlg.vector(pop) 
   }
   subind <- sub_index(pop, sublist, blacklist)
   vec    <- vec[subind]
   mlgtab <- mlg.matrix(pop)
+
   if (!is.null(mlgsub)){
-    mlgsubnames <- paste("MLG", mlgsub, sep = ".")
+    if (visible == "custom"){
+      mlgsubnames <- mlgsub
+    } else {
+      mlgsubnames <- paste("MLG", mlgsub, sep = ".")
+    }
     matches <- mlgsubnames %in% colnames(mlgtab)
+
     if (!all(matches)){
       rejects <- mlgsub[!matches]
       mlgsubnames  <- mlgsubnames[matches]
       warning(mlg_sub_warning(rejects))
     }
+    
     mlgtab <- mlgtab[, mlgsubnames, drop = FALSE]
-    mlgs   <- 1:ncol(mlgtab)
-    names(mlgs) <- colnames(mlgtab)
+    mlgs   <- setNames(1:ncol(mlgtab), colnames(mlgtab))
+  
   } else {
     if (sublist[1] != "ALL" | !is.null(blacklist)){
       pop    <- popsub(pop, sublist, blacklist)
-      mlgtab <- mlgtab[unlist(vapply(popNames(pop), 
-                  function(x) which(rownames(mlgtab) == x), 1)), , drop=FALSE]
+      mlgtab <- mlgtab[pop@pop.names, , drop = FALSE]
     }
-    #mlgtab <- mlgtab[, which(colSums(mlgtab) > 0)]
-    # mlgs <- unlist(strsplit(names(which(colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1)), 
-    #                       "\\."))
-    # mlgs <- as.numeric(mlgs[!mlgs %in% "MLG"])
+
     mlgs <- colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1
     if (sum(mlgs) == 0){
       cat("No multilocus genotypes were detected across populations\n")
       return(0)
     }
-    #names(mlgs) <- paste("MLG", mlgs, sep=".")
-    if (indexreturn){
+  }
+  if (indexreturn){
+    if (visible == "custom"){
+      mlgout <- names(mlgs[mlgs])
+    } else {
       mlgout <- unlist(strsplit(names(mlgs[mlgs]), "\\."))
-      mlgout <- as.numeric(mlgout[!mlgout %in% "MLG"])
-      return(mlgout)
+      mlgout <- as.numeric(mlgout[!mlgout %in% "MLG"])        
     }
+    return(mlgout)
   }
   popop <- function(x, quiet=TRUE){
     popnames <- mlgtab[mlgtab[, x] > 0L, x]
@@ -405,7 +428,7 @@ mlg.crosspop <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, indexr
 
 
 mlg.id <- function (pop){
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop(paste(substitute(pop), "is not a genind or genclone object"))
   }
   return(split(indNames(pop), mlg.vector(pop)))

@@ -1,7 +1,7 @@
 context("Population subset tests")
 
 test_that("subsetting needs a genind object", {
-  expect_error(popsub(1:10), "popsub requires a genind object\n")
+  expect_error(popsub(1:10), "popsub requires a genind or genlight object\n")
 })
 
 test_that("sublist needs to match populations", {

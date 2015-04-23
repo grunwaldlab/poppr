@@ -113,42 +113,58 @@ valid.genclone <- function(object){
 
 setValidity("genclone", valid.genclone)
 
+# valid.genclone <- function(object){
+#   slots   <- slotNames(object)
+#   if (any(!c("mlg", "hierarchy") %in% slots)){
+#     return(FALSE)
+#   }
+#   inds    <- length(object@ind.names)
+#   mlgs    <- length(object@ind.names)
+#   hier    <- length(object@hierarchy)
+#   hierobs <- nrow(object@hierarchy)
+#   if (mlgs != inds){  
+#     cat("Multilocus genotypes do not match the number of observations")
+#     return(FALSE)
+#   }
+#   if (hier > 0 & hierobs != inds){
+#     cat("Hierarchy does not match the number of observations")
+#     return(FALSE)
+#   }
+#   return(TRUE)
+# }
+# 
+# setValidity("genclone", valid.genclone)
 #==============================================================================#
-#~ mlg object
-#~ 
-#~ An internal object used for multilocus genotype definition. 
-#~ Not intended for user interaction. Ideally what this will do is create the
-#~ multilocus genotype table from scratch with the lowest level of the
-#~ population hierarchy and then subset it with higher levels when requested.
-#~ 
-#~ 
-#~ @name mlg-class
-#~ @rdname mlg-class
-#~ @export
-#~ @slot table a matrix representing the multilocus genotypes of the smallest
-#~ hierarchy. Defaults to NULL
-#~ @slot mlg a single integer with the number of multilocus genotypes in the
-#~ dataset
-#~ @slot vec a vector defining the multilocus genotypes
-#~ @author Zhian N. Kamvar
-#~ @import methods
+#' SNPclone class
+#' 
+#' SNPclone is an S4 class that extends the \code{\linkS4class{genlight}}
+#' from the \pkg{\link{adegenet}} package. It will have all of the same
+#' attributes as the \code{\linkS4class{genlight}}, but it will contain two
+#' extra slots that will help retain information about population hierarchies
+#' and multilocus genotypes.
+#' 
+#' @section Extends: 
+#' Class \code{"\linkS4class{genlight}"}, directly.
+#' 
+#' @details The snpclone class will allow for more optimized methods of clone
+#' correcting and analyzing data over multiple levels of population hierarchy.
+#' 
+#' 
+#' @name snpclone-class
+#' @rdname snpclone-class
+#' @aliases snpclone
+#' @export
+#' @slot mlg a vector representing multilocus genotypes for the data set.
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{as.snpclone}} \code{\linkS4class{genclone}} 
+#' \code{\linkS4class{genlight}} 
+#' @import methods
 #==============================================================================#
-subset_mlgtable <- function(tab, hierarchy, df){
-  if (nrow(df) != sum(tab)){
-    stop("Number of rows in the data frame must equal the sum of the table.")
-  }
-  form <- as.formula(paste0("~", paste(names(df), collapse = "/")))
-  def_hier <- all.vars(hierarchy)
-  def_hier <- def_hier[length(def_hier)]
-  
-  newdf <- make_ade_df(form, df)[[def_hier]]
-  
-  hier_levs <- levels(newdf[def_hier])
-  ncols <- ncol(tab)
-  newmat <- vapply(hier_levs, function(x) colSums(tab[newdf == x, , drop = FALSE]), numeric(ncols))
-  dimnames(newmat) <- list(colnames(tab), hier_levs)
-  return(t(newmat))
-}
+setClass("snpclone",
+         contains = "genlight",
+         representation = representation(mlg = "mlgORnumeric"),
+         prototype = prototype(mlg = integer(0))
+)
 
 
 #==============================================================================#

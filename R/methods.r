@@ -260,6 +260,177 @@ setMethod(
   }
 )
 
+
+################################################################################
+#------------------------------------------------------------------------------#
+# SNPCLONE METHODS
+#------------------------------------------------------------------------------#
+################################################################################
+#==============================================================================#
+#' Check for validity of a snpclone object
+#' 
+#' @note a \linkS4class{snpclone} object will always be a valid 
+#' \linkS4class{genlight} object.
+#' 
+#' @export
+#' @rdname is.snpclone
+#' @param x a snpclone object 
+#' @author Zhian N. Kamvar
+#' @examples
+#' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#' is.snpclone(x)
+#==============================================================================#
+is.snpclone <- function(x){
+  res <- (is(x, "snpclone"))
+  return(res)
+}
+
+#==============================================================================#
+#' Methods used for the snpclone object
+#' 
+#' Default methods for subsetting snpclone objects. 
+#' 
+#' @rdname snpclone-method
+#' @param x a snpclone object
+#' @param i vector of numerics indicating number of individuals desired
+#' @param j a vector of numerics corresponding to the loci desired.
+#' @param ... passed on to the \code{\linkS4class{genlight}} object.
+#' @param drop set to \code{FALSE} 
+#' @author Zhian N. Kamvar
+#==============================================================================#
+setMethod(
+  f = "[",
+  signature(x = "snpclone", i = "ANY", j = "ANY", drop = "ANY"),
+  definition = function(x, i, j, ..., drop = FALSE){
+    if (missing(i)) i <- TRUE
+    ismlgclass <- "MLG" %in% class(x@mlg)
+
+    if (ismlgclass){
+      mlg <- x@mlg[i, all = TRUE]
+    } else {
+      mlg <- x@mlg[i]
+    }
+    x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
+    x@mlg <- mlg
+    return(x)
+  })
+
+#==============================================================================#
+#' @rdname snpclone-method
+#' @param .Object a character, "snpclone"
+#' @param mlg a vector where each element assigns the multilocus genotype of
+#' that individual in the data set. 
+#' @param mlgclass a logical value specifying whether or not to translate the
+#' mlg object into an MLG class object. 
+#' @author Zhian N. Kamvar
+#' @keywords internal
+#==============================================================================#
+setMethod(      
+  f = "initialize",
+  signature("snpclone"),
+  definition = function(.Object, ..., mlg, mlgclass = TRUE){
+
+    .Object <- callNextMethod(.Object, ..., mlg)
+    if (missing(mlg)){
+      mlg <- mlg.vector(.Object)
+    }
+    if (mlgclass){
+      mlg <- new("MLG", mlg)
+    }
+    slot(.Object, "mlg") <- mlg
+    return(.Object)
+  }
+)
+
+#==============================================================================#
+#' @rdname snpclone-method
+#' @param object a snpclone object
+#==============================================================================#
+setMethod(
+  f = "show", 
+  signature("snpclone"),
+  definition = function(object){
+    callNextMethod()
+    cat(" --- snpclone contents ---\n")
+    if (length(object@hierarchy) > 0){
+      hiernames <- names(object@hierarchy)
+      hierlen <- length(hiernames)
+      nameshow <- ifelse(hierlen > 6, 
+                         c(head(hiernames, 3), "...", tail(hiernames, 3)), 
+                         hiernames)
+      nameshow <- paste(nameshow, collapse = ", ")
+      cat(" @hierarchy:", "a data frame with", hierlen, 
+          "levels: (", nameshow, ")\n")
+    }
+    mlgtype <- ifelse(is(object@mlg, "MLG"), paste0(object@mlg@visible, " "), "")
+    mlgtype <- paste0(mlgtype, "multilocus genotypes")
+    cat(" @mlg:", length(unique(object@mlg[])), mlgtype)
+  }
+)
+#==============================================================================#
+#' Create a snpclone object from a genlight object.
+#' 
+#' Wrapper for snpclone initializer.
+#' 
+#' @export
+#' @rdname snpclone-coercion-methods
+#' @aliases as.snpclone,genlight-method
+#' @param x a \code{\linkS4class{genlight}} or \code{\linkS4class{snpclone}} 
+#'   object
+#' @param ... arguments to be passed on to the genlight constructor. These are
+#'   not used if x is not missing.
+#' @param parallel should the parallel package be used to construct the object?
+#' @param n.cores how many cores should be utilized? See documentation for
+#'   \code{\linkS4class{genlight}} for details.
+#' @param mlg a vector of multilocus genotypes or an object of class MLG for the
+#'   new snpclone object.
+#' @param mlgclass if \code{TRUE} (default), the multilocus genotypes will be
+#'   represented as an \code{\linkS4class{MLG}} object.
+#'   
+#' @docType methods
+#'   
+#' @author Zhian N. Kamvar
+#' @examples
+#' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#==============================================================================#
+as.snpclone <- function(x, ..., parallel = require('parallel'), n.cores = NULL, 
+                        mlg, mlgclass = TRUE){
+  standardGeneric("as.snpclone")
+}
+
+#' @export
+setGeneric("as.snpclone")
+
+
+setMethod(
+  f = "as.snpclone",
+  signature(x = "genlight"),
+  definition = function(x, ..., parallel = require('parallel'), n.cores = NULL, 
+                        mlg, mlgclass = TRUE){
+    if (!missing(x) && is(x, "genlight")){
+      if (missing(mlg)) mlg <- mlg.vector(x)
+      res <- new("snpclone", 
+                 gen = x@gen, 
+                 n.loc = nLoc(x), 
+                 ind.names = indNames(x), 
+                 loc.names = locNames(x), 
+                 loc.all = alleles(x), 
+                 chromosome = chr(x), 
+                 position = position(x), 
+                 strata = strata(x), 
+                 hierarchy = x@hierarchy, 
+                 ploidy = ploidy(x), 
+                 pop = pop(x), 
+                 other = other(x), 
+                 parallel = parallel,
+                 n.cores = n.cores,
+                 mlg = mlg,
+                 mlgclass = mlgclass)
+    } else {
+      res <- new("snpclone", ..., mlg = mlg, mlgclass = mlgclass)
+    }
+    return(res)
+  })
 ################################################################################
 #------------------------------------------------------------------------------#
 # GENCLONE METHODS
@@ -336,7 +507,12 @@ setMethod(
     if (missing(i)) i <- TRUE
     x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
     if (!mlg.reset){
-      x@mlg <- x@mlg[i]
+      if (is(x@mlg, "MLG")){
+        x@mlg <- x@mlg[i, all = TRUE]
+      } else {
+        x@mlg <- x@mlg[i]
+      }
+      
     } else {
       if (class(x@mlg)[1] != "MLG"){
         x@mlg <- mlg.vector(x, reset = TRUE)        
@@ -526,3 +702,254 @@ setMethod(
     names(listx) <- locNames(x)
     return(listx)
   })
+
+#==============================================================================#
+#' Access and manipulate multilocus lineages.
+#' 
+#' The following methods allow the user to access and manipulate multilocus 
+#' lineages in genclone or snpclone objects.
+#' 
+#' @export
+#' @param x a \linkS4class{genclone} or \linkS4class{snpclone} object.
+#' @param type a character specifying "original", "contracted", or "custom"
+#'   defining they type of mlgs to return. Defaults to what is set in the
+#'   object.
+#' @param value a character specifying which mlg type is visible in the object.
+#'   See details.
+#'   
+#' @return an object of the same type as x.
+#' 
+#' @details \linkS4class{genclone} and \linkS4class{snpclone} objects have a
+#'   slot for an internal class of object called \linkS4class{MLG}. This class
+#'   allows the storage of flexible mll definitions: \itemize{ \item "original"
+#'   - naive mlgs defined by string comparison. This is default. \item
+#'   "contracted" - mlgs defined by a genetic distance threshold. \item "custom"
+#'   - user-defined MLGs }
+#'   
+#' @rdname mll-method
+#' @aliases mll,genclone-method mll,snpclone-method
+#' @docType methods
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{mll.custom}} \code{\link{mlg.table}}
+#' @examples
+#' 
+#' data(partial_clone)
+#' pc <- as.genclone(partial_clone)
+#' mll(pc)
+#' mll(pc) <- "custom"
+#' mll(pc)
+#' mll.levels(pc) <- LETTERS
+#' mll(pc)
+#==============================================================================#
+mll <- function(x, type = NULL) standardGeneric("mll")
+
+#' @export
+setGeneric("mll")
+
+mll.internal <- function(x, type = NULL){
+  mlg <- x@mlg
+  if (!"MLG" %in% class(mlg)){
+    return(mlg)
+  }
+  if (!is.null(type)){
+    TYPES <- c("original", "expanded", "contracted", "custom")
+    type <- match.arg(type, TYPES)
+  } else {
+    type <- mlg@visible
+  }
+  return(mlg[, type])
+}
+
+setMethod(
+  f = "mll",
+  signature(x = "genclone"),
+  definition = function(x, type = NULL){
+    mll.internal(x, type)
+  })
+
+setMethod(
+  f = "mll",
+  signature(x = "snpclone"),
+  definition = function(x, type = NULL){
+    mll.internal(x, type)
+  })
+
+setMethod(
+  f = "mll",
+  signature(x = "snpclone"),
+  definition = function(x, type = NULL){
+    mlg <- x@mlg
+    if (!"MLG" %in% class(mlg)){
+      return(mlg)
+    }
+    if (!is.null(type)){
+      TYPES <- c("original", "expanded", "contracted", "custom")
+      type <- match.arg(type, TYPES)
+    } else {
+      type <- mlg@visible
+    }
+    return(mlg[, type])
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll-method
+#' @aliases mll<-,genclone-method mll<-,snpclone-method
+#' @docType methods
+#==============================================================================#
+"mll<-" <- function(x, value) standardGeneric("mll<-")
+
+#' @export
+setGeneric("mll<-")
+
+setMethod(
+  f = "mll<-",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    TYPES <- c("original", "expanded", "contracted", "custom")
+    value <- match.arg(value, TYPES)
+    x@mlg@visible <- value
+    return(x)
+  })
+
+setMethod(
+  f = "mll<-",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    TYPES <- c("original", "expanded", "contracted", "custom")
+    value <- match.arg(value, TYPES)
+    x@mlg@visible <- value
+    return(x)
+  })
+
+#==============================================================================#
+#' Define custom multilocus lineages
+#' 
+#' This function will allow you to define custom multilocus lineages for your
+#' data set.
+#' 
+#' @export
+#' @param x a \linkS4class{genclone} or \linkS4class{snpclone} object.
+#' @param set logical. If \code{TRUE} (default), the visible mlls will be set to
+#' 'custom'. 
+#' @param value a vector that defines the multilocus lineages for your data.
+#' This can be a vector of ANYTHING that can be turned into a factor. 
+#' 
+#' @return an object of the same type as x
+#' @rdname mll.custom
+#' @aliases mll.custom,genclone-method mll.custom,snpclone-method
+#' @docType methods
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{mll}} \code{\link{mlg.table}}
+#' @examples 
+#' data(partial_clone)
+#' pc <- as.genclone(partial_clone)
+#' mll.custom(pc) <- LETTERS[mll(pc)]
+#' mll(pc)
+#' 
+#' # Let's say we had a mistake and the A mlg was actually B. 
+#' mll.levels(pc)[mll.levels(pc) == "A"] <- "B"
+#' mll(pc)
+#' 
+#' # Set the MLL back to the original definition.
+#' mll(pc) <- "original"
+#' mll(pc)
+#==============================================================================#
+mll.custom <- function(x, set = TRUE, value) standardGeneric("mll.custom")
+
+#' @export
+setGeneric("mll.custom")
+
+setMethod(
+  f = "mll.custom",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+setMethod(
+  f = "mll.custom",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.custom<-,genclone-method mll.custom<-,snpclone-method
+#' @docType methods
+#==============================================================================#
+"mll.custom<-" <- function(x, set = TRUE, value) standardGeneric("mll.custom<-")
+
+#' @export
+setGeneric("mll.custom<-")
+
+setMethod(
+  f = "mll.custom<-",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+setMethod(
+  f = "mll.custom<-",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.custom.internal(x, set, value)
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.levels,genclone-method mll.levels,snpclone-method
+#' @docType methods
+#==============================================================================#
+mll.levels <- function(x, set = TRUE, value) standardGeneric("mll.levels")
+
+#' @export
+setGeneric("mll.levels")
+
+setMethod(
+  f = "mll.levels",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+setMethod(
+  f = "mll.levels",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+
+#==============================================================================#
+#' @export
+#' @rdname mll.custom
+#' @aliases mll.levels<-,genclone-method mll.levels<-,snpclone-method
+#' @docType methods
+#==============================================================================#
+"mll.levels<-" <- function(x, set = TRUE, value) standardGeneric("mll.levels<-")
+
+#' @export
+setGeneric("mll.levels<-")
+
+setMethod(
+  f = "mll.levels<-",
+  signature(x = "genclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
+
+setMethod(
+  f = "mll.levels<-",
+  signature(x = "snpclone"),
+  definition = function(x, set = TRUE, value){
+    mll.levels.internal(x, set, value)
+  }
+)
