@@ -43,194 +43,102 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-#
-# This will make a histogram of permutations of a dataset and show a red line
-# indicating p = 0.05 and a green line indicating the observed value. 
-# 
-#==============================================================================#
-permut.histogram.maker <- function(index="index",sampled,observed,pop){
-  if(all(is.nan(sampled[[index]]))){
-    warning("Cannot create histogram due to NaN's")
-    next
+poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05), 
+                       pop = NULL, file = NULL, N = NULL,
+                       observed = c(Ia = 0, rbarD = 0), 
+                       index = c("rbarD", "Ia")){
+  INDEX_ARGS <- c("rbarD", "Ia")
+  index      <- match.arg(index, INDEX_ARGS)
+  if (!class(sample) %in% "ialist" & class(sample) %in% "list"){
+    suppressMessages(ggsamps <- melt(lapply(sample, "[[", "samples")))
+    ggvals <- vapply(sample, "[[", numeric(4), "index")
+    names(dimnames(ggvals)) <- c("index", "population")
+    suppressMessages(ggvals <- melt(ggvals))
+    ggsamps <- ggsamps[ggsamps$variable == index, ]
+    ggvals  <- ggvals[grep(ifelse(index == "Ia", "I", "D"), ggvals$index), ]
+    ggindex <- ggvals[ggvals$index == index, ]
+    ggpval  <- ggvals[ggvals$index == ifelse(index == "Ia", "p.Ia", "p.rD"), ]
+    names(ggsamps)[3] <- "population"
+    ggsamps$population <- factor(ggsamps$population, names(sample))
+    srange  <- range(ggsamps$value, na.rm = TRUE)
+    binw    <- diff(srange/30)
+    plot_title <- make_poppr_plot_title(sample[[1]][["samples"]][[index]], 
+                                        file = file)
+    thePlot <- ggplot(ggsamps, aes_string(x = "value", group = "population")) +
+      geom_histogram(binwidth = binw, position = "identity") +
+      geom_vline(aes_string(xintercept = "value"), color = "blue", linetype = 2,
+                 data = ggindex) +
+      facet_wrap(~population, scales = "free_x") +
+      ggtitle(plot_title)
+    if (index == "rbarD"){
+      thePlot <- thePlot + xlab(expression(paste(bar(r)[d])))
+    } else if (index == "Ia"){
+      thePlot <- thePlot + xlab(expression(paste(I[A])))
+    }
+    return(thePlot)
   }
-	xmin <- min(observed, sampled[[index]])
-	xmax <- max(observed, sampled[[index]])
-  # R does not like it when the max value for xlim is infinity, so this will fix
-  # the culprit where it occurs, usually in the rbarD caluclation. I will be
-  # surprised if I see it in the Ia calculation.
-  if(!is.nan(xmax) & xmax==Inf & index=="rbarD"){
-    xmax <- 1
-  }
-  if(is.nan(xmin)){
-    xmin <- -0.5
-  }
-  if(is.nan(xmax)){
-    xmax <- ifelse(index=="Ia", 18, 1)
-  }
-	hist(sampled[[index]], xlim=c(xmin, xmax),
-        main=c("Population:",as.character(pop)),
-        xlab=sprintf("%s (%d permutations)",names(sampled[index]),
-                      length(sampled[[index]])), col="grey")
-	abline(v=observed, col="green")
-  perc95 <- quantile(sampled[[index]], 0.95, na.rm=TRUE)[[1]]
-  abline(v=perc95, col="red")
-}
-#==============================================================================#
-# histogram will create two histograms showing the sampled distributions of the
-# index of association and the standardized index of association along with an
-# informative legend between them.
-#==============================================================================#
-permut.histogram <- function(sampled, observed, pval, pop="pop", file="file"){
-  par(xpd=TRUE,mfrow=c(3,1))
-  permut.histogram.maker(index="Ia",sampled,observed[1],pop)
-  if (!is.na(pval)){
-    pval <- ifelse(pval==0, sprintf("< %g", 1/length(sampled[["Ia"]])), pval)
-    frame()
-    legend('center', col=c("red", "green"), lty=c(1,1), c("p = 0.05",
-              paste("Observed\n","(p-value  ",pval,")", sep="")), 
-                        horiz=TRUE, title=paste("File : ",file,sep=""))
-  }
-  permut.histogram.maker(index="rbarD",sampled,observed[2],pop)
-}
-
-poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop", 
-                        observed = observed, file="file", N=NA){
-  #   if (!is.na(pval[1])){
-  #     pval[1] <- ifelse(pval[1]==0, sprintf("< %g", 1/length(sample[["Ia"]])), pval[1])
-  #   }
-  #   if (!is.na(pval[2])){
-  #     pval[2] <- ifelse(pval[2]==0, sprintf("< %g", 1/length(sample[["rbarD"]])), pval[2])
-  #   }
-  #````````````````````````````````````````````````````````````````````````````#
-  # In the case that the sample contains all NaNs, a graph cannot be displayed.
-  # In place of the graph will be an orange box with a warning message.
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-  
+  plot_title <- make_poppr_plot_title(sample[[index]], file, N, pop)
   if (all(is.nan(sample$rbarD))){
-    warning(paste("The data from ",file,", population: ",pop," contains only missing values and cannot be displayed graphically", sep=""))
-    background_stuff <- theme(panel.grid.major.y = element_line(size=0)) +
-      theme(panel.grid.minor.y = element_line(size=0)) +
-      theme(panel.grid.major.x = element_line(size=0)) +
-      theme(panel.background = element_rect(fill="grey95")) +
-      #theme(plot.background = element_rect(size=1, color="black")) +
-      theme(axis.ticks.y = element_line(size=0)) +
-      theme(axis.text.y = element_text(size=0)) +
-      theme(axis.ticks.x = element_line(size=0)) +
-      theme(axis.text.x = element_text(size=0)) +
-      theme(axis.title.y = element_text(size=rel(0)))+
-      theme(axis.title.x = element_text(size=rel(0)))
     oops <- ggplot(as.data.frame(list(x=-10:9)), aes_string(x = "x")) + 
       geom_histogram(binwidth=1, fill="orange") + 
       geom_text(aes(label="Warning:", x=0, y=0.8), color="black", size=rel(15)) + 
       geom_text(aes(label="Data contains only NaNs and\ncannot be displayed graphically", 
                     x=0, y=0.5, hjust=0.5), color="black", size=rel(10)) +
-      labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-                       length(sample$Ia), "\nFile: ", file, sep="")) + 
-      theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-      background_stuff
-    print(oops)
+      theme(line = element_blank(), 
+            axis.text = element_blank(), 
+            axis.title = element_blank()) +
+      ggtitle(plot_title)
+    return(oops)
   }
-  else {
-    #``````````````````````````````````````````````````````````````````````````#
-    # Normal Cases
-    #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-    if(any(is.nan(sample[["rbarD"]])))
-      sample[["rbarD"]][which(is.nan(sample[["rbarD"]]))] <- mean(sample[["rbarD"]], na.rm=TRUE)
-    if(any(is.nan(sample[["Ia"]])))
-      sample[["Ia"]][which(is.nan(sample[["Ia"]]))] <- mean(sample[["Ia"]], na.rm=TRUE)
-    
-    # Transforming the data into a data frame that ggplot can understand and put
-    # into facets. It will have the following rows: Value, Index, and Quant.
-    Indexfac <- factor(1:2, levels=1:2, labels=c("I[A]","bar(r)[d]"))
-    infodata <- as.data.frame(list(Value=c(sample[["Ia"]], sample[["rbarD"]]), 
-                                   Index=rep(Indexfac, each=length(sample[["Ia"]]))))
-    
-    # Setting up the observed values for formatting the overlaying lines.
-    # It will have the following rows: Observed, Index, Quant, Sam, P, min, max
-    
-    obsdata <- data.frame(list(Observed=observed[1:2], Index=Indexfac))
-    obsdata[["P"]] <- paste("Observed \n(p-value: ", pval,")",sep="")
-    obsdata[["median"]] <- c(median(infodata[infodata[["Index"]] == Indexfac[1], "Value"]),
-                        median(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))
-
-
-    obsdata[["label"]] <- paste("Observed: ",obsdata[["Observed"]], sep="")
-    if(any(is.na(observed))){
-      warning(paste("The Index of Association values from ",file,", population: ",pop," contain missing values and cannot be displayed graphically", sep=""))
-      iard_plot <- ggplot(infodata, aes_string(x = "Value")) + 
-        # Giving the data over to the histogram creating function and removing
-        # all of the lines from each bar, so it's displayed as a solid area.
-        geom_histogram(linetype="blank", #alpha=0.8, 
-                       data = infodata[infodata[["Index"]] == Indexfac[1], ], 
-                       position="identity",
-                       binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[1], "Value"]))/30) + 
-        geom_histogram(linetype="blank", #alpha=0.8, 
-                       data = infodata[infodata[["Index"]] == Indexfac[2], ], 
-                       position="identity",
-                       binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))/30) + 
-        geom_rug(alpha = 0.5) + #theme(legend.position = "none") + 
-        # The label for the observed line is a bit more difficult to code as
-        # it has the ability to appear anywhere on the chart. Here, I'm
-        # forcing it to flip to one side or the other based on which side of
-        # the mean that the observed value falls on.
-        geom_text(aes_string(label="label", x=0, y=Inf, vjust=1.5),
-                  data=obsdata, angle=0, color="red") + 
-        
-        # Splitting the data into separate plots with free x-axes.
-        facet_grid(". ~ Index", scales="free_x", labeller=label_parsed) +
-        
-        # Title of the plot.
-        labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-                         length(sample$Ia), "\nFile: ", file, sep="")) + 
-        theme_classic() %+replace%
-        theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-        theme(panel.background = element_rect(fill="grey98")) +
-        
-        # Making the Index titles bigger. 
-        theme(strip.text.x = element_text(size=rel(3), face="bold"))
-    }
-    else{
-      iard_plot <- ggplot(infodata, aes_string(x = "Value")) + 
-        # Giving the data over to the histogram creating function and removing
-        # all of the lines from each bar, so it's displayed as a solid area.
-        geom_histogram(linetype="blank", #alpha=0.8, 
-                       data = infodata[infodata[["Index"]] == Indexfac[1], ], 
-                       position="identity",
-                       binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[1], "Value"]))/30) + 
-        geom_histogram(linetype="blank", #alpha=0.8, 
-                       data = infodata[infodata[["Index"]] == Indexfac[2], ], 
-                       position="identity",
-                       binwidth=diff(range(infodata[infodata[["Index"]] == Indexfac[2], "Value"]))/30) + 
-        geom_rug(alpha = 0.5) + #theme(legend.position = "none") + 
-        # Positioning the observed line and labeling it.
-        geom_vline(aes_string(xintercept = "Observed"), data = obsdata, color="blue", 
-                   show_guide=TRUE, linetype="dashed") +
-        
-        # The label for the observed line is a bit more difficult to code as
-        # it has the ability to appear anywhere on the chart. Here, I'm
-        # forcing it to flip to one side or the other based on which side of
-        # the mean that the observed value falls on.
-        #geom_text(aes_string(label=paste("Observed \n(p-value: ", P,")",sep=""),
-        geom_text(aes_string(label="P", 
-                      x="Observed",y=Inf,vjust=2,hjust="ifelse(Observed > median, 1.01, -0.01)"),
-                  data=obsdata, angle=0, color="blue") + 
-        
-        # Splitting the data into separate plots with free x-axes.
-        facet_grid(". ~ Index", scales="free_x", labeller=label_parsed) +
-        
-        # Title of the plot.
-        labs(title=paste("Population: ", pop, "; N: ", N, "\nPermutations: ", 
-                         length(sample$Ia), "\nFile: ", file, sep="")) + 
-        theme_classic() %+replace%
-        theme(plot.title = element_text(vjust=1, size=rel(2), face="bold")) +
-        theme(panel.background = element_rect(fill="grey98")) +
-        
-        # Making the Index titles bigger. 
-        theme(strip.text.x = element_text(size=rel(3), face="bold"))
-    }
-    print(iard_plot)
+  if (any(is.na(sample[[index]]))){
+    sample[[index]][is.na(sample[[index]])] <- mean(sample[[index]], na.rm=TRUE)
   }
-} 
+  srange <- range(sample[[index]])
+  labs   <- c(Ia = "I[A]", rbarD = "bar(r)[d]")
+  names(pval) <- names(labs)
+  binw <- diff(srange/30)
+  if (is.na(observed[index])){
+    xval <- srange[2]
+    just <- 1
+    vline <- geom_blank()
+    annot_color <- "red"
+    obs <- "NaN"
+  } else if (all(observed[index] > srange)){
+    xval <- observed[index]
+    just <- 1.1
+  } else {
+    maxobsmin <- c(srange[1], observed[index], srange[2])
+    xjust <- which.max(abs(diff(maxobsmin)))
+    xval  <- srange[xjust]
+    just  <- ifelse(xjust < 2, 0, 1)
+  }
+  if (!exists("annot_color")){
+    annot_color <- "blue"
+    vline       <- geom_vline(xintercept = observed[index], color = "blue", 
+                              linetype = 2)
+    obs         <- signif(observed[index], 3)
+  }
+  obslab  <- paste(labs[index], ":", obs, sep = "")
+  plab    <- paste("p =", signif(pval[index], 3))
+  suppressMessages(ggdata  <- melt(sample))
+  ggdata  <- ggdata[ggdata$variable == index, ] 
+  thePlot <- ggplot(ggdata, aes_string(x = "value"))
+  thePlot <- thePlot + 
+    geom_histogram(binwidth = binw, position = "identity") +
+    geom_rug() + 
+    vline +
+    annotate(geom = "text", x = xval, y = Inf, label = obslab, color = annot_color, 
+             vjust = 2, hjust = just, parse = TRUE) + 
+    annotate(geom = "text", x = xval, y = Inf, label = plab, color = annot_color, 
+             vjust = 4, hjust = just)
+  if (index == "rbarD"){
+    thePlot <- thePlot + xlab(expression(paste(bar(r)[d])))
+  } else if (index == "Ia"){
+    thePlot <- thePlot + xlab(expression(paste(I[A])))
+  }
+  thePlot    <- thePlot + ggtitle(plot_title)
+  return(thePlot)
+}
 
 #==============================================================================#
 #
@@ -240,6 +148,10 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' @param pop a \code{\link{genind}} object
 #'   
 #' @param distmat a distance matrix that has been derived from your data set.
+#' 
+#' @param mlg.compute if the multilocus genotypes are set to "custom" (see
+#'   \code{\link{mll.custom}} for details) in your genclone object, this will
+#'   specify which mlg level to calculate the nodes from. See details.
 #'   
 #' @param palette a \code{function} defining the color palette to be used to 
 #'   color the populations on the graph. It defaults to
@@ -304,6 +216,18 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #'   vertex colors} \item{colors}{a vector of the hexadecimal representations of
 #'   the colors used in the vertex colors}
 #'   
+#'   
+#' @details Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.
+#'   
 #' @note The edges of these graphs may cross each other if the graph becomes too
 #'   large.
 #'   
@@ -350,7 +274,7 @@ poppr.plot <- function(sample, pval = c("0.05", "0.05"), pop="pop",
 #' }
 #' 
 #==============================================================================#
-poppr.msn <- function (pop, distmat, palette = topo.colors, 
+poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "original",
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale=TRUE, showplot = TRUE, 
@@ -374,6 +298,20 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   
   bclone <- as.matrix(distmat)
+
+  # # The clone correction of the matrix needs to be done at this step if there
+  # # is only one or no populations. 
+  # if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+  #   if (is.genclone(pop)){
+  #     mlgs <- mll(pop, mlg.compute)
+  #   } else {
+  #     mlgs <- pop$other$mlg.vec
+  #   }
+  #   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  #   return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+  #                        glim = glim, gadj = gadj, wscale = wscale, 
+  #                        palette = palette))
+  # }
   # This will subset both the population and the matrix. 
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(pop, sublist, blacklist)
@@ -383,6 +321,16 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
 
   # The clone correction of the matrix needs to be done at this step if there
   # is only one or no populations. 
+  classstat <- (is.genclone(pop) | is(pop, "snpclone")) && is(pop@mlg, "MLG")
+  if (classstat){
+    visible <- pop@mlg@visible
+    mll(pop)  <- mlg.compute
+  }
+  # cpop <- pop[.clonecorrector(pop), ]
+
+  # # This will clone correct the incoming matrix. 
+  # bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
@@ -408,7 +356,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
     
     bclone <- filter.stats[[3]]
   }
-  else {
+  else {  
     cpop <- pop[.clonecorrector(pop), ]
     # This will determine the size of the nodes based on the number of individuals
     # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
@@ -420,14 +368,24 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   }
   rownames(bclone) <- cpop$ind.names
   colnames(bclone) <- cpop$ind.names
-  mlgs <- pop@mlg[]
-  cmlg <- cpop@mlg[]
+  if (is.genclone(pop)){
+    mlgs <- mll(pop)
+    cmlg <- mll(cpop)
+    if (!is.numeric(mlgs)){
+      mlgs <- as.character(mlgs)
+      cmlg <- as.character(cmlg)
+    }
+  } else {
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+  }  
   
   # Obtaining population information for all MLGs
   subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
-
-  names(mlg.cp) <- paste0("MLG.", sort(unique(cmlg)))
+  if (is.numeric(mlgs)){
+    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+  }
   mlg.cp     <- mlg.cp[rank(cmlg)]
   bclone <- as.matrix(bclone)
   
@@ -447,7 +405,14 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cmlg, sep="")
+      if (is.numeric(cmlg) && !classstat){
+        vertex.label <- paste("MLG.", cmlg, sep="")        
+      } else if (visible == "custom"){
+        mll(pop) <- visible
+        vertex.label <- correlate_custom_mlgs(pop, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)
+      }
     }
     else if(toupper(vertex.label) == "INDS"){
       vertex.label <- cpop$ind.names
@@ -838,6 +803,18 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   useful if you want to maintain the same position of the nodes before and
 #'   after removing edges with the \code{cutoff} argument. This works best if
 #'   you set a seed before you run the function.}}
+#'   
+#'   \subsection{mlg.compute}{
+#'   Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.}
 #' 
 #' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 #' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
@@ -893,7 +870,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
-plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, 
+plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = "original",
                            glim = c(0, 0.8), gweight = 1, wscale = TRUE, 
                            nodebase = 1.15, nodelab = 2, inds = "ALL", 
                            mlg = FALSE, quantiles = TRUE, cutoff = NULL, 
@@ -937,7 +914,16 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   poppr_msn$graph <- update_edge_scales(poppr_msn$graph, wscale, gscale, glim, gadj)
   
   x.mlg <- mlg.vector(x)
-  labs  <- unique(x.mlg)
+  if (is.factor(x.mlg)){
+    x.mlg <- mll(x, mlg.compute)
+    custom <- TRUE
+    # labs <- unique(x.mlg)
+    labs  <- correlate_custom_mlgs(x, mlg.compute)
+  } else {
+    labs  <- unique(x.mlg)    
+    custom <- FALSE
+  }
+
   
 
   # Highlighting only the names of the submitted genotypes and the matching
@@ -954,7 +940,12 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   }
   
   # Remove labels that are not specified.
-  labs[which(!labs %in% x.input)] <- NA
+  if (!custom){
+    labs[!labs %in% x.input] <- NA    
+  } else {
+    labs[!labs %in% labs[as.character(x.input)]] <- NA
+  }
+
 
   if (!isTRUE(mlg)){
     # Combine all the names that match with each particular MLG in x.input.
@@ -963,8 +954,10 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
                                    collapse = "\n"),
                              character(1))
     labs[!is.na(labs)] <- combined_names
-  } else {
+  } else if (is.numeric(x.mlg) && !custom){
     labs[!is.na(labs)] <- paste("MLG", labs[!is.na(labs)], sep = ".")
+  } else {
+    labs <- as.character(labs)
   }
   if (any(is.na(labs))){
     sizelabs <- V(poppr_msn$graph)$size

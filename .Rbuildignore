@@ -9,3 +9,5 @@
 ^vignettes/*.toc$
 ^tools/*$
 ^\.travis\.yml$
+^vignettes/figure
+^tests/testthat/Rplots.pdf

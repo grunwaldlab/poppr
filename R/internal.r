@@ -117,7 +117,7 @@ NULL
 #'   "Symptom"
 #' @references SE Everhart, H Scherm, (2014) Fine-scale genetic structure of 
 #'   \emph{Monilinia fructicola} during brown rot epidemics within individual peach 
-#'   tree canopies. Phytopathology, submitted
+#'   tree canopies. Phytopathology 105:542-549 doi:10.1094/PHYTO-03-14-0088-R
 #' @examples
 #' data(monpop)
 #' splithierarchy(monpop) <- ~Tree/Year/Symptom
@@ -224,7 +224,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
 #==============================================================================#
 
 .clonecorrector <- function(x){
-  if (is.genclone(x)){
+  if (is.genclone(x) | is(x, "snpclone")){
     is_duplicated <- duplicated(x@mlg[])
   } else {
     is_duplicated <- duplicated(x@tab[, 1:ncol(x@tab)])
@@ -410,7 +410,7 @@ pop_combiner <- function(df, hier=c(1), sep="_"){
 # # none
 #==============================================================================#
 sub_index <- function(pop, sublist="ALL", blacklist=NULL){
-  if (!is.genind(pop)){
+  if (!is.genind(pop) & !is(pop, "snpclone")){
     stop("pop.subset requires a genind object\n")
   }
   if (is.null(pop(pop))){
@@ -423,13 +423,13 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
     }
     else {
       # filling the sublist with all of the population names.
-      sublist <- pop@pop.names 
+      sublist <- levels(pop(pop))
     }
   }
 
   # Checking if there are names for the population names. 
   # If there are none, it will give them names. 
-  if (is.null(names(pop@pop.names))){
+  if (is.genind(pop) && is.null(names(pop@pop.names))){
     if (length(pop@pop.names) == length(levels(pop@pop))){
       names(pop@pop.names) <- levels(pop@pop)
     }
@@ -437,7 +437,7 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       stop("Population names do not match population factors.")
     }
   }
-  
+  popnames <- levels(pop(pop))
   # Treating anything present in blacklist.
   if (!is.null(blacklist)){
     # If both the sublist and blacklist are numeric or character.
@@ -445,27 +445,27 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       sublist <- sublist[!sublist %in% blacklist]
     } else if (is.numeric(sublist) & class(blacklist) == "character"){
     # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-      sublist <- sublist[sublist %in% which(!pop@pop.names %in% blacklist)]
+      sublist <- sublist[sublist %in% which(popnames %in% blacklist)]
     } else {
       # no sublist specified. Ideal situation
-      if(all(pop@pop.names %in% sublist)){
+      if(all(popnames %in% sublist)){
         sublist <- sublist[-blacklist]
       } else {
       # weird situation where the user will specify a certain sublist, yet index
       # the blacklist numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
-        sublist <- sublist[!sublist %in% pop@pop.names[blacklist]]
+        sublist <- sublist[!sublist %in% popnames[blacklist]]
       }
     }
   }
 
   # subsetting the population. 
   if (is.numeric(sublist))
-    sublist <- names(pop@pop.names[sublist])
+    sublist <- names(popnames[sublist])
   else
-    sublist <- names(pop@pop.names[pop@pop.names %in% sublist])
-  sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
+    sublist <- names(popnames[popnames %in% sublist])
+  sublist <- (1:length(pop(pop)))[pop(pop) %in% sublist]
   if(is.na(sublist[1])){
     warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
     return(1:length(pop@ind.names))
@@ -484,20 +484,28 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 # # none
 #==============================================================================#
 mlg.matrix <- function(x){
-  if (is.genclone(x)){
+  visible <- "original"
+  if (is.genclone(x) | is(x, "snpclone")){
     mlgvec <- x@mlg[]
+    if (is(x@mlg, "MLG")){
+      visible <- x@mlg@visible
+    }
   } else {
     mlgvec <- mlg.vector(x)
   }
-  mlgs   <- length(unique(mlgvec))
+  
   if (!is.null(pop(x))){
     mlg.mat <- table(pop(x), mlgvec)
   } else {
-    mlg.mat <- matrix(table(mlgvec), nrow = 1)
+    mlg.mat <- t(as.matrix(table(mlgvec)))
     rownames(mlg.mat) <- "Total"
   }
   names(attr(mlg.mat, "dimnames")) <- NULL
+  if (visible == "custom"){
+    return(mlg.mat)
+  }
   if (is.null(colnames(mlg.mat))){
+    mlgs <- length(unique(mlgvec))
     colnames(mlg.mat) <- 1:mlgs
   }
   colnames(mlg.mat) <- paste("MLG", colnames(mlg.mat), sep=".")
@@ -667,7 +675,7 @@ final <- function(Iout, result){
 #==============================================================================#
 
 .ia <- function(pop, sample=0, method=1, quiet=FALSE, namelist=NULL, 
-                missing="ignore", hist=TRUE){
+                missing="ignore", hist=TRUE, index = "rbarD"){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   if(pop@type!="PA"){
@@ -700,7 +708,7 @@ final <- function(Iout, result){
   }
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
-  if (sample==0){
+  if (sample == 0){
     Iout   <- IarD
     result <- NULL
   }
@@ -714,13 +722,16 @@ final <- function(Iout, result){
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
-      poppr.plot(samp, observed=IarD, pop=namelist$population,
-                        file=namelist$File, pval=p.val, N=nrow(pop@tab))
+      print(poppr.plot(samp, observed=IarD, pop=namelist$population, index = index,
+                       file=namelist$File, pval=p.val, N=nrow(pop@tab)))
     }
     result <- 1:4
-    result[c(1,3)] <- IarD
-    result[c(2,4)] <- p.val
+    result[c(1, 3)] <- IarD
+    result[c(2, 4)] <- p.val
     names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
+    iaobj <- list(index = final(Iout, result), samples = samp)
+    class(iaobj) <- "ialist"
+    return(iaobj)
   } 
   return(final(Iout, result))
 }
@@ -1106,11 +1117,11 @@ fix_negative_branch <- function(tre){
                                         c("parent", "child", "length")
                         ))
   # Looking at the edges that are zero.
-  zero.edges  <- all.lengths[tre$edge.length < 0, ]
+  zero.edges  <- all.lengths[tre$edge.length < 0, , drop = FALSE]
   # Checking which negative edges are included in all the edges
-  all.edges   <- all.lengths[all.lengths[, "parent"] %in% zero.edges[, "parent"], ]
+  all.edges   <- all.lengths[all.lengths[, "parent"] %in% zero.edges[, "parent"], , drop = FALSE]
   # Ordering all the edges
-  index.table <- all.edges[order(all.edges[, "parent"]), ]
+  index.table <- all.edges[order(all.edges[, "parent"]), , drop = FALSE]
   # Loop to change the NJ branch length
   for (i in (unique(index.table[, "parent"]))){
     the_parents <- index.table[, "parent"] == i
@@ -1135,16 +1146,14 @@ fix_negative_branch <- function(tre){
 # Internal functions utilizing this function:
 # # none
 #==============================================================================#
-
-
-singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gscale = TRUE, 
+singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE, loss = TRUE, distmat = NULL, gscale = TRUE, mlg.compute = "original",
                       glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, 
                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
   if(!is.genclone(pop)){
     pop <- as.genclone(pop)
   }
 
-  if (class(pop$mlg) != "MLG"){
+  if (!is(pop@mlg, "MLG")){
     # Froce pop$mlg to be class MLG
     pop$mlg <- new("MLG", pop$mlg)
   }
@@ -1161,21 +1170,35 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
     pop$mlg[] <- filter.stats[[1]]
     cpop <- pop[if(is.na(-which(duplicated(pop$mlg[]))[1])) which(!duplicated(pop$mlg[])) else -which(duplicated(pop$mlg[])) ,]
     distmat <- filter.stats[[3]]
-  }
-  else {
+  } else {
+    classstat <- (is.genclone(pop) | is(pop, "snpclone")) && is(pop@mlg, "MLG")
+    if (classstat){
+      visible  <- pop@mlg@visible
+      mll(pop) <- mlg.compute
+    }
     cpop <- pop[.clonecorrector(pop), ]
+   
+    
+    mlg.number <- table(mlgs)[rank(cmlg)]
     # Calculate distance matrix if not supplied (Bruvo's distance)
-    if (is.null(distmat) & !is.null(replen)){
-      distmat <- as.matrix(bruvo.dist(cpop, replen=replen))
+     if (is.null(distmat) & !is.null(replen)){
+        distmat <- as.matrix(bruvo.dist(cpop, replen = replen, add = add, loss = loss))
     }
   }
   if(class(distmat) != "matrix"){
     distmat <- as.matrix(distmat)
   } 
-  mlgs <- pop$mlg[]
-  cmlg <- cpop$mlg[]
-  mlg.number <- table(mlgs)[rank(cmlg)]
-
+ if (is.genclone(pop)){
+    mlgs <- mll(pop)
+    cmlg <- mll(cpop)
+    if (!is.numeric(mlgs)){
+      mlgs <- as.character(mlgs)
+      cmlg <- as.character(cmlg)
+    }
+  } else {
+    mlgs <- pop$other$mlg.vec
+    cmlg <- cpop$other$mlg.vec
+  }
   # Create the graphs.
   g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")
   if(length(cpop@mlg[]) > 1){
@@ -1195,12 +1218,20 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
   # Create the vertex labels
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cmlg)
+      if (is.numeric(cmlg) && !classstat){
+        vertex.label <- paste0("MLG.", cmlg)        
+      } else if (visible == "custom"){
+        mll(pop) <- visible
+        vertex.label <- correlate_custom_mlgs(pop, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)        
+      }
+
     } else if(toupper(vertex.label) == "INDS") {
       vertex.label <- cpop$ind.names
     }
   } 
-  if(length(cpop@mlg[]) > 1){
+  if(length(mll(cpop)) > 1){
     mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   }
   populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
@@ -1233,7 +1264,8 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, distmat = NULL, gsca
 # # singlepop_msn
 #==============================================================================#
 
-bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, loss = TRUE){
+bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, 
+                            loss = TRUE){
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
   replen <- bruvomat@replen
@@ -1325,7 +1357,7 @@ make_ade_df <- function(hier, df, expanded = FALSE){
   }
   smallest  <- df[[levs[length(levs)]]]
   smallinds <- !duplicated(smallest)
-  newdf     <- df[smallinds, ]
+  newdf     <- df[smallinds, , drop = FALSE]
   newdf     <- newdf[-length(levs)]
   if (length(newdf) > 1){
     factlist <- lapply(newdf, function(x) factor(x, unique(x)))
@@ -1434,8 +1466,11 @@ pool_haplotypes <- function(x, dfname = "population_hierarchy"){
   ploidy        <- ploidy(x)
   df            <- other(x)[[dfname]]
   df$Individual <- indNames(x)
-  df            <- df[rep(1:nrow(df), ploidy), ]
+  df            <- df[rep(1:nrow(df), ploidy), , drop = FALSE]
   newx          <- repool(separate_haplotypes(x))
+  the_names     <- indNames(newx)
+  the_names     <- substr(the_names, 1, nchar(the_names) - 2)
+  df <- df[df$Individual %in% the_names, ]
   pop(newx)     <- df$Individual
   other(newx)[[dfname]] <- df
   return(newx)
@@ -1495,19 +1530,17 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codo
 # Private functions utilizing this function:
 # # nei.boot any.boot
 #==============================================================================#
-poppr.plot.phylo <- function(tree, type = "nj"){
-  ARGS <- c("nj", "upgma")
-  type <- match.arg(type, ARGS)
+poppr.plot.phylo <- function(tree, type = "nj", root = FALSE){
   barlen <- min(median(tree$edge.length), 0.1)
   if (barlen < 0.1) barlen <- 0.01
-  if (type == "nj"){
+  if (!root && type != "upgma"){
     tree <- ladderize(tree)
-  }
+  } 
   plot.phylo(tree, cex = 0.8, font = 2, adj = 0, xpd = TRUE, 
              label.offset = 0.0125)
   nodelabels(tree$node.label, adj = c(1.3, -0.5), frame = "n", cex = 0.8, 
              font = 3, xpd = TRUE)
-  if (type == "nj"){
+  if (type != "upgma"){
     add.scale.bar(lwd = 5, length = barlen)
   } else {
     axisPhylo(3)
@@ -1604,7 +1637,7 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
   otherargs <- list(...)
   #print(otherargs)
   matchargs <- names(distargs)[names(distargs) %in% names(otherargs)]
-  distargs[matchargs] <- unlist(otherargs[matchargs])
+  distargs[matchargs] <- otherargs[matchargs]
   #print(distargs)
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
   treedist <- function(x){
@@ -1811,7 +1844,7 @@ mlg_barplot <- function(mlgt){
 
   # Organize the data frame by count in descending order.
   rearranged <- order(mlgt.df$count, decreasing = TRUE)
-  mlgt.df <- mlgt.df[rearranged, ]
+  mlgt.df <- mlgt.df[rearranged, , drop = FALSE]
   mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
 
   # plot it
@@ -1862,3 +1895,94 @@ get_sample_mlg <- function(size, samp, nloci, gen, progbar){
   return(out)
 }
 
+#==============================================================================#
+# Internal function for creating title for index of association histogram.
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # poppr.plot
+#==============================================================================#
+make_poppr_plot_title <- function(samp, file = NULL, N = NULL, pop = NULL){
+  plot_title <- ifelse(is.null(pop), "", paste0("Population:", pop))
+  plot_title <- ifelse(is.null(N), paste0(plot_title, ""), 
+                       paste(plot_title, paste("N:", N), sep = "\n"))
+  plot_title <- ifelse(is.null(file), paste0(plot_title, ""), 
+                       paste(plot_title, paste("Data:", file), sep = "\n"))
+  perms      <- paste("Permutations:", length(samp))
+  plot_title <- paste(plot_title, perms, sep = "\n")
+  return(plot_title)
+}
+
+#==============================================================================#
+# Function to subset the custom MLGs by the computationally derived MLGs in the
+# data set. This is necessary due to the fact that minimum spanning networks
+# will clone correct before calculations, but this is performed on the visible
+# multilocus genotypes. for custom MLGs that may not be monophyletic, this 
+# results in observed networks that may be incorrect. 
+# 
+# A solution to this would simply be to label the multilocus genotypes with 
+# their custom labels, but collapse them with the computationally derived 
+# labels.
+# 
+# In order to parse these out, we have three possible situations we can think
+# of:
+# 
+#  1. computational MLGs match the custom MLGs: pretty easy, simply return the
+#     non-duplicated mlgs
+#  2. There are more computational MLG classes than custom MLGs. This is also
+#     fairly simple: return the custom MLGs censored by the computational MLGs
+#  3. More custom MLGs than computational MLGs. For labelling purposes, 
+#     the custom MLGs that occupy a single MLG should be concatenated in a 
+#     string.
+#  4. A mix of 2 and 3. Same strategy as 3.
+#  
+#  Input: a genclone or snpclone object with an MLG object in the @mlg slot
+#  Output: A string of clone-censored custom MLGs
+#
+# Public functions utilizing this function:
+# # bruvo.msn poppr.msn plot_poppr_msn
+#
+# Private functions utilizing this function
+# # singlepop_msn
+#==============================================================================#
+correlate_custom_mlgs <- function(x, by = "original", subset = TRUE){
+  if (!is.genclone(x) & !is(x, "snpclone")){
+    stop("needs a genclone or snpclone object")
+  }
+  if (!is(x@mlg, "MLG")){
+    stop("the @mlg slot needs to be of class MLG. This procedure is meaningless otherwise.")
+  }
+  the_mlgs <- x@mlg@mlg
+  customs  <- as.character(the_mlgs[["custom"]])
+  ncustom  <- nlevels(the_mlgs[["custom"]])
+  mlg_dup  <- !duplicated(the_mlgs[[by]])
+  ndup     <- sum(mlg_dup)
+  
+  # Create contingency table with custom genotypes in rows and computed in
+  # columns
+  cont_table <- table(customs, the_mlgs[[by]])
+  
+  # Create true/false table of MLG identity
+  i_table <- cont_table > 0
+  
+  # Count up the number of custom MLGs contained within each computed MLG.
+  check_less_custom <- colSums(i_table)
+  
+  if ((ndup == ncustom | ndup > ncustom) & all(check_less_custom == 1)){
+    if (!subset){
+      return(customs)
+    }
+    res        <- customs[mlg_dup]
+    names(res) <- the_mlgs[[by]][mlg_dup]
+    return(res)
+  }
+  
+  cust_names <- rownames(cont_table)
+  res <- apply(cont_table, 2, function(i) paste(cust_names[i > 0], collapse = "\n"))
+  if (!subset){
+    res <- res[as.character(as.character(the_mlgs[[by]]))]
+  }
+  return(res)
+}

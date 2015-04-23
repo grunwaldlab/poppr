@@ -115,6 +115,9 @@
 #'   
 #' @param hist \code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
 #'   a histogram will be produced for each population.
+#'  
+#' @param index \code{character} Either "Ia" or "rbarD". If \code{hist = TRUE},
+#'   this will determine the index used for the visualization.
 #'   
 #' @param minsamp an \code{integer} indicating the minimum number of individuals
 #'   to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for
@@ -212,7 +215,8 @@
 poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                   method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
                   clonecorrect=FALSE, hier=1, dfname="population_hierarchy", 
-                  keep = 1, hist=TRUE, minsamp=10, legend=FALSE){
+                  keep = 1, hist=TRUE, index = "rbarD", minsamp=10, 
+                  legend=FALSE){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
@@ -280,15 +284,28 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
     N.rare  <- suppressWarnings(rarefy(pop.mat, raremax, se=TRUE))
-    IaList  <- NULL
-    invisible(lapply(sublist, function(x){ 
-      namelist <- list(File = namelist$File, population = x)
-      IaList   <<- rbind(IaList, 
-                       .ia(poplist[[x]], sample=sample, method=method, 
-                        quiet=quiet, missing=missing, namelist=namelist, 
-                        hist=hist) 
-                       )
-      })) 
+    IaList  <- lapply(sublist, function(x){
+                      namelist <- list(file = namelist$File, population = x)
+                      .ia(poplist[[x]], sample = sample, method = method, 
+                          quiet = quiet, missing = missing, hist = FALSE,
+                          namelist = namelist)
+    })
+    names(IaList) <- sublist
+    if (sample > 0){
+      classtest <- summary(IaList)
+      classless <- !classtest[, "Class"] %in% "ialist"
+      if (any(classless)){
+        no_class_pops <- paste(names(IaList[classless]), collapse = ", ")
+        msg    <- paste0("values for ", no_class_pops, 
+                         " could not be plotted.\n")
+        IaList[classless] <- lapply(IaList[classless], function(x) list(index = x))
+        warning(msg, call. = FALSE)
+      }
+      try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
+      IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
+    } else {
+      IaList <- t(as.data.frame(IaList))
+    }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, 
                                G=G, Hexp=Hexp, E.5=E.5, IaList, 
@@ -387,6 +404,10 @@ poppr.all <- function(filelist, ...){
 #'   
 #' @param hist \code{logical} if \code{TRUE}, a histogram will be printed for 
 #'   each population if there is sampling.
+#' 
+#' @param index \code{character} either "Ia" or "rbarD". If \code{hist = TRUE}, 
+#'   this indicates which index you want represented in the plot (default:
+#'   "rbarD").
 #'   
 #' @param valuereturn \code{logical} if \code{TRUE}, the index values from the 
 #'   reshuffled data is returned. If \code{FALSE} (default), the index is 
@@ -511,7 +532,7 @@ poppr.all <- function(filelist, ...){
 #==============================================================================#
 
 ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore", 
-                hist=TRUE, valuereturn = FALSE){
+                hist = TRUE, index = "rbarD", valuereturn = FALSE){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   
@@ -547,7 +568,7 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   IarD <- .Ia.Rd(popx, missing)
   names(IarD) <- c("Ia", "rbarD")
   # no sampling, it will simply return two named numbers.
-  if (sample==0){
+  if (sample == 0){
     Iout   <- IarD
     result <- NULL
   } else {
@@ -560,12 +581,12 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
     if (hist == TRUE){
-      poppr.plot(samp, observed=IarD, pop=namelist$population,
-                        file=namelist$File, pval=p.val, N=nrow(pop@tab))
+      print(poppr.plot(samp, observed=IarD, pop=namelist$population, index = index,
+                       file=namelist$File, pval=p.val, N=nrow(pop@tab)))
     }
     result         <- 1:4
-    result[c(1,3)] <- IarD
-    result[c(2,4)] <- p.val
+    result[c(1, 3)] <- IarD
+    result[c(2, 4)] <- p.val
     names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
     if (valuereturn == TRUE){
       iaobj <- list(index = final(Iout, result), samples = samp)
