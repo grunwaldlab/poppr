@@ -313,7 +313,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "origi
   #                        palette = palette))
   # }
   # This will subset both the population and the matrix. 
-  if(sublist[1] != "ALL" | !is.null(blacklist)){
+  if(toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(pop, sublist, blacklist)
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
     pop    <- popsub(pop, sublist, blacklist)
