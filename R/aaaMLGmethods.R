@@ -45,6 +45,7 @@ setMethod(
     slot(.Object, "mlg")      <- mlg
     slot(.Object, "visible")  <- "original"
     slot(.Object, "distname") <- "nei.dist"
+    slot(.Object, "distargs") <- list()
     return(.Object)
   }
 )
