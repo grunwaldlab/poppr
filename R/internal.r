@@ -1176,14 +1176,14 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE, loss = T
       visible  <- pop@mlg@visible
       mll(pop) <- mlg.compute
     }
-    cpop <- pop[.clonecorrector(pop), ]
-   
-    
-    mlg.number <- table(mlgs)[rank(cmlg)]
+    to_remove <- .clonecorrector(pop)
+    cpop <- pop[to_remove, ]
     # Calculate distance matrix if not supplied (Bruvo's distance)
      if (is.null(distmat) & !is.null(replen)){
         distmat <- as.matrix(bruvo.dist(cpop, replen = replen, add = add, loss = loss))
-    }
+     } else if (nInd(cpop) < nrow(distmat)){
+       distmat <- distmat[to_remove, to_remove]
+     }
   }
   if(class(distmat) != "matrix"){
     distmat <- as.matrix(distmat)
@@ -1199,6 +1199,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE, loss = T
     mlgs <- pop$other$mlg.vec
     cmlg <- cpop$other$mlg.vec
   }
+  mlg.number <- table(mlgs)[rank(cmlg)]
   # Create the graphs.
   g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")
   if(length(cpop@mlg[]) > 1){
