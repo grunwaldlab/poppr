@@ -201,7 +201,7 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
     window.size = as.integer(window.size)
   }
 
-  if(!is(x, "genlight")){
+  if(is(x, "genlight")){
     # Ensure that every SNPbin object has data for both chromosomes
     for(i in 1:length(x$gen)){
       if(length(x$gen[[i]]$snp) == 1){
