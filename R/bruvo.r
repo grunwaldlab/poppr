@@ -414,7 +414,20 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   
 #' @param showplot logical. If \code{TRUE}, the graph will be plotted. If 
 #'   \code{FALSE}, it will simply be returned.
+#'
+#' @param include.ties logical. If \code{TRUE}, the graph will include all
+#'   edges that were arbitrarily passed over in favor of another edge of equal
+#'   weight. If \code{FALSE}, which is the default, one edge will be arbitrarily 
+#'   selected when two or more edges are tied, resulting in a pure minimum spanning
+#'   network. 
 #'   
+#' @param threshold numeric. If greater than the default value of 0.0, this will
+#'   be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'
+#' @param clustering.algorithm string. If \code{threshold} is greater than 0, this
+#'   this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'   For both of these arguments, see \code{\link{mlg.filter}} for more details.
+#'
 #' @param ... any other arguments that could go into plot.igraph
 #'   
 #' @return \item{graph}{a minimum spanning network with nodes corresponding to 
@@ -502,32 +515,37 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)
 #' }
 #==============================================================================#
-#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph
+#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph add.edges
 bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "original", 
                        palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale = TRUE, showplot = TRUE, ...){
-
-  gadj <- ifelse(gweight == 1, gadj, -gadj)
+                       wscale = TRUE, showplot = TRUE, 
+                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
   if (!is.genclone(gid)){
-    # Storing the MLG vector into the genind object
-    gid$other$mlg.vec <- mlg.vector(gid)  
+    # convert to genclone object
+    gid <- as.genclone(gid)  
   }
-  if (is.null(pop(gid)) | nPop(gid) == 1){
-    return(singlepop_msn(gid, vertex.label, add = add, loss = loss, 
-                         replen = replen, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
-  }
+  # if (is.null(pop(gid)) | nPop(gid) == 1){
+  #   return(singlepop_msn(gid, vertex.label, add = add, loss = loss, 
+  #                        replen = replen, gscale = gscale, 
+  #                        glim = glim, gadj = gadj, wscale = wscale, 
+  #                        palette = palette))
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
+
   if (sublist[1] != "ALL" | !is.null(blacklist)){
     gid <- popsub(gid, sublist, blacklist)
   }
   if (is.null(pop(gid)) | nPop(gid) == 1){
     return(singlepop_msn(gid, vertex.label, add = add, loss = loss, 
-                         replen = replen, gscale = gscale, 
+                         replen = replen, gscale = gscale, mlg.compute = mlg.compute,
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, ...))
+                         palette = palette, include.ties = include.ties,
+                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
+  }
+  if (class(gid$mlg) != "MLG"){
+    # Froce gid$mlg to be class MLG
+    gid$mlg <- new("MLG", gid$mlg)
   }
   # Obtaining population information for all MLGs
   classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
@@ -535,13 +553,19 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
     visible <- gid@mlg@visible
     mll(gid)  <- mlg.compute
   }
-  cgid <- gid[.clonecorrector(gid), ]
-  if (is.genclone(gid)){
-    subs <- sort(unique(gid@mlg))
+  # Updating the MLG with filtered data
+  if(threshold > 0){
+    filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL", add = add, loss = loss)
+    # TODO: The following two lines should be a product of mlg.filter
+    gid$mlg@visible <- "contracted"
+    gid$mlg[] <- filter.stats[[1]]  
+    # Obtaining population information for all MLGs
+    cgid <- gid[if(length(-which(duplicated(gid$mlg[]))==0)) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
+    bclone <- filter.stats[[3]]
   } else {
-    subs <- 1:mlg(gid, quiet = TRUE)
+    cgid <- gid[.clonecorrector(gid), ]
+    bclone <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))
   }
-  mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
   if (is.genclone(gid)){
     mlgs <- mll(gid)
     cmlg <- mll(cgid)
@@ -549,9 +573,12 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
     mlgs <- gid$other$mlg.vec
     cmlg <- cgid$other$mlg.vec
   }
+  subs <- sort(unique(mlgs))
+  mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
   if (is.numeric(mlgs)){
     names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
   }
+
   
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
@@ -559,12 +586,22 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  bclone     <- bruvo.dist(cgid, replen = replen, add = add, loss = loss)
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
-  mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
-  
+  if(length(cgid@mlg[]) > 1){ 
+    mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
+    # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+    if(include.ties){
+      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
+      if(length(tied_edges) > 0){
+        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+      }
+    }
+  } else {
+    mst <- minimum.spanning.tree(g)
+  }
+
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
       if (is.numeric(cmlg) && !classstat){
@@ -584,7 +621,9 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
   color   <- setNames(palette(nPop(gid)), popNames(gid))
-  mst     <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  if(length(mll(cgid)) > 1){ 
+    mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  }
 
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])

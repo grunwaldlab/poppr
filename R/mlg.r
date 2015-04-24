@@ -98,7 +98,7 @@
 #' }
 #'
 #' @seealso \code{\link[vegan]{diversity}} \code{\link{popsub}}
-#' @author Zhian N. Kamvar
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
 #'
 #' # Load the data set
@@ -331,8 +331,143 @@ mlg.vector <- function(pop, reset = FALSE){
   return(countvec2)
 }
 
+
+
+mlg.filter.internal <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", 
+                       distance="nei.dist", threads=0, stats="MLGs", ...){
+
+  # This will return a vector indicating the multilocus genotypes after applying
+  # a minimum required distance threshold between multilocus genotypes.
+
+  if(!is.genclone(pop) && !is.genind(pop) && !is(pop, "genlight"))
+  {
+    stop("No genclone or genind object was provided.")
+  }
+
+  if (is.genind(pop))
+  {
+    pop <- missingno(pop,missing,quiet=TRUE)     
+  }
+  if(is.character(distance) || is.function(distance))
+  {
+    if(memory==TRUE && identical(c(pop,distance,...),.last.value.param$get()))
+    {
+      dis <- .last.value.dist$get()
+    }
+    else
+    {
+      DISTFUN <- match.fun(distance)
+      dis <- DISTFUN(pop, ...)
+      dis <- as.matrix(dis)
+      if(memory==TRUE)
+      {
+        .last.value.param$set(c(pop,distance,...))
+        .last.value.dist$set(dis)
+      }
+    }
+  }
+  else
+  {
+    # Treating distance as a distance table
+    # Warning: Missing data in distance matrix or data uncorrelated with pop may produce unexpected results.
+    dis <- as.matrix(distance)
+  }
+
+  if (is.genclone(pop) | is(pop, "snpclone"))
+  {
+    if (!is(pop@mlg, "MLG")){
+      pop@mlg <- new("MLG", pop@mlg)
+    }
+    basemlg <- mll(pop, "original")
+  }
+  else if (is.genind(pop))
+  {
+    basemlg <- mlg.vector(pop)
+  }
+  else
+  {
+    basemlg <- seq(nInd(pop))
+  }
+
+
+  # Input validation before passing arguments to C
+    #  dist is an n by n matrix containing distances between individuals
+  if((!is.numeric(dis) && !is.integer(dis)) || dim(dis)[1] != dim(dis)[2])
+  {
+    stop("Distance matrix must be a square matrix of numeric or integer values.")
+  } 
+    #  mlg is a vector of length n containing mlg assignments
+  if((!is.numeric(basemlg) && !is.integer(basemlg)) || length(basemlg) != dim(dis)[1])
+  {
+    stop("MLG must contain one numeric or integer entry for each individual in the population.")
+  }
+    # Threshold must be something that can cast to numeric
+  if(!is.numeric(threshold) && !is.integer(threshold))
+  {
+    stop("Threshold must be a numeric or integer value")
+  } 
+    # Threads must be something that can cast to integer
+  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  {
+    stop("Threads must be a non-negative numeric or integer value")
+  } 
+    # Stats must be logical
+  if(!is.character(stats) || !( toupper(stats) %in% c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")))
+  {
+    stop("Stats must be a character string for MLGS, THRESHOLDS, DISTANCES, SIZES, or ALL")
+  } 
+
+  # Cast parameters to proper types before passing them to C
+  dis_dim <- dim(dis)
+  dis <- as.numeric(dis)
+  dim(dis) <- dis_dim # Turn it back into a matrix
+  threshold <- as.numeric(threshold)
+  algo <- tolower(as.character(algorithm))
+  threads <- as.integer(threads)
+  if(!isTRUE(all.equal(basemlg,as.integer(basemlg))))
+  {
+    warning("MLG contains non-integer values. MLGs differing only in decimal values will be merged.")
+  }
+  basemlg <- as.integer(basemlg)
+  
+  result_list <- .Call("neighbor_clustering", dis, basemlg, threshold, algo, threads) 
+  
+  # Cut out empty values from result_list[[2]]
+  result_list[[2]] <- result_list[[2]][result_list[[2]] > -.05]
+  # Format result_list[[3]]
+  mlgs <- unique(result_list[[1]])
+  dists <- result_list[[3]]
+  dists <- dists[mlgs,mlgs]
+  if(length(mlgs) > 1){
+    rownames(dists) <- mlgs
+    colnames(dists) <- mlgs
+  }
+  result_list[[3]] <- dists
+
+  if(toupper(stats) == "ALL"){
+    return(result_list)
+  } else if(toupper(stats) == "THRESHOLDS") {
+    return(result_list[[2]])
+  } else if(toupper(stats) == "DISTANCES") {
+    return(result_list[[3]])
+  } else if(toupper(stats) == "SIZES") {
+    return(result_list[[4]])
+  } else { # toupper(stats) == "MLGS")
+    return(result_list[[1]])
+  }
+}
+
+
+
 #==============================================================================#
-#' @rdname mlg 
+#' @rdname mlg
+# Multilocus Genotypes Across Populations
+#
+# Show which multilocus genotypes exist accross populations. 
+#
+# @param pop a \code{\link{genind}} object.
+# 
+#' @return a \code{list} containing vectors of population names for each MLG. 
 #' 
 #' @export
 #==============================================================================#

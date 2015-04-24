@@ -75,6 +75,8 @@ a numeric vector naming the multilocus genotype of each individual in
 \subsection{mlg.id}{
 a list of multilocus genotypes with the associated individual names per MLG.
 }
+
+a \code{list} containing vectors of population names for each MLG.
 }
 \description{
 Create counts, vectors, and matrices of multilocus genotypes.
@@ -158,7 +160,7 @@ new.H <- H3N2[H.vec \%in\% inds, ]
 }
 }
 \author{
-Zhian N. Kamvar
+Zhian N. Kamvar, Jonah C. Brooks
 }
 \seealso{
 \code{\link[vegan]{diversity}} \code{\link{popsub}}

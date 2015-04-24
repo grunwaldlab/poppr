@@ -194,6 +194,19 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' @param showplot logical. If \code{TRUE}, the graph will be plotted. If
 #'   \code{FALSE}, it will simply be returned.
 #'   
+#' @param include.ties logical. If \code{TRUE}, the graph will include all
+#'   edges that were arbitrarily passed over in favor of another edge of equal
+#'   weight. If \code{FALSE}, which is the default, one edge will be arbitrarily 
+#'   selected when two or more edges are tied, resulting in a pure minimum spanning
+#'   network. 
+#'
+#' @param threshold numeric. If greater than the default value of 0.0, this will
+#'   be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'
+#' @param clustering.algorithm string. If \code{threshold} is greater than 0, this
+#'   this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'   For both of these arguments, see \code{\link{mlg.filter}} for more details.
+#'
 #' @param ... any other arguments that could go into plot.igraph
 #'   
 #' @return \item{graph}{a minimum spanning network with nodes corresponding to 
@@ -266,7 +279,8 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "original",
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale=TRUE, showplot = TRUE, ...){
+                       wscale=TRUE, showplot = TRUE, 
+                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
   if (class(distmat) != "dist"){
     if (is.matrix(distmat)){
       if (any(nInd(gid) != dim(distmat))){
@@ -280,27 +294,26 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   if (nInd(gid) != attr(distmat, "Size")){
     stop("The size of the distance matrix does not match the size of the data.\n")
   }
-  gadj <- ifelse(gweight == 1, gadj, -gadj)
-  # Storing the MLG vector into the genind object
-  if (!is.genclone(gid)){
-    # Storing the MLG vector into the genind object
-    gid$other$mlg.vec <- mlg.vector(gid)  
+  if(!is.genclone(gid)){
+    gid <- as.genclone(gid)
   }
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
+  
   bclone <- as.matrix(distmat)
 
-  # The clone correction of the matrix needs to be done at this step if there
-  # is only one or no populations. 
-  if (is.null(pop(gid)) | nPop(gid) == 1){
-    if (is.genclone(gid)){
-      mlgs <- mll(gid, mlg.compute)
-    } else {
-      mlgs <- gid$other$mlg.vec
-    }
-    bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
-    return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
-  }
+  # # The clone correction of the matrix needs to be done at this step if there
+  # # is only one or no populations. 
+  # if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+  #   if (is.genclone(pop)){
+  #     mlgs <- mll(pop, mlg.compute)
+  #   } else {
+  #     mlgs <- pop$other$mlg.vec
+  #   }
+  #   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  #   return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+  #                        glim = glim, gadj = gadj, wscale = wscale, 
+  #                        palette = palette))
+  # }
   # This will subset both the population and the matrix. 
   if(sublist[1] != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(gid, sublist, blacklist)
@@ -313,10 +326,53 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     visible <- gid@mlg@visible
     mll(gid)  <- mlg.compute
   }
-  cgid <- gid[.clonecorrector(gid), ]
+
+  # cpop <- pop[.clonecorrector(pop), ]
+
+  # # This will clone correct the incoming matrix. 
+  # bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  
+  if (is.null(pop(gid)) | nPop(gid) == 1){
+    return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, 
+                         palette = palette, include.ties = include.ties, showplot=showplot,
+                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
+  }
+
+  if (class(gid$mlg) != "MLG"){
+    # Froce gid$mlg to be class MLG
+    gid$mlg <- new("MLG", gid$mlg)
+  }
+
+  if(threshold > 0){
+    # Updating MLG with filtered data
+    filter.stats <- mlg.filter(gid,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
+    # TODO: The following two lines should be a product of mlg.filter
+    gid$mlg@visible <- "contracted"
+    gid$mlg[] <- filter.stats[[1]]
+    cgid <- gid
+    cgid <- cgid[if(length(-which(duplicated(cgid$mlg[]))==0)) which(!duplicated(cgid$mlg[])) else -which(duplicated(cgid$mlg[])) ,]
+    # Preserve MLG membership of individuals
+    mlg.number <- table(filter.stats[[1]])[rank(cgid@mlg[])]
+    
+    bclone <- filter.stats[[3]]
+  }
+  else {  
+    cgid <- gid[.clonecorrector(gid), ]
+    # This will determine the size of the nodes based on the number of individuals
+    # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
+    # give us the numbers and the population information in the correct order.
+    # Note: rank is used to correctly subset the data
+    mlg.number <- table(gid$mlg[])[rank(cgid$mlg[])]
+    # This will clone correct the incoming matrix. 
+    bclone <- bclone[!duplicated(gid$mlg[]), !duplicated(gid$mlg[])]
+  }
+  rownames(bclone) <- cgid$ind.names
+  colnames(bclone) <- cgid$ind.names
   if (is.genclone(gid)){
     mlgs <- mll(gid)
     cmlg <- mll(cgid)
+
     if (!is.numeric(mlgs)){
       mlgs <- as.character(mlgs)
       cmlg <- as.character(cmlg)
@@ -324,44 +380,37 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   } else {
     mlgs <- gid$other$mlg.vec
     cmlg <- cgid$other$mlg.vec
-  }
-  # This will clone correct the incoming matrix. 
-  bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  }  
   
-  if (is.null(pop(gid)) | nPop(gid) == 1){
-    return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, ...))
-  }
   # Obtaining population information for all MLGs
-  if (is.genclone(gid)){
-    subs <- sort(unique(mlgs))
-  } else {
-    subs <- 1:mlg(gid, quiet = TRUE)
-  }
+  subs <- sort(unique(mlgs))
   mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
   if (is.numeric(mlgs)){
     names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
   }
-
-  # This will determine the size of the nodes based on the number of individuals
-  # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
-  # give us the numbers and the population information in the correct order.
-  # Note: rank is used to correctly subset the data
-  mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  rownames(bclone) <- cgid$pop
-  colnames(bclone) <- cgid$pop
+  bclone     <- as.matrix(bclone)
   
   g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
-  mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+  if(length(cgid@mlg[]) > 1){
+    mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+    # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+    if(include.ties){
+      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
+      if(length(tied_edges) > 0){
+        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+      }
+    }
+  } else {
+    mst <- minimum.spanning.tree(g)
+  }
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
       if (is.numeric(cmlg) && !classstat){
         vertex.label <- paste("MLG.", cmlg, sep="")        
       } else if (visible == "custom"){
-        mll(pop) <- visible
+        mll(gid) <- visible
         vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
       } else {
         vertex.label <- paste0("MLG.", cmlg)
@@ -377,9 +426,11 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   palette <- match.fun(palette)
   color   <- setNames(palette(nPop(gid)), popNames(gid))
   
-  ###### Edge adjustments ######
-  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
-  
+  if(length(cgid@mlg[]) > 1){
+    ###### Edge adjustments ######
+    mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  }
+ 
   # This creates a list of colors corresponding to populations.
   mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])
   if (showplot){

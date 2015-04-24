@@ -9,7 +9,9 @@ distance.}
 bruvo.msn(gid, replen = 1, add = TRUE, loss = TRUE,
   mlg.compute = "original", palette = topo.colors, sublist = "All",
   blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
-  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE, ...)
+  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE,
+  include.ties = FALSE, threshold = 0,
+  clustering.algorithm = "farthest_neighbor", ...)
 }
 \arguments{
 \item{gid}{a \code{\link{genind}} object}
@@ -67,6 +69,19 @@ bruvo.msn(gid, replen = 1, add = TRUE, loss = TRUE,
 
 \item{showplot}{logical. If \code{TRUE}, the graph will be plotted. If
   \code{FALSE}, it will simply be returned.}
+
+\item{include.ties}{logical. If \code{TRUE}, the graph will include all
+  edges that were arbitrarily passed over in favor of another edge of equal
+  weight. If \code{FALSE}, which is the default, one edge will be arbitrarily
+  selected when two or more edges are tied, resulting in a pure minimum spanning
+  network.}
+
+\item{threshold}{numeric. If greater than the default value of 0.0, this will
+  be passed to \code{\link{mlg.filter}} prior to creating the msn.}
+
+\item{clustering.algorithm}{string. If \code{threshold} is greater than 0, this
+  this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
+  For both of these arguments, see \code{\link{mlg.filter}} for more details.}
 
 \item{...}{any other arguments that could go into plot.igraph}
 }

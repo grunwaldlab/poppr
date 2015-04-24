@@ -12,4 +12,5 @@ README.html
 vignettes/*.gz
 vignettes/poppr_manual-*.pdf
 vignettes/*.log
+*.swp
 tests/testthat/Rplots.pdf

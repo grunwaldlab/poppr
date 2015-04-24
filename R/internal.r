@@ -1160,21 +1160,48 @@ fix_negative_branch <- function(tre){
 # Internal functions utilizing this function:
 # # none
 #==============================================================================#
-
-
-singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, 
-                          loss = TRUE, distmat = NULL, gscale = TRUE, 
-                          glim = c(0, 0.8), gadj = 3, wscale = TRUE, 
-                          mlg.compute = "original",
-                          palette = topo.colors, showplot = TRUE, ...){
-  # First, clone correct and get the number of individuals per MLG in order.
-  classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
-  if (classstat){
-    visible <- gid@mlg@visible
-    mll(gid)  <- mlg.compute
+singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = TRUE, distmat = NULL, gscale = TRUE, mlg.compute = "original",
+                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, 
+                      include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
+  if(!is.genclone(gid)){
+    gid <- as.genclone(gid)
   }
-  cgid <- gid[.clonecorrector(gid), ]
-  if (is.genclone(gid)){
+
+  if (!is(gid@mlg, "MLG")){
+    # Froce gid$mlg to be class MLG
+    gid$mlg <- new("MLG", gid$mlg)
+  }
+
+  # First, clone correct and get the number of individuals per MLG in order.
+  if(threshold > 0){
+    if (is.null(distmat) & !is.null(replen)){
+      filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+    } else {
+      filter.stats <- mlg.filter(gid,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+    }
+     # TODO: The following two lines should be a product of mlg.filter
+    gid$mlg@visible <- "contracted"
+    gid$mlg[] <- filter.stats[[1]]
+    cgid <- gid[if(is.na(-which(duplicated(gid$mlg[]))[1])) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
+    distmat <- filter.stats[[3]]
+  } else {
+    classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
+    if (classstat){
+      visible  <- gid@mlg@visible
+      mll(gid) <- mlg.compute
+    }
+    cgid <- gid[.clonecorrector(gid), ]
+   
+    
+    # Calculate distance matrix if not supplied (Bruvo's distance)
+     if (is.null(distmat) & !is.null(replen)){
+        distmat <- as.matrix(bruvo.dist(cgid, replen = replen, add = add, loss = loss))
+    }
+  }
+  if(class(distmat) != "matrix"){
+    distmat <- as.matrix(distmat)
+  } 
+ if (is.genclone(gid)){
     mlgs <- mll(gid)
     cmlg <- mll(cgid)
     if (!is.numeric(mlgs)){
@@ -1185,25 +1212,31 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
     mlgs <- gid$other$mlg.vec
     cmlg <- cgid$other$mlg.vec
   }
-  
   mlg.number <- table(mlgs)[rank(cmlg)]
-  # Calculate distance matrix if not supplied (Bruvo's distance)
-  if (is.null(distmat) & !is.null(replen)){
-    distmat <- as.matrix(bruvo.dist(cgid, replen = replen, add = add, loss = loss))
-  }
-  
   # Create the graphs.
   g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")
-  mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
-  
+  if(length(cgid@mlg[]) > 1){
+    mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+
+    # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+    if(include.ties){
+      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(distmat),(.Machine$double.eps ^ 0.5))
+      if(length(tied_edges) > 0){
+        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+      }
+    }
+  } else {
+    mst <- minimum.spanning.tree(g)
+  }
+ 
   # Create the vertex labels
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
       if (is.numeric(cmlg) && !classstat){
         vertex.label <- paste0("MLG.", cmlg)        
       } else if (visible == "custom"){
-        mll(pop) <- visible
-        vertex.label <- correlate_custom_mlgs(pop, mlg.compute)
+        mll(gid) <- visible
+        vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
       } else {
         vertex.label <- paste0("MLG.", cmlg)        
       }
@@ -1212,7 +1245,9 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
       vertex.label <- cgid$ind.names
     }
   } 
-  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  if (length(mll(cgid)) > 1){
+    mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)    
+  }
   populations <- ifelse(is.null(pop(gid)), NA, popNames(gid))
   
   # Plot everything
