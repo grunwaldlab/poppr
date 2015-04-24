@@ -533,7 +533,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
-                         replen = replen, gscale = gscale, 
+                         replen = replen, gscale = gscale, mlg.compute = mlg.compute,
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, include.ties = include.ties,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))

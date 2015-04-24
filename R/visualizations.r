@@ -333,7 +333,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "origi
   
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, mlg.compute = mlg.compute,
                          palette = palette, include.ties = include.ties, showplot=showplot,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
