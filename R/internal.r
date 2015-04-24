@@ -1217,7 +1217,7 @@ singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE, loss = T
   # Create the vertex labels
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      if (is.numeric(cmlg) && !is(cmlg@mlg, "MLG")){
+      if (is.numeric(cmlg) && !is(gid@mlg, "MLG")){
         vertex.label <- paste0("MLG.", cmlg)        
       } else if (visible == "custom"){
         mll(pop) <- visible
