@@ -1605,7 +1605,7 @@ setMethod(
   definition = function(pop, missing = "mean", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "nei.dist",
                         threads = 0, ..., value){
-    if (!is.genclone(pop)){
+    if (!is.snpclone(pop)){
       the_warning <- paste("mlg.filter<- only has an effect on snpclone",
                            "objects.\n", "If you want to utilize this",
                            "functionality, please convert to a snpclone object.\n",
