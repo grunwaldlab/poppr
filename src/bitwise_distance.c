@@ -73,7 +73,7 @@ struct locus
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
-//SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads);
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads, SEXP differences_only);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
@@ -497,289 +497,213 @@ Input: A genlight object containing samples of diploids.
        A boolean representing whether or not missing values should match. 
        A vector of locus indices to be used in the calculations.
        An integer representing the number of threads to be used.
+       A boolean representing whether distances or differences should be counted.
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-// SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads)
-// {
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads, SEXP differences_only)
+{
 
-//   //TODO: Validate input
-//   //TODO: Create variables
-//   //TODO: Protect output variable
-//   //TODO: Allocate arrays: M, M2, N
+  //TODO: Validate input
+  //TODO: Create variables
+  //TODO: Protect output variable
+  //TODO: Allocate arrays: M, M2, N
 
-//   //TODO: Fetch one loci chunk to count its length, or assume they are all 32 or less
-//   //TODO: Parallelize for loop over loci chunks of that length // Or all loci, then parallelize inside
-//     //TODO: Loop over all samples
-//       //TODO: Loop over all other samples
-//         //TODO: Make and fill zygosity structs
-//         //TODO: Make distance variable D=0
-//         //TODO: Call and store as S the similarity set between those
-//         //TODO: Or together the two structs' H fields, store as Hor
-//         //TODO: Loop through i=0 to loci_chunk_length
-//           //TODO: If (S>i)&1 != 0 // If they are not the same at this loci
-//             //TODO: D++
-//             //TODO: If (Hor>i)&1 == 0 // If neither of them are heterozygotes at this loci
-//               //TODO: D++
-//           //TODO: M[i+chunk_num*chunk_length] += D
-//           //TODO: M2[i+chunk_num*chunk_length] += D*D
+  //TODO: Fetch one loci chunk to count its length, or assume they are all 32 or less
+  //TODO: Parallelize for loop over loci chunks of that length // Or all loci, then parallelize inside
+    //TODO: Loop over all samples
+      //TODO: Loop over all other samples
+        //TODO: Make and fill zygosity structs
+        //TODO: Make distance variable D=0
+        //TODO: Call and store as S the similarity set between those
+        //TODO: Or together the two structs' H fields, store as Hor
+        //TODO: Loop through i=0 to loci_chunk_length
+          //TODO: If (S>i)&1 != 0 // If they are not the same at this loci
+            //TODO: D++
+            //TODO: If (Hor>i)&1 == 0 // If neither of them are heterozygotes at this loci
+              //TODO: D++
+          //TODO: M[i+chunk_num*chunk_length] += D
+          //TODO: M2[i+chunk_num*chunk_length] += D*D
 
-//   SEXP R_out;
-//   SEXP R_gen_symbol;
-//   SEXP R_chr_symbol;  
-//   SEXP R_nap_symbol;
-//   // SEXP R_nloc_symbol; // For accessing the number of SNPs in each genotype
-//   SEXP R_gen;
-//   int num_gens;
-//   int num_chunks;
-//   SEXP R_chr1_1;
-//   SEXP R_chr1_2;
-//   SEXP R_chr2_1;
-//   SEXP R_chr2_2;
-//   SEXP R_nap1;
-//   SEXP R_nap2;
-//   int nap1_length;
-//   int nap2_length;
-//   int chr_length;
-//   int next_missing_index_i;
-//   int next_missing_index_j;
-//   int next_missing_i;
-//   int next_missing_j;
-//   int missing_match;
-//   int only_differences;
-//   int num_threads;
-//   char mask;
-//   struct zygosity set_1;
-//   struct zygosity set_2;
-//   int i;
-//   int j;
-//   int k;
+  SEXP R_out;
+  SEXP R_gen_symbol;
+  SEXP R_chr_symbol;  
+  SEXP R_nap_symbol;
+  // SEXP R_nloc_symbol; // For accessing the number of SNPs in each genotype
+  SEXP R_gen;
+  int num_gens;
+  int num_chunks;
+  int chunk_length;
+  SEXP R_chr1_1;
+  SEXP R_chr1_2;
+  SEXP R_chr2_1;
+  SEXP R_chr2_2;
+  SEXP R_nap1;
+  SEXP R_nap2;
+  int nap1_length;
+  int nap2_length;
+  int chr_length;
+  int next_missing_index_i;
+  int next_missing_index_j;
+  int next_missing_i;
+  int next_missing_j;
+  int missing_match;
+  int only_differences;
+  int num_threads;
+  char mask;
+  struct zygosity set_1;
+  struct zygosity set_2;
+  int i;
+  int j;
+  int k;
+  int x;
 
-//   char** chunk_matrix;
-//   int cur_distance;
-//   char tmp_sim_set;
+  int* M;  // Sum of distances at each locus
+  int* M2; // Sum of squared distances at each locus
 
-  
-//   PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
-//   PROTECT(R_chr_symbol = install("snp"));
-//   PROTECT(R_nap_symbol = install("NA.posi"));  
+  char** chunk_matrix;
+  int cur_distance;
+  char tmp_sim_set;
+  char Sn;             // Used for temporary bitwise calculations
+  char Hnor;
+  char Hs;
+  char offset;
+  char val; 
 
-//   // This will be a LIST of type LIST:RAW
-//   R_gen = getAttrib(genlight, R_gen_symbol);
-//   num_gens = XLENGTH(R_gen);
 
-//   R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,0),R_chr_symbol),0); // Chromosome 1
-//   num_chunks = XLENGTH(R_chr1_1);
+  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
+  PROTECT(R_chr_symbol = install("snp"));
+  PROTECT(R_nap_symbol = install("NA.posi"));  
 
-//   PROTECT(R_out = allocVector(INTSXP, num_gens*num_gens)); // TODO: Change to single double
-//   chunk_matrix = R_Calloc(num_gens*2,char*);
-//   for(i = 0; i < num_gens; i++)
-//   {
-//     chunk_matrix[i] = R_Calloc(num_chunks,chr);
-//     chunk_matrix[i+1] = R_Calloc(num_chunks,chr);
-//     R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
-//     R_chr1_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1); // Chromosome 2
-//     for(j = 0; j < num_chunks; j++)
-//     {
-//       chunk_matrix[i][j] = (char)RAW(R_chr1_1)[j];
-//       chunk_matrix[i+1][j] = (char)RAW(R_chr1_2)[j];
-//       // TODO: Correct for missing data here
-//     }
-//   }
+  // This will be a LIST of type LIST:RAW
+  R_gen = getAttrib(genlight, R_gen_symbol);
+  num_gens = XLENGTH(R_gen);
 
-//   #ifdef _OPENMP
-//   {
-//     // Set the number of threads to be used in each omp parallel region
-//     if(INTEGER(requested_threads)[0] == 0)
-//     {
-//       num_threads = omp_get_max_threads();
-//     }
-//     else
-//     {
-//       num_threads = INTEGER(requested_threads)[0];
-//     }
-//     omp_set_num_threads(num_threads);
-//   }
-//   #else
-//   {
-//     num_threads = 1;
-//   }
-//   #endif
+  R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,0),R_chr_symbol),0); // Chromosome 1
+  num_chunks = XLENGTH(R_chr1_1);
 
-//   next_missing_index_i = 0;
-//   next_missing_index_j = 0;
-//   next_missing_i = -1;
-//   next_missing_j = -1;
-//   mask = 0;
-//   tmp_sim_set = 0;
-//   nap1_length = 0;
-//   nap2_length = 0;
-//   chr_length = 0;
-//   missing_match = asLogical(missing);
-//   only_differences = asLogical(differences_only);
+  PROTECT(R_out = allocVector(REALSXP, 1));
+  chunk_matrix = R_Calloc(num_gens*2,char*);
+  for(i = 0; i < num_gens; i++)
+  {
+    chunk_matrix[i] = R_Calloc(num_chunks,char);
+    chunk_matrix[i+1] = R_Calloc(num_chunks,char);
+    R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
+    R_chr1_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1); // Chromosome 2
+    for(j = 0; j < num_chunks; j++)
+    {
+      chunk_matrix[i][j] = (char)RAW(R_chr1_1)[j];
+      chunk_matrix[i+1][j] = (char)RAW(R_chr1_2)[j];
+      // TODO: Correct for missing data here
+    }
+  }
 
-//   // Loop through all SNP chunks
-//   // TODO: Parallelize this
-//   for(i = 0; i < num_chunks; i++)
-//   {
-//     // TODO: Stuff
-//     // Loop through all samples
-//     for(j = 0; j < num_gens; j++)
-//     {
-//       // TODO: Things
-//       // TODO: Make a zygosity struct
-//       // TODO: Fill c1 and c2 with chunk_matrix[j][i] and [j+1][i] respectively
-//       // TODO: Call fill_zygosity to fill out the rest of the fields
-//       // Loop through the rest of the genotypes
-//       for(k = 0; k < j; k++)
-//       {
-//         // TODO: Make a zygosity struct
-//         // TODO: Fill c1 and c2 with chunk_matrix[k][i] and [k+1][i] respectively
-//         // TODO: Call fill_zygosity to fill out the rest of the fields
+  // TODO: This should be 32 for all chunks. If this assumption is wrong things will fail.
+  chunk_length = 32;
 
-//         // TODO: Get the similarity set between the two, then negate it. Store as Sn
-//         // TODO: OR the two H fields together, negate it, and store that as Hnor
-//         // TODO: AND together Hnor and Sn to get a set of differing homozygote sites, store as Hs
-//         // TODO: Loop through 0 through chunk_length, call this x
-//         // TODO: offset = chunk_length-x-1
-//         // TODO: mask = 1<<offset
-//         // TODO: M[x] += (mask&Sn)>>offset + (mask&Hs)>>offset // Add one for not same, add one for opposite homozygotes
-//         // TODO: M2[x] += ((mask&Sn)>>offset + (mask&Hs)>>offset)*((mask&Sn)>>offset + (mask&Hs)>>offset) // Squared
-//      }
-      
+  M = R_Calloc(num_chunks*chunk_length, int);
+  M2 = R_Calloc(num_chunks*chunk_length, int);
 
-//     }
+  #ifdef _OPENMP
+  {
+    // Set the number of threads to be used in each omp parallel region
+    if(INTEGER(requested_threads)[0] == 0)
+    {
+      num_threads = omp_get_max_threads();
+    }
+    else
+    {
+      num_threads = INTEGER(requested_threads)[0];
+    }
+    omp_set_num_threads(num_threads);
+  }
+  #else
+  {
+    num_threads = 1;
+  }
+  #endif
 
-//   }
+  next_missing_index_i = 0;
+  next_missing_index_j = 0;
+  next_missing_i = -1;
+  next_missing_j = -1;
+  mask = 0;
+  tmp_sim_set = 0;
+  nap1_length = 0;
+  nap2_length = 0;
+  chr_length = 0;
+  missing_match = asLogical(missing);
+  only_differences = asLogical(differences_only);
 
-//   // TODO: Get the other Nc2 length vector of distances
-//   // TODO: Calculate and fill a vector of variances
-//   // TODO: Calculate and return the index of association
-  
+  // Loop through all SNP chunks
+  // TODO: Parallelize this
+  for(i = 0; i < num_chunks; i++)
+  {
+    // TODO: Stuff?
+    // Loop through all samples
+    for(j = 0; j < num_gens; j++)
+    {
+      // TODO: Things?
+      // Fill c1 and c2 with the next two chunks, representing a pair
+      set_1.c1 = chunk_matrix[j][i];
+      set_1.c2 = chunk_matrix[j+1][i]; // This chunk is the chromosonal pair of the first
+      // Call fill_zygosity to fill out the rest of the fields
+      fill_zygosity(&set_1);
+      // Loop through the rest of the genotypes
+      for(k = 0; k < j; k++)
+      {
+        // Fill c1 and c2 with the next two chunks, representing a pair
+        set_2.c1 = chunk_matrix[k][i];
+        set_2.c2 = chunk_matrix[k+1][i]; // This chunk is the chromosonal pair of the first
+        // Call fill_zygosity to fill out the rest of the fields
+        fill_zygosity(&set_2);
 
-// // TODO: Remove from here down
-//   // Loop through every genotype 
-//   for(i = 0; i < num_gens; i++)
-//   {
-//     R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
-//     R_chr1_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1); // Chromosome 2
-//     chr_length = XLENGTH(R_chr1_1);
-//     R_nap1 = getAttrib(VECTOR_ELT(R_gen,i),R_nap_symbol); // Vector of the indices of missing values 
-//     nap1_length = XLENGTH(R_nap1);
-//     // Loop through every other genotype
-//     #ifdef _OPENMP
-//     #pragma omp parallel for \
-//       private(j,cur_distance,R_chr2_1,R_chr2_2,R_nap2,next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,\
-//               set_1,set_2,tmp_sim_set, k, mask, nap2_length) \
-//       shared(R_nap1, nap1_length, i, distance_matrix)
-//     #endif
-//     for(j = 0; j < i; j++)
-//     {
-//       cur_distance = 0;
-//       // These will be arrays of type RAW
-//       R_chr2_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,j),R_chr_symbol),0); // Chromosome 1
-//       R_chr2_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,j),R_chr_symbol),1); // Chromosome 2
-//       R_nap2 = getAttrib(VECTOR_ELT(R_gen,j),R_nap_symbol); // Vector of the indices of missing values
-//       nap2_length = XLENGTH(R_nap2);
-//       if(nap2_length > 0)
-//       {
-//         next_missing_index_j = 0; // Next set of chromosomes start back at index 0
-//         next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1; //Compensate for Rs 1 based indexing
-//       }
-//       else
-//       {
-//         next_missing_index_j = -1;
-//         next_missing_j = -1;
-//       }
-//       if(nap1_length > 0)
-//       {
-//         next_missing_index_i = 0;
-//         next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1; //Compensate for Rs 1 based indexing
-//       }
-//       else
-//       {
-//         next_missing_index_i = -1;
-//         next_missing_i = -1;
-//       }
-//       // Finally, loop through all the chunks of SNPs for these genotypes
-//       for(k = 0; k < chr_length; k++) 
-//       {
-//         set_1.c1 = (char)RAW(R_chr1_1)[k];
-//         set_1.c2 = (char)RAW(R_chr1_2)[k];
-//         fill_zygosity(&set_1);
+        // Get the similarity set between the two, then negate it. Store as Sn
+        Sn = ~get_similarity_set(&set_1,&set_2);
+        // OR the two H fields together, negate it, and store that as Hnor
+        Hnor = ~(set_1.ch | set_2.ch);
+        // AND together Hnor and Sn to get a set of differing homozygote sites, store as Hs
+        Hs = Sn & Hnor;
+        // Loop through 0 through chunk_length, call this x
+        for(x = 0; x < chunk_length; x++)
+        {
+          // Find the offset for the next bit/locus of interest 
+          offset = chunk_length - x - 1;
+          // Create mask to retrieve just that bit/locus
+          mask = 1<<offset;
+	  // val = (mask&Sn)>>offset + (mask&Hs)>>offset // Add one for not same, add one for opposite homozygotes
+          // If only_differences is set, subtract (mask&Hs)>>offset back off of val
+          val = (mask&Sn)>>offset + (mask&Hs)>>offset;
+          // Update M[current locus] with val 
+          M[x + i*chunk_length] += val;
+          // Update M2[current locus] with val squared
+          M2[x + i*chunk_length] += val*val;
+        }
+     }
+   
 
-//         set_2.c1 = (char)RAW(R_chr2_1)[k];
-//         set_2.c2 = (char)RAW(R_chr2_2)[k];
-//         fill_zygosity(&set_2);
+    }
 
-//         tmp_sim_set = get_similarity_set(&set_1,&set_2);
+  }
 
-//         // Check for missing values and force them to match
-//         while(next_missing_index_i < nap1_length && next_missing_i < (k+1)*8 && next_missing_i >= (k*8) )
-//         {
-//           // Handle missing bit in both chromosomes and both samples with mask
-//           mask = 1 << (next_missing_i%8); 
-//           if(missing_match)
-//           {
-//             tmp_sim_set |= mask; // Force the missing bit to match
-//           }
-//           else
-//           {
-//             tmp_sim_set &= ~mask; // Force the missing bit to not match
-//           }
-//           next_missing_index_i++; 
-//           next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
-//         }       
-//         // Repeat for j
-//         while(next_missing_index_j < nap2_length && next_missing_j < (k+1)*8 && next_missing_j >= (k*8))
-//         {
-//           // Handle missing bit in both chromosomes and both samples with mask
-//           mask = 1 << (next_missing_j%8);
-//           if(missing_match)
-//           {
-//             tmp_sim_set |= mask; // Force the missing bit to match
-//           }
-//           else
-//           {
-//             tmp_sim_set &= ~mask; // Force the missing bit to not match
-//           }
-//           next_missing_index_j++;
-//           next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
-//         }       
+  // TODO: Call this SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
 
-//         // Add the distance from this word into the total between these two genotypes
-//         if(only_differences)
-//         {
-//           cur_distance += get_zeros(tmp_sim_set);
-//         }
-//         else
-//         {
-//           cur_distance += get_distance_custom(tmp_sim_set,&set_1,&set_2);
-//         }
-//       }
-//       // Store the distance between these two genotypes in the distance matrix
-//       distance_matrix[i][j] = cur_distance;
-//       distance_matrix[j][i] = cur_distance;
-//     } // End parallel
-//   } 
+  // TODO: Get the other Nc2 length vector of distances
+  // TODO: Calculate and fill a vector of variances
+  // TODO: Calculate and return the index of association
 
-//   // Fill the output matrix
-//   for(i = 0; i < num_gens; i++)
-//   {
-//     for(j = 0; j < num_gens; j++)
-//     {
-//       INTEGER(R_out)[i + j*num_gens] = distance_matrix[i][j];
-//     }
-//   }
 
-//   for(i = 0; i < num_gens; i++)
-//   {
-//     R_Free(distance_matrix[i]);
-//   }
-//   R_Free(distance_matrix);
-//   UNPROTECT(4); 
-//   return R_out;
 
-// }
+  for(i = 0; i < num_gens; i++)
+  {
+    R_Free(chunk_matrix[i]);
+  }
+  R_Free(chunk_matrix);
+  R_Free(M);
+  R_Free(M2);
+  UNPROTECT(4); 
+  return R_out;
+
+}
 
 
 
