@@ -1181,15 +1181,13 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = T
     }
      # TODO: The following two lines should be a product of mlg.filter
     gid$mlg@visible <- "contracted"
+    visible <- "contracted"
     gid$mlg[] <- filter.stats[[1]]
     cgid <- gid[if(is.na(-which(duplicated(gid$mlg[]))[1])) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
     distmat <- filter.stats[[3]]
   } else {
-    classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
-    if (classstat){
       visible  <- gid@mlg@visible
       mll(gid) <- mlg.compute
-    }
     to_remove <- .clonecorrector(gid)
     cgid <- gid[to_remove, ]
     # Calculate distance matrix if not supplied (Bruvo's distance)
