@@ -794,6 +794,31 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname mll-method
+#' @aliases nmll,genclone-method nmll,snpclone-method
+#' @docType methods
+#==============================================================================#
+nmll <- function(x, type = NULL) standardGeneric("nmll")
+
+#' @export
+setGeneric("nmll")
+
+setMethod(
+  f = "nmll",
+  signature(x = "genclone"),
+  definition = function(x, type = NULL){
+    length(unique(mll(x, type)))
+  })
+
+setMethod(
+  f = "nmll",
+  signature(x = "snpclone"),
+  definition = function(x, type = NULL){
+    length(unique(mll(x, type)))
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll-method
 #' @aliases mll<-,genclone-method mll<-,snpclone-method
 #' @docType methods
 #==============================================================================#

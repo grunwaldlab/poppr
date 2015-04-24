@@ -1190,13 +1190,14 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = T
       visible  <- gid@mlg@visible
       mll(gid) <- mlg.compute
     }
-    cgid <- gid[.clonecorrector(gid), ]
-   
-    
+    to_remove <- .clonecorrector(gid)
+    cgid <- gid[to_remove, ]
     # Calculate distance matrix if not supplied (Bruvo's distance)
      if (is.null(distmat) & !is.null(replen)){
         distmat <- as.matrix(bruvo.dist(cgid, replen = replen, add = add, loss = loss))
-    }
+     } else if (nInd(cgid) < nrow(distmat)){
+       distmat <- distmat[to_remove, to_remove]
+     }
   }
   if(class(distmat) != "matrix"){
     distmat <- as.matrix(distmat)
