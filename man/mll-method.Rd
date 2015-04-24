@@ -8,9 +8,14 @@
 \alias{mll<-}
 \alias{mll<-,genclone-method}
 \alias{mll<-,snpclone-method}
+\alias{nmll}
+\alias{nmll,genclone-method}
+\alias{nmll,snpclone-method}
 \title{Access and manipulate multilocus lineages.}
 \usage{
 mll(x, type = NULL)
+
+nmll(x, type = NULL)
 
 mll(x) <- value
 }

@@ -1276,7 +1276,7 @@ setMethod(
 
 #==============================================================================#
 #' @export
-#' @rdname nmll-method
+#' @rdname mll-method
 #' @aliases nmll,genclone-method nmll,snpclone-method
 #' @docType methods
 #==============================================================================#
