@@ -35,6 +35,9 @@ citation(package = "poppr")
 
 ### From CRAN
 
+[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
+[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
+
 Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/web/packages/poppr/index.html).
 
 To install, make sure R is at least version 2.15.1 (the authors recommend &ge; 3.0), and in your console, type:
