@@ -882,7 +882,9 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = 
     poppr_msn <- update_poppr_graph(poppr_msn, palette)
   }
   # Making sure incoming data matches so that the individual names match.
-  x <- popsub(x, sublist = poppr_msn$populations)
+  if (nPop(x) > 0 & !is.na(poppr_msn$populations)){
+    x <- popsub(x, sublist = poppr_msn$populations)    
+  }
   
   if (beforecut){
     LAYFUN <- match.fun(layfun)
