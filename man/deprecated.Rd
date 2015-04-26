@@ -8,6 +8,8 @@
 \alias{namehierarchy<-}
 \alias{sethierarchy}
 \alias{sethierarchy<-}
+\alias{setpop}
+\alias{setpop<-}
 \alias{splithierarchy}
 \alias{splithierarchy<-}
 \title{DEPRECATED FUNCTIONS}
@@ -15,6 +17,10 @@
 gethierarchy(...)
 
 sethierarchy(...)
+
+setpop(...)
+
+setpop(...) <- value
 
 sethierarchy(...) <- value
 
@@ -32,7 +38,7 @@ namehierarchy(...) <- value
 }
 \arguments{
 \item{...}{arguments to be passed on to adegenet
-\code{\link[adegenet]{strata}} methods.}
+\code{\link[adegenet]{strata}} and \code{\link[adegenet]{setPop}} methods.}
 
 \item{value}{argument passed on to adegenet methods.}
 }
@@ -53,6 +59,6 @@ details.
   relfected the nature of the fields to contain any information possible.
 }
 \seealso{
-\code{\link[adegenet]{strata}}
+\code{\link[adegenet]{strata}} \code{\link[adegenet]{setPop}}
 }
 
