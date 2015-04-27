@@ -539,6 +539,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   SEXP R_chr2_2;
   SEXP R_nap1;
   SEXP R_nap2;
+  SEXP R_dists;
   int nap1_length;
   int nap2_length;
   int chr_length;
@@ -557,8 +558,15 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   int k;
   int x;
 
+  double* vars; // Variance at each locus
   int* M;  // Sum of distances at each locus
   int* M2; // Sum of squared distances at each locus
+  int D;   // Sum of distances between each sample
+  int D2;  // Sum of squared distances between each sample
+  double Vo; // Observed variance
+  double Ve; // Expected variance
+  double Nc2;  // num_gens choose 2
+  double denom; // The denominator for the index of association function
 
   char** chunk_matrix;
   int cur_distance;
@@ -600,6 +608,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   // TODO: This should be 32 for all chunks. If this assumption is wrong things will fail.
   chunk_length = 32;
 
+  vars = R_Calloc(num_chunks*chunk_length, double);
   M = R_Calloc(num_chunks*chunk_length, int);
   M2 = R_Calloc(num_chunks*chunk_length, int);
 
@@ -685,12 +694,55 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
 
   }
 
-  // TODO: Call this SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
+  // Get the distance matrix from bitwise_distance
+  R_dists = bitwise_distance_diploid(genlight, missing, differences_only, requested_threads);
 
-  // TODO: Get the other Nc2 length vector of distances
-  // TODO: Calculate and fill a vector of variances
-  // TODO: Calculate and return the index of association
+  // Calculate the sum and squared sum of distances between samples
+  D = 0;
+  D2 = 0;
+  for(i = 0; i < num_gens; i++)
+  {
+    for(j = 0; j < i; j++)
+    {
+      D += INTEGER(R_dists)[i + j*num_gens];
+      D2 += INTEGER(R_dists)[i + j*num_gens];
+    }
+  }
 
+  // Calculate C(num_gens,2), which will always be (n*n-n)/2 
+  Nc2 = (num_gens*num_gens - num_gens)/2.0;
+  // Calculate the observed variance using D and D2
+  Vo = (D2 - (D*D)/Nc2) / Nc2;
+
+  // Calculate and fill a vector of variances
+  for(i = 0; i < num_chunks*chunk_length; i++)
+  {
+    vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2;
+  }
+
+  // Calculate the expected variance
+  Ve = 0;
+  for(i = 0; i < num_chunks*chunk_length; i++)
+  {
+    Ve += vars[i];
+  }
+
+  // Calculate the denominator for the index of association
+  denom = 0;
+  for(i = 0; i < num_chunks*chunk_length; i++)
+  {
+    for(j = 0; j < num_chunks*chunk_length; j++)
+    {
+      if(i != j)
+      {
+        denom += sqrt(vars[i]*vars[j]);
+      }
+    }
+  }
+  denom = 2 * denom;
+
+  // Calculate and store the index of association
+  REAL(R_out)[0] = (Vo - Ve) / denom;
 
 
   for(i = 0; i < num_gens; i++)
@@ -698,6 +750,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
     R_Free(chunk_matrix[i]);
   }
   R_Free(chunk_matrix);
+  R_Free(vars);
   R_Free(M);
   R_Free(M2);
   UNPROTECT(4); 
