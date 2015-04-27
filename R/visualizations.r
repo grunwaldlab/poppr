@@ -883,7 +883,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = 
   }
   # Making sure incoming data matches so that the individual names match.
   if (!all(is.na(poppr_msn$populations))){
-    if (nlevels(pop(x)) > 0 && nlevels(pop(x)) > length(poppr_msn$populations)){
+    if (nPop(x) > 0 && nPop(x) >= length(poppr_msn$populations)){
       x <- popsub(x, sublist = poppr_msn$populations)
     } else {
       warning("populations in graph don't match data. Setting to none.")
