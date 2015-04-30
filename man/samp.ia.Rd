@@ -22,10 +22,6 @@ of association.}
   caution.}
 
 \item{quiet}{if \code{FALSE}, a progress bar will be printed to the screen.}
-
-\item{n.snp}{an integer specifying the minimum number of snps allowed per
-  window. If a window does not meet this criteria, the value will return as
-  NA.}
 }
 \value{
 Index of association representing the samples in this genlight
