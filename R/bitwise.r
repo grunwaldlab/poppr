@@ -298,6 +298,7 @@ poppr_has_parallel <- function(){
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
+#' @internal
 #==============================================================================#
 bitwise.IA <- function(x, indices=NULL, threads=0){
   stopifnot(is(x, "genlight"))
@@ -309,4 +310,145 @@ bitwise.IA <- function(x, indices=NULL, threads=0){
 
   return(0)
 
+}
+
+#==============================================================================#
+#' Calculate windows of the index of association for genlight objects.
+#' 
+#' Genlight objects can contain millions of loci. Since it does not make much 
+#' sense to caluclate the index of association over that many loci, this
+#' function will scan windows across the loci positions and calculate the index
+#' of association.
+#' 
+#' @param x a genlight object.
+#'   
+#' @param window an integer specifying the size of the window.
+#'   
+#' @param min.snps an integer specifying the minimum number of snps allowed per 
+#'   window. If a window does not meet this criteria, the value will return as
+#'   NA.
+#'   
+#' @param threads The maximum number of parallel threads to be used within this 
+#'   function. A value of 0 (default) will attempt to use as many threads as
+#'   there are available cores/CPUs. In most cases this is ideal. A value of 1
+#'   will force the function to run serially, which may increase stability on
+#'   some systems. Other values may be specified, but should be used with
+#'   caution.
+#'   
+#' @return Index of association representing the samples in this genlight
+#'   object.
+#' @author Zhian N. Kamvar, Jonah Brooks
+#'   
+#' @export
+#' @examples
+#' 
+#' # with structured snps assuming 1e4 positions
+#' set.seed(999)
+#' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+#' position(x) <- sort(sample(1e4, 1e3))
+#' res <- win.ia(x, window = 300L) # Calculate for windows of size 300
+#' plot(res, type = "l")
+#' 
+#' \dontrun{
+#' # unstructured snps
+#' set.seed(999)
+#' x <- glSim(n.ind = 10, n.snp.nonstruc = 1e3, ploidy = 2)
+#' position(x) <- sort(sample(1e4, 1e3))
+#' res <- win.ia(x, window = 300L) # Calculate for windows of size 300
+#' plot(res, type = "l")
+#' }
+#' 
+#==============================================================================#
+win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
+  stopifnot(is(x, "genlight"))
+  if (!is.null(position(x))){
+    xpos <- position(x)
+  } else {
+    xpos <- seq(nLoc(x))
+  }
+  nwin <- ceiling(max(xpos)/window)
+  winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
+  winmat[, 1] <- winmat[, 1] + window
+  res_mat <- vector(mode = "numeric", length = nwin)
+  for (i in seq(nwin)){
+    posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+    if (length(posns) < min.snps){
+      res_mat[i] <- NA
+    } else {
+      res_mat[i] <- snpia(x[, posns], threads = threads)
+    }
+  }
+  return(res_mat)
+}
+
+#==============================================================================#
+#' Calculate random samples of the index of association for genlight objects.
+#' 
+#' Genlight objects can contain millions of loci. Since it does not make much 
+#' sense to caluclate the index of association over that many loci, this
+#' function will randomly sample sites to calculate the index of association.
+#' 
+#' @param x a genlight object.
+#'   
+#' @param window an integer specifying the size of the window.
+#'   
+#' @param min.snps an integer specifying the minimum number of snps allowed per 
+#'   window. If a window does not meet this criteria, the value will return as
+#'   NA.
+#'   
+#' @param threads The maximum number of parallel threads to be used within this 
+#'   function. A value of 0 (default) will attempt to use as many threads as
+#'   there are available cores/CPUs. In most cases this is ideal. A value of 1
+#'   will force the function to run serially, which may increase stability on
+#'   some systems. Other values may be specified, but should be used with
+#'   caution.
+#'   
+#' @return Index of association representing the samples in this genlight
+#'   object.
+#' @author Zhian N. Kamvar, Jonah Brooks
+#'   
+#' @export
+#' 
+#' @examples
+#' \dontrun{
+#' # with structured snps assuming 1e4 positions
+#' set.seed(999)
+#' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+#' position(x) <- sort(sample(1e4, 1e3))
+#' res <- samp.ia(x)
+#' hist(res)
+#' 
+#' # with unstructured snps assuming 1e4 positions
+#' set.seed(999)
+#' x <- glSim(n.ind = 10, n.snp.nonstruc = 1e3, ploidy = 2)
+#' position(x) <- sort(sample(1e4, 1e3))
+#' res <- samp.ia(x)
+#' hist(res)
+#' }
+#==============================================================================#
+samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L){
+  stopifnot(is(x, "genlight"))
+  nloc <- nLoc(x)
+  res_mat <- vector(mode = "numeric", length = reps)
+  for (i in seq(reps)){
+    posns <- sample(nloc, n.snp)
+    res_mat[i] <- snpia(x[, posns], threads = threads)
+  }
+  return(res_mat)
+}
+
+snpia <- function(x, threads = 1L){
+  nloc <- nLoc(x)
+  nind <- nInd(x)
+  np <- choose(nind, 2)
+  d_mat <- vapply(seq(nloc), function(i) as.vector(bitwise.dist(x[, i], percent = FALSE, threads = threads)), integer(np))
+  D <- rowSums(d_mat)
+  SD <- sum(D)
+  Sd <- colSums(d_mat)
+  Sd2 <- colSums(d_mat*d_mat)
+  Vo <- (sum(D*D) - (SD*SD)/np)/np
+  varj <- (Sd2 - (Sd*Sd)/np)/np
+  Ve <- sum(varj)
+  Svarij <- .Call("pairwise_covar", varj, PACKAGE = "poppr")
+  return((Vo - Ve)/(2 * sum(Svarij)))
 }
