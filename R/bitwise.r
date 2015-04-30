@@ -445,9 +445,9 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   stopifnot(is(x, "genlight"))
   nloc <- nLoc(x)
   res_mat <- vector(mode = "numeric", length = reps)
+  if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(reps)){
     posns <- sample(nloc, n.snp)
-    if (!quiet) progbar <- txtProgressBar(style = 3)
     res_mat[i] <- snpia(x[, posns], threads = threads)
     if (!quiet){
       setTxtProgressBar(progbar, i/reps)
