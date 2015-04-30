@@ -4,7 +4,7 @@
 \alias{samp.ia}
 \title{Calculate random samples of the index of association for genlight objects.}
 \usage{
-samp.ia(x, n.snp = 100L, reps = 100L, threads = 1L)
+samp.ia(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE)
 }
 \arguments{
 \item{x}{a genlight object.}
@@ -20,6 +20,8 @@ of association.}
   will force the function to run serially, which may increase stability on
   some systems. Other values may be specified, but should be used with
   caution.}
+
+\item{quiet}{if \code{FALSE}, a progress bar will be printed to the screen.}
 
 \item{n.snp}{an integer specifying the minimum number of snps allowed per
   window. If a window does not meet this criteria, the value will return as

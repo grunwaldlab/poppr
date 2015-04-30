@@ -335,6 +335,8 @@ bitwise.IA <- function(x, indices=NULL, threads=0){
 #'   some systems. Other values may be specified, but should be used with
 #'   caution.
 #'   
+#' @param quiet if \code{FALSE}, a progress bar will be printed to the screen.
+#'   
 #' @return Index of association representing the samples in this genlight
 #'   object.
 #'   
@@ -363,7 +365,7 @@ bitwise.IA <- function(x, indices=NULL, threads=0){
 #' }
 #' 
 #==============================================================================#
-win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
+win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE){
   stopifnot(is(x, "genlight"))
   if (!is.null(position(x))){
     xpos <- position(x)
@@ -374,12 +376,16 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
   winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
   winmat[, 1] <- winmat[, 1] - window
   res_mat <- vector(mode = "numeric", length = nwin)
+  progbar <- txtProgressBar(style = 3)
   for (i in seq(nwin)){
     posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
     if (length(posns) < min.snps){
       res_mat[i] <- NA
     } else {
       res_mat[i] <- snpia(x[, posns], threads = threads)
+    }
+    if (!quiet){
+      setTxtProgressBar(progbar, i/nwin)
     }
   }
   return(res_mat)
@@ -399,16 +405,14 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
 #' 
 #' @param reps the number of times to perform the calculation.
 #'   
-#' @param n.snp an integer specifying the minimum number of snps allowed per 
-#'   window. If a window does not meet this criteria, the value will return as
-#'   NA.
-#'   
 #' @param threads The maximum number of parallel threads to be used within this 
 #'   function. A value of 0 (default) will attempt to use as many threads as
 #'   there are available cores/CPUs. In most cases this is ideal. A value of 1
 #'   will force the function to run serially, which may increase stability on
 #'   some systems. Other values may be specified, but should be used with
 #'   caution.
+#' 
+#' @param quiet if \code{FALSE}, a progress bar will be printed to the screen.
 #'   
 #'   
 #' @note this will calculate the standardized index of assocation from Agapow
@@ -437,13 +441,17 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
 #' hist(res)
 #' }
 #==============================================================================#
-samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L){
+samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   stopifnot(is(x, "genlight"))
   nloc <- nLoc(x)
   res_mat <- vector(mode = "numeric", length = reps)
   for (i in seq(reps)){
     posns <- sample(nloc, n.snp)
+    progbar <- txtProgressBar(style = 3)
     res_mat[i] <- snpia(x[, posns], threads = threads)
+    if (!quiet){
+      setTxtProgressBar(progbar, i/reps)
+    }
   }
   return(res_mat)
 }

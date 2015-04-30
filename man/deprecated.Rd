@@ -52,11 +52,11 @@ details.
 }
 \section{Background}{
 
-  These functions origianlly appeared in \pkg{poppr} in July of 2014. In
+  These functions originally appeared in \pkg{poppr} in July of 2014. In
   March 2015, a request was made for them to be ported to the \pkg{adegenet}
   package as part of the population genetics in R hackathon. The name of the
   functions were moved from "hierarchy" to "strata" because it better
-  relfected the nature of the fields to contain any information possible.
+  reflected the nature of the fields to contain any information possible.
 }
 \seealso{
 \code{\link[adegenet]{strata}} \code{\link[adegenet]{setPop}}
