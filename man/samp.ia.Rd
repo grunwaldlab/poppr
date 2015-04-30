@@ -21,7 +21,7 @@ of association.}
   some systems. Other values may be specified, but should be used with
   caution.}
 
-\item{min.snps}{an integer specifying the minimum number of snps allowed per
+\item{n.snp}{an integer specifying the minimum number of snps allowed per
   window. If a window does not meet this criteria, the value will return as
   NA.}
 }
