@@ -73,7 +73,7 @@ struct locus
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
-SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads, SEXP differences_only);
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP indices);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
@@ -495,12 +495,12 @@ Calculates the index of association of a genlight object of diploids.
 
 Input: A genlight object containing samples of diploids.
        A boolean representing whether or not missing values should match. 
-       A vector of locus indices to be used in the calculations.
-       An integer representing the number of threads to be used.
        A boolean representing whether distances or differences should be counted.
+       An integer representing the number of threads to be used.
+       A vector of locus indices to be used in the calculations.
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP requested_threads, SEXP differences_only)
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP indices)
 {
 
   //TODO: Validate input
@@ -528,11 +528,12 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   SEXP R_gen_symbol;
   SEXP R_chr_symbol;  
   SEXP R_nap_symbol;
-  // SEXP R_nloc_symbol; // For accessing the number of SNPs in each genotype
+  SEXP R_nloc_symbol; // For accessing the number of SNPs in each genotype
   SEXP R_gen;
   int num_gens;
   int num_chunks;
   int chunk_length;
+  int num_loci;
   SEXP R_chr1_1;
   SEXP R_chr1_2;
   SEXP R_chr2_1;
@@ -540,6 +541,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   SEXP R_nap1;
   SEXP R_nap2;
   SEXP R_dists;
+  SEXP R_nloc;
   int nap1_length;
   int nap2_length;
   int chr_length;
@@ -581,6 +583,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
   PROTECT(R_chr_symbol = install("snp"));
   PROTECT(R_nap_symbol = install("NA.posi"));  
+  PROTECT(R_nloc_symbol = install("n.loc"));
 
   // This will be a LIST of type LIST:RAW
   R_gen = getAttrib(genlight, R_gen_symbol);
@@ -588,6 +591,9 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
 
   R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,0),R_chr_symbol),0); // Chromosome 1
   num_chunks = XLENGTH(R_chr1_1);
+
+  R_nloc = getAttrib(genlight,R_nloc_symbol);
+  num_loci = INTEGER(R_nloc)[0];
 
   PROTECT(R_out = allocVector(REALSXP, 1));
   chunk_matrix = R_Calloc(num_gens*2,char*);
@@ -606,7 +612,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   }
 
   // TODO: This should be 32 for all chunks. If this assumption is wrong things will fail.
-  chunk_length = 32;
+  chunk_length = 8;
 
   vars = R_Calloc(num_chunks*chunk_length, double);
   M = R_Calloc(num_chunks*chunk_length, int);
@@ -705,7 +711,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
     for(j = 0; j < i; j++)
     {
       D += INTEGER(R_dists)[i + j*num_gens];
-      D2 += INTEGER(R_dists)[i + j*num_gens];
+      D2 += INTEGER(R_dists)[i + j*num_gens]*INTEGER(R_dists)[i + j*num_gens];
     }
   }
 
@@ -715,23 +721,23 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   Vo = (D2 - (D*D)/Nc2) / Nc2;
 
   // Calculate and fill a vector of variances
-  for(i = 0; i < num_chunks*chunk_length; i++)
+  for(i = 0; i < num_loci; i++)
   {
     vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2;
   }
 
   // Calculate the expected variance
   Ve = 0;
-  for(i = 0; i < num_chunks*chunk_length; i++)
+  for(i = 0; i < num_loci; i++)
   {
     Ve += vars[i];
   }
 
   // Calculate the denominator for the index of association
   denom = 0;
-  for(i = 0; i < num_chunks*chunk_length; i++)
+  for(i = 0; i < num_loci; i++)
   {
-    for(j = 0; j < num_chunks*chunk_length; j++)
+    for(j = 0; j < num_loci; j++)  // Or j < i ?
     {
       if(i != j)
       {
@@ -753,7 +759,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP indices, SEXP r
   R_Free(vars);
   R_Free(M);
   R_Free(M2);
-  UNPROTECT(4); 
+  UNPROTECT(5); 
   return R_out;
 
 }
