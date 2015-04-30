@@ -298,7 +298,7 @@ poppr_has_parallel <- function(){
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
-#' @internal
+#' @keywords internal
 #==============================================================================#
 bitwise.IA <- function(x, indices=NULL, threads=0){
   stopifnot(is(x, "genlight"))
@@ -337,6 +337,10 @@ bitwise.IA <- function(x, indices=NULL, threads=0){
 #'   
 #' @return Index of association representing the samples in this genlight
 #'   object.
+#'   
+#' @note this will calculate the standardized index of assocation from Agapow
+#' 2001. See \code{\link{ia}} for details.
+#' 
 #' @author Zhian N. Kamvar, Jonah Brooks
 #'   
 #' @export
@@ -390,7 +394,10 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
 #' 
 #' @param x a genlight object.
 #'   
-#' @param window an integer specifying the size of the window.
+#' @param n.snp the number of snps to be used to calcuate standardized index
+#' of association.
+#' 
+#' @param reps the number of times to perform the calculation.
 #'   
 #' @param min.snps an integer specifying the minimum number of snps allowed per 
 #'   window. If a window does not meet this criteria, the value will return as
@@ -403,6 +410,10 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
 #'   some systems. Other values may be specified, but should be used with
 #'   caution.
 #'   
+#'   
+#' @note this will calculate the standardized index of assocation from Agapow
+#' 2001. See \code{\link{ia}} for details.
+#' 
 #' @return Index of association representing the samples in this genlight
 #'   object.
 #' @author Zhian N. Kamvar, Jonah Brooks
