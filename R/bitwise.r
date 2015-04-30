@@ -372,7 +372,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
   }
   nwin <- ceiling(max(xpos)/window)
   winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
-  winmat[, 1] <- winmat[, 1] + window
+  winmat[, 1] <- winmat[, 1] - window
   res_mat <- vector(mode = "numeric", length = nwin)
   for (i in seq(nwin)){
     posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
