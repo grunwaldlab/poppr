@@ -313,7 +313,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "origi
   #                        palette = palette))
   # }
   # This will subset both the population and the matrix. 
-  if(sublist[1] != "ALL" | !is.null(blacklist)){
+  if(toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(pop, sublist, blacklist)
     bclone <- bclone[sublist_blacklist, sublist_blacklist]
     pop    <- popsub(pop, sublist, blacklist)
@@ -333,7 +333,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors, mlg.compute = "origi
   
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, mlg.compute = mlg.compute,
                          palette = palette, include.ties = include.ties, showplot=showplot,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
   }
@@ -886,7 +886,14 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = 
     poppr_msn <- update_poppr_graph(poppr_msn, palette)
   }
   # Making sure incoming data matches so that the individual names match.
-  x <- popsub(x, sublist = poppr_msn$populations)
+  if (!all(is.na(poppr_msn$populations))){
+    if (nlevels(pop(x)) > 0 && nlevels(pop(x)) >= length(poppr_msn$populations)){
+      x <- popsub(x, sublist = poppr_msn$populations)
+    } else {
+      warning("populations in graph don't match data. Setting to none.")
+    }
+    
+  }
   
   if (beforecut){
     LAYFUN <- match.fun(layfun)
@@ -979,20 +986,25 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = 
   # Setting up the matrix for plotting. One Vertical panel of width 1 and height
   # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
   # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
-  layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
-         widths = c(1, 4), heights= c(4.5, 0.5))
-  # mar = bottom left top right
+  if (!all(is.na(poppr_msn$populations))){
+    layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
+           widths = c(1, 4), heights= c(4.5, 0.5))
+    # mar = bottom left top right
+    
+    ## LEGEND
+    par(mar = c(0, 0, 1, 0) + 0.5)
+    too_many_pops   <- as.integer(ceiling(length(x$pop.names)/30))
+    pops_correction <- ifelse(too_many_pops > 1, -1, 1)
+    yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
+    plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
+         main = 'POPULATION')
   
-  ## LEGEND
-  par(mar = c(0, 0, 1, 0) + 0.5)
-  too_many_pops   <- as.integer(ceiling(length(x$pop.names)/30))
-  pops_correction <- ifelse(too_many_pops > 1, -1, 1)
-  yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
-  plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
-       main = 'POPULATION')
-  legend("topleft", bty = "n", cex = 1.2^pops_correction,
-         legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
-         ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
+    legend("topleft", bty = "n", cex = 1.2^pops_correction,
+           legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
+           ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
+  } else {
+    layout(matrix(c(1,2), nrow = 2), heights= c(4.5, 0.5))
+  }
   
   ## PLOT
   par(mar = c(0,0,0,0))

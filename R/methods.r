@@ -1277,6 +1277,31 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname mll-method
+#' @aliases nmll,genclone-method nmll,snpclone-method
+#' @docType methods
+#==============================================================================#
+nmll <- function(x, type = NULL) standardGeneric("nmll")
+
+#' @export
+setGeneric("nmll")
+
+setMethod(
+  f = "nmll",
+  signature(x = "genclone"),
+  definition = function(x, type = NULL){
+    length(unique(mll(x, type)))
+  })
+
+setMethod(
+  f = "nmll",
+  signature(x = "snpclone"),
+  definition = function(x, type = NULL){
+    length(unique(mll(x, type)))
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname mll-method
 #' @aliases mll<-,genclone-method mll<-,snpclone-method
 #' @docType methods
 #==============================================================================#
@@ -1605,7 +1630,7 @@ setMethod(
   definition = function(pop, missing = "mean", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "nei.dist",
                         threads = 0, ..., value){
-    if (!is.genclone(pop)){
+    if (!is.snpclone(pop)){
       the_warning <- paste("mlg.filter<- only has an effect on snpclone",
                            "objects.\n", "If you want to utilize this",
                            "functionality, please convert to a snpclone object.\n",

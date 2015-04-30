@@ -533,7 +533,7 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
 
   if (is.null(pop(pop)) | length(pop@pop.names) == 1){
     return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
-                         replen = replen, gscale = gscale, 
+                         replen = replen, gscale = gscale, mlg.compute = mlg.compute,
                          glim = glim, gadj = gadj, wscale = wscale, 
                          palette = palette, include.ties = include.ties,
                          threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
@@ -634,4 +634,156 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
   return(list(graph = mst, populations = pop$pop.names, colors = color))
+}
+#' Test repeat length consistency.
+#' 
+#' This function will test for consistency in the sense that all alleles are 
+#' able to be represented as discrete units after division and rounding.
+#' @param gid a genind object
+#' @param replen a numeric vector of repeat motif lengths.
+#' @return a logical vector indicating whether or not the repeat motif length is
+#'   consistent.
+#'   
+#' @details This function is modified from the version used in 
+#'   \url{http://dx.doi.org/10.5281/zenodo.13007}.
+#'   
+#' @references Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
+#'   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
+#'   and temporal population dynamics of the sudden oak death epidemic in Oregon
+#'   Forests. ZENODO, http://doi.org/10.5281/zenodo.13007, 2014.
+#'   
+#'   Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
+#'   Schulenburg. A simple method for the calculation of microsatellite genotype
+#'   distances irrespective of ploidy level. Molecular Ecology, 13(7):2101-2106,
+#'   2004.
+#'   
+#' @export
+#' @seealso \code{\link{fix_replen}} \code{\link{bruvo.dist}}
+#'   \code{\link{bruvo.msn}} \code{\link{bruvo.boot}}
+#' @author Zhian N. Kamvar
+#' @examples
+#' data(nancycats)
+#' test_replen(nancycats, rep(2, 9))
+test_replen <- function(gid, replen){
+  alleles <- lapply(gid@all.names, as.numeric)
+  are_consistent <- vapply(1:nLoc(gid), consistent_replen, logical(1), 
+                           alleles, replen)
+  names(are_consistent) <- locNames(gid)
+  return(are_consistent)
+}
+
+consistent_replen <- function(index, alleles, replen){
+  !any(duplicated(round(alleles[[index]]/replen[index])))
+}
+
+#' Find and fix inconsistent repeat lengths
+#' 
+#' Attempts to fix inconsistent repeat lengths found by \code{test_replen}
+#' 
+#' @param gid a genind object
+#' @param replen a numeric vector of repeat motif lengths.
+#' @param e a number to be subtracted or added to inconsistent repeat lengths to
+#'   allow for proper rounding.
+#' @param fix_some if \code{TRUE} (default), when there are inconsistent repeat 
+#'   lengths that cannot be fixed by subtracting or adding e, those than can be 
+#'   fixed will. If \code{FALSE}, the original repeat lengths will not be fixed.
+#' @return a numeric vector of corrected repeat motif lengths.
+#' @details This function is modified from the version used in 
+#'   \url{http://dx.doi.org/10.5281/zenodo.13007}.\cr Before being fed into the
+#'   algorithm to calculate Bruvo's distance, the amplicon length is divided by
+#'   the repeat unit length. Because of the amplified primer sequence attached
+#'   to sequence repeat, this division does not always result in an integer and
+#'   so the resulting numbers are rounded. The rounding also protects against
+#'   slight mis-calls of alleles. Because we know that \deqn{\frac{(A - e) - (B
+#'   - e)}{r}}{((A - e) - (B - e))/r} is equivalent to \deqn{\frac{A - B}{r}}{(A
+#'   - B)/r}, we know that the primer sequence will not alter the relationships
+#'   between the alleles. Unfortunately for nucleotide repeats that have powers
+#'   of 2, rounding in R is based off of the IEC 60559 standard (see
+#'   \code{\link{round}}), that means that any number ending in 5 is rounded to
+#'   the nearest \emph{even} digit. This function will attempt to alleviate this
+#'   problem by adding a very small amount to the repeat length so that division
+#'   will not result in a 0.5. If this fails, the same amount will be
+#'   subtracted. If neither of these work, a warning will be issued and it is up
+#'   to the user to determine if the fault is in the allele calls or the repeat
+#'   lengths.
+#' @export
+#' 
+#' @references Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
+#'   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
+#'   and temporal population dynamics of the sudden oak death epidemic in Oregon
+#'   Forests. ZENODO, http://doi.org/10.5281/zenodo.13007, 2014.
+#'   
+#'   Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
+#'   Schulenburg. A simple method for the calculation of microsatellite genotype
+#'   distances irrespective of ploidy level. Molecular Ecology, 13(7):2101-2106,
+#'   2004.
+#'   
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{test_replen}} \code{\link{bruvo.dist}}
+#'   \code{\link{bruvo.msn}} \code{\link{bruvo.boot}}
+#' @examples
+#' 
+#' data(nancycats)
+#' fix_replen(nancycats, rep(2, 9))
+#' # Let's start with an example of a tetranucleotide repeat motif and imagine
+#' # that there are twenty alleles all 1 step apart:
+#' (x <- 1:20L * 4L)
+#' # These are the true lengths of the different alleles. Now, let's add the
+#' # primer sequence to them. 
+#' (PxP <- x + 21 + 21)
+#' # Now we make sure that x / 4 is equal to 1:20, which we know each have
+#' # 1 difference.
+#' x/4
+#' # Now, we divide the sequence with the primers by 4 and see what happens.
+#' (PxPc <- PxP/4)
+#' (PxPcr <- round(PxPc))
+#' diff(PxPcr) # we expect all 1s
+#' 
+#' # Let's try that again by subtracting a tiny amount from 4
+#' (PxPc <- PxP/(4 - 1e-5))
+#' (PxPcr <- round(PxPc))
+#' diff(PxPcr)
+fix_replen <- function(gid, replen, e = 1e-5, fix_some = TRUE){
+  if (length(replen) != nLoc(gid)) {
+    stop(paste0("length of repeats (", length(replen), ") does not equal",
+                " the number of loci (", nLoc(gid), ")."))
+  }
+  consistent_reps <- test_replen(gid, replen)
+  names(replen)   <- locNames(gid)
+  ADD <- FALSE
+  SUB <- FALSE
+  newReps <- replen
+  while (any(!consistent_reps)){
+    if (!SUB){
+      newReps[!consistent_reps] <- newReps[!consistent_reps] - e
+      SUB <- TRUE
+    } else {
+      newReps[!consistent_reps] <- newReps[!consistent_reps] + (2*e)
+      ADD <- TRUE
+    }
+    consistent_reps <- test_replen(gid, newReps)
+    if (any(!consistent_reps) & ADD & SUB){
+      inconsistent <- paste(names(replen[!consistent_reps]), collapse = ", ")
+      msg <- paste("The repeat lengths for", inconsistent, 
+                   "are not consistent.\n\n",
+                   "This might be due to inconsistent allele calls or repeat",
+                   "lengths that are too large.\n",
+                   "Check the alleles to make sure there are no duplicated",
+                   "or similar alleles that might end up being the same after",
+                   "division.\n")
+      if (fix_some){
+        original <- test_replen(gid, replen)
+        fixed    <- paste(names(replen[!original & consistent_reps]), collapse = ", ")
+        msg <- paste(msg, "\nRepeat lengths with some modification are",
+                     "being returned:", fixed)
+        newReps[!consistent_reps] <- replen[!consistent_reps]
+      } else {
+        msg <- paste(msg, "\nOriginal repeat lengths are being returned.")
+        newReps <- replen
+      }
+      warning(msg, immediate. = TRUE)
+      consistent_reps <- TRUE
+    }
+  }
+  return(newReps)
 }
