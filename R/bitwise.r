@@ -399,7 +399,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
 #' 
 #' @param reps the number of times to perform the calculation.
 #'   
-#' @param min.snps an integer specifying the minimum number of snps allowed per 
+#' @param n.snp an integer specifying the minimum number of snps allowed per 
 #'   window. If a window does not meet this criteria, the value will return as
 #'   NA.
 #'   
