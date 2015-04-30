@@ -376,7 +376,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
   winmat[, 1] <- winmat[, 1] - window
   res_mat <- vector(mode = "numeric", length = nwin)
-  progbar <- txtProgressBar(style = 3)
+  if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(nwin)){
     posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
     if (length(posns) < min.snps){
@@ -447,7 +447,7 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   res_mat <- vector(mode = "numeric", length = reps)
   for (i in seq(reps)){
     posns <- sample(nloc, n.snp)
-    progbar <- txtProgressBar(style = 3)
+    if (!quiet) progbar <- txtProgressBar(style = 3)
     res_mat[i] <- snpia(x[, posns], threads = threads)
     if (!quiet){
       setTxtProgressBar(progbar, i/reps)
