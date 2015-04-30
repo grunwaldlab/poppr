@@ -28,4 +28,5 @@ TODO: Add description of method
 \author{
 Zhian N. Kamvar, Jonah Brooks
 }
+\keyword{internal}
 
