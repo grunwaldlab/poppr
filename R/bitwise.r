@@ -300,15 +300,59 @@ poppr_has_parallel <- function(){
 #' @export
 #' @keywords internal
 #==============================================================================#
-bitwise.IA <- function(x, indices=NULL, threads=0){
-  stopifnot(is(x, "genlight"))
-  #TODO: Validate the arguments
+bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0, indices=NULL){
+  stopifnot(class(x)[1] == "genlight")
+  #TODO: Use this and pass others to ia(): stopifnot(class(x)[1] %in% c("genlight", "genclone", "genind"))
+  # Stop if the ploidy of the genlight object is not consistent
+  stopifnot(min(ploidy(x)) == max(ploidy(x))) 
+  # Stop if the ploidy of the genlight object is not haploid or diploid
+  stopifnot(min(ploidy(x)) == 2) # Once this handles haploids add:  || min(ploidy(x)) == 1)
+
+  ploid     <- min(ploidy(x))
+  ind.names <- indNames(x)
+  inds      <- nInd(x)
+  numPairs   <- nLoc(x)
+
+  # Use Provesti if this is a genclone or genind object
+#  if(class(x)[1] != "genlight"){
+#    dist.mat <- provesti.dist(x)
+#    if (percent == FALSE){
+#      dist.mat <- dist.mat*ploid*numPairs
+#    }
+#    if (mat == TRUE){
+#      dist.mat <- as.matrix(dist.mat)
+#    }
+#    # Return this matrix and exit function
+#    return(dist.mat)
+#  }
+#
+  # Continue function for genlight objects
+
+  # Ensure that every SNPbin object has data for all chromosomes
+  if(ploid == 2){
+    for(i in 1:length(x$gen)){
+      if(length(x$gen[[i]]$snp) == 1){
+        x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
+      }
+    }
+  }
+  # Threads must be something that can cast to integer
+  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  {
+    stop("Threads must be a non-negative numeric or integer value")
+  }
+
+  # Cast parameters to proper types before passing them to C
+  threads <- as.integer(threads)
+  indices <- as.integer(indices)
 
   #TODO: Allow for automated index generation, such as random or window based
 
   #TODO: Call C function and return
+  
+  IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads,indices)
 
-  return(0)
+  return(IA)
 
 }
 
