@@ -1,5 +1,8 @@
 poppr 1.1.4.99
 ===========
+COMPATIBILITY UPDATE
+* poppr has moved to version 2.0 due to adegenet's recent update. The hierarchy slot introduced in version 1.1 is now being moved to adegenet and renamed `strata`. For maximum backwards compatibility, all of the hierarchy methods still exist, but they are deprecated and will print a warning with the proper function to use. If you were accessing the hierarchy slot without using the `*hierarchy()` methods, your code will fail as the hierarchy slot now should only contain a formula object. 
+
 NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
 * The function `poppr` will now plot all populations in a single faceted plot instead of one plot per population.
@@ -22,7 +25,7 @@ NEW FUNCTIONS
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
 
 NEW CLASSES
-* snpclone is an extension of the genlight object that acts very much like genclone. It contains a hierarchy and mlg slot. 
+* snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 
 * MLG is an internal class that lives inside the mlg slot of snpclone and genclone objects. It allows the user to easily switch between multilocus genotype definitions.
 
 BUG FIX
