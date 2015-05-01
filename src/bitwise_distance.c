@@ -573,11 +573,11 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   char** chunk_matrix;
   int cur_distance;
   char tmp_sim_set;
-  char Sn;             // Used for temporary bitwise calculations
-  char Hnor;
-  char Hs;
-  char offset;
-  char val; 
+  unsigned char Sn;             // Used for temporary bitwise calculations
+  unsigned char Hnor;
+  unsigned char Hs;
+  unsigned char offset;
+  unsigned char val; 
 
 
   PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
@@ -599,14 +599,14 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   chunk_matrix = R_Calloc(num_gens*2,char*);
   for(i = 0; i < num_gens; i++)
   {
-    chunk_matrix[i] = R_Calloc(num_chunks,char);
-    chunk_matrix[i+1] = R_Calloc(num_chunks,char);
+    chunk_matrix[i*2] = R_Calloc(num_chunks,char);
+    chunk_matrix[i*2+1] = R_Calloc(num_chunks,char);
     R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
     R_chr1_2 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),1); // Chromosome 2
     for(j = 0; j < num_chunks; j++)
     {
-      chunk_matrix[i][j] = (char)RAW(R_chr1_1)[j];
-      chunk_matrix[i+1][j] = (char)RAW(R_chr1_2)[j];
+      chunk_matrix[i*2][j] = (char)RAW(R_chr1_1)[j];
+      chunk_matrix[i*2+1][j] = (char)RAW(R_chr1_2)[j];
       // TODO: Correct for missing data here
     }
   }
@@ -659,16 +659,16 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
     {
       // TODO: Things?
       // Fill c1 and c2 with the next two chunks, representing a pair
-      set_1.c1 = chunk_matrix[j][i];
-      set_1.c2 = chunk_matrix[j+1][i]; // This chunk is the chromosonal pair of the first
+      set_1.c1 = chunk_matrix[j*2][i];
+      set_1.c2 = chunk_matrix[j*2+1][i]; // This chunk is the chromosonal pair of the first
       // Call fill_zygosity to fill out the rest of the fields
       fill_zygosity(&set_1);
       // Loop through the rest of the genotypes
       for(k = 0; k < j; k++)
       {
         // Fill c1 and c2 with the next two chunks, representing a pair
-        set_2.c1 = chunk_matrix[k][i];
-        set_2.c2 = chunk_matrix[k+1][i]; // This chunk is the chromosonal pair of the first
+        set_2.c1 = chunk_matrix[k*2][i];
+        set_2.c2 = chunk_matrix[k*2+1][i]; // This chunk is the chromosonal pair of the first
         // Call fill_zygosity to fill out the rest of the fields
         fill_zygosity(&set_2);
 
@@ -682,12 +682,13 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
         for(x = 0; x < chunk_length; x++)
         {
           // Find the offset for the next bit/locus of interest 
-          offset = chunk_length - x - 1;
+          offset = x;
           // Create mask to retrieve just that bit/locus
           mask = 1<<offset;
 	  // val = (mask&Sn)>>offset + (mask&Hs)>>offset // Add one for not same, add one for opposite homozygotes
           // If only_differences is set, subtract (mask&Hs)>>offset back off of val
-          val = (mask&Sn)>>offset + (mask&Hs)>>offset;
+          val = (mask&Sn)>>offset;
+          val += (mask&Hs)>>offset;
           // Update M[current locus] with val 
           M[x + i*chunk_length] += val;
           // Update M2[current locus] with val squared
@@ -725,7 +726,6 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   {
     vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2;
   }
-
   // Calculate the expected variance
   Ve = 0;
   for(i = 0; i < num_loci; i++)
@@ -737,7 +737,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   denom = 0;
   for(i = 0; i < num_loci; i++)
   {
-    for(j = 0; j < num_loci; j++)  // Or j < i ?
+    for(j = 0; j < i; j++)  // Or j < i ?
     {
       if(i != j)
       {
