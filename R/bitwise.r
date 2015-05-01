@@ -414,16 +414,29 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L){
   } else {
     xpos <- seq(nLoc(x))
   }
+  diploid <- all(ploidy(x) == 2)
+  missing <- any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
   nwin <- ceiling(max(xpos)/window)
   winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
   winmat[, 1] <- winmat[, 1] - window
   res_mat <- vector(mode = "numeric", length = nwin)
-  for (i in seq(nwin)){
-    posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
-    if (length(posns) < min.snps){
-      res_mat[i] <- NA
-    } else {
-      res_mat[i] <- snpia(x[, posns], threads = threads)
+  if (missing || !diploid){
+    for (i in seq(nwin)){
+      posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+      if (length(posns) < min.snps){
+        res_mat[i] <- NA
+      } else {
+        res_mat[i] <- snpia(x[, posns], threads = threads)
+      }
+    }
+  } else {
+    for (i in seq(nwin)){
+      posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+      if (length(posns) < min.snps){
+        res_mat[i] <- NA
+      } else {
+        res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
+      }
     }
   }
   return(res_mat)
@@ -485,9 +498,18 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L){
   stopifnot(is(x, "genlight"))
   nloc <- nLoc(x)
   res_mat <- vector(mode = "numeric", length = reps)
-  for (i in seq(reps)){
-    posns <- sample(nloc, n.snp)
-    res_mat[i] <- snpia(x[, posns], threads = threads)
+  diploid <- all(ploidy(x) == 2)
+  missing <- any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
+  if (missing || !diploid){
+    for (i in seq(reps)){
+      posns <- sample(nloc, n.snp)
+      res_mat[i] <- snpia(x[, posns], threads = threads)
+    }  
+  } else {
+    for (i in seq(reps)){
+      posns <- sample(nloc, n.snp)
+      res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
+    }
   }
   return(res_mat)
 }
