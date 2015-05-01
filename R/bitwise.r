@@ -416,8 +416,8 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   } else {
     xpos <- seq(nLoc(x))
   }
-  diploid <- all(ploidy(x) == 2)
-  missing <- any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
+  diploid <- FALSE # Use this line when bitwise.IA works all(ploidy(x) == 2)
+  missing <- TRUE  # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
   nwin <- ceiling(max(xpos)/window)
   winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
   winmat[, 1] <- winmat[, 1] - window + 1
@@ -506,8 +506,8 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   nloc <- nLoc(x)
   res_mat <- vector(mode = "numeric", length = reps)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  diploid <- all(ploidy(x) == 2)
-  missing <- any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
+  diploid <- FALSE # Use this line when bitwise.IA works all(ploidy(x) == 2)
+  missing <- TRUE  # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
   if (missing || !diploid){
     for (i in seq(reps)){
       posns <- sample(nloc, n.snp)
