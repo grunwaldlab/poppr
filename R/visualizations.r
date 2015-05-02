@@ -294,8 +294,10 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   if (nInd(gid) != attr(distmat, "Size")){
     stop("The size of the distance matrix does not match the size of the data.\n")
   }
-  if(!is.genclone(gid)){
+  if (!is(gid, "genlight") && !is.genclone(gid)){
     gid <- as.genclone(gid)
+  } else if (is(gid, "genlight") && !is(gid, "snpclone")){
+    gid <- as.snpclone(gid)
   }
   gadj <- ifelse(gweight == 1, gadj, -gadj)
   
@@ -369,7 +371,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   }
   rownames(bclone) <- cgid$ind.names
   colnames(bclone) <- cgid$ind.names
-  if (is.genclone(gid)){
+  if (is.genclone(gid) | is.snpclone(gid)){
     mlgs <- mll(gid)
     cmlg <- mll(cgid)
 
