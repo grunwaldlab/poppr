@@ -145,7 +145,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' Create a minimum spanning network of selected populations using a distance
 #' matrix.
 #'
-#' @param gid a \code{\link{genind}} object
+#' @param gid a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object
 #'   
 #' @param distmat a distance matrix that has been derived from your data set.
 #' 
@@ -237,7 +237,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' 
 #' @export
 #' @aliases msn.poppr
-#' @author Javier F. Tabima, Zhian N. Kamvar
+#' @author Javier F. Tabima, Zhian N. Kamvar, Jonah Brooks
 #' @examples
 #' 
 #' # Load the data set and calculate the distance matrix for all individuals.
@@ -716,7 +716,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' customize the plot by labeling groups of individuals, size of nodes, and 
 #' adjusting the palette and scale bar.
 #' 
-#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#' @param x a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}}
 #'   object from which \code{poppr_msn} was derived.
 #'   
 #' @param poppr_msn a \code{list} produced from either \code{\link{poppr.msn}}

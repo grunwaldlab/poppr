@@ -13,7 +13,7 @@ poppr.msn(gid, distmat, palette = topo.colors, mlg.compute = "original",
   clustering.algorithm = "farthest_neighbor", ...)
 }
 \arguments{
-\item{gid}{a \code{\link{genind}} object}
+\item{gid}{a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object}
 
 \item{distmat}{a distance matrix that has been derived from your data set.}
 
@@ -142,7 +142,7 @@ edge.label.color = "red")
 }
 }
 \author{
-Javier F. Tabima, Zhian N. Kamvar
+Javier F. Tabima, Zhian N. Kamvar, Jonah Brooks
 }
 \seealso{
 \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},

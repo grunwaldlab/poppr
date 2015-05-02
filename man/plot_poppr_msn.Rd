@@ -11,7 +11,7 @@ plot_poppr_msn(x, poppr_msn, gscale = TRUE, gadj = 3,
   layfun = layout.auto, beforecut = FALSE, ...)
 }
 \arguments{
-\item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+\item{x}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}}
   object from which \code{poppr_msn} was derived.}
 
 \item{poppr_msn}{a \code{list} produced from either \code{\link{poppr.msn}}
