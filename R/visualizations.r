@@ -874,7 +874,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = 
                            mlg = FALSE, quantiles = TRUE, cutoff = NULL, 
                            palette = NULL, layfun = layout.auto, 
                            beforecut = FALSE, ...){
-  if (!is.genind(x)){
+  if (!is(x, "genlight") && !is.genind(x)){
     stop(paste(substitute(x), "is not a genind or genclone object."))
   }
   if (!identical(names(poppr_msn), c("graph", "populations", "colors"))){
@@ -939,7 +939,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = 
   if (length(inds) == 1 & toupper(inds[1]) == "ALL"){
     x.input <- unique(x.mlg)
   } else if (is.character(inds)){
-    x.input <- unique(x.mlg[x@ind.names %in% inds])
+    x.input <- unique(x.mlg[indNames(x) %in% inds])
   } else if (is.numeric(inds)){
     x.input <- unique(x.mlg[x.mlg %in% inds])
   }
@@ -955,7 +955,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = 
   if (!isTRUE(mlg)){
     # Combine all the names that match with each particular MLG in x.input.
     combined_names <- vapply(x.input, function(mlgname)
-                             paste(rev(x@ind.names[x.mlg == mlgname]),
+                             paste(rev(indNames(x)[x.mlg == mlgname]),
                                    collapse = "\n"),
                              character(1))
     labs[!is.na(labs)] <- combined_names
