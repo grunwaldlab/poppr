@@ -1163,8 +1163,10 @@ fix_negative_branch <- function(tre){
 singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = TRUE, distmat = NULL, gscale = TRUE, mlg.compute = "original",
                       glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, 
                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
-  if(!is.genclone(gid)){
+  if (!is(gid, "genlight") && !is.genclone(gid)){
     gid <- as.genclone(gid)
+  } else if (is(gid, "genlight") && !is(gid, "snpclone")){
+    gid <- as.snpclone(gid)
   }
 
   if (!is(gid@mlg, "MLG")){
@@ -1200,7 +1202,7 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = T
   if(class(distmat) != "matrix"){
     distmat <- as.matrix(distmat)
   } 
- if (is.genclone(gid)){
+ if (is(gid, "snpclone") || is.genclone(gid)){
     mlgs <- mll(gid)
     cmlg <- mll(cgid)
     if (!is.numeric(mlgs)){
