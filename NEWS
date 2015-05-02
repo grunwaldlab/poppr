@@ -10,6 +10,7 @@ NEW FEATURES
 * The mlg slot in the genclone object can now optionally hold an MLG class object. This object will contain different definitions of multilocus genotypes, allowing the user to switch between observed, custom, and mlgs defined given a genetic distance threshold.
 * minimum spanning network functions gain the ability to include reticulations using the option `include.ties`
 * minimum spanning network functions gain the ability to collapse multilocus genotypes by genetic distance with the option `threshold`.
+* `informloci` gains the argument "MAF", which allows the specificatin of a minor allele frequency cutoff in addition to the cutoff argument. Examples have been updated.
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
