@@ -513,7 +513,7 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
       posns <- sample(nloc, n.snp)
       res_mat[i] <- snpia(x[, posns], threads = threads)
       if (!quiet){
-        setTxtProgressBar(progbar, i/nwin)
+        setTxtProgressBar(progbar, i/reps)
       }
     }  
   } else {
@@ -521,7 +521,7 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
       posns <- sample(nloc, n.snp)
       res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
       if (!quiet){
-        setTxtProgressBar(progbar, i/nwin)
+        setTxtProgressBar(progbar, i/reps)
       }
     }
   }
