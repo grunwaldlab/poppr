@@ -372,7 +372,7 @@ provesti.dist <- function(x){
 #' Calculate a dendrogram with bootstrap support using any distance applicable 
 #' to genind or genclone objects.
 #' 
-#' @param x a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.
+#' @param x a \linkS4class{genind}, \linkS4class{genpop}, \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone}, or \link{matrix} object.
 #'   
 #' @param tree a text string or function that can calculate a tree from a
 #'   distance matrix. Defaults to "upgma". Note that you must load the package
@@ -472,6 +472,12 @@ provesti.dist <- function(x){
 #' set.seed(5000)
 #' aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
 #' 
+#' # And genlight objects 
+#' # From glSim:
+#' ## 1,000 non structured SNPs, 100 structured SNPs
+#' x <- glSim(100, 1e3, n.snp.struc=100, ploid=2)
+#' aboot(x, distance = bitwise.dist)
+#' 
 #' # Utilizing other tree methods
 #' 
 #' library("ape")
@@ -482,12 +488,13 @@ provesti.dist <- function(x){
 #' 
 #' myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
 #' aboot(Aeut.pop, tree = myFastME, sample = 1000)
+#' 
 #' }
 #==============================================================================#
 aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                   cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
                   quiet = FALSE, root = NULL, ...){
-  if (x@type == "PA"){
+  if (!is(x, "genlight") && x@type == "PA"){
     xboot           <- x@tab
     colnames(xboot) <- locNames(x)
     if (is.genpop(x)){
@@ -495,7 +502,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
     } else {
       rownames(xboot) <- indNames(x)
     }
-  } else {
+  } else if (is(x, "gen")){
     if (is.genind(x)){
       if (missing %in% c("loci", "geno", "ignore")){
         x <- missingno(x, missing, quiet = quiet, cutoff = mcutoff)
@@ -509,10 +516,18 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
         xboot@tab <- matrix(as.integer(otab), nrow = nrow(otab),
                             ncol = ncol(otab), dimnames = dimnames(otab))
       }
-    } else{
+    } else {
       xboot <- new("bootgen", x, na = missing, freq = TRUE)
     }
-  } 
+  } else if (is(x, "genlight")){
+    xboot <- x
+    if (!as.character(substitute(distance)) %in% "bitwise.dist"){
+       warning("distance from genlight objects can only be calculated by bitwise.dist.")
+       distance <- bitwise.dist
+    }
+  } else {
+    stop("x must be a genind, genpop, or genlight object.")
+  }
   treefunk <- tree_generator(tree, distance, ...)
   xtree    <- treefunk(xboot)
   if (any(xtree$edge.len < 0)){
@@ -527,8 +542,10 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
                          quiet = quiet)
   nodelabs <- (nodelabs/sample)*100
   nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
-  if (is.genind(x)){
-    xtree$tip.label <- indNames(x)
+  if (!is.genpop(x)){
+    if (!is.null(indNames(x))){
+      xtree$tip.label <- indNames(x)      
+    }
   } else {
     xtree$tip.label <- popNames(x)
   }

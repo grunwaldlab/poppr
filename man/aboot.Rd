@@ -11,7 +11,7 @@ aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
   quiet = FALSE, root = NULL, ...)
 }
 \arguments{
-\item{x}{a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.}
+\item{x}{a \linkS4class{genind}, \linkS4class{genpop}, \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone}, or \link{matrix} object.}
 
 \item{tree}{a text string or function that can calculate a tree from a
   distance matrix. Defaults to "upgma". Note that you must load the package
@@ -108,6 +108,12 @@ Aeut.pop <- genind2genpop(Aeut.gc)
 set.seed(5000)
 aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
 
+# And genlight objects
+# From glSim:
+## 1,000 non structured SNPs, 100 structured SNPs
+x <- glSim(100, 1e3, n.snp.struc=100, ploid=2)
+aboot(x, distance = bitwise.dist)
+
 # Utilizing other tree methods
 
 library("ape")
@@ -118,6 +124,7 @@ aboot(Aeut.pop, tree = fastme.bal, sample = 1000)
 
 myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
 aboot(Aeut.pop, tree = myFastME, sample = 1000)
+
 }
 }
 \seealso{

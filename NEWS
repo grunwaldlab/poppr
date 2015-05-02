@@ -11,6 +11,7 @@ NEW FEATURES
 * minimum spanning network functions gain the ability to include reticulations using the option `include.ties`
 * minimum spanning network functions gain the ability to collapse multilocus genotypes by genetic distance with the option `threshold`.
 * `informloci` gains the argument "MAF", which allows the specificatin of a minor allele frequency cutoff in addition to the cutoff argument. Examples have been updated.
+* `aboot` can now take genlight objects.
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
