@@ -725,11 +725,11 @@ private_alleles <- function(gid, report = "table", level = "population"){
   if (!is.genind(gid) & !is.genpop(gid)){
     stop(paste(gid, "is not a genind or genpop object."))
   }
-  if (is.genind(gid) & !is.null(pop(gid)) | is.genpop(gid) & nrow(gid@tab) > 1){
+  if (is.genind(gid) && !is.null(pop(gid)) | is.genpop(gid) && nPop(gid) > 1){
     if (is.genind(gid)){
-      gid.pop <- truenames(genind2genpop(gid, quiet = TRUE))
+      gid.pop <- tab(genind2genpop(gid, quiet = TRUE))
     } else {
-      gid.pop <- truenames(gid)
+      gid.pop <- tab(gid)
     }
     privates <- gid.pop[, colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2]
     privates <- privates[rowSums(privates) > 0, ]
