@@ -4,11 +4,15 @@
 \alias{private_alleles}
 \title{Tabulate alleles the occur in only one population.}
 \usage{
-private_alleles(gid, report = "table", level = "population")
+private_alleles(gid, form = alleles ~ ., report = "table",
+  level = "population", count.alleles = TRUE)
 }
 \arguments{
 \item{gid}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
   object.}
+
+\item{form}{a \code{\link{formula}} giving the levels of markers and
+  hierarchy to analyze. See Details.}
 
 \item{report}{one of \code{"table", "vector",} or \code{"data.frame"}. Tables
   (Default) and data frame will report counts along with populations or
@@ -17,6 +21,11 @@ private_alleles(gid, report = "table", level = "population")
   individuals in rows and alleles in columns. Data frames are long form.}
 
 \item{level}{one of \code{"population"} (Default) or \code{"individual"}.}
+
+\item{count.alleles}{\code{logical}. If \code{TRUE} (Default), The report
+  will return the observed number of alleles private to each population. If
+  \code{FALSE}, each private allele will be counted once, regardless of
+  dosage.}
 }
 \value{
 a matrix, data.frame, or vector defining the populations or
@@ -26,15 +35,38 @@ a matrix, data.frame, or vector defining the populations or
 \description{
 Tabulate alleles the occur in only one population.
 }
+\details{
+the argument \code{form} allows for control over the strata at which
+  private alleles should be computed. It takes a form where the left hand
+  side of the formula can be either "allele", "locus", or "loci". The right
+  hand of the equation, by default is ".". If you change it, it must
+  correspond to strata located in the \code{\link[adegenet]{strata}} slot.
+  Note, that the right hand side is disabled for genpop objects.
+}
 \examples{
 data(Pinf) # Load P. infestans data.
-setPop(Pinf) <- ~Country # Set the population to be at the country level
 private_alleles(Pinf)
+
 \dontrun{
-# An example of how this data can be displayed.
+# Analyze private alleles based on the country of interest:
+private_alleles(Pinf, alleles ~ Country)
+
+# Number of observed alleles per locus
+private_alleles(Pinf, locus ~ Country, count.alleles = TRUE)
+
+# Get raw number of private alleles per locus.
+(pal <- private_alleles(Pinf, locus ~ Country, count.alleles = FALSE))
+
+# Get percentages.
+sweep(pal, 2, Pinf@loc.nall[colnames(pal)], FUN = "/")
+
+# An example of how these data can be displayed.
 library("ggplot2")
 Pinfpriv <- private_alleles(Pinf, report = "data.frame")
 ggplot(Pinfpriv) + geom_tile(aes(x = population, y = allele, fill = count))
 }
+}
+\author{
+Zhian N. Kamvar
 }
 

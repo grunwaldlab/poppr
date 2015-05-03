@@ -692,6 +692,9 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #' @param gid a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
 #'   object.
 #'   
+#' @param form a \code{\link{formula}} giving the levels of markers and 
+#'   hierarchy to analyze. See Details.
+#'   
 #' @param report one of \code{"table", "vector",} or \code{"data.frame"}. Tables
 #'   (Default) and data frame will report counts along with populations or 
 #'   individuals. Vectors will simply report which populations or individuals 
@@ -700,26 +703,71 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #'   
 #' @param level one of \code{"population"} (Default) or \code{"individual"}.
 #'   
+#' @param count.alleles \code{logical}. If \code{TRUE} (Default), The report 
+#'   will return the observed number of alleles private to each population. If 
+#'   \code{FALSE}, each private allele will be counted once, regardless of 
+#'   dosage.
+#'   
 #' @return a matrix, data.frame, or vector defining the populations or
 #'   individuals containing private alleles. If vector is chosen, alleles are
 #'   not defined.
 #'
+#' @details the argument \code{form} allows for control over the strata at which
+#'   private alleles should be computed. It takes a form where the left hand
+#'   side of the formula can be either "allele", "locus", or "loci". The right
+#'   hand of the equation, by default is ".". If you change it, it must
+#'   correspond to strata located in the \code{\link[adegenet]{strata}} slot.
+#'   Note, that the right hand side is disabled for genpop objects.
+#' 
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' 
 #' data(Pinf) # Load P. infestans data.
-#' setPop(Pinf) <- ~Country # Set the population to be at the country level
 #' private_alleles(Pinf)
+#' 
 #' \dontrun{
-#' # An example of how this data can be displayed.
+#' # Analyze private alleles based on the country of interest:
+#' private_alleles(Pinf, alleles ~ Country)
+#' 
+#' # Number of observed alleles per locus
+#' private_alleles(Pinf, locus ~ Country, count.alleles = TRUE)
+#' 
+#' # Get raw number of private alleles per locus.
+#' (pal <- private_alleles(Pinf, locus ~ Country, count.alleles = FALSE))
+#' 
+#' # Get percentages.
+#' sweep(pal, 2, Pinf@@loc.nall[colnames(pal)], FUN = "/")
+#' 
+#' # An example of how these data can be displayed.
 #' library("ggplot2")
 #' Pinfpriv <- private_alleles(Pinf, report = "data.frame")
 #' ggplot(Pinfpriv) + geom_tile(aes(x = population, y = allele, fill = count))
 #' }
 #==============================================================================#
-private_alleles <- function(gid, report = "table", level = "population"){
+private_alleles <- function(gid, form = alleles ~ ., report = "table", 
+                            level = "population", count.alleles = TRUE){
   REPORTARGS <- c("table", "vector", "data.frame")
   LEVELARGS  <- c("individual", "population")
+  LHS_ARGS <- c("alleles", "locus", "loci")
+  showform <- capture.output(print(form))
+  marker <- pmatch(as.character(form[[2]]), LHS_ARGS, nomatch = 0L, 
+                   duplicates.ok = FALSE)
+  if (all(marker == 0L)){
+    stop("Left hand side of", showform, "must be one of:\n",
+         paste(LHS_ARGS, collapse = " "))
+  } else {
+    marker <- LHS_ARGS[marker]
+  }
+  strataform <- form[c(1, 3)]
+  the_strata <- all.vars(strataform[[2]])
+  if (length(the_strata) > 1 || the_strata[1] != "."){
+    if (!is.genpop(gid)){
+      setPop(gid) <- strataform
+    } else {
+      warning("cannot set strata for a genpop object.")
+    }
+  } 
   report <- match.arg(report, REPORTARGS)
   level  <- match.arg(level, LEVELARGS)
   if (!is.genind(gid) & !is.genpop(gid)){
@@ -731,12 +779,23 @@ private_alleles <- function(gid, report = "table", level = "population"){
     } else {
       gid.pop <- tab(gid)
     }
-    privates <- gid.pop[, colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2]
-    privates <- privates[rowSums(privates) > 0, ]
+    private_columns <- colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2
+    privates <- gid.pop[, private_columns, drop = FALSE]
     if (level == "individual" & is.genind(gid)){
-      gid.tab  <- truenames(gid)$tab
-      privates <- gid.tab[, colnames(gid.pop) %in% colnames(privates)]
-      privates <- privates[rowSums(privates, na.rm = TRUE) > 0, ]
+      gid.tab  <- tab(gid)
+      privates <- gid.tab[, private_columns, drop = FALSE]
+    } else if (!count.alleles){
+      privates <- ifelse(privates > 0, 1, 0)
+    }
+    
+    privates <- privates[rowSums(privates, na.rm = TRUE) > 0, , drop = FALSE]
+    if (marker != "alleles"){
+      private_fac <- gid@loc.fac[private_columns]
+      privates <- vapply(unique(private_fac), function(l){
+        rowSums(privates[, private_fac == l, drop = FALSE], na.rm = TRUE)
+      }, FUN.VALUE = numeric(nrow(privates))
+      )
+      colnames(privates) <- locNames(gid)[unique(private_fac)]
     }
     if (length(privates) == 0){
       privates <- NULL
@@ -746,7 +805,8 @@ private_alleles <- function(gid, report = "table", level = "population"){
     if (report == "vector"){
       privates <- rownames(privates)
     } else if (report == "data.frame"){
-      privates <- melt(privates, varnames = c(level, "allele"), 
+      marker <- ifelse(marker == "alleles", "allele", "locus")
+      privates <- melt(privates, varnames = c(level, marker), 
                        value.name = "count")
     }
     return(privates)
