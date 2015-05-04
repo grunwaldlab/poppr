@@ -389,18 +389,27 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   }
   
   res.gid@call <- gencall
+  ind.vec <- indNames(res.gid)
+  names(pop.vec) <- ind.vec
   
   # Keep the name if it's a URL
   if (length(grep("://", genalex)) < 1 & !"connection" %in% class(genalex)){
     res.gid@call[2] <- basename(genalex)
   }
   if (region){
-    strata(res.gid) <- data.frame(Pop = pop.vec, Region = reg.vec)
+    names(reg.vec) <- ind.vec
+    strata(res.gid) <- data.frame(Pop = pop.vec[ind.vec], Region = reg.vec[ind.vec])
   } else {
-    strata(res.gid) <- data.frame(Pop = pop.vec)
+    strata(res.gid) <- data.frame(Pop = pop.vec[ind.vec])
   }
   if (geo){
-    res.gid@other[["xy"]] <- xy
+    if (nrow(xy) == length(ind.vec)){
+      names(xy) <- ind.vec
+      res.gid@other[["xy"]] <- xy[ind.vec]
+    } else {
+      res.gid@other[["xy"]] <- xy      
+    }
+
   }
   if (genclone){
     res.gid <- as.genclone(res.gid)
