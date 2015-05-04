@@ -1,4 +1,16 @@
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=adegenet-fix)](https://travis-ci.org/grunwaldlab/poppr?branch=adegenet-fix)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=2.0-rc)](https://travis-ci.org/grunwaldlab/poppr?branch=2.0-rc)
+
+# Poppr version 2.0
+
+This version of poppr is version 2.0 and is only compatible with 
+[adegenet version 2.0](https://github.com/thibautjombart/adegenet). If you want 
+to try out poppr version 2.0, you must install adegenet 2.0 first. See the 
+Installation section below.
+
+```r
+devtools::install_github("thibautjombart/adegenet")
+devtools::install_github("grunwaldlab/poppr@2.0-rc")
+```
 
 ## Welcome 
 
@@ -18,6 +30,21 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 - batch processing on any server that has R ( &ge; 2.15.1) installed
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
+
+### New in version 2.0:
+
+- handling of genomic SNP data
+- custom multilocus genotype definitions
+- collapse multilocus lineages by genetic distance
+- calculate reticulate minimum spanning networks
+- calculate index of association in a sliding window across snps
+- and more!
+
+For full details, see the NEWS file or type in your R console:
+
+```r
+news(Version == "1.1.4.99", package = "poppr")
+```
 
 ## Citation
 
@@ -65,9 +92,11 @@ Now you can use the `install_github()` function:
 #### For the latest stable release:    
 
 ```s
-devtools::install_github(repo = "grunwaldlab/poppr")
+devtools::install_github(repo = "grunwaldlab/poppr@current")
 library("poppr")
 ```
+
+#### For the bleeding edge (development) version:
 
 #### For the bleeding edge (development) version:
 
