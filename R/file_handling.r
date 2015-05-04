@@ -371,7 +371,9 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
     res.gid@other[["original_names"]] <- ind.vec
   }
   
-  res.gid@other[["population_hierarchy"]] <- as.data.frame(list(Pop=pop.vec))
+  ind.names <- indNames(res.gid)
+  names(pop.vec) <- ind.vec
+  res.gid@other[["population_hierarchy"]] <- as.data.frame(list(Pop=pop.vec[ind.names]))
   res.gid@call <- gencall
   
   # Keep the name if it's a URL
@@ -379,10 +381,17 @@ read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE,
     res.gid@call[2] <- basename(genalex)
   }
   if (region){
-    res.gid@other[["population_hierarchy"]]$Region <- reg.vec
+    names(reg.vec) <- ind.vec
+    res.gid@other[["population_hierarchy"]]$Region <- reg.vec[ind.names]
   }
   if (geo){
-    res.gid@other[["xy"]] <- xy
+    if (nrow(xy) == length(ind.vec)){
+      names(xy) <- ind.vec
+      res.gid@other[["xy"]] <- xy[ind.names]
+    } else {
+      res.gid@other[["xy"]] <- xy      
+    }
+
   }
   if (genclone){
     res.gid <- as.genclone(res.gid)
