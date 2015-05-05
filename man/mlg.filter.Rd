@@ -101,5 +101,14 @@ pc # 26 mlgs
 # Set MLGs at threshold 0.05
 mlg.filter(pc, distance = "nei.dist") <- 0.05
 pc # 25 mlgs
+
+\dontrun{
+# on genlight/snpclone objects
+set.seed(999)
+gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2))
+gc # 100 mlgs
+mlg.filter(gc) <- 0.25
+gc # 82 mlgs
+}
 }
 
