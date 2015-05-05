@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=2.0-rc)](https://travis-ci.org/grunwaldlab/poppr?branch=2.0-rc)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=2.0-rc)](https://travis-ci.org/grunwaldlab/poppr)
 
 # Poppr version 2.0
 
@@ -64,6 +64,7 @@ citation(package = "poppr")
 
 [![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
 [![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
+[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
 
 Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/web/packages/poppr/index.html).
 
