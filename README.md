@@ -7,7 +7,7 @@ This version of poppr is version 2.0 and is only compatible with
 to try out poppr version 2.0, you must install adegenet 2.0 first. See the 
 Installation section below.
 
-```r
+```R
 devtools::install_github("thibautjombart/adegenet")
 devtools::install_github("grunwaldlab/poppr@2.0-rc")
 ```
@@ -42,7 +42,7 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 
 For full details, see the NEWS file or type in your R console:
 
-```r
+```R
 news(Version == "1.1.4.99", package = "poppr")
 ```
 
@@ -54,7 +54,7 @@ Please cite poppr as:
   
 You can obtain citation information in R by typing:
 
-```s
+```R
 citation(package = "poppr")
 ```
 
@@ -70,7 +70,7 @@ Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](h
 
 To install, make sure R is at least version 2.15.1 (the authors recommend &ge; 3.0), and in your console, type:
 
-```s
+```R
 install.packages("poppr")
 ```
 
@@ -92,17 +92,15 @@ Now you can use the `install_github()` function:
 
 #### For the latest stable release:    
 
-```s
+```R
 devtools::install_github(repo = "grunwaldlab/poppr@current")
 library("poppr")
 ```
 
 #### For the bleeding edge (development) version:
 
-#### For the bleeding edge (development) version:
-
-```s
-devtools::install_github(repo = "grunwaldlab/poppr@devel")
+```R
+devtools::install_github(repo = "grunwaldlab/poppr")
 library("poppr")
 ```
 
