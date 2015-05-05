@@ -1187,6 +1187,7 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = T
     gid$mlg[] <- filter.stats[[1]]
     cgid <- gid[if(is.na(-which(duplicated(gid$mlg[]))[1])) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
     distmat <- filter.stats[[3]]
+    if (!is.matrix(distmat)) distmat <- as.matrix(distmat)
   } else {
       visible  <- gid@mlg@visible
       mll(gid) <- mlg.compute

@@ -358,6 +358,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     mlg.number <- table(filter.stats[[1]])[rank(cgid@mlg[])]
     
     bclone <- filter.stats[[3]]
+    if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
   }
   else {  
     cgid <- gid[.clonecorrector(gid), ]

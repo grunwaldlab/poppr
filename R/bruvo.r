@@ -562,6 +562,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
     # Obtaining population information for all MLGs
     cgid <- gid[if(length(-which(duplicated(gid$mlg[]))==0)) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
     bclone <- filter.stats[[3]]
+    if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
   } else {
     cgid <- gid[.clonecorrector(gid), ]
     bclone <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))
