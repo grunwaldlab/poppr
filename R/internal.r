@@ -1196,7 +1196,7 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = T
      if (is.null(distmat) & !is.null(replen)){
         distmat <- as.matrix(bruvo.dist(cgid, replen = replen, add = add, loss = loss))
      } else if (nInd(cgid) < nrow(distmat)){
-       distmat <- distmat[to_remove, to_remove]
+       distmat <- distmat[to_remove, to_remove, drop = FALSE]
      }
   }
   if(class(distmat) != "matrix"){

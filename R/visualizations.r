@@ -319,7 +319,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   # This will subset both the population and the matrix. 
   if(toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(gid, sublist, blacklist)
-    bclone <- bclone[sublist_blacklist, sublist_blacklist]
+    bclone <- bclone[sublist_blacklist, sublist_blacklist, drop = FALSE]
     gid    <- popsub(gid, sublist, blacklist)
   }
 
@@ -367,7 +367,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     # Note: rank is used to correctly subset the data
     mlg.number <- table(gid$mlg[])[rank(cgid$mlg[])]
     # This will clone correct the incoming matrix. 
-    bclone <- bclone[!duplicated(gid$mlg[]), !duplicated(gid$mlg[])]
+    bclone <- bclone[!duplicated(gid$mlg[]), !duplicated(gid$mlg[]), drop = FALSE]
   }
   rownames(bclone) <- cgid$ind.names
   colnames(bclone) <- cgid$ind.names
