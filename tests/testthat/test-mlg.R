@@ -189,7 +189,7 @@ test_that("multilocus genotype filtering functions correctly", {
   # No clustering should happen if the threshold is set to 0
   expect_that(length(unique(amlg)), equals(length(unique(mlg.filter(Aeut,0,distance="diss.dist")))))
   expect_that(length(unique(pmlg)), equals(length(unique(mlg.filter(partial_clone,0,distance="diss.dist")))))
-  expect_that(length(unique(nmlg)), equals(length(unique(mlg.filter(nancycats,0,distance="diss.dist")))))
+  expect_that(length(unique(nmlg)), equals(length(unique(mlg.filter(nancycats, 0, distance="diss.dist")))))
   # All clusters should be merged for an arbitrarily large threshold
   expect_that(1, equals(length(unique(mlg.filter(Aeut,10000,distance="diss.dist")))))
   expect_that(1, equals(length(unique(mlg.filter(partial_clone,10000,distance="diss.dist")))))

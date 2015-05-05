@@ -267,21 +267,25 @@ setMethod(
 #------------------------------------------------------------------------------#
 ################################################################################
 #==============================================================================#
-#' Check for validity of a snpclone object
-#' 
-#' @note a \linkS4class{snpclone} object will always be a valid 
-#' \linkS4class{genlight} object.
-#' 
 #' @export
-#' @rdname is.snpclone
-#' @param x a snpclone object 
-#' @author Zhian N. Kamvar
+#' @rdname is.clone
 #' @examples
-#' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
-#' is.snpclone(x)
+#' (sc <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#' is.snpclone(sc)
 #==============================================================================#
 is.snpclone <- function(x){
   res <- (is(x, "snpclone"))
+  return(res)
+}
+
+#==============================================================================#
+#' @export
+#' @rdname is.clone
+#' @examples
+#' is.clone(sc)
+#==============================================================================#
+is.clone <- function(x){
+  res <- (is(x, "snpclone") || is(x, "genclone"))
   return(res)
 }
 
@@ -437,14 +441,15 @@ setMethod(
 #------------------------------------------------------------------------------#
 ################################################################################
 #==============================================================================#
-#' Check for validity of a genclone object
+#' Check for validity of a genclone or snpclone object
 #' 
 #' @note a \linkS4class{genclone} object will always be a valid 
-#' \linkS4class{genind} object.
+#' \linkS4class{genind} object and a \linkS4class{snpclone} object will always
+#' be a valid \linkS4class{genlight} object.
 #' 
 #' @export
-#' @rdname is.genclone
-#' @param x a genclone object 
+#' @rdname is.clone
+#' @param x a genclone or snpclone object 
 #' @author Zhian N. Kamvar
 #' @examples
 #' data(nancycats)
@@ -1069,8 +1074,9 @@ setMethod(
   definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
                         algorithm="farthest_neighbor", distance="nei.dist", 
                         threads=0, stats="MLGs", ...){
+    the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, ...) 
+                        threads, stats, the_call, ...) 
   }
 )
 
@@ -1080,8 +1086,9 @@ setMethod(
   definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
                         algorithm="farthest_neighbor", distance="nei.dist", 
                         threads=0, stats="MLGs", ...){
+    the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, ...) 
+                        threads, stats, the_call, ...) 
   }
 )
 
@@ -1091,17 +1098,20 @@ setMethod(
   definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
                         algorithm="farthest_neighbor", distance="nei.dist", 
                         threads=0, stats="MLGs", ...){
-    callNextMethod()
-  }
+    the_call <- match.call()
+    mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
+                        threads, stats, the_call, ...)   }
 )  
   
 setMethod(
   f = "mlg.filter",
   signature(pop = "snpclone"),
   definition = function(pop, threshold=0.0, missing="mean", memory=FALSE,
-                        algorithm="farthest_neighbor", distance="nei.dist", 
+                        algorithm="farthest_neighbor", distance="bitwise.dist", 
                         threads=0, stats="MLGs", ...){
-    callNextMethod()
+    the_call <- match.call()
+    mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
+                        threads, stats, the_call, ...) 
   }
 )
   
@@ -1166,8 +1176,13 @@ setMethod(
                        algorithm = "farthest_neighbor", distance = "nei.dist",
                        threads = 0, ..., value){
     pop <- callNextMethod()
+    the_call <- match.call()
+    if (!"distance" %in% names(the_call)){
+      the_call[["distance"]] <- distance
+    }
     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
-                                 distance, threads, stats = "MLGs", ...) 
+                                 distance, threads, stats = "MLGs", the_call, 
+                                 ...) 
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
     pop@mlg@cutoff["contracted"] <- value
@@ -1182,11 +1197,16 @@ setMethod(
   f = "mlg.filter<-",
   signature(pop = "snpclone"),
   definition = function(pop, missing = "mean", memory = FALSE, 
-                        algorithm = "farthest_neighbor", distance = "nei.dist",
+                        algorithm = "farthest_neighbor", distance = "bitwise.dist",
                         threads = 0, ..., value){
     pop <- callNextMethod()
+    the_call <- match.call()
+    if (!"distance" %in% names(the_call)){
+      the_call[["distance"]] <- distance
+    }
     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
-                                 distance, threads, stats = "MLGs", ...) 
+                                 distance, threads, stats = "MLGs", the_call, 
+                                 ...) 
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
     pop@mlg@cutoff["contracted"] <- value
