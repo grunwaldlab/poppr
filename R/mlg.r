@@ -333,35 +333,67 @@ mlg.vector <- function(pop, reset = FALSE){
 
 
 
-mlg.filter.internal <- function(pop, threshold=0.0, missing="mean", memory=FALSE, algorithm="farthest_neighbor", 
-                       distance="nei.dist", threads=0, stats="MLGs", ...){
+mlg.filter.internal <- function(pop, threshold = 0.0, missing = "mean", 
+                                memory = FALSE, algorithm = "farthest_neighbor", 
+                                distance = "nei.dist", threads = 0, 
+                                stats = "MLGs", the_call = match.call(), ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
 
-  if(!is.genclone(pop) && !is.genind(pop) && !is(pop, "genlight"))
+#   if(!is.genclone(pop) && !is.genind(pop) && !is(pop, "genlight"))
+#   {
+#     stop("No genclone or genind object was provided.")
+#   }
+  if (is.character(distance) || is.function(distance))
   {
-    stop("No genclone or genind object was provided.")
-  }
-
-  if (is.genind(pop))
-  {
-    pop <- missingno(pop,missing,quiet=TRUE)     
-  }
-  if(is.character(distance) || is.function(distance))
-  {
-    if(memory==TRUE && identical(c(pop,distance,...),.last.value.param$get()))
+    if (memory==TRUE && identical(c(pop, distance, ...), .last.value.param$get()))
     {
       dis <- .last.value.dist$get()
     }
     else
     {
-      DISTFUN <- match.fun(distance)
-      dis <- DISTFUN(pop, ...)
-      dis <- as.matrix(dis)
-      if(memory==TRUE)
+      if (is.genind(pop))
       {
-        .last.value.param$set(c(pop,distance,...))
+        the_dist <- as.character(the_call[["distance"]])
+        call_len <- length(the_dist)
+        is_diss_dist <- the_dist %in% "diss.dist"
+        any_dist <- the_dist %in% c("diss.dist", "nei.dist", "provesti.dist",
+                                    "edwards.dist", "reynolds.dist", 
+                                    "rogers.dist")
+        if (missing == "mean" && call_len == 1){
+          if (is_diss_dist){
+            disswarn <- paste("Cannot use function diss.dist and correct for", 
+                              "mean values.", "diss.dist will automatically",
+                              "ignore missing data.") 
+            warning(disswarn, call. = FALSE)
+            mpop <- pop
+          }
+          else if (any_dist) 
+          {
+            mpop <- new("bootgen", pop, na = missing, 
+                        freq = ifelse(is_diss_dist, FALSE, TRUE))
+          } 
+          else 
+          {
+            mpop <- missingno(pop, type = missing, quiet = TRUE)
+          }
+        }
+        else 
+        {
+          mpop <- missingno(pop, type = missing, quiet = TRUE)
+        }
+      }
+      else 
+      {
+        mpop <- pop
+      }
+      DISTFUN <- match.fun(distance)
+      dis <- DISTFUN(mpop, ...)
+      dis <- as.matrix(dis)
+      if (memory == TRUE)
+      {
+        .last.value.param$set(c(pop, distance, ...))
         .last.value.dist$set(dis)
       }
     }
@@ -373,21 +405,23 @@ mlg.filter.internal <- function(pop, threshold=0.0, missing="mean", memory=FALSE
     dis <- as.matrix(distance)
   }
 
-  if (is.genclone(pop) | is(pop, "snpclone"))
+  if (!is.clone(pop))
+  {
+    if (is(pop, "genlight")){
+      pop <- as.snpclone(pop)
+    } else {
+      pop <- as.genclone(pop)
+    }
+  }
+  else
   {
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
-    basemlg <- mll(pop, "original")
+    mll(pop) <- "original"
   }
-  else if (is.genind(pop))
-  {
-    basemlg <- mlg.vector(pop)
-  }
-  else
-  {
-    basemlg <- seq(nInd(pop))
-  }
+  basemlg <- mlg.vector(pop)
+  
 
 
   # Input validation before passing arguments to C
@@ -412,10 +446,8 @@ mlg.filter.internal <- function(pop, threshold=0.0, missing="mean", memory=FALSE
     stop("Threads must be a non-negative numeric or integer value")
   } 
     # Stats must be logical
-  if(!is.character(stats) || !( toupper(stats) %in% c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")))
-  {
-    stop("Stats must be a character string for MLGS, THRESHOLDS, DISTANCES, SIZES, or ALL")
-  } 
+  STATARGS <- c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")
+  stats <- match.arg(toupper(stats), STATARGS)
 
   # Cast parameters to proper types before passing them to C
   dis_dim <- dim(dis)
@@ -424,7 +456,7 @@ mlg.filter.internal <- function(pop, threshold=0.0, missing="mean", memory=FALSE
   threshold <- as.numeric(threshold)
   algo <- tolower(as.character(algorithm))
   threads <- as.integer(threads)
-  if(!isTRUE(all.equal(basemlg,as.integer(basemlg))))
+  if(!isTRUE(all.equal(basemlg, as.integer(basemlg))))
   {
     warning("MLG contains non-integer values. MLGs differing only in decimal values will be merged.")
   }
@@ -443,18 +475,21 @@ mlg.filter.internal <- function(pop, threshold=0.0, missing="mean", memory=FALSE
     colnames(dists) <- mlgs
   }
   result_list[[3]] <- dists
-
+  names(result_list) <- c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES")
   if(toupper(stats) == "ALL"){
     return(result_list)
-  } else if(toupper(stats) == "THRESHOLDS") {
-    return(result_list[[2]])
-  } else if(toupper(stats) == "DISTANCES") {
-    return(result_list[[3]])
-  } else if(toupper(stats) == "SIZES") {
-    return(result_list[[4]])
-  } else { # toupper(stats) == "MLGS")
-    return(result_list[[1]])
-  }
+  } else {
+    return(result_list[[stats]])
+  } 
+#   else if(toupper(stats) == "THRESHOLDS") {
+#     return(result_list[[2]])
+#   } else if(toupper(stats) == "DISTANCES") {
+#     return(result_list[[3]])
+#   } else if(toupper(stats) == "SIZES") {
+#     return(result_list[[4]])
+#   } else { # toupper(stats) == "MLGS")
+#     return(result_list[[1]])
+#   }
 }
 
 
