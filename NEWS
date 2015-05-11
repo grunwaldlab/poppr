@@ -35,6 +35,7 @@ BUG FIX
 * Fixed internal bug for `fix_negative_branch` when only one branch had a negative edge.
 * Fixed bug in `diss.dist` where a single locus would return an error.
 * Fixed bug in `poppr.amova` where a single locus would return an error due to `repool_haplotypes`.
+* Fixed bug from the future! mlg.table will now return a matrix all the time (Fix #25).
 
 poppr 1.1.4
 ===========
