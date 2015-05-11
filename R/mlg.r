@@ -250,7 +250,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
     }
   }
   mlgtab <- mlgtab[, which(colSums(mlgtab) > 0), drop = FALSE]
-  return(mlgtab)
+  return(unclass(mlgtab))
 }
 
 #==============================================================================#
