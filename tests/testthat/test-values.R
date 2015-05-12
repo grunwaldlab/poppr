@@ -60,3 +60,14 @@ test_that("Internal function fix_negative_branch works as expected.", {
   # order.
   expect_equivalent(min(fix_tree$edge.length - the_tree$edge.length), min(the_tree$edge.length))
 })
+
+test_that("mlg.matrix returns a matrix and not table", {
+  data(partial_clone)
+  mat4row <- poppr:::mlg.matrix(partial_clone)
+  pop(partial_clone) <- NULL
+  mat1row <- poppr:::mlg.matrix(partial_clone)
+  expect_that(mat4row, is_a("matrix"))
+  expect_that(mat1row, is_a("matrix"))
+  expect_that(mat1row, not(is_a("table")))
+  expect_that(mat4row, not(is_a("table")))
+})

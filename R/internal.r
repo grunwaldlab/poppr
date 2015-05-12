@@ -509,7 +509,7 @@ mlg.matrix <- function(x){
     colnames(mlg.mat) <- 1:mlgs
   }
   colnames(mlg.mat) <- paste("MLG", colnames(mlg.mat), sep=".")
-  return(mlg.mat)
+  return(unclass(mlg.mat))
 }
 #==============================================================================#
 # DEPRECATED
