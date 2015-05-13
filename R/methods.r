@@ -1224,13 +1224,19 @@ setMethod(
     return(pop)
   }
 )
-  
+
+#==============================================================================#
+# old2new method for genclone objects. 
+# The old2new method for genind objects will initialize the strata slot as NULL
+# because it's an old object. Adding the method for genclone objects prevents
+# the previous hierarchy from being clobbered.
+#==============================================================================#
 setMethod(
   f = "old2new",
   signature(object = "genclone"),
   definition = function(object){
-    newstrata <- object@hierarchy
-    object <- callNextMethod()
+    newstrata     <- object@hierarchy
+    object        <- callNextMethod()
     object@strata <- newstrata
     return(object)
   }
