@@ -4,20 +4,21 @@
 \alias{bitwise.IA}
 \title{Calculate the index of association between samples in a genlight object.}
 \usage{
-bitwise.IA(x, indices = NULL, threads = 0)
+bitwise.IA(x, missing_match = TRUE, differences_only = FALSE, threads = 0,
+  indices = NULL)
 }
 \arguments{
 \item{x}{a genlight object.}
-
-\item{indices}{A vector of integers indicating which loci should be
-  sampled while calculating the index of association. If NULL (default),
-  all loci will be used.}
 
 \item{threads}{The maximum number of parallel threads to be used within this
   function. A value of 0 (default) will attempt to use as many threads as there
   are available cores/CPUs. In most cases this is ideal. A value of 1 will force
   the function to run serially, which may increase stability on some systems.
   Other values may be specified, but should be used with caution.}
+
+\item{indices}{A vector of integers indicating which loci should be
+  sampled while calculating the index of association. If NULL (default),
+  all loci will be used.}
 }
 \value{
 Index of association representing the samples in this genlight object.

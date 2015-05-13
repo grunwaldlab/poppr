@@ -1,4 +1,4 @@
-poppr 1.1.4.99
+poppr 1.1.5
 ===========
 NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
@@ -29,6 +29,7 @@ BUG FIX
 * Fixed internal bug for `fix_negative_branch` when only one branch had a negative edge.
 * Fixed bug in `diss.dist` where a single locus would return an error.
 * Fixed bug in `poppr.amova` where a single locus would return an error due to `repool_haplotypes`.
+* Fixed bug from the future! mlg.table will now return a matrix all the time (Fix #25).
 
 poppr 1.1.4
 ===========
