@@ -1225,3 +1225,13 @@ setMethod(
   }
 )
   
+setMethod(
+  f = "old2new",
+  signature(object = "genclone"),
+  definition = function(object){
+    newstrata <- object@hierarchy
+    object <- callNextMethod()
+    object@strata <- newstrata
+    return(object)
+  }
+)
