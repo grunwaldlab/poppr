@@ -764,6 +764,14 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   before any edges are removed with \code{cutoff}. If \code{FALSE} (Default),
 #'   the layout will be computed after any edges are removed.
 #'   
+#' @param pop.leg if \code{TRUE}, a legend indicating the populations will
+#'   appear in the top right corner of the graph, but will not overlap. Setting
+#'   \code{pop.leg = FALSE} disables this legend. See details.
+#'   
+#' @param scale.leg if \code{TRUE}, a scale bar indicating the distance will
+#'   appear under the graph. Setting \code{scale.leg = FALSE} suppresses this
+#'   bar. See details.
+#'   
 #' @param ... any other parameters to be passed on to 
 #'   \code{\link[igraph]{plot.igraph}}.
 #'   
@@ -814,6 +822,12 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   clone correction will be done via the computed multilocus genotypes, either
 #'   "original" or "contracted". This is specified in the \code{mlg.compute}
 #'   argument, above.}
+#'   
+#'   \subsection{legends}{ To avoid drawing the legend over the graph, legends 
+#'   are separated by different plotting areas. This means that if legends are 
+#'   included, you cannot plot multiple MSNs in a single plot. The scale bar (to
+#'   be added in manually) can be obtained from \code{\link{greycurve}} and the
+#'   legend can be plotted with \code{\link{legend}}.}
 #' 
 #' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 #' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
@@ -869,12 +883,14 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
-plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = "original",
+plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, 
+                           mlg.compute = "original",
                            glim = c(0, 0.8), gweight = 1, wscale = TRUE, 
                            nodebase = 1.15, nodelab = 2, inds = "ALL", 
                            mlg = FALSE, quantiles = TRUE, cutoff = NULL, 
                            palette = NULL, layfun = layout.auto, 
-                           beforecut = FALSE, ...){
+                           beforecut = FALSE, pop.leg = TRUE, scale.leg = TRUE, 
+                           ...){
   if (!is(x, "genlight") && !is.genind(x)){
     stop(paste(substitute(x), "is not a genind or genclone object."))
   }
@@ -982,53 +998,60 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, mlg.compute = 
   
   # Plotting parameters.
   def.par <- par(no.readonly = TRUE)
-  # Setting up the matrix for plotting. One Vertical panel of width 1 and height
-  # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
-  # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
-  if (!all(is.na(poppr_msn$populations))){
-    layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
-           widths = c(1, 4), heights= c(4.5, 0.5))
-    # mar = bottom left top right
+  
+  if (!pop.leg & !scale.leg){
+    plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
+                layout = lay, ...)
+  } else {
     
-    ## LEGEND
-    par(mar = c(0, 0, 1, 0) + 0.5)
-    too_many_pops   <- as.integer(ceiling(nPop(x)/30))
-    pops_correction <- ifelse(too_many_pops > 1, -1, 1)
-    yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
-    plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
-         main = 'POPULATION')
-  
-    legend("topleft", bty = "n", cex = 1.2^pops_correction,
-           legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
-           ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
-  } else {
-    layout(matrix(c(1,2), nrow = 2), heights= c(4.5, 0.5))
+    # Setting up the matrix for plotting. One Vertical panel of width 1 and height
+    # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
+    # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
+    if (pop.leg && !all(is.na(poppr_msn$populations))){
+      layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
+             widths = c(1, 4), heights= c(4.5, 0.5))
+      # mar = bottom left top right
+      
+      ## LEGEND
+      par(mar = c(0, 0, 1, 0) + 0.5)
+      too_many_pops   <- as.integer(ceiling(nPop(x)/30))
+      pops_correction <- ifelse(too_many_pops > 1, -1, 1)
+      yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
+      plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
+           main = 'POPULATION')
+    
+      legend("topleft", bty = "n", cex = 1.2^pops_correction,
+             legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
+             ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
+    } else {
+      layout(matrix(c(1,2), nrow = 2), heights= c(4.5, 0.5))
+    }
+    
+    ## PLOT
+    par(mar = c(0,0,0,0))
+    plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
+                layout = lay, ...)
+    
+    ## SCALE BAR
+    if (quantiles){
+      scales <- sort(weights)
+    } else {
+      scales <- seq(wmin, wmax, l = 1000)
+    }
+    greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
+    legend_image <- as.raster(matrix(greyscales, nrow=1))
+    par(mar = c(0, 1, 0, 1) + 0.5)
+    plot.new()
+    rasterImage(legend_image, 0, 0.5, 1, 1)
+    polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+    axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
+    text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
+    
+    # Return top level plot to defaults.
+    layout(matrix(c(1), ncol=1, byrow=T))
+    par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
+    par(oma=c(0,0,0,0)) # Figure margins
   }
-  
-  ## PLOT
-  par(mar = c(0,0,0,0))
-  plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
-              layout = lay, ...)
-  
-  ## SCALE BAR
-  if (quantiles){
-    scales <- sort(weights)
-  } else {
-    scales <- seq(wmin, wmax, l = 1000)
-  }
-  greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
-  legend_image <- as.raster(matrix(greyscales, nrow=1))
-  par(mar = c(0, 1, 0, 1) + 0.5)
-  plot.new()
-  rasterImage(legend_image, 0, 0.5, 1, 1)
-  polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
-  axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
-  text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
-  
-  # Return top level plot to defaults.
-  layout(matrix(c(1), ncol=1, byrow=T))
-  par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
-  par(oma=c(0,0,0,0)) # Figure margins
 }
 
 
