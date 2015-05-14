@@ -1412,6 +1412,7 @@ multi.dnds <- function(x, quiet=FALSE){
   dnds.df <- (vapply(x, dn.ds,numeric(4)))
   dnds.df <-as.data.frame(t(dnds.df))
   rownames(dnds.df) <- sub("^([^.]*).*", "\\1", basename(x)) 
+  colnames(dnds.df) <- c("ka","ks","vka","vks")
   dnds.df$dnds <- dnds.df$ka/dnds.df$ks
   dnds.df$stat[dnds.df$dnds>1] <- "Positive"
   dnds.df$stat[dnds.df$dnds<1] <- "Negative"
@@ -1460,7 +1461,8 @@ multi.dnds.chisq <- function(x, quiet=FALSE, c.interval = 0.05){
     cat("dN/dS calculation\n")
   }
   dnds.df <- (vapply(x, dn.ds,numeric(4)))
-  dnds.df <-as.data.frame(t(dnds.df))
+  dnds.df <- as.data.frame(t(dnds.df))
+  colnames(dnds.df) <- c("ka","ks","vka","vks")
   rownames(dnds.df) <- sub("^([^.]*).*", "\\1", basename(x)) 
   dnds.df$dnds <- dnds.df$ka/dnds.df$ks
   dnds.df$chi.square <- ((dnds.df$dnds - 1)^2)/1
