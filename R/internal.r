@@ -1924,9 +1924,10 @@ old_mlg_barplot <- function(mlgt){
 
 #' @importFrom dplyr %>% mutate_ desc group_by_ 
 #' @importFrom stats reorder
-mlg_barplot <- function(mlgt){
-  names(dimnames(mlgt)) <- c("Population", "MLG")
+mlg_barplot <- function(mlgt, color_table = NULL){
+  names(dimnames(mlgt)) <- c("Population", "MLG") # -> names(dimnames(color_table))
   mlgt.df <- reshape2::melt(mlgt, value.name = "count")
+  # colordf <- reshape2::melt(color_table, value.name = "count")
   mlgt.df <- mlgt.df[mlgt.df$count > 0, ]
   # create a data frame that ggplot2 can read.
   # mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 

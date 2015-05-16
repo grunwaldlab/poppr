@@ -201,8 +201,7 @@ mlg <- function(gid, quiet=FALSE){
 #' 
 #' @export
 #==============================================================================#
-mlg.table <- function(gid, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar = TRUE, 
-                      plot = TRUE, total=FALSE, quiet=FALSE){  
+mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, plot = TRUE, color_by = NULL, total = FALSE, quiet = FALSE){  
   if (!is.genind(gid) & !is(gid, "snpclone")){
     stop("This function requires a genind object.")
   }
@@ -212,6 +211,9 @@ mlg.table <- function(gid, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar = TRU
     warning("In poppr version 2.0, bar is deprecated. Please use plot.")
   }
   the_data <- capture.output(the_call[["gid"]])
+  if (!is.null(strata)){
+    setPop(gid) <- strata
+  }
   mlgtab <- mlg.matrix(gid)
   if (!is.null(mlgsub)){
     if (is.numeric(mlgsub)){
@@ -233,6 +235,10 @@ mlg.table <- function(gid, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar = TRU
 
   # Dealing with the visualizations.
   if (plot){
+    color_table <- NULL
+    if (!is.null(color_by)){
+      color_table <- mlg.matrix(setPop(gid, color_by))
+    }
     # If there is a population structure
     if(!is.null(popNames(gid))){
       popnames <- popNames(gid)
