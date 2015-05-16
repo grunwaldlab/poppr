@@ -10,9 +10,10 @@ NEW FEATURES
 * The mlg slot in the genclone object can now optionally hold an MLG class object. This object will contain different definitions of multilocus genotypes, allowing the user to switch between observed, custom, and mlgs defined given a genetic distance threshold.
 * minimum spanning network functions gain the ability to include reticulations using the option `include.ties`
 * minimum spanning network functions gain the ability to collapse multilocus genotypes by genetic distance with the option `threshold`.
-* `informloci` gains the argument "MAF", which allows the specificatin of a minor allele frequency cutoff in addition to the cutoff argument. Examples have been updated.
+* `informloci` gains the argument "MAF", which allows the specification of a minor allele frequency cutoff in addition to the cutoff argument. Examples have been updated.
 * `aboot` can now take genlight objects.
 * `poppr.msn` and `plot_poppr_msn` can now take genlight objects.
+* `plot_poppr_msn` now gives users the option to include or exclude the legends.
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
@@ -23,7 +24,7 @@ NEW FUNCTIONS
 * `mll.levels` allows the user to edit the names of custom multilocus genotypes.
 * `poppr_has_parallel` will return `TRUE` if poppr was built with OpenMP parallel library.
 * `win.ia` calculates windows of \bar{r}_d along genlight chromosomes.
-* `samp.ia` calculates \bar{r}_d for genlight object by ranomly sampling a user-defined number of SNPs.
+* `samp.ia` calculates \bar{r}_d for genlight object by randomly sampling a user-defined number of SNPs.
 * `test_replen` will test repeat lengths of microsatellite markers for consistency.
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
 
