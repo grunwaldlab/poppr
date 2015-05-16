@@ -42,67 +42,59 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #' Create counts, vectors, and matrices of multilocus genotypes.
-#'
+#' 
 #' @name mlg
-#'
-#' @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} object.
-#'
-#' @param sublist a \code{vector} of population names or indices that the user
-#' wishes to keep. Default to "ALL".
-#'
+#'   
+#' @param gid a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#'   object.
+#'   
+#' @param sublist a \code{vector} of population names or indices that the user 
+#'   wishes to keep. Default to "ALL".
+#'   
 #' @param blacklist a \code{vector} of population names or indices that the user
-#' wishes to discard. Default to \code{NULL}.
-#'
-#' @param mlgsub a \code{vector} of multilocus genotype indices with which to
-#' subset \code{mlg.table} and \code{mlg.crosspop}. NOTE: The resulting table
-#' from \code{mlg.table} will only contain countries with those MLGs
-#'
-#' @param quiet \code{Logical}. If FALSE, progress of functions will be printed
-#' to the screen. 
-#'
-#' @param bar deprecated. Same as \code{plot}.
+#'   wishes to discard. Default to \code{NULL}.
+#'   
+#' @param mlgsub a \code{vector} of multilocus genotype indices with which to 
+#'   subset \code{mlg.table} and \code{mlg.crosspop}. NOTE: The resulting table 
+#'   from \code{mlg.table} will only contain countries with those MLGs
+#'   
+#' @param quiet \code{Logical}. If FALSE, progress of functions will be printed 
+#'   to the screen.
+#'   
+#' @param bar deprecated. Same as \code{plot}. Retained for compatibility.
+#'   
+#' @param plot \code{logical} If \code{TRUE}, a bar graph for each population 
+#'   will be displayed showing the relative abundance of each MLG within the 
+#'   population.
+#'   
+#' @param indexreturn \code{logical} If \code{TRUE}, a vector will be returned 
+#'   to index the columns of \code{mlg.table}.
+#'   
+#' @param df \code{logical} If \code{TRUE}, return a data frame containing the 
+#'   counts of the MLGs and what countries they are in. Useful for making graphs
+#'   with \code{\link{ggplot}}.
+#'   
+#' @param total \code{logical} If \code{TRUE}, a row containing the sum of all 
+#'   represented MLGs is appended to the matrix produced by mlg.table.
+#'   
+#' @return \subsection{mlg}{ an integer describing the number of multilocus
+#' genotypes observed. } \subsection{mlg.table}{ a matrix with columns
+#' indicating unique multilocus genotypes and rows indicating populations. } 
+#' \subsection{mlg.vector}{ a numeric vector naming the multilocus genotype of
+#' each individual in the dataset. } \subsection{mlg.crosspop}{ \itemize{ 
+#' \item{default}{ a \code{list} where each element contains a named integer
+#' vector representing the number of individuals represented from each
+#' population in that MLG} \item{\code{indexreturn = TRUE}}{ a \code{vector} of
+#' integers defining the multilocus genotypes that have individuals crossing
+#' populations} \item{\code{df = TRUE}}{ A long form data frame with the
+#' columns: MLG, Population, Count. Useful for graphing with ggplot2} } } 
+#' \subsection{mlg.id}{ a list of multilocus genotypes with the associated
+#' individual names per MLG. }
 #' 
-#' @param plot \code{logical} If \code{TRUE}, a bar graph for each population
-#' will be displayed showing the relative abundance of each MLG within the
-#' population.
-#'
-#' @param indexreturn \code{logical} If \code{TRUE}, a vector will be returned
-#' to index the columns of \code{mlg.table}.
-#'
-#' @param df \code{logical} If \code{TRUE}, return a data frame containing the
-#' counts of the MLGs and what countries they are in. Useful for making graphs
-#' with \code{\link{ggplot}}. 
-#'
-#' @param total \code{logical} If \code{TRUE}, a row containing the sum of all
-#' represented MLGs is appended to the matrix produced by mlg.table.
-#' 
-#' @return 
-#' \subsection{mlg}{
-#' an integer describing the number of multilocus genotypes observed.
-#' }
-#' \subsection{mlg.table}{
-#' a matrix with columns indicating unique multilocus genotypes and rows
-#' indicating populations.
-#' }
-#' \subsection{mlg.vector}{
-#' a numeric vector naming the multilocus genotype of each individual in
-#'   the dataset.
-#' }
-#' \subsection{mlg.crosspop}{
-#' \itemize{
-#' \item{default}{ a \code{list} where each element contains a named integer vector representing the number of individuals represented from each population in that MLG}
-#' \item{\code{indexreturn = TRUE}}{ a \code{vector} of integers defining the multilocus genotypes that have individuals crossing populations}
-#' \item{\code{df = TRUE}}{ A long form data frame with the columns: MLG, Population, Count. Useful for graphing with ggplot2}
-#' }
-#' }
-#' \subsection{mlg.id}{
-#' a list of multilocus genotypes with the associated individual names per MLG.
-#' }
-#'
 #' @seealso \code{\link[vegan]{diversity}} \code{\link{popsub}}
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
-#'
+#' 
 #' # Load the data set
 #' data(Aeut)
 #' 
@@ -146,10 +138,10 @@
 #' # Changing the population vector to indicate the years of each epidemic.
 #' pop(H3N2) <- other(H3N2)$x$country
 #' H.tab <- mlg.table(H3N2, plot=FALSE, total=TRUE)
-#'
+#' 
 #' # Show which genotypes exist accross populations in the entire dataset.
 #' res <- mlg.crosspop(H3N2, quiet=FALSE)
-#'
+#' 
 #' # Let's say we want to visualize the multilocus genotype distribution for the
 #' # USA and Russia
 #' mlg.table(H3N2, sublist=c("USA", "Russia"), bar=TRUE)
@@ -161,10 +153,10 @@
 #' # Since the columns of the table from mlg.table are equal to the number of
 #' # MLGs, we can subset with just the columns.
 #' H.sub <- H.tab[, inds]
-#'
+#' 
 #' # We can also do the same by using the mlgsub flag.
 #' H.sub <- mlg.table(H3N2, mlgsub=inds)
-#'
+#' 
 #' # We can subset the original data set using the output of mlg.vector to
 #' # analyze only the MLGs that are duplicated across populations. 
 #' new.H <- H3N2[H.vec %in% inds, ]
@@ -178,24 +170,24 @@ NULL
 #' @export
 #==============================================================================#
 
-mlg <- function(pop, quiet=FALSE){
-  if (!is(pop, "genlight") & !is(pop, "genind")){
-    stop(paste(substitute(pop), "is not a genind or genlight object"))
+mlg <- function(gid, quiet=FALSE){
+  if (!is(gid, "genlight") & !is(gid, "genind")){
+    stop(paste(substitute(gid), "is not a genind or genlight object"))
   }
-  if ((is.snpclone(pop) | is.genclone(pop)) && length(pop@mlg) == nrow(pop@tab)){
-    out <- length(unique(pop@mlg[]))
+  if ((is.snpclone(gid) | is.genclone(gid)) && length(gid@mlg) == nrow(gid@tab)){
+    out <- length(unique(gid@mlg[]))
   } else {
-    if (is(pop, "genlight")) return(nInd(pop))
-    if(nrow(pop@tab) == 1){
+    if (is(gid, "genlight")) return(nInd(gid))
+    if(nrow(gid@tab) == 1){
       out <- 1
     }
     else {
-      out <- nrow(unique(pop@tab[, 1:ncol(pop@tab)]))
+      out <- nrow(unique(gid@tab[, 1:ncol(gid@tab)]))
     } 
   } 
   if(quiet!=TRUE){
     cat("#############################\n")
-    cat("# Number of Individuals: ", nInd(pop), "\n")
+    cat("# Number of Individuals: ", nInd(gid), "\n")
     cat("# Number of MLG: ", out, "\n")
     cat("#############################\n")
   }
@@ -209,23 +201,29 @@ mlg <- function(pop, quiet=FALSE){
 #' 
 #' @export
 #==============================================================================#
-mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE, 
+mlg.table <- function(gid, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar = TRUE, 
                       plot = TRUE, total=FALSE, quiet=FALSE){  
-  if (!is.genind(pop) & !is(pop, "snpclone")){
+  if (!is.genind(gid) & !is(gid, "snpclone")){
     stop("This function requires a genind object.")
   }
-  mlgtab <- mlg.matrix(pop)
+  the_call <- match.call()
+  if ("bar" %in% names(the_call)){
+    plot <- bar
+    warning("In poppr version 2.0, bar is deprecated. Please use plot.")
+  }
+  the_data <- capture.output(the_call[["gid"]])
+  mlgtab <- mlg.matrix(gid)
   if (!is.null(mlgsub)){
     if (is.numeric(mlgsub)){
       mlgsub <- paste("MLG", mlgsub, sep = ".")      
     }
     mlgtab <- mlgtab[, mlgsub, drop = FALSE]
     mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), , drop = FALSE]
-    pop <- popsub(pop, sublist = rownames(mlgtab))
+    gid <- popsub(gid, sublist = rownames(mlgtab))
   }
   if (sublist[1] != "ALL" | !is.null(blacklist)){
-    pop <- popsub(pop, sublist, blacklist)
-    mlgtab <- mlgtab[popNames(pop), , drop=FALSE]
+    gid <- popsub(gid, sublist, blacklist)
+    mlgtab <- mlgtab[popNames(gid), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
   if (total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
@@ -234,10 +232,10 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
   }
 
   # Dealing with the visualizations.
-  if (bar){
+  if (plot){
     # If there is a population structure
-    if(!is.null(popNames(pop))){
-      popnames <- popNames(pop)
+    if(!is.null(popNames(gid))){
+      popnames <- popNames(gid)
       if(total & nrow(mlgtab) > 1){
         popnames[length(popnames) + 1] <- "Total"
       }
@@ -248,7 +246,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
     print(mlg_barplot(mlgtab) + 
             # theme_classic() %+replace%
             # theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
-            labs(title = paste("Data:", as.character(substitute(pop)), "\nN =",
+            labs(title = paste("Data:", the_data, "\nN =",
                                sum(mlgtab), "MLG =", ncol(mlgtab))))
     # }
   }
@@ -269,7 +267,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
 #'   
 #' @export
 #==============================================================================#
-mlg.vector <- function(pop, reset = FALSE){
+mlg.vector <- function(gid, reset = FALSE){
 
   # This will return a vector indicating the multilocus genotypes.
   # note that the genotype numbers will not match up with the original numbers,
@@ -282,13 +280,13 @@ mlg.vector <- function(pop, reset = FALSE){
   # Step 4: evaluate strings in sorted vector and increment to the respective 
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
-  if (!reset && (is.snpclone(pop) || is.genclone(pop)) && length(pop@mlg) == nInd(pop)){
-    return(pop@mlg[])
+  if (!reset && (is.snpclone(gid) || is.genclone(gid)) && length(gid@mlg) == nInd(gid)){
+    return(gid@mlg[])
   }
-  if (is(pop, "genlight")){
-    return(seq_len(nInd(pop)))
+  if (is(gid, "genlight")){
+    return(seq_len(nInd(gid)))
   } 
-  xtab <- pop@tab
+  xtab <- gid@tab
   # concatenating each genotype into one long string.
   xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ], collapse = ""), "string")
 
@@ -336,7 +334,7 @@ mlg.vector <- function(pop, reset = FALSE){
 
 
 
-mlg.filter.internal <- function(pop, threshold = 0.0, missing = "mean", 
+mlg.filter.internal <- function(gid, threshold = 0.0, missing = "mean", 
                                 memory = FALSE, algorithm = "farthest_neighbor", 
                                 distance = "nei.dist", threads = 0, 
                                 stats = "MLGs", the_call = match.call(), ...){
@@ -344,19 +342,19 @@ mlg.filter.internal <- function(pop, threshold = 0.0, missing = "mean",
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
 
-#   if(!is.genclone(pop) && !is.genind(pop) && !is(pop, "genlight"))
+#   if(!is.genclone(gid) && !is.genind(gid) && !is(gid, "genlight"))
 #   {
 #     stop("No genclone or genind object was provided.")
 #   }
   if (is.character(distance) || is.function(distance))
   {
-    if (memory==TRUE && identical(c(pop, distance, ...), .last.value.param$get()))
+    if (memory==TRUE && identical(c(gid, distance, ...), .last.value.param$get()))
     {
       dis <- .last.value.dist$get()
     }
     else
     {
-      if (is.genind(pop))
+      if (is.genind(gid))
       {
         the_dist <- as.character(the_call[["distance"]])
         call_len <- length(the_dist)
@@ -370,33 +368,33 @@ mlg.filter.internal <- function(pop, threshold = 0.0, missing = "mean",
                               "mean values.", "diss.dist will automatically",
                               "ignore missing data.") 
             warning(disswarn, call. = FALSE)
-            mpop <- pop
+            mpop <- gid
           }
           else if (any_dist) 
           {
-            mpop <- new("bootgen", pop, na = missing, 
+            mpop <- new("bootgen", gid, na = missing, 
                         freq = ifelse(is_diss_dist, FALSE, TRUE))
           } 
           else 
           {
-            mpop <- missingno(pop, type = missing, quiet = TRUE)
+            mpop <- missingno(gid, type = missing, quiet = TRUE)
           }
         }
         else 
         {
-          mpop <- missingno(pop, type = missing, quiet = TRUE)
+          mpop <- missingno(gid, type = missing, quiet = TRUE)
         }
       }
       else 
       {
-        mpop <- pop
+        mpop <- gid
       }
       DISTFUN <- match.fun(distance)
       dis <- DISTFUN(mpop, ...)
       dis <- as.matrix(dis)
       if (memory == TRUE)
       {
-        .last.value.param$set(c(pop, distance, ...))
+        .last.value.param$set(c(gid, distance, ...))
         .last.value.dist$set(dis)
       }
     }
@@ -404,26 +402,26 @@ mlg.filter.internal <- function(pop, threshold = 0.0, missing = "mean",
   else
   {
     # Treating distance as a distance table
-    # Warning: Missing data in distance matrix or data uncorrelated with pop may produce unexpected results.
+    # Warning: Missing data in distance matrix or data uncorrelated with gid may produce unexpected results.
     dis <- as.matrix(distance)
   }
 
-  if (!is.clone(pop))
+  if (!is.clone(gid))
   {
-    if (is(pop, "genlight")){
-      pop <- as.snpclone(pop)
+    if (is(gid, "genlight")){
+      gid <- as.snpclone(gid)
     } else {
-      pop <- as.genclone(pop)
+      gid <- as.genclone(gid)
     }
   }
   else
   {
-    if (!is(pop@mlg, "MLG")){
-      pop@mlg <- new("MLG", pop@mlg)
+    if (!is(gid@mlg, "MLG")){
+      gid@mlg <- new("MLG", gid@mlg)
     }
-    mll(pop) <- "original"
+    mll(gid) <- "original"
   }
-  basemlg <- mlg.vector(pop)
+  basemlg <- mlg.vector(gid)
   
 
 
@@ -503,32 +501,32 @@ mlg.filter.internal <- function(pop, threshold = 0.0, missing = "mean",
 #
 # Show which multilocus genotypes exist accross populations. 
 #
-# @param pop a \code{\link{genind}} object.
+# @param gid a \code{\link{genind}} object.
 # 
 #' @return a \code{list} containing vectors of population names for each MLG. 
 #' 
 #' @export
 #==============================================================================#
 
-mlg.crosspop <- function(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
+mlg.crosspop <- function(gid, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
                          indexreturn = FALSE, df = FALSE, quiet = FALSE){
 
-  if (length(sublist) == 1 & sublist[1] != "ALL" | is.null(pop(pop))){
+  if (length(sublist) == 1 & sublist[1] != "ALL" | is.null(pop(gid))){
     cat("Multiple populations are needed for this analysis.\n")
     return(0)
   }
   visible <- "original"
-  if (is.genclone(pop) | is(pop, "snpclone")){
-    vec <- pop@mlg[]
-    if (is(pop@mlg, "MLG")){
-      visible <- pop@mlg@visible
+  if (is.genclone(gid) | is(gid, "snpclone")){
+    vec <- gid@mlg[]
+    if (is(gid@mlg, "MLG")){
+      visible <- gid@mlg@visible
     }
   } else {
-    vec <- mlg.vector(pop) 
+    vec <- mlg.vector(gid) 
   }
-  subind <- sub_index(pop, sublist, blacklist)
+  subind <- sub_index(gid, sublist, blacklist)
   vec    <- vec[subind]
-  mlgtab <- mlg.matrix(pop)
+  mlgtab <- mlg.matrix(gid)
 
   if (!is.null(mlgsub)){
     if (visible == "custom"){
@@ -549,8 +547,8 @@ mlg.crosspop <- function(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
   
   } else {
     if (sublist[1] != "ALL" | !is.null(blacklist)){
-      pop    <- popsub(pop, sublist, blacklist)
-      mlgtab <- mlgtab[pop@pop.names, , drop = FALSE]
+      gid    <- popsub(gid, sublist, blacklist)
+      mlgtab <- mlgtab[popNames(gid), , drop = FALSE]
     }
 
     mlgs <- colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1
@@ -600,9 +598,9 @@ mlg.crosspop <- function(pop, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
 #==============================================================================#
 
 
-mlg.id <- function (pop){
-  if (!is.genind(pop) & !is(pop, "snpclone")){
-    stop(paste(substitute(pop), "is not a genind or genclone object"))
+mlg.id <- function (gid){
+  if (!is.genind(gid) & !is(gid, "snpclone")){
+    stop(paste(substitute(gid), "is not a genind or genclone object"))
   }
-  return(split(indNames(pop), mlg.vector(pop)))
+  return(split(indNames(gid), mlg.vector(gid)))
 }
