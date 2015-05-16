@@ -1008,8 +1008,13 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
     # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
     # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
     if (pop.leg && !all(is.na(poppr_msn$populations))){
-      layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
-             widths = c(1, 4), heights= c(4.5, 0.5))
+      if (scale.leg){
+        layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
+               widths = c(1, 4), heights= c(4.5, 0.5))        
+      } else {
+        layout(matrix(c(1, 2), nrow = 2), widths = c(1, 4))
+      }
+
       # mar = bottom left top right
       
       ## LEGEND
@@ -1031,22 +1036,22 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
     par(mar = c(0,0,0,0))
     plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
                 layout = lay, ...)
-    
-    ## SCALE BAR
-    if (quantiles){
-      scales <- sort(weights)
-    } else {
-      scales <- seq(wmin, wmax, l = 1000)
+    if (scale.leg){
+      ## SCALE BAR
+      if (quantiles){
+        scales <- sort(weights)
+      } else {
+        scales <- seq(wmin, wmax, l = 1000)
+      }
+      greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
+      legend_image <- as.raster(matrix(greyscales, nrow=1))
+      par(mar = c(0, 1, 0, 1) + 0.5)
+      plot.new()
+      rasterImage(legend_image, 0, 0.5, 1, 1)
+      polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+      axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
+      text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
     }
-    greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
-    legend_image <- as.raster(matrix(greyscales, nrow=1))
-    par(mar = c(0, 1, 0, 1) + 0.5)
-    plot.new()
-    rasterImage(legend_image, 0, 0.5, 1, 1)
-    polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
-    axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
-    text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
-    
     # Return top level plot to defaults.
     layout(matrix(c(1), ncol=1, byrow=T))
     par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
