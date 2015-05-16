@@ -240,14 +240,15 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
         popnames[length(popnames) + 1] <- "Total"
       }
       # Apply this over all populations. 
-      invisible(lapply(popnames, print_mlg_barplot, mlgtab, quiet=quiet))
-    } else {
-      print(mlg_barplot(mlgtab) + 
-        theme_classic() %+replace%
-        theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
-        labs(title = paste("Data:", as.character(substitute(pop)), "\nN =",
-                           sum(mlgtab), "MLG =", length(mlgtab))))
+      # invisible(lapply(popnames, print_mlg_barplot, mlgtab, quiet=quiet))
+      # } else {
     }
+    print(mlg_barplot(mlgtab) + 
+            # theme_classic() %+replace%
+            # theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
+            labs(title = paste("Data:", as.character(substitute(pop)), "\nN =",
+                               sum(mlgtab), "MLG =", length(mlgtab))))
+    # }
   }
   mlgtab <- mlgtab[, which(colSums(mlgtab) > 0), drop = FALSE]
   return(mlgtab)

@@ -1905,7 +1905,7 @@ test_zeroes <- function(x){
 # Private functions utilizing this function:
 # # print_mlg_barplot
 #==============================================================================#
-mlg_barplot <- function(mlgt){
+old_mlg_barplot <- function(mlgt){
 
   # create a data frame that ggplot2 can read.
   mlgt.df <- as.data.frame(list(MLG   = colnames(mlgt), 
@@ -1920,6 +1920,34 @@ mlg_barplot <- function(mlgt){
   # plot it
   return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
+}
+
+mlg_barplot <- function(mlgt){
+  names(dimnames(mlgt)) <- c("Population", "MLG")
+  mlgt.df <- melt(mlgt, value.name = "count")
+  mlgt.df <- mlgt.df[mlgt.df$count > 0, ]
+  # create a data frame that ggplot2 can read.
+  # mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 
+  # count = rep(mlgt, mlgt)), 
+  # stringsAsFactors = FALSE)
+  
+  # Organize the data frame by count in descending order.
+  mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
+  # mlgt.df <- mlgt.df[rearranged, ]
+  # mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
+  the_breaks <- pretty(mlgt.df$count)
+  the_breaks <- the_breaks[the_breaks %% 1 == 0]
+  # plot it
+  return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
+           geom_bar(aes_string(fill = "count"), stat="identity") + 
+           facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE) +
+           # theme_classic() %+replace%
+           theme(axis.text.x = 
+                   element_text(size=10, angle=-45, hjust=0, vjust=1)) +
+           scale_fill_gradient(guide = "legend", 
+                               breaks = rev(the_breaks)) +
+           scale_y_discrete(expand = c(0, -1))
+  )
 }
 
 #==============================================================================#
@@ -1940,7 +1968,7 @@ print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
 
   # controlling for the situation where the population size is 1.
   if (sum(mlgtab[n, ]) > 1){ 
-    print(mlg_barplot(mlgt) +
+    print(old_mlg_barplot(mlgt) +
             theme_classic() %+replace%
             theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) + 
             labs(title=paste("Population:", n, "\nN =", sum(mlgtab[n, ]),
