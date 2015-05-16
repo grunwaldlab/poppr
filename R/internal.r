@@ -1922,9 +1922,11 @@ old_mlg_barplot <- function(mlgt){
          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
 }
 
+#' @importFrom dplyr %>% mutate_ desc group_by_
+#' @importFrom stats reorder
 mlg_barplot <- function(mlgt){
   names(dimnames(mlgt)) <- c("Population", "MLG")
-  mlgt.df <- melt(mlgt, value.name = "count")
+  mlgt.df <- reshape2::melt(mlgt, value.name = "count")
   mlgt.df <- mlgt.df[mlgt.df$count > 0, ]
   # create a data frame that ggplot2 can read.
   # mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 
@@ -1932,21 +1934,26 @@ mlg_barplot <- function(mlgt){
   # stringsAsFactors = FALSE)
   
   # Organize the data frame by count in descending order.
-  mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
+  ordered_mlgs <- list(MLG = "stats::reorder(MLG, dplyr::desc(count))")
+  mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
+    dplyr::mutate_(.dots = ordered_mlgs)
+  # mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
   # mlgt.df <- mlgt.df[rearranged, ]
   # mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
   the_breaks <- pretty(mlgt.df$count)
   the_breaks <- the_breaks[the_breaks %% 1 == 0]
   # plot it
-  return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
-           geom_bar(aes_string(fill = "count"), stat="identity") + 
+  return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count", fill = "count")) + 
+           geom_bar(stat = "identity", position = "identity") + 
            facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE) +
-           # theme_classic() %+replace%
-           theme(axis.text.x = 
-                   element_text(size=10, angle=-45, hjust=0, vjust=1)) +
+           theme(panel.grid.major.x = element_blank(), 
+                 panel.grid.minor.x = element_blank(),
+                 # panel.background = element_rect(fill = "grey90"),
+                 axis.text.x = 
+                   element_text(size = 10, angle = 90, hjust = 1, vjust = 1)) +
            scale_fill_gradient(guide = "legend", 
                                breaks = rev(the_breaks)) +
-           scale_y_discrete(expand = c(0, -1))
+           scale_y_discrete(expand = c(0, -1), breaks = pretty(mlgt.df$count))
   )
 }
 
