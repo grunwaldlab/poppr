@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Data import and manipulation in poppr version 1.1.5.99-428}
+\title{Data import and manipulation in poppr version 1.1.5.99-435}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -162,12 +162,12 @@ association, and easily determine which multilocus genotypes are shared across
 populations.
 
 <<<<<<< HEAD
-\subsection{A note about poppr version 1.1.5.99-428}
+\subsection{A note about poppr version 1.1.5.99-435}
 =======
 <<<<<<< HEAD
-\subsection{A note about poppr version 1.1.5.99-428}
+\subsection{A note about poppr version 1.1.5.99-435}
 =======
-\subsection{A note about poppr version 1.1.5.99-428}
+\subsection{A note about poppr version 1.1.5.99-435}
 >>>>>>> adegenet-fix-mlg
 >>>>>>> 1f2874bbcb0957cd3477eb98a35fd4ebed0ee2a9
 
@@ -2368,7 +2368,7 @@ print_command(funk)
     see \cmdlink{data.manip:divide:popsub}{popsub.}
     \item \texttt{mlgsub -} a vector containing the indices of MLGs you wish to
     subset your table with.
-    \item \texttt{bar -} \texttt{TRUE} or \texttt{FALSE}. If  \texttt{TRUE}, a
+    \item \texttt{plot -} \texttt{TRUE} or \texttt{FALSE}. If  \texttt{TRUE}, a
     bar plot will be printed for each population with more than one individual.
     \item \texttt{total -} When set to \texttt{TRUE}, the pooled data set will
     be added to the table. Defaults to \texttt{FALSE}.
@@ -2377,13 +2377,13 @@ print_command(funk)
   \end{itemize}
 \bline{}
 
-<<mlgbar, eval=FALSE>>=
-v.tab <- mlg.table(virus, quiet=TRUE, bar=TRUE)
+<<mlgbar, eval = FALSE>>=
+v.tab <- mlg.table(virus, plot = TRUE)
 v.tab[1:10, 1:10] # Showing the first 10 columns and rows of the table.
 @
-<<echo=FALSE>>=
-v.tab <- mlg.table(virus, quiet=TRUE, bar=FALSE)
-v.tab[1:10, 1:10]
+<<mlgbarshow, echo = FALSE>>=
+v.tab <- mlg.table(virus, plot = FALSE)
+v.tab[1:10, 1:10] # Showing the first 10 columns and rows of the table.
 @
 \begin{figure}[h!]
   \centering
@@ -2391,8 +2391,8 @@ v.tab[1:10, 1:10]
   \texttt{mlg.table}. Note that this data set would produce several such
   charts but only the chart for Norway is shown here.}
   \label{nortable}
-<<mlgbarplot, echo=FALSE, results='hide'>>=
-mlg.table(virus, sublist="Norway", quiet=TRUE, bar=TRUE)
+<<mlgbarplot, results = 'hide', out.width = "0.8\\linewidth">>=
+mlg.table(virus, sublist = "Norway", plot = TRUE)
 @
 \end{figure}
 \newpage
@@ -2434,7 +2434,7 @@ cat(res, sep = "\n")
 @
 <<mlgrare2, eval=FALSE, tidy=FALSE>>=
 library("vegan")
-H.year <- mlg.table(virus, bar=FALSE)
+H.year <- mlg.table(virus, plot = FALSE)
 rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), 
           border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
@@ -2444,7 +2444,7 @@ rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)),
   \label{rarecurve}
 <<mlgrareplot, echo=FALSE, results='hide'>>=
 # library("vegan")
-H.year <- mlg.table(virus, bar=FALSE)
+H.year <- mlg.table(virus, plot = FALSE)
 vegan::rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
 \end{figure}
@@ -2524,7 +2524,12 @@ the 22 individuals.
 indNames(virus)[UGNN_match]
 @
 
-Note that there is an alternative way to list individuals matching specific MLGs using the function \texttt{mlg.id}. This function will return a list where each element represents a unique MLG. You can use this data to find out which individuals correspond to specific MLGs. Each element in the list is named with the MLG, but the index does not necessarily match up, so it is important to convert your query MLGs to strings:
+Note that there is an alternative way to list individuals matching specific MLGs
+using the function \texttt{mlg.id}. This function will return a list where each
+element represents a unique MLG. You can use this data to find out which
+individuals correspond to specific MLGs. Each element in the list is named with
+the MLG, but the index does not necessarily match up, so it is important to
+convert your query MLGs to strings:
 \label{mlg:mix:mlg.id}
 <<mlg.id>>=
 virus.id <- mlg.id(virus)
@@ -2535,20 +2540,17 @@ virus.id[as.character(UGNN)]
 We can also use the vector of MLGs to
 subset \cmdlink{mlg:table:mlg.table}{mlg.table} with the \texttt{mlgsub} flag.
 <<mlgsub_flag, eval=FALSE>>=
-mlg.table(virus, mlgsub = UGNN, bar = TRUE)
-@
-<<mlgsub_flagshow, echo=FALSE>>=
-mlg.table(virus, mlgsub = UGNN, bar = FALSE)
+mlg.table(virus, mlgsub = UGNN)
 @
 \noindent
-That showed us exactly which populations these three MLGs came from in our data set.
+That showed us exactly which populations these three MLGs came from in our data
+set.
 \begin{figure}[h!]
   \centering
-  \caption{\footnotesize An example of the same bar-chart as \textit{Figure 1},
-  but focusing on three MLGs.}
+  \caption{\footnotesize All populations that contain these MLGs}
   \label{nortable2}
-<<subnor, results='hide', echo=FALSE>>=
-mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
+<<mlgsub_flagshow, results='hide', echo=FALSE, out.width = "0.8\\linewidth">>=
+mlg.table(virus, mlgsub = UGNN)
 @
 \end{figure}
 \newpage
@@ -4235,30 +4237,54 @@ the only manipulation that can be performed is by adding elements to the graph.
 It is a static image. The ggplot graphs are actually represented as objects in
 your R environment. We can use the function \texttt{last\_plot()} from
 \textit{ggplot2} to be able to grab the plot that was plotted last in our
-window. Let's illustrate this using a MLG bar graph from the Athena population
-of the Aeut data set.
+window. Let's illustrate this using a MLG bar graph from the Aeut data set.
 
-<<Aeut_MLG_Ahena>>=
+<<Aeut_MLG_Aeut, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
 library("poppr")
 library("ggplot2")
 data(Aeut)
-Athena.tab <- mlg.table(Aeut, sublist = "Athena")
+Aeut.tab <- mlg.table(Aeut)
 p <- last_plot()
 @
 
 We've captured our plot using \texttt{last\_plot()} and now we can manipulate
-it. Let's say we didn't like the scale going from blue to black and we wanted
-make it monotone without a color guide. (NOTE: the () around
-the call allows us to show the result immediately.)
+it. One common need is to change the title. We can easily do that with the
+function \texttt{ggtitle()}. Let's say we wanted to label it
+``\textit{Aphanomyces euteiches} multilocus genotype distribution''. We would
+use \texttt{ggtitle("Aphanomyces euteiches multilocus genotype distribution")}.
+Unfortunately, we need italics for a latin binomial. One way to acheive this is
+by using the \texttt{expression()} function and declaring which text needs to be
+italicized.
 
-<<Aeut_MLG_black>>=
-(pb <- p + scale_fill_continuous(low = "black", high = "black", guide = "none"))
+<<Aeut_MLG_title, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
+myTitle <- expression(paste(italic("Aphanomyces euteiches"), " multilocus genotype distribution"))
+(pt <- p + 
+   ggtitle(myTitle) + 
+   xlab("Multilocus genotype")) # We can label the x axis, too
 @
 
-We could also change the title
+Let's say we wanted to remove the grey background. We could use the
+\texttt{theme()} function to do this, or we could use a theme already
+implemented in ggplot2 called \texttt{theme\_bw()}.
 
-<<Aeut_MLG_title>>=
-(pbt <- pb + ggtitle("Distribution of multilocus genotypes for the Athena population")) + xlab("Multilocus genotype")
+
+<<Aeut_MLG_theme, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
+(ptt <- pt + theme_bw())
+@
+
+Uh-oh. The x axis labels are now horizontal when they should be vertical. Since
+it's the overall distribution we're interested in, we don't really need them
+anyways. We can remove them with \texttt{axis.text.x} and \texttt{axis.ticks.x}.
+
+<<Aeut_MLG_theme_axis, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
+(ptta <- ptt + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()))
+@
+
+And, if for some bizzarre reason, you liked the color gradient in \poppr{}
+version 1, you can get that back by adding the \textit{fill} aesthetic:
+
+<<Aeut_silly, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
+(ptttaf <- ptta + aes(fill = count))
 @
 
 This allows you to produce publication quality graphs directly in R. Please see
