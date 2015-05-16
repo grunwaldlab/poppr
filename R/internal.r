@@ -1922,7 +1922,7 @@ old_mlg_barplot <- function(mlgt){
          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
 }
 
-#' @importFrom dplyr %>% mutate_ desc group_by_
+#' @importFrom dplyr %>% mutate_ desc group_by_ 
 #' @importFrom stats reorder
 mlg_barplot <- function(mlgt){
   names(dimnames(mlgt)) <- c("Population", "MLG")
@@ -1934,9 +1934,9 @@ mlg_barplot <- function(mlgt){
   # stringsAsFactors = FALSE)
   
   # Organize the data frame by count in descending order.
-  ordered_mlgs <- list(MLG = "stats::reorder(MLG, dplyr::desc(count))")
+  order_mlgs_by_pop <- list(MLG = "stats::reorder(MLG, dplyr::desc(count))")
   mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
-    dplyr::mutate_(.dots = ordered_mlgs)
+    dplyr::mutate_(.dots = order_mlgs_by_pop) %>% as.data.frame
   # mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
   # mlgt.df <- mlgt.df[rearranged, ]
   # mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
@@ -1950,7 +1950,7 @@ mlg_barplot <- function(mlgt){
                  panel.grid.minor.x = element_blank(),
                  axis.text.x = 
                    element_text(size = 10, angle = 90, hjust = 1, vjust = 1)) +
-           scale_y_discrete(expand = c(0, -1), breaks = pretty(mlgt.df$count))
+           scale_y_discrete(expand = c(0, -.75), breaks = pretty(mlgt.df$count))
   )
 }
 
