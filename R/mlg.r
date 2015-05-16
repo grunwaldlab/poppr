@@ -60,7 +60,9 @@
 #' @param quiet \code{Logical}. If FALSE, progress of functions will be printed
 #' to the screen. 
 #'
-#' @param bar \code{logical} If \code{TRUE}, a bar graph for each population
+#' @param bar deprecated. Same as \code{plot}.
+#' 
+#' @param plot \code{logical} If \code{TRUE}, a bar graph for each population
 #' will be displayed showing the relative abundance of each MLG within the
 #' population.
 #'
@@ -113,7 +115,7 @@
 #' avec 
 #' 
 #' # Get a table
-#' atab <- mlg.table(Aeut, bar = FALSE)
+#' atab <- mlg.table(Aeut, plot = FALSE)
 #' atab
 #' 
 #' # See where multilocus genotypes cross populations
@@ -143,7 +145,7 @@
 #' 
 #' # Changing the population vector to indicate the years of each epidemic.
 #' pop(H3N2) <- other(H3N2)$x$country
-#' H.tab <- mlg.table(H3N2, bar=FALSE, total=TRUE)
+#' H.tab <- mlg.table(H3N2, plot=FALSE, total=TRUE)
 #'
 #' # Show which genotypes exist accross populations in the entire dataset.
 #' res <- mlg.crosspop(H3N2, quiet=FALSE)
@@ -208,7 +210,7 @@ mlg <- function(pop, quiet=FALSE){
 #' @export
 #==============================================================================#
 mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE, 
-                      total=FALSE, quiet=FALSE){  
+                      plot = TRUE, total=FALSE, quiet=FALSE){  
   if (!is.genind(pop) & !is(pop, "snpclone")){
     stop("This function requires a genind object.")
   }
@@ -247,7 +249,7 @@ mlg.table <- function(pop, sublist="ALL", blacklist=NULL, mlgsub=NULL, bar=TRUE,
             # theme_classic() %+replace%
             # theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
             labs(title = paste("Data:", as.character(substitute(pop)), "\nN =",
-                               sum(mlgtab), "MLG =", length(mlgtab))))
+                               sum(mlgtab), "MLG =", ncol(mlgtab))))
     # }
   }
   mlgtab <- mlgtab[, which(colSums(mlgtab) > 0), drop = FALSE]

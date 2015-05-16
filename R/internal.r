@@ -1943,16 +1943,13 @@ mlg_barplot <- function(mlgt){
   the_breaks <- pretty(mlgt.df$count)
   the_breaks <- the_breaks[the_breaks %% 1 == 0]
   # plot it
-  return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count", fill = "count")) + 
+  return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
            geom_bar(stat = "identity", position = "identity") + 
            facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE) +
            theme(panel.grid.major.x = element_blank(), 
                  panel.grid.minor.x = element_blank(),
-                 # panel.background = element_rect(fill = "grey90"),
                  axis.text.x = 
                    element_text(size = 10, angle = 90, hjust = 1, vjust = 1)) +
-           scale_fill_gradient(guide = "legend", 
-                               breaks = rev(the_breaks)) +
            scale_y_discrete(expand = c(0, -1), breaks = pretty(mlgt.df$count))
   )
 }
