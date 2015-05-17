@@ -10,8 +10,9 @@
 \usage{
 mlg(gid, quiet = FALSE)
 
-mlg.table(gid, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
-  bar = TRUE, plot = TRUE, total = FALSE, quiet = FALSE)
+mlg.table(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
+  mlgsub = NULL, bar = TRUE, plot = TRUE, color_by = NULL,
+  total = FALSE, quiet = FALSE)
 
 mlg.vector(gid, reset = FALSE)
 

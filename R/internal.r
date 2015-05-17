@@ -1922,8 +1922,7 @@ old_mlg_barplot <- function(mlgt){
          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
 }
 
-#' @importFrom dplyr %>% mutate_ desc group_by_ 
-#' @importFrom stats reorder
+#' @importFrom dplyr %>% arrange_ group_by_ ungroup distinct
 mlg_barplot <- function(mlgt, color_table = NULL){
   names(dimnames(mlgt)) <- c("Population", "MLG") # -> names(dimnames(color_table))
   mlgt.df <- reshape2::melt(mlgt, value.name = "count")
@@ -1935,22 +1934,30 @@ mlg_barplot <- function(mlgt, color_table = NULL){
   # stringsAsFactors = FALSE)
   
   # Organize the data frame by count in descending order.
-  order_mlgs_by_pop <- list(MLG = "stats::reorder(MLG, dplyr::desc(count))")
+#   order_mlgs_by_pop <- list(MLGp = "stats::reorder(MLG, dplyr::desc(count))")
+#   mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
+#     dplyr::mutate_(.dots = order_mlgs_by_pop) %>% ungroup %>% distinct %>% 
+#     as.data.frame
   mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
-    dplyr::mutate_(.dots = order_mlgs_by_pop) %>% as.data.frame
+    dplyr::arrange_("count")
+  mlgt.df <- dplyr::distinct(dplyr::ungroup(mlgt.df))
+  mlgt.df$fac <- nrow(mlgt.df):1 %>% factor(., rev(.))
+
   # mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
   # mlgt.df <- mlgt.df[rearranged, ]
   # mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
   the_breaks <- pretty(mlgt.df$count)
   the_breaks <- the_breaks[the_breaks %% 1 == 0]
   # plot it
-  return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
+  return(ggplot(mlgt.df, aes_string(x = "fac", y = "count")) + 
            geom_bar(stat = "identity", position = "identity") + 
+           scale_x_discrete(labels = mlgt.df$MLG, breaks = mlgt.df$fac) +
            facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE) +
            theme(panel.grid.major.x = element_blank(), 
                  panel.grid.minor.x = element_blank(),
                  axis.text.x = 
                    element_text(size = 10, angle = 90, hjust = 1, vjust = 1)) +
+           xlab("MLG") + 
            scale_y_discrete(expand = c(0, -.75), breaks = pretty(mlgt.df$count))
   )
 }
