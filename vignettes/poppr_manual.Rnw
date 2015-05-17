@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Data import and manipulation in poppr version 1.1.5.99-436}
+\title{Data import and manipulation in poppr version 1.1.5.99-439}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -162,12 +162,12 @@ association, and easily determine which multilocus genotypes are shared across
 populations.
 
 <<<<<<< HEAD
-\subsection{A note about poppr version 1.1.5.99-436}
+\subsection{A note about poppr version 1.1.5.99-439}
 =======
 <<<<<<< HEAD
-\subsection{A note about poppr version 1.1.5.99-436}
+\subsection{A note about poppr version 1.1.5.99-439}
 =======
-\subsection{A note about poppr version 1.1.5.99-436}
+\subsection{A note about poppr version 1.1.5.99-439}
 >>>>>>> adegenet-fix-mlg
 >>>>>>> 1f2874bbcb0957cd3477eb98a35fd4ebed0ee2a9
 

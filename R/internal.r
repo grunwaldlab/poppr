@@ -1941,7 +1941,8 @@ mlg_barplot <- function(mlgt, color_table = NULL){
   mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
     dplyr::arrange_("count")
   mlgt.df <- dplyr::distinct(dplyr::ungroup(mlgt.df))
-  mlgt.df$fac <- nrow(mlgt.df):1 %>% factor(., rev(.))
+  mlgt.df$fac <- nrow(mlgt.df):1
+  mlgt.df$fac <- factor(mlgt.df$fac, rev(mlgt.df$fac))
 
   # mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
   # mlgt.df <- mlgt.df[rearranged, ]

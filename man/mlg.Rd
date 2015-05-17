@@ -11,13 +11,13 @@
 mlg(gid, quiet = FALSE)
 
 mlg.table(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
-  mlgsub = NULL, bar = TRUE, plot = TRUE, color_by = NULL,
-  total = FALSE, quiet = FALSE)
+  mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE,
+  quiet = FALSE)
 
 mlg.vector(gid, reset = FALSE)
 
-mlg.crosspop(gid, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
-  indexreturn = FALSE, df = FALSE, quiet = FALSE)
+mlg.crosspop(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
+  mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)
 
 mlg.id(gid)
 }
@@ -27,6 +27,9 @@ mlg.id(gid)
 
 \item{quiet}{\code{Logical}. If FALSE, progress of functions will be printed
   to the screen.}
+
+\item{strata}{a formula specifying the strata at which computation is to be
+  performed.}
 
 \item{sublist}{a \code{vector} of population names or indices that the user
   wishes to keep. Default to "ALL".}
@@ -48,7 +51,9 @@ mlg.id(gid)
   represented MLGs is appended to the matrix produced by mlg.table.}
 
 \item{reset}{logical. For genclone objects, the MLGs are defined by the input
-data, but they do not change if more or less information is added (i.e. loci are dropped). Setting \code{reset = TRUE} will recalculate MLGs. Default is \code{FALSE}, returning the MLGs defined in the @mlg slot.}
+  data, but they do not change if more or less information is added (i.e.
+  loci are dropped). Setting \code{reset = TRUE} will recalculate MLGs.
+  Default is \code{FALSE}, returning the MLGs defined in the @mlg slot.}
 
 \item{indexreturn}{\code{logical} If \code{TRUE}, a vector will be returned
   to index the columns of \code{mlg.table}.}

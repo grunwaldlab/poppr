@@ -47,7 +47,10 @@
 #'   
 #' @param gid a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
 #'   object.
-#'   
+#'  
+#' @param strata a formula specifying the strata at which computation is to be
+#'   performed.
+#' 
 #' @param sublist a \code{vector} of population names or indices that the user 
 #'   wishes to keep. Default to "ALL".
 #'   
@@ -201,7 +204,7 @@ mlg <- function(gid, quiet=FALSE){
 #' 
 #' @export
 #==============================================================================#
-mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, plot = TRUE, color_by = NULL, total = FALSE, quiet = FALSE){  
+mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE, quiet = FALSE){  
   if (!is.genind(gid) & !is(gid, "snpclone")){
     stop("This function requires a genind object.")
   }
@@ -235,10 +238,10 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlg
 
   # Dealing with the visualizations.
   if (plot){
-    color_table <- NULL
-    if (!is.null(color_by)){
-      color_table <- mlg.matrix(setPop(gid, color_by))
-    }
+#     color_table <- NULL
+#     if (!is.null(color_by)){
+#       color_table <- mlg.matrix(setPop(gid, color_by))
+#     }
     # If there is a population structure
     if(!is.null(popNames(gid))){
       popnames <- popNames(gid)
@@ -264,7 +267,9 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlg
 #' @rdname mlg
 #' 
 #' @param reset logical. For genclone objects, the MLGs are defined by the input
-#' data, but they do not change if more or less information is added (i.e. loci are dropped). Setting \code{reset = TRUE} will recalculate MLGs. Default is \code{FALSE}, returning the MLGs defined in the @@mlg slot.
+#'   data, but they do not change if more or less information is added (i.e.
+#'   loci are dropped). Setting \code{reset = TRUE} will recalculate MLGs.
+#'   Default is \code{FALSE}, returning the MLGs defined in the @@mlg slot.
 #'   
 #' @note mlg.vector will recalculate the mlg vector for
 #'   \code{\linkS4class{genind}} objects and will return the contents of the mlg
@@ -514,7 +519,8 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "mean",
 #' @export
 #==============================================================================#
 
-mlg.crosspop <- function(gid, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
+mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, 
+                         mlgsub = NULL,
                          indexreturn = FALSE, df = FALSE, quiet = FALSE){
 
   if (length(sublist) == 1 & sublist[1] != "ALL" | is.null(pop(gid))){
@@ -529,6 +535,9 @@ mlg.crosspop <- function(gid, sublist = "ALL", blacklist = NULL, mlgsub = NULL,
     }
   } else {
     vec <- mlg.vector(gid) 
+  }
+  if (!is.null(strata)){
+    setPop(gid) <- strata
   }
   subind <- sub_index(gid, sublist, blacklist)
   vec    <- vec[subind]
