@@ -166,8 +166,16 @@
 #'   \code{\link{cailliez}}. The correction of these distances should not 
 #'   adversely affect the outcome of the analysis.}
 #'   
+#'   \subsection{On Pairwise AMOVA}{ This implemenation allows one to obtain
+#'   results for pairwise comparisons by all populations specified in 
+#'   \code{split_by}. By default, a matrix of PhiPT values will be obtained,
+#'   but it is possible to output the amova objects themselves. If no hierarchy
+#'   is set, it will simply compare the lowest hierarchical level specified in
+#'   \code{split_by}.}
+#'   
 #' @keywords amova
 #' @aliases amova
+#' @rdname poppr.amova
 #' 
 #' @references Excoffier, L., Smouse, P.E. and Quattro, J.M. (1992) Analysis of
 #' molecular variance inferred from metric distances among DNA haplotypes:
@@ -282,4 +290,82 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   xtab    <- t(mlg.table(x, bar = FALSE, quiet = TRUE, mlgsub = unique(mlg.vector(x))))
   xtab    <- as.data.frame(xtab)
   return(ade4::amova(samples = xtab, distances = xdist, structures = xstruct))
+}
+
+
+amova_pair <- function(pops, dat, hier, ...){
+  dat <- popsub(dat, pops)
+  if (any(table(pop(dat)) < 3)){
+    return(NULL)
+  }
+  poppr.amova(dat, hier, ...)
+}
+
+#' @rdname poppr.amova
+#' @param split_by a formula defining the hierarchy at which the populations 
+#'   should be defined for pairwise between-group AMOVA.
+#' @param res The type of result you want back. Choices: "dist" (Default) for a
+#'   distance matrix. "matrix" for a square matrix, "raw" for raw data.\
+#' @param ... parameters passed on to poppr.amova
+#' @export 
+pairwise_amova <- function(x, split_by, res = "dist", ...){
+  if (is.null(split_by)){
+    stop("split_by must be defined.")
+  }
+  setpop(x)    <- split_by
+  the_dots     <- list(...)
+  the_call     <- match.call()
+  if (!"hier" %in% names(the_dots)){
+    the_dots[["hier"]] <- as.formula(paste0("~", tail(all.vars(split_by), 1)))
+  }
+  pops         <- x@pop.names
+  pop_combs    <- combn(pops, 2)
+  xlist        <- apply(pop_combs, 2, function(i){
+    do.call("amova_pair", c(list(i), x, the_dots))
+  })
+  names(xlist) <- apply(pop_combs, 2, paste, collapse = " : ")
+  if (res != "raw"){
+    phis <- make_amova_dist(xlist, res, pops, the_call)
+  } else {
+    phis <- xlist
+  }
+  return(phis)
+}
+
+
+make_amova_dist <- function(x, res = "dist", pops, the_call){
+  if (!"randtest" %in% class(x)){
+    phis <- vapply(x, 
+                   function(i) ifelse(is.null(i), NA_real_, i$statphi$Phi[1]),
+                   FUN.VALUE = numeric(1))    
+  } else {
+    phis <- vapply(x, 
+                   function(i) ifelse(is.null(i), NA_real_, i$pvalue[2]),
+                   FUN.VALUE = numeric(1))
+  }
+
+  phis <- make_attributes(phis, length(pops), pops, "PhiPT", the_call)
+  if (res == "matrix"){
+    phis <- as.matrix(phis)
+  }
+  return(phis)
+}
+
+#' @importFrom ade4 randtest
+test_amova_pairs <- function(pairname, pairlist, nrepet, quiet){
+  thePair <- pairlist[[pairname]]
+  if (!is.null(thePair)){
+    cat(pairname, "\r ...")
+    theTest <- randtest(thePair, nrepet = nrepet)
+    # try(plot(theTest))
+    return(theTest)
+  } else {
+    return(NULL)
+  }
+}
+
+pairwise_amova_test <- function(pairlist, nrepet = 99){
+  res <- lapply(names(pairlist), test_amova_pairs, pairlist, nrepet)
+  names(res) <- names(pairlist)
+  return(res)
 }
