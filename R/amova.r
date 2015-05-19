@@ -166,7 +166,7 @@
 #'   \code{\link{cailliez}}. The correction of these distances should not 
 #'   adversely affect the outcome of the analysis.}
 #'   
-#'   \subsection{On Pairwise AMOVA}{ This implemenation allows one to obtain
+#'   \subsection{On Pairwise AMOVA:}{ This implemenation allows one to obtain
 #'   results for pairwise comparisons by all populations specified in 
 #'   \code{split_by}. By default, a matrix of PhiPT values will be obtained,
 #'   but it is possible to output the amova objects themselves. If no hierarchy
@@ -305,7 +305,7 @@ amova_pair <- function(pops, dat, hier, ...){
 #' @param split_by a formula defining the hierarchy at which the populations 
 #'   should be defined for pairwise between-group AMOVA.
 #' @param res The type of result you want back. Choices: "dist" (Default) for a
-#'   distance matrix. "matrix" for a square matrix, "raw" for raw data.\
+#'   distance matrix. "matrix" for a square matrix, "raw" for raw data.
 #' @param ... parameters passed on to poppr.amova
 #' @export 
 pairwise_amova <- function(x, split_by, res = "dist", ...){

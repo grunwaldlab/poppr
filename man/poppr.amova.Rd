@@ -2,6 +2,7 @@
 % Please edit documentation in R/amova.r
 \name{poppr.amova}
 \alias{amova}
+\alias{pairwise_amova}
 \alias{poppr.amova}
 \title{Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.}
 \usage{
@@ -9,6 +10,8 @@ poppr.amova(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   dist = NULL, squared = TRUE, correction = "quasieuclid",
   dfname = "population_hierarchy", sep = "_", missing = "loci",
   cutoff = 0.05, quiet = FALSE)
+
+pairwise_amova(x, split_by, res = "dist", ...)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
@@ -54,6 +57,14 @@ defaults to "_".}
 \item{quiet}{\code{logical} If \code{FALSE} (Default), messages regarding any
   corrections will be printed to the screen. If \code{TRUE}, no messages will
   be printed.}
+
+\item{split_by}{a formula defining the hierarchy at which the populations
+should be defined for pairwise between-group AMOVA.}
+
+\item{res}{The type of result you want back. Choices: "dist" (Default) for a
+distance matrix. "matrix" for a square matrix, "raw" for raw data.}
+
+\item{...}{parameters passed on to poppr.amova}
 }
 \value{
 a list of class \code{amova} from the ade4 package. See
@@ -103,6 +114,13 @@ The poppr implementation of AMOVA is a very detailed wrapper for the
   ade4, \code{\link{quasieuclid}}, \code{\link{lingoes}}, and
   \code{\link{cailliez}}. The correction of these distances should not
   adversely affect the outcome of the analysis.}
+
+  \subsection{On Pairwise AMOVA:}{ This implemenation allows one to obtain
+  results for pairwise comparisons by all populations specified in
+  \code{split_by}. By default, a matrix of PhiPT values will be obtained,
+  but it is possible to output the amova objects themselves. If no hierarchy
+  is set, it will simply compare the lowest hierarchical level specified in
+  \code{split_by}.}
 }
 \examples{
 data(Aeut)
