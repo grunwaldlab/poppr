@@ -17,11 +17,17 @@ r_github_packages:
   - thibautjombart/adegenet
   - emmanuelparadis/pegas/pegas
   - KlausVigo/phangorn
+  - jimhester/covr
 
+after_success:
+  - Rscript -e 'library(covr);codecov()'
+  
 notifications:
   email:
     on_success: change
     on_failure: always
+
+
 env:
   global:
     - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"
