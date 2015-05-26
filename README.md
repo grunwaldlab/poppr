@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=2.0-rc)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=2.0-rc)](https://coveralls.io/r/grunwaldlab/poppr)
+[![Coverage Status](http://codecov.io/github/grunwaldlab/poppr/coverage.svg?branch=2.0-rc)](http://codecov.io/github/grunwaldlab/poppr?branch=2.0-rc)
 
 # Poppr version 2.0
 
