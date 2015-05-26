@@ -17,7 +17,7 @@ r_github_packages:
   - thibautjombart/adegenet
   - emmanuelparadis/pegas/pegas
   - KlausVigo/phangorn
-  - jimhester/covr
+  - zkamvar/covr@expect_error
 
 after_success:
   - Rscript -e 'library(covr);codecov()'
