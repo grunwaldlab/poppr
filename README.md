@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=2.0-rc)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=2.0-rc)](https://coveralls.io/r/grunwaldlab/poppr)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=diversity_table)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=diversity_table)](https://coveralls.io/r/grunwaldlab/poppr)
 
 # Poppr version 2.0
 
@@ -10,7 +10,7 @@ Installation section below.
 
 ```R
 devtools::install_github("thibautjombart/adegenet")
-devtools::install_github("grunwaldlab/poppr@2.0-rc")
+devtools::install_github("grunwaldlab/poppr@diversity_table")
 ```
 
 ## Welcome 
@@ -44,7 +44,7 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 For full details, see the NEWS file or type in your R console:
 
 ```R
-news(Version == "1.1.4.99", package = "poppr")
+news(Version == "1.1.5.99", package = "poppr")
 ```
 
 ## Citation
