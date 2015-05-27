@@ -13,6 +13,14 @@ do_boot(tab, n, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...)
 \item{n}{an integer > 0 specifying the number of bootstrap replicates to
 perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.}
 
+\item{H}{logical whether or not to calculate Shannon's index}
+
+\item{G}{logical whether or not to calculate Stoddart and Taylor's index}
+
+\item{simp}{logical whether or not to calculate Simpson's index}
+
+\item{E5}{logical whether or not to calculate Evenness}
+
 \item{...}{other parameters passed on to \code{\link[boot]{boot}} and
   \code{\link{get_stats}}.}
 }

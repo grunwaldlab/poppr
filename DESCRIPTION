@@ -33,10 +33,12 @@ Imports:
     ade4,
     pegas,
     reshape2,
-    dplyr (>= 0.4)
+    dplyr (>= 0.4),
+    boot
 Suggests:
     testthat,
     knitr,
-    polysat
+    polysat,
+    poweRlaw
 License: GPL-2 | GPL-3
 VignetteBuilder: knitr

@@ -128,7 +128,6 @@ get_stats <- function(z, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
   return(drop(mat))
 }
 
-#' @importFrom vegan diversity
 boot_stats <- function(x, i, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
   res <- get_stats(tabulate(x[i]), H, G, simp, E5, ...)
   return(res)
@@ -142,6 +141,7 @@ extract_samples <- function(x) rep(1:length(x), x)
 #'   \code{\link[poppr]{mlg.table}}. MLGs in columns and populations in rows
 #' @param n an integer > 0 specifying the number of bootstrap replicates to
 #'   perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
+#' @inheritParams get_stats
 #' @param ... other parameters passed on to \code{\link[boot]{boot}} and
 #'   \code{\link{get_stats}}.
 #'   
