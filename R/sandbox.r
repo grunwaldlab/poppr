@@ -47,21 +47,52 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
   return(read.genalex(genalex, ploidy, geo, region))
 }
 
-##' Produce a table of diversity statistics
+#' Produce a table of diversity statistics
 #' 
 #' @param z a table of integers representing counts of MLGs (columns) per 
-#' population (rows)
-#' 
-#' @return a numeric matrix with 4 columns giving the following statistics for 
-#'   each population: \itemize{\item H - Shannon Diversity \item G Stoddart and
-#'   Taylor's Diveristy (inverse Simpson's) \item unbiased Simpson Diversity \eqn{(N/(N-1))*(1 - D)} \item E.5 evenness}
+#'   population (rows)
+#'   
+#' @param H logical whether or not to calculate Shannon's index
+#' @param G logical whether or not to calculate Stoddart and Taylor's index
+#' @param simp logical whether or not to calculate Simpson's index
+#' @param E5 logical whether or not to calculate Evenness
+#' @param ... any functions that can be calculated on a vector or matrix of
+#'   genotype counts.
+#'   
+#' @return a numeric matrix giving statistics (columns) for each population
+#'   (rows).
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
 #' data(Pinf)
-#' tab <- mlg.table(Pinf, bar = FALSE)
+#' tab <- mlg.table(Pinf, plot = FALSE)
 #' get_stats(tab)
+#' \dontrun{
+#' # Example using the poweRlaw package to calculate the negative slope of the
+#' # Pareto distribution.
+#'
+#' library("poweRlaw")
+#' power_law_beta <- function(x){
+#'   xpow <- displ(x[x > 0])                 # Generate the distribution
+#'   xpow$setPars(estimate_pars(xpow))       # Estimate the parameters
+#'   xdat <- plot(xpow, draw = FALSE)        # Extract the data
+#'   xlm <- lm(log(y) ~ log(x), data = xdat) # Run log-log linear model for slope
+#'   return(-coef(xlm)[2])
+#' }
+#' 
+#' Beta <- function(x){
+#'   x <- drop(as.matrix(x))
+#'   if (length(dim(x)) > 1){
+#'     res <- apply(x, 1, power_law_beta)
+#'   } else {
+#'     res <- power_law_beta(x)
+#'   }
+#'   return(res)
+#' }
+#'
+#' get_stats(tab, B = Beta)
+#' }
 get_stats <- function(z, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
   
   E.5 <- function(x){
@@ -107,11 +138,14 @@ extract_samples <- function(x) rep(1:length(x), x)
 
 #' Perform a bootstrap analysis on diversity statistics
 #' 
-#' @param tab a table produced from the \pkg{poppr} function \code{\link[poppr]{mlg.table}}. MLGs in columns and populations in rows
-#' @param n an integer > 0 specifying the number of bootstrap replicates to perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
-#' @param ... other parameters passed on to \code{\link[boot]{boot}}.
-#' 
-#' @return a list of objects of class "boot". 
+#' @param tab a table produced from the \pkg{poppr} function
+#'   \code{\link[poppr]{mlg.table}}. MLGs in columns and populations in rows
+#' @param n an integer > 0 specifying the number of bootstrap replicates to
+#'   perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
+#' @param ... other parameters passed on to \code{\link[boot]{boot}} and
+#'   \code{\link{get_stats}}.
+#'   
+#' @return a list of objects of class "boot".
 #' @seealso \code{\link{boot_ci}}
 #' @export
 #' @author Zhian N. Kamvar
@@ -155,17 +189,21 @@ get_all_ci <- function(res, ci = 95, index_names = c("H", "G", "Hexp", "E.5")){
 
 #' Perform bootstrap statistics, calculate and plot confidence intervals.
 #' 
-#' @param tab a genind object OR a matrix produced from \code{\link[poppr]{mlg.table}}.
-#' @param n an integer defining the number of bootstrap replicates (defaults to 1000).
+#' @param tab a genind object OR a matrix produced from
+#'   \code{\link[poppr]{mlg.table}}.
+#' @param n an integer defining the number of bootstrap replicates (defaults to
+#'   1000).
 #' @param ci the percent for confidence interval.
-#' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if \code{tab} is a genind object.
-#' @param ... parameters to be passed on to \code{\link[boot]{boot}}
-#' 
-#' @return an array of 3 dimensions giving the lower and upper bound, the index
-#' measured, and the population. This also prints barplots for each population
-#' faceted by each index using \pkg{ggplot2}. This plot can be retrieved by using
-#' \code{p <- last_plot()}
-#' 
+#' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if
+#'   \code{tab} is a genind object.
+#' @param ... parameters to be passed on to \code{\link[boot]{boot}} and
+#'   \code{\link{get_stats}}
+#'   
+#' @return an array of 3 dimensions giving the lower and upper bound, the index 
+#'   measured, and the population. This also prints barplots for each population
+#'   faceted by each index using \pkg{ggplot2}. This plot can be retrieved by
+#'   using \code{p <- last_plot()}
+#'   
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
