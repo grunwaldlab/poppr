@@ -88,7 +88,11 @@ get_stats <- function(z, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
   
   mat <- matrix(nrow = nrows, ncol = length(STATS), dimnames = dims)
   for (i in STATS){
-    mat[, i] <- FUNS[[i]](z)
+    if (i == "E.5" && !all(is.na(mat[, "G"])) && !all(is.na(mat[, "H"]))){
+      mat[, i] <- (mat[, "G"] - 1)/(exp(mat[, "H"]) - 1)
+    } else {
+      mat[, i] <- FUNS[[i]](z)
+    }
   }
   return(drop(mat))
 }
@@ -134,15 +138,16 @@ get_ci <- function(x, lb, ub){
   return(res)
 }
 
-get_all_ci <- function(res, ci = 95){
+get_all_ci <- function(res, ci = 95, index_names = c("H", "G", "Hexp", "E.5")){
   lower_bound  <- (100 - ci)/200
   upper_bound  <- 1 - lower_bound
-  funval       <- matrix(numeric(8), nrow = 2)
+  n_indices    <- length(index_names)
+  funval       <- matrix(numeric(n_indices*2), nrow = 2)
   CI           <- vapply(res, FUN = get_ci, FUN.VALUE = funval, 
                          lower_bound, upper_bound)
   dCI          <- dimnames(CI)
   dimnames(CI) <- list(CI    = dCI[[1]], 
-                       Index = c("H", "G", "Hexp", "E.5"),
+                       Index = index_names,
                        Pop   = dCI[[3]])
   
   return(CI)
@@ -175,16 +180,22 @@ get_all_ci <- function(res, ci = 95){
 #' 
 boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, ...){
   if (!is.matrix(tab) & is.genind(tab)){
-    tab <- mlg.table(tab, total = total, bar = FALSE)
+    tab <- mlg.table(tab, total = total, plot = FALSE)
   }
   res  <- do_boot(tab, n, ...)
-  orig <- get_stats(tab)
+  dotlist <- list(...)
+  bootargs <- names(formals(boot))
+  dotlist <- dotlist[!names(dotlist) %in% bootargs]
+  get_stats_args <- formals(get_stats)
+  get_stats_args$z <- tab
+  orig <- do.call("get_stats", c(get_stats_args[-6], dotlist))
+  statnames <- colnames(orig)
   orig <- melt(orig)
   orig$Pop <- factor(orig$Pop)
-  CI   <- get_all_ci(res, ci = ci)
+  CI   <- get_all_ci(res, ci = ci, index_names = statnames)
   samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
   dimnames(samp) <- list(NULL, 
-                         Index = c("H", "G", "Hexp", "E.5"),
+                         Index = statnames,
                          Pop = rownames(tab))
   sampmelt <- melt(samp)
   sampmelt$Pop <- factor(sampmelt$Pop)
