@@ -88,7 +88,7 @@ get_stats <- function(z, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
   
   mat <- matrix(nrow = nrows, ncol = length(STATS), dimnames = dims)
   for (i in STATS){
-    if (i == "E.5" && !all(is.na(mat[, "G"])) && !all(is.na(mat[, "H"]))){
+    if (i == "E.5" && H && G){
       mat[, i] <- (mat[, "G"] - 1)/(exp(mat[, "H"]) - 1)
     } else {
       mat[, i] <- FUNS[[i]](z)
@@ -188,6 +188,19 @@ boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, ...){
   dotlist <- dotlist[!names(dotlist) %in% bootargs]
   get_stats_args <- formals(get_stats)
   get_stats_args$z <- tab
+  matching_names <- names(dotlist) %in% names(get_stats_args)
+  if (any(matching_names)){
+    for (i in names(dotlist[matching_names])){
+      if (!is.logical(dotlist[[i]])){
+        warning("Extra functions cannot have the same name a defaults. Renaming")
+        names(dotlist)[names(dotlist) == i] <- paste0("d", i)
+      } else {
+        get_stats_args[[i]] <- dotlist[[i]]
+      }
+    }
+  }
+  unique_names <- !names(dotlist) %in% names(get_stats_args)
+  dotlist <- dotlist[unique_names]
   orig <- do.call("get_stats", c(get_stats_args[-6], dotlist))
   statnames <- colnames(orig)
   orig <- melt(orig)
