@@ -1,13 +1,13 @@
 context("Population subset tests")
 
 test_that("subsetting needs a genind object", {
-  expect_error(popsub(1:10), "popsub requires a genind object\n")
+  expect_error(popsub(1:10), "popsub requires a genind or genlight object\n")
 })
 
 test_that("sublist needs to match populations", {
   data(microbov, package = "adegenet")
   expect_error(popsub(microbov, "missingno"), 
-               poppr:::unmatched_pops_warning(microbov@pop.names, "missingno"))
+               poppr:::unmatched_pops_warning(popNames(microbov), "missingno"))
 })
 
 test_that("sum of the pops equal the whole", {

@@ -117,11 +117,11 @@ NULL
 #'   "Symptom"
 #' @references SE Everhart, H Scherm, (2014) Fine-scale genetic structure of 
 #'   \emph{Monilinia fructicola} during brown rot epidemics within individual peach 
-#'   tree canopies. Phytopathology, submitted
+#'   tree canopies. Phytopathology 105:542-549 doi:10.1094/PHYTO-03-14-0088-R
 #' @examples
 #' data(monpop)
-#' splithierarchy(monpop) <- ~Tree/Year/Symptom
-#' setpop(monpop) <- ~Symptom/Year
+#' splitStrata(monpop) <- ~Tree/Year/Symptom
+#' setPop(monpop) <- ~Symptom/Year
 #' monpop
 #==============================================================================#
 NULL
@@ -176,8 +176,8 @@ extract.info <- function(x) {
 # Internal functions utilizing this function:
 # # new.poppr (in testing)
 #==============================================================================#
-process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=1,
-                            clonecorrect=FALSE, hier=c(1), dfname="hier"){
+process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, 
+                         keep=1, clonecorrect=FALSE, strata=1){
   if (!is.genind(input)){
     x <- input
     if (toupper(.readExt(x)) == "CSV"){
@@ -194,7 +194,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
     input         <- missingno(input, type=missing, cutoff=cutoff, quiet=quiet)
     input@call    <- popcall
     if (clonecorrect == TRUE){
-      poplist    <- clonecorrect(input, hier=hier, dfname=dfname, keep=keep)
+      poplist    <- clonecorrect(input, strata = strata, keep = keep)
       input      <- poplist
       input@call <- popcall
     }
@@ -203,7 +203,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
     popcall   <- input@call
     input     <- missingno(input, type=missing, cutoff=cutoff, quiet=quiet)
     if (clonecorrect == TRUE){
-      poplist    <- clonecorrect(input, hier=hier, dfname=dfname, keep=keep)
+      poplist    <- clonecorrect(input, strata = strata, keep = keep)
       input      <- poplist
       input@call <- popcall
     }
@@ -224,7 +224,7 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05, keep=
 #==============================================================================#
 
 .clonecorrector <- function(x){
-  if (is.genclone(x)){
+  if (is.genclone(x) | is(x, "snpclone")){
     is_duplicated <- duplicated(x@mlg[])
   } else {
     is_duplicated <- duplicated(x@tab[, 1:ncol(x@tab)])
@@ -410,34 +410,22 @@ pop_combiner <- function(df, hier=c(1), sep="_"){
 # # none
 #==============================================================================#
 sub_index <- function(pop, sublist="ALL", blacklist=NULL){
-  if (!is.genind(pop)){
-    stop("pop.subset requires a genind object\n")
+  if (!is.genind(pop) & !is(pop, "genlight")){
+    stop("pop.subset requires a genind or genlight object\n")
   }
+  numList <- seq(nInd(pop))
   if (is.null(pop(pop))){
     warning("No population structure. Subsetting not taking place.")
-    return(1:length(pop@ind.names))
+    return(numList)
   }
   if(toupper(sublist[1]) == "ALL"){
     if (is.null(blacklist)){
-      return(1:length(pop@ind.names))
-    }
-    else {
+      return(numList)
+    } else {
       # filling the sublist with all of the population names.
-      sublist <- pop@pop.names 
+      sublist <- popNames(pop) 
     }
   }
-
-  # Checking if there are names for the population names. 
-  # If there are none, it will give them names. 
-  if (is.null(names(pop@pop.names))){
-    if (length(pop@pop.names) == length(levels(pop@pop))){
-      names(pop@pop.names) <- levels(pop@pop)
-    }
-    else{
-      stop("Population names do not match population factors.")
-    }
-  }
-  
   # Treating anything present in blacklist.
   if (!is.null(blacklist)){
     # If both the sublist and blacklist are numeric or character.
@@ -445,33 +433,35 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
       sublist <- sublist[!sublist %in% blacklist]
     } else if (is.numeric(sublist) & class(blacklist) == "character"){
     # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-      sublist <- sublist[sublist %in% which(!pop@pop.names %in% blacklist)]
+      sublist <- sublist[sublist %in% which(!popNames(pop) %in% blacklist)]
     } else {
       # no sublist specified. Ideal situation
-      if(all(pop@pop.names %in% sublist)){
+      if(all(popNames(pop) %in% sublist)){
         sublist <- sublist[-blacklist]
       } else {
       # weird situation where the user will specify a certain sublist, yet index
       # the blacklist numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
         warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
-        sublist <- sublist[!sublist %in% pop@pop.names[blacklist]]
+        sublist <- sublist[!sublist %in% popNames(pop)[blacklist]]
       }
     }
   }
 
   # subsetting the population. 
-  if (is.numeric(sublist))
-    sublist <- names(pop@pop.names[sublist])
-  else
-    sublist <- names(pop@pop.names[pop@pop.names %in% sublist])
-  sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
-  if(is.na(sublist[1])){
-    warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
-    return(1:length(pop@ind.names))
+  if (is.numeric(sublist)){
+    sublist <- popNames(pop)[sublist]
+  } else{
+    sublist <- popNames(pop)[popNames(pop) %in% sublist]
   }
+  # sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
+  sublist <- pop(pop) %in% sublist
+  if (sum(sublist) == 0){
+    warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
+    return(seq(nInd(pop)))
+  } 
   #cat("Sublist:\n",sublist,"\n")
-  return(sublist)
+  return(numList[sublist])
 }
 
 
@@ -484,54 +474,62 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
 # # none
 #==============================================================================#
 mlg.matrix <- function(x){
-  if (is.genclone(x)){
+  visible <- "original"
+  if (is.genclone(x) | is(x, "snpclone")){
     mlgvec <- x@mlg[]
+    if (is(x@mlg, "MLG")){
+      visible <- x@mlg@visible
+    }
   } else {
     mlgvec <- mlg.vector(x)
   }
-  mlgs   <- length(unique(mlgvec))
+  
   if (!is.null(pop(x))){
     mlg.mat <- table(pop(x), mlgvec)
   } else {
-    mlg.mat <- matrix(table(mlgvec), nrow = 1)
+    mlg.mat <- t(as.matrix(table(mlgvec)))
     rownames(mlg.mat) <- "Total"
   }
   names(attr(mlg.mat, "dimnames")) <- NULL
+  if (visible == "custom"){
+    return(mlg.mat)
+  }
   if (is.null(colnames(mlg.mat))){
+    mlgs <- length(unique(mlgvec))
     colnames(mlg.mat) <- 1:mlgs
   }
   colnames(mlg.mat) <- paste("MLG", colnames(mlg.mat), sep=".")
-  return(mlg.mat)
+  return(unclass(mlg.mat))
 }
-#==============================================================================#
-# DEPRECATED
-#==============================================================================#
-old.mlg.matrix <- function(x){
-  mlgvec <- mlg.vector(x)
-  mlgs   <- length(unique(mlgvec))
-  
-  if (!is.null(x@pop)){
-    # creating a new population matrix. Rows are the population indicator and 
-    # columns are the genotype indicator.
-    mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0L)
-    # populating (no, pun intended.) the matrix with genotype counts.
-    lapply(levels(x@pop),function(z){
-                           # This first part gets the index for the row names. 
-                           count <- as.numeric(substr(z, 2, nchar(z)))
-                           sapply(mlgvec[which(x@pop==z)], 
-                                  function(a) mlg.mat[count, a] <<-
-                                              mlg.mat[count, a] + 1L)
-                         })
-    rownames(mlg.mat) <-x@pop.names
-  } else {
-    # if there are no populations to speak of.
-    mlg.mat <- t(as.matrix(vector(length=mlgs, mode="numeric")))
-    sapply(mlgvec, function(a) mlg.mat[a] <<- mlg.mat[a] + 1)
-    rownames(mlg.mat) <- "Total"
-  }
-  colnames(mlg.mat) <- paste("MLG", 1:mlgs, sep=".")
-  return(mlg.mat)
-}
+# #==============================================================================#
+# # DEPRECATED
+# #==============================================================================#
+# old.mlg.matrix <- function(x){
+#   mlgvec <- mlg.vector(x)
+#   mlgs   <- length(unique(mlgvec))
+#   
+#   if (!is.null(x@pop)){
+#     # creating a new population matrix. Rows are the population indicator and 
+#     # columns are the genotype indicator.
+#     mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0L)
+#     # populating (no, pun intended.) the matrix with genotype counts.
+#     lapply(levels(x@pop),function(z){
+#                            # This first part gets the index for the row names. 
+#                            count <- as.numeric(substr(z, 2, nchar(z)))
+#                            sapply(mlgvec[which(x@pop==z)], 
+#                                   function(a) mlg.mat[count, a] <<-
+#                                               mlg.mat[count, a] + 1L)
+#                          })
+#     rownames(mlg.mat) <-popNames(x)
+#   } else {
+#     # if there are no populations to speak of.
+#     mlg.mat <- t(as.matrix(vector(length=mlgs, mode="numeric")))
+#     sapply(mlgvec, function(a) mlg.mat[a] <<- mlg.mat[a] + 1)
+#     rownames(mlg.mat) <- "Total"
+#   }
+#   colnames(mlg.mat) <- paste("MLG", 1:mlgs, sep=".")
+#   return(mlg.mat)
+# }
 #==============================================================================#
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
 # 
@@ -600,8 +598,8 @@ old.mlg.matrix <- function(x){
 #
 #==============================================================================#
 
-.PA.pairwise.differences <- function(pop,numLoci,np, missing){  
-  temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
+.PA.pairwise.differences <- function(pop, numLoci, np, missing){  
+  temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = NA_real_)
   if( missing == "MEAN" ){
     # this will round all of the values if the missing indicator is "mean"  
     temp.d.vector <- vapply(seq(numLoci), 
@@ -621,10 +619,10 @@ old.mlg.matrix <- function(x){
       temp.d.vector[which(is.na(temp.d.vector))] <- 0
     }
   }
-  if (ploidy(pop) > 1){
+  if (max(ploidy(pop)) > 1){
     # multiplying by two is the proper way to evaluate P/A diploid data because
     # one cannot detect heterozygous loci (eg, a difference of 1).
-    temp.d.vector <- temp.d.vector*ploidy(pop)
+    temp.d.vector <- temp.d.vector * max(ploidy(pop))
     d.vector  <- as.vector(colSums(temp.d.vector))
     d2.vector <- as.vector(colSums(temp.d.vector^2))
     D.vector  <- as.vector(rowSums(temp.d.vector))
@@ -633,7 +631,7 @@ old.mlg.matrix <- function(x){
     d2.vector <- d.vector
     D.vector  <- as.vector(rowSums(temp.d.vector))
   }
-  vectors <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
+  vectors <- list(d.vector = d.vector, d2.vector = d2.vector, D.vector = D.vector)
   return(vectors)
 }
 
@@ -746,22 +744,22 @@ final <- function(Iout, result){
 # 			isolates.
 #
 #
-# DEPRECATED
-#==============================================================================#
-.pairwise.differences <- function(pop,numLoci,np, missing){  
-  temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
-  if( missing == "MEAN" )
-    temp.d.vector <- matrix(nrow=np, ncol=numLoci,
-                            data=vapply(vapply(pop, pairwisematrix, 
-                                        temp.d.vector[,1], np),round.poppr,1))  
-  else    
-    temp.d.vector <- vapply(pop, pairwisematrix, temp.d.vector[,1], np)
-  d.vector  <- as.vector(colSums(temp.d.vector))
-  d2.vector <- as.vector(colSums(temp.d.vector^2))
-  D.vector  <- as.vector(rowSums(temp.d.vector))
-  vectors   <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
-  return(vectors)
-}
+# # DEPRECATED
+# #==============================================================================#
+# .pairwise.differences <- function(pop,numLoci,np, missing){  
+#   temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
+#   if( missing == "MEAN" )
+#     temp.d.vector <- matrix(nrow=np, ncol=numLoci,
+#                             data=vapply(vapply(pop, pairwisematrix, 
+#                                         temp.d.vector[,1], np),round.poppr,1))  
+#   else    
+#     temp.d.vector <- vapply(pop, pairwisematrix, temp.d.vector[,1], np)
+#   d.vector  <- as.vector(colSums(temp.d.vector))
+#   d2.vector <- as.vector(colSums(temp.d.vector^2))
+#   D.vector  <- as.vector(rowSums(temp.d.vector))
+#   vectors   <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
+#   return(vectors)
+# }
 #==============================================================================#
 # pairwisematrix performs a pairwise comparison over all individuals per locus
 # and returns a vector that will make its way into the final matrix for d.
@@ -771,12 +769,12 @@ final <- function(Iout, result){
 #
 # DEPRECATED 
 #==============================================================================#
-pairwisematrix <- function(pop, np){
-  temp.d.vector <- vector(mode="numeric", length=np)
-  if ( ncol(pop@tab) != 1 )
-    temp.d.vector <- as.numeric(colSums(.pairwise.diffs(t(pop@tab)), na.rm=TRUE))
-  return(temp.d.vector)
-}
+# pairwisematrix <- function(pop, np){
+#   temp.d.vector <- vector(mode="numeric", length=np)
+#   if ( ncol(pop@tab) != 1 )
+#     temp.d.vector <- as.numeric(colSums(.pairwise.diffs(t(pop@tab)), na.rm=TRUE))
+#   return(temp.d.vector)
+# }
 #==============================================================================#
 # The original function pairwise.diffs can be found here
 # https://stat.ethz.ch/pipermail/r-help/2004-August/055324.html
@@ -784,18 +782,18 @@ pairwisematrix <- function(pop, np){
 #
 # DEPRECATED
 #==============================================================================#
-.pairwise.diffs <- function(x){
-  stopifnot(is.matrix(x))
-
-  # create column combination pairs
-  prs <- cbind(rep(1:ncol(x), each = ncol(x)), 1:ncol(x))
-  col.diffs <- prs[prs[, 1] < prs[, 2], , drop = FALSE]
-
-  # do pairwise differences 
-  result <- abs(x[, col.diffs[, 1]] - x[, col.diffs[, 2], drop = FALSE])
-
-  return(result)
-}
+# .pairwise.diffs <- function(x){
+#   stopifnot(is.matrix(x))
+# 
+#   # create column combination pairs
+#   prs <- cbind(rep(1:ncol(x), each = ncol(x)), 1:ncol(x))
+#   col.diffs <- prs[prs[, 1] < prs[, 2], , drop = FALSE]
+# 
+#   # do pairwise differences 
+#   result <- abs(x[, col.diffs[, 1]] - x[, col.diffs[, 2], drop = FALSE])
+# 
+#   return(result)
+# }
 #==============================================================================#
 # To calculate rbarD, the pairwise variances for each locus needs to be
 # caluclated. 
@@ -803,13 +801,13 @@ pairwisematrix <- function(pop, np){
 #
 # DEPRECATED
 #==============================================================================#
-.pairwise.variances <- function(vard.vector, pair.alleles){  
-  # Here the roots of the products of the variances are being produced and
-  # the sum of those values is taken. 
-  vardpair.vector <- vector(length=pair.alleles)
-  vardpair.vector <- sqrt(combn(vard.vector, 2, prod))
-  return(vardpair.vector)
-}
+# .pairwise.variances <- function(vard.vector, pair.alleles){  
+#   # Here the roots of the products of the variances are being produced and
+#   # the sum of those values is taken. 
+#   vardpair.vector <- vector(length=pair.alleles)
+#   vardpair.vector <- sqrt(combn(vard.vector, 2, prod))
+#   return(vardpair.vector)
+# }
 #==============================================================================#
 # The actual calculation of Ia and rbarD. This allows for multiple populations
 # to be calculated.
@@ -856,8 +854,9 @@ pair_diffs <- function(pop, numLoci, np)
 {
   ploid <- ploidy(pop[[1]])
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", x@tab, PACKAGE = "poppr")*(ploid/2), 
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", tab(x), PACKAGE = "poppr")/2, 
                           temp.d.vector[, 1])
+  temp.d.vector <- ceiling(temp.d.vector)
   d.vector  <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
   D.vector  <- rowSums(temp.d.vector)
@@ -887,30 +886,30 @@ pair_diffs <- function(pop, numLoci, np)
 #
 # DEPRECATED
 #==============================================================================#
-phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss = TRUE){
-  # Preceeding functions should take care of this:
-  # ssr.matrix <- genind2df(pop, sep="/", usepop=FALSE)
-  # ssr.matrix[is.na(ssr.matrix)] <- paste(rep(0, ploid), collapse="/")
-  # Bruvo's distance needs a matrix with the number of columns equal to the
-  # number of loci multiplied by the polidy. 
-  indnames <- rownames(ssr.matrix)
-  ssr.matrix <- apply(ssr.matrix, 1, strsplit, "/")
-  # Getting the values into numeric form.
-  ssr.matrix <- apply(as.matrix(t(sapply(ssr.matrix, unlist))), 2, as.numeric)
-  # Dividing each column by the repeat length and changing the values to integers.
-  ssr.matrix <- apply(ssr.matrix / rep(replen, each=ploid*nrow(ssr.matrix)), 2, round)
-  ssr.matrix <- apply(ssr.matrix, 2, as.integer)
-  perms <- .Call("permuto", ploid, PACKAGE = "poppr")
-  distmat <- .Call("bruvo_distance", ssr.matrix, perms, ploid, add, loss, PACKAGE = "poppr")
-  distmat[distmat == 100] <- NA
-  avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
-  # presenting the information in a lower triangle distance matrix.
-  dist.mat <- matrix(ncol=nrow(ssr.matrix), nrow=nrow(ssr.matrix))
-  dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
-  dist.mat <- as.dist(dist.mat)
-  attr(dist.mat, "labels") <- indnames
-  return(dist.mat)
-}
+# phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss = TRUE){
+#   # Preceeding functions should take care of this:
+#   # ssr.matrix <- genind2df(pop, sep="/", usepop=FALSE)
+#   # ssr.matrix[is.na(ssr.matrix)] <- paste(rep(0, ploid), collapse="/")
+#   # Bruvo's distance needs a matrix with the number of columns equal to the
+#   # number of loci multiplied by the polidy. 
+#   indnames <- rownames(ssr.matrix)
+#   ssr.matrix <- apply(ssr.matrix, 1, strsplit, "/")
+#   # Getting the values into numeric form.
+#   ssr.matrix <- apply(as.matrix(t(sapply(ssr.matrix, unlist))), 2, as.numeric)
+#   # Dividing each column by the repeat length and changing the values to integers.
+#   ssr.matrix <- apply(ssr.matrix / rep(replen, each=ploid*nrow(ssr.matrix)), 2, round)
+#   ssr.matrix <- apply(ssr.matrix, 2, as.integer)
+#   perms <- .Call("permuto", ploid, PACKAGE = "poppr")
+#   distmat <- .Call("bruvo_distance", ssr.matrix, perms, ploid, add, loss, PACKAGE = "poppr")
+#   distmat[distmat == 100] <- NA
+#   avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+#   # presenting the information in a lower triangle distance matrix.
+#   dist.mat <- matrix(ncol=nrow(ssr.matrix), nrow=nrow(ssr.matrix))
+#   dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
+#   dist.mat <- as.dist(dist.mat)
+#   attr(dist.mat, "labels") <- indnames
+#   return(dist.mat)
+# }
 
 #==============================================================================#
 # This will transform the data to be in the range of [0, 1]
@@ -1094,6 +1093,13 @@ test_table <- function(loc, min_ind, n){
 #==============================================================================#
 # Normalize negative branch lenght by converting the negative branch to zero
 # and adding the negative value to the sibling branch.
+# 
+# This now has a few caveats: 
+#  1. If the parent branch contains a polytomy, then only the branch that is
+#  equal to the negative branch will be fixed.
+#  2. If there are branches that cannot be fixed (i.e., the absolute value of 
+#  the negative branch is greater than the value of the sibling), then it will 
+#  not be fixed.
 #
 # Public functions utilizing this function:
 # # bruvo.boot
@@ -1118,7 +1124,23 @@ fix_negative_branch <- function(tre){
   for (i in (unique(index.table[, "parent"]))){
     the_parents <- index.table[, "parent"] == i
     fork <- index.table[, "length"][the_parents]
-    index.table[, "length"][the_parents] <- abs(fork) + min(fork)      
+    # Check for polytomies
+    if (length(fork) > 2){
+      # Fix only siblings of equal magnitude.
+      forkinds <- abs(fork) == -min(fork)
+      fork     <- fork[forkinds]
+      fixed_lengths <- abs(fork) + min(fork)
+      # Check that branches are actually fixed.
+      if (all(fixed_lengths >= 0)){
+        index.table[, "length"][the_parents][forkinds] <- abs(fork) + min(fork)
+      }
+    } else { # No polytomies
+      fixed_lengths <- abs(fork) + min(fork)
+      # Check that branches are actually fixed.
+      if (all(fixed_lengths >= 0)){
+        index.table[, "length"][the_parents] <- abs(fork) + min(fork)
+      }
+    }
   }
   # replacing the branch length for each negative value in the total table
   name_match <- match(rownames(index.table), rownames(all.lengths))
@@ -1138,43 +1160,97 @@ fix_negative_branch <- function(tre){
 # Internal functions utilizing this function:
 # # none
 #==============================================================================#
+singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = TRUE, distmat = NULL, gscale = TRUE, mlg.compute = "original",
+                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, 
+                      include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
+  if (!is(gid, "genlight") && !is.genclone(gid)){
+    gid <- as.genclone(gid)
+  } else if (is(gid, "genlight") && !is(gid, "snpclone")){
+    gid <- as.snpclone(gid)
+  }
 
+  if (!is(gid@mlg, "MLG")){
+    # Froce gid$mlg to be class MLG
+    gid$mlg <- new("MLG", gid$mlg)
+  }
 
-singlepop_msn <- function(pop, vertex.label, replen = NULL, add = TRUE, 
-                          loss = TRUE, distmat = NULL, gscale = TRUE, 
-                          glim = c(0, 0.8), gadj = 3, wscale = TRUE, 
-                          palette = topo.colors, showplot = TRUE, ...){
   # First, clone correct and get the number of individuals per MLG in order.
-  cpop <- pop[.clonecorrector(pop), ]
-  if (is.genclone(pop)){
-    mlgs <- pop$mlg
-    cmlg <- cpop$mlg
-    mlg.number <- table(mlgs)[rank(cmlg)]
+  if(threshold > 0){
+    if (is.null(distmat) & !is.null(replen)){
+      filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+    } else {
+      filter.stats <- mlg.filter(gid,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+    }
+     # TODO: The following two lines should be a product of mlg.filter
+    gid$mlg@visible <- "contracted"
+    visible <- "contracted"
+    gid$mlg[] <- filter.stats[[1]]
+    cgid <- gid[if(is.na(-which(duplicated(gid$mlg[]))[1])) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
+    distmat <- filter.stats[[3]]
+    if (!is.matrix(distmat)) distmat <- as.matrix(distmat)
   } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
-    mlg.number <- table(mlgs)[rank(cmlg)]
+      visible  <- gid@mlg@visible
+      mll(gid) <- mlg.compute
+    to_remove <- .clonecorrector(gid)
+    cgid <- gid[to_remove, ]
+    # Calculate distance matrix if not supplied (Bruvo's distance)
+     if (is.null(distmat) & !is.null(replen)){
+        distmat <- as.matrix(bruvo.dist(cgid, replen = replen, add = add, loss = loss))
+     } else if (nInd(cgid) < nrow(distmat)){
+       distmat <- distmat[to_remove, to_remove, drop = FALSE]
+     }
   }
-  
-  # Calculate distance matrix if not supplied (Bruvo's distance)
-  if (is.null(distmat) & !is.null(replen)){
-    distmat <- as.matrix(bruvo.dist(cpop, replen = replen, add = add, loss = loss))
+  if(class(distmat) != "matrix"){
+    distmat <- as.matrix(distmat)
+  } 
+ if (is(gid, "snpclone") || is.genclone(gid)){
+    mlgs <- mll(gid)
+    cmlg <- mll(cgid)
+    if (!is.numeric(mlgs)){
+      mlgs <- as.character(mlgs)
+      cmlg <- as.character(cmlg)
+    }
+  } else {
+    mlgs <- gid$other$mlg.vec
+    cmlg <- cgid$other$mlg.vec
   }
-  
+  mlg.number <- table(mlgs)[rank(cmlg)]
   # Create the graphs.
   g   <- graph.adjacency(distmat, weighted=TRUE, mode="undirected")
-  mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
-  
+  if(length(cgid@mlg[]) > 1){
+    mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+
+    # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+    if(include.ties){
+      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(distmat),(.Machine$double.eps ^ 0.5))
+      if(length(tied_edges) > 0){
+        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+      }
+    }
+  } else {
+    mst <- minimum.spanning.tree(g)
+  }
+ 
   # Create the vertex labels
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cmlg)
+      if (is.numeric(cmlg) && !is(gid@mlg, "MLG")){
+        vertex.label <- paste0("MLG.", cmlg)        
+      } else if (visible == "custom"){
+        mll(gid) <- visible
+        vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)        
+      }
+
     } else if(toupper(vertex.label) == "INDS") {
-      vertex.label <- cpop$ind.names
+      vertex.label <- cgid$ind.names
     }
   } 
-  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
-  populations <- ifelse(is.null(pop(pop)), NA, pop$pop.names)
+  if (length(mll(cgid)) > 1){
+    mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)    
+  }
+  populations <- ifelse(is.null(pop(gid)), NA, popNames(gid))
   
   # Plot everything
   if (showplot){
@@ -1210,22 +1286,29 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
   ploid  <- bruvomat@ploidy
   replen <- bruvomat@replen
   x[is.na(x)] <- 0
+
   # Dividing the data by the repeat length of each locus.
-  x <- x / rep(replen, each=ploid*nrow(x))
-  x <- matrix(as.integer(round(x)), ncol=ncol(x))
+  x <- x / rep(replen, each = ploid * nrow(x))
+  x <- matrix(as.integer(round(x)), ncol = ncol(x))
+
   # Getting the permutation vector.
   perms <- .Call("permuto", ploid, PACKAGE = "poppr")
+
   # Calculating bruvo's distance over each locus. 
   distmat <- .Call("bruvo_distance", x, perms, ploid, add, loss, PACKAGE = "poppr")
+
   # If there are missing values, the distance returns 100, which means that the
   # comparison is not made. These are changed to NA.
   distmat[distmat == 100] <- NA
+
   # Obtaining the average distance over all loci.
   avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+
   # presenting the information in a lower triangle distance matrix.
   dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
   dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
   dist.mat <- as.dist(dist.mat)
+
   attr(dist.mat, "Labels") <- bruvomat@ind.names
   attr(dist.mat, "method") <- "Bruvo"
   attr(dist.mat, "call")   <- funk_call
@@ -1247,7 +1330,7 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
 #
 # Public functions utilizing this function:
 #
-# # poppr.amova, setpop, gethierarchy
+# # poppr.amova, setPop, strata
 #
 # Internal functions utilizing this function:
 # # none
@@ -1317,77 +1400,121 @@ make_ade_df <- function(hier, df, expanded = FALSE){
 # # none
 
 check_Hs <- function(x){
-  res <- any(x@tab > 0 & x@tab < 1, na.rm = TRUE)
+  res <- sweep(tab(x), 1, ploidy(x), function(x, y) any(x < y))
   return(res)
 }
 
+#==============================================================================#
 ## Obtains specific haplotypes from a genind object.
-## 
-## Arguments:
-##   inds      - indexes of the first and last characters defining the haplotype
-##   x         - the loci object
-##   loci_cols - the columns defining the loci
-##   ind_names - the sample names
-##   hap_fac   - a vector defining the haplotype. 
-##
-## Since the inds and hap_fac args are not intuitive, I should demonstrate.
-## Let's say we have a two individuals with two loci:
-##      1      2
-##   A: 10/20  30/40
-##   B: 15/15  25/10
-##
-## They have the haplotypes of 
-##   A1: 10 30 
-##   A2: 20 40 
-##   B1: 15 25
-##   B2: 15 10
-##
-## Each genotype at a locus is 5 characters long. To get the haplotypes, we need
-## to avoid the separator.
-## inds in this case will be c(1, 2) for the first haplotype and c(4, 5) for the
-## second haplotype and hap_fac will be c(1,1,1,2,2,2) for both.
-##
+#  
+# Arguments:
+#    index - name or index of locus
+#    locus - a data frame of genotypes
+#    sep_location - a matrix with the location of each separator
+#    geno_lengths - a matrix with the char lengths of each genotype
+#    first - when TRUE, the first haplotype is extracted, when FALSE, the second
+#
+# Returns:
+#   a character vector with a single locus haplotype for each sample. 
+#   
 # Public functions utilizing this function:
 # # none
 #
 # Internal functions utilizing this function:
 # # separate_haplotypes
-
-hap2genind <- function(inds, x, loci_cols, ind_names, hap_fac){
-  new_ind_names <- paste(ind_names, hap_fac[inds[2]], sep = ".")
-  new_pop       <- rep(hap_fac[inds[2]], nrow(x))
-  x2 <- lapply(x[loci_cols], substr, inds[1], inds[2])
-  x2 <- data.frame(x2, stringsAsFactors = F)
-  x2 <- df2genind(x2, ploidy = 1, pop=new_pop, ind.names=new_ind_names)
-  return(x2)
+#==============================================================================#
+get_haplotype <- function(index, locus, sep_location, geno_lengths, first = TRUE){
+  if (first){
+    res <- substr(locus[[index]], 
+                  start = 1, 
+                  stop = sep_location[, index] - 1)
+  } else {
+    res <- substr(locus[[index]], 
+                  start = sep_location[, index] + 1,
+                  stop = geno_lengths[, index])
+  }
+  return(res)
 }
 
-## Secondary function. Transforms the genind object into a loci object and
-## collects information necessary to collect individual haplotypes.
-# Public functions utilizing this function:
+#==============================================================================#
+# Arguments:
+#   x a diploid genind object. 
+# 
+# Returns:
+#   list:
+#     loci_data    - a data frame of genotypes
+#     sep_location - a matrix with the location of each separator
+#     geno_lengths - a matrix with the char lengths of each genotype
+#
+# External functions utilizing this function:
 # # none
 #
 # Internal functions utilizing this function:
-# # pool_haplotypes
-separate_haplotypes <- function(x){
-  ploidy        <- ploidy(x)
-  allele_list   <- unlist(lapply(x@all.names, nchar))
-  allele_length <- sum(allele_list)/length(allele_list)
-  if (!all(allele_list == allele_length)){
-    stop("not all alleles are of equal length.")
-  }
-  inds        <- indNames(x)
-  x.loc       <- as.loci(x)
-  loci_cols   <- attr(x.loc, "locicol")
-  pop_col     <- which(names(x.loc) == "population")
-  geno_length <- allele_length*ploidy + ploidy - 1
-  sep         <- which(1:geno_length %% (allele_length + 1) == 0)
-  sep         <- c(0, sep, geno_length + 1)
-  hap_fac     <- rep(1:ploidy, each = allele_length + 1)
-  allele_inds <- lapply(1:ploidy, function(i) c(sep[i] + 1, sep[i + 1] - 1))
-  haplist     <- lapply(allele_inds, hap2genind, x.loc, loci_cols, inds, hap_fac)
+# # separate_haplotypes
+#==============================================================================#
+haplotype_detector <- function(x){
+  x.loc        <- genind2df(x, sep = "/", usepop = FALSE)
+  facstr       <- function(i) nchar(as.character(i))
+  sep_location <- lapply(x.loc, function(i) regexpr("/", i))
+  sep_location <- matrix(unlist(sep_location, use.names = FALSE), 
+                         nrow = nrow(x.loc))
+  dimnames(sep_location) <- dimnames(x.loc)
+  geno_lengths <- vapply(x.loc, facstr, integer(nrow(x.loc)))
+  dimnames(geno_lengths) <- dimnames(sep_location)
+  haplist <- list(loci_data = x.loc, 
+                  sep_location = sep_location, 
+                  geno_lengths = geno_lengths)
   return(haplist)
 }
+
+#==============================================================================#
+# Arguments:
+#   x a diploid genind object. 
+# 
+# Returns:
+#   a matrix with n*2 rows where haplotypes are interleaved. This is to be 
+#   converted into a genind object. To explain what it looks like:
+#   
+#   if you have your genotypes arranged like so:
+#      L1   L2
+#   A  x/y  a/b
+#   B  z/z  c/a
+#   
+#   The result of this function would be to return a matrix that looks like:
+#        L1 L2
+#   A.1  x  a
+#   A.2  y  b
+#   B.1  z  c
+#   B.2  z  a
+#     
+# External functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # separate_haplotypes
+#==============================================================================#
+separate_haplotypes <- function(x){
+  haps      <- haplotype_detector(x)
+  the_loci  <- colnames(haps$sep_location)
+  ind_names <- rownames(haps$sep_location)
+  h1 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
+               haps$geno_lengths, first = TRUE)
+  h2 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
+               haps$geno_lengths, first = FALSE)
+  newnames <- paste(rep(ind_names, each = 2), 1:2, sep = ".")
+  outlength <- length(newnames)
+  outvec <- seq(outlength)
+  index1 <- outvec %% 2 == 1
+  index2 <- !index1
+  matdimnames <- list(newnames, the_loci)
+  hapmat <- matrix(NA_character_, nrow = outlength,
+                   ncol = length(the_loci), dimnames = matdimnames)
+  hapmat[index1, ] <- unlist(h1)
+  hapmat[index2, ] <- unlist(h2)
+  return(hapmat)
+}
+
+
 
 #==============================================================================#
 # Haplotype pooling. 
@@ -1402,14 +1529,16 @@ separate_haplotypes <- function(x){
 # # none
 #==============================================================================#
 ## Main Function. Lengthens the population hierarchy as well.
-pool_haplotypes <- function(x, dfname = "population_hierarchy"){
-  ploidy        <- ploidy(x)
-  df            <- other(x)[[dfname]]
-  df$Individual <- indNames(x)
-  df            <- df[rep(1:nrow(df), ploidy), , drop = FALSE]
-  newx          <- repool(separate_haplotypes(x))
-  pop(newx)     <- df$Individual
-  other(newx)[[dfname]] <- df
+pool_haplotypes <- function(x){
+  ploidy <- max(ploidy(x))
+  if (is.null(strata(x))){
+    strata(x) <- data.frame(pop = pop(x))
+  }
+  addStrata(x)  <- data.frame(Individual = indNames(x))
+  df            <- strata(x)
+  df            <- df[rep(1:nrow(df), each = ploidy), , drop = FALSE]
+  newx          <- df2genind(separate_haplotypes(x), ploidy = 1, strata = df)
+  setPop(newx)  <- ~Individual
   return(newx)
 }
 
@@ -1467,19 +1596,18 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codo
 # Private functions utilizing this function:
 # # nei.boot any.boot
 #==============================================================================#
-poppr.plot.phylo <- function(tree, type = "nj"){
-  ARGS <- c("nj", "upgma")
-  type <- match.arg(type, ARGS)
+poppr.plot.phylo <- function(tree, type = "nj", root = FALSE){
   barlen <- min(median(tree$edge.length), 0.1)
   if (barlen < 0.1) barlen <- 0.01
-  if (type == "nj"){
+  if (!root && type != "upgma"){
     tree <- ladderize(tree)
   }
+  nodelabs <- round(tree$node.label, 2)
   plot.phylo(tree, cex = 0.8, font = 2, adj = 0, xpd = TRUE, 
              label.offset = 0.0125)
-  nodelabels(tree$node.label, adj = c(1.3, -0.5), frame = "n", cex = 0.8, 
+  nodelabels(nodelabs, adj = c(1.3, -0.5), frame = "n", cex = 0.8, 
              font = 3, xpd = TRUE)
-  if (type == "nj"){
+  if (type != "upgma"){
     add.scale.bar(lwd = 5, length = barlen)
   } else {
     axisPhylo(3)
@@ -1576,7 +1704,7 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
   otherargs <- list(...)
   #print(otherargs)
   matchargs <- names(distargs)[names(distargs) %in% names(otherargs)]
-  distargs[matchargs] <- unlist(otherargs[matchargs])
+  distargs[matchargs] <- otherargs[matchargs]
   #print(distargs)
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
   treedist <- function(x){
@@ -1597,10 +1725,10 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
 # # none
 #==============================================================================#
 get_gen_mat <- function(x){
-  if (is.genpop(x) && x@type == "codom"){
-    MAT  <- makefreq(x, missing = "mean", quiet = TRUE)$tab
+  if (suppressWarnings(is.genpop(x)) && x@type == "codom"){
+    MAT  <- makefreq(x, missing = "mean", quiet = TRUE)
   } else {
-    MAT  <- x@tab
+    MAT  <- tab(x, freq = TRUE)
   }
   return(MAT)
 }
@@ -1618,7 +1746,7 @@ get_gen_dist_labs <- function(x){
   if (is.genind(x)){
     labs <- indNames(x)
   } else if (is.genpop(x)){
-    labs <- x@pop.names
+    labs <- popNames(x)
   } else if (is(x, "bootgen")){
     labs <- names(x)
   } else {
@@ -1720,13 +1848,12 @@ update_single_color <- function(x, lookup, colorvec){
 # # none
 #==============================================================================#
 get_local_ploidy <- function(x){
-  ploidy <- x@ploidy
-  stopifnot(ploidy > 2)
-  stopifnot(test_zeroes(x))
-  zerocol <- which(as.numeric(x@all.names[[1]]) == 0)
-  locs <- names(x@loc.names)
-  locmat <- vapply(1:nLoc(x), function(z) as.integer(round(ploidy - x[loc = locs[z]]@tab[, zerocol]*ploidy)), 
-                   integer(nInd(x)))
+  if (any(as.numeric(unlist(x@all.names, use.names = FALSE)) == 0)){
+    x <- recode_polyploids(x, newploidy = TRUE)    
+  }
+  tabx   <- tab(x)
+  cols   <- split(colnames(tabx), x@loc.fac)
+  locmat <- vapply(cols, function(i) rowSums(tabx[, i]), numeric(nInd(x)))
   return(locmat)
 }
 #==============================================================================#
@@ -1757,8 +1884,12 @@ test_microsat <- function(x){
 #==============================================================================#
 test_zeroes <- function(x){
   if (test_microsat(x)){
-    allnames <- unlist(lapply(x@all.names, as.numeric))
-    if (any(allnames == 0) & x@ploidy > 2){
+    
+    allnames  <- as.numeric(unlist(x@all.names, use.names = FALSE))
+    ploid     <- unique(ploidy(x))
+    ploidtest <- length(ploid) > 1 | any(x@ploidy > 2)
+
+    if (any(allnames == 0) && any(x@loc.nall > 2) && ploidtest){
       return(TRUE)
     }
   }
@@ -1774,7 +1905,7 @@ test_zeroes <- function(x){
 # Private functions utilizing this function:
 # # print_mlg_barplot
 #==============================================================================#
-mlg_barplot <- function(mlgt){
+old_mlg_barplot <- function(mlgt){
 
   # create a data frame that ggplot2 can read.
   mlgt.df <- as.data.frame(list(MLG   = colnames(mlgt), 
@@ -1789,6 +1920,47 @@ mlg_barplot <- function(mlgt){
   # plot it
   return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
+}
+
+#' @importFrom dplyr %>% arrange_ group_by_ ungroup distinct
+mlg_barplot <- function(mlgt, color_table = NULL){
+  names(dimnames(mlgt)) <- c("Population", "MLG") # -> names(dimnames(color_table))
+  mlgt.df <- reshape2::melt(mlgt, value.name = "count")
+  # colordf <- reshape2::melt(color_table, value.name = "count")
+  mlgt.df <- mlgt.df[mlgt.df$count > 0, ]
+  # create a data frame that ggplot2 can read.
+  # mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 
+  # count = rep(mlgt, mlgt)), 
+  # stringsAsFactors = FALSE)
+  
+  # Organize the data frame by count in descending order.
+#   order_mlgs_by_pop <- list(MLGp = "stats::reorder(MLG, dplyr::desc(count))")
+#   mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
+#     dplyr::mutate_(.dots = order_mlgs_by_pop) %>% ungroup %>% distinct %>% 
+#     as.data.frame
+  mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
+    dplyr::arrange_("count")
+  mlgt.df <- dplyr::distinct(dplyr::ungroup(mlgt.df))
+  mlgt.df$fac <- nrow(mlgt.df):1
+  mlgt.df$fac <- factor(mlgt.df$fac, rev(mlgt.df$fac))
+
+  # mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
+  # mlgt.df <- mlgt.df[rearranged, ]
+  # mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
+  the_breaks <- pretty(mlgt.df$count)
+  the_breaks <- the_breaks[the_breaks %% 1 == 0]
+  # plot it
+  return(ggplot(mlgt.df, aes_string(x = "fac", y = "count")) + 
+           geom_bar(stat = "identity", position = "identity") + 
+           scale_x_discrete(labels = mlgt.df$MLG, breaks = mlgt.df$fac) +
+           facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE) +
+           theme(panel.grid.major.x = element_blank(), 
+                 panel.grid.minor.x = element_blank(),
+                 axis.text.x = 
+                   element_text(size = 10, angle = 90, hjust = 1, vjust = 1)) +
+           xlab("MLG") + 
+           scale_y_discrete(expand = c(0, -.75), breaks = pretty(mlgt.df$count))
+  )
 }
 
 #==============================================================================#
@@ -1809,7 +1981,7 @@ print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
 
   # controlling for the situation where the population size is 1.
   if (sum(mlgtab[n, ]) > 1){ 
-    print(mlg_barplot(mlgt) +
+    print(old_mlg_barplot(mlgt) +
             theme_classic() %+replace%
             theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) + 
             labs(title=paste("Population:", n, "\nN =", sum(mlgtab[n, ]),
@@ -1853,3 +2025,198 @@ make_poppr_plot_title <- function(samp, file = NULL, N = NULL, pop = NULL){
   plot_title <- paste(plot_title, perms, sep = "\n")
   return(plot_title)
 }
+
+#==============================================================================#
+# fill a single genotype with zeroes if the number of alleles is maxploid.
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # fill_zero_locus
+#==============================================================================#
+fill_zero <- function(x, maxploid, mat = FALSE){
+  if (length(x) < maxploid){
+    if (!mat){
+      zeroes <- paste(rep(0, maxploid - length(x)), collapse = "/")
+      res    <- paste(x, collapse = "/")
+      res    <- paste(zeroes, res, sep = "/")     
+    } else {
+      res <- c(rep(0.0, maxploid - length(x)), as.numeric(x))
+    }
+ 
+  } else {
+    if (!mat){
+      res <- paste(x, collapse = "/")
+    } else {
+      res <- as.numeric(x)
+    }
+  }
+  return(res)
+}
+
+#==============================================================================#
+# Fill short genotypes in a character vector with zeroes.
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # generate_bruvo_mat
+#==============================================================================#
+fill_zero_locus <- function(x, sep = "/", maxploid, mat = FALSE){
+  x <- strsplit(x, sep)
+  if (mat){
+    result <- numeric(maxploid)
+  } else {
+    result <- character(1)
+  }
+  return(t(vapply(x, fill_zero, result, maxploid, mat)))
+}
+
+#==============================================================================#
+# This will fill in zeroes from a data frame with uneven ploidy to force it to
+# have uniform ploidy.
+#
+# Example: 
+#               locus_1     locus_2
+# sample_1     25/91/20 15/33/10/55
+# sample_2  71/29/34/69          45
+# sample_3           24    23/83/25
+# sample_4     12/18/94           4
+# sample_5           68    15/54/57
+# sample_6     36/45/91    32/74/22
+# sample_7           72 22/27/70/75
+# sample_8       100/54          92
+# sample_9        62/50 17/11/62/50
+# sample_10       41/31    17/30/57
+#
+# Will become
+#
+#               locus_1     locus_2
+# sample_1   0/25/91/20 15/33/10/55
+# sample_2  71/29/34/69    0/0/0/45
+# sample_3     0/0/0/24  0/23/83/25
+# sample_4   0/12/18/94     0/0/0/4
+# sample_5     0/0/0/68  0/15/54/57
+# sample_6   0/36/45/91  0/32/74/22
+# sample_7     0/0/0/72 22/27/70/75
+# sample_8   0/0/100/54    0/0/0/92
+# sample_9    0/0/62/50 17/11/62/50
+# sample_10   0/0/41/31  0/17/30/57
+#
+# or, if mat = TRUE
+#
+#           locus_1.1 locus_1.2 locus_1.3 locus_1.4 locus_2.1 locus_2.2 locus_2.3 locus_2.4
+# sample_1          0        25        91        20        15        33        10        55
+# sample_2         71        29        34        69         0         0         0        45
+# sample_3          0         0         0        24         0        23        83        25
+# sample_4          0        12        18        94         0         0         0         4
+# sample_5          0         0         0        68         0        15        54        57
+# sample_6          0        36        45        91         0        32        74        22
+# sample_7          0         0         0        72        22        27        70        75
+# sample_8          0         0       100        54         0         0         0        92
+# sample_9          0         0        62        50        17        11        62        50
+# sample_10         0         0        41        31         0        17        30        57
+#
+#
+# Public functions utilizing this function:
+# # none
+#
+# Private functions utilizing this function:
+# # none
+#==============================================================================#
+generate_bruvo_mat <- function(x, maxploid, sep = "/", mat = FALSE){
+  if (mat){
+    result <- matrix(numeric(nrow(x)*maxploid), ncol = maxploid, nrow = nrow(x))
+  } else {
+    result <- character(nrow(x))
+  }
+  res <- vapply(x, fill_zero_locus, result, sep, maxploid, mat)
+  if (length(dim(res)) > 2){
+    redim    <- dim(res)
+    dim(res) <- c(redim[1], redim[2]*redim[3])
+    xcols  <- colnames(x)
+    maxseq <- seq(maxploid)
+    colnames(res) <- vapply(xcols, FUN = paste, 
+                            FUN.VALUE = character(maxploid), maxseq, sep = ".")
+  } else {
+    colnames(res) <- colnames(x)
+  }
+  if (!mat){
+    res[grep("NA", res)] <- NA_character_
+  }
+  rownames(res) <- rownames(x)
+  return(res)
+}
+# Function to subset the custom MLGs by the computationally derived MLGs in the
+# data set. This is necessary due to the fact that minimum spanning networks
+# will clone correct before calculations, but this is performed on the visible
+# multilocus genotypes. for custom MLGs that may not be monophyletic, this 
+# results in observed networks that may be incorrect. 
+# 
+# A solution to this would simply be to label the multilocus genotypes with 
+# their custom labels, but collapse them with the computationally derived 
+# labels.
+# 
+# In order to parse these out, we have three possible situations we can think
+# of:
+# 
+#  1. computational MLGs match the custom MLGs: pretty easy, simply return the
+#     non-duplicated mlgs
+#  2. There are more computational MLG classes than custom MLGs. This is also
+#     fairly simple: return the custom MLGs censored by the computational MLGs
+#  3. More custom MLGs than computational MLGs. For labelling purposes, 
+#     the custom MLGs that occupy a single MLG should be concatenated in a 
+#     string.
+#  4. A mix of 2 and 3. Same strategy as 3.
+#  
+#  Input: a genclone or snpclone object with an MLG object in the @mlg slot
+#  Output: A string of clone-censored custom MLGs
+#
+# Public functions utilizing this function:
+# # bruvo.msn poppr.msn plot_poppr_msn
+#
+# Private functions utilizing this function
+# # singlepop_msn
+#==============================================================================#
+correlate_custom_mlgs <- function(x, by = "original", subset = TRUE){
+  if (!is.genclone(x) & !is(x, "snpclone")){
+    stop("needs a genclone or snpclone object")
+  }
+  if (!is(x@mlg, "MLG")){
+    stop("the @mlg slot needs to be of class MLG. This procedure is meaningless otherwise.")
+  }
+  the_mlgs <- x@mlg@mlg
+  customs  <- as.character(the_mlgs[["custom"]])
+  ncustom  <- nlevels(the_mlgs[["custom"]])
+  mlg_dup  <- !duplicated(the_mlgs[[by]])
+  ndup     <- sum(mlg_dup)
+  
+  # Create contingency table with custom genotypes in rows and computed in
+  # columns
+  cont_table <- table(customs, the_mlgs[[by]])
+  
+  # Create true/false table of MLG identity
+  i_table <- cont_table > 0
+  
+  # Count up the number of custom MLGs contained within each computed MLG.
+  check_less_custom <- colSums(i_table)
+  
+  if ((ndup == ncustom | ndup > ncustom) & all(check_less_custom == 1)){
+    if (!subset){
+      return(customs)
+    }
+    res        <- customs[mlg_dup]
+    names(res) <- the_mlgs[[by]][mlg_dup]
+    return(res)
+  }
+  
+  cust_names <- rownames(cont_table)
+  res <- apply(cont_table, 2, function(i) paste(cust_names[i > 0], collapse = "\n"))
+  if (!subset){
+    res <- res[as.character(as.character(the_mlgs[[by]]))]
+  }
+  return(res)
+}
+

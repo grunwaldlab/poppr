@@ -1,5 +1,7 @@
 language: r 
 
+sudo: required
+
 os:
   - linux
   - osx
@@ -11,10 +13,21 @@ apt_packages:
 r_packages:
   - devtools
 
+r_github_packages:
+  - thibautjombart/adegenet
+  - emmanuelparadis/pegas/pegas
+  - KlausVigo/phangorn
+  - zkamvar/covr@expect_error
+
+after_success:
+  - Rscript -e 'library(covr);codecov()'
+  
 notifications:
   email:
     on_success: change
     on_failure: always
+
+
 env:
   global:
     - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"

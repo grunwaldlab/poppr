@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Data import and manipulation in poppr version 1.1.4.99-39}
+\title{Data import and manipulation in poppr version 1.1.5.99-441}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -146,7 +146,7 @@ format.
 \Poppr{} is designed to make analysis of populations with mixed reproductive
 modes more streamlined and user friendly so that the researcher using it can
 focus on data analysis and interpretation. \Poppr{} allows analysis of haploid
-and diploid dominant/co-dominant marker data including microsattelites, Single
+and diploid dominant/co-dominant marker data including microsatellites, Single
 Nucleotide Polymorphisms (SNP), and Amplified Fragment Length Polymorphisms
 (AFLP). To avoid creating yet another file format that is specific to a program,
 \poppr{} was created on the backbone of the popular R package \adegenet{} and
@@ -156,10 +156,35 @@ and Structure) and newly introduces compatibility with GenAlEx formatted files
 be further analyzed with \poppr{}.
 
 The real power of \poppr{} is in the data manipulation and analytic tools.
-\Poppr{} has the ability to define multiple population hierarchies, clone-
-censor, and subset data sets. With \poppr{} you can also quickly calculate
-Bruvo's distance, the index of association, and easily determine which
-multilocus genotypes are shared across populations.
+\Poppr{} has the ability to bootstrap, clone- censor, and subset data sets. With
+\poppr{} you can also quickly calculate Bruvo's distance, the index of
+association, and easily determine which multilocus genotypes are shared across
+populations.
+
+<<<<<<< HEAD
+\subsection{A note about poppr version 1.1.5.99-441}
+=======
+<<<<<<< HEAD
+\subsection{A note about poppr version 1.1.5.99-441}
+=======
+\subsection{A note about poppr version 1.1.5.99-441}
+>>>>>>> adegenet-fix-mlg
+>>>>>>> 1f2874bbcb0957cd3477eb98a35fd4ebed0ee2a9
+
+In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
+an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
+
+\begin{enumerate}
+\item{\textbf{mlg}}{numeric classification of multilocus genotypes in the data set}
+\item{\textbf{hierarchy}}{storage of multiple population factors.}
+\end{enumerate}
+
+In particular, the \textbf{hierarchy} slot played a large role in providing a
+more tractable way of performing analyses such as clone-correction and AMOVA. In
+March of 2015, The \textbf{hierarchy} slot was ported to the \adegenet{}
+packaged and the name was changed to the \textbf{strata} slot. This means that
+code written before \poppr{} 2.0.0 might need some small changes. Please see the
+\textsc{Migrating from poppr version 1} vignette for more details.
 
 \subsection{Resources}
 
@@ -182,22 +207,27 @@ our github site}.
 
 \subsection{Getting Help}
 
-If you have any questions or feedback, feel free to send a message to the \poppr{} forum at \url{http://groups.google.com/group/poppr}. You can submit bug reports
-there or on our github site: \url{https://github.com/grunwaldlab/poppr}
+If you have any questions or feedback, feel free to send a message to the
+\poppr{} forum at \url{http://groups.google.com/group/poppr}. You can submit bug
+reports there or on our github site: \url{https://github.com/grunwaldlab/poppr}
 
-\subsection{Acknowledgements}
+\subsection{Acknowledgments}
 
 Much thanks goes to Sydney E. Everhart for alpha testing, beta testing, feature
-requests, proofreading, data contribution, and moral support throught the writing
-of this package and manual. Thanks also to Brian Knaus, Ignazio Carbone, David Cooke,
-Corine Schoebel, Jane Stewart, and Zaid Abdo for beta testing and feedback. 
+requests, proofreading, data contribution, and moral support throught the
+writing of this package and manual. Thanks also to Brian Knaus, Ignazio Carbone,
+David Cooke, Corine Schoebel, Jane Stewart, and Zaid Abdo for beta testing and
+feedback.
 
-The following data sets are included in \poppr{}: \texttt{Pinf} \cite{goss2014irish}, \texttt{monpop} (Sydney E. Everhart, unpublished),
+The following data sets are included in \poppr{}: \texttt{Pinf}
+\cite{goss2014irish}, \texttt{monpop} (Sydney E. Everhart, unpublished),
 \texttt{Aeut} \cite{Grunwald:2006}
 
 \subsection{Citation}
 
-The formal publication for \poppr{} was published in the journal PeerJ: \url{http://peerj.com/articles/281/}. To cite \poppr{}, please type in your R console:
+The formal publication for \poppr{} was published in the journal PeerJ:
+\url{http://peerj.com/articles/281/}. To cite \poppr{}, please type in your R
+console:
 
 <<popprcite, eval = FALSE, size="normalsize">>=
 citation(package = "poppr")
@@ -456,157 +486,192 @@ as \texttt{NaN}.\\
 \label{intro:import}
 
 
-There are several ways of reading data into R. One way is using the function
-\texttt{getfile}.
-\subsubsection{Function: getfile}
-\label{intro:import:getfile}
-\tab\tab \texttt{getfile} gives the user an easy way to point R to the directory
-in which your data is stored. It is only meant for R GUIs such as Rstudio. Using
-this on the command line has little advantage over setting the working
-directory manually.\\
-\tline{}
-\begin{quote}
-Default Command:
-% \texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
-<<getfile_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "getfile"
-print_command(funk)
-@
-\end{quote}
+% There are several ways of reading data into R. One way is using the function
+% \texttt{getfile}.
+% \subsubsection{Function: getfile}
+% \label{intro:import:getfile}
+% \tab\tab \texttt{getfile} gives the user an easy way to point R to the directory
+% in which your data is stored. It is only meant for R GUIs such as Rstudio. Using
+% this on the command line has little advantage over setting the working
+% directory manually.\\
+% \tline{}
+% \begin{quote}
+% Default Command:
+% % \texttt{getfile(multi = FALSE, pattern = NULL, combine = TRUE)}
+% <<getfile_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "getfile"
+% print_command(funk)
+% @
+% \end{quote}
+% \begin{itemize}
+%   \item \texttt{multi -} This is normally set to \texttt{FALSE}, meaning that it
+%   will only grab the file you selected. If it's \texttt{TRUE}, it will grab all
+%   files within the directory, constrained only by what you type into the
+%   \texttt{pattern} field.
+%   \item \texttt{pattern -} A pattern that you want to filter the files you get.
+%   This accepts regular expressions, so you must be careful with anything that is
+%   not an alphanumeric character.
+%   \item \texttt{combine -} This tells \texttt{getfile} to combine the path and
+%   all the files. This is set to \texttt{TRUE} by default so that you can access
+%   your files no matter what working directory you are in.
+% \end{itemize}
+% \bline{}
+
+% This method works for a single file, but let's say you had a lot of data sets
+% you wanted to import. Instead of doing these one-by-one, \texttt{getfile} has a
+% flag called \texttt{multi} telling the computer that you want to grab multiple
+% files in the folder:
+% <<multi_getfile, eval = FALSE>>=
+% x <- getfile(multi=TRUE)
+% @
+% A window would pop up again, and you should navigate to the same directory as
+% you had before, and select any of the files in that directory.
+% <<show_multi_getfile1,eval=FALSE>>=
+% x
+% @
+% <<show_multi_getfile,echo=FALSE>>=
+% x$files <- list.files(dirname(system.file("files/rootrot.csv", package="poppr")))
+% x$files <- paste(x$path, x$files, sep="/")
+% x
+% @
+% As you can see, now all of the files that existed in that directory are there!
+% Now you can look at all those files at once! We will use \texttt{poppr.all} to
+% produce a summary table for all of your files\footnote{These files do not need
+% to be similar in any way to do this analysis}. Let's set \texttt{digits = 2} to
+% only print 2 significant digits.
+% <<poppr.all, eval=FALSE>>=
+% all_files <- poppr.all(x$files)
+% print(all_files, digits = 2)
+% @
+% <<poppr.all_eval, echo=FALSE>>=
+% print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), 
+%                   system.file("files/rootrot2.csv", package="poppr"), 
+%                   system.file("files/simulated.dat", package="poppr"))), 
+%       digits = 2)
+% @
+
+% You've seen examples of how to use \texttt{getfile} to extract a single file and
+% all the files in a directory, but what if you wanted many files only of a
+% certain type or with a certain name? This is what you would use the
+% \texttt{pattern} argument for. For example, there are several data files with
+% different formats in the \adegenet{} folder in your R library. Let's take a look
+% at the names of these files.
+% \begin{center}
+%   \fcolorbox{light-gray}{salmon}{
+%     \begin{minipage}[t]{0.8\textwidth}
+%       \jala{} For the rest of this section, remember that every time you invoke
+%       \texttt{getfile()}, a window will pop up and you should select a file
+%       before hitting enter.
+%     \end{minipage}
+%   }
+% \end{center}
+% <<getfile_adegenet, eval=FALSE>>=
+% getfile(multi=TRUE)
+% @
+% Navigate to the \adegenet{} folder in your R library.
+% <<list_adegenet_files, echo=FALSE>>=
+% nancylist <- dir(dirname(system.file("files/nancycats.gtx",package="adegenet")))
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+
+% We can see that we have a mix of files with different formats. If we tried to
+% run all of these files using poppr, we would have a problem because some of the
+% file formats have no direct import into a \texttt{genind} object (*.fasta, or
+% *.snp), or just simply are not supported (eg. *.rda files). To filter these
+% files, use the \texttt{pattern} argument. Let's say we only wanted the files
+% that have the word ``nancy'' in them.
+% <<getfile_nancy,eval=FALSE>>=
+% getfile(multi=TRUE, pattern="nancy")
+% @
+% <<show_getfile_nancy, echo=FALSE>>=
+% nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="nancy")
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+% Now, let's exclude everything but genetix files (*.gtx).
+% <<getfile_gtx, eval=FALSE>>=
+% getfile(multi=TRUE, pattern="gtx")
+% @
+% <<show_getfile_gtx, echo=FALSE>>=
+% nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="gtx")
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+% Now, let's only get FSTAT files (*.dat)
+% <<getfile_dat, eval=FALSE>>=
+% getfile(multi=TRUE, pattern="dat")
+% @
+% <<show_getfile_dat, echo=FALSE>>=
+% nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="dat")
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+
+% Uh-oh. We've run into a problem. Three out of our four files are not FSTAT
+% files. Why did this happen? It happened because they happen to have
+% \texttt{"dat"} within their name. This problem can be solved, by using regular
+% expressions. If you are unfamiliar with regular expressions, you can think of
+% them as special characters that you can use to make your search pattern more
+% strict or more flexible. Since the topic of regular expressions can take up
+% several lectures, I will spare you the gory details. For this situation, the
+% only one you need to know is ``\texttt{\$}". The dollar sign indicates the end
+% of a word or string. If we want specific file extensions all we have to do is
+% add this to the end of the search term like so:
+% <<getfile_datend, eval=FALSE>>=
+% getfile(multi=TRUE, pattern="dat$")
+% @
+% <<show_getfile_datend, echo=FALSE>>=
+% nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="dat$")
+% list(
+%   files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
+%   path = "/path/to/R/adegenet/files"
+% )
+% @
+% Now we have our FSTAT file!
+
+\subsubsection{How does R represent data? \{Objective: data\}}
+
+Working with data in R means that these data have to be stored inside an
+``object'', which is stored in the computer's memory. Because of this, it's
+important to know the difference between a \textbf{file} and an \textbf{object}.
+When anyone talking about importing a \textbf{file} into R, they are referring
+to a spreadsheet or text file that lives in a folder on your hard drive.
+Spreadsheet files (saved as *.csv files) are normally imported through the R
+function \texttt{read.table()}. The output of \texttt{read.table()} is a
+\texttt{data.frame}. A \texttt{data.frame} is an \textbf{object} represented in
+your computer's memory. This means that it only exists for as long as R is
+running. 
+
+The good thing about having objects stored in memory is that you can manipulate
+them in any way and not affect the source of those data. Since R is a scripted
+language (instead of point-and-click), any of your manipulations can be saved in
+a separate R file that can be easily adapted to new data. Of course, most data
+are not going to be entered into R manually. Usually they will be formatted in a
+manner that can be read by popular population genetics programs.
+
+As previously mentioned, since \poppr{} is based on \adegenet{}, it's possible
+to read in the following file formats into a \texttt{genind} object with the
+function \texttt{import2genind()}:
+
 \begin{itemize}
-  \item \texttt{multi -} This is normally set to \texttt{FALSE}, meaning that it
-  will only grab the file you selected. If it's \texttt{TRUE}, it will grab all
-  files within the directory, constrained only by what you type into the
-  \texttt{pattern} field.
-  \item \texttt{pattern -} A pattern that you want to filter the files you get.
-  This accepts regular expressions, so you must be careful with anything that is
-  not an alphanumeric character.
-  \item \texttt{combine -} This tells \texttt{getfile} to combine the path and
-  all the files. This is set to \texttt{TRUE} by default so that you can access
-  your files no matter what working directory you are in.
+  \item{\textsc{Fstat}}
+  \item{\textsc{Genepop}}
+  \item{\textsc{Genetix}}
+  \item{\textsc{Structure}}
 \end{itemize}
-\bline{}
 
-This method works for a single file, but let's say you had a lot of data sets
-you wanted to import. Instead of doing these one-by-one, \texttt{getfile} has a
-flag called \texttt{multi} telling the computer that you want to grab multiple
-files in the folder:
-<<multi_getfile, eval = FALSE>>=
-x <- getfile(multi=TRUE)
-@
-A window would pop up again, and you should navigate to the same directory as
-you had before, and select any of the files in that directory.
-<<show_multi_getfile1,eval=FALSE>>=
-x
-@
-<<show_multi_getfile,echo=FALSE>>=
-x$files <- list.files(dirname(system.file("files/rootrot.csv", package="poppr")))
-x$files <- paste(x$path, x$files, sep="/")
-x
-@
-As you can see, now all of the files that existed in that directory are there!
-Now you can look at all those files at once! We will use \texttt{poppr.all} to
-produce a summary table for all of your files\footnote{These files do not need
-to be similar in any way to do this analysis}. Let's set \texttt{digits = 2} to
-only print 2 significant digits.
-<<poppr.all, eval=FALSE>>=
-all_files <- poppr.all(x$files)
-print(all_files, digits = 2)
-@
-<<poppr.all_eval, echo=FALSE>>=
-print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), 
-                  system.file("files/rootrot2.csv", package="poppr"), 
-                  system.file("files/simulated.dat", package="poppr"))), 
-      digits = 2)
-@
+Here, we introduce a new way of importing data into a \texttt{genind} or
+\texttt{genclone} object.
 
-You've seen examples of how to use \texttt{getfile} to extract a single file and
-all the files in a directory, but what if you wanted many files only of a
-certain type or with a certain name? This is what you would use the
-\texttt{pattern} argument for. For example, there are several data files with
-different formats in the \adegenet{} folder in your R library. Let's take a look
-at the names of these files.
-\begin{center}
-  \fcolorbox{light-gray}{salmon}{
-    \begin{minipage}[t]{0.8\textwidth}
-      \jala{} For the rest of this section, remember that every time you invoke
-      \texttt{getfile()}, a window will pop up and you should select a file
-      before hitting enter.
-    \end{minipage}
-  }
-\end{center}
-<<getfile_adegenet, eval=FALSE>>=
-getfile(multi=TRUE)
-@
-Navigate to the \adegenet{} folder in your R library.
-<<list_adegenet_files, echo=FALSE>>=
-nancylist <- dir(dirname(system.file("files/nancycats.gtx",package="adegenet")))
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-
-We can see that we have a mix of files with different formats. If we tried to
-run all of these files using poppr, we would have a problem because some of the
-file formats have no direct import into a \texttt{genind} object (*.fasta, or
-*.snp), or just simply are not supported (eg. *.rda files). To filter these
-files, use the \texttt{pattern} argument. Let's say we only wanted the files
-that have the word ``nancy'' in them.
-<<getfile_nancy,eval=FALSE>>=
-getfile(multi=TRUE, pattern="nancy")
-@
-<<show_getfile_nancy, echo=FALSE>>=
-nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="nancy")
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-Now, let's exclude everything but genetix files (*.gtx).
-<<getfile_gtx, eval=FALSE>>=
-getfile(multi=TRUE, pattern="gtx")
-@
-<<show_getfile_gtx, echo=FALSE>>=
-nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="gtx")
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-Now, let's only get FSTAT files (*.dat)
-<<getfile_dat, eval=FALSE>>=
-getfile(multi=TRUE, pattern="dat")
-@
-<<show_getfile_dat, echo=FALSE>>=
-nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="dat")
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-
-Uh-oh. We've run into a problem. Three out of our four files are not FSTAT
-files. Why did this happen? It happened because they happen to have
-\texttt{"dat"} within their name. This problem can be solved, by using regular
-expressions. If you are unfamiliar with regular expressions, you can think of
-them as special characters that you can use to make your search pattern more
-strict or more flexible. Since the topic of regular expressions can take up
-several lectures, I will spare you the gory details. For this situation, the
-only one you need to know is ``\texttt{\$}". The dollar sign indicates the end
-of a word or string. If we want specific file extensions all we have to do is
-add this to the end of the search term like so:
-<<getfile_datend, eval=FALSE>>=
-getfile(multi=TRUE, pattern="dat$")
-@
-<<show_getfile_datend, echo=FALSE>>=
-nancylist <- list.files(dirname(system.file("files/nancycats.gtx",package="adegenet")), pattern="dat$")
-list(
-  files = paste("/path/to/R/adegenet/files", nancylist, sep="/"),
-  path = "/path/to/R/adegenet/files"
-)
-@
-Now we have our FSTAT file!
 \subsubsection{Function: read.genalex}
 \label{intro:import:read.genalex}
 
@@ -635,8 +700,8 @@ functions are presented elsewhere in this manual.
 library("poppr")
 data(microbov)
 microbov <- as.genclone(microbov)
-sethierarchy(microbov) <- data.frame(other(microbov))
-setpop(microbov) <- ~coun/breed/spe
+strata(microbov) <- data.frame(other(microbov))
+setPop(microbov) <- ~coun/breed/spe
 genind2genalex(microbov, file="~/Desktop/microbov.csv")
 @
 <<microsave_message, echo=FALSE>>=
@@ -1016,25 +1081,31 @@ data(Aeut)
 Aeut
 @
 
-This gives us a lot of information about the object, and is useful once you
-become more comfortable with programming. Once we convert it to a
-\texttt{genclone} object, the multilocus genotypes will be defined and the
-population hierarchy (if a data frame is defined in the
-\texttt{@other} slot called ``population\_hierarchy") will be set.
+We can see that there is a data frame in the  \texttt{@other} slot called
+``population\_hierarchy". This is left over from \poppr{} version 1.x behavior.
+Since the \texttt{genind} object now has a \texttt{@strata} slot, we can use it
+to set the stratification (previously called ``hierarchy'').
+
+<<add_strata_Aeut>>=
+strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
+@
+
+Now we can convert this to a \texttt{genclone} object, which will store 
+information about our multilocus genotypes for us. 
+% This gives us a lot of information about the object, and is useful once you
+% become more comfortable with programming. Once we convert it to a
+% \texttt{genclone} object, the multilocus genotypes will be defined and the
+% population hierarchy (if a data frame is defined in the
+% \texttt{@other} slot called ``population\_hierarchy") will be set.
 
 <<as_genclone>>=
 agc <- as.genclone(Aeut)
 agc
-
-# We can also manually set the hierarchy.
-as.genclone(Aeut, hierarchy = other(Aeut)$population_hierarchy[-1])
 @
 
 We can see here that it shows less information, but it gives us a very simple
 overview of our data. Don't be fooled, however, because it contains the same
-information as a \texttt{genind} object and the advantage of the
-\texttt{genclone} object is that setting the population from the hierarchy
-becomes \textbf{much} easier. 
+information as a \texttt{genind} object.
 
 <<genclone_compare>>=
 c(is.genind(Aeut), is.genclone(Aeut), is.genind(agc), is.genclone(agc))
@@ -1043,49 +1114,29 @@ c(is.genind(Aeut), is.genclone(Aeut), is.genind(agc), is.genclone(agc))
 c(nInd(Aeut), nInd(agc))
 @
 
-<<setpop>>=
-# We'll look at the population names
-Aeut$pop.names
-
-# genind way:
-# Extract the combined hierarchical levels.
-pophier <- other(Aeut)$population_hierarchy$Pop_Subpop
-pop(Aeut) <- pophier
-Aeut$pop.names
-
-# genclone way:
-agc
-setpop(agc) <- ~Pop/Subpop
-agc
-
-# Notice that you only see the first and last three population names.
-# Use the print function to display all population names.
-
-print(agc)
-@
 
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Accessing the population hierarchy}
+% \subsection{Accessing the population hierarchy}
 \label{intro:genclone:access}
 
-The hierarchy slot in the genclone object allows us to access and manipulate
-different levels of a population hierarchy without the complication of creating
-new data sets. We implemented the use of hierarchical nested formulae:
+% The hierarchy slot in the genclone object allows us to access and manipulate
+% different levels of a population hierarchy without the complication of creating
+% new data sets. We implemented the use of hierarchical nested formulae:
 
-<<formuladef, eval = FALSE>>=
-hier = ~Population/Subpopulation/Year
-@
-\noindent
-\jala{} \textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if
-you only are specifying one level.\\
-The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
-years nested within subpopulations, nested within populations. This allows the
-user to easily restructure the population hierarchy. Manipulation of the
-hierarchy is necessary for \seclink{data.manip:cc}{clone correction} and AMOVA
-analysis. See the section \seclink{data.manip:hier}{Can you take me
-hier(archy)} for more details on manipulation of hierarchies.
+% <<formuladef, eval = FALSE>>=
+% hier = ~Population/Subpopulation/Year
+% @
+% \noindent
+% \jala{} \textbf{NOTE:} The $\sim$ symbol is absolutely required for formulas, even if
+% you only are specifying one level.\\
+% The \texttt{"/"} symbolizes a hierarchical nesting. The above formula represents
+% years nested within subpopulations, nested within populations. This allows the
+% user to easily restructure the population hierarchy. Manipulation of the
+% hierarchy is necessary for \seclink{data.manip:cc}{clone correction} and AMOVA
+% analysis. See the section \seclink{data.manip:hier}{Can you take me
+% hier(archy)} for more details on manipulation of hierarchies.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1120,7 +1171,7 @@ represented.
 <<pinf_show>>=
 data(Pinf)
 Pinf
-tail(truenames(Pinf[loc = c("L09", "L10")])$tab)
+tail(tab(Pinf[loc = locNames(Pinf)[9:10]]))
 @
 \noindent
 Each column in this data represents a different allele at a particular locus.
@@ -1140,23 +1191,23 @@ genotypes appear diploid (\texttt{\Sexpr{Pinfdf[85, 10]}}) and some appear
 triploid (\texttt{\Sexpr{Pinfdf[86, 10]}}). The tetraploid genotype is padded
 with zeroes to make up the difference in ploidy.
 
+%% TODO: ZHIAN FIX THIS
+
 This method allows \textsc{Bruvo's Distance} \cite{Bruvo:2004} and the
 \textsc{Index of Association} \cite{Brown:1980,Smith:1993,Agapow:2001} to work
 with polyploids as they specifically recognize the zeroes as being missing data.
 A side effect, unfortunately is that the extra zeroes appear as extra alleles.
 As this affects all frequency-based statistics (except for the ones noted
 above), the user should reformat their data set with the function
-\texttt{recode\_polyploids}, which will remove the zeroes and recode the allele
-frequencies to the observed frequencies.
+\texttt{recode\_polyploids}, which will remove the zeroes.
 
 <<pinf_recode>>=
-Pinf_rc <- recode_polyploids(Pinf, newploidy = 2)
-tail(truenames(Pinf_rc[loc = c("L09", "L10")])$tab)
+Pinf_rc <- recode_polyploids(Pinf, newploidy = TRUE)
+tail(tab(Pinf_rc[loc = locNames(Pinf_rc)[9:10]]))
 @
 \noindent
-Notice that the triploid locus now has frequencies that are multiples of
-$\frac{1}{3}$ and the diploid locus has multiples of $\frac{1}{2}$. Below, we
-show the observed genotypes:
+Below, we show the observed genotypes:
+
 <<pinf_recode_df>>=
 Pinfrcdf <- genind2df(Pinf_rc, sep = "/")
 tail(Pinfrcdf[10:11])
@@ -1179,6 +1230,10 @@ loci, or by sample size \cite{Jombart:2008}. \Poppr{} includes novel functions
 for clone-censoring your data sets or sub-setting a genind object by specific
 populations.
 
+%===============================================================================
+% TODO: TRANSFER THIS TO ADEGENET
+%===============================================================================
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1198,7 +1253,7 @@ In this section, we will show you how to \seclink{data.manip:hier:define}{define
 hierarchical levels, \seclink{data.manip:hier:view}{view} those levels to ensure
 that they are correctly defined, \seclink{data.manip:hier:manip}{manipulate} your
 hierarchical levels by adding and renaming them, and use these levels
-to \seclink{data.manip:hier:setpop}{set the population} in
+to \seclink{data.manip:hier:setPop}{set the population} in
 your \seclink{intro:genclone}{genclone} object using the following methods:
 
 % latex table generated in R 3.0.3 by xtable 1.7-3 package
@@ -1209,11 +1264,11 @@ your \seclink{intro:genclone}{genclone} object using the following methods:
   \hline
  Method & Function & Input & Result\\ 
   \hline
- split & \cmdlink{data.manip:hier:define:split}{splithierarchy} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{sethierarchy} & data frame & new hierarchical levels\\ 
- get & \cmdlink{data.manip:hier:view}{gethierarchy} & formula & data frame\\ 
- name & \cmdlink{data.manip:hier:manip:name}{namehierarchy} & formula & new hierarchical level names\\ 
- add & \cmdlink{data.manip:hier:manip:add}{addhierarchy} & vector or data frame & new hierarchical level\\
+ split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
+ set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchical levels\\ 
+ get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\ 
+ name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchical level names\\ 
+ add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
 \end{table}
@@ -1253,7 +1308,7 @@ aphan <- read.genalex("http://files.figshare.com/1314228/rootrot.csv")
 aphan
 @
 <<aphan_figshare, echo = FALSE>>=
-aphan <- namehierarchy(sethierarchy(agc, gethierarchy(agc, ~Pop_Subpop)), ~Pop)
+aphan <- nameStrata(strata(agc, value = strata(agc, ~Pop/Subpop, combine = TRUE)[2]), ~Pop)
 aphan
 @
 \noindent
@@ -1262,22 +1317,22 @@ only see one here labeled `Pop'. This is how populations are automatically
 defined when importing to a \seclink{intro:genclone}{genclone} object since it
 does not know how many hierarchical levels you have defined. To define these
 levels present in the data set, we will need to split them up using the function
-\texttt{splithierarchy}:
+\texttt{splitStrata}:
 \label{data.manip:hier:define:split}
 <<aphan_split>>=
-splithierarchy(aphan) <- ~field/sample
+splitStrata(aphan) <- ~field/sample
 aphan
 @
 \noindent
 Now we have sucessfully defined our hierarchies. If you have imported your data
-in this manner, you may skip to the \seclink{data.manip:hier:setpop}{setting
+in this manner, you may skip to the \seclink{data.manip:hier:setPop}{setting
 population hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, or
 \seclink{data.manip:hier:manip}{manipulating hierarchical levels.}
 
 \bline{}
 
 If you have imported your data with a single population and want to add
-hierarchical levels separately, you can use the function \texttt{sethierarchy}
+hierarchical levels separately, you can use the function \texttt{strata}
 with a data frame containing your hierarchical levels. For this example, we will
 use the data set \texttt{H3N2}, which contains SNP data from the H3N2 virus.
 This data set holds a data frame in the the \seclink{intro:genind:other}{other
@@ -1307,13 +1362,13 @@ names(virus_info)
 @
 
 From here we will convert our genind object to a genclone object and use
-\texttt{sethierarchy} to define the hierarchical levels with the table we just
+\texttt{strata} to define the hierarchical levels with the table we just
 imported.
 
 \label{data.manip:hier:define:set}
-<<H3N2_sethierarchy>>=
+<<H3N2_strata>>=
 virus <- as.genclone(H3N2) # Converting it to a genclone object.
-sethierarchy(virus) <- virus_info # Setting the hierarchy
+strata(virus) <- virus_info # Setting the hierarchy
 virus
 @
 \noindent
@@ -1321,17 +1376,17 @@ In this data, levels such as host and segment are unimportant levels because
 they are all the same. Let's say that we are only interested in year and country.
 To make things easier to view, we will set the hierarchical levels to these two
 columns:
-<<H3N2_sethierarchy_again>>=
-sethierarchy(virus) <- virus_info[c("country", "year")]
+<<H3N2_strata_again>>=
+strata(virus) <- virus_info[c("country", "year")]
 virus
 @
 
 Notice that there are no populations defined. Now that we have the hierarchical
 levels in place, we can use it to define the population hierarchy. We will use
-the function \texttt{setpop} to define the population as year with respect to
+the function \texttt{setPop} to define the population as year with respect to
 country:
 <<H3N2_set_country>>=
-setpop(virus) <- ~year/country
+setPop(virus) <- ~year/country
 virus
 @
 
@@ -1340,12 +1395,12 @@ virus
 
 If you wanted to view your hierarchies to make sure that you made no spelling
 errors in your population definitions, you can extract the data frame from your
-genclone object by using the function \texttt{gethierarchy}:
+genclone object by using the function \texttt{strata}:
 
 \begin{quote}
 Default Command:
-<<gethierarchy_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "gethierarchy"
+<<strata_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "strata"
 print_command(funk)
 @
 \end{quote}
@@ -1358,8 +1413,8 @@ combined. Note, if you don't supply a formula argument, the data frame as it
 exists will be returned.
 
 <<aphan_hier_get>>=
-head(gethierarchy(aphan))
-head(gethierarchy(aphan, ~field/sample))
+head(strata(aphan))
+head(strata(aphan, ~field/sample))
 @
 
 If the hierarchical levels are not nested, or you simply want to use this
@@ -1367,14 +1422,14 @@ hierarchy for another data set, you might want to set the \textbf{combine} flag
 to \texttt{FALSE}. Let's use the virus data as an example:
 
 <<virus_get>>=
-head(gethierarchy(virus, ~year/country))
-head(gethierarchy(virus, ~year/country, combine = FALSE))
+head(strata(virus, ~year/country))
+head(strata(virus, ~year/country, combine = FALSE))
 @
 
 It will return only the levels you ask it to return:
 
 <<virus_onepop>>=
-head(gethierarchy(virus, ~country))
+head(strata(virus, ~country))
 @
 
 \subsubsection{Manipulating hierarchical levels}
@@ -1394,11 +1449,11 @@ If we were saving our script the whole time, we could just go back and retrieve
 the data frame, but that defeats the purpose of this section where we imagine
 that we've recieved new information and wanted to add it to our hierarchy. If we
 want to add this to our hierarchy, we just use the function
-\texttt{addhierarchy} defined as thus:
+\texttt{addStrata} defined as thus:
 \begin{quote}
 Default Command:
-<<addhierarchy_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "addhierarchy"
+<<addStrata_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+funk <- "addStrata"
 print_command(funk)
 @
 \end{quote}
@@ -1406,27 +1461,27 @@ print_command(funk)
 We can use this function to add on a new column to the data frame.  
 \label{data.manip:hier:manip:add}
 <<virus_add_arg>>=
-addhierarchy(virus) <- virus_info 
+addStrata(virus) <- virus_info 
 virus
 @
 \noindent
 Notice that the new hierarchical level is simply labeled as \texttt{NEW}. We
 will customize the name of the hierarchical levels with the function
-\texttt{namehierarchy}. 
+\texttt{nameStrata}. 
 \label{data.manip:hier:manip:name}
 
 <<virus_name>>=
-namehierarchy(virus) <- ~country/year/month
+nameStrata(virus) <- ~country/year/month
 virus
 @
 \noindent
 Of course, perhaps a better way still would be to use a data frame:
 <<virus_add_df, eval = FALSE>>=
-addhierarchy(virus) <- data.frame(month = virus_info)
+addStrata(virus) <- data.frame(month = virus_info)
 @
 
 \subsubsection{Defining populations with hierarchies}
-\label{data.manip:hier:setpop}
+\label{data.manip:hier:setPop}
 
 Now that we have defined the hierarchical levels in the data set, setting the
 population hierarchy allows us to group our data according to the hierarchical
@@ -1434,7 +1489,7 @@ level of your choice. This is a necessary step. For this example, we will use a
 data set of \textit{Phytophthora infestans} collected from North America and
 South America.
 
-<<Pinf_setpop>>=
+<<Pinf_setPop>>=
 data(Pinf)
 Pinf
 @
@@ -1442,12 +1497,12 @@ Pinf
 Above we have two hierarchies for Continent and Country, but the
 populations only show Continent level populations. If we wanted to investigate
 each country separately, we would need to reset the population to be represented
-by Country. This can be done with the function \texttt{setpop}. This function
+by Country. This can be done with the function \texttt{setPop}. This function
 utilizes the defined population hierarchies to set the population. We'll use our
 data set above to illustrate this:
 
-<<Pinf_setpop2>>=
-setpop(Pinf) <- ~Country
+<<Pinf_setPop2>>=
+setPop(Pinf) <- ~Country
 Pinf # Now set by country
 @
 \noindent
@@ -1455,8 +1510,8 @@ The beauty about it is the fact that it will also combine all the hierarchical
 levels you want to use. Let's see when we ask it to set the population of
 Country with respect to Continent.
 
-<<Pinf_setpop_combine>>=
-setpop(Pinf) <- ~Continent/Country
+<<Pinf_setPop_combine>>=
+setPop(Pinf) <- ~Continent/Country
 Pinf
 @
 \noindent
@@ -1562,6 +1617,7 @@ nanzero <- missingno(nancycats, type = "zero")
 nanmean <- missingno(nancycats, type = "mean")
 nanzero$tab[1:5, 8:13]
 nanmean$tab[1:5, 8:13]
+is.genind(nanmean)
 @
 You notice how the values of NA changed, yet the basic structure stayed the
 same. These are the replacement options from \adegenet{}. Let's look at the same
@@ -1649,7 +1705,7 @@ that we saw in \seclink{data.manip:hier:define}{Defining hierarchies.} Let's say
 we wanted to analyze only the data in North America. To make sure we are all on
 the same page, we will reset the population factor to ``country".
 <<popsub_sublist>>=
-setpop(virus) <- ~country
+setPop(virus) <- ~country
 virus$pop.names # Only two countries from North America.
 vna <- popsub(virus, sublist=c("USA", "Canada"))
 vna$pop.names
@@ -1727,11 +1783,8 @@ print_command(funk)
    \texttt{genind} object that has a population hierarchy data frame in the
    \texttt{@other} slot. Note, the \texttt{genind} object does not necessarily
    require a population factor to begin with.
-  \item \texttt{hier -} A hierarchical formula (eg. \texttt{$\sim$Pop/Subpop}),
+  \item \texttt{strata -} A hierarchical formula (eg. \texttt{$\sim$Pop/Subpop}),
   representing the hierarchical levels in your data.
-  \item \texttt{dfname -} \textbf{Only for use in genind objects, otherwise,
-   deprecated} The name of a data frame you have in the \texttt{@other} slot
-   with the population factors.
   \item \texttt{combine -} Do you want to combine the population hierarchy? If
    it's set to \texttt{FALSE} (default), you will be returned an object with the
    top most hierarchical level as a population factor unless the \textbf{keep}
@@ -1767,19 +1820,19 @@ aphan # Original object
 \noindent
 Now we correct by sample with respect to field and keep the field as the population.
 <<clonecorrect2>>=
-clonecorrect(aphan,  hier = ~field/sample)
-# Your turn: Use the same hierarchy and use combine = TRUE and then
-# keep = 1:2. Is there any difference?
+clonecorrect(aphan,  strata = ~field/sample)
+# Your turn: Use the same stratification and use combine = TRUE and then
+# keep = 1:2. Is there any differenc
 @
 \noindent
 Correcting by field. Notice how the number of MLG is much closer to our census.
 <<clonecorrect3>>=
-clonecorrect(aphan, hier = ~field)
+clonecorrect(aphan, strata = ~field)
 @
 \noindent
 Correcting over whole data set. Our MLG is equal to our census.
 <<clonecorrectx>>=
-clonecorrect(aphan, hier = NA)
+clonecorrect(aphan, strata = NA)
 @
 
 %-----------------------------------------------------------------------------%
@@ -2084,256 +2137,7 @@ set.seed(9999)
 bd.test <- replicate(999, mean(bruvo.dist(shufflepop(nan1, method = 2), replen = reps)))
 @
 <<shuffle_bd_replicate, echo = FALSE>>=
-bd.test <- c(0.383180217978395, 0.415172887731481, 0.395401716820988, 0.36112075617284, 
-0.381246383101852, 0.391417100694444, 0.368165268132716, 0.44764419367284, 
-0.39599006558642, 0.392292390046296, 0.416001157407407, 0.359629388503086, 
-0.375589554398148, 0.405174575617284, 0.409643856095679, 0.391482204861111, 
-0.382218123070988, 0.41436149691358, 0.383174189814815, 0.404762249228395, 
-0.409695698302469, 0.351765046296296, 0.375487075617284, 0.394843508873457, 
-0.403155140817901, 0.395619936342593, 0.35908203125, 0.396396363811728, 
-0.387588011188272, 0.375771604938272, 0.374916811342593, 0.371144386574074, 
-0.375567853009259, 0.372751494984568, 0.41537181712963, 0.390055941358025, 
-0.372065489969136, 0.38319106867284, 0.418766878858025, 0.389811197916667, 
-0.391309799382716, 0.380735194830247, 0.392493730709877, 0.407855902777778, 
-0.373485725308642, 0.393967013888889, 0.419801311728395, 0.419554157021605, 
-0.349768518518519, 0.368592062114198, 0.396170910493827, 0.38164665316358, 
-0.397676745756173, 0.359424430941358, 0.390004099151235, 0.375790895061728, 
-0.415828751929012, 0.396510898919753, 0.398491753472222, 0.399006558641975, 
-0.378590374228395, 0.410376880787037, 0.373421826774691, 0.401580584490741, 
-0.388343942901235, 0.389790702160494, 0.406230709876543, 0.410212914737654, 
-0.411181037808642, 0.397419945987654, 0.409830729166667, 0.38501880787037, 
-0.375995852623457, 0.374977092978395, 0.404217303240741, 0.381970968364198, 
-0.427674093364198, 0.421094955632716, 0.392737268518519, 0.372973331404321, 
-0.396556712962963, 0.41493537808642, 0.367643229166667, 0.417230902777778, 
-0.37703872492284, 0.388992573302469, 0.390311535493827, 0.404422260802469, 
-0.325649836033951, 0.382992139274691, 0.396333670910494, 0.385146604938272, 
-0.40302734375, 0.369362461419753, 0.40317684220679, 0.400687210648148, 
-0.402665653935185, 0.383434606481481, 0.398591820987654, 0.403266059027778, 
-0.33031322337963, 0.381671971450617, 0.398115596064815, 0.401163435570988, 
-0.416612413194444, 0.403988233024691, 0.421760464891975, 0.425095244984568, 
-0.431723813657407, 0.401032021604938, 0.390247636959877, 0.431340422453704, 
-0.390993923611111, 0.421104600694444, 0.339672550154321, 0.437996720679012, 
-0.358885513117284, 0.368224344135802, 0.361101466049383, 0.384192949459877, 
-0.410045331790123, 0.368414834104938, 0.340546633873457, 0.341089168595679, 
-0.387595244984568, 0.371152826003086, 0.386452305169753, 0.438270399305556, 
-0.414109519675926, 0.376890432098765, 0.367886766975309, 0.326484133873457, 
-0.385950761959877, 0.429093123070988, 0.414934172453704, 0.395864679783951, 
-0.385291280864198, 0.405513358410494, 0.373255449459877, 0.380583285108025, 
-0.371088927469136, 0.367192322530864, 0.39708236882716, 0.337759211033951, 
-0.412621768904321, 0.394872444058642, 0.381664737654321, 0.423829330632716, 
-0.389819637345679, 0.420828510802469, 0.404482542438272, 0.414830488040123, 
-0.383400848765432, 0.389350646219136, 0.38399040316358, 0.378415557484568, 
-0.401076630015432, 0.367534722222222, 0.429076244212963, 0.419275655864198, 
-0.369282889660494, 0.402340133101852, 0.341787229938272, 0.379204041280864, 
-0.386735628858025, 0.446989535108025, 0.402697000385802, 0.433216386959877, 
-0.367690248842593, 0.375049430941358, 0.368416039737654, 0.402647569444444, 
-0.40395809220679, 0.425563030478395, 0.45283203125, 0.369378134645062, 
-0.355145640432099, 0.419715711805556, 0.321680893132716, 0.400511188271605, 
-0.399321228780864, 0.408874662422839, 0.380805121527778, 0.357367621527778, 
-0.387917148919753, 0.46065055941358, 0.397224633487654, 0.365272955246914, 
-0.419821807484568, 0.395893614969136, 0.434101321373457, 0.420037615740741, 
-0.344226224922839, 0.380940152391975, 0.364171006944444, 0.419171971450617, 
-0.419407069830247, 0.370770640432099, 0.3603515625, 0.408857783564815, 
-0.417365933641975, 0.352559558256173, 0.399633487654321, 0.389433834876543, 
-0.394340760030864, 0.383954234182099, 0.388071469907407, 0.359601658950617, 
-0.363640528549383, 0.357619598765432, 0.37666015625, 0.39146412037037, 
-0.360531201774691, 0.37396556712963, 0.396057581018519, 0.436072530864198, 
-0.426344280478395, 0.404943094135802, 0.418567949459877, 0.360329861111111, 
-0.44258415316358, 0.382421875, 0.396319203317901, 0.404704378858025, 
-0.352875434027778, 0.401589023919753, 0.389913676697531, 0.38095100308642, 
-0.390802228009259, 0.401812065972222, 0.410579427083333, 0.401623987268519, 
-0.437044270833333, 0.403096064814815, 0.335836226851852, 0.393484760802469, 
-0.39955150462963, 0.391191647376543, 0.347428385416667, 0.397435619212963, 
-0.372844328703704, 0.405638744212963, 0.381063126929012, 0.377789834104938, 
-0.406129436728395, 0.385578221450617, 0.371550684799383, 0.397008825231481, 
-0.410454041280864, 0.383675733024691, 0.344425154320988, 0.352178578317901, 
-0.395658516589506, 0.410639708719136, 0.372582706404321, 0.401175491898148, 
-0.364237316743827, 0.401288821373457, 0.393103780864198, 0.371531394675926, 
-0.369349199459877, 0.386342592592593, 0.43155502507716, 0.420232928240741, 
-0.448606288580247, 0.345263069058642, 0.399540653935185, 0.376935040509259, 
-0.357755835262346, 0.382535204475309, 0.408638358410494, 0.421451822916667, 
-0.408481626157407, 0.416130160108025, 0.429947916666667, 0.387145543981481, 
-0.427443817515432, 0.334611304012346, 0.389210792824074, 0.370070167824074, 
-0.408222415123457, 0.400714940200617, 0.429736930941358, 0.365889033564815, 
-0.416772762345679, 0.364687017746914, 0.407233796296296, 0.403978587962963, 
-0.371117862654321, 0.43031322337963, 0.368804253472222, 0.376974826388889, 
-0.432552083333333, 0.400812596450617, 0.379140142746914, 0.397846739969136, 
-0.346225163966049, 0.372135416666667, 0.408092206790123, 0.414579716435185, 
-0.404601900077161, 0.40112003279321, 0.364250578703704, 0.359230324074074, 
-0.390632233796296, 0.392872299382716, 0.406500771604938, 0.396532600308642, 
-0.433258584104938, 0.407444782021605, 0.369508342978395, 0.375815007716049, 
-0.404651331018519, 0.398518277391975, 0.403392650462963, 0.393666811342593, 
-0.407813705632716, 0.424363425925926, 0.389061294367284, 0.369866415895062, 
-0.396776138117284, 0.409172453703704, 0.416928288966049, 0.378232301311728, 
-0.40765697337963, 0.417314091435185, 0.389046826774691, 0.415744357638889, 
-0.393634259259259, 0.36586612654321, 0.401743344907407, 0.426003086419753, 
-0.39360050154321, 0.412666377314815, 0.41353443287037, 0.395747733410494, 
-0.390230758101852, 0.386709104938272, 0.387943672839506, 0.35624397183642, 
-0.415022183641975, 0.409261670524691, 0.396379484953704, 0.38554084683642, 
-0.363905767746914, 0.397246334876543, 0.396917197145062, 0.370558449074074, 
-0.326807243441358, 0.380318045910494, 0.371108217592593, 0.402881462191358, 
-0.421170910493827, 0.377513744212963, 0.406248794367284, 0.432503858024691, 
-0.389230082947531, 0.374774546682099, 0.385296103395062, 0.356553819444444, 
-0.429593460648148, 0.399232011959877, 0.413334297839506, 0.357564139660494, 
-0.380099826388889, 0.392191116898148, 0.425604021990741, 0.382099971064815, 
-0.396692949459877, 0.378401089891975, 0.382632860725309, 0.379443962191358, 
-0.353100887345679, 0.350179639274691, 0.400798128858025, 0.391773967978395, 
-0.390212673611111, 0.421403597608025, 0.383235677083333, 0.404604311342593, 
-0.382499035493827, 0.404053337191358, 0.380803915895062, 0.409326774691358, 
-0.360821759259259, 0.352030285493827, 0.382887249228395, 0.362068383487654, 
-0.395824893904321, 0.426868730709877, 0.350993441358025, 0.351259886188272, 
-0.376520302854938, 0.405735194830247, 0.333004195601852, 0.375434027777778, 
-0.454225742669753, 0.385618007330247, 0.397746672453704, 0.399845679012346, 
-0.381020929783951, 0.390805844907407, 0.37349537037037, 0.366712480709877, 
-0.34423828125, 0.384405140817901, 0.376293643904321, 0.423095100308642, 
-0.362887008101852, 0.410147810570988, 0.407542438271605, 0.397905815972222, 
-0.438437982253086, 0.391622058256173, 0.359475067515432, 0.412031008873457, 
-0.395044849537037, 0.406966145833333, 0.377733169367284, 0.353202160493827, 
-0.382794415509259, 0.39121696566358, 0.411637972608025, 0.406511622299383, 
-0.395616319444444, 0.352868200231481, 0.411424575617284, 0.386510175540123, 
-0.388442804783951, 0.381898630401235, 0.44444565007716, 0.414210792824074, 
-0.415461033950617, 0.43555290316358, 0.386957465277778, 0.349611786265432, 
-0.360434751157407, 0.417320119598765, 0.381280140817901, 0.383104263117284, 
-0.404839409722222, 0.363233024691358, 0.379905719521605, 0.405243296682099, 
-0.364553192515432, 0.345275125385802, 0.414390432098765, 0.405825617283951, 
-0.371305941358025, 0.382529176311728, 0.404598283179012, 0.369455295138889, 
-0.409336419753086, 0.394952015817901, 0.380199893904321, 0.405327690972222, 
-0.405947386188272, 0.384239969135802, 0.40400390625, 0.397398244598765, 
-0.386231674382716, 0.398750964506173, 0.366917438271605, 0.413671875, 
-0.377615017361111, 0.441937934027778, 0.373066165123457, 0.426989293981481, 
-0.393100163966049, 0.384252025462963, 0.386873070987654, 0.447501929012346, 
-0.392793933256173, 0.350059076003086, 0.350538917824074, 0.375974151234568, 
-0.394501109182099, 0.364362702546296, 0.359079619984568, 0.398760609567901, 
-0.365193383487654, 0.413980516975309, 0.336530671296296, 0.367936197916667, 
-0.427888695987654, 0.411747685185185, 0.361118344907407, 0.340543016975309, 
-0.374469521604938, 0.376176697530864, 0.339312065972222, 0.36255184220679, 
-0.428757957175926, 0.396603732638889, 0.398220486111111, 0.377998408564815, 
-0.458297164351852, 0.411371527777778, 0.388263165509259, 0.38179012345679, 
-0.393031442901235, 0.378683207947531, 0.365017361111111, 0.395235339506173, 
-0.361461950231481, 0.387102141203704, 0.446594087577161, 0.402951388888889, 
-0.413870804398148, 0.383012635030864, 0.392099488811728, 0.380672501929012, 
-0.369762731481481, 0.404457224151235, 0.437080439814815, 0.42606819058642, 
-0.344309413580247, 0.370612702546296, 0.386519820601852, 0.330557966820988, 
-0.414650848765432, 0.376538387345679, 0.367432243441358, 0.434569106867284, 
-0.410765094521605, 0.393921199845679, 0.430010609567901, 0.424990354938272, 
-0.37861930941358, 0.389408516589506, 0.397084780092593, 0.418393132716049, 
-0.404865933641975, 0.419696421682099, 0.42328197337963, 0.35384837962963, 
-0.440784143518519, 0.339085407021605, 0.398503809799383, 0.38325496720679, 
-0.343084490740741, 0.365447771990741, 0.394507137345679, 0.437507233796296, 
-0.373072193287037, 0.383201919367284, 0.399937307098765, 0.379497010030864, 
-0.356886574074074, 0.420395688657407, 0.356246383101852, 0.388859953703704, 
-0.445442708333333, 0.361277488425926, 0.371222752700617, 0.388386140046296, 
-0.385187596450617, 0.375283323688272, 0.387521701388889, 0.388689959490741, 
-0.357333863811728, 0.453578317901235, 0.36547550154321, 0.39613956404321, 
-0.417972366898148, 0.374092158564815, 0.382782359182099, 0.381862461419753, 
-0.423981240354938, 0.414672550154321, 0.348871527777778, 0.387929205246914, 
-0.413448832947531, 0.389042004243827, 0.336711516203704, 0.407901716820988, 
-0.370625964506173, 0.412831548996914, 0.381561053240741, 0.366015625, 
-0.37412712191358, 0.407411024305556, 0.378071952160494, 0.372794897762346, 
-0.419258777006173, 0.402212336033951, 0.403891782407407, 0.425675154320988, 
-0.415992717978395, 0.392179060570988, 0.407238618827161, 0.402026668595679, 
-0.395384837962963, 0.380525414737654, 0.363785204475309, 0.412713396990741, 
-0.398572530864198, 0.395569299768519, 0.383186246141975, 0.36587215470679, 
-0.36796272183642, 0.365980661651235, 0.357057773919753, 0.41279899691358, 
-0.395349874614198, 0.390680459104938, 0.377873022762346, 0.389040798611111, 
-0.377109857253086, 0.348837770061728, 0.368975453317901, 0.357876398533951, 
-0.374716676311728, 0.394544511959877, 0.394398630401235, 0.417626350308642, 
-0.382323013117284, 0.351409384645062, 0.425944010416667, 0.388559751157407, 
-0.428446903935185, 0.398743730709877, 0.392685426311728, 0.398725646219136, 
-0.345968364197531, 0.377530623070988, 0.382658179012346, 0.349848090277778, 
-0.396012972608025, 0.353338396990741, 0.430840084876543, 0.377238859953704, 
-0.394731385030864, 0.411692226080247, 0.37016300154321, 0.399468315972222, 
-0.453606047453704, 0.368296682098765, 0.33921802662037, 0.417118778935185, 
-0.406395881558642, 0.389037181712963, 0.417344232253086, 0.374247685185185, 
-0.358676938657407, 0.404021990740741, 0.412682050540123, 0.347416329089506, 
-0.394303385416667, 0.333446662808642, 0.361119550540123, 0.397492283950617, 
-0.450394241898148, 0.381412760416667, 0.429846643518519, 0.376713204089506, 
-0.40488884066358, 0.372957658179012, 0.404951533564815, 0.3615234375, 
-0.380840084876543, 0.375343605324074, 0.378115354938272, 0.386223234953704, 
-0.407086709104938, 0.390598476080247, 0.38189380787037, 0.426994116512346, 
-0.398075810185185, 0.355055217978395, 0.40372299382716, 0.384253231095679, 
-0.377801890432099, 0.421995563271605, 0.438786410108025, 0.39292896412037, 
-0.373168643904321, 0.396023823302469, 0.406528501157407, 0.385123697916667, 
-0.411454716435185, 0.407146990740741, 0.354187162422839, 0.385707224151235, 
-0.45199893904321, 0.423301263503086, 0.426093508873457, 0.357736545138889, 
-0.41849681712963, 0.397376543209877, 0.388570601851852, 0.369656635802469, 
-0.389693045910494, 0.364955873842593, 0.41753833912037, 0.381816647376543, 
-0.366625675154321, 0.405238474151235, 0.381565875771605, 0.395021942515432, 
-0.412459008487654, 0.359935619212963, 0.361991222993827, 0.385581838348765, 
-0.415857687114198, 0.383632330246914, 0.434061535493827, 0.352875434027778, 
-0.42680362654321, 0.364462770061728, 0.401983265817901, 0.371050347222222, 
-0.382638888888889, 0.341284481095679, 0.388495852623457, 0.40468147183642, 
-0.398787133487654, 0.434308690200617, 0.415680459104938, 0.407871576003086, 
-0.431914303626543, 0.387229938271605, 0.388371672453704, 0.377091772762346, 
-0.409389467592593, 0.37120346257716, 0.39843147183642, 0.385562548225309, 
-0.366154272762346, 0.373057725694444, 0.399386332947531, 0.357748601466049, 
-0.436159336419753, 0.362225115740741, 0.365024594907407, 0.396502459490741, 
-0.415729890046296, 0.37396556712963, 0.361053240740741, 0.37051986882716, 
-0.409051890432099, 0.406489920910494, 0.399397183641975, 0.346672453703704, 
-0.385487798996914, 0.382908950617284, 0.387248022762346, 0.370142505787037, 
-0.361493296682099, 0.373767843364198, 0.419709683641975, 0.432388117283951, 
-0.345741705246914, 0.386319685570988, 0.368377459490741, 0.377933304398148, 
-0.355714699074074, 0.379832175925926, 0.376674623842593, 0.352170138888889, 
-0.402731963734568, 0.35858772183642, 0.409573929398148, 0.430726755401235, 
-0.398097511574074, 0.387141927083333, 0.401740933641975, 0.397419945987654, 
-0.374105420524691, 0.405016637731481, 0.382298900462963, 0.392015094521605, 
-0.342367139274691, 0.41382137345679, 0.36112075617284, 0.39140625, 
-0.391415895061728, 0.362373408564815, 0.418616174768519, 0.385100790895062, 
-0.37310474537037, 0.359172453703704, 0.344196084104938, 0.405438609182099, 
-0.393285831404321, 0.426271942515432, 0.407395351080247, 0.358265817901235, 
-0.413771942515432, 0.348013117283951, 0.364741271219136, 0.38968822337963, 
-0.404763454861111, 0.38482349537037, 0.415417631172839, 0.385947145061728, 
-0.386601803626543, 0.356246383101852, 0.372376543209877, 0.420251012731481, 
-0.380846113040123, 0.402442611882716, 0.404289641203704, 0.374849295910494, 
-0.405134789737654, 0.424883053626543, 0.369742235725309, 0.394878472222222, 
-0.402324459876543, 0.408324893904321, 0.36083984375, 0.401047694830247, 
-0.370205198688272, 0.399468315972222, 0.365071614583333, 0.387427662037037, 
-0.386566840277778, 0.387134693287037, 0.341704041280864, 0.386242525077161, 
-0.389988425925926, 0.394380545910494, 0.373389274691358, 0.386977961033951, 
-0.372048611111111, 0.361917679398148, 0.360828993055556, 0.338351176697531, 
-0.39232494212963, 0.376856674382716, 0.377413676697531, 0.375761959876543, 
-0.417889178240741, 0.408604600694444, 0.419092399691358, 0.392327353395062, 
-0.426388888888889, 0.386496913580247, 0.418935667438272, 0.369508342978395, 
-0.389066116898148, 0.35234375, 0.409077208719136, 0.397744261188272, 
-0.402287085262346, 0.412764033564815, 0.399705825617284, 0.395793547453704, 
-0.390901089891975, 0.390275366512346, 0.425829475308642, 0.422141444830247, 
-0.40127555941358, 0.425836709104938, 0.408755304783951, 0.43119212962963, 
-0.394044174382716, 0.445629581404321, 0.38599537037037, 0.429912953317901, 
-0.356674382716049, 0.410478153935185, 0.384129050925926, 0.423949893904321, 
-0.419736207561728, 0.354499421296296, 0.411144868827161, 0.437016541280864, 
-0.371636284722222, 0.384575135030864, 0.369868827160494, 0.417621527777778, 
-0.384243586033951, 0.411648823302469, 0.398116801697531, 0.388364438657407, 
-0.386033950617284, 0.415200617283951, 0.407120466820988, 0.373558063271605, 
-0.41405647183642, 0.406703317901235, 0.378138261959877, 0.399733555169753, 
-0.388875626929012, 0.42020278742284, 0.355137201003086, 0.351853057484568, 
-0.377156876929012, 0.415581597222222, 0.397840711805556, 0.351316550925926, 
-0.43052059220679, 0.408252555941358, 0.373283179012346, 0.364079378858025, 
-0.370189525462963, 0.39624324845679, 0.371161265432099, 0.436905623070988, 
-0.372820216049383, 0.416814959490741, 0.367123601466049, 0.382185570987654, 
-0.422733410493827, 0.412718219521605, 0.380322868441358, 0.385768711419753, 
-0.429175106095679, 0.392156153549383, 0.336970727237654, 0.42496021412037, 
-0.404698350694444, 0.385574604552469, 0.417764998070988, 0.347227044753086, 
-0.387035831404321, 0.418354552469136, 0.401291232638889, 0.382189187885802, 
-0.367764998070988, 0.366671489197531, 0.399421296296296, 0.348514660493827, 
-0.392493730709877, 0.362890625, 0.391638937114198, 0.426443142361111, 
-0.379252266589506, 0.411027922453704, 0.370541570216049, 0.378446903935185, 
-0.394773582175926, 0.413078703703704, 0.443235194830247, 0.401103153935185, 
-0.403628954475309, 0.431617717978395, 0.394756703317901, 0.41430362654321, 
-0.387205825617284, 0.356032986111111, 0.377866994598765, 0.427340133101852, 
-0.430457899305556, 0.369756703317901, 0.40421127507716, 0.42396556712963, 
-0.394716917438272, 0.344619261188272, 0.429246238425926, 0.358376736111111, 
-0.373515866126543, 0.376716820987654, 0.415721450617284, 0.398945071373457, 
-0.390829957561728, 0.415590036651235, 0.372623697916667, 0.411378761574074, 
-0.362014130015432, 0.385200858410494, 0.42539665316358, 0.358989197530864, 
-0.39154369212963, 0.409165219907407, 0.354264322916667, 0.382320601851852, 
-0.392441888503086, 0.38319106867284, 0.415165653935185, 0.419118923611111, 
-0.438945553626543, 0.383711902006173, 0.406321132330247, 0.420744116512346, 
-0.393296682098765, 0.373635223765432, 0.382902922453704, 0.370631992669753, 
-0.386036361882716, 0.395402922453704, 0.386788676697531, 0.386981577932099, 
-0.38959659529321, 0.391449652777778, 0.355647183641975, 0.376593846450617, 
-0.354891251929012, 0.343709008487654, 0.404910542052469, 0.393446180555556, 
-0.363194444444444, 0.393581211419753, 0.381512827932099, 0.385577015817901, 
-0.361928530092593, 0.436765769675926, 0.38978587962963)
+load("nancybruvo.rda")
 @
 You could use this method to replicate the resampling 999 times and then create
 a histogram to visualize a distribution of what would happen under different
@@ -2388,8 +2192,10 @@ data(H3N2)
 H.five <- informloci(H3N2, cutoff = 0.05)
 @
 <<inform.H3N2.2, echo = FALSE>>=
-res <- c(157,177,233,243,262,267,280,303,313,327,357,382,384,399,412,418,424,425,429,433,451,470,529,546,555,557,564,576,592,595,597,602,612,627,642,647,648,654,658,663,667,681,717,806,824,837,882)
-cat("cutoff value: 5 percent ( 95 individuals ).\n","47 uninfomative loci found:", res, fill = 80)
+#res <- c(157,177,233,243,262,267,280,303,313,327,357,382,384,399,412,418,424,425,429,433,451,470,529,546,555,557,564,576,592,595,597,602,612,627,642,647,648,654,658,663,667,681,717,806,824,837,882)
+# cat("cutoff value: 5 percent ( 95 individuals ).\n","47 uninfomative loci found:", res, fill = 80)
+msg <- readLines("msg.txt")
+for (i in msg) message(i)
 @
 Now what happens when you have all informative loci. We'll use the nancycats
 data set, which has microsatellite loci. It is important to note that this is
@@ -2410,7 +2216,13 @@ naninform <- informloci(nancycats, cutoff = 0.05)
 \section{Multilocus Genotype Analysis}
 \label{mlg}
 
-\tab\tab In populations with mixed sexual and clonal reproduction, it common to have multiple samples from the same population that have the same set of alleles at all loci. Here, we introduce tools for tracking MLGs within and across populations in \seclink{intro:genind}{genind} objects from the \adegenet{} package. We will be using the \seclink{data:virus}{virus} data set containing SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that genclone objects are optimal for these analyses. %-----------------------------------------------------------------------------%
+\tab\tab In populations with mixed sexual and clonal reproduction, it common to
+have multiple samples from the same population that have the same set of alleles
+at all loci. Here, we introduce tools for tracking MLGs within and across
+populations in \seclink{intro:genind}{genind} objects from the \adegenet{}
+package. We will be using the \seclink{data:virus}{virus} data set containing
+SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that genclone
+objects are optimal for these analyses. %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
 \subsection{How many multilocus genotypes are in our data set? \{Just a peek\}}
@@ -2484,14 +2296,14 @@ print_command(funk)
 We can see what MLGs cross different populations and then give a
 vector that shows how many populations each one of those MLGs crosses.
 <<crosspop, eval=FALSE>>=
-setpop(virus) <- ~country
+setPop(virus) <- ~country
 v.dup <- mlg.crosspop(virus, quiet=TRUE)
 @
 Here is a snippet of what the output looks like when \texttt{quiet} is
 \texttt{FALSE}. It will print out the MLG name, the total number of individuals
 that make up that MLG, and the populations where that MLG can be found.
 <<crosspopout, echo=FALSE>>=
-setpop(virus) <- ~country
+setPop(virus) <- ~country
 v.dup <- structure(list(MLG.3 = structure(c(4L, 8L), .Names = c("USA", 
 "Denmark")), MLG.9 = structure(c(1L, 13L, 1L, 1L), .Names = c("Japan", 
 "USA", "Finland", "Denmark")), MLG.31 = structure(c(2L, 7L), .Names = c("Japan", 
@@ -2556,7 +2368,7 @@ print_command(funk)
     see \cmdlink{data.manip:divide:popsub}{popsub.}
     \item \texttt{mlgsub -} a vector containing the indices of MLGs you wish to
     subset your table with.
-    \item \texttt{bar -} \texttt{TRUE} or \texttt{FALSE}. If  \texttt{TRUE}, a
+    \item \texttt{plot -} \texttt{TRUE} or \texttt{FALSE}. If  \texttt{TRUE}, a
     bar plot will be printed for each population with more than one individual.
     \item \texttt{total -} When set to \texttt{TRUE}, the pooled data set will
     be added to the table. Defaults to \texttt{FALSE}.
@@ -2565,13 +2377,13 @@ print_command(funk)
   \end{itemize}
 \bline{}
 
-<<mlgbar, eval=FALSE>>=
-v.tab <- mlg.table(virus, quiet=TRUE, bar=TRUE)
+<<mlgbar, eval = FALSE>>=
+v.tab <- mlg.table(virus, plot = TRUE)
 v.tab[1:10, 1:10] # Showing the first 10 columns and rows of the table.
 @
-<<echo=FALSE>>=
-v.tab <- mlg.table(virus, quiet=TRUE, bar=FALSE)
-v.tab[1:10, 1:10]
+<<mlgbarshow, echo = FALSE>>=
+v.tab <- mlg.table(virus, plot = FALSE)
+v.tab[1:10, 1:10] # Showing the first 10 columns and rows of the table.
 @
 \begin{figure}[h!]
   \centering
@@ -2579,8 +2391,8 @@ v.tab[1:10, 1:10]
   \texttt{mlg.table}. Note that this data set would produce several such
   charts but only the chart for Norway is shown here.}
   \label{nortable}
-<<mlgbarplot, echo=FALSE, results='hide'>>=
-mlg.table(virus, sublist="Norway", quiet=TRUE, bar=TRUE)
+<<mlgbarplot, results = 'hide', out.width = "0.8\\linewidth">>=
+mlg.table(virus, sublist = "Norway", plot = TRUE)
 @
 \end{figure}
 \newpage
@@ -2595,54 +2407,34 @@ number of expected MLGs for a given sample size. For more information, type
 For the sake of this example, instead of drawing a curve for each of the 37
 countries represented in this sample, let's set the hierarchical level to year.
 <<mlgrare1_dummy, eval = FALSE>>=
-setpop(virus) <- ~year
+setPop(virus) <- ~year
 summary(virus) # Check the data to make sure it's correct.
 @
 <<mlgrare1, echo = FALSE>>=
-setpop(virus) <- ~year
-res <- structure(list(N = 1903L, pop.eff = structure(c(158, 415, 399, 
-469, 462), .Names = c("2002", "2003", "2004", "2005", "2006")), 
-    loc.nall = structure(c(3L, 3L, 4L, 2L, 4L, 2L, 3L, 2L, 4L, 
-    3L, 4L, 2L, 4L, 3L, 2L, 2L, 3L, 3L, 2L, 2L, 3L, 3L, 3L, 2L, 
-    2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 4L, 4L, 3L, 3L, 3L, 4L, 
-    2L, 2L, 2L, 4L, 3L, 2L, 3L, 4L, 2L, 3L, 2L, 3L, 2L, 2L, 2L, 
-    4L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 4L, 4L, 4L, 3L, 3L, 2L, 3L, 
-    4L, 3L, 2L, 3L, 3L, 3L, 3L, 2L, 3L, 2L, 4L, 2L, 3L, 2L, 2L, 
-    3L, 3L, 3L, 3L, 2L, 2L, 2L, 2L, 3L, 2L, 3L, 2L, 3L, 2L, 3L, 
-    2L, 3L, 3L, 2L, 2L, 2L, 3L, 2L, 2L, 2L, 3L, 3L, 3L, 2L, 2L, 
-    3L, 3L, 3L, 3L, 4L, 2L, 3L, 3L, 4L, 3L, 2L), .Names = c("L001", 
-    "L002", "L003", "L004", "L005", "L006", "L007", "L008", "L009", 
-    "L010", "L011", "L012", "L013", "L014", "L015", "L016", "L017", 
-    "L018", "L019", "L020", "L021", "L022", "L023", "L024", "L025", 
-    "L026", "L027", "L028", "L029", "L030", "L031", "L032", "L033", 
-    "L034", "L035", "L036", "L037", "L038", "L039", "L040", "L041", 
-    "L042", "L043", "L044", "L045", "L046", "L047", "L048", "L049", 
-    "L050", "L051", "L052", "L053", "L054", "L055", "L056", "L057", 
-    "L058", "L059", "L060", "L061", "L062", "L063", "L064", "L065", 
-    "L066", "L067", "L068", "L069", "L070", "L071", "L072", "L073", 
-    "L074", "L075", "L076", "L077", "L078", "L079", "L080", "L081", 
-    "L082", "L083", "L084", "L085", "L086", "L087", "L088", "L089", 
-    "L090", "L091", "L092", "L093", "L094", "L095", "L096", "L097", 
-    "L098", "L099", "L100", "L101", "L102", "L103", "L104", "L105", 
-    "L106", "L107", "L108", "L109", "L110", "L111", "L112", "L113", 
-    "L114", "L115", "L116", "L117", "L118", "L119", "L120", "L121", 
-    "L122", "L123", "L124", "L125")), pop.nall = structure(c(203L, 
-    255L, 232L, 262L, 240L), .Names = c("1", "2", "3", "4", "5"
-    )), NA.perc = 2.36342616920652, Hobs = 0, Xexp = 0), .Names = c("N", 
-"pop.eff", "loc.nall", "pop.nall", "NA.perc", "Hobs", "Xexp"))
-listlab <- c("# Total number of genotypes: ", "# Population sample sizes: ", 
-    "# Number of alleles per locus: ", "# Number of alleles per population: ", 
-    "# Percentage of missing data: ", "# Observed heterozygosity: ", 
-    "# Expected heterozygosity: ")
-cat("\n", listlab[1], res[[1]], "\n")
-for (i in 2:7) {
-    cat("\n", listlab[i], "\n")
-    print(res[[i]])
-}
+setPop(virus) <- ~year
+res <- c("", " # Total number of genotypes:  1903 ", "", " # Population sample sizes:  ", 
+         "2002 2003 2004 2005 2006 ", " 158  415  399  469  462 ", "", 
+         " # Number of alleles per locus:  ", "  6  17  39  42  45  51  60  72  73  90 108 123 129 134 145 148 149 157 168 171 177 225 ", 
+         "  3   3   4   2   4   2   3   2   4   3   4   2   4   3   2   2   3   3   2   2   3   3 ", 
+         "233 243 247 262 267 280 303 313 317 327 334 345 351 357 376 382 384 391 396 399 412 418 ", 
+         "  3   2   2   2   2   2   2   2   2   2   2   4   4   3   3   3   4   2   2   2   4   3 ", 
+         "424 425 429 430 433 434 435 451 463 464 468 470 476 483 490 517 529 546 555 557 561 562 ", 
+         "  2   3   4   2   3   2   3   2   2   2   4   2   2   2   2   2   2   2   4   4   4   3 ", 
+         "564 566 576 577 578 582 592 594 595 597 600 602 604 612 627 642 647 648 654 658 663 664 ", 
+         "  3   2   3   4   3   2   3   3   3   3   2   3   2   4   2   3   2   2   3   3   3   3 ", 
+         "666 667 673 674 676 679 681 685 717 763 806 807 824 837 882 897 906 910 915 929 933 936 ", 
+         "  2   2   2   2   3   2   3   2   3   2   3   2   3   3   2   2   2   3   2   2   2   3 ", 
+         "939 940 957 961 962 963 966 967 969 973 975 977 978 979 980 ", 
+         "  3   3   2   2   3   3   3   3   4   2   3   3   4   3   2 ", 
+         "", " # Number of alleles per population:  ", "2002 2003 2004 2005 2006 ", 
+         " 203  255  232  262  240 ", "", " # Percentage of missing data:  ", 
+         "[1] 2.363426", "", " # Observed heterozygosity:  ", "[1] 0", 
+         "", " # Expected heterozygosity:  ", "[1] 0")
+cat(res, sep = "\n")
 @
 <<mlgrare2, eval=FALSE, tidy=FALSE>>=
 library("vegan")
-H.year <- mlg.table(virus, bar=FALSE)
+H.year <- mlg.table(virus, plot = FALSE)
 rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), 
           border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
@@ -2652,7 +2444,7 @@ rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)),
   \label{rarecurve}
 <<mlgrareplot, echo=FALSE, results='hide'>>=
 # library("vegan")
-H.year <- mlg.table(virus, bar=FALSE)
+H.year <- mlg.table(virus, plot = FALSE)
 vegan::rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
 \end{figure}
@@ -2676,7 +2468,7 @@ interesting data sets. Let's say we wanted to know which MLGs were duplicated
 across the regions of the United Kingdom, Germany, Netherlands, and Norway. All
 we have to do is use the \texttt{sublist} flag in the function:
 <<subcross>>=
-setpop(virus) <- ~country
+setPop(virus) <- ~country
 UGNN.list <- c("United Kingdom", "Germany", "Netherlands", "Norway")
 UGNN <- mlg.crosspop(virus, sublist=UGNN.list, indexreturn=TRUE)
 @
@@ -2732,7 +2524,12 @@ the 22 individuals.
 indNames(virus)[UGNN_match]
 @
 
-Note that there is an alternative way to list individuals matching specific MLGs using the function \texttt{mlg.id}. This function will return a list where each element represents a unique MLG. You can use this data to find out which individuals correspond to specific MLGs. Each element in the list is named with the MLG, but the index does not necessarily match up, so it is important to convert your query MLGs to strings:
+Note that there is an alternative way to list individuals matching specific MLGs
+using the function \texttt{mlg.id}. This function will return a list where each
+element represents a unique MLG. You can use this data to find out which
+individuals correspond to specific MLGs. Each element in the list is named with
+the MLG, but the index does not necessarily match up, so it is important to
+convert your query MLGs to strings:
 \label{mlg:mix:mlg.id}
 <<mlg.id>>=
 virus.id <- mlg.id(virus)
@@ -2743,20 +2540,17 @@ virus.id[as.character(UGNN)]
 We can also use the vector of MLGs to
 subset \cmdlink{mlg:table:mlg.table}{mlg.table} with the \texttt{mlgsub} flag.
 <<mlgsub_flag, eval=FALSE>>=
-mlg.table(virus, mlgsub = UGNN, bar = TRUE)
-@
-<<mlgsub_flagshow, echo=FALSE>>=
-mlg.table(virus, mlgsub = UGNN, bar = FALSE)
+mlg.table(virus, mlgsub = UGNN)
 @
 \noindent
-That showed us exactly which populations these three MLGs came from in our data set.
+That showed us exactly which populations these three MLGs came from in our data
+set.
 \begin{figure}[h!]
   \centering
-  \caption{\footnotesize An example of the same bar-chart as \textit{Figure 1},
-  but focusing on three MLGs.}
+  \caption{\footnotesize All populations that contain these MLGs}
   \label{nortable2}
-<<subnor, results='hide', echo=FALSE>>=
-mlg.table(virus, sublist = "Norway", mlgsub = UGNN)
+<<mlgsub_flagshow, results='hide', echo=FALSE, out.width = "0.8\\linewidth">>=
+mlg.table(virus, mlgsub = UGNN)
 @
 \end{figure}
 \newpage
@@ -4161,11 +3955,11 @@ hierarchies in genclone objects:
   \hline
  Method & Function & Input & Result\\ 
   \hline
- split & \cmdlink{data.manip:hier:define:split}{splithierarchy} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{sethierarchy} & data frame & new hierarchy\\ 
- get & \cmdlink{data.manip:hier:view}{gethierarchy} & formula & data frame\\ 
- name & \cmdlink{data.manip:hier:manip:name}{namehierarchy} & formula & new hierarchy names\\ 
- add & \cmdlink{data.manip:hier:manip:add}{addhierarchy} & vector or data frame & new hierarchical level\\
+ split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
+ set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchy\\ 
+ get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\ 
+ name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchy names\\ 
+ add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
 \end{table}
@@ -4186,9 +3980,9 @@ Pinf
 @
 \noindent
 Let's say I wanted to change the hierarchy names to Spanish. I can do that using
-\texttt{namehierarchy}.
+\texttt{nameStrata}.
 <<Pinf_rename>>=
-elPinf <- namehierarchy(Pinf, ~continente/pais) # Don't forget the formula syntax!
+elPinf <- nameStrata(Pinf, ~continente/pais) # Don't forget the formula syntax!
 elPinf
 Pinf
 @
@@ -4198,7 +3992,7 @@ the names we want.
 
 Of course, it would be silly to create a new data set every time we wanted to do
 something like change names. This is why all of the above functions (with the
-exception of \texttt{gethierarchy}) all have the replacement syntax of:
+exception of \texttt{strata}) all have the replacement syntax of:
 <<hier_syntax_replace, eval = FALSE>>=
 FUNCTION(object) <- input
 @
@@ -4209,7 +4003,7 @@ This allows the object to be edited \textit{in place} and makes things generally
 easier. Let's revisit our previous example:
 <<Pinf_replace>>=
 Pinf
-namehierarchy(Pinf) <- ~continente/pais
+nameStrata(Pinf) <- ~continente/pais
 Pinf
 @
 While we will mainly be using the replacement syntax in this vignette, the 
@@ -4443,30 +4237,54 @@ the only manipulation that can be performed is by adding elements to the graph.
 It is a static image. The ggplot graphs are actually represented as objects in
 your R environment. We can use the function \texttt{last\_plot()} from
 \textit{ggplot2} to be able to grab the plot that was plotted last in our
-window. Let's illustrate this using a MLG bar graph from the Athena population
-of the Aeut data set.
+window. Let's illustrate this using a MLG bar graph from the Aeut data set.
 
-<<Aeut_MLG_Ahena>>=
+<<Aeut_MLG_Aeut, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
 library("poppr")
 library("ggplot2")
 data(Aeut)
-Athena.tab <- mlg.table(Aeut, sublist = "Athena")
+Aeut.tab <- mlg.table(Aeut)
 p <- last_plot()
 @
 
 We've captured our plot using \texttt{last\_plot()} and now we can manipulate
-it. Let's say we didn't like the scale going from blue to black and we wanted
-make it monotone without a color guide. (NOTE: the () around
-the call allows us to show the result immediately.)
+it. One common need is to change the title. We can easily do that with the
+function \texttt{ggtitle()}. Let's say we wanted to label it
+``\textit{Aphanomyces euteiches} multilocus genotype distribution''. We would
+use \texttt{ggtitle("Aphanomyces euteiches multilocus genotype distribution")}.
+Unfortunately, we need italics for a latin binomial. One way to acheive this is
+by using the \texttt{expression()} function and declaring which text needs to be
+italicized.
 
-<<Aeut_MLG_black>>=
-(pb <- p + scale_fill_continuous(low = "black", high = "black", guide = "none"))
+<<Aeut_MLG_title, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
+myTitle <- expression(paste(italic("Aphanomyces euteiches"), " multilocus genotype distribution"))
+(pt <- p + 
+   ggtitle(myTitle) + 
+   xlab("Multilocus genotype")) # We can label the x axis, too
 @
 
-We could also change the title
+Let's say we wanted to remove the grey background. We could use the
+\texttt{theme()} function to do this, or we could use a theme already
+implemented in ggplot2 called \texttt{theme\_bw()}.
 
-<<Aeut_MLG_title>>=
-(pbt <- pb + ggtitle("Distribution of multilocus genotypes for the Athena population")) + xlab("Multilocus genotype")
+
+<<Aeut_MLG_theme, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
+(ptt <- pt + theme_bw())
+@
+
+Uh-oh. The x axis labels are now horizontal when they should be vertical. Since
+it's the overall distribution we're interested in, we don't really need them
+anyways. We can remove them with \texttt{axis.text.x} and \texttt{axis.ticks.x}.
+
+<<Aeut_MLG_theme_axis, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
+(ptta <- ptt + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()))
+@
+
+And, if for some bizzarre reason, you liked the color gradient in \poppr{}
+version 1, you can get that back by adding the \textit{fill} aesthetic:
+
+<<Aeut_silly, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
+(ptttaf <- ptta + aes(fill = count))
 @
 
 This allows you to produce publication quality graphs directly in R. Please see
@@ -4644,18 +4462,18 @@ to its definition and description.
 \endlastfoot
 
 \multicolumn{2}{l}{\Large\textsc{Import/Export}}\\
-\cmdlink{intro:import:getfile}{getfile} & Provides a quick GUI to grab files for import \\
+\texttt{getfile} & Provides a quick GUI to grab files for import \\
 \cmdlink{intro:import:read.genalex}{read.genalex} & Read \textit{GenAlEx} formatted csv files to a genind object \\
 \cmdlink{intro:import:genind2genalex}{genind2genalex} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
 \cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Manipulation}}\\
-\cmdlink{data.manip:hier:setpop}{setpop} & Set the population using defined hierarchies\\
-\cmdlink{data.manip:hier:define}{splithierarchy} & Split a concatenated hierarchy imported as a population\\
-\cmdlink{data.manip:hier:define}{sethierarchy} & Define a population hierarchy of a genclone object\\
-\cmdlink{data.manip:hier:view}{gethierarchy} & Extract the hierarchy data frame\\
-\cmdlink{data.manip:hier:manip}{addhierarchy} & Add a vector or data frame to an existing hierarchy \\
-\cmdlink{data.manip:hier:manip}{namehierarchy} & Rename a population hierarchy\\
+\cmdlink{data.manip:hier:setPop}{setPop} & Set the population using defined hierarchies\\
+\cmdlink{data.manip:hier:define}{splitStrata} & Split a concatenated hierarchy imported as a population\\
+\cmdlink{data.manip:hier:define}{strata} & Define a population hierarchy of a genclone object\\
+\cmdlink{data.manip:hier:view}{strata} & Extract the hierarchy data frame\\
+\cmdlink{data.manip:hier:manip}{addStrata} & Add a vector or data frame to an existing hierarchy \\
+\cmdlink{data.manip:hier:manip}{nameStrata} & Rename a population hierarchy\\
 \cmdlink{data.manip:missing:missingno}{missingno} & Handles missing data \\
 \cmdlink{data.manip:cc:clonecorrect}{clonecorrect} & Clone censors at a specified population hierarchy \\
 \cmdlink{data.manip:informloci}{informloci} & Detects and removes phylogenetically uninformative loci \\

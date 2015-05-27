@@ -47,12 +47,12 @@
 #' @section Data manipulation:
 #' \itemize{
 #' \item \code{\link{as.genclone}} - Converts genind objects to genclone objects
-#' \item \code{\link{setpop}} - Set the population using defined hierarchies
-#' \item \code{\link{splithierarchy}} - Split a concatenated hierarchy imported as a population
-#' \item \code{\link{sethierarchy}} - Define a population hierarchy of a genclone object
-#' \item \code{\link{gethierarchy}} - Extract the hierarchy data frame
-#' \item \code{\link{addhierarchy}} - Add a vector or data frame to an existing hierarchy
-#' \item \code{\link{namehierarchy}} - Rename a population hierarchy
+#' \item \code{\link{setPop}} - Set the population using defined hierarchies
+#' \item \code{\link{splitStrata}} - Split a concatenated hierarchy imported as a population
+#' \item \code{\link{strata}} - Define a population hierarchy of a genclone object
+#' \item \code{\link{strata}} - Extract the hierarchy data frame
+#' \item \code{\link{addStrata}} - Add a vector or data frame to an existing hierarchy
+#' \item \code{\link{nameStrata}} - Rename a population hierarchy
 #' \item \code{\link{missingno}} - Handles missing data
 #' \item \code{\link{clonecorrect}} - Clone censors at a specified population hierarchy
 #' \item \code{\link{informloci}} - Detects and removes phylogenetically uninformative loci

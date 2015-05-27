@@ -79,7 +79,7 @@
 #'   
 #' @param missing how should missing data be treated? \code{"zero"} and 
 #'   \code{"mean"} will set the missing values to those documented in 
-#'   \code{\link{na.replace}}. \code{"loci"} and \code{"geno"} will remove any 
+#'   \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any 
 #'   loci or genotypes with missing data, respectively (see 
 #'   \code{\link{missingno}} for more information.
 #'   
@@ -94,24 +94,15 @@
 #'   and \code{dfname} parameters, or the user will potentially get undesired 
 #'   results. see \code{\link{clonecorrect}} for details.
 #'   
-#' @param hier \itemize{ \item \strong{for genclone objects} - a \code{formula} 
+#' @param strata \itemize{ \item \strong{for genclone objects} - a \code{formula} 
 #'   indicating the hierarchical levels to be used. The hierarchies should be 
-#'   present in the \code{hierarchy} slot. See \code{\link{sethierarchy}} for 
-#'   details. \item \strong{for genind objects} - a \code{numeric or character} 
-#'   vector OR a hierarchical formula. This is the list of columns within a data
-#'   frame (specified in \code{dfname}) in the 'other' slot of the 
-#'   \code{\link{genind}} object. The list should indicate the population 
-#'   hierarchy to be used for clone correction.  }
+#'   present in the \code{strata} slot. See \code{\link{strata}} for 
+#'   details.}
 #'   
-#' @param dfname a \code{character string}. (Only for genind objects) This is
-#'   the name of the data frame or heirarchy containing the vectors of the
-#'   population hierarchy within the \code{other} slot of the
-#'   \code{\link{genind}} object.
-#'   
-#' @param keep an \code{integer}. This indicates the levels of the population 
-#'   hierarchy you wish to keep after clone correcting your data sets. To 
-#'   combine the hierarchy, just set keep from 1 to the length of your 
-#'   hierarchy. see \code{\link{clonecorrect}} for details.
+#' @param keep an \code{integer}. This indicates which strata you wish to keep
+#'   after clone correcting your data sets. To combine strata, just set keep
+#'   from 1 to the number of straifications set in strata. see
+#'   \code{\link{clonecorrect}} for details.
 #'   
 #' @param hist \code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
 #'   a histogram will be produced for each population.
@@ -208,20 +199,19 @@
 #' # on slower computers. 
 #' data(H3N2)
 #' poppr(H3N2, total=FALSE, sublist=c("Austria", "China", "USA"), 
-#' 				clonecorrect=TRUE, hier="country", dfname="x")
+#' 				clonecorrect=TRUE, strata="country", dfname="x")
 #' }
 #==============================================================================#
 #' @import adegenet ggplot2 vegan
-poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
-                  method=1, missing="ignore", cutoff=0.05, quiet=FALSE,
-                  clonecorrect=FALSE, hier=1, dfname="population_hierarchy", 
-                  keep = 1, hist=TRUE, index = "rbarD", minsamp=10, 
-                  legend=FALSE){
-  METHODS = c("permute alleles", "parametric bootstrap",
+poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL, 
+                  sample = 0, method = 1, missing = "ignore", cutoff = 0.05, 
+                  quiet = FALSE, clonecorrect = FALSE, strata = 1, keep = 1, 
+                  hist = TRUE, index = "rbarD", minsamp = 10, legend = FALSE){
+  METHODS <- c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
-                  clonecorrect = clonecorrect, hier = hier, dfname = dfname, 
-                  keep = keep, quiet = TRUE)  
+                    clonecorrect = clonecorrect, strata = strata,
+                    keep = keep, quiet = TRUE)  
   # The namelist will contain information such as the filename and population
   # names so that they can easily be ported around.
   namelist <- NULL
@@ -234,15 +224,13 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   } else {
     namelist$File <- basename(x$X)
   }
-  #poplist <- x$POPLIST
   if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
     dat           <- x$GENIND
     pop(dat)      <- NULL
     poplist       <- NULL
     poplist$Total <- dat
-  }
-  else{
-    dat <- popsub(x$GENIND, sublist=sublist, blacklist=blacklist)
+  } else {
+    dat <- popsub(x$GENIND, sublist = sublist, blacklist = blacklist)
     if (any(levels(pop(dat)) == "")){
       levels(pop(dat))[levels(pop(dat)) == ""] <- "?"
       warning("missing population factor replaced with '?'")
@@ -253,7 +241,7 @@ poppr <- function(dat, total=TRUE, sublist="ALL", blacklist=NULL, sample=0,
   pop.mat <- mlg.matrix(dat)
   if (total==TRUE & !is.null(poplist) & length(poplist) > 1){
     poplist$Total <- dat
-    pop.mat <- rbind(pop.mat, colSums(pop.mat))
+    pop.mat       <- rbind(pop.mat, colSums(pop.mat))
   }
   sublist <- names(poplist)
   Iout    <- NULL
@@ -520,9 +508,13 @@ poppr.all <- function(filelist, ...){
 #' \dontrun{
 #' # Get the indices back and plot them using base R graphics:
 #' nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
-#' layout(matrix(c(1,1,2,2,), 2, 2, byrow = TRUE))
+#' layout(matrix(c(1,1,2,2), 2, 2, byrow = TRUE))
 #' hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
 #' hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
+#' layout(matrix(c(1,1,1,1), 1, 1))
+#' # You can also view them directly:
+#' plot(nansamp, index = "Ia")
+#' plot(nansamp, index = "rbarD")
 #' 
 #' # Get the index for each population.
 #' lapply(seppop(nancycats), ia)
@@ -536,16 +528,16 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   
-  namelist            <- NULL
-  namelist$population <- ifelse(length(levels(pop@pop)) > 1 | 
-                                is.null(pop@pop), "Total", pop@pop.names)
-  namelist$File       <- as.character(match.call()[2])
+  namelist <- list(population = ifelse(nPop(pop) > 1 | is.null(pop@pop), 
+                                       "Total", popNames(pop)),
+                   File = as.character(match.call()[2])
+                  )
   
   popx    <- pop
   missing <- toupper(missing)
   type    <- pop@type
   
-  if(type=="PA"){
+  if (type == "PA"){
     .Ia.Rd <- .PA.Ia.Rd
   } else {
     popx <- seploc(popx)
@@ -554,13 +546,11 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   # if there are less than three individuals in the population, the calculation
   # does not proceed. 
   if (nInd(pop) < 3){
-    IarD <- as.numeric(c(NA, NA))
-    names(IarD) <- c("Ia", "rbarD")
-    if (sample==0){
+    IarD <- setNames(as.numeric(c(NA, NA)), c("Ia", "rbarD"))
+    if (sample == 0){
       return(IarD)
     } else {
-      IarD <- as.numeric(rep(NA, 4))
-      names(IarD) <- c("Ia","p.Ia","rbarD","p.rD")
+      IarD <- setNames(as.numeric(rep(NA, 4)), c("Ia","p.Ia","rbarD","p.rD"))
       return(IarD)
     }
   }
@@ -576,20 +566,24 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   # the population, index, observed value, and p-value. It will also produce a 
   # histogram.
     Iout     <- NULL 
-    idx      <- as.data.frame(list(Index=names(IarD)))
-    samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
-    p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
-    p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
+    idx      <- data.frame(Index = names(IarD))
+    samp     <- .sampling(popx, sample, missing, quiet = quiet, type = type, 
+                          method = method)
+    p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)
+    p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)
+
     if (hist == TRUE){
-      print(poppr.plot(samp, observed=IarD, pop=namelist$population, index = index,
-                       file=namelist$File, pval=p.val, N=nrow(pop@tab)))
+      the_plot <- poppr.plot(samp, observed = IarD, pop = namelist$population, 
+                             index = index, file = namelist$File, pval = p.val, 
+                             N = nrow(pop@tab))
+      print(the_plot)
     }
-    result         <- 1:4
+    result <- setNames(vector(mode = "numeric", length = 4), 
+                       c("Ia","p.Ia","rbarD","p.rD"))
     result[c(1, 3)] <- IarD
     result[c(2, 4)] <- p.val
-    names(result)  <- c("Ia","p.Ia","rbarD","p.rD")
     if (valuereturn == TRUE){
-      iaobj <- list(index = final(Iout, result), samples = samp)
+      iaobj        <- list(index = final(Iout, result), samples = samp)
       class(iaobj) <- "ialist"
       return(iaobj)
     } 
@@ -683,10 +677,10 @@ locus_table <- function(x, index = "simpson", lev = "allele",
     } else {
       msg <- "Stoddard and Taylor index"
     }
-    cat("\n", divs[1], "= Number of observed", paste0(divs[1], "s"))
-    cat("\n", divs[2], "=", msg)
-    cat("\n", divs[3], "= Nei's 1978 expected heterozygosity\n")
-    cat("------------------------------------------\n")
+    message("\n", divs[1], " = Number of observed ", paste0(divs[1], "s"), appendLF = FALSE)
+    message("\n", divs[2], " = ", msg, appendLF = FALSE)
+    message("\n", divs[3], " = Nei's 1978 expected heterozygosity\n", appendLF = FALSE)
+    message("------------------------------------------\n", appendLF = FALSE)
   }
   class(res) <- c("locustable", "matrix")
   return(res)
@@ -698,6 +692,9 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #' @param gid a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
 #'   object.
 #'   
+#' @param form a \code{\link{formula}} giving the levels of markers and 
+#'   hierarchy to analyze. See Details.
+#'   
 #' @param report one of \code{"table", "vector",} or \code{"data.frame"}. Tables
 #'   (Default) and data frame will report counts along with populations or 
 #'   individuals. Vectors will simply report which populations or individuals 
@@ -706,43 +703,99 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #'   
 #' @param level one of \code{"population"} (Default) or \code{"individual"}.
 #'   
+#' @param count.alleles \code{logical}. If \code{TRUE} (Default), The report 
+#'   will return the observed number of alleles private to each population. If 
+#'   \code{FALSE}, each private allele will be counted once, regardless of 
+#'   dosage.
+#'   
 #' @return a matrix, data.frame, or vector defining the populations or
 #'   individuals containing private alleles. If vector is chosen, alleles are
 #'   not defined.
 #'
+#' @details the argument \code{form} allows for control over the strata at which
+#'   private alleles should be computed. It takes a form where the left hand
+#'   side of the formula can be either "allele", "locus", or "loci". The right
+#'   hand of the equation, by default is ".". If you change it, it must
+#'   correspond to strata located in the \code{\link[adegenet]{strata}} slot.
+#'   Note, that the right hand side is disabled for genpop objects.
+#' 
 #' @export
+#' @author Zhian N. Kamvar
 #' @examples
 #' 
 #' data(Pinf) # Load P. infestans data.
-#' setpop(Pinf) <- ~Country # Set the population to be at the country level
 #' private_alleles(Pinf)
+#' 
 #' \dontrun{
-#' # An example of how this data can be displayed.
+#' # Analyze private alleles based on the country of interest:
+#' private_alleles(Pinf, alleles ~ Country)
+#' 
+#' # Number of observed alleles per locus
+#' private_alleles(Pinf, locus ~ Country, count.alleles = TRUE)
+#' 
+#' # Get raw number of private alleles per locus.
+#' (pal <- private_alleles(Pinf, locus ~ Country, count.alleles = FALSE))
+#' 
+#' # Get percentages.
+#' sweep(pal, 2, Pinf@@loc.nall[colnames(pal)], FUN = "/")
+#' 
+#' # An example of how these data can be displayed.
 #' library("ggplot2")
 #' Pinfpriv <- private_alleles(Pinf, report = "data.frame")
 #' ggplot(Pinfpriv) + geom_tile(aes(x = population, y = allele, fill = count))
 #' }
 #==============================================================================#
-private_alleles <- function(gid, report = "table", level = "population"){
+private_alleles <- function(gid, form = alleles ~ ., report = "table", 
+                            level = "population", count.alleles = TRUE){
   REPORTARGS <- c("table", "vector", "data.frame")
   LEVELARGS  <- c("individual", "population")
+  LHS_ARGS <- c("alleles", "locus", "loci")
+  showform <- capture.output(print(form))
+  marker <- pmatch(as.character(form[[2]]), LHS_ARGS, nomatch = 0L, 
+                   duplicates.ok = FALSE)
+  if (all(marker == 0L)){
+    stop("Left hand side of", showform, "must be one of:\n",
+         paste(LHS_ARGS, collapse = " "))
+  } else {
+    marker <- LHS_ARGS[marker]
+  }
+  strataform <- form[c(1, 3)]
+  the_strata <- all.vars(strataform[[2]])
+  if (length(the_strata) > 1 || the_strata[1] != "."){
+    if (!is.genpop(gid)){
+      setPop(gid) <- strataform
+    } else {
+      warning("cannot set strata for a genpop object.")
+    }
+  } 
   report <- match.arg(report, REPORTARGS)
   level  <- match.arg(level, LEVELARGS)
   if (!is.genind(gid) & !is.genpop(gid)){
     stop(paste(gid, "is not a genind or genpop object."))
   }
-  if (is.genind(gid) & !is.null(pop(gid)) | is.genpop(gid) & nrow(gid@tab) > 1){
+  if (is.genind(gid) && !is.null(pop(gid)) | is.genpop(gid) && nPop(gid) > 1){
     if (is.genind(gid)){
-      gid.pop <- truenames(genind2genpop(gid, quiet = TRUE))
+      gid.pop <- tab(genind2genpop(gid, quiet = TRUE))
     } else {
-      gid.pop <- truenames(gid)
+      gid.pop <- tab(gid)
     }
-    privates <- gid.pop[, colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2]
-    privates <- privates[rowSums(privates) > 0, ]
+    private_columns <- colSums(ifelse(gid.pop > 0, 1, 0), na.rm = TRUE) < 2
+    privates <- gid.pop[, private_columns, drop = FALSE]
     if (level == "individual" & is.genind(gid)){
-      gid.tab  <- truenames(gid)$tab
-      privates <- gid.tab[, colnames(gid.pop) %in% colnames(privates)]
-      privates <- privates[rowSums(privates, na.rm = TRUE) > 0, ]
+      gid.tab  <- tab(gid)
+      privates <- gid.tab[, private_columns, drop = FALSE]
+    } else if (!count.alleles){
+      privates <- ifelse(privates > 0, 1, 0)
+    }
+    
+    privates <- privates[rowSums(privates, na.rm = TRUE) > 0, , drop = FALSE]
+    if (marker != "alleles"){
+      private_fac <- gid@loc.fac[private_columns]
+      privates <- vapply(unique(private_fac), function(l){
+        rowSums(privates[, private_fac == l, drop = FALSE], na.rm = TRUE)
+      }, FUN.VALUE = numeric(nrow(privates))
+      )
+      colnames(privates) <- locNames(gid)[unique(private_fac)]
     }
     if (length(privates) == 0){
       privates <- NULL
@@ -752,7 +805,8 @@ private_alleles <- function(gid, report = "table", level = "population"){
     if (report == "vector"){
       privates <- rownames(privates)
     } else if (report == "data.frame"){
-      privates <- melt(privates, varnames = c(level, "allele"), 
+      marker <- ifelse(marker == "alleles", "allele", "locus")
+      privates <- melt(privates, varnames = c(level, marker), 
                        value.name = "count")
     }
     return(privates)

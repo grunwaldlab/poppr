@@ -2,7 +2,7 @@ context("Population Distance Tests")
 
 test_that("dist.genpop matches distance", {
 	data(nancycats, package = "adegenet")
-	nanpop <- genind2genpop(nancycats, quiet = TRUE)
+	nanpop   <- genind2genpop(nancycats, quiet = TRUE)
 	nei      <- as.vector(nei.dist(nanpop))
 	edwards  <- as.vector(edwards.dist(nanpop))
 	reynolds <- as.vector(reynolds.dist(nanpop))

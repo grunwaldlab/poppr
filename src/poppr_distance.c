@@ -109,36 +109,39 @@ SEXP pairdiffs(SEXP freq_mat)
 	int i;
 	int j;
 	int z;
+	int P;
 	int count;
-	double P;
 	SEXP Rout;
 	SEXP Rdim;
 	SEXP pair_matrix;
 	Rdim = getAttrib(freq_mat, R_DimSymbol);
 	I = INTEGER(Rdim)[0]; // Rows
 	J = INTEGER(Rdim)[1]; // Columns
-	PROTECT(pair_matrix = allocVector(REALSXP, J*2));
+	PROTECT(pair_matrix = allocVector(INTSXP, J*2));
+	int* pairmat = INTEGER(pair_matrix);
+	int* inmat = INTEGER(freq_mat);
 	count = 0;
-	PROTECT(Rout = allocVector(REALSXP, I*(I-1)/2));
+	PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
+
 	for(i = 0; i < I-1; i++)
 	{
 		for(z = 0; z < J; z++)
 		{
-			REAL(pair_matrix)[z] = REAL(freq_mat)[i+(I)*z];
+			pairmat[z] = inmat[i+(I)*z];
 		}
 		for(j = i+1; j < I; j++)
 		{
 			P = 0;
 			for(z = 0; z < J; z++)
 			{
-				if(ISNA(REAL(pair_matrix)[0]) || ISNA(REAL(freq_mat)[j+(I)*z]))
+				if(pairmat[0] == NA_INTEGER || inmat[j + (I)*z] == NA_INTEGER)
 				{
 					P = 0;
 					break;
 				}
-				P += fabs(REAL(pair_matrix)[z] - REAL(freq_mat)[j+(I)*z]);
+				P += abs(pairmat[z] - inmat[j + (I)*z]);
 			}
-			REAL(Rout)[count++] = P;
+			INTEGER(Rout)[count++] = P;
 		}
 	}
 	UNPROTECT(2);
@@ -198,7 +201,10 @@ and then the average over all loci will be taken.
 
 SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP add, SEXP loss)
 {
-	int A, P, *pA, *pP;
+	int A;
+	int P;
+	int *pA;
+	int *pP;
 	SEXP Rval;
 	//SEXP Rdim;
 	P = length(permutations);
@@ -230,7 +236,16 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add,
 	
 	A matrix in R is built row by row. That's why there is a triple 'for' loop.
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-	int I, J, A, P, i, j, a, count = 0, *pA, *pP;//, add, loss, *padd, *ploss;
+	int I;
+	int J;
+	int A;
+	int P;
+	int i;
+	int j;
+	int a;
+	int count = 0;
+	int *pA;
+	int *pP;
 	//Initialization of R vectors.
 	SEXP Rdim;
 	SEXP Rval;

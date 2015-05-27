@@ -154,7 +154,7 @@
 #' 
 #' # View each population as a heatmap.
 #' \dontrun{
-#' sapply(nancycats$pop.names, function(x) 
+#' sapply(popNames(nancycats), function(x) 
 #' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 #' }
 #==============================================================================#
@@ -200,8 +200,8 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' @param sample an \code{integer} indicated the number of bootstrap replicates 
 #'   desired.
 #'   
-#' @param tree choose between "nj" for neighbor-joining and "upgma" for a upgma 
-#'   tree to be produced.
+#' @param tree any function that can generate a tree from a distance matrix.
+#'   Default is \code{\link[phangorn]{upgma}}.
 #'   
 #' @param showtree \code{logical} if \code{TRUE}, a tree will be plotted with 
 #'   nodelabels.
@@ -212,21 +212,38 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' @param quiet \code{logical} defaults to \code{FALSE}. If \code{TRUE}, a 
 #'   progress bar and messages will be suppressed.
 #'   
+#' @param root \code{logical} This is a parameter passed on to
+#'   \code{\link[ape]{boot.phylo}}. If the \code{tree} argument produces a
+#'   rooted tree (e.g. "upgma"), then this value should be \code{TRUE}. If it
+#'   produces an unrooted tree (e.g. "nj"), then the value should be
+#'   \code{FALSE}. By default, it is set to \code{NULL}, which will assume an
+#'   unrooted phylogeny unless the function name contains "upgma".
+#' 
 #' @param ... any argument to be passed on to \code{\link{boot.phylo}}. eg. 
 #'   \code{quiet = TRUE}.
+#'   
 #'   
 #' @return a tree of class phylo with nodelables
 #'   
 #' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
 #'   \code{\link{upgma}}, \code{\link{nj}}, \code{\link{boot.phylo}}, 
-#'   \code{\link{nodelabels}}, \code{\link{na.replace}}, 
+#'   \code{\link{nodelabels}}, \code{\link{tab}}, 
 #'   \code{\link{missingno}}.
 #'   
+#' @details This function will calculate a tree based off of Bruvo's distance
+#'   and then utilize \code{\link[ape]{boot.phylo}} to randomly sample loci with
+#'   replacement, recalculate the tree, and tally up the bootstrap support
+#'   (measured in percent success). While this function can take any tree
+#'   function, it has native support for two algorithms: \code{\link[ape]{nj}}
+#'   and \code{\link[phangorn]{upgma}}. If you want to use any other functions,
+#'   you must load the package before you use them (see examples).
+#' 
 #' @note \strong{Please refer to the documentation for bruvo.dist for details on
 #'   the algorithm.} If the user does not provide a vector of appropriate length
 #'   for \code{replen} , it will be estimated by taking the minimum difference
 #'   among represented alleles at each locus. IT IS NOT RECOMMENDED TO RELY ON
 #'   THIS ESTIMATION.
+#'   
 #'   
 #' @export
 #' @author Zhian N. Kamvar, Javier F. Tabima
@@ -249,6 +266,26 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #' 
 #' bruvo.boot(popsub(nancycats, 1), replen = ssr)
 #' 
+#' \dontrun{
+#' 
+#' # Always load the library before you specify the function.
+#' library("ape")
+#' 
+#' # Estimate the tree based off of the BIONJ algorithm.
+#' 
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = bionj)
+#' 
+#' # Utilizing  balanced FastME
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = fastme.bal)
+#' 
+#' # To change parameters for the tree, wrap it in a function.
+#' # For example, let's build the tree without utilizing subtree-prune-regraft
+#' 
+#' myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
+#' bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = myFastME)
+#' 
+#' }
+#' 
 #==============================================================================#
 #' @importFrom phangorn upgma midpoint
 #' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize 
@@ -258,7 +295,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #   \     /
 bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100, 
                         tree = "upgma", showtree = TRUE, cutoff = NULL, 
-                        quiet = FALSE, ...){
+                        quiet = FALSE, root = NULL, ...){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
@@ -274,14 +311,23 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   bootgen <- new('bruvomat', pop, replen)
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
   # analysis, and then place the support labels on the tree.
-  if (tree == "upgma"){
-    root <- TRUE
-    newfunk <- match.fun(upgma)
-  } else if (tree == "nj"){
-    root <- FALSE
-    newfunk <- match.fun(nj)
+  treechar <- paste(as.character(substitute(tree)), collapse = "")
+  if ("upgma" %in% treechar){
+    treefun <- upgma
+  } else if ("nj" %in% treechar){
+    treefun <- nj
+  } else {
+    treefun <- match.fun(tree)    
   }
-  tre <- newfunk(bruvos_distance(bootgen, funk_call = match.call(), add = add, loss = loss))
+  bootfun <- function(x){
+    treefun(bruvos_distance(x, funk_call = match.call(), add = add, 
+                            loss = loss))
+  }
+
+  if (is.null(root)){
+    root <- grepl("upgma", treechar)
+  }
+  tre <- bootfun(bootgen)
   if (any (tre$edge.length < 0)){
     warning(negative_branch_warning(), immediate.=TRUE)
 	  tre <- fix_negative_branch(tre)
@@ -290,9 +336,6 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
     cat("\nBootstrapping...\n") 
     cat("(note: calculation of node labels can take a while even after") 
     cat(" the progress bar is full)\n\n")
-  }
-  bootfun <- function(x){
-    return(newfunk(bruvos_distance(x, funk_call = match.call(), add = add, loss = loss)))
   }
   bp <- boot.phylo(tre, bootgen, FUN = bootfun, B = sample, quiet = quiet, 
                    rooted = root, ...)
@@ -307,7 +350,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   }
   tre$tip.label <- pop@ind.names
   if (showtree == TRUE){
-    poppr.plot.phylo(tre, tree)
+    poppr.plot.phylo(tre, treechar, root)
   }
   return(tre)
 }
@@ -316,7 +359,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' Create minimum spanning network of selected populations using Bruvo's 
 #' distance.
 #' 
-#' @param pop a \code{\link{genind}} object
+#' @param gid a \code{\link{genind}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus.
@@ -326,6 +369,10 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   
 #' @param loss if \code{TRUE}, genotypes with zero values will be treated under 
 #'   the genome loss model presented in Bruvo et al. 2004.
+#'   
+#' @param mlg.compute if the multilocus genotypes are set to "custom" (see
+#'   \code{\link{mll.custom}} for details) in your genclone object, this will
+#'   specify which mlg level to calculate the nodes from. See details.
 #'   
 #' @param palette a \code{function} defining the color palette to be used to 
 #'   color the populations on the graph. It defaults to 
@@ -367,7 +414,20 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   
 #' @param showplot logical. If \code{TRUE}, the graph will be plotted. If 
 #'   \code{FALSE}, it will simply be returned.
+#'
+#' @param include.ties logical. If \code{TRUE}, the graph will include all
+#'   edges that were arbitrarily passed over in favor of another edge of equal
+#'   weight. If \code{FALSE}, which is the default, one edge will be arbitrarily 
+#'   selected when two or more edges are tied, resulting in a pure minimum spanning
+#'   network. 
 #'   
+#' @param threshold numeric. If greater than the default value of 0.0, this will
+#'   be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'
+#' @param clustering.algorithm string. If \code{threshold} is greater than 0, this
+#'   this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'   For both of these arguments, see \code{\link{mlg.filter}} for more details.
+#'
 #' @param ... any other arguments that could go into plot.igraph
 #'   
 #' @return \item{graph}{a minimum spanning network with nodes corresponding to 
@@ -389,10 +449,21 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   graph produced can be plotted using igraph functions, or the entire object
 #'   can be plotted using the function \code{\link{plot_poppr_msn}}, which will
 #'   give the user a scale bar and the option to layout your data.
+#'   \subsection{mlg.compute}{
+#'   Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.}
 #'   
 #' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
 #'   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{minimum.spanning.tree}} 
-#'   \code{\link{bruvo.boot}}, \code{\link{greycurve}}
+#'   \code{\link{bruvo.boot}}, \code{\link{greycurve}} \code{\link{poppr.msn}}
 #'   
 #' @export
 #' @author Zhian N. Kamvar, Javier F. Tabima
@@ -438,54 +509,77 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' # View with no scaling at all.
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
 #' palette = colorRampPalette(c("orange", "black")), vertex.label.cex=0.7, 
-#' vertex.label.dist=0.4, vscale=FALSE, gscale=FALSE)
+#' vertex.label.dist=0.4, gscale=FALSE)
 #' 
 #' # View the whole population, but without labels.
 #' bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)
 #' }
 #==============================================================================#
-#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph
-bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,
+#' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph add.edges
+bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "original", 
+                       palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale = TRUE, showplot = TRUE, ...){
-
+                       wscale = TRUE, showplot = TRUE, 
+                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
+  if (!is.genclone(gid)){
+    # convert to genclone object
+    gid <- as.genclone(gid)  
+  }
+  # if (is.null(pop(gid)) | nPop(gid) == 1){
+  #   return(singlepop_msn(gid, vertex.label, add = add, loss = loss, 
+  #                        replen = replen, gscale = gscale, 
+  #                        glim = glim, gadj = gadj, wscale = wscale, 
+  #                        palette = palette))
   gadj <- ifelse(gweight == 1, gadj, -gadj)
-  if (!is.genclone(pop)){
-    # Storing the MLG vector into the genind object
-    pop$other$mlg.vec <- mlg.vector(pop)  
-  }
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
-                         replen = replen, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
-  }
+
   if (sublist[1] != "ALL" | !is.null(blacklist)){
-    pop <- popsub(pop, sublist, blacklist)
+    gid <- popsub(gid, sublist, blacklist)
   }
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, add = add, loss = loss, 
-                         replen = replen, gscale = gscale, 
+  if (is.null(pop(gid)) | nPop(gid) == 1){
+    return(singlepop_msn(gid, vertex.label, add = add, loss = loss, 
+                         replen = replen, gscale = gscale, mlg.compute = mlg.compute,
                          glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, ...))
+                         palette = palette, include.ties = include.ties,
+                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
+  }
+  if (class(gid$mlg) != "MLG"){
+    # Froce gid$mlg to be class MLG
+    gid$mlg <- new("MLG", gid$mlg)
   }
   # Obtaining population information for all MLGs
-  cpop <- pop[.clonecorrector(pop), ]
-  if (is.genclone(pop)){
-    subs <- sort(unique(pop@mlg))
-  } else {
-    subs <- 1:mlg(pop, quiet = TRUE)
+  classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
+  if (classstat){
+    visible <- gid@mlg@visible
+    mll(gid)  <- mlg.compute
   }
-  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
-  if (is.genclone(pop)){
-    mlgs <- pop@mlg
-    cmlg <- cpop@mlg
+  # Updating the MLG with filtered data
+  if(threshold > 0){
+    filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL", add = add, loss = loss)
+    # TODO: The following two lines should be a product of mlg.filter
+    gid$mlg@visible <- "contracted"
+    gid$mlg[] <- filter.stats[[1]]  
+    # Obtaining population information for all MLGs
+    cgid <- gid[if(length(-which(duplicated(gid$mlg[]))==0)) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
+    bclone <- filter.stats[[3]]
+    if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
   } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
+    cgid <- gid[.clonecorrector(gid), ]
+    bclone <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))
   }
-  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
+  if (is.genclone(gid)){
+    mlgs <- mll(gid)
+    cmlg <- mll(cgid)
+  } else {
+    mlgs <- gid$other$mlg.vec
+    cmlg <- cgid$other$mlg.vec
+  }
+  subs <- sort(unique(mlgs))
+  mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
+  if (is.numeric(mlgs)){
+    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+  }
+
   
   # This will determine the size of the nodes based on the number of individuals
   # in the MLG. Subsetting by the MLG vector of the clone corrected set will
@@ -493,33 +587,52 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   # Note: rank is used to correctly subset the data
   mlg.number <- table(mlgs)[rank(cmlg)]
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  bclone     <- bruvo.dist(cpop, replen = replen, add = add, loss = loss)
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
-  mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
-  
+  if(length(cgid@mlg[]) > 1){ 
+    mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
+    # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+    if(include.ties){
+      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
+      if(length(tied_edges) > 0){
+        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+      }
+    }
+  } else {
+    mst <- minimum.spanning.tree(g)
+  }
+
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if (toupper(vertex.label) == "MLG"){
-      vertex.label <- paste0("MLG.", cmlg)
+      if (is.numeric(cmlg) && !classstat){
+        vertex.label <- paste0("MLG.", cmlg)
+      } else if (visible == "custom"){
+        mll(gid) <- visible
+        vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)
+      }
     } else if (toupper(vertex.label) == "INDS"){
-      vertex.label <- cpop$ind.names
+      vertex.label <- cgid$ind.names
     }
   }
   ###### Color schemes #######  
   # The palette is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color   <- setNames(palette(length(pop@pop.names)), pop@pop.names)
-  mst     <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  color   <- setNames(palette(nPop(gid)), popNames(gid))
+  if(length(mll(cgid)) > 1){ 
+    mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  }
 
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    legend(-1.55, 1, bty = "n", cex = 0.75, legend = pop$pop.names, 
+    legend(-1.55, 1, bty = "n", cex = 0.75, legend = popNames(gid), 
            title = "Populations", fill = color, border = NULL)
   }
   V(mst)$size      <- mlg.number
@@ -527,5 +640,157 @@ bruvo.msn <- function (pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = pop$pop.names, colors = color))
+  return(list(graph = mst, populations = popNames(gid), colors = color))
+}
+#' Test repeat length consistency.
+#' 
+#' This function will test for consistency in the sense that all alleles are 
+#' able to be represented as discrete units after division and rounding.
+#' @param gid a genind object
+#' @param replen a numeric vector of repeat motif lengths.
+#' @return a logical vector indicating whether or not the repeat motif length is
+#'   consistent.
+#'   
+#' @details This function is modified from the version used in 
+#'   \url{http://dx.doi.org/10.5281/zenodo.13007}.
+#'   
+#' @references Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
+#'   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
+#'   and temporal population dynamics of the sudden oak death epidemic in Oregon
+#'   Forests. ZENODO, http://doi.org/10.5281/zenodo.13007, 2014.
+#'   
+#'   Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
+#'   Schulenburg. A simple method for the calculation of microsatellite genotype
+#'   distances irrespective of ploidy level. Molecular Ecology, 13(7):2101-2106,
+#'   2004.
+#'   
+#' @export
+#' @seealso \code{\link{fix_replen}} \code{\link{bruvo.dist}}
+#'   \code{\link{bruvo.msn}} \code{\link{bruvo.boot}}
+#' @author Zhian N. Kamvar
+#' @examples
+#' data(nancycats)
+#' test_replen(nancycats, rep(2, 9))
+test_replen <- function(gid, replen){
+  alleles <- lapply(gid@all.names, as.numeric)
+  are_consistent <- vapply(1:nLoc(gid), consistent_replen, logical(1), 
+                           alleles, replen)
+  names(are_consistent) <- locNames(gid)
+  return(are_consistent)
+}
+
+consistent_replen <- function(index, alleles, replen){
+  !any(duplicated(round(alleles[[index]]/replen[index])))
+}
+
+#' Find and fix inconsistent repeat lengths
+#' 
+#' Attempts to fix inconsistent repeat lengths found by \code{test_replen}
+#' 
+#' @param gid a genind object
+#' @param replen a numeric vector of repeat motif lengths.
+#' @param e a number to be subtracted or added to inconsistent repeat lengths to
+#'   allow for proper rounding.
+#' @param fix_some if \code{TRUE} (default), when there are inconsistent repeat 
+#'   lengths that cannot be fixed by subtracting or adding e, those than can be 
+#'   fixed will. If \code{FALSE}, the original repeat lengths will not be fixed.
+#' @return a numeric vector of corrected repeat motif lengths.
+#' @details This function is modified from the version used in 
+#'   \url{http://dx.doi.org/10.5281/zenodo.13007}.\cr Before being fed into the
+#'   algorithm to calculate Bruvo's distance, the amplicon length is divided by
+#'   the repeat unit length. Because of the amplified primer sequence attached
+#'   to sequence repeat, this division does not always result in an integer and
+#'   so the resulting numbers are rounded. The rounding also protects against
+#'   slight mis-calls of alleles. Because we know that \deqn{\frac{(A - e) - (B
+#'   - e)}{r}}{((A - e) - (B - e))/r} is equivalent to \deqn{\frac{A - B}{r}}{(A
+#'   - B)/r}, we know that the primer sequence will not alter the relationships
+#'   between the alleles. Unfortunately for nucleotide repeats that have powers
+#'   of 2, rounding in R is based off of the IEC 60559 standard (see
+#'   \code{\link{round}}), that means that any number ending in 5 is rounded to
+#'   the nearest \emph{even} digit. This function will attempt to alleviate this
+#'   problem by adding a very small amount to the repeat length so that division
+#'   will not result in a 0.5. If this fails, the same amount will be
+#'   subtracted. If neither of these work, a warning will be issued and it is up
+#'   to the user to determine if the fault is in the allele calls or the repeat
+#'   lengths.
+#' @export
+#' 
+#' @references Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
+#'   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
+#'   and temporal population dynamics of the sudden oak death epidemic in Oregon
+#'   Forests. ZENODO, http://doi.org/10.5281/zenodo.13007, 2014.
+#'   
+#'   Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
+#'   Schulenburg. A simple method for the calculation of microsatellite genotype
+#'   distances irrespective of ploidy level. Molecular Ecology, 13(7):2101-2106,
+#'   2004.
+#'   
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{test_replen}} \code{\link{bruvo.dist}}
+#'   \code{\link{bruvo.msn}} \code{\link{bruvo.boot}}
+#' @examples
+#' 
+#' data(nancycats)
+#' fix_replen(nancycats, rep(2, 9))
+#' # Let's start with an example of a tetranucleotide repeat motif and imagine
+#' # that there are twenty alleles all 1 step apart:
+#' (x <- 1:20L * 4L)
+#' # These are the true lengths of the different alleles. Now, let's add the
+#' # primer sequence to them. 
+#' (PxP <- x + 21 + 21)
+#' # Now we make sure that x / 4 is equal to 1:20, which we know each have
+#' # 1 difference.
+#' x/4
+#' # Now, we divide the sequence with the primers by 4 and see what happens.
+#' (PxPc <- PxP/4)
+#' (PxPcr <- round(PxPc))
+#' diff(PxPcr) # we expect all 1s
+#' 
+#' # Let's try that again by subtracting a tiny amount from 4
+#' (PxPc <- PxP/(4 - 1e-5))
+#' (PxPcr <- round(PxPc))
+#' diff(PxPcr)
+fix_replen <- function(gid, replen, e = 1e-5, fix_some = TRUE){
+  if (length(replen) != nLoc(gid)) {
+    stop(paste0("length of repeats (", length(replen), ") does not equal",
+                " the number of loci (", nLoc(gid), ")."))
+  }
+  consistent_reps <- test_replen(gid, replen)
+  names(replen)   <- locNames(gid)
+  ADD <- FALSE
+  SUB <- FALSE
+  newReps <- replen
+  while (any(!consistent_reps)){
+    if (!SUB){
+      newReps[!consistent_reps] <- newReps[!consistent_reps] - e
+      SUB <- TRUE
+    } else {
+      newReps[!consistent_reps] <- newReps[!consistent_reps] + (2*e)
+      ADD <- TRUE
+    }
+    consistent_reps <- test_replen(gid, newReps)
+    if (any(!consistent_reps) & ADD & SUB){
+      inconsistent <- paste(names(replen[!consistent_reps]), collapse = ", ")
+      msg <- paste("The repeat lengths for", inconsistent, 
+                   "are not consistent.\n\n",
+                   "This might be due to inconsistent allele calls or repeat",
+                   "lengths that are too large.\n",
+                   "Check the alleles to make sure there are no duplicated",
+                   "or similar alleles that might end up being the same after",
+                   "division.\n")
+      if (fix_some){
+        original <- test_replen(gid, replen)
+        fixed    <- paste(names(replen[!original & consistent_reps]), collapse = ", ")
+        msg <- paste(msg, "\nRepeat lengths with some modification are",
+                     "being returned:", fixed)
+        newReps[!consistent_reps] <- replen[!consistent_reps]
+      } else {
+        msg <- paste(msg, "\nOriginal repeat lengths are being returned.")
+        newReps <- replen
+      }
+      warning(msg, immediate. = TRUE)
+      consistent_reps <- TRUE
+    }
+  }
+  return(newReps)
 }

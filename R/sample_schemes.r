@@ -113,29 +113,34 @@ shufflepop <- function(pop, method=1){
   }
   if(pop@type == "PA"){
     if(method == 1 | method == 4){
-      pop@tab <- vapply(1:ncol(pop@tab),
-                        function(x) sample(pop@tab[, x]), pop@tab[, 1])
+      pop@tab <- vapply(1:ncol(tab(pop)),
+                        function(x) sample(tab(pop)[, x]), pop@tab[, 1])
     }
     else if(method == 2){
       paramboot <- function(x){
-        one <- mean(pop@tab[, x], na.rm=TRUE)
+        one <- mean(tab(pop)[, x], na.rm=TRUE)
         zero <- 1-one
-        return(sample(c(1,0), length(pop@tab[, x]), prob=c(one, zero), replace=TRUE))
+        return(sample(c(1,0), length(tab(pop)[, x]), prob=c(one, zero), replace=TRUE))
       }
-      pop@tab <- vapply(1:ncol(pop@tab), paramboot, pop@tab[, 1])
+      pop@tab <- vapply(1:ncol(tab(pop)), paramboot, pop@tab[, 1])
     }
     else if(method == 3){
-      pop@tab <- vapply(1:ncol(pop@tab),
-                        function(x) sample(pop@tab[, x], replace=TRUE), pop@tab[, 1])
+      pop@tab <- vapply(1:ncol(tab(pop)),
+                        function(x) sample(tab(pop)[, x], replace=TRUE), pop@tab[, 1])
     }
   } else {
-    addpop <- function(locus="L1", pop, method=method){
-      pop@tab[, pop@loc.fac %in% locus] <<- .locus.shuffler(pop[, loc=locus], method=method)@tab
+    addpop <- function(locus = "L1", pop, method=method){
+      pop@tab[, pop@loc.fac %in% locus] <<- .locus.shuffler(pop[, loc = locus], method=method)@tab
     }
-    invisible(lapply(names(pop@loc.names), addpop, pop, method))
+    invisible(lapply(locNames(pop), addpop, pop, method))
   }
   return(pop)
 }
+
+#==============================================================================#
+# Shuffling function that never panned out. The idea was to provide a way to 
+# utilize these bootstrap methods for any statistic. 
+#==============================================================================#
 shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
   FUN <- match.fun(FUN)
   lapply(1:sample, function(x) FUN(shufflepop(pop, method=method), ...))
@@ -162,22 +167,8 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
                                  )
                             )
   if(!quiet) progbar <- txtProgressBar(style = 3)
-  # ploid <- ploidy(pop[[1]])
-  # tz <- test_zeroes(pop[[1]])
-  # if (ploid > 2 & tz){
-  #   zcol <- which(as.numeric(pop[[1]]@all.names[[1]]) == 0)
-  #   ploidvec <- vapply(pop, get_local_ploidy, integer(nInd(pop[[1]])))
-  #   ploidind <- TRUE
-  # } else {
-  #   ploidind <- FALSE
-  # }
   for (c in 1:iterations){
-    # if (ploidind){
-    #   IarD <- .Ia.Rd(new.all.shuff(pop, type, method, ploidvec = ploidvec, 
-    #                                zerocol = zcol), missing = missing)
-    # } else {
-      IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)
-    # }
+    IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)   
     sample.data$Ia[c]    <- IarD[1]
     sample.data$rbarD[c] <- IarD[2]
     if (!quiet){
@@ -200,24 +191,21 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
               "non-parametric bootstrap", "multilocus")
   if(type=="PA"){
     if(method == 1 | method == 4){
-      pop@tab <- vapply(1:ncol(pop@tab),
-                        function(x) sample(pop@tab[, x]), pop@tab[, 1])
-    }
-    else if(method == 2){
+      pop@tab <- vapply(1:ncol(tab(pop)),
+                        function(x) sample(tab(pop)[, x]), pop@tab[, 1])
+    } else if(method == 2) {
       paramboot <- function(x){
-        one <- mean(pop@tab[, x], na.rm=TRUE)
+        one <- mean(tab(pop)[, x], na.rm=TRUE)
         zero <- 1-one
-        return(sample(c(1,0), length(pop@tab[, x]), prob=c(one, zero), replace=TRUE))
+        return(sample(c(1,0), length(tab(pop)[, x]), prob=c(one, zero), replace=TRUE))
       }
-      pop@tab <- vapply(1:ncol(pop@tab), paramboot, pop@tab[, 1])
+      pop@tab <- vapply(1:ncol(tab(pop)), paramboot, pop@tab[, 1])
+    } else if(method == 3) {
+      pop@tab <- vapply(1:ncol(tab(pop)),
+                        function(x) sample(tab(pop)[, x], replace=TRUE), pop@tab[, 1])
     }
-    else if(method == 3){
-      pop@tab <- vapply(1:ncol(pop@tab),
-                        function(x) sample(pop@tab[, x], replace=TRUE), pop@tab[, 1])
-    }
-  } 
-  else {
-    pop <- lapply(pop, .locus.shuffler, method=method)
+  } else {
+    pop <- lapply(pop, .locus.shuffler, method = method)
   }
   return(pop)
 }
@@ -230,75 +218,36 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   # if the locus is homozygous for all individuals, shuffling will not occur.
-  if( ncol(pop@tab) > 1 ){
+  if( ncol(tab(pop)) > 1 ){
 
-# Maintenence of the heterozygotic and allelic structure.
-    if(method == 4)
-      pop@tab <- .both.shuff(pop@tab)
+    if (method == 4){
 
-# Maintenece of only the allelic structure. Heterozygosity can fluctuate.
-    else if(method == 1)
-      pop@tab <- .permut.shuff(pop@tab, ploidy(pop))
+      # Maintenence of the heterozygotic and allelic structure.
+      pop@tab <- .both.shuff(tab(pop))
 
-# Parametric Bootstraping where both heterozygosity and allelic structure can
-# change based on allelic frequency. 
-    else if(method == 2){
-      weights <- colMeans(pop@tab, na.rm = TRUE)
-      #pop@tab  <- t(apply(pop@tab, 1, .diploid.shuff, weights))
-      pop@tab <- t(rmultinom(nrow(pop@tab), size = ploidy(pop), prob = weights))/ ploidy(pop)
+    } else if(method == 1){
+
+      # Maintenece of only the allelic structure. Heterozygosity can fluctuate.
+      pop@tab <- .permut.shuff(tab(pop))
+
+    } else if(method == 2){
+
+      # Parametric Bootstraping where both heterozygosity and allelic structure
+      # can change based on allelic frequency.
+      weights <- colMeans(tab(pop), na.rm = TRUE)
+      theSize <- sample(ploidy(pop), 1)
+      pop@tab <- t(rmultinom(nrow(tab(pop)), size = theSize, prob = weights))
+
+    } else if(method == 3){
+
+      # Non-Parametric Bootstrap.
+      weights <- rep(1, ncol(tab(pop)))
+      theSize <- sample(ploidy(pop), 1)
+      pop@tab <- t(rmultinom(nrow(tab(pop)), size = theSize, prob = weights))
+
     }
-# Non-Parametric Bootstrap.
-    else if(method == 3){
-      weights <- rep(1, ncol(pop@tab))
-#       pop@tab  <- t(apply(pop@tab, 1, .diploid.shuff, weights))
-      pop@tab <- t(rmultinom(nrow(pop@tab), size = ploidy(pop), prob = weights))/ ploidy(pop)
-    }
-# Maintaining heterozygosity.    
-#    if(method == 5){
-#      temp <- vapply(1:nrow(pop@tab), function(x) sample(pop@tab[x,]), pop@tab[1,])
-#      pop@tab <- t(temp)
-#    }
   }
   return(pop)
-}
-
-
-
-#==============================================================================# 
-# This is a parametric boostrap resampling method, It works on one single
-# genotype at each individual. In order to make this work you need to take your
-# separate loci, then apply this function over all individuals at that locus. 
-# this way, it is independent for each individual and each locus. 
-#
-# vec is a vector of possible alleles for the locus.
-#
-# weights is a corresponding vector giving the allelic frequency for each allele
-# at that locus in that population. The sum of the frequencies should be 1. 
-# DEPRECATED (replaced with multinomial distribution)
-#==============================================================================# 
-.diploid.shuff <- function(vec, weights){
-  # Dealing with missing values is probably not necessary for a parametric
-  # bootstrap resampling. 
-  #
-  #
-  # Missing values need to be handled by preserving the structure.   
-  #if(any(is.na(vec))){
-  #  if(any(!is.na(vec))){
-  #    vec <- rep(NA, length(vec))
-  #    vec[sample(length(vec), 1, prob = weights)] <- 0.5
-  #  }
-  #  return(vec)
-  #}   
-  # samples potential alleles from the locus
-  temp <- sample(length(vec), 2, replace=TRUE, prob = weights)
-  #cat("Weights: ",weights, "\n")
-  #cat("Sampled: ",temp, "\n")     
-  vec <- vector(mode="numeric", length=length(vec))
-  # the first allele assigned as heterozygote
-  vec[temp[1]] <- 0.5
-  # if the second allele is the same as the first, it will become homozygous
-  vec[temp[2]] <- vec[temp[2]] + 0.5
-  return(vec)
 }
 
 #==============================================================================#
@@ -309,10 +258,11 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 #
 #==============================================================================#
   
-.permut.shuff <- function(mat, ploidy = 2){
-  bucket     <- round(colSums(mat, na.rm = TRUE)*ploidy)
-  bucketlist <- as.integer(sample(rep(1:length(bucket), bucket)))
-  mat        <- .Call("permute_shuff", mat, bucketlist - 1, 1/ploidy, ploidy, PACKAGE = "poppr")
+.permut.shuff <- function(mat){
+  bucket     <- colSums(mat, na.rm = TRUE)
+  ploidy     <- rowSums(mat, na.rm = TRUE)
+  bucketlist <- as.integer(sample(rep(1:length(bucket), bucket))) - 1L
+  mat        <- .Call("permute_shuff", mat, bucketlist, ploidy, PACKAGE = "poppr")
   return(mat)
 }
 
@@ -321,7 +271,8 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
 # states as well as the heterozygosity. 
 #==============================================================================#
 .both.shuff <- function(mat){
-  mat <- mat[sample(nrow(mat)), ]
+  typed <- which(!is.na(rowSums(mat)))
+  mat[typed, ] <- mat[sample(typed), ]
   return(mat)
 }
 

@@ -1,8 +1,49 @@
-poppr 1.1.4.99
+poppr 1.1.5.99
 ===========
+COMPATIBILITY UPDATE
+* poppr has moved to version 2.0 due to adegenet's recent update. The hierarchy slot introduced in version 1.1 is now being moved to adegenet and renamed `strata`. For maximum backwards compatibility, all of the hierarchy methods still exist, but they are deprecated and will print a warning with the proper function to use. If you were accessing the hierarchy slot without using the `*hierarchy()` methods, your code will fail as the hierarchy slot now should only contain a formula object. 
+
+NEW DEPENDENCIES
+* poppr now imports elements from dplyr
+
 NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
-* The function `poppr` will now plot all populations in a single facetted plot instead of one plot per population.
+* The function `poppr` will now plot all populations in a single faceted plot instead of one plot per population.
+* `aboot` and `bruvo.boot` will now be able to utilize any function to generate trees (suggested in issue #18).
+* The mlg slot in the genclone object can now optionally hold an MLG class object. This object will contain different definitions of multilocus genotypes, allowing the user to switch between observed, custom, and mlgs defined given a genetic distance threshold.
+* minimum spanning network functions gain the ability to include reticulations using the option `include.ties`
+* minimum spanning network functions gain the ability to collapse multilocus genotypes by genetic distance with the option `threshold`.
+* `informloci` gains the argument "MAF", which allows the specification of a minor allele frequency cutoff in addition to the cutoff argument. Examples have been updated.
+* `aboot` can now take genlight objects.
+* `poppr.msn` and `plot_poppr_msn` can now take genlight objects.
+* `plot_poppr_msn` now gives users the option to exclude the legends.
+* Default plotting for `mlg.table` will no longer produce one plot per population. It will now produce a single ggplot object for all populations. Note that the bars are no longer colored by count.
+
+NEW FUNCTIONS
+* `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
+* `bitwise.dist` can efficiently calculate absolute genetic distance for genlight objects. 
+* `mll` "multilocus lineages" is a new replacement for `mlg.vector` which gains the functionality of selecting the multilocus genotype definition from the mlg slot.
+* `nmll` counts the number of multilocus lineages
+* `mll.custom` allows the user to define custom multilocus genotypes.
+* `mll.levels` allows the user to edit the names of custom multilocus genotypes.
+* `poppr_has_parallel` will return `TRUE` if poppr was built with OpenMP parallel library.
+* `win.ia` calculates windows of \bar{r}_d along genlight chromosomes.
+* `samp.ia` calculates \bar{r}_d for genlight object by randomly sampling a user-defined number of SNPs.
+* `test_replen` will test repeat lengths of microsatellite markers for consistency.
+* `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
+
+NEW CLASSES
+* snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 
+* MLG is an internal class that lives inside the mlg slot of snpclone and genclone objects. It allows the user to easily switch between multilocus genotype definitions.
+
+
+poppr 1.1.5
+===========
+BUG FIX
+* Fixed internal bug for `fix_negative_branch` when only one branch had a negative edge.
+* Fixed bug in `diss.dist` where a single locus would return an error.
+* Fixed bug in `poppr.amova` where a single locus would return an error due to `repool_haplotypes`.
+* Fixed bug from the future! mlg.table will now return a matrix all the time (Fix #25).
 
 poppr 1.1.4
 ===========

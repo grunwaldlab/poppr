@@ -145,9 +145,13 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' Create a minimum spanning network of selected populations using a distance
 #' matrix.
 #'
-#' @param pop a \code{\link{genind}} object
+#' @param gid a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object
 #'   
 #' @param distmat a distance matrix that has been derived from your data set.
+#' 
+#' @param mlg.compute if the multilocus genotypes are set to "custom" (see
+#'   \code{\link{mll.custom}} for details) in your genclone object, this will
+#'   specify which mlg level to calculate the nodes from. See details.
 #'   
 #' @param palette a \code{function} defining the color palette to be used to 
 #'   color the populations on the graph. It defaults to
@@ -190,6 +194,19 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' @param showplot logical. If \code{TRUE}, the graph will be plotted. If
 #'   \code{FALSE}, it will simply be returned.
 #'   
+#' @param include.ties logical. If \code{TRUE}, the graph will include all
+#'   edges that were arbitrarily passed over in favor of another edge of equal
+#'   weight. If \code{FALSE}, which is the default, one edge will be arbitrarily 
+#'   selected when two or more edges are tied, resulting in a pure minimum spanning
+#'   network. 
+#'
+#' @param threshold numeric. If greater than the default value of 0.0, this will
+#'   be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'
+#' @param clustering.algorithm string. If \code{threshold} is greater than 0, this
+#'   this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
+#'   For both of these arguments, see \code{\link{mlg.filter}} for more details.
+#'
 #' @param ... any other arguments that could go into plot.igraph
 #'   
 #' @return \item{graph}{a minimum spanning network with nodes corresponding to 
@@ -199,16 +216,28 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #'   vertex colors} \item{colors}{a vector of the hexadecimal representations of
 #'   the colors used in the vertex colors}
 #'   
+#'   
+#' @details Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.
+#'   
 #' @note The edges of these graphs may cross each other if the graph becomes too
 #'   large.
 #'   
 #' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}}, 
-#'   \code{\link{nodelabels}}, \code{\link{na.replace}},
+#'   \code{\link{nodelabels}}, \code{\link{tab}},
 #'   \code{\link{missingno}}, \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
 #' 
 #' @export
 #' @aliases msn.poppr
-#' @author Javier F. Tabima, Zhian N. Kamvar
+#' @author Javier F. Tabima, Zhian N. Kamvar, Jonah Brooks
 #' @examples
 #' 
 #' # Load the data set and calculate the distance matrix for all individuals.
@@ -221,7 +250,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' \dontrun{
 #' # Set subpopulation structure.
 #' Aeut.sub <- as.genclone(Aeut)
-#' setpop(Aeut.sub) <- ~Pop/Subpop
+#' setPop(Aeut.sub) <- ~Pop/Subpop
 #' 
 #' # Plot respective to the subpopulation structure
 #' As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA)
@@ -230,12 +259,14 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' As.msn <- poppr.msn(Aeut.sub, A.dist, gadj=15, vertex.label=NA, sublist=1:10)
 #' 
 #' # Let's look at the structure of the microbov data set
+#'
+#' library("igraph")
 #' data(microbov)
-#' micro.dist <- diss.dist(microbov)
-#' micro.msn <- poppr.msn(microbov, diss.dist(microbov), vertex.label=NA)
+#' micro.dist <- diss.dist(microbov, percent = TRUE)
+#' micro.msn <- poppr.msn(microbov, micro.dist, vertex.label=NA)
 #' 
 #' # Let's plot it and show where individuals have < 15% of their genotypes 
-#' different.
+#' # different.
 #' 
 #' edge_weight <- E(micro.msn$graph)$weight
 #' edge_labels <- ifelse(edge_weight < 0.15, round(edge_weight, 3), NA)
@@ -245,13 +276,14 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' }
 #' 
 #==============================================================================#
-poppr.msn <- function (pop, distmat, palette = topo.colors, 
+poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "original",
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
-                       wscale=TRUE, showplot = TRUE, ...){
+                       wscale=TRUE, showplot = TRUE, 
+                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
   if (class(distmat) != "dist"){
     if (is.matrix(distmat)){
-      if (any(nInd(pop) != dim(distmat))){
+      if (any(nInd(gid) != dim(distmat))){
         stop("The size of the distance matrix does not match the size of the data.\n")
       }
       distmat <- as.dist(distmat)
@@ -259,97 +291,156 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
       stop("The distance matrix is neither a dist object nor a matrix.\n")
     }
   }
-  if (nInd(pop) != attr(distmat, "Size")){
+  if (nInd(gid) != attr(distmat, "Size")){
     stop("The size of the distance matrix does not match the size of the data.\n")
   }
-  gadj <- ifelse(gweight == 1, gadj, -gadj)
-  # Storing the MLG vector into the genind object
-  if (!is.genclone(pop)){
-    # Storing the MLG vector into the genind object
-    pop$other$mlg.vec <- mlg.vector(pop)  
+  if (!is(gid, "genlight") && !is.genclone(gid)){
+    gid <- as.genclone(gid)
+  } else if (is(gid, "genlight") && !is(gid, "snpclone")){
+    gid <- as.snpclone(gid)
   }
+  gadj <- ifelse(gweight == 1, gadj, -gadj)
+  
   bclone <- as.matrix(distmat)
 
-  # The clone correction of the matrix needs to be done at this step if there
-  # is only one or no populations. 
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    if (is.genclone(pop)){
-      mlgs <- pop@mlg
-    } else {
-      mlgs <- pop$other$mlg.vec
-    }
-    bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
-    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette))
-  }
+  # # The clone correction of the matrix needs to be done at this step if there
+  # # is only one or no populations. 
+  # if (is.null(pop(pop)) | length(pop@pop.names) == 1){
+  #   if (is.genclone(pop)){
+  #     mlgs <- mll(pop, mlg.compute)
+  #   } else {
+  #     mlgs <- pop$other$mlg.vec
+  #   }
+  #   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  #   return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
+  #                        glim = glim, gadj = gadj, wscale = wscale, 
+  #                        palette = palette))
+  # }
   # This will subset both the population and the matrix. 
-  if(sublist[1] != "ALL" | !is.null(blacklist)){
-    sublist_blacklist <- sub_index(pop, sublist, blacklist)
-    bclone <- bclone[sublist_blacklist, sublist_blacklist]
-    pop    <- popsub(pop, sublist, blacklist)
+  if(toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
+    sublist_blacklist <- sub_index(gid, sublist, blacklist)
+    bclone <- bclone[sublist_blacklist, sublist_blacklist, drop = FALSE]
+    gid    <- popsub(gid, sublist, blacklist)
   }
-  cpop <- pop[.clonecorrector(pop), ]
-  if (is.genclone(pop)){
-    mlgs <- pop@mlg
-    cmlg <- cpop@mlg
-  } else {
-    mlgs <- pop$other$mlg.vec
-    cmlg <- cpop$other$mlg.vec
-  }
-  # This will clone correct the incoming matrix. 
-  bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
-  
-  if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-    return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, showplot = showplot, ...))
-  }
-  # Obtaining population information for all MLGs
-  if (is.genclone(pop)){
-    subs <- sort(unique(mlgs))
-  } else {
-    subs <- 1:mlg(pop, quiet = TRUE)
-  }
-  mlg.cp <- mlg.crosspop(pop, mlgsub = subs, quiet=TRUE)
 
-  names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))
-  # This will determine the size of the nodes based on the number of individuals
-  # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
-  # give us the numbers and the population information in the correct order.
-  # Note: rank is used to correctly subset the data
-  mlg.number <- table(mlgs)[rank(cmlg)]
+  classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
+  if (classstat){
+    visible <- gid@mlg@visible
+    mll(gid)  <- mlg.compute
+  }
+
+  # cpop <- pop[.clonecorrector(pop), ]
+
+  # # This will clone correct the incoming matrix. 
+  # bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
+  
+  if (is.null(pop(gid)) | nPop(gid) == 1){
+    return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
+                         glim = glim, gadj = gadj, wscale = wscale, mlg.compute = mlg.compute,
+                         palette = palette, include.ties = include.ties, showplot=showplot,
+                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
+  }
+
+  if (class(gid$mlg) != "MLG"){
+    # Froce gid$mlg to be class MLG
+    gid$mlg <- new("MLG", gid$mlg)
+  }
+
+  if(threshold > 0){
+    # Updating MLG with filtered data
+    filter.stats <- mlg.filter(gid,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
+    # TODO: The following two lines should be a product of mlg.filter
+    gid$mlg@visible <- "contracted"
+    gid$mlg[] <- filter.stats[[1]]
+    cgid <- gid
+    cgid <- cgid[if(length(-which(duplicated(cgid$mlg[]))==0)) which(!duplicated(cgid$mlg[])) else -which(duplicated(cgid$mlg[])) ,]
+    # Preserve MLG membership of individuals
+    mlg.number <- table(filter.stats[[1]])[rank(cgid@mlg[])]
+    
+    bclone <- filter.stats[[3]]
+    if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
+  }
+  else {  
+    cgid <- gid[.clonecorrector(gid), ]
+    # This will determine the size of the nodes based on the number of individuals
+    # in the MLG. Sub-setting by the MLG vector of the clone corrected set will
+    # give us the numbers and the population information in the correct order.
+    # Note: rank is used to correctly subset the data
+    mlg.number <- table(gid$mlg[])[rank(cgid$mlg[])]
+    # This will clone correct the incoming matrix. 
+    bclone <- bclone[!duplicated(gid$mlg[]), !duplicated(gid$mlg[]), drop = FALSE]
+  }
+  rownames(bclone) <- cgid$ind.names
+  colnames(bclone) <- cgid$ind.names
+  if (is.genclone(gid) | is.snpclone(gid)){
+    mlgs <- mll(gid)
+    cmlg <- mll(cgid)
+
+    if (!is.numeric(mlgs)){
+      mlgs <- as.character(mlgs)
+      cmlg <- as.character(cmlg)
+    }
+  } else {
+    mlgs <- gid$other$mlg.vec
+    cmlg <- cgid$other$mlg.vec
+  }  
+  
+  # Obtaining population information for all MLGs
+  subs <- sort(unique(mlgs))
+  mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
+  if (is.numeric(mlgs)){
+    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+  }
   mlg.cp     <- mlg.cp[rank(cmlg)]
-  rownames(bclone) <- cpop$pop
-  colnames(bclone) <- cpop$pop
+  bclone     <- as.matrix(bclone)
   
   g   <- graph.adjacency(bclone, weighted=TRUE, mode="undirected")
-  mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+  if(length(cgid@mlg[]) > 1){
+    mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
+    # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
+    if(include.ties){
+      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
+      if(length(tied_edges) > 0){
+        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
+      }
+    }
+  } else {
+    mst <- minimum.spanning.tree(g)
+  }
   
   if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
     if(toupper(vertex.label) == "MLG"){
-      vertex.label <- paste("MLG.", cmlg, sep="")
+      if (is.numeric(cmlg) && !classstat){
+        vertex.label <- paste("MLG.", cmlg, sep="")        
+      } else if (visible == "custom"){
+        mll(gid) <- visible
+        vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
+      } else {
+        vertex.label <- paste0("MLG.", cmlg)
+      }
     }
     else if(toupper(vertex.label) == "INDS"){
-      vertex.label <- cpop$ind.names
+      vertex.label <- cgid$ind.names
     }
   }
   ###### Color schemes #######  
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color   <- setNames(palette(length(pop@pop.names)), pop@pop.names)
+  color   <- setNames(palette(nPop(gid)), popNames(gid))
   
-  ###### Edge adjustments ######
-  mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
-  
+  if(length(cgid@mlg[]) > 1){
+    ###### Edge adjustments ######
+    mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
+  }
+ 
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[pop@pop.names %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pop$pop.names, 
+    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = popNames(gid), 
            title = "Populations", fill=color, border=NULL)
   }
   V(mst)$size      <- mlg.number
@@ -357,7 +448,7 @@ poppr.msn <- function (pop, distmat, palette = topo.colors,
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = pop$pop.names, colors = color))
+  return(list(graph = mst, populations = popNames(gid), colors = color))
 }
 
 
@@ -460,7 +551,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
     colnames(data_table)         <- names(pops)
     dimnames(data_table) <- list(Locus = c(gen@loc.names, "Mean"), Population = names(pops))
     if (all(data_table == 0)){
-      cat("No Missing Data Found!")
+      message("No Missing Data Found!")
       return(NULL)
     }
     if (plot){
@@ -516,15 +607,9 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
 
   } else if (type == "ploidy"){
 
-    valname <- "Observed_Ploidy"
-    if (gen@ploidy <= 2){
-      warning("This function is meant for polyploid data.")
-      data_table <- matrix(gen@ploidy, nrow = nInd(gen), ncol = nLoc(gen))
-      missing <- propTyped(gen, "both") == 0
-      data_table[missing] <- NA
-    } else {
-      data_table <- get_local_ploidy(gen)
-    }
+    valname    <- "Observed_Ploidy"
+    data_table <- get_local_ploidy(gen)
+    
     dimnames(data_table) <- list(Samples = indNames(gen), Loci = locNames(gen))
     if (plot){
       data_df <- melt(data_table, value.name = valname)
@@ -632,7 +717,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' customize the plot by labeling groups of individuals, size of nodes, and 
 #' adjusting the palette and scale bar.
 #' 
-#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#' @param x a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}}
 #'   object from which \code{poppr_msn} was derived.
 #'   
 #' @param poppr_msn a \code{list} produced from either \code{\link{poppr.msn}}
@@ -679,6 +764,14 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   before any edges are removed with \code{cutoff}. If \code{FALSE} (Default),
 #'   the layout will be computed after any edges are removed.
 #'   
+#' @param pop.leg if \code{TRUE}, a legend indicating the populations will
+#'   appear in the top right corner of the graph, but will not overlap. Setting
+#'   \code{pop.leg = FALSE} disables this legend. See details.
+#'   
+#' @param scale.leg if \code{TRUE}, a scale bar indicating the distance will
+#'   appear under the graph. Setting \code{scale.leg = FALSE} suppresses this
+#'   bar. See details.
+#'   
 #' @param ... any other parameters to be passed on to 
 #'   \code{\link[igraph]{plot.igraph}}.
 #'   
@@ -717,6 +810,24 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   useful if you want to maintain the same position of the nodes before and
 #'   after removing edges with the \code{cutoff} argument. This works best if
 #'   you set a seed before you run the function.}}
+#'   
+#'   \subsection{mlg.compute}{
+#'   Each node on the graph represents a different multilocus genotype. 
+#'   The edges on the graph represent genetic distances that connect the
+#'   multilocus genotypes. In genclone objects, it is possible to set the
+#'   multilocus genotypes to a custom definition. This creates a problem for
+#'   clone correction, however, as it is very possible to define custom lineages
+#'   that are not monophyletic. When clone correction is performed on these
+#'   definitions, information is lost from the graph. To circumvent this, The
+#'   clone correction will be done via the computed multilocus genotypes, either
+#'   "original" or "contracted". This is specified in the \code{mlg.compute}
+#'   argument, above.}
+#'   
+#'   \subsection{legends}{ To avoid drawing the legend over the graph, legends 
+#'   are separated by different plotting areas. This means that if legends are 
+#'   included, you cannot plot multiple MSNs in a single plot. The scale bar (to
+#'   be added in manually) can be obtained from \code{\link{greycurve}} and the
+#'   legend can be plotted with \code{\link{legend}}.}
 #' 
 #' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 #' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
@@ -773,12 +884,14 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
 plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, 
+                           mlg.compute = "original",
                            glim = c(0, 0.8), gweight = 1, wscale = TRUE, 
                            nodebase = 1.15, nodelab = 2, inds = "ALL", 
                            mlg = FALSE, quantiles = TRUE, cutoff = NULL, 
                            palette = NULL, layfun = layout.auto, 
-                           beforecut = FALSE, ...){
-  if (!is.genind(x)){
+                           beforecut = FALSE, pop.leg = TRUE, scale.leg = TRUE, 
+                           ...){
+  if (!is(x, "genlight") && !is.genind(x)){
     stop(paste(substitute(x), "is not a genind or genclone object."))
   }
   if (!identical(names(poppr_msn), c("graph", "populations", "colors"))){
@@ -788,7 +901,14 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
     poppr_msn <- update_poppr_graph(poppr_msn, palette)
   }
   # Making sure incoming data matches so that the individual names match.
-  x <- popsub(x, sublist = poppr_msn$populations)
+  if (!all(is.na(poppr_msn$populations))){
+    if (nPop(x) > 0 && nPop(x) >= length(poppr_msn$populations)){
+      x <- popsub(x, sublist = poppr_msn$populations)
+    } else {
+      warning("populations in graph don't match data. Setting to none.")
+    }
+    
+  }
   
   if (beforecut){
     LAYFUN <- match.fun(layfun)
@@ -816,7 +936,16 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   poppr_msn$graph <- update_edge_scales(poppr_msn$graph, wscale, gscale, glim, gadj)
   
   x.mlg <- mlg.vector(x)
-  labs  <- unique(x.mlg)
+  if (is.factor(x.mlg)){
+    x.mlg <- mll(x, mlg.compute)
+    custom <- TRUE
+    # labs <- unique(x.mlg)
+    labs  <- correlate_custom_mlgs(x, mlg.compute)
+  } else {
+    labs  <- unique(x.mlg)    
+    custom <- FALSE
+  }
+
   
 
   # Highlighting only the names of the submitted genotypes and the matching
@@ -827,23 +956,30 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   if (length(inds) == 1 & toupper(inds[1]) == "ALL"){
     x.input <- unique(x.mlg)
   } else if (is.character(inds)){
-    x.input <- unique(x.mlg[x@ind.names %in% inds])
+    x.input <- unique(x.mlg[indNames(x) %in% inds])
   } else if (is.numeric(inds)){
     x.input <- unique(x.mlg[x.mlg %in% inds])
   }
   
   # Remove labels that are not specified.
-  labs[which(!labs %in% x.input)] <- NA
+  if (!custom){
+    labs[!labs %in% x.input] <- NA    
+  } else {
+    labs[!labs %in% labs[as.character(x.input)]] <- NA
+  }
+
 
   if (!isTRUE(mlg)){
     # Combine all the names that match with each particular MLG in x.input.
     combined_names <- vapply(x.input, function(mlgname)
-                             paste(rev(x@ind.names[x.mlg == mlgname]),
+                             paste(rev(indNames(x)[x.mlg == mlgname]),
                                    collapse = "\n"),
                              character(1))
     labs[!is.na(labs)] <- combined_names
-  } else {
+  } else if (is.numeric(x.mlg) && !custom){
     labs[!is.na(labs)] <- paste("MLG", labs[!is.na(labs)], sep = ".")
+  } else {
+    labs <- as.character(labs)
   }
   if (any(is.na(labs))){
     sizelabs <- V(poppr_msn$graph)$size
@@ -862,48 +998,65 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   
   # Plotting parameters.
   def.par <- par(no.readonly = TRUE)
-  # Setting up the matrix for plotting. One Vertical panel of width 1 and height
-  # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
-  # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
-  layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
-         widths = c(1, 4), heights= c(4.5, 0.5))
-  # mar = bottom left top right
   
-  ## LEGEND
-  par(mar = c(0, 0, 1, 0) + 0.5)
-  too_many_pops   <- as.integer(ceiling(length(x$pop.names)/30))
-  pops_correction <- ifelse(too_many_pops > 1, -1, 1)
-  yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
-  plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
-       main = 'POPULATION')
-  legend("topleft", bty = "n", cex = 1.2^pops_correction,
-         legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
-         ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
-  
-  ## PLOT
-  par(mar = c(0,0,0,0))
-  plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
-              layout = lay, ...)
-  
-  ## SCALE BAR
-  if (quantiles){
-    scales <- sort(weights)
+  if (!pop.leg & !scale.leg){
+    plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
+                layout = lay, ...)
   } else {
-    scales <- seq(wmin, wmax, l = 1000)
+    
+    # Setting up the matrix for plotting. One Vertical panel of width 1 and height
+    # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
+    # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
+    if (pop.leg && !all(is.na(poppr_msn$populations))){
+      if (scale.leg){
+        layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
+               widths = c(1, 4), heights= c(4.5, 0.5))        
+      } else {
+        layout(matrix(c(1, 2), nrow = 2), widths = c(1, 4))
+      }
+
+      # mar = bottom left top right
+      
+      ## LEGEND
+      par(mar = c(0, 0, 1, 0) + 0.5)
+      too_many_pops   <- as.integer(ceiling(nPop(x)/30))
+      pops_correction <- ifelse(too_many_pops > 1, -1, 1)
+      yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
+      plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
+           main = 'POPULATION')
+    
+      legend("topleft", bty = "n", cex = 1.2^pops_correction,
+             legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
+             ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
+    } else {
+      layout(matrix(c(1,2), nrow = 2), heights= c(4.5, 0.5))
+    }
+    
+    ## PLOT
+    par(mar = c(0,0,0,0))
+    plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
+                layout = lay, ...)
+    if (scale.leg){
+      ## SCALE BAR
+      if (quantiles){
+        scales <- sort(weights)
+      } else {
+        scales <- seq(wmin, wmax, l = 1000)
+      }
+      greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
+      legend_image <- as.raster(matrix(greyscales, nrow=1))
+      par(mar = c(0, 1, 0, 1) + 0.5)
+      plot.new()
+      rasterImage(legend_image, 0, 0.5, 1, 1)
+      polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+      axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
+      text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
+    }
+    # Return top level plot to defaults.
+    layout(matrix(c(1), ncol=1, byrow=T))
+    par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
+    par(oma=c(0,0,0,0)) # Figure margins
   }
-  greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
-  legend_image <- as.raster(matrix(greyscales, nrow=1))
-  par(mar = c(0, 1, 0, 1) + 0.5)
-  plot.new()
-  rasterImage(legend_image, 0, 0.5, 1, 1)
-  polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
-  axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
-  text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
-  
-  # Return top level plot to defaults.
-  layout(matrix(c(1), ncol=1, byrow=T))
-  par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
-  par(oma=c(0,0,0,0)) # Figure margins
 }
 
 
@@ -927,7 +1080,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' @param thresh a number from 0 to 1. This will draw a line at this fraction of
 #'   multilocus genotypes.
 #'   
-#' @return a matrix of integers showing the results of each randomization.
+#' @return (invisibly) a matrix of integers showing the results of each randomization.
 #'   Columns represent the number of loci sampled and rows represent an
 #'   independent sample.
 #'   
@@ -971,7 +1124,7 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
   threshdf <- data.frame(x = mlg(gen, quiet = TRUE)*thresh)
   outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
   aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
-  outplot <- ggplot(outmelt) + geom_boxplot(aesthetics) + 
+  outplot <- ggplot(outmelt, aesthetics) + geom_boxplot() + 
              labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
                        y = "Number of multilocus genotypes",
                        x = "Number of loci sampled")) 
@@ -985,5 +1138,5 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
                          scale_y_continuous(breaks = outbreaks)
   }
   print(outplot)
-  return(out)
+  return(invisible(out))
 }
