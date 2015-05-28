@@ -207,8 +207,8 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
                   sample = 0, method = 1, missing = "ignore", cutoff = 0.05, 
                   quiet = FALSE, clonecorrect = FALSE, strata = 1, keep = 1, 
                   hist = TRUE, index = "rbarD", minsamp = 10, legend = FALSE){
-  METHODS <- c("permute alleles", "parametric bootstrap",
-              "non-parametric bootstrap", "multilocus")
+#   METHODS <- c("permute alleles", "parametric bootstrap",
+#                "non-parametric bootstrap", "multilocus")
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
                     clonecorrect = clonecorrect, strata = strata,
                     keep = keep, quiet = TRUE)  
@@ -245,33 +245,24 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   }
   sublist <- names(poplist)
   Iout    <- NULL
-  origpop <- x$GENIND
   total   <- toupper(total)
   missing <- toupper(missing)
-  type    <- dat@type
   # For presence/absences markers, a different algorithm is applied. 
-  if(type=="PA"){
-    .Ia.Rd <- .PA.Ia.Rd
-  }
   if (legend) poppr_message()
   
   MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
   N.vec   <- rowSums(pop.mat)
-  # Shannon-Weiner diversity index.
-  H       <- vegan::diversity(pop.mat)
-  # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-  G       <- vegan::diversity(pop.mat, "inv")
-  Hexp    <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
-  # E_5
-  E.5     <- (G-1)/(exp(H)-1)
-  
+  divmat  <- get_stats(pop.mat)
+  if (!is.matrix(divmat)){
+    divmat <- matrix(divmat, nrow = 1, dimnames = list(NULL, names(divmat)))
+  }
   if (!is.null(poplist)){
     # rarefaction giving the standard errors. This will use the minimum pop size
     # above a user-defined threshold.
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
-    N.rare  <- suppressWarnings(rarefy(pop.mat, raremax, se=TRUE))
+    N.rare  <- suppressWarnings(rarefy(pop.mat, raremax, se = TRUE))
     IaList  <- lapply(sublist, function(x){
                       namelist <- list(file = namelist$File, population = x)
                       .ia(poplist[[x]], sample = sample, method = method, 
@@ -295,20 +286,21 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
       IaList <- t(as.data.frame(IaList))
     }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
-                               eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, 
-                               G=G, Hexp=Hexp, E.5=E.5, IaList, 
+                               eMLG=N.rare[1, ], SE=N.rare[2, ], 
+                               divmat, IaList, 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
   } else { 
     # rarefaction giving the standard errors. No population structure means that
     # the sample is equal to the number of individuals.
-    N.rare <- rarefy(pop.mat, sum(pop.mat), se=TRUE)
+    N.rare <- rarefy(pop.mat, sum(pop.mat), se = TRUE)
     IaList <- .ia(dat, sample=sample, method=method, quiet=quiet, missing=missing,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
+    
     Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
-                               eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, G=G, 
-                               Hexp=Hexp, E.5=E.5, as.data.frame(t(IaList)), 
+                               eMLG=N.rare[1, ], SE=N.rare[2, ], divmat, 
+                               as.data.frame(t(IaList)), 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
   }
