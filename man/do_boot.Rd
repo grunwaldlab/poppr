@@ -44,7 +44,7 @@ Perform a bootstrap analysis on diversity statistics
 \examples{
 library(poppr)
 data(Pinf)
-tab <- mlg.table(Pinf, bar = FALSE)
+tab <- mlg.table(Pinf, plot = FALSE)
 do_boot(tab, 10L)
 \dontrun{
 # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
@@ -56,6 +56,6 @@ system.time(do_boot(tab, 10000L))
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{boot_ci}}
+\code{\link{boot_ci}} \code{\link{get_stats}} \code{\link{poppr}}
 }
 

@@ -40,6 +40,16 @@ an array of 3 dimensions giving the lower and upper bound, the index
 \description{
 Perform bootstrap statistics, calculate and plot confidence intervals.
 }
+\note{
+While it is possible to use custom functions with this, there are three
+  important things to remember when using these functions:
+\enumerate{
+\item The function must return a single value.
+\item The function must allow for both matrix and vector inputs
+\item The function name cannot match or partially match any arguments from
+\code{\link[boot]{boot}}
+}. Anonymous functions are okay (e.g. \code{function(x) vegan::rarefy(x, 10)}).
+}
 \examples{
 library(poppr)
 data(Pinf)
@@ -48,9 +58,31 @@ boot_ci(Pinf, n = 100)
 # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
 system.time(boot_ci(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
 system.time(boot_ci(Pinf, 10000L))
+
+# The previous version of poppr contained a statistic known as Hexp, which
+# was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased
+# Simpson's index. This statistic was originally included in poppr because it
+# was originally included in the program multilocus. Since the reference for
+# this was hard to track down. Because of this, it was removed from analysis.
+
+Hexp <- function(x){
+ lambda <- vegan::diversity(x, "simpson")
+ x <- drop(as.matrix(x))
+ if (length(dim(x)) > 1){
+   N <- rowSums(x)
+ } else {
+   N <- sum(x)
+ }
+ return((N/(N-1))*lambda)
+}
+boot_ci(Pinf, 1000L, Hexp = Hexp)
+boot_ci(Pinf, 1000L, Hexp = Hexp, rarefy = TRUE)
 }
 }
 \author{
 Zhian N. Kamvar
+}
+\seealso{
+\code{\link{do_boot}} \code{\link{get_stats}} \code{\link{poppr}}
 }
 

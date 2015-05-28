@@ -62,4 +62,7 @@ get_stats(tab, B = Beta)
 \author{
 Zhian N. Kamvar
 }
+\seealso{
+\code{\link{do_boot}} \code{\link{boot_ci}} \code{\link{poppr}}
+}
 
