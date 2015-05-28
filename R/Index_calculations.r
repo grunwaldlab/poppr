@@ -125,19 +125,18 @@
 #'   \code{\link{mlg}})} \item{eMLG}{The expected number of MLG at the lowest 
 #'   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The 
 #'   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner 
-#'   Diversity index} \item{G}{Stoddard and Taylor's Index} \item{Hexp}{Expected
-#'   heterozygosity or Nei's 1987 genotypic diversity corrected for sample 
-#'   size.} \item{E.5}{Evenness} \item{Ia}{A numeric vector giving the value of 
-#'   the Index of Association for each population factor, (see 
-#'   \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating the p-value for
-#'   Ia from the number of reshufflings indicated in \code{sample}. Lowest value
-#'   is 1/n where n is the number of observed values.} \item{rbarD}{A numeric 
-#'   vector giving the value of the Standardized Index of Association for each 
-#'   population factor, (see \code{\link{ia}}).} \item{p.rD}{A numeric vector 
-#'   indicating the p-value for rbarD from the number of reshuffles indicated 
-#'   in \code{sample}. Lowest value is 1/n where n is the number of observed 
-#'   values.} \item{File}{A vector indicating the name of the original data 
-#'   file.}
+#'   Diversity index} \item{G}{Stoddard and Taylor's Index}
+#'   \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Ia}{A numeric
+#'   vector giving the value of the Index of Association for each population
+#'   factor, (see \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating
+#'   the p-value for Ia from the number of reshufflings indicated in
+#'   \code{sample}. Lowest value is 1/n where n is the number of observed
+#'   values.} \item{rbarD}{A numeric vector giving the value of the Standardized
+#'   Index of Association for each population factor, (see \code{\link{ia}}).}
+#'   \item{p.rD}{A numeric vector indicating the p-value for rbarD from the
+#'   number of reshuffles indicated in \code{sample}. Lowest value is 1/n where
+#'   n is the number of observed values.} \item{File}{A vector indicating the
+#'   name of the original data file.}
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
 #'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
@@ -168,8 +167,8 @@
 #'   J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
 #'   Computing. New York USA: John Wiley and Sons, 1988.
 #'   
-#'   Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
-#'   from a small number of individuals. Genetics, 89(3):583-590, 1978.
+#'   Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949 
+#'   doi:10.1038/163688a0
 #'   
 #'   Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
 #'   R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. 
