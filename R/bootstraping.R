@@ -328,10 +328,14 @@ extract_samples <- function(x) rep(1:length(x), x)
 #'   \code{\link[poppr]{mlg.table}}. MLGs in columns and populations in rows
 #' @param n an integer > 0 specifying the number of bootstrap replicates to 
 #'   perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
-#' @param n.rare a sample size at which all resamplings should be performed.
-#'   This should be no larger than the smallest sample size. Defaults to
-#'   \code{NULL}, indicating that each population will be sampled at its own
+#' @param n.rare a sample size at which all resamplings should be performed. 
+#'   This should be no larger than the smallest sample size. Defaults to 
+#'   \code{NULL}, indicating that each population will be sampled at its own 
 #'   size.
+#' @param mlg.weight when \code{FALSE} (default), all observed MLGs have an equal 
+#'   chance of being selected in the bootstrapping procedure. When \code{TRUE},
+#'   larger MLGs have more of a chance of being selected. This parameter is
+#'   ignored when \code{n.rare = TRUE}.
 #' @inheritParams get_stats
 #' @param ... other parameters passed on to \code{\link[boot]{boot}} and 
 #'   \code{\link{get_stats}}.
@@ -352,7 +356,8 @@ extract_samples <- function(x) rep(1:length(x), x)
 #' }
 #' @importFrom boot boot
 #==============================================================================#
-do_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
+do_boot <- function(tab, n, n.rare = NULL, mlg.weight = FALSE, H = TRUE, G = TRUE, 
+                    lambda = TRUE, E5 = TRUE, ...){
   if (!is.null(n.rare)){
     res <- apply(tab, 1, function(x){
       xi <- extract_samples(x)
@@ -360,10 +365,18 @@ do_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE, lambda = TRUE, E5
                  ran.gen = rare_sim_boot, 
                  mle = n.rare, H = H, G = G, lambda = lambda, E5 = E5, ...)
     })
+  } else if (!mlg.weight){
+    res <- apply(tab, 1, function(x){
+      xi <- (1:length(x))[x > 0]
+      boot::boot(xi, boot_stats, R = n, sim = "parametric", 
+                 ran.gen = sim_boot, 
+                 mle = sum(x), H = H, G = G, lambda = lambda, E5 = E5, ...)
+    })  
   } else {
     res <- apply(tab, 1, function(x){
-      boot::boot(extract_samples(x), boot_stats, n, H = H, G = G, lambda = lambda, E5 = E5, ...)
-    })    
+      xi <- extract_samples(x)
+      boot::boot(xi, boot_stats, R = n, H = H, G = G, lambda = lambda, E5 = E5, ...)
+    })
   }
 
   return(res)
@@ -390,9 +403,12 @@ get_all_ci <- function(res, ci = 95, index_names = c("H", "G", "Hexp", "E.5")){
 }
 
 rare_sim_boot <- function(x, mle = 10){
-  sample(x, mle, replace = TRUE)
+  sample(x, mle)
 }
 
+sim_boot <- function(x, mle = 100){
+  sample(x, mle, replace = TRUE)
+}
 #==============================================================================#
 #' Perform bootstrap statistics, calculate and plot confidence intervals.
 #' 
@@ -406,6 +422,10 @@ rare_sim_boot <- function(x, mle = 10){
 #' @param rarefy if \code{TRUE}, bootstrapping will be performed on the smallest
 #'   population size. Defaults to \code{FALSE}, indicating that bootstrapping
 #'   will be performed respective to each population size.
+#' @param mlg.weight when \code{FALSE} (default), all observed MLGs have an equal 
+#'   chance of being selected in the bootstrapping procedure. When \code{TRUE},
+#'   larger MLGs have more of a chance of being selected. This parameter is
+#'   ignored when \code{rarefy = TRUE}.
 #' @param ... parameters to be passed on to \code{\link[boot]{boot}} and
 #'   \code{\link{get_stats}}
 #'   
@@ -427,7 +447,8 @@ rare_sim_boot <- function(x, mle = 10){
 #' }
 #' 
 #==============================================================================#
-boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, ...){
+boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
+                    mlg.weight = TRUE,...){
   if (!is.matrix(tab) & is.genind(tab)){
     tab <- mlg.table(tab, total = total, plot = FALSE)
   }
@@ -436,7 +457,7 @@ boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, ...){
   if (rarefy){
     rareval <- min(rowSums(tab))
   }
-  res  <- do_boot(tab, n, n.rare = rareval, ...)
+  res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
   dotlist <- list(...)
   bootargs <- names(formals(boot))
   dotlist <- dotlist[!names(dotlist) %in% bootargs]

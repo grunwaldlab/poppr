@@ -4,7 +4,8 @@
 \alias{boot_ci}
 \title{Perform bootstrap statistics, calculate and plot confidence intervals.}
 \usage{
-boot_ci(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, ...)
+boot_ci(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
+  mlg.weight = TRUE, ...)
 }
 \arguments{
 \item{tab}{a genind object OR a matrix produced from
@@ -21,6 +22,11 @@ boot_ci(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, ...)
 \item{rarefy}{if \code{TRUE}, bootstrapping will be performed on the smallest
 population size. Defaults to \code{FALSE}, indicating that bootstrapping
 will be performed respective to each population size.}
+
+\item{mlg.weight}{when \code{FALSE} (default), all observed MLGs have an equal
+chance of being selected in the bootstrapping procedure. When \code{TRUE},
+larger MLGs have more of a chance of being selected. This parameter is
+ignored when \code{rarefy = TRUE}.}
 
 \item{...}{parameters to be passed on to \code{\link[boot]{boot}} and
   \code{\link{get_stats}}}

@@ -4,8 +4,8 @@
 \alias{do_boot}
 \title{Perform a bootstrap analysis on diversity statistics}
 \usage{
-do_boot(tab, n, n.rare = NULL, H = TRUE, G = TRUE, lambda = TRUE,
-  E5 = TRUE, ...)
+do_boot(tab, n, n.rare = NULL, mlg.weight = FALSE, H = TRUE, G = TRUE,
+  lambda = TRUE, E5 = TRUE, ...)
 }
 \arguments{
 \item{tab}{a table produced from the \pkg{poppr} function
@@ -18,6 +18,11 @@ perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.}
 This should be no larger than the smallest sample size. Defaults to
 \code{NULL}, indicating that each population will be sampled at its own
 size.}
+
+\item{mlg.weight}{when \code{FALSE} (default), all observed MLGs have an equal
+chance of being selected in the bootstrapping procedure. When \code{TRUE},
+larger MLGs have more of a chance of being selected. This parameter is
+ignored when \code{n.rare = TRUE}.}
 
 \item{H}{logical whether or not to calculate Shannon's index}
 
