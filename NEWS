@@ -31,6 +31,10 @@ NEW FUNCTIONS
 * `samp.ia` calculates \bar{r}_d for genlight object by randomly sampling a user-defined number of SNPs.
 * `test_replen` will test repeat lengths of microsatellite markers for consistency.
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
+* `get_stats` returns a matrix containing diversity statistics. Defaults to 4 found in `poppr`, but can be extended to any statistic that can be calculated on a vector of MLG counts.
+* `do_boot` will bootstrap a MLG matrix over the statistics specified for `get_stats`. Can also perform rarefaction bootstrap.
+* `boot_ci` will calculate and plot confidence intervals for bootstrap resampling of an MLG matrix.
+* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calucluated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
 
 NEW CLASSES
 * snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 
