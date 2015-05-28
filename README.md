@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=diversity_table)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=diversity_table)](https://coveralls.io/r/grunwaldlab/poppr)
+[![Coverage Status](http://codecov.io/github/grunwaldlab/poppr/coverage.svg?branch=diversity_table)](http://codecov.io/github/grunwaldlab/poppr?branch=diversity_table)
 
 # Poppr version 2.0
 
