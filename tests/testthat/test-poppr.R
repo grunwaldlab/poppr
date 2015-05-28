@@ -13,12 +13,12 @@ Aeut_comparison <- structure(list(Pop = structure(1:3,
     SE = c(1.24567688244012, 0, 2.98857840353058), 
     H = c(4.06272002528149, 3.66843094399907, 4.55798828426928), 
     G = c(42.1928251121076, 28.7234042553191, 68.9723865877712), 
-    simp = c(0.976299287915825, 0.965185185185185, 0.985501444136235), 
+    lambda = c(0.976299287915825, 0.965185185185185, 0.985501444136235), 
     E.5 = c(0.721008688944842, 0.725926650260449, 0.720112175857993), 
     Ia = c(2.90602921191748, 13.3024309367662, 14.3707995986407), 
     rbarD = c(0.0723700801886747, 0.281642324983496, 0.270617053778004), 
     File = structure(c(1L, 1L, 1L), class = "factor", .Label = "rootrot.csv")), 
-    .Names = c("Pop", "N", "MLG", "eMLG", "SE", "H", "G", "simp", "E.5", "Ia", "rbarD", "File"), 
+    .Names = c("Pop", "N", "MLG", "eMLG", "SE", "H", "G", "lambda", "E.5", "Ia", "rbarD", "File"), 
     row.names = c(NA, -3L), 
     class = c("popprtable", "data.frame"))
 
@@ -30,13 +30,13 @@ pc_comparison <- structure(list(Pop = structure(1:5, .Label = c("1", "2", "3",
     SE = c(0.498518515262143, 0.36080121229411, 0, 0, 1.12881059579593),
     H = c(2.24503527412618, 2.45831132968308, 2.36938211969468, 2.09472904752765, 3.07152395656842), 
     G = c(8.89473684210526, 11.2666666666667, 10.2857142857143, 7.2, 17.8571428571429 ), 
-    simp = c(0.887573964497041, 0.911242603550296, 0.902777777777778, 
+    lambda = c(0.887573964497041, 0.911242603550296, 0.902777777777778, 
              0.861111111111111, 0.944), 
     E.5 = c(0.935312405238733, 0.960842907662783, 0.958200460752105, 0.870390481833875, 0.819311895784525), 
     Ia = c(2.1580763424628, 1.87492360969648, 1.15572679509632, 1.157153633392, 1.93513179817012),
     rbarD = c(0.243225877705591, 0.212786561587854, 0.132460530412697, 0.13328661732193, 0.217470007471919),
     File = structure(c(1L, 1L, 1L, 1L, 1L), class = "factor", .Label = "partial_clone.dat")), 
-    .Names = c("Pop", "N", "MLG", "eMLG", "SE", "H", "G", "simp", "E.5", "Ia", "rbarD", "File"),
+    .Names = c("Pop", "N", "MLG", "eMLG", "SE", "H", "G", "lambda", "E.5", "Ia", "rbarD", "File"),
     row.names = c(NA, -5L),
     class = c("popprtable", "data.frame"))
 
@@ -50,7 +50,7 @@ test_that("poppr returns expected PA values", {
   expect_that(A.tab$SE, equals(Aeut_comparison$SE))
   expect_that(A.tab$H, equals(Aeut_comparison$H))
   expect_that(A.tab$G, equals(Aeut_comparison$G))
-  expect_that(A.tab$simp, equals(Aeut_comparison$simp))
+  expect_that(A.tab$lambda, equals(Aeut_comparison$lambda))
   expect_that(A.tab$E.5, equals(Aeut_comparison$E.5))
   expect_that(A.tab$Ia, equals(Aeut_comparison$Ia))
   expect_that(A.tab$rbarD, equals(Aeut_comparison$rbarD))
@@ -64,7 +64,7 @@ test_that("poppr returns expected codominant values", {
   expect_that(p.tab$SE, equals(pc_comparison$SE))
   expect_that(p.tab$H, equals(pc_comparison$H))
   expect_that(p.tab$G, equals(pc_comparison$G))
-  expect_that(p.tab$simp, equals(pc_comparison$simp))
+  expect_that(p.tab$lambda, equals(pc_comparison$lambda))
   expect_that(p.tab$E.5, equals(pc_comparison$E.5))
   expect_that(p.tab$Ia, equals(pc_comparison$Ia))
   expect_that(p.tab$rbarD, equals(pc_comparison$rbarD))

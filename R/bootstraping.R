@@ -239,7 +239,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #'   
 #' @param H logical whether or not to calculate Shannon's index
 #' @param G logical whether or not to calculate Stoddart and Taylor's index
-#' @param simp logical whether or not to calculate Simpson's index
+#' @param lambda logical whether or not to calculate Simpson's index
 #' @param E5 logical whether or not to calculate Evenness
 #' @param ... any functions that can be calculated on a vector or matrix of
 #'   genotype counts.
@@ -279,7 +279,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #' get_stats(tab, B = Beta)
 #' }
 #==============================================================================#
-get_stats <- function(z, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
+get_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
   
   E.5 <- function(x){
     H <- vegan::diversity(x)
@@ -288,11 +288,11 @@ get_stats <- function(z, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
   }
   BASIC_FUNS <- list(H = vegan::diversity,
                      G = function(x) vegan::diversity(x, "inv"),
-                     simp = function(x) vegan::diversity(x, "simp"),
+                     lambda = function(x) vegan::diversity(x, "simp"),
                      E.5 = E.5)
   FUNS   <- c(BASIC_FUNS, list(...))
   STATS <- names(FUNS)
-  STATS <- STATS[c(H, G, simp, E5, rep(TRUE, length(list(...))))]
+  STATS <- STATS[c(H, G, lambda, E5, rep(TRUE, length(list(...))))]
   
   boot <- is.null(dim(z))
   
@@ -314,8 +314,8 @@ get_stats <- function(z, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
   return(drop(mat))
 }
 
-boot_stats <- function(x, i, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
-  res <- get_stats(tabulate(x[i]), H, G, simp, E5, ...)
+boot_stats <- function(x, i, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
+  res <- get_stats(tabulate(x[i]), H, G, lambda, E5, ...)
   return(res)
 }
 
@@ -324,12 +324,16 @@ extract_samples <- function(x) rep(1:length(x), x)
 #==============================================================================#
 #' Perform a bootstrap analysis on diversity statistics
 #' 
-#' @param tab a table produced from the \pkg{poppr} function
+#' @param tab a table produced from the \pkg{poppr} function 
 #'   \code{\link[poppr]{mlg.table}}. MLGs in columns and populations in rows
-#' @param n an integer > 0 specifying the number of bootstrap replicates to
+#' @param n an integer > 0 specifying the number of bootstrap replicates to 
 #'   perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
+#' @param n.rare a sample size at which all resamplings should be performed.
+#'   This should be no larger than the smallest sample size. Defaults to
+#'   \code{NULL}, indicating that each population will be sampled at its own
+#'   size.
 #' @inheritParams get_stats
-#' @param ... other parameters passed on to \code{\link[boot]{boot}} and
+#' @param ... other parameters passed on to \code{\link[boot]{boot}} and 
 #'   \code{\link{get_stats}}.
 #'   
 #' @return a list of objects of class "boot".
@@ -348,10 +352,20 @@ extract_samples <- function(x) rep(1:length(x), x)
 #' }
 #' @importFrom boot boot
 #==============================================================================#
-do_boot <- function(tab, n, H = TRUE, G = TRUE, simp = TRUE, E5 = TRUE, ...){
-  res <- apply(tab, 1, function(x){
-    boot::boot(extract_samples(x), boot_stats, n, H = H, G = G, simp = simp, E5 = E5, ...)
-  })
+do_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
+  if (!is.null(n.rare)){
+    res <- apply(tab, 1, function(x){
+      xi <- extract_samples(x)
+      boot::boot(xi, boot_stats, R = n, sim = "parametric", 
+                 ran.gen = rare_sim_boot, 
+                 mle = n.rare, H = H, G = G, lambda = lambda, E5 = E5, ...)
+    })
+  } else {
+    res <- apply(tab, 1, function(x){
+      boot::boot(extract_samples(x), boot_stats, n, H = H, G = G, lambda = lambda, E5 = E5, ...)
+    })    
+  }
+
   return(res)
 }
 
@@ -389,6 +403,9 @@ rare_sim_boot <- function(x, mle = 10){
 #' @param ci the percent for confidence interval.
 #' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if
 #'   \code{tab} is a genind object.
+#' @param rarefy if \code{TRUE}, bootstrapping will be performed on the smallest
+#'   population size. Defaults to \code{FALSE}, indicating that bootstrapping
+#'   will be performed respective to each population size.
 #' @param ... parameters to be passed on to \code{\link[boot]{boot}} and
 #'   \code{\link{get_stats}}
 #'   
@@ -405,16 +422,21 @@ rare_sim_boot <- function(x, mle = 10){
 #' boot_ci(Pinf, n = 100)
 #' \dontrun{
 #' # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
-#' system.time(boot_ci(tab, 10000L, parallel = "multicore", ncpus = 4L))
-#' system.time(boot_ci(tab, 10000L))
+#' system.time(boot_ci(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
+#' system.time(boot_ci(Pinf, 10000L))
 #' }
 #' 
 #==============================================================================#
-boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, ...){
+boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, ...){
   if (!is.matrix(tab) & is.genind(tab)){
     tab <- mlg.table(tab, total = total, plot = FALSE)
   }
-  res  <- do_boot(tab, n, ...)
+  rareval <- NULL
+  
+  if (rarefy){
+    rareval <- min(rowSums(tab))
+  }
+  res  <- do_boot(tab, n, n.rare = rareval, ...)
   dotlist <- list(...)
   bootargs <- names(formals(boot))
   dotlist <- dotlist[!names(dotlist) %in% bootargs]
