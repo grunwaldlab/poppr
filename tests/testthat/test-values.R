@@ -76,3 +76,20 @@ test_that("mlg.matrix returns a matrix and not table", {
   expect_that(mat1row, not(is_a("table")))
   expect_that(mat4row, not(is_a("table")))
 })
+
+test_that("get_stats returns expected values", {
+  skip_on_cran()
+  data("Aeut", package = "poppr")
+  expected <- structure(c(4.06272002528149, 3.66843094399907, 4.55798828426928,
+  42.1928251121076, 28.7234042553191, 68.9723865877712, 0.976299287915825,
+  0.965185185185185, 0.985501444136235, 0.721008688944842, 0.725926650260449,
+  0.720112175857993), .Dim = 3:4, .Dimnames = structure(list(Pop = c("Athena",
+  "Mt. Vernon", "Total"), Index = c("H", "G", "simp", "E.5")), .Names = c("Pop",
+  "Index")))
+  res <- get_stats(mlg.table(Aeut, plot = FALSE, total = TRUE))
+  pop(Aeut) <- NULL
+  res_single <- get_stats(mlg.table(Aeut, plot = FALSE))
+  expect_equivalent(res, expected)
+  expect_false(is.matrix(res_single))
+  expect_equivalent(res_single, res["Total", ])
+})
