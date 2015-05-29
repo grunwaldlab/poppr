@@ -526,3 +526,13 @@ boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
   print(pl)
   return(CI)
 }
+
+get_boot_stats <- function(bootlist){
+  npop   <- length(bootlist)
+  bstats <- bootlist[[1]]$t0
+  nstat  <- length(bstats)
+  resmat <- matrix(nrow = npop, ncol = nstat,
+                   dimnames = list(Pop = names(bootlist), Index = names(bstats)))
+  resmat[] <- t(vapply(bootlist, FUN = "[[", FUN.VAL = bstats, "t0"))
+  return(resmat)
+}
