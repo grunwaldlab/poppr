@@ -231,7 +231,7 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlg
     mlgtab <- mlgtab[popNames(gid), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
-  if (total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
+  if (total == TRUE && nrow(mlgtab) > 1 ){
     mlgtab <- rbind(mlgtab, colSums(mlgtab))
     rownames(mlgtab)[nrow(mlgtab)] <- "Total"
   }
