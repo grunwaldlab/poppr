@@ -93,3 +93,28 @@ test_that("get_stats returns expected values", {
   expect_false(is.matrix(res_single))
   expect_equivalent(res_single, res["Total", ])
 })
+
+test_that("get_boot_x works with one pop or one stat", {
+  skip_on_cran()
+  data(Pinf)
+  Ptab <- mlg.table(Pinf, plot = FALSE)
+  pop(Pinf) <- NULL
+  ptab <- mlg.table(Pinf, plot = FALSE)
+  
+  Pboot_all <- do_boot(Ptab, 20L)
+  Pboot_E   <- do_boot(Ptab, 20L, G = FALSE, H = FALSE, lambda = FALSE)
+  pboot_all <- do_boot(ptab, 20L)
+  pboot_E   <- do_boot(ptab, 20L, G = FALSE, H = FALSE, lambda = FALSE)
+  
+  Past <- poppr:::get_boot_stats(Pboot_all)
+  PEst <- poppr:::get_boot_stats(Pboot_E)
+  past <- poppr:::get_boot_stats(pboot_all)
+  pEst <- poppr:::get_boot_stats(pboot_E)
+  
+  
+  expect_equivalent(dim(Past), c(2, 4))
+  expect_equivalent(dim(PEst), c(2, 1))
+  expect_equivalent(dim(past), c(1, 4))
+  expect_equivalent(dim(pEst), c(1, 1))
+  
+})
