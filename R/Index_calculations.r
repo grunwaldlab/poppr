@@ -117,6 +117,8 @@
 #' @param legend \code{logical}. When this is set to \code{TRUE}, a legend 
 #'   describing the resulting table columns will be printed. Defaults to 
 #'   \code{FALSE}
+#' 
+#' @param ... arguments to be passed on to \code{\link{boot_ci}}
 #'   
 #' @return \item{Pop}{A vector indicating the pouplation factor} \item{N}{An 
 #'   integer vector indicating the number of individuals/isolates in the 

@@ -74,6 +74,8 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 \item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend
   describing the resulting table columns will be printed. Defaults to
   \code{FALSE}}
+
+\item{...}{arguments to be passed on to \code{\link{boot_ci}}}
 }
 \value{
 \item{Pop}{A vector indicating the pouplation factor} \item{N}{An
