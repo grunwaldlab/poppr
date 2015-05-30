@@ -488,25 +488,26 @@ boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
     rareval <- min(rowSums(tab))
   }
   res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
-  dotlist <- list(...)
-  bootargs <- names(formals(boot))
-  dotlist <- dotlist[!names(dotlist) %in% bootargs]
-  get_stats_args <- formals(get_stats)
-  get_stats_args$z <- tab
-  matching_names <- names(dotlist) %in% names(get_stats_args)
-  if (any(matching_names)){
-    for (i in names(dotlist[matching_names])){
-      if (!is.logical(dotlist[[i]])){
-        warning("Extra functions cannot have the same name a defaults. Renaming")
-        names(dotlist)[names(dotlist) == i] <- paste0("d", i)
-      } else {
-        get_stats_args[[i]] <- dotlist[[i]]
-      }
-    }
-  }
-  unique_names <- !names(dotlist) %in% names(get_stats_args)
-  dotlist <- dotlist[unique_names]
-  orig <- do.call("get_stats", c(get_stats_args[-6], dotlist))
+#   dotlist <- list(...)
+#   bootargs <- names(formals(boot))
+#   dotlist <- dotlist[!names(dotlist) %in% bootargs]
+#   get_stats_args <- formals(get_stats)
+#   get_stats_args$z <- tab
+#   matching_names <- names(dotlist) %in% names(get_stats_args)
+#   if (any(matching_names)){
+#     for (i in names(dotlist[matching_names])){
+#       if (!is.logical(dotlist[[i]])){
+#         warning("Extra functions cannot have the same name a defaults. Renaming")
+#         names(dotlist)[names(dotlist) == i] <- paste0("d", i)
+#       } else {
+#         get_stats_args[[i]] <- dotlist[[i]]
+#       }
+#     }
+#   }
+#   unique_names <- !names(dotlist) %in% names(get_stats_args)
+#   dotlist <- dotlist[unique_names]
+#   orig <- do.call("get_stats", c(get_stats_args[-6], dotlist))
+  orig <- get_boot_stats(res)
   statnames <- colnames(orig)
   orig <- melt(orig)
   orig$Pop <- factor(orig$Pop)
@@ -548,4 +549,49 @@ get_boot_se <- function(bootlist){
   resmat[] <- t(vapply(bootlist, FUN = sd.boot, FUN.VAL = bstats))
   colnames(resmat) <- paste(colnames(resmat), "se", sep = ".")
   return(resmat)
+}
+
+evens <- function(x){
+  if (length(x) > 1){
+    if (is.numeric(x)){
+      res <- x %% 2 == 0
+    } else {
+      res <- 1:length(x) %% 2 == 0
+    }
+  } else {
+    res <- seq(x) %% 2 == 0
+  }
+  return(res)
+}
+
+intersp <- function(v1, v2){
+  v1l <- length(v1)
+  v2l <- length(v2)
+  the_evens <- evens(v1l + v2l)
+  stopifnot(v1l == v2l)
+  ov <- vector(length = v1l + v2l, mode = class(c(v1[1], v2[1])))
+  ov[the_evens]  <- v2
+  ov[!the_evens] <- v1
+  return(ov)
+}
+
+boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
+                          mlg.weight = TRUE,...){
+  if (!is.matrix(tab) & is.genind(tab)){
+    tab <- mlg.table(tab, total = total, plot = FALSE)
+  }
+  rareval <- NULL
+  
+  if (rarefy){
+    rareval <- min(rowSums(tab))
+  }
+  res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
+  orig <- get_boot_stats(res)
+  out  <- matrix(nrow = nrow(orig), ncol = ncol(orig)*2, 
+                 dimnames = list(rownames(orig), NULL))
+  out[, !evens(1:ncol(out))]  <- orig
+  se_out <- get_boot_se(res)
+  out[, evens(1:ncol(out))] <- se_out
+  colnames(out) <- intersp(colnames(orig), colnames(se_out))
+  return(out)
 }

@@ -205,7 +205,8 @@
 poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL, 
                   sample = 0, method = 1, missing = "ignore", cutoff = 0.05, 
                   quiet = FALSE, clonecorrect = FALSE, strata = 1, keep = 1, 
-                  hist = TRUE, index = "rbarD", minsamp = 10, legend = FALSE){
+                  hist = TRUE, index = "rbarD", minsamp = 10, legend = FALSE,
+                  ...){
 #   METHODS <- c("permute alleles", "parametric bootstrap",
 #                "non-parametric bootstrap", "multilocus")
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
@@ -251,7 +252,13 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   
   MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
   N.vec   <- rowSums(pop.mat)
-  divmat  <- get_stats(pop.mat)
+  if (sample > 0){
+    if (!quiet) message("bootstrapping diversity statistics...")
+    divmat <- boot_se_table(pop.mat, n = sample, ...)
+    if (!quiet) message("calculating index of association...")
+  } else {
+    divmat <- get_stats(pop.mat)
+  }
   if (!is.matrix(divmat)){
     divmat <- matrix(divmat, nrow = 1, dimnames = list(NULL, names(divmat)))
   }
