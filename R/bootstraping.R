@@ -576,14 +576,14 @@ intersp <- function(v1, v2){
 }
 
 boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
-                          mlg.weight = TRUE,...){
+                          mlg.weight = TRUE, rare.val = NULL, ...){
   if (!is.matrix(tab) & is.genind(tab)){
     tab <- mlg.table(tab, total = total, plot = FALSE)
   }
   rareval <- NULL
   
   if (rarefy){
-    rareval <- min(rowSums(tab))
+    rareval <- ifelse(is.null(rare.val), min(rowSums(tab)), rare.val)
   }
   res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
   orig <- get_boot_stats(res)
@@ -594,4 +594,44 @@ boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
   out[, evens(1:ncol(out))] <- se_out
   colnames(out) <- intersp(colnames(orig), colnames(se_out))
   return(out)
+}
+
+rare_ia <- function(x, n = 1000, rare = 10, obs = FALSE){
+  if (is.genind(x) || is.clone(x) || is(x, "genlight")){
+    xloc <- seploc(x)
+    est <- bootjack(xloc, n, rare, progbar = NULL)
+    se  <- vapply(est, sd, numeric(1), na.rm = TRUE)
+    if (obs){
+      res <- matrix(nrow = 4, ncol = 1,
+                    dimnames = list(c("Ia", "Ia.se", "rbarD", "rbarD.se"), NULL))
+      est <- vapply(est, mean, numeric(1), na.rm = TRUE)
+      res[c("Ia", "rbarD"), ] <- est
+    } else {
+      res <- matrix(nrow = 2, ncol = 1,
+                    dimnames = list(c("Ia.se", "rbarD.se"), NULL))
+    } 
+    res[c("Ia.se", "rbarD.se"), ] <- se
+  } else {
+    if (obs){
+      res <- matrix(nrow = 4, ncol = length(x),
+                    dimnames = list(c("Ia", "Ia.se", "rbarD", "rbarD.se"), NULL))
+    } else {
+      res <- matrix(nrow = 2, ncol = length(x),
+                    dimnames = list(c("Ia.se", "rbarD.se"), NULL))
+    }
+    for (i in seq(length(x))){
+      if (nInd(x[[i]]) > rare){
+        iloc <- seploc(x[[i]])
+        est  <- bootjack(iloc, n , rare, progbar = NULL)
+        se   <- vapply(est, sd, numeric(1), na.rm = TRUE)
+        if (obs) est <- vapply(est, mean, numeric(1), na.rm = TRUE)
+      } else {
+        if (obs) est <- ia(x[[i]])
+        se  <- c(0, 0)
+      }
+      if (obs) res[c("Ia", "rbarD"), i] <- est
+      res[c("Ia.se", "rbarD.se"), i] <- se
+    }
+  }
+  return(res)
 }
