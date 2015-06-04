@@ -143,15 +143,7 @@
 #' @details This table is intended to be a first look into the dynamics of
 #'   mutlilocus genotype diversity. Many of the statistics (except for the the
 #'   index of association) are simply based on counts of multilocus genotypes
-#'   and do not take into account the actual allelic states. The function
-#'   \code{\link{boot_ci}} has the possability to calculate the statistics over
-#'   the smallest sample size when \code{rarefy = TRUE}. Note that the
-#'   statistics reported will be the estimated statistics and thier respective
-#'   standard deviations. These are useful for comparison across all sample
-#'   sizes. When sampling is greater than zero and rarefy is not set, then the
-#'   standard errors for each statistic will appear, but take note that these
-#'   might not reflect the standard error around the observed mean. Use
-#'   \code{\link{boot_ci}} to get the CI around the estimated mean.
+#'   and do not take into account the actual allelic states. 
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
 #'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
@@ -254,7 +246,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   }
   # Creating the genotype matrix for vegan's diversity analysis.
   pop.mat <- mlg.matrix(dat)
-  if (total==TRUE & !is.null(poplist) & length(poplist) > 1){
+  if (total == TRUE & !is.null(poplist) & length(poplist) > 1){
     poplist$Total <- dat
     pop.mat       <- rbind(pop.mat, colSums(pop.mat))
   }
@@ -267,15 +259,15 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   
   MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
   N.vec   <- rowSums(pop.mat)
-  the_dots <- list(...)
-  rarefied <- "rarefy" %in% names(the_dots)
-  if (sample > 0){
-    if (!quiet) message("bootstrapping diversity statistics...")
-    divmat <- boot_se_table(pop.mat, n = sample, ...)
-    if (!quiet) message("calculating index of association...")
-  } else {
-    divmat <- get_stats(pop.mat)
-  }
+#   the_dots <- list(...)
+#   rarefied <- "rarefy" %in% names(the_dots)
+#   if (sample > 0){
+#     if (!quiet) message("bootstrapping diversity statistics...")
+#     divmat <- boot_se_table(pop.mat, n = sample, ...)
+#     if (!quiet) message("calculating index of association...")
+#   } else {
+    divmat <- get_stats(pop.mat, ...)
+  # }
   if (!is.matrix(divmat)){
     divmat <- matrix(divmat, nrow = 1, dimnames = list(NULL, names(divmat)))
   }
@@ -286,7 +278,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
     N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
-    if (!rarefied){
+    # if (!rarefied){
       IaList  <- lapply(sublist, function(x){
         namelist <- list(file = namelist$File, population = x)
         .ia(poplist[[x]], sample = sample, method = method, 
@@ -294,14 +286,14 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
             namelist = namelist)
       })    
       names(IaList) <- sublist
-    } else {
-      IaList <- t(vapply(poplist, rare_ia, numeric(4), n = sample, 
-                         rare = raremax, obs = TRUE))
-      colnames(IaList) <- c("Ia", "Ia.sd", "rbarD", "rbarD.sd")
-    }
+#     } else {
+#       IaList <- t(vapply(poplist, rare_ia, numeric(4), n = sample, 
+#                          rare = raremax, obs = TRUE))
+#       colnames(IaList) <- c("Ia", "Ia.sd", "rbarD", "rbarD.sd")
+#     }
   
     
-    if (sample > 0 && !rarefied){
+    if (sample > 0){# && !rarefied){
       classtest <- summary(IaList)
       classless <- !classtest[, "Class"] %in% "ialist"
       if (any(classless)){
@@ -313,7 +305,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
       }
       try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
       IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
-    } else if (!rarefied){
+    } else {#if (!rarefied){
       IaList <- t(as.data.frame(IaList))
     }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
