@@ -140,6 +140,19 @@
 #'   n is the number of observed values.} \item{File}{A vector indicating the
 #'   name of the original data file.}
 #'   
+#' @details This table is intended to be a first look into the dynamics of
+#'   mutlilocus genotype diversity. Many of the statistics (except for the the
+#'   index of association) are simply based on counts of multilocus genotypes
+#'   and do not take into account the actual allelic states. The function
+#'   \code{\link{boot_ci}} has the possability to calculate the statistics over
+#'   the smallest sample size when \code{rarefy = TRUE}. Note that the
+#'   statistics reported will be the estimated statistics and thier respective
+#'   standard deviations. These are useful for comparison across all sample
+#'   sizes. When sampling is greater than zero and rarefy is not set, then the
+#'   standard errors for each statistic will appear, but take note that these
+#'   might not reflect the standard error around the observed mean. Use
+#'   \code{\link{boot_ci}} to get the CI around the estimated mean.
+#'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
 #'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
 #'   
@@ -254,6 +267,8 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   
   MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
   N.vec   <- rowSums(pop.mat)
+  the_dots <- list(...)
+  rarefied <- "rarefy" %in% names(the_dots)
   if (sample > 0){
     if (!quiet) message("bootstrapping diversity statistics...")
     divmat <- boot_se_table(pop.mat, n = sample, ...)
@@ -270,15 +285,23 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
-    N.rare  <- suppressWarnings(rarefy(pop.mat, raremax, se = TRUE))
-    IaList  <- lapply(sublist, function(x){
-                      namelist <- list(file = namelist$File, population = x)
-                      .ia(poplist[[x]], sample = sample, method = method, 
-                          quiet = quiet, missing = missing, hist = FALSE,
-                          namelist = namelist)
-    })
-    names(IaList) <- sublist
-    if (sample > 0){
+    N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
+    if (!rarefied){
+      IaList  <- lapply(sublist, function(x){
+        namelist <- list(file = namelist$File, population = x)
+        .ia(poplist[[x]], sample = sample, method = method, 
+            quiet = quiet, missing = missing, hist = FALSE,
+            namelist = namelist)
+      })    
+      names(IaList) <- sublist
+    } else {
+      IaList <- t(vapply(poplist, rare_ia, numeric(4), n = sample, 
+                         rare = raremax, obs = TRUE))
+      colnames(IaList) <- c("Ia", "Ia.sd", "rbarD", "rbarD.sd")
+    }
+  
+    
+    if (sample > 0 && !rarefied){
       classtest <- summary(IaList)
       classless <- !classtest[, "Class"] %in% "ialist"
       if (any(classless)){
@@ -290,7 +313,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
       }
       try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
       IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
-    } else {
+    } else if (!rarefied){
       IaList <- t(as.data.frame(IaList))
     }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
