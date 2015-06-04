@@ -50,10 +50,10 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   INDEX_ARGS <- c("rbarD", "Ia")
   index      <- match.arg(index, INDEX_ARGS)
   if (!class(sample) %in% "ialist" & class(sample) %in% "list"){
-    suppressMessages(ggsamps <- melt(lapply(sample, "[[", "samples")))
+    suppressMessages(ggsamps <- reshape2::melt(lapply(sample, "[[", "samples")))
     ggvals <- vapply(sample, "[[", numeric(4), "index")
     names(dimnames(ggvals)) <- c("index", "population")
-    suppressMessages(ggvals <- melt(ggvals))
+    suppressMessages(ggvals <- reshape2::melt(ggvals, as.is = TRUE))
     ggsamps <- ggsamps[ggsamps$variable == index, ]
     ggvals  <- ggvals[grep(ifelse(index == "Ia", "I", "D"), ggvals$index), ]
     ggindex <- ggvals[ggvals$index == index, ]
@@ -136,7 +136,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   } else if (index == "Ia"){
     thePlot <- thePlot + xlab(expression(paste(I[A])))
   }
-  thePlot    <- thePlot + ggtitle(plot_title)
+  thePlot <- thePlot + ggtitle(plot_title)
   return(thePlot)
 }
 
