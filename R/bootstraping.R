@@ -539,15 +539,19 @@ get_boot_stats <- function(bootlist){
 }
 
 sd.boot <- function(x, na.rm = TRUE) apply(x$t, 2, sd, na.rm)
+mean.boot <- function(x, ...) apply(x$t, 2, mean, na.rm = TRUE)
 
-get_boot_se <- function(bootlist){
+get_boot_se <- function(bootlist, res = "sd"){
   npop   <- length(bootlist)
   bstats <- bootlist[[1]]$t0
   nstat  <- length(bstats)
+  THE_FUN <- match.fun(paste0(res, ".boot"))
   resmat <- matrix(nrow = npop, ncol = nstat,
                    dimnames = list(Pop = names(bootlist), Index = names(bstats)))
-  resmat[] <- t(vapply(bootlist, FUN = sd.boot, FUN.VAL = bstats))
-  colnames(resmat) <- paste(colnames(resmat), "se", sep = ".")
+  resmat[] <- t(vapply(bootlist, FUN = THE_FUN, FUN.VAL = bstats))
+  if (res == "sd"){
+    colnames(resmat) <- paste(colnames(resmat), res, sep = ".")  
+  }
   return(resmat)
 }
 
@@ -586,11 +590,15 @@ boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
     rareval <- ifelse(is.null(rare.val), min(rowSums(tab)), rare.val)
   }
   res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
-  orig <- get_boot_stats(res)
+  if (rarefy){
+    orig <- get_boot_se(res, "mean")
+  } else {
+    orig <- get_boot_stats(res)    
+  }
   out  <- matrix(nrow = nrow(orig), ncol = ncol(orig)*2, 
                  dimnames = list(rownames(orig), NULL))
   out[, !evens(1:ncol(out))]  <- orig
-  se_out <- get_boot_se(res)
+  se_out <- get_boot_se(res, "sd")
   out[, evens(1:ncol(out))] <- se_out
   colnames(out) <- intersp(colnames(orig), colnames(se_out))
   return(out)
