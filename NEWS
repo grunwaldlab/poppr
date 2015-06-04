@@ -18,6 +18,8 @@ NEW FEATURES
 * `poppr.msn` and `plot_poppr_msn` can now take genlight objects.
 * `plot_poppr_msn` now gives users the option to exclude the legends.
 * Default plotting for `mlg.table` will no longer produce one plot per population. It will now produce a single ggplot object for all populations. Note that the bars are no longer colored by count.
+* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calucluated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
+* `poppr` can now take any statistic that can be caluclated from a table of multilocus genotype counts. 
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
@@ -33,8 +35,7 @@ NEW FUNCTIONS
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
 * `get_stats` returns a matrix containing diversity statistics. Defaults to 4 found in `poppr`, but can be extended to any statistic that can be calculated on a vector of MLG counts.
 * `do_boot` will bootstrap a MLG matrix over the statistics specified for `get_stats`. Can also perform rarefaction bootstrap.
-* `boot_ci` will calculate and plot confidence intervals for bootstrap resampling of an MLG matrix.
-* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calucluated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
+* `boot_ci` will calculate and plot confidence intervals for bootstrap resampling of an MLG matrix. This includes rarefaction to the smallest sample size.
 
 NEW CLASSES
 * snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 

@@ -104,7 +104,8 @@ anei <- aboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
 arog <- aboot(Aeut, dist = rogers.dist, sample = 1000, cutoff = 50)
 
 # This can also be run on genpop objects
-Aeut.gc <- as.genclone(Aeut, hierarchy=other(Aeut)$population_hierarchy[-1])
+strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
+Aeut.gc <- as.genclone(Aeut)
 setPop(Aeut.gc) <- ~Pop/Subpop
 Aeut.pop <- genind2genpop(Aeut.gc)
 set.seed(5000)
