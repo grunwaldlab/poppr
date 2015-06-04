@@ -538,7 +538,7 @@ get_boot_stats <- function(bootlist){
   nstat  <- length(bstats)
   resmat <- matrix(nrow = npop, ncol = nstat,
                    dimnames = list(Pop = names(bootlist), Index = names(bstats)))
-  resmat[] <- t(vapply(bootlist, FUN = "[[", FUN.VAL = bstats, "t0"))
+  resmat[] <- t(vapply(bootlist, FUN = "[[", FUN.VALUE = bstats, "t0"))
   return(resmat)
 }
 
@@ -552,7 +552,7 @@ get_boot_se <- function(bootlist, res = "sd"){
   THE_FUN <- match.fun(paste0(res, ".boot"))
   resmat <- matrix(nrow = npop, ncol = nstat,
                    dimnames = list(Pop = names(bootlist), Index = names(bstats)))
-  resmat[] <- t(vapply(bootlist, FUN = THE_FUN, FUN.VAL = bstats))
+  resmat[] <- t(vapply(bootlist, FUN = THE_FUN, FUN.VALUE = bstats))
   if (res == "sd"){
     colnames(resmat) <- paste(colnames(resmat), res, sep = ".")  
   }

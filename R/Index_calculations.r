@@ -47,9 +47,9 @@
 #' This function allows the user to quickly view indicies of heterozygosity, 
 #' evenness, and inbreeding to aid in the decision of a path to further analyze 
 #' a specified dataset. It natively takes \code{\linkS4class{genind}} and 
-#' \code{\linkS4class{genclone}} objects, but can convert any raw data formats
-#' that adegenet can take (fstat, structure, genetix, and genpop) as well as
-#' genalex files exported into a csv format (see \code{\link{read.genalex}} for
+#' \code{\linkS4class{genclone}} objects, but can convert any raw data formats 
+#' that adegenet can take (fstat, structure, genetix, and genpop) as well as 
+#' genalex files exported into a csv format (see \code{\link{read.genalex}} for 
 #' details).
 #' 
 #' 
@@ -57,7 +57,7 @@
 #'   \code{\linkS4class{genclone}} object OR any fstat, structure, genetix, 
 #'   genpop, or genalex formatted file.
 #'   
-#' @param total When \code{TRUE} (default), indices will be calculated for the
+#' @param total When \code{TRUE} (default), indices will be calculated for the 
 #'   pooled populations.
 #'   
 #' @param sublist a list of character strings or integers to indicate specific 
@@ -79,46 +79,45 @@
 #'   
 #' @param missing how should missing data be treated? \code{"zero"} and 
 #'   \code{"mean"} will set the missing values to those documented in 
-#'   \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any 
-#'   loci or genotypes with missing data, respectively (see 
-#'   \code{\link{missingno}} for more information.
+#'   \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any loci or
+#'   genotypes with missing data, respectively (see \code{\link{missingno}} for
+#'   more information.
 #'   
 #' @param cutoff \code{numeric} a number from 0 to 1 indicating the percent 
 #'   missing data allowed for analysis. This is to be used in conjunction with 
 #'   the flag \code{missing} (see \code{\link{missingno}} for details)
 #'   
-#' @param quiet \code{FALSE} (default) will display a progress bar for each
+#' @param quiet \code{FALSE} (default) will display a progress bar for each 
 #'   population analyzed.
 #'   
-#' @param clonecorrect default \code{FALSE}. must be used with the \code{hier} 
-#'   and \code{dfname} parameters, or the user will potentially get undesired 
-#'   results. see \code{\link{clonecorrect}} for details.
+#' @param clonecorrect default \code{FALSE}. must be used with the \code{strata}
+#'   parameter, or the user will potentially get undesired results. see
+#'   \code{\link{clonecorrect}} for details.
 #'   
-#' @param strata \itemize{ \item \strong{for genclone objects} - a \code{formula} 
-#'   indicating the hierarchical levels to be used. The hierarchies should be 
-#'   present in the \code{strata} slot. See \code{\link{strata}} for 
-#'   details.}
+#' @param strata a \code{formula} indicating the hierarchical levels to be used.
+#'   The hierarchies should be present in the \code{strata} slot. See
+#'   \code{\link{strata}} for details.
 #'   
-#' @param keep an \code{integer}. This indicates which strata you wish to keep
-#'   after clone correcting your data sets. To combine strata, just set keep
-#'   from 1 to the number of straifications set in strata. see
+#' @param keep an \code{integer}. This indicates which strata you wish to keep 
+#'   after clone correcting your data sets. To combine strata, just set keep 
+#'   from 1 to the number of straifications set in strata. see 
 #'   \code{\link{clonecorrect}} for details.
 #'   
 #' @param hist \code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
 #'   a histogram will be produced for each population.
-#'  
-#' @param index \code{character} Either "Ia" or "rbarD". If \code{hist = TRUE},
+#'   
+#' @param index \code{character} Either "Ia" or "rbarD". If \code{hist = TRUE}, 
 #'   this will determine the index used for the visualization.
 #'   
 #' @param minsamp an \code{integer} indicating the minimum number of individuals
-#'   to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for
+#'   to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for 
 #'   details.
 #'   
 #' @param legend \code{logical}. When this is set to \code{TRUE}, a legend 
 #'   describing the resulting table columns will be printed. Defaults to 
 #'   \code{FALSE}
-#' 
-#' @param ... arguments to be passed on to \code{\link{boot_ci}}
+#'   
+#' @param ... arguments to be passed on to \code{\link{get_stats}}
 #'   
 #' @return \item{Pop}{A vector indicating the pouplation factor} \item{N}{An 
 #'   integer vector indicating the number of individuals/isolates in the 
@@ -127,23 +126,34 @@
 #'   \code{\link{mlg}})} \item{eMLG}{The expected number of MLG at the lowest 
 #'   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The 
 #'   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner 
-#'   Diversity index} \item{G}{Stoddard and Taylor's Index}
-#'   \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Ia}{A numeric
-#'   vector giving the value of the Index of Association for each population
-#'   factor, (see \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating
-#'   the p-value for Ia from the number of reshufflings indicated in
-#'   \code{sample}. Lowest value is 1/n where n is the number of observed
+#'   Diversity index} \item{G}{Stoddard and Taylor's Index} 
+#'   \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Ia}{A numeric 
+#'   vector giving the value of the Index of Association for each population 
+#'   factor, (see \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating 
+#'   the p-value for Ia from the number of reshufflings indicated in 
+#'   \code{sample}. Lowest value is 1/n where n is the number of observed 
 #'   values.} \item{rbarD}{A numeric vector giving the value of the Standardized
-#'   Index of Association for each population factor, (see \code{\link{ia}}).}
-#'   \item{p.rD}{A numeric vector indicating the p-value for rbarD from the
-#'   number of reshuffles indicated in \code{sample}. Lowest value is 1/n where
-#'   n is the number of observed values.} \item{File}{A vector indicating the
+#'   Index of Association for each population factor, (see \code{\link{ia}}).} 
+#'   \item{p.rD}{A numeric vector indicating the p-value for rbarD from the 
+#'   number of reshuffles indicated in \code{sample}. Lowest value is 1/n where 
+#'   n is the number of observed values.} \item{File}{A vector indicating the 
 #'   name of the original data file.}
 #'   
-#' @details This table is intended to be a first look into the dynamics of
-#'   mutlilocus genotype diversity. Many of the statistics (except for the the
-#'   index of association) are simply based on counts of multilocus genotypes
-#'   and do not take into account the actual allelic states. 
+#' @details This table is intended to be a first look into the dynamics of 
+#'   mutlilocus genotype diversity. Many of the statistics (except for the the 
+#'   index of association) are simply based on counts of multilocus genotypes 
+#'   and do not take into account the actual allelic states. None of the 
+#'   diversity indices will be bootstrapped if \code{sample > 0}. These are 
+#'   relatively quick to bootstrap, so the function \code{\link{boot_ci}} should
+#'   suit the need to produce confidence intervals for these statistics. 
+#'   \subsection{graphic}{This function outputs a \pkg{ggplot2} graphic of 
+#'   histograms. These can be manipulated to be visualized in another manner by 
+#'   retrieving the plot with the \code{\link{last_plot}} command from 
+#'   \pkg{ggplot2}. A useful manipulation would be to arrange the graphs into a 
+#'   single column so that the values of the statistic line up: \cr \code{p <- 
+#'   last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")}\cr 
+#'   The name for the groupings is "population" and the name for the x axis is 
+#'   "value".}
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
 #'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
@@ -155,7 +165,8 @@
 #'   2001
 #'   
 #'   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-#'   populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536, 1980.
+#'   populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536,
+#'   1980.
 #'   
 #'   Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
 #'   E. Fry. Analysis of genotypic diversity data for populations of 
@@ -199,13 +210,43 @@
 #' poppr(nancycats)
 #' 
 #' \dontrun{
-#' poppr(nancycats, sample=99, total=FALSE, quiet=FALSE)
+#' # Sampling
+#' poppr(nancycats, sample = 999, total = FALSE)
 #' 
+#' # Customizing the plot
+#' library("ggplot2")
+#' p <- last_plot()
+#' p + facet_wrap(~population, scales = "free_y", ncol = 1)
+#' 
+#' # Turning off diversity statistics (see get_stats)
+#' poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
+#' 
+#' # We can also get a corrected version of Simpson's index. We'll use clonal
+#' # data to demonstrate this.
+#' 
+#' data(Aeut)
+#' 
+#' Sc <- function(x){
+#'   lambda <- vegan::diversity(x, "simpson")
+#'   x <- drop(as.matrix(x))
+#'   if (length(dim(x)) > 1){
+#'     N <- rowSums(x)
+#'   } else {
+#'     N <- sum(x)
+#'   }
+#'   return((N/(N-1))*lambda)
+#' }
+#' poppr(Aeut, Sc = Sc)
+#' 
+#' 
+#' # Demonstration with viral data
 #' # Note: this is a larger data set that could take a couple of minutes to run
 #' # on slower computers. 
 #' data(H3N2)
-#' poppr(H3N2, total=FALSE, sublist=c("Austria", "China", "USA"), 
-#' 				clonecorrect=TRUE, strata="country", dfname="x")
+#' strata(H3N2) <- data.frame(other(H3N2)$x)
+#' setPop(H3N2) <- ~country
+#' poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"), 
+#' 				clonecorrect = TRUE, strata = ~country/year)
 #' }
 #==============================================================================#
 #' @import adegenet ggplot2 vegan

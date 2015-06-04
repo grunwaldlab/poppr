@@ -36,9 +36,9 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 
 \item{missing}{how should missing data be treated? \code{"zero"} and
   \code{"mean"} will set the missing values to those documented in
-  \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any
-  loci or genotypes with missing data, respectively (see
-  \code{\link{missingno}} for more information.}
+  \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any loci or
+  genotypes with missing data, respectively (see \code{\link{missingno}} for
+  more information.}
 
 \item{cutoff}{\code{numeric} a number from 0 to 1 indicating the percent
   missing data allowed for analysis. This is to be used in conjunction with
@@ -47,14 +47,13 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 \item{quiet}{\code{FALSE} (default) will display a progress bar for each
   population analyzed.}
 
-\item{clonecorrect}{default \code{FALSE}. must be used with the \code{hier}
-  and \code{dfname} parameters, or the user will potentially get undesired
-  results. see \code{\link{clonecorrect}} for details.}
+\item{clonecorrect}{default \code{FALSE}. must be used with the \code{strata}
+  parameter, or the user will potentially get undesired results. see
+  \code{\link{clonecorrect}} for details.}
 
-\item{strata}{\itemize{ \item \strong{for genclone objects} - a \code{formula}
-  indicating the hierarchical levels to be used. The hierarchies should be
-  present in the \code{strata} slot. See \code{\link{strata}} for
-  details.}}
+\item{strata}{a \code{formula} indicating the hierarchical levels to be used.
+  The hierarchies should be present in the \code{strata} slot. See
+  \code{\link{strata}} for details.}
 
 \item{keep}{an \code{integer}. This indicates which strata you wish to keep
   after clone correcting your data sets. To combine strata, just set keep
@@ -75,7 +74,7 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   describing the resulting table columns will be printed. Defaults to
   \code{FALSE}}
 
-\item{...}{arguments to be passed on to \code{\link{boot_ci}}}
+\item{...}{arguments to be passed on to \code{\link{get_stats}}}
 }
 \value{
 \item{Pop}{A vector indicating the pouplation factor} \item{N}{An
@@ -111,28 +110,61 @@ details).
 This table is intended to be a first look into the dynamics of
   mutlilocus genotype diversity. Many of the statistics (except for the the
   index of association) are simply based on counts of multilocus genotypes
-  and do not take into account the actual allelic states. The function
-  \code{\link{boot_ci}} has the possability to calculate the statistics over
-  the smallest sample size when \code{rarefy = TRUE}. Note that the
-  statistics reported will be the estimated statistics and thier respective
-  standard deviations. These are useful for comparison across all sample
-  sizes. When sampling is greater than zero and rarefy is not set, then the
-  standard errors for each statistic will appear, but take note that these
-  might not reflect the standard error around the observed mean. Use
-  \code{\link{boot_ci}} to get the CI around the estimated mean.
+  and do not take into account the actual allelic states. None of the
+  diversity indices will be bootstrapped if \code{sample > 0}. These are
+  relatively quick to bootstrap, so the function \code{\link{boot_ci}} should
+  suit the need to produce confidence intervals for these statistics.
+  \subsection{graphic}{This function outputs a \pkg{ggplot2} graphic of
+  histograms. These can be manipulated to be visualized in another manner by
+  retrieving the plot with the \code{\link{last_plot}} command from
+  \pkg{ggplot2}. A useful manipulation would be to arrange the graphs into a
+  single column so that the values of the statistic line up: \cr \code{p <-
+  last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")}\cr
+  The name for the groupings is "population" and the name for the x axis is
+  "value".}
 }
 \examples{
 data(nancycats)
 poppr(nancycats)
 
 \dontrun{
-poppr(nancycats, sample=99, total=FALSE, quiet=FALSE)
+# Sampling
+poppr(nancycats, sample = 999, total = FALSE)
 
+# Customizing the plot
+library("ggplot2")
+p <- last_plot()
+p + facet_wrap(~population, scales = "free_y", ncol = 1)
+
+# Turning off diversity statistics (see get_stats)
+poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
+
+# We can also get a corrected version of Simpson's index. We'll use clonal
+# data to demonstrate this.
+
+data(Aeut)
+
+Sc <- function(x){
+  lambda <- vegan::diversity(x, "simpson")
+  x <- drop(as.matrix(x))
+  if (length(dim(x)) > 1){
+    N <- rowSums(x)
+  } else {
+    N <- sum(x)
+  }
+  return((N/(N-1))*lambda)
+}
+poppr(Aeut, Sc = Sc)
+
+
+# Demonstration with viral data
 # Note: this is a larger data set that could take a couple of minutes to run
 # on slower computers.
 data(H3N2)
-poppr(H3N2, total=FALSE, sublist=c("Austria", "China", "USA"),
-				clonecorrect=TRUE, strata="country", dfname="x")
+strata(H3N2) <- data.frame(other(H3N2)$x)
+setPop(H3N2) <- ~country
+poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"),
+				clonecorrect = TRUE, strata = ~country/year)
 }
 }
 \author{
@@ -144,7 +176,8 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
   2001
 
   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural
-  populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536, 1980.
+  populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536,
+  1980.
 
   Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
   E. Fry. Analysis of genotypic diversity data for populations of
