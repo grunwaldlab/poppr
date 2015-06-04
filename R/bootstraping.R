@@ -507,7 +507,11 @@ boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
 #   unique_names <- !names(dotlist) %in% names(get_stats_args)
 #   dotlist <- dotlist[unique_names]
 #   orig <- do.call("get_stats", c(get_stats_args[-6], dotlist))
-  orig <- get_boot_stats(res)
+  if (!mlg.weight){
+    orig <- get_stats(tab, ...)
+  } else {
+    orig <- get_boot_stats(res)    
+  }
   statnames <- colnames(orig)
   orig <- melt(orig)
   orig$Pop <- factor(orig$Pop)
