@@ -4,7 +4,7 @@
 \alias{do_boot}
 \title{Perform a bootstrap analysis on diversity statistics}
 \usage{
-do_boot(tab, n, n.rare = NULL, mlg.weight = FALSE, H = TRUE, G = TRUE,
+do_boot(tab, n, n.rare = NULL, mlg.weight = TRUE, H = TRUE, G = TRUE,
   lambda = TRUE, E5 = TRUE, ...)
 }
 \arguments{
@@ -19,8 +19,8 @@ This should be no larger than the smallest sample size. Defaults to
 \code{NULL}, indicating that each population will be sampled at its own
 size.}
 
-\item{mlg.weight}{when \code{FALSE} (default), all observed MLGs have an equal
-chance of being selected in the bootstrapping procedure. When \code{TRUE},
+\item{mlg.weight}{when \code{FALSE}, all observed MLGs have an equal
+chance of being selected in the bootstrapping procedure. When \code{TRUE} (default),
 larger MLGs have more of a chance of being selected. This parameter is
 ignored when \code{n.rare = TRUE}.}
 

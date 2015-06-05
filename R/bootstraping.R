@@ -334,8 +334,8 @@ extract_samples <- function(x) rep(1:length(x), x)
 #'   This should be no larger than the smallest sample size. Defaults to 
 #'   \code{NULL}, indicating that each population will be sampled at its own 
 #'   size.
-#' @param mlg.weight when \code{FALSE} (default), all observed MLGs have an equal 
-#'   chance of being selected in the bootstrapping procedure. When \code{TRUE},
+#' @param mlg.weight when \code{FALSE}, all observed MLGs have an equal 
+#'   chance of being selected in the bootstrapping procedure. When \code{TRUE} (default),
 #'   larger MLGs have more of a chance of being selected. This parameter is
 #'   ignored when \code{n.rare = TRUE}.
 #' @inheritParams get_stats
@@ -358,7 +358,7 @@ extract_samples <- function(x) rep(1:length(x), x)
 #' }
 #' @importFrom boot boot
 #==============================================================================#
-do_boot <- function(tab, n, n.rare = NULL, mlg.weight = FALSE, H = TRUE, G = TRUE, 
+do_boot <- function(tab, n, n.rare = NULL, mlg.weight = TRUE, H = TRUE, G = TRUE, 
                     lambda = TRUE, E5 = TRUE, ...){
   if (!is.null(n.rare)){
     res <- apply(tab, 1, function(x){
@@ -428,13 +428,15 @@ sim_boot <- function(x, mle = 100){
 #'   chance of being selected in the bootstrapping procedure. When \code{TRUE},
 #'   larger MLGs have more of a chance of being selected. This parameter is
 #'   ignored when \code{rarefy = TRUE}.
+#' @param plot If \code{TRUE} (default), boxplots will be produced for each
+#'   population, grouped by statistic. Colored dots will indicate the observed
+#'   value.This plot can be retrieved by using \code{p <- last_plot()} from the
+#'   \pkg{ggplot2} package.
 #' @param ... parameters to be passed on to \code{\link[boot]{boot}} and
 #'   \code{\link{get_stats}}
 #'   
 #' @return an array of 3 dimensions giving the lower and upper bound, the index 
-#'   measured, and the population. This also prints barplots for each population
-#'   faceted by each index using \pkg{ggplot2}. This plot can be retrieved by
-#'   using \code{p <- last_plot()}
+#'   measured, and the population.
 #'   
 #' @note While it is possible to use custom functions with this, there are three
 #'   important things to remember when using these functions: 
@@ -479,7 +481,7 @@ sim_boot <- function(x, mle = 100){
 #' 
 #==============================================================================#
 boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
-                    mlg.weight = TRUE,...){
+                    mlg.weight = TRUE, plot = TRUE, ...){
   if (!is.matrix(tab) & is.genind(tab)){
     tab <- mlg.table(tab, total = total, plot = FALSE)
   }
@@ -489,29 +491,10 @@ boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
     rareval <- min(rowSums(tab))
   }
   res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
-#   dotlist <- list(...)
-#   bootargs <- names(formals(boot))
-#   dotlist <- dotlist[!names(dotlist) %in% bootargs]
-#   get_stats_args <- formals(get_stats)
-#   get_stats_args$z <- tab
-#   matching_names <- names(dotlist) %in% names(get_stats_args)
-#   if (any(matching_names)){
-#     for (i in names(dotlist[matching_names])){
-#       if (!is.logical(dotlist[[i]])){
-#         warning("Extra functions cannot have the same name a defaults. Renaming")
-#         names(dotlist)[names(dotlist) == i] <- paste0("d", i)
-#       } else {
-#         get_stats_args[[i]] <- dotlist[[i]]
-#       }
-#     }
-#   }
-#   unique_names <- !names(dotlist) %in% names(get_stats_args)
-#   dotlist <- dotlist[unique_names]
-#   orig <- do.call("get_stats", c(get_stats_args[-6], dotlist))
   if (!mlg.weight){
     orig <- get_stats(tab, ...)
   } else {
-    orig <- get_boot_stats(res)    
+    orig <- get_boot_stats(res)
   }
   statnames <- colnames(orig)
   orig <- melt(orig)
@@ -532,6 +515,50 @@ boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
   print(pl)
   return(CI)
 }
+
+boot_plot <- function(res, orig, statnames, popnames){
+  statnames <- colnames(orig)
+  orig <- melt(orig)
+  orig$Pop <- factor(orig$Pop)
+  samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
+  dimnames(samp) <- list(NULL, 
+                         Index = statnames,
+                         Pop = popnames)
+  sampmelt <- melt(samp)
+  sampmelt$Pop <- factor(sampmelt$Pop)
+  pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
+    geom_boxplot() + 
+    geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 
+               size = 5, pch = 16, data = orig) +
+    xlab("Population") + labs(color = "Observed") +
+    facet_wrap(~Index, scales = "free_y") + myTheme
+  print(pl)
+}
+
+
+diversity_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
+                            mlg.weight = TRUE, plot = TRUE, ...){
+  if (!is.matrix(tab) & is.genind(tab)){
+    tab <- mlg.table(tab, total = total, plot = FALSE)
+  }
+  rareval <- NULL
+  
+  if (rarefy){
+    rareval <- min(rowSums(tab))
+  }
+  res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
+  if (!mlg.weight){
+    orig <- get_stats(tab, ...)
+  } else {
+    orig <- get_boot_stats(res)
+  }
+  statnames <- colnames(orig)
+  CI <- get_all_ci(res, ci = ci, index_names = statnames)
+  means <- get_boot_se(res, "mean")
+  if (plot) boot_plot(res, orig, statnames, rownames(tab))
+  return(list(CI = CI, est = means, obs = orig))
+}
+
 
 get_boot_stats <- function(bootlist){
   npop   <- length(bootlist)
@@ -598,7 +625,7 @@ boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
   if (rarefy){
     orig <- get_boot_se(res, "mean")
   } else {
-    orig <- get_boot_stats(res)    
+    orig <- get_boot_stats(res)
   }
   out  <- matrix(nrow = nrow(orig), ncol = ncol(orig)*2, 
                  dimnames = list(rownames(orig), NULL))
