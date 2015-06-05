@@ -537,12 +537,11 @@ boot_plot <- function(res, orig, statnames, popnames){
 
 
 diversity_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
-                            mlg.weight = TRUE, plot = TRUE, ...){
+                            mlg.weight = TRUE, plot = TRUE, raw = TRUE, ...){
   if (!is.matrix(tab) & is.genind(tab)){
     tab <- mlg.table(tab, total = total, plot = FALSE)
   }
   rareval <- NULL
-  
   if (rarefy){
     rareval <- min(rowSums(tab))
   }
@@ -553,12 +552,36 @@ diversity_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE
     orig <- get_boot_stats(res)
   }
   statnames <- colnames(orig)
-  CI <- get_all_ci(res, ci = ci, index_names = statnames)
-  means <- get_boot_se(res, "mean")
-  if (plot) boot_plot(res, orig, statnames, rownames(tab))
-  return(list(CI = CI, est = means, obs = orig))
+  CI  <- get_all_ci(res, ci = ci, index_names = statnames)
+  est <- get_boot_se(res, "mean")
+  out <- list(CI = CI, est = est, obs = orig)
+  if (plot){
+    boot_plot(res, orig, statnames, rownames(tab))
+  }
+  if (!raw){
+    out <- do.call("pretty_info", out)
+  }
+  return(out)
 }
 
+
+pretty_info <- function(obs, est, CI){
+  pretty_ci <- t(apply(round(CI, 3), 2:3, function(x) paste0("(", paste(x, collapse = ", "), ")")))
+  colnames(est) <- paste(colnames(est), "est", sep = ".")
+  out <- vector(mode = "list", length = ncol(est)*3)
+  colnames(pretty_ci) <- paste(colnames(pretty_ci), "ci", sep = ".")
+  names(out)[(1:length(out)) %% 3 != 0] <- intersp(colnames(obs), colnames(est))
+  names(out)[(1:length(out)) %% 3 == 0] <- colnames(pretty_ci)
+  for (i in names(out)){
+    out[[i]] <- obs[, 1]
+  }
+  out <- data.frame(out)
+  out[colnames(obs)] <- obs
+  out[colnames(est)] <- est
+  out[colnames(pretty_ci)] <- pretty_ci
+  class(out) <- c("popprtable", "data.frame")
+  return(out)
+}
 
 get_boot_stats <- function(bootlist){
   npop   <- length(bootlist)
