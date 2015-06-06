@@ -384,8 +384,16 @@ do_boot <- function(tab, n, n.rare = NULL, mlg.weight = TRUE, H = TRUE, G = TRUE
   return(res)
 }
 
-get_ci <- function(x, lb, ub){
-  res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)
+#' @importFrom boot boot.ci
+get_ci <- function(x, lb, ub, bci = TRUE, btype = "norm"){
+  if (bci){
+    lenout <- length(x$t0)
+    res <- vapply(1:lenout, function(i) boot::boot.ci(x, type = btype, index = i)$normal[-1], 
+                  numeric(2))
+    if (!is.null(dim(res))) rownames(res) <- paste(c(lb, ub)*100, "%")
+  } else {
+    res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)    
+  }
   return(res)
 }
 
@@ -546,8 +554,12 @@ pretty_info <- function(obs, est, CI){
 
 boot_plot <- function(res, orig, statnames, popnames){
   statnames <- colnames(orig)
-  orig <- melt(orig)
+  orig <- reshape2::melt(orig)
   orig$Pop <- factor(orig$Pop)
+#   cidf <- reshape2::melt(CI)
+#   cidf <- reshape2::dcast(cidf, as.formula("Pop + Index ~ CI"))
+#   orig <- merge(orig, cidf)
+#   colnames(orig)[4:5] <- c("lb", "ub")
   samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
   dimnames(samp) <- list(NULL, 
                          Index = statnames,
@@ -558,6 +570,8 @@ boot_plot <- function(res, orig, statnames, popnames){
     geom_boxplot() + 
     geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 
                size = 5, pch = 16, data = orig) +
+#     geom_errorbar(aes_string(color = "Pop", x = "Pop", ymin = "lb", ymax = "ub"),
+#                   data = orig) + 
     xlab("Population") + labs(color = "Observed") +
     facet_wrap(~Index, scales = "free_y") + myTheme
   print(pl)
