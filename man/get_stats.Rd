@@ -63,6 +63,6 @@ get_stats(tab, B = Beta)
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{do_boot}} \code{\link{boot_ci}} \code{\link{poppr}}
+\code{\link{do_boot}} \code{\link{diversity_stats}} \code{\link{poppr}}
 }
 

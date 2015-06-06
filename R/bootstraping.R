@@ -248,7 +248,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #' @return a numeric matrix giving statistics (columns) for each population
 #'   (rows).
 #' @export
-#' @seealso \code{\link{do_boot}} \code{\link{boot_ci}} \code{\link{poppr}}
+#' @seealso \code{\link{do_boot}} \code{\link{diversity_stats}} \code{\link{poppr}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
@@ -343,7 +343,7 @@ extract_samples <- function(x) rep(1:length(x), x)
 #'   \code{\link{get_stats}}.
 #'   
 #' @return a list of objects of class "boot".
-#' @seealso \code{\link{boot_ci}} \code{\link{get_stats}} \code{\link{poppr}}
+#' @seealso \code{\link{diversity_stats}} \code{\link{get_stats}} \code{\link{poppr}}
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
@@ -432,12 +432,22 @@ sim_boot <- function(x, mle = 100){
 #'   population, grouped by statistic. Colored dots will indicate the observed
 #'   value.This plot can be retrieved by using \code{p <- last_plot()} from the
 #'   \pkg{ggplot2} package.
+#' @param raw if \code{TRUE} (default) a list containing three elements will be returned
+
 #' @param ... parameters to be passed on to \code{\link[boot]{boot}} and
 #'   \code{\link{get_stats}}
 #'   
-#' @return an array of 3 dimensions giving the lower and upper bound, the index 
+#' @return \subsection{raw = TRUE}{
+#' \itemize{
+#' \item \strong{obs} - a matrix with observed statistics in columns, populations in rows
+#' \item \strong{est} - a matrix with estimated statistics in columns, populations in rows
+#' \item \strong{CI} - an array of 3 dimensions giving the lower and upper bound, the index 
 #'   measured, and the population.
-#'   
+#'   }
+#'  }
+#'  \subsection{raw = FALSE}{
+#'  a data frame with the statistic observations, estimates, and confidence intervals in columns, and populations in rows. Note that the confidence intervals are converted to characters and rounded to three decimal places.
+#'  }
 #' @note While it is possible to use custom functions with this, there are three
 #'   important things to remember when using these functions: 
 #' \enumerate{
@@ -448,16 +458,20 @@ sim_boot <- function(x, mle = 100){
 #' }. Anonymous functions are okay (e.g. \code{function(x) vegan::rarefy(x, 10)}).
 #'   
 #' @export
+#' @rdname diversity_stats
 #' @seealso \code{\link{do_boot}} \code{\link{get_stats}} \code{\link{poppr}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
 #' data(Pinf)
-#' boot_ci(Pinf, n = 100)
+#' diversity_stats(Pinf, n = 100L)
 #' \dontrun{
+#' # With pretty results
+#' diversity_stats(Pinf, n = 100L, raw = FALSE)
+#' 
 #' # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
-#' system.time(boot_ci(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
-#' system.time(boot_ci(Pinf, 10000L))
+#' system.time(diversity_stats(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
+#' system.time(diversity_stats(Pinf, 10000L))
 #' 
 #' # The previous version of poppr contained a statistic known as Hexp, which
 #' # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased 
@@ -475,18 +489,18 @@ sim_boot <- function(x, mle = 100){
 #'  }
 #'  return((N/(N-1))*lambda)
 #' }
-#' boot_ci(Pinf, 1000L, Hexp = Hexp)
-#' boot_ci(Pinf, 1000L, Hexp = Hexp, rarefy = TRUE)
+#' # Show pretty results
+#' diversity_stats(Pinf, 1000L, Hexp = Hexp, raw = FALSE)
+#' diversity_stats(Pinf, 1000L, Hexp = Hexp, rarefy = TRUE, raw = FALSE)
 #' }
 #' 
 #==============================================================================#
-boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
-                    mlg.weight = TRUE, plot = TRUE, ...){
-  if (!is.matrix(tab) & is.genind(tab)){
+diversity_stats <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
+                            mlg.weight = TRUE, plot = TRUE, raw = TRUE, ...){
+  if (!is.matrix(tab) & is.genind(tab) | is(tab, "genlight")){
     tab <- mlg.table(tab, total = total, plot = FALSE)
   }
   rareval <- NULL
-  
   if (rarefy){
     rareval <- min(rowSums(tab))
   }
@@ -497,24 +511,38 @@ boot_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
     orig <- get_boot_stats(res)
   }
   statnames <- colnames(orig)
-  orig <- melt(orig)
-  orig$Pop <- factor(orig$Pop)
-  CI   <- get_all_ci(res, ci = ci, index_names = statnames)
-  samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
-  dimnames(samp) <- list(NULL, 
-                         Index = statnames,
-                         Pop = rownames(tab))
-  sampmelt <- melt(samp)
-  sampmelt$Pop <- factor(sampmelt$Pop)
-  pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
-    geom_boxplot() + 
-    geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 
-               size = 5, pch = 16, data = orig) +
-    xlab("Population") + labs(color = "Observed") +
-    facet_wrap(~Index, scales = "free_y") + myTheme
-  print(pl)
-  return(CI)
+  CI  <- get_all_ci(res, ci = ci, index_names = statnames)
+  est <- get_boot_se(res, "mean")
+  out <- list(obs = orig, est = est, CI = CI)
+  if (plot){
+    boot_plot(res, orig, statnames, rownames(tab))
+  }
+  if (!raw){
+    out <- do.call("pretty_info", out)
+  }
+  return(out)
 }
+
+pretty_info <- function(obs, est, CI){
+  pretty_ci <- t(apply(round(CI, 3), 2:3, 
+                       function(x) paste0("(", paste(x, collapse = ", "), ")")))
+  colnames(est) <- paste(colnames(est), "est", sep = ".")
+  out <- vector(mode = "list", length = ncol(est)*3)
+  colnames(pretty_ci) <- paste(colnames(pretty_ci), "ci", sep = ".")
+  names(out)[(1:length(out)) %% 3 != 0] <- intersp(colnames(obs), colnames(est))
+  names(out)[(1:length(out)) %% 3 == 0] <- colnames(pretty_ci)
+  for (i in names(out)){
+    out[[i]] <- obs[, 1]
+  }
+  out <- data.frame(out)
+  out[colnames(obs)] <- obs
+  out[colnames(est)] <- est
+  out[colnames(pretty_ci)] <- pretty_ci
+  class(out) <- c("popprtable", "data.frame")
+  return(out)
+}
+
+
 
 boot_plot <- function(res, orig, statnames, popnames){
   statnames <- colnames(orig)
@@ -536,52 +564,6 @@ boot_plot <- function(res, orig, statnames, popnames){
 }
 
 
-diversity_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
-                            mlg.weight = TRUE, plot = TRUE, raw = TRUE, ...){
-  if (!is.matrix(tab) & is.genind(tab)){
-    tab <- mlg.table(tab, total = total, plot = FALSE)
-  }
-  rareval <- NULL
-  if (rarefy){
-    rareval <- min(rowSums(tab))
-  }
-  res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
-  if (!mlg.weight){
-    orig <- get_stats(tab, ...)
-  } else {
-    orig <- get_boot_stats(res)
-  }
-  statnames <- colnames(orig)
-  CI  <- get_all_ci(res, ci = ci, index_names = statnames)
-  est <- get_boot_se(res, "mean")
-  out <- list(CI = CI, est = est, obs = orig)
-  if (plot){
-    boot_plot(res, orig, statnames, rownames(tab))
-  }
-  if (!raw){
-    out <- do.call("pretty_info", out)
-  }
-  return(out)
-}
-
-
-pretty_info <- function(obs, est, CI){
-  pretty_ci <- t(apply(round(CI, 3), 2:3, function(x) paste0("(", paste(x, collapse = ", "), ")")))
-  colnames(est) <- paste(colnames(est), "est", sep = ".")
-  out <- vector(mode = "list", length = ncol(est)*3)
-  colnames(pretty_ci) <- paste(colnames(pretty_ci), "ci", sep = ".")
-  names(out)[(1:length(out)) %% 3 != 0] <- intersp(colnames(obs), colnames(est))
-  names(out)[(1:length(out)) %% 3 == 0] <- colnames(pretty_ci)
-  for (i in names(out)){
-    out[[i]] <- obs[, 1]
-  }
-  out <- data.frame(out)
-  out[colnames(obs)] <- obs
-  out[colnames(est)] <- est
-  out[colnames(pretty_ci)] <- pretty_ci
-  class(out) <- c("popprtable", "data.frame")
-  return(out)
-}
 
 get_boot_stats <- function(bootlist){
   npop   <- length(bootlist)

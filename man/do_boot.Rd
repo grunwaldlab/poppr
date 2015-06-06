@@ -56,6 +56,6 @@ system.time(do_boot(tab, 10000L))
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{boot_ci}} \code{\link{get_stats}} \code{\link{poppr}}
+\code{\link{diversity_stats}} \code{\link{get_stats}} \code{\link{poppr}}
 }
 
