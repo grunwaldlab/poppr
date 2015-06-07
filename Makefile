@@ -45,8 +45,8 @@ update:
 	rm -fv vignettes/*toc
 	rm -fv vignettes/*log
 	perl -p -i -e "s/^Version: .*$$/Version: $(VERSION)/" DESCRIPTION
-	perl -p -i -e "s/version .*\}$$/version $(VERSION)\}/" vignettes/algo.Rnw
-	perl -p -i -e "s/version .*\}$$/version $(VERSION)\}/" vignettes/poppr_manual.Rnw
+	# perl -p -i -e "s/version .*\}$$/version $(VERSION)\}/" vignettes/algo.Rnw
+	# perl -p -i -e "s/version .*\}$$/version $(VERSION)\}/" vignettes/poppr_manual.Rnw
 
 checkdevel: build
 	cd ..;\
