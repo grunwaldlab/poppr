@@ -23,17 +23,18 @@ diversity_stats(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
 population size. Defaults to \code{FALSE}, indicating that bootstrapping
 will be performed respective to each population size.}
 
-\item{mlg.weight}{when \code{FALSE} (default), all observed MLGs have an equal
-chance of being selected in the bootstrapping procedure. When \code{TRUE},
-larger MLGs have more of a chance of being selected. This parameter is
-ignored when \code{rarefy = TRUE}.}
+\item{mlg.weight}{when \code{FALSE} (default), all observed MLGs have an
+equal chance of being selected in the bootstrapping procedure. When
+\code{TRUE}, larger MLGs have more of a chance of being selected. This
+parameter is ignored when \code{rarefy = TRUE}.}
 
 \item{plot}{If \code{TRUE} (default), boxplots will be produced for each
 population, grouped by statistic. Colored dots will indicate the observed
 value.This plot can be retrieved by using \code{p <- last_plot()} from the
 \pkg{ggplot2} package.}
 
-\item{raw}{if \code{TRUE} (default) a list containing three elements will be returned}
+\item{raw}{if \code{TRUE} (default) a list containing three elements will be
+returned}
 
 \item{...}{parameters to be passed on to \code{\link[boot]{boot}} and
   \code{\link{get_stats}}}
@@ -47,9 +48,10 @@ value.This plot can be retrieved by using \code{p <- last_plot()} from the
   measured, and the population.
   }
  }
- \subsection{raw = FALSE}{
- a data frame with the statistic observations, estimates, and confidence intervals in columns, and populations in rows. Note that the confidence intervals are converted to characters and rounded to three decimal places.
- }
+\subsection{raw = FALSE}{ a data frame with the statistic observations,
+estimates, and confidence intervals in columns, and populations in rows. Note
+that the confidence intervals are converted to characters and rounded to
+three decimal places. }
 }
 \description{
 Perform bootstrap statistics, calculate and plot confidence intervals.
@@ -63,6 +65,14 @@ While it is possible to use custom functions with this, there are three
 \item The function name cannot match or partially match any arguments from
 \code{\link[boot]{boot}}
 }. Anonymous functions are okay (e.g. \code{function(x) vegan::rarefy(x, 10)}).
+\subsection{Confidence Intervals}{The estimates from the bootstrapping
+procedure are often biased due to the nature of the data. Calculating a
+confidence interval utilizes the function \code{\link[boot]{boot.ci}}, which
+will attempt to correct for bias when calculating the CI, but it will not
+always be centered around the mean and can occasionally fall outside of the
+possible range of values (i.e. a lambda value > 1). If you want to calculate
+the CI yourself, you may use the function \code{\link{do_boot}} to create the
+bootstrap statistics for each population.}
 }
 \examples{
 library(poppr)

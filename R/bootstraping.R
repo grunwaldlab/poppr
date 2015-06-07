@@ -385,11 +385,19 @@ do_boot <- function(tab, n, n.rare = NULL, mlg.weight = TRUE, H = TRUE, G = TRUE
 }
 
 #' @importFrom boot boot.ci
+get_boot_ci <- function(index, x, type , conf, ...){
+  if (length(unique(x$t[, index])) == 1){
+    return(c(NA_real_, NA_real_))
+  } else {
+    return(boot::boot.ci(x, conf, type, index, ...)$normal[-1])
+  }
+}
+
 get_ci <- function(x, lb, ub, bci = TRUE, btype = "norm"){
   if (bci){
     lenout <- length(x$t0)
-    res <- vapply(1:lenout, function(i) boot::boot.ci(x, type = btype, index = i)$normal[-1], 
-                  numeric(2))
+    conf   <- diff(c(lb, ub))
+    res    <- vapply(1:lenout, get_boot_ci, numeric(2), x, btype, conf)
     if (!is.null(dim(res))) rownames(res) <- paste(c(lb, ub)*100, "%")
   } else {
     res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)    
@@ -422,27 +430,27 @@ sim_boot <- function(x, mle = 100){
 #==============================================================================#
 #' Perform bootstrap statistics, calculate and plot confidence intervals.
 #' 
-#' @param tab a genind object OR a matrix produced from
+#' @param tab a genind object OR a matrix produced from 
 #'   \code{\link[poppr]{mlg.table}}.
-#' @param n an integer defining the number of bootstrap replicates (defaults to
+#' @param n an integer defining the number of bootstrap replicates (defaults to 
 #'   1000).
 #' @param ci the percent for confidence interval.
-#' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if
+#' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if 
 #'   \code{tab} is a genind object.
 #' @param rarefy if \code{TRUE}, bootstrapping will be performed on the smallest
-#'   population size. Defaults to \code{FALSE}, indicating that bootstrapping
+#'   population size. Defaults to \code{FALSE}, indicating that bootstrapping 
 #'   will be performed respective to each population size.
-#' @param mlg.weight when \code{FALSE} (default), all observed MLGs have an equal 
-#'   chance of being selected in the bootstrapping procedure. When \code{TRUE},
-#'   larger MLGs have more of a chance of being selected. This parameter is
-#'   ignored when \code{rarefy = TRUE}.
-#' @param plot If \code{TRUE} (default), boxplots will be produced for each
-#'   population, grouped by statistic. Colored dots will indicate the observed
-#'   value.This plot can be retrieved by using \code{p <- last_plot()} from the
+#' @param mlg.weight when \code{FALSE} (default), all observed MLGs have an
+#'   equal chance of being selected in the bootstrapping procedure. When
+#'   \code{TRUE}, larger MLGs have more of a chance of being selected. This
+#'   parameter is ignored when \code{rarefy = TRUE}.
+#' @param plot If \code{TRUE} (default), boxplots will be produced for each 
+#'   population, grouped by statistic. Colored dots will indicate the observed 
+#'   value.This plot can be retrieved by using \code{p <- last_plot()} from the 
 #'   \pkg{ggplot2} package.
-#' @param raw if \code{TRUE} (default) a list containing three elements will be returned
-
-#' @param ... parameters to be passed on to \code{\link[boot]{boot}} and
+#' @param raw if \code{TRUE} (default) a list containing three elements will be
+#'   returned
+#' @param ... parameters to be passed on to \code{\link[boot]{boot}} and 
 #'   \code{\link{get_stats}}
 #'   
 #' @return \subsection{raw = TRUE}{
@@ -453,17 +461,26 @@ sim_boot <- function(x, mle = 100){
 #'   measured, and the population.
 #'   }
 #'  }
-#'  \subsection{raw = FALSE}{
-#'  a data frame with the statistic observations, estimates, and confidence intervals in columns, and populations in rows. Note that the confidence intervals are converted to characters and rounded to three decimal places.
-#'  }
+#' \subsection{raw = FALSE}{ a data frame with the statistic observations,
+#' estimates, and confidence intervals in columns, and populations in rows. Note
+#' that the confidence intervals are converted to characters and rounded to
+#' three decimal places. }
 #' @note While it is possible to use custom functions with this, there are three
-#'   important things to remember when using these functions: 
+#'   important things to remember when using these functions:
 #' \enumerate{
 #' \item The function must return a single value.
 #' \item The function must allow for both matrix and vector inputs
 #' \item The function name cannot match or partially match any arguments from
 #' \code{\link[boot]{boot}}
 #' }. Anonymous functions are okay (e.g. \code{function(x) vegan::rarefy(x, 10)}).
+#' \subsection{Confidence Intervals}{The estimates from the bootstrapping
+#' procedure are often biased due to the nature of the data. Calculating a
+#' confidence interval utilizes the function \code{\link[boot]{boot.ci}}, which
+#' will attempt to correct for bias when calculating the CI, but it will not
+#' always be centered around the mean and can occasionally fall outside of the
+#' possible range of values (i.e. a lambda value > 1). If you want to calculate
+#' the CI yourself, you may use the function \code{\link{do_boot}} to create the
+#' bootstrap statistics for each population.}
 #'   
 #' @export
 #' @rdname diversity_stats

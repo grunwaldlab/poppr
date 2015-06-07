@@ -112,16 +112,16 @@ This table is intended to be a first look into the dynamics of
   index of association) are simply based on counts of multilocus genotypes
   and do not take into account the actual allelic states. None of the
   diversity indices will be bootstrapped if \code{sample > 0}. These are
-  relatively quick to bootstrap, so the function \code{\link{boot_ci}} should
-  suit the need to produce confidence intervals for these statistics.
-  \subsection{graphic}{This function outputs a \pkg{ggplot2} graphic of
-  histograms. These can be manipulated to be visualized in another manner by
-  retrieving the plot with the \code{\link{last_plot}} command from
-  \pkg{ggplot2}. A useful manipulation would be to arrange the graphs into a
-  single column so that the values of the statistic line up: \cr \code{p <-
-  last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")}\cr
-  The name for the groupings is "population" and the name for the x axis is
-  "value".}
+  relatively quick to bootstrap, so the function
+  \code{\link{diversity_stats}} should suit the need to produce confidence
+  intervals for these statistics. \subsection{graphic}{This function outputs
+  a \pkg{ggplot2} graphic of histograms. These can be manipulated to be
+  visualized in another manner by retrieving the plot with the
+  \code{\link{last_plot}} command from \pkg{ggplot2}. A useful manipulation
+  would be to arrange the graphs into a single column so that the values of
+  the statistic line up: \cr \code{p <- last_plot(); p +
+  facet_wrap(~population, ncol = 1, scales = "free_y")}\cr The name for the
+  groupings is "population" and the name for the x axis is "value".}
 }
 \examples{
 data(nancycats)
