@@ -2,115 +2,67 @@
 % Please edit documentation in R/bootstraping.R
 \name{diversity_stats}
 \alias{diversity_stats}
-\title{Perform bootstrap statistics, calculate and plot confidence intervals.}
+\title{Produce a table of diversity statistics}
 \usage{
-diversity_stats(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
-  mlg.weight = TRUE, plot = TRUE, raw = TRUE, ...)
+diversity_stats(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...)
 }
 \arguments{
-\item{tab}{a genind object OR a matrix produced from
-\code{\link[poppr]{mlg.table}}.}
+\item{z}{a table of integers representing counts of MLGs (columns) per
+  population (rows)}
 
-\item{n}{an integer defining the number of bootstrap replicates (defaults to
-1000).}
+\item{H}{logical whether or not to calculate Shannon's index}
 
-\item{ci}{the percent for confidence interval.}
+\item{G}{logical whether or not to calculate Stoddart and Taylor's index}
 
-\item{total}{argument to be passed on to \code{\link[poppr]{mlg.table}} if
-\code{tab} is a genind object.}
+\item{lambda}{logical whether or not to calculate Simpson's index}
 
-\item{rarefy}{if \code{TRUE}, bootstrapping will be performed on the smallest
-population size. Defaults to \code{FALSE}, indicating that bootstrapping
-will be performed respective to each population size.}
+\item{E5}{logical whether or not to calculate Evenness}
 
-\item{mlg.weight}{when \code{FALSE} (default), all observed MLGs have an
-equal chance of being selected in the bootstrapping procedure. When
-\code{TRUE}, larger MLGs have more of a chance of being selected. This
-parameter is ignored when \code{rarefy = TRUE}.}
-
-\item{plot}{If \code{TRUE} (default), boxplots will be produced for each
-population, grouped by statistic. Colored dots will indicate the observed
-value.This plot can be retrieved by using \code{p <- last_plot()} from the
-\pkg{ggplot2} package.}
-
-\item{raw}{if \code{TRUE} (default) a list containing three elements will be
-returned}
-
-\item{...}{parameters to be passed on to \code{\link[boot]{boot}} and
-  \code{\link{get_stats}}}
+\item{...}{any functions that can be calculated on a vector or matrix of
+  genotype counts.}
 }
 \value{
-\subsection{raw = TRUE}{
-\itemize{
-\item \strong{obs} - a matrix with observed statistics in columns, populations in rows
-\item \strong{est} - a matrix with estimated statistics in columns, populations in rows
-\item \strong{CI} - an array of 3 dimensions giving the lower and upper bound, the index
-  measured, and the population.
-  }
- }
-\subsection{raw = FALSE}{ a data frame with the statistic observations,
-estimates, and confidence intervals in columns, and populations in rows. Note
-that the confidence intervals are converted to characters and rounded to
-three decimal places. }
+a numeric matrix giving statistics (columns) for each population
+  (rows).
 }
 \description{
-Perform bootstrap statistics, calculate and plot confidence intervals.
-}
-\note{
-While it is possible to use custom functions with this, there are three
-  important things to remember when using these functions:
-\enumerate{
-\item The function must return a single value.
-\item The function must allow for both matrix and vector inputs
-\item The function name cannot match or partially match any arguments from
-\code{\link[boot]{boot}}
-}. Anonymous functions are okay (e.g. \code{function(x) vegan::rarefy(x, 10)}).
-\subsection{Confidence Intervals}{The estimates from the bootstrapping
-procedure are often biased due to the nature of the data. Calculating a
-confidence interval utilizes the function \code{\link[boot]{boot.ci}}, which
-will attempt to correct for bias when calculating the CI, but it will not
-always be centered around the mean and can occasionally fall outside of the
-possible range of values (i.e. a lambda value > 1). If you want to calculate
-the CI yourself, you may use the function \code{\link{do_boot}} to create the
-bootstrap statistics for each population.}
+Produce a table of diversity statistics
 }
 \examples{
 library(poppr)
 data(Pinf)
-diversity_stats(Pinf, n = 100L)
+tab <- mlg.table(Pinf, plot = FALSE)
+diversity_stats(tab)
 \dontrun{
-# With pretty results
-diversity_stats(Pinf, n = 100L, raw = FALSE)
+# Example using the poweRlaw package to calculate the negative slope of the
+# Pareto distribution.
 
-# This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
-system.time(diversity_stats(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
-system.time(diversity_stats(Pinf, 10000L))
-
-# The previous version of poppr contained a statistic known as Hexp, which
-# was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased
-# Simpson's index. This statistic was originally included in poppr because it
-# was originally included in the program multilocus. Since the reference for
-# this was hard to track down. Because of this, it was removed from analysis.
-
-Hexp <- function(x){
- lambda <- vegan::diversity(x, "simpson")
- x <- drop(as.matrix(x))
- if (length(dim(x)) > 1){
-   N <- rowSums(x)
- } else {
-   N <- sum(x)
- }
- return((N/(N-1))*lambda)
+library("poweRlaw")
+power_law_beta <- function(x){
+  xpow <- displ(x[x > 0])                 # Generate the distribution
+  xpow$setPars(estimate_pars(xpow))       # Estimate the parameters
+  xdat <- plot(xpow, draw = FALSE)        # Extract the data
+  xlm <- lm(log(y) ~ log(x), data = xdat) # Run log-log linear model for slope
+  return(-coef(xlm)[2])
 }
-# Show pretty results
-diversity_stats(Pinf, 1000L, Hexp = Hexp, raw = FALSE)
-diversity_stats(Pinf, 1000L, Hexp = Hexp, rarefy = TRUE, raw = FALSE)
+
+Beta <- function(x){
+  x <- drop(as.matrix(x))
+  if (length(dim(x)) > 1){
+    res <- apply(x, 1, power_law_beta)
+  } else {
+    res <- power_law_beta(x)
+  }
+  return(res)
+}
+
+diversity_stats(tab, B = Beta)
 }
 }
 \author{
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{do_boot}} \code{\link{get_stats}} \code{\link{poppr}}
+\code{\link{diversity_boot}} \code{\link{diversity_ci}} \code{\link{poppr}}
 }
 

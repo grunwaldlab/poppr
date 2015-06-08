@@ -248,13 +248,13 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #' @return a numeric matrix giving statistics (columns) for each population
 #'   (rows).
 #' @export
-#' @seealso \code{\link{do_boot}} \code{\link{diversity_stats}} \code{\link{poppr}}
+#' @seealso \code{\link{diversity_boot}} \code{\link{diversity_ci}} \code{\link{poppr}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
 #' data(Pinf)
 #' tab <- mlg.table(Pinf, plot = FALSE)
-#' get_stats(tab)
+#' diversity_stats(tab)
 #' \dontrun{
 #' # Example using the poweRlaw package to calculate the negative slope of the
 #' # Pareto distribution.
@@ -278,11 +278,10 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #'   return(res)
 #' }
 #'
-#' get_stats(tab, B = Beta)
+#' diversity_stats(tab, B = Beta)
 #' }
 #==============================================================================#
-get_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
-  
+diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
   E.5 <- function(x){
     H <- vegan::diversity(x)
     G <- vegan::diversity(x, "inv")
@@ -317,7 +316,7 @@ get_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
 }
 
 boot_stats <- function(x, i, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
-  res <- get_stats(tabulate(x[i]), H, G, lambda, E5, ...)
+  res <- diversity_stats(tabulate(x[i]), H, G, lambda, E5, ...)
   return(res)
 }
 
@@ -338,27 +337,29 @@ extract_samples <- function(x) rep(1:length(x), x)
 #'   chance of being selected in the bootstrapping procedure. When \code{TRUE} (default),
 #'   larger MLGs have more of a chance of being selected. This parameter is
 #'   ignored when \code{n.rare = TRUE}.
-#' @inheritParams get_stats
+#' @inheritParams diversity_stats
 #' @param ... other parameters passed on to \code{\link[boot]{boot}} and 
-#'   \code{\link{get_stats}}.
+#'   \code{\link{diversity_stats}}.
 #'   
 #' @return a list of objects of class "boot".
-#' @seealso \code{\link{diversity_stats}} \code{\link{get_stats}} \code{\link{poppr}}
+#' @seealso \code{\link{diversity_stats}} for basic statistic calculation, 
+#'    \code{\link{diversity_ci}} for confidence intervals and plotting, and 
+#'    \code{\link{poppr}}
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
 #' data(Pinf)
 #' tab <- mlg.table(Pinf, plot = FALSE)
-#' do_boot(tab, 10L)
+#' diversity_boot(tab, 10L)
 #' \dontrun{
 #' # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
-#' system.time(do_boot(tab, 10000L, parallel = "multicore", ncpus = 4L))
-#' system.time(do_boot(tab, 10000L))
+#' system.time(diversity_boot(tab, 10000L, parallel = "multicore", ncpus = 4L))
+#' system.time(diversity_boot(tab, 10000L))
 #' }
 #' @importFrom boot boot
 #==============================================================================#
-do_boot <- function(tab, n, n.rare = NULL, mlg.weight = TRUE, H = TRUE, G = TRUE, 
+diversity_boot <- function(tab, n, n.rare = NULL, mlg.weight = TRUE, H = TRUE, G = TRUE, 
                     lambda = TRUE, E5 = TRUE, ...){
   if (!is.null(n.rare)){
     res <- apply(tab, 1, function(x){
@@ -451,7 +452,7 @@ sim_boot <- function(x, mle = 100){
 #' @param raw if \code{TRUE} (default) a list containing three elements will be
 #'   returned
 #' @param ... parameters to be passed on to \code{\link[boot]{boot}} and 
-#'   \code{\link{get_stats}}
+#'   \code{\link{diversity_stats}}
 #'   
 #' @return \subsection{raw = TRUE}{
 #' \itemize{
@@ -472,27 +473,26 @@ sim_boot <- function(x, mle = 100){
 #' \item The function must allow for both matrix and vector inputs
 #' \item The function name cannot match or partially match any arguments from
 #' \code{\link[boot]{boot}}
-#' }. Anonymous functions are okay (e.g. \code{function(x) vegan::rarefy(x, 10)}).
+#' } Anonymous functions are okay \cr(e.g. \code{function(x) vegan::rarefy(x, 10)}).
 #' \subsection{Confidence Intervals}{The estimates from the bootstrapping
 #' procedure are often biased due to the nature of the data. Calculating a
 #' confidence interval utilizes the function \code{\link[boot]{boot.ci}}, which
 #' will attempt to correct for bias when calculating the CI, but it will not
 #' always be centered around the mean and can occasionally fall outside of the
 #' possible range of values (i.e. a lambda value > 1). If you want to calculate
-#' the CI yourself, you may use the function \code{\link{do_boot}} to create the
+#' the CI yourself, you may use the function \code{\link{diversity_boot}} to create the
 #' bootstrap statistics for each population.}
 #'   
 #' @export
-#' @rdname diversity_stats
-#' @seealso \code{\link{do_boot}} \code{\link{get_stats}} \code{\link{poppr}}
+#' @seealso \code{\link{diversity_boot}} \code{\link{diversity_stats}} \code{\link{poppr}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
 #' data(Pinf)
-#' diversity_stats(Pinf, n = 100L)
+#' diversity_ci(Pinf, n = 100L)
 #' \dontrun{
 #' # With pretty results
-#' diversity_stats(Pinf, n = 100L, raw = FALSE)
+#' diversity_ci(Pinf, n = 100L, raw = FALSE)
 #' 
 #' # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
 #' system.time(diversity_stats(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
@@ -515,12 +515,12 @@ sim_boot <- function(x, mle = 100){
 #'  return((N/(N-1))*lambda)
 #' }
 #' # Show pretty results
-#' diversity_stats(Pinf, 1000L, Hexp = Hexp, raw = FALSE)
-#' diversity_stats(Pinf, 1000L, Hexp = Hexp, rarefy = TRUE, raw = FALSE)
+#' diversity_ci(Pinf, 1000L, Hexp = Hexp, raw = FALSE)
+#' diversity_ci(Pinf, 1000L, Hexp = Hexp, rarefy = TRUE, raw = FALSE)
 #' }
 #' 
 #==============================================================================#
-diversity_stats <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
+diversity_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
                             mlg.weight = TRUE, plot = TRUE, raw = TRUE, ...){
   if (!is.matrix(tab) & is.genind(tab) | is(tab, "genlight")){
     tab <- mlg.table(tab, total = total, plot = FALSE)
@@ -529,9 +529,9 @@ diversity_stats <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE
   if (rarefy){
     rareval <- min(rowSums(tab))
   }
-  res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
+  res  <- diversity_boot(tab, n, n.rare = rareval, mlg.weight, ...)
   if (!mlg.weight){
-    orig <- get_stats(tab, ...)
+    orig <- diversity_stats(tab, ...)
   } else {
     orig <- get_boot_stats(res)
   }
@@ -657,7 +657,7 @@ boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
   if (rarefy){
     rareval <- ifelse(is.null(rare.val), min(rowSums(tab)), rare.val)
   }
-  res  <- do_boot(tab, n, n.rare = rareval, mlg.weight, ...)
+  res <- diversity_boot(tab, n, n.rare = rareval, mlg.weight, ...)
   if (rarefy){
     orig <- get_boot_se(res, "mean")
   } else {

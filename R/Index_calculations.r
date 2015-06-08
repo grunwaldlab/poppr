@@ -117,7 +117,7 @@
 #'   describing the resulting table columns will be printed. Defaults to 
 #'   \code{FALSE}
 #'   
-#' @param ... arguments to be passed on to \code{\link{get_stats}}
+#' @param ... arguments to be passed on to \code{\link{diversity_stats}}
 #'   
 #' @return \item{Pop}{A vector indicating the pouplation factor} \item{N}{An 
 #'   integer vector indicating the number of individuals/isolates in the 
@@ -156,7 +156,8 @@
 #'   groupings is "population" and the name for the x axis is "value".}
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
-#'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
+#'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}, 
+#'   \code{\link{diversity_stats}}
 #'   
 #' @export
 #' @author Zhian N. Kamvar
@@ -307,7 +308,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
 #     divmat <- boot_se_table(pop.mat, n = sample, ...)
 #     if (!quiet) message("calculating index of association...")
 #   } else {
-    divmat <- get_stats(pop.mat, ...)
+    divmat <- diversity_stats(pop.mat, ...)
   # }
   if (!is.matrix(divmat)){
     divmat <- matrix(divmat, nrow = 1, dimnames = list(NULL, names(divmat)))

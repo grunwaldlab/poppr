@@ -74,7 +74,7 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   describing the resulting table columns will be printed. Defaults to
   \code{FALSE}}
 
-\item{...}{arguments to be passed on to \code{\link{get_stats}}}
+\item{...}{arguments to be passed on to \code{\link{diversity_stats}}}
 }
 \value{
 \item{Pop}{A vector indicating the pouplation factor} \item{N}{An
@@ -217,6 +217,7 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
 }
 \seealso{
 \code{\link{clonecorrect}}, \code{\link{poppr.all}},
-  \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
+  \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}},
+  \code{\link{diversity_stats}}
 }
 
