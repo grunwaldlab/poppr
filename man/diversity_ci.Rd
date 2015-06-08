@@ -83,8 +83,8 @@ diversity_ci(Pinf, n = 100L)
 diversity_ci(Pinf, n = 100L, raw = FALSE)
 
 # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
-system.time(diversity_stats(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
-system.time(diversity_stats(Pinf, 10000L))
+system.time(diversity_ci(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
+system.time(diversity_ci(Pinf, 10000L))
 
 # The previous version of poppr contained a statistic known as Hexp, which
 # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased

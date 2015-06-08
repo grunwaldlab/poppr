@@ -333,10 +333,10 @@ extract_samples <- function(x) rep(1:length(x), x)
 #'   This should be no larger than the smallest sample size. Defaults to 
 #'   \code{NULL}, indicating that each population will be sampled at its own 
 #'   size.
-#' @param mlg.weight when \code{FALSE}, all observed MLGs have an equal 
-#'   chance of being selected in the bootstrapping procedure. When \code{TRUE} (default),
-#'   larger MLGs have more of a chance of being selected. This parameter is
-#'   ignored when \code{n.rare = TRUE}.
+#' @param mlg.weight when \code{FALSE}, all observed MLGs have an equal chance
+#'   of being selected in the bootstrapping procedure. When \code{TRUE}
+#'   (default), larger MLGs have more of a chance of being selected. This
+#'   parameter is ignored when \code{n.rare = TRUE}.
 #' @inheritParams diversity_stats
 #' @param ... other parameters passed on to \code{\link[boot]{boot}} and 
 #'   \code{\link{diversity_stats}}.
@@ -495,8 +495,8 @@ sim_boot <- function(x, mle = 100){
 #' diversity_ci(Pinf, n = 100L, raw = FALSE)
 #' 
 #' # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
-#' system.time(diversity_stats(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
-#' system.time(diversity_stats(Pinf, 10000L))
+#' system.time(diversity_ci(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
+#' system.time(diversity_ci(Pinf, 10000L))
 #' 
 #' # The previous version of poppr contained a statistic known as Hexp, which
 #' # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased 
@@ -550,7 +550,10 @@ diversity_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
 
 pretty_info <- function(obs, est, CI){
   pretty_ci <- t(apply(round(CI, 3), 2:3, 
-                       function(x) paste0("(", paste(x, collapse = ", "), ")")))
+                       function(x){
+                         if (all(is.na(x))) return(NA_character_)
+                         paste0("(", paste(x, collapse = ", "), ")")
+                      }))
   colnames(est) <- paste(colnames(est), "est", sep = ".")
   out <- vector(mode = "list", length = ncol(est)*3)
   colnames(pretty_ci) <- paste(colnames(pretty_ci), "ci", sep = ".")
