@@ -385,34 +385,42 @@ diversity_boot <- function(tab, n, n.rare = NULL, mlg.weight = TRUE, H = TRUE, G
   return(res)
 }
 
-#' @importFrom boot boot.ci
-get_boot_ci <- function(index, x, type , conf, ...){
+#' @importFrom boot boot.ci norm.ci
+get_boot_ci <- function(index, x, type = "normal" , conf = 0.95, around_estimate = TRUE, ...){
   if (length(unique(x$t[, index])) == 1){
     return(c(NA_real_, NA_real_))
+  } else if (around_estimate){
+    res <- boot::norm.ci(t0 = x$t0[index], var.t0 = var(x$t[, index]))[1, ]
   } else {
-    return(boot::boot.ci(x, conf, type, index, ...)$normal[-1])
+    res <- boot::boot.ci(x, conf, type, index, ...)[[type]][1, ]
   }
+  return(tail(res, 2))
 }
 
-get_ci <- function(x, lb, ub, bci = TRUE, btype = "norm"){
+get_ci <- function(x, lb, ub, bci = TRUE, btype = "normal", center = TRUE){
   if (bci){
     lenout <- length(x$t0)
     conf   <- diff(c(lb, ub))
-    res    <- vapply(1:lenout, get_boot_ci, numeric(2), x, btype, conf)
+    res    <- vapply(1:lenout, get_boot_ci, numeric(2), x, btype, conf, center)
     if (!is.null(dim(res))) rownames(res) <- paste(c(lb, ub)*100, "%")
   } else {
-    res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)    
+    res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)
+    if (all(apply(res, 2, function(i) i[1] == i[2]))){
+      res[] <- NA_real_
+    }
   }
   return(res)
 }
 
-get_all_ci <- function(res, ci = 95, index_names = c("H", "G", "Hexp", "E.5")){
+get_all_ci <- function(res, ci = 95, index_names = c("H", "G", "Hexp", "E.5"),
+                       center = TRUE, btype = "normal", bci = TRUE){
   lower_bound  <- (100 - ci)/200
   upper_bound  <- 1 - lower_bound
   n_indices    <- length(index_names)
   funval       <- matrix(numeric(n_indices*2), nrow = 2)
   CI           <- vapply(res, FUN = get_ci, FUN.VALUE = funval, 
-                         lower_bound, upper_bound)
+                         lower_bound, upper_bound, bci = bci, btype = btype,
+                         center = center)
   dCI          <- dimnames(CI)
   dimnames(CI) <- list(CI    = dCI[[1]], 
                        Index = index_names,
@@ -536,11 +544,19 @@ diversity_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
     orig <- get_boot_stats(res)
   }
   statnames <- colnames(orig)
-  CI  <- get_all_ci(res, ci = ci, index_names = statnames)
+  CI  <- get_all_ci(res, ci = ci, index_names = statnames,
+                    center = ifelse(rarefy, FALSE, TRUE),
+                    btype = ifelse(rarefy, "percent", "normal"),
+                    bci = ifelse(rarefy, FALSE, TRUE))
   est <- get_boot_se(res, "mean")
   out <- list(obs = orig, est = est, CI = CI)
   if (plot){
-    boot_plot(res, orig, statnames, rownames(tab))
+    if (rarefy){
+      boot_plot(res, orig, statnames, rownames(tab), NULL)
+    } else {
+      boot_plot(res, orig, statnames, rownames(tab), CI)      
+    }
+
   }
   if (!raw){
     out <- do.call("pretty_info", out)
@@ -572,14 +588,16 @@ pretty_info <- function(obs, est, CI){
 
 
 
-boot_plot <- function(res, orig, statnames, popnames){
+boot_plot <- function(res, orig, statnames, popnames, CI){
   statnames <- colnames(orig)
   orig <- reshape2::melt(orig)
   orig$Pop <- factor(orig$Pop)
-#   cidf <- reshape2::melt(CI)
-#   cidf <- reshape2::dcast(cidf, as.formula("Pop + Index ~ CI"))
-#   orig <- merge(orig, cidf)
-#   colnames(orig)[4:5] <- c("lb", "ub")
+  if (!is.null(CI)){
+    cidf <- reshape2::melt(CI)
+    cidf <- reshape2::dcast(cidf, as.formula("Pop + Index ~ CI"))
+    orig <- merge(orig, cidf)
+    colnames(orig)[4:5] <- c("lb", "ub")    
+  }
   samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
   dimnames(samp) <- list(NULL, 
                          Index = statnames,
@@ -594,6 +612,11 @@ boot_plot <- function(res, orig, statnames, popnames){
 #                   data = orig) + 
     xlab("Population") + labs(color = "Observed") +
     facet_wrap(~Index, scales = "free_y") + myTheme
+  if (!is.null(CI)){
+    pl <- pl +
+      geom_errorbar(aes_string(color = "Pop", x = "Pop", ymin = "lb", ymax = "ub"),
+                    data = orig)
+  }
   print(pl)
 }
 
