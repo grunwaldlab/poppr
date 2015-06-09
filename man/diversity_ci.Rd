@@ -5,7 +5,7 @@
 \title{Perform bootstrap statistics, calculate and plot confidence intervals.}
 \usage{
 diversity_ci(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
-  mlg.weight = TRUE, plot = TRUE, raw = TRUE, ...)
+  plot = TRUE, raw = TRUE, ...)
 }
 \arguments{
 \item{tab}{a genind object OR a matrix produced from
@@ -23,11 +23,6 @@ diversity_ci(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
 population size. Defaults to \code{FALSE}, indicating that bootstrapping
 will be performed respective to each population size.}
 
-\item{mlg.weight}{when \code{FALSE} (default), all observed MLGs have an
-equal chance of being selected in the bootstrapping procedure. When
-\code{TRUE}, larger MLGs have more of a chance of being selected. This
-parameter is ignored when \code{rarefy = TRUE}.}
-
 \item{plot}{If \code{TRUE} (default), boxplots will be produced for each
 population, grouped by statistic. Colored dots will indicate the observed
 value.This plot can be retrieved by using \code{p <- last_plot()} from the
@@ -44,8 +39,8 @@ returned}
 \itemize{
 \item \strong{obs} - a matrix with observed statistics in columns, populations in rows
 \item \strong{est} - a matrix with estimated statistics in columns, populations in rows
-\item \strong{CI} - an array of 3 dimensions giving the lower and upper bound, the index
-  measured, and the population.
+\item \strong{CI} - an array of 3 dimensions giving the lower and upper bound, the index measured, and the population.
+\item \strong{boot} - a list containing the output of \code{\link[boot]{boot}} for each population.
   }
  }
 \subsection{raw = FALSE}{ a data frame with the statistic observations,
@@ -56,6 +51,14 @@ three decimal places. }
 \description{
 Perform bootstrap statistics, calculate and plot confidence intervals.
 }
+\details{
+For details on the bootstrapping procedures, see
+  \code{\link{diversity_boot}}. Confidence intervals are derived from the
+  function \code{\link[boot]{norm.ci}}. The confidence interval is caluclated
+  from the bootstrapped distribution and centered around the bias-corrected
+  estimate. For rarefaction, the confidence interval is simply determined by
+  caluclating the percentiles from the bootstrapped distribution.
+}
 \note{
 While it is possible to use custom functions with this, there are three
   important things to remember when using these functions:
@@ -64,15 +67,7 @@ While it is possible to use custom functions with this, there are three
 \item The function must allow for both matrix and vector inputs
 \item The function name cannot match or partially match any arguments from
 \code{\link[boot]{boot}}
-} Anonymous functions are okay \cr(e.g. \code{function(x) vegan::rarefy(x, 10)}).
-\subsection{Confidence Intervals}{The estimates from the bootstrapping
-procedure are often biased due to the nature of the data. Calculating a
-confidence interval utilizes the function \code{\link[boot]{boot.ci}}, which
-will attempt to correct for bias when calculating the CI, but it will not
-always be centered around the mean and can occasionally fall outside of the
-possible range of values (i.e. a lambda value > 1). If you want to calculate
-the CI yourself, you may use the function \code{\link{diversity_boot}} to create the
-bootstrap statistics for each population.}
+} Anonymous functions are okay \cr(e.g. \code{function(x) vegan::rarefy(t(as.matrix(x)), 10)}).
 }
 \examples{
 library(poppr)
@@ -86,31 +81,30 @@ diversity_ci(Pinf, n = 100L, raw = FALSE)
 system.time(diversity_ci(Pinf, 10000L, parallel = "multicore", ncpus = 4L))
 system.time(diversity_ci(Pinf, 10000L))
 
-# The previous version of poppr contained a statistic known as Hexp, which
-# was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased
-# Simpson's index. This statistic was originally included in poppr because it
-# was originally included in the program multilocus. Since the reference for
-# this was hard to track down. Because of this, it was removed from analysis.
+# We often get many requests for a clonal fraction statistic. As this is
+# simply the number of observed MLGs over the number of samples, we
+# recommeneded that people calculate it themselves. With this function, you
+# can add it in:
 
-Hexp <- function(x){
- lambda <- vegan::diversity(x, "simpson")
+CF <- function(x){
  x <- drop(as.matrix(x))
  if (length(dim(x)) > 1){
-   N <- rowSums(x)
+   res <- rowSums(x > 0)/rowSums(x)
  } else {
-   N <- sum(x)
+   res <- sum(x > 0)/sum(x)
  }
- return((N/(N-1))*lambda)
+ return(res)
 }
 # Show pretty results
-diversity_ci(Pinf, 1000L, Hexp = Hexp, raw = FALSE)
-diversity_ci(Pinf, 1000L, Hexp = Hexp, rarefy = TRUE, raw = FALSE)
+
+diversity_ci(Pinf, 1000L, CF = CF, raw = FALSE)
+diversity_ci(Pinf, 1000L, CF = CF, rarefy = TRUE, raw = FALSE)
 }
 }
 \author{
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{diversity_boot}} \code{\link{diversity_stats}} \code{\link{poppr}}
+\code{\link{diversity_boot}} \code{\link{diversity_stats}} \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}} \code{\link[boot]{boot.ci}}
 }
 

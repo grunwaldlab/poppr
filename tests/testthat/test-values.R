@@ -86,9 +86,12 @@ test_that("diversity_stats returns expected values", {
   0.720112175857993), .Dim = 3:4, .Dimnames = structure(list(Pop = c("Athena",
   "Mt. Vernon", "Total"), Index = c("H", "G", "simp", "E.5")), .Names = c("Pop",
   "Index")))
-  res <- diversity_stats(mlg.table(Aeut, plot = FALSE, total = TRUE))
-  pop(Aeut) <- NULL
-  res_single <- diversity_stats(mlg.table(Aeut, plot = FALSE))
+  
+  atab       <- mlg.table(Aeut, plot = FALSE, total = TRUE)
+  res        <- diversity_stats(atab)
+  pop(Aeut)  <- NULL
+  res_single <- diversity_stats(atab["Total", , drop = FALSE])
+  
   expect_equivalent(res, expected)
   expect_false(is.matrix(res_single))
   expect_equivalent(res_single, res["Total", ])

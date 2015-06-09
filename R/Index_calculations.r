@@ -222,12 +222,15 @@
 #' # Turning off diversity statistics (see get_stats)
 #' poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
 #' 
-#' # We can also get a corrected version of Simpson's index. We'll use clonal
-#' # data to demonstrate this.
+#' # The previous version of poppr contained a statistic known as Hexp, which
+#' # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased 
+#' # Simpson's index. This statistic was originally included in poppr because it
+#' # was originally included in the program multilocus. Since the reference for
+#' # this was hard to track down. Because of this, it was removed from analysis.
 #' 
 #' data(Aeut)
 #' 
-#' Sc <- function(x){
+#' Hexp <- function(x){
 #'   lambda <- vegan::diversity(x, "simpson")
 #'   x <- drop(as.matrix(x))
 #'   if (length(dim(x)) > 1){
@@ -237,7 +240,7 @@
 #'   }
 #'   return((N/(N-1))*lambda)
 #' }
-#' poppr(Aeut, Sc = Sc)
+#' poppr(Aeut, Hexp = Hexp)
 #' 
 #' 
 #' # Demonstration with viral data

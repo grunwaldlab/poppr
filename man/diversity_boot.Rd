@@ -4,8 +4,8 @@
 \alias{diversity_boot}
 \title{Perform a bootstrap analysis on diversity statistics}
 \usage{
-diversity_boot(tab, n, n.rare = NULL, mlg.weight = TRUE, H = TRUE,
-  G = TRUE, lambda = TRUE, E5 = TRUE, ...)
+diversity_boot(tab, n, n.rare = NULL, H = TRUE, G = TRUE, lambda = TRUE,
+  E5 = TRUE, ...)
 }
 \arguments{
 \item{tab}{a table produced from the \pkg{poppr} function
@@ -18,11 +18,6 @@ perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.}
 This should be no larger than the smallest sample size. Defaults to
 \code{NULL}, indicating that each population will be sampled at its own
 size.}
-
-\item{mlg.weight}{when \code{FALSE}, all observed MLGs have an equal chance
-of being selected in the bootstrapping procedure. When \code{TRUE}
-(default), larger MLGs have more of a chance of being selected. This
-parameter is ignored when \code{n.rare = TRUE}.}
 
 \item{H}{logical whether or not to calculate Shannon's index}
 
@@ -41,6 +36,18 @@ a list of objects of class "boot".
 \description{
 Perform a bootstrap analysis on diversity statistics
 }
+\details{
+Bootstrapping is performed in two ways depending on whether or not
+rarefaction is being performed.
+\itemize{
+\item if \code{n.rare = NULL}, bootstrapping is performed by sampling n
+samples from a multinomial distribution weighted by the number of samples in
+each MLG.
+\item if \code{n.rare} is a number greater than zero, then bootstrapping is
+performed by randomly sampling without replacement \emph{n.rare} samples from
+the data.
+}
+}
 \examples{
 library(poppr)
 data(Pinf)
@@ -58,6 +65,7 @@ Zhian N. Kamvar
 \seealso{
 \code{\link{diversity_stats}} for basic statistic calculation,
    \code{\link{diversity_ci}} for confidence intervals and plotting, and
-   \code{\link{poppr}}
+   \code{\link{poppr}}. For bootstrap sampling:
+   \code{\link[stats]{rmultinom}} \code{\link[boot]{boot}}
 }
 
