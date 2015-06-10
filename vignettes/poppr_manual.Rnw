@@ -217,9 +217,10 @@ The following data sets are included in \poppr{}: \texttt{Pinf}
 
 \subsection{Citation}
 
-The formal publication for \poppr{} was published in the journal PeerJ:
-\url{http://peerj.com/articles/281/}. To cite \poppr{}, please type in your R
-console:
+The formal publication for the first version of \poppr{} was published in the 
+journal PeerJ: \url{http://peerj.com/articles/281/}. The new features in version
+2.x were published in Frontiers \url{http://dx.doi.org/10.3389/fgene.2015.00208}. 
+To cite \poppr{}, please type in your R console:
 
 <<popprcite, eval = FALSE, size="normalsize">>=
 citation(package = "poppr")
