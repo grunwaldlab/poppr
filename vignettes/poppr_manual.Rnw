@@ -161,15 +161,7 @@ The real power of \poppr{} is in the data manipulation and analytic tools.
 association, and easily determine which multilocus genotypes are shared across
 populations.
 
-<<<<<<< HEAD
 \subsection{A note about poppr version 1.1.5.99-441}
-=======
-<<<<<<< HEAD
-\subsection{A note about poppr version 1.1.5.99-441}
-=======
-\subsection{A note about poppr version 1.1.5.99-441}
->>>>>>> adegenet-fix-mlg
->>>>>>> 1f2874bbcb0957cd3477eb98a35fd4ebed0ee2a9
 
 In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
 an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
