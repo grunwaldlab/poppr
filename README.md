@@ -50,11 +50,19 @@ news(Version == "1.1.5.99", package = "poppr")
 
 ## Citation
 
-Please cite poppr as:
+If you use *poppr* at all, please cite:
 
 > Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281 [http://dx.doi.org/10.7717/peerj.281](http://dx.doi.org/10.7717/peerj.281)
 
-and version 2.0 with new features as
+Additionally, if you use any following functionalities:
+
+- minimum spanning networks with reticulation
+- collapsing multilocus genotypes into multilocus lineages with `mlg.filter()`
+- custom multilocus genotype definitions with `mlg.custom()`
+- index of association for genomic data with `win.ia()` or `samp.ia()`
+- bootstrapping any genetic distance with genind, genlight, or genpop objects with `aboot()`
+
+Please also cite:
 
 > Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality. Front. Genet. 6:208. doi: [10.3389/fgene.2015.00208](http://journal.frontiersin.org/article/10.3389/fgene.2015.00208/abstract)
   
