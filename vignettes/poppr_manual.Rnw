@@ -161,15 +161,8 @@ The real power of \poppr{} is in the data manipulation and analytic tools.
 association, and easily determine which multilocus genotypes are shared across
 populations.
 
-<<<<<<< HEAD
-\subsection{A note about poppr version 1.1.5.99-483}
-=======
-<<<<<<< HEAD
-\subsection{A note about poppr version 1.1.5.99-483}
-=======
-\subsection{A note about poppr version 1.1.5.99-483}
->>>>>>> adegenet-fix-mlg
->>>>>>> 1f2874bbcb0957cd3477eb98a35fd4ebed0ee2a9
+
+\subsection{A note about poppr version \Sexpr{packageVersion("poppr")}}
 
 In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
 an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
@@ -225,9 +218,10 @@ The following data sets are included in \poppr{}: \texttt{Pinf}
 
 \subsection{Citation}
 
-The formal publication for \poppr{} was published in the journal PeerJ:
-\url{http://peerj.com/articles/281/}. To cite \poppr{}, please type in your R
-console:
+The formal publication for the first version of \poppr{} was published in the 
+journal PeerJ: \url{http://peerj.com/articles/281/}. The new features in version
+2.x were published in Frontiers \url{http://dx.doi.org/10.3389/fgene.2015.00208}. 
+To cite \poppr{}, please type in your R console:
 
 <<popprcite, eval = FALSE, size="normalsize">>=
 citation(package = "poppr")
