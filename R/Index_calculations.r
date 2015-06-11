@@ -127,17 +127,17 @@
 #'   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The 
 #'   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner 
 #'   Diversity index} \item{G}{Stoddard and Taylor's Index} 
-#'   \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Ia}{A numeric 
-#'   vector giving the value of the Index of Association for each population 
-#'   factor, (see \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating 
-#'   the p-value for Ia from the number of reshufflings indicated in 
-#'   \code{sample}. Lowest value is 1/n where n is the number of observed 
-#'   values.} \item{rbarD}{A numeric vector giving the value of the Standardized
-#'   Index of Association for each population factor, (see \code{\link{ia}}).} 
-#'   \item{p.rD}{A numeric vector indicating the p-value for rbarD from the 
-#'   number of reshuffles indicated in \code{sample}. Lowest value is 1/n where 
-#'   n is the number of observed values.} \item{File}{A vector indicating the 
-#'   name of the original data file.}
+#'   \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's
+#'   expected heterozygosity} \item{Ia}{A numeric vector giving the value of the
+#'   Index of Association for each population factor, (see \code{\link{ia}}).}
+#'   \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
+#'   of reshufflings indicated in \code{sample}. Lowest value is 1/n where n is
+#'   the number of observed values.} \item{rbarD}{A numeric vector giving the
+#'   value of the Standardized Index of Association for each population factor,
+#'   (see \code{\link{ia}}).} \item{p.rD}{A numeric vector indicating the
+#'   p-value for rbarD from the number of reshuffles indicated in \code{sample}.
+#'   Lowest value is 1/n where n is the number of observed values.}
+#'   \item{File}{A vector indicating the name of the original data file.}
 #'   
 #' @details This table is intended to be a first look into the dynamics of 
 #'   mutlilocus genotype diversity. Many of the statistics (except for the the 
@@ -154,6 +154,13 @@
 #'   the statistic line up: \cr \code{p <- last_plot(); p +
 #'   facet_wrap(~population, ncol = 1, scales = "free_y")}\cr The name for the
 #'   groupings is "population" and the name for the x axis is "value".}
+#'   
+#' @note The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
+#'   previously calculated based on the diversity of multilocus genotypes,
+#'   resulting in a value of 1 for sexual populations. This was obviously not
+#'   Nei's 1978 expected heterozygosity. We have thus changed the statistic to
+#'   be the true value of Hexp by calculating (n/(n-1))*lambda for alleles in
+#'   each locus and then returning the average.
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
 #'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}, 
@@ -179,6 +186,9 @@
 #'   Kenneth L.Jr. Heck, Gerald van Belle, and Daniel Simberloff. Explicit 
 #'   calculation of the rarefaction diversity measurement and the determination 
 #'   of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975
+#'   
+#'   Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
+#'   from a small number of individuals. Genetics, 89(3):583-590, 1978.
 #'   
 #'   S H Hurlbert. The nonconcept of species diversity: a critique and 
 #'   alternative parameters. Ecology, 52(4):577-586, 1971.
@@ -222,7 +232,7 @@
 #' # Turning off diversity statistics (see get_stats)
 #' poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
 #' 
-#' # The previous version of poppr contained a statistic known as Hexp, which
+#' # The previous version of poppr contained a definition of Hexp, which
 #' # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased 
 #' # Simpson's index. This statistic was originally included in poppr because it
 #' # was originally included in the program multilocus. Since the reference for
@@ -230,7 +240,7 @@
 #' 
 #' data(Aeut)
 #' 
-#' Hexp <- function(x){
+#' Hexp.mlg <- function(x){
 #'   lambda <- vegan::diversity(x, "simpson")
 #'   x <- drop(as.matrix(x))
 #'   if (length(dim(x)) > 1){
@@ -240,7 +250,7 @@
 #'   }
 #'   return((N/(N-1))*lambda)
 #' }
-#' poppr(Aeut, Hexp = Hexp)
+#' poppr(Aeut, Hexp.mlg = Hexp.mlg)
 #' 
 #' 
 #' # Demonstration with viral data
@@ -322,6 +332,8 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
+    Hexp <- vapply(lapply(poplist, pegas::as.loci), FUN = get_hexp_from_loci, 
+                   FUN.VALUE = numeric(1), type = dat@type)
     N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
     # if (!rarefied){
       IaList  <- lapply(sublist, function(x){
@@ -355,19 +367,21 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], 
-                               divmat, IaList, 
+                               divmat, Hexp = Hexp, IaList, 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
   } else { 
     # rarefaction giving the standard errors. No population structure means that
     # the sample is equal to the number of individuals.
     N.rare <- rarefy(pop.mat, sum(pop.mat), se = TRUE)
+    Hexp   <- get_hexp_from_loci(pegas::as.loci(dat), type = dat@type)
     IaList <- .ia(dat, sample=sample, method=method, quiet=quiet, missing=missing,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
     
     Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], divmat, 
+                               Hexp = Hexp,
                                as.data.frame(t(IaList)), 
                                File=namelist$File)) 
     rownames(Iout) <- NULL

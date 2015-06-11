@@ -85,17 +85,17 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The
   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner
   Diversity index} \item{G}{Stoddard and Taylor's Index}
-  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Ia}{A numeric
-  vector giving the value of the Index of Association for each population
-  factor, (see \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating
-  the p-value for Ia from the number of reshufflings indicated in
-  \code{sample}. Lowest value is 1/n where n is the number of observed
-  values.} \item{rbarD}{A numeric vector giving the value of the Standardized
+  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's
+  expected heterozygosity} \item{Ia}{A numeric vector giving the value of the
   Index of Association for each population factor, (see \code{\link{ia}}).}
-  \item{p.rD}{A numeric vector indicating the p-value for rbarD from the
-  number of reshuffles indicated in \code{sample}. Lowest value is 1/n where
-  n is the number of observed values.} \item{File}{A vector indicating the
-  name of the original data file.}
+  \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
+  of reshufflings indicated in \code{sample}. Lowest value is 1/n where n is
+  the number of observed values.} \item{rbarD}{A numeric vector giving the
+  value of the Standardized Index of Association for each population factor,
+  (see \code{\link{ia}}).} \item{p.rD}{A numeric vector indicating the
+  p-value for rbarD from the number of reshuffles indicated in \code{sample}.
+  Lowest value is 1/n where n is the number of observed values.}
+  \item{File}{A vector indicating the name of the original data file.}
 }
 \description{
 This function allows the user to quickly view indicies of heterozygosity,
@@ -123,6 +123,14 @@ This table is intended to be a first look into the dynamics of
   facet_wrap(~population, ncol = 1, scales = "free_y")}\cr The name for the
   groupings is "population" and the name for the x axis is "value".}
 }
+\note{
+The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
+  previously calculated based on the diversity of multilocus genotypes,
+  resulting in a value of 1 for sexual populations. This was obviously not
+  Nei's 1978 expected heterozygosity. We have thus changed the statistic to
+  be the true value of Hexp by calculating (n/(n-1))*lambda for alleles in
+  each locus and then returning the average.
+}
 \examples{
 data(nancycats)
 poppr(nancycats)
@@ -139,7 +147,7 @@ p + facet_wrap(~population, scales = "free_y", ncol = 1)
 # Turning off diversity statistics (see get_stats)
 poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
 
-# The previous version of poppr contained a statistic known as Hexp, which
+# The previous version of poppr contained a definition of Hexp, which
 # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased
 # Simpson's index. This statistic was originally included in poppr because it
 # was originally included in the program multilocus. Since the reference for
@@ -147,7 +155,7 @@ poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
 
 data(Aeut)
 
-Hexp <- function(x){
+Hexp.mlg <- function(x){
   lambda <- vegan::diversity(x, "simpson")
   x <- drop(as.matrix(x))
   if (length(dim(x)) > 1){
@@ -157,7 +165,7 @@ Hexp <- function(x){
   }
   return((N/(N-1))*lambda)
 }
-poppr(Aeut, Hexp = Hexp)
+poppr(Aeut, Hexp.mlg = Hexp.mlg)
 
 
 # Demonstration with viral data
@@ -192,6 +200,9 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
   Kenneth L.Jr. Heck, Gerald van Belle, and Daniel Simberloff. Explicit
   calculation of the rarefaction diversity measurement and the determination
   of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975
+
+  Masatoshi Nei. Estimation of average heterozygosity and genetic distance
+  from a small number of individuals. Genetics, 89(3):583-590, 1978.
 
   S H Hurlbert. The nonconcept of species diversity: a critique and
   alternative parameters. Ecology, 52(4):577-586, 1971.
