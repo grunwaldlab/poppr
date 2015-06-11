@@ -1557,7 +1557,8 @@ pool_haplotypes <- function(x){
 # Internal functions utilizing this function:
 # # none
 #==============================================================================#
-locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codom"){
+locus_table_pegas <- function(x, index = "simpson", lev = "allele", 
+                              type = "codom", hexp_only = FALSE){
   unique_types <- x[[lev]]
   # Removing any zero-typed alleles that would be present with polyploids.
   zero_names   <- grep("^0+?$", names(unique_types))
@@ -1566,10 +1567,13 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codo
   }
   
   N       <- length(unique_types)
-  H       <- vegan::diversity(unique_types)
-  G       <- vegan::diversity(unique_types, "inv")
   Simp    <- vegan::diversity(unique_types, "simp")
   nei     <- (N/(N-1)) * Simp
+  if (hexp_only){
+    return(nei)
+  }
+  H       <- vegan::diversity(unique_types)
+  G       <- vegan::diversity(unique_types, "inv")
   
   if (index == "simpson"){
     idx        <- Simp
@@ -1585,6 +1589,12 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", type = "codo
   E.5        <- (G - 1)/(exp(H) - 1)
   names(N)   <- lev
   return(c(N, idx, Hexp = nei, Evenness = E.5))
+}
+
+get_hexp_from_loci <- function(loci, type = "codom"){
+  loci <- vapply(summary(loci), FUN = locus_table_pegas, FUN.VALUE = numeric(1),
+                 type = type, hexp_only = TRUE)
+  return(mean(loci, na.rm = TRUE))
 }
 
 #==============================================================================#
