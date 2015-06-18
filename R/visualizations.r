@@ -370,8 +370,8 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     # This will clone correct the incoming matrix. 
     bclone <- bclone[!duplicated(gid$mlg[]), !duplicated(gid$mlg[]), drop = FALSE]
   }
-  rownames(bclone) <- cgid$ind.names
-  colnames(bclone) <- cgid$ind.names
+  rownames(bclone) <- indNames(cgid)
+  colnames(bclone) <- indNames(cgid)
   if (is.genclone(gid) | is.snpclone(gid)){
     mlgs <- mll(gid)
     cmlg <- mll(cgid)
@@ -420,7 +420,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
       }
     }
     else if(toupper(vertex.label) == "INDS"){
-      vertex.label <- cgid$ind.names
+      vertex.label <- indNames(cgid)
     }
   }
   ###### Color schemes #######  

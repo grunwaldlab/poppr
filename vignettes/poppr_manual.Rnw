@@ -51,7 +51,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Data import and manipulation in poppr version 1.1.5.99-441}
+\title{Data import and manipulation in poppr version \Sexpr{packageVersion("poppr")}}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -161,7 +161,7 @@ The real power of \poppr{} is in the data manipulation and analytic tools.
 association, and easily determine which multilocus genotypes are shared across
 populations.
 
-\subsection{A note about poppr version 1.1.5.99-441}
+\subsection{A note about poppr version \Sexpr{packageVersion("poppr")}}
 
 In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
 an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
@@ -1699,9 +1699,9 @@ we wanted to analyze only the data in North America. To make sure we are all on
 the same page, we will reset the population factor to ``country".
 <<popsub_sublist>>=
 setPop(virus) <- ~country
-virus$pop.names # Only two countries from North America.
+popNames(virus) # Only two countries from North America.
 vna <- popsub(virus, sublist=c("USA", "Canada"))
-vna$pop.names
+popNames(vna)
 @
 \noindent
 If we want to see the population size, we can use the \adegenet{} function
@@ -1715,7 +1715,7 @@ data set is considerably smaller. Let's see the data set without the North
 American countries.
 <<popsub_blacklist>>=
 vnaminus <- popsub(virus, blacklist=c("USA", "Canada"))
-vnaminus$pop.names
+popNames(vnaminus)
 @
 \noindent
 Let's make sure that the number of individuals in both data sets is equal to
@@ -1730,10 +1730,10 @@ alphabetical order, but we know that we still don't want any countries in North
 America. We can easily do this by using the \textit{base} function
 \texttt{sort}.
 <<popsub_combine>>=
-vsort <- sort(virus$pop.names)[1:10]
+vsort <- sort(popNames(virus))[1:10]
 vsort
 valph <- popsub(virus, sublist=vsort, blacklist=c("USA", "Canada"))
-valph$pop.names
+popNames(valph)
 @
 \noindent
 And that, is how you subset your data with poppr!
