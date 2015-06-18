@@ -18,8 +18,8 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   pooled populations.}
 
 \item{sublist}{a list of character strings or integers to indicate specific
-  population names (located in \code{$pop.names} within the
-  \code{\link{genind}} object) Defaults to "ALL".}
+  population names (accessed via \code{\link[adegenet]{popNames}}).
+  Defaults to "ALL".}
 
 \item{blacklist}{a list of character strings or integers to indicate specific
   populations to be removed from analysis. Defaults to NULL.}

@@ -384,7 +384,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   }
   if (any(duplicated(ind.vec))){
     # ensuring that all names are unique
-    res.gid@ind.names <- paste("ind", 1:length(ind.vec))
+    indNames(res.gid) <- paste("ind", 1:length(ind.vec))
     res.gid@other[["original_names"]] <- ind.vec
   }
   
@@ -482,11 +482,11 @@ genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE,
   # Constructing the locus names. GenAlEx separates the alleles of the loci, so
   # There is one locus name for every p ploidy columns you have.
   if(all(ploid > 1) & pop@type == "codom"){
-    locnames <- unlist(strsplit(paste(pop@loc.names, 
+    locnames <- unlist(strsplit(paste(locNames(pop), 
                                       paste(rep(" ", ploidy(pop)[1] - 1), 
                                             collapse="/"), sep="/"),"/"))
   } else {
-    locnames <- pop@loc.names
+    locnames <- locNames(pop)
   }
   thirdline <- c("Ind","Pop", locnames)
   
@@ -515,7 +515,7 @@ genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE,
   df[is.na(df)] <- 0
   
   # making sure that the individual names are included.
-  if(all(pop@ind.names == "") | is.null(indNames(pop))){
+  if(all(indNames(pop) == "") | is.null(indNames(pop))){
     indNames(pop) <- paste("ind", 1:nInd(pop), sep="")
   }
   df <- cbind(indNames(pop), the_pop, df)

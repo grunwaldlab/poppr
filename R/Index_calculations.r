@@ -61,8 +61,8 @@
 #'   pooled populations.
 #'   
 #' @param sublist a list of character strings or integers to indicate specific 
-#'   population names (located in \code{$pop.names} within the 
-#'   \code{\link{genind}} object) Defaults to "ALL".
+#'   population names (accessed via \code{\link[adegenet]{popNames}}). 
+#'   Defaults to "ALL".
 #'   
 #' @param blacklist a list of character strings or integers to indicate specific
 #'   populations to be removed from analysis. Defaults to NULL.

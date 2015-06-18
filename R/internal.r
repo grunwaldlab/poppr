@@ -823,7 +823,7 @@ final <- function(Iout, result){
 {
   vard.vector <- NULL
   numLoci     <- length(pop)
-  numIsolates <- length(pop[[1]]@ind.names)
+  numIsolates <- nInd(pop[[1]])
   np          <- choose(numIsolates, 2)
   if (np < 2) {
     return(as.numeric(c(NaN, NaN)))
@@ -1244,7 +1244,7 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = T
       }
 
     } else if(toupper(vertex.label) == "INDS") {
-      vertex.label <- cgid$ind.names
+      vertex.label <- indNames(cgid)
     }
   } 
   if (length(mll(cgid)) > 1){

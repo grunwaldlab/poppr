@@ -168,7 +168,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
-  if (length(replen) != length(pop@loc.names)){
+  if (length(replen) != length(locNames(pop))){
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
@@ -304,7 +304,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
-  if (length(replen) != length(pop@loc.names)){
+  if (length(replen) != length(locNames(pop))){
     replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
@@ -348,8 +348,8 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
     }
     tre$node.labels[tre$node.labels < cutoff] <- NA
   }
-  tre$tip.label <- pop@ind.names
-  if (showtree == TRUE){
+  tre$tip.label <- indNames(pop)
+  if (showtree){
     poppr.plot.phylo(tre, treechar, root)
   }
   return(tre)
@@ -614,7 +614,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
         vertex.label <- paste0("MLG.", cmlg)
       }
     } else if (toupper(vertex.label) == "INDS"){
-      vertex.label <- cgid$ind.names
+      vertex.label <- indNames(cgid)
     }
   }
   ###### Color schemes #######  
