@@ -232,8 +232,7 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
   else if(is.genind(x)){
     # Ensure there is a population assignment for every genotype
     if(is.null(x$pop) || by.pop == FALSE){
-      x$pop <- as.factor(rep(1,dim(x$tab)[1]))
-      x$pop.names <- as.character(1)
+      pop(x) <- as.factor(rep(1,dim(x$tab)[1]))
     }   
     pops <- pop(x)
     freqs <- makefreq(genind2genpop(x,quiet=TRUE),quiet=TRUE)$tab

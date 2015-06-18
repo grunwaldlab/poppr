@@ -138,9 +138,9 @@ setMethod(
       return(.Object)
     }
     if (is.genind(gen)){
-      objnames <- slot(gen, "ind.names")
+      objnames <- indNames(gen)
     } else if (is.genpop(gen)){
-      objnames <- slot(gen, "pop.names")
+      objnames <- popNames(gen)
     } else {
       stop("gen must be a valid genind or genpop object.")
     }
