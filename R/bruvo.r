@@ -349,6 +349,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
     tre$node.labels[tre$node.labels < cutoff] <- NA
   }
   tre$tip.label <- indNames(pop)
+  if (showtree){
     poppr.plot.phylo(tre, treechar, root)
   }
   return(tre)

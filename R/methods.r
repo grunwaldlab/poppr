@@ -105,7 +105,18 @@ setMethod(
   f = "dim",
   signature(x = "bootgen"),
   definition = function(x){
-    return(c(length(slot(x, "names")), length(slot(x, "loc.names"))))
+    return(c(length(slot(x, "names")), nlevels(slot(x, "loc.fac"))))
+  }
+)
+
+#==============================================================================#
+#' @rdname bootgen-methods
+#==============================================================================#
+setMethod(
+  f = "nLoc",
+  signature(x = "bootgen"),
+  definition = function(x){
+    return(dim(x)[2])
   }
 )
 

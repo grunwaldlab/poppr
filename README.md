@@ -95,7 +95,7 @@ If you want the absolute latest version of *poppr*, see about installing from gi
 
 To install this package from github, make sure you have the following:
 
-- [Xcode](http://developer.apple.com/xcode/) (OSX)
+- [Xcode](https://developer.apple.com/xcode/) (OSX)
     OR [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
 - [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
 

@@ -90,12 +90,12 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
   if (is(x, "bootgen")){
     ind.names <- x@names
   } else {
-    ind.names <- x@ind.names
+    ind.names <- indNames(x)
   }
   inds      <- nrow(x@tab)
   np        <- choose(inds, 2)
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
-  numLoci   <- length(x@loc.names)
+  numLoci   <- nLoc(x)
   type      <- x@type
   if (type == "PA"){
     dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
@@ -251,7 +251,7 @@ nei.dist <- function(x, warning = TRUE){
 edwards.dist <- function(x){
   if (is(x, "gen")){ 
     MAT  <- get_gen_mat(x)
-    nloc <- length(x@loc.names)
+    nloc <- nLoc(x)
   } else if (length(dim(x)) == 2){
     MAT  <- x
     nloc <- ncol(x)
@@ -276,12 +276,12 @@ rogers.dist <- function(x){
   if (is(x, "gen")){ 
     if (is.genind(x) && x@type == "PA"){
       MAT     <- x@tab
-      nloc    <- length(x@loc.names)
-      loc.fac <- factor(x@loc.names, levels = x@loc.names)
+      nloc    <- nLoc(x)
+      loc.fac <- factor(locNames(x), levels = locNames(x))
       nlig    <- nrow(x@tab)
     } else {
       MAT     <- get_gen_mat(x)
-      nloc    <- length(x@loc.names)
+      nloc    <- nLoc(x)
       loc.fac <- x@loc.fac
       nlig    <- nrow(x@tab)      
     }
@@ -311,7 +311,7 @@ rogers.dist <- function(x){
 reynolds.dist <- function(x){
   if (is(x, "gen")){ 
     MAT    <- get_gen_mat(x)
-    nloc   <- length(x@loc.names)
+    nloc   <- nLoc(x)
   } else if (length(dim(x)) == 2){
     MAT  <- x
     nloc <- ncol(x)
@@ -339,7 +339,7 @@ provesti.dist <- function(x){
   if (is(x, "gen")){
     MAT   <- get_gen_mat(x)
     nlig  <- nrow(x@tab)
-    nloc  <- length(x@loc.names)
+    nloc  <- nLoc(x)
     ploid <- x@ploidy
   } else if (length(dim(x)) == 2){
     MAT  <- x
