@@ -224,9 +224,9 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
     }
 
     dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/window.size))
-    rownames(pgen_matrix)            <- x$ind.names
+    rownames(pgen_matrix)            <- indNames(x)
     if(window.size == 1) {
-      colnames(pgen_matrix)          <- x$loc.names
+      colnames(pgen_matrix)          <- locNames(x)
     }
   }
   else if(is.genind(x)){
@@ -242,9 +242,9 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
     {
       pgen_matrix <- exp(pgen_matrix)
     }
-    dim(pgen_matrix) <- c(dim(x$tab)[1],length(x$loc.names))
-    colnames(pgen_matrix)            <- x$loc.names
-    rownames(pgen_matrix)            <- x$ind.names
+    dim(pgen_matrix) <- c(dim(x$tab)[1],length(locNames(x)))
+    colnames(pgen_matrix)            <- locNames(x)
+    rownames(pgen_matrix)            <- indNames(x)
   }
   else{
     stop("Object provided must be a genlight, genind, or genclone object.")

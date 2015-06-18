@@ -148,7 +148,7 @@ setMethod(
     num_loci                   <- length(num_alleles)
     slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = freq)     
     slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")   
-    slot(.Object, "loc.names") <- slot(gen, "loc.names") 
+    # slot(.Object, "loc.names") <- slot(gen, "loc.names") 
     slot(.Object, "loc.nall")  <- num_alleles  
     slot(.Object, "all.names") <- slot(gen, "all.names") 
     slot(.Object, "alllist")   <- .Call("expand_indices", cumsum(num_alleles), num_loci, PACKAGE = "poppr")
