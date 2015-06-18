@@ -89,7 +89,7 @@ setMethod(
     ## Resetting all factors that need to be set. 
     slot(x, "tab")       <- res
     slot(x, "loc.fac")   <- factor(locnames, names(allnames))
-    slot(x, "loc.names") <- names(allnames)
+    # slot(x, "loc.names") <- names(allnames)
     slot(x, "loc.nall")  <- locnall
     slot(x, "all.names") <- allnames
     slot(x, "alllist")   <- .Call("expand_indices", cumsum(locnall), length(j), PACKAGE = "poppr")

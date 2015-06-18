@@ -98,13 +98,13 @@ pair_ia <- function(pop){
 
   if(pop@type == "codom"){
     pop_loci <- seploc(pop)
-    loci_pairs <- combn(pop@loc.names, 2)
+    loci_pairs <- combn(locNames(pop), 2)
     pair_ia_vector <- apply(loci_pairs, 2, function(x) .Ia.Rd(pop_loci[x]))
     colnames(pair_ia_vector) <- apply(loci_pairs, 2, paste, collapse = ":")
   } else {
     loci_pairs <- combn(1:nLoc(pop), 2)
     pair_ia_vector <- apply(loci_pairs, 2, function(x) .PA.Ia.Rd(pop[, x], missing = "ignore"))
-    colnames(pair_ia_vector) <- apply(combn(pop@loc.names, 2), 2, paste, collapse = ":")
+    colnames(pair_ia_vector) <- apply(combn(locNames(pop), 2), 2, paste, collapse = ":")
   }
   rownames(pair_ia_vector) <- c("Ia", "rbarD")    
   return(pair_ia_vector)

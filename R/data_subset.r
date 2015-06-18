@@ -154,8 +154,8 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   setPop(pop) <- strataformula
   # Corrects the individual names of the object. This is fo the fact that the
   # clone corrector relies on the unique individual names for it to work.
-  if(all(pop@ind.names == "")){
-    pop@ind.names <- as.character(1:nInd(pop))
+  if(all(indNames(pop) == "")){
+    indNames(pop) <- as.character(1:nInd(pop))
   }
 
   cpop <- nPop(pop)  
@@ -417,7 +417,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
           message("\n No loci with missing values above ",
               paste0(cutoff*100,"%")," found.\n")
         } else {
-          remloc <- pop@loc.names[!cumsum(pop@loc.nall) %in% navals]
+          remloc <- locNames(pop)[!cumsum(pop@loc.nall) %in% navals]
           message("\n Found ", sum(is.na(tab(pop)))," missing values.")
           loci   <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", 
                           "loci"))

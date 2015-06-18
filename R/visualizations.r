@@ -547,9 +547,9 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
     data_table[1:nLoc(gen), ] <- vapply(pops, number_missing_locus, numeric(nLoc(gen)), 1)
     data_table[-nrow(data_table), ] <- t(apply(data_table[-nrow(data_table), ], 1, "/", inds))
     data_table[nrow(data_table), ]  <- colMeans(data_table[-nrow(data_table), ])
-    rownames(data_table)         <- c(gen@loc.names, "Mean")
+    rownames(data_table)         <- c(locNames(gen), "Mean")
     colnames(data_table)         <- names(pops)
-    dimnames(data_table) <- list(Locus = c(gen@loc.names, "Mean"), Population = names(pops))
+    dimnames(data_table) <- list(Locus = c(locNames(gen), "Mean"), Population = names(pops))
     if (all(data_table == 0)){
       message("No Missing Data Found!")
       return(NULL)
