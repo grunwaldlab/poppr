@@ -40,6 +40,7 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 - calculate reticulate minimum spanning networks
 - calculate index of association in a sliding window across snps
 - bootstrapping of MLG diversity statistics
+- [interactive exploration of minimum spanning networks](https://github.com/zkamvar/poppr_msn_shiny)
 - and more!
 
 For full details, see the NEWS file or type in your R console:
