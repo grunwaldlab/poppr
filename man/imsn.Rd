@@ -65,14 +65,16 @@ and paste this to an R file for reproducibility.
 \item \strong{Save Plot} - This provides a tool for you to save the plot to a
 PDF or PNG image.
 \item \strong{Session Information} - displays the result of
-\code{\link{sessionInfo()} for reproducibility.}
+\code{\link{sessionInfo}} for reproducibility.
 
 }
 }
 }
 \examples{
 \dontrun{
+
 imsn()
+
 }
 }
 \author{

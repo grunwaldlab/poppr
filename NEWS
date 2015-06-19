@@ -4,7 +4,7 @@ COMPATIBILITY UPDATE
 * poppr has moved to version 2.0 due to adegenet's recent update. The hierarchy slot introduced in version 1.1 is now being moved to adegenet and renamed `strata`. For maximum backwards compatibility, all of the hierarchy methods still exist, but they are deprecated and will print a warning with the proper function to use. If you were accessing the hierarchy slot without using the `*hierarchy()` methods, your code will fail as the hierarchy slot now should only contain a formula object. 
 
 NEW DEPENDENCIES
-* poppr now imports elements from dplyr
+* poppr now imports elements from dplyr and shiny
 
 NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
@@ -21,7 +21,7 @@ NEW FEATURES
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
-* `bitwise.dist` can efficiently calculate absolute genetic distance for genlight objects. 
+* `bitwise.dist` can efficiently calculate absolute genetic distance for genlight objects.
 * `mll` "multilocus lineages" is a new replacement for `mlg.vector` which gains the functionality of selecting the multilocus genotype definition from the mlg slot.
 * `nmll` counts the number of multilocus lineages
 * `mll.custom` allows the user to define custom multilocus genotypes.
@@ -31,6 +31,7 @@ NEW FUNCTIONS
 * `samp.ia` calculates \bar{r}_d for genlight object by randomly sampling a user-defined number of SNPs.
 * `test_replen` will test repeat lengths of microsatellite markers for consistency.
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
+* `imsn` provides an interactive shiny interface for construction of minimum spanning networks.
 
 NEW CLASSES
 * snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 
