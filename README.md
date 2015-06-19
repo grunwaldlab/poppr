@@ -39,12 +39,13 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 - collapse multilocus lineages by genetic distance
 - calculate reticulate minimum spanning networks
 - calculate index of association in a sliding window across snps
+- [interactive exploration of minimum spanning networks](https://github.com/zkamvar/poppr_msn_shiny)
 - and more!
 
 For full details, see the NEWS file or type in your R console:
 
 ```R
-news(Version == "1.1.4.99", package = "poppr")
+news(Version == "1.1.5.99", package = "poppr")
 ```
 
 ## Citation
