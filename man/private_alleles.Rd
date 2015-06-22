@@ -58,7 +58,7 @@ private_alleles(Pinf, locus ~ Country, count.alleles = TRUE)
 (pal <- private_alleles(Pinf, locus ~ Country, count.alleles = FALSE))
 
 # Get percentages.
-sweep(pal, 2, Pinf@loc.nall[colnames(pal)], FUN = "/")
+sweep(pal, 2, nAll(Pinf)[colnames(pal)], FUN = "/")
 
 # An example of how these data can be displayed.
 library("ggplot2")
