@@ -1889,7 +1889,7 @@ test_zeroes <- function(x){
     ploid     <- unique(ploidy(x))
     ploidtest <- length(ploid) > 1 | any(x@ploidy > 2)
 
-    if (any(allnames == 0) && any(x@loc.nall > 2) && ploidtest){
+    if (any(allnames == 0) && any(nAll(x) > 2) && ploidtest){
       return(TRUE)
     }
   }

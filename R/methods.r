@@ -75,7 +75,7 @@ setMethod(
     }
     
     # Taking Names
-    locnall         <- x@loc.nall[j]
+    locnall         <- x@loc.n.all[j]
     allnames        <- x@all.names[j]
     names(allnames) <- names(x@all.names)[1:length(j)]
     names(locnall)  <- names(allnames)
@@ -90,7 +90,7 @@ setMethod(
     slot(x, "tab")       <- res
     slot(x, "loc.fac")   <- factor(locnames, names(allnames))
     # slot(x, "loc.names") <- names(allnames)
-    slot(x, "loc.nall")  <- locnall
+    slot(x, "loc.n.all")  <- locnall
     slot(x, "all.names") <- allnames
     slot(x, "alllist")   <- .Call("expand_indices", cumsum(locnall), length(j), PACKAGE = "poppr")
     slot(x, "names")     <- slot(x, "names")[i]
@@ -155,12 +155,12 @@ setMethod(
     } else {
       stop("gen must be a valid genind or genpop object.")
     }
-    num_alleles                <- slot(gen, "loc.nall")
+    num_alleles                <- slot(gen, "loc.n.all")
     num_loci                   <- length(num_alleles)
     slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = freq)     
     slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")   
     # slot(.Object, "loc.names") <- slot(gen, "loc.names") 
-    slot(.Object, "loc.nall")  <- num_alleles  
+    slot(.Object, "loc.n.all")  <- num_alleles  
     slot(.Object, "all.names") <- slot(gen, "all.names") 
     slot(.Object, "alllist")   <- .Call("expand_indices", cumsum(num_alleles), num_loci, PACKAGE = "poppr")
     slot(.Object, "names")     <- objnames

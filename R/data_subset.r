@@ -417,7 +417,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
           message("\n No loci with missing values above ",
               paste0(cutoff*100,"%")," found.\n")
         } else {
-          remloc <- locNames(pop)[!cumsum(pop@loc.nall) %in% navals]
+          remloc <- locNames(pop)[!cumsum(nAll(pop)) %in% navals]
           message("\n Found ", sum(is.na(tab(pop)))," missing values.")
           loci   <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", 
                           "loci"))
@@ -905,8 +905,8 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' iPinf <- recode_polyploids(Pinf)
 #' 
 #' # Note that the difference between the number of alleles.
-#' Pinf@@loc.nall
-#' iPinf@@loc.nall
+#' nAll(Pinf)
+#' nAll(iPinf)
 #' 
 #' \dontrun{
 #' library("ape")
@@ -958,7 +958,7 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
   non_zero_cols_vector <- unlist(non_zero_cols_list, use.names = FALSE)
 
   poly@loc.fac   <- fac[non_zero_cols_vector]
-  poly@loc.nall  <- setNames(tabulate(poly@loc.fac), locNames(poly))
+  poly@loc.n.all  <- setNames(tabulate(poly@loc.fac), locNames(poly))
   poly@tab       <- MAT[, non_zero_cols_vector, drop = FALSE]
   poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list,
                            SIMPLIFY = FALSE)
