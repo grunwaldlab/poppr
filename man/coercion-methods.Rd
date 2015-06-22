@@ -4,9 +4,13 @@
 \name{as.genclone}
 \alias{as.genclone}
 \alias{as.genclone,genind-method}
-\title{Create a genclone object from a genind object.}
+\alias{genclone2genind}
+\alias{genclone2genind,genclone-method}
+\title{Switch between genind and genclone objects.}
 \usage{
 as.genclone(x, ..., mlg, mlgclass = TRUE)
+
+genclone2genind(x)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
@@ -19,15 +23,20 @@ object}
 \item{mlgclass}{should the mlg slot be of class MLG?}
 }
 \description{
-Wrapper for genclone initializer.
+as.genclone will create a genclone object from a genind object OR anything
+that can be passed to the genind initializer.
+}
+\details{
+genclone2genind will remove the mlg slot from the genclone object, creating a
+genind object.
 }
 \examples{
 data(Aeut)
 Aeut
 Aeut.gc <- as.genclone(Aeut)
 Aeut.gc
-Aeut.gc <- as.genclone(Aeut)
-Aeut.gc
+Aeut.gi <- genclone2genind(Aeut.gc)
+Aeut.gi
 }
 \author{
 Zhian N. Kamvar
