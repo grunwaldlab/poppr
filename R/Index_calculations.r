@@ -811,7 +811,7 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #' (pal <- private_alleles(Pinf, locus ~ Country, count.alleles = FALSE))
 #' 
 #' # Get percentages.
-#' sweep(pal, 2, Pinf@@loc.nall[colnames(pal)], FUN = "/")
+#' sweep(pal, 2, nAll(Pinf)[colnames(pal)], FUN = "/")
 #' 
 #' # An example of how these data can be displayed.
 #' library("ggplot2")
@@ -864,7 +864,7 @@ private_alleles <- function(gid, form = alleles ~ ., report = "table",
     
     privates <- privates[rowSums(privates, na.rm = TRUE) > 0, , drop = FALSE]
     if (marker != "alleles"){
-      private_fac <- gid@loc.fac[private_columns]
+      private_fac <- locFac(gid)[private_columns]
       privates <- vapply(unique(private_fac), function(l){
         rowSums(privates[, private_fac == l, drop = FALSE], na.rm = TRUE)
       }, FUN.VALUE = numeric(nrow(privates))

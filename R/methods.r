@@ -75,7 +75,7 @@ setMethod(
     }
     
     # Taking Names
-    locnall         <- x@loc.nall[j]
+    locnall         <- x@loc.n.all[j]
     allnames        <- x@all.names[j]
     names(allnames) <- names(x@all.names)[1:length(j)]
     names(locnall)  <- names(allnames)
@@ -90,7 +90,7 @@ setMethod(
     slot(x, "tab")       <- res
     slot(x, "loc.fac")   <- factor(locnames, names(allnames))
     # slot(x, "loc.names") <- names(allnames)
-    slot(x, "loc.nall")  <- locnall
+    slot(x, "loc.n.all")  <- locnall
     slot(x, "all.names") <- allnames
     slot(x, "alllist")   <- .Call("expand_indices", cumsum(locnall), length(j), PACKAGE = "poppr")
     slot(x, "names")     <- slot(x, "names")[i]
@@ -109,16 +109,16 @@ setMethod(
   }
 )
 
-#==============================================================================#
-#' @rdname bootgen-methods
-#==============================================================================#
-setMethod(
-  f = "nLoc",
-  signature(x = "bootgen"),
-  definition = function(x){
-    return(dim(x)[2])
-  }
-)
+# #==============================================================================#
+# # @rdname bootgen-methods
+# #==============================================================================#
+# setMethod(
+#   f = "nLoc",
+#   signature(x = "bootgen"),
+#   definition = function(x){
+#     return(dim(x)[2])
+#   }
+# )
 
 #==============================================================================#
 #' @rdname bootgen-methods
@@ -155,12 +155,11 @@ setMethod(
     } else {
       stop("gen must be a valid genind or genpop object.")
     }
-    num_alleles                <- slot(gen, "loc.nall")
+    num_alleles                <- slot(gen, "loc.n.all")
     num_loci                   <- length(num_alleles)
     slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = freq)     
-    slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")   
-    # slot(.Object, "loc.names") <- slot(gen, "loc.names") 
-    slot(.Object, "loc.nall")  <- num_alleles  
+    slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")
+    slot(.Object, "loc.n.all") <- num_alleles  
     slot(.Object, "all.names") <- slot(gen, "all.names") 
     slot(.Object, "alllist")   <- .Call("expand_indices", cumsum(num_alleles), num_loci, PACKAGE = "poppr")
     slot(.Object, "names")     <- objnames
@@ -202,24 +201,6 @@ setMethod(
       replen <- vapply(gen@all.names, function(y) guesslengths(as.numeric(y)), 1)
     }
     ploid <- max(ploidy(gen))
-    # This controlls for the user correcting missing data using "mean". 
-    # if (any(!gen@tab %in% c((0:ploid)/ploid, NA))){
-    #   gen@tab[!gen@tab %in% c((0:ploid)/ploid, NA)] <- NA
-    # }
-    # # This will check for data that has missing scored as "zero".
-    # popcols <- ploid*nLoc(gen)
-    # if (!any(is.na(gen@tab)) & any(rowSums(gen@tab, na.rm=TRUE) < nLoc(gen))){
-    #   mat1 <- as.matrix.data.frame(genind2df(gen, sep="/", usepop=FALSE))
-    #   mat1[mat1 %in% c("", NA)] <- paste(rep(0, ploid), collapse="/")
-    #   mat2 <- apply(mat1, 1, strsplit, "/")
-    #   mat3 <- apply(as.matrix(t(sapply(mat2, unlist))), 2, as.numeric)
-    #   vec1 <- suppressWarnings(as.numeric(unlist(mat3)))
-    #   pop  <- matrix(vec1, nrow=nInd(gen), ncol=popcols)
-    # } else {
-    #   popdf <- genind2df(gen, oneColPerAll=TRUE, usepop=FALSE)
-    #   mat1  <- as.matrix.data.frame(popdf)
-    #   pop   <- suppressWarnings(matrix(as.numeric(mat1), ncol=popcols))
-    # }
     popdf <- genind2df(gen, sep = "/", usepop = FALSE)
     mat   <- generate_bruvo_mat(popdf, maxploid = ploid, sep = "/", mat = TRUE)
     mat[is.na(mat)] <- 0
@@ -606,7 +587,8 @@ setGeneric("print")
 setMethod(
   f = "print",
   signature("genclone"),
-  definition = function(x, ...){
+  definition = function(x, ..., fullnames = TRUE){
+    nmlg  <- length(unique(x@mlg))
     ploid  <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
     ploid  <- paste0(unique(ploid[x@ploidy]), "ploid")
@@ -618,7 +600,6 @@ setMethod(
     }
     nind   <- nInd(x)     
     type  <- ifelse(x@type == "PA", "dominant", "codominant")
-    nmlg  <- length(unique(x@mlg))
     nloc  <- nLoc(x)
     npop  <- ifelse(is.null(x@pop), 0, nPop(x))
     strata  <- length(x@strata)
@@ -627,6 +608,16 @@ setMethod(
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops  <- popNames(x)
     stratanames <- names(x@strata)
+    if (!fullnames){
+      poplen <- length(pops)
+      stratalen <- length(stratanames)
+      if (poplen > 7){
+        pops <- c(pops[1:3], "...", pops[(poplen-2):poplen])        
+      }
+      if (stratalen > 7){
+        stratanames <- c(stratanames[1:3], "...", stratanames[(stratalen-2):stratalen])
+      }
+    }
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
@@ -647,9 +638,13 @@ setMethod(
   })
 
 #==============================================================================#
-#' Create a genclone object from a genind object.
+#' Switch between genind and genclone objects.
 #' 
-#' Wrapper for genclone initializer.
+#' as.genclone will create a genclone object from a genind object OR anything
+#' that can be passed to the genind initializer. 
+#' 
+#' genclone2genind will remove the mlg slot from the genclone object, creating a 
+#' genind object.
 #' 
 #' @export
 #' @rdname coercion-methods
@@ -669,8 +664,8 @@ setMethod(
 #' Aeut
 #' Aeut.gc <- as.genclone(Aeut)
 #' Aeut.gc
-#' Aeut.gc <- as.genclone(Aeut)
-#' Aeut.gc
+#' Aeut.gi <- genclone2genind(Aeut.gc)
+#' Aeut.gi
 #==============================================================================#
 as.genclone <- function(x, ..., mlg, mlgclass = TRUE){
   standardGeneric("as.genclone")
@@ -697,6 +692,29 @@ setMethod(
     }
     return(res)
   })
+#==============================================================================#
+#' @export
+#' @rdname coercion-methods
+#' @aliases genclone2genind,genclone-method
+#' @docType methods
+#==============================================================================#
+genclone2genind <- function(x){
+  standardGeneric("genclone2genind")
+}
+
+#' @export
+setGeneric("genclone2genind")
+
+setMethod(
+  f = "genclone2genind",
+  signature(x = "genclone"),
+  definition = function(x){
+    attributes(x) <- attributes(x)[slotNames(new("genind"))]
+    class(x) <- "genind"
+    x@call <- match.call()
+    return(x)
+  }
+)
 
 #==============================================================================#
 # Seploc method for genclone objects. 
@@ -710,7 +728,7 @@ setMethod(
     ARGS <- c("genind", "matrix")
     res.type <- match.arg(res.type, ARGS)
     if (res.type == "matrix"){
-      splitsville <- split(colnames(x@tab), x@loc.fac)
+      splitsville <- split(colnames(x@tab), locFac(x))
       listx       <- lapply(splitsville, function(i) x@tab[, i, drop = FALSE])
     } else {
       listx <- lapply(locNames(x), function(i) x[loc = i])
@@ -1237,18 +1255,18 @@ setMethod(
 )
 
 #==============================================================================#
-# old2new method for genclone objects. 
-# The old2new method for genind objects will initialize the strata slot as NULL
-# because it's an old object. Adding the method for genclone objects prevents
-# the previous hierarchy from being clobbered.
+#' Convert an old genclone object to a new genclone object
+#' 
+#' @param object a genclone object from poppr v. 1.1
+#' @param donor a new genclone object from poppr v. 2.0
+#' 
+#' @export
+#' @author Zhian N. Kamvar
 #==============================================================================#
-setMethod(
-  f = "old2new",
-  signature(object = "genclone"),
-  definition = function(object){
-    newstrata     <- object@hierarchy
-    object        <- callNextMethod()
-    object@strata <- newstrata
-    return(object)
+old2new_genclone <- function(object, donor = new(class(object))){
+  n <- old2new_genind(object, donor)
+  if ("genclone" %in% class(n)){
+    n@mlg <- object@mlg
   }
-)
+  return(n)
+}

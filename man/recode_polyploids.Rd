@@ -85,8 +85,8 @@ data(Pinf)
 iPinf <- recode_polyploids(Pinf)
 
 # Note that the difference between the number of alleles.
-Pinf@loc.nall
-iPinf@loc.nall
+nAll(Pinf)
+nAll(iPinf)
 
 \dontrun{
 library("ape")
