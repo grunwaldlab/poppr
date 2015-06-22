@@ -294,10 +294,10 @@ loci.na <- function(pop) {
 percent_missing <- function(pop, type="loci", cutoff=0.05){
   if (toupper(type) == "LOCI"){
     missing_loci        <- 1 - propTyped(pop, "loc")
-    names(missing_loci) <- levels(pop@loc.fac)
+    names(missing_loci) <- levels(locFac(pop))
     missing_loci        <- missing_loci[missing_loci > cutoff]
     misslist            <- 1:ncol(pop@tab)
-    filter              <- !pop@loc.fac %in% names(missing_loci)
+    filter              <- !locFac(pop) %in% names(missing_loci)
   } else {
     missing_geno <- 1 - propTyped(pop, "ind")
     misslist     <- 1:nInd(pop)
@@ -1852,7 +1852,7 @@ get_local_ploidy <- function(x){
     x <- recode_polyploids(x, newploidy = TRUE)    
   }
   tabx   <- tab(x)
-  cols   <- split(colnames(tabx), x@loc.fac)
+  cols   <- split(colnames(tabx), locFac(x))
   locmat <- vapply(cols, function(i) rowSums(tabx[, i]), numeric(nInd(x)))
   return(locmat)
 }
@@ -1889,7 +1889,7 @@ test_zeroes <- function(x){
     ploid     <- unique(ploidy(x))
     ploidtest <- length(ploid) > 1 | any(x@ploidy > 2)
 
-    if (any(allnames == 0) && any(x@loc.nall > 2) && ploidtest){
+    if (any(allnames == 0) && any(nAll(x) > 2) && ploidtest){
       return(TRUE)
     }
   }

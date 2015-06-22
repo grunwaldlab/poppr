@@ -130,7 +130,7 @@ shufflepop <- function(pop, method=1){
     }
   } else {
     addpop <- function(locus = "L1", pop, method=method){
-      pop@tab[, pop@loc.fac %in% locus] <<- .locus.shuffler(pop[, loc = locus], method=method)@tab
+      pop@tab[, locFac(pop) %in% locus] <<- .locus.shuffler(pop[, loc = locus], method=method)@tab
     }
     invisible(lapply(locNames(pop), addpop, pop, method))
   }
