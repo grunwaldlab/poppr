@@ -6,14 +6,11 @@
 \alias{[,bootgen,ANY,ANY,ANY-method}
 \alias{dim,bootgen-method}
 \alias{initialize,bootgen-method}
-\alias{nLoc,bootgen-method}
 \title{Methods used for the bootgen object.}
 \usage{
 \S4method{[}{bootgen,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{dim}{bootgen}(x)
-
-\S4method{nLoc}{bootgen}(x)
 
 \S4method{$}{bootgen}(x, name)
 

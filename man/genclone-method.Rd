@@ -15,7 +15,7 @@
 
 \S4method{show}{genclone}(object)
 
-\S4method{print}{genclone}(x, ...)
+\S4method{print}{genclone}(x, ..., fullnames = TRUE)
 }
 \arguments{
 \item{.Object}{a character, "genclone"}
@@ -41,6 +41,10 @@ vector will be reset}
 
 \item{object}{a genclone object}
 
+\item{fullnames}{\code{logical}. If \code{TRUE}, then the full names of the
+populations will be printed. If \code{FALSE}, then only the first and last
+three population names are displayed.}
+
 \item{gen}{\code{"\linkS4class{genind}"} object}
 
 \item{loc}{passed on to \code{\linkS4class{genind}} object.}
@@ -50,10 +54,6 @@ vector will be reset}
 \item{quiet}{passed on to \code{\linkS4class{genind}} object.}
 
 \item{x}{a genclone object}
-
-\item{fullnames}{\code{logical}. If \code{TRUE}, then the full names of the
-populations will be printed. If \code{FALSE}, then only the first and last
-three population names are displayed.}
 }
 \description{
 Default methods for subsetting genclone objects.
