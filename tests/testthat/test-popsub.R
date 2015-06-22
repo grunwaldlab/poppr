@@ -33,7 +33,7 @@ test_that("subsetting works with populations", {
   # Populations equivalent
   expect_that(as.character(pop(nan48)), is_identical_to(as.character(pop(p48))))
   # Individuals equivalent
-  expect_that(nan48@ind.names, is_identical_to(p48@ind.names))
+  expect_that(indNames(nan48), is_identical_to(indNames(p48)))
   # Rejects unknown populations
   expect_that(popsub(nancycats, 18), gives_warning())
   # Rejects equivalent blacklist and sublist

@@ -7,7 +7,7 @@ test_that("A genclone object contains a genind object", {
 	expect_that(slotNames(partial_clone), equals(slotNames(pc)[-1]))
 	expect_that(partial_clone@tab, equals(pc@tab))
 	# expect_that(partial_clone@loc.names, is_identical_to(pc@loc.names))
-	expect_that(partial_clone@loc.nall, is_identical_to(pc@loc.nall))
+	expect_that(partial_clone@loc.n.all, is_identical_to(pc@loc.n.all))
 	expect_that(partial_clone@all.names, is_equivalent_to(pc@all.names))
 	# expect_that(partial_clone@ind.names, is_identical_to(pc@ind.names))
 	expect_that(partial_clone@pop, is_identical_to(pc@pop))
