@@ -57,7 +57,9 @@ For details on the bootstrapping procedures, see
   function \code{\link[boot]{norm.ci}}. The confidence interval is caluclated
   from the bootstrapped distribution and centered around the bias-corrected
   estimate. For rarefaction, the confidence interval is simply determined by
-  caluclating the percentiles from the bootstrapped distribution.
+  caluclating the percentiles from the bootstrapped distribution. If you
+  want to calcuate your own confidence intervals, you can use the results of
+  the permutations stored in the \code{$boot} element of the output.
 }
 \note{
 While it is possible to use custom functions with this, there are three
