@@ -28,7 +28,19 @@ an object of class \code{\link{dist}}
 Calculate the average Bruvo's distance over all loci in a population.
 }
 \details{
-Ploidy is irrelevant with respect to calculation of Bruvo's
+Bruvo's distance between two alleles is calculated as
+  \deqn{d = 1 - 2^{-\mid x \mid}}{d = 1 - (2^(-abs(x)))}, where \strong{x}
+  is the number of repeat units between the two alleles (see the Algorithms
+  and Equations vignette for more details). These distances are calculated
+  over all combinations of alleles at a locus and then the minimum average
+  distance between allele combinations is taken as the distance for that
+  locus. All loci are then averaged over to obtain the distance between two
+  samples. Missing data is ignored (in the same fashion as
+  \code{mean(c(1:9, NA), na.rm = TRUE)}) if all alleles are missing. See the
+  next section for other cases.
+
+  \subsection{Polyploids}{
+  Ploidy is irrelevant with respect to calculation of Bruvo's
   distance. However, since it makes a comparison between all alleles at a
   locus, it only makes sense that the two loci need to have the same ploidy
   level. Unfortunately for polyploids, it's often difficult to fully separate
@@ -71,9 +83,11 @@ Ploidy is irrelevant with respect to calculation of Bruvo's
   distance will be calculated using the largest observed ploidy in pairwise
   comparisons. This means that when comparing [69,70,71,0] and [59,60,0,0],
   they will be treated as triploids.
+  }
 }
 \note{
-\subsection{Model Choice}{ The \code{add} and \code{loss} arguments
+Do not use missingno with this function.
+  \subsection{Model Choice}{ The \code{add} and \code{loss} arguments
   modify the model choice accordingly: \itemize{ \item \strong{Infitine
   Model:}  \code{add = FALSE, loss = FALSE} \item \strong{Genome Addition
   Model:}  \code{add = TRUE, loss = FALSE} \item \strong{Genome Loss Model:}

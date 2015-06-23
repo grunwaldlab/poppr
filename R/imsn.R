@@ -114,6 +114,14 @@
 #' @examples 
 #' \dontrun{
 #' 
+#' # Set up some data
+#' library("poppr")
+#' library("magrittr")
+#' data(monpop)
+#' splitStrata(monpop) <- ~Tree/Year/Symptom
+#' summary(monpop)
+#' t26 <- monpop %>% setPop(~Tree) %>% popsub("26") %>% setPop(~Year/Symptom)
+#' t26
 #' imsn()
 #' 
 #' }
