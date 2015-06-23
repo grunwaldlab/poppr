@@ -1276,6 +1276,16 @@ setMethod(
 #' @author Zhian N. Kamvar
 #==============================================================================#
 old2new_genclone <- function(object, donor = new(class(object))){
+  has_strata <- .hasSlot(object, "strata")
+  has_loc.n.all <- .hasSlot(object, "loc.n.all")
+  if (has_loc.n.all){
+    warning("this object appears to be up to date.")
+    return(object)
+  }
+  if (!has_strata && is(object, "genclone")){
+    object@strata    <- object@hierarchy
+    object@hierarchy <- NULL
+  }
   n <- old2new_genind(object, donor)
   if ("genclone" %in% class(n)){
     n@mlg <- object@mlg
