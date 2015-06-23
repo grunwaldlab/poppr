@@ -408,7 +408,8 @@ get_boot_ci <- function(index, x, type = "normal" , conf = 0.95, around_estimate
   if (length(unique(x$t[, index])) == 1){
     return(c(NA_real_, NA_real_))
   } else if (around_estimate){
-    res <- boot::norm.ci(x, conf = conf, index = index)[1, ]
+    # res <- boot::norm.ci(x, conf = conf, index = index)[1, ]
+    res <- boot::norm.ci(conf = conf, t0 = x$t0[index], var.t0 = var(x$t[, index]))[-1]
   } else {
     res <- boot::boot.ci(x, conf, type, index, ...)[[type]][1, ]
   }
