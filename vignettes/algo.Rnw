@@ -585,5 +585,5 @@ Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
 genotypes observed and $N$ is the sample size. 
 
 \bibliographystyle{plain}
-\bibliography{poppr_man}
+\bibliography{the_bibliography}
 \end{document}

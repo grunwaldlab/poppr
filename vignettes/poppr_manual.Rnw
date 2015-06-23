@@ -4520,5 +4520,5 @@ to its definition and description.
 \end{longtable}
 \end{center}
 \bibliographystyle{plain}
-\bibliography{poppr_man}
+\bibliography{the_bibliography}
 \end{document}
