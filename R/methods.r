@@ -502,12 +502,24 @@ setMethod(
   signature(x = "genclone", i = "ANY", j = "ANY", drop = "ANY"),
   definition = function(x, i, j, ..., mlg.reset = FALSE, drop = FALSE){
     if (missing(i)) i <- TRUE
+    newi <- i
+    ## HANDLE 'POP'
+    dots <- list(...)
+    if (any(names(dots) == "pop")){
+      pop <- dots[["pop"]]
+      if (!is.null(pop) && !is.null(pop(x))){
+        if (is.factor(pop)) pop <- as.character(pop)
+        if (!is.character(pop)) pop <- popNames(x)[pop]
+        newi <- pop(x) %in% pop
+      }      
+    }
     x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
+    
     if (!mlg.reset){
       if (is(x@mlg, "MLG")){
-        x@mlg <- x@mlg[i, all = TRUE]
+        x@mlg <- x@mlg[newi, all = TRUE]
       } else {
-        x@mlg <- x@mlg[i]
+        x@mlg <- x@mlg[newi]
       }
       
     } else {
