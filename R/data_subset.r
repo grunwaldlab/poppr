@@ -342,7 +342,10 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #'  
 #'@details These methods provide a way to deal with systematic missing data and 
 #'  to give a wrapper for \code{adegenet}'s \code{ \link{tab}} function. 
-#'  ALL OF THESE ARE TO BE USED WITH CAUTION.
+#'  ALL OF THESE ARE TO BE USED WITH CAUTION. 
+#'  
+#'  Using this function with polyploid data (where missing data is coded as "0")
+#'  may give spurious results.
 #'  
 #'  \subsection{Treatment types}{ \itemize{ \item{\code{"ignore"} - does not 
 #'  remove or replace missing data.} \item{\code{"loci"} - removes all loci 
