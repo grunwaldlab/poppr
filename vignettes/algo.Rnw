@@ -604,5 +604,5 @@ $l^{th}$ locus.
 % genotypes observed and $N$ is the sample size. 
 
 \bibliographystyle{plain}
-\bibliography{poppr_man}
+\bibliography{the_bibliography}
 \end{document}
