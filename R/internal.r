@@ -64,6 +64,7 @@ NULL
 #' Distance
 #' 
 #' @name partial_clone
+#' @rdname partial_clone
 #' @docType data
 #' @usage data(partial_clone)
 #' @description These data were simulated using SimuPOP version 1.0.8 with 
@@ -78,9 +79,15 @@ NULL
 #==============================================================================#
 NULL
 #==============================================================================#
+#' @name old_partial_clone
+#' @rdname partial_clone
+#==============================================================================#
+NULL
+#==============================================================================#
 #' Phytophthora infestans data from Mexico and South America.
 #' 
 #' @name Pinf
+#' @rdname Pinf
 #' @docType data
 #' @usage data(Pinf)
 #' @description The Pinf data set contains 86 isolates genotyped over 11 
@@ -94,6 +101,11 @@ NULL
 #'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen
 #'   \emph{Phytophthora infestans} originated in central Mexico rather than the Andes."
 #'   Proceedings of the National Academy of Sciences 111:8791-8796.
+#==============================================================================#
+NULL
+#==============================================================================#
+#' @name old_Pinf
+#' @rdname Pinf
 #==============================================================================#
 NULL
 #==============================================================================#
