@@ -154,32 +154,32 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differe
 
 
 #==============================================================================#
-#' Probability of genotypes (under development)
-#'
-#' @param x a genind or genlight object. 
-#'
-#' @param log a \code{logical} to determine whether the values should be
-#'   returned as percentages or logarithms of percentages. \code{TRUE} is the
-#'   default, and returns the logarithmic values rather than the percentage
-#'   values. This option has a much larger range and is highly recommended.
-#'   \code{FALSE} returns the percentage chance for each genotype to be produced
-#'   via random mating, rather than the log equivalent.
-#'
-#' @param by.pop a \code{logical} to determine whether allelic frequencies
-#'   should be calculated per population (\code{TRUE}, default) or across all
-#'   populations in the data (\code{FALSE}).
-#'
-#' @param window.size an \code{integer} to determine how many SNPs should be 
-#'   included in each pgen calculation. The default is 1, causing every SNP to 
-#'   have its own pgen value in the result matrix. Higher values can be used to
-#'   reduce matrix size, but may result in precision errors if pgen values are 
-#'   too small. This argument only affects processing of genlight objects.
-#'
-#' @return A vector containing one Pgen value for each genotype in the genlight
-#'   object.
-#' @author Zhian N. Kamvar, Jonah Brooks
-#' 
-#' 
+#~ Probability of genotypes (under development)
+#~
+#~ @param x a genind or genlight object. 
+#~
+#~ @param log a \code{logical} to determine whether the values should be
+#~   returned as percentages or logarithms of percentages. \code{TRUE} is the
+#~   default, and returns the logarithmic values rather than the percentage
+#~   values. This option has a much larger range and is highly recommended.
+#~   \code{FALSE} returns the percentage chance for each genotype to be produced
+#~   via random mating, rather than the log equivalent.
+#~
+#~ @param by.pop a \code{logical} to determine whether allelic frequencies
+#~   should be calculated per population (\code{TRUE}, default) or across all
+#~   populations in the data (\code{FALSE}).
+#~
+#~ @param window.size an \code{integer} to determine how many SNPs should be 
+#~   included in each pgen calculation. The default is 1, causing every SNP to 
+#~   have its own pgen value in the result matrix. Higher values can be used to
+#~   reduce matrix size, but may result in precision errors if pgen values are 
+#~   too small. This argument only affects processing of genlight objects.
+#~
+#~ @return A vector containing one Pgen value for each genotype in the genlight
+#~   object.
+#~ @author Zhian N. Kamvar, Jonah Brooks
+#~ 
+#~ 
 #==============================================================================#
 pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
   stopifnot(class(x)[1] == "genlight" || is.genind(x))
