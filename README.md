@@ -77,11 +77,11 @@ citation(package = "poppr")
 
 ### From CRAN
 
-[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
-[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
-[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
+[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
+[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
+[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://www.r-pkg.org/pkg/poppr)
 
-Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/web/packages/poppr/index.html).
+Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/package=poppr).
 
 To install, make sure R is at least version 2.15.1 (the authors recommend &ge; 3.0), and in your console, type:
 
@@ -97,7 +97,7 @@ If you want the absolute latest version of *poppr*, see about installing from gi
 
 To install this package from github, make sure you have the following:
 
-- [Xcode](https://developer.apple.com/xcode/) (OSX)
+- [Xcode](https://developer.apple.com/xcode) (OSX)
     OR [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
 - [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
 
