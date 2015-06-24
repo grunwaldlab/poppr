@@ -188,7 +188,8 @@ old_pair_ia <- function(pop){
   return(pair_ia_vector)
 }
 
-pair.ia <- function(gid, quiet = FALSE){
+pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
+                    index = "rbarD"){
   N       <- nInd(gid)
   numLoci <- nLoc(gid)
   lnames  <- locNames(gid)
@@ -215,8 +216,36 @@ pair.ia <- function(gid, quiet = FALSE){
   
   colnames(pair_ia_vector) <- apply(loci_pairs[-3, ], 2, paste, collapse = ":")
   rownames(pair_ia_vector) <- c("Ia", "rbarD")
+  class(pair_ia_vector) <- c("matrix", "pairia")
+  if (plot){
+    plot(pair_ia_vector, index = index, low = low, high = high)
+  }
   return(pair_ia_vector)
 }
+
+plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red"){
+  df.index <- x[index, ]
+  theLoci  <- strsplit(colnames(x), ":")
+  lnames   <- unique(unlist(theLoci))
+  theTitle <- ifelse(index == "rbarD", 
+                     expression(paste(bar(r)[d])), 
+                     expression(paste(I[A])))
+  L1 <- factor(vapply(theLoci, "[[", character(1), 1), lnames)
+  L2 <- factor(vapply(theLoci, "[[", character(1), 2), lnames)
+  df <- data.frame(value = df.index, L1 = L1, L2 = L2)
+  basic_plot <- ggplot(df, aes_string(x = "L1", y = "L2", fill = "value")) +
+    geom_tile()
+  basic_plot <- basic_plot + 
+    scale_fill_gradient(low = low, high = high, na.value = "white") +
+    scale_x_discrete(expand = c(0, -1)) +
+    scale_y_discrete(expand = c(0, -1)) +
+    theme(axis.title = element_blank(), title = element_text(size = rel(2))) + 
+    # theme(legend.title.align = 0.5) + 
+    myTheme +
+    labs(fill = theTitle)
+  print(basic_plot)
+}
+
 
 ia_pair_loc <- function(pair, V, np, progbar, iterations){
   if (!is.null(progbar)){
