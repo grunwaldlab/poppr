@@ -154,37 +154,32 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differe
 
 
 #==============================================================================#
-#' Calculates and returns a matrix of Pgen values for the given genlight object.
-#' Each column represents a genotype in the genlight objects, and each row
-#' represents a specific, sequential set of 8 base pairs. The values in each cell
-#' represent the Pgen value of the corresponding set of base pairs. These values
-#' indicate the probability of observing these alleles in a randomly mating 
-#' population using estimates derived from the genotypes present in the genlight 
-#' object.
+#' Probability of genotypes (under development)
 #'
-#' @param x a genlight object. 
+#' @param x a genind or genlight object. 
 #'
-#' @param log a \code{logical} to determine whether the values should be returned 
-#'  as percentages or logarithms of percentages. \code{TRUE} is the default, and 
-#'  returns the logarithmic values rather than the percentage values. This option has 
-#'  a much larger range and is highly recommended. \code{FALSE} returns the percentage 
-#'  chance for each genotype to be produced via random mating, rather than the log 
-#'  equivalent.
+#' @param log a \code{logical} to determine whether the values should be
+#'   returned as percentages or logarithms of percentages. \code{TRUE} is the
+#'   default, and returns the logarithmic values rather than the percentage
+#'   values. This option has a much larger range and is highly recommended.
+#'   \code{FALSE} returns the percentage chance for each genotype to be produced
+#'   via random mating, rather than the log equivalent.
 #'
-#' @param by.pop a \code{logical} to determine whether allelic frequencies should
-#'  be calculated per population (\code{TRUE}, default) or across all populations
-#'  in the data (\code{FALSE}).
+#' @param by.pop a \code{logical} to determine whether allelic frequencies
+#'   should be calculated per population (\code{TRUE}, default) or across all
+#'   populations in the data (\code{FALSE}).
 #'
-#' @param window.size an \code{integer} to determine how many SNPs should be
-#'  included in each pgen calculation. The default is 1, causing every SNP to
-#'  have its own pgen value in the result matrix. Higher values can be used
-#'  to reduce matrix size, but may result in precision errors if pgen values are
-#'  too small. This argument only affects processing of genlight objects.
+#' @param window.size an \code{integer} to determine how many SNPs should be 
+#'   included in each pgen calculation. The default is 1, causing every SNP to 
+#'   have its own pgen value in the result matrix. Higher values can be used to
+#'   reduce matrix size, but may result in precision errors if pgen values are 
+#'   too small. This argument only affects processing of genlight objects.
 #'
-#' @return A vector containing one Pgen value for each genotype in the genlight object.
+#' @return A vector containing one Pgen value for each genotype in the genlight
+#'   object.
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
-#' @export
+#' 
 #==============================================================================#
 pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
   stopifnot(class(x)[1] == "genlight" || is.genind(x))
@@ -211,14 +206,14 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
 
     # Ensure there is a population assignment for every genotype
     if(is.null(x$pop) || by.pop == FALSE){
-      x$pop <- as.factor(rep(1,length(x$gen)))
+      x$pop <- as.factor(rep(1, length(x$gen)))
     }   
  
     # TODO: Support haploids
 
-    pgen_matrix <- .Call("get_pgen_matrix_genlight",x,window.size)
+    pgen_matrix <- .Call("get_pgen_matrix_genlight", x, window.size)
 
-    if(!log)
+    if (!log)
     {
       pgen_matrix <- exp(pgen_matrix)
     }
@@ -235,8 +230,8 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
       pop(x) <- as.factor(rep(1,dim(x$tab)[1]))
     }   
     pops <- pop(x)
-    freqs <- makefreq(genind2genpop(x,quiet=TRUE),quiet=TRUE)$tab
-    pgen_matrix <- .Call("get_pgen_matrix_genind",x,freqs,pops)
+    freqs <- tab(genind2genpop(x, quiet = TRUE), freq = TRUE)
+    pgen_matrix <- .Call("get_pgen_matrix_genind", x, freqs, pops)
     # TODO: calculate in log form in C, then convert back here.
     if(!log)
     {
