@@ -63,8 +63,9 @@ Corvallis, OR}}
 
 <<echo=FALSE, warning=FALSE>>=
 knitr::opts_knit$set(out.format = "latex")
-thm <- knitr::knit_theme$get("acid")
-knitr::knit_theme$set(thm)
+so.d <- knitr::knit_theme$get("solarized-dark")
+so.l <- knitr::knit_theme$get("solarized-light")
+knitr::knit_theme$set(so.l)
 knitr::opts_chunk$set(concordance=TRUE)
 # knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 knitr::opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'asis')
@@ -147,6 +148,30 @@ received major updates \cite{kamvar2015novel}. The side effect of these updates
 is that backwards compatibility has been broken in making \adegenet{} and 
 \poppr{} more efficient.
 
+\subsection{Color Schemes}
+
+Because this vignette will discuss both code that will work and code that will
+is not recommended, we will use two color schemes to distinguish the two. Note
+that all code that will fail is wrapped in a \texttt{try()} command.
+\begin{itemize}
+\item \textbf{Solarized-light theme for code that works}:
+<<sl>>=
+rnorm(10) # Works!
+@
+
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.d)
+@
+
+\item \textbf{Solarized-dark theme for code that is not recommended}:
+<<sd, error = TRUE>>=
+try(rnorm("A")) # Throws a warning and error.
+@
+
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.l)
+@
+\end{itemize}
 \subsection{Major changes in \adegenet{}}
 
 Major breaking changes involve the structure of the \adegenet{}'s \textsc{genind}
@@ -196,8 +221,16 @@ partial_clone
 
 We can try printing the old object, but it won't work and will throw an error:
 
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.d)
+@
+
 <<show_old_genind, message = TRUE, warning = TRUE, error = TRUE>>=
 try(old_partial_clone)
+@
+
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.l)
 @
 
 
@@ -232,26 +265,9 @@ opi # It prints!
 
 \section{Hierarchy functions/accessors}
 
-While all of the previous hierarchy functions still exist, they exist in a 
-deprecated fashion and will inform you how to properly use them. For example,
-if we wanted to use the old function \texttt{gethierarchy()}, it would throw a 
-warning:
-
-<<hier_warning>>=
-head(gethierarchy(Pinf, ~Continent/Country)) # Throws warning
-head(strata(Pinf, ~Continent/Country))       # No warning :)
-@
-
-Note, the function \texttt{setpop()} is also affected:
-
-<<setpop_warning>>=
-setpop(Pinf) <- ~Country # Ambiguous warning
-setPop(Pinf) <- ~Country # No warning
-@
-
-For many of the functions where you use the assignment, it can't tell what 
-arguments you supply, so it will simply suggest the new function. Below is a 
-table to guide you from the old to the new functions. 
+Since the \texttt{@hierarchy} slot was moved to the \texttt{@strata} slot, the
+methods also had to change. Below is a table to guide you from the old to the 
+new functions. 
 
 \begin{table}[h]
 \centering
@@ -268,12 +284,52 @@ table to guide you from the old to the new functions.
 \caption{Function conversion from version 1.1 to 2.0}
 \end{table}
 
+While all of the previous hierarchy functions still exist, they exist in a 
+deprecated fashion and will inform you how to properly use them. For example,
+if we wanted to use the old function \texttt{gethierarchy()}, it would throw a 
+warning:
+
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.d)
+@
+
+<<hier_warning>>=
+head(gethierarchy(Pinf, ~Continent/Country)) # Throws warning
+@
+
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.l)
+@
+<<hier_strata>>=
+head(strata(Pinf, ~Continent/Country))       # No warning :)
+@
+
+Note, the function \texttt{setpop()} is also affected:
+
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.d)
+@
+<<setpop_warning>>=
+setpop(Pinf) <- ~Country # Ambiguous warning
+@
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.l)
+@
+<<setPop_nowarning>>=
+setPop(Pinf) <- ~Country # No warning
+@
+
+For many of the functions where you use the assignment, it can't tell what 
+arguments you supply, so it will simply suggest the new function. 
+
 
 \subsection{Additional warning}
 
 Please read this section if you have code that directly accesses the hierarchy
 or strata slot directly. An example is below:
-
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.d)
+@
 <<hier_no, eval = FALSE>>=
 myData@hierarchy <- myData@hierarchy[-2] # wat
 @
@@ -310,7 +366,9 @@ knitr::knit_hooks$set(message = my.color.block('\\bfseries\\color{errorcolor}{',
 message(geterrmessage())
 @
 
-
+<<echo = FALSE>>=
+knitr::knit_theme$set(so.l)
+@
 If we had used accessors, the error would have been caught from the start!
 
 <<Pinf_right_strata, error = TRUE, message = TRUE, warning = TRUE>>=
