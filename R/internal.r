@@ -2171,6 +2171,7 @@ generate_bruvo_mat <- function(x, maxploid, sep = "/", mat = FALSE){
   rownames(res) <- rownames(x)
   return(res)
 }
+#==============================================================================#
 # Function to subset the custom MLGs by the computationally derived MLGs in the
 # data set. This is necessary due to the fact that minimum spanning networks
 # will clone correct before calculations, but this is performed on the visible
@@ -2242,3 +2243,300 @@ correlate_custom_mlgs <- function(x, by = "original", subset = TRUE){
   return(res)
 }
 
+
+#==============================================================================#
+# Function to boostrap a single population from a mlg.matrix
+# 
+# Public functions utilizing this function:
+# ## diversity_boot
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+boot_per_pop <- function(x, rg = multinom_boot, n, n.rare = NULL, H = TRUE, 
+                         G = TRUE, lambda = TRUE, E5 = TRUE, ...){
+  xi  <- extract_samples(x)
+  res <- boot::boot(xi, boot_stats, R = n, sim = "parametric", ran.gen = rg, 
+                    mle = n.rare, H = H, G = G, lambda = lambda, E5 = E5, ...)
+  return(res)
+}
+
+#==============================================================================#
+# multinomial sampler for bootstrapping
+# 
+# Public functions utilizing this function:
+# ## diversity_boot
+# 
+# Internal functions utilizing this function:
+# ## boot_per_pop
+#==============================================================================#
+multinom_boot <- function(x, mle = NULL){
+  if (is.null(mle)){
+    res <- rmultinom(1, length(x), prob = tabulate(x))
+  } else {
+    res <- rmultinom(1, mle, prob = tabulate(x))
+  }
+  extract_samples(res)
+}
+
+#==============================================================================#
+# subsampler for rarefaction bootstrapping
+# 
+# Public functions utilizing this function:
+# ## diversity_boot
+# 
+# Internal functions utilizing this function:
+# ## boot_per_pop
+#==============================================================================#
+rare_sim_boot <- function(x, mle = 10){
+  sample(x, mle)
+}
+
+#==============================================================================#
+# wrapper to calculate statistics from bootstrapped samples
+# 
+# Public functions utilizing this function:
+# ## none
+# 
+# Internal functions utilizing this function:
+# ## boot_per_pop
+#==============================================================================#
+boot_stats <- function(x, i, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
+  xi  <- tabulate(x[i])
+  res <- diversity_stats(xi, H, G, lambda, E5, ...)
+  return(res)
+}
+
+#==============================================================================#
+# Sets up a vector of mlg counts for bootstrapping. Input is a vector where each
+# element represents the count of a specific mlg, output is a vector where each
+# element represents the mlg assignment of a particular sample. 
+# 
+# Public functions utilizing this function:
+# ## none
+# 
+# Internal functions utilizing this function:
+# ## boot_per_pop, multinom_boot
+#==============================================================================#
+extract_samples <- function(x) rep(1:length(x), x)
+
+#==============================================================================#
+# calculates confidence interval for a single population and a single statistic
+# given the result of a bootstrap. Note, around_estimate is always true, and 
+# will center the CI around the observed estimate. The structure for changing it
+# is set up, but currently not used.
+# 
+# Public functions utilizing this function:
+# ## none
+# 
+# Internal functions utilizing this function:
+# ## get_ci
+#==============================================================================#
+get_boot_ci <- function(index, x, type = "normal" , conf = 0.95, around_estimate = TRUE, ...){
+  if (length(unique(x$t[, index])) == 1){
+    return(c(NA_real_, NA_real_))
+  } else if (around_estimate){
+    # res <- boot::norm.ci(x, conf = conf, index = index)[1, ]
+    res <- boot::norm.ci(conf = conf, t0 = x$t0[index], var.t0 = var(x$t[, index]))[-1]
+  } else {
+    res <- boot::boot.ci(x, conf, type, index, ...)[[type]][1, ]
+  }
+  return(tail(res, 2))
+}
+
+#==============================================================================#
+# calculates confidence intervals for all statistics per population. If 
+# bci = TRUE, then the confidence interval is calculated using norm.ci or 
+# boot.ci. Otherwise, the CI is calculated using quantiles from the bootstrapped
+# data.
+# 
+# Public functions utilizing this function:
+# ## none
+# 
+# Internal functions utilizing this function:
+# ## get_all_ci
+#==============================================================================#
+get_ci <- function(x, lb, ub, bci = TRUE, btype = "normal", center = TRUE){
+  if (bci){
+    lenout <- length(x$t0)
+    conf   <- diff(c(lb, ub))
+    res    <- vapply(1:lenout, get_boot_ci, numeric(2), x, btype, conf, center)
+    if (!is.null(dim(res))) rownames(res) <- paste(c(lb, ub)*100, "%")
+  } else {
+    res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)
+    if (all(apply(res, 2, function(i) i[1] == i[2]))){
+      res[] <- NA_real_
+    }
+  }
+  return(res)
+}
+
+#==============================================================================#
+# compiles an array of confidence intervals per statistic, per population.
+# 
+# Public functions utilizing this function:
+# ## diversity_ci
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+get_all_ci <- function(res, ci = 95, index_names = c("H", "G", "Hexp", "E.5"),
+                       center = TRUE, btype = "normal", bci = TRUE){
+  lower_bound  <- (100 - ci)/200
+  upper_bound  <- 1 - lower_bound
+  n_indices    <- length(index_names)
+  funval       <- matrix(numeric(n_indices*2), nrow = 2)
+  CI           <- vapply(res, FUN = get_ci, FUN.VALUE = funval, 
+                         lower_bound, upper_bound, bci = bci, btype = btype,
+                         center = center)
+  dCI          <- dimnames(CI)
+  dimnames(CI) <- list(CI    = dCI[[1]], 
+                       Index = index_names,
+                       Pop   = dCI[[3]])
+  
+  return(CI)
+}
+
+#==============================================================================#
+# Takes the output of diversity_ci and converts it to a data frame.
+# 
+# Public functions utilizing this function:
+# ## diversity_ci
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+pretty_info <- function(obs, est, CI, boots = NULL){
+  pretty_ci <- t(apply(round(CI, 3), 2:3, 
+                       function(x){
+                         if (all(is.na(x))) return(NA_character_)
+                         paste0("(", paste(x, collapse = ", "), ")")
+                       }))
+  colnames(est) <- paste(colnames(est), "est", sep = ".")
+  out <- vector(mode = "list", length = ncol(est)*3)
+  colnames(pretty_ci) <- paste(colnames(pretty_ci), "ci", sep = ".")
+  names(out)[(1:length(out)) %% 3 != 0] <- intersp(colnames(obs), colnames(est))
+  names(out)[(1:length(out)) %% 3 == 0] <- colnames(pretty_ci)
+  for (i in names(out)){
+    out[[i]] <- obs[, 1]
+  }
+  out <- data.frame(out)
+  out[colnames(obs)] <- obs
+  out[colnames(est)] <- est
+  out[colnames(pretty_ci)] <- pretty_ci
+  class(out) <- c("popprtable", "data.frame")
+  return(out)
+}
+
+#==============================================================================#
+# Takes two vectors and intersperses their elements
+# 
+# Public functions utilizing this function:
+# ## none
+# 
+# Internal functions utilizing this function:
+# ## pretty_info
+#==============================================================================#
+intersp <- function(v1, v2){
+  v1l <- length(v1)
+  v2l <- length(v2)
+  the_evens <- evens(v1l + v2l)
+  stopifnot(v1l == v2l)
+  ov <- vector(length = v1l + v2l, mode = class(c(v1[1], v2[1])))
+  ov[the_evens]  <- v2
+  ov[!the_evens] <- v1
+  return(ov)
+}
+
+#==============================================================================#
+# Returns a vector of even elements
+# 
+# Public functions utilizing this function:
+# ## none
+# 
+# Internal functions utilizing this function:
+# ## intersp
+#==============================================================================#
+evens <- function(x){
+  if (length(x) > 1){
+    if (is.numeric(x)){
+      res <- x %% 2 == 0
+    } else {
+      res <- 1:length(x) %% 2 == 0
+    }
+  } else {
+    res <- seq(x) %% 2 == 0
+  }
+  return(res)
+}
+
+#==============================================================================#
+# Plots the results of bootstrapping and confidence interval calculation in
+# facetted barplots
+# 
+# Public functions utilizing this function:
+# ## diversity_ci
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+boot_plot <- function(res, orig, statnames, popnames, CI){
+  statnames <- colnames(orig)
+  orig <- reshape2::melt(orig)
+  orig$Pop <- factor(orig$Pop)
+  if (!is.null(CI)){
+    cidf <- reshape2::melt(CI)
+    cidf <- reshape2::dcast(cidf, as.formula("Pop + Index ~ CI"))
+    orig <- merge(orig, cidf)
+    colnames(orig)[4:5] <- c("lb", "ub")    
+  }
+  samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
+  dimnames(samp) <- list(NULL, 
+                         Index = statnames,
+                         Pop = popnames)
+  sampmelt <- melt(samp)
+  sampmelt$Pop <- factor(sampmelt$Pop)
+  pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
+    geom_boxplot() + 
+    geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 
+               size = rel(4), pch = 16, data = orig) +
+    xlab("Population") + labs(color = "Observed") +
+    facet_wrap(~Index, scales = "free_y") + myTheme
+  if (!is.null(CI)){
+    pl <- pl +
+      geom_errorbar(aes_string(color = "Pop", x = "Pop", ymin = "lb", ymax = "ub"),
+                    data = orig)
+  }
+  print(pl)
+}
+
+#==============================================================================#
+# Extract the observed bootstrap statistics from a boot object. 
+# 
+# Public functions utilizing this function:
+# ## diversity_ci
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+get_boot_stats <- function(bootlist){
+  npop   <- length(bootlist)
+  bstats <- bootlist[[1]]$t0
+  nstat  <- length(bstats)
+  resmat <- matrix(nrow = npop, ncol = nstat,
+                   dimnames = list(Pop = names(bootlist), Index = names(bstats)))
+  resmat[] <- t(vapply(bootlist, FUN = "[[", FUN.VALUE = bstats, "t0"))
+  return(resmat)
+}
+
+#==============================================================================#
+# mean and sd methods for boot 
+# 
+# Public functions utilizing this function:
+# ## ???
+# 
+# Internal functions utilizing this function:
+# ## ???
+#==============================================================================#
+mean.boot <- function(x, ...) apply(x$t, 2, mean, na.rm = TRUE)
+sd.boot <- function(x, na.rm = TRUE) apply(x$t, 2, sd, na.rm)

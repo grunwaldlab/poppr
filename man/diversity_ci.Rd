@@ -37,10 +37,14 @@ returned}
 \value{
 \subsection{raw = TRUE}{
 \itemize{
-\item \strong{obs} - a matrix with observed statistics in columns, populations in rows
-\item \strong{est} - a matrix with estimated statistics in columns, populations in rows
-\item \strong{CI} - an array of 3 dimensions giving the lower and upper bound, the index measured, and the population.
-\item \strong{boot} - a list containing the output of \code{\link[boot]{boot}} for each population.
+\item \strong{obs} - a matrix with observed statistics in columns,
+populations in rows
+\item \strong{est} - a matrix with estimated statistics in columns,
+populations in rows
+\item \strong{CI} - an array of 3 dimensions giving the lower and upper
+bound, the index measured, and the population.
+\item \strong{boot} - a list containing the output of
+\code{\link[boot]{boot}} for each population.
   }
  }
 \subsection{raw = FALSE}{ a data frame with the statistic observations,
@@ -69,7 +73,8 @@ While it is possible to use custom functions with this, there are three
 \item The function must allow for both matrix and vector inputs
 \item The function name cannot match or partially match any arguments from
 \code{\link[boot]{boot}}
-} Anonymous functions are okay \cr(e.g. \code{function(x) vegan::rarefy(t(as.matrix(x)), 10)}).
+} Anonymous functions are okay \cr(e.g. \code{function(x)
+vegan::rarefy(t(as.matrix(x)), 10)}).
 }
 \examples{
 library(poppr)
@@ -107,6 +112,8 @@ diversity_ci(Pinf, 1000L, CF = CF, rarefy = TRUE, raw = FALSE)
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{diversity_boot}} \code{\link{diversity_stats}} \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}} \code{\link[boot]{boot.ci}}
+\code{\link{diversity_boot}} \code{\link{diversity_stats}}
+  \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}}
+  \code{\link[boot]{boot.ci}}
 }
 

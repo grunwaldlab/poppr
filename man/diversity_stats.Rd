@@ -63,6 +63,7 @@ diversity_stats(tab, B = Beta)
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{diversity_boot}} \code{\link{diversity_ci}} \code{\link{poppr}}
+\code{\link{diversity_boot}} \code{\link{diversity_ci}}
+  \code{\link{poppr}}
 }
 

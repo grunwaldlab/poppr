@@ -248,7 +248,8 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #' @return a numeric matrix giving statistics (columns) for each population
 #'   (rows).
 #' @export
-#' @seealso \code{\link{diversity_boot}} \code{\link{diversity_ci}} \code{\link{poppr}}
+#' @seealso \code{\link{diversity_boot}} \code{\link{diversity_ci}}
+#'   \code{\link{poppr}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
@@ -295,6 +296,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
   STATS <- names(FUNS)
   STATS <- STATS[c(H, G, lambda, E5, rep(TRUE, length(list(...))))]
   
+  # Indicator to determine if the input is from diversity_boot
   boot <- is.null(dim(z))
   
   nrows <- ifelse(boot, 1, nrow(z))
@@ -358,7 +360,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #' system.time(diversity_boot(tab, 10000L, parallel = "multicore", ncpus = 4L))
 #' system.time(diversity_boot(tab, 10000L))
 #' }
-#' @importFrom boot boot
+#' @importFrom boot boot boot.ci norm.ci
 #==============================================================================#
 diversity_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE, 
                            lambda = TRUE, E5 = TRUE, ...){
@@ -370,88 +372,6 @@ diversity_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE,
   res <- apply(tab, 1, boot_per_pop, rg = FUN, n = n, 
                n.rare = n.rare, H = H, G = G, lambda = lambda, E5 = E5, ...)
   return(res)
-}
-
-boot_per_pop <- function(x, rg = multinom_boot, n, n.rare = NULL, H = TRUE, 
-                         G = TRUE, lambda = TRUE, E5 = TRUE, ...){
-  xi  <- extract_samples(x)
-  res <- boot::boot(xi, boot_stats, R = n, sim = "parametric", ran.gen = rg, 
-                    mle = n.rare, H = H, G = G, lambda = lambda, E5 = E5, ...)
-  return(res)
-}
-
-multinom_boot <- function(x, mle = NULL){
-  if (is.null(mle)){
-    res <- rmultinom(1, length(x), prob = tabulate(x))
-  } else {
-    res <- rmultinom(1, mle, prob = tabulate(x))
-  }
-  extract_samples(res)
-}
-
-rare_sim_boot <- function(x, mle = 10){
-  sample(x, mle)
-}
-
-boot_stats <- function(x, i, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...){
-  xi  <- tabulate(x[i])
-  res <- diversity_stats(xi, H, G, lambda, E5, ...)
-  return(res)
-}
-
-extract_samples <- function(x) rep(1:length(x), x)
-
-
-
-#' @importFrom boot boot.ci norm.ci
-get_boot_ci <- function(index, x, type = "normal" , conf = 0.95, around_estimate = TRUE, ...){
-  if (length(unique(x$t[, index])) == 1){
-    return(c(NA_real_, NA_real_))
-  } else if (around_estimate){
-    # res <- boot::norm.ci(x, conf = conf, index = index)[1, ]
-    res <- boot::norm.ci(conf = conf, t0 = x$t0[index], var.t0 = var(x$t[, index]))[-1]
-  } else {
-    res <- boot::boot.ci(x, conf, type, index, ...)[[type]][1, ]
-  }
-  return(tail(res, 2))
-}
-
-get_ci <- function(x, lb, ub, bci = TRUE, btype = "normal", center = TRUE){
-  if (bci){
-    lenout <- length(x$t0)
-    conf   <- diff(c(lb, ub))
-    res    <- vapply(1:lenout, get_boot_ci, numeric(2), x, btype, conf, center)
-    if (!is.null(dim(res))) rownames(res) <- paste(c(lb, ub)*100, "%")
-  } else {
-    res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)
-    if (all(apply(res, 2, function(i) i[1] == i[2]))){
-      res[] <- NA_real_
-    }
-  }
-  return(res)
-}
-
-get_all_ci <- function(res, ci = 95, index_names = c("H", "G", "Hexp", "E.5"),
-                       center = TRUE, btype = "normal", bci = TRUE){
-  lower_bound  <- (100 - ci)/200
-  upper_bound  <- 1 - lower_bound
-  n_indices    <- length(index_names)
-  funval       <- matrix(numeric(n_indices*2), nrow = 2)
-  CI           <- vapply(res, FUN = get_ci, FUN.VALUE = funval, 
-                         lower_bound, upper_bound, bci = bci, btype = btype,
-                         center = center)
-  dCI          <- dimnames(CI)
-  dimnames(CI) <- list(CI    = dCI[[1]], 
-                       Index = index_names,
-                       Pop   = dCI[[3]])
-  
-  return(CI)
-}
-
-
-
-sim_boot <- function(x, mle = 100){
-  sample(x, mle, replace = TRUE)
 }
 
 #==============================================================================#
@@ -478,10 +398,14 @@ sim_boot <- function(x, mle = 100){
 #'   
 #' @return \subsection{raw = TRUE}{
 #' \itemize{
-#' \item \strong{obs} - a matrix with observed statistics in columns, populations in rows
-#' \item \strong{est} - a matrix with estimated statistics in columns, populations in rows
-#' \item \strong{CI} - an array of 3 dimensions giving the lower and upper bound, the index measured, and the population.
-#' \item \strong{boot} - a list containing the output of \code{\link[boot]{boot}} for each population.
+#' \item \strong{obs} - a matrix with observed statistics in columns,
+#' populations in rows
+#' \item \strong{est} - a matrix with estimated statistics in columns,
+#' populations in rows
+#' \item \strong{CI} - an array of 3 dimensions giving the lower and upper
+#' bound, the index measured, and the population.
+#' \item \strong{boot} - a list containing the output of
+#' \code{\link[boot]{boot}} for each population.
 #'   }
 #'  }
 #' \subsection{raw = FALSE}{ a data frame with the statistic observations,
@@ -505,10 +429,13 @@ sim_boot <- function(x, mle = 100){
 #' \item The function must allow for both matrix and vector inputs
 #' \item The function name cannot match or partially match any arguments from
 #' \code{\link[boot]{boot}}
-#' } Anonymous functions are okay \cr(e.g. \code{function(x) vegan::rarefy(t(as.matrix(x)), 10)}).
+#' } Anonymous functions are okay \cr(e.g. \code{function(x)
+#' vegan::rarefy(t(as.matrix(x)), 10)}).
 #'   
 #' @export
-#' @seealso \code{\link{diversity_boot}} \code{\link{diversity_stats}} \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}} \code{\link[boot]{boot.ci}}
+#' @seealso \code{\link{diversity_boot}} \code{\link{diversity_stats}}
+#'   \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}}
+#'   \code{\link[boot]{boot.ci}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
@@ -575,174 +502,3 @@ diversity_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
   return(out)
 }
 
-pretty_info <- function(obs, est, CI, boots = NULL){
-  pretty_ci <- t(apply(round(CI, 3), 2:3, 
-                       function(x){
-                         if (all(is.na(x))) return(NA_character_)
-                         paste0("(", paste(x, collapse = ", "), ")")
-                      }))
-  colnames(est) <- paste(colnames(est), "est", sep = ".")
-  out <- vector(mode = "list", length = ncol(est)*3)
-  colnames(pretty_ci) <- paste(colnames(pretty_ci), "ci", sep = ".")
-  names(out)[(1:length(out)) %% 3 != 0] <- intersp(colnames(obs), colnames(est))
-  names(out)[(1:length(out)) %% 3 == 0] <- colnames(pretty_ci)
-  for (i in names(out)){
-    out[[i]] <- obs[, 1]
-  }
-  out <- data.frame(out)
-  out[colnames(obs)] <- obs
-  out[colnames(est)] <- est
-  out[colnames(pretty_ci)] <- pretty_ci
-  class(out) <- c("popprtable", "data.frame")
-  return(out)
-}
-
-
-
-boot_plot <- function(res, orig, statnames, popnames, CI){
-  statnames <- colnames(orig)
-  orig <- reshape2::melt(orig)
-  orig$Pop <- factor(orig$Pop)
-  if (!is.null(CI)){
-    cidf <- reshape2::melt(CI)
-    cidf <- reshape2::dcast(cidf, as.formula("Pop + Index ~ CI"))
-    orig <- merge(orig, cidf)
-    colnames(orig)[4:5] <- c("lb", "ub")    
-  }
-  samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
-  dimnames(samp) <- list(NULL, 
-                         Index = statnames,
-                         Pop = popnames)
-  sampmelt <- melt(samp)
-  sampmelt$Pop <- factor(sampmelt$Pop)
-  pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
-    geom_boxplot() + 
-    geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 
-               size = rel(4), pch = 16, data = orig) +
-    xlab("Population") + labs(color = "Observed") +
-    facet_wrap(~Index, scales = "free_y") + myTheme
-  if (!is.null(CI)){
-    pl <- pl +
-      geom_errorbar(aes_string(color = "Pop", x = "Pop", ymin = "lb", ymax = "ub"),
-                    data = orig)
-  }
-  print(pl)
-}
-
-
-
-get_boot_stats <- function(bootlist){
-  npop   <- length(bootlist)
-  bstats <- bootlist[[1]]$t0
-  nstat  <- length(bstats)
-  resmat <- matrix(nrow = npop, ncol = nstat,
-                   dimnames = list(Pop = names(bootlist), Index = names(bstats)))
-  resmat[] <- t(vapply(bootlist, FUN = "[[", FUN.VALUE = bstats, "t0"))
-  return(resmat)
-}
-
-sd.boot <- function(x, na.rm = TRUE) apply(x$t, 2, sd, na.rm)
-mean.boot <- function(x, ...) apply(x$t, 2, mean, na.rm = TRUE)
-
-get_boot_se <- function(bootlist, res = "sd"){
-  npop   <- length(bootlist)
-  bstats <- bootlist[[1]]$t0
-  nstat  <- length(bstats)
-  THE_FUN <- match.fun(paste0(res, ".boot"))
-  resmat <- matrix(nrow = npop, ncol = nstat,
-                   dimnames = list(Pop = names(bootlist), Index = names(bstats)))
-  resmat[] <- t(vapply(bootlist, FUN = THE_FUN, FUN.VALUE = bstats))
-  if (res == "sd"){
-    colnames(resmat) <- paste(colnames(resmat), res, sep = ".")  
-  }
-  return(resmat)
-}
-
-evens <- function(x){
-  if (length(x) > 1){
-    if (is.numeric(x)){
-      res <- x %% 2 == 0
-    } else {
-      res <- 1:length(x) %% 2 == 0
-    }
-  } else {
-    res <- seq(x) %% 2 == 0
-  }
-  return(res)
-}
-
-intersp <- function(v1, v2){
-  v1l <- length(v1)
-  v2l <- length(v2)
-  the_evens <- evens(v1l + v2l)
-  stopifnot(v1l == v2l)
-  ov <- vector(length = v1l + v2l, mode = class(c(v1[1], v2[1])))
-  ov[the_evens]  <- v2
-  ov[!the_evens] <- v1
-  return(ov)
-}
-
-boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
-                          rare.val = NULL, ...){
-  if (!is.matrix(tab) & is.genind(tab)){
-    tab <- mlg.table(tab, total = total, plot = FALSE)
-  }
-  rareval <- NULL
-  
-  if (rarefy){
-    rareval <- ifelse(is.null(rare.val), min(rowSums(tab)), rare.val)
-  }
-  res <- diversity_boot(tab, n, n.rare = rareval, ...)
-  if (rarefy){
-    orig <- get_boot_se(res, "mean")
-  } else {
-    orig <- get_boot_stats(res)
-  }
-  out  <- matrix(nrow = nrow(orig), ncol = ncol(orig)*2, 
-                 dimnames = list(rownames(orig), NULL))
-  out[, !evens(1:ncol(out))]  <- orig
-  se_out <- get_boot_se(res, "sd")
-  out[, evens(1:ncol(out))] <- se_out
-  colnames(out) <- intersp(colnames(orig), colnames(se_out))
-  return(out)
-}
-
-rare_ia <- function(x, n = 1000, rare = 10, obs = FALSE){
-  if (is.genind(x) || is.clone(x) || is(x, "genlight")){
-    xloc <- seploc(x)
-    est <- bootjack(xloc, n, rare, progbar = NULL)
-    se  <- vapply(est, sd, numeric(1), na.rm = TRUE)
-    if (obs){
-      res <- matrix(nrow = 4, ncol = 1,
-                    dimnames = list(c("Ia", "Ia.se", "rbarD", "rbarD.se"), NULL))
-      est <- vapply(est, mean, numeric(1), na.rm = TRUE)
-      res[c("Ia", "rbarD"), ] <- est
-    } else {
-      res <- matrix(nrow = 2, ncol = 1,
-                    dimnames = list(c("Ia.se", "rbarD.se"), NULL))
-    } 
-    res[c("Ia.se", "rbarD.se"), ] <- se
-  } else {
-    if (obs){
-      res <- matrix(nrow = 4, ncol = length(x),
-                    dimnames = list(c("Ia", "Ia.se", "rbarD", "rbarD.se"), NULL))
-    } else {
-      res <- matrix(nrow = 2, ncol = length(x),
-                    dimnames = list(c("Ia.se", "rbarD.se"), NULL))
-    }
-    for (i in seq(length(x))){
-      if (nInd(x[[i]]) > rare){
-        iloc <- seploc(x[[i]])
-        est  <- bootjack(iloc, n , rare, progbar = NULL)
-        se   <- vapply(est, sd, numeric(1), na.rm = TRUE)
-        if (obs) est <- vapply(est, mean, numeric(1), na.rm = TRUE)
-      } else {
-        if (obs) est <- ia(x[[i]])
-        se  <- c(0, 0)
-      }
-      if (obs) res[c("Ia", "rbarD"), i] <- est
-      res[c("Ia.se", "rbarD.se"), i] <- se
-    }
-  }
-  return(res)
-}
