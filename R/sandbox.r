@@ -86,15 +86,20 @@ zero_adder <- function(index, extras, df){
     return(df[index])
   }
 }
-#==============================================================================#
-# Create a population hierarchy in a genind object if one is not there.
-#==============================================================================#
-genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
-  if (is.null(df)){
-    df <- data.frame(Pop = pop(x))
-  } 
-  other(x)[[dfname]] <- df
-  return(x)
+
+# Used for boot_se_table (below)
+get_boot_se <- function(bootlist, res = "sd"){
+  npop   <- length(bootlist)
+  bstats <- bootlist[[1]]$t0
+  nstat  <- length(bstats)
+  THE_FUN <- match.fun(paste0(res, ".boot"))
+  resmat <- matrix(nrow = npop, ncol = nstat,
+                   dimnames = list(Pop = names(bootlist), Index = names(bstats)))
+  resmat[] <- t(vapply(bootlist, FUN = THE_FUN, FUN.VALUE = bstats))
+  if (res == "sd"){
+    colnames(resmat) <- paste(colnames(resmat), res, sep = ".")  
+  }
+  return(resmat)
 }
 
 pair_ia <- function(pop){
@@ -111,6 +116,72 @@ pair_ia <- function(pop){
   }
   rownames(pair_ia_vector) <- c("Ia", "rbarD")    
   return(pair_ia_vector)
+
+# Attempt at rarefcation for the index of association.
+rare_ia <- function(x, n = 1000, rare = 10, obs = FALSE){
+  if (is.genind(x) || is.clone(x) || is(x, "genlight")){
+    xloc <- seploc(x)
+    est <- bootjack(xloc, n, rare, progbar = NULL)
+    se  <- vapply(est, sd, numeric(1), na.rm = TRUE)
+    if (obs){
+      res <- matrix(nrow = 4, ncol = 1,
+                    dimnames = list(c("Ia", "Ia.se", "rbarD", "rbarD.se"), NULL))
+      est <- vapply(est, mean, numeric(1), na.rm = TRUE)
+      res[c("Ia", "rbarD"), ] <- est
+    } else {
+      res <- matrix(nrow = 2, ncol = 1,
+                    dimnames = list(c("Ia.se", "rbarD.se"), NULL))
+    } 
+    res[c("Ia.se", "rbarD.se"), ] <- se
+  } else {
+    if (obs){
+      res <- matrix(nrow = 4, ncol = length(x),
+                    dimnames = list(c("Ia", "Ia.se", "rbarD", "rbarD.se"), NULL))
+    } else {
+      res <- matrix(nrow = 2, ncol = length(x),
+                    dimnames = list(c("Ia.se", "rbarD.se"), NULL))
+    }
+    for (i in seq(length(x))){
+      if (nInd(x[[i]]) > rare){
+        iloc <- seploc(x[[i]])
+        est  <- bootjack(iloc, n , rare, progbar = NULL)
+        se   <- vapply(est, sd, numeric(1), na.rm = TRUE)
+        if (obs) est <- vapply(est, mean, numeric(1), na.rm = TRUE)
+      } else {
+        if (obs) est <- ia(x[[i]])
+        se  <- c(0, 0)
+      }
+      if (obs) res[c("Ia", "rbarD"), i] <- est
+      res[c("Ia.se", "rbarD.se"), i] <- se
+    }
+  }
+  return(res)
+}
+
+pair_ia <- function(gid){
+  N       <- nInd(gid)
+  numLoci <- nLoc(gid)
+  lnames  <- locNames(gid)
+  # Step 1: make a distance matrix defining the indices for the pairwise 
+  # distance matrix of loci.
+  np  <- choose(N, 2)
+  dis <- 1:np
+  dis <- make_attributes(dis, N, 1:N, "dist", call("dist"))
+  mat <- as.matrix(dis)
+  # Step 2: calculate the pairwise distances for each locus. 
+  V   <- jack.pair_diffs(gid, numLoci, np)
+#   if(pop@type == "codom"){
+#     pop_loci <- seploc(pop)
+#     loci_pairs <- combn(locNames(pop), 2)
+#     pair_ia_vector <- apply(loci_pairs, 2, function(x) .Ia.Rd(pop_loci[x]))
+#     colnames(pair_ia_vector) <- apply(loci_pairs, 2, paste, collapse = ":")
+#   } else {
+#     loci_pairs <- combn(1:nLoc(pop), 2)
+#     pair_ia_vector <- apply(loci_pairs, 2, function(x) .PA.Ia.Rd(pop[, x], missing = "ignore"))
+#     colnames(pair_ia_vector) <- apply(combn(locNames(pop), 2), 2, paste, collapse = ":")
+#   }
+#   rownames(pair_ia_vector) <- c("Ia", "rbarD")    
+#   return(pair_ia_vector)
 }
 
 
@@ -251,7 +322,7 @@ jack.calc <- function(V, np){
 
 jack.pair_diffs <- function(pop, numLoci, np){
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  if(!is.list(pop)){
+  if (!is.list(pop)){
     ploid <- 2
     temp.d.vector <- vapply(seq(numLoci), 
                       function(x) as.vector(dist(pop@tab[,x])), 
