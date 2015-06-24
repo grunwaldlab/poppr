@@ -188,63 +188,7 @@ old_pair_ia <- function(pop){
   return(pair_ia_vector)
 }
 
-pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
-                    index = "rbarD"){
-  N       <- nInd(gid)
-  numLoci <- nLoc(gid)
-  lnames  <- locNames(gid)
-  np      <- choose(N, 2)
-  nploci  <- choose(numLoci, 2)
-  if (gid@type == "codom"){
-    V <- pair_matrix(seploc(gid), numLoci, np)
-  } else { # P/A case
-    V <- apply(tab(gid), 2, function(x) as.vector(dist(x)))
-    # checking for missing data and imputing the comparison to zero.
-    if (any(is.na(V))){
-      V[which(is.na(V))] <- 0
-    }
-  }
-  colnames(V) <- lnames
-  
-  loci_pairs       <- matrix(NA, nrow = 3, ncol = nploci)
-  loci_pairs[-3, ] <- combn(lnames, 2)
-  loci_pairs[3, ]  <- as.character(1:nploci)
-  prog             <- NULL
-  if (!quiet) prog <- txtProgressBar(style = 3)
-  pair_ia_vector   <- apply(loci_pairs, 2, ia_pair_loc, V, np, prog, nploci)
-  if (!quiet) cat("\n")
-  
-  colnames(pair_ia_vector) <- apply(loci_pairs[-3, ], 2, paste, collapse = ":")
-  rownames(pair_ia_vector) <- c("Ia", "rbarD")
-  class(pair_ia_vector) <- c("matrix", "pairia")
-  if (plot){
-    plot(pair_ia_vector, index = index, low = low, high = high)
-  }
-  return(pair_ia_vector)
-}
 
-plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red"){
-  df.index <- x[index, ]
-  theLoci  <- strsplit(colnames(x), ":")
-  lnames   <- unique(unlist(theLoci))
-  theTitle <- ifelse(index == "rbarD", 
-                     expression(paste(bar(r)[d])), 
-                     expression(paste(I[A])))
-  L1 <- factor(vapply(theLoci, "[[", character(1), 1), lnames)
-  L2 <- factor(vapply(theLoci, "[[", character(1), 2), lnames)
-  df <- data.frame(value = df.index, L1 = L1, L2 = L2)
-  basic_plot <- ggplot(df, aes_string(x = "L1", y = "L2", fill = "value")) +
-    geom_tile()
-  basic_plot <- basic_plot + 
-    scale_fill_gradient(low = low, high = high, na.value = "white") +
-    scale_x_discrete(expand = c(0, -1)) +
-    scale_y_discrete(expand = c(0, -1)) +
-    theme(axis.title = element_blank(), title = element_text(size = rel(2))) + 
-    # theme(legend.title.align = 0.5) + 
-    myTheme +
-    labs(fill = theTitle)
-  print(basic_plot)
-}
 
 
 ia_pair_loc <- function(pair, V, np, progbar, iterations){

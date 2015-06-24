@@ -95,3 +95,34 @@ print.locustable <- function(x, ...){
     print.table(x, digits = 2, zero.print = ".", ...)
   }
 }
+
+#' @method print pairia
+#' @export
+print.pairia <- function(x, ...){
+  print.locustable(x, ...)
+}
+
+#' @method plot pairia
+#' @export
+plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red"){
+  df.index <- x[, index]
+  theLoci  <- strsplit(rownames(x), ":")
+  lnames   <- unique(unlist(theLoci))
+  theTitle <- ifelse(index == "rbarD", 
+                     expression(paste(bar(r)[d])), 
+                     expression(paste(I[A])))
+  L1 <- factor(vapply(theLoci, "[[", character(1), 1), lnames)
+  L2 <- factor(vapply(theLoci, "[[", character(1), 2), lnames)
+  df <- data.frame(value = df.index, L1 = L1, L2 = L2)
+  basic_plot <- ggplot(df, aes_string(x = "L1", y = "L2", fill = "value")) +
+    geom_tile()
+  basic_plot <- basic_plot + 
+    scale_fill_gradient(low = low, high = high, na.value = "white") +
+    scale_x_discrete(expand = c(0, -1)) +
+    scale_y_discrete(expand = c(0, -1)) +
+    theme(axis.title = element_blank(), title = element_text(size = rel(2))) + 
+    # theme(legend.title.align = 0.5) + 
+    myTheme +
+    labs(fill = theTitle)
+  print(basic_plot)
+}

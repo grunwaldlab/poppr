@@ -444,9 +444,12 @@ poppr.all <- function(filelist, ...){
 #' Index of Association
 #' 
 #' Calculate the Index of Association and Standardized Index of Association. 
-#' Obtain p-values from one-sided permutation tests.
+#' Obtain p-values from one-sided permutation tests. 
 #' 
-#' @param pop a \code{\link{genind}} object OR any fstat, structure, genetix, 
+#' The function \code{ia} will calculate this over the whole data set while
+#' \code{pair.ia} will calculate the index pairwise per locus. 
+#' 
+#' @param gid a \code{\link{genind}} object OR any fstat, structure, genetix, 
 #'   genpop, or genalex formatted files.
 #'   
 #' @param sample an integer indicating the number of permutations desired (eg 
@@ -475,20 +478,23 @@ poppr.all <- function(filelist, ...){
 #'   reshuffled data is returned. If \code{FALSE} (default), the index is 
 #'   returned with associated p-values in a 4 element numeric vector.
 #'   
-#' @return \subsection{If no sampling has occurred:}{ A named number vector of 
-#'   length 2 giving the Index of Association, "Ia"; and the Standardized Index 
-#'   of Association, "rbarD" } \subsection{If there is sampling:}{ A a named 
-#'   number vector of length 4 with the following values: \itemize{\item{Ia -
-#'   }{numeric. The index of association.} \item{p.Ia - }{A number indicating
-#'   the p-value resulting from a one-sided permutation test based on the number
-#'   of samples indicated in the original call.} \item{rbarD - }{numeric. The
-#'   standardized index of association.} \item{p.rD - }{A factor indicating the
-#'   p-value resulting from a one-sided permutation test based on the number of
-#'   samples indicated in the original call.}} } \subsection{If there is
-#'   sampling and valureturn = TRUE}{ A list with the following
-#'   elements: \itemize{ \item{index}{The above vector} \item{samples}{A data
-#'   frame with s by 2 column data frame where s is the number of samples
-#'   defined. The columns are for the values of Ia and rbarD, respectively.}}}
+#' @return \subsection{for \code{pair.ia}}{a matrix with two columns and
+#'   choose(nLoc(gid), 2) rows representing the values for Ia and rbarD per
+#'   locus pair.}\subsection{If no sampling has occurred:}{ A named number
+#'   vector of length 2 giving the Index of Association, "Ia"; and the
+#'   Standardized Index of Association, "rbarD" } \subsection{If there is
+#'   sampling:}{ A a named number vector of length 4 with the following values:
+#'   \itemize{\item{Ia - }{numeric. The index of association.} \item{p.Ia - }{A
+#'   number indicating the p-value resulting from a one-sided permutation test
+#'   based on the number of samples indicated in the original call.} \item{rbarD
+#'   - }{numeric. The standardized index of association.} \item{p.rD - }{A
+#'   factor indicating the p-value resulting from a one-sided permutation test
+#'   based on the number of samples indicated in the original call.}} }
+#'   \subsection{If there is sampling and valureturn = TRUE}{ A list with the
+#'   following elements: \itemize{ \item{index}{The above vector}
+#'   \item{samples}{A data frame with s by 2 column data frame where s is the
+#'   number of samples defined. The columns are for the values of Ia and rbarD,
+#'   respectively.}}}
 #'   
 #' @details The index of association was originally developed by A.H.D. Brown 
 #'   analyzing population structure of wheat (Brown, 1980). It has been widely 
@@ -571,13 +577,19 @@ poppr.all <- function(filelist, ...){
 #'   
 #' @seealso \code{\link{poppr}}, \code{\link{missingno}}, 
 #'   \code{\link{import2genind}}, \code{\link{read.genalex}}, 
-#'   \code{\link{clonecorrect}}
+#'   \code{\link{clonecorrect}}, \code{\link{win.ia}}, \code{\link{samp.ia}}
 #'   
 #' @export
+#' @rdname ia
 #' @author Zhian N. Kamvar
 #' @examples
 #' data(nancycats)
 #' ia(nancycats)
+#' 
+#' # Pairwise over all loci:
+#' data(partial_clone)
+#' res <- pair.ia(partial_clone)
+#' plot(res, low = "black", high = "green", index = "Ia")
 #' 
 #' \dontrun{
 #' # Get the indices back and plot them using base R graphics:
@@ -586,6 +598,7 @@ poppr.all <- function(filelist, ...){
 #' hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
 #' hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
 #' layout(matrix(c(1,1,1,1), 1, 1))
+#' 
 #' # You can also view them directly:
 #' plot(nansamp, index = "Ia")
 #' plot(nansamp, index = "rbarD")
@@ -596,20 +609,16 @@ poppr.all <- function(filelist, ...){
 #' lapply(seppop(nancycats), ia, sample=999)
 #' }
 #==============================================================================#
-
-ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore", 
+ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore", 
                 hist = TRUE, index = "rbarD", valuereturn = FALSE){
-  METHODS = c("permute alleles", "parametric bootstrap",
-              "non-parametric bootstrap", "multilocus")
-  
-  namelist <- list(population = ifelse(nPop(pop) > 1 | is.null(pop@pop), 
-                                       "Total", popNames(pop)),
+  namelist <- list(population = ifelse(nPop(gid) > 1 | is.null(gid@pop), 
+                                       "Total", popNames(gid)),
                    File = as.character(match.call()[2])
                   )
   
-  popx    <- pop
+  popx    <- gid
   missing <- toupper(missing)
-  type    <- pop@type
+  type    <- gid@type
   
   if (type == "PA"){
     .Ia.Rd <- .PA.Ia.Rd
@@ -619,7 +628,7 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
 
   # if there are less than three individuals in the population, the calculation
   # does not proceed. 
-  if (nInd(pop) < 3){
+  if (nInd(gid) < 3){
     IarD <- setNames(as.numeric(c(NA, NA)), c("Ia", "rbarD"))
     if (sample == 0){
       return(IarD)
@@ -649,7 +658,7 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
     if (hist == TRUE){
       the_plot <- poppr.plot(samp, observed = IarD, pop = namelist$population, 
                              index = index, file = namelist$File, pval = p.val, 
-                             N = nrow(pop@tab))
+                             N = nrow(gid@tab))
       print(the_plot)
     }
     result <- setNames(vector(mode = "numeric", length = 4), 
@@ -665,7 +674,51 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   return(final(Iout, result))
 }
 
-
+#==============================================================================#
+#' @rdname ia
+#' @param plot (for pair.ia) when \code{TRUE} (default), a heatmap of the values
+#'   per locus pair will be plotted.
+#' @param low (for pair.ia) a color to use for low values when \code{plot =
+#'   TRUE}
+#' @param high (for pair.ia) a color to use for low values when \code{plot =
+#'   TRUE}
+#' @export
+#==============================================================================#
+pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
+                    index = "rbarD"){
+  N       <- nInd(gid)
+  numLoci <- nLoc(gid)
+  lnames  <- locNames(gid)
+  np      <- choose(N, 2)
+  nploci  <- choose(numLoci, 2)
+  if (gid@type == "codom"){
+    V <- pair_matrix(seploc(gid), numLoci, np)
+  } else { # P/A case
+    V <- apply(tab(gid), 2, function(x) as.vector(dist(x)))
+    # checking for missing data and imputing the comparison to zero.
+    if (any(is.na(V))){
+      V[which(is.na(V))] <- 0
+    }
+  }
+  colnames(V) <- lnames
+  
+  loci_pairs       <- matrix(NA, nrow = 3, ncol = nploci)
+  loci_pairs[-3, ] <- combn(lnames, 2)
+  loci_pairs[3, ]  <- as.character(1:nploci)
+  prog             <- NULL
+  if (!quiet) prog <- txtProgressBar(style = 3)
+  pair_ia_vector   <- apply(loci_pairs, 2, ia_pair_loc, V, np, prog, nploci)
+  if (!quiet) cat("\n")
+  
+  colnames(pair_ia_vector) <- apply(loci_pairs[-3, ], 2, paste, collapse = ":")
+  rownames(pair_ia_vector) <- c("Ia", "rbarD")
+  pair_ia_vector           <- t(pair_ia_vector)
+  class(pair_ia_vector)    <- c("matrix", "pairia")
+  if (plot){
+    plot(pair_ia_vector, index = index, low = low, high = high)
+  }
+  return(pair_ia_vector)
+}
 
 #==============================================================================#
 #' Create a table of summary statistics per locus. 
