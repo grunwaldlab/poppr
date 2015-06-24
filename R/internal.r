@@ -852,8 +852,8 @@ final <- function(Iout, result){
 }
 
 #==============================================================================#
-# This creates a pairwise difference matrix via the C function pairdiffs in
-# src/poppr_distance.c
+# This creates the results from the pairwise difference matrix used by .Ia.Rd
+# to calcuate the index of association.
 # 
 # Public functions utilizing this function:
 # # none
@@ -864,17 +864,33 @@ final <- function(Iout, result){
 #==============================================================================#
 pair_diffs <- function(pop, numLoci, np)
 {
-  ploid <- ploidy(pop[[1]])
-  temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", tab(x), PACKAGE = "poppr")/2, 
-                          temp.d.vector[, 1])
-  temp.d.vector <- ceiling(temp.d.vector)
+  temp.d.vector <- pair_matrix(pop, numLoci, np)
   d.vector  <- colSums(temp.d.vector)
   d2.vector <- colSums(temp.d.vector^2)
   D.vector  <- rowSums(temp.d.vector)
   return(list(d.vector = d.vector, d2.vector = d2.vector, D.vector = D.vector))
 }
 
+#==============================================================================#
+# This creates a pairwise difference matrix via the C function pairdiffs in
+# src/poppr_distance.c
+# 
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # pair_diffs, pair.ia
+#
+#==============================================================================#
+pair_matrix <- function(pop, numLoci, np)
+{
+  temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
+  temp.d.vector <- vapply(pop, function(x) .Call("pairdiffs", tab(x), 
+                                                 PACKAGE = "poppr")/2, 
+                          FUN.VALUE = temp.d.vector[, 1])
+  temp.d.vector <- ceiling(temp.d.vector)
+  return(temp.d.vector)
+}
 #==============================================================================#
 # Internal counter...probably DEPRECATED.
 #==============================================================================#

@@ -102,20 +102,33 @@ get_boot_se <- function(bootlist, res = "sd"){
   return(resmat)
 }
 
-pair_ia <- function(pop){
 
-  if(pop@type == "codom"){
-    pop_loci <- seploc(pop)
-    loci_pairs <- combn(locNames(pop), 2)
-    pair_ia_vector <- apply(loci_pairs, 2, function(x) .Ia.Rd(pop_loci[x]))
-    colnames(pair_ia_vector) <- apply(loci_pairs, 2, paste, collapse = ":")
-  } else {
-    loci_pairs <- combn(1:nLoc(pop), 2)
-    pair_ia_vector <- apply(loci_pairs, 2, function(x) .PA.Ia.Rd(pop[, x], missing = "ignore"))
-    colnames(pair_ia_vector) <- apply(combn(locNames(pop), 2), 2, paste, collapse = ":")
+# Function that was to be used to calculate standard errors for bootstrapping
+# diversity statistics. Probably will not use this one.
+boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
+                          rare.val = NULL, ...){
+  if (!is.matrix(tab) & is.genind(tab)){
+    tab <- mlg.table(tab, total = total, plot = FALSE)
   }
-  rownames(pair_ia_vector) <- c("Ia", "rbarD")    
-  return(pair_ia_vector)
+  rareval <- NULL
+  
+  if (rarefy){
+    rareval <- ifelse(is.null(rare.val), min(rowSums(tab)), rare.val)
+  }
+  res <- diversity_boot(tab, n, n.rare = rareval, ...)
+  if (rarefy){
+    orig <- get_boot_se(res, "mean")
+  } else {
+    orig <- get_boot_stats(res)
+  }
+  out  <- matrix(nrow = nrow(orig), ncol = ncol(orig)*2, 
+                 dimnames = list(rownames(orig), NULL))
+  out[, !evens(1:ncol(out))]  <- orig
+  se_out <- get_boot_se(res, "sd")
+  out[, evens(1:ncol(out))] <- se_out
+  colnames(out) <- intersp(colnames(orig), colnames(se_out))
+  return(out)
+}
 
 # Attempt at rarefcation for the index of association.
 rare_ia <- function(x, n = 1000, rare = 10, obs = FALSE){
@@ -158,41 +171,74 @@ rare_ia <- function(x, n = 1000, rare = 10, obs = FALSE){
   return(res)
 }
 
-pair_ia <- function(gid){
+
+old_pair_ia <- function(pop){
+  
+  if(pop@type == "codom"){
+    pop_loci <- seploc(pop)
+    loci_pairs <- combn(locNames(pop), 2)
+    pair_ia_vector <- apply(loci_pairs, 2, function(x) .Ia.Rd(pop_loci[x]))
+    colnames(pair_ia_vector) <- apply(loci_pairs, 2, paste, collapse = ":")
+  } else {
+    loci_pairs <- combn(1:nLoc(pop), 2)
+    pair_ia_vector <- apply(loci_pairs, 2, function(x) .PA.Ia.Rd(pop[, x], missing = "ignore"))
+    colnames(pair_ia_vector) <- apply(combn(locNames(pop), 2), 2, paste, collapse = ":")
+  }
+  rownames(pair_ia_vector) <- c("Ia", "rbarD")    
+  return(pair_ia_vector)
+}
+
+pair.ia <- function(gid, quiet = FALSE){
   N       <- nInd(gid)
   numLoci <- nLoc(gid)
   lnames  <- locNames(gid)
-  # Step 1: make a distance matrix defining the indices for the pairwise 
-  # distance matrix of loci.
-  np  <- choose(N, 2)
-  dis <- 1:np
-  dis <- make_attributes(dis, N, 1:N, "dist", call("dist"))
-  mat <- as.matrix(dis)
-  # Step 2: calculate the pairwise distances for each locus. 
-  V   <- jack.pair_diffs(gid, numLoci, np)
-#   if(pop@type == "codom"){
-#     pop_loci <- seploc(pop)
-#     loci_pairs <- combn(locNames(pop), 2)
-#     pair_ia_vector <- apply(loci_pairs, 2, function(x) .Ia.Rd(pop_loci[x]))
-#     colnames(pair_ia_vector) <- apply(loci_pairs, 2, paste, collapse = ":")
-#   } else {
-#     loci_pairs <- combn(1:nLoc(pop), 2)
-#     pair_ia_vector <- apply(loci_pairs, 2, function(x) .PA.Ia.Rd(pop[, x], missing = "ignore"))
-#     colnames(pair_ia_vector) <- apply(combn(locNames(pop), 2), 2, paste, collapse = ":")
-#   }
-#   rownames(pair_ia_vector) <- c("Ia", "rbarD")    
-#   return(pair_ia_vector)
+  np      <- choose(N, 2)
+  nploci  <- choose(numLoci, 2)
+  if (gid@type == "codom"){
+    V <- pair_matrix(seploc(gid), numLoci, np)
+  } else { # P/A case
+    V <- apply(tab(gid), 2, function(x) as.vector(dist(x)))
+    # checking for missing data and imputing the comparison to zero.
+    if (any(is.na(V))){
+      V[which(is.na(V))] <- 0
+    }
+  }
+  colnames(V) <- lnames
+  
+  loci_pairs       <- matrix(NA, nrow = 3, ncol = nploci)
+  loci_pairs[-3, ] <- combn(lnames, 2)
+  loci_pairs[3, ]  <- as.character(1:nploci)
+  prog             <- NULL
+  if (!quiet) prog <- txtProgressBar(style = 3)
+  pair_ia_vector   <- apply(loci_pairs, 2, ia_pair_loc, V, np, prog, nploci)
+  if (!quiet) cat("\n")
+  
+  colnames(pair_ia_vector) <- apply(loci_pairs[-3, ], 2, paste, collapse = ":")
+  rownames(pair_ia_vector) <- c("Ia", "rbarD")
+  return(pair_ia_vector)
+}
+
+ia_pair_loc <- function(pair, V, np, progbar, iterations){
+  if (!is.null(progbar)){
+    setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
+  }
+  newV <- V[, pair[-3]]
+  V    <- list(d.vector  = colSums(newV), 
+               d2.vector = colSums(newV * newV), 
+               D.vector  = rowSums(newV)
+  )
+  return(jack.calc(V, np))
 }
 
 
-poppr_pair_ia <- function(pop){
+poppr.pair.ia <- function(pop){
   if(is.null(pop(pop))){
-    return(pair_ia(pop))
+    return(pair.ia(pop))
   }
   pops       <- seppop(pop, drop = FALSE)
   loci_pairs <- choose(nLoc(pop), 2)
   res_mat    <- matrix(0.5, 2, loci_pairs)
-  pops_array <- vapply(pops, pair_ia, res_mat)
+  pops_array <- vapply(pops, pair.ia, res_mat)
   return(pops_array)
 }
 
