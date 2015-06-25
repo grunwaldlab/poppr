@@ -422,7 +422,18 @@ diversity_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE,
 #'   want to calcuate your own confidence intervals, you can use the results of 
 #'   the permutations stored in the \code{$boot} element of the output.
 #'   
-#' @note While it is possible to use custom functions with this, there are three
+#' @note 
+#' \subsection{Confidence interval calculation}{Almost all of the statistics
+#' supplied here have a maximum when all genotypes are equally represented. 
+#' This means that bootstrapping the samples will always be downwardly biased.
+#' In many cases, the confidence intervals from the bootstrapped distribution
+#' will fall outside of the observed statistic. The reported confidence 
+#' intevals here are reported by assuming the variance of the bootstrapped 
+#' distribution is the same as the variance around the observed statistic. In 
+#' many cases, this will not be correct. For details, see 
+#' \url{http://stats.stackexchange.com/q/156235/49413}.}
+#' \subsection{User-defined functions}{
+#' While it is possible to use custom functions with this, there are three
 #'   important things to remember when using these functions:
 #' \enumerate{
 #' \item The function must return a single value.
@@ -431,7 +442,7 @@ diversity_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE,
 #' \code{\link[boot]{boot}}
 #' } Anonymous functions are okay \cr(e.g. \code{function(x)
 #' vegan::rarefy(t(as.matrix(x)), 10)}).
-#'   
+#' }
 #' @export
 #' @seealso \code{\link{diversity_boot}} \code{\link{diversity_stats}}
 #'   \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}}
@@ -494,7 +505,6 @@ diversity_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE,
     } else {
       boot_plot(res, orig, statnames, rownames(tab), CI)      
     }
-
   }
   if (!raw){
     out <- do.call("pretty_info", out)

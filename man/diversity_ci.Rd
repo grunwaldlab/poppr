@@ -66,6 +66,16 @@ For details on the bootstrapping procedures, see
   the permutations stored in the \code{$boot} element of the output.
 }
 \note{
+\subsection{Confidence interval calculation}{Almost all of the statistics
+supplied here have a maximum when all genotypes are equally represented.
+This means that bootstrapping the samples will always be downwardly biased.
+In many cases, the confidence intervals from the bootstrapped distribution
+will fall outside of the observed statistic. The reported confidence
+intevals here are reported by assuming the variance of the bootstrapped
+distribution is the same as the variance around the observed statistic. In
+many cases, this will not be correct. For details, see
+\url{http://stats.stackexchange.com/q/156235/49413}.}
+\subsection{User-defined functions}{
 While it is possible to use custom functions with this, there are three
   important things to remember when using these functions:
 \enumerate{
@@ -75,6 +85,7 @@ While it is possible to use custom functions with this, there are three
 \code{\link[boot]{boot}}
 } Anonymous functions are okay \cr(e.g. \code{function(x)
 vegan::rarefy(t(as.matrix(x)), 10)}).
+}
 }
 \examples{
 library(poppr)
