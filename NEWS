@@ -6,6 +6,9 @@ COMPATIBILITY UPDATE
 NEW DEPENDENCIES
 * poppr now imports elements from dplyr and shiny
 
+NEW SUGGESTS
+* poppr now suggests the cowplot, poweRlaw, and polysat packages.
+
 NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
 * The function `poppr` will now plot all populations in a single faceted plot instead of one plot per population.
@@ -37,6 +40,7 @@ NEW FUNCTIONS
 * `diviersity_boot` will bootstrap a MLG matrix over the statistics specified for `get_stats`. Can also perform rarefaction bootstrap.
 * `diversity_ci` will calculate and plot confidence intervals for bootstrap resampling of an MLG matrix. This includes rarefaction to the smallest sample size.
 * `imsn` provides an interactive shiny interface for construction of minimum spanning networks.
+* `pair.ia` will calculate the index of association for pairs of loci and plot heatmaps. 
 
 NEW CLASSES
 * snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 
