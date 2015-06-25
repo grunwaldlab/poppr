@@ -112,7 +112,7 @@ plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red"){
                      expression(paste(bar(r)[d])), 
                      expression(paste(I[A])))
   L1 <- factor(vapply(theLoci, "[[", character(1), 1), lnames)
-  L2 <- factor(vapply(theLoci, "[[", character(1), 2), lnames)
+  L2 <- factor(vapply(theLoci, "[[", character(1), 2), rev(lnames))
   df <- data.frame(value = df.index, L1 = L1, L2 = L2)
   basic_plot <- ggplot(df, aes_string(x = "L1", y = "L2", fill = "value")) +
     geom_tile()
