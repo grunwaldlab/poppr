@@ -592,6 +592,7 @@ poppr.all <- function(filelist, ...){
 #' plot(res, low = "black", high = "green", index = "Ia")
 #' 
 #' \dontrun{
+#' 
 #' # Get the indices back and plot them using base R graphics:
 #' nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
 #' layout(matrix(c(1,1,2,2), 2, 2, byrow = TRUE))
@@ -606,7 +607,35 @@ poppr.all <- function(filelist, ...){
 #' # Get the index for each population.
 #' lapply(seppop(nancycats), ia)
 #' # With sampling
-#' lapply(seppop(nancycats), ia, sample=999)
+#' lapply(seppop(nancycats), ia, sample = 999)
+#' 
+#' # Plot pairwise ia for all populations in a grid with cowplot
+#' # Set up the library and data
+#' library("cowplot")
+#' data(monpop)
+#' splitStrata(monpop) <- ~Tree/Year/Symptom
+#' setPop(monpop)      <- ~Tree
+#' 
+#' # Need to set up a list in which to store the plots.
+#' plotlist        <- vector(mode = "list", length = nPop(monpop))
+#' names(plotlist) <- popNames(monpop)
+#' 
+#' # Loop throgh the populations, calculate pairwise ia, plot, and then
+#' # capture the plot in the list
+#' for (i in popNames(monpop)){
+#'   x <- pair.ia(monpop[pop = i])         # subset, calculate, and plot
+#'   plotlist[[i]] <- ggplot2::last_plot() + background_grid() # save the last plot
+#' }
+#' 
+#' # Use the plot_grid function to plot. We could do it manually since there are
+#' # only 4 populations:
+#' plot_grid(plotlist[[1]], plotlist[[2]], plotlist[[3]], plotlist[[4]], 
+#'           labels = paste("Tree", popNames(monpop)))
+#'  
+#' # This gets tedious with many populations, so we can use the do.call function
+#' # to help us!
+#' 
+#' do.call(plot_grid, c(plotlist, list(labels = paste("Tree", popNames(monpop)))))
 #' }
 #==============================================================================#
 ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore", 
