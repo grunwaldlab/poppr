@@ -624,7 +624,7 @@ poppr.all <- function(filelist, ...){
 #' # capture the plot in the list
 #' for (i in popNames(monpop)){
 #'   x <- pair.ia(monpop[pop = i])         # subset, calculate, and plot
-#'   plotlist[[i]] <- ggplot2::last_plot() + background_grid() # save the last plot
+#'   plotlist[[i]] <- ggplot2::last_plot() # save the last plot
 #' }
 #' 
 #' # Use the plot_grid function to plot. We could do it manually since there are
