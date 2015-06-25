@@ -108,10 +108,10 @@ ties_single <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3, 1),
 "populations", "colors"))
 
 if (packageVersion("igraph") >= package_version("1.0.0")){
-    noties$graph <- upgrade_graph(noties$graph)
-    noties_single$graph <- upgrade_graph(noties_single$graph)
-    ties$graph <- upgrade_graph(ties$graph)
-    ties_single$graph <- upgrade_graph(ties_single$graph)
+    noties$graph <- igraph::upgrade_graph(noties$graph)
+    noties_single$graph <- igraph::upgrade_graph(noties_single$graph)
+    ties$graph <- igraph::upgrade_graph(ties$graph)
+    ties_single$graph <- igraph::upgrade_graph(ties_single$graph)
 }
 
 # Test Bruvo.msn
