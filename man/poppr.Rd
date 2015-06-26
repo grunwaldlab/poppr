@@ -77,10 +77,10 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 \item{...}{arguments to be passed on to \code{\link{diversity_stats}}}
 }
 \value{
-\item{Pop}{A vector indicating the pouplation factor} \item{N}{An
+\item{Pop}{A vector indicating the population factor} \item{N}{An
   integer vector indicating the number of individuals/isolates in the
   specified population.} \item{MLG}{An integer vector indicating the number
-  of multilocus genotypes found in the specified poupulation, (see:
+  of multilocus genotypes found in the specified population, (see:
   \code{\link{mlg}})} \item{eMLG}{The expected number of MLG at the lowest
   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The
   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner
@@ -150,12 +150,12 @@ poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
 # The previous version of poppr contained a definition of Hexp, which
 # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased
 # Simpson's index. This statistic was originally included in poppr because it
-# was originally included in the program multilocus. Since the reference for
-# this was hard to track down. Because of this, it was removed from analysis.
+# was originally included in the program multilocus. It was finally figured
+# to be an unbiased Simpson's diversity metric (Lande, 1996; Good, 1953).
 
 data(Aeut)
 
-Hexp.mlg <- function(x){
+uSimp <- function(x){
   lambda <- vegan::diversity(x, "simpson")
   x <- drop(as.matrix(x))
   if (length(dim(x)) > 1){
@@ -165,7 +165,7 @@ Hexp.mlg <- function(x){
   }
   return((N/(N-1))*lambda)
 }
-poppr(Aeut, Hexp.mlg = Hexp.mlg)
+poppr(Aeut, uSimp = uSimp)
 
 
 # Demonstration with viral data
@@ -212,6 +212,12 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
 
   Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949
   doi:10.1038/163688a0
+
+  Good, I. J. (1953). On the Population Frequency of Species and the
+  Estimation of Population Parameters. \emph{Biometrika} 40(3/4): 237-264.
+
+  Lande, R. (1996). Statistics and partitioning of species diversity, and
+  similarity among multiple communities. \emph{Oikos} 76: 5-13.
 
   Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter
   R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H.

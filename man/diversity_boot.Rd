@@ -16,7 +16,7 @@ perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.}
 
 \item{n.boot}{an integer specifying the number of samples to be drawn in each
 bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples
-drawn for each boostrap replicate will be equal to the number of samples in
+drawn for each bootstrap replicate will be equal to the number of samples in
 the data set.}
 
 \item{n.rare}{a sample size at which all resamplings should be performed.
@@ -39,7 +39,7 @@ size.}
 a list of objects of class "boot".
 }
 \description{
-This function is inteneded to perform bootstrap statistics on a matrix of
+This function is intended to perform bootstrap statistics on a matrix of
 multilocus genotype counts in different populations. Results from this
 function should be interpreted carefully as the default statistics are known
 to have a downward bias. See the details for more information.
@@ -56,7 +56,7 @@ Bootstrapping is performed in three ways:
     proportion of each MLG in the data.
 
     \item if \code{n.boot} is less than 2, bootstrapping is performed by
-    sampling N samples from a multinumial distribution weighted by the
+    sampling N samples from a multinomial distribution weighted by the
     proportion of each MLG in the data.
   }
 
@@ -65,7 +65,7 @@ Bootstrapping is performed in three ways:
     downward bias partially due to the small number of samples in the data.
     The result is that the mean of the bootstrapped samples will often be
     much lower than the observed value. Alternatively, you can increase the
-    sample size of the bootstap by increasing the size of \code{n.boot}. Both
+    sample size of the bootstrap by increasing the size of \code{n.boot}. Both
     of these methods should be taken with caution in interpretation. There
     are several R packages freely available that will calculate and perform
     bootstrap estimates of Shannon and Simpson diversity metrics (eg.
@@ -81,7 +81,7 @@ data(Pinf)
 tab <- mlg.table(Pinf, plot = FALSE)
 diversity_boot(tab, 10L)
 \dontrun{
-# This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
+# This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")
 system.time(diversity_boot(tab, 10000L, parallel = "multicore", ncpus = 4L))
 system.time(diversity_boot(tab, 10000L))
 }

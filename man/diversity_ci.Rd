@@ -17,7 +17,7 @@ diversity_ci(tab, n = 1000, n.boot = 1L, ci = 95, total = TRUE,
 
 \item{n.boot}{an integer specifying the number of samples to be drawn in each
 bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples
-drawn for each boostrap replicate will be equal to the number of samples in
+drawn for each bootstrap replicate will be equal to the number of samples in
 the data set. See Details.}
 
 \item{ci}{the percent for confidence interval.}
@@ -26,8 +26,12 @@ the data set. See Details.}
 \code{tab} is a genind object.}
 
 \item{rarefy}{if \code{TRUE}, bootstrapping will be performed on the smallest
-population size. Defaults to \code{FALSE}, indicating that bootstrapping
-will be performed respective to each population size.}
+population size or the value of \code{n.rare}, whichever is larger.
+Defaults to \code{FALSE}, indicating that bootstrapping will be performed
+respective to each population size.}
+
+\item{n.rare}{an integer specifying the smallest size at which to resample
+data. This is only used if \code{rarefy = TRUE}.}
 
 \item{plot}{If \code{TRUE} (default), boxplots will be produced for each
 population, grouped by statistic. Colored dots will indicate the observed
@@ -74,7 +78,7 @@ to compare values across populations. Please take caution otherwise.
 \subsection{Bootstrapping}{
   For details on the bootstrapping procedures, see
   \code{\link{diversity_boot}}. Default bootstrapping is performed by
-  sampling \strong{N} samples from a multinomal distribution weighted by the
+  sampling \strong{N} samples from a multinomial distribution weighted by the
   relative multilocus genotype abundance per population where \strong{N} is
   equal to the number of samples in the data set. If \strong{n.boot} > 2,
   then \strong{n.boot} samples are taken at each bootstrap replicate. When
@@ -86,13 +90,13 @@ to compare values across populations. Please take caution otherwise.
   Confidence intervals are derived from the function
   \code{\link[boot]{norm.ci}}. This function will attempt to correct for bias
   between the observed value and the bootstrapped estimate. When \code{center
-  = TRUE} (default), the confidence interval is caluclated from the
+  = TRUE} (default), the confidence interval is calculated from the
   bootstrapped distribution and centered around the bias-corrected estimate
-  as perscribed in Marcon (2012). This method can lead to undesirable
+  as prescribed in Marcon (2012). This method can lead to undesirable
   properties, such as the confidence interval lying outside of the maximum
   possible value. For rarefaction, the confidence interval is simply
-  determined by caluclating the percentiles from the bootstrapped
-  distribution. If you want to calcuate your own confidence intervals, you
+  determined by calculating the percentiles from the bootstrapped
+  distribution. If you want to calculate your own confidence intervals, you
   can use the results of the permutations stored in the \code{$boot} element
   of the output.
   }
@@ -109,7 +113,7 @@ to compare values across populations. Please take caution otherwise.
   This means that bootstrapping the samples will always be downwardly biased.
   In many cases, the confidence intervals from the bootstrapped distribution
   will fall outside of the observed statistic. The reported confidence
-  intevals here are reported by assuming the variance of the bootstrapped
+  intervals here are reported by assuming the variance of the bootstrapped
   distribution is the same as the variance around the observed statistic. As
   different statistics have different properties, there will not always be
   one clear method for calculating confidence intervals. A suggestion for
@@ -145,7 +149,7 @@ system.time(diversity_ci(Pinf, 10000L))
 
 # We often get many requests for a clonal fraction statistic. As this is
 # simply the number of observed MLGs over the number of samples, we
-# recommeneded that people calculate it themselves. With this function, you
+# recommended that people calculate it themselves. With this function, you
 # can add it in:
 
 CF <- function(x){

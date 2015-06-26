@@ -320,7 +320,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #==============================================================================#
 #' Perform a bootstrap analysis on diversity statistics
 #' 
-#' This function is inteneded to perform bootstrap statistics on a matrix of
+#' This function is intended to perform bootstrap statistics on a matrix of
 #' multilocus genotype counts in different populations. Results from this 
 #' function should be interpreted carefully as the default statistics are known
 #' to have a downward bias. See the details for more information.
@@ -332,7 +332,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #'   perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
 #' @param n.boot an integer specifying the number of samples to be drawn in each
 #'   bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples 
-#'   drawn for each boostrap replicate will be equal to the number of samples in
+#'   drawn for each bootstrap replicate will be equal to the number of samples in
 #'   the data set. 
 #' @param n.rare a sample size at which all resamplings should be performed. 
 #'   This should be no larger than the smallest sample size. Defaults to 
@@ -360,7 +360,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #'     proportion of each MLG in the data.
 #'     
 #'     \item if \code{n.boot} is less than 2, bootstrapping is performed by 
-#'     sampling N samples from a multinumial distribution weighted by the
+#'     sampling N samples from a multinomial distribution weighted by the
 #'     proportion of each MLG in the data.
 #'   }
 #'   
@@ -369,7 +369,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #'     downward bias partially due to the small number of samples in the data. 
 #'     The result is that the mean of the bootstrapped samples will often be 
 #'     much lower than the observed value. Alternatively, you can increase the
-#'     sample size of the bootstap by increasing the size of \code{n.boot}. Both
+#'     sample size of the bootstrap by increasing the size of \code{n.boot}. Both
 #'     of these methods should be taken with caution in interpretation. There
 #'     are several R packages freely available that will calculate and perform
 #'     bootstrap estimates of Shannon and Simpson diversity metrics (eg.
@@ -386,7 +386,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #' tab <- mlg.table(Pinf, plot = FALSE)
 #' diversity_boot(tab, 10L)
 #' \dontrun{
-#' # This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")
+#' # This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")
 #' system.time(diversity_boot(tab, 10000L, parallel = "multicore", ncpus = 4L))
 #' system.time(diversity_boot(tab, 10000L))
 #' }
@@ -421,14 +421,17 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   1000).
 #' @param n.boot an integer specifying the number of samples to be drawn in each
 #'   bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples
-#'   drawn for each boostrap replicate will be equal to the number of samples in
+#'   drawn for each bootstrap replicate will be equal to the number of samples in
 #'   the data set. See Details.
 #' @param ci the percent for confidence interval.
 #' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if 
 #'   \code{tab} is a genind object.
 #' @param rarefy if \code{TRUE}, bootstrapping will be performed on the smallest
-#'   population size. Defaults to \code{FALSE}, indicating that bootstrapping 
-#'   will be performed respective to each population size.
+#'   population size or the value of \code{n.rare}, whichever is larger.
+#'   Defaults to \code{FALSE}, indicating that bootstrapping will be performed
+#'   respective to each population size.
+#' @param n.rare an integer specifying the smallest size at which to resample
+#'   data. This is only used if \code{rarefy = TRUE}.
 #' @param plot If \code{TRUE} (default), boxplots will be produced for each 
 #'   population, grouped by statistic. Colored dots will indicate the observed 
 #'   value.This plot can be retrieved by using \code{p <- last_plot()} from the 
@@ -463,7 +466,7 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   \subsection{Bootstrapping}{
 #'   For details on the bootstrapping procedures, see 
 #'   \code{\link{diversity_boot}}. Default bootstrapping is performed by 
-#'   sampling \strong{N} samples from a multinomal distribution weighted by the
+#'   sampling \strong{N} samples from a multinomial distribution weighted by the
 #'   relative multilocus genotype abundance per population where \strong{N} is
 #'   equal to the number of samples in the data set. If \strong{n.boot} > 2,
 #'   then \strong{n.boot} samples are taken at each bootstrap replicate. When
@@ -475,13 +478,13 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   Confidence intervals are derived from the function 
 #'   \code{\link[boot]{norm.ci}}. This function will attempt to correct for bias
 #'   between the observed value and the bootstrapped estimate. When \code{center
-#'   = TRUE} (default), the confidence interval is caluclated from the
+#'   = TRUE} (default), the confidence interval is calculated from the
 #'   bootstrapped distribution and centered around the bias-corrected estimate
-#'   as perscribed in Marcon (2012). This method can lead to undesirable
+#'   as prescribed in Marcon (2012). This method can lead to undesirable
 #'   properties, such as the confidence interval lying outside of the maximum
 #'   possible value. For rarefaction, the confidence interval is simply
-#'   determined by caluclating the percentiles from the bootstrapped
-#'   distribution. If you want to calcuate your own confidence intervals, you
+#'   determined by calculating the percentiles from the bootstrapped
+#'   distribution. If you want to calculate your own confidence intervals, you
 #'   can use the results of the permutations stored in the \code{$boot} element
 #'   of the output.
 #'   }
@@ -498,7 +501,7 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   This means that bootstrapping the samples will always be downwardly biased.
 #'   In many cases, the confidence intervals from the bootstrapped distribution 
 #'   will fall outside of the observed statistic. The reported confidence 
-#'   intevals here are reported by assuming the variance of the bootstrapped 
+#'   intervals here are reported by assuming the variance of the bootstrapped 
 #'   distribution is the same as the variance around the observed statistic. As
 #'   different statistics have different properties, there will not always be
 #'   one clear method for calculating confidence intervals. A suggestion for
@@ -543,7 +546,7 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #' 
 #' # We often get many requests for a clonal fraction statistic. As this is 
 #' # simply the number of observed MLGs over the number of samples, we 
-#' # recommeneded that people calculate it themselves. With this function, you
+#' # recommended that people calculate it themselves. With this function, you
 #' # can add it in:
 #' 
 #' CF <- function(x){
