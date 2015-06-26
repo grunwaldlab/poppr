@@ -66,14 +66,14 @@ knitr::opts_knit$set(out.format = "latex")
 thm <- knitr::knit_theme$get("acid")
 knitr::knit_theme$set(thm)
 knitr::opts_chunk$set(concordance=TRUE)
-knitr::opts_chunk$set(size = 'footnotesize', message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(size = 'small', message = FALSE, warning = FALSE)
 knitr::opts_chunk$set(out.width = '0.5\\linewidth', fig.align = "center", fig.show = 'asis')
 @
 
 <<poppr_funk, eval = TRUE, echo = FALSE>>=
 print_command <- function(funk){
   fargs <- formals(funk)
-  
+
   lapply(names(fargs), function(arg_name, fargs){
     arg <- fargs[[arg_name]]
     if (missing(arg)){
@@ -90,8 +90,8 @@ print_command <- function(funk){
 \definecolor{light-gray}{gray}{0.97}
 \definecolor{salmon}{HTML}{F0AAAA}
 
-\maketitle 
-\begin{abstract} 
+\maketitle
+\begin{abstract}
 \Poppr{} provides open-source, cross-platform tools for quick analysis of
 population genetic data enabling focus on data analysis and interpretation.
 While there are a plethora of packages for population genetic analysis, few are
@@ -99,21 +99,24 @@ able to offer quick and easy analysis of populations with mixed reproductive
 modes. \Poppr{}'s main advantage is the ease of use and integration with other
 packages such as \adegenet{} and \textit{vegan}, including support for novel
 methods such as clone correction, multilocus genotype analysis, calculation of
-Bruvo's distance and the index of association.
-\end{abstract} 
-% Inserting the \Poppr{} logo here 
+Bruvo's distance, and the index of association. New features in version 2.0
+include generation of minimum spanning networks with reticulation, calculation
+of the index of association for genomic data, and filtering multilocus genotypes
+based on genetic distance.
+\end{abstract}
+% Inserting the \Poppr{} logo here
 
-\begin{figure}[b]   
+\begin{figure}[b]
   \centering
-  \label{logo}   
-  \includegraphics{popprlogo} 
-\end{figure} 
+  \label{logo}
+  \includegraphics{popprlogo}
+\end{figure}
 
-\newpage 
+\newpage
 \begingroup
-  \hypersetup{linkcolor=black} 
-  \tableofcontents 
-\endgroup 
+  \hypersetup{linkcolor=black}
+  \tableofcontents
+\endgroup
 
 %\linenumbers
 
@@ -137,7 +140,7 @@ Bruvo's distance and the index of association.
 genetic data with mixed modes of reproduction including sexual and clonal
 reproduction. While there are many R packages in CRAN and other repositories
 with tools for population genetic analyses, few are appropriate for populations
-with mixed modes of reproduction. There are several stand alone programs that
+with mixed modes of reproduction. There are several stand-alone programs that
 can handle these types of data sets, but they are often platform specific and
 often only accept specific data types. Furthermore, a typical analysis often
 involves switching between many programs, and converting data to each specific
@@ -156,11 +159,16 @@ and Structure) and newly introduces compatibility with GenAlEx formatted files
 be further analyzed with \poppr{}.
 
 The real power of \poppr{} is in the data manipulation and analytic tools.
-\Poppr{} has the ability to bootstrap, clone- censor, and subset data sets. With
+\Poppr{} has the ability to bootstrap, clone-censor, and subset data sets. With
 \poppr{} you can also quickly calculate Bruvo's distance, the index of
 association, and easily determine which multilocus genotypes are shared across
 populations.
 
+In version 2.0, tools for genomic data were introduced \cite{kamvar2015novel}.
+These tools allow researchers to define what it means to be a clone lost in a
+sea of genomic data, generate bootstrapped dendrograms with any genetic
+distance, and calculate minimum spanning networks with reticulations to reveal
+the underlying population structure of your clonal data.
 
 \subsection{A note about poppr version \Sexpr{packageVersion("poppr")}}
 
@@ -177,7 +185,11 @@ more tractable way of performing analyses such as clone-correction and AMOVA. In
 March of 2015, The \textbf{hierarchy} slot was ported to the \adegenet{}
 packaged and the name was changed to the \textbf{strata} slot. This means that
 code written before \poppr{} 2.0.0 might need some small changes. Please see the
-\textsc{Migrating from poppr version 1} vignette for more details.
+\textsc{Migrating from poppr version 1} vignette for more details:
+
+<<migration_vignette, eval = FALSE>>=
+vignette("how_to_migrate", package = "poppr")
+@
 
 \subsection{Resources}
 
@@ -186,17 +198,18 @@ analyze data in \poppr{}. For information on methods of analysis (eg. index of
 association, distance measures, AMOVA, ...), please read the manual pages
 provided for each function.
 
-As \poppr{} expanded from version 1.0, the vignette also expanded to be 80+ 
-pages. As a result, it became clear that over 22,000 was less of a manual and 
+As \poppr{} expanded from version 1.0, the vignette also expanded to be 80+
+pages. As a result, it became clear that over 22,000 was less of a manual and
 more of a novella with a terrible plot. To remedy this, this vignette will focus
 only on data manipulation and a separate vignette, ``algo", has been written
-to give algorithmic details of analyses introduced with \poppr{}. 
+to give algorithmic details of analyses introduced with \poppr{}.
 
-As of spring 2014, Drs. Niklaus J. Gr\"unwald, Sydney E. Everhart, and I have 
+As of spring 2014, Drs. Niklaus J. Gr\"unwald, Sydney E. Everhart, and I have
 co-authored a primer on using R for population genetic analysis. It is located
-\href{http://grunwaldlab.cgrb.oregonstate.edu/popgen}{here} and the source code
-can be found \href{https://github.com/grunwaldlab/Population_Genetics_in_R}{on
-our github site}. 
+at \url{http://grunwaldlab.github.io//Population_Genetics_in_R} and the source
+code can be found
+\href{https://github.com/grunwaldlab/Population_Genetics_in_R}{on our github
+site}.
 
 \subsection{Getting Help}
 
@@ -212,16 +225,21 @@ writing of this package and manual. Thanks also to Brian Knaus, Ignazio Carbone,
 David Cooke, Corine Schoebel, Jane Stewart, and Zaid Abdo for beta testing and
 feedback.
 
-The following data sets are included in \poppr{}: \texttt{Pinf}
-\cite{goss2014irish}, \texttt{monpop} (Sydney E. Everhart, unpublished),
-\texttt{Aeut} \cite{Grunwald:2006}
+The following data sets are included in \poppr{}:
+
+\begin{itemize}
+  \item \texttt{Pinf} \cite{goss2014irish}
+  \item \texttt{monpop} \cite{everhart2014finescale}
+  \item \texttt{Aeut} \cite{Grunwald:2006}
+\end{itemize}
 
 \subsection{Citation}
 
-The formal publication for the first version of \poppr{} was published in the 
-journal PeerJ: \url{http://peerj.com/articles/281/}. The new features in version
-2.x were published in Frontiers \url{http://dx.doi.org/10.3389/fgene.2015.00208}. 
-To cite \poppr{}, please type in your R console:
+The formal publication for the first version of \poppr{} was published in the
+journal \textbf{PeerJ}: \url{http://peerj.com/articles/281/}. The new features
+in version 2.x were published in \textbf{Frontiers}
+\url{http://dx.doi.org/10.3389/fgene.2015.00208}. To cite \poppr{}, please type
+in your R console:
 
 <<popprcite, eval = FALSE, size="normalsize">>=
 citation(package = "poppr")
@@ -241,11 +259,12 @@ to view the R console, environment, scripts, and plots in a single window.
 
 \subsubsection{From CRAN}
 \tab\tab To install \poppr{} from CRAN, select ``Package
-Installer" from the menu ``Packages \& Data" in the gui or type:
+Installer" from the menu ``Packages \& Data" in the GUI or type:
 
 <<install, eval=FALSE>>=
 install.packages("poppr", dependencies=TRUE)
 @
+
 
 All dependencies (\textit{adegenet, pegas, vegan, ggplot2, phangorn, ape,
 reshape2} and \textit{igraph}) will also be installed. In the unfortunate case
@@ -265,7 +284,7 @@ are on Windows or OSX, you might need to download some special tools:
 
 \begin{description}
   \item[Windows] Download Rtools: \url{http://cran.r-project.org/bin/windows/Rtools/}
-  \item[OSX] Download Xcode: \url{https://developer.apple.com/xcode/}
+  \item[OSX] Download Xcode: \url{https://developer.apple.com/xcode}
 \end{description}
 
 If you choose to install \poppr{} from a source file, you should first make sure
@@ -274,6 +293,7 @@ to install all of the dependencies with the following command:
 <<install_depend, eval=FALSE>>=
 install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
 @
+
 \textbf{If you want to install from github, skip to the next section.}
 
 After installing dependencies, download the package to your computer and then
@@ -295,18 +315,18 @@ package for you directly from github. After you have installed all dependencies
 <<install_devtools, eval = FALSE>>=
 install.packages("devtools")
 @
-Now you can execute the command \texttt{install\_github} with the user and 
+Now you can execute the command \texttt{install\_github} with the user and
 repository name:
 <<install_github, eval = FALSE>>=
 library("devtools")
-install_github(repo = "grunwaldlab/poppr")
+install_github("grunwaldlab/poppr")
 @
 
-If you are the adventurous type and are willing to test out unreleased versions 
+If you are the adventurous type and are willing to test out unreleased versions
 of the package, you can also install the development version:
 <<install_devel, eval = FALSE>>=
 library("devtools")
-install_github(repo = "grunwaldlab/poppr", ref = "devel")
+install_github("grunwaldlab/poppr@devel")
 @
 Users who install this version do so at their own risk. Since it is a
 development version, documentation may be incomplete or nonexistant for new
@@ -326,7 +346,7 @@ package Library is located.
 \begin{center}
    \fcolorbox{light-gray}{light-gray}{
         \begin{minipage}[t]{0.8\textwidth}
-          {\large \textsc{What or where is my R package library?}}\\ 
+          {\large \textsc{What or where is my R package library?}}\\
           R is as powerful as it is through a community of people who submit
           extra code called ``Packages" to help it do specific things. These
           packages live in a certain place on your computer called an R library.
@@ -362,7 +382,7 @@ will have to toggle to this window}:
 \begin{center}
    \fcolorbox{light-gray}{light-gray}{
       \begin{minipage}[t]{0.8\textwidth}
-        {\large \textsc{Hey! My window doesn't look like that!}}\\ 
+        {\large \textsc{Hey! My window doesn't look like that!}}\\
         Now, this window will not match up to your window on your computer
         because you will probably not be in the right directory. Remember the
         first path in \texttt{.libPaths()}? Move to a folder called
@@ -393,10 +413,10 @@ those files.
       For anyone who has never used a command line, this is a new concept. You
       can think of the path as an address. So instead of
       \texttt{"/path/to/R"}, you could have \texttt{"/USA/Oregon/Corvallis"}.
-      Or on your computer, it could be 
+      Or on your computer, it could be
       \texttt{"C:/users/poppr-user/R/win-library/3.1"} on Windows (where ``poppr-user"
-       is your username) or 
-      \texttt{"/Library/Frameworks/R.framework/Versions/3.1/Resources/library"} 
+       is your username) or
+      \texttt{"/Library/Frameworks/R.framework/Versions/3.1/Resources/library"}
       on OSX. Each slash represents a folder that you would click on when
       you are using the mouse.
 
@@ -538,9 +558,9 @@ as \texttt{NaN}.\\
 % print(all_files, digits = 2)
 % @
 % <<poppr.all_eval, echo=FALSE>>=
-% print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"), 
-%                   system.file("files/rootrot2.csv", package="poppr"), 
-%                   system.file("files/simulated.dat", package="poppr"))), 
+% print(poppr.all(c(system.file("files/rootrot.csv", package="poppr"),
+%                   system.file("files/rootrot2.csv", package="poppr"),
+%                   system.file("files/simulated.dat", package="poppr"))),
 %       digits = 2)
 % @
 
@@ -643,7 +663,7 @@ Spreadsheet files (saved as *.csv files) are normally imported through the R
 function \texttt{read.table()}. The output of \texttt{read.table()} is a
 \texttt{data.frame}. A \texttt{data.frame} is an \textbf{object} represented in
 your computer's memory. This means that it only exists for as long as R is
-running. 
+running.
 
 The good thing about having objects stored in memory is that you can manipulate
 them in any way and not affect the source of those data. Since R is a scripted
@@ -670,7 +690,7 @@ Here, we introduce a new way of importing data into a \texttt{genind} or
 \label{intro:import:read.genalex}
 
 \tab\tab A very popular program for population genetics is GenAlEx
-(\url{http://biology.anu.edu.au/GenAlEx/Welcome.html}) 
+(\url{http://biology.anu.edu.au/GenAlEx/Welcome.html})
 \cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and
 can be very powerful in its analyses. \Poppr{} has added the ability to read
 *.CSV files\footnote{*.CSV files are comma separated files that are easily
@@ -726,13 +746,13 @@ levels in a \seclink{intro:genclone}{genclone object.}
 
 The First three rows contain information pretaining to the global data set. The
 only important information for \poppr{} is the information contained in row 3
-and the first three columns of row 1. 
+and the first three columns of row 1.
 
 \begin{table}[h!]
 \centering
 \begin{tabular}{|l|l|l|l|ll|}
   \hline
- & \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \\ 
+ & \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \\
   \hline
  \textbf{1} & \# of Loci & \# of Individuals & \# of Populations & Pop1 Size & ...\\
  \hline
@@ -807,7 +827,7 @@ print_command(funk)
         \item Click the Microsoft Office Button in the top left corner of Excel.
         (Or go to the File menu if you have an older version)
         \item Click Save As...
-        \item In the ``Save as type" drop down box, select CSV (comma delimited). 
+        \item In the ``Save as type" drop down box, select CSV (comma delimited).
       \end{enumerate}
     \end{minipage}
   }
@@ -855,7 +875,7 @@ still import your data using R's \texttt{read.table} along with
 
 \tab\tab Of course, being able to export data is just as useful as being able to
 import it, so we have this handy little function that will write a GenAlEx
-formatted file to wherever you desire.\\ 
+formatted file to wherever you desire.\\
 \textbf{WARNING: This will overwrite any file that exists with the same name.}
 
 \tline{}
@@ -943,11 +963,11 @@ that had 3, 4, and 5 allelic states respectively:
 \centering
 \begin{tabular}{rlll}
   \hline
- & locus1 & locus2 & locus3 \\ 
+ & locus1 & locus2 & locus3 \\
   \hline
-1 & 101/101 & 201/201 & 301/302 \\ 
-  2 & 102/103 & 202/203 & 301/303 \\ 
-  3 & 102/102 & 203/204 & 304/305 \\ 
+1 & 101/101 & 201/201 & 301/302 \\
+  2 & 102/103 & 202/203 & 301/303 \\
+  3 & 102/102 & 203/204 & 304/305 \\
    \hline
 \end{tabular}
 \label{example_table}
@@ -956,12 +976,12 @@ that had 3, 4, and 5 allelic states respectively:
 The resulting \texttt{genind} object would contain a matrix that has 3 rows and
 12 columns. Below is a schematic of what that would look like. Each column
 represents a separate allele, each row represents an individual and each color
-represents a different locus. 
+represents a different locus.
 
 <<ex_data_picture, echo = FALSE, fig.width=14, fig.height=4, out.width="7in", out.height = "2in">>=
 library("adegenet")
-df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
-                      locus2=c("201/201", "202/203", "203/204"), 
+df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"),
+                      locus2=c("201/201", "202/203", "203/204"),
                       locus3=c("301/302", "301/303", "304/305")))
 dat <- df2genind(df, sep="/")$tab
 tdat <- dat
@@ -974,7 +994,7 @@ axis(1, at = c(2, 6.125, 11.5), labels = names(df), tick = FALSE)
 @
 \noindent
 When we look at the data derived from table \ref{example_table}, we see that we
-have a matrix of individual allele frequencies at each locus. 
+have a matrix of individual allele frequencies at each locus.
 <<ex_genind, echo=FALSE>>=
 dat
 @
@@ -991,8 +1011,8 @@ the \adegenet{} ``Getting Started'' manual.
 
 The other slot is a place in the genind object that can be used to store useful
 information about the data. We saw earlier that it could store demographic
-information, now let's explore a different example. Bruvo's 
-distance is based off of a stepwise mutation model for microsatellites. This 
+information, now let's explore a different example. Bruvo's
+distance is based off of a stepwise mutation model for microsatellites. This
 requires us to know the length of the repeat of each locus. We could store the
 repeat lengths in a separate variable in our R environment, but we are at risk
 of losing that. One wa to prevent it from being lost would be to place it in the
@@ -1084,8 +1104,8 @@ to set the stratification (previously called ``hierarchy'').
 strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 @
 
-Now we can convert this to a \texttt{genclone} object, which will store 
-information about our multilocus genotypes for us. 
+Now we can convert this to a \texttt{genclone} object, which will store
+information about our multilocus genotypes for us.
 % This gives us a lot of information about the object, and is useful once you
 % become more comfortable with programming. Once we convert it to a
 % \texttt{genclone} object, the multilocus genotypes will be defined and the
@@ -1256,12 +1276,12 @@ your \seclink{intro:genclone}{genclone} object using the following methods:
 \centering
 \begin{tabular}{llll}
   \hline
- Method & Function & Input & Result\\ 
+ Method & Function & Input & Result\\
   \hline
  split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchical levels\\ 
- get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\ 
- name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchical level names\\ 
+ set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchical levels\\
+ get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\
+ name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchical level names\\
  add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
@@ -1272,11 +1292,11 @@ your \seclink{intro:genclone}{genclone} object using the following methods:
   \fcolorbox{light-gray}{light-gray}{
     \begin{minipage}[t]{0.8\textwidth}
       \jala{} {\large \textsc{A note about formulas}} \revjala{}\\
-      The formulas used by genclone objects always start with a $\sim$ and 
+      The formulas used by genclone objects always start with a $\sim$ and
       are hierarchical levels are always separated by a $/$. Some examples
-      are: 
+      are:
 
-      $\sim$Country/City/District 
+      $\sim$Country/City/District
 
       $\sim$Field/Year
 
@@ -1332,7 +1352,7 @@ use the data set \texttt{H3N2}, which contains SNP data from the H3N2 virus.
 This data set holds a data frame in the the \seclink{intro:genind:other}{other
 slot} that contains many variables including country, year, and month of
 collection. We will first load the data and write that data frame to a file on
-the desktop. 
+the desktop.
 \label{data:virus}
 <<H3N2_data_show, eval = FALSE>>=
 data(H3N2)
@@ -1400,7 +1420,7 @@ print_command(funk)
 \end{quote}
 \noindent
 Where \textbf{x} is the genclone object, \textbf{formula} defines the hierarchical
-levels, and \textbf{combine} indicates whether or not you want the lower levels 
+levels, and \textbf{combine} indicates whether or not you want the lower levels
 of the hierarchy combined with the higher levels. For example, in the root rot
 data above, the hierarchical levels are explicitly hierarchical and should be
 combined. Note, if you don't supply a formula argument, the data frame as it
@@ -1452,16 +1472,16 @@ print_command(funk)
 @
 \end{quote}
 \noindent
-We can use this function to add on a new column to the data frame.  
+We can use this function to add on a new column to the data frame.
 \label{data.manip:hier:manip:add}
 <<virus_add_arg>>=
-addStrata(virus) <- virus_info 
+addStrata(virus) <- virus_info
 virus
 @
 \noindent
 Notice that the new hierarchical level is simply labeled as \texttt{NEW}. We
 will customize the name of the hierarchical levels with the function
-\texttt{nameStrata}. 
+\texttt{nameStrata}.
 \label{data.manip:hier:manip:name}
 
 <<virus_name>>=
@@ -1838,7 +1858,7 @@ clonecorrect(aphan, strata = NA)
 \tab\tab A common null hypothesis for populations with mixed reproductive modes
 is panmixia, or to put it simply: lots of sex. \Poppr{} randomly shuffles data
 sets in order to calculate P-values for the index of association ($I_A$ and
-$\bar{r} _d$) \cite{Agapow:2001} using 4 different methods: 
+$\bar{r} _d$) \cite{Agapow:2001} using 4 different methods:
 
 % latex table generated in R 3.1.0 by xtable 1.7-3 package
 % Fri May  2 23:17:17 2014
@@ -1846,15 +1866,15 @@ $\bar{r} _d$) \cite{Agapow:2001} using 4 different methods:
 \centering
 \begin{tabular}{rll}
   \hline
-method & strategy & units sampled \\ 
+method & strategy & units sampled \\
   \hline
-1 & permutation & alleles \\ 
-  2 & simulation & alleles \\ 
-  3 & simulation & alleles \\ 
-  4 & permutation & genotypes \\ 
+1 & permutation & alleles \\
+  2 & simulation & alleles \\
+  3 & simulation & alleles \\
+  4 & permutation & genotypes \\
    \hline
 \end{tabular}
-\end{table} 
+\end{table}
 
 These methods are detailed below. We will create a dummy data set to be shuffled
 by each example below. Let's assume a single diploid locus with four alleles (1,
@@ -1866,13 +1886,13 @@ by each example below. Let's assume a single diploid locus with four alleles (1,
 \centering
 \begin{tabular}{lc}
           \hline
-            & A1/A2 \\ 
+            & A1/A2 \\
           \hline
-          1 & 4/4 \\ 
-          2 & 4/1 \\ 
-          3 & 4/3 \\ 
-          4 & 2/2 \\ 
-          5 & 3/3 \\ 
+          1 & 4/4 \\
+          2 & 4/1 \\
+          3 & 4/3 \\
+          4 & 2/2 \\
+          5 & 3/3 \\
            \hline
         \end{tabular}
         \caption{Original}
@@ -1914,13 +1934,13 @@ The example above might become tables \ref{tab:permsinglebest} and \ref{tab:perm
     \begin{minipage}[b]{0.45\hsize}\centering
         \begin{tabular}{lc}
           \hline
-            & A1/A2 \\ 
+            & A1/A2 \\
           \hline
-          1 & 3/4 \\ 
-          2 & 2/3 \\ 
-          3 & 4/4 \\ 
-          4 & 2/1 \\ 
-          5 & 3/4 \\ 
+          1 & 3/4 \\
+          2 & 2/3 \\
+          3 & 4/4 \\
+          4 & 2/1 \\
+          5 & 3/4 \\
            \hline
         \end{tabular}
         \caption{Permute 1}
@@ -1930,13 +1950,13 @@ The example above might become tables \ref{tab:permsinglebest} and \ref{tab:perm
     \begin{minipage}[b]{0.45\hsize}\centering
         \begin{tabular}{lc}
           \hline
-         & A1/A2 \\ 
+         & A1/A2 \\
           \hline
-        1 & 1/3 \\ 
-          2 & 2/4 \\ 
-          3 & 3/4 \\ 
-          4 & 4/3 \\ 
-          5 & 4/2 \\ 
+        1 & 1/3 \\
+          2 & 2/4 \\
+          3 & 3/4 \\
+          4 & 4/3 \\
+          5 & 4/2 \\
            \hline
         \end{tabular}
         \caption{Permute 2}
@@ -1966,13 +1986,13 @@ the sample you had underwent panmixis within this sample itself.
     \begin{minipage}[b]{0.45\hsize}\centering
         \begin{tabular}{lc}
           \hline
-         & A1/A2 \\ 
+         & A1/A2 \\
           \hline
-        1 & 1/3 \\ 
-          2 & 3/3 \\ 
-          3 & 3/2 \\ 
-          4 & 4/4 \\ 
-          5 & 4/2 \\ 
+        1 & 1/3 \\
+          2 & 3/3 \\
+          3 & 3/2 \\
+          4 & 4/4 \\
+          5 & 4/2 \\
            \hline
         \end{tabular}
         \caption{Parametric 1}
@@ -1982,13 +2002,13 @@ the sample you had underwent panmixis within this sample itself.
     \begin{minipage}[b]{0.45\hsize}\centering
         \begin{tabular}{lc}
           \hline
-         & A1/A2 \\ 
+         & A1/A2 \\
           \hline
-        1 & 3/4 \\ 
-          2 & 2/3 \\ 
-          3 & 4/2 \\ 
-          4 & 4/4 \\ 
-          5 & 4/2 \\ 
+        1 & 3/4 \\
+          2 & 2/3 \\
+          3 & 4/2 \\
+          4 & 4/4 \\
+          5 & 4/2 \\
            \hline
         \end{tabular}
         \caption{Parametric 2}
@@ -2021,13 +2041,13 @@ frequencies, small samples will produce skewed results.
     \begin{minipage}[b]{0.45\hsize}\centering
         \begin{tabular}{lc}
           \hline
-         & A1/A2 \\ 
+         & A1/A2 \\
           \hline
-        1 & 1/3 \\ 
-          2 & 3/3 \\ 
-          3 & 3/1 \\ 
-          4 & 2/2 \\ 
-          5 & 3/1 \\ 
+        1 & 1/3 \\
+          2 & 3/3 \\
+          3 & 3/1 \\
+          4 & 2/2 \\
+          5 & 3/1 \\
            \hline
         \end{tabular}
         \caption{Non-parametric 1}
@@ -2037,13 +2057,13 @@ frequencies, small samples will produce skewed results.
     \begin{minipage}[b]{0.45\hsize}\centering
         \begin{tabular}{lc}
           \hline
-         & A1/A2 \\ 
+         & A1/A2 \\
           \hline
-        1 & 1/3 \\ 
-          2 & 3/1 \\ 
-          3 & 2/3 \\ 
-          4 & 2/1 \\ 
-          5 & 4/3 \\ 
+        1 & 1/3 \\
+          2 & 3/1 \\
+          3 & 2/3 \\
+          4 & 2/1 \\
+          5 & 4/3 \\
            \hline
         \end{tabular}
         \caption{Non-parametric 2}
@@ -2071,13 +2091,13 @@ the alleles have a 1 in 4 chance of being chosen.
     \begin{minipage}[b]{0.45\hsize}\centering
         \begin{tabular}{lc}
           \hline
-         & A1/A2 \\ 
+         & A1/A2 \\
           \hline
-        1 & 3/3 \\ 
-          2 & 4/1 \\ 
-          3 & 2/2 \\ 
-          4 & 4/4 \\ 
-          5 & 4/3 \\ 
+        1 & 3/3 \\
+          2 & 4/1 \\
+          3 & 2/2 \\
+          4 & 4/4 \\
+          5 & 4/3 \\
            \hline
         \end{tabular}
         \caption{ML 1}
@@ -2087,13 +2107,13 @@ the alleles have a 1 in 4 chance of being chosen.
     \begin{minipage}[b]{0.45\hsize}\centering
         \begin{tabular}{lc}
           \hline
-         & A1/A2 \\ 
+         & A1/A2 \\
           \hline
-        1 & 4/4 \\ 
-          2 & 2/2 \\ 
-          3 & 3/3 \\ 
-          4 & 4/3 \\ 
-          5 & 4/1 \\ 
+        1 & 4/4 \\
+          2 & 2/2 \\
+          3 & 3/3 \\
+          4 & 4/3 \\
+          5 & 4/1 \\
            \hline
         \end{tabular}
         \caption{ML 2}
@@ -2268,7 +2288,7 @@ print_command(funk)
 \end{quote}
 \begin{itemize}
   \item \texttt{pop -} a \texttt{genind} object.
-  \item \texttt{sublist -} Populations to include (Defaults to ``ALL''). 
+  \item \texttt{sublist -} Populations to include (Defaults to ``ALL'').
   see \cmdlink{data.manip:divide:popsub}{popsub.}
   \item \texttt{blacklist -} Populations to exclude. see \cmdlink{data.manip:divide:popsub}{popsub.}
   \item \texttt{mlgsub -} see \cmdlink{mlg:table:mlg.table}{mlg.table.} Only
@@ -2284,7 +2304,7 @@ print_command(funk)
   populations be printed to screen as they are processed? (will print nothing
   if \texttt{indexreturn} is \texttt{TRUE})
 \end{itemize}
-  
+
 \bline{}
 
 We can see what MLGs cross different populations and then give a
@@ -2298,23 +2318,23 @@ Here is a snippet of what the output looks like when \texttt{quiet} is
 that make up that MLG, and the populations where that MLG can be found.
 <<crosspopout, echo=FALSE>>=
 setPop(virus) <- ~country
-v.dup <- structure(list(MLG.3 = structure(c(4L, 8L), .Names = c("USA", 
-"Denmark")), MLG.9 = structure(c(1L, 13L, 1L, 1L), .Names = c("Japan", 
-"USA", "Finland", "Denmark")), MLG.31 = structure(c(2L, 7L), .Names = c("Japan", 
-"Canada")), MLG.75 = structure(c(2L, 8L, 2L, 1L, 6L, 2L, 1L, 
-1L), .Names = c("Japan", "USA", "Finland", "Norway", "Denmark", 
+v.dup <- structure(list(MLG.3 = structure(c(4L, 8L), .Names = c("USA",
+"Denmark")), MLG.9 = structure(c(1L, 13L, 1L, 1L), .Names = c("Japan",
+"USA", "Finland", "Denmark")), MLG.31 = structure(c(2L, 7L), .Names = c("Japan",
+"Canada")), MLG.75 = structure(c(2L, 8L, 2L, 1L, 6L, 2L, 1L,
+1L), .Names = c("Japan", "USA", "Finland", "Norway", "Denmark",
 "Austria", "Russia", "Ireland")), MLG.80 = structure(c(1L, 1L
-), .Names = c("USA", "Denmark")), MLG.86 = structure(3:4, .Names = c("Denmark", 
-"Austria")), MLG.95 = structure(c(1L, 1L), .Names = c("USA", 
-"Bangladesh")), MLG.97 = structure(c(1L, 5L, 1L, 1L), .Names = c("USA", 
-"Austria", "Bangladesh", "Romania")), MLG.104 = structure(1:2, .Names = c("USA", 
-"France")), MLG.110 = structure(c(2L, 3L, 11L), .Names = c("Japan", 
-"USA", "China"))), .Names = c("MLG.3", "MLG.9", "MLG.31", "MLG.75", 
+), .Names = c("USA", "Denmark")), MLG.86 = structure(3:4, .Names = c("Denmark",
+"Austria")), MLG.95 = structure(c(1L, 1L), .Names = c("USA",
+"Bangladesh")), MLG.97 = structure(c(1L, 5L, 1L, 1L), .Names = c("USA",
+"Austria", "Bangladesh", "Romania")), MLG.104 = structure(1:2, .Names = c("USA",
+"France")), MLG.110 = structure(c(2L, 3L, 11L), .Names = c("Japan",
+"USA", "China"))), .Names = c("MLG.3", "MLG.9", "MLG.31", "MLG.75",
 "MLG.80", "MLG.86", "MLG.95", "MLG.97", "MLG.104", "MLG.110"))
 printthings <- function(ind, x){
-  cat(paste0(names(x)[ind], ":"), 
-      paste0("(", sum(x[[ind]])," inds)"), 
-      names(x[[ind]]), 
+  cat(paste0(names(x)[ind], ":"),
+      paste0("(", sum(x[[ind]])," inds)"),
+      names(x[[ind]]),
       "\n")
 }
 invisible(lapply(1:10, printthings, v.dup))
@@ -2406,30 +2426,30 @@ summary(virus) # Check the data to make sure it's correct.
 @
 <<mlgrare1, echo = FALSE>>=
 setPop(virus) <- ~year
-res <- c("", " # Total number of genotypes:  1903 ", "", " # Population sample sizes:  ", 
-         "2002 2003 2004 2005 2006 ", " 158  415  399  469  462 ", "", 
-         " # Number of alleles per locus:  ", "  6  17  39  42  45  51  60  72  73  90 108 123 129 134 145 148 149 157 168 171 177 225 ", 
-         "  3   3   4   2   4   2   3   2   4   3   4   2   4   3   2   2   3   3   2   2   3   3 ", 
-         "233 243 247 262 267 280 303 313 317 327 334 345 351 357 376 382 384 391 396 399 412 418 ", 
-         "  3   2   2   2   2   2   2   2   2   2   2   4   4   3   3   3   4   2   2   2   4   3 ", 
-         "424 425 429 430 433 434 435 451 463 464 468 470 476 483 490 517 529 546 555 557 561 562 ", 
-         "  2   3   4   2   3   2   3   2   2   2   4   2   2   2   2   2   2   2   4   4   4   3 ", 
-         "564 566 576 577 578 582 592 594 595 597 600 602 604 612 627 642 647 648 654 658 663 664 ", 
-         "  3   2   3   4   3   2   3   3   3   3   2   3   2   4   2   3   2   2   3   3   3   3 ", 
-         "666 667 673 674 676 679 681 685 717 763 806 807 824 837 882 897 906 910 915 929 933 936 ", 
-         "  2   2   2   2   3   2   3   2   3   2   3   2   3   3   2   2   2   3   2   2   2   3 ", 
-         "939 940 957 961 962 963 966 967 969 973 975 977 978 979 980 ", 
-         "  3   3   2   2   3   3   3   3   4   2   3   3   4   3   2 ", 
-         "", " # Number of alleles per population:  ", "2002 2003 2004 2005 2006 ", 
-         " 203  255  232  262  240 ", "", " # Percentage of missing data:  ", 
-         "[1] 2.363426", "", " # Observed heterozygosity:  ", "[1] 0", 
+res <- c("", " # Total number of genotypes:  1903 ", "", " # Population sample sizes:  ",
+         "2002 2003 2004 2005 2006 ", " 158  415  399  469  462 ", "",
+         " # Number of alleles per locus:  ", "  6  17  39  42  45  51  60  72  73  90 108 123 129 134 145 148 149 157 168 171 177 225 ",
+         "  3   3   4   2   4   2   3   2   4   3   4   2   4   3   2   2   3   3   2   2   3   3 ",
+         "233 243 247 262 267 280 303 313 317 327 334 345 351 357 376 382 384 391 396 399 412 418 ",
+         "  3   2   2   2   2   2   2   2   2   2   2   4   4   3   3   3   4   2   2   2   4   3 ",
+         "424 425 429 430 433 434 435 451 463 464 468 470 476 483 490 517 529 546 555 557 561 562 ",
+         "  2   3   4   2   3   2   3   2   2   2   4   2   2   2   2   2   2   2   4   4   4   3 ",
+         "564 566 576 577 578 582 592 594 595 597 600 602 604 612 627 642 647 648 654 658 663 664 ",
+         "  3   2   3   4   3   2   3   3   3   3   2   3   2   4   2   3   2   2   3   3   3   3 ",
+         "666 667 673 674 676 679 681 685 717 763 806 807 824 837 882 897 906 910 915 929 933 936 ",
+         "  2   2   2   2   3   2   3   2   3   2   3   2   3   3   2   2   2   3   2   2   2   3 ",
+         "939 940 957 961 962 963 966 967 969 973 975 977 978 979 980 ",
+         "  3   3   2   2   3   3   3   3   4   2   3   3   4   3   2 ",
+         "", " # Number of alleles per population:  ", "2002 2003 2004 2005 2006 ",
+         " 203  255  232  262  240 ", "", " # Percentage of missing data:  ",
+         "[1] 2.363426", "", " # Observed heterozygosity:  ", "[1] 0",
          "", " # Expected heterozygosity:  ", "[1] 0")
 cat(res, sep = "\n")
 @
 <<mlgrare2, eval=FALSE, tidy=FALSE>>=
 library("vegan")
 H.year <- mlg.table(virus, plot = FALSE)
-rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), 
+rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)),
           border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
 \begin{figure}[h!]
@@ -2562,47 +2582,47 @@ mlg.table(virus, mlgsub = UGNN)
 % v.df[v.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
 % @
 % <<df hashing_eval, echo=FALSE>>=
-% structure(list(pop = structure(c(15L, 15L, 15L, 15L, 15L, 15L, 
-% 15L, 21L, 25L, 6L, 1L, 1L, 6L, 6L, 6L, 6L, 21L, 1L, 1L, 13L, 
-% 1L, 6L), .Label = c("Japan", "USA", "Finland", "China", "South Korea", 
-% "Norway", "Taiwan", "France", "Latvia", "Netherlands", "Bulgaria", 
-% "Turkey", "United Kingdom", "Denmark", "Austria", "Canada", "Italy", 
-% "Russia", "Bangladesh", "Egypt", "Germany", "Romania", "Ukraine", 
-% "Czech Republic", "Greece", "Iceland", "Ireland", "Sweden", "Nepal", 
-% "Saudi Arabia", "Switzerland", "Iran", "Mongolia", "Spain", "Slovenia", 
-% "Croatia", "Algeria"), class = "factor"), `6` = c("a", "a", "a", 
-% "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", 
-% "a", "a", "a", "a", "a", "a"), `17` = c("a", "a", "a", "a", "a", 
-% "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", 
-% "a", "a", "a", "a"), `39` = c("g", "g", "g", "g", "g", "g", "g", 
-% "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", 
-% "g", "g"), `42` = c("c", "c", "c", "c", "c", "c", "c", "c", "c", 
+% structure(list(pop = structure(c(15L, 15L, 15L, 15L, 15L, 15L,
+% 15L, 21L, 25L, 6L, 1L, 1L, 6L, 6L, 6L, 6L, 21L, 1L, 1L, 13L,
+% 1L, 6L), .Label = c("Japan", "USA", "Finland", "China", "South Korea",
+% "Norway", "Taiwan", "France", "Latvia", "Netherlands", "Bulgaria",
+% "Turkey", "United Kingdom", "Denmark", "Austria", "Canada", "Italy",
+% "Russia", "Bangladesh", "Egypt", "Germany", "Romania", "Ukraine",
+% "Czech Republic", "Greece", "Iceland", "Ireland", "Sweden", "Nepal",
+% "Saudi Arabia", "Switzerland", "Iran", "Mongolia", "Spain", "Slovenia",
+% "Croatia", "Algeria"), class = "factor"), `6` = c("a", "a", "a",
+% "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+% "a", "a", "a", "a", "a", "a"), `17` = c("a", "a", "a", "a", "a",
+% "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+% "a", "a", "a", "a"), `39` = c("g", "g", "g", "g", "g", "g", "g",
+% "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g",
+% "g", "g"), `42` = c("c", "c", "c", "c", "c", "c", "c", "c", "c",
 % "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c"
-% ), `45` = c("g", "g", "g", "g", "g", "g", "g", "g", "g", "g", 
-% "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t"), 
-%     `51` = c("c", "c", "c", "c", "c", "c", "c", "c", "c", "c", 
+% ), `45` = c("g", "g", "g", "g", "g", "g", "g", "g", "g", "g",
+% "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t"),
+%     `51` = c("c", "c", "c", "c", "c", "c", "c", "c", "c", "c",
 %     "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c"
-%     ), `60` = c("g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", 
-%     "a"), `72` = c("g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g"), `73` = c("c", "c", "c", "c", "c", "c", "c", "c", "c", 
-%     "c", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", 
-%     "a"), `90` = c("g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g"), `108` = c("a", "a", "a", "a", "a", "a", "a", "a", "a", 
-%     "a", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", 
-%     "t"), `123` = c("g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g"), `129` = c("t", "t", "t", "t", "t", "t", "t", "t", "t", 
-%     "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", 
-%     "t"), `134` = c("g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", 
-%     "g")), .Names = c("pop", "6", "17", "39", "42", "45", "51", 
-% "60", "72", "73", "90", "108", "123", "129", "134"), row.names = c("CY026119", 
-% "CY026120", "CY026121", "CY026122", "CY026131", "CY026132", "CY026135", 
-% "EU502462", "EU502463", "EU502464", "EU501513", "AB243868", "DQ883618", 
-% "DQ883619", "DQ883620", "DQ883628", "EU501609", "EU501642", "EU501643", 
+%     ), `60` = c("g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+%     "a"), `72` = c("g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g"), `73` = c("c", "c", "c", "c", "c", "c", "c", "c", "c",
+%     "c", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+%     "a"), `90` = c("g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g"), `108` = c("a", "a", "a", "a", "a", "a", "a", "a", "a",
+%     "a", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t",
+%     "t"), `123` = c("g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g"), `129` = c("t", "t", "t", "t", "t", "t", "t", "t", "t",
+%     "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t",
+%     "t"), `134` = c("g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g",
+%     "g")), .Names = c("pop", "6", "17", "39", "42", "45", "51",
+% "60", "72", "73", "90", "108", "123", "129", "134"), row.names = c("CY026119",
+% "CY026120", "CY026121", "CY026122", "CY026131", "CY026132", "CY026135",
+% "EU502462", "EU502463", "EU502464", "EU501513", "AB243868", "DQ883618",
+% "DQ883619", "DQ883620", "DQ883628", "EU501609", "EU501642", "EU501643",
 % "EU501735", "EU501742", "EU502513"), class = "data.frame")
 % @
 % Notice that there seems to be a clear separation between the SNPs of the first
@@ -2710,7 +2730,7 @@ mlg.table(virus, mlgsub = UGNN)
 % funk <- "ia"
 % print_command(funk)
 % @
-% % \texttt{ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore", 
+% % \texttt{ia(pop, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 % %     hist = TRUE)}
 % \end{quote}
 % \begin{itemize}
@@ -2791,15 +2811,15 @@ mlg.table(virus, mlgsub = UGNN)
 
 % <<ia_demo_sampling_vr, echo = FALSE>>=
 % cat("|================================================================================| 100%\n")
-% structure(list(index = structure(c(-0.0475399533129828, 0.5, 
-% -0.00600425397248417, 0.5), .Names = c("Ia", "p.Ia", "rbarD", 
-% "p.rD")), samples = structure(list(Ia = c(-0.174180206794681, 
-% 0.110998135909168, -0.0516575036742681, -0.227057548622598, -0.290794613187196, 
+% structure(list(index = structure(c(-0.0475399533129828, 0.5,
+% -0.00600425397248417, 0.5), .Names = c("Ia", "p.Ia", "rbarD",
+% "p.rD")), samples = structure(list(Ia = c(-0.174180206794681,
+% 0.110998135909168, -0.0516575036742681, -0.227057548622598, -0.290794613187196,
 % 0.17142682029909, 0.127426390403491, -0.0489769895090723, -0.0100523130577507
-% ), rbarD = c(-0.022056780840299, 0.0142082562146926, -0.00661071136361462, 
-% -0.0289477478354951, -0.0366851757977678, 0.0217644448059182, 
+% ), rbarD = c(-0.022056780840299, 0.0142082562146926, -0.00661071136361462,
+% -0.0289477478354951, -0.0366851757977678, 0.0217644448059182,
 % 0.0160542108673502, -0.00622397887147145, -0.00126986051456087
-% )), .Names = c("Ia", "rbarD"), row.names = c(NA, -9L), class = "data.frame")), .Names = c("index", 
+% )), .Names = c("Ia", "rbarD"), row.names = c(NA, -9L), class = "data.frame")), .Names = c("index",
 % "samples"))
 % @
 
@@ -2859,7 +2879,7 @@ mlg.table(virus, mlgsub = UGNN)
 % \centering
 % \begin{tabular}{llll}
 %   \hline
-%  Method & Function & Assumption & Euclidean \\ 
+%  Method & Function & Assumption & Euclidean \\
 %   \hline
 % \seclink{distance:dissimilarity}{Provesti} & \texttt{provesti.dist} & - & No \\
 %  & \texttt{diss.dist} & & \\
@@ -2890,7 +2910,7 @@ mlg.table(virus, mlgsub = UGNN)
 % \begin{quote}
 % Let \textbf{A} a table containing allelic frequencies with $t$ populations or
 % individuals (rows) and $m$ alleles (columns).\\
-% Let $\nu$ be the number of loci. The locus $j$ gets $m(j)$ alleles. 
+% Let $\nu$ be the number of loci. The locus $j$ gets $m(j)$ alleles.
 
 
 % \begin{equation}
@@ -2917,10 +2937,10 @@ mlg.table(virus, mlgsub = UGNN)
 % the value of the initial table.
 
 % \begin{equation}
-%   a_{ij\cdot}=\sum_{k=1}^{m(j)} a_{ijk} 
+%   a_{ij\cdot}=\sum_{k=1}^{m(j)} a_{ijk}
 % \end{equation}
 
-% and 
+% and
 
 % \begin{equation}
 %   p_{ijk}=\frac{a_{ijk}}{a_{ij\cdot}}
@@ -2934,18 +2954,18 @@ mlg.table(virus, mlgsub = UGNN)
 % \begin{equation}
 %  p_{ij\cdot}=\sum_{k=1}^{m(j)} p_{ijk}=1
 % \end{equation}
-% The sum of all allele frequencies for a single population (or individual) at a 
+% The sum of all allele frequencies for a single population (or individual) at a
 % single locus is one.
 
 % \begin{equation}
 % p_{i{\cdot}\cdot}=\sum_{j=1}^{\nu} p_{ij\cdot}=\nu
 % \end{equation}
 % The sum of all allele frequences over all loci is equal to the number of loci.
- 
+
 % \begin{equation}
 % p_{{\cdot}{\cdot}\cdot}=\sum_{j=1}^{\nu} p_{i{\cdot}\cdot}=t\nu
 % \end{equation}
-% The the sum of the entire table is the sum of all loci multiplied by the number 
+% The the sum of the entire table is the sum of all loci multiplied by the number
 % of populations (or individuals).
 
 
@@ -2969,7 +2989,7 @@ mlg.table(virus, mlgsub = UGNN)
 %   D_{P}(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
 %   |p_{ajk} - p_{bjk}|
 % \end{equation}
-% Note: for AFLP data, the $2$ is dropped. 
+% Note: for AFLP data, the $2$ is dropped.
 
 
 % Nei's distance
@@ -3000,7 +3020,7 @@ mlg.table(virus, mlgsub = UGNN)
 % \end{equation}
 
 
-% Roger's distance 
+% Roger's distance
 % \label{distance:rogers}
 % \begin{equation}
 %   D_4(a,b)=\frac{1}{\nu} \sum_{k=1}^{\nu} \sqrt{\frac{1}{2}
@@ -3053,7 +3073,7 @@ mlg.table(virus, mlgsub = UGNN)
 % \label{index:boot:any}
 % \subsubsection{Bootstrapping Bruvo's Distance}
 % \label{index:boot:bruvo}
-% This is optimized for Bruvo's distance. 
+% This is optimized for Bruvo's distance.
 
 % \subsection{Minimum spanning networks \{nothing but net(works)\}}
 
@@ -3108,7 +3128,7 @@ mlg.table(virus, mlgsub = UGNN)
 % \end{quote}
 
 % \begin{itemize}
-%   \item \texttt{pop -} a \texttt{genind} object. 
+%   \item \texttt{pop -} a \texttt{genind} object.
 % \end{itemize}
 % Since we have a data set that we know is very clonal, let's analyze the
 % \textit{A. euteiches} data set \cite{Grunwald:2006} and create a heatmap to
@@ -3155,7 +3175,7 @@ mlg.table(virus, mlgsub = UGNN)
 % temp <- lapply(1:30, function(i) sample(0:9, 4, replace=TRUE))
 % temp <- sapply(temp, paste, collapse = "/")
 % temp <- matrix(temp, nrow=10, dimnames=list(paste("ind",1:10), paste("loc",1:3)))
-% temp 
+% temp
 % obj <- df2genind(temp, ploidy=4, sep="/")
 % pop(obj) <- paste("ind", 1:10)
 % @
@@ -3469,7 +3489,7 @@ mlg.table(virus, mlgsub = UGNN)
 % funk <- "bruvo.msn"
 % print_command(funk)
 % @
-% % \texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\ 
+% % \texttt{bruvo.msn(pop, replen = 1, add = TRUE, loss = TRUE, palette = topo.colors,\\
 % %   \tab sublist = "All", blacklist = NULL, vertex.label = "MLG", gscale = TRUE, \\
 % %   \tab glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE, ...)
 % % }
@@ -3540,7 +3560,7 @@ mlg.table(virus, mlgsub = UGNN)
 % <<bruvo_msn_code, eval=FALSE>>=
 % data(partial_clone)
 % set.seed(9005)
-% pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
+% pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7,
 %           vertex.label.dist=-0.5, palette=colorRampPalette(c("blue", "yellow")))
 % @
 % \begin{figure}[ht!]
@@ -3554,7 +3574,7 @@ mlg.table(virus, mlgsub = UGNN)
 % <<bruvo_msn, resolution=300, echo=FALSE, out.width='0.8\\linewidth'>>=
 % data(partial_clone)
 % set.seed(9005)
-% pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7, 
+% pc.msn <- bruvo.msn(partial_clone, replen=rep(1, 10), vertex.label.cex=0.7,
 %           vertex.label.dist=-0.5, palette=colorRampPalette(c("blue", "yellow")))
 % @
 % \end{figure}
@@ -3584,9 +3604,9 @@ mlg.table(virus, mlgsub = UGNN)
 % <<bruvo_msn_reconstruct, eval=FALSE>>=
 % set.seed(9005)
 % library("igraph")
-% plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3, 
+% plot(pc.msn$graph, vertex.size = V(pc.msn$graph)$size * 3,
 %      vertex.label.cex=0.7, vertex.label.dist=-0.5,)
-% legend(-1.55, 1, bty = "n", cex = 0.75, legend = pc.msn$populations, 
+% legend(-1.55, 1, bty = "n", cex = 0.75, legend = pc.msn$populations,
 %        title = "Populations", fill = pc.msn$colors, border = NULL)
 % @
 
@@ -3616,8 +3636,8 @@ mlg.table(virus, mlgsub = UGNN)
 % funk <- "poppr.msn"
 % print_command(funk)
 % @
-% % \texttt{poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",\\ 
-% %   \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\ 
+% % \texttt{poppr.msn(pop, distmat, palette = topo.colors, sublist = "All",\\
+% %   \tab blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8),\\
 % %   \tab gadj = 3, gweight = 1, wscale = TRUE, ...)
 % % }
 % \end{quote}
@@ -3698,7 +3718,7 @@ mlg.table(virus, mlgsub = UGNN)
 % @
 % \end{figure}
 % \newpage
-% %\subsubsection{Gory details} 
+% %\subsubsection{Gory details}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3733,7 +3753,7 @@ mlg.table(virus, mlgsub = UGNN)
 % funk <- "poppr"
 % print_command(funk)
 % @
-% % \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\ 
+% % \texttt{poppr(pop, total = TRUE, sublist = c("ALL"), blacklist = c(NULL), sample = 0,\\
 % %         \tab method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE, \\
 % %         \tab clonecorrect = FALSE, hier = c(1), dfname = "population\_hierarchy", \\
 % %         \tab hist = TRUE, minsamp = 10)}
@@ -3823,7 +3843,7 @@ mlg.table(virus, mlgsub = UGNN)
 % Let's clone correct at different levels to see if that affects the index of
 % association. First, we'll clone correct at the sub population level.
 % <<Aeut_cc_sub_show, eval=FALSE>>=
-% poppr(Aeut, sample=999, clonecorrect=TRUE, hier=c("Pop","Subpop"), 
+% poppr(Aeut, sample=999, clonecorrect=TRUE, hier=c("Pop","Subpop"),
 %       dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
 % @
 % <<Aeut_cc_sub, echo=FALSE>>=
@@ -3832,7 +3852,7 @@ mlg.table(virus, mlgsub = UGNN)
 % @
 % And at the population level.
 % <<Aeut_cc_pop_show, eval=FALSE>>=
-% poppr(Aeut, sample=999, clonecorrect=TRUE, hier="Pop", 
+% poppr(Aeut, sample=999, clonecorrect=TRUE, hier="Pop",
 %       dfname="population_hierarchy", quiet=TRUE, hist=FALSE)
 % @
 % <<Aeut_cc_pop, echo=FALSE>>=
@@ -3947,12 +3967,12 @@ hierarchies in genclone objects:
 \centering
 \begin{tabular}{llll}
   \hline
- Method & Function & Input & Result\\ 
+ Method & Function & Input & Result\\
   \hline
  split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchy\\ 
- get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\ 
- name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchy names\\ 
+ set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchy\\
+ get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\
+ name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchy names\\
  add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
    \hline
 \end{tabular}
@@ -3991,7 +4011,7 @@ exception of \texttt{strata}) all have the replacement syntax of:
 FUNCTION(object) <- input
 @
 \noindent
-\textbf{NOTE: This is the preferred syntax}.\\ 
+\textbf{NOTE: This is the preferred syntax}.\\
 \noindent
 This allows the object to be edited \textit{in place} and makes things generally
 easier. Let's revisit our previous example:
@@ -4000,9 +4020,9 @@ Pinf
 nameStrata(Pinf) <- ~continente/pais
 Pinf
 @
-While we will mainly be using the replacement syntax in this vignette, the 
-advantage to having both systems is that with the 
-\texttt{function(object, input)} syntax, you can test manipulation without 
+While we will mainly be using the replacement syntax in this vignette, the
+advantage to having both systems is that with the
+\texttt{function(object, input)} syntax, you can test manipulation without
 affecting your object.
 
 %-----------------------------------------------------------------------------%
@@ -4037,8 +4057,8 @@ affecting your object.
 % difference increases the distance between two individuals. Consider the
 % genotypes of the dummy data frame we created earlier:
 % <<echo=FALSE>>=
-% df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"), 
-%                       locus2=c("201/201", "202/203", "203/204"), 
+% df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"),
+%                       locus2=c("201/201", "202/203", "203/204"),
 %                       locus3=c("301/302", "301/303", "304/305")))
 % df
 % @
@@ -4252,8 +4272,8 @@ italicized.
 
 <<Aeut_MLG_title, fig.width = 7, fig.height = 3, out.width = "0.8\\linewidth">>=
 myTitle <- expression(paste(italic("Aphanomyces euteiches"), " multilocus genotype distribution"))
-(pt <- p + 
-   ggtitle(myTitle) + 
+(pt <- p +
+   ggtitle(myTitle) +
    xlab("Multilocus genotype")) # We can label the x axis, too
 @
 
@@ -4496,7 +4516,7 @@ to its definition and description.
 \cmdlink{mlg:mlg:mlg}{mlg} & Calculates the number of multilocus genotypes \\
 \cmdlink{mlg:cross:mlg.crosspop}{mlg.crosspop} & Finds all multilocus genotypes that cross populations \\
 \cmdlink{mlg:table:mlg.table}{mlg.table} & Returns a table of populations by multilocus genotypes \\
-\cmdlink{mlg:mix:mlg.vector}{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\ 
+\cmdlink{mlg:mix:mlg.vector}{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\
  & each individual \\
 \cmdlink{mlg:mix:mlg.id}{mlg.id} & Identifies individuals associated with each MLG \\
 \texttt{poppr} & Returns a diversity table by population \\
@@ -4511,7 +4531,7 @@ to its definition and description.
  & grey level for msn functions \\
 \texttt{bruvo.msn} & Produces minimum spanning networks based off Bruvo's distance\\
  & colored by population \\
-\texttt{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\  
+\texttt{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\
  & matrix related to the data \\
 \texttt{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
 \texttt{genotype\_curve} & Creates a series of boxplots demonstrating how many loci are\\
