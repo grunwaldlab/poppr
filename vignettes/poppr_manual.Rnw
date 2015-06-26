@@ -176,8 +176,8 @@ In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
 an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
 
 \begin{enumerate}
-\item{\textbf{mlg}}{numeric classification of multilocus genotypes in the data set}
-\item{\textbf{hierarchy}}{storage of multiple population factors.}
+\item \textbf{mlg} numeric classification of multilocus genotypes in the data set
+\item \textbf{hierarchy} storage of multiple population factors.
 \end{enumerate}
 
 In particular, the \textbf{hierarchy} slot played a large role in providing a
@@ -271,12 +271,9 @@ reshape2} and \textit{igraph}) will also be installed. In the unfortunate case
 this does not work, consult
 \url{http://cran.r-project.org/doc/manuals/R-admin.html#Installing-packages}.
 
-\subsubsection{From Source}
-\tab\tab The tarball for \poppr{} can be downloaded from CRAN:
-\url{http://cran.r-project.org/package=poppr}, under the \textsc{Resources} tab
-in the Gr\"unwald Lab website:
-\url{http://http://grunwaldlab.cgrb.oregonstate.edu/}, or via github at
-\url{https://github.com/grunwaldlab/poppr}.
+\subsubsection{From GitHub}
+\tab\tab GitHub is a repository where you can find all stable and development
+versions of \poppr{}. 
 
 Since \poppr{} contains C code, it needs to be compiled, which means that you
 need a working C compiler. If you are on Linux, you should have that, but if you
@@ -287,14 +284,48 @@ are on Windows or OSX, you might need to download some special tools:
   \item[OSX] Download Xcode: \url{https://developer.apple.com/xcode}
 \end{description}
 
+To install from GitHub, you do not need to download the tarball since
+there is a package called \textit{devtools} that will download and install the
+package for you directly from GitHub. After you have installed all dependencies
+(see above section), you should download \textit{devtools}:
+
+<<install_devtools, eval = FALSE>>=
+install.packages("devtools")
+@
+Now you can execute the command \texttt{install\_github} with the user and
+repository name:
+
+<<install_github, eval = FALSE>>=
+devtools::install_github("grunwaldlab/poppr")
+@
+
+If you are the adventurous type and are willing to test out unreleased versions
+of the package, you can also install the development version:
+
+<<install_devel, eval = FALSE>>=
+devtools::install_github("grunwaldlab/poppr@devel")
+@
+
+Users who install this version do so at their own risk. Since it is a
+development version, documentation may be incomplete or non-existent for new
+functions.
+
+\subsubsection{From Source}
+
+\tab\tab The tarball for \poppr{} can be downloaded from CRAN:
+\url{http://cran.r-project.org/package=poppr} or via github at
+\url{https://github.com/grunwaldlab/poppr}.
+
+You will need a C compiler to install this way. See the section above for details.
+
 If you choose to install \poppr{} from a source file, you should first make sure
 to install all of the dependencies with the following command:
 
-<<install_depend, eval=FALSE>>=
-install.packages(c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", "igraph"))
+<<install_depend, eval=FALSE, tidy = FALSE>>=
+pkgs <- c("adegenet", "pegas", "vegan", "ggplot2", "phangorn", "ape", 
+          "igraph", "reshape2", "dplyr", "shiny")
+install.packages(pkgs)
 @
-
-\textbf{If you want to install from github, skip to the next section.}
 
 After installing dependencies, download the package to your computer and then
 install it with:
@@ -302,35 +333,7 @@ install it with:
 install.packages("/path/to/poppr.tar.gz", type="source", repos=NULL)
 @
 
-\subsubsection{From github}
-\tab\tab Github is a repository where you can find all stable and development
-versions of \poppr{}. Installing from github requires a C compiler, so be sure
-to read the section above for instructions on how to obtain that if you aren't
-on a Linux system.
 
-To install from github, you do not need to download the tarball since
-there is a package called \textit{devtools} that will download and install the
-package for you directly from github. After you have installed all dependencies
-(see above section), you should download \textit{devtools}:
-<<install_devtools, eval = FALSE>>=
-install.packages("devtools")
-@
-Now you can execute the command \texttt{install\_github} with the user and
-repository name:
-<<install_github, eval = FALSE>>=
-library("devtools")
-install_github("grunwaldlab/poppr")
-@
-
-If you are the adventurous type and are willing to test out unreleased versions
-of the package, you can also install the development version:
-<<install_devel, eval = FALSE>>=
-library("devtools")
-install_github("grunwaldlab/poppr@devel")
-@
-Users who install this version do so at their own risk. Since it is a
-development version, documentation may be incomplete or nonexistant for new
-functions.
 
 %-----------------------------------------------------------------------------%
 %
@@ -469,9 +472,10 @@ The fields you see in the output include:
   \item \texttt{H -} Shannon-Wiener Index of MLG diversity. \cite{Shannon:1948}
   \item \texttt{G -} Stoddart and Taylor's Index of MLG diversity.
   \cite{Stoddart:1988}
+  \item \texttt{lambda -} Simpson's index, $\lambda$.
+  \item \texttt{E.5 -} Evenness, $E_5$.
   \item \texttt{Hexp -} Nei's 1978 genotypic diversity (corrected for sample
   size), or  Expected Heterozygosity. \cite{Nei:1978}
-  \item \texttt{E.5 -} Evenness, $E_5$.
   \cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}
   \item \texttt{Ia -} The index of association, $I_A$. \cite{Brown:1980}
   \cite{Smith:1993} \cite{Agapow:2001}
@@ -1037,24 +1041,27 @@ other(nancycats) # two items named xy and repeat_lengths
 
 The \texttt{genclone} class was defined in order to make working with
 hierarchies more intuitive. It is built off of the \texttt{genind} object and
-has dedicated slots for the population hierarchy and defined multilocus
-genotypes. The name genclone refers to the fact that it has the ability to
-handle genotypes of clonal organisms (but it is also used for sexual
-populations).
+has dedicated slots for defined multilocus genotypes. The name genclone refers
+to the fact that it has the ability to handle genotypes of clonal organisms (but
+it is also used for sexual populations).
 
-The main difference between the genclone and genind objects is how they handle
-populations: With the \texttt{genind} object, the user must find the vector
-defining the population and set it using that vector. The \texttt{genclone}
-object already defines a data frame with different population factors or
-hierarchical levels in the object. The user simply supplies a formula defining
-the desired hierarchy with which to set the population. This formula driven
-method is also used for clone correction, combining hierarchical levels and
-conducting AMOVA. These will all be explained in later chapters. For examples
-and details, type \texttt{help("genclone")} in your R console.
+In previous versions of \poppr{}, the genclone object contained a hierarchy slot
+as well. This slot was moved to \adegenet{} and its name was changed to 
+``strata''. This slot allows you to carry around several definitions for 
+populations in the same data set.
+% The main difference between the genclone and genind objects is how they handle
+% populations: With the \texttt{genind} object, the user must find the vector
+% defining the population and set it using that vector. The \texttt{genclone}
+% object already defines a data frame with different population factors or
+% hierarchical levels in the object. The user simply supplies a formula defining
+% the desired hierarchy with which to set the population. This formula driven
+% method is also used for clone correction, combining hierarchical levels and
+% conducting AMOVA. These will all be explained in later chapters. For examples
+% and details, type \texttt{help("genclone")} in your R console.
 
 The function \texttt{as.genclone} allows the user to convert a \texttt{genind}
 object to a \texttt{genclone} object. The following example will demonstrate
-that the \texttt{genclone} object is an extention of the \texttt{genind} object
+that the \texttt{genclone} object is an extension of the \texttt{genind} object
 as well as the advantages of having populations pre-defined in your data set.
 
 \subsubsection{Function: as.genclone}
@@ -1070,8 +1077,9 @@ print_command(funk)
 \end{quote}
 \begin{itemize}
   \item \textbf{x -} a \texttt{genind} object to be converted.
-  \item \textbf{hierarchy -} an optional data frame where each column represents
-  a hierarchical level of the population hierarchy in the data set.
+  \item \textbf{... -} any arguments to be passed to the genind constructor.
+  \item \textbf{mlg -} a vector representing the multilocus genotype definitions of your data.
+  \item \textbf{mlgclass -} if \texttt{TRUE}, the MLGs represented in your object will be converted to an MLG class object, which allows for custom MLG definitions. 
 \end{itemize}
 \bline{}
 
@@ -1080,7 +1088,7 @@ existing \texttt{genind} object and convert it using the function
 \texttt{as.genclone} (We can also use the function
 \cmdlink{intro:import:read.genalex}{read.genalex} to import as \texttt{genclone}
 or \texttt{genind} objects). We will use the \texttt{Aeut} data set because it
-is a clonal data set that has a simple population hierarchy
+is a clonal data set that has a simple population strata
 \cite{Grunwald:2006}. The data set is here:
 \url{http://dx.doi.org/10.6084/m9.figshare.877104} and it is AFLP data of the
 root rot pathogen \textit{Aphanomyces euteiches} collected from two different
@@ -1128,7 +1136,11 @@ c(is.genind(Aeut), is.genclone(Aeut), is.genind(agc), is.genclone(agc))
 c(nInd(Aeut), nInd(agc))
 @
 
+If we wanted to, we could also convert it back to a genind object.
 
+<<genclone2genind>>=
+genclone2genind(agc)
+@
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1195,10 +1207,12 @@ up the individual genotype at a particular locus. What we can see here is that
 the number of columns is 8 when we expect only 6 (2 loci $\times$ 3 alleles).
 The first allele at each locus is \texttt{000}. Let's take a look at the data in
 a human-readable format.
+
 <<pinf_show_df>>=
 Pinfdf <- genind2df(Pinf, sep = "/")
 tail(Pinfdf[10:11])
 @
+
 \noindent
 It's more clear now that we have a data set of tetraploid individuals where some
 genotypes appear diploid (\texttt{\Sexpr{Pinfdf[85, 10]}}) and some appear
