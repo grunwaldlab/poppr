@@ -9,7 +9,7 @@ ia(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   hist = TRUE, index = "rbarD", valuereturn = FALSE)
 
 pair.ia(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
-  index = "rbarD")
+  limits = NULL, index = "rbarD")
 }
 \arguments{
 \item{gid}{a \code{\link{genind}} object OR any fstat, structure, genetix,
@@ -49,6 +49,10 @@ TRUE}}
 
 \item{high}{(for pair.ia) a color to use for low values when \code{plot =
 TRUE}}
+
+\item{limits}{(for pair.ia) the limits to be used for the color scale.
+Defaults to \code{NULL}. If you want to use a custom range, supply two
+numbers between -1 and 1, (e.g. \code{limits = c(-0.15, 1)})}
 }
 \value{
 \subsection{for \code{pair.ia}}{a matrix with two columns and
@@ -187,7 +191,7 @@ names(plotlist) <- popNames(monpop)
 # Loop throgh the populations, calculate pairwise ia, plot, and then
 # capture the plot in the list
 for (i in popNames(monpop)){
-  x <- pair.ia(monpop[pop = i])         # subset, calculate, and plot
+  x <- pair.ia(monpop[pop = i], limits = c(-0.15, 1)) # subset, calculate, and plot
   plotlist[[i]] <- ggplot2::last_plot() # save the last plot
 }
 

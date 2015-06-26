@@ -623,7 +623,7 @@ poppr.all <- function(filelist, ...){
 #' # Loop throgh the populations, calculate pairwise ia, plot, and then
 #' # capture the plot in the list
 #' for (i in popNames(monpop)){
-#'   x <- pair.ia(monpop[pop = i])         # subset, calculate, and plot
+#'   x <- pair.ia(monpop[pop = i], limits = c(-0.15, 1)) # subset, calculate, and plot
 #'   plotlist[[i]] <- ggplot2::last_plot() # save the last plot
 #' }
 #' 
@@ -678,7 +678,7 @@ ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore",
   # the population, index, observed value, and p-value. It will also produce a 
   # histogram.
     Iout     <- NULL 
-    idx      <- data.frame(Index = names(IarD))
+    # idx      <- data.frame(Index = names(IarD))
     samp     <- .sampling(popx, sample, missing, quiet = quiet, type = type, 
                           method = method)
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)
@@ -711,10 +711,13 @@ ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore",
 #'   TRUE}
 #' @param high (for pair.ia) a color to use for low values when \code{plot =
 #'   TRUE}
+#' @param limits (for pair.ia) the limits to be used for the color scale. 
+#'   Defaults to \code{NULL}. If you want to use a custom range, supply two
+#'   numbers between -1 and 1, (e.g. \code{limits = c(-0.15, 1)})
 #' @export
 #==============================================================================#
 pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
-                    index = "rbarD"){
+                    limits = NULL, index = "rbarD"){
   N       <- nInd(gid)
   numLoci <- nLoc(gid)
   lnames  <- locNames(gid)
@@ -744,7 +747,7 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
   pair_ia_vector           <- t(pair_ia_vector)
   class(pair_ia_vector)    <- c("matrix", "pairia")
   if (plot){
-    plot(pair_ia_vector, index = index, low = low, high = high)
+    plot(pair_ia_vector, index = index, low = low, high = high, limits = limits)
   }
   return(pair_ia_vector)
 }

@@ -104,7 +104,8 @@ print.pairia <- function(x, ...){
 
 #' @method plot pairia
 #' @export
-plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red"){
+plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red",
+                        limits = c(-0.2, 1)){
   df.index <- x[, index]
   theLoci  <- strsplit(rownames(x), ":")
   lnames   <- unique(unlist(theLoci))
@@ -117,7 +118,7 @@ plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red"){
   basic_plot <- ggplot(df, aes_string(x = "L1", y = "L2", fill = "value")) +
     geom_tile()
   basic_plot <- basic_plot + 
-    scale_fill_gradient(low = low, high = high, na.value = "white") +
+    scale_fill_gradient(low = low, high = high, limits = limits) +
     scale_x_discrete(expand = c(0, -1)) +
     scale_y_discrete(expand = c(0, -1)) +
     theme(axis.title = element_blank(), title = element_text(size = rel(2))) + 
