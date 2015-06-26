@@ -1,6 +1,9 @@
 context("Minimum spanning network functions")
 
-test_that("Minimum spanning networks can properly account for tied edges", {
+options(warn = -1)
+ucl <- function(x){
+  unclass(x$graph)[-10]
+}
 
 set.seed(9005)
 
@@ -26,14 +29,12 @@ gend <-new("genind"
 set.seed(9005)
 
 gend_single <- new("genind"
-    , tab = structure(c(0.5, 0.5, 0, 0, 0.5, 0.5, 1, 1, 0, 0.5, 0.5, 0, 1, 
-0.5, 0.5, 1)*2, .Dim = c(4L, 4L), .Dimnames = list(c("1", "2", 
+    , tab = structure(c(0.5, 0.5, 0, 0, 0.5, 0.5, 1, 1, 0, 0.5, 0.5, 0, 1, 0.5, 0.5, 1)*2, .Dim = c(4L, 4L), .Dimnames = list(c("1", "2", 
 "3", "4"), c("loc-1.1", "loc-1.2", "loc-2.1", "loc-2.2")))
     , loc.names = structure(c("loc-1", "loc-2"), .Names = c("loc-1", "loc-2"))
     , loc.fac = structure(c(1L, 1L, 2L, 2L), .Label = c("loc-1", "loc-2"), class = "factor")
     , loc.nall = structure(c(2L, 2L), .Names = c("loc-1", "loc-2"))
-    , all.names = structure(list(`loc-1` = structure(c("3", "4"), .Names = c("1", "2"
-)), `loc-2` = structure(c("3", "4"), .Names = c("1", "2"))), .Names = c("loc-1", 
+    , all.names = structure(list(`loc-1` = structure(c("3", "4"), .Names = c("1", "2")), `loc-2` = structure(c("3", "4"), .Names = c("1", "2"))), .Names = c("loc-1", 
 "loc-2"))
     , call = NULL
     , ind.names = structure(c("", "", "", ""), .Names = c("1", "2", "3", "4"))
@@ -107,30 +108,38 @@ ties_single <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3, 1),
     populations = "1", colors = "#4C00FFFF"), .Names = c("graph", 
 "populations", "colors"))
 
+if (packageVersion("igraph") >= package_version("1.0.0")){
+    no_ties$graph <- igraph::upgrade_graph(no_ties$graph)
+    no_ties_single$graph <- igraph::upgrade_graph(no_ties_single$graph)
+    ties$graph <- igraph::upgrade_graph(ties$graph)
+    ties_single$graph <- igraph::upgrade_graph(ties_single$graph)
+}
 
-# Test Bruvo.msn
-set.seed(9005)
-expect_that(bruvo.msn(gend, replen=c(1,1)), equals(no_ties))
-set.seed(9005)
-expect_that(bruvo.msn(gend, replen=c(1,1), include.ties = TRUE), equals(ties))
+options(warn = 0)
 
-# Test poppr.msn
-set.seed(9005)
-expect_that(poppr.msn(gend, distmat=bruvo.dist(gend,replen=c(1,1))), equals(no_ties))
-set.seed(9005)
-expect_that(poppr.msn(gend, distmat=bruvo.dist(gend,replen=c(1,1)), include.ties = TRUE), equals(ties))
+test_that("Minimum spanning networks can properly account for tied edges", {
 
-# Test both for single populations sets
-set.seed(9005)
-expect_that(bruvo.msn(gend_single, replen=c(1,1)), equals(no_ties_single))
-set.seed(9005)
-expect_that(bruvo.msn(gend_single, replen=c(1,1), include.ties = TRUE), equals(ties_single))
-set.seed(9005)
-expect_that(poppr.msn(gend_single, distmat=bruvo.dist(gend_single,replen=c(1,1))), equals(no_ties_single))
-set.seed(9005)
-expect_that(poppr.msn(gend_single, distmat=bruvo.dist(gend_single,replen=c(1,1)), include.ties = TRUE), equals(ties_single))
+  # Test Bruvo.msn
+  set.seed(9005)
+  expect_equal(ucl(bruvo.msn(gend, replen=c(1,1))), ucl(no_ties))
+  set.seed(9005)
+  expect_equal(ucl(bruvo.msn(gend, replen=c(1,1), include.ties = TRUE)), ucl(ties))
 
+  # Test poppr.msn
+  set.seed(9005)
+  expect_equal(ucl(poppr.msn(gend, distmat=bruvo.dist(gend,replen=c(1,1)))), ucl(no_ties))
+  set.seed(9005)
+  expect_equal(ucl(poppr.msn(gend, distmat=bruvo.dist(gend,replen=c(1,1)), include.ties = TRUE)), ucl(ties))
 
+  # Test both for single populations sets
+  set.seed(9005)
+  expect_equal(ucl(bruvo.msn(gend_single, replen=c(1,1))), ucl(no_ties_single))
+  set.seed(9005)
+  expect_equal(ucl(bruvo.msn(gend_single, replen=c(1,1), include.ties = TRUE)), ucl(ties_single))
+  set.seed(9005)
+  expect_equal(ucl(poppr.msn(gend_single, distmat=bruvo.dist(gend_single,replen=c(1,1)))), ucl(no_ties_single))
+  set.seed(9005)
+  expect_equal(ucl(poppr.msn(gend_single, distmat=bruvo.dist(gend_single,replen=c(1,1)), include.ties = TRUE)), ucl(ties_single))
 
 })
 

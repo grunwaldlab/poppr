@@ -99,7 +99,7 @@ able to offer quick and easy analysis of populations with mixed reproductive
 modes. \Poppr{}'s main advantage is the ease of use and integration with other
 packages such as \adegenet{} and \textit{vegan}, including support for novel
 methods such as clone correction, multilocus genotype analysis, calculation of
-Bruvo's distance and the index of association.
+Bruvo's distance, and the index of association.
 \end{abstract} 
 % Inserting the \Poppr{} logo here 
 

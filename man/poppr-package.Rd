@@ -19,8 +19,9 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
   It was built around the \code{\linkS4class{genind}} object, which stores
   genetic information in a table of allele frequencies. \pkg{Poppr} has
   extended this object into a new object called
-  \code{\linkS4class{genclone}}. This object tracks clones and organizes
-  different population hierarchical levels.
+  \code{\linkS4class{genclone}}. This object is designed for analysis of
+  clonal organisms as it adds the \strong{@mlg} slot for keeping track of
+  multilocus genotypes and multilocus lineages.
 
   \subsection{Documentation}{ Documentation is available for any function by
   typing \code{?function_name} in the R console. Essential functions for
@@ -37,18 +38,36 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
   \url{https://groups.google.com/forum/#!forum/poppr}. If you find a bug and
   are a github user, you can submit bug reports at
   \url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a
-  message on the groups.}
+  message on the groups. Personal emails are highly discouraged as they do
+  not allow others to learn.}
 
   Below are descriptions and links to functions found in \pkg{poppr}. Be
   aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
   available.
 }
+\section{A note about version 2.0}{
+
+  \pkg{Poppr} has recently moved to version 2.0 partially because
+  \pkg{adegenet} has also moved to version 2.0, and partially because we
+  needed to change the way a few things were done. Major changes that have
+  affected both packages: the main data structure in \pkg{adegenet}, the
+  \code{\linkS4class{genind}} object, has changed drastically and reduced in
+  size. You must convert your data if you want to use the new functionality.
+  See the vignette "Migration from poppr version 1" by typing
+  \code{vignette("how_to_migrate", package = "poppr")} for more details on
+  major changes and how to deal with them.
+
+  Many new features in \pkg{poppr} are described in Kamvar, Brooks, and
+  Grünwald (2015), linked below.
+}
+
 \section{Data import/export}{
 
 \itemize{
 \item \code{\link{getfile}} - Provides a quick GUI to grab files for import
 \item \code{\link{read.genalex}} - Read GenAlEx formatted csv files to a genind object
 \item \code{\link{genind2genalex}} - Converts genind objects to GenAlEx formatted csv files
+\item \code{\link{genclone2genind}} - Removes the @mlg slot from genclone objects
 }
 }
 
@@ -56,12 +75,6 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 
 \itemize{
 \item \code{\link{as.genclone}} - Converts genind objects to genclone objects
-\item \code{\link{setPop}} - Set the population using defined hierarchies
-\item \code{\link{splitStrata}} - Split a concatenated hierarchy imported as a population
-\item \code{\link{strata}} - Define a population hierarchy of a genclone object
-\item \code{\link{strata}} - Extract the hierarchy data frame
-\item \code{\link{addStrata}} - Add a vector or data frame to an existing hierarchy
-\item \code{\link{nameStrata}} - Rename a population hierarchy
 \item \code{\link{missingno}} - Handles missing data
 \item \code{\link{clonecorrect}} - Clone censors at a specified population hierarchy
 \item \code{\link{informloci}} - Detects and removes phylogenetically uninformative loci
@@ -74,13 +87,14 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \section{Genetic distances}{
 
 \itemize{
-\item \code{\link{bruvo.dist}} - Bruvo's distance
+\item \code{\link{bruvo.dist}} - Bruvo's distance (see also: \code{\link{fix_replen}})
 \item \code{\link{diss.dist}} - Absolute genetic distance (see provesti.dist)
 \item \code{\link{nei.dist}} - Nei's 1978 genetic distance
 \item \code{\link{rogers.dist}} - Rogers' euclidean distance
 \item \code{\link{reynolds.dist}} - Reynolds' coancestry distance
 \item \code{\link{edwards.dist}} - Edwards' angular distance
 \item \code{\link{provesti.dist}} - Provesti's absolute genetic distance
+\item \code{\link{bitwise.dist}} - Calculates fast pairwise distances for genlight objects.
 }
 }
 
@@ -94,14 +108,27 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 
 \section{Analysis}{
 
+\subsection{Multilocus Genotypes}{
 \itemize{
-\item \code{\link{poppr.amova}} - Analysis of Molecular Variance (as implemented in ade4)
-\item \code{\link{ia}} - Calculates the index of association
 \item \code{\link{mlg}} - Calculates the number of multilocus genotypes
+\item \code{\link{mll}} - Displays the current multilocus lineages (genotypes) defined.
+\item \code{\link{nmll}} - Same as \code{\link{mlg}}.
 \item \code{\link{mlg.crosspop}} - Finds all multilocus genotypes that cross populations
 \item \code{\link{mlg.table}} - Returns a table of populations by multilocus genotypes
 \item \code{\link{mlg.vector}} - Returns a vector of a numeric multilocus genotype assignment for each individual
 \item \code{\link{mlg.id}} - Finds all individuals associated with a single multilocus genotype
+\item \code{\link{mlg.filter}} - Collapses MLGs by genetic distance
+\item \code{\link{mll.custom}} - Allows for the custom definition of multilocus lineages
+\item \code{\link{mll.levels}} - Allows the user to change levels of custom MLLs.
+
+}
+}
+\itemize{
+\item \code{\link{poppr.amova}} - Analysis of Molecular Variance (as implemented in ade4)
+\item \code{\link{ia}} - Calculates the index of association
+\item \code{\link{pair.ia}} - Calculates the index of association for all loci pairs.
+\item \code{\link{win.ia}} - Index of assocation windows for genlight objects.
+\item \code{\link{samp.ia}} - Index of association on random subsets of loci for genlight objects.
 \item \code{\link{poppr}} - Returns a diversity table by population
 \item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
 \item \code{\link{private_alleles}} - Tabulates the occurences of alleles that only occur in one population.
@@ -112,6 +139,7 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \section{Visulalization}{
 
 \itemize{
+\item \code{\link{imsn}} - interactive construction and visualization of minimum spanning networks
 \item \code{\link{plot_poppr_msn}} - Plots minimum spanning networks produced in poppr with scale bar and legend
 \item \code{\link{greycurve}} - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
 \item \code{\link{bruvo.msn}} - Produces minimum spanning networks based off Bruvo's distance colored by population
@@ -121,7 +149,7 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 }
 }
 \author{
-Zhian N. Kamvar, Javier F. Tabima, Niklaus J. Grünwald
+Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Niklaus J. Grünwald
 
 Maintainer: Zhian N. Kamvar
 }
@@ -133,5 +161,6 @@ reproduction. PeerJ 2:e281 \url{http://dx.doi.org/10.7717/peerj.281}
 Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
 6:208. doi: 10.3389/fgene.2015.00208
+\url{http://dx.doi.org/10.3389/fgene.2015.00208}
 }
 
