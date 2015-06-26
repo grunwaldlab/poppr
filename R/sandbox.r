@@ -87,20 +87,7 @@ zero_adder <- function(index, extras, df){
   }
 }
 
-# Used for boot_se_table (below)
-get_boot_se <- function(bootlist, res = "sd"){
-  npop   <- length(bootlist)
-  bstats <- bootlist[[1]]$t0
-  nstat  <- length(bstats)
-  THE_FUN <- match.fun(paste0(res, ".boot"))
-  resmat <- matrix(nrow = npop, ncol = nstat,
-                   dimnames = list(Pop = names(bootlist), Index = names(bstats)))
-  resmat[] <- t(vapply(bootlist, FUN = THE_FUN, FUN.VALUE = bstats))
-  if (res == "sd"){
-    colnames(resmat) <- paste(colnames(resmat), res, sep = ".")  
-  }
-  return(resmat)
-}
+
 
 
 # Function that was to be used to calculate standard errors for bootstrapping

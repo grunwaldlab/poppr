@@ -320,10 +320,20 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #==============================================================================#
 #' Perform a bootstrap analysis on diversity statistics
 #' 
+#' This function is inteneded to perform bootstrap statistics on a matrix of
+#' multilocus genotype counts in different populations. Results from this 
+#' function should be interpreted carefully as the default statistics are known
+#' to have a downward bias. See the details for more information.
+#' 
+#' 
 #' @param tab a table produced from the \pkg{poppr} function 
 #'   \code{\link[poppr]{mlg.table}}. MLGs in columns and populations in rows
 #' @param n an integer > 0 specifying the number of bootstrap replicates to 
 #'   perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
+#' @param n.boot an integer specifying the number of samples to be drawn in each
+#'   bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples 
+#'   drawn for each boostrap replicate will be equal to the number of samples in
+#'   the data set. 
 #' @param n.rare a sample size at which all resamplings should be performed. 
 #'   This should be no larger than the smallest sample size. Defaults to 
 #'   \code{NULL}, indicating that each population will be sampled at its own 
@@ -338,16 +348,36 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #'    \code{\link{poppr}}. For bootstrap sampling:
 #'    \code{\link[stats]{rmultinom}} \code{\link[boot]{boot}}
 #'    
-#' @details Bootstrapping is performed in two ways depending on whether or not
-#' rarefaction is being performed. 
-#' \itemize{
-#' \item if \code{n.rare = NULL}, bootstrapping is performed by sampling n
-#' samples from a multinomial distribution weighted by the number of samples in
-#' each MLG.
-#' \item if \code{n.rare} is a number greater than zero, then bootstrapping is
-#' performed by randomly sampling without replacement \emph{n.rare} samples from
-#' the data.
-#' }
+#' @details 
+#'   Bootstrapping is performed in three ways:
+#'   \itemize{
+#'     \item if \code{n.rare} is a number greater than zero, then bootstrapping
+#'     is performed by randomly sampling without replacement \emph{n.rare}
+#'     samples from the data.
+#'     
+#'     \item if \code{n.boot} is greater than 1, bootstrapping is performed by
+#'     sampling n.boot samples from a multinomial distribution weighted by the
+#'     proportion of each MLG in the data.
+#'     
+#'     \item if \code{n.boot} is less than 2, bootstrapping is performed by 
+#'     sampling N samples from a multinumial distribution weighted by the
+#'     proportion of each MLG in the data.
+#'   }
+#'   
+#'   \subsection{Downward Bias}{
+#'     When sampling with replacement, the diversity statistics here present a 
+#'     downward bias partially due to the small number of samples in the data. 
+#'     The result is that the mean of the bootstrapped samples will often be 
+#'     much lower than the observed value. Alternatively, you can increase the
+#'     sample size of the bootstap by increasing the size of \code{n.boot}. Both
+#'     of these methods should be taken with caution in interpretation. There
+#'     are several R packages freely available that will calculate and perform
+#'     bootstrap estimates of Shannon and Simpson diversity metrics (eg.
+#'     \pkg{entropart}, \pkg{entropy}, \pkg{simboot}, and
+#'     \pkg{EntropyEstimation}. These packages also offer unbiased estimators of
+#'     Shannon and Simpson diversity. Please take care when attempting to
+#'     interpret the results of this function.
+#'   }
 #' @export
 #' @author Zhian N. Kamvar
 #' @examples
@@ -362,25 +392,37 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #' }
 #' @importFrom boot boot boot.ci norm.ci
 #==============================================================================#
-diversity_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE, 
-                           lambda = TRUE, E5 = TRUE, ...){
+diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE, 
+                           G = TRUE, lambda = TRUE, E5 = TRUE, ...){
   if (!is.null(n.rare)){
     FUN <- rare_sim_boot
+    mle <- n.rare
   } else {
     FUN <- multinom_boot
+    mle <- n.boot
   }
-  res <- apply(tab, 1, boot_per_pop, rg = FUN, n = n, 
-               n.rare = n.rare, H = H, G = G, lambda = lambda, E5 = E5, ...)
+  res <- apply(tab, 1, boot_per_pop, rg = FUN, n = n, mle = mle, H = H, G = G, 
+               lambda = lambda, E5 = E5, ...)
   return(res)
 }
 
 #==============================================================================#
-#' Perform bootstrap statistics, calculate and plot confidence intervals.
+#' Perform bootstrap statistics, calculate, and plot confidence intervals.
+#' 
+#' This function is for calculating bootstrap statistics and their confidence 
+#' intervals. It is important to note that there are inherent problems to 
+#' calculating confidence intervals for diversity statistics as discussed below.
+#' Perhaps the best use of this function is for calculating rarefied estimates
+#' to compare values across populations. Please take caution otherwise. 
 #' 
 #' @param tab a genind object OR a matrix produced from 
 #'   \code{\link[poppr]{mlg.table}}.
 #' @param n an integer defining the number of bootstrap replicates (defaults to 
 #'   1000).
+#' @param n.boot an integer specifying the number of samples to be drawn in each
+#'   bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples
+#'   drawn for each boostrap replicate will be equal to the number of samples in
+#'   the data set. See Details.
 #' @param ci the percent for confidence interval.
 #' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if 
 #'   \code{tab} is a genind object.
@@ -393,19 +435,23 @@ diversity_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE,
 #'   \pkg{ggplot2} package.
 #' @param raw if \code{TRUE} (default) a list containing three elements will be
 #'   returned
+#' @param center if \code{TRUE}, the confidence interval will be centered around
+#'   the observed statistic. Otherwise, if \code{FALSE} (default), the
+#'   confidence interval will be bias-corrected normal CI as reported from
+#' \code{\link[boot]{boot.ci}}
 #' @param ... parameters to be passed on to \code{\link[boot]{boot}} and 
 #'   \code{\link{diversity_stats}}
 #'   
 #' @return \subsection{raw = TRUE}{
 #' \itemize{
-#' \item \strong{obs} - a matrix with observed statistics in columns,
-#' populations in rows
-#' \item \strong{est} - a matrix with estimated statistics in columns,
-#' populations in rows
-#' \item \strong{CI} - an array of 3 dimensions giving the lower and upper
-#' bound, the index measured, and the population.
-#' \item \strong{boot} - a list containing the output of
-#' \code{\link[boot]{boot}} for each population.
+#'   \item \strong{obs} - a matrix with observed statistics in columns,
+#'   populations in rows
+#'   \item \strong{est} - a matrix with estimated statistics in columns,
+#'   populations in rows
+#'   \item \strong{CI} - an array of 3 dimensions giving the lower and upper
+#'   bound, the index measured, and the population.
+#'   \item \strong{boot} - a list containing the output of
+#'   \code{\link[boot]{boot}} for each population.
 #'   }
 #'  }
 #' \subsection{raw = FALSE}{ a data frame with the statistic observations,
@@ -413,41 +459,76 @@ diversity_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE,
 #' that the confidence intervals are converted to characters and rounded to
 #' three decimal places. }
 #' 
-#' @details For details on the bootstrapping procedures, see
-#'   \code{\link{diversity_boot}}. Confidence intervals are derived from the
-#'   function \code{\link[boot]{norm.ci}}. The confidence interval is caluclated
-#'   from the bootstrapped distribution and centered around the bias-corrected
-#'   estimate. For rarefaction, the confidence interval is simply determined by
-#'   caluclating the percentiles from the bootstrapped distribution. If you 
-#'   want to calcuate your own confidence intervals, you can use the results of 
-#'   the permutations stored in the \code{$boot} element of the output.
+#' @details 
+#'   \subsection{Bootstrapping}{
+#'   For details on the bootstrapping procedures, see 
+#'   \code{\link{diversity_boot}}. Default bootstrapping is performed by 
+#'   sampling \strong{N} samples from a multinomal distribution weighted by the
+#'   relative multilocus genotype abundance per population where \strong{N} is
+#'   equal to the number of samples in the data set. If \strong{n.boot} > 2,
+#'   then \strong{n.boot} samples are taken at each bootstrap replicate. When
+#'   \code{rarefy = TRUE}, then samples are taken at the smallest population
+#'   size without replacement. This will provide confidence intervals for all
+#'   but the smallest population.
+#'   }
+#'   \subsection{Confidence intervals}{
+#'   Confidence intervals are derived from the function 
+#'   \code{\link[boot]{norm.ci}}. This function will attempt to correct for bias
+#'   between the observed value and the bootstrapped estimate. When \code{center
+#'   = TRUE} (default), the confidence interval is caluclated from the
+#'   bootstrapped distribution and centered around the bias-corrected estimate
+#'   as perscribed in Marcon (2012). This method can lead to undesirable
+#'   properties, such as the confidence interval lying outside of the maximum
+#'   possible value. For rarefaction, the confidence interval is simply
+#'   determined by caluclating the percentiles from the bootstrapped
+#'   distribution. If you want to calcuate your own confidence intervals, you
+#'   can use the results of the permutations stored in the \code{$boot} element
+#'   of the output.
+#'   }
+#'   \subsection{Rarefaction}{
+#'   Rarefaction in the sense of this function is simply sampling a subset of 
+#'   the data at size \strong{n.rare}. The estimates derived from this metod
+#'   have straightforward interpretations and allow you to compare diversity
+#'   across populations since you are controlling for sample size.
+#'   }
 #'   
 #' @note 
-#' \subsection{Confidence interval calculation}{Almost all of the statistics
-#' supplied here have a maximum when all genotypes are equally represented. 
-#' This means that bootstrapping the samples will always be downwardly biased.
-#' In many cases, the confidence intervals from the bootstrapped distribution
-#' will fall outside of the observed statistic. The reported confidence 
-#' intevals here are reported by assuming the variance of the bootstrapped 
-#' distribution is the same as the variance around the observed statistic. In 
-#' many cases, this will not be correct. For details, see 
-#' \url{http://stats.stackexchange.com/q/156235/49413}.}
-#' \subsection{User-defined functions}{
-#' While it is possible to use custom functions with this, there are three
+#'   \subsection{Confidence interval calculation}{ Almost all of the statistics 
+#'   supplied here have a maximum when all genotypes are equally represented. 
+#'   This means that bootstrapping the samples will always be downwardly biased.
+#'   In many cases, the confidence intervals from the bootstrapped distribution 
+#'   will fall outside of the observed statistic. The reported confidence 
+#'   intevals here are reported by assuming the variance of the bootstrapped 
+#'   distribution is the same as the variance around the observed statistic. As
+#'   different statistics have different properties, there will not always be
+#'   one clear method for calculating confidence intervals. A suggestion for
+#'   correction in Shannon's index is to center the CI around the observed
+#'   statistic (Marcon, 2012), but there are theoretical limitations to this.
+#'   For details, see \url{http://stats.stackexchange.com/q/156235/49413}.
+#'   }
+#' 
+#'   \subsection{User-defined functions}{ 
+#'   While it is possible to use custom functions with this, there are three
 #'   important things to remember when using these functions:
-#' \enumerate{
-#' \item The function must return a single value.
-#' \item The function must allow for both matrix and vector inputs
-#' \item The function name cannot match or partially match any arguments from
-#' \code{\link[boot]{boot}}
-#' } Anonymous functions are okay \cr(e.g. \code{function(x)
-#' vegan::rarefy(t(as.matrix(x)), 10)}).
-#' }
+#'   \enumerate{
+#'     \item The function must return a single value. 
+#'     \item The function must allow for both matrix and vector inputs 
+#'     \item The function name cannot match or partially match any arguments 
+#'     from \code{\link[boot]{boot}}
+#'   } 
+#'   Anonymous functions are okay \cr(e.g. \code{function(x)
+#'   vegan::rarefy(t(as.matrix(x)), 10)}).
+#'   }
 #' @export
 #' @seealso \code{\link{diversity_boot}} \code{\link{diversity_stats}}
 #'   \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}}
 #'   \code{\link[boot]{boot.ci}}
 #' @author Zhian N. Kamvar
+#' @references
+#' Marcon, E., Herault, B., Baraloto, C. and Lang, G. (2012). The Decomposition 
+#' of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
+#' \emph{Oikos} 121(4): 516-522.
+#' 
 #' @examples
 #' library(poppr)
 #' data(Pinf)
@@ -476,25 +557,40 @@ diversity_boot <- function(tab, n, n.rare = NULL, H = TRUE, G = TRUE,
 #' }
 #' # Show pretty results
 #' 
-#' diversity_ci(Pinf, 1000L, CF = CF, raw = FALSE)
+#' diversity_ci(Pinf, 1000L, CF = CF, center = TRUE, raw = FALSE)
 #' diversity_ci(Pinf, 1000L, CF = CF, rarefy = TRUE, raw = FALSE)
 #' }
 #' 
 #==============================================================================#
-diversity_ci <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
-                         plot = TRUE, raw = TRUE, ...){
+diversity_ci <- function(tab, n = 1000, n.boot = 1L, ci = 95, total = TRUE, 
+                         rarefy = FALSE, n.rare = 10, plot = TRUE, raw = TRUE, 
+                         center = TRUE, ...){
   if (!is.matrix(tab) & is.genind(tab) | is(tab, "genlight")){
     tab <- mlg.table(tab, total = total, plot = FALSE)
   }
   rareval <- NULL
   if (rarefy){
-    rareval <- min(rowSums(tab))
+    rareval <- max(min(rowSums(tab)), n.rare)
+    msg <- paste("\nSamples for rarefaction:", rareval)
+    message(msg)
+  } else {
+    if (center == TRUE){
+      msg <- paste("\nConfidence Intervals have been centered around observed",
+                   "statistic.\nPlease see ?diversity_ci for details.\n")
+      message(msg)
+    } else if (n.boot > 2){
+      msg <- paste("\nTake caution in interpreting the results.\nWhile sampling",
+                   n.boot, "samples will produce a confidence interval,\nit",
+                   "might be unclear what the correct interpretation should be.\n")
+      message(msg)
+    }
+    
   }
-  res  <- diversity_boot(tab, n, n.rare = rareval, ...)
+  res  <- diversity_boot(tab, n, n.rare = rareval, n.boot = n.boot, ...)
   orig <- get_boot_stats(res)
   statnames <- colnames(orig)
-  CI  <- get_all_ci(res, ci = ci, index_names = statnames,
-                    center = ifelse(rarefy, FALSE, TRUE),
+  CI  <- get_all_ci(res, ci = ci, index_names = statnames, 
+                    center = ifelse(rarefy, FALSE, center),
                     btype = ifelse(rarefy, "percent", "normal"),
                     bci = ifelse(rarefy, FALSE, TRUE))
   est <- get_boot_se(res, "mean")

@@ -2269,11 +2269,11 @@ correlate_custom_mlgs <- function(x, by = "original", subset = TRUE){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-boot_per_pop <- function(x, rg = multinom_boot, n, n.rare = NULL, H = TRUE, 
+boot_per_pop <- function(x, rg = multinom_boot, n, mle = NULL, H = TRUE, 
                          G = TRUE, lambda = TRUE, E5 = TRUE, ...){
   xi  <- extract_samples(x)
   res <- boot::boot(xi, boot_stats, R = n, sim = "parametric", ran.gen = rg, 
-                    mle = n.rare, H = H, G = G, lambda = lambda, E5 = E5, ...)
+                    mle = mle, H = H, G = G, lambda = lambda, E5 = E5, ...)
   return(res)
 }
 
@@ -2287,7 +2287,7 @@ boot_per_pop <- function(x, rg = multinom_boot, n, n.rare = NULL, H = TRUE,
 # ## boot_per_pop
 #==============================================================================#
 multinom_boot <- function(x, mle = NULL){
-  if (is.null(mle)){
+  if (is.null(mle) || mle < 2){
     res <- rmultinom(1, length(x), prob = tabulate(x))
   } else {
     res <- rmultinom(1, mle, prob = tabulate(x))
@@ -2305,7 +2305,11 @@ multinom_boot <- function(x, mle = NULL){
 # ## boot_per_pop
 #==============================================================================#
 rare_sim_boot <- function(x, mle = 10){
-  sample(x, mle)
+  if (length(x) < mle){
+    sample(x)
+  } else {
+    sample(x, mle)    
+  }
 }
 
 #==============================================================================#
@@ -2348,14 +2352,15 @@ extract_samples <- function(x) rep(1:length(x), x)
 # Internal functions utilizing this function:
 # ## get_ci
 #==============================================================================#
-get_boot_ci <- function(index, x, type = "normal" , conf = 0.95, around_estimate = TRUE, ...){
+get_boot_ci <- function(index, x, type = "normal", conf = 0.95, 
+                        around_estimate = TRUE, ...){
   if (length(unique(x$t[, index])) == 1){
     return(c(NA_real_, NA_real_))
   } else if (around_estimate){
-    # res <- boot::norm.ci(x, conf = conf, index = index)[1, ]
     res <- boot::norm.ci(conf = conf, t0 = x$t0[index], var.t0 = var(x$t[, index]))[-1]
   } else {
-    res <- boot::boot.ci(x, conf, type, index, ...)[[type]][1, ]
+    res <- boot::norm.ci(x, conf = conf, index = index)[1, ]
+    # res <- boot::boot.ci(x, conf, type, index, ...)[[type]][1, ]
   }
   return(tail(res, 2))
 }
@@ -2380,7 +2385,7 @@ get_ci <- function(x, lb, ub, bci = TRUE, btype = "normal", center = TRUE){
     if (!is.null(dim(res))) rownames(res) <- paste(c(lb, ub)*100, "%")
   } else {
     res <- apply(x$t, 2, quantile, c(lb, ub), na.rm = TRUE)
-    if (all(apply(res, 2, function(i) i[1] == i[2]))){
+    if (all(all.equal(res[1, ], res[2, ]) == TRUE)){
       res[] <- NA_real_
     }
   }
@@ -2549,10 +2554,34 @@ get_boot_stats <- function(bootlist){
 # mean and sd methods for boot 
 # 
 # Public functions utilizing this function:
-# ## ???
+# ## none
 # 
 # Internal functions utilizing this function:
-# ## ???
+# ## get_boot_se
 #==============================================================================#
 mean.boot <- function(x, ...) apply(x$t, 2, mean, na.rm = TRUE)
 sd.boot <- function(x, na.rm = TRUE) apply(x$t, 2, sd, na.rm)
+
+#==============================================================================#
+# retrieves standard error or mean from list of boot objects.
+# 
+# Public functions utilizing this function:
+# ## diversity_ci
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+get_boot_se <- function(bootlist, res = "sd"){
+  npop   <- length(bootlist)
+  bstats <- bootlist[[1]]$t0
+  nstat  <- length(bstats)
+  THE_FUN <- match.fun(paste0(res, ".boot")) # mean.boot sd.boot
+  resmat <- matrix(nrow = npop, ncol = nstat,
+                   dimnames = list(Pop = names(bootlist), Index = names(bstats)))
+  resmat[] <- t(vapply(bootlist, FUN = THE_FUN, FUN.VALUE = bstats))
+  if (res == "sd"){
+    colnames(resmat) <- paste(colnames(resmat), res, sep = ".")  
+  }
+  return(resmat)
+}
+

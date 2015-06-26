@@ -4,8 +4,8 @@
 \alias{diversity_boot}
 \title{Perform a bootstrap analysis on diversity statistics}
 \usage{
-diversity_boot(tab, n, n.rare = NULL, H = TRUE, G = TRUE, lambda = TRUE,
-  E5 = TRUE, ...)
+diversity_boot(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE, G = TRUE,
+  lambda = TRUE, E5 = TRUE, ...)
 }
 \arguments{
 \item{tab}{a table produced from the \pkg{poppr} function
@@ -13,6 +13,11 @@ diversity_boot(tab, n, n.rare = NULL, H = TRUE, G = TRUE, lambda = TRUE,
 
 \item{n}{an integer > 0 specifying the number of bootstrap replicates to
 perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.}
+
+\item{n.boot}{an integer specifying the number of samples to be drawn in each
+bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples
+drawn for each boostrap replicate will be equal to the number of samples in
+the data set.}
 
 \item{n.rare}{a sample size at which all resamplings should be performed.
 This should be no larger than the smallest sample size. Defaults to
@@ -34,19 +39,41 @@ size.}
 a list of objects of class "boot".
 }
 \description{
-Perform a bootstrap analysis on diversity statistics
+This function is inteneded to perform bootstrap statistics on a matrix of
+multilocus genotype counts in different populations. Results from this
+function should be interpreted carefully as the default statistics are known
+to have a downward bias. See the details for more information.
 }
 \details{
-Bootstrapping is performed in two ways depending on whether or not
-rarefaction is being performed.
-\itemize{
-\item if \code{n.rare = NULL}, bootstrapping is performed by sampling n
-samples from a multinomial distribution weighted by the number of samples in
-each MLG.
-\item if \code{n.rare} is a number greater than zero, then bootstrapping is
-performed by randomly sampling without replacement \emph{n.rare} samples from
-the data.
-}
+Bootstrapping is performed in three ways:
+  \itemize{
+    \item if \code{n.rare} is a number greater than zero, then bootstrapping
+    is performed by randomly sampling without replacement \emph{n.rare}
+    samples from the data.
+
+    \item if \code{n.boot} is greater than 1, bootstrapping is performed by
+    sampling n.boot samples from a multinomial distribution weighted by the
+    proportion of each MLG in the data.
+
+    \item if \code{n.boot} is less than 2, bootstrapping is performed by
+    sampling N samples from a multinumial distribution weighted by the
+    proportion of each MLG in the data.
+  }
+
+  \subsection{Downward Bias}{
+    When sampling with replacement, the diversity statistics here present a
+    downward bias partially due to the small number of samples in the data.
+    The result is that the mean of the bootstrapped samples will often be
+    much lower than the observed value. Alternatively, you can increase the
+    sample size of the bootstap by increasing the size of \code{n.boot}. Both
+    of these methods should be taken with caution in interpretation. There
+    are several R packages freely available that will calculate and perform
+    bootstrap estimates of Shannon and Simpson diversity metrics (eg.
+    \pkg{entropart}, \pkg{entropy}, \pkg{simboot}, and
+    \pkg{EntropyEstimation}. These packages also offer unbiased estimators of
+    Shannon and Simpson diversity. Please take care when attempting to
+    interpret the results of this function.
+  }
 }
 \examples{
 library(poppr)
