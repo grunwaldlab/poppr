@@ -344,37 +344,44 @@ install.packages("/path/to/poppr.tar.gz", type="source", repos=NULL)
 \tab\tab The author assumes that if you have reached this point in the manual,
 then you have successfully installed R and \poppr{}. Before proceeding, you
 should be aware that R is case sensitive. This means that the words ``Case" and
-``case" are different. You should also know where your R
-package Library is located.
+``case" are different. You should also know where your R package library is
+located. In this section, you will learn how to locate a file, import it to R,
+and make a first analysis using the \texttt{poppr()} function.
+
 \begin{center}
    \fcolorbox{light-gray}{light-gray}{
         \begin{minipage}[t]{0.8\textwidth}
           {\large \textsc{What or where is my R package library?}}\\
           R is as powerful as it is through a community of people who submit
-          extra code called ``Packages" to help it do specific things. These
+          extra code called ``packages" to help it do specific things. These
           packages live in a certain place on your computer called an R library.
           You can find out where this library is by typing \texttt{.libPaths()}
         \end{minipage}
     }
 \end{center}
+
 Importing a file into R involves you knowing the path to your file and then
 typing that into R's console. \texttt{getfile()} will help provide a point and
-click interface for selecting a file. There are two steps:
+click interface for selecting a file. This is simply a tool to help you get 
+started. As you get better with R, you might feel that you don't need it at all.
+
+First, tell your computer to search R's library, load the \poppr{} package, and 
+use \texttt{getfile()}:
+
 <<echo=FALSE>>=
 library("poppr")
 x <- list(files="/path/to/R/poppr/files/rootrot.csv", path="/path/to/R/poppr/files")
 @
-Tell your computer to search R's library to find the \poppr{} and load the package:
+
 <<getfilefunk, eval=FALSE>>=
 library("poppr")
-@
-After that, you can use \texttt{getfile()}
-<<getfilefunk2, eval=FALSE>>=
 x <- getfile()
 @
+
 A pop up window will appear like this\footnote{This window
 sometimes appears behind your current session of R, depending on the GUI and you
 will have to toggle to this window}:
+
 \begin{figure}[h!]
   \centering
   \caption{\footnotesize \footnotesize A popup window as it appears in OSX (Mountain Lion).}
@@ -382,6 +389,7 @@ will have to toggle to this window}:
   \includegraphics{getfile}
 \end{figure}
 \newpage
+
 \begin{center}
    \fcolorbox{light-gray}{light-gray}{
       \begin{minipage}[t]{0.8\textwidth}
@@ -396,16 +404,16 @@ will have to toggle to this window}:
     }
 \end{center}
 
-
-We can navigate throughout your entire computer through this window and tell R
-where to go. The example I'm using goes to your R library directory where
-\poppr{} is stored. If you don't know where that is, you can find it by typing
+You should navigate to your R library and select the file called ``rootrot.csv''.
+If you don't know where your the poppr package lives, you can find it by typing
 \texttt{find.package('poppr')} into the R command line. Once we select a file,
-the file name and its path will be stored in the variable, x. We can confirm
-that by typing \texttt{x} into R's command line.
+the file name and its path will be stored in the variable, \texttt{x}. We can 
+confirm that by typing \texttt{x} into R's command line.
+
 <<getfilex>>=
 x
 @
+
 Here we can see that \texttt{x} is a list with two entries: \texttt{\$files}
 shows the files you selected and \texttt{\$path} shows the path to
 those files.
@@ -441,22 +449,29 @@ those files.
   }
 \end{center}
 
-We will use \texttt{x\$files} to access the file. The \texttt{poppr()} function
-provides a simple first analysis of your data directly from the file on the your
-disk (For information on importing your data into R, see
-section \seclink{intro:import}{Get out of my dreams and into my R.})
+We will use \texttt{x\$files} to access the file. The file is in the 
+\seclink{intro:import:read.genalex}{GenAlEx} format, so we will import it using
+\cmdlink{intro:import:read.genalex}{read.genalex()} and then analyze it with
+the function \texttt{poppr()} to get a table of diversity indices per population. 
+
 <<firstpoppr, eval=FALSE>>=
+myData  <- read.genalex(x$files)
+myData
 popdata <- poppr(x$files)
 @
+
 <<aflp, echo=FALSE>>=
 options(width=90)
 popprsoutput <- poppr(system.file("files/rootrot.csv", package="poppr"))
 @
+
 The output of \texttt{poppr()} was assigned to the variable \texttt{popdata}, so
 let's look at the data.
+
 <<firstpoppr2, eval=FALSE>>=
 popdata
 @
+
 <<aflp2, echo=FALSE>>=
 popprsoutput
 @
@@ -473,10 +488,8 @@ The fields you see in the output include:
   \item \texttt{G -} Stoddart and Taylor's Index of MLG diversity.
   \cite{Stoddart:1988}
   \item \texttt{lambda -} Simpson's index, $\lambda$.
-  \item \texttt{E.5 -} Evenness, $E_5$.
-  \item \texttt{Hexp -} Nei's 1978 genotypic diversity (corrected for sample
-  size), or  Expected Heterozygosity. \cite{Nei:1978}
-  \cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}
+  \item \texttt{E.5 -} Evenness, $E_5$. \cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}
+  \item \texttt{Hexp -} Nei's 1978 Expected Heterozygosity. \cite{Nei:1978}
   \item \texttt{Ia -} The index of association, $I_A$. \cite{Brown:1980}
   \cite{Smith:1993} \cite{Agapow:2001}
   \item \texttt{rbarD -} The standardized index of association, $\bar r_d$.
@@ -688,7 +701,7 @@ function \texttt{import2genind()}:
 \end{itemize}
 
 Here, we introduce a new way of importing data into a \texttt{genind} or
-\texttt{genclone} object.
+\texttt{genclone} object from a \textsc{GenAlEx} formatted file. 
 
 \subsubsection{Function: read.genalex}
 \label{intro:import:read.genalex}
@@ -711,17 +724,18 @@ Below is an example of the GenAlEx format. We will use the data set called
 \texttt{microbov} from the \adegenet{} package to generate it. The data contains
 three demographic factors: Country, Species and Breed contained within the
 \texttt{@other} slot (detailed in \seclink{intro:genind:other}{The other slot}).
-We will combine these and save the file to the desktop. Details of these
-functions are presented elsewhere in this manual.
+We will first set these as the population strata, define the population as the
+combination of the strata, and then save a file to the desktop. 
 
 <<microsave, eval=FALSE>>=
 library("poppr")
 data(microbov)
-microbov <- as.genclone(microbov)
-strata(microbov) <- data.frame(other(microbov))
-setPop(microbov) <- ~coun/breed/spe
-genind2genalex(microbov, file="~/Desktop/microbov.csv")
+strata(microbov) <- data.frame(other(microbov)) # set the strata
+setPop(microbov) <- ~coun/breed/spe             # combine the strata
+microbov
+genind2genalex(microbov, file = "~/Desktop/microbov.csv")
 @
+
 <<microsave_message, echo=FALSE>>=
 cat("Extracting the table ... Writing the table to ~/Desktop/microbov.csv ... Done.")
 @
@@ -748,7 +762,7 @@ levels in a \seclink{intro:genclone}{genclone object.}
 
 \newpage
 
-The First three rows contain information pretaining to the global data set. The
+The First three rows contain information pertaining to the global data set. The
 only important information for \poppr{} is the information contained in row 3
 and the first three columns of row 1.
 
@@ -821,6 +835,9 @@ print_command(funk)
   more info).
   \item \texttt{sep -} The separator argument for columns in your data. It
   defaults to ``,".
+  \item \texttt{recode -} If your data is polyploid data, this gives you the 
+  option to recode it. (See \seclink{intro:import:polyploid}{About Polyploid
+  Data} for details)
 \end{itemize}
 \bline{}
 \begin{center}
@@ -841,19 +858,23 @@ Note that regional data and geographic data are not mutually exclusive. You can
 have both in one file, just make sure that they are on the same sheet and that
 the geographic data is always placed after all genetic and demographic data.
 
-We have a short example of genalex formatted data with no geographic or regional
-formatting. We will first see where the data is using the command
+We have a short example of \textsc{GenAlEx} formatted data with no geographic or
+regional formatting. We will first see where the data is using the command
 \texttt{system.file()}
+
 <<system_file_genalex, eval=FALSE>>=
 system.file("files/rootrot.csv", package="poppr")
 @
+
 <<system_file_echo, echo=FALSE>>=
 paste("/path/to/R/library/poppr/files/rootrot.csv")
 @
+
 Now import the data into \poppr{} like so:
 <<read.genalex_ex>>=
 rootrot <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 @
+
 Executing rootrot shows that this file is now in genclone format and can be used
 with any function in \poppr{} and \adegenet{}
 <<read.genalex_ex2>>=
@@ -864,8 +885,8 @@ rootrot
 \subsubsection{Other ways of importing data}
 \label{intro:import:other}
 
-\tab\tab \Adegenet{} already supports the import of FSTAT, Structure, Genpop,
-and Genetix formatted files, so if you have data in those formats, you can
+\tab\tab \Adegenet{} already supports the import of \textsc{FSTAT}, \textsc{Structure}, \textsc{Genpop},
+and \textsc{Genetix} formatted files, so if you have data in those formats, you can
 import them using the function \texttt{import2genind}. For sequence data, check
 if you can use \texttt{read.dna} from the \textit{ape} package to import your
 data. If you can, then you can use the \adegenet{} function
@@ -874,7 +895,7 @@ still import your data using R's \texttt{read.table} along with
 \texttt{df2genind} from \adegenet{}. For more information, see \adegenet{}'s
 ``Getting Started" vignette.
 
-\subsubsection{Function: genind2genalex}
+\subsubsection{Function: genind2genalex (exporting data)}
 \label{intro:import:genind2genalex}
 
 \tab\tab Of course, being able to export data is just as useful as being able to
@@ -917,9 +938,11 @@ genind2genalex(rootrot, "~/Desktop/rootrot.csv")
 cat("Extracting the table ... Writing the table to ~/Desktop/rootrot.csv ... Done.\n")
 @
 
-Here's an example of exporting the nancycats data set into GenAlEx format
-with geographic information. If we look at the nancycats geographic information,
-we can see it's coordinates for each population, but not each individual:
+Here's an example of exporting the nancycats data set into \textsc{GenAlEx}
+format with geographic information. If we look at the nancycats geographic
+information, we can see it's coordinates for each population, but not each
+individual:
+
 <<nancyxy>>=
 data(nancycats)
 nancycats@other$xy
@@ -929,6 +952,7 @@ To export it:
 <<genind2genalex_nancy, eval=FALSE>>=
 genind2genalex(nancycats, "~/Desktop/nancycats_pop_xy.csv", geo = TRUE)
 @
+
 <<genind2genalex_cat2, echo=FALSE>>=
 cat("Extracting the table ... Writing the table to ~/Desktop/nancycats_pop_xy.csv ... Done.\n")
 @
@@ -939,6 +963,7 @@ nan2 <- nancycats
 nan2@other$xy <- nan2@other$xy[rep(1:17, table(pop(nan2))), ]
 head(nan2@other$xy)
 @
+
 Now we can export it to a different file.
 <<genind2genalex_nancy_grow, eval=FALSE>>=
 genind2genalex(nan2, "~/Desktop/nancycats_inds_xy.csv", geo = TRUE)
@@ -987,7 +1012,7 @@ library("adegenet")
 df <- data.frame(list(locus1=c("101/101", "102/103", "102/102"),
                       locus2=c("201/201", "202/203", "203/204"),
                       locus3=c("301/302", "301/303", "304/305")))
-dat <- df2genind(df, sep="/")$tab
+dat <- tab(df2genind(df, sep="/"))
 tdat <- dat
 tdat[] <- 1
 x <- barplot(tdat, axes = FALSE, axisnames = FALSE)
@@ -1079,7 +1104,9 @@ print_command(funk)
   \item \textbf{x -} a \texttt{genind} object to be converted.
   \item \textbf{... -} any arguments to be passed to the genind constructor.
   \item \textbf{mlg -} a vector representing the multilocus genotype definitions of your data.
-  \item \textbf{mlgclass -} if \texttt{TRUE}, the MLGs represented in your object will be converted to an MLG class object, which allows for custom MLG definitions. 
+  \item \textbf{mlgclass -} if \texttt{TRUE}, the MLGs represented in your
+  object will be converted to an MLG class object, which allows for custom MLG
+  definitions.
 \end{itemize}
 \bline{}
 
@@ -1110,6 +1137,7 @@ to set the stratification (previously called ``hierarchy'').
 
 <<add_strata_Aeut>>=
 strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
+Aeut
 @
 
 Now we can convert this to a \texttt{genclone} object, which will store
@@ -1241,6 +1269,12 @@ Pinfrcdf <- genind2df(Pinf_rc, sep = "/")
 tail(Pinfrcdf[10:11])
 @
 
+If you have imported your data as recoded polyploid data, you can use the 
+argument ``addzero'' to fill out the ploidy:
+
+<<pinf_rerecode>>=
+tail(tab(recode_polyploids(Pinf_rc[loc = locNames(Pinf_rc)[9:10]], addzero = TRUE)))
+@
 %=============================================================================%
 %=============================================================================%
 %
