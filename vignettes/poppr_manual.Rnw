@@ -1217,14 +1217,20 @@ difficult to import polyploid data because of this ambiguity as data was
 required to be unambiguous or missing.
 
 A solution to this problem is to code missing alleles as ``0''. An example of
-this is found within the \texttt{Pinf} data set in \poppr{}
-\cite{goss2014irish}. We look at the last six samples over two loci, Pi63 (3
-alleles, triploid) and Pi70 (3 alleles, diploid) to examine how the data is
-represented.
+this is found within the \texttt{Pinf} data set in \poppr{} 
+\cite{goss2014irish}. First, we will look at where we have polyploid allele 
+calls.
 
-<<pinf_show>>=
+<<pinf_table, fig.width = 5, fig.height = 15>>=
 data(Pinf)
 Pinf
+ptab <- info_table(Pinf, type = "ploidy", plot = TRUE)
+@
+
+We look at the last six samples over two loci, Pi63 (3 alleles, triploid) and
+Pi70 (3 alleles, diploid) to examine how the data is represented.
+
+<<pinf_show>>=
 tail(tab(Pinf[loc = locNames(Pinf)[9:10]]))
 @
 \noindent
@@ -1286,11 +1292,9 @@ tail(tab(recode_polyploids(Pinf_rc[loc = locNames(Pinf_rc)[9:10]], addzero = TRU
 \label{data.manip}
 
 \tab\tab One tedious aspect of population genetic analysis is the need for
-repeated data manipulation. \Adegenet{} has some functions for manipulating data
-that are limited to replacing missing data and dividing data into populations,
-loci, or by sample size \cite{Jombart:2008}. \Poppr{} includes novel functions
-for clone-censoring your data sets or sub-setting a genind object by specific
-populations.
+repeated data manipulation. \Poppr{} includes novel functions for clone-
+censoring your data sets, removing genotypes or loci with missing data, removing
+uninformative loci, and shuffling populations.
 
 %===============================================================================
 % TODO: TRANSFER THIS TO ADEGENET
@@ -1299,285 +1303,285 @@ populations.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Population hierarchy construction \{Can you take me hier(archy)?\}}
-\label{data.manip:hier}
+% \subsection{Population hierarchy construction \{Can you take me hier(archy)?\}}
+% \label{data.manip:hier}
 
-\tab\tab in \poppr{}, the \seclink{intro:genclone}{genclone} object contains a
-slot called \texttt{hierarchy}. This slot contains a data frame used to define
-hierarchical levels of population factors describing your data. The preferred
-way of defining these hierarchical levels is to concatenate them using `\_' and
-use them to define a single population in your data before you import it into
-\poppr{}. Examples of this format can be found in figures \ref{microbov
-unmodified}, \ref{microbov modified}, and at
-\url{http://dx.doi.org/10.6084/m9.figshare.877104}.
+% \tab\tab in \poppr{}, the \seclink{intro:genclone}{genclone} object contains a
+% slot called \texttt{hierarchy}. This slot contains a data frame used to define
+% hierarchical levels of population factors describing your data. The preferred
+% way of defining these hierarchical levels is to concatenate them using `\_' and
+% use them to define a single population in your data before you import it into
+% \poppr{}. Examples of this format can be found in figures \ref{microbov
+% unmodified}, \ref{microbov modified}, and at
+% \url{http://dx.doi.org/10.6084/m9.figshare.877104}.
 
-In this section, we will show you how to \seclink{data.manip:hier:define}{define}
-hierarchical levels, \seclink{data.manip:hier:view}{view} those levels to ensure
-that they are correctly defined, \seclink{data.manip:hier:manip}{manipulate} your
-hierarchical levels by adding and renaming them, and use these levels
-to \seclink{data.manip:hier:setPop}{set the population} in
-your \seclink{intro:genclone}{genclone} object using the following methods:
+% In this section, we will show you how to \seclink{data.manip:hier:define}{define}
+% hierarchical levels, \seclink{data.manip:hier:view}{view} those levels to ensure
+% that they are correctly defined, \seclink{data.manip:hier:manip}{manipulate} your
+% hierarchical levels by adding and renaming them, and use these levels
+% to \seclink{data.manip:hier:setPop}{set the population} in
+% your \seclink{intro:genclone}{genclone} object using the following methods:
 
-% latex table generated in R 3.0.3 by xtable 1.7-3 package
-% Sat Mar 22 20:24:23 2014
-\begin{table}[ht]
-\centering
-\begin{tabular}{llll}
-  \hline
- Method & Function & Input & Result\\
-  \hline
- split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchical levels\\
- get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\
- name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchical level names\\
- add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
-   \hline
-\end{tabular}
-\end{table}
+% % latex table generated in R 3.0.3 by xtable 1.7-3 package
+% % Sat Mar 22 20:24:23 2014
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{llll}
+%   \hline
+%  Method & Function & Input & Result\\
+%   \hline
+%  split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
+%  set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchical levels\\
+%  get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\
+%  name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchical level names\\
+%  add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
+%    \hline
+% \end{tabular}
+% \end{table}
 
 
-\begin{center}
-  \fcolorbox{light-gray}{light-gray}{
-    \begin{minipage}[t]{0.8\textwidth}
-      \jala{} {\large \textsc{A note about formulas}} \revjala{}\\
-      The formulas used by genclone objects always start with a $\sim$ and
-      are hierarchical levels are always separated by a $/$. Some examples
-      are:
+% \begin{center}
+%   \fcolorbox{light-gray}{light-gray}{
+%     \begin{minipage}[t]{0.8\textwidth}
+%       \jala{} {\large \textsc{A note about formulas}} \revjala{}\\
+%       The formulas used by genclone objects always start with a $\sim$ and
+%       are hierarchical levels are always separated by a $/$. Some examples
+%       are:
 
-      $\sim$Country/City/District
+%       $\sim$Country/City/District
 
-      $\sim$Field/Year
+%       $\sim$Field/Year
 
-      Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
-      details on how to access hierarchies.
-    \end{minipage}
-    }
-\end{center}
-\noindent
-In the next section, we'll explore two ways of defining hierarchical levels.
+%       Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
+%       details on how to access hierarchies.
+%     \end{minipage}
+%     }
+% \end{center}
+% \noindent
+% In the next section, we'll explore two ways of defining hierarchical levels.
 
-\subsubsection{Defining hierarchies}
-\label{data.manip:hier:define}
+% \subsubsection{Defining hierarchies}
+% \label{data.manip:hier:define}
 
-\tab\tab As explained above, the best way to define hierarchical levels is to
-concatenate them using `\_' and set that as your population factor. We will use
-the example data set from \url{http://dx.doi.org/10.6084/m9.figshare.877104}. It
-is an AFLP data set of the root rot pathogen \textit{Aphanomyces euteiches} from
-two fields and multiple soil cores per field. First, we will follow the link and
-copy the download link from figshare.
-<<aphan_dummy_figshare, eval = FALSE>>=
-aphan <- read.genalex("http://files.figshare.com/1314228/rootrot.csv")
-aphan
-@
-<<aphan_figshare, echo = FALSE>>=
-aphan <- nameStrata(strata(agc, value = strata(agc, ~Pop/Subpop, combine = TRUE)[2]), ~Pop)
-aphan
-@
-\noindent
-The supplemental information in the data defined two hierarchical leves, yet we
-only see one here labeled `Pop'. This is how populations are automatically
-defined when importing to a \seclink{intro:genclone}{genclone} object since it
-does not know how many hierarchical levels you have defined. To define these
-levels present in the data set, we will need to split them up using the function
-\texttt{splitStrata}:
-\label{data.manip:hier:define:split}
-<<aphan_split>>=
-splitStrata(aphan) <- ~field/sample
-aphan
-@
-\noindent
-Now we have sucessfully defined our hierarchies. If you have imported your data
-in this manner, you may skip to the \seclink{data.manip:hier:setPop}{setting
-population hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, or
-\seclink{data.manip:hier:manip}{manipulating hierarchical levels.}
+% \tab\tab As explained above, the best way to define hierarchical levels is to
+% concatenate them using `\_' and set that as your population factor. We will use
+% the example data set from \url{http://dx.doi.org/10.6084/m9.figshare.877104}. It
+% is an AFLP data set of the root rot pathogen \textit{Aphanomyces euteiches} from
+% two fields and multiple soil cores per field. First, we will follow the link and
+% copy the download link from figshare.
+% <<aphan_dummy_figshare, eval = FALSE>>=
+% aphan <- read.genalex("http://files.figshare.com/1314228/rootrot.csv")
+% aphan
+% @
+% <<aphan_figshare, echo = FALSE>>=
+% aphan <- nameStrata(strata(agc, value = strata(agc, ~Pop/Subpop, combine = TRUE)[2]), ~Pop)
+% aphan
+% @
+% \noindent
+% The supplemental information in the data defined two hierarchical leves, yet we
+% only see one here labeled `Pop'. This is how populations are automatically
+% defined when importing to a \seclink{intro:genclone}{genclone} object since it
+% does not know how many hierarchical levels you have defined. To define these
+% levels present in the data set, we will need to split them up using the function
+% \texttt{splitStrata}:
+% \label{data.manip:hier:define:split}
+% <<aphan_split>>=
+% splitStrata(aphan) <- ~field/sample
+% aphan
+% @
+% \noindent
+% Now we have sucessfully defined our hierarchies. If you have imported your data
+% in this manner, you may skip to the \seclink{data.manip:hier:setPop}{setting
+% population hierarchies}, \seclink{data.manip:hier:view}{viewing hierarchies}, or
+% \seclink{data.manip:hier:manip}{manipulating hierarchical levels.}
 
-\bline{}
+% \bline{}
 
-If you have imported your data with a single population and want to add
-hierarchical levels separately, you can use the function \texttt{strata}
-with a data frame containing your hierarchical levels. For this example, we will
-use the data set \texttt{H3N2}, which contains SNP data from the H3N2 virus.
-This data set holds a data frame in the the \seclink{intro:genind:other}{other
-slot} that contains many variables including country, year, and month of
-collection. We will first load the data and write that data frame to a file on
-the desktop.
-\label{data:virus}
-<<H3N2_data_show, eval = FALSE>>=
-data(H3N2)
-write.table(other(H3N2)$x, file = "~/Desktop/virus_info.csv", row.names = FALSE)
-@
-<<H3N2_data_noshow, echo = FALSE>>=
-data(H3N2)
-virus_info <- as.data.frame(other(H3N2)$x) # extracting the data frame
-@
-\noindent
-Now we have our data and we have a separate table in a file on our desktop
-defining our hierarchical levels. Let's import those levels into R with
-\texttt{read.table} and see what they are:
+% If you have imported your data with a single population and want to add
+% hierarchical levels separately, you can use the function \texttt{strata}
+% with a data frame containing your hierarchical levels. For this example, we will
+% use the data set \texttt{H3N2}, which contains SNP data from the H3N2 virus.
+% This data set holds a data frame in the the \seclink{intro:genind:other}{other
+% slot} that contains many variables including country, year, and month of
+% collection. We will first load the data and write that data frame to a file on
+% the desktop.
+% \label{data:virus}
+% <<H3N2_data_show, eval = FALSE>>=
+% data(H3N2)
+% write.table(other(H3N2)$x, file = "~/Desktop/virus_info.csv", row.names = FALSE)
+% @
+% <<H3N2_data_noshow, echo = FALSE>>=
+% data(H3N2)
+% virus_info <- as.data.frame(other(H3N2)$x) # extracting the data frame
+% @
+% \noindent
+% Now we have our data and we have a separate table in a file on our desktop
+% defining our hierarchical levels. Let's import those levels into R with
+% \texttt{read.table} and see what they are:
 
-<<H3N2_read_table, eval = FALSE>>=
-virus_info <- read.table("~/Desktop/virus_info.csv", header = TRUE)
-names(virus_info)
-@
-<<H3N2_read_table_eval, echo = FALSE>>=
-names(virus_info)
-@
+% <<H3N2_read_table, eval = FALSE>>=
+% virus_info <- read.table("~/Desktop/virus_info.csv", header = TRUE)
+% names(virus_info)
+% @
+% <<H3N2_read_table_eval, echo = FALSE>>=
+% names(virus_info)
+% @
 
-From here we will convert our genind object to a genclone object and use
-\texttt{strata} to define the hierarchical levels with the table we just
-imported.
+% From here we will convert our genind object to a genclone object and use
+% \texttt{strata} to define the hierarchical levels with the table we just
+% imported.
 
-\label{data.manip:hier:define:set}
-<<H3N2_strata>>=
-virus <- as.genclone(H3N2) # Converting it to a genclone object.
-strata(virus) <- virus_info # Setting the hierarchy
-virus
-@
-\noindent
-In this data, levels such as host and segment are unimportant levels because
-they are all the same. Let's say that we are only interested in year and country.
-To make things easier to view, we will set the hierarchical levels to these two
-columns:
-<<H3N2_strata_again>>=
-strata(virus) <- virus_info[c("country", "year")]
-virus
-@
+% \label{data.manip:hier:define:set}
+% <<H3N2_strata>>=
+% virus <- as.genclone(H3N2) # Converting it to a genclone object.
+% strata(virus) <- virus_info # Setting the hierarchy
+% virus
+% @
+% \noindent
+% In this data, levels such as host and segment are unimportant levels because
+% they are all the same. Let's say that we are only interested in year and country.
+% To make things easier to view, we will set the hierarchical levels to these two
+% columns:
+% <<H3N2_strata_again>>=
+% strata(virus) <- virus_info[c("country", "year")]
+% virus
+% @
 
-Notice that there are no populations defined. Now that we have the hierarchical
-levels in place, we can use it to define the population hierarchy. We will use
-the function \texttt{setPop} to define the population as year with respect to
-country:
-<<H3N2_set_country>>=
-setPop(virus) <- ~year/country
-virus
-@
+% Notice that there are no populations defined. Now that we have the hierarchical
+% levels in place, we can use it to define the population hierarchy. We will use
+% the function \texttt{setPop} to define the population as year with respect to
+% country:
+% <<H3N2_set_country>>=
+% setPop(virus) <- ~year/country
+% virus
+% @
 
-\subsubsection{Viewing hierarchies}
-\label{data.manip:hier:view}
+% \subsubsection{Viewing hierarchies}
+% \label{data.manip:hier:view}
 
-If you wanted to view your hierarchies to make sure that you made no spelling
-errors in your population definitions, you can extract the data frame from your
-genclone object by using the function \texttt{strata}:
+% If you wanted to view your hierarchies to make sure that you made no spelling
+% errors in your population definitions, you can extract the data frame from your
+% genclone object by using the function \texttt{strata}:
 
-\begin{quote}
-Default Command:
-<<strata_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "strata"
-print_command(funk)
-@
-\end{quote}
-\noindent
-Where \textbf{x} is the genclone object, \textbf{formula} defines the hierarchical
-levels, and \textbf{combine} indicates whether or not you want the lower levels
-of the hierarchy combined with the higher levels. For example, in the root rot
-data above, the hierarchical levels are explicitly hierarchical and should be
-combined. Note, if you don't supply a formula argument, the data frame as it
-exists will be returned.
+% \begin{quote}
+% Default Command:
+% <<strata_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "strata"
+% print_command(funk)
+% @
+% \end{quote}
+% \noindent
+% Where \textbf{x} is the genclone object, \textbf{formula} defines the hierarchical
+% levels, and \textbf{combine} indicates whether or not you want the lower levels
+% of the hierarchy combined with the higher levels. For example, in the root rot
+% data above, the hierarchical levels are explicitly hierarchical and should be
+% combined. Note, if you don't supply a formula argument, the data frame as it
+% exists will be returned.
 
-<<aphan_hier_get>>=
-head(strata(aphan))
-head(strata(aphan, ~field/sample))
-@
+% <<aphan_hier_get>>=
+% head(strata(aphan))
+% head(strata(aphan, ~field/sample))
+% @
 
-If the hierarchical levels are not nested, or you simply want to use this
-hierarchy for another data set, you might want to set the \textbf{combine} flag
-to \texttt{FALSE}. Let's use the virus data as an example:
+% If the hierarchical levels are not nested, or you simply want to use this
+% hierarchy for another data set, you might want to set the \textbf{combine} flag
+% to \texttt{FALSE}. Let's use the virus data as an example:
 
-<<virus_get>>=
-head(strata(virus, ~year/country))
-head(strata(virus, ~year/country, combine = FALSE))
-@
+% <<virus_get>>=
+% head(strata(virus, ~year/country))
+% head(strata(virus, ~year/country, combine = FALSE))
+% @
 
-It will return only the levels you ask it to return:
+% It will return only the levels you ask it to return:
 
-<<virus_onepop>>=
-head(strata(virus, ~country))
-@
+% <<virus_onepop>>=
+% head(strata(virus, ~country))
+% @
 
-\subsubsection{Manipulating hierarchical levels}
-\label{data.manip:hier:manip}
+% \subsubsection{Manipulating hierarchical levels}
+% \label{data.manip:hier:manip}
 
-Once we have our hierarchies set in place, we want to be able to rename and add
-to them. For this example, we will revisit the \seclink{data:virus}{virus
-example} from above. We have set the population hierarchy to be based on year and
-country, but we've noticed that we left out month. And let's say that we
-accidentally overwrote the data object like this:
-<<virus_stupid>>=
-virus_info <- virus_info[["month"]]
-names(virus_info)
-@
-\noindent
-If we were saving our script the whole time, we could just go back and retrieve
-the data frame, but that defeats the purpose of this section where we imagine
-that we've recieved new information and wanted to add it to our hierarchy. If we
-want to add this to our hierarchy, we just use the function
-\texttt{addStrata} defined as thus:
-\begin{quote}
-Default Command:
-<<addStrata_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
-funk <- "addStrata"
-print_command(funk)
-@
-\end{quote}
-\noindent
-We can use this function to add on a new column to the data frame.
-\label{data.manip:hier:manip:add}
-<<virus_add_arg>>=
-addStrata(virus) <- virus_info
-virus
-@
-\noindent
-Notice that the new hierarchical level is simply labeled as \texttt{NEW}. We
-will customize the name of the hierarchical levels with the function
-\texttt{nameStrata}.
-\label{data.manip:hier:manip:name}
+% Once we have our hierarchies set in place, we want to be able to rename and add
+% to them. For this example, we will revisit the \seclink{data:virus}{virus
+% example} from above. We have set the population hierarchy to be based on year and
+% country, but we've noticed that we left out month. And let's say that we
+% accidentally overwrote the data object like this:
+% <<virus_stupid>>=
+% virus_info <- virus_info[["month"]]
+% names(virus_info)
+% @
+% \noindent
+% If we were saving our script the whole time, we could just go back and retrieve
+% the data frame, but that defeats the purpose of this section where we imagine
+% that we've recieved new information and wanted to add it to our hierarchy. If we
+% want to add this to our hierarchy, we just use the function
+% \texttt{addStrata} defined as thus:
+% \begin{quote}
+% Default Command:
+% <<addStrata_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
+% funk <- "addStrata"
+% print_command(funk)
+% @
+% \end{quote}
+% \noindent
+% We can use this function to add on a new column to the data frame.
+% \label{data.manip:hier:manip:add}
+% <<virus_add_arg>>=
+% addStrata(virus) <- virus_info
+% virus
+% @
+% \noindent
+% Notice that the new hierarchical level is simply labeled as \texttt{NEW}. We
+% will customize the name of the hierarchical levels with the function
+% \texttt{nameStrata}.
+% \label{data.manip:hier:manip:name}
 
-<<virus_name>>=
-nameStrata(virus) <- ~country/year/month
-virus
-@
-\noindent
-Of course, perhaps a better way still would be to use a data frame:
-<<virus_add_df, eval = FALSE>>=
-addStrata(virus) <- data.frame(month = virus_info)
-@
+% <<virus_name>>=
+% nameStrata(virus) <- ~country/year/month
+% virus
+% @
+% \noindent
+% Of course, perhaps a better way still would be to use a data frame:
+% <<virus_add_df, eval = FALSE>>=
+% addStrata(virus) <- data.frame(month = virus_info)
+% @
 
-\subsubsection{Defining populations with hierarchies}
-\label{data.manip:hier:setPop}
+% \subsubsection{Defining populations with hierarchies}
+% \label{data.manip:hier:setPop}
 
-Now that we have defined the hierarchical levels in the data set, setting the
-population hierarchy allows us to group our data according to the hierarchical
-level of your choice. This is a necessary step. For this example, we will use a
-data set of \textit{Phytophthora infestans} collected from North America and
-South America.
+% Now that we have defined the hierarchical levels in the data set, setting the
+% population hierarchy allows us to group our data according to the hierarchical
+% level of your choice. This is a necessary step. For this example, we will use a
+% data set of \textit{Phytophthora infestans} collected from North America and
+% South America.
 
-<<Pinf_setPop>>=
-data(Pinf)
-Pinf
-@
-\noindent
-Above we have two hierarchies for Continent and Country, but the
-populations only show Continent level populations. If we wanted to investigate
-each country separately, we would need to reset the population to be represented
-by Country. This can be done with the function \texttt{setPop}. This function
-utilizes the defined population hierarchies to set the population. We'll use our
-data set above to illustrate this:
+% <<Pinf_setPop>>=
+% data(Pinf)
+% Pinf
+% @
+% \noindent
+% Above we have two hierarchies for Continent and Country, but the
+% populations only show Continent level populations. If we wanted to investigate
+% each country separately, we would need to reset the population to be represented
+% by Country. This can be done with the function \texttt{setPop}. This function
+% utilizes the defined population hierarchies to set the population. We'll use our
+% data set above to illustrate this:
 
-<<Pinf_setPop2>>=
-setPop(Pinf) <- ~Country
-Pinf # Now set by country
-@
-\noindent
-The beauty about it is the fact that it will also combine all the hierarchical
-levels you want to use. Let's see when we ask it to set the population of
-Country with respect to Continent.
+% <<Pinf_setPop2>>=
+% setPop(Pinf) <- ~Country
+% Pinf # Now set by country
+% @
+% \noindent
+% The beauty about it is the fact that it will also combine all the hierarchical
+% levels you want to use. Let's see when we ask it to set the population of
+% Country with respect to Continent.
 
-<<Pinf_setPop_combine>>=
-setPop(Pinf) <- ~Continent/Country
-Pinf
-@
-\noindent
-Nice!
+% <<Pinf_setPop_combine>>=
+% setPop(Pinf) <- ~Continent/Country
+% Pinf
+% @
+% \noindent
+% Nice!
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1585,19 +1589,19 @@ Nice!
 \label{data.manip:missing}
 
 \tab\tab A data set without missing data is always ideal, but often not
-achievable. Many functions in \adegenet{} cannot handle missing data and thus
-the function \texttt{na.replace} exists \cite{Jombart:2008}. It will replace
-missing data with with either ``0" representing a mysterious extra allele in the
-data set resulting in more diversity or the mean of allelic frequencies at the
-locus. There is no set method, however, for simply removing missing data from
-analyses, which is why the \poppr{} function \texttt{missingno} (see below)
-exists. If the name makes you uneasy it's because it should. Missing data can
-mean different things based on your data type. For microsatellites, missing data
-might represent any source of error that could cause a PCR product to not
-amplify in gel electrophoresis, which may or may not be biologically relevant.
-For a DNA alignment, missing data could mean something as simple as an insertion
-or deletion, which is biologically relevant. The choice to exclude or estimate
-data has very different implications for the type of data you have.
+achievable. 
+% Many functions in \adegenet{} cannot handle missing data and thus
+% the function \texttt{na.replace} exists \cite{Jombart:2008}. It will replace
+% missing data with with either ``0" representing a mysterious extra allele in the
+% data set resulting in more diversity or the mean of allelic frequencies at the
+% locus. 
+The \poppr{} function \texttt{missingno} exists to handle missing data. Missing
+data can mean different things based on your data type. For microsatellites,
+missing data might represent any source of error that could cause a PCR product
+to not amplify in gel electrophoresis, which may or may not be biologically
+relevant. For a DNA alignment, missing data could mean something as simple as an
+insertion or deletion, which is biologically relevant. The choice to exclude or
+estimate data has very different implications for the type of data you have.
 
 \begin{center}
   \fcolorbox{light-gray}{salmon}{
@@ -1612,9 +1616,10 @@ data has very different implications for the type of data you have.
 \subsubsection{Function: missingno}
 \label{data.manip:missing:missingno}
 
-\tab\tab \texttt{missingno} is a function that serves partially as a wrapper for
-\adegenet{}'s \texttt{na.replace} to replace missing data and as a way to
-exclude specific areas that contain systematic missing data.
+\tab\tab \texttt{missingno} is a function that serves as a way to exclude
+specific areas that contain systematic missing data. There are four methods
+available, 
+
 \begin{quote}
 Default Command:
 <<missingo_command, echo = FALSE, comment = NA, size = 'normalsize'>>=
@@ -1627,10 +1632,6 @@ print_command(funk)
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{type -} This could be one of four options:
     \begin{description}
-      \item[ ``mean"] This replaces missing data with the mean allele
-      frequencies in the entire data set.
-      \item[ ``zero" or ``0"] This replaces missing data with zero, signifying a
-      new allele.
       \item[ ``loci"] This is to be used for a data set that has systematic
       problems with certain loci that contain null alleles or simply failed to
       amplify. This will remove loci with a defined threshold of missing data
@@ -1638,6 +1639,14 @@ print_command(funk)
       \item[ ``geno"] This is to be used for genotypes (individuals) in your
       data set where many null alleles are present. Individuals with a defined
       threshold missing data will be removed.
+      \item[``ignore''] This function is used internally for functions like
+      \texttt{aboot}. This will retain the missing data when using these
+      functions.
+      \item[ ``mean"] This replaces missing data with the mean allele
+      frequencies in the entire data set (This is for backwards compatibility,
+      please don't use this).
+      \item[ ``zero" or ``0"] This replaces missing data with zero, signifying a
+      new allele (This is for backwards compatibility, please don't use this).
     \end{description}
     \item \texttt{cutoff -} This is a numeric value from 0 to 1 indicating the
     percent allowable missing data for either loci or genotypes. If you have,
@@ -1655,6 +1664,7 @@ print_command(funk)
 Let's take a look at what this does by focusing in on areas with missing data.
 We'll use the data set \texttt{nancycats} as an example. Using the \poppr{}
 function \texttt{info\_table}, we can assess missing data within populations.
+
 <<initializing_poppr, out.width=".8\\linewidth", fig.height = 6, fig.width = 10>>=
 library("poppr")
 data(nancycats)
@@ -1663,48 +1673,44 @@ info_table(nancycats, plot = TRUE)
 \label{function:info-table}
 
 We can see that locus \Sexpr{locNames(nancycats)[1]} has a lot of missing data.
-To demonstrate the function \cmdlink{data.manip:missing:missingno}{missingno}, we
-will zoom into the first five individuals at the first locus.
+To demonstrate the function \cmdlink{data.manip:missing:missingno}{missingno},
+we will zoom into the first five individuals at the first locus.
+
 <<nancy_indiv>>=
-nancycats$tab[1:5, 8:13]
+tab(nancycats)[1:5, 8:13]
 @
 
 When looking at this data set, recall how a \texttt{genind} object is formatted.
-You have a matrix of 0's, 1's and 0.5's. For diploids, if you see 0.5, that
-means it is heterozygous at that allele, and a 1 means it's homozygous. Here we
-see three heterozygotes and two individuals with missing data (indicated by NA).
-Let's first replace it by zero and mean, respectively.
-<<missingno_replace>>=
-nanzero <- missingno(nancycats, type = "zero")
-nanmean <- missingno(nancycats, type = "mean")
-nanzero$tab[1:5, 8:13]
-nanmean$tab[1:5, 8:13]
-is.genind(nanmean)
-@
-You notice how the values of NA changed, yet the basic structure stayed the
-same. These are the replacement options from \adegenet{}. Let's look at the same
-example with the exclusion options (set to the default cutoff of 5\%).
+You have a matrix representing counts of alleles. For diploids, if you see 1,
+that means it is heterozygous at that allele, and a 2 means it's homozygous.
+Here we see three heterozygotes and two individuals with missing data (indicated
+by NA). Let's look at what happens when we exclude loci and genotypes with
+\textgreater 5\% missing data).
+
 <<missingno_exclude>>=
 nanloci <-  missingno(nancycats, "loci")
 nangeno <-  missingno(nancycats, "geno")
-nanloci$tab[1:5, 8:13]
+tab(nanloci)[1:5, 8:13]
 @
 
-Notice how we now see columns named ``L2.01" and ``L2.02". This is showing us
-another locus because we have removed the first. Recall from the summary table
-that the first locus had 16 alleles, and the second had 11. Now that we've
-removed loci containing missing data, all others have shifted over.\\ Let's look
-at the loci names and number of individuals.
+Notice how we now see columns named ``fca23.128" and ``fca23.130". This is
+showing us another locus because we have removed the first. Recall from the
+summary table that the first locus had 16 alleles, and the second had 11. Now
+that we've removed loci containing missing data, all others have shifted over.\\
+Let's look at the loci names and number of individuals.
+
 <<missingno_loci>>=
-nInd(nanloci) # Individuals
+nInd(nanloci)     # Individuals
 locNames(nanloci) # Names of the loci
 @
+
 You can see that the number of individuals stayed the same but the loci ``fca8",
 ``fca45", and ``fca96" were removed.\\
+
 Let's look at what happened when we removed individuals.
 <<missingno_geno>>=
-nangeno$tab[1:5, 8:13]
-nInd(nangeno) # Individuals
+tab(nangeno)[1:5, 8:13]
+nInd(nangeno)     # Individuals
 locNames(nangeno) # Names of the loci
 @
 
@@ -1714,16 +1720,28 @@ the scenario with ``loci", we removed several columns of the data set, and so
 with our sub-setting, we see alleles from the second locus. In the scenario with
 ``geno", we removed several rows of the data set so we see other individuals in
 our sub-setting.
+
+
+% Let's first replace it by zero and mean, respectively.
+
+% <<missingno_replace>>=
+% nanzero <- missingno(nancycats, type = "zero")
+% nanmean <- missingno(nancycats, type = "mean")
+% nanzero$tab[1:5, 8:13]
+% nanmean$tab[1:5, 8:13]
+% is.genind(nanmean)
+% @
+
+% You notice how the values of NA changed, yet the basic structure stayed the
+% same. 
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
 \subsection{Extract populations \{Divide (populations) and conquer (your analysis)\}}
 \label{data.manip:divide}
 
-\tab\tab \Adegenet{} provides methods for subsetting data by individual or
-splitting all of the data into a list of populations. If you only want one or
-two populations, these methods become tedious. The \poppr{} function
-\texttt{popsub} makes this easier:
+\tab\tab This \poppr{} function \texttt{popsub} makes subsetting genind or
+genlight objects by population easier:
 
 \subsubsection{Function: popsub}
 \label{data.manip:divide:popsub}
@@ -1762,35 +1780,50 @@ print_command(funk)
 \end{itemize}
 \bline{}
 
-To demonstrate this tool, let's revisit the \seclink{data:virus}{virus} data set
-that we saw in \seclink{data.manip:hier:define}{Defining hierarchies.} Let's say
-we wanted to analyze only the data in North America. To make sure we are all on
-the same page, we will reset the population factor to ``country".
-<<popsub_sublist>>=
-setPop(virus) <- ~country
-popNames(virus) # Only two countries from North America.
-vna <- popsub(virus, sublist=c("USA", "Canada"))
-popNames(vna)
+To demonstrate this tool, we'll use the H3N2 virus data set provided in 
+\adegenet{}. It contains a data frame in the ``other'' slot called ``x'' that
+contains information about the year of epidemic, country, etc.
+
+<<load_H3N2>>=
+data("H3N2", package = "adegenet")
+strata(H3N2) <- data.frame(other(H3N2)$x)
+H3N2
 @
+
+We will demonstrate the \texttt{popsub} functionality by setting the population
+factor to ``country''. Note, in this section, I am naming the variables staring
+with ``v'' indicating ``virus''.
+
+<<popsub_sublist>>=
+setPop(H3N2) <- ~country
+popNames(H3N2) # Only two countries from North America.
+v_na <- popsub(H3N2, sublist = c("USA", "Canada"))
+popNames(v_na)
+@
+
 \noindent
 If we want to see the population size, we can use the \adegenet{} function
 \texttt{nInd()}:
+
 <<popsub_sizes>>=
-c(NorthAmerica = nInd(vna), Total = nInd(virus))
+c(NorthAmerica = nInd(v_na), Total = nInd(H3N2))
 @
+
 \noindent
 You can see that the population factors are correct and that the size of the
 data set is considerably smaller. Let's see the data set without the North
 American countries.
+
 <<popsub_blacklist>>=
-vnaminus <- popsub(virus, blacklist=c("USA", "Canada"))
-popNames(vnaminus)
+v_na_minus <- popsub(H3N2, blacklist = c("USA", "Canada"))
+popNames(v_na_minus)
 @
+
 \noindent
 Let's make sure that the number of individuals in both data sets is equal to
 the number of individuals in our original data set:
 <<length_test>>=
-(nInd(vnaminus) + nInd(vna)) == nInd(virus)
+(nInd(v_na_minus) + nInd(v_na)) == nInd(H3N2)
 @
 
 Now we have data sets with and without North America. Let's try something a bit
@@ -1799,11 +1832,12 @@ alphabetical order, but we know that we still don't want any countries in North
 America. We can easily do this by using the \textit{base} function
 \texttt{sort}.
 <<popsub_combine>>=
-vsort <- sort(popNames(virus))[1:10]
+vsort <- sort(popNames(H3N2))[1:10]
 vsort
-valph <- popsub(virus, sublist=vsort, blacklist=c("USA", "Canada"))
+valph <- popsub(H3N2, sublist = vsort, blacklist = c("USA", "Canada"))
 popNames(valph)
 @
+
 \noindent
 And that, is how you subset your data with poppr!
 %-----------------------------------------------------------------------------%
@@ -1867,20 +1901,33 @@ print_command(funk)
 \bline{}
 
 Let's look at ways to clone-correct our data. We'll look at our \textit{A.
-euteichies} data that we loaded earlier in the
-section \seclink{data.manip:hier}{Can you take me hier(archy)} since that data
-set is known to include clonal populations \cite{Grunwald:2006}. Try playing
-around with the data and see what different combinations of the \texttt{hier},
-and \texttt{keep} flags produce. Below, I will give three examples of clone
-corrections at the sample level with respect to field, at the field level, and
-finally, at the level of the entire data set.
+euteichies} data that we used in the \seclink{intro:qstart}{quickstart} since
+that data set is known to include clonal populations \cite{Grunwald:2006}. Try
+playing around with the data and see what different combinations of the
+\texttt{hier}, and \texttt{keep} flags produce. Below, I will give three
+examples of clone corrections at the sample level with respect to field, at the
+field level, and finally, at the level of the entire data set.
 
 First, we will examine the original data set.
 <<clonecorrect>>=
-aphan # Original object
+data(Aeut)
+strata(Aeut) <- data.frame(other(Aeut)$population_hierarchy[-1])
+Aeut
 @
+
+When you read in data with \cmdlink{intro:import:read.genalex}{read.genalex},
+the default is to represent it in a genclone object. Since the
+\texttt{clonecorrect} function works on multilocus genotype definitions, It's
+more efficient to convert it to a genclone object first.
+
+<<clonecorrect_genclone>>=
+aphan <- as.genclone(Aeut)
+@
+
 \noindent
-Now we correct by sample with respect to field and keep the field as the population.
+Now we correct by sample with respect to field and keep the field as the
+population.
+
 <<clonecorrect2>>=
 clonecorrect(aphan,  strata = ~field/sample)
 # Your turn: Use the same stratification and use combine = TRUE and then
@@ -2170,14 +2217,15 @@ the alleles have a 1 in 4 chance of being chosen.
 }}
 \end{table}
 
-Note that you have the same genotypes after shuffling, so at each locus, you
-will maintain the same allelic frequencies and heterozygosity. So, in this
-sample, you will only see a homozygote with allele 2. This also ensures that the
-P-values associated with $I_A$ and $\bar{r} _d$ are exactly the same.
-Unfortunately, if you are trying to simulate a sexual population, this does not
-make much biological sense as it \textbf{assumes that alleles are not independently
-assorting within individuals.}
+  Note that you have the same genotypes after shuffling, so at each locus, you
+  will maintain the same allelic frequencies and heterozygosity. So, in this
+  sample, you will only see a homozygote with allele 2. This also ensures that
+  the P-values associated with $I_A$ and $\bar{r} _d$ are exactly the same. This
+  method \textbf{assumes that alleles are not independently assorting within
+  individuals.} This strategy is \textbf{useful if you suspect the population is
+  inbreeding (Jerome Goudet, personal communication)}
   \end{enumerate}
+
 \end{itemize}
 
 \bline{}
@@ -2247,10 +2295,11 @@ print_command(funk)
   \end{itemize}
 \bline{}
 
-Here's a quick example using the H3N2 virus SNP data set. We will only retain
-loci that have a minor allele frequency of $\geq 5\%$
+Here's a quick example using the H3N2 virus SNP data set from section
+\seclink{data.manip:divide}{on subsetting your data}. We will only retain loci
+that have a minor allele frequency of $\geq 5\%$
+
 <<inform.H3N2.1, eval = FALSE>>=
-data(H3N2)
 H.five <- informloci(H3N2, cutoff = 0.05)
 @
 <<inform.H3N2.2, echo = FALSE>>=
@@ -2294,14 +2343,14 @@ first step for these analyses as they allow us to see how many clones
 exist. With the \seclink{intro:genclone}{genclone} object, This information is
 already displayed when we view the object.
 <<view_mlg>>=
-virus
+H3N2
 @
 \noindent
 If we need to store the number of MLGs as a variable, we can simply run the
 \texttt{mlg} command.
 <<mlg_genind>>=
-virus_mlg <- mlg(virus)
-virus_mlg
+H3N2_mlg <- mlg(H3N2)
+H3N2_mlg
 @
 \label{mlg:mlg:mlg}
 
@@ -2358,14 +2407,14 @@ print_command(funk)
 We can see what MLGs cross different populations and then give a
 vector that shows how many populations each one of those MLGs crosses.
 <<crosspop, eval=FALSE>>=
-setPop(virus) <- ~country
-v.dup <- mlg.crosspop(virus, quiet=TRUE)
+setPop(H3N2) <- ~country
+v.dup <- mlg.crosspop(H3N2, quiet=TRUE)
 @
 Here is a snippet of what the output looks like when \texttt{quiet} is
 \texttt{FALSE}. It will print out the MLG name, the total number of individuals
 that make up that MLG, and the populations where that MLG can be found.
 <<crosspopout, echo=FALSE>>=
-setPop(virus) <- ~country
+setPop(H3N2) <- ~country
 v.dup <- structure(list(MLG.3 = structure(c(4L, 8L), .Names = c("USA",
 "Denmark")), MLG.9 = structure(c(1L, 13L, 1L, 1L), .Names = c("Japan",
 "USA", "Finland", "Denmark")), MLG.31 = structure(c(2L, 7L), .Names = c("Japan",
@@ -2440,11 +2489,11 @@ print_command(funk)
 \bline{}
 
 <<mlgbar, eval = FALSE>>=
-v.tab <- mlg.table(virus, plot = TRUE)
+v.tab <- mlg.table(H3N2, plot = TRUE)
 v.tab[1:10, 1:10] # Showing the first 10 columns and rows of the table.
 @
 <<mlgbarshow, echo = FALSE>>=
-v.tab <- mlg.table(virus, plot = FALSE)
+v.tab <- mlg.table(H3N2, plot = FALSE)
 v.tab[1:10, 1:10] # Showing the first 10 columns and rows of the table.
 @
 \begin{figure}[h!]
@@ -2454,7 +2503,7 @@ v.tab[1:10, 1:10] # Showing the first 10 columns and rows of the table.
   charts but only the chart for Norway is shown here.}
   \label{nortable}
 <<mlgbarplot, results = 'hide', out.width = "0.8\\linewidth">>=
-mlg.table(virus, sublist = "Norway", plot = TRUE)
+mlg.table(H3N2, sublist = "Norway", plot = TRUE)
 @
 \end{figure}
 \newpage
@@ -2469,11 +2518,11 @@ number of expected MLGs for a given sample size. For more information, type
 For the sake of this example, instead of drawing a curve for each of the 37
 countries represented in this sample, let's set the hierarchical level to year.
 <<mlgrare1_dummy, eval = FALSE>>=
-setPop(virus) <- ~year
-summary(virus) # Check the data to make sure it's correct.
+setPop(H3N2) <- ~year
+summary(H3N2) # Check the data to make sure it's correct.
 @
 <<mlgrare1, echo = FALSE>>=
-setPop(virus) <- ~year
+setPop(H3N2) <- ~year
 res <- c("", " # Total number of genotypes:  1903 ", "", " # Population sample sizes:  ",
          "2002 2003 2004 2005 2006 ", " 158  415  399  469  462 ", "",
          " # Number of alleles per locus:  ", "  6  17  39  42  45  51  60  72  73  90 108 123 129 134 145 148 149 157 168 171 177 225 ",
@@ -2496,7 +2545,7 @@ cat(res, sep = "\n")
 @
 <<mlgrare2, eval=FALSE, tidy=FALSE>>=
 library("vegan")
-H.year <- mlg.table(virus, plot = FALSE)
+H.year <- mlg.table(H3N2, plot = FALSE)
 rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)),
           border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
@@ -2506,7 +2555,7 @@ rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)),
   \label{rarecurve}
 <<mlgrareplot, echo=FALSE, results='hide'>>=
 # library("vegan")
-H.year <- mlg.table(virus, plot = FALSE)
+H.year <- mlg.table(H3N2, plot = FALSE)
 vegan::rarecurve(H.year, ylab="Number of expected MLGs", sample=min(rowSums(H.year)), border = NA, fill = NA, font = 2, cex = 1, col = "blue")
 @
 \end{figure}
@@ -2530,9 +2579,9 @@ interesting data sets. Let's say we wanted to know which MLGs were duplicated
 across the regions of the United Kingdom, Germany, Netherlands, and Norway. All
 we have to do is use the \texttt{sublist} flag in the function:
 <<subcross>>=
-setPop(virus) <- ~country
+setPop(H3N2) <- ~country
 UGNN.list <- c("United Kingdom", "Germany", "Netherlands", "Norway")
-UGNN <- mlg.crosspop(virus, sublist=UGNN.list, indexreturn=TRUE)
+UGNN <- mlg.crosspop(H3N2, sublist=UGNN.list, indexreturn=TRUE)
 @
 OK, the output tells us that there are three MLGs that are crossing between
 these populations, but we do not know how many are in each. We can easily find
@@ -2554,7 +2603,7 @@ populations. Let's use \texttt{mlg.vector} to find individuals corresponding to
 the MLGs. First we'll investigate what the output of this function looks like.
 
 <<mlg.vector_first>>=
-v.vec <- mlg.vector(virus)
+v.vec <- mlg.vector(H3N2)
 str(v.vec) # Analyze the structure.
 @
 \noindent
@@ -2565,7 +2614,7 @@ we look at the number of unique integers in the vector, it corresponds to the
 number of observed multilocus genotypes:
 <<mlg.vector_second>>=
 length(unique(v.vec)) # count the number of MLGs
-virus # equal to the first number in this output.
+H3N2 # equal to the first number in this output.
 @
 \label{mlg:mix:mlg.vector}
 \noindent
@@ -2583,7 +2632,7 @@ table(UGNN_match) # How many individuals matched to those three MLGs?
 the 22 individuals.
 
 <<mlg.vector_inds>>=
-indNames(virus)[UGNN_match]
+indNames(H3N2)[UGNN_match]
 @
 
 Note that there is an alternative way to list individuals matching specific MLGs
@@ -2594,15 +2643,15 @@ the MLG, but the index does not necessarily match up, so it is important to
 convert your query MLGs to strings:
 \label{mlg:mix:mlg.id}
 <<mlg.id>>=
-virus.id <- mlg.id(virus)
-virus.id[as.character(UGNN)]
+H3N2.id <- mlg.id(H3N2)
+H3N2.id[as.character(UGNN)]
 @
 
 
 We can also use the vector of MLGs to
 subset \cmdlink{mlg:table:mlg.table}{mlg.table} with the \texttt{mlgsub} flag.
 <<mlgsub_flag, eval=FALSE>>=
-mlg.table(virus, mlgsub = UGNN)
+mlg.table(H3N2, mlgsub = UGNN)
 @
 \noindent
 That showed us exactly which populations these three MLGs came from in our data
@@ -2612,7 +2661,7 @@ set.
   \caption{\footnotesize All populations that contain these MLGs}
   \label{nortable2}
 <<mlgsub_flagshow, results='hide', echo=FALSE, out.width = "0.8\\linewidth">>=
-mlg.table(virus, mlgsub = UGNN)
+mlg.table(H3N2, mlgsub = UGNN)
 @
 \end{figure}
 \newpage
@@ -2626,7 +2675,7 @@ mlg.table(virus, mlgsub = UGNN)
 % Let's take a look at the three genotypes we specified above utilizing the vector
 % of MLGs we created above, \texttt{H.vec}.
 % <<df hashing_echo, eval=FALSE>>=
-% v.df <- genind2df(virus)
+% v.df <- genind2df(H3N2)
 % v.df[v.vec %in% UGNN, 1:15] # Showing only 15 columns becaus it is a large dataset.
 % @
 % <<df hashing_eval, echo=FALSE>>=
@@ -2702,7 +2751,7 @@ mlg.table(virus, mlgsub = UGNN)
 % is based on data frames, we have to give ourselves a data frame to work with. We
 % can do this using the \texttt{df = TRUE} flag.
 % <<mlg_chart>>=
-% df <- mlg.crosspop(virus, df=TRUE, quiet=TRUE)
+% df <- mlg.crosspop(H3N2, df=TRUE, quiet=TRUE)
 % names(df)
 % @
 % Now that we have our data frame, we can do a couple of things. We can first see
@@ -4004,74 +4053,74 @@ mlg.table(virus, mlgsub = UGNN)
 \section{Appendix}
 \label{appendix}
 
-\subsection{General hierarchy method use}
-\label{appendix:hier:method}
+% \subsection{General hierarchy method use}
+% \label{appendix:hier:method}
 
-\tab\tab To reiterate, there are currently 5 methods that manipulate population
-hierarchies in genclone objects:
-% latex table generated in R 3.0.3 by xtable 1.7-3 package
-% Sat Mar 22 20:24:23 2014
-\begin{table}[ht]
-\centering
-\begin{tabular}{llll}
-  \hline
- Method & Function & Input & Result\\
-  \hline
- split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
- set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchy\\
- get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\
- name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchy names\\
- add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
-   \hline
-\end{tabular}
-\end{table}
-\noindent
-NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
-details on how to access hierarchies.\\
+% \tab\tab To reiterate, there are currently 5 methods that manipulate population
+% hierarchies in genclone objects:
+% % latex table generated in R 3.0.3 by xtable 1.7-3 package
+% % Sat Mar 22 20:24:23 2014
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{llll}
+%   \hline
+%  Method & Function & Input & Result\\
+%   \hline
+%  split & \cmdlink{data.manip:hier:define:split}{splitStrata} & formula & defined hierarchical levels\\
+%  set & \cmdlink{data.manip:hier:define:set}{strata} & data frame & new hierarchy\\
+%  get & \cmdlink{data.manip:hier:view}{strata} & formula & data frame\\
+%  name & \cmdlink{data.manip:hier:manip:name}{nameStrata} & formula & new hierarchy names\\
+%  add & \cmdlink{data.manip:hier:manip:add}{addStrata} & vector or data frame & new hierarchical level\\
+%    \hline
+% \end{tabular}
+% \end{table}
+% \noindent
+% NOTE: Refer to \seclink{intro:genclone:access}{Accessing hierarchies} for more
+% details on how to access hierarchies.\\
 
-These functions all have a syntax that looks like this:
-<<hier_syntax, eval = FALSE>>=
-newobject <- FUNCTION(object, input)
-@
-Let's take a data set of \textit{Phytophthora infestans} collected from North
-America and South America and use that as an example. It has two population
-hierarchies defined, Continent and Country:
-<<Pinf_load>>=
-data(Pinf)
-Pinf
-@
-\noindent
-Let's say I wanted to change the hierarchy names to Spanish. I can do that using
-\texttt{nameStrata}.
-<<Pinf_rename>>=
-elPinf <- nameStrata(Pinf, ~continente/pais) # Don't forget the formula syntax!
-elPinf
-Pinf
-@
-\noindent
-The original data set has stayed the same and we now have a new data set with
-the names we want.
+% These functions all have a syntax that looks like this:
+% <<hier_syntax, eval = FALSE>>=
+% newobject <- FUNCTION(object, input)
+% @
+% Let's take a data set of \textit{Phytophthora infestans} collected from North
+% America and South America and use that as an example. It has two population
+% hierarchies defined, Continent and Country:
+% <<Pinf_load>>=
+% data(Pinf)
+% Pinf
+% @
+% \noindent
+% Let's say I wanted to change the hierarchy names to Spanish. I can do that using
+% \texttt{nameStrata}.
+% <<Pinf_rename>>=
+% elPinf <- nameStrata(Pinf, ~continente/pais) # Don't forget the formula syntax!
+% elPinf
+% Pinf
+% @
+% \noindent
+% The original data set has stayed the same and we now have a new data set with
+% the names we want.
 
-Of course, it would be silly to create a new data set every time we wanted to do
-something like change names. This is why all of the above functions (with the
-exception of \texttt{strata}) all have the replacement syntax of:
-<<hier_syntax_replace, eval = FALSE>>=
-FUNCTION(object) <- input
-@
-\noindent
-\textbf{NOTE: This is the preferred syntax}.\\
-\noindent
-This allows the object to be edited \textit{in place} and makes things generally
-easier. Let's revisit our previous example:
-<<Pinf_replace>>=
-Pinf
-nameStrata(Pinf) <- ~continente/pais
-Pinf
-@
-While we will mainly be using the replacement syntax in this vignette, the
-advantage to having both systems is that with the
-\texttt{function(object, input)} syntax, you can test manipulation without
-affecting your object.
+% Of course, it would be silly to create a new data set every time we wanted to do
+% something like change names. This is why all of the above functions (with the
+% exception of \texttt{strata}) all have the replacement syntax of:
+% <<hier_syntax_replace, eval = FALSE>>=
+% FUNCTION(object) <- input
+% @
+% \noindent
+% \textbf{NOTE: This is the preferred syntax}.\\
+% \noindent
+% This allows the object to be edited \textit{in place} and makes things generally
+% easier. Let's revisit our previous example:
+% <<Pinf_replace>>=
+% Pinf
+% nameStrata(Pinf) <- ~continente/pais
+% Pinf
+% @
+% While we will mainly be using the replacement syntax in this vignette, the
+% advantage to having both systems is that with the
+% \texttt{function(object, input)} syntax, you can test manipulation without
+% affecting your object.
 
 %-----------------------------------------------------------------------------%
 %
@@ -4530,12 +4579,12 @@ to its definition and description.
 \cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Manipulation}}\\
-\cmdlink{data.manip:hier:setPop}{setPop} & Set the population using defined hierarchies\\
-\cmdlink{data.manip:hier:define}{splitStrata} & Split a concatenated hierarchy imported as a population\\
-\cmdlink{data.manip:hier:define}{strata} & Define a population hierarchy of a genclone object\\
-\cmdlink{data.manip:hier:view}{strata} & Extract the hierarchy data frame\\
-\cmdlink{data.manip:hier:manip}{addStrata} & Add a vector or data frame to an existing hierarchy \\
-\cmdlink{data.manip:hier:manip}{nameStrata} & Rename a population hierarchy\\
+\texttt{setPop} & Set the population using defined hierarchies\\
+\texttt{splitStrata} & Split a concatenated hierarchy imported as a population\\
+\texttt{strata} & Define a population hierarchy of a genclone object\\
+\texttt{strata} & Extract the hierarchy data frame\\
+\texttt{addStrata} & Add a vector or data frame to an existing hierarchy \\
+\texttt{nameStrata} & Rename a population hierarchy\\
 \cmdlink{data.manip:missing:missingno}{missingno} & Handles missing data \\
 \cmdlink{data.manip:cc:clonecorrect}{clonecorrect} & Clone censors at a specified population hierarchy \\
 \cmdlink{data.manip:informloci}{informloci} & Detects and removes phylogenetically uninformative loci \\
