@@ -2606,7 +2606,7 @@ get_boot_stats <- function(bootlist){
 # ## get_boot_se
 #==============================================================================#
 mean.boot <- function(x, ...) apply(x$t, 2, mean, na.rm = TRUE)
-sd.boot <- function(x, na.rm = TRUE) apply(x$t, 2, sd, na.rm)
+sd.boot <- function(x, na.rm = TRUE) apply(x$t, 2, stats::sd, na.rm)
 
 #==============================================================================#
 # retrieves standard error or mean from list of boot objects.
