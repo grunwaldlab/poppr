@@ -129,6 +129,15 @@
 #' \item \code{\link{genotype_curve}} - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 
 #' }
 #' 
+#' @section Datasets:
+#' \itemize{
+#' \item \code{\link{Aeut}} - (AFLP) Oomycete root rot pathogen \emph{Aphanomyces euteiches}
+#' \item \code{\link{monpop}} - (SSR) Peach brown rot pathogen \emph{Monolinia fructicola}
+#' \item \code{\link{partial_clone}} - (SSR) Simulated partially-clonal data
+#' \item \code{\link{Pinf}} - (SSR) Potato late blight pathogen \emph{Phytophthora infestans}
+#' \item \code{\link{Pram}} - (SSR) Sudden Oak Death pathogen \emph{Phytophthora ramorum}
+#' }
+#' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Niklaus J. Grünwald
 #' 
 #' Maintainer: Zhian N. Kamvar
