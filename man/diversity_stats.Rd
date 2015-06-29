@@ -27,7 +27,8 @@ a numeric matrix giving statistics (columns) for each population
   (rows).
 }
 \description{
-Produce a table of diversity statistics
+Calcuate diversity statistics on a matrix containing counts of multilocus
+genotypes per population.
 }
 \details{
 This function will calculate any diversity statistic for counts of

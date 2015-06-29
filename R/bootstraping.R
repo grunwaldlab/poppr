@@ -235,6 +235,9 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #==============================================================================#
 #' Produce a table of diversity statistics
 #' 
+#' Calcuate diversity statistics on a matrix containing counts of multilocus
+#' genotypes per population.
+#' 
 #' @param z a table of integers representing counts of MLGs (columns) per 
 #'   population (rows)
 #'   
