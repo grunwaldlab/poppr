@@ -14,6 +14,7 @@
 \usepackage{mathtools}
 \usepackage{makeidx}
 \usepackage{longtable}
+\usepackage{natbib}
 
 % for bold symbols in mathmode
 \usepackage{bm}
@@ -58,8 +59,7 @@ OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
 Corvallis, OR}}
 
 \begin{document}
-% Set the width of figures.
-\setkeys{Gin}{width=0.5\textwidth}
+
 
 <<echo=FALSE, warning=FALSE>>=
 knitr::opts_knit$set(out.format = "latex")
@@ -113,6 +113,8 @@ based on genetic distance.
 \end{figure}
 
 \newpage
+% Set the width of figures.
+\setkeys{Gin}{width=0.5\textwidth}
 \begingroup
   \hypersetup{linkcolor=black}
   \tableofcontents
@@ -164,7 +166,7 @@ The real power of \poppr{} is in the data manipulation and analytic tools.
 association, and easily determine which multilocus genotypes are shared across
 populations.
 
-In version 2.0, tools for genomic data were introduced \cite{kamvar2015novel}.
+In version 2.0, tools for genomic data were introduced \citep{kamvar2015novel}.
 These tools allow researchers to define what it means to be a clone lost in a
 sea of genomic data, generate bootstrapped dendrograms with any genetic
 distance, and calculate minimum spanning networks with reticulations to reveal
@@ -228,10 +230,10 @@ feedback.
 The following data sets are included in \poppr{}:
 
 \begin{itemize}
-  \item \texttt{Pinf} (SSR, \textit{Phytophthora infestans})\cite{goss2014irish}
-  \item \texttt{monpop} (SSR, \textit{Monolinia fructicola})\cite{everhart2014finescale}
-  \item \texttt{Aeut} (AFLP, \textit{Aphanomyces eutieches})\cite{Grunwald:2006}
-  \item \texttt{Pram} (SSR, \textit{Phytophthora ramorum})\cite{kamvar2015spatial}
+  \item \texttt{Pinf} (SSR, \textit{Phytophthora infestans})\citep{goss2014irish}
+  \item \texttt{monpop} (SSR, \textit{Monolinia fructicola})\citep{everhart2014finescale}
+  \item \texttt{Aeut} (AFLP, \textit{Aphanomyces eutieches})\citep{Grunwald:2006}
+  \item \texttt{Pram} (SSR, \textit{Phytophthora ramorum})\citep{kamvar2015spatial}
 \end{itemize}
 
 \subsection{Citation}
@@ -483,18 +485,18 @@ The fields you see in the output include:
   \item \texttt{N -} Number of individuals observed.
   \item \texttt{MLG -} Number of multilocus genotypes (MLG) observed.
   \item \texttt{eMLG -} The number of expected MLG at the smallest sample size
-  $\geq 10$ based on rarefaction. \cite{Hurlbert:1971}
-  \item \texttt{SE -} Standard error based on \texttt{eMLG} \cite{Heck:1975}
-  \item \texttt{H -} Shannon-Wiener Index of MLG diversity. \cite{Shannon:1948}
+  $\geq 10$ based on rarefaction. \citep{Hurlbert:1971}
+  \item \texttt{SE -} Standard error based on \texttt{eMLG} \citep{Heck:1975}
+  \item \texttt{H -} Shannon-Wiener Index of MLG diversity. \citep{Shannon:1948}
   \item \texttt{G -} Stoddart and Taylor's Index of MLG diversity.
-  \cite{Stoddart:1988}
+  \citep{Stoddart:1988}
   \item \texttt{lambda -} Simpson's index, $\lambda$.
-  \item \texttt{E.5 -} Evenness, $E_5$. \cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}
-  \item \texttt{Hexp -} Nei's 1978 Expected Heterozygosity. \cite{Nei:1978}
-  \item \texttt{Ia -} The index of association, $I_A$. \cite{Brown:1980}
-  \cite{Smith:1993} \cite{Agapow:2001}
+  \item \texttt{E.5 -} Evenness, $E_5$. \citep{Pielou:1975}\citep{Ludwig:1988}\citep{Grunwald:2003}
+  \item \texttt{Hexp -} Nei's 1978 Expected Heterozygosity. \citep{Nei:1978}
+  \item \texttt{Ia -} The index of association, $I_A$. \citep{Brown:1980}
+  \citep{Smith:1993} \citep{Agapow:2001}
   \item \texttt{rbarD -} The standardized index of association, $\bar r_d$.
-  \cite{Agapow:2001}
+  \citep{Agapow:2001}
 \end{itemize}
 
 These fields are further described in the function \texttt{poppr}. You can
@@ -709,7 +711,7 @@ Here, we introduce a new way of importing data into a \texttt{genind} or
 
 \tab\tab A very popular program for population genetics is GenAlEx
 (\url{http://biology.anu.edu.au/GenAlEx/Welcome.html})
-\cite{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and
+\citep{Peakall:2012, Peakall:2006}. GenAlEx runs within the Excel environment and
 can be very powerful in its analyses. \Poppr{} has added the ability to read
 *.CSV files\footnote{*.CSV files are comma separated files that are easily
 machine readable.} produced in the GenAlEx format. It can handle data types
@@ -982,7 +984,7 @@ cat("Extracting the table ... Writing the table to ~/Desktop/nancycats_inds_xy.c
 important to know how \adegenet{} stores data in the genind object, as that is
 the object used by \poppr{}. To create a genind object, \adegenet{} takes a data
 frame of genotypes (rows) across multiple loci (columns) and converts them into
-a matrix of individual allelic frequencies at each locus \cite{Jombart:2008}.
+a matrix of individual allelic frequencies at each locus \citep{Jombart:2008}.
 
 For example, Let's say we had data with 3 diploid individuals each with 3 loci
 that had 3, 4, and 5 allelic states respectively:
@@ -1117,7 +1119,7 @@ existing \texttt{genind} object and convert it using the function
 \cmdlink{intro:import:read.genalex}{read.genalex} to import as \texttt{genclone}
 or \texttt{genind} objects). We will use the \texttt{Aeut} data set because it
 is a clonal data set that has a simple population strata
-\cite{Grunwald:2006}. The data set is here:
+\citep{Grunwald:2006}. The data set is here:
 \url{http://dx.doi.org/10.6084/m9.figshare.877104} and it is AFLP data of the
 root rot pathogen \textit{Aphanomyces euteiches} collected from two different
 fields in NW Oregon and W Washington, USA. These fields were divided up into
@@ -1219,7 +1221,7 @@ required to be unambiguous or missing.
 
 A solution to this problem is to code missing alleles as ``0''. An example of
 this is found within the \texttt{Pinf} data set in \poppr{} 
-\cite{goss2014irish}. First, we will look at where we have polyploid allele 
+\citep{goss2014irish}. First, we will look at where we have polyploid allele 
 calls.
 
 <<pinf_table, fig.width = 5, fig.height = 15>>=
@@ -1256,8 +1258,8 @@ with zeroes to make up the difference in ploidy.
 
 %% TODO: ZHIAN FIX THIS
 
-This method allows \textsc{Bruvo's Distance} \cite{Bruvo:2004} and the
-\textsc{Index of Association} \cite{Brown:1980,Smith:1993,Agapow:2001} to work
+This method allows \textsc{Bruvo's Distance} \citep{Bruvo:2004} and the
+\textsc{Index of Association} \citep{Brown:1980,Smith:1993,Agapow:2001} to work
 with polyploids as they specifically recognize the zeroes as being missing data.
 A side effect, unfortunately is that the extra zeroes appear as extra alleles.
 As this affects all frequency-based statistics (except for the ones noted
@@ -1592,7 +1594,7 @@ uninformative loci, and shuffling populations.
 \tab\tab A data set without missing data is always ideal, but often not
 achievable. 
 % Many functions in \adegenet{} cannot handle missing data and thus
-% the function \texttt{na.replace} exists \cite{Jombart:2008}. It will replace
+% the function \texttt{na.replace} exists \citep{Jombart:2008}. It will replace
 % missing data with with either ``0" representing a mysterious extra allele in the
 % data set resulting in more diversity or the mean of allelic frequencies at the
 % locus. 
@@ -1903,7 +1905,7 @@ print_command(funk)
 
 Let's look at ways to clone-correct our data. We'll look at our \textit{A.
 euteichies} data that we used in the \seclink{intro:qstart}{quickstart} since
-that data set is known to include clonal populations \cite{Grunwald:2006}. Try
+that data set is known to include clonal populations \citep{Grunwald:2006}. Try
 playing around with the data and see what different combinations of the
 \texttt{hier}, and \texttt{keep} flags produce. Below, I will give three
 examples of clone corrections at the sample level with respect to field, at the
@@ -1957,7 +1959,7 @@ clonecorrect(aphan, strata = NA)
 \tab\tab A common null hypothesis for populations with mixed reproductive modes
 is panmixia, or to put it simply: lots of sex. \Poppr{} randomly shuffles data
 sets in order to calculate P-values for the index of association ($I_A$ and
-$\bar{r} _d$) \cite{Agapow:2001} using 4 different methods:
+$\bar{r} _d$) \citep{Agapow:2001} using 4 different methods:
 
 % latex table generated in R 3.1.0 by xtable 1.7-3 package
 % Fri May  2 23:17:17 2014
@@ -2175,7 +2177,7 @@ Again, heterozygosity and allele frequencies are not maintained, but now all of
 the alleles have a 1 in 4 chance of being chosen.
     \item \textbf{Multilocus permutation} This is called Multilocus permutation
     because it does the same thing as the permutation analysis in the program
-    \textit{multilocus} by Paul Agapow and Austin Burt \cite{Agapow:2001}. This
+    \textit{multilocus} by Paul Agapow and Austin Burt \citep{Agapow:2001}. This
     will shuffle the genotypes at each locus. Using our example above, tables
     \ref{tab:singlebest} and \ref{tab:twobest}
     are shuffled with method 4.
@@ -2270,7 +2272,7 @@ legend('topleft', legend="observed", col="red", lty = 1)
 \label{data.manip:informloci}
 \tab\tab Phylogenetically uninformative loci are those that have only one
 sample differentiating from the rest. This can lead to biased results when
-using multilocus analyses such as the index of association \cite{Brown:1980,Smith:1993}.
+using multilocus analyses such as the index of association \citep{Brown:1980,Smith:1993}.
 These nuisance loci can be removed with the following function.
 \subsubsection{Function: informloci}
 \label{data.manip:informloci:informloci}
@@ -2520,7 +2522,7 @@ mlg.table(H3N2, sublist = "Norway", plot = TRUE)
 
 The MLG table is not limited to use with \poppr{}. In fact, one of the main
 advantages of \texttt{mlg.table} is that it allows easy access to diversity
-functions present in the package \textit{vegan} \cite{vegan}. One example is to
+functions present in the package \textit{vegan} \citep{vegan}. One example is to
 create a rarefaction curve for each population in your data set giving the
 number of expected MLGs for a given sample size. For more information, type
 \texttt{help("diversity", package="vegan")} in your R console.
@@ -2802,15 +2804,15 @@ mlg.table(H3N2, mlgsub = UGNN)
 % \label{index:iard}
 
 % \tab\tab The index of association was originally developed as a measure of
-% multilocus linkage disequilibrium \cite{Brown:1980} and was found to be able to
+% multilocus linkage disequilibrium \citep{Brown:1980} and was found to be able to
 % detect signatures of sexual reproduction and population structure
-% \cite{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with
+% \citep{Brown:1980, Smith:1993}. Unfotunately, $I_A$ was found to increase with
 % the number of loci, and was not suitable to comparisons across studies
-% \cite{Agapow:2001}. To remedy this, $\bar{r} _d$ was developed that corrects for
+% \citep{Agapow:2001}. To remedy this, $\bar{r} _d$ was developed that corrects for
 % this scaling and forces the index to lie between 0 (linkage equilibrium) and 1
 % (full disequilibrium). $I_A$ has previously been implemented in a couple of
-% programs including \textit{multilocus} \cite{Agapow:2001} and \textit{LIAN}
-% \cite{Haubold:2000}. While both of these programs are still available for
+% programs including \textit{multilocus} \citep{Agapow:2001} and \textit{LIAN}
+% \citep{Haubold:2000}. While both of these programs are still available for
 % download, \textit{multilocus} is no longer actively supported, and
 % \textit{LIAN}, despite its speed, is only appropriate for haplotypic data. Both
 % of these programs each require one specific file format, and, until
@@ -2850,7 +2852,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 %     \item permutation over alleles.
 %     \item parametric bootstrap.
 %     \item non-parametric bootstrap.
-%     \item \textit{multilocus} style permutation \cite{Agapow:2001}.
+%     \item \textit{multilocus} style permutation \citep{Agapow:2001}.
 %   \end{enumerate}
 %   The methods are detailed
 %   in \cmdlink{data.manip:shuffle:shufflepop}{shufflepop.}
@@ -2891,7 +2893,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 % method chosen. In this case, the method was to shuffle genotypes at each locus
 % to simulate unlinked loci. Since the P = 0.572, we would fail to reject $H_0$
 % and we therefore might conclude that this population is sexually reproducing
-% \cite{Brown:1980} \cite{Smith:1993} \cite{Agapow:2001}.
+% \citep{Brown:1980} \citep{Smith:1993} \citep{Agapow:2001}.
 % \begin{figure}[h!]
 %   \centering
 %   \caption{\footnotesize Histograms of 999 values of $I_A$ and $\bar{r} _d$
@@ -3238,7 +3240,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 %   \item \texttt{pop -} a \texttt{genind} object.
 % \end{itemize}
 % Since we have a data set that we know is very clonal, let's analyze the
-% \textit{A. euteiches} data set \cite{Grunwald:2006} and create a heatmap to
+% \textit{A. euteiches} data set \citep{Grunwald:2006} and create a heatmap to
 % visualize the degree of difference between populations.
 % <<diss_dist, eval=FALSE>>=
 % data(Aeut)
@@ -3265,11 +3267,11 @@ mlg.table(H3N2, mlgsub = UGNN)
 
 % \tab\tab Bruvo's distance is a genetic distance measure for microsatellite
 % markers utilizing a stepwise mutation model that allows for differing ploidy
-% levels \cite{Bruvo:2004}. As \textit{adegenet's} \texttt{genind} object has an
+% levels \citep{Bruvo:2004}. As \textit{adegenet's} \texttt{genind} object has an
 % all or none approach to missing data, any genotypes not exhibiting full ploidy
 % will be treated as missing. This means that only non-special cases will be
 % considered for the calculation and missing data will be ignored
-% \cite{Bruvo:2004}.
+% \citep{Bruvo:2004}.
 
 % This is true only if missing data is treated as missing when importing to
 % \adegenet{}. If missing data in the initial data frame has missing
@@ -3290,7 +3292,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 % We will save this object for a later demonstration of the addition and loss
 % models of Bruvo's distance. It is important to note that this is a distance
 % between individuals, not populations, unlike Nei's 1978 distance
-% \cite{Nei:1978}. For distances between populations, see the \adegenet{} function
+% \citep{Nei:1978}. For distances between populations, see the \adegenet{} function
 % \texttt{dist.genpop}
 
 % \subsubsection{Function: bruvo.dist}
@@ -3801,7 +3803,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 % \end{itemize}
 
 % Since we have the ability, let's visualize the \textit{A. euteiches} data set
-% \cite{Grunwald:2006}.
+% \citep{Grunwald:2006}.
 % <<poppr_msn, eval=FALSE>>=
 % data(Aeut)
 % A.dist <- diss.dist(Aeut)
@@ -3918,20 +3920,20 @@ mlg.table(H3N2, mlgsub = UGNN)
 
 % This function produces a table that contains the population name, number of
 % individuals observed, number of MLGs observed, number of MLGs expected at the
-% lowest common sampling size within the data set \cite{Hurlbert:1971}
-% \cite{Heck:1975}, the Shannon-Wiener index \cite{Shannon:1948}, Stoddart and
-% Taylor's index for expected MLGs \cite{Stoddart:1988}, Nei's 1987 genotypic
-% diversity \cite{Nei:1978}, evenness
-% \cite{Pielou:1975}\cite{Ludwig:1988}\cite{Grunwald:2003}, the index of
-% association \cite{Brown:1980}\cite{Smith:1993}, the standardized index of
-% association \cite{Agapow:2001}, and the file name. Most of these indices are
+% lowest common sampling size within the data set \citep{Hurlbert:1971}
+% \citep{Heck:1975}, the Shannon-Wiener index \citep{Shannon:1948}, Stoddart and
+% Taylor's index for expected MLGs \citep{Stoddart:1988}, Nei's 1987 genotypic
+% diversity \citep{Nei:1978}, evenness
+% \citep{Pielou:1975}\citep{Ludwig:1988}\citep{Grunwald:2003}, the index of
+% association \citep{Brown:1980}\citep{Smith:1993}, the standardized index of
+% association \citep{Agapow:2001}, and the file name. Most of these indices are
 % calculated by converting the population into an MLG table with
 % \texttt{mlg.table} (see section \ref{mlg:table}) and using the \textit{vegan}
 % package's \texttt{diversity} function (To see details, type
 % \texttt{?vegan::diversity} into the R console).
 
 % To begin, let's revisit our example data set of \textit{Aphanomyces euteiches}
-% \cite{Grunwald:2006}.
+% \citep{Grunwald:2006}.
 % <<Aeut_rehash>>=
 % data(Aeut)
 % poppr(Aeut)
@@ -3971,7 +3973,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 
 % You might notice that the P-values for both $I_A$ and $\bar r_d$ are often equal
 % to each other. This will always be the case with the sampling method utilized in
-% method 4 \cite{Agapow:2001}. Here, we show examples where they are not equal and
+% method 4 \citep{Agapow:2001}. Here, we show examples where they are not equal and
 % why it's okay.
 % <<nancy_example_show, eval=FALSE>>=
 % set.seed(2002)
@@ -4141,9 +4143,9 @@ mlg.table(H3N2, mlgsub = UGNN)
 % \label{appendix:algorithm:iard}
 
 % \tab \tab The index of association was originally developed by A.H.D. Brown
-% analyzing population structure of wheat \cite{Brown:1980}. It has been widely
+% analyzing population structure of wheat \citep{Brown:1980}. It has been widely
 % used as a tool to detect clonal reproduction within populations
-% \cite{Smith:1993}. Populations whose members are undergoing sexual reproduction,
+% \citep{Smith:1993}. Populations whose members are undergoing sexual reproduction,
 % whether it be selfing or out-crossing, will produce gametes via meiosis, and
 % thus have a chance to shuffle alleles in the next generation. Populations whose
 % members are undergoing clonal reproduction, however, generally do so via
@@ -4152,9 +4154,9 @@ mlg.table(H3N2, mlgsub = UGNN)
 % rarely sufficiently high to approximate a random shuffling of alleles. The index
 % of association is a calculation based on the ratio of the variance of the raw
 % number of differences between individuals and the sum of those variances over
-% each locus \cite{Smith:1993}. You can also think of it as the observed variance
+% each locus \citep{Smith:1993}. You can also think of it as the observed variance
 % over the expected variance. If they  are the same, then the index is zero after
-% subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
+% subtracting one (from Maynard-Smith, 1993 \citep{Smith:1993}):
 % \begin{equation}
 % \label{eq:I_A}
 % I_A = \frac{V_O}{V_E}-1
@@ -4206,7 +4208,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 % data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{} m$
 % values of $d$ and ${n \choose 2}$ values of $D$. Calculating the observed
 % variances is fairly straightforward (modified from Agapow and Burt, 2001)
-% \cite{Agapow:2001}:
+% \citep{Agapow:2001}:
 
 % \begin{equation}
 % \label{eq:V_O}
@@ -4215,7 +4217,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 
 % Calculating the expected variance is the sum of each of the variances of the
 % individual loci. The calculation at a single locus, $j$ is the same as the
-% previous equation, substituting values of $D$ for $d$ \cite{Agapow:2001}:
+% previous equation, substituting values of $D$ for $d$ \citep{Agapow:2001}:
 
 % \begin{equation}
 % \label{eq:var_j}
@@ -4223,7 +4225,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 % \end{equation}
 
 % The expected variance is then the sum of all the variances over all $m$ loci
-% \cite{Agapow:2001}:
+% \citep{Agapow:2001}:
 
 % \begin{equation}
 % \label{eq:V_E}
@@ -4234,9 +4236,9 @@ mlg.table(H3N2, mlgsub = UGNN)
 % equation (\ref{eq:I_A}) to get the index of association. Of course, Agapow and
 % Burt showed that this index increases steadily with the number of loci, so they
 % came up with an approximation that is widely used, $\bar r_d$
-% \cite{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}.
+% \citep{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}.
 % The equation is as follows, utilizing equations (\ref{eq:V_O}),
-% (\ref{eq:var_j}), and (\ref{eq:V_E}) \cite{Agapow:2001}:
+% (\ref{eq:var_j}), and (\ref{eq:V_E}) \citep{Agapow:2001}:
 
 % \begin{equation}
 % \label{eq:r_d}
@@ -4250,8 +4252,8 @@ mlg.table(H3N2, mlgsub = UGNN)
 
 % \tab \tab Bruvo's distance between two individuals calculates the minimum
 % distance across all combinations of possible pairs of alleles at a single locus
-% and then averaging that distance across all loci \cite{Bruvo:2004}. The distance
-% between each pair of alleles is calculated as \cite{Bruvo:2004}:
+% and then averaging that distance across all loci \citep{Bruvo:2004}. The distance
+% between each pair of alleles is calculated as \citep{Bruvo:2004}:
 
 % \begin{equation}
 % \label{eq:m_x}
@@ -4270,7 +4272,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 % number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance
 % at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For
 % samples with higher ploidy ($k$), there would be $k$ such distances of which we
-% would need to take the sum \cite{Bruvo:2004}.
+% would need to take the sum \citep{Bruvo:2004}.
 
 % \begin{equation}
 % \label{eq:s_i}
@@ -4282,7 +4284,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 % account. This means that we will have $k^2$ values of $d_a$, when we only want
 % $k$. How do we know which $k$ distances we want? We will have to invoke
 % parsimony for this and attempt to take the minimum sum of the alleles, of which
-% there are $k!$ possibilities \cite{Bruvo:2004}:
+% there are $k!$ possibilities \citep{Bruvo:2004}:
 
 % \begin{equation}
 % \label{eq:d_l}
@@ -4290,7 +4292,7 @@ mlg.table(H3N2, mlgsub = UGNN)
 % \end{equation}
 
 % Finally, after all of this, we can get the average distance over all loci
-% \cite{Bruvo:2004}.
+% \citep{Bruvo:2004}.
 
 % \begin{equation}
 % \label{eq:D}
@@ -4307,10 +4309,10 @@ mlg.table(H3N2, mlgsub = UGNN)
 % all alleles at a locus, it only makes sense that the two loci need to have the
 % same ploidy level. Unfortunately for polyploids, it's often difficult to fully
 % separate distinct alleles at each locus, so you end up with genotypes that
-% appear to have a lower ploidy level than the organism \cite{Bruvo:2004}.
+% appear to have a lower ploidy level than the organism \citep{Bruvo:2004}.
 
 % To help deal with these situatons, Bruvo has suggested three methods for dealing
-% with these differences in ploidy levels \cite{Bruvo:2004}:
+% with these differences in ploidy levels \citep{Bruvo:2004}:
 % \begin{itemize}
 %   \item{Infinite Model -} The simplest way to deal with it is to count all
 %   missing alleles as infinitely large so that the distance between it and
@@ -4409,7 +4411,7 @@ version 1, you can get that back by adding the \textit{fill} aesthetic:
 @
 
 This allows you to produce publication quality graphs directly in R. Please see
-Hadley Wickham's \textit{ggplot2} package for more details \cite{ggplot2}. Note
+Hadley Wickham's \textit{ggplot2} package for more details \citep{ggplot2}. Note
 that if you don't like using \textit{ggplot2}, you can access the data in the
 ggplot2 object and plot the data yourself:
 
@@ -4647,6 +4649,6 @@ to its definition and description.
 
 \end{longtable}
 \end{center}
-\bibliographystyle{plain}
+\bibliographystyle{authordate1}
 \bibliography{the_bibliography}
 \end{document}
