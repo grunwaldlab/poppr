@@ -1918,10 +1918,13 @@ Aeut
 When you read in data with \cmdlink{intro:import:read.genalex}{read.genalex},
 the default is to represent it in a genclone object. Since the
 \texttt{clonecorrect} function works on multilocus genotype definitions, It's
-more efficient to convert it to a genclone object first.
+more efficient to convert it to a genclone object first. We will also rename the
+strata to ``field'' and ``sample'' to make the biological relevance of the data
+clearer.
 
 <<clonecorrect_genclone>>=
 aphan <- as.genclone(Aeut)
+nameStrata(Aeut) <- ~field/sample
 @
 
 \noindent
@@ -1929,14 +1932,14 @@ Now we correct by sample with respect to field and keep the field as the
 population.
 
 <<clonecorrect2>>=
-clonecorrect(aphan,  strata = ~field/sample)
+clonecorrect(aphan,  strata = ~Pop/Subpop)
 # Your turn: Use the same stratification and use combine = TRUE and then
-# keep = 1:2. Is there any differenc
+# keep = 1:2. Is there any difference?
 @
 \noindent
 Correcting by field. Notice how the number of MLG is much closer to our census.
 <<clonecorrect3>>=
-clonecorrect(aphan, strata = ~field)
+clonecorrect(aphan, strata = ~Pop)
 @
 \noindent
 Correcting over whole data set. Our MLG is equal to our census.
@@ -2223,7 +2226,7 @@ the alleles have a 1 in 4 chance of being chosen.
   the P-values associated with $I_A$ and $\bar{r} _d$ are exactly the same. This
   method \textbf{assumes that alleles are not independently assorting within
   individuals.} This strategy is \textbf{useful if you suspect the population is
-  inbreeding (Jerome Goudet, personal communication)}
+  inbreeding} (Jerome Goudet, personal communication).
   \end{enumerate}
 
 \end{itemize}
