@@ -564,7 +564,7 @@ to the number of rarer genotypes.
 This is simply calculated as 
 
 \begin{equation}
-E_{5} = \frac{(1/\lambda) - 1}{e^{H}}
+E_{5} = \frac{(1/\lambda) - 1}{e^{H} - 1}
 \end{equation}
 
 Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity
@@ -574,7 +574,7 @@ Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity
 
 $H_{exp}$ stands for Nei's 1978 expected heterozygosity \cite{nei1978estimation}.
 Previously, in \poppr{}, it was calcuated over multilocus genotypes, which was
-more analagous to a correction for Simpson's index. This has been corrected in
+more analagous to a correction for Simpson's ind eex. This has been corrected in
 version 2.0 and is now correctly calculated over alleles. The following is 
 adapted from equations 2 and 3 in \cite{nei1978estimation}:
 

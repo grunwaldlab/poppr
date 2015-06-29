@@ -12,7 +12,8 @@ diversity_stats(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...)
 
 \item{H}{logical whether or not to calculate Shannon's index}
 
-\item{G}{logical whether or not to calculate Stoddart and Taylor's index}
+\item{G}{logical whether or not to calculate Stoddart and Taylor's index (aka
+inverse Simpson's index).}
 
 \item{lambda}{logical whether or not to calculate Simpson's index}
 
@@ -27,6 +28,13 @@ a numeric matrix giving statistics (columns) for each population
 }
 \description{
 Produce a table of diversity statistics
+}
+\details{
+This function will calculate any diversity statistic for counts of
+  multilocus genotypes per population. This does not count allelic diversity.
+  The calculations of H, G, and lambda are all performed by
+  \code{\link[vegan]{diversity}}. E5 is calculated as \deqn{E_{5} =
+  \frac{(1/\lambda) - 1}{e^{H} - 1}}{(G - 1)/(exp(H) - 1)}.
 }
 \examples{
 library(poppr)

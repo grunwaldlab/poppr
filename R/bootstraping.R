@@ -239,14 +239,22 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #'   population (rows)
 #'   
 #' @param H logical whether or not to calculate Shannon's index
-#' @param G logical whether or not to calculate Stoddart and Taylor's index
+#' @param G logical whether or not to calculate Stoddart and Taylor's index (aka
+#'   inverse Simpson's index).
 #' @param lambda logical whether or not to calculate Simpson's index
 #' @param E5 logical whether or not to calculate Evenness
-#' @param ... any functions that can be calculated on a vector or matrix of
+#' @param ... any functions that can be calculated on a vector or matrix of 
 #'   genotype counts.
 #'   
-#' @return a numeric matrix giving statistics (columns) for each population
+#' @return a numeric matrix giving statistics (columns) for each population 
 #'   (rows).
+#'   
+#' @details This function will calculate any diversity statistic for counts of 
+#'   multilocus genotypes per population. This does not count allelic diversity.
+#'   The calculations of H, G, and lambda are all performed by 
+#'   \code{\link[vegan]{diversity}}. E5 is calculated as \deqn{E_{5} = 
+#'   \frac{(1/\lambda) - 1}{e^{H} - 1}}{(G - 1)/(exp(H) - 1)}.
+#'   
 #' @export
 #' @seealso \code{\link{diversity_boot}} \code{\link{diversity_ci}}
 #'   \code{\link{poppr}}
@@ -437,10 +445,10 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   \pkg{ggplot2} package.
 #' @param raw if \code{TRUE} (default) a list containing three elements will be
 #'   returned
-#' @param center if \code{TRUE}, the confidence interval will be centered around
-#'   the observed statistic. Otherwise, if \code{FALSE} (default), the
-#'   confidence interval will be bias-corrected normal CI as reported from
-#' \code{\link[boot]{boot.ci}}
+#' @param center if \code{TRUE} (default), the confidence interval will be
+#'   centered around the observed statistic. Otherwise, if \code{FALSE}, the 
+#'   confidence interval will be bias-corrected normal CI as reported from 
+#'   \code{\link[boot]{boot.ci}}
 #' @param ... parameters to be passed on to \code{\link[boot]{boot}} and 
 #'   \code{\link{diversity_stats}}
 #'   

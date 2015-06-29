@@ -41,9 +41,9 @@ value.This plot can be retrieved by using \code{p <- last_plot()} from the
 \item{raw}{if \code{TRUE} (default) a list containing three elements will be
 returned}
 
-\item{center}{if \code{TRUE}, the confidence interval will be centered around
-  the observed statistic. Otherwise, if \code{FALSE} (default), the
-  confidence interval will be bias-corrected normal CI as reported from
+\item{center}{if \code{TRUE} (default), the confidence interval will be
+centered around the observed statistic. Otherwise, if \code{FALSE}, the
+confidence interval will be bias-corrected normal CI as reported from
 \code{\link[boot]{boot.ci}}}
 
 \item{...}{parameters to be passed on to \code{\link[boot]{boot}} and

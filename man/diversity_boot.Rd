@@ -26,7 +26,8 @@ size.}
 
 \item{H}{logical whether or not to calculate Shannon's index}
 
-\item{G}{logical whether or not to calculate Stoddart and Taylor's index}
+\item{G}{logical whether or not to calculate Stoddart and Taylor's index (aka
+inverse Simpson's index).}
 
 \item{lambda}{logical whether or not to calculate Simpson's index}
 

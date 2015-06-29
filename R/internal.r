@@ -2288,9 +2288,9 @@ boot_per_pop <- function(x, rg = multinom_boot, n, mle = NULL, H = TRUE,
 #==============================================================================#
 multinom_boot <- function(x, mle = NULL){
   if (is.null(mle) || mle < 2){
-    res <- rmultinom(1, length(x), prob = tabulate(x))
+    res <- stats::rmultinom(1, length(x), prob = tabulate(x))
   } else {
-    res <- rmultinom(1, mle, prob = tabulate(x))
+    res <- stats::rmultinom(1, mle, prob = tabulate(x))
   }
   extract_samples(res)
 }
