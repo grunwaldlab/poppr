@@ -5,6 +5,10 @@ COMPATIBILITY UPDATE
 
 NEW DEPENDENCIES
 * poppr now imports elements from dplyr and shiny
+* As required as of 2015-06-29, poppr now explicitly imports: stats, graphics, grDevices, and utils
+
+NEW SUGGESTS
+* poppr now suggests the cowplot, poweRlaw, and polysat packages.
 
 NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
@@ -18,6 +22,8 @@ NEW FEATURES
 * `poppr.msn` and `plot_poppr_msn` can now take genlight objects.
 * `plot_poppr_msn` now gives users the option to exclude the legends.
 * Default plotting for `mlg.table` will no longer produce one plot per population. It will now produce a single ggplot object for all populations. Note that the bars are no longer colored by count.
+* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calucluated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
+* `poppr` can now take any statistic that can be caluclated from a table of multilocus genotype counts. 
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
@@ -31,7 +37,11 @@ NEW FUNCTIONS
 * `samp.ia` calculates \bar{r}_d for genlight object by randomly sampling a user-defined number of SNPs.
 * `test_replen` will test repeat lengths of microsatellite markers for consistency.
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
+* `diversity_stats` returns a matrix containing diversity statistics. Defaults to 4 found in `poppr`, but can be extended to any statistic that can be calculated on a vector of MLG counts.
+* `diviersity_boot` will bootstrap a MLG matrix over the statistics specified for `get_stats`. Can also perform rarefaction bootstrap.
+* `diversity_ci` will calculate and plot confidence intervals for bootstrap resampling of an MLG matrix. This includes rarefaction to the smallest sample size.
 * `imsn` provides an interactive shiny interface for construction of minimum spanning networks.
+* `pair.ia` will calculate the index of association for pairs of loci and plot heatmaps. 
 
 NEW CLASSES
 * snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 

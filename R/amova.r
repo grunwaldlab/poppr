@@ -260,7 +260,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     }
   }
   allmlgs <- unique(mlg.vector(x))
-  xtab    <- t(mlg.table(x, bar = FALSE, quiet = TRUE, mlgsub = allmlgs))
+  xtab    <- t(mlg.table(x, plot = FALSE, quiet = TRUE, mlgsub = allmlgs))
   xtab    <- as.data.frame(xtab)
   return(ade4::amova(samples = xtab, distances = xdist, structures = xstruct))
 }

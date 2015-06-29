@@ -231,7 +231,7 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlg
     mlgtab <- mlgtab[popNames(gid), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
-  if (total==TRUE & (nrow(mlgtab) > 1 | !is.null(nrow(mlgtab)) )){
+  if (total == TRUE && nrow(mlgtab) > 1 ){
     mlgtab <- rbind(mlgtab, colSums(mlgtab))
     rownames(mlgtab)[nrow(mlgtab)] <- "Total"
   }
@@ -558,7 +558,7 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
     }
     
     mlgtab <- mlgtab[, mlgsubnames, drop = FALSE]
-    mlgs   <- setNames(1:ncol(mlgtab), colnames(mlgtab))
+    mlgs   <- stats::setNames(1:ncol(mlgtab), colnames(mlgtab))
   
   } else {
     if (sublist[1] != "ALL" | !is.null(blacklist)){

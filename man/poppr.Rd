@@ -7,7 +7,7 @@
 poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   method = 1, missing = "ignore", cutoff = 0.05, quiet = FALSE,
   clonecorrect = FALSE, strata = 1, keep = 1, hist = TRUE,
-  index = "rbarD", minsamp = 10, legend = FALSE)
+  index = "rbarD", minsamp = 10, legend = FALSE, ...)
 }
 \arguments{
 \item{dat}{a \code{\linkS4class{genind}} object OR a
@@ -36,9 +36,9 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 
 \item{missing}{how should missing data be treated? \code{"zero"} and
   \code{"mean"} will set the missing values to those documented in
-  \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any
-  loci or genotypes with missing data, respectively (see
-  \code{\link{missingno}} for more information.}
+  \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any loci or
+  genotypes with missing data, respectively (see \code{\link{missingno}} for
+  more information.}
 
 \item{cutoff}{\code{numeric} a number from 0 to 1 indicating the percent
   missing data allowed for analysis. This is to be used in conjunction with
@@ -47,14 +47,13 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 \item{quiet}{\code{FALSE} (default) will display a progress bar for each
   population analyzed.}
 
-\item{clonecorrect}{default \code{FALSE}. must be used with the \code{hier}
-  and \code{dfname} parameters, or the user will potentially get undesired
-  results. see \code{\link{clonecorrect}} for details.}
+\item{clonecorrect}{default \code{FALSE}. must be used with the \code{strata}
+  parameter, or the user will potentially get undesired results. see
+  \code{\link{clonecorrect}} for details.}
 
-\item{strata}{\itemize{ \item \strong{for genclone objects} - a \code{formula}
-  indicating the hierarchical levels to be used. The hierarchies should be
-  present in the \code{strata} slot. See \code{\link{strata}} for
-  details.}}
+\item{strata}{a \code{formula} indicating the hierarchical levels to be used.
+  The hierarchies should be present in the \code{strata} slot. See
+  \code{\link{strata}} for details.}
 
 \item{keep}{an \code{integer}. This indicates which strata you wish to keep
   after clone correcting your data sets. To combine strata, just set keep
@@ -74,28 +73,29 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
 \item{legend}{\code{logical}. When this is set to \code{TRUE}, a legend
   describing the resulting table columns will be printed. Defaults to
   \code{FALSE}}
+
+\item{...}{arguments to be passed on to \code{\link{diversity_stats}}}
 }
 \value{
-\item{Pop}{A vector indicating the pouplation factor} \item{N}{An
+\item{Pop}{A vector indicating the population factor} \item{N}{An
   integer vector indicating the number of individuals/isolates in the
   specified population.} \item{MLG}{An integer vector indicating the number
-  of multilocus genotypes found in the specified poupulation, (see:
+  of multilocus genotypes found in the specified population, (see:
   \code{\link{mlg}})} \item{eMLG}{The expected number of MLG at the lowest
   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The
   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner
-  Diversity index} \item{G}{Stoddard and Taylor's Index} \item{Hexp}{Expected
-  heterozygosity or Nei's 1987 genotypic diversity corrected for sample
-  size.} \item{E.5}{Evenness} \item{Ia}{A numeric vector giving the value of
-  the Index of Association for each population factor, (see
-  \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating the p-value for
-  Ia from the number of reshufflings indicated in \code{sample}. Lowest value
-  is 1/n where n is the number of observed values.} \item{rbarD}{A numeric
-  vector giving the value of the Standardized Index of Association for each
-  population factor, (see \code{\link{ia}}).} \item{p.rD}{A numeric vector
-  indicating the p-value for rbarD from the number of reshuffles indicated
-  in \code{sample}. Lowest value is 1/n where n is the number of observed
-  values.} \item{File}{A vector indicating the name of the original data
-  file.}
+  Diversity index} \item{G}{Stoddard and Taylor's Index}
+  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's
+  expected heterozygosity} \item{Ia}{A numeric vector giving the value of the
+  Index of Association for each population factor, (see \code{\link{ia}}).}
+  \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
+  of reshufflings indicated in \code{sample}. Lowest value is 1/n where n is
+  the number of observed values.} \item{rbarD}{A numeric vector giving the
+  value of the Standardized Index of Association for each population factor,
+  (see \code{\link{ia}}).} \item{p.rD}{A numeric vector indicating the
+  p-value for rbarD from the number of reshuffles indicated in \code{sample}.
+  Lowest value is 1/n where n is the number of observed values.}
+  \item{File}{A vector indicating the name of the original data file.}
 }
 \description{
 This function allows the user to quickly view indicies of heterozygosity,
@@ -106,18 +106,76 @@ that adegenet can take (fstat, structure, genetix, and genpop) as well as
 genalex files exported into a csv format (see \code{\link{read.genalex}} for
 details).
 }
+\details{
+This table is intended to be a first look into the dynamics of
+  mutlilocus genotype diversity. Many of the statistics (except for the the
+  index of association) are simply based on counts of multilocus genotypes
+  and do not take into account the actual allelic states. None of the
+  diversity indices will be bootstrapped if \code{sample > 0}. These are
+  relatively quick to bootstrap, so the function
+  \code{\link{diversity_stats}} should suit the need to produce confidence
+  intervals for these statistics. \subsection{graphic}{This function outputs
+  a \pkg{ggplot2} graphic of histograms. These can be manipulated to be
+  visualized in another manner by retrieving the plot with the
+  \code{\link{last_plot}} command from \pkg{ggplot2}. A useful manipulation
+  would be to arrange the graphs into a single column so that the values of
+  the statistic line up: \cr \code{p <- last_plot(); p +
+  facet_wrap(~population, ncol = 1, scales = "free_y")}\cr The name for the
+  groupings is "population" and the name for the x axis is "value".}
+}
+\note{
+The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
+  previously calculated based on the diversity of multilocus genotypes,
+  resulting in a value of 1 for sexual populations. This was obviously not
+  Nei's 1978 expected heterozygosity. We have thus changed the statistic to
+  be the true value of Hexp by calculating (n/(n-1))*lambda for alleles in
+  each locus and then returning the average.
+}
 \examples{
 data(nancycats)
 poppr(nancycats)
 
 \dontrun{
-poppr(nancycats, sample=99, total=FALSE, quiet=FALSE)
+# Sampling
+poppr(nancycats, sample = 999, total = FALSE)
 
+# Customizing the plot
+library("ggplot2")
+p <- last_plot()
+p + facet_wrap(~population, scales = "free_y", ncol = 1)
+
+# Turning off diversity statistics (see get_stats)
+poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
+
+# The previous version of poppr contained a definition of Hexp, which
+# was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased
+# Simpson's index. This statistic was originally included in poppr because it
+# was originally included in the program multilocus. It was finally figured
+# to be an unbiased Simpson's diversity metric (Lande, 1996; Good, 1953).
+
+data(Aeut)
+
+uSimp <- function(x){
+  lambda <- vegan::diversity(x, "simpson")
+  x <- drop(as.matrix(x))
+  if (length(dim(x)) > 1){
+    N <- rowSums(x)
+  } else {
+    N <- sum(x)
+  }
+  return((N/(N-1))*lambda)
+}
+poppr(Aeut, uSimp = uSimp)
+
+
+# Demonstration with viral data
 # Note: this is a larger data set that could take a couple of minutes to run
 # on slower computers.
 data(H3N2)
-poppr(H3N2, total=FALSE, sublist=c("Austria", "China", "USA"),
-				clonecorrect=TRUE, strata="country", dfname="x")
+strata(H3N2) <- data.frame(other(H3N2)$x)
+setPop(H3N2) <- ~country
+poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"),
+				clonecorrect = TRUE, strata = ~country/year)
 }
 }
 \author{
@@ -129,7 +187,8 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
   2001
 
   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural
-  populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536, 1980.
+  populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536,
+  1980.
 
   Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
   E. Fry. Analysis of genotypic diversity data for populations of
@@ -142,14 +201,23 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
   calculation of the rarefaction diversity measurement and the determination
   of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975
 
+  Masatoshi Nei. Estimation of average heterozygosity and genetic distance
+  from a small number of individuals. Genetics, 89(3):583-590, 1978.
+
   S H Hurlbert. The nonconcept of species diversity: a critique and
   alternative parameters. Ecology, 52(4):577-586, 1971.
 
   J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
   Computing. New York USA: John Wiley and Sons, 1988.
 
-  Masatoshi Nei. Estimation of average heterozygosity and genetic distance
-  from a small number of individuals. Genetics, 89(3):583-590, 1978.
+  Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949
+  doi:10.1038/163688a0
+
+  Good, I. J. (1953). On the Population Frequency of Species and the
+  Estimation of Population Parameters. \emph{Biometrika} 40(3/4): 237-264.
+
+  Lande, R. (1996). Statistics and partitioning of species diversity, and
+  similarity among multiple communities. \emph{Oikos} 76: 5-13.
 
   Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter
   R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H.
@@ -169,6 +237,7 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
 }
 \seealso{
 \code{\link{clonecorrect}}, \code{\link{poppr.all}},
-  \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
+  \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}},
+  \code{\link{diversity_stats}}
 }
 

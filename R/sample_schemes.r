@@ -236,14 +236,14 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
       # can change based on allelic frequency.
       weights <- colMeans(tab(pop), na.rm = TRUE)
       theSize <- sample(ploidy(pop), 1)
-      pop@tab <- t(rmultinom(nrow(tab(pop)), size = theSize, prob = weights))
+      pop@tab <- t(stats::rmultinom(nrow(tab(pop)), size = theSize, prob = weights))
 
     } else if(method == 3){
 
       # Non-Parametric Bootstrap.
       weights <- rep(1, ncol(tab(pop)))
       theSize <- sample(ploidy(pop), 1)
-      pop@tab <- t(rmultinom(nrow(tab(pop)), size = theSize, prob = weights))
+      pop@tab <- t(stats::rmultinom(nrow(tab(pop)), size = theSize, prob = weights))
 
     }
   }

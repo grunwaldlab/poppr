@@ -239,8 +239,8 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 
   all.info <- strsplit(readLines(genalex, n = 2), sep)
   cskip    <- ifelse("connection" %in% class(genalex), 0, 2)
-  gena     <- read.table(genalex, sep = sep, header = TRUE, skip = cskip, 
-                         stringsAsFactors = FALSE, check.names = FALSE)
+  gena     <- utils::read.table(genalex, sep = sep, header = TRUE, skip = cskip, 
+                                stringsAsFactors = FALSE, check.names = FALSE)
   num.info <- as.numeric(all.info[[1]])
   pop.info <- all.info[[2]][-c(1:3)]
   num.info <- num.info[!is.na(num.info)]

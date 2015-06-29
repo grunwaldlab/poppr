@@ -100,7 +100,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 1.1.5.99.472}
+\title{Algorithms and equations utilized in poppr version 1.1.5.99.569}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -618,7 +618,7 @@ to the number of rarer genotypes.
 This is simply calculated as 
 
 \begin{equation}
-E_{5} = \frac{(1/\lambda) - 1}{e^{H}}
+E_{5} = \frac{(1/\lambda) - 1}{e^{H} - 1}
 \end{equation}
 
 Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity
@@ -626,17 +626,36 @@ Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity
 
 \subsection{Hexp}
 
-Essentially, $H_{exp}$ is an analog of Nei's expected heterozygosity and is
-equivalent to an unbiased estimator for Simpson's index. It was implemented in
-\poppr{} as it was previously in \textit{multilocus} \cite{Agapow:2001}. The
-calculation is as follows:
+$H_{exp}$ stands for Nei's 1978 expected heterozygosity \cite{nei1978estimation}.
+Previously, in \poppr{}, it was calcuated over multilocus genotypes, which was
+more analagous to a correction for Simpson's index. This has been corrected in
+version 2.0 and is now correctly calculated over alleles. The following is 
+adapted from equations 2 and 3 in \cite{nei1978estimation}:
 
 \begin{equation}
-H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
+h = \frac{N}{N-1} \sum_{i = 1}^k{x^{2}_{i}}
 \end{equation}
-\noindent
-Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
-genotypes observed and $N$ is the sample size. 
+
+\begin{equation}
+H_{exp} = \sum_{l = 1}^m{h_l/m}
+\end{equation}
+
+where $x_i$ is the population frequency of the $i^{th}$ allele in a locus and $k$
+is the number of alleles in a particular locus. $h_l$ is the value of $h$ at the
+$l^{th}$ locus.
+
+% 
+% Essentially, $H_{exp}$ is an analog of Nei's expected heterozygosity and is
+% equivalent to an unbiased estimator for Simpson's index. It was implemented in
+% \poppr{} as it was previously in \textit{multilocus} \cite{Agapow:2001}. The
+% calculation is as follows:
+% 
+% \begin{equation}
+% H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
+% \end{equation}
+% \noindent
+% Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
+% genotypes observed and $N$ is the sample size. 
 
 \bibliographystyle{plain}
 \bibliography{the_bibliography}

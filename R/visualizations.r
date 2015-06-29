@@ -50,10 +50,10 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   INDEX_ARGS <- c("rbarD", "Ia")
   index      <- match.arg(index, INDEX_ARGS)
   if (!class(sample) %in% "ialist" & class(sample) %in% "list"){
-    suppressMessages(ggsamps <- melt(lapply(sample, "[[", "samples")))
+    suppressMessages(ggsamps <- reshape2::melt(lapply(sample, "[[", "samples")))
     ggvals <- vapply(sample, "[[", numeric(4), "index")
     names(dimnames(ggvals)) <- c("index", "population")
-    suppressMessages(ggvals <- melt(ggvals))
+    suppressMessages(ggvals <- reshape2::melt(ggvals, as.is = TRUE))
     ggsamps <- ggsamps[ggsamps$variable == index, ]
     ggvals  <- ggvals[grep(ifelse(index == "Ia", "I", "D"), ggvals$index), ]
     ggindex <- ggvals[ggvals$index == index, ]
@@ -136,7 +136,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   } else if (index == "Ia"){
     thePlot <- thePlot + xlab(expression(paste(I[A])))
   }
-  thePlot    <- thePlot + ggtitle(plot_title)
+  thePlot <- thePlot + ggtitle(plot_title)
   return(thePlot)
 }
 
@@ -427,7 +427,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   palette <- match.fun(palette)
-  color   <- setNames(palette(nPop(gid)), popNames(gid))
+  color   <- stats::setNames(palette(nPop(gid)), popNames(gid))
   
   if(length(cgid@mlg[]) > 1){
     ###### Edge adjustments ######
@@ -1022,14 +1022,14 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
       too_many_pops   <- as.integer(ceiling(nPop(x)/30))
       pops_correction <- ifelse(too_many_pops > 1, -1, 1)
       yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
-      plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
+      graphics::plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
            main = 'POPULATION')
     
-      legend("topleft", bty = "n", cex = 1.2^pops_correction,
+      graphics::legend("topleft", bty = "n", cex = 1.2^pops_correction,
              legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
              ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
     } else {
-      layout(matrix(c(1,2), nrow = 2), heights= c(4.5, 0.5))
+      graphics::layout(matrix(c(1,2), nrow = 2), heights= c(4.5, 0.5))
     }
     
     ## PLOT
@@ -1043,19 +1043,19 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
       } else {
         scales <- seq(wmin, wmax, l = 1000)
       }
-      greyscales <- gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
-      legend_image <- as.raster(matrix(greyscales, nrow=1))
-      par(mar = c(0, 1, 0, 1) + 0.5)
-      plot.new()
-      rasterImage(legend_image, 0, 0.5, 1, 1)
-      polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
-      axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
-      text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
+      greyscales <- grDevices::gray(adjustcurve(scales, show=FALSE, glim=glim, correction=gadj))
+      legend_image <- grDevices::as.raster(matrix(greyscales, nrow=1))
+      graphics::par(mar = c(0, 1, 0, 1) + 0.5)
+      graphics::plot.new()
+      graphics::rasterImage(legend_image, 0, 0.5, 1, 1)
+      graphics::polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+      graphics::axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
+      graphics::text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
     }
     # Return top level plot to defaults.
-    layout(matrix(c(1), ncol=1, byrow=T))
-    par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
-    par(oma=c(0,0,0,0)) # Figure margins
+    graphics::layout(matrix(c(1), ncol=1, byrow=T))
+    graphics::par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
+    graphics::par(oma=c(0,0,0,0)) # Figure margins
   }
 }
 

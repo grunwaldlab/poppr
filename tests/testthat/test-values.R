@@ -76,3 +76,48 @@ test_that("mlg.matrix returns a matrix and not table", {
   expect_that(mat1row, not(is_a("table")))
   expect_that(mat4row, not(is_a("table")))
 })
+
+test_that("diversity_stats returns expected values", {
+  skip_on_cran()
+  data("Aeut", package = "poppr")
+  expected <- structure(c(4.06272002528149, 3.66843094399907, 4.55798828426928,
+  42.1928251121076, 28.7234042553191, 68.9723865877712, 0.976299287915825,
+  0.965185185185185, 0.985501444136235, 0.721008688944842, 0.725926650260449,
+  0.720112175857993), .Dim = 3:4, .Dimnames = structure(list(Pop = c("Athena",
+  "Mt. Vernon", "Total"), Index = c("H", "G", "simp", "E.5")), .Names = c("Pop",
+  "Index")))
+  
+  atab       <- mlg.table(Aeut, plot = FALSE, total = TRUE)
+  res        <- diversity_stats(atab)
+  pop(Aeut)  <- NULL
+  res_single <- diversity_stats(atab["Total", , drop = FALSE])
+  
+  expect_equivalent(res, expected)
+  expect_false(is.matrix(res_single))
+  expect_equivalent(res_single, res["Total", ])
+})
+
+test_that("get_boot_x works with one pop or one stat", {
+  skip_on_cran()
+  data(Pinf)
+  Ptab <- mlg.table(Pinf, plot = FALSE)
+  pop(Pinf) <- NULL
+  ptab <- mlg.table(Pinf, plot = FALSE)
+  
+  Pboot_all <- diversity_boot(Ptab, 20L)
+  Pboot_E   <- diversity_boot(Ptab, 20L, G = FALSE, H = FALSE, lambda = FALSE)
+  pboot_all <- diversity_boot(ptab, 20L)
+  pboot_E   <- diversity_boot(ptab, 20L, G = FALSE, H = FALSE, lambda = FALSE)
+  
+  Past <- poppr:::get_boot_stats(Pboot_all)
+  PEst <- poppr:::get_boot_stats(Pboot_E)
+  past <- poppr:::get_boot_stats(pboot_all)
+  pEst <- poppr:::get_boot_stats(pboot_E)
+  
+  
+  expect_equivalent(dim(Past), c(2, 4))
+  expect_equivalent(dim(PEst), c(2, 1))
+  expect_equivalent(dim(past), c(1, 4))
+  expect_equivalent(dim(pEst), c(1, 1))
+  
+})

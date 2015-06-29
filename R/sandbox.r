@@ -48,6 +48,9 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 }
 
 
+
+myTheme <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
 read_allele_columns <- function(x, ploidy = 2){
   clm <- ncol(x)
   if (length(ploidy) == 1){
@@ -83,19 +86,81 @@ zero_adder <- function(index, extras, df){
     return(df[index])
   }
 }
-#==============================================================================#
-# Create a population hierarchy in a genind object if one is not there.
-#==============================================================================#
-genind_hierarchy <- function(x, df = NULL, dfname = "population_hierarchy"){
-  if (is.null(df)){
-    df <- data.frame(Pop = pop(x))
-  } 
-  other(x)[[dfname]] <- df
-  return(x)
+
+
+
+
+# Function that was to be used to calculate standard errors for bootstrapping
+# diversity statistics. Probably will not use this one.
+boot_se_table <- function(tab, n = 1000, ci = 95, total = TRUE, rarefy = FALSE, 
+                          rare.val = NULL, ...){
+  if (!is.matrix(tab) & is.genind(tab)){
+    tab <- mlg.table(tab, total = total, plot = FALSE)
+  }
+  rareval <- NULL
+  
+  if (rarefy){
+    rareval <- ifelse(is.null(rare.val), min(rowSums(tab)), rare.val)
+  }
+  res <- diversity_boot(tab, n, n.rare = rareval, ...)
+  if (rarefy){
+    orig <- get_boot_se(res, "mean")
+  } else {
+    orig <- get_boot_stats(res)
+  }
+  out  <- matrix(nrow = nrow(orig), ncol = ncol(orig)*2, 
+                 dimnames = list(rownames(orig), NULL))
+  out[, !evens(1:ncol(out))]  <- orig
+  se_out <- get_boot_se(res, "sd")
+  out[, evens(1:ncol(out))] <- se_out
+  colnames(out) <- intersp(colnames(orig), colnames(se_out))
+  return(out)
 }
 
-pair_ia <- function(pop){
+# Attempt at rarefcation for the index of association.
+rare_ia <- function(x, n = 1000, rare = 10, obs = FALSE){
+  if (is.genind(x) || is.clone(x) || is(x, "genlight")){
+    xloc <- seploc(x)
+    est <- bootjack(xloc, n, rare, progbar = NULL)
+    se  <- vapply(est, sd, numeric(1), na.rm = TRUE)
+    if (obs){
+      res <- matrix(nrow = 4, ncol = 1,
+                    dimnames = list(c("Ia", "Ia.se", "rbarD", "rbarD.se"), NULL))
+      est <- vapply(est, mean, numeric(1), na.rm = TRUE)
+      res[c("Ia", "rbarD"), ] <- est
+    } else {
+      res <- matrix(nrow = 2, ncol = 1,
+                    dimnames = list(c("Ia.se", "rbarD.se"), NULL))
+    } 
+    res[c("Ia.se", "rbarD.se"), ] <- se
+  } else {
+    if (obs){
+      res <- matrix(nrow = 4, ncol = length(x),
+                    dimnames = list(c("Ia", "Ia.se", "rbarD", "rbarD.se"), NULL))
+    } else {
+      res <- matrix(nrow = 2, ncol = length(x),
+                    dimnames = list(c("Ia.se", "rbarD.se"), NULL))
+    }
+    for (i in seq(length(x))){
+      if (nInd(x[[i]]) > rare){
+        iloc <- seploc(x[[i]])
+        est  <- bootjack(iloc, n , rare, progbar = NULL)
+        se   <- vapply(est, sd, numeric(1), na.rm = TRUE)
+        if (obs) est <- vapply(est, mean, numeric(1), na.rm = TRUE)
+      } else {
+        if (obs) est <- ia(x[[i]])
+        se  <- c(0, 0)
+      }
+      if (obs) res[c("Ia", "rbarD"), i] <- est
+      res[c("Ia.se", "rbarD.se"), i] <- se
+    }
+  }
+  return(res)
+}
 
+
+old_pair_ia <- function(pop){
+  
   if(pop@type == "codom"){
     pop_loci <- seploc(pop)
     loci_pairs <- combn(locNames(pop), 2)
@@ -111,14 +176,29 @@ pair_ia <- function(pop){
 }
 
 
-poppr_pair_ia <- function(pop){
+
+
+ia_pair_loc <- function(pair, V, np, progbar, iterations){
+  if (!is.null(progbar)){
+    setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
+  }
+  newV <- V[, pair[-3]]
+  V    <- list(d.vector  = colSums(newV), 
+               d2.vector = colSums(newV * newV), 
+               D.vector  = rowSums(newV)
+  )
+  return(jack.calc(V, np))
+}
+
+
+poppr.pair.ia <- function(pop){
   if(is.null(pop(pop))){
-    return(pair_ia(pop))
+    return(pair.ia(pop))
   }
   pops       <- seppop(pop, drop = FALSE)
   loci_pairs <- choose(nLoc(pop), 2)
   res_mat    <- matrix(0.5, 2, loci_pairs)
-  pops_array <- vapply(pops, pair_ia, res_mat)
+  pops_array <- vapply(pops, pair.ia, res_mat)
   return(pops_array)
 }
 
@@ -248,7 +328,7 @@ jack.calc <- function(V, np){
 
 jack.pair_diffs <- function(pop, numLoci, np){
   temp.d.vector <- matrix(nrow = np, ncol = numLoci, data = as.numeric(NA))
-  if(!is.list(pop)){
+  if (!is.list(pop)){
     ploid <- 2
     temp.d.vector <- vapply(seq(numLoci), 
                       function(x) as.vector(dist(pop@tab[,x])), 

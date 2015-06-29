@@ -11,7 +11,7 @@ bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
   nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT)
-  repeat would have a repelen value of 3.}
+  repeat would have a repelen value of 3. (Also see \code{\link{fix_replen}})}
 
 \item{add}{if \code{TRUE}, genotypes with zero values will be treated under
   the genome addition model presented in Bruvo et al. 2004. See the
@@ -87,6 +87,18 @@ Bruvo's distance between two alleles is calculated as
 }
 \note{
 Do not use missingno with this function.
+  \subsection{Repeat Lenghts (replen)}{
+  The \code{replen} argument is crucial for proper analysis of Bruvo's
+  distance since the calculation relies on the knowledge of the number of
+  steps between alleles. To calculate Bruvo's distance, your raw allele calls
+  are first divided by the repeat lengths and then rounded. This can create a
+  problem with repeat lengths of even size due to the IEC 60559 standard that
+  says rounding at 0.5 is to the nearest even number, meaning that it is
+  possible for two alleles that are one step apart may appear to be exactly
+  the same. This can be fixed by subtracting a tiny number from the repeat
+  length with the function \code{\link{fix_replen}}. Please consider using
+  this before running Bruvo's distance.
+  }
   \subsection{Model Choice}{ The \code{add} and \code{loss} arguments
   modify the model choice accordingly: \itemize{ \item \strong{Infitine
   Model:}  \code{add = FALSE, loss = FALSE} \item \strong{Genome Addition
@@ -108,10 +120,13 @@ Do not use missingno with this function.
 
 # Load the nancycats dataset and construct the repeat vector.
 data(nancycats)
-ssr <- rep(2, 9)
 
-# Analyze the 1st population in nancycats
+# Assume the alleles are all dinucleotide repeats.
+ssr <- rep(2, nLoc(nancycats))
+test_replen(nancycats, ssr)         # Are the repeat lengths consistent?
+(ssr <- fix_replen(nancycats, ssr)) # Nope. We need to fix them.
 
+# Analyze the first population in nancycats
 bruvo.dist(popsub(nancycats, 1), replen = ssr)
 
 # View each population as a heatmap.
@@ -130,6 +145,7 @@ Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
   13(7):2101-2106, 2004.
 }
 \seealso{
-\code{\link{bruvo.boot}}, \code{\link{bruvo.msn}}
+\code{\link{fix_replen}}, \code{\link{test_replen}},
+  \code{\link{bruvo.boot}}, \code{\link{bruvo.msn}}
 }
 

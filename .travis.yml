@@ -17,7 +17,7 @@ r_github_packages:
   - thibautjombart/adegenet
   - emmanuelparadis/pegas/pegas
   - KlausVigo/phangorn
-  - zkamvar/covr@expect_error
+  - jimhester/covr
 
 after_success:
   - Rscript -e 'library(covr);codecov()'
@@ -30,6 +30,8 @@ notifications:
 
 env:
   global:
+    - CRAN: http://cran.rstudio.com
+    - NOT_CRAN: true
     - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"
     - R_CHECK_ARGS="--as-cran --timings"
     - R_CHECK_TIME="TRUE"

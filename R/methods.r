@@ -352,7 +352,7 @@ setMethod(
       hiernames <- names(object@hierarchy)
       hierlen <- length(hiernames)
       nameshow <- ifelse(hierlen > 6, 
-                         c(head(hiernames, 3), "...", tail(hiernames, 3)), 
+                         c(utils::head(hiernames, 3), "...", utils::tail(hiernames, 3)), 
                          hiernames)
       nameshow <- paste(nameshow, collapse = ", ")
       cat(" @hierarchy:", "a data frame with", hierlen, 

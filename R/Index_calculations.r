@@ -47,9 +47,9 @@
 #' This function allows the user to quickly view indicies of heterozygosity, 
 #' evenness, and inbreeding to aid in the decision of a path to further analyze 
 #' a specified dataset. It natively takes \code{\linkS4class{genind}} and 
-#' \code{\linkS4class{genclone}} objects, but can convert any raw data formats
-#' that adegenet can take (fstat, structure, genetix, and genpop) as well as
-#' genalex files exported into a csv format (see \code{\link{read.genalex}} for
+#' \code{\linkS4class{genclone}} objects, but can convert any raw data formats 
+#' that adegenet can take (fstat, structure, genetix, and genpop) as well as 
+#' genalex files exported into a csv format (see \code{\link{read.genalex}} for 
 #' details).
 #' 
 #' 
@@ -57,7 +57,7 @@
 #'   \code{\linkS4class{genclone}} object OR any fstat, structure, genetix, 
 #'   genpop, or genalex formatted file.
 #'   
-#' @param total When \code{TRUE} (default), indices will be calculated for the
+#' @param total When \code{TRUE} (default), indices will be calculated for the 
 #'   pooled populations.
 #'   
 #' @param sublist a list of character strings or integers to indicate specific 
@@ -79,68 +79,92 @@
 #'   
 #' @param missing how should missing data be treated? \code{"zero"} and 
 #'   \code{"mean"} will set the missing values to those documented in 
-#'   \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any 
-#'   loci or genotypes with missing data, respectively (see 
-#'   \code{\link{missingno}} for more information.
+#'   \code{\link{tab}}. \code{"loci"} and \code{"geno"} will remove any loci or
+#'   genotypes with missing data, respectively (see \code{\link{missingno}} for
+#'   more information.
 #'   
 #' @param cutoff \code{numeric} a number from 0 to 1 indicating the percent 
 #'   missing data allowed for analysis. This is to be used in conjunction with 
 #'   the flag \code{missing} (see \code{\link{missingno}} for details)
 #'   
-#' @param quiet \code{FALSE} (default) will display a progress bar for each
+#' @param quiet \code{FALSE} (default) will display a progress bar for each 
 #'   population analyzed.
 #'   
-#' @param clonecorrect default \code{FALSE}. must be used with the \code{hier} 
-#'   and \code{dfname} parameters, or the user will potentially get undesired 
-#'   results. see \code{\link{clonecorrect}} for details.
+#' @param clonecorrect default \code{FALSE}. must be used with the \code{strata}
+#'   parameter, or the user will potentially get undesired results. see
+#'   \code{\link{clonecorrect}} for details.
 #'   
-#' @param strata \itemize{ \item \strong{for genclone objects} - a \code{formula} 
-#'   indicating the hierarchical levels to be used. The hierarchies should be 
-#'   present in the \code{strata} slot. See \code{\link{strata}} for 
-#'   details.}
+#' @param strata a \code{formula} indicating the hierarchical levels to be used.
+#'   The hierarchies should be present in the \code{strata} slot. See
+#'   \code{\link{strata}} for details.
 #'   
-#' @param keep an \code{integer}. This indicates which strata you wish to keep
-#'   after clone correcting your data sets. To combine strata, just set keep
-#'   from 1 to the number of straifications set in strata. see
+#' @param keep an \code{integer}. This indicates which strata you wish to keep 
+#'   after clone correcting your data sets. To combine strata, just set keep 
+#'   from 1 to the number of straifications set in strata. see 
 #'   \code{\link{clonecorrect}} for details.
 #'   
 #' @param hist \code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
 #'   a histogram will be produced for each population.
-#'  
-#' @param index \code{character} Either "Ia" or "rbarD". If \code{hist = TRUE},
+#'   
+#' @param index \code{character} Either "Ia" or "rbarD". If \code{hist = TRUE}, 
 #'   this will determine the index used for the visualization.
 #'   
 #' @param minsamp an \code{integer} indicating the minimum number of individuals
-#'   to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for
+#'   to resample for rarefaction analysis. See \code{\link[vegan]{rarefy}} for 
 #'   details.
 #'   
 #' @param legend \code{logical}. When this is set to \code{TRUE}, a legend 
 #'   describing the resulting table columns will be printed. Defaults to 
 #'   \code{FALSE}
 #'   
-#' @return \item{Pop}{A vector indicating the pouplation factor} \item{N}{An 
+#' @param ... arguments to be passed on to \code{\link{diversity_stats}}
+#'   
+#' @return \item{Pop}{A vector indicating the population factor} \item{N}{An 
 #'   integer vector indicating the number of individuals/isolates in the 
 #'   specified population.} \item{MLG}{An integer vector indicating the number 
-#'   of multilocus genotypes found in the specified poupulation, (see: 
+#'   of multilocus genotypes found in the specified population, (see: 
 #'   \code{\link{mlg}})} \item{eMLG}{The expected number of MLG at the lowest 
 #'   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The 
 #'   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner 
-#'   Diversity index} \item{G}{Stoddard and Taylor's Index} \item{Hexp}{Expected
-#'   heterozygosity or Nei's 1987 genotypic diversity corrected for sample 
-#'   size.} \item{E.5}{Evenness} \item{Ia}{A numeric vector giving the value of 
-#'   the Index of Association for each population factor, (see 
-#'   \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating the p-value for
-#'   Ia from the number of reshufflings indicated in \code{sample}. Lowest value
-#'   is 1/n where n is the number of observed values.} \item{rbarD}{A numeric 
-#'   vector giving the value of the Standardized Index of Association for each 
-#'   population factor, (see \code{\link{ia}}).} \item{p.rD}{A numeric vector 
-#'   indicating the p-value for rbarD from the number of reshuffles indicated 
-#'   in \code{sample}. Lowest value is 1/n where n is the number of observed 
-#'   values.} \item{File}{A vector indicating the name of the original data 
-#'   file.}
+#'   Diversity index} \item{G}{Stoddard and Taylor's Index} 
+#'   \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's
+#'   expected heterozygosity} \item{Ia}{A numeric vector giving the value of the
+#'   Index of Association for each population factor, (see \code{\link{ia}}).}
+#'   \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
+#'   of reshufflings indicated in \code{sample}. Lowest value is 1/n where n is
+#'   the number of observed values.} \item{rbarD}{A numeric vector giving the
+#'   value of the Standardized Index of Association for each population factor,
+#'   (see \code{\link{ia}}).} \item{p.rD}{A numeric vector indicating the
+#'   p-value for rbarD from the number of reshuffles indicated in \code{sample}.
+#'   Lowest value is 1/n where n is the number of observed values.}
+#'   \item{File}{A vector indicating the name of the original data file.}
+#'   
+#' @details This table is intended to be a first look into the dynamics of 
+#'   mutlilocus genotype diversity. Many of the statistics (except for the the 
+#'   index of association) are simply based on counts of multilocus genotypes 
+#'   and do not take into account the actual allelic states. None of the 
+#'   diversity indices will be bootstrapped if \code{sample > 0}. These are 
+#'   relatively quick to bootstrap, so the function
+#'   \code{\link{diversity_stats}} should suit the need to produce confidence
+#'   intervals for these statistics. \subsection{graphic}{This function outputs
+#'   a \pkg{ggplot2} graphic of histograms. These can be manipulated to be
+#'   visualized in another manner by retrieving the plot with the
+#'   \code{\link{last_plot}} command from \pkg{ggplot2}. A useful manipulation
+#'   would be to arrange the graphs into a single column so that the values of
+#'   the statistic line up: \cr \code{p <- last_plot(); p +
+#'   facet_wrap(~population, ncol = 1, scales = "free_y")}\cr The name for the
+#'   groupings is "population" and the name for the x axis is "value".}
+#'   
+#' @note The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
+#'   previously calculated based on the diversity of multilocus genotypes,
+#'   resulting in a value of 1 for sexual populations. This was obviously not
+#'   Nei's 1978 expected heterozygosity. We have thus changed the statistic to
+#'   be the true value of Hexp by calculating (n/(n-1))*lambda for alleles in
+#'   each locus and then returning the average.
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
-#'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}
+#'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}, 
+#'   \code{\link{diversity_stats}}
 #'   
 #' @export
 #' @author Zhian N. Kamvar
@@ -149,7 +173,8 @@
 #'   2001
 #'   
 #'   A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-#'   populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536, 1980.
+#'   populations of \emph{Hordeum spontaneum}. \emph{Genetics}, 96(2):523-536,
+#'   1980.
 #'   
 #'   Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
 #'   E. Fry. Analysis of genotypic diversity data for populations of 
@@ -162,14 +187,23 @@
 #'   calculation of the rarefaction diversity measurement and the determination 
 #'   of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975
 #'   
+#'   Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
+#'   from a small number of individuals. Genetics, 89(3):583-590, 1978.
+#'   
 #'   S H Hurlbert. The nonconcept of species diversity: a critique and 
 #'   alternative parameters. Ecology, 52(4):577-586, 1971.
 #'   
 #'   J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
 #'   Computing. New York USA: John Wiley and Sons, 1988.
 #'   
-#'   Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
-#'   from a small number of individuals. Genetics, 89(3):583-590, 1978.
+#'   Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949 
+#'   doi:10.1038/163688a0
+#'   
+#'   Good, I. J. (1953). On the Population Frequency of Species and the 
+#'   Estimation of Population Parameters. \emph{Biometrika} 40(3/4): 237-264.
+#'   
+#'   Lande, R. (1996). Statistics and partitioning of species diversity, and 
+#'   similarity among multiple communities. \emph{Oikos} 76: 5-13.
 #'   
 #'   Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
 #'   R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. 
@@ -193,22 +227,56 @@
 #' poppr(nancycats)
 #' 
 #' \dontrun{
-#' poppr(nancycats, sample=99, total=FALSE, quiet=FALSE)
+#' # Sampling
+#' poppr(nancycats, sample = 999, total = FALSE)
 #' 
+#' # Customizing the plot
+#' library("ggplot2")
+#' p <- last_plot()
+#' p + facet_wrap(~population, scales = "free_y", ncol = 1)
+#' 
+#' # Turning off diversity statistics (see get_stats)
+#' poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
+#' 
+#' # The previous version of poppr contained a definition of Hexp, which
+#' # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased 
+#' # Simpson's index. This statistic was originally included in poppr because it
+#' # was originally included in the program multilocus. It was finally figured
+#' # to be an unbiased Simpson's diversity metric (Lande, 1996; Good, 1953).
+#' 
+#' data(Aeut)
+#' 
+#' uSimp <- function(x){
+#'   lambda <- vegan::diversity(x, "simpson")
+#'   x <- drop(as.matrix(x))
+#'   if (length(dim(x)) > 1){
+#'     N <- rowSums(x)
+#'   } else {
+#'     N <- sum(x)
+#'   }
+#'   return((N/(N-1))*lambda)
+#' }
+#' poppr(Aeut, uSimp = uSimp)
+#' 
+#' 
+#' # Demonstration with viral data
 #' # Note: this is a larger data set that could take a couple of minutes to run
 #' # on slower computers. 
 #' data(H3N2)
-#' poppr(H3N2, total=FALSE, sublist=c("Austria", "China", "USA"), 
-#' 				clonecorrect=TRUE, strata="country", dfname="x")
+#' strata(H3N2) <- data.frame(other(H3N2)$x)
+#' setPop(H3N2) <- ~country
+#' poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"), 
+#' 				clonecorrect = TRUE, strata = ~country/year)
 #' }
 #==============================================================================#
 #' @import adegenet ggplot2 vegan
 poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL, 
                   sample = 0, method = 1, missing = "ignore", cutoff = 0.05, 
                   quiet = FALSE, clonecorrect = FALSE, strata = 1, keep = 1, 
-                  hist = TRUE, index = "rbarD", minsamp = 10, legend = FALSE){
-  METHODS <- c("permute alleles", "parametric bootstrap",
-              "non-parametric bootstrap", "multilocus")
+                  hist = TRUE, index = "rbarD", minsamp = 10, legend = FALSE,
+                  ...){
+#   METHODS <- c("permute alleles", "parametric bootstrap",
+#                "non-parametric bootstrap", "multilocus")
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
                     clonecorrect = clonecorrect, strata = strata,
                     keep = keep, quiet = TRUE)  
@@ -239,47 +307,56 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   }
   # Creating the genotype matrix for vegan's diversity analysis.
   pop.mat <- mlg.matrix(dat)
-  if (total==TRUE & !is.null(poplist) & length(poplist) > 1){
+  if (total == TRUE & !is.null(poplist) & length(poplist) > 1){
     poplist$Total <- dat
     pop.mat       <- rbind(pop.mat, colSums(pop.mat))
   }
   sublist <- names(poplist)
   Iout    <- NULL
-  origpop <- x$GENIND
   total   <- toupper(total)
   missing <- toupper(missing)
-  type    <- dat@type
   # For presence/absences markers, a different algorithm is applied. 
-  if(type=="PA"){
-    .Ia.Rd <- .PA.Ia.Rd
-  }
   if (legend) poppr_message()
   
   MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
   N.vec   <- rowSums(pop.mat)
-  # Shannon-Weiner diversity index.
-  H       <- vegan::diversity(pop.mat)
-  # inverse Simpson's index aka Stoddard and Taylor: 1/lambda
-  G       <- vegan::diversity(pop.mat, "inv")
-  Hexp    <- (N.vec/(N.vec-1))*vegan::diversity(pop.mat, "simp")
-  # E_5
-  E.5     <- (G-1)/(exp(H)-1)
-  
+#   the_dots <- list(...)
+#   rarefied <- "rarefy" %in% names(the_dots)
+#   if (sample > 0){
+#     if (!quiet) message("bootstrapping diversity statistics...")
+#     divmat <- boot_se_table(pop.mat, n = sample, ...)
+#     if (!quiet) message("calculating index of association...")
+#   } else {
+    divmat <- diversity_stats(pop.mat, ...)
+  # }
+  if (!is.matrix(divmat)){
+    divmat <- matrix(divmat, nrow = 1, dimnames = list(NULL, names(divmat)))
+  }
   if (!is.null(poplist)){
     # rarefaction giving the standard errors. This will use the minimum pop size
     # above a user-defined threshold.
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
-    N.rare  <- suppressWarnings(rarefy(pop.mat, raremax, se=TRUE))
-    IaList  <- lapply(sublist, function(x){
-                      namelist <- list(file = namelist$File, population = x)
-                      .ia(poplist[[x]], sample = sample, method = method, 
-                          quiet = quiet, missing = missing, hist = FALSE,
-                          namelist = namelist)
-    })
-    names(IaList) <- sublist
-    if (sample > 0){
+    Hexp <- vapply(lapply(poplist, pegas::as.loci), FUN = get_hexp_from_loci, 
+                   FUN.VALUE = numeric(1), type = dat@type)
+    N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
+    # if (!rarefied){
+      IaList  <- lapply(sublist, function(x){
+        namelist <- list(file = namelist$File, population = x)
+        .ia(poplist[[x]], sample = sample, method = method, 
+            quiet = quiet, missing = missing, hist = FALSE,
+            namelist = namelist)
+      })    
+      names(IaList) <- sublist
+#     } else {
+#       IaList <- t(vapply(poplist, rare_ia, numeric(4), n = sample, 
+#                          rare = raremax, obs = TRUE))
+#       colnames(IaList) <- c("Ia", "Ia.sd", "rbarD", "rbarD.sd")
+#     }
+  
+    
+    if (sample > 0){# && !rarefied){
       classtest <- summary(IaList)
       classless <- !classtest[, "Class"] %in% "ialist"
       if (any(classless)){
@@ -291,24 +368,27 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
       }
       try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
       IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
-    } else {
+    } else {#if (!rarefied){
       IaList <- t(as.data.frame(IaList))
     }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
-                               eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, 
-                               G=G, Hexp=Hexp, E.5=E.5, IaList, 
+                               eMLG=N.rare[1, ], SE=N.rare[2, ], 
+                               divmat, Hexp = Hexp, IaList, 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
   } else { 
     # rarefaction giving the standard errors. No population structure means that
     # the sample is equal to the number of individuals.
-    N.rare <- rarefy(pop.mat, sum(pop.mat), se=TRUE)
+    N.rare <- rarefy(pop.mat, sum(pop.mat), se = TRUE)
+    Hexp   <- get_hexp_from_loci(pegas::as.loci(dat), type = dat@type)
     IaList <- .ia(dat, sample=sample, method=method, quiet=quiet, missing=missing,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
+    
     Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
-                               eMLG=N.rare[1, ], SE=N.rare[2, ], H=H, G=G, 
-                               Hexp=Hexp, E.5=E.5, as.data.frame(t(IaList)), 
+                               eMLG=N.rare[1, ], SE=N.rare[2, ], divmat, 
+                               Hexp = Hexp,
+                               as.data.frame(t(IaList)), 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
   }
@@ -370,9 +450,12 @@ poppr.all <- function(filelist, ...){
 #' Index of Association
 #' 
 #' Calculate the Index of Association and Standardized Index of Association. 
-#' Obtain p-values from one-sided permutation tests.
+#' Obtain p-values from one-sided permutation tests. 
 #' 
-#' @param pop a \code{\link{genind}} object OR any fstat, structure, genetix, 
+#' The function \code{ia} will calculate this over the whole data set while
+#' \code{pair.ia} will calculate the index pairwise per locus. 
+#' 
+#' @param gid a \code{\link{genind}} object OR any fstat, structure, genetix, 
 #'   genpop, or genalex formatted files.
 #'   
 #' @param sample an integer indicating the number of permutations desired (eg 
@@ -401,20 +484,23 @@ poppr.all <- function(filelist, ...){
 #'   reshuffled data is returned. If \code{FALSE} (default), the index is 
 #'   returned with associated p-values in a 4 element numeric vector.
 #'   
-#' @return \subsection{If no sampling has occurred:}{ A named number vector of 
-#'   length 2 giving the Index of Association, "Ia"; and the Standardized Index 
-#'   of Association, "rbarD" } \subsection{If there is sampling:}{ A a named 
-#'   number vector of length 4 with the following values: \itemize{\item{Ia -
-#'   }{numeric. The index of association.} \item{p.Ia - }{A number indicating
-#'   the p-value resulting from a one-sided permutation test based on the number
-#'   of samples indicated in the original call.} \item{rbarD - }{numeric. The
-#'   standardized index of association.} \item{p.rD - }{A factor indicating the
-#'   p-value resulting from a one-sided permutation test based on the number of
-#'   samples indicated in the original call.}} } \subsection{If there is
-#'   sampling and valureturn = TRUE}{ A list with the following
-#'   elements: \itemize{ \item{index}{The above vector} \item{samples}{A data
-#'   frame with s by 2 column data frame where s is the number of samples
-#'   defined. The columns are for the values of Ia and rbarD, respectively.}}}
+#' @return \subsection{for \code{pair.ia}}{a matrix with two columns and
+#'   choose(nLoc(gid), 2) rows representing the values for Ia and rbarD per
+#'   locus pair.}\subsection{If no sampling has occurred:}{ A named number
+#'   vector of length 2 giving the Index of Association, "Ia"; and the
+#'   Standardized Index of Association, "rbarD" } \subsection{If there is
+#'   sampling:}{ A a named number vector of length 4 with the following values:
+#'   \itemize{\item{Ia - }{numeric. The index of association.} \item{p.Ia - }{A
+#'   number indicating the p-value resulting from a one-sided permutation test
+#'   based on the number of samples indicated in the original call.} \item{rbarD
+#'   - }{numeric. The standardized index of association.} \item{p.rD - }{A
+#'   factor indicating the p-value resulting from a one-sided permutation test
+#'   based on the number of samples indicated in the original call.}} }
+#'   \subsection{If there is sampling and valureturn = TRUE}{ A list with the
+#'   following elements: \itemize{ \item{index}{The above vector}
+#'   \item{samples}{A data frame with s by 2 column data frame where s is the
+#'   number of samples defined. The columns are for the values of Ia and rbarD,
+#'   respectively.}}}
 #'   
 #' @details The index of association was originally developed by A.H.D. Brown 
 #'   analyzing population structure of wheat (Brown, 1980). It has been widely 
@@ -497,21 +583,29 @@ poppr.all <- function(filelist, ...){
 #'   
 #' @seealso \code{\link{poppr}}, \code{\link{missingno}}, 
 #'   \code{\link{import2genind}}, \code{\link{read.genalex}}, 
-#'   \code{\link{clonecorrect}}
+#'   \code{\link{clonecorrect}}, \code{\link{win.ia}}, \code{\link{samp.ia}}
 #'   
 #' @export
+#' @rdname ia
 #' @author Zhian N. Kamvar
 #' @examples
 #' data(nancycats)
 #' ia(nancycats)
 #' 
+#' # Pairwise over all loci:
+#' data(partial_clone)
+#' res <- pair.ia(partial_clone)
+#' plot(res, low = "black", high = "green", index = "Ia")
+#' 
 #' \dontrun{
+#' 
 #' # Get the indices back and plot them using base R graphics:
 #' nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
 #' layout(matrix(c(1,1,2,2), 2, 2, byrow = TRUE))
 #' hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
 #' hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
 #' layout(matrix(c(1,1,1,1), 1, 1))
+#' 
 #' # You can also view them directly:
 #' plot(nansamp, index = "Ia")
 #' plot(nansamp, index = "rbarD")
@@ -519,23 +613,47 @@ poppr.all <- function(filelist, ...){
 #' # Get the index for each population.
 #' lapply(seppop(nancycats), ia)
 #' # With sampling
-#' lapply(seppop(nancycats), ia, sample=999)
+#' lapply(seppop(nancycats), ia, sample = 999)
+#' 
+#' # Plot pairwise ia for all populations in a grid with cowplot
+#' # Set up the library and data
+#' library("cowplot")
+#' data(monpop)
+#' splitStrata(monpop) <- ~Tree/Year/Symptom
+#' setPop(monpop)      <- ~Tree
+#' 
+#' # Need to set up a list in which to store the plots.
+#' plotlist        <- vector(mode = "list", length = nPop(monpop))
+#' names(plotlist) <- popNames(monpop)
+#' 
+#' # Loop throgh the populations, calculate pairwise ia, plot, and then
+#' # capture the plot in the list
+#' for (i in popNames(monpop)){
+#'   x <- pair.ia(monpop[pop = i], limits = c(-0.15, 1)) # subset, calculate, and plot
+#'   plotlist[[i]] <- ggplot2::last_plot() # save the last plot
+#' }
+#' 
+#' # Use the plot_grid function to plot. We could do it manually since there are
+#' # only 4 populations:
+#' plot_grid(plotlist[[1]], plotlist[[2]], plotlist[[3]], plotlist[[4]], 
+#'           labels = paste("Tree", popNames(monpop)))
+#'  
+#' # This gets tedious with many populations, so we can use the do.call function
+#' # to help us!
+#' 
+#' do.call(plot_grid, c(plotlist, list(labels = paste("Tree", popNames(monpop)))))
 #' }
 #==============================================================================#
-
-ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore", 
+ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore", 
                 hist = TRUE, index = "rbarD", valuereturn = FALSE){
-  METHODS = c("permute alleles", "parametric bootstrap",
-              "non-parametric bootstrap", "multilocus")
-  
-  namelist <- list(population = ifelse(nPop(pop) > 1 | is.null(pop@pop), 
-                                       "Total", popNames(pop)),
+  namelist <- list(population = ifelse(nPop(gid) > 1 | is.null(gid@pop), 
+                                       "Total", popNames(gid)),
                    File = as.character(match.call()[2])
                   )
   
-  popx    <- pop
+  popx    <- gid
   missing <- toupper(missing)
-  type    <- pop@type
+  type    <- gid@type
   
   if (type == "PA"){
     .Ia.Rd <- .PA.Ia.Rd
@@ -545,12 +663,12 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
 
   # if there are less than three individuals in the population, the calculation
   # does not proceed. 
-  if (nInd(pop) < 3){
-    IarD <- setNames(as.numeric(c(NA, NA)), c("Ia", "rbarD"))
+  if (nInd(gid) < 3){
+    IarD <- stats::setNames(as.numeric(c(NA, NA)), c("Ia", "rbarD"))
     if (sample == 0){
       return(IarD)
     } else {
-      IarD <- setNames(as.numeric(rep(NA, 4)), c("Ia","p.Ia","rbarD","p.rD"))
+      IarD <- stats::setNames(as.numeric(rep(NA, 4)), c("Ia","p.Ia","rbarD","p.rD"))
       return(IarD)
     }
   }
@@ -566,7 +684,7 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   # the population, index, observed value, and p-value. It will also produce a 
   # histogram.
     Iout     <- NULL 
-    idx      <- data.frame(Index = names(IarD))
+    # idx      <- data.frame(Index = names(IarD))
     samp     <- .sampling(popx, sample, missing, quiet = quiet, type = type, 
                           method = method)
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)
@@ -575,10 +693,10 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
     if (hist == TRUE){
       the_plot <- poppr.plot(samp, observed = IarD, pop = namelist$population, 
                              index = index, file = namelist$File, pval = p.val, 
-                             N = nrow(pop@tab))
+                             N = nrow(gid@tab))
       print(the_plot)
     }
-    result <- setNames(vector(mode = "numeric", length = 4), 
+    result <- stats::setNames(vector(mode = "numeric", length = 4), 
                        c("Ia","p.Ia","rbarD","p.rD"))
     result[c(1, 3)] <- IarD
     result[c(2, 4)] <- p.val
@@ -591,7 +709,54 @@ ia <- function(pop, sample=0, method=1, quiet=FALSE, missing="ignore",
   return(final(Iout, result))
 }
 
-
+#==============================================================================#
+#' @rdname ia
+#' @param plot (for pair.ia) when \code{TRUE} (default), a heatmap of the values
+#'   per locus pair will be plotted.
+#' @param low (for pair.ia) a color to use for low values when \code{plot =
+#'   TRUE}
+#' @param high (for pair.ia) a color to use for low values when \code{plot =
+#'   TRUE}
+#' @param limits (for pair.ia) the limits to be used for the color scale. 
+#'   Defaults to \code{NULL}. If you want to use a custom range, supply two
+#'   numbers between -1 and 1, (e.g. \code{limits = c(-0.15, 1)})
+#' @export
+#==============================================================================#
+pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
+                    limits = NULL, index = "rbarD"){
+  N       <- nInd(gid)
+  numLoci <- nLoc(gid)
+  lnames  <- locNames(gid)
+  np      <- choose(N, 2)
+  nploci  <- choose(numLoci, 2)
+  if (gid@type == "codom"){
+    V <- pair_matrix(seploc(gid), numLoci, np)
+  } else { # P/A case
+    V <- apply(tab(gid), 2, function(x) as.vector(dist(x)))
+    # checking for missing data and imputing the comparison to zero.
+    if (any(is.na(V))){
+      V[which(is.na(V))] <- 0
+    }
+  }
+  colnames(V) <- lnames
+  
+  loci_pairs       <- matrix(NA, nrow = 3, ncol = nploci)
+  loci_pairs[-3, ] <- combn(lnames, 2)
+  loci_pairs[3, ]  <- as.character(1:nploci)
+  prog             <- NULL
+  if (!quiet) prog <- txtProgressBar(style = 3)
+  pair_ia_vector   <- apply(loci_pairs, 2, ia_pair_loc, V, np, prog, nploci)
+  if (!quiet) cat("\n")
+  
+  colnames(pair_ia_vector) <- apply(loci_pairs[-3, ], 2, paste, collapse = ":")
+  rownames(pair_ia_vector) <- c("Ia", "rbarD")
+  pair_ia_vector           <- t(pair_ia_vector)
+  class(pair_ia_vector)    <- c("matrix", "pairia")
+  if (plot){
+    plot(pair_ia_vector, index = index, low = low, high = high, limits = limits)
+  }
+  return(pair_ia_vector)
+}
 
 #==============================================================================#
 #' Create a table of summary statistics per locus. 
