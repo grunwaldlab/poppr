@@ -24,6 +24,10 @@ Depends:
     R (>= 2.15.1),
     adegenet (>= 2.0-0)
 Imports:
+    stats,
+    graphics,
+    grDevices,
+    utils,
     vegan,
     ggplot2,
     phangorn,
