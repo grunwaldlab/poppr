@@ -410,10 +410,9 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #' Perform bootstrap statistics, calculate, and plot confidence intervals.
 #' 
 #' This function is for calculating bootstrap statistics and their confidence 
-#' intervals. It is important to note that there are inherent problems to 
-#' calculating confidence intervals for diversity statistics as discussed below.
-#' Perhaps the best use of this function is for calculating rarefied estimates
-#' to compare values across populations. Please take caution otherwise. 
+#' intervals. It is important to note that the calculation of confidence 
+#' intervals is not perfect (See Details). Please be cautious when interpreting
+#' the results.
 #' 
 #' @param tab a genind object OR a matrix produced from 
 #'   \code{\link[poppr]{mlg.table}}.
@@ -494,7 +493,12 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   have straightforward interpretations and allow you to compare diversity
 #'   across populations since you are controlling for sample size.
 #'   }
-#'   
+#'   \subsection{Plotting}{ Results are plotted as boxplots with point
+#'   estimates. If there is no rarefaction applied, confidence intervals are
+#'   displayed around the point etimates. The boxplots represent the actual
+#'   values from the bootstrapping and will often appear below the estimates and
+#'   confidence intervals. 
+#'   }
 #' @note 
 #'   \subsection{Confidence interval calculation}{ Almost all of the statistics 
 #'   supplied here have a maximum when all genotypes are equally represented. 
