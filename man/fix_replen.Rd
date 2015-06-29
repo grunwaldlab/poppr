@@ -75,6 +75,11 @@ Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M.
   and temporal population dynamics of the sudden oak death epidemic in Oregon
   Forests. ZENODO, http://doi.org/10.5281/zenodo.13007, 2014.
 
+  Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald,
+  N. J. (2015). Spatial and temporal analysis of populations of the sudden
+  oak death pathogen in Oregon forests. Phytopathology XXX:X-X.
+  \url{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}
+
   Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich
   Schulenburg. A simple method for the calculation of microsatellite genotype
   distances irrespective of ploidy level. Molecular Ecology, 13(7):2101-2106,
