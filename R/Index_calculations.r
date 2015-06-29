@@ -664,11 +664,11 @@ ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore",
   # if there are less than three individuals in the population, the calculation
   # does not proceed. 
   if (nInd(gid) < 3){
-    IarD <- setNames(as.numeric(c(NA, NA)), c("Ia", "rbarD"))
+    IarD <- stats::setNames(as.numeric(c(NA, NA)), c("Ia", "rbarD"))
     if (sample == 0){
       return(IarD)
     } else {
-      IarD <- setNames(as.numeric(rep(NA, 4)), c("Ia","p.Ia","rbarD","p.rD"))
+      IarD <- stats::setNames(as.numeric(rep(NA, 4)), c("Ia","p.Ia","rbarD","p.rD"))
       return(IarD)
     }
   }
@@ -696,7 +696,7 @@ ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore",
                              N = nrow(gid@tab))
       print(the_plot)
     }
-    result <- setNames(vector(mode = "numeric", length = 4), 
+    result <- stats::setNames(vector(mode = "numeric", length = 4), 
                        c("Ia","p.Ia","rbarD","p.rD"))
     result[c(1, 3)] <- IarD
     result[c(2, 4)] <- p.val

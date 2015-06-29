@@ -50,9 +50,9 @@ print.ialist <- function(x, ...){
   print(x$index)
   cat("Samples\n")
   if (nrow(x$samples) > 13){
-    print(head(x$samples))
+    print(utils::head(x$samples))
     cat("...\n")
-    print(tail(x$samples))    
+    print(utils::tail(x$samples))    
   } else {
     print(x$samples)
   }

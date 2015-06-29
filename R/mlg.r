@@ -558,7 +558,7 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
     }
     
     mlgtab <- mlgtab[, mlgsubnames, drop = FALSE]
-    mlgs   <- setNames(1:ncol(mlgtab), colnames(mlgtab))
+    mlgs   <- stats::setNames(1:ncol(mlgtab), colnames(mlgtab))
   
   } else {
     if (sublist[1] != "ALL" | !is.null(blacklist)){

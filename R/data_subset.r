@@ -547,7 +547,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
 # #~ H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
 # #~ 
 # #~ # Checking to make sure they were actually combined.
-# #~ head(H.comb$other$x$year_country)
+# #~ utils::head(H.comb$other$x$year_country)
 # #~ # Creating new data frame in the object to mess around with. 
 # #~ H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
 # #~ 
@@ -961,7 +961,7 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
   non_zero_cols_vector <- unlist(non_zero_cols_list, use.names = FALSE)
 
   poly@loc.fac   <- fac[non_zero_cols_vector]
-  poly@loc.n.all  <- setNames(tabulate(locFac(poly)), locNames(poly))
+  poly@loc.n.all  <- stats::setNames(tabulate(locFac(poly)), locNames(poly))
   poly@tab       <- MAT[, non_zero_cols_vector, drop = FALSE]
   poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list,
                            SIMPLIFY = FALSE)

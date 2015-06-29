@@ -1036,48 +1036,48 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE,
     with_quantiles <- sort(weights)
     wq_raster      <- t(as.raster(as.matrix(gray(sort(adj)), nrow = 1)))
     xlims <- c(min(weights), max(weights))
-    plot(xlims, 0:1, type = "n", ylim = 0:1, xlim = xlims, xlab = "", ylab = "")
-    rasterImage(wq_raster, xlims[1], 0, xlims[2], 1)
-    points(x = sort(weights), y = sort(adj), col=grey(rev(sort(adj))), pch=20)
+    graphics::plot(xlims, 0:1, type = "n", ylim = 0:1, xlim = xlims, xlab = "", ylab = "")
+    graphics::rasterImage(wq_raster, xlims[1], 0, xlims[2], 1)
+    graphics::points(x = sort(weights), y = sort(adj), col = grDevices::grey(rev(sort(adj))), pch=20)
     title(xlab="Observed Value", ylab="Grey Adjusted", 
           main=paste("Grey adjustment\n min:", 
                      min(glim), 
                      "max:", max(glim), 
                      "adjust:",abs(correction)))
     if (correction < 0){
-      text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
+      graphics::text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
                                        .(ming)^-1),")") + .(1-ming), 
                        .(maxg)^-1)) , 
            x = min(weights) + (0.25*max(weights)), y=0.75, col="red")
     } else {
-      text(bquote(frac(1-bgroup("(",frac((1-scriptstyle(x))^.(abs(correction)),
+      graphics::text(bquote(frac(1-bgroup("(",frac((1-scriptstyle(x))^.(abs(correction)),
                                          .(ming)^-1),")"), 
                        .(maxg)^-1)) , 
            x= min(weights) + (0.15*max(weights)), y=0.75, col="red")
     }
-    lines(x=xlims, y=c(min(glim),min(glim)), col="yellow")
-    lines(x=xlims, y=c(max(glim),max(glim)), col="yellow")    
+    graphics::lines(x=xlims, y=c(min(glim),min(glim)), col="yellow")
+    graphics::lines(x=xlims, y=c(max(glim),max(glim)), col="yellow")    
   } else {
     with_quantiles <- sort(weights)
-    wq_raster      <- t(as.raster(as.matrix(gray(sort(adj)), nrow = 1)))
+    wq_raster      <- t(grDevices::as.raster(as.matrix(grDevices::gray(sort(adj)), nrow = 1)))
     no_quantiles   <- seq(min(weights), max(weights), length = 1000)
     nq_raster      <- adjustcurve(no_quantiles, glim, correction, show = FALSE)
-    nq_raster      <- t(as.raster(as.matrix(gray(nq_raster), nrow = 1)))
-    layout(matrix(1:2, nrow = 2))
-    plot.new()
-    rasterImage(wq_raster, 0, 0.5, 1, 1)
-    polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
-    axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(with_quantiles), 3))
-    text(0.5, 0, labels = "Quantiles From Data", font = 2, cex = 1.5, adj = c(0.5, 0))
-    plot.new()
-    rasterImage(nq_raster, 0, 0.5, 1, 1)
-    polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
-    axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(no_quantiles), 3))
-    text(0.5, 0, labels = "Quantiles From Smoothing", font = 2, cex = 1.5, adj = c(0.5, 0))
+    nq_raster      <- t(grDevices::as.raster(as.matrix(grDevices::gray(nq_raster), nrow = 1)))
+    graphics::layout(matrix(1:2, nrow = 2))
+    graphics::plot.new()
+    graphics::rasterImage(wq_raster, 0, 0.5, 1, 1)
+    graphics::polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+    graphics::axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(with_quantiles), 3))
+    graphics::text(0.5, 0, labels = "Quantiles From Data", font = 2, cex = 1.5, adj = c(0.5, 0))
+    graphics::plot.new()
+    graphics::rasterImage(nq_raster, 0, 0.5, 1, 1)
+    graphics::polygon(c(0, 1, 1), c(0.5, 0.5, 0.8), col = "white", border = "white", lwd = 2)
+    graphics::axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(no_quantiles), 3))
+    graphics::text(0.5, 0, labels = "Quantiles From Smoothing", font = 2, cex = 1.5, adj = c(0.5, 0))
     # Return top level plot to defau lts.
-    layout(matrix(c(1), ncol=1, byrow=T))
-    par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
-    par(oma=c(0,0,0,0)) # Figure margins
+    graphics::layout(matrix(c(1), ncol=1, byrow=T))
+    graphics::par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
+    graphics::par(oma=c(0,0,0,0)) # Figure margins
   }
 }
 
@@ -1285,7 +1285,7 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = T
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color,  
                 vertex.label = vertex.label, vertex.size = mlg.number*3, 
                 vertex.color = palette(1),  ...)
-    legend(-1.55,1,bty = "n", cex = 0.75, 
+    graphics::legend(-1.55,1,bty = "n", cex = 0.75, 
            legend = populations, title = "Populations", fill = palette(1), 
            border = NULL)
   }
@@ -2362,7 +2362,7 @@ get_boot_ci <- function(index, x, type = "normal", conf = 0.95,
     res <- boot::norm.ci(x, conf = conf, index = index)[1, ]
     # res <- boot::boot.ci(x, conf, type, index, ...)[[type]][1, ]
   }
-  return(tail(res, 2))
+  return(utils::tail(res, 2))
 }
 
 #==============================================================================#
