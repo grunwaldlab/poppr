@@ -85,6 +85,8 @@
 #' \itemize{
 #' \item \code{\link{aboot}} - Creates a bootstrapped dendrogram for any distance measure
 #' \item \code{\link{bruvo.boot}} - Produces dendrograms with bootstrap support based on Bruvo's distance
+#' \item \code{\link{diversity_boot}} - Generates boostrap distributions of diversity statistics for multilocus genotypes
+#' \item \code{\link{diversity_ci}} - Generates confidence intervals for multilocus genotype diversity.
 #' }
 #' @section Analysis:
 #' \subsection{Multilocus Genotypes}{
@@ -99,10 +101,12 @@
 #' \item \code{\link{mlg.filter}} - Collapses MLGs by genetic distance
 #' \item \code{\link{mll.custom}} - Allows for the custom definition of multilocus lineages
 #' \item \code{\link{mll.levels}} - Allows the user to change levels of custom MLLs. 
-#' 
+#' \item \code{\link{diversity_stats}} - Creates a table of diversity indices for multilocus genotypes. 
 #' }
 #' }
+#' \subsection{Other}{
 #' \itemize{
+#' 
 #' \item \code{\link{poppr.amova}} - Analysis of Molecular Variance (as implemented in ade4)
 #' \item \code{\link{ia}} - Calculates the index of association
 #' \item \code{\link{pair.ia}} - Calculates the index of association for all loci pairs.
@@ -112,6 +116,7 @@
 #' \item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
 #' \item \code{\link{private_alleles}} - Tabulates the occurences of alleles that only occur in one population.
 #' \item \code{\link{locus_table}} - Creates a table of summary statistics per locus.
+#' }
 #' }
 #' @section Visulalization:
 #' \itemize{
@@ -123,7 +128,7 @@
 #' \item \code{\link{info_table}} - Creates a heatmap representing missing data or observed ploidy
 #' \item \code{\link{genotype_curve}} - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 
 #' }
-#'
+#' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Niklaus J. Grünwald
 #' 
 #' Maintainer: Zhian N. Kamvar

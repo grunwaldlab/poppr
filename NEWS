@@ -5,6 +5,7 @@ COMPATIBILITY UPDATE
 
 NEW DEPENDENCIES
 * poppr now imports elements from dplyr and shiny
+* As required as of 2015-06-29, poppr now explicitly imports: stats, graphics, grDevices, and utils
 
 NEW SUGGESTS
 * poppr now suggests the cowplot, poweRlaw, and polysat packages.
