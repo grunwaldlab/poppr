@@ -228,9 +228,10 @@ feedback.
 The following data sets are included in \poppr{}:
 
 \begin{itemize}
-  \item \texttt{Pinf} \cite{goss2014irish}
-  \item \texttt{monpop} \cite{everhart2014finescale}
-  \item \texttt{Aeut} \cite{Grunwald:2006}
+  \item \texttt{Pinf} (SSR, \textit{Phytophthora infestans})\cite{goss2014irish}
+  \item \texttt{monpop} (SSR, \textit{Monolinia fructicola})\cite{everhart2014finescale}
+  \item \texttt{Aeut} (AFLP, \textit{Aphanomyces eutieches})\cite{Grunwald:2006}
+  \item \texttt{Pram} (SSR, \textit{Phytophthora ramorum})\cite{kamvar2015spatial}
 \end{itemize}
 
 \subsection{Citation}
@@ -2334,9 +2335,15 @@ naninform <- informloci(nancycats, cutoff = 0.05)
 have multiple samples from the same population that have the same set of alleles
 at all loci. Here, we introduce tools for tracking MLGs within and across
 populations in \seclink{intro:genind}{genind} objects from the \adegenet{}
-package. We will be using the \seclink{data:virus}{virus} data set containing
+package. We will be using the H3N2 data set containing
 SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that genclone
-objects are optimal for these analyses. %-----------------------------------------------------------------------------%
+objects are optimal for these analyses. For a more in-depth document on methods
+for multilocus genotypes in \poppr{}, see the ``Multilocus Genotype Analysis'' 
+vignette by typing 
+<<eval = FALSE>>=
+vignette("mlg", package = "poppr")
+@
+%-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
 \subsection{How many multilocus genotypes are in our data set? \{Just a peek\}}
