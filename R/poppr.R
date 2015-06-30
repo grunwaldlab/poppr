@@ -134,7 +134,7 @@
 #' @section Datasets:
 #' \itemize{
 #' \item \code{\link{Aeut}} - (AFLP) Oomycete root rot pathogen \emph{Aphanomyces euteiches}
-#' \item \code{\link{monpop}} - (SSR) Peach brown rot pathogen \emph{Monolinia fructicola}
+#' \item \code{\link{monpop}} - (SSR) Peach brown rot pathogen \emph{Monilinia fructicola}
 #' \item \code{\link{partial_clone}} - (SSR) Simulated partially-clonal data
 #' \item \code{\link{Pinf}} - (SSR) Potato late blight pathogen \emph{Phytophthora infestans}
 #' \item \code{\link{Pram}} - (SSR) Sudden Oak Death pathogen \emph{Phytophthora ramorum}

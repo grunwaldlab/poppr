@@ -32,8 +32,10 @@
 #' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
+#' \dontrun{
 #' data(Pinf)
 #' filter_stats(Pinf, distance = diss.dist, percent = TRUE, plot = TRUE)
+#' }
 filter_stats <- function(x, distance = bitwise.dist, 
                          threshold = 1 + .Machine$double.eps^0.5, 
                          stats = "All", missing = "ignore", plot = FALSE, 
@@ -91,10 +93,12 @@ filter_stats <- function(x, distance = bitwise.dist,
 #' 
 #' @author Zhian N. Kamvar
 #' @examples
+#' \dontrun{
 #' data(Pinf)
 #' pthresh <- mlg.filter(Pinf, distance = diss.dist, percent = TRUE, 
 #'                       threshold = 1.1, stats = "THRESH")
 #' cutoff_predictor(pthresh)
+#' }
 cutoff_predictor <- function(thresholds, fraction = 0.5){
   frac <- 1:round(length(thresholds)*fraction)
   diffs <- diff(thresholds[frac])

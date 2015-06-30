@@ -42,8 +42,10 @@ This function originally appeared in
   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
 }
 \examples{
+\dontrun{
 data(Pinf)
 filter_stats(Pinf, distance = diss.dist, percent = TRUE, plot = TRUE)
+}
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks

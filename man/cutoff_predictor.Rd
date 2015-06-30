@@ -28,10 +28,12 @@ This function originally appeared in
   This is a bit of a blunt instrument.
 }
 \examples{
+\dontrun{
 data(Pinf)
 pthresh <- mlg.filter(Pinf, distance = diss.dist, percent = TRUE,
                       threshold = 1.1, stats = "THRESH")
 cutoff_predictor(pthresh)
+}
 }
 \author{
 Zhian N. Kamvar
