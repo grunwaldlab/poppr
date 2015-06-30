@@ -255,6 +255,7 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlg
     print(mlg_barplot(mlgtab) + 
             # theme_classic() %+replace%
             # theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
+            myTheme + 
             labs(title = paste("Data:", the_data, "\nN =",
                                sum(mlgtab), "MLG =", ncol(mlgtab))))
     # }
