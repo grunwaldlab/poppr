@@ -1,0 +1,344 @@
+---
+title: "Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`"
+author: Zhian N. Kamvar and Niklaus J. Grünwald
+date: "`r Sys.Date()`"
+bibliography: the_bibliography.bib
+output:
+  html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Multilocus Genotype Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, tidy = FALSE)
+knitr::opts_chunk$set(fig.align = "center", fig.show = 'asis', fig.height = 7,
+                      fig.width = 7)
+library("knitcitations")
+cite_options(citation_format = "pandoc", max.names = 3, style = "html", 
+             hyperlink = "to.doc")
+bib <- read.bibtex("the_bibliography.bib")
+```
+
+----
+<center>
+# Abstract
+
+A multilocus genotype is the unique combination of alleles across two or more
+loci. For organisms such as plant pathogens that often reproduce clonally,
+multilocus genotypes are invaluable for identifying the mode and spread of an
+organism. This document will describe in detail how you can define multilocus
+genotypes/lineages and how you can use them for your analyses of both genclone
+and snpclone objects.
+<br>
+<br>
+
+<img src="popprlogo.png" width="300">
+</center>
+
+----
+
+# Introduction
+
+
+# Multilocus Genotype Flavors
+
+There are three different way for constructing multilocus genotypes in *poppr*.
+The first is a simply naïve construction where all alleles must match to make a
+unique multilocus genotype. New in version `r packageVersion("poppr")` is the
+ability to use genetic distance to define multilocus genotypes or define custom
+multilocus lineages based on other biological factors. You can use the function
+`mll()` to display and switch between different multilocus genotypes/lineages.
+All of these functions will work for both **genclone** and **snpclone** objects.
+In this section, we will demonstrate how to construct each of these three
+multilocus genotype definitions in different data sets.
+
+## Naïve ("original")
+
+This is the default way *poppr* calculates multilocus genotypes. You see it
+immediately when you load a genclone object. Let's use the example `monpop` from
+`r citep(bib["everhart2014finescale"])`
+
+```{r}
+library("poppr")
+data(monpop)
+monpop
+```
+
+You notice that there are 694 samples, yet only 264 multilocus genotypes in the 
+data set over 13 loci. In this sub-section, I will demonstrate how these MLGs
+are constructed.
+
+The naïve definition simply takes strings of alleles and compares them for
+equality. This method is quick and easily interpretable, but means that things
+like genotyping error, hyper-variable loci, and missing data all contribute to a
+unique genotype that might not be truly unique `r citep(bib["kamvar2015novel"])`.
+
+To give an example, let's imagine that we have five samples with alleles typed
+at two loci. 
+
+```{r}
+grid_example <- matrix(c(1, 1, 5, 9, 9, 
+                         4, 1, 1, 1, 4), 
+                       ncol = 2)
+rownames(grid_example) <- LETTERS[1:5]
+colnames(grid_example) <- c("x", "y")
+grid_example
+```
+
+We notice how they all have different multilocus genotypes. Indeed, if we 
+analyze them, we see that there are five multilocus genotypes.
+
+```{r}
+library("poppr")
+x <- as.genclone(df2genind(grid_example, ploidy = 1))
+tab(x)  # Look at the multilocus genotype table
+nmll(x) # count the number of multilocus genotypes
+mll(x)  # show the multilocus genotype definitions
+```
+
+What we did above was to analyze the **tab** slot of the object showing the
+counts of alleles per sample across the two loci. We can clearly see by eye that
+no two samples are alike. The `nmll()` function counts the **n**umber of
+**m**ulti**l**ocus **l**ineages in the sample. the `mll()` function displays the
+assignment of the multilocus lineages in the sample.
+
+> Note: we used `mll()` to show us our multilocus lineages. Later on, we will
+> use this same function to switch between different definitions. See ?mll for
+> details.
+
+Now let's say we included another sample with partial missing data. Let's say it
+was typed as allele "5" at the **x** locus, but missing the allele at the **y**
+locus.
+
+```{r}
+x <- as.genclone(df2genind(rbind(grid_example, new = c(5, NA)), ploidy = 1))
+tab(x)  # Note the missing data at locus 2. 
+nmll(x)
+mll(x)
+```
+
+Now we see that we have 6 multilocus genotypes even though one of them contains
+missing data.
+
+Let's also imagine that we included yet another sample that had a low-frequency
+allele at locus **y**, 2, but had the allele "5" at locus **x**.
+
+```{r}
+grid_new <- rbind(grid_example, 
+                  new = c(5, NA), 
+                  mut = c(5, 2)
+                  )
+x <- as.genclone(df2genind(grid_new, ploidy = 1))
+tab(x)
+nmll(x)
+mll(x)
+```
+
+Again, we get completely different genotypes, but notice how the genotypes we 
+added are closer to the genotype that shares the 5 allele. The reason this 
+happens is because the naïve algorithm reports the rank of the concatenated 
+alleles like so:
+
+```{r}
+(xt <- apply(tab(x), 1, paste, collapse = ""))
+rank(xt, ties.method = "first")
+```
+
+Even though we have reason to believe that the samples "new" and "mut" might
+actually have the genotype x.5 and y.1, the algorithm only sees them as
+different. We can even see that if we analyze their alleles in euclidean space,
+they are very similar to each other:
+
+```{r, fig.width = 5, fig.height = 5}
+library("phangorn")
+raw_dist <- function(x){
+  dist(genind2df(x, usepop = FALSE))
+}
+(xdis <- raw_dist(x))
+plot.phylo(upgma(xdis))
+```
+
+In the next section, you will see how to collapse multilocus genotypes by
+genetic distance.
+
+## Filtered ("contracted")
+
+To remedy the issues with a naïve definition of multilocus genotypes, we can 
+utilize genetic distance, which will allow us to collapse multilocus genotypes
+that are under a specific distance threshold. The main function we will use in
+this section is `mlg.filter()`. By default, it will calculate Nei's genetic 
+distance `r citep(bib[c("nei1972genetic")])` on the data
+and then filter based off of that matrix. You can also utilize your own supplied
+distance matrix or distance function. 
+
+### Collapsing
+
+Let's continue our example by using the euclidean distance of the raw alleles.
+To do the collapsing, we will use the function `mlg.filter()`. 
+
+```{r}
+mlg.filter(x, distance = xdis, threshold = 1)
+```
+
+Notice that we now have the last two MLGs collapsed together into one MLL. 
+Unfortunately, we wanted to collapse three MLGs. What happened?
+
+Remember that the distance between "mut" and "C" was 1. We need to set the 
+threshold above where we want the collapse to happen. In order to do this, we
+should add a tiny number to the threshold:
+
+```{r}
+(e <- .Machine$double.eps^0.5) # A very tiny number
+mlg.filter(x, distance = xdis, threshold = 1 + e)
+```
+
+
+### Minimum spanning networks
+
+Now we have all of our mlgs collapsed together, but perhaps a better way to 
+visualize it would be to use `poppr.msn()`:
+
+```{r}
+# Threshold of 1
+set.seed(9001)
+poppr.msn(x, xdis, threshold = 1, include.ties = TRUE, 
+          vertex.label.color = "firebrick", vertex.label.font = 2)
+# Threshold of 1 + e
+set.seed(9001)
+poppr.msn(x, xdis, threshold = 1 + e, include.ties = TRUE, 
+          vertex.label.color = "firebrick", vertex.label.font = 2)
+```
+
+Notice how the genotypes collapse into a single node. Both `poppr.msn()` and
+`bruvo.msn()` will calculate and plot these minimum spanning networks. 
+
+### Setting the genotypes
+
+If we wanted to set our genotypes specifically to the collapsed version, all
+we would have to do is use the `mlg.filter` commands above, but use the `<-` 
+operator to specify the threshold. Note that I will be using `mlg.table` to show
+the distribution of the multilocus genotypes before and after filtering.
+
+```{r}
+mlg.table(x) # Before: 7 MLGs
+mlg.filter(x, distance = xdis) <- 1 + e
+mlg.table(x) # After: 5 MLGs
+```
+
+Of course, our multilocus genotypes are not changed forever, they are simply
+just stored in a different place. We can access the original, naïve multilocus
+genotypes by using the `mll()` function:
+
+```{r}
+mll(x, "original")
+mll(x) # contracted
+mll(x) <- "original"
+mll(x) # original
+```
+
+### Tie breakers (algorithms)
+
+Underlying `mlg.filter` are three algorithms that decide what genotypes go
+together `r citep(bib["kamvar2015novel"])`:
+
+ - nearest neighbor
+ - farthest neighbor (default)
+ - average neighbor (UPGMA)
+
+You can specify which algorithm you want to use in clustering with the
+`algorithm` argument. Each of these algorithms have different behaviors when it
+comes to collapsing multilocus genotypes. In short, farthest neighbor is the
+most conservative, nearest neighbor can have a chaining effect, and average
+neighbor is somewhere in between. Your choice of algorithm really depends on 
+the biology of your organism.
+
+To help visualize this, there is the function `filter_stats()`, which will plot
+the output of the filtering algorithm. For simplicity, we will use the `Pinf`
+data set. 
+
+```{r}
+data(Pinf)
+Pinf
+pinfreps <- c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)
+pinf_filtered <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE)
+```
+
+We can see that the different algorithms behave quite differently. 
+
+## Custom ("custom")
+
+Sometimes multilocus genotypes are defined by more than just genetic data and it
+would be useful to be able to analyze these genotype definitions. Luckily,
+there is a way to do this. *Poppr* has support for custom multilocus genotypes.
+For example, we have a simulated data set that has 50 samples with 26 multilocus
+genotypes. 
+
+```{r}
+data(partial_clone)
+pc <- as.genclone(partial_clone)
+mll(pc)
+```
+
+Let's change the MLGs to letters instead of numbers. We will use `mll.custom()`
+to do this.
+
+```{r}
+LETTERS[mll(pc)]  # The new MLGs
+mll.custom(pc) <- LETTERS[mll(pc)]
+mlg.table(pc)
+```
+
+This even works with minimum spanning networks:
+
+```{r}
+pcpal <- colorRampPalette(c("blue", "gold"))
+set.seed(9001)
+pcmsn <- bruvo.msn(pc, replen = rep(1, nLoc(pc)), palette = pcpal,
+                   vertex.label.color = "firebrick", vertex.label.font = 2,
+                   vertex.label.cex = 1.5)
+``` 
+
+Let's say that we realized that we have strong evidence for MLG "Q" being the
+same as MLG "M". If we wanted to change those, we could simply just change the
+factor levels:
+
+```{r}
+mll.levels(pc)[mll.levels(pc) == "Q"] <- "M"
+```
+
+And we can plot again
+
+```{r}
+set.seed(9001)
+pcmsn <- bruvo.msn(pc, replen = rep(1, nLoc(pc)), palette = pcpal,
+                   vertex.label.color = "firebrick", vertex.label.font = 2,
+                   vertex.label.cex = 1.5)
+```
+
+Notice how the minimum spanning network architecture stayed the same, but the
+labels had changed. 
+
+# Diversity Analysis
+
+# Clone Correction
+
+# Conclusions
+
+
+# References
+
+
+
+
+
+
+
+
+
+
+
+
