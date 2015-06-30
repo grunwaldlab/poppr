@@ -99,6 +99,8 @@
 #' \item \code{\link{mlg.vector}} - Returns a vector of a numeric multilocus genotype assignment for each individual
 #' \item \code{\link{mlg.id}} - Finds all individuals associated with a single multilocus genotype
 #' \item \code{\link{mlg.filter}} - Collapses MLGs by genetic distance
+#' \item \code{\link{filter_stats}} - Calculate mlg.filter for all algorithms and plot
+#' \item \code{\link{cutoff_predictor}} - predict cutoff threshold from mlg.filter. 
 #' \item \code{\link{mll.custom}} - Allows for the custom definition of multilocus lineages
 #' \item \code{\link{mll.levels}} - Allows the user to change levels of custom MLLs. 
 #' \item \code{\link{diversity_stats}} - Creates a table of diversity indices for multilocus genotypes. 
