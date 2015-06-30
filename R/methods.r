@@ -1230,6 +1230,9 @@ setMethod(
     if (!"distance" %in% names(the_call)){
       the_call[["distance"]] <- distance
     }
+    if (!is(pop@mlg, "MLG")){
+      pop@mlg <- new("MLG", pop@mlg)
+    }
     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
                                  distance, threads, stats = "MLGs", the_call, 
                                  ...) 
@@ -1253,6 +1256,9 @@ setMethod(
     the_call <- match.call()
     if (!"distance" %in% names(the_call)){
       the_call[["distance"]] <- distance
+    }
+    if (!is(pop@mlg, "MLG")){
+      pop@mlg <- new("MLG", pop@mlg)
     }
     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
                                  distance, threads, stats = "MLGs", the_call, 
