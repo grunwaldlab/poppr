@@ -14,11 +14,11 @@
 \alias{mlg.filter<-,snpclone-method}
 \title{Statistics on Clonal Filtering of Genotype Data}
 \usage{
-mlg.filter(pop, threshold = 0, missing = "mean", memory = FALSE,
+mlg.filter(pop, threshold = 0, missing = "ignore", memory = FALSE,
   algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
   stats = "MLGs", ...)
 
-mlg.filter(pop, missing = "mean", memory = FALSE,
+mlg.filter(pop, missing = "ignore", memory = FALSE,
   algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
   ...) <- value
 }
@@ -29,8 +29,8 @@ object.}
 \item{threshold}{the desired minimum distance between distinct genotypes.
 Defaults to 0, which will only merge identical genotypes}
 
-\item{missing}{any method to be used by \code{\link{missingno}}: "mean"
-(default), "zero", "loci", "genotype", or "ignore".}
+\item{missing}{any method to be used by \code{\link{missingno}}: "mean",
+"zero", "loci", "genotype", or "ignore" (default).}
 
 \item{memory}{whether this function should remember the last distance matrix
 it generated. TRUE will attempt to reuse the last distance matrix if the
