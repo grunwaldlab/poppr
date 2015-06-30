@@ -1234,9 +1234,12 @@ fix_negative_branch <- function(tre){
 # Internal functions utilizing this function:
 # # none
 #==============================================================================#
-singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, loss = TRUE, distmat = NULL, gscale = TRUE, mlg.compute = "original",
-                      glim = c(0, 0.8), gadj = 3, wscale = TRUE, palette = topo.colors, showplot = TRUE, 
-                      include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
+singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE, 
+                          loss = TRUE, distmat = NULL, gscale = TRUE, 
+                          mlg.compute = "original", glim = c(0, 0.8), gadj = 3,
+                          wscale = TRUE, palette = topo.colors, showplot = TRUE,
+                          include.ties = FALSE, threshold = 0.0, 
+                          clustering.algorithm="farthest_neighbor", ...){
   if (!is(gid, "genlight") && !is.genclone(gid)){
     gid <- as.genclone(gid)
   } else if (is(gid, "genlight") && !is(gid, "snpclone")){

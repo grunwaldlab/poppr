@@ -546,12 +546,14 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' }
 #==============================================================================#
 #' @importFrom igraph graph.adjacency plot.igraph V E minimum.spanning.tree V<- E<- print.igraph add.edges
-bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "original", 
+bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, 
+                       mlg.compute = "original", 
                        palette = topo.colors,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, showplot = TRUE, 
-                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
+                       include.ties = FALSE, threshold = 0.0, 
+                       clustering.algorithm="farthest_neighbor", ...){
   if (!is.genclone(gid)){
     # convert to genclone object
     gid <- as.genclone(gid)  
@@ -563,7 +565,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, mlg.compute = "
   #                        palette = palette))
   gadj <- ifelse(gweight == 1, gadj, -gadj)
 
-  if (sublist[1] != "ALL" | !is.null(blacklist)){
+  if (toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
     gid <- popsub(gid, sublist, blacklist)
   }
   if (is.null(pop(gid)) | nPop(gid) == 1){
