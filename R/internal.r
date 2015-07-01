@@ -57,6 +57,7 @@
 #' @references Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
 #'   Diversity, Selfing, and Genetic Differentiation in Populations of the 
 #'   Oomycete \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141
+#'   doi: \href{http://dx.doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
 #==============================================================================#
 NULL
 #==============================================================================#
@@ -101,6 +102,7 @@ NULL
 #'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen 
 #'   \emph{Phytophthora infestans} originated in central Mexico rather than the
 #'   Andes." Proceedings of the National Academy of Sciences 111:8791-8796.
+#'   doi: \href{http://dx.doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
 #==============================================================================#
 NULL
 #==============================================================================#
@@ -133,17 +135,17 @@ NULL
 #' @references Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & 
 #'   Grünwald, N. J. (2015). Spatial and temporal analysis of populations of the
 #'   sudden oak death pathogen in Oregon forests. Phytopathology XXX:X-X. 
-#'   \url{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}
+#'   doi: \url{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
 #'   
 #'   Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. Hansen, & 
-#'   Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial and 
+#'   Niklaus J. Grünwald. 2014. Sudden_Oak_Death_in_Oregon_Forests: Spatial and 
 #'   temporal population dynamics of the sudden oak death epidemic in Oregon 
-#'   Forests. ZENODO, http://doi.org/10.5281/zenodo.13007, 2014.
+#'   Forests. ZENODO, doi: \href{http://doi.org/10.5281/zenodo.13007}{10.5281/zenodo.13007}
 #'   
 #'   Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
 #'   J. 2009. Population genetic analysis infers migration pathways of 
 #'   \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. 
-#'   \url{http://dx.doi.org/10.1371/journal.ppat.1000583}
+#'   doi: \href{http://dx.doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
 #' @examples
 #' data(Pram)
 #' 
@@ -175,7 +177,7 @@ NULL
 #'   "Symptom"
 #' @references SE Everhart, H Scherm, (2014) Fine-scale genetic structure of 
 #'   \emph{Monilinia fructicola} during brown rot epidemics within individual peach 
-#'   tree canopies. Phytopathology 105:542-549 doi:10.1094/PHYTO-03-14-0088-R
+#'   tree canopies. Phytopathology 105:542-549 doi: \href{http://dx.doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
 #' @examples
 #' data(monpop)
 #' splitStrata(monpop) <- ~Tree/Year/Symptom

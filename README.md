@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=diversity_table)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](http://codecov.io/github/grunwaldlab/poppr/coverage.svg?branch=diversity_table)](http://codecov.io/github/grunwaldlab/poppr?branch=diversity_table)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=2.0-rc)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](http://codecov.io/github/grunwaldlab/poppr/coverage.svg?branch=2.0-rc)](http://codecov.io/github/grunwaldlab/poppr?branch=2.0-rc)
 
 # Poppr version 2.0
 
@@ -10,7 +10,7 @@ Installation section below.
 
 ```R
 devtools::install_github("thibautjombart/adegenet")
-devtools::install_github("grunwaldlab/poppr@diversity_table")
+devtools::install_github("grunwaldlab/poppr@2.0-rc")
 ```
 
 ## Welcome 
