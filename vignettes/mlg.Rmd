@@ -324,21 +324,74 @@ labels had changed.
 
 # Diversity Analysis
 
+In the **Data Import and Manipulation** vignette, the first command demonstrated
+was the `poppr()`, command, which produced a table of diversity statistics, most
+of which were calculated on counts of multilocus genotypes. These statistics can
+be replicated by using the function `diversity_stats()`. This function takes in
+a table of multilocus genotypes and calculates diversity statistics based off of
+that. Let's analyze the diversity of the peach brown rot pathogen, *Monilinia
+fructicola*, structured by Symptom (Fruit Rot:FR and Blossom Blight:BB) and Year
+`r citep(bib["everhart2014finescale"])`. Let's first look at the distribution of
+multilocus genotypes:
+
+```{r}
+data(monpop)
+splitStrata(monpop) <- ~Tree/Year/Symptom
+montab <- mlg.table(monpop, strata = ~Symptom/Year)
+```
+
+We can see from these plots that the Fruit Rot (FR) have a lot more clones in
+the canopies than Blossom Blight (BB). This makes biological sense since Fruit
+Rot infections are clonally propagated, whereas Blossom Blight infections are
+from sexual propagules `r citep(bib["everhart2014finescale"])`. Let's look at
+the diversity metrics.
+
+## Basic Statistics
+
+```{r}
+(monstat <- diversity_stats(montab))
+```
+
+A common question is: how can we get confidence intervals for these statistics?
+The answer is to use `diversity_ci`:
+
+## Confidence Intervals
+
+```{r, message = TRUE, warning = TRUE}
+diversity_ci(montab, n = 100L, raw = FALSE)
+```
+
+You can see that there was a warning about centering the confidence interval. We
+invite users to please read the documentation for `diversity_ci` by typing
+`?diversity_ci`. It is very important to be careful when interpreting these
+results because sometimes confidence the confidence intervals exist outside of
+the possible range, as exemplified by 
+`r paste(rownames(monstat)[monstat[, "E.5"] == 1], collapse = " and ")`.
+
+## Custom Statistics
+
+In all of the `diversity_*` functions, you can use your own custom diversity 
+statistics. A common one we get requests for is the clonal fraction, $MLG/N$ or 
+the number of multilocus genotypes over the number of samples. You can add it in
+by writing your own function. Keep in mind, that you should write it for both
+a matrix and a vector of counts if you want to be able to bootstrap it.
+
+```{r}
+myCF <- function(x){
+ x <- drop(as.matrix(x))
+ if (length(dim(x)) > 1){ # if it's a matrix
+   res <- rowSums(x > 0)/rowSums(x)
+ } else {                 # if it's a vector
+   res <- sum(x > 0)/sum(x)
+ }
+ return(res)
+}
+(monstat2 <- diversity_stats(montab, CF = myCF))
+```
+
 # Clone Correction
 
 # Conclusions
 
 
 # References
-
-
-
-
-
-
-
-
-
-
-
-

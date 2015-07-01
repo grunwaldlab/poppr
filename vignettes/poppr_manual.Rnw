@@ -231,7 +231,7 @@ The following data sets are included in \poppr{}:
 
 \begin{itemize}
   \item \texttt{Pinf} (SSR, \textit{Phytophthora infestans})\citep{goss2014irish}
-  \item \texttt{monpop} (SSR, \textit{Monolinia fructicola})\citep{everhart2014finescale}
+  \item \texttt{monpop} (SSR, \textit{Monilinia fructicola})\citep{everhart2014finescale}
   \item \texttt{Aeut} (AFLP, \textit{Aphanomyces eutieches})\citep{Grunwald:2006}
   \item \texttt{Pram} (SSR, \textit{Phytophthora ramorum})\citep{kamvar2015spatial}
 \end{itemize}
