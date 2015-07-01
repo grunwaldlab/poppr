@@ -616,5 +616,13 @@ careful when clone-correcting modified multilocus genotypes.
 
 # Conclusions
 
+We have demonstrated here new methods for treating multilocus genotypes on
+microsatellite data, but it is important to remember that all of these functions
+can work with any source of data stored in either a **genclone** or **snpclone**
+(derived from **genlight**) object. Especially with `mlg.filter()`, these new
+functions will allow for a more flexible analysis of WGS data of clonal
+organisms where true clones may differ by more than a few
+mutations/errors/missing data. As with all analyses, it is important to take
+caution when interpreting the results. 
 
 # References
