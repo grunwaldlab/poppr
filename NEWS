@@ -30,6 +30,8 @@ NEW FEATURES
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
+* `filter_stats` will show you graphical output of all the algorithms in `mlg.filter`.
+* `cutoff_predictor` will predict the cutoff threshold from `mlg.filter`.
 * `bitwise.dist` can efficiently calculate absolute genetic distance for genlight objects.
 * `mll` "multilocus lineages" is a new replacement for `mlg.vector` which gains the functionality of selecting the multilocus genotype definition from the mlg slot.
 * `nmll` counts the number of multilocus lineages

@@ -43,6 +43,7 @@ Imports:
 Suggests:
     testthat,
     knitr,
+    rmarkdown,
     knitcitations,
     polysat,
     poweRlaw,
