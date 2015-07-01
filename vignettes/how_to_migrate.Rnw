@@ -213,8 +213,8 @@ Now, let's examine the names of the slots and compare it with the current
 version.
 
 <<show_genind, message = TRUE, warning = TRUE, error = TRUE>>=
-names(attributes(old_partial_clone))         # Has pop.names, ind.names, etc.
-names(partial_clone)                         # Has strata slot.
+names(attributes(old_partial_clone)) # Has pop.names, ind.names, etc.
+names(partial_clone)                 # Has strata slot.
 # This is ultimately what we want
 partial_clone
 @
@@ -251,9 +251,9 @@ the \texttt{Pinf} data set for our demonstration.
 <<old_Pinf, message = TRUE, warning = TRUE, error = TRUE>>=
 data("old_Pinf", package = "poppr") # From version 1.1.5
 data("Pinf", package = "poppr")     # From version 2.0.0
-names(attributes(old_Pinf))         # No strata slot
-names(Pinf)                         # Has strata slot
-Pinf                                # What we want
+names(attributes(old_Pinf)) # No strata slot
+names(Pinf)                 # Has strata slot
+Pinf # What we want
 @
 
 Again, we can just use \texttt{old2new\_genclone()} to convert this. 
@@ -262,7 +262,7 @@ Again, we can just use \texttt{old2new\_genclone()} to convert this.
 opi <- old2new_genclone(old_Pinf)
 opi # It prints!
 @
-
+\newpage
 \section{Hierarchy functions/accessors}
 
 Since the \texttt{@hierarchy} slot was moved to the \texttt{@strata} slot, the

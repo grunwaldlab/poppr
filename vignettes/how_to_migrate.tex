@@ -100,7 +100,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Migration from poppr version 1.1 to 1.1.5.99.472}
+\title{Migration from poppr version 1.1 to 1.1.5.99.595}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -163,8 +163,8 @@ that all code that will fail is wrapped in a \texttt{try()} command.
 \hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{)} \hlcom{# Works!}
 \end{alltt}
 \begin{verbatim}
-##  [1] -0.40685928  0.75316340 -1.11196425  2.69254491  1.61911229
-##  [6]  0.26258133  2.75725506 -0.78162824  0.08035727 -0.40930504
+##  [1] -0.6988598 -0.6106481  1.4484847 -0.4295111  0.9491479 -1.9868344
+##  [7]  0.9379773  0.4487399  0.9123760  1.5203152
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -222,7 +222,7 @@ for demonstration. First, we'll load the data.
 \end{alltt}
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: adegenet\\\#\# Loading required package: ade4\\\#\# \\\#\#\ \ \ \ /// adegenet 2.0.0 is loaded ////////////\\\#\# \\\#\#\ \ \ \ > overview: '?adegenet'\\\#\#\ \ \ \ > tutorials/doc/questions: 'adegenetWeb()' \\\#\#\ \ \ \ > bug reports/feature resquests: adegenetIssues()\\\#\# \\\#\# \\\#\# This is poppr version 1.1.5.99.472. To get started, type package?poppr}}\begin{alltt}
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: adegenet\\\#\# Loading required package: ade4\\\#\# \\\#\#\ \ \ \ /// adegenet 2.0.0 is loaded ////////////\\\#\# \\\#\#\ \ \ \ > overview: '?adegenet'\\\#\#\ \ \ \ > tutorials/doc/questions: 'adegenetWeb()' \\\#\#\ \ \ \ > bug reports/feature resquests: adegenetIssues()\\\#\# \\\#\# \\\#\# This is poppr version 1.1.5.99.595. To get started, type package?poppr}}\begin{alltt}
 \hlkwd{data}\hlstd{(}\hlstr{"old_partial_clone"}\hlstd{,} \hlkwc{package} \hlstd{=} \hlstr{"poppr"}\hlstd{)} \hlcom{# From version 1.1.5}
 \hlkwd{data}\hlstd{(}\hlstr{"partial_clone"}\hlstd{,} \hlkwc{package} \hlstd{=} \hlstr{"poppr"}\hlstd{)}     \hlcom{# From version 2.0.0}
 \end{alltt}
@@ -235,7 +235,7 @@ version.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.992, 0.965, 0.89}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{names}\hlstd{(}\hlkwd{attributes}\hlstd{(old_partial_clone))}         \hlcom{# Has pop.names, ind.names, etc.}
+\hlkwd{names}\hlstd{(}\hlkwd{attributes}\hlstd{(old_partial_clone))} \hlcom{# Has pop.names, ind.names, etc.}
 \end{alltt}
 \begin{verbatim}
 ##  [1] "tab"       "loc.names" "loc.fac"   "loc.nall"  "all.names"
@@ -243,7 +243,7 @@ version.
 ## [11] "type"      "other"     "class"
 \end{verbatim}
 \begin{alltt}
-\hlkwd{names}\hlstd{(partial_clone)}                         \hlcom{# Has strata slot.}
+\hlkwd{names}\hlstd{(partial_clone)}                 \hlcom{# Has strata slot.}
 \end{alltt}
 \begin{verbatim}
 ##  [1] "tab"       "loc.fac"   "loc.n.all" "all.names" "ploidy"   
@@ -339,7 +339,7 @@ the \texttt{Pinf} data set for our demonstration.
 \begin{alltt}
 \hlkwd{data}\hlstd{(}\hlstr{"old_Pinf"}\hlstd{,} \hlkwc{package} \hlstd{=} \hlstr{"poppr"}\hlstd{)} \hlcom{# From version 1.1.5}
 \hlkwd{data}\hlstd{(}\hlstr{"Pinf"}\hlstd{,} \hlkwc{package} \hlstd{=} \hlstr{"poppr"}\hlstd{)}     \hlcom{# From version 2.0.0}
-\hlkwd{names}\hlstd{(}\hlkwd{attributes}\hlstd{(old_Pinf))}         \hlcom{# No strata slot}
+\hlkwd{names}\hlstd{(}\hlkwd{attributes}\hlstd{(old_Pinf))} \hlcom{# No strata slot}
 \end{alltt}
 \begin{verbatim}
 ##  [1] "mlg"       "hierarchy" "tab"       "loc.names" "loc.fac"  
@@ -348,7 +348,7 @@ the \texttt{Pinf} data set for our demonstration.
 ## [16] "strata"
 \end{verbatim}
 \begin{alltt}
-\hlkwd{names}\hlstd{(Pinf)}                         \hlcom{# Has strata slot}
+\hlkwd{names}\hlstd{(Pinf)}                 \hlcom{# Has strata slot}
 \end{alltt}
 \begin{verbatim}
 ##  [1] "mlg"       "tab"       "loc.fac"   "loc.n.all" "all.names"
@@ -356,7 +356,7 @@ the \texttt{Pinf} data set for our demonstration.
 ## [11] "strata"    "hierarchy"
 \end{verbatim}
 \begin{alltt}
-\hlstd{Pinf}                                \hlcom{# What we want}
+\hlstd{Pinf} \hlcom{# What we want}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -401,7 +401,7 @@ Again, we can just use \texttt{old2new\_genclone()} to convert this.
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
+\newpage
 \section{Hierarchy functions/accessors}
 
 Since the \texttt{@hierarchy} slot was moved to the \texttt{@strata} slot, the
