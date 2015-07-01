@@ -197,6 +197,37 @@ test_that("subsetting and resetting MLGs works", {
   expect_that(fullmlg, is_more_than(realmlg))
 })
 
+test_that("multilocus genotype filtering algorithms work", {
+  grid_example <- matrix(c(1, 1, 5, 9, 9, 
+                         4, 1, 1, 1, 4), 
+                       ncol = 2)
+  rownames(grid_example) <- LETTERS[1:5]
+  colnames(grid_example) <- c("x", "y")
+  x  <- as.genclone(df2genind(grid_example, ploidy = 1))
+  xd <- dist(grid_example)
+  
+  expect_equal(nmll(x), nInd(x))
+  expect_equal(nmll(x), 5)
+  
+  # The following tests are from the paper
+  fart <- mlg.filter(x, distance = xd, threshold = 4.51, algorithm = "f")
+  aver <- mlg.filter(x, distance = xd, threshold = 4.51, algorithm = "a")
+  near <- mlg.filter(x, distance = xd, threshold = 4.51, algorithm = "n")
+  
+  # Nearest should chain everything
+  expect_equal(lu(near), 1)
+  expect_equal(near, c(1L, 1L, 1L, 1L, 1L))
+  
+  # Average should make two groups
+  expect_equal(lu(aver), 2)
+  expect_equal(aver, c(4L, 4L, 1L, 1L, 1L))
+  
+  # Farthest should make three
+  expect_equal(lu(fart), 3)
+  expect_equal(fart, c(4L, 4L, 3L, 1L, 1L))
+  
+})
+
 test_that("multilocus genotype filtering functions correctly", {
   skip_on_cran()
   # amlg  <- mlg.vector(Aeut)
@@ -232,5 +263,6 @@ test_that("multilocus genotype filtering functions correctly", {
   expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis),  mlg.filter(partial_clone, 0.3, missing="mean", distance=diss.dist))
   expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis),  mlg.filter(partial_clone, 0.3, missing="mean", distance="diss.dist"))
 })
+
 
 
