@@ -104,15 +104,15 @@ test_that("get_boot_x works with one pop or one stat", {
   pop(Pinf) <- NULL
   ptab <- mlg.table(Pinf, plot = FALSE)
   
-  Pboot_all <- diversity_boot(Ptab, 20L)
-  Pboot_E   <- diversity_boot(Ptab, 20L, G = FALSE, H = FALSE, lambda = FALSE)
-  pboot_all <- diversity_boot(ptab, 20L)
-  pboot_E   <- diversity_boot(ptab, 20L, G = FALSE, H = FALSE, lambda = FALSE)
+  Pboot_all <- diversity_ci(Ptab, 20L, plot = FALSE)
+  Pboot_E   <- diversity_ci(Ptab, 20L, G = FALSE, H = FALSE, lambda = FALSE, plot = FALSE)
+  pboot_all <- diversity_ci(ptab, 20L, plot = FALSE)
+  pboot_E   <- diversity_ci(ptab, 20L, G = FALSE, H = FALSE, lambda = FALSE, plot = FALSE)
   
-  Past <- poppr:::get_boot_stats(Pboot_all)
-  PEst <- poppr:::get_boot_stats(Pboot_E)
-  past <- poppr:::get_boot_stats(pboot_all)
-  pEst <- poppr:::get_boot_stats(pboot_E)
+  Past <- poppr:::get_boot_stats(Pboot_all$boot)
+  PEst <- poppr:::get_boot_stats(Pboot_E$boot)
+  past <- poppr:::get_boot_stats(pboot_all$boot)
+  pEst <- poppr:::get_boot_stats(pboot_E$boot)
   
   
   expect_equivalent(dim(Past), c(2, 4))
@@ -157,3 +157,6 @@ test_that("fix_replen works as expected", {
   expect_true(all(floor(nanfix)[!nantest] == 1))
 })
 
+test_that("poppr_has_parallel returns something logical", {
+  expect_is(poppr_has_parallel(), "logical")
+})

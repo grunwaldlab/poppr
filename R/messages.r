@@ -64,6 +64,7 @@ poppr_message <- function(){
   cat("G       = Stoddart and Taylor's Index of MLG diversity\n")
   cat("lambda  = Simpson's index\n")
   cat("E.5     = Evenness\n")
+  cat("Hexp    = Nei's 1978 expected heterozygosity\n")
   cat("Ia      = Index of association\n")
   cat("rbarD   = Standardized index of association\n")
   cat("-----------------------------------------------------------------------|\n")
