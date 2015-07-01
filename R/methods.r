@@ -550,17 +550,19 @@ setMethod(
       sep    <- ifelse(length(ploid) > 2, ", ", " ")
       ploid  <- paste0(ploid1, sep, "and ", ploid[length(ploid)])
     }
-    nind   <- nInd(object)     
-    type   <- ifelse(object@type == "PA", "dominant", "codominant")
-    nmlg   <- length(unique(object@mlg))
-    nloc   <- nLoc(object)
-    npop   <- ifelse(is.null(object@pop), 0, nPop(object))
-    strata <- length(object@strata)
-    chars  <- nchar(c(nmlg, nind, nloc, strata, 1, npop))
-    ltab   <- max(chars) - chars
-    ltab   <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
-    pops   <- popNames(object)
-    poplen <- length(pops)
+    nind    <- nInd(object)     
+    type    <- ifelse(object@type == "PA", "dominant", "codominant")
+    nmlg    <- length(unique(object@mlg))
+    nloc    <- nLoc(object)
+    npop    <- ifelse(is.null(object@pop), 0, nPop(object))
+    strata  <- length(object@strata)
+    chars   <- nchar(c(nmlg, nind, nloc, strata, 1, npop))
+    ltab    <- max(chars) - chars
+    ltab    <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
+    pops    <- popNames(object)
+    poplen  <- length(pops)
+    mlgtype <- ifelse(is(object@mlg, "MLG"), paste0(object@mlg@visible, " "), "")
+    mlgtype <- paste0(mlgtype, "multilocus genotypes")
     if (poplen > 7) 
       pops <- c(pops[1:3], "...", pops[(poplen-2):poplen])
     stratanames <- names(object@strata)
@@ -570,7 +572,7 @@ setMethod(
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
-      ltab[1], nmlg, "multilocus genotypes\n",
+      ltab[1], nmlg, mlgtype, "\n",
       ltab[2], nind, ploid, "individuals\n", 
       ltab[3], nloc, type, "loci\n\n"
       )
@@ -610,16 +612,20 @@ setMethod(
       sep    <- ifelse(length(ploid) > 2, ", ", " ")
       ploid  <- paste0(ploid1, sep, "and ", ploid[length(ploid)])
     }
-    nind   <- nInd(x)     
-    type  <- ifelse(x@type == "PA", "dominant", "codominant")
-    nloc  <- nLoc(x)
-    npop  <- ifelse(is.null(x@pop), 0, nPop(x))
+    nind    <- nInd(x)     
+    type    <- ifelse(x@type == "PA", "dominant", "codominant")
+    nloc    <- nLoc(x)
+    npop    <- ifelse(is.null(x@pop), 0, nPop(x))
     strata  <- length(x@strata)
+    
     chars <- nchar(c(nmlg, nind, nloc, strata, 1, npop))
     ltab  <- max(chars) - chars
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
-    pops  <- popNames(x)
+    pops        <- popNames(x)
     stratanames <- names(x@strata)
+    
+    mlgtype <- ifelse(is(x@mlg, "MLG"), paste0(x@mlg@visible, " "), "")
+    mlgtype <- paste0(mlgtype, "multilocus genotypes")
     if (!fullnames){
       poplen <- length(pops)
       stratalen <- length(stratanames)
@@ -633,7 +639,7 @@ setMethod(
     cat("\nThis is a genclone object\n")
     cat("-------------------------\n")
     cat("Genotype information:\n\n",
-      ltab[1], nmlg, "multilocus genotypes\n",
+      ltab[1], nmlg, mlgtype, "\n",
       ltab[2], nind, ploid, "individuals\n", 
       ltab[3], nloc, type, "loci\n\n",
       fill = TRUE)
@@ -792,9 +798,16 @@ mll <- function(x, type = NULL) standardGeneric("mll")
 #' @export
 setGeneric("mll")
 
-mll.internal <- function(x, type = NULL){
+mll.internal <- function(x, type = NULL, the_call = match.call()){
   mlg <- x@mlg
   if (!"MLG" %in% class(mlg)){
+    the_obj <- as.character(the_call[["x"]])
+    the_type <- as.character(the_call[["type"]])
+    msg <- paste("\n The @mlg slot does not contain an MLG class object.\n",
+                 "Returning the original mlgs. Please use:\n\n",
+                 paste0('mll(', the_obj, ') <- "', the_type, '"\n'),
+                 "\n to convert your object.")
+    warning(msg, call. = FALSE)
     return(mlg)
   }
   if (!is.null(type)){
@@ -822,14 +835,14 @@ setMethod(
   f = "mll",
   signature(x = "genclone"),
   definition = function(x, type = NULL){
-    mll.internal(x, type)
+    mll.internal(x, type, match.call())
   })
 
 setMethod(
   f = "mll",
   signature(x = "snpclone"),
   definition = function(x, type = NULL){
-    mll.internal(x, type)
+    mll.internal(x, type, match.call())
   })
 
 setMethod(
@@ -891,6 +904,9 @@ setMethod(
   definition = function(x, value){
     TYPES <- c("original", "expanded", "contracted", "custom")
     value <- match.arg(value, TYPES)
+    if (!"MLG" %in% class(x@mlg)){
+      x@mlg <- new("MLG", x@mlg)
+    }
     x@mlg@visible <- value
     return(x)
   })
@@ -901,6 +917,9 @@ setMethod(
   definition = function(x, value){
     TYPES <- c("original", "expanded", "contracted", "custom")
     value <- match.arg(value, TYPES)
+    if (!"MLG" %in% class(x@mlg)){
+      x@mlg <- new("MLG", x@mlg)
+    }
     x@mlg@visible <- value
     return(x)
   })
