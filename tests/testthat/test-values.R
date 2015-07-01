@@ -126,8 +126,34 @@ test_that("ia and pair.ia return same values", {
   skip_on_cran()
   data(partial_clone)
   pc_pair <- pair.ia(partial_clone, plot = FALSE, quiet = TRUE)
+  
+  # Randomly sample two loci
   locpair <- sample(locNames(partial_clone), 2)
+  
+  # Calculate ia for those
   pc_ia   <- ia(partial_clone[loc = locpair])
+  
+  # Find the pair in the table
   pair_posi <- grepl(locpair[1], rownames(pc_pair)) & grepl(locpair[2], rownames(pc_pair))
+
   expect_equivalent(pc_pair[pair_posi], pc_ia)
 })
+
+test_that("win.ia knows the batman theme", {
+  skip_on_cran()
+  set.seed(999)
+  x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+  position(x) <- sort(sample(1e4, 1e3))
+  res <- win.ia(x, window = 300L, min.snps = 100L, quiet = TRUE)
+  expect_true(all(is.na(res)))
+})
+
+test_that("fix_replen works as expected", {
+  data(nancycats)
+  nanrep  <- rep(2, 9)
+  nantest <- test_replen(nancycats, nanrep)
+  nanfix  <- fix_replen(nancycats, nanrep)
+  expect_equal(sum(nantest), 5)
+  expect_true(all(floor(nanfix)[!nantest] == 1))
+})
+
