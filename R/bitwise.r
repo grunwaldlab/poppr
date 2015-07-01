@@ -78,6 +78,12 @@
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
+#' @examples
+#' set.seed(999)
+#' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+#' x
+#' system.time(xd <- bitwise.dist(x))
+#' xd
 #==============================================================================#
 bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differences_only=FALSE, threads=0){
   stopifnot(class(x)[1] %in% c("genlight", "genclone", "genind", "snpclone"))
@@ -256,6 +262,8 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
 #' @author Zhian N. Kamvar, Jonah Brooks
 #' 
 #' @export
+#' @examples
+#' poppr_has_parallel()
 #==============================================================================#
 poppr_has_parallel <- function(){
 
