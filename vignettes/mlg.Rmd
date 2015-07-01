@@ -46,12 +46,56 @@ and snpclone objects.
 
 # Multilocus Genotype Flavors
 
-There are three different way for constructing multilocus genotypes in *poppr*.
+There are three different ways for constructing multilocus genotypes in *poppr*.
+
+| Method | Description |
+|----|----|
+| `"original"` | Default MLG definition; strict matching |
+| `"contracted"` | Collapsing MLGs by genetic distance with `mlg.filter` |
+| `"custom"` | User-defined multilocus genotypes  |
+
 The first is a simply naïve construction where all alleles must match to make a
 unique multilocus genotype. New in version `r packageVersion("poppr")` is the
 ability to use genetic distance to define multilocus genotypes or define custom
 multilocus lineages based on other biological factors. You can use the function
 `mll()` to display and switch between different multilocus genotypes/lineages.
+
+```{r, warning = TRUE}
+library("poppr")
+data(monpop)
+monpop
+head(mll(monpop, "original"), 20) # Showing the definitions for the first 20 samples
+```
+
+Notice how we got a warning. This is because the `monpop` data set was created
+before `mll()` was implemented. Luckily, this warning gives us information on 
+how to fix it.
+
+```{r}
+mll(monpop) <- "original"
+monpop
+```
+
+We can see that the description says 
+`r gsub("original", "**original**", capture.output(monpop)[6])`. This is how we
+know what the current MLG definition is for our object. Let' see what happens
+when we change it.
+
+```{r}
+mll(monpop) <- "custom"
+monpop
+```
+
+Now it says `r gsub("custom", "**custom**", capture.output(monpop)[6])`. Of 
+course, if we look at the MLGs, we will see that they appear to be the same as
+our original definition:
+
+```{r}
+head(mll(monpop, "custom"), 20) # Showing the definitions for the first 20 samples
+```
+
+
+
 All of these functions will work for both **genclone** and **snpclone** objects.
 In this section, we will demonstrate how to construct each of these three
 multilocus genotype definitions in different data sets.
@@ -60,11 +104,11 @@ multilocus genotype definitions in different data sets.
 
 This is the default way *poppr* calculates multilocus genotypes. You see it
 immediately when you load a genclone object. Let's use the example `monpop` from
-`r citep(bib["everhart2014finescale"])`
+`r citep(bib["everhart2014finescale"])`. First, we need to reset the data to
+our original MLGs.
 
 ```{r}
-library("poppr")
-data(monpop)
+mll(monpop) <- "original"
 monpop
 ```
 
