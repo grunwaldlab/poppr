@@ -4,25 +4,25 @@ data(Pinf, package = "poppr")
 data(Aeut, package = "poppr")
 data(partial_clone, package = "poppr")
 data(nancycats, package = "adegenet")
+amlg <- mlg.vector(Aeut)
+pmlg <- mlg.vector(partial_clone)
+nmlg <- mlg.vector(nancycats)
+lu <- function(x) length(unique(x))
 
 test_that("multilocus genotype vector is same length as samples", {
-
-  amlg <- mlg.vector(Aeut)
-  pmlg <- mlg.vector(partial_clone)
-  nmlg <- mlg.vector(nancycats)
   expect_that(length(amlg), equals(nInd(Aeut)))
   expect_that(length(pmlg), equals(nInd(partial_clone)))
   expect_that(length(nmlg), equals(nInd(nancycats)))
-  expect_that(length(unique(amlg)), equals(mlg(Aeut, quiet = TRUE)))
-  expect_that(length(unique(pmlg)), equals(mlg(partial_clone, quiet = TRUE)))
-  expect_that(length(unique(nmlg)), equals(mlg(nancycats, quiet = TRUE)))
+  expect_that(lu(amlg), equals(mlg(Aeut, quiet = TRUE)))
+  expect_that(lu(pmlg), equals(mlg(partial_clone, quiet = TRUE)))
+  expect_that(lu(nmlg), equals(mlg(nancycats, quiet = TRUE)))
 })
 
 test_that("multilocus genotype matrix matches mlg.vector and data", {
   aclone <- as.genclone(Aeut)
-  atab   <- mlg.table(Aeut, bar = FALSE)
-  ptab   <- mlg.table(partial_clone, bar = FALSE)
-  ntab   <- mlg.table(nancycats, bar = FALSE)
+  atab   <- mlg.table(Aeut, plot = FALSE)
+  ptab   <- mlg.table(partial_clone, plot = FALSE)
+  ntab   <- mlg.table(nancycats, plot = FALSE)
   expect_that(nrow(atab), equals(nPop(Aeut)))
   expect_that(nrow(ptab), equals(nPop(partial_clone)))
   expect_that(nrow(ntab), equals(nPop(nancycats)))
@@ -34,11 +34,30 @@ test_that("multilocus genotype matrix matches mlg.vector and data", {
   expect_that(sum(ntab), equals(nInd(nancycats)))
 })
 
+test_that("multilocus genotype matrix can utilize strata", {
+  pcount <- mlg.table(Pinf, strata = ~Country, plot = FALSE)
+  pcont  <- mlg.table(Pinf, strata = ~Continent, plot = FALSE)
+  expect_equal(nrow(pcount), 4)
+  expect_equal(nrow(pcont), 2)
+})
+
+test_that("mll works for genind objects", {
+  expect_warning(atest <- mll(Aeut, "original"))
+  expect_equal(atest, amlg)
+})
+
+test_that("mll can convert a numeric mlg slot to MLG", {
+  expect_that(Pinf@mlg, is_a("integer"))
+  mll(Pinf) <- "original"
+  expect_that(Pinf@mlg, is_a("MLG"))
+})
+
 test_that("mlg.crosspop will work with subsetted genclone objects", {
   strata(Aeut) <- other(Aeut)$population_hierarchy
-  agc <- as.genclone(Aeut)
-  Athena <- popsub(agc, "Athena")
-  setPop(Athena) <- ~Subpop
+  agc          <- as.genclone(Aeut)
+  Athena       <- popsub(agc, "Athena")
+
+  setPop(Athena)  <- ~Subpop
   expected_output <- structure(list(MLG.13 = structure(c(1L, 1L), .Names = c("8", 
 "9")), MLG.23 = structure(c(1L, 1L), .Names = c("4", "6")), MLG.24 = structure(c(1L, 
 1L), .Names = c("9", "10")), MLG.32 = structure(c(1L, 1L), .Names = c("7", 
@@ -104,7 +123,7 @@ test_that("mlg.id Aeut works", {
   x    <- mlg.id(Aeut)
   Avec <- mlg.vector(Aeut)
   expect_that(lapply(x, as.integer), equals(lapply(expected_output, as.integer)))
-  expect_that(length(x), equals(length(unique(Avec))))
+  expect_that(length(x), equals(lu(Avec)))
   expect_that(sapply(x, length), is_equivalent_to(as.vector(table(Avec))))
   expect_that(names(x[1]), equals("1"))
   })
@@ -161,15 +180,15 @@ test_that("mlg.id Pinf works", {
   x    <- mlg.id(Pinf)
   Pvec <- mlg.vector(Pinf)
   expect_that(x, equals(expected_output))
-  expect_that(length(x), equals(length(unique(Pvec))))
+  expect_that(length(x), equals(lu(Pvec)))
   expect_that(sapply(x, length), is_equivalent_to(as.vector(table(Pvec))))
   expect_that(names(x[1]), equals("1"))
 })
 
 
 test_that("subsetting and resetting MLGs works", {
-  pmlg <- mlg.vector(Pinf)
-  pres <- mlg.vector(Pinf, reset = TRUE)
+  pmlg    <- mlg.vector(Pinf)
+  pres    <- mlg.vector(Pinf, reset = TRUE)
   fullmlg <- mlg(Pinf[loc = locNames(Pinf)[-c(1:5)]], quiet = TRUE)
   realmlg <- mlg(Pinf[loc = locNames(Pinf)[-c(1:5)], mlg.reset = TRUE], quiet = TRUE)
   expect_that(pmlg, equals(Pinf@mlg[]))
@@ -179,31 +198,39 @@ test_that("subsetting and resetting MLGs works", {
 })
 
 test_that("multilocus genotype filtering functions correctly", {
-  data(Aeut, package = "poppr")
-  data(partial_clone, package = "poppr")
-  data(nancycats, package = "adegenet")
-  amlg <- mlg.vector(Aeut)
-  pmlg <- mlg.vector(partial_clone)
-  nmlg <- mlg.vector(nancycats)
+  skip_on_cran()
+  # amlg  <- mlg.vector(Aeut)
+  # pmlg  <- mlg.vector(partial_clone)
+  # nmlg  <- mlg.vector(nancycats)
+  adist <- diss.dist(Aeut)
+  pdist <- diss.dist(partial_clone)
+  ndist <- diss.dist(nancycats)
+  afilt <- function(thresh = 0, d = adist) mlg.filter(Aeut, thresh, distance = d)
+  pfilt <- function(thresh = 0, d = pdist) mlg.filter(partial_clone, thresh, distance = d)
+  nfilt <- function(thresh = 0, d = ndist) mlg.filter(nancycats, thresh, distance = d)
+
  
   # No clustering should happen if the threshold is set to 0
-  expect_that(length(unique(amlg)), equals(length(unique(mlg.filter(Aeut,0,distance="diss.dist")))))
-  expect_that(length(unique(pmlg)), equals(length(unique(mlg.filter(partial_clone,0,distance="diss.dist")))))
-  expect_that(length(unique(nmlg)), equals(length(unique(mlg.filter(nancycats, 0, distance="diss.dist")))))
+  expect_equal(lu(amlg), lu(afilt(0)))
+  expect_equal(lu(pmlg), lu(pfilt(0)))
+  expect_equal(lu(nmlg), lu(nfilt(0)))
+
   # All clusters should be merged for an arbitrarily large threshold
-  expect_that(1, equals(length(unique(mlg.filter(Aeut,10000,distance="diss.dist")))))
-  expect_that(1, equals(length(unique(mlg.filter(partial_clone,10000,distance="diss.dist")))))
-  expect_that(1, equals(length(unique(mlg.filter(nancycats,10000,distance="diss.dist")))))
+  expect_equal(1, lu(afilt(1000L)))
+  expect_equal(1, lu(pfilt(1000L)))
+  expect_equal(1, lu(pfilt(1000L)))
+
   # The different methods of passing distance should produce the same results
-  adis <- diss.dist(missingno(Aeut,"mean",quiet=TRUE))
-  pdis <- diss.dist(missingno(partial_clone,"mean",quiet=TRUE))
-  ndis <- diss.dist(missingno(nancycats,"mean",quiet=TRUE))
-  expect_that(mlg.filter(Aeut,0.3,missing="mean",distance=adis), equals(mlg.filter(Aeut,0.3,missing="mean",distance=diss.dist)))
-  expect_that(mlg.filter(Aeut,0.3,missing="mean",distance=adis), equals(mlg.filter(Aeut,0.3,missing="mean",distance="diss.dist")))
-  expect_that(mlg.filter(nancycats,0.3,missing="mean",distance=ndis), equals(mlg.filter(nancycats,0.3,missing="mean",distance=diss.dist)))
-  expect_that(mlg.filter(nancycats,0.3,missing="mean",distance=ndis), equals(mlg.filter(nancycats,0.3,missing="mean",distance="diss.dist")))
-  expect_that(mlg.filter(partial_clone,0.3,missing="mean",distance=pdis), equals(mlg.filter(partial_clone,0.3,missing="mean",distance=diss.dist)))
-  expect_that(mlg.filter(partial_clone,0.3,missing="mean",distance=pdis), equals(mlg.filter(partial_clone,0.3,missing="mean",distance="diss.dist")))
+  adis <- diss.dist(missingno(Aeut, "mean", quiet=TRUE))
+  pdis <- diss.dist(missingno(partial_clone, "mean", quiet=TRUE))
+  ndis <- diss.dist(missingno(nancycats, "mean", quiet=TRUE))
+
+  expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis),  mlg.filter(Aeut, 0.3, missing="mean", distance=diss.dist))
+  expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis),  mlg.filter(Aeut, 0.3, missing="mean", distance="diss.dist"))
+  expect_equal(mlg.filter(nancycats, 0.3, missing="mean", distance=ndis),  mlg.filter(nancycats, 0.3, missing="mean", distance=diss.dist))
+  expect_equal(mlg.filter(nancycats, 0.3, missing="mean", distance=ndis),  mlg.filter(nancycats, 0.3, missing="mean", distance="diss.dist"))
+  expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis),  mlg.filter(partial_clone, 0.3, missing="mean", distance=diss.dist))
+  expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis),  mlg.filter(partial_clone, 0.3, missing="mean", distance="diss.dist"))
 })
 
 

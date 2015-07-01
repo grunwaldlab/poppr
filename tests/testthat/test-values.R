@@ -121,3 +121,13 @@ test_that("get_boot_x works with one pop or one stat", {
   expect_equivalent(dim(pEst), c(1, 1))
   
 })
+
+test_that("ia and pair.ia return same values", {
+  skip_on_cran()
+  data(partial_clone)
+  pc_pair <- pair.ia(partial_clone, plot = FALSE, quiet = TRUE)
+  locpair <- sample(locNames(partial_clone), 2)
+  pc_ia   <- ia(partial_clone[loc = locpair])
+  pair_posi <- grepl(locpair[1], rownames(pc_pair)) & grepl(locpair[2], rownames(pc_pair))
+  expect_equivalent(pc_pair[pair_posi], pc_ia)
+})
