@@ -129,7 +129,7 @@ Users who have any questions/comments/suggestions regarding any version of poppr
 
 A few vignettes have been written for poppr:
 
-|Title                          |Topic                                 |
+|Title                          |Command                               |
 |:------------------------------|:-------------------------------------|
 |Algorightms and Equations      |`vignette("algo", "poppr")`           |
 |Data import and manipulation   |`vignette("poppr_manual", "poppr")`   |
