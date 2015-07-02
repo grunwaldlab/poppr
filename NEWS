@@ -13,6 +13,9 @@ NEW SUGGESTS
 NEW DATA
 * A data set called `Pram` containing SSR genotypes from the Sudden Oak Death pathogen _Phytophthora ramorum_ (Kamvar et.al., 2015)
 
+NEW MINT FLAVOR
+* refreshing!
+
 NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
 * The function `poppr` will now plot all populations in a single faceted plot instead of one plot per population.

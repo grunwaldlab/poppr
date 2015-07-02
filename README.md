@@ -10,7 +10,7 @@ Installation section below.
 
 ```R
 devtools::install_github("thibautjombart/adegenet")
-devtools::install_github("grunwaldlab/poppr@2.0-rc")
+devtools::install_github("grunwaldlab/poppr@2.0-rc", build_vignettes = TRUE)
 ```
 
 ## Welcome 
@@ -127,10 +127,14 @@ Users who have any questions/comments/suggestions regarding any version of poppr
 
 ### Vignettes
 
-Two vignettes have been written for poppr:
+A few vignettes have been written for poppr:
 
-1. Data Import and Manipulation (`vignette("poppr_manual", package = "poppr")`)
-2. Algorithms and Equation Utilized (`vignette("algo", package = "poppr")`)
+|Title                          |Topic                                 |
+|:------------------------------|:-------------------------------------|
+|Algorightms and Equations      |`vignette("algo", "poppr")`           |
+|Data import and manipulation   |`vignette("poppr_manual", "poppr")`   |
+|Migration from poppr version 1 |`vignette("how_to_migrate", "poppr")` |
+|Multilocus Genotype Analysis   |`vignette("mlg", "poppr")`            |
 
 ### Book/Primer
 
