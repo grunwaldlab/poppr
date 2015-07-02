@@ -41,7 +41,9 @@ filter_stats <- function(x, distance = bitwise.dist,
                          stats = "All", missing = "ignore", plot = FALSE, 
                          cols = NULL, nclone = NULL, ...){
   if (!"dist" %in% class(distance)){
-    distmat <- distance(x, ...)
+    DIST    <- match.fun(distance)
+    x       <- missingno(x, type = missing)
+    distmat <- DIST(x, ...)
   } else {
     distmat <- distance
   }

@@ -346,7 +346,7 @@ mlg.vector <- function(gid, reset = FALSE){
 
 
 
-mlg.filter.internal <- function(gid, threshold = 0.0, missing = "mean", 
+mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis", 
                                 memory = FALSE, algorithm = "farthest_neighbor", 
                                 distance = "nei.dist", threads = 0, 
                                 stats = "MLGs", the_call = match.call(), ...){
@@ -374,24 +374,20 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "mean",
         any_dist <- the_dist %in% c("diss.dist", "nei.dist", "provesti.dist",
                                     "edwards.dist", "reynolds.dist", 
                                     "rogers.dist")
-        if (missing == "mean" && call_len == 1){
-          if (is_diss_dist){
+        if (missing == "mean" && call_len == 1 && is_diss_dist){
+          # if (is_diss_dist){
             disswarn <- paste("Cannot use function diss.dist and correct for", 
                               "mean values.", "diss.dist will automatically",
                               "ignore missing data.") 
             warning(disswarn, call. = FALSE)
             mpop <- gid
-          }
-          else if (any_dist) 
-          {
-            mpop <- new("bootgen", gid, na = missing, 
-                        freq = ifelse(is_diss_dist, FALSE, TRUE))
-          } 
-          else 
-          {
-            mpop <- missingno(gid, type = missing, quiet = TRUE)
-          }
+          # }
         }
+        else if (call_len == 1 && any_dist)
+        {
+          mpop <- new("bootgen", gid, na = missing, 
+                      freq = ifelse(is_diss_dist, FALSE, TRUE))
+        } 
         else 
         {
           mpop <- missingno(gid, type = missing, quiet = TRUE)
@@ -417,7 +413,12 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "mean",
     # Warning: Missing data in distance matrix or data uncorrelated with gid may produce unexpected results.
     dis <- as.matrix(distance)
   }
-
+  if (any(is.na(dis))){
+    msg <- paste("The resulting distance matrix contains missing data.\n",
+                 "Please treat your missing data by using the missing",
+                 "argument.\n")
+    stop(msg)
+  }
   if (!is.clone(gid))
   {
     if (is(gid, "genlight")){

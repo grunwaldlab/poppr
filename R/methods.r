@@ -1066,7 +1066,7 @@ setMethod(
 #' @param threshold the desired minimum distance between distinct genotypes. 
 #'   Defaults to 0, which will only merge identical genotypes
 #' @param missing any method to be used by \code{\link{missingno}}: "mean", 
-#'   "zero", "loci", "genotype", or "ignore" (default).
+#'   "zero", "loci", "genotype", or "asis" (default).
 #' @param memory whether this function should remember the last distance matrix 
 #'   it generated. TRUE will attempt to reuse the last distance matrix if the
 #'   other parameters are the same. (default) FALSE will ignore any stored 
@@ -1140,7 +1140,7 @@ setMethod(
 #' gc # 82 mlgs
 #' }
 #==============================================================================#
-mlg.filter <- function(pop, threshold=0.0, missing="ignore", memory=FALSE, 
+mlg.filter <- function(pop, threshold=0.0, missing="asis", memory=FALSE, 
                        algorithm="farthest_neighbor", 
                        distance="nei.dist", threads=0, stats="MLGs", ...){
   standardGeneric("mlg.filter")
@@ -1152,7 +1152,7 @@ setGeneric("mlg.filter")
 setMethod(
   f = "mlg.filter",
   signature(pop = "genind"),
-  definition = function(pop, threshold=0.0, missing="ignore", memory=FALSE,
+  definition = function(pop, threshold=0.0, missing="asis", memory=FALSE,
                         algorithm="farthest_neighbor", distance="nei.dist", 
                         threads=0, stats="MLGs", ...){
     the_call <- match.call()
@@ -1164,7 +1164,7 @@ setMethod(
 setMethod(
   f = "mlg.filter",
   signature(pop = "genlight"),
-  definition = function(pop, threshold=0.0, missing="ignore", memory=FALSE,
+  definition = function(pop, threshold=0.0, missing="asis", memory=FALSE,
                         algorithm="farthest_neighbor", distance="nei.dist", 
                         threads=0, stats="MLGs", ...){
     the_call <- match.call()
@@ -1176,7 +1176,7 @@ setMethod(
 setMethod(
   f = "mlg.filter",
   signature(pop = "genclone"),
-  definition = function(pop, threshold=0.0, missing="ignore", memory=FALSE,
+  definition = function(pop, threshold=0.0, missing="asis", memory=FALSE,
                         algorithm="farthest_neighbor", distance="nei.dist", 
                         threads=0, stats="MLGs", ...){
     the_call <- match.call()
@@ -1187,7 +1187,7 @@ setMethod(
 setMethod(
   f = "mlg.filter",
   signature(pop = "snpclone"),
-  definition = function(pop, threshold=0.0, missing="ignore", memory=FALSE,
+  definition = function(pop, threshold=0.0, missing="asis", memory=FALSE,
                         algorithm="farthest_neighbor", distance="bitwise.dist", 
                         threads=0, stats="MLGs", ...){
     the_call <- match.call()
@@ -1204,7 +1204,7 @@ setMethod(
 #'   mlg.filter<-,snpclone-method mlg.filter<-,genlight-method
 #' @docType methods
 #==============================================================================#
-"mlg.filter<-" <- function(pop, missing = "ignore", memory = FALSE, 
+"mlg.filter<-" <- function(pop, missing = "asis", memory = FALSE, 
                            algorithm = "farthest_neighbor", distance = "nei.dist",
                            threads = 0, ..., value){
   standardGeneric("mlg.filter<-")
@@ -1217,7 +1217,7 @@ setGeneric("mlg.filter<-")
 setMethod(
   f = "mlg.filter<-",
   signature(pop = "genind"),
-  definition = function(pop, missing = "ignore", memory = FALSE, 
+  definition = function(pop, missing = "asis", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "nei.dist",
                         threads = 0, ..., value){
     if (!is.genclone(pop)){
@@ -1235,7 +1235,7 @@ setMethod(
 setMethod(
   f = "mlg.filter<-",
   signature(pop = "genlight"),
-  definition = function(pop, missing = "ignore", memory = FALSE, 
+  definition = function(pop, missing = "asis", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "nei.dist",
                         threads = 0, ..., value){
     if (!is.snpclone(pop)){
@@ -1253,7 +1253,7 @@ setMethod(
 setMethod(
   f = "mlg.filter<-",
   signature(pop = "genclone"),
-  definition = function(pop, missing = "ignore", memory = FALSE, 
+  definition = function(pop, missing = "asis", memory = FALSE, 
                        algorithm = "farthest_neighbor", distance = "nei.dist",
                        threads = 0, ..., value){
     pop <- callNextMethod()

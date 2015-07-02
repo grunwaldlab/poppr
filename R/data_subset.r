@@ -405,12 +405,12 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FALSE){
   if(sum(is.na(pop@tab)) > 0){
     # removes any loci (columns) with missing values.
-    MISSINGOPTS <- c("loci", "genotypes", "mean", "zero", "0", "ignore")
+    MISSINGOPTS <- c("loci", "genotypes", "mean", "zero", "0", "ignore", "asis")
     freq_warning <- paste("Objects of class 'genind' must have integers in the",
       "genotype matrix. Setting freq = TRUE will force the matrix to be numeric.",
       "please see help('tab') for alternatives.")
     type        <- match.arg(tolower(type), MISSINGOPTS)
-    if (type == "ignore"){
+    if (type %in% c("ignore", "asis")){
       return(pop)
     }
     navals <- percent_missing(pop, type = type, cutoff = cutoff)
