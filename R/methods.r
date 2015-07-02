@@ -925,6 +925,81 @@ setMethod(
   })
 
 #==============================================================================#
+#' Reset multilocus lineages
+#' 
+#' This function will allow you to reset multilocus lineages for your data set.
+#' 
+#' @export
+#' @param x a \linkS4class{genclone} or \linkS4class{snpclone} object.
+#' @param value a character vector that specifies which levels you wish to be 
+#'   reset.
+#'   
+#' @note This method has no assignment method. If "original" is not contained in
+#'   "value", it is assumed that the "original" definition will be used to reset
+#'   the MLGs.
+#' @return an object of the same type as x
+#' @rdname mll.reset-method
+#' @aliases mll.reset,genclone-method mll.reset,snpclone-method
+#' @docType methods
+#' @author Zhian N. Kamvar
+#' @seealso \code{\link{mll}} \code{\link{mlg.table}} \code{\link{mll.custom}}
+#' @examples 
+#' 
+#' # This data set was a subset of a larger data set, so the multilocus
+#' # genotypes are not all sequential
+#' data(Pinf)
+#' mll(Pinf) <- "original"
+#' mll(Pinf)
+#' 
+#' # If we use mll.reset, then it will become sequential
+#' Pinf.new <- mll.reset(Pinf, TRUE) # reset all
+#' mll(Pinf.new)
+#' 
+#' \dontrun{
+#' 
+#' # It is possible to reset only specific mll definitions. For example, let's
+#' # say that we wanted to filter our multilocus genotypes by nei's distance
+#' mlg.filter(Pinf, dist = nei.dist, missing = "mean") <- 0.02
+#' 
+#' # And we wanted to set those as custom genotypes,
+#' mll.custom(Pinf) <- mll(Pinf, "contracted")
+#' mll.levels(Pinf) <- .genlab("MLG", nmll(Pinf, "custom"))
+#' 
+#' # We could reset just the original and the filtered if we wanted to and keep
+#' # the custom as it were.
+#' 
+#' Pinf.new <- mll.reset(Pinf, c("original", "contracted"))
+#' 
+#' mll(Pinf.new, "original")
+#' mll(Pinf.new, "contracted")
+#' mll(Pinf.new, "custom")
+#' 
+#' # If "original" is not one of the values, then that is used as a baseline.
+#' Pinf.orig <- mll.reset(Pinf, "contracted")
+#' mll(Pinf.orig, "contracted")
+#' mll(Pinf.new, "contracted")
+#' }
+#' 
+#==============================================================================#
+mll.reset <- function(x, value) standardGeneric("mll.reset")
+
+#' @export
+setGeneric("mll.reset")
+
+setMethod(
+  f = "mll.reset",
+  signature(x = "genclone"),
+  definition = function(x, value){
+    mll.reset.internal(x, value)
+  })
+
+setMethod(
+  f = "mll.reset",
+  signature(x = "snpclone"),
+  definition = function(x, value){
+    mll.reset.internal(x, value)
+  })
+#==============================================================================#
 #' Define custom multilocus lineages
 #' 
 #' This function will allow you to define custom multilocus lineages for your

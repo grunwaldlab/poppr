@@ -152,6 +152,41 @@ setpop.internal <- function(x, formula = NULL){
 # Internal functions to deal with the MLG class.
 #==============================================================================#
 
+mll.reset.internal <- function(x, value){
+  if (!is(x@mlg, "MLG")){
+    x@mlg <- new("MLG", x@mlg)
+    return(x)
+  }
+  if (is.logical(value) && length(value) == 1 && value == TRUE){
+    x@mlg <- new("MLG", mlg.vector(x, reset = TRUE))
+    return(x)
+  }
+  new_mlg <- x@mlg@mlg
+  TYPES   <- c("original", "expanded", "contracted", "custom")
+  types   <- match.arg(value, TYPES, several.ok = TRUE)
+  
+  if ("original" %in% types){
+    newvec <- mlg.vector(x, reset = TRUE)
+  } else {
+    newvec <- mll(x, "original")
+  }
+  for (i in types){
+    if (i == "custom"){
+      new_mlg[i] <- as.factor(newvec)
+    } else {
+      new_mlg[i] <- newvec
+    }
+  }
+  x@mlg@mlg <- new_mlg
+  if ("contracted" %in% types){
+    x@mlg@cutoff["contracted"] <- 0
+    x@mlg@distname             <- "nei.dist"
+    x@mlg@distargs             <- list()
+  }
+  return(x)
+}
+
+
 mll.custom.internal <- function(x, set = TRUE, value){
   if (!is(x@mlg, "MLG")){
     x@mlg <- new("MLG", x@mlg)
