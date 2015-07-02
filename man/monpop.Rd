@@ -29,7 +29,7 @@ setPop(monpop) <- ~Symptom/Year
 monpop
 }
 \references{
-SE Everhart, H Scherm, (2014) Fine-scale genetic structure of
+SE Everhart, H Scherm, (2015) Fine-scale genetic structure of
   \emph{Monilinia fructicola} during brown rot epidemics within individual peach
   tree canopies. Phytopathology 105:542-549 doi: \href{http://dx.doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
 }

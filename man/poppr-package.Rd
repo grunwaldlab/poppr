@@ -16,20 +16,35 @@ beginning of a sentence.
 }
 \details{
 This package relies on the \pkg{\link[adegenet]{adegenet}} package.
-  It was built around the \code{\linkS4class{genind}} object, which stores
-  genetic information in a table of allele frequencies. \pkg{Poppr} has
-  extended this object into a new object called
-  \code{\linkS4class{genclone}}. This object is designed for analysis of
-  clonal organisms as it adds the \strong{@mlg} slot for keeping track of
-  multilocus genotypes and multilocus lineages.
+  It is built around the \code{\linkS4class{genind}} and
+  \code{\linkS4class{genlight}} object. Genind objects store genetic
+  information in a table of allele frequencies while genlight objects store
+  SNP data efficiently by packing binary allele calls into single bits.
+  \pkg{Poppr} has extended these object into new objects called
+  \code{\linkS4class{genclone}} and \code{\linkS4class{snpclone}},
+  respectively. These objects are designed for analysis of clonal organisms
+  as they add the \strong{@mlg} slot for keeping track of multilocus
+  genotypes and multilocus lineages.
 
   \subsection{Documentation}{ Documentation is available for any function by
-  typing \code{?function_name} in the R console. Essential functions for
-  manipulating data are detailed within the \emph{Data import and
-  manipulation} vignette (\code{vignette("poppr_manual", package = "poppr")})
-  and details on algorithms used in \pkg{poppr} are within the
-  \emph{Algorithms and equations} vignette (\code{vignette("algo", package =
-  "poppr")}). Examples of analyses are available in a primer written by
+  typing \code{?function_name} in the R console. Detailed topic explanations
+  live in the package vignettes:
+
+  \tabular{ll}{
+    \strong{Vignette}              \tab \strong{command}\cr
+    Migration from poppr version 1 \tab \code{vignette("how_to_migrate", "poppr")}\cr
+    Data import and manipulation   \tab \code{vignette("poppr_manual", "poppr")}\cr
+    Algorightms and Equations      \tab \code{vignette("algo", "poppr")}\cr
+    Multilocus Genotype Analysis   \tab \code{vignette("mlg", "poppr")}
+  }
+
+  Important notes on the changes from poppr version 1 to poppr version 2 are
+  in \emph{Migration from poppr version 1}, essential functions for importing
+  and manipulating data are detailed within the \emph{Data import and
+  manipulation} vignette, details on algorithms used in \pkg{poppr} are
+  within the \emph{Algorithms and equations} vignette, and details for
+  working with multilocus genotypes are in \emph{Multilocus Genotype
+  Analysis}. Examples of analyses are available in a primer written by
   Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E. Everhart at
   \url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
 
@@ -54,7 +69,7 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
   \code{\linkS4class{genind}} object, has changed drastically and reduced in
   size. You must convert your data if you want to use the new functionality.
   See the vignette "Migration from poppr version 1" by typing
-  \code{vignette("how_to_migrate", package = "poppr")} for more details on
+  \code{vignette("how_to_migrate", "poppr")} for more details on
   major changes and how to deal with them.
 
   Many new features in \pkg{poppr} are described in Kamvar, Brooks, and
@@ -159,11 +174,16 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \section{Datasets}{
 
 \itemize{
-\item \code{\link{Aeut}} - (AFLP) Oomycete root rot pathogen \emph{Aphanomyces euteiches}
-\item \code{\link{monpop}} - (SSR) Peach brown rot pathogen \emph{Monilinia fructicola}
-\item \code{\link{partial_clone}} - (SSR) Simulated partially-clonal data
-\item \code{\link{Pinf}} - (SSR) Potato late blight pathogen \emph{Phytophthora infestans}
-\item \code{\link{Pram}} - (SSR) Sudden Oak Death pathogen \emph{Phytophthora ramorum}
+\item \code{\link{Aeut}} - (AFLP) Oomycete root rot pathogen
+\emph{Aphanomyces euteiches} (Grünwald and Hoheisel, 2006)
+\item \code{\link{monpop}} - (SSR) Peach brown rot pathogen \emph{Monilinia
+fructicola} (Everhart and Scherm, 2015)
+\item \code{\link{partial_clone}} - (SSR) partially-clonal data simulated via
+simuPOP (Peng and Amos, 2008)
+\item \code{\link{Pinf}} - (SSR) Potato late blight pathogen
+\emph{Phytophthora infestans} (Goss et. al., 2014)
+\item \code{\link{Pram}} - (SSR) Sudden Oak Death pathogen \emph{Phytophthora
+ramorum} (Kamvar et. al., 2015; Goss et. al., 2009)
 }
 }
 \author{
@@ -172,13 +192,48 @@ Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Niklaus J. Grünwald
 Maintainer: Zhian N. Kamvar
 }
 \references{
-Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for
-genetic analysis of populations with clonal, partially clonal, and/or sexual
+--------- Papers announcing poppr ---------
+
+Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
+analysis of populations with clonal, partially clonal, and/or sexual
 reproduction. PeerJ 2:e281 \url{http://dx.doi.org/10.7717/peerj.281}
 
 Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
 6:208. doi: 10.3389/fgene.2015.00208
 \url{http://dx.doi.org/10.3389/fgene.2015.00208}
+
+--------- Papers referencing data sets ---------
+
+Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity,
+Selfing, and Genetic Differentiation in Populations of the Oomycete
+\emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141 doi:
+\href{http://dx.doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
+
+SE Everhart, H Scherm, (2015) Fine-scale genetic structure of \emph{Monilinia
+fructicola} during brown rot epidemics within individual peach tree canopies.
+Phytopathology 105:542-549 doi:
+\href{http://dx.doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
+
+Bo Peng and Christopher Amos (2008) Forward-time simulations of nonrandom
+mating populations using simuPOP. \emph{bioinformatics}, 24 (11): 1408-1409.
+
+Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia Restrepo, William E.
+Fry, Gregory A. Forbes, Valerie J. Fieland, Martha Cardenas, and Niklaus J.
+Grünwald. (2014) "The Irish potato famine pathogen \emph{Phytophthora
+infestans} originated in central Mexico rather than the Andes." Proceedings
+of the National Academy of Sciences 111:8791-8796. doi:
+\href{http://dx.doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
+
+Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald, N.
+J. (2015). Spatial and temporal analysis of populations of the sudden oak
+death pathogen in Oregon forests. Phytopathology XXX:X-X. doi:
+\href{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+
+
+Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
+J. 2009. Population genetic analysis infers migration pathways of
+\emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
+\href{http://dx.doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
 }
 

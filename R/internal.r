@@ -135,7 +135,7 @@ NULL
 #' @references Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & 
 #'   Grünwald, N. J. (2015). Spatial and temporal analysis of populations of the
 #'   sudden oak death pathogen in Oregon forests. Phytopathology XXX:X-X. 
-#'   doi: \url{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+#'   doi: \href{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
 #'   
 #'   Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. Hansen, & 
 #'   Niklaus J. Grünwald. 2014. Sudden_Oak_Death_in_Oregon_Forests: Spatial and 
@@ -175,7 +175,7 @@ NULL
 #' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
 #'   coded into one population factor. These are named "Tree", "Year", and 
 #'   "Symptom"
-#' @references SE Everhart, H Scherm, (2014) Fine-scale genetic structure of 
+#' @references SE Everhart, H Scherm, (2015) Fine-scale genetic structure of 
 #'   \emph{Monilinia fructicola} during brown rot epidemics within individual peach 
 #'   tree canopies. Phytopathology 105:542-549 doi: \href{http://dx.doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
 #' @examples
