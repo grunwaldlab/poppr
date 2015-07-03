@@ -86,3 +86,11 @@ test_that("AMOVA can calculate within individual variance for diploids", {
   expect_equal(dim(micwithin$componentsofcovariance), c(4, 2))
   expect_equal(dim(micwithout$componentsofcovariance), c(3, 2))
 })
+
+test_that("AMOVA can do filtering", {
+  skip_on_cran()
+  data("monpop", package = "poppr")
+  splitStrata(monpop) <- ~Tree/Year/Symptom
+  warn <- "Original.+?264"
+  expect_message(res <- poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = 0.1), warn)
+})
