@@ -15,7 +15,6 @@ r_packages:
 
 r_github_packages:
   - thibautjombart/adegenet
-  - emmanuelparadis/pegas/pegas
   - KlausVigo/phangorn
   - jimhester/covr
 
