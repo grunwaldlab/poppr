@@ -276,7 +276,22 @@ mlg.table(x) # After: 5 MLGs
 ```
 
 Notice how the information you see has changed. You can see that it's printed
-out that you have 5 **contracted** multilocus genotypes, but you have some cryptic code underdeath. This is shorthand for the threshold **[t]** and distance **[d]** you used to filter the multilocus genotypes. This indicates that your object remembers what object was used for the distance. This means that you don't always have to specify the distance when assigning a threshold:
+out that you have 5 **contracted** multilocus genotypes, but you have some
+cryptic code underneath:
+
+| symbol | meaning |
+|:----:|:----|
+| **[t]** | threshold |
+| **[d]** | distance (can be matrix or function) |
+| **[a]** | algorithm (see the next section) |
+
+Genclone and snpclone objects will always remember what parameters were used for
+filtering multilocus genotypes, but the only catch is that, if you use your own
+supplied distance (matrix or function), you must be very careful not to delete
+it or change the object name.
+
+This means that you don't always have to specify the distance when assigning a
+threshold:
 
 ```{r}
 mlg.filter(x) <- 4.51
@@ -284,7 +299,10 @@ x
 mlg.table(x)
 ```
 
-> DANGER! DANGER! While this is a convenient function, if you use a matrix or function that was created by you, you **must not delete it**. The reason being that if you delete the matrix used to inform your filtering, you will get an error:
+> DANGER! DANGER! While this is a convenient function, if you use a matrix or
+> function that was created by you, you **must not delete it**. The reason being
+> that if you delete the matrix used to inform your filtering, you will get an
+> error:
 
 ```{r, errors = TRUE}
 rm(xdis) # NOOOOOO!
@@ -297,15 +315,19 @@ cat(" Error: cannot evaluate distance function, it might be missing.")
 
 Basically, your object thinks that there should be a matrix called **xdis**, but
 it can't find it anywhere. But don't worry, we can restore it if we have the
-function available. We will use the `raw_dist()` function that we defined earlier.
+function available. We will use the `raw_dist()` function that we defined
+earlier.
 
 ```{r}
 mlg.filter(x, distance = raw_dist) <- 1 + e
 x
 ```
 
-The safest way, perhaps is to use a function defined in *poppr*. For example, Bruvo's distance `r citep(bib["Bruvo:2004"])`.
+The safest way, perhaps, is to use a function defined in *poppr*. For example,
+we'll use Bruvo's distance since it takes into account the real value of the
+alleles `r citep(bib["Bruvo:2004"])`.
 
+> The arguments to your distance function will be stored in the object as well!
 
 ```{r}
 bruvo.dist(x, replen = c(1, 1))
