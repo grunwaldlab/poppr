@@ -7,6 +7,13 @@ data(nancycats, package = "adegenet")
 amlg <- mlg.vector(Aeut)
 pmlg <- mlg.vector(partial_clone)
 nmlg <- mlg.vector(nancycats)
+grid_example <- matrix(c(1, 1, 5, 9, 9, 
+                         4, 1, 1, 1, 4), 
+                       ncol = 2)
+rownames(grid_example) <- LETTERS[1:5]
+colnames(grid_example) <- c("x", "y")
+x  <- as.genclone(df2genind(grid_example, ploidy = 1))
+xd <- dist(grid_example)
 lu <- function(x) length(unique(x))
 
 test_that("multilocus genotype vector is same length as samples", {
@@ -198,14 +205,6 @@ test_that("subsetting and resetting MLGs works", {
 })
 
 test_that("multilocus genotype filtering algorithms work", {
-  grid_example <- matrix(c(1, 1, 5, 9, 9, 
-                         4, 1, 1, 1, 4), 
-                       ncol = 2)
-  rownames(grid_example) <- LETTERS[1:5]
-  colnames(grid_example) <- c("x", "y")
-  x  <- as.genclone(df2genind(grid_example, ploidy = 1))
-  xd <- dist(grid_example)
-  
   expect_equal(nmll(x), nInd(x))
   expect_equal(nmll(x), 5)
   
@@ -263,6 +262,5 @@ test_that("multilocus genotype filtering functions correctly", {
   expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis),  mlg.filter(partial_clone, 0.3, missing="mean", distance=diss.dist))
   expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis),  mlg.filter(partial_clone, 0.3, missing="mean", distance="diss.dist"))
 })
-
 
 
