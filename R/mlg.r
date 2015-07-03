@@ -368,7 +368,7 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
     {
       if (is.genind(gid))
       {
-        the_dist <- as.character(the_call[["distance"]])
+        the_dist <- as.character(substitute(the_call[["distance"]]))
         call_len <- length(the_dist)
         is_diss_dist <- the_dist %in% "diss.dist"
         any_dist <- the_dist %in% c("diss.dist", "nei.dist", "provesti.dist",

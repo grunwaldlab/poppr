@@ -332,6 +332,7 @@ setMethod(
     }
     if (mlgclass){
       mlg <- new("MLG", mlg)
+      mlg@distname <- "bitwise.dist"
     }
     slot(.Object, "mlg") <- mlg
     return(.Object)
@@ -347,7 +348,7 @@ setMethod(
   signature("snpclone"),
   definition = function(object){
     callNextMethod()
-    cat(" --- snpclone contents ---\n")
+    cat(" // snpclone contents ---\n")
     if (length(object@hierarchy) > 0){
       hiernames <- names(object@hierarchy)
       hierlen <- length(hiernames)
@@ -358,11 +359,22 @@ setMethod(
       cat(" @hierarchy:", "a data frame with", hierlen, 
           "levels: (", nameshow, ")\n")
     }
-    mlgtype <- ifelse(is(object@mlg, "MLG"), paste0(object@mlg@visible, " "), "")
-    mlgtype <- paste0(mlgtype, "multilocus genotypes")
-    cat(" @mlg:", length(unique(object@mlg[])), mlgtype)
+    the_type <- object@mlg@visible
+    mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
+    mlgtype  <- paste0(mlgtype, "multilocus genotypes")
+    cat("   @mlg:", length(unique(object@mlg[])), mlgtype)
+    if (the_type == "contracted"){
+      thresh <- round(object@mlg@cutoff["contracted"], 3)
+      dist <- object@mlg@distname
+      if (!is.character(dist)){
+        dist <- paste(capture.output(dist), collapse = "")        
+      }
+      cat(" (", thresh, ") [t], (", dist, ") [d]", sep = "")
+    }
   }
 )
+
+
 #==============================================================================#
 #' Create a snpclone object from a genlight object.
 #' 
@@ -561,8 +573,20 @@ setMethod(
     ltab    <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
     pops    <- popNames(object)
     poplen  <- length(pops)
-    mlgtype <- ifelse(is(object@mlg, "MLG"), paste0(object@mlg@visible, " "), "")
-    mlgtype <- paste0(mlgtype, "multilocus genotypes")
+    the_type <- ifelse(is(object@mlg, "MLG"), object@mlg@visible, "nope")
+    mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
+    mlgtype  <- paste0(mlgtype, "multilocus genotypes")
+    if (the_type == "contracted"){
+      thresh <- round(object@mlg@cutoff["contracted"], 3)
+      dist <- object@mlg@distname
+      if (!is.character(dist)){
+        dist <- paste(capture.output(dist), collapse = "")        
+      }
+      contab <- max(chars)
+      contab <- substr("             ", 1, contab + 4)
+      mlgthresh <- paste0("\n", contab, "(", thresh, ") [t], (", dist, ") [d]")
+      mlgtype  <- paste0(mlgtype, mlgthresh)
+    }
     if (poplen > 7) 
       pops <- c(pops[1:3], "...", pops[(poplen-2):poplen])
     stratanames <- names(object@strata)
@@ -1136,50 +1160,69 @@ setMethod(
 #' 
 #' Create a vector of multilocus genotype indices filtered by minimum distance.
 #'   
-#' @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#' @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} 
 #'   object.
 #' @param threshold the desired minimum distance between distinct genotypes. 
 #'   Defaults to 0, which will only merge identical genotypes
 #' @param missing any method to be used by \code{\link{missingno}}: "mean", 
 #'   "zero", "loci", "genotype", or "asis" (default).
 #' @param memory whether this function should remember the last distance matrix 
-#'   it generated. TRUE will attempt to reuse the last distance matrix if the
+#'   it generated. TRUE will attempt to reuse the last distance matrix if the 
 #'   other parameters are the same. (default) FALSE will ignore any stored 
 #'   matrices and not store any it generates.
-#' @param algorithm determines the type of clustering to be done. (default)
-#'   "farthest_neighbor" merges clusters based on the maximum distance between
+#' @param algorithm determines the type of clustering to be done. (default) 
+#'   "farthest_neighbor" merges clusters based on the maximum distance between 
 #'   points in either cluster. This is the strictest of the three. 
 #'   "nearest_neighbor" merges clusters based on the minimum distance between 
 #'   points in either cluster. This is the loosest of the three. 
 #'   "average_neighbor" merges clusters based on the average distance between 
 #'   every pair of points between clusters.
 #' @param distance a character or function defining the distance to be applied 
-#'   to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing 
-#'   distances between individuals (such as the output of
+#'   to pop. Defaults to \code{\link{nei.dist}} for genclone objects and
+#'   \code{\link{bitwise.dist}} for snpclone objects. A matrix or table
+#'   containing distances between individuals (such as the output of 
 #'   \code{\link{nei.dist}}) is also accepted for this parameter.
 #' @param threads The maximum number of parallel threads to be used within this 
-#'   function. A value of 0 (default) will attempt to use as many threads as
-#'   there are available cores/CPUs. In most cases this is ideal. A value of 1
-#'   will force the function to run serially, which may increase stability on
-#'   some systems. Other values may be specified, but should be used with
+#'   function. A value of 0 (default) will attempt to use as many threads as 
+#'   there are available cores/CPUs. In most cases this is ideal. A value of 1 
+#'   will force the function to run serially, which may increase stability on 
+#'   some systems. Other values may be specified, but should be used with 
 #'   caution.
-#' @param stats determines which statistics this function should return on
+#' @param stats determines which statistics this function should return on 
 #'   cluster mergers. If (default) "MLGs", this function will return a vector of
-#'   cluster assignments, similar to that of \code{\link{mlg.vector}}. If
-#'   "thresholds", the threshold at which each cluster was merged will be
-#'   returned instead of the cluster assignment. "distances" will return a
-#'   distance matrix of the new distances between each new cluster. If "sizes",
-#'   the size of each remaining cluster will be returned. Finally, "all" will
+#'   cluster assignments, similar to that of \code{\link{mlg.vector}}. If 
+#'   "thresholds", the threshold at which each cluster was merged will be 
+#'   returned instead of the cluster assignment. "distances" will return a 
+#'   distance matrix of the new distances between each new cluster. If "sizes", 
+#'   the size of each remaining cluster will be returned. Finally, "all" will 
 #'   return a list of all 4.
 #' @param ... any parameters to be passed off to the distance method.
+#'   
+#' @details This function will take in any distance matrix or function and
+#' collapse multilocus genotypes below a given threshold. If you use this
+#' function as the assignment method (mlg.filter(myData, distance = myDist) <-
+#' 0.5), the distance function or matrix will be remembered by the object. This
+#' means that if you define your own distance matrix or function, you must keep
+#' it in memory to further utilize mlg.filter.
 #' 
-#' @return 
-#' \subsection{mlg.stats}{
-#' a numeric vector naming the multilocus genotype of each individual in the
-#' dataset. Each genotype is at least the specified distance apart, as 
-#' calculated by the selected algorithm. If stats is set to \code{TRUE}, this 
-#' function will return the thresholds had which each cluster merger occurred 
-#' instead of the new cluster assignments.
+#' @return Default, the collapsed multilocus genotypes. Otherwise, any
+#'   combination of the following:
+#' \subsection{MLGs}{
+#'   a numeric vector naming the multilocus genotype of each individual in the 
+#'   dataset. Each genotype is at least the specified distance apart, as 
+#'   calculated by the selected algorithm. If stats is set to \code{TRUE}, this 
+#'   function will return the thresholds had which each cluster merger occurred 
+#'   instead of the new cluster assignments.
+#' }
+#' \subsection{THRESHOLDS}{
+#'   A numeric vector representing the thresholds beyond which clusters of 
+#'   multilocus genotypes were collapsed. 
+#' }
+#' \subsection{DISTANCES}{
+#'   A square matrix representing the distances between each cluster.
+#' }
+#' \subsection{SIZES}{
+#'  The sizes of the multilocus genotype clusters in order. 
 #' }
 #'
 #' @note \code{mlg.vector} makes use of \code{mlg.vector} grouping prior to 
@@ -1207,6 +1250,22 @@ setMethod(
 #' pc # 25 mlgs
 #' 
 #' \dontrun{
+#' # The distance definition is persistant
+#' mlg.filter(pc) <- 0.1
+#' pc # 24 mlgs
+#' 
+#' # You can still change the definition
+#' mlg.filter(pc, distance = diss.dist, percent = TRUE) <- 0.1
+#' pc
+#' 
+#' # Even with custom definitions
+#' data(Pinf)
+#' Pinf
+#' mlg.filter(Pinf, distance = function(x) dist(tab(x))) <- 3
+#' Pinf
+#' mlg.filter(Pinf) <- 4
+#' Pinf
+#' 
 #' # on genlight/snpclone objects
 #' set.seed(999)
 #' gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2))
@@ -1232,7 +1291,7 @@ setMethod(
                         threads=0, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ...) 
+                        threads, stats, the_call, ... ) 
   }
 )
 
@@ -1325,6 +1384,7 @@ setMethod(
   }
 )
 
+
 setMethod(
   f = "mlg.filter<-",
   signature(pop = "genclone"),
@@ -1333,20 +1393,39 @@ setMethod(
                        threads = 0, ..., value){
     pop <- callNextMethod()
     the_call <- match.call()
+    the_dots <- list(...)
     if (!"distance" %in% names(the_call)){
+      distance <- pop@mlg@distname
+      distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
+      if ("try-error" %in% class(distfun)){
+        stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
+      }
+      if (is.character(distfun)){
+        distfun <- match.fun(distfun)
+      }
       the_call[["distance"]] <- distance
+      if (is.function(distfun)){
+        the_dots <- pop@mlg@distargs
+        the_call <- c(the_call, the_dots)
+      }
+      # the_call[["distance"]] <- distance
     }
+  
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
-    fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
-                                 distance, threads, stats = "MLGs", the_call, 
-                                 ...) 
+    the_args <- list(gid = pop, threshold = value, missing = missing, 
+                     memory = memory, algorithm = algorithm, distance = distance, 
+                     threads = threads, stats = "MLGs")
+    fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
+#     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
+#                                  distance, threads, stats = "MLGs", the_call,
+#                                  ...) 
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
     pop@mlg@cutoff["contracted"] <- value
     pop@mlg@distname <- substitute(distance)
-    pop@mlg@distargs <- list(...)
+    pop@mlg@distargs <- the_dots
     return(pop)
   }
 )
@@ -1360,15 +1439,34 @@ setMethod(
                         threads = 0, ..., value){
     pop <- callNextMethod()
     the_call <- match.call()
+    the_dots <- list(...)
     if (!"distance" %in% names(the_call)){
+      distance <- pop@mlg@distname
+      distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
+      if ("try-error" %in% class(distfun)){
+        stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
+      }
+      if (is.character(distfun)){
+        distfun <- match.fun(distfun)
+      }
       the_call[["distance"]] <- distance
+      if (is.function(distfun)){
+        the_dots <- pop@mlg@distargs
+        the_call <- c(the_call, the_dots)
+      }
+      # the_call[["distance"]] <- distance
     }
+    
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
-    fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
-                                 distance, threads, stats = "MLGs", the_call, 
-                                 ...) 
+    the_args <- list(gid = pop, threshold = value, missing = missing, 
+                     memory = memory, algorithm = algorithm, distance = distance, 
+                     threads = threads, stats = "MLGs")
+    fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
+    #     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
+    #                                  distance, threads, stats = "MLGs", the_call,
+    #                                  ...) 
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
     pop@mlg@cutoff["contracted"] <- value
