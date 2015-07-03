@@ -106,6 +106,13 @@
 #'   
 #' @param sep A single character used to separate the hierarchical levels. This
 #' defaults to "_".
+#' 
+#' @param filter \code{logical} When set to \code{TRUE}, mlg.filter will be run 
+#'   to determine genotypes from the distance matrix. It defaults to 
+#'   \code{FALSE}. You can set the parameters with \code{algorithm} and
+#'   \code{threshold} arguments. Note that this will not be performed when 
+#'   \code{within = TRUE}. Note that the threshold should be the number of
+#'   allowable substitutions if you don't supply a distance matrix.
 #'   
 #' @param missing specify method of correcting for missing data utilizing
 #'   options given in the function \code{\link{missingno}}. Default is
@@ -117,14 +124,16 @@
 #' @param quiet \code{logical} If \code{FALSE} (Default), messages regarding any
 #'   corrections will be printed to the screen. If \code{TRUE}, no messages will
 #'   be printed.
+#' @inheritParams mlg.filter
 #'   
 #' @return a list of class \code{amova} from the ade4 package. See 
 #'   \code{\link[ade4]{amova}} for details.
 #' 
 #' @details The poppr implementation of AMOVA is a very detailed wrapper for the
 #'   ade4 implementation. The output is an \code{\link[ade4]{amova}} class list 
-#'   that contains the results in the first four elements. The inputs are contained in the 
-#'   last three elements. The inputs required for the ade4 implementation are: 
+#'   that contains the results in the first four elements. The inputs are
+#'   contained in the last three elements. The inputs required for the ade4
+#'   implementation are:
 #'   \enumerate{
 #'   \item a distance matrix on all unique genotypes (haplotypes)
 #'   \item a data frame defining the hierarchy of the distance matrix 
@@ -161,6 +170,15 @@
 #'   \code{\link{cailliez}}. The correction of these distances should not 
 #'   adversely affect the outcome of the analysis.}
 #'   
+#'   \subsection{On Filtering:}{ Filtering multilocus genotypes is performed by
+#'   \code{\link{mlg.filter}}. This can necessarily only be done AMOVA tests 
+#'   that do not account for within-individual variance. The distance matrix used
+#'   to calculate the amova is derived from using \code{\link{mlg.filter}} with
+#'   the option \code{stats = "distance"}, which reports the distance between 
+#'   multilocus genotype clusters. One useful way to utilize this feature is to
+#'   correct for genotypes that have equivalent distance due to missing data. 
+#'   (See example below.)}
+#'   
 #' @keywords amova
 #' @aliases amova
 #' 
@@ -189,19 +207,59 @@
 #' amova.cc.test <- randtest(amova.cc.result)
 #' plot(amova.cc.test)
 #' amova.cc.test
+#' 
+#' # Example with filtering
+#' data(monpop)
+#' splitStrata(monpop) <- ~Tree/Year/Symptom
+#' poppr.amova(monpop, ~Symptom/Year) # gets a warning of zero distances
+#' poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = 0.1) # no warning
 #' }
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE, 
                         dist = NULL, squared = TRUE, correction = "quasieuclid", 
-                        sep = "_", 
-                        missing = "loci", cutoff = 0.05, quiet = FALSE){
+                        sep = "_", filter = FALSE, threshold = 0, 
+                        algorithm = "farthest_neighbor", missing = "loci", 
+                        cutoff = 0.05, quiet = FALSE){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   if (is.null(hier)) stop("A population hierarchy must be specified")
   parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
   full_hier <- parsed_hier[length(parsed_hier)]
 
   setPop(x) <- hier
+  if (filter && (!within | all(ploidy(x) == 1) | !check_Hs(x) | x@type == "PA")){
+    
+    if (!is.genclone(x)){
+      x <- as.genclone(x)
+    }
+    if (!is(x@mlg, "MLG")){
+      x@mlg <- new("MLG", x@mlg)
+    }
+    if (!quiet){
+      message("Filtering ...")
+      message("Original multilocus genotypes ... ", nmll(x))
+    }
+    if (is.null(dist)){
+      nulldist <- TRUE
+      dist <- diss.dist(x, percent = FALSE)
+    } else {
+      nulldist <- FALSE
+    }
+    filt_stats <- mlg.filter(x, threshold = threshold, algorithm = algorithm,
+                             distance = dist, stats = "ALL")
+    if (nulldist){
+      filt_stats$DISTANCE <- sqrt(filt_stats$DISTANCE)
+      squared <- FALSE
+    }
+    dist <- as.dist(filt_stats$DISTANCE)
+    # Forcing this. Probably should make an explicit method for this.
+    x@mlg@mlg["contracted"]    <- filt_stats$MLGS
+    x@mlg@distname             <- "diss.dist"
+    x@mlg@distalgo             <- algorithm
+    x@mlg@cutoff["contracted"] <- threshold
+    mll(x) <- "contracted"
+    if (!quiet) message("Contracted multilocus genotypes ... ", nmll(x))
+  }
   if (clonecorrect){
     x <- clonecorrect(x, strata = hier, keep = 1:length(all.vars(hier)))
   }
