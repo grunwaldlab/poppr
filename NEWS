@@ -23,6 +23,7 @@ NEW FEATURES
 * The mlg slot in the genclone object can now optionally hold an MLG class object. This object will contain different definitions of multilocus genotypes, allowing the user to switch between observed, custom, and mlgs defined given a genetic distance threshold.
 * minimum spanning network functions gain the ability to include reticulations using the option `include.ties`
 * minimum spanning network functions gain the ability to collapse multilocus genotypes by genetic distance with the option `threshold`.
+* `poppr.amova` gains the ability to filter multilocus genotypes before calculation.
 * `informloci` gains the argument "MAF", which allows the specification of a minor allele frequency cutoff in addition to the cutoff argument. Examples have been updated.
 * `aboot` can now take genlight objects.
 * `poppr.msn` and `plot_poppr_msn` can now take genlight objects.
