@@ -113,27 +113,6 @@ valid.genclone <- function(object){
 
 setValidity("genclone", valid.genclone)
 
-# valid.genclone <- function(object){
-#   slots   <- slotNames(object)
-#   if (any(!c("mlg", "hierarchy") %in% slots)){
-#     return(FALSE)
-#   }
-#   inds    <- length(object@ind.names)
-#   mlgs    <- length(object@ind.names)
-#   hier    <- length(object@hierarchy)
-#   hierobs <- nrow(object@hierarchy)
-#   if (mlgs != inds){  
-#     cat("Multilocus genotypes do not match the number of observations")
-#     return(FALSE)
-#   }
-#   if (hier > 0 & hierobs != inds){
-#     cat("Hierarchy does not match the number of observations")
-#     return(FALSE)
-#   }
-#   return(TRUE)
-# }
-# 
-# setValidity("genclone", valid.genclone)
 #==============================================================================#
 #' SNPclone class
 #' 
@@ -166,7 +145,7 @@ setClass("snpclone",
          prototype = prototype(mlg = integer(0))
 )
 
-
+setValidity("snpclone", valid.genclone)
 #==============================================================================#
 #' bruvomat object
 #' 
@@ -177,8 +156,8 @@ setClass("snpclone",
 #' @name bruvomat-class
 #' @rdname bruvomat-class
 #' @export
-#' @slot mat a matrix of genotypes with one allele per locus. Number of rows will
-#' be equal to (ploidy)*(number of loci)
+#' @slot mat a matrix of genotypes with one allele per locus. Number of rows
+#'   will be equal to (ploidy)*(number of loci)
 #' @slot replen repeat length of microsatellite loci
 #' @slot ploidy the ploidy of the data set
 #' @slot ind.names names of individuals in matrix rows.
