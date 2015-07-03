@@ -264,3 +264,46 @@ test_that("multilocus genotype filtering functions correctly", {
 })
 
 
+test_that("mlg.filter can remember things", {
+  skip_on_cran()
+  
+  # Default printing does not show code
+  tda <- "(\\[t\\]).+?(\\[d\\]).+?(\\[a\\])"
+  expect_true(all( !grepl(tda, capture.output(x)) ))
+  suppressWarnings(mlg.filter(x) <- 0)
+  
+  # Code is shown after modification and values are set to 0, nei and farthest
+  expect_false(all( !grepl(tda, capture.output(x)) ))
+  original_vals <- "(0).+?(nei.dist).+?(farthest).+?"
+  expect_false(all( !grepl(original_vals, capture.output(x)) ))
+  
+  # supplied distance matrices work
+  assign("x20150702210257_distance", xd, envir = .GlobalEnv)
+  mlg.filter(x, distance = x20150702210257_distance) <- 0
+  expect_false(all( !grepl("x20150702210257_distance", capture.output(x)) ))
+  
+  # choosing different algorithms work
+  mlg.filter(x, algo = "average") <- 0
+  expect_false(all( !grep("average", capture.output(x)) ))
+  
+  # choosing different distances with parameters works
+  mlg.filter(x, distance = diss.dist, percent = TRUE) <- 0
+  expect_equal(nmll(x), 5)
+  expect_false(all( !grep("diss.dist", capture.output(x)) ))
+  
+  # algorithms are persistant
+  expect_false(all( !grep("average", capture.output(x)) ))
+  
+  # Parameters are kept (default for diss.dist is percent = FALSE)
+  mlg.filter(x) <- 0.75
+  expect_equal(nmll(x), 3)
+  expect_false(all( !grep("0.75", capture.output(x)) ))
+  
+  mlg.filter(x, distance = x20150702210257_distance) <- 4.51
+  expect_equal(nmll(x), 2)
+  
+  # An error is thrown if the distance is removed
+  rm("x20150702210257_distance", envir = .GlobalEnv)
+  expect_error(mlg.filter(x) <- 0)
+  
+})
