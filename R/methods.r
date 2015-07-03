@@ -365,11 +365,12 @@ setMethod(
     cat("   @mlg:", length(unique(object@mlg[])), mlgtype)
     if (the_type == "contracted"){
       thresh <- round(object@mlg@cutoff["contracted"], 3)
+      algo <- strsplit(object@mlg@distalgo, "_")[[1]][1]
       dist <- object@mlg@distname
       if (!is.character(dist)){
         dist <- paste(capture.output(dist), collapse = "")        
       }
-      cat(" (", thresh, ") [t], (", dist, ") [d]", sep = "")
+      cat(" (", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]", sep = "")
     }
   }
 )
@@ -579,12 +580,13 @@ setMethod(
     if (the_type == "contracted"){
       thresh <- round(object@mlg@cutoff["contracted"], 3)
       dist <- object@mlg@distname
+      algo <- strsplit(object@mlg@distalgo, "_")[[1]][1]
       if (!is.character(dist)){
         dist <- paste(capture.output(dist), collapse = "")        
       }
       contab <- max(chars)
       contab <- substr("             ", 1, contab + 4)
-      mlgthresh <- paste0("\n", contab, "(", thresh, ") [t], (", dist, ") [d]")
+      mlgthresh <- paste0("\n", contab, "(", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]")
       mlgtype  <- paste0(mlgtype, mlgthresh)
     }
     if (poplen > 7) 
@@ -1393,8 +1395,12 @@ setMethod(
                        threads = 0, ..., value){
     pop <- callNextMethod()
     the_call <- match.call()
+    callnames <- names(the_call)
     the_dots <- list(...)
-    if (!"distance" %in% names(the_call)){
+    if (!is(pop@mlg, "MLG")){
+      pop@mlg <- new("MLG", pop@mlg)
+    }
+    if (!"distance" %in% callnames){
       distance <- pop@mlg@distname
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
       if ("try-error" %in% class(distfun)){
@@ -1410,6 +1416,9 @@ setMethod(
       }
       # the_call[["distance"]] <- distance
     }
+    if (!"algorithm" %in% callnames){
+      the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
+    }
   
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
@@ -1421,11 +1430,13 @@ setMethod(
 #     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
 #                                  distance, threads, stats = "MLGs", the_call,
 #                                  ...) 
+    algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
     pop@mlg@cutoff["contracted"] <- value
     pop@mlg@distname <- substitute(distance)
     pop@mlg@distargs <- the_dots
+    pop@mlg@distalgo <- match.arg(algorithm, algos)
     return(pop)
   }
 )
@@ -1439,8 +1450,12 @@ setMethod(
                         threads = 0, ..., value){
     pop <- callNextMethod()
     the_call <- match.call()
+    callnames <- names(the_call)
     the_dots <- list(...)
-    if (!"distance" %in% names(the_call)){
+    if (!is(pop@mlg, "MLG")){
+      pop@mlg <- new("MLG", pop@mlg)
+    }
+    if (!"distance" %in% callnames){
       distance <- pop@mlg@distname
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
       if ("try-error" %in% class(distfun)){
@@ -1456,6 +1471,9 @@ setMethod(
       }
       # the_call[["distance"]] <- distance
     }
+    if (!"algorithm" %in% callnames){
+      the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
+    }
     
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
@@ -1467,11 +1485,13 @@ setMethod(
     #     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
     #                                  distance, threads, stats = "MLGs", the_call,
     #                                  ...) 
+    algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
     pop@mlg@cutoff["contracted"] <- value
     pop@mlg@distname <- substitute(distance)
-    pop@mlg@distargs <- list(...)
+    pop@mlg@distargs <- the_dots
+    pop@mlg@distalgo <- match.arg(algorithm, algos)
     return(pop)
   }
 )
