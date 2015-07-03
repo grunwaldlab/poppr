@@ -49,6 +49,7 @@ setMethod(
     slot(.Object, "visible")  <- "original"
     slot(.Object, "distname") <- "nei.dist"
     slot(.Object, "distargs") <- list()
+    slot(.Object, "distalgo") <- "farthest_neighbor"
     return(.Object)
   }
 )
