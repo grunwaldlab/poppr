@@ -108,17 +108,17 @@ setMethod(
     return(c(length(slot(x, "names")), nlevels(slot(x, "loc.fac"))))
   }
 )
-
-# #==============================================================================#
-# # @rdname bootgen-methods
-# #==============================================================================#
-# setMethod(
-#   f = "nLoc",
-#   signature(x = "bootgen"),
-#   definition = function(x){
-#     return(dim(x)[2])
-#   }
-# )
+setGeneric("dist")
+#==============================================================================#
+# @rdname bootgen-methods
+#==============================================================================#
+setMethod(
+  f = "dist",
+  signature(x = "bootgen"),
+  definition = function(x){
+    return(dist(tab(x)))
+  }
+)
 
 #==============================================================================#
 #' @rdname bootgen-methods
