@@ -57,7 +57,7 @@ w <- c(rep(genos[2], 99), genos[3])           # found by cutoff
 x <- c(rep(genos[1], 98), genos[3], genos[2]) # found by MAF
 y <- c(rep(genos[1], 99), genos[2])           # found by both
 z <- sample(genos, 100, replace = TRUE)
-dat <- df2genind(data.frame(v = v, w = w, x = x, y = y, x = z), sep = "/")
+dat <- df2genind(data.frame(v = v, w = w, x = x, y = y, z = z), sep = "/")
 
 informloci(dat)
 

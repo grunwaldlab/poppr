@@ -732,7 +732,7 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
 #' x <- c(rep(genos[1], 98), genos[3], genos[2]) # found by MAF
 #' y <- c(rep(genos[1], 99), genos[2])           # found by both
 #' z <- sample(genos, 100, replace = TRUE)
-#' dat <- df2genind(data.frame(v = v, w = w, x = x, y = y, x = z), sep = "/")
+#' dat <- df2genind(data.frame(v = v, w = w, x = x, y = y, z = z), sep = "/")
 #' 
 #' informloci(dat)
 #' 
@@ -817,7 +817,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
                   ifelse(glocsum == 0, "", ":\n"),
                   paste(locNames(pop)[!glocivals], collapse = ", "))
     amsg <- paste(alocsum, 
-                  ifelse(alocsum != 1, "loci", "locus"), "found with",
+                  ifelse(alocsum != 1, "loci", "locus"),
                   "found with MAF <", signif(MAF, 3), 
                   ifelse(alocsum == 0, "", ":\n"),
                   paste(locNames(pop)[!alocivals], collapse = ", "))
