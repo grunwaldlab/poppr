@@ -232,11 +232,11 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     } else if(length(dist) == mlglength){
       xdist <- dist
     } else {
-      msg <- paste("\nDistance matrix does not match the data.",
-      "\nUncorrected observations expected..........", nInd(x),
-      "\nClone corrected observations expected......", mlgs,
-      "\nObservations in provided distance matrix...", ceiling(sqrt(length(dist)*2)),
-      ifelse(within == TRUE, "\nTry setting within = FALSE.", "\n"))
+      msg <- paste("\nDistance matrix does not match the data.\n",
+      "\n\tUncorrected observations expected..........", nInd(x),
+      "\n\tClone corrected observations expected......", mlgs,
+      "\n\tObservations in provided distance matrix...", ceiling(sqrt(length(dist)*2)),
+      ifelse(within == TRUE, "\n\n\tTry setting within = FALSE.", "\n"))
       stop(msg)
     }
     if (squared){
@@ -251,8 +251,8 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     } else {
       correct_fun <- match.fun(correct)
       if (correct == CORRECTIONS[2]){
-        cat("Distance matrix is non-euclidean.\n")
-        cat("Utilizing quasieuclid correction method. See ?quasieuclid for details.\n")
+        message("Distance matrix is non-euclidean.")
+        message("Utilizing quasieuclid correction method. See ?quasieuclid for details.")
         xdist <- correct_fun(xdist)        
       } else {
         xdist <- correct_fun(xdist, print = TRUE, cor.zero = FALSE)        
