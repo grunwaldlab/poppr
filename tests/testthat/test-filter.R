@@ -36,6 +36,34 @@ test_that("multilocus genotype filtering algorithms work", {
   
 })
 
+test_that("filter_stats works for genind", {
+	skip_on_cran()
+	res <- filter_stats(x, distance = xd, threshold = 100L, plot = TRUE)
+	maxres <- nmll(x) - 1
+	
+	expect_is(res, "list")
+	expect_equal(names(res), c("farthest", "average", "nearest"))
+	res <- lapply(res, "[[", "THRESHOLDS")
+	expect_true(all(unlist(lapply(res, "[", 1:2), use.names = FALSE) == 3))
+	expect_true(all(vapply(res, length, numeric(1)) == maxres))
+	expect_less_than(res$nearest[maxres], res$average[maxres])
+	expect_less_than(res$average[maxres], res$farthest[maxres])
+})
+
+test_that("filter_stats works for snpclone", {
+	skip_on_cran()
+	res <- filter_stats(gc, distance = bitwise.dist, threshold = 100L, plot = TRUE)
+	maxres <- nmll(gc) - 1
+	
+	expect_is(res, "list")
+	expect_equal(names(res), c("farthest", "average", "nearest"))
+	res <- lapply(res, "[[", "THRESHOLDS")
+	expect_true(all(vapply(res, length, numeric(1)) == maxres))
+	expect_less_than(res$nearest[maxres], res$average[maxres])
+	expect_less_than(res$average[maxres], res$farthest[maxres])
+})
+
+
 test_that("mlg.filter can remember things", {
   skip_on_cran()
   
