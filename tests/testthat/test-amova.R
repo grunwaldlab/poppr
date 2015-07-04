@@ -10,23 +10,20 @@ rescc  <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, clonecorrect = TRUE)
 
 
 test_that("Amova returns published values", {
-	expect_that(res$componentsofcovariance[, 2], equals(c(70.0067859292295, 
-														  8.40748251295027, 
-														  21.5857315578203, 
-														  100)))
-	expect_that(res$componentsofcovariance[, 1], equals(c(11.0634458464745, 
-														  1.3286673034988, 
-														  3.41127747798475, 
-														  15.8033906279581)))
-	expect_that(rescc$componentsofcovariance[, 2], equals(c(66.7776803325885, 
-															6.10535452127678, 
-															27.1169651461347, 
-															100)))
-	expect_that(rescc$componentsofcovariance[, 1], equals(c(10.4131525344064, 
-															0.952054452775842, 
-															4.22855500416477, 
-															15.593761991347)))
-	})
+  resper <- c(70.0067859292295, 8.40748251295027, 21.5857315578203, 100)
+  ressig <- c(11.0634458464745, 1.3286673034988, 
+              3.41127747798475, 15.8033906279581)
+	expect_equivalent(res$componentsofcovariance[, 2], resper)
+	expect_equivalent(res$componentsofcovariance[, 1], ressig)
+
+  resccper <- c(66.7776803325885, 6.10535452127678, 27.1169651461347, 100)
+  resccsig <- c(10.4131525344064, 0.952054452775842, 
+                4.22855500416477, 15.593761991347)
+
+	expect_equivalent(rescc$componentsofcovariance[, 2], resccper)
+	expect_equivalent(rescc$componentsofcovariance[, 1], resccsig)
+})
+
 test_that("AMOVA handles subsetted genclone objects", {
 	Athena.mlg <- mlg.vector(Athena)
 	agc.mlg <- mlg.vector(agc)
@@ -39,7 +36,7 @@ test_that("AMOVA handles subsetted genclone objects", {
 	expect_true(anyNA(match(1:max(Athena.mlg), Athena.mlg)))
 
 	#AMOVA will still work on the data set with missing MLGs
-	expect_that(class(Athena.AMOVA), equals("amova"))	
+	expect_equal(class(Athena.AMOVA), "amova")
 	})
 
 
@@ -84,8 +81,8 @@ test_that("AMOVA can calculate within individual variance for diploids", {
   strata(microbov) <- data.frame(other(microbov))
   mics <- microbov[pop = 1:2]
   expect_output(micwithin  <- poppr.amova(mics, ~breed), "Removing")
-  expect_output(poppr.amova(mic, ~breed, correction = "cai"), "Cailliez constant")
-  expect_output(poppr.amova(mic, ~breed, correction = "lin"), "Lingoes constant")
+  expect_output(poppr.amova(mics, ~breed, correction = "cai"), "Cailliez constant")
+  expect_output(poppr.amova(mics, ~breed, correction = "lin"), "Lingoes constant")
   expect_output(micwithout <- poppr.amova(mics, ~breed, within = FALSE), "Removing")
   expect_equal(dim(micwithin$componentsofcovariance), c(4, 2))
   expect_equal(dim(micwithout$componentsofcovariance), c(3, 2))
