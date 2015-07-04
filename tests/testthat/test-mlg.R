@@ -7,14 +7,8 @@ data(nancycats, package = "adegenet")
 amlg <- mlg.vector(Aeut)
 pmlg <- mlg.vector(partial_clone)
 nmlg <- mlg.vector(nancycats)
-grid_example <- matrix(c(1, 1, 5, 9, 9, 
-                         4, 1, 1, 1, 4), 
-                       ncol = 2)
-rownames(grid_example) <- LETTERS[1:5]
-colnames(grid_example) <- c("x", "y")
-x  <- as.genclone(df2genind(grid_example, ploidy = 1))
-xd <- dist(grid_example)
 lu <- function(x) length(unique(x))
+
 
 test_that("multilocus genotype vector is same length as samples", {
   expect_equal(length(amlg), nInd(Aeut))
@@ -204,28 +198,6 @@ test_that("subsetting and resetting MLGs works", {
   expect_that(fullmlg, is_more_than(realmlg))
 })
 
-test_that("multilocus genotype filtering algorithms work", {
-  expect_equal(nmll(x), nInd(x))
-  expect_equal(nmll(x), 5)
-  
-  # The following tests are from the paper
-  fart <- mlg.filter(x, distance = xd, threshold = 4.51, algorithm = "f")
-  aver <- mlg.filter(x, distance = xd, threshold = 4.51, algorithm = "a")
-  near <- mlg.filter(x, distance = xd, threshold = 4.51, algorithm = "n")
-  
-  # Nearest should chain everything
-  expect_equal(lu(near), 1)
-  expect_equal(near, c(1L, 1L, 1L, 1L, 1L))
-  
-  # Average should make two groups
-  expect_equal(lu(aver), 2)
-  expect_equal(aver, c(4L, 4L, 1L, 1L, 1L))
-  
-  # Farthest should make three
-  expect_equal(lu(fart), 3)
-  expect_equal(fart, c(4L, 4L, 3L, 1L, 1L))
-  
-})
 
 test_that("multilocus genotype filtering functions correctly", {
   skip_on_cran()
@@ -264,46 +236,3 @@ test_that("multilocus genotype filtering functions correctly", {
 })
 
 
-test_that("mlg.filter can remember things", {
-  skip_on_cran()
-  
-  # Default printing does not show code
-  tda <- "(\\[t\\]).+?(\\[d\\]).+?(\\[a\\])"
-  expect_true(all( !grepl(tda, capture.output(x)) ))
-  suppressWarnings(mlg.filter(x) <- 0)
-  
-  # Code is shown after modification and values are set to 0, nei and farthest
-  expect_false(all( !grepl(tda, capture.output(x)) ))
-  original_vals <- "(0).+?(nei.dist).+?(farthest).+?"
-  expect_false(all( !grepl(original_vals, capture.output(x)) ))
-  
-  # supplied distance matrices work
-  assign("x20150702210257_distance", xd, envir = .GlobalEnv)
-  mlg.filter(x, distance = x20150702210257_distance) <- 0
-  expect_false(all( !grepl("x20150702210257_distance", capture.output(x)) ))
-  
-  # choosing different algorithms work
-  mlg.filter(x, algo = "average") <- 0
-  expect_false(all( !grep("average", capture.output(x)) ))
-  
-  # choosing different distances with parameters works
-  mlg.filter(x, distance = diss.dist, percent = TRUE) <- 0
-  expect_equal(nmll(x), 5)
-  expect_false(all( !grep("diss.dist", capture.output(x)) ))
-  
-  # algorithms are persistant
-  expect_false(all( !grep("average", capture.output(x)) ))
-  
-  # Parameters are kept (default for diss.dist is percent = FALSE)
-  mlg.filter(x) <- 0.75
-  expect_equal(nmll(x), 3)
-  expect_false(all( !grep("0.75", capture.output(x)) ))
-  
-  mlg.filter(x, distance = x20150702210257_distance) <- 4.51
-  expect_equal(nmll(x), 2)
-  
-  # An error is thrown if the distance is removed
-  rm("x20150702210257_distance", envir = .GlobalEnv)
-  expect_error(mlg.filter(x) <- 0)
-  
-})
