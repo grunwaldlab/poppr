@@ -62,7 +62,7 @@ test_that("AMOVA can take a distance matrix as input", {
 })
 
 
-test_that("AMOVA can work on clone correction from mlg.filter", {
+test_that("AMOVA can work on clone correction from mlg.filter and do filtering", {
   skip_on_cran()
   data("monpop", package = "poppr")
   splitStrata(monpop) <- ~Tree/Year/Symptom
@@ -71,9 +71,11 @@ test_that("AMOVA can work on clone correction from mlg.filter", {
   monfilt <- mlg.filter(monpop, distance = mondist, threshold = 1.1, 
                         stats = "DIST")
   mlg.filter(monpop, distance = mondist) <- 1.1 
-  monfiltdist <- as.dist(monfilt/nLoc(monpop))
+  monfiltdist <- as.dist(monfilt)
   monres <- poppr.amova(monpop, ~Symptom/Year, dist = monfiltdist)
-  expect_equivalent(monres$componentsofcovariance[4, 2], 100)
+  msg <- "Original.+?264"
+  expect_message(res <- poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = 1.1), msg)
+  expect_equivalent(monres$componentsofcovariance, res$componentsofcovariance)
 })
 
 test_that("AMOVA can calculate within individual variance for diploids", {
@@ -82,15 +84,9 @@ test_that("AMOVA can calculate within individual variance for diploids", {
   strata(microbov) <- data.frame(other(microbov))
   mics <- microbov[pop = 1:2]
   expect_output(micwithin  <- poppr.amova(mics, ~breed), "Removing")
+  expect_output(poppr.amova(mic, ~breed, correction = "cai"), "Cailliez constant")
+  expect_output(poppr.amova(mic, ~breed, correction = "lin"), "Lingoes constant")
   expect_output(micwithout <- poppr.amova(mics, ~breed, within = FALSE), "Removing")
   expect_equal(dim(micwithin$componentsofcovariance), c(4, 2))
   expect_equal(dim(micwithout$componentsofcovariance), c(3, 2))
-})
-
-test_that("AMOVA can do filtering", {
-  skip_on_cran()
-  data("monpop", package = "poppr")
-  splitStrata(monpop) <- ~Tree/Year/Symptom
-  warn <- "Original.+?264"
-  expect_message(res <- poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = 0.1), warn)
 })

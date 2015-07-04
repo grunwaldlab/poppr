@@ -237,7 +237,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     }
     if (!quiet){
       message("Filtering ...")
-      message("Original multilocus genotypes ... ", nmll(x))
+      message("Original multilocus genotypes ... ", nmll(x, "original"))
     }
     if (is.null(dist)){
       nulldist <- TRUE
