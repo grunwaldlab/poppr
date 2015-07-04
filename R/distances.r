@@ -338,7 +338,7 @@ reynolds.dist <- function(x){
 provesti.dist <- function(x){
   if (is(x, "gen")){
     MAT   <- get_gen_mat(x)
-    nlig  <- nrow(x@tab)
+    nlig  <- nrow(tab(x))
     nloc  <- nLoc(x)
     ploid <- x@ploidy
   } else if (length(dim(x)) == 2){
@@ -352,7 +352,7 @@ provesti.dist <- function(x){
   loca <- function(k, nlig, MAT, nLoc){
     w1     <- (k+1):nlig
     resloc <- vapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]), na.rm = TRUE), numeric(1))
-    if (x@type == "codom"){
+    if (is(x, "gen") && x@type == "codom"){
       # This only applies to codominant data because dominant data can only take
       # on a single state. Dividing by two indicates that the observations can
       # occupy co-occurring states.
@@ -361,7 +361,7 @@ provesti.dist <- function(x){
     return(resloc/nloc)
   }
 
-  d    <- unlist(lapply(w0, loca, nlig, MAT, nLoc))
+  d    <- unlist(lapply(w0, loca, nlig, MAT, nloc))
   labs <- get_gen_dist_labs(x)
   d    <- make_attributes(d, nlig, labs, "Provesti", match.call())
   return(d)
