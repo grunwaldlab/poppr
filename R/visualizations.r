@@ -66,6 +66,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
                                         file = file)
     thePlot <- ggplot(ggsamps, aes_string(x = "value", group = "population")) +
       geom_histogram(binwidth = binw, position = "identity") +
+      geom_rug(alpha = 0.5) + 
       geom_vline(aes_string(xintercept = "value"), color = "blue", linetype = 2,
                  data = ggindex) +
       facet_wrap(~population, scales = "free_x") +
