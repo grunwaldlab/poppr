@@ -751,7 +751,7 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
   colnames(pair_ia_vector) <- apply(loci_pairs[-3, ], 2, paste, collapse = ":")
   rownames(pair_ia_vector) <- c("Ia", "rbarD")
   pair_ia_vector           <- t(pair_ia_vector)
-  class(pair_ia_vector)    <- c("matrix", "pairia")
+  class(pair_ia_vector)    <- c("pairia", "matrix")
   if (plot){
     plot(pair_ia_vector, index = index, low = low, high = high, limits = limits)
   }
