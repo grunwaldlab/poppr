@@ -192,14 +192,14 @@
 bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
-  if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
+  if (pop@type != "codom" || all(is.na(unlist(lapply(alleles(pop), as.numeric))))){
     stop(non_ssr_data_warning())
   }
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(locNames(pop))){
-    replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
+    replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
   bruvomat  <- new('bruvomat', pop, replen)
@@ -319,7 +319,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
 #==============================================================================#
 #' @importFrom phangorn upgma midpoint
 #' @importFrom ape nodelabels nj boot.phylo plot.phylo axisPhylo ladderize 
-#' @importFrom ape add.scale.bar nodelabels tiplabels
+#' @importFrom ape add.scale.bar nodelabels tiplabels is.ultrametric
 #   /     \
 #   |=(o)=|
 #   \     /
@@ -328,14 +328,14 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
                         quiet = FALSE, root = NULL, ...){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
-  if (pop@type != "codom" | all(is.na(unlist(lapply(pop@all.names, as.numeric))))){
+  if (pop@type != "codom" || all(is.na(unlist(lapply(alleles(pop), as.numeric))))){
     stop(non_ssr_data_warning())
   }
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
   if (length(replen) != length(locNames(pop))){
-    replen <- vapply(pop@all.names, function(x) guesslengths(as.numeric(x)), 1)
+    replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
   bootgen <- new('bruvomat', pop, replen)
@@ -354,10 +354,10 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
                             loss = loss))
   }
 
-  if (is.null(root)){
-    root <- grepl("upgma", treechar)
-  }
   tre <- bootfun(bootgen)
+  if (is.null(root)){
+    root <- ape::is.ultrametric(tre)
+  }
   if (any (tre$edge.length < 0)){
     warning(negative_branch_warning(), immediate.=TRUE)
 	  tre <- fix_negative_branch(tre)

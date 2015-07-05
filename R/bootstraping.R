@@ -80,7 +80,7 @@
 #'   \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a 
 #'   rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like 
 #'   neighbor-joining), it should be false. When set to \code{NULL} (default), 
-#'   the tree will be considered unrooted unless it is a upgma tree.
+#'   the tree is considered rooted if \code{\link[ape]{is.ultrametric}} is true.
 #'   
 #' @param ... any parameters to be passed off to the distance method.
 #'   
@@ -185,7 +185,8 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
         missing <- "asis"  
       } 
     }
-    if (as.character(substitute(distance)) %in% "diss.dist"){
+    distname <- as.character(substitute(distance))
+    if (length(distname) == 1 && distname %in% "diss.dist"){
       xboot <- new("bootgen", x, na = missing, freq = FALSE)
       if (!is.integer(xboot@tab)){
         otab <- xboot@tab
@@ -212,7 +213,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
   }
   treechar <- paste(substitute(tree), collapse = "")
   if (is.null(root)){
-    root <- grepl("upgma", treechar)
+    root <- ape::is.ultrametric(xtree)
   }
   nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root, 
                          quiet = quiet)

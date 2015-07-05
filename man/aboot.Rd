@@ -46,7 +46,7 @@ aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
   \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a
   rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like
   neighbor-joining), it should be false. When set to \code{NULL} (default),
-  the tree will be considered unrooted unless it is a upgma tree.}
+  the tree is considered rooted if \code{\link[ape]{is.ultrametric}} is true.}
 
 \item{...}{any parameters to be passed off to the distance method.}
 }
