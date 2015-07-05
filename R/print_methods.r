@@ -121,8 +121,7 @@ plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red",
     scale_fill_gradient(low = low, high = high, limits = limits) +
     scale_x_discrete(expand = c(0, -1)) +
     scale_y_discrete(expand = c(0, -1)) +
-    theme(axis.title = element_blank(), title = element_text(size = rel(2))) + 
-    # theme(legend.title.align = 0.5) + 
+    theme(axis.title = element_blank(), title = element_text(size = rel(2))) +  
     myTheme +
     labs(fill = theTitle)
   print(basic_plot)
