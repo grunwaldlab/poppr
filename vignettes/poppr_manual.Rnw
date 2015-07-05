@@ -132,6 +132,97 @@ based on genetic distance.
 \section{Introduction}
 \label{intro}
 
+\subsection{Table of Functions}
+\label{appendix:funk}
+
+\tab\tab Below is a table of functions found in \poppr{}. These functions are
+linked within the document. If a function name is blue, simply click on it to go
+to its definition and description.
+
+\begin{center}
+\begin{longtable}{ll}
+\caption{Functions available in \poppr{}} \label{function_table} \\
+
+\hline \\[-1.5ex] \textbf{\large Function} & \textbf{\large Description} \\ \hline \\[-1.5ex]
+\endfirsthead
+
+\multicolumn{2}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline \\[-1.5ex] \textbf{\large Function} & \textbf{\large Description} \\ \hline \\[-1.5ex]
+\endhead
+
+\hline \multicolumn{2}{r}{\textbf{Continued on next page...}} \\
+\endfoot
+
+\hline \hline
+\endlastfoot
+
+\multicolumn{2}{l}{\Large\textsc{Import/Export}}\\
+\texttt{getfile} & Provides a quick GUI to grab files for import \\
+\cmdlink{intro:import:read.genalex}{read.genalex} & Read \textit{GenAlEx} formatted csv files to a genind object \\
+\cmdlink{intro:import:genind2genalex}{genind2genalex} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
+\cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Manipulation}}\\
+\texttt{setPop} & Set the population using defined hierarchies\\
+\texttt{splitStrata} & Split a concatenated hierarchy imported as a population\\
+\texttt{strata} & Define a population hierarchy of a genclone object\\
+\texttt{strata} & Extract the hierarchy data frame\\
+\texttt{addStrata} & Add a vector or data frame to an existing hierarchy \\
+\texttt{nameStrata} & Rename a population hierarchy\\
+\cmdlink{data.manip:missing:missingno}{missingno} & Handles missing data \\
+\cmdlink{data.manip:cc:clonecorrect}{clonecorrect} & Clone censors at a specified population hierarchy \\
+\cmdlink{data.manip:informloci}{informloci} & Detects and removes phylogenetically uninformative loci \\
+\cmdlink{data.manip:divide:popsub}{popsub} & Subsets genind objects by population \\
+\cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
+\texttt{splitcombine*} & Manipulates population hierarchy *Deprecated\\
+\cmdlink{intro:import:polyploid}{recode\_polyploids} &  recode polyploid data sets with missing alleles imported as ``0''\\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Distances}}\\
+\texttt{bruvo.dist} & Bruvo's distance \\
+\texttt{diss.dist} & Absolute genetic distance (see \texttt{provesti.dist}) \\
+\texttt{nei.dist} & Nei's 1978 genetic distance \\
+\texttt{rogers.dist} & Rogers' euclidean distance \\
+\texttt{reynolds.dist} & Reynolds' coancestry distance \\
+\texttt{edwards.dist} & Edwards' angular distance \\
+\texttt{provesti.dist} & Provesti's absolute genetic distance \\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Bootstrapping}}\\
+\texttt{aboot} & Creates a bootstrapped dendrogram for any distance measure \\
+\texttt{bruvo.boot} & Produces dendrograms with bootstrap support\\
+ & based on Bruvo's distance \\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Analysis}}\\
+\texttt{poppr.amova} & Analysis of Molecular Variance (as implemented in ade4) \\
+\texttt{ia} & Calculates the index of association \\
+\cmdlink{mlg:mlg:mlg}{mlg} & Calculates the number of multilocus genotypes \\
+\cmdlink{mlg:cross:mlg.crosspop}{mlg.crosspop} & Finds all multilocus genotypes that cross populations \\
+\cmdlink{mlg:table:mlg.table}{mlg.table} & Returns a table of populations by multilocus genotypes \\
+\cmdlink{mlg:mix:mlg.vector}{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\
+ & each individual \\
+\cmdlink{mlg:mix:mlg.id}{mlg.id} & Identifies individuals associated with each MLG \\
+\texttt{poppr} & Returns a diversity table by population \\
+\texttt{poppr.all} & Returns a diversity table by population for all compatible files specified \\
+\texttt{private\_alleles} & Tabulates the occurrences of alleles that only occur in one population\\
+\texttt{locus\_table} & Creates a table of summary statistics per locus\\
+\hline \\[-1.5ex]
+\multicolumn{2}{l}{\Large\textsc{Visualization}}\\
+\texttt{plot\_poppr\_msn} & Plots minimum spanning networks produced in poppr with\\
+ & scale bar and legend \\
+\texttt{greycurve} & Helper to determine the appropriate parameters for adjusting the\\
+ & grey level for msn functions \\
+\texttt{bruvo.msn} & Produces minimum spanning networks based off Bruvo's distance\\
+ & colored by population \\
+\texttt{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\
+ & matrix related to the data \\
+\texttt{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
+\texttt{genotype\_curve} & Creates a series of boxplots demonstrating how many loci are\\
+ & needed to represent the diversity of your data.\\
+\hline
+
+\end{longtable}
+\end{center}
+
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -2294,6 +2385,9 @@ print_command(funk)
     \adegenet{} function \texttt{nInd}). Essentially, this means that any locus
     with fewer than 2 observations differing will be removed. The user can also
     specify a fraction of observations for the cutoff (eg. 0.05).
+    \item \texttt{MAF -} (Minor Allele Frequency), This defaults to 0.01
+    indicating that loci that contain one allele representing 1 - MAF of the
+    data will be removed.
     \item \texttt{quiet -} if \texttt{TRUE}, nothing will be printed to the
     screen, if \texttt{FALSE} (default), the cutoff value in percentage and
     number of individuals will be printed as well as the names of the
@@ -2308,7 +2402,7 @@ that have a minor allele frequency of $\geq 5\%$
 <<inform.H3N2.1, eval = FALSE>>=
 H.five <- informloci(H3N2, cutoff = 0.05)
 @
-<<inform.H3N2.2, echo = FALSE>>=
+<<inform.H3N2.2, echo = FALSE, message = TRUE>>=
 #res <- c(157,177,233,243,262,267,280,303,313,327,357,382,384,399,412,418,424,425,429,433,451,470,529,546,555,557,564,576,592,595,597,602,612,627,642,647,648,654,658,663,667,681,717,806,824,837,882)
 # cat("cutoff value: 5 percent ( 95 individuals ).\n","47 uninfomative loci found:", res, fill = 80)
 msg <- readLines("msg.txt")
@@ -2318,7 +2412,7 @@ Now what happens when you have all informative loci. We'll use the nancycats
 data set, which has microsatellite loci. It is important to note that this is
 searching for loci with a specified genotype frequency as fixed heterozygous
 sites are also uninformative:
-<<inform.nancy>>=
+<<inform.nancy, message = TRUE>>=
 data(nancycats)
 naninform <- informloci(nancycats, cutoff = 0.05)
 @
@@ -4499,8 +4593,8 @@ Saving a plot with \textit{ggplot2} is performed with one command after your
 plot has rendered:
 <<ggsave1, eval=FALSE>>=
 data(nancycats) # Load the data set.
-poppr(nancycats, sublist=5, sample=999) # Produce a single plot.
-ggsave("nancy5.pdf")
+poppr(nancycats, sample=999) # Produce a single plot.
+ggsave("nancycats.pdf")
 @
 Note that you can name the file anything, and \texttt{ggsave} will save it in
 that format for you. The details are in the documentation and you can access it
@@ -4528,11 +4622,10 @@ want to create, and then make sure to close the session with the function
 \texttt{dev.off()}. Let's give an example saving to pdf and png files.
 
 <<png_save, eval=FALSE>>=
-data(H3N2)
-pop(H3N2) <- H3N2$other$x$country
+data(nancycats)
 ####
-png("H3N2_barchart%02d.png", width = 14, height = 14, units = "in", res = 300)
-H.tab <- mlg.table(H3N2)
+png("nancy_pair%02d.png", width = 14, height = 14, units = "in", res = 300)
+poppairs <- lapply(seppop(nancycats), pair.ia, limits = c(-0.25, 1))
 dev.off()
 ####
 @
@@ -4547,8 +4640,8 @@ you wanted to do the same thing, but place them all in one file, you should use
 the pdf option.
 
 <<pdf_save, eval=FALSE>>=
-pdf("H3N2_barcharts.png", width = 14, height = 14, compress = FALSE)
-H.tab <- mlg.table(H3N2)
+pdf("nancy_pair.png", width = 14, height = 14, compress = FALSE)
+poppairs <- lapply(seppop(nancycats), pair.ia, limits = c(-0.25, 1))
 dev.off()
 @
 
@@ -4559,96 +4652,7 @@ image since it is based off of vector graphics.
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Table of Functions}
-\label{appendix:funk}
 
-\tab\tab Below is a table of functions found in \poppr{}. These functions are
-linked within the document. If a function name is blue, simply click on it to go
-to its definition and description.
-
-\begin{center}
-\begin{longtable}{ll}
-\caption{Functions available in \poppr{}} \label{function_table} \\
-
-\hline \\[-1.5ex] \textbf{\large Function} & \textbf{\large Description} \\ \hline \\[-1.5ex]
-\endfirsthead
-
-\multicolumn{2}{c}%
-{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
-\hline \\[-1.5ex] \textbf{\large Function} & \textbf{\large Description} \\ \hline \\[-1.5ex]
-\endhead
-
-\hline \multicolumn{2}{r}{\textbf{Continued on next page...}} \\
-\endfoot
-
-\hline \hline
-\endlastfoot
-
-\multicolumn{2}{l}{\Large\textsc{Import/Export}}\\
-\texttt{getfile} & Provides a quick GUI to grab files for import \\
-\cmdlink{intro:import:read.genalex}{read.genalex} & Read \textit{GenAlEx} formatted csv files to a genind object \\
-\cmdlink{intro:import:genind2genalex}{genind2genalex} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
-\cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
-\hline \\[-1.5ex]
-\multicolumn{2}{l}{\Large\textsc{Manipulation}}\\
-\texttt{setPop} & Set the population using defined hierarchies\\
-\texttt{splitStrata} & Split a concatenated hierarchy imported as a population\\
-\texttt{strata} & Define a population hierarchy of a genclone object\\
-\texttt{strata} & Extract the hierarchy data frame\\
-\texttt{addStrata} & Add a vector or data frame to an existing hierarchy \\
-\texttt{nameStrata} & Rename a population hierarchy\\
-\cmdlink{data.manip:missing:missingno}{missingno} & Handles missing data \\
-\cmdlink{data.manip:cc:clonecorrect}{clonecorrect} & Clone censors at a specified population hierarchy \\
-\cmdlink{data.manip:informloci}{informloci} & Detects and removes phylogenetically uninformative loci \\
-\cmdlink{data.manip:divide:popsub}{popsub} & Subsets genind objects by population \\
-\cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
-\texttt{splitcombine*} & Manipulates population hierarchy *Deprecated\\
-\cmdlink{intro:import:polyploid}{recode\_polyploids} &  recode polyploid data sets with missing alleles imported as ``0''\\
-\hline \\[-1.5ex]
-\multicolumn{2}{l}{\Large\textsc{Distances}}\\
-\texttt{bruvo.dist} & Bruvo's distance \\
-\texttt{diss.dist} & Absolute genetic distance (see \texttt{provesti.dist}) \\
-\texttt{nei.dist} & Nei's 1978 genetic distance \\
-\texttt{rogers.dist} & Rogers' euclidean distance \\
-\texttt{reynolds.dist} & Reynolds' coancestry distance \\
-\texttt{edwards.dist} & Edwards' angular distance \\
-\texttt{provesti.dist} & Provesti's absolute genetic distance \\
-\hline \\[-1.5ex]
-\multicolumn{2}{l}{\Large\textsc{Bootstrapping}}\\
-\texttt{aboot} & Creates a bootstrapped dendrogram for any distance measure \\
-\texttt{bruvo.boot} & Produces dendrograms with bootstrap support\\
- & based on Bruvo's distance \\
-\hline \\[-1.5ex]
-\multicolumn{2}{l}{\Large\textsc{Analysis}}\\
-\texttt{poppr.amova} & Analysis of Molecular Variance (as implemented in ade4) \\
-\texttt{ia} & Calculates the index of association \\
-\cmdlink{mlg:mlg:mlg}{mlg} & Calculates the number of multilocus genotypes \\
-\cmdlink{mlg:cross:mlg.crosspop}{mlg.crosspop} & Finds all multilocus genotypes that cross populations \\
-\cmdlink{mlg:table:mlg.table}{mlg.table} & Returns a table of populations by multilocus genotypes \\
-\cmdlink{mlg:mix:mlg.vector}{mlg.vector} & Returns a vector of a numeric multilocus genotype assignment for \\
- & each individual \\
-\cmdlink{mlg:mix:mlg.id}{mlg.id} & Identifies individuals associated with each MLG \\
-\texttt{poppr} & Returns a diversity table by population \\
-\texttt{poppr.all} & Returns a diversity table by population for all compatible files specified \\
-\texttt{private\_alleles} & Tabulates the occurrences of alleles that only occur in one population\\
-\texttt{locus\_table} & Creates a table of summary statistics per locus\\
-\hline \\[-1.5ex]
-\multicolumn{2}{l}{\Large\textsc{Visualization}}\\
-\texttt{plot\_poppr\_msn} & Plots minimum spanning networks produced in poppr with\\
- & scale bar and legend \\
-\texttt{greycurve} & Helper to determine the appropriate parameters for adjusting the\\
- & grey level for msn functions \\
-\texttt{bruvo.msn} & Produces minimum spanning networks based off Bruvo's distance\\
- & colored by population \\
-\texttt{poppr.msn} & Produces a minimum spanning network for any pairwise distance\\
- & matrix related to the data \\
-\texttt{info\_table} & Creates a heatmap representing missing data or observed ploidy\\
-\texttt{genotype\_curve} & Creates a series of boxplots demonstrating how many loci are\\
- & needed to represent the diversity of your data.\\
-\hline
-
-\end{longtable}
-\end{center}
 \bibliographystyle{authordate1}
 \bibliography{the_bibliography}
 \end{document}
