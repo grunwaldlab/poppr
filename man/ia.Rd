@@ -55,23 +55,36 @@ Defaults to \code{NULL}. If you want to use a custom range, supply two
 numbers between -1 and 1, (e.g. \code{limits = c(-0.15, 1)})}
 }
 \value{
-\subsection{for \code{pair.ia}}{a matrix with two columns and
-  choose(nLoc(gid), 2) rows representing the values for Ia and rbarD per
-  locus pair.}\subsection{If no sampling has occurred:}{ A named number
-  vector of length 2 giving the Index of Association, "Ia"; and the
-  Standardized Index of Association, "rbarD" } \subsection{If there is
-  sampling:}{ A a named number vector of length 4 with the following values:
-  \itemize{\item{Ia - }{numeric. The index of association.} \item{p.Ia - }{A
-  number indicating the p-value resulting from a one-sided permutation test
-  based on the number of samples indicated in the original call.} \item{rbarD
-  - }{numeric. The standardized index of association.} \item{p.rD - }{A
-  factor indicating the p-value resulting from a one-sided permutation test
-  based on the number of samples indicated in the original call.}} }
-  \subsection{If there is sampling and valureturn = TRUE}{ A list with the
-  following elements: \itemize{ \item{index}{The above vector}
-  \item{samples}{A data frame with s by 2 column data frame where s is the
-  number of samples defined. The columns are for the values of Ia and rbarD,
-  respectively.}}}
+\subsection{for \code{pair.ia}}{
+  A matrix with two columns and choose(nLoc(gid), 2) rows representing the
+  values for Ia and rbarD per locus pair.
+  }
+  \subsection{If no sampling has occurred:}{
+  A named number vector of length 2 giving the Index of Association, "Ia";
+  and the Standardized Index of Association, "rbarD"
+  }
+  \subsection{If there is sampling:}{ A a named number vector of length 4
+  with the following values:
+  \itemize{
+    \item{Ia - }{numeric. The index of association.}
+    \item{p.Ia - }{A number indicating the p-value resulting from a
+    one-sided permutation test based on the number of samples indicated in
+    the original call.}
+    \item{rbarD - }{numeric. The standardized index of association.}
+    \item{p.rD - }{A factor indicating the p-value resulting from a
+    one-sided permutation test based on the number of samples indicated in
+    the original call.}
+  }
+  }
+  \subsection{If there is sampling and valureturn = TRUE}{
+  A list with the following elements:
+  \itemize{
+    \item{index }{The above vector}
+    \item{samples }{A data frame with s by 2 column data frame where s is the
+    number of samples defined. The columns are for the values of Ia and
+    rbarD, respectively.}
+  }
+  }
 }
 \description{
 Calculate the Index of Association and Standardized Index of Association.

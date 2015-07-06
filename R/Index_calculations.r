@@ -484,23 +484,37 @@ poppr.all <- function(filelist, ...){
 #'   reshuffled data is returned. If \code{FALSE} (default), the index is 
 #'   returned with associated p-values in a 4 element numeric vector.
 #'   
-#' @return \subsection{for \code{pair.ia}}{a matrix with two columns and
-#'   choose(nLoc(gid), 2) rows representing the values for Ia and rbarD per
-#'   locus pair.}\subsection{If no sampling has occurred:}{ A named number
-#'   vector of length 2 giving the Index of Association, "Ia"; and the
-#'   Standardized Index of Association, "rbarD" } \subsection{If there is
-#'   sampling:}{ A a named number vector of length 4 with the following values:
-#'   \itemize{\item{Ia - }{numeric. The index of association.} \item{p.Ia - }{A
-#'   number indicating the p-value resulting from a one-sided permutation test
-#'   based on the number of samples indicated in the original call.} \item{rbarD
-#'   - }{numeric. The standardized index of association.} \item{p.rD - }{A
-#'   factor indicating the p-value resulting from a one-sided permutation test
-#'   based on the number of samples indicated in the original call.}} }
-#'   \subsection{If there is sampling and valureturn = TRUE}{ A list with the
-#'   following elements: \itemize{ \item{index}{The above vector}
-#'   \item{samples}{A data frame with s by 2 column data frame where s is the
-#'   number of samples defined. The columns are for the values of Ia and rbarD,
-#'   respectively.}}}
+#' @return 
+#'   \subsection{for \code{pair.ia}}{
+#'   A matrix with two columns and choose(nLoc(gid), 2) rows representing the
+#'   values for Ia and rbarD per locus pair.
+#'   }
+#'   \subsection{If no sampling has occurred:}{ 
+#'   A named number vector of length 2 giving the Index of Association, "Ia";
+#'   and the Standardized Index of Association, "rbarD" 
+#'   }
+#'   \subsection{If there is sampling:}{ A a named number vector of length 4
+#'   with the following values:
+#'   \itemize{
+#'     \item{Ia - }{numeric. The index of association.} 
+#'     \item{p.Ia - }{A number indicating the p-value resulting from a
+#'     one-sided permutation test based on the number of samples indicated in
+#'     the original call.}
+#'     \item{rbarD - }{numeric. The standardized index of association.}
+#'     \item{p.rD - }{A factor indicating the p-value resulting from a
+#'     one-sided permutation test based on the number of samples indicated in
+#'     the original call.} 
+#'   }
+#'   }
+#'   \subsection{If there is sampling and valureturn = TRUE}{ 
+#'   A list with the following elements:
+#'   \itemize{ 
+#'     \item{index }{The above vector}
+#'     \item{samples }{A data frame with s by 2 column data frame where s is the
+#'     number of samples defined. The columns are for the values of Ia and
+#'     rbarD, respectively.}
+#'   }
+#'   }
 #'   
 #' @details The index of association was originally developed by A.H.D. Brown 
 #'   analyzing population structure of wheat (Brown, 1980). It has been widely 
