@@ -160,24 +160,24 @@ to its definition and description.
 
 \multicolumn{2}{l}{\Large\textsc{Import/Export}}\\
 \texttt{getfile} & Provides a quick GUI to grab files for import \\
-\cmdlink{intro:import:read.genalex}{read.genalex} & Read \textit{GenAlEx} formatted csv files to a genind object \\
-\cmdlink{intro:import:genind2genalex}{genind2genalex} & Converts genind objects to \textit{GenAlEx} formatted csv files \\
-\cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
+\cmdlink{intro:import:read.genalex}{read.genalex} & Read \textit{GenAlEx} formatted csv files to a \texttt{genind} object \\
+\cmdlink{intro:import:genind2genalex}{genind2genalex} & Converts \texttt{genind} objects to \textit{GenAlEx} formatted csv files \\
+\cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts \texttt{genind} objects to \texttt{genclone} objects \\
 %----------------|
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Manipulation}}\\
-\cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts genind objects to genclone objects \\
-\cmdlink{function:genclone2genind}{genclone2genind} & Removes the \texttt{@mlg} slot from genclone objects \\
+\cmdlink{intro:genclone:as.genclone}{as.genclone} & Converts \texttt{genind} objects to \texttt{genclone} objects \\
+\cmdlink{function:genclone2genind}{genclone2genind} & Removes the \texttt{@mlg} slot from \texttt{genclone} objects \\
 \texttt{setPop} & \textit{(moved to adegenet)} Set the population using defined hierarchies\\
 \texttt{splitStrata} & \textit{(moved to adegenet)} Split a concatenated hierarchy imported as a population\\
-\texttt{strata} & \textit{(moved to adegenet)} Define a population hierarchy of a genclone object\\
+\texttt{strata} & \textit{(moved to adegenet)} Define a population hierarchy of a \texttt{genclone} object\\
 \texttt{strata} & \textit{(moved to adegenet)} Extract the hierarchy data frame\\
 \texttt{addStrata} & \textit{(moved to adegenet)} Add a vector or data frame to an existing hierarchy \\
 \texttt{nameStrata} & \textit{(moved to adegenet)} Rename a population hierarchy\\
 \cmdlink{data.manip:missing:missingno}{missingno} & Handles missing data \\
 \cmdlink{data.manip:cc:clonecorrect}{clonecorrect} & Clone censors at a specified population hierarchy \\
 \cmdlink{data.manip:informloci}{informloci} & Detects and removes phylogenetically uninformative loci \\
-\cmdlink{data.manip:divide:popsub}{popsub} & Subsets genind objects by population \\
+\cmdlink{data.manip:divide:popsub}{popsub} & Subsets \texttt{genind} objects by population \\
 \cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
 \cmdlink{intro:import:polyploid}{recode\_polyploids} &  recode polyploid data sets with missing alleles imported as ``0''\\
 %----------------|
@@ -813,7 +813,7 @@ print_command(funk)
   you would any other data (see the GenAlEx manual for details). If you have
   your file organized in this manner, select this option and the regional
   information will be stored in the \texttt{@other} slot of the resulting
-  genind object or be incorporated into the hierarchy of the genclone object.
+  \texttt{genind} object or be incorporated into the hierarchy of the \texttt{genclone} object.
   \item \texttt{genclone -} This flag will convert your data into a
   \texttt{genclone} object (see \seclink{intro:genclone}{Send in the clones} for
   more info).
@@ -859,7 +859,7 @@ Now import the data into \poppr{} like so:
 rootrot <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 @
 
-Executing rootrot shows that this file is now in genclone format and can be used
+Executing rootrot shows that this file is now in \texttt{genclone} format and can be used
 with any function in \poppr{} and \adegenet{}
 <<read.genalex_ex2>>=
 rootrot
@@ -904,7 +904,7 @@ print_command(funk)
   \item \texttt{quiet -} If this is set to \texttt{FALSE}, a status message will
   be printed to the console as the extraction progresses.
   \item \texttt{geo -} Set to \texttt{TRUE}, if you have a data frame or matrix
-  in the  \texttt{@other} slot of your genind object that contains geographic
+  in the  \texttt{@other} slot of your \texttt{genind} object that contains geographic
   coordinates for all individuals or all populations. Setting this to
   \texttt{TRUE} means the resulting file will have two extra columns at the end
   of your file with geographic coordinates.
@@ -958,14 +958,14 @@ cat("Extracting the table ... Writing the table to ~/Desktop/nancycats_inds_xy.c
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{Getting to know \adegenet{}'s genind object}
+\subsection{Getting to know \adegenet{}'s \texttt{genind} object}
 \label{intro:genind}
 
 \tab\tab Since \poppr{} was built around \adegenet{}'s framework, it is
-important to know how \adegenet{} stores data in the genind object, as that is
-the object used by \poppr{}. To create a genind object, \adegenet{} takes a data
+important to know how \adegenet{} stores data in the \texttt{genind} object, as that is
+the object used by \poppr{}. To create a \texttt{genind} object, \adegenet{} takes a data
 frame of genotypes (rows) across multiple loci (columns) and converts them into
-a matrix of individual allelic frequencies at each locus \citep{Jombart:2008}.
+a matrix of individual allelic counts at each locus \citep{Jombart:2008}.
 
 For example, Let's say we had data with 3 diploid individuals each with 3 loci
 that had 3, 4, and 5 allelic states respectively:
@@ -1007,31 +1007,32 @@ axis(1, at = c(2, 6.125, 11.5), labels = names(df), tick = FALSE)
 @
 \noindent
 When we look at the data derived from table \ref{example_table}, we see that we
-have a matrix of individual allele frequencies at each locus.
+have a matrix of individual allele counts at each locus.
 <<ex_genind, echo=FALSE>>=
 dat
 @
 \noindent
-At each locus, the allele frequencies for each individual sum to one.
-Homozygotes are denoted as having an allele frequency of 1 at a particular
-allele while heterozygotes have their allele frequencies represented as $1/p$
-wher $p$ = ploidy. Along with this matrix, are elements that define the names of
-the individuals, loci, alleles, and populations. If you wish to know more, see
-the \adegenet{} ``Getting Started'' manual.
+At each locus, the allele counts for each individual sum to the ploidy, $p$.
+Homozygotes are denoted as having an allele count of $p$ at a single allele
+within a locus, while heterozygotes have their allele counts represented as $<
+p$ wher $p$ = ploidy across multiple alleles in a single locus. Along with this
+matrix, are elements that define the names of the individuals, loci, alleles,
+and populations. If you wish to know more, see the \adegenet{} ``Getting
+Started'' manual.
 
 \subsubsection{The other slot}
 \label{intro:genind:other}
 
-The other slot is a place in the genind object that can be used to store useful
+The other slot is a place in the \texttt{genind} object that can be used to store useful
 information about the data. We saw earlier that it could store demographic
-information, now let's explore a different example. Bruvo's
-distance is based off of a stepwise mutation model for microsatellites. This
-requires us to know the length of the repeat of each locus. We could store the
-repeat lengths in a separate variable in our R environment, but we are at risk
-of losing that. One wa to prevent it from being lost would be to place it in the
-``other'' slot. For the purpose of this example, we will use the ``nancycats''
-data set from the \adegenet{} package and assume that it has dinucleotide repeats
-at all of its loci.
+information, now let's explore a different example. Bruvo's distance is based
+off of a stepwise mutation model for microsatellites. This requires us to know
+the length of the repeat of each locus. We could store the repeat lengths in a
+separate variable in our R environment, but we are at risk of losing that. One
+way to prevent it from being lost would be to place it in the ``other'' slot.
+For the purpose of this example, we will use the ``nancycats'' data set from the
+\adegenet{} package and assume that it has di-nucleotide repeats at all of its
+loci.
 
 <<other_replen>>=
 data(nancycats) # Load the data
@@ -1045,16 +1046,16 @@ other(nancycats) # two items named xy and repeat_lengths
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
-\subsection{The genclone object \{send in the clones\}}
+\subsection{The \texttt{genclone} object \{send in the clones\}}
 \label{intro:genclone}
 
-The \texttt{genclone} class was defined in order to make working with
-hierarchies more intuitive. It is built off of the \texttt{genind} object and
-has dedicated slots for defined multilocus genotypes. The name genclone refers
-to the fact that it has the ability to handle genotypes of clonal organisms (but
-it is also used for sexual populations).
+The \texttt{genclone} class was defined in order to make working with clonal
+organisms more intuitive. It is built off of the \texttt{genind} object and has
+dedicated slots for defined multilocus genotypes. The name \texttt{genclone} refers to
+the fact that it has the ability to handle genotypes of clonal organisms (but it
+is also used for sexual populations).
 
-In previous versions of \poppr{}, the genclone object contained a hierarchy slot
+In previous versions of \poppr{}, the \texttt{genclone} object contained a hierarchy slot
 as well. This slot was moved to \adegenet{} and its name was changed to 
 ``strata''. This slot allows you to carry around several definitions for 
 populations in the same data set.
@@ -1077,7 +1078,7 @@ print_command(funk)
 \end{quote}
 \begin{itemize}
   \item \textbf{x -} a \texttt{genind} object to be converted.
-  \item \textbf{... -} any arguments to be passed to the genind constructor.
+  \item \textbf{... -} any arguments to be passed to the \texttt{genind} constructor.
   \item \textbf{mlg -} a vector representing the multilocus genotype definitions of your data.
   \item \textbf{mlgclass -} if \texttt{TRUE}, the MLGs represented in your
   object will be converted to an MLG class object, which allows for custom MLG
@@ -1134,7 +1135,7 @@ c(is.genind(Aeut), is.genclone(Aeut), is.genind(agc), is.genclone(agc))
 c(nInd(Aeut), nInd(agc))
 @
 
-If we wanted to, we could also convert it back to a genind object.
+If we wanted to, we could also convert it back to a \texttt{genind} object.
 \label{function:genclone2genind}
 
 <<genclone2genind>>=
@@ -1214,6 +1215,7 @@ above), the user should reformat their data set with the function
 
 <<pinf_recode>>=
 Pinf_rc <- recode_polyploids(Pinf, newploidy = TRUE)
+Pinf_rc # Notice that the new ploidy is accounted for.
 tail(tab(Pinf_rc[loc = locNames(Pinf_rc)[9:10]]))
 @
 \noindent
@@ -1403,7 +1405,7 @@ our sub-setting.
 \subsection{Extract populations \{Divide (populations) and conquer (your analysis)\}}
 \label{data.manip:divide}
 
-\tab\tab This \poppr{} function \texttt{popsub} makes subsetting genind or
+\tab\tab This \poppr{} function \texttt{popsub} makes subsetting \texttt{genind} or
 genlight objects by population easier:
 
 \subsubsection{Function: popsub}
@@ -1579,9 +1581,9 @@ Aeut
 @
 
 When you read in data with \cmdlink{intro:import:read.genalex}{read.genalex},
-the default is to represent it in a genclone object. Since the
+the default is to represent it in a \texttt{genclone} object. Since the
 \texttt{clonecorrect} function works on multilocus genotype definitions, It's
-more efficient to convert it to a genclone object first. We will also rename the
+more efficient to convert it to a \texttt{genclone} object first. We will also rename the
 strata to ``field'' and ``sample'' to make the biological relevance of the data
 clearer.
 
