@@ -127,11 +127,11 @@
 #' \item \code{\link{poppr.amova}} - Analysis of Molecular Variance (as implemented in ade4)
 #' \item \code{\link{ia}} - Calculates the index of association
 #' \item \code{\link{pair.ia}} - Calculates the index of association for all loci pairs.
-#' \item \code{\link{win.ia}} - Index of assocation windows for genlight objects.
+#' \item \code{\link{win.ia}} - Index of association windows for genlight objects.
 #' \item \code{\link{samp.ia}} - Index of association on random subsets of loci for genlight objects.
 #' \item \code{\link{poppr}} - Returns a diversity table by population
 #' \item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
-#' \item \code{\link{private_alleles}} - Tabulates the occurences of alleles that only occur in one population.
+#' \item \code{\link{private_alleles}} - Tabulates the occurrences of alleles that only occur in one population.
 #' \item \code{\link{locus_table}} - Creates a table of summary statistics per locus.
 #' }
 #' }
