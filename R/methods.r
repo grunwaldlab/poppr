@@ -649,9 +649,21 @@ setMethod(
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops        <- popNames(x)
     stratanames <- names(x@strata)
-    
-    mlgtype <- ifelse(is(x@mlg, "MLG"), paste0(x@mlg@visible, " "), "")
-    mlgtype <- paste0(mlgtype, "multilocus genotypes")
+    the_type <- ifelse(is(x@mlg, "MLG"), x@mlg@visible, "nope")
+    mlgtype  <- ifelse(is(x@mlg, "MLG"), paste0(the_type, " "), "")
+    mlgtype  <- paste0(mlgtype, "multilocus genotypes")
+    if (the_type == "contracted"){
+      thresh <- round(x@mlg@cutoff["contracted"], 3)
+      dist <- x@mlg@distname
+      algo <- strsplit(x@mlg@distalgo, "_")[[1]][1]
+      if (!is.character(dist)){
+        dist <- paste(capture.output(dist), collapse = "")        
+      }
+      contab <- max(chars)
+      contab <- substr("             ", 1, contab + 4)
+      mlgthresh <- paste0("\n", contab, "(", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]")
+      mlgtype  <- paste0(mlgtype, mlgthresh)
+    }
     if (!fullnames){
       poplen <- length(pops)
       stratalen <- length(stratanames)
