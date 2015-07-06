@@ -1,34 +1,39 @@
 context("Genclone coercion tests")
 
-test_that("A genclone object contains a genind object", {
+data("Aeut", package = "poppr")
+agc         <- as.genclone(Aeut)
+strata(agc) <- other(agc)$population_hierarchy
 
-	data(partial_clone, package = "poppr")
-	pc <- as.genclone(partial_clone)
-	expect_that(slotNames(partial_clone), equals(slotNames(pc)[-1]))
-	expect_that(partial_clone@tab, equals(pc@tab))
-	# expect_that(partial_clone@loc.names, is_identical_to(pc@loc.names))
-	expect_that(partial_clone@loc.n.all, is_identical_to(pc@loc.n.all))
-	expect_that(partial_clone@all.names, is_equivalent_to(pc@all.names))
-	# expect_that(partial_clone@ind.names, is_identical_to(pc@ind.names))
-	expect_that(partial_clone@pop, is_identical_to(pc@pop))
-	expect_that(popNames(partial_clone), is_identical_to(popNames(pc)))
-	expect_that(partial_clone@ploidy, is_identical_to(pc@ploidy))
-	expect_that(partial_clone@type, is_identical_to(pc@type))
-	expect_that(partial_clone@other, is_identical_to(pc@other))
-	expect_that(pc@mlg[], is_identical_to(mlg.vector(partial_clone)))
+data(partial_clone, package = "poppr")
+pc <- as.genclone(partial_clone)
+
+data("old_Pinf", package = "poppr")
+data("old_partial_clone", package = "poppr")
+
+data("Pinf", package = "poppr")
+
+test_that("A genclone object contains a genind object", {
+	expect_equal(slotNames(partial_clone), slotNames(pc)[-1])
+	expect_equal(tab(partial_clone), tab(pc))
+	expect_identical(nAll(partial_clone), nAll(pc))
+	expect_equivalent(alleles(partial_clone), alleles(pc))
+	expect_identical(pop(partial_clone), pop(pc))
+	expect_identical(popNames(partial_clone), popNames(pc))
+	expect_identical(ploidy(partial_clone), ploidy(pc))
+	expect_identical(partial_clone@type, pc@type)
+	expect_identical(partial_clone@other, pc@other)
+	expect_identical(pc@mlg[], mlg.vector(partial_clone))
 })
 
-test_that("Hierarchy methods work for genclone objects.", {
-  data(Aeut, package = "poppr")
-  agc <- as.genclone(Aeut)
-  strata(agc) <- other(agc)$population_hierarchy
-  expect_that(length(strata(agc)), equals(3))
-  expect_that(popNames(agc), equals(c("Athena", "Mt. Vernon")))
+test_that("Strata methods work for genclone objects.", {
+  
+  expect_equal(length(strata(agc)), 3)
+  expect_equal(popNames(agc), c("Athena", "Mt. Vernon"))
   expect_that({agcsplit <- splitStrata(agc, ~Pop/Subpop)}, gives_warning())
-  expect_that(strata(agcsplit), equals(strata(agc, ~Pop/Subpop, combine = FALSE)))
-  expect_that(strata(agc, value = strata(agcsplit)), equals(agcsplit))
+  expect_equal(strata(agcsplit), strata(agc, ~Pop/Subpop, combine = FALSE))
+  expect_equal(strata(agc, value = strata(agcsplit)), agcsplit)
   nameStrata(agcsplit) <- ~Field/Core
-  expect_that(names(strata(agcsplit)), equals(c("Field", "Core")))
+  expect_equal(names(strata(agcsplit)), c("Field", "Core"))
   setPop(agc) <- ~Pop/Subpop
   expect_that(popNames(agc), equals(c("Athena_1", "Athena_2", "Athena_3", 
                                       "Athena_4", "Athena_5", "Athena_6", 
@@ -38,4 +43,31 @@ test_that("Hierarchy methods work for genclone objects.", {
                                       "Mt. Vernon_4", "Mt. Vernon_5", 
                                       "Mt. Vernon_6", "Mt. Vernon_7", 
                                       "Mt. Vernon_8")))
+})
+
+test_that("Subsetting works with populations", {
+  sA <- Pinf[pop = "South America"]
+  nA <- Pinf[pop = "North America"]
+  msg <- '\\) <- "original"'
+  expect_warning(msA <- mll(sA), paste0("mll\\(sA", msg))
+  expect_warning(mnA <- mll(nA), paste0("mll\\(nA", msg))
+  expect_warning(mP  <- mll(Pinf), paste0("mll\\(Pinf", msg))
+  expect_true(all(sort(c(msA, mnA)) == sort(mP)))
+})
+
+test_that("genclone2genind conversion works", {
+  AGC <- genclone2genind(agc)
+  expect_false(is.clone(AGC))
+  expect_true(is.clone(as.genclone(AGC)))
+})
+
+test_that("old2new_genclone conversion works",{
+  expect_is(old2new_genclone(old_Pinf), "genclone")
+  expect_is(old2new_genclone(old_partial_clone), "genind")
+})
+
+test_that("print method will show all populations", {
+  setPop(agc) <- ~Pop/Subpop
+  expect_output(print(agc), paste(popNames(agc)[1:5], collapse = " "))
+  expect_output(print(agc, fullnames = FALSE), "...")
 })

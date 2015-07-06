@@ -9,7 +9,6 @@ pmlg <- mlg.vector(partial_clone)
 nmlg <- mlg.vector(nancycats)
 lu <- function(x) length(unique(x))
 
-
 test_that("multilocus genotype vector is same length as samples", {
   expect_equal(length(amlg), nInd(Aeut))
   expect_equal(length(pmlg), nInd(partial_clone))
@@ -48,9 +47,19 @@ test_that("mll works for genind objects", {
 })
 
 test_that("mll can convert a numeric mlg slot to MLG", {
-  expect_that(Pinf@mlg, is_a("integer"))
+  expect_is(Pinf@mlg, "integer")
   mll(Pinf) <- "original"
-  expect_that(Pinf@mlg, is_a("MLG"))
+  expect_is(Pinf@mlg, "MLG")
+})
+
+test_that("MLG class can print expected", {
+  mll(Pinf) <- "original"
+  expect_output(Pinf@mlg, "86 original mlgs.")
+  mll(Pinf) <- "custom"
+  expect_output(Pinf@mlg, "86 custom mlgs.")
+  mll(Pinf) <- "contracted"
+  expect_output(Pinf@mlg, "86 contracted mlgs with a cutoff of 0 based on the function nei.dist")
+  mll(Pinf) <- "original"
 })
 
 test_that("mlg.crosspop will work with subsetted genclone objects", {

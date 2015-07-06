@@ -403,11 +403,14 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     strata(res.gid) <- data.frame(Pop = pop.vec[ind.vec])
   }
   if (geo){
+    if (!all(c("x", "y") %in% colnames(xy))){
+      colnames(xy) <- c("x", "y")
+    }
     if (nrow(xy) == length(ind.vec)){
-      names(xy) <- ind.vec
-      res.gid@other[["xy"]] <- xy[ind.vec]
+      rownames(xy) <- ind.vec
+      res.gid@other[["xy"]] <- xy[ind.vec, ]
     } else {
-      res.gid@other[["xy"]] <- xy      
+      res.gid@other[["xy"]] <- xy
     }
 
   }
@@ -426,7 +429,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 #' genind2genalex will export a genclone or genind object to a *.csv file
 #' formatted for use in genalex.
 #' 
-#' @param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' @param gid a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
 #'   object.
 #'   
 #' @param filename a string indicating the name and/or path of the file you wish
@@ -435,6 +438,15 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 #' @param quiet \code{logical} If \code{FALSE} a message will be printed to the 
 #'   screen.
 #'   
+#' @param pop a character vector OR formula specifying the population factor. 
+#'   This can be used to specify a specific subset of strata or custom 
+#'   population factor for the output. Note that the \code{allstrata} command 
+#'   has precedence over this unless the value of this is a new population
+#'   factor.
+#'   
+#' @param allstrata if this is \code{TRUE}, the strata will be combined into a
+#'   single population factor in the genalex file.
+#' 
 #' @param geo \code{logical} Default is \code{FALSE}. If it is set to 
 #'   \code{TRUE}, the resulting file will have two columns for geographic data.
 #'   
@@ -463,30 +475,49 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 #' genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 #' }
 #==============================================================================#
-genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE, 
-                           geo = FALSE, geodf = "xy", sep = ","){
-  if (!is.genind(pop)) stop("A genind object is needed.")
+genind2genalex <- function(gid, filename = "genalex.csv", quiet = FALSE, pop = NULL, 
+                           allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ","){
+  if (!is.genind(gid)) stop("A genind object is needed.")
   if (nchar(sep) != 1) stop("sep must be one byte/character (eg. \",\")")
-  if (is.null(pop@pop)){
-    pop(pop) <- rep("Pop", nInd(pop))
+  
+  if (allstrata && !is.null(strata(gid))){
+    if (is.null(pop) && length(pop) != nInd(gid)){
+      allform <- paste0("~", paste(nameStrata(gid), collapse = "/"))
+      allform <- stats::as.formula(allform)
+      setPop(gid) <- allform
+    } else {
+      pop(gid) <- pop
+    }
+  } else if (!is.null(pop)){
+    if ("formula" %in% class(pop)){
+      setPop(gid) <- pop
+    } else if (is.character(pop) && length(pop) == nInd(gid)){
+      pop(gid) <- pop
+    } else{
+      warning("supplied population factor does not match the number of samples or strata.")
+    }
+  }
+  
+  if (is.null(pop(gid))){
+    pop(gid) <- rep("Pop", nInd(gid))
   }
   popcall <- match.call()
   #topline is for the number of loci, individuals, and populations.
-  topline <- c(nLoc(pop), nInd(pop), nPop(pop))
-  popsizes <- table(pop@pop)
-  # The sizes of the populations correspond to the second line, which is the pop
+  topline <- c(nLoc(gid), nInd(gid), nPop(gid))
+  popsizes <- table(pop(gid))
+  # The sizes of the populations correspond to the second line, which is the_gid
   # names. 
   topline <- c(topline, popsizes)
-  secondline <- c("", "", "", popNames(pop))
-  ploid <- ploidy(pop)
+  secondline <- c("", "", "", popNames(gid))
+  ploid <- ploidy(gid)
   # Constructing the locus names. GenAlEx separates the alleles of the loci, so
   # There is one locus name for every p ploidy columns you have.
-  if(all(ploid > 1) & pop@type == "codom"){
-    locnames <- unlist(strsplit(paste(locNames(pop), 
-                                      paste(rep(" ", ploidy(pop)[1] - 1), 
+  if(all(ploid > 1) & gid@type == "codom"){
+    locnames <- unlist(strsplit(paste(locNames(gid), 
+                                      paste(rep(" ", ploidy(gid)[1] - 1), 
                                             collapse="/"), sep="/"),"/"))
   } else {
-    locnames <- locNames(pop)
+    locnames <- locNames(gid)
   }
   thirdline <- c("Ind","Pop", locnames)
   
@@ -505,32 +536,32 @@ genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE,
 
   
   # converting to a data frame
-  # if(any(!pop@tab %in% c(0, ((1:ploid)/ploid), 1, NA))){
-  #   pop@tab[!pop@tab %in% c(0, ((1:ploid)/ploid), 1, NA)] <- NA
+  # if(any gid@tab %in% c(0, ((1:ploid)/ploid), 1, NA))){
+  #   gid@tab[ gid@tab %in% c(0, ((1:ploid)/ploid), 1, NA)] <- NA
   # }
   if(!quiet) cat("Extracting the table ... ")
-  the_pop <- as.character(pop(pop))
-  df      <- genind2df(pop, sep = "/", usepop = FALSE)
+  the_gid <- as.character(pop(gid))
+  df      <- genind2df(gid, sep = "/", usepop = FALSE)
   df      <- generate_bruvo_mat(df, maxploid = max(ploid), sep = "/", mat = TRUE)
   df[is.na(df)] <- 0
   
   # making sure that the individual names are included.
-  if(all(indNames(pop) == "") | is.null(indNames(pop))){
-    indNames(pop) <- paste("ind", 1:nInd(pop), sep="")
+  if(all(indNames(gid) == "") | is.null(indNames(gid))){
+    indNames(gid) <- paste("ind", 1:nInd(gid), sep="")
   }
-  df <- cbind(indNames(pop), the_pop, df)
+  df <- cbind(indNames(gid), the_gid, df)
   # setting the NA replacement. This doesn't work too well. 
-  replacement <- ifelse(pop@type == "PA", "-1", "0")
+  replacement <- ifelse(gid@type == "PA", "-1", "0")
   if(!quiet) cat("Writing the table to", filename, "... ")
   
-  if(geo == TRUE & !is.null(pop$other[[geodf]])){
+  if(geo == TRUE & !is.null(gid$other[[geodf]])){
     replacemat <- matrix("", 3, 3)
     replacemat[3, 2:3] <- c("X", "Y")
     infolines <- cbind(infolines, replacemat)
-    df2 <- data.frame(list("Space" = rep("", nInd(pop))))
-    gdf <- as.matrix(pop@other[[geodf]])
-    if (nrow(gdf) < nInd(pop)){
-      gdf <- rbind(gdf, matrix("", nInd(pop) - nrow(gdf), 2))
+    df2 <- data.frame(list("Space" = rep("", nInd(gid))))
+    gdf <- as.matrix(gid@other[[geodf]])
+    if (nrow(gdf) < nInd(gid)){
+      gdf <- rbind(gdf, matrix("", nInd(gid) - nrow(gdf), 2))
     }
     df <- cbind(df, df2, gdf)
   } else if (geo == TRUE) {
@@ -545,7 +576,7 @@ genind2genalex <- function(pop, filename = "genalex.csv", quiet = FALSE,
   
   if (ncol(infolines) > ncol(df)){
     lendiff <- ncol(infolines) - ncol(df)
-    padding <- matrix("", nrow = nInd(pop), ncol = lendiff)
+    padding <- matrix("", nrow = nInd(gid), ncol = lendiff)
     df      <- cbind(df, padding)
   }
   write.table(infolines, file = filename, quote = FALSE, row.names = FALSE, 

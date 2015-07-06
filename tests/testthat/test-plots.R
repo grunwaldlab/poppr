@@ -66,14 +66,14 @@ test_that("genotype_curve produces boxplots", {
 
 test_that("ia produces histograms", {
 	skip_on_cran()
-	res    <- ia(nancy, sample = 99, valuereturn = TRUE, quiet = TRUE)
+	res    <- ia(nancy, sample = 20, valuereturn = TRUE, quiet = TRUE)
 	iaplot <- ggplot2::last_plot()
 	expect_is(res, "ialist")
 	expect_output(res, "Index")
 	plot(res)
 	expect_equivalent(iaplot$data, ggplot2::last_plot()$data)
 
-	pres   <- poppr(nancy, sample = 99, quiet = TRUE, total = FALSE)
+	pres   <- poppr(nancy, sample = 20, quiet = TRUE, total = FALSE)
 	poplot <- ggplot2::last_plot()
 	expect_is(pres, "popprtable")
 	expect_output(pres, "nancy")
@@ -111,4 +111,39 @@ test_that("pair.ia produces a heatmap", {
 	expect_output(pplot$layers[[1]], "stat_identity")
 	expect_output(pplot$layers[[1]], "position_identity")
 	expect_output(pplot$facet, "facet_null\\(\\)")
+})
+
+test_that("diversity_ci produces boxplots and correct output", {
+	skip_on_cran()
+	msg <- "Confidence Intervals have been centered around observed statistic"
+	set.seed(999)
+	expect_message(datdf <- diversity_ci(Pinf, n = 10, raw = FALSE), msg)
+	ciplot <- ggplot2::last_plot()
+	expect_is(datdf, "popprtable")
+	expect_output(datdf, "\\(\\d\\.\\d{3}, \\d\\.\\d{3})")
+	expect_is(ciplot, "ggplot")
+
+	expect_output(ciplot$layers[[1]], "geom_boxplot")
+	expect_output(ciplot$layers[[2]], "geom_point")
+	expect_output(ciplot$layers[[3]], "geom_errorbar")
+	expect_output(ciplot$facet, "facet_wrap\\(Index\\)")
+
+})
+
+test_that("diversity_ci produces boxplots for rarefaction", {
+	skip_on_cran()
+	msg <- "Samples for rarefaction: 38"
+	set.seed(999)
+	expect_message(datdf <- diversity_ci(Pinf, n = 10, raw = FALSE, rarefy = TRUE), msg)
+	ciplot <- ggplot2::last_plot()
+	expect_is(datdf, "popprtable")
+	expect_output(datdf, "\\(\\d\\.\\d{3}, \\d\\.\\d{3})")
+	expect_output(datdf, "NA")
+	expect_is(ciplot, "ggplot")
+
+	expect_equal(length(ciplot$layers), 2)
+	expect_output(ciplot$layers[[1]], "geom_boxplot")
+	expect_output(ciplot$layers[[2]], "geom_point")
+	expect_output(ciplot$facet, "facet_wrap\\(Index\\)")
+
 })

@@ -194,36 +194,6 @@ NULL
 #==============================================================================#
 NULL
 #==============================================================================#
-# This function will extract all relevant information from the files
-# 
-# Public functions utilizing this function:
-# # none
-#
-# Internal functions utilizing this function:
-# # new.poppr (in testing)
-#==============================================================================#
-extract.info <- function(x) {
-	if (length(grep("^clone.+?dat$", x$File)) != 0){
-		# Rate of clonal reproduction
-		x$Clone <- as.numeric(sub("^clone.(\\d{3}.\\d{2}).+?dat$","\\1", x$File))
-		# Rate of Sexual reproduction
-		x$Sex.Rate <- (100-x$Clone)/100
-	}
-	if (length(grep(".+?rep.+?dat$", x$File)) != 0){
-		# Replicate indicators
-		x$Replicate <- sub(".+?rep.(\\d{2}).+?dat$", "\\1", x$File)
-	}
-	if (length(grep(".+?pop.+?dat$", x$File)) != 0){
-		# Population size indicators
-		x$Pop.Size <- sub(".+?pop.(\\d+?).+?dat$","\\1", x$File)
-	}
-	if (length(grep(".+?sam.+?dat$", x$File)) != 0){
-		# Sample size
-		x$Samp.Size <- sub(".+?sam.+?(\\d{2,3}).+?dat$", "\\1", x$File)
-	}
-	return(x)
-}
-#==============================================================================#
 # This function will attempt to convert external files of the following types:
 #
 # Structure (*.str, *.stru)
@@ -306,49 +276,6 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05,
 }
 
 #==============================================================================#
-# geno.na will find the genotypes in the population that contain na's and 
-# remove them.
-#
-# Public functions utilizing this function:
-# # none
-#
-# Internal functions utilizing this function:
-# # percent_missing
-#
-# DEPRECATED
-#==============================================================================#
-
-geno.na <- function(pop){
-  pop2 <- -unique(which(is.na(pop@tab), arr.ind=T)[,1])  
-  if(is.na(pop2[1])){
-    return(unique(which(!is.na(pop@tab), arr.ind=T)[,1]))
-  } else {
-    return(pop2)
-  } 
-}
-
-#==============================================================================#
-# loci.na will find the loci in the population that contain na's and remove
-# them.
-# Public functions utilizing this function:
-# # none
-#
-# Internal functions utilizing this function:
-# # percent_missing
-#
-# DEPRECATED
-#==============================================================================#
-
-loci.na <- function(pop) {
-  pop2 <- -unique(which(is.na(pop@tab), arr.ind=T)[,2])  
-  if(is.na(pop2[1])){
-    return(unique(which(!is.na(pop@tab), arr.ind=T)[,2]))
-  } else {
-    return(pop2)
-  } 
-}
-
-#==============================================================================#
 # This will remove either loci or genotypes containing missing values above the
 # cutoff percent.
 # 
@@ -391,55 +318,6 @@ round.poppr <- function(x){
   else
     x <- round(x)
   return(x)
-}
-
-
-#==============================================================================#
-# This will caluclulate p-values for permutation tests. 
-# Public functions utilizing this function:
-# # ia
-#
-# Internal functions utilizing this function:
-# # .ia
-# DEPRECATED
-#==============================================================================#
-
-ia.pval <- function(index="index", sampled, observed){
-  if (all(is.nan(sampled[[index]]))){
-    return(NA)
-  }
-  pval <- mean(ifelse(!is.na(sampled[[index]]) & sampled[[index]] >= observed,1,0))
-  return(pval)
-}
-
-#==============================================================================#
-# This will be used to split heirarchical population vectors that are separated
-# by a given separator (normally "_"). It's useful for maintaining the
-# population structure after clone correction. The input data is a data frame
-# where the first column is a character vector of the combined population
-# heirarchy. 
-# Public functions utilizing this function:
-# # splitcombine
-#
-# Internal functions utilizing this function:
-# # none
-#==============================================================================#
-
-pop_splitter <- function(df, sep="_"){
-  if(is.vector(df))
-    df <- as.data.frame(list(comb=df), stringsAsFactors=FALSE)
-  if(is.factor(df[[1]]))
-    df[[1]] <- as.character(df[[1]])
-  # iterating through the number of items separated by the given separator.
-  for(x in seq(length(strsplit(df[[1]], sep)[[1]]))){
-    # creating a column on the data frame called h# for the heirarchical level.
-    # These levels are arbitrary and labeled as they are arranged in the
-    # original vector. 
-    df[[paste0("h",x)]] <- "NA"
-    df[[paste0("h",x)]] <- vapply(strsplit(df[[1]],sep), 
-                                          function(y) y[x], "1")
-  }
-  return(df)
 }
 
 #==============================================================================#
@@ -1481,12 +1359,13 @@ make_ade_df <- function(hier, df, expanded = FALSE){
 # Function for determining if a genind object has any heterozygous sites.
 # Public functions utilizing this function:
 #
-# # none...yet
+# # poppr.amova
 #
 # Internal functions utilizing this function:
 # # none
 
 check_Hs <- function(x){
+  if (all(ploidy(x) == 1)) return(FALSE)
   res <- sweep(tab(x), 1, ploidy(x), function(x, y) any(x < y))
   return(res)
 }
@@ -1982,9 +1861,9 @@ test_microsat <- function(x){
 test_zeroes <- function(x){
   if (test_microsat(x)){
     
-    allnames  <- as.numeric(unlist(x@all.names, use.names = FALSE))
+    allnames  <- as.numeric(unlist(alleles(x), use.names = FALSE))
     ploid     <- unique(ploidy(x))
-    ploidtest <- length(ploid) > 1 | any(x@ploidy > 2)
+    ploidtest <- length(ploid) > 1 | any(ploid > 2)
 
     if (any(allnames == 0) && any(nAll(x) > 2) && ploidtest){
       return(TRUE)
@@ -1992,7 +1871,6 @@ test_zeroes <- function(x){
   }
   return(FALSE)
 }
-
 #==============================================================================#
 # Internal plotting function for mlg.table
 #
@@ -2018,32 +1896,29 @@ old_mlg_barplot <- function(mlgt){
   return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
 }
-
+#==============================================================================#
+# Internal plotting function for mlg.table
+#
+# Public functions utilizing this function:
+# none
+#
+# Private functions utilizing this function:
+# # print_mlg_barplot
+#==============================================================================#
 #' @importFrom dplyr %>% arrange_ group_by_ ungroup distinct
 mlg_barplot <- function(mlgt, color_table = NULL){
-  names(dimnames(mlgt)) <- c("Population", "MLG") # -> names(dimnames(color_table))
+  names(dimnames(mlgt)) <- c("Population", "MLG")
   mlgt.df <- reshape2::melt(mlgt, value.name = "count")
-  # colordf <- reshape2::melt(color_table, value.name = "count")
   mlgt.df <- mlgt.df[mlgt.df$count > 0, ]
   # create a data frame that ggplot2 can read.
-  # mlgt.df <- as.data.frame(list(MLG = rep(colnames(mlgt), mlgt), 
-  # count = rep(mlgt, mlgt)), 
-  # stringsAsFactors = FALSE)
   
   # Organize the data frame by count in descending order.
-#   order_mlgs_by_pop <- list(MLGp = "stats::reorder(MLG, dplyr::desc(count))")
-#   mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
-#     dplyr::mutate_(.dots = order_mlgs_by_pop) %>% ungroup %>% distinct %>% 
-#     as.data.frame
   mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
     dplyr::arrange_("count")
   mlgt.df <- dplyr::distinct(dplyr::ungroup(mlgt.df))
   mlgt.df$fac <- nrow(mlgt.df):1
   mlgt.df$fac <- factor(mlgt.df$fac, rev(mlgt.df$fac))
 
-  # mlgt.df$MLG <- reorder(mlgt.df$MLG, -mlgt.df$count)
-  # mlgt.df <- mlgt.df[rearranged, ]
-  # mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
   the_breaks <- pretty(mlgt.df$count)
   the_breaks <- the_breaks[the_breaks %% 1 == 0]
   # plot it

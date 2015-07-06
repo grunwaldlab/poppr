@@ -31,6 +31,7 @@ NEW FEATURES
 * Default plotting for `mlg.table` will no longer produce one plot per population. It will now produce a single ggplot object for all populations. Note that the bars are no longer colored by count.
 * `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calucluated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
 * `poppr` can now take any statistic that can be caluclated from a table of multilocus genotype counts. 
+* `genind2genalex` gains the ability to selectively write different strata.
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
@@ -56,6 +57,8 @@ NEW CLASSES
 * snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 
 * MLG is an internal class that lives inside the mlg slot of snpclone and genclone objects. It allows the user to easily switch between multilocus genotype definitions.
 
+BUG FIXES
+* I was going too fast to count.
 
 poppr 1.1.5
 ===========

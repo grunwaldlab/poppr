@@ -4,11 +4,11 @@
 \alias{genind2genalex}
 \title{Exporting data from genind objects to genalex formatted *.csv files.}
 \usage{
-genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE,
-  geodf = "xy", sep = ",")
+genind2genalex(gid, filename = "genalex.csv", quiet = FALSE, pop = NULL,
+  allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ",")
 }
 \arguments{
-\item{pop}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+\item{gid}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
   object.}
 
 \item{filename}{a string indicating the name and/or path of the file you wish
@@ -16,6 +16,15 @@ genind2genalex(pop, filename = "genalex.csv", quiet = FALSE, geo = FALSE,
 
 \item{quiet}{\code{logical} If \code{FALSE} a message will be printed to the
   screen.}
+
+\item{pop}{a character vector OR formula specifying the population factor.
+  This can be used to specify a specific subset of strata or custom
+  population factor for the output. Note that the \code{allstrata} command
+  has precedence over this unless the value of this is a new population
+  factor.}
+
+\item{allstrata}{if this is \code{TRUE}, the strata will be combined into a
+  single population factor in the genalex file.}
 
 \item{geo}{\code{logical} Default is \code{FALSE}. If it is set to
   \code{TRUE}, the resulting file will have two columns for geographic data.}

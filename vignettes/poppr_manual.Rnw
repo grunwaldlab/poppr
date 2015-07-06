@@ -600,24 +600,23 @@ the function \texttt{poppr()} to get a table of diversity indices per population
 <<firstpoppr, eval=FALSE>>=
 myData  <- read.genalex(x$files)
 myData
-popdata <- poppr(x$files)
+@
+<<echo = FALSE>>=
+options(width=90)
+myData <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
 @
 
-<<aflp, echo=FALSE>>=
-options(width=90)
-popprsoutput <- poppr(system.file("files/rootrot.csv", package="poppr"))
+<<aflp>>=
+popdata <- poppr(myData)
 @
 
 The output of \texttt{poppr()} was assigned to the variable \texttt{popdata}, so
 let's look at the data.
 
-<<firstpoppr2, eval=FALSE>>=
+<<firstpoppr2>>=
 popdata
 @
 
-<<aflp2, echo=FALSE>>=
-popprsoutput
-@
 The fields you see in the output include:
 \begin{itemize}
   \item \texttt{Pop -} Population name (Note that ``Total" also means
@@ -722,7 +721,6 @@ combination of the strata, and then save a file to the desktop.
 library("poppr")
 data(microbov)
 strata(microbov) <- data.frame(other(microbov)) # set the strata
-setPop(microbov) <- ~coun/breed/spe             # combine the strata
 microbov
 genind2genalex(microbov, file = "~/Desktop/microbov.csv")
 @
@@ -910,6 +908,10 @@ print_command(funk)
   the file in your current working directory.
   \item \texttt{quiet -} If this is set to \texttt{FALSE}, a status message will
   be printed to the console as the extraction progresses.
+  \item \texttt{pop -} A vector specifying a custom population OR a formula
+  specifying the strata to be combined in the new file.
+  \item \texttt{allstrata -} This is \texttt{TRUE} by default and will combine
+  all of the strata in your file unless you have specified a new population factor.
   \item \texttt{geo -} Set to \texttt{TRUE}, if you have a data frame or matrix
   in the  \texttt{@other} slot of your \texttt{genind} object that contains geographic
   coordinates for all individuals or all populations. Setting this to
@@ -936,7 +938,7 @@ individual:
 
 <<nancyxy>>=
 data(nancycats)
-nancycats@other$xy
+other(nancycats)$xy
 @
 
 To export it:
@@ -951,8 +953,8 @@ If we wanted to assign a geographic coordinate to each individual, we can use
 this trick knowing that there are 17 populations in the data set:
 <<nancy_grow_xy>>=
 nan2 <- nancycats
-nan2@other$xy <- nan2@other$xy[rep(1:17, table(pop(nan2))), ]
-head(nan2@other$xy)
+other(nan2)$xy <- other(nan2)$xy[rep(1:17, table(pop(nan2))), ]
+head(other(nan2)$xy)
 @
 
 Now we can export it to a different file.

@@ -841,6 +841,7 @@ mll.internal <- function(x, type = NULL, the_call = match.call()){
   if (!"MLG" %in% class(mlg)){
     the_obj <- as.character(the_call[["x"]])
     the_type <- as.character(the_call[["type"]])
+    if (length(the_type) == 0) the_type <- "original"
     msg <- paste("\n The @mlg slot does not contain an MLG class object.\n",
                  "Returning the original mlgs. Please use:\n\n",
                  paste0('mll(', the_obj, ') <- "', the_type, '"\n'),
