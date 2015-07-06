@@ -130,11 +130,12 @@ based on genetic distance.
 %
 %=============================================================================%
 %=============================================================================%
-
-
-\section*{Table of Functions}\addcontentsline{toc}{section}{Table of Functions}
-
-\label{appendix:funk}
+\newpage
+\renewcommand\thesection{\roman{section}}
+\section{Table of Functions}%\addcontentsline{toc}{section}{Table of Functions}
+\renewcommand\thesection{\arabic{section}}
+\setcounter{section}{0}
+\label{table:funk}
 
 \tab\tab Below is a table of functions found in \poppr{}. These functions are
 linked within the document. If a function name is blue, simply click on it to go
@@ -180,6 +181,7 @@ to its definition and description.
 \cmdlink{data.manip:divide:popsub}{popsub} & Subsets \texttt{genind} objects by population \\
 \cmdlink{data.manip:shuffle:shufflepop}{shufflepop} & Shuffles genotypes at each locus using four different shuffling algorithms \\
 \cmdlink{intro:import:polyploid}{recode\_polyploids} &  recode polyploid data sets with missing alleles imported as ``0''\\
+\texttt{fix\_replen} & Finds and fixes inconsistant repeat lengths for Bruvo's distance.\\
 %----------------|
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Distances}}\\
@@ -370,18 +372,22 @@ The following data sets are included in \poppr{}:
   \item \texttt{Pram} (SSR, \textit{Phytophthora ramorum})\citep{kamvar2015spatial, goss2009population}
 \end{itemize}
 
+% \newpage
 \subsection{Citation}
 
-The formal publication for the first version of \poppr{} was published in the
-journal \textbf{PeerJ}: \url{http://peerj.com/articles/281/}. The new features
-in version 2.x were published in \textbf{Frontiers}
-\url{http://dx.doi.org/10.3389/fgene.2015.00208}. To cite \poppr{}, please type
+To cite \poppr{}, please type
 in your R console:
 
-<<popprcite, eval = FALSE, size="normalsize">>=
+<<popprcite, eval = TRUE, size="normalsize">>=
 citation(package = "poppr")
 @
 
+The formal publication for the first version of \poppr{} was published in the
+journal \textbf{PeerJ}: \url{http://peerj.com/articles/281/} \citep{kamvar2014poppr}. The new features
+in version 2.x were published in \textbf{Frontiers}
+\url{http://dx.doi.org/10.3389/fgene.2015.00208} \citep{kamvar2015novel}. 
+
+\section{Installation and Quick Start}
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -647,6 +653,7 @@ component, $i$. Unfortunately, R will not represent the imaginary components of
 numbers unless you specifically tell it to do so. By default, R represents these
 as \texttt{NaN}.\\
 
+\section{Import and Data types}
 %-----------------------------------------------------------------------------%
 %
 %-----------------------------------------------------------------------------%
@@ -1297,21 +1304,20 @@ print_command(funk)
   \item \texttt{pop -} a \texttt{genind} object.
   \item \texttt{type -} This could be one of four options:
     \begin{description}
-      \item[ ``loci"] This is to be used for a data set that has systematic
+      \item[``loci"] This is to be used for a data set that has systematic
       problems with certain loci that contain null alleles or simply failed to
       amplify. This will remove loci with a defined threshold of missing data
       from the data set.
-      \item[ ``geno"] This is to be used for genotypes (individuals) in your
+      \item[``geno"] This is to be used for genotypes (individuals) in your
       data set where many null alleles are present. Individuals with a defined
       threshold missing data will be removed.
-      \item[``ignore''] This function is used internally for functions like
-      \texttt{aboot}. This will retain the missing data when using these
-      functions.
-      \item[ ``mean"] This replaces missing data with the mean allele
-      frequencies in the entire data set (This is for backwards compatibility,
-      please don't use this).
-      \item[ ``zero" or ``0"] This replaces missing data with zero, signifying a
-      new allele (This is for backwards compatibility, please don't use this).
+      \item[``ignore'' or ``asis''] This argument will retain missing data in your data
+      set. It's useful for functions that utilize \texttt{missingno} internally,
+      such as \texttt{mlg.filter()}, \texttt{poppr.amova()}, or \texttt{aboot()}.
+      \item[``mean''] This replaces missing data with the mean allele
+      frequencies in the entire data set \textcolor{red}{(This is for backwards compatibility, please don't use this)}.
+      \item[``zero" or ``0"] This replaces missing data with zero, signifying a
+      new allele \textcolor{red}{(This is for backwards compatibility, please don't use this)}.
     \end{description}
     \item \texttt{cutoff -} This is a numeric value from 0 to 1 indicating the
     percent allowable missing data for either loci or genotypes. If you have,
@@ -1323,6 +1329,9 @@ print_command(funk)
     missing values replaced will be printed to screen if the method is ``zero"
     or ``mean". It will print the number of loci or individuals removed if the
     method is ``loci" or ``geno".
+    \item \texttt{freq -} This is used for compatibility with the \texttt{tab()}
+    method for \texttt{genind} object. It will convert counts of alleles to 
+    frequencies of alleles, rendering an object that will return warnings. 
 \end{itemize}
 \bline{}
 
@@ -1358,7 +1367,9 @@ nangeno <-  missingno(nancycats, "geno")
 tab(nanloci)[1:5, 8:13]
 @
 
-Notice how we now see columns named ``fca23.128" and ``fca23.130". This is
+Notice how we now see columns named 
+\Sexpr{na <- alleles(nancycats)[[2]]; paste(locNames(nancycats)[2], na[1:2], sep = ".", collapse = " and ")}. 
+This is
 showing us another locus because we have removed the first. Recall from the
 summary table that the first locus had 16 alleles, and the second had 11. Now
 that we've removed loci containing missing data, all others have shifted over.\\
@@ -2350,6 +2361,9 @@ mlg.table(H3N2, mlgsub = UGNN)
 %
 %=============================================================================%
 %=============================================================================%
+\renewcommand\thesection{\Alph{section}}
+\setcounter{section}{0}
+
 \section{Appendix}
 \label{appendix}
 
