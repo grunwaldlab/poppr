@@ -41,6 +41,14 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+#' @importFrom graphics abline axis frame hist layout legend lines par plot.new
+#'   points polygon rasterImage text title
+#' @importFrom grDevices as.raster gray grey topo.colors
+#' @importFrom stats as.dist as.formula df dist median quantile rmultinom sd
+#'   setNames terms update var
+#' @importFrom utils combn head read.table setTxtProgressBar tail txtProgressBar
+#'   write.table
+NULL
 #==============================================================================#
 #' Oomycete root rot pathogen \emph{Aphanomyces euteiches} AFLP data
 #' 
