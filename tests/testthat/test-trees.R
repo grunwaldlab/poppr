@@ -56,3 +56,11 @@ test_that("aboot can handle populations", {
 	expect_false(ape::is.ultrametric(Atreen))
 	expect_false(ape::is.ultrametric(AtreeF))
 })
+
+test_that("aboot can handle genlight objects", {
+	skip_on_cran()
+	set.seed(999)
+	gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE))
+	gtree <- aboot(gc, distance = bitwise.dist, sample = 5, quiet = TRUE)
+	expect_is(gtree, "phylo")
+})
