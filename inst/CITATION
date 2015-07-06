@@ -20,10 +20,8 @@ citEntry(entry = 'article',
  url = "http://dx.doi.org/10.7717/peerj.281",
  doi = "10.7717/peerj.281",
  journal = "PeerJ",
- textVersion = paste0("Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281 http://dx.doi.org/10.7717/peerj.281")
+ textVersion = paste0("Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281. doi: 10.7717/peerj.281")
 )
-
-citHeader("If using tools described in version 2.0, please cite:")
 
 citEntry(entry = 'article',
  title = "{Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality}",
