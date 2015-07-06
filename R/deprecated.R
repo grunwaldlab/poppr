@@ -74,7 +74,7 @@ gethierarchy <- function(...){
 	the_call[[1]] <- quote(strata)
 	dmsg <- paste("'gethierarchy' has been deprecated, moved to the adegenet package, and",
 								"renamed to 'strata'.\n\n Please use:\n", 
-								capture.output(print(the_call)), "\n")
+								utils::capture.output(print(the_call)), "\n")
 	.Deprecated("strata", package = "adegenet", dmsg)
 	return(strata(...))
 }
@@ -91,7 +91,7 @@ sethierarchy <- function(...){
 	dots <- list(...)
 	dmsg <- paste("'sethierarchy' has been deprecated, moved to the adegenet package, and",
 								"renamed to 'strata'.\n\n Please use:\n", 
-								capture.output(print(the_call)), "\n")
+								utils::capture.output(print(the_call)), "\n")
 	.Deprecated("strata", package = "adegenet", dmsg)
 	return(strata(dots[[1]], value = dots[[2]]))
 }
@@ -103,7 +103,7 @@ setpop <- function(...){
   the_call[[1]] <- quote(setPop)
   dmsg <- paste("'setpop' has been deprecated, moved to the adegenet package, and",
                 "renamed to 'setPop'.\n\n Please use:\n", 
-                capture.output(print(the_call)), "\n")
+                utils::capture.output(print(the_call)), "\n")
   .Deprecated("setPop", package = "adegenet", dmsg)
   return(setPop(...))
 }
@@ -141,7 +141,7 @@ addhierarchy <- function(...){
 	the_call[[1]] <- quote(addStrata)
 	dmsg <- paste("'addhierarchy' has been deprecated, moved to the adegenet package, and",
 								"renamed to 'addStrata'.\n\n Please use:\n", 
-								capture.output(print(the_call)), "\n")
+								utils::capture.output(print(the_call)), "\n")
 	.Deprecated("addStrata", package = "adegenet", dmsg)
 	return(addStrata(...))
 }
@@ -165,7 +165,7 @@ splithierarchy <- function(...){
 	the_call[[1]] <- quote(splitStrata)
 	dmsg <- paste("'splithierarchy' has been deprecated, moved to the adegenet package, and",
 								"renamed to 'splitStrata'.\n\n Please use:\n", 
-								capture.output(print(the_call)), "\n")
+								utils::capture.output(print(the_call)), "\n")
 	.Deprecated("splitStrata", package = "adegenet", dmsg)
 	return(splitStrata(...))
 }
@@ -189,7 +189,7 @@ namehierarchy <- function(...){
 	the_call[[1]] <- quote(nameStrata)
 	dmsg <- paste("'namehierarchy' has been deprecated, moved to the adegenet package, and",
 								"renamed to 'nameStrata'.\n\n Please use:\n", 
-								capture.output(print(the_call)), "\n")
+								utils::capture.output(print(the_call)), "\n")
 	.Deprecated("nameStrata", package = "adegenet", dmsg)
 	return(nameStrata(...))
 }

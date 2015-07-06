@@ -929,7 +929,7 @@ private_alleles <- function(gid, form = alleles ~ ., report = "table",
   REPORTARGS <- c("table", "vector", "data.frame")
   LEVELARGS  <- c("individual", "population")
   LHS_ARGS <- c("alleles", "locus", "loci")
-  showform <- capture.output(print(form))
+  showform <- utils::capture.output(print(form))
   marker <- pmatch(as.character(form[[2]]), LHS_ARGS, nomatch = 0L, 
                    duplicates.ok = FALSE)
   if (all(marker == 0L)){

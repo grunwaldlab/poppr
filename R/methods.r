@@ -368,7 +368,7 @@ setMethod(
       algo <- strsplit(object@mlg@distalgo, "_")[[1]][1]
       dist <- object@mlg@distname
       if (!is.character(dist)){
-        dist <- paste(capture.output(dist), collapse = "")        
+        dist <- paste(utils::capture.output(dist), collapse = "")        
       }
       cat(" (", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]", sep = "")
     }
@@ -582,7 +582,7 @@ setMethod(
       dist <- object@mlg@distname
       algo <- strsplit(object@mlg@distalgo, "_")[[1]][1]
       if (!is.character(dist)){
-        dist <- paste(capture.output(dist), collapse = "")        
+        dist <- paste(utils::capture.output(dist), collapse = "")        
       }
       contab <- max(chars)
       contab <- substr("             ", 1, contab + 4)
@@ -657,7 +657,7 @@ setMethod(
       dist <- x@mlg@distname
       algo <- strsplit(x@mlg@distalgo, "_")[[1]][1]
       if (!is.character(dist)){
-        dist <- paste(capture.output(dist), collapse = "")        
+        dist <- paste(utils::capture.output(dist), collapse = "")        
       }
       contab <- max(chars)
       contab <- substr("             ", 1, contab + 4)

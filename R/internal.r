@@ -47,7 +47,7 @@
 #' @importFrom stats as.dist as.formula df dist median quantile rmultinom sd
 #'   setNames terms update var
 #' @importFrom utils combn head read.table setTxtProgressBar tail txtProgressBar
-#'   write.table
+#'   write.table capture.output
 NULL
 #==============================================================================#
 #' Oomycete root rot pathogen \emph{Aphanomyces euteiches} AFLP data

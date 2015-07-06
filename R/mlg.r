@@ -213,7 +213,7 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlg
     plot <- bar
     warning("In poppr version 2.0, bar is deprecated. Please use plot.")
   }
-  the_data <- capture.output(the_call[["gid"]])
+  the_data <- utils::capture.output(the_call[["gid"]])
   if (!is.null(strata)){
     setPop(gid) <- strata
   }
