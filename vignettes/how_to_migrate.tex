@@ -100,7 +100,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Migration from poppr version 1.1 to 1.1.5.99.595}
+\title{Migration from poppr version 1.1 to 1.1.5.99.666}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -163,8 +163,8 @@ that all code that will fail is wrapped in a \texttt{try()} command.
 \hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{)} \hlcom{# Works!}
 \end{alltt}
 \begin{verbatim}
-##  [1] -0.6988598 -0.6106481  1.4484847 -0.4295111  0.9491479 -1.9868344
-##  [7]  0.9379773  0.4487399  0.9123760  1.5203152
+##  [1]  0.1363818 -1.7346618 -0.3668241  1.1960343 -0.3733115  0.2905125
+##  [7]  0.3734550  0.7931824 -1.3121382  0.4039278
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -222,7 +222,7 @@ for demonstration. First, we'll load the data.
 \end{alltt}
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: adegenet\\\#\# Loading required package: ade4\\\#\# \\\#\#\ \ \ \ /// adegenet 2.0.0 is loaded ////////////\\\#\# \\\#\#\ \ \ \ > overview: '?adegenet'\\\#\#\ \ \ \ > tutorials/doc/questions: 'adegenetWeb()' \\\#\#\ \ \ \ > bug reports/feature resquests: adegenetIssues()\\\#\# \\\#\# \\\#\# This is poppr version 1.1.5.99.595. To get started, type package?poppr}}\begin{alltt}
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: adegenet\\\#\# Loading required package: ade4\\\#\# \\\#\#\ \ \ \ /// adegenet 2.0.0 is loaded ////////////\\\#\# \\\#\#\ \ \ \ > overview: '?adegenet'\\\#\#\ \ \ \ > tutorials/doc/questions: 'adegenetWeb()' \\\#\#\ \ \ \ > bug reports/feature resquests: adegenetIssues()\\\#\# \\\#\# \\\#\# This is poppr version 1.1.5.99.666. To get started, type package?poppr}}\begin{alltt}
 \hlkwd{data}\hlstd{(}\hlstr{"old_partial_clone"}\hlstd{,} \hlkwc{package} \hlstd{=} \hlstr{"poppr"}\hlstd{)} \hlcom{# From version 1.1.5}
 \hlkwd{data}\hlstd{(}\hlstr{"partial_clone"}\hlstd{,} \hlkwc{package} \hlstd{=} \hlstr{"poppr"}\hlstd{)}     \hlcom{# From version 2.0.0}
 \end{alltt}
@@ -364,7 +364,7 @@ the \texttt{Pinf} data set for our demonstration.
 ## -------------------------
 ## Genotype information:
 ## 
-##    72 multilocus genotypes
+##    72 multilocus genotypes 
 ##    86 tetraploid individuals
 ##    11 codominant loci
 ## 
@@ -390,7 +390,7 @@ Again, we can just use \texttt{old2new\_genclone()} to convert this.
 ## -------------------------
 ## Genotype information:
 ## 
-##    72 multilocus genotypes
+##    72 multilocus genotypes 
 ##    86 tetraploid individuals
 ##    11 codominant loci
 ## 
