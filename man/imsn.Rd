@@ -79,9 +79,13 @@ library("magrittr")
 data(monpop)
 splitStrata(monpop) <- ~Tree/Year/Symptom
 summary(monpop)
+monpop_ssr <- c(CHMFc4 = 7, CHMFc5 = 2, CHMFc12 = 4,
+                SEA = 4, SED = 4, SEE = 2, SEG = 6,
+                SEI = 3, SEL = 4, SEN = 2, SEP = 4,
+                SEQ = 2, SER = 4)
 t26 <- monpop \%>\% setPop(~Tree) \%>\% popsub("26") \%>\% setPop(~Year/Symptom)
 t26
-imsn()
+imsn() # select Bruvo's distance and enter "monpop_ssr" into the Repeat Length field.
 
 }
 }

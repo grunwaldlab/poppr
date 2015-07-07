@@ -282,7 +282,7 @@ shinyServer(function(input, output, session) {
     has_no_args <- length(args) == 1 && args == ""
     if (distfunk == "bruvo.dist"){
       args <- paste(replen(), addloss(), sep = ", ")
-      distfunk <- "bruvo.msn"
+      distfunk <- "min_span_net <- bruvo.msn"
       closer <- paste0(", ", args, ", ", closer)
       return_cmd <- paste0(distfunk, "(", dat, "_sub", closer)
     } else { 
