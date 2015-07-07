@@ -122,6 +122,14 @@ test_that("get_boot_x works with one pop or one stat", {
   
 })
 
+test_that("ia returns NA with less than three samples", {
+  skip_on_cran()
+  data(partial_clone)
+  pc <- partial_clone[sample(50, 2)]
+  expect_equivalent(rep(NA_real_, 2), ia(pc))
+  expect_equivalent(rep(NA_real_, 4), ia(pc, sample = 9))
+})
+
 test_that("ia and pair.ia return same values", {
   skip_on_cran()
   data(partial_clone)

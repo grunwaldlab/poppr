@@ -15,3 +15,21 @@ test_that("Private alleles can be tabluated over loci", {
   expect_that(ncol(locus_dose), equals(ncol(locus_nodose)))
   expect_true(all(locus_nodose <= locus_dose))
 })
+
+test_that("Private alleles can be tabulated over individuals", {
+	skip_on_cran()
+	res <- private_alleles(Pinf, level = "indiv")
+	expect_is(res, "matrix")
+})
+
+test_that("Private alleles can handle genpop objects", {
+	skip_on_cran()
+	pinfpop <- genind2genpop(Pinf, quiet = TRUE)
+	expect_is(private_alleles(pinfpop), "matrix")
+})
+
+test_that("Private alleles throws appropriate errors", {
+	skip_on_cran()
+	expect_error(private_alleles(Pinf, LOCUS ~ .), "Left hand side of LOCUS \\~ \\.")
+	expect_error(private_alleles(Pinf, locus ~ people), "strata:.+?people")
+})

@@ -36,3 +36,19 @@ test_that("shuffling methods behave as expected with polyploids", {
 	expect_that(rowSums(tab(s4)), not(equals(rowSums(tab(pr)))))
 
 })
+
+test_that("shuffling methods work for PA data", {
+	skip_on_cran()
+	data("Aeut", package = "poppr")
+	expect_is(shufflepop(Aeut, method = 1), "genind")
+	expect_is(shufflepop(Aeut, method = 2), "genind")
+	expect_is(shufflepop(Aeut, method = 3), "genind")
+	expect_is(shufflepop(Aeut, method = 4), "genind")
+
+	A10 <- Aeut[sample(nInd(Aeut), 10)]
+	expect_is(poppr(A10, sample = 9, method = 1, quiet = TRUE, hist = FALSE, sublist = "Total"), "popprtable")
+	expect_is(poppr(A10, sample = 9, method = 2, quiet = TRUE, hist = FALSE, sublist = "Total"), "popprtable")
+	expect_is(poppr(A10, sample = 9, method = 3, quiet = TRUE, hist = FALSE, sublist = "Total"), "popprtable")
+	expect_is(poppr(A10, sample = 9, method = 4, quiet = TRUE, sublist = "Total"), "popprtable")
+
+})
