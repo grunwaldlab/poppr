@@ -19,7 +19,7 @@ wishes to discard. Default to \code{NULL}}
 subsetted. If this is present, the subsetted matrix will be returned instead
 of the genind object}
 
-\item{drop}{\code{logical}. If \code{TRUE}, univariate alleles will be dropped
+\item{drop}{\code{logical}. If \code{TRUE}, unvarying alleles will be dropped
 from the population.}
 }
 \value{
