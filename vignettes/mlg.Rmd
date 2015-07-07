@@ -268,8 +268,8 @@ Notice how the genotypes collapse into a single node. Both `poppr.msn()` and
 ### Setting the genotypes
 
 If we wanted to reassign our sample genotypes to the collapsed version, all
-we would have to do is use the `mlg.filter` commands above, but use the `<-` 
-operator to specify the threshold. Note that I will be using `mlg.table` to show
+we would have to do is use the `mlg.filter()` commands above, but use the `<-` 
+operator to specify the threshold. Note that I will be using `mlg.table()` to show
 the distribution of the multilocus genotypes before and after filtering.
 
 ```{r}
@@ -530,7 +530,7 @@ the diversity metrics.
 
 ## Basic Statistics
 
-The function `diversity_stats` is used to get basic diversity statistics:
+The function `diversity_stats()` is used to get basic diversity statistics:
 
 ```{r}
 (monstat <- diversity_stats(montab))
@@ -538,7 +538,7 @@ The function `diversity_stats` is used to get basic diversity statistics:
 
 ## Confidence Intervals
 
-We can get confidence intervals for these statistics using `diversity_ci`:
+We can get confidence intervals for these statistics using `diversity_ci()`:
 
 ```{r, message = TRUE, warning = TRUE}
 diversity_ci(montab, n = 100L, raw = FALSE)
@@ -547,7 +547,7 @@ diversity_ci(montab, n = 100L, raw = FALSE)
 You can see that there was a warning about centering the confidence interval.
 The boxplots you see are the distribution of the bootstrapped replicates, but
 they are known to be biased. We invite users to please read the documentation
-for `diversity_ci` by typing `?diversity_ci`. It is very important to be careful
+for `diversity_ci()` by typing `?diversity_ci`. It is very important to be careful
 when interpreting these results because sometimes confidence the confidence
 intervals exist outside of the possible range, as exemplified by 
 `r paste(rownames(monstat)[monstat[, "E.5"] > 0.9], collapse = " and ")`.
@@ -675,7 +675,7 @@ mll(monpop) <- "original"
 
 ## Jack-knife rarefaction
 
-The function `diversity_ci` and `diversity_boot` have the option to perform
+The function `diversity_ci()` and `diversity_boot()` have the option to perform
 jack knife rarefaction calculations. This means that your data will be randomly
 sub-sampled to either the smallest population size, or whatever is specified
 in the parameter `n.rare`, whichever is bigger. Here's an example with the
