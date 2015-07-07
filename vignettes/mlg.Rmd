@@ -198,7 +198,7 @@ rank(xt, ties.method = "first")
 
 Even though we have reason to believe that the samples "new" and "mut" might
 actually have the genotype x.5 and y.1 (the MLG of sample C), the algorithm sees them as
-different. If we calculate the pairwise euclidean distances bewteen samples, we see that 
+different. If we calculate the pairwise euclidean distances between samples, we see that 
 "new"", "mut"" and, "C"" are very similar to each other:
 
 ```{r, fig.width = 5, fig.height = 5}
