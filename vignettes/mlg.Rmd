@@ -27,7 +27,7 @@ bib <- read.bibtex("the_bibliography.bib")
 <center>
 # Abstract
 
-A multilocus genotype is the unique combination of alleles across two or more
+A multilocus genotype is a unique combination of alleles across two or more
 loci. For organisms such as plant pathogens that often reproduce clonally,
 multilocus genotypes are invaluable for identifying the mode and spread of an
 organism. This document will describe in detail how you can define multilocus
@@ -55,9 +55,9 @@ There are three different ways for constructing multilocus genotypes in *poppr*.
 | `"custom"` | User-defined multilocus genotypes  |
 
 The first is a simply naïve construction where all alleles must match to make a
-unique multilocus genotype. New in version `r packageVersion("poppr")` is the
-ability to use genetic distance to define multilocus genotypes or define custom
-multilocus lineages based on other biological factors. You can use the function
+unique multilocus genotype. New in version `r packageVersion("poppr")` `r # Should the version be explicit?` is the
+ability to use genetic distance to collapse multilocus genotypes or define custom
+multilocus lineages based on other biological factors `r # perhaps "other information" would be more accurate?`. You can use the function
 `mll()` to display and switch between different multilocus genotypes/lineages.
 
 ```{r, warning = TRUE}
@@ -125,9 +125,13 @@ To give an example, let's imagine that we have five samples with alleles typed
 at two loci. 
 
 ```{r}
-grid_example <- matrix(c(1, 1, 5, 9, 9, 
-                         4, 1, 1, 1, 4), 
-                       ncol = 2)
+grid_example <- matrix(c(1, 4,
+                         1, 1,
+                         5, 1,
+                         9, 1,
+                         9, 4), 
+                       ncol = 2,
+                       byrow = TRUE)
 rownames(grid_example) <- LETTERS[1:5]
 colnames(grid_example) <- c("x", "y")
 grid_example
@@ -193,9 +197,9 @@ rank(xt, ties.method = "first")
 ```
 
 Even though we have reason to believe that the samples "new" and "mut" might
-actually have the genotype x.5 and y.1, the algorithm only sees them as
-different. We can even see that if we analyze their alleles in euclidean space,
-they are very similar to each other:
+actually have the genotype x.5 and y.1 (the MLG of sample C), the algorithm sees them as
+different. If we calculate the pairwise euclidean distances bewteen samples, we see that 
+"new"", "mut"" and, "C"" are very similar to each other:
 
 ```{r, fig.width = 5, fig.height = 5}
 library("phangorn")
@@ -206,6 +210,7 @@ raw_dist <- function(x){
 plot.phylo(upgma(xdis))
 ```
 
+Therefore, we might want to consider "new", "mut" and, "C" to be the same MLG.
 In the next section, you will see how to collapse multilocus genotypes by
 genetic distance.
 
@@ -214,7 +219,7 @@ genetic distance.
 To remedy the issues with a naïve definition of multilocus genotypes, we can 
 utilize genetic distance, which will allow us to collapse multilocus genotypes
 that are under a specific distance threshold. The main function we will use in
-this section is `mlg.filter()`. By default, it will calculate Nei's genetic 
+this section is `mlg.filter()``r # I would remove the "()" since it implies a specific implementation`. By default, it will calculate Nei's genetic 
 distance `r citep(bib[c("nei1972genetic")])` on the data
 and then filter based off of that matrix. You can also utilize your own supplied
 distance matrix or distance function. 
@@ -222,7 +227,7 @@ distance matrix or distance function.
 ### Collapsing
 
 Let's continue our example by using the euclidean distance of the raw alleles.
-To do the collapsing, we will use the function `mlg.filter()`. 
+To do the collapsing, we will use the function `mlg.filter()``r # see previous comment`. 
 
 ```{r}
 mlg.filter(x, distance = xdis, threshold = 1)
@@ -243,8 +248,8 @@ mlg.filter(x, distance = xdis, threshold = 1 + e)
 
 ### Minimum spanning networks
 
-Now we have all of our mlgs collapsed together, but perhaps a better way to 
-visualize it would be to use `poppr.msn()`:
+Now we have all of our MLGs collapsed together, but perhaps a better way to 
+visualize it would be to use `poppr.msn()`: `r # I think the graph object output is distracting; maybe "results='hide'" should be used?`
 
 ```{r}
 # Threshold of 1
@@ -262,7 +267,7 @@ Notice how the genotypes collapse into a single node. Both `poppr.msn()` and
 
 ### Setting the genotypes
 
-If we wanted to set our genotypes specifically to the collapsed version, all
+If we wanted to reassign our sample genotypes to the collapsed version, all
 we would have to do is use the `mlg.filter` commands above, but use the `<-` 
 operator to specify the threshold. Note that I will be using `mlg.table` to show
 the distribution of the multilocus genotypes before and after filtering.
@@ -288,7 +293,7 @@ cryptic code underneath:
 Genclone and snpclone objects will always remember what parameters were used for
 filtering multilocus genotypes, but the only catch is that, if you use your own
 supplied distance (matrix or function), you must be very careful not to delete
-it or change the object name.
+it or change the object name. `r # the "catch" part of the sentence can be removed since you mention this issue in the warning below`
 
 This means that you don't always have to specify the distance when assigning a
 threshold:
@@ -300,8 +305,9 @@ mlg.table(x)
 ```
 
 > DANGER! DANGER! While this is a convenient function, if you use a matrix or
-> function that was created by you, you **must not delete it**. The reason being
-> that if you delete the matrix used to inform your filtering, you will get an
+> function that was created by you, you **must not delete it or change its name**.
+> Only the name of the matrix/function is stored, 
+> so if you delete the matrix/function used to inform your filtering, you will get an
 > error:
 
 ```{r, errors = TRUE}
@@ -335,7 +341,7 @@ mlg.filter(x, distance = bruvo.dist, replen = c(1, 1)) <- 0.44
 x
 ```
 
-Of course, our multilocus genotypes are not changed forever, they are simply
+Of course, our multilocus genotypes are not changed forever, they are
 just stored in a different place. We can access the original, naïve multilocus
 genotypes by using the `mll()` function:
 
@@ -480,7 +486,7 @@ pcmsn <- bruvo.msn(pc, replen = rep(1, nLoc(pc)), palette = pcpal,
 ``` 
 
 Let's say that we realized that we have strong evidence for MLG "Q" being the
-same as MLG "M". If we wanted to change those, we could simply just change the
+same as MLG "M". If we wanted to change those, we could simply change the
 factor levels:
 
 ```{r}
@@ -504,9 +510,9 @@ labels had changed.
 In the **Data Import and Manipulation** vignette, the first command demonstrated
 was the `poppr()`, command, which produced a table of diversity statistics, most
 of which were calculated on counts of multilocus genotypes. These statistics can
-be replicated by using the function `diversity_stats()`. This function takes in
-a table of multilocus genotypes and calculates diversity statistics based off of
-that. Let's analyze the diversity of the peach brown rot pathogen, *Monilinia
+be replicated by using the function `diversity_stats()`. This function
+calculates diversity statistics based off of a table of multilocus genotypes.
+Let's analyze the diversity of the peach brown rot pathogen, *Monilinia
 fructicola*, structured by Symptom (Fruit Rot:FR and Blossom Blight:BB) and Year
 `r citep(bib["everhart2014finescale"])`. Let's first look at the distribution of
 multilocus genotypes:
@@ -525,14 +531,15 @@ the diversity metrics.
 
 ## Basic Statistics
 
+The function `diversity_stats` is used to get basic diversity statistics:
+
 ```{r}
 (monstat <- diversity_stats(montab))
 ```
 
-A common question is: how can we get confidence intervals for these statistics?
-The answer is to use `diversity_ci`:
-
 ## Confidence Intervals
+
+We can get confidence intervals for these statistics using `diversity_ci`:
 
 ```{r, message = TRUE, warning = TRUE}
 diversity_ci(montab, n = 100L, raw = FALSE)
@@ -679,14 +686,15 @@ previous data set:
 (monrare <- diversity_ci(montab, n = 100L, rarefy = TRUE, raw = FALSE))
 ```
 
-This can give you estimates of diversity when all samples are of equal size.
+This can give you estimates of diversity when all samples are of equal size. `r # should this "not of equal size"?`
 
 # Clone Correction
 
 Clone-correction works hierarchically and only uses the first MLG copy
 encountered in the data per population. This is straightforward for naïve MLGs,
 but for MLLs collapsed by genetic distance or custom MLLs, this might change the
-results ever so slightly. As an example, let's look at the `monpop` filtered
+results ever so `r # I would remove the "ever so"; possibly replace it with "very"
+` slightly. As an example, let's look at the `monpop` filtered
 MLLs that we created earlier.
 
 ```{r}
@@ -717,7 +725,7 @@ sum(dist(mcc2))
 ```
 
 Notice how we are getting different results based on the order of samples. This
-does not mean that the procedure doesn't work, it just means that one must be
+does not mean that the procedure doesn't work, it just means that we must be
 careful when clone-correcting modified multilocus genotypes. 
 
 # Conclusions
@@ -728,7 +736,7 @@ can work with any source of data stored in either a **genclone** or **snpclone**
 (derived from **genlight**) object. Especially with `mlg.filter()`, these new
 functions will allow for a more flexible analysis of WGS data of clonal
 organisms where true clones may differ by more than a few
-mutations/errors/missing data. As with all analyses, it is important to take
-caution when interpreting the results. 
+mutations/errors/missing data. As with all analyses, it is important to understand
+the algorithms used and take them into account when interpreting results. 
 
 # References
