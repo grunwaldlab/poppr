@@ -6,7 +6,7 @@
 \title{The \pkg{poppr} R package.}
 \description{
 \pkg{Poppr} provides tools for population genetic analysis that
-include genotypic diveristy measures, genetic distances with bootstrap
+include genotypic diversity measures, genetic distances with bootstrap
 support, native organization and handling of population hierarchies, and
 clone correction.
 
@@ -34,7 +34,7 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
     \strong{Vignette}              \tab \strong{command}\cr
     Migration from poppr version 1 \tab \code{vignette("how_to_migrate", "poppr")}\cr
     Data import and manipulation   \tab \code{vignette("poppr_manual", "poppr")}\cr
-    Algorightms and Equations      \tab \code{vignette("algo", "poppr")}\cr
+    Algorithms and Equations      \tab \code{vignette("algo", "poppr")}\cr
     Multilocus Genotype Analysis   \tab \code{vignette("mlg", "poppr")}
   }
 
@@ -158,7 +158,7 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 }
 }
 
-\section{Visulalization}{
+\section{Visualization}{
 
 \itemize{
 \item \code{\link{imsn}} - interactive construction and visualization of minimum spanning networks

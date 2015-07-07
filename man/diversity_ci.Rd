@@ -101,13 +101,13 @@ the results.
   }
   \subsection{Rarefaction}{
   Rarefaction in the sense of this function is simply sampling a subset of
-  the data at size \strong{n.rare}. The estimates derived from this metod
+  the data at size \strong{n.rare}. The estimates derived from this method
   have straightforward interpretations and allow you to compare diversity
   across populations since you are controlling for sample size.
   }
   \subsection{Plotting}{ Results are plotted as boxplots with point
   estimates. If there is no rarefaction applied, confidence intervals are
-  displayed around the point etimates. The boxplots represent the actual
+  displayed around the point estimates. The boxplots represent the actual
   values from the bootstrapping and will often appear below the estimates and
   confidence intervals.
   }
