@@ -208,7 +208,7 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 #' subsetted. If this is present, the subsetted matrix will be returned instead
 #' of the genind object 
 #'
-#' @param drop \code{logical}. If \code{TRUE}, unvariate alleles will be dropped
+#' @param drop \code{logical}. If \code{TRUE}, univariate alleles will be dropped
 #' from the population.
 #' 
 #' @return A \code{genind} object or a matrix.
