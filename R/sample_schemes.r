@@ -119,10 +119,10 @@ shufflepop <- function(pop, method=1){
     else if(method == 2){
       paramboot <- function(x){
         one <- mean(tab(pop)[, x], na.rm=TRUE)
-        zero <- 1-one
-        return(sample(c(1,0), length(tab(pop)[, x]), prob=c(one, zero), replace=TRUE))
+        zero <- 1 - one
+        return(sample(c(1L ,0L), length(tab(pop)[, x]), prob=c(one, zero), replace=TRUE))
       }
-      pop@tab <- vapply(1:ncol(tab(pop)), paramboot, pop@tab[, 1])
+      pop@tab <- vapply(1:ncol(tab(pop)), paramboot, tab(pop)[, 1])
     }
     else if(method == 3){
       pop@tab <- vapply(1:ncol(tab(pop)),
@@ -197,7 +197,7 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
       paramboot <- function(x){
         one <- mean(tab(pop)[, x], na.rm=TRUE)
         zero <- 1-one
-        return(sample(c(1,0), length(tab(pop)[, x]), prob=c(one, zero), replace=TRUE))
+        return(sample(c(1L ,0L), length(tab(pop)[, x]), prob=c(one, zero), replace=TRUE))
       }
       pop@tab <- vapply(1:ncol(tab(pop)), paramboot, pop@tab[, 1])
     } else if(method == 3) {

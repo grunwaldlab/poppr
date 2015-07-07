@@ -294,7 +294,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   }
   if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
     dat           <- x$GENIND
-    pop(dat)      <- NULL
+    pop(dat)      <- rep("Total", nInd(dat))
     poplist       <- NULL
     poplist$Total <- dat
   } else {
@@ -366,7 +366,9 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
         IaList[classless] <- lapply(IaList[classless], function(x) list(index = x))
         warning(msg, call. = FALSE)
       }
-      try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
+      if (hist){
+        try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
+      }
       IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
     } else {#if (!rarefied){
       IaList <- t(as.data.frame(IaList))
@@ -933,7 +935,7 @@ private_alleles <- function(gid, form = alleles ~ ., report = "table",
   marker <- pmatch(as.character(form[[2]]), LHS_ARGS, nomatch = 0L, 
                    duplicates.ok = FALSE)
   if (all(marker == 0L)){
-    stop("Left hand side of", showform, "must be one of:\n",
+    stop("Left hand side of ", showform, " must be one of:\n ",
          paste(LHS_ARGS, collapse = " "))
   } else {
     marker <- LHS_ARGS[marker]
