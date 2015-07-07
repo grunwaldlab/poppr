@@ -58,7 +58,7 @@
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT) 
-#'   repeat would have a repelen value of 3. (Also see \code{\link{fix_replen}})
+#'   repeat would have a replen value of 3. (Also see \code{\link{fix_replen}})
 #'   
 #' @param add if \code{TRUE}, genotypes with zero values will be treated under 
 #'   the genome addition model presented in Bruvo et al. 2004. See the
@@ -129,7 +129,7 @@
 #'   }
 #'   
 #' @note Do not use missingno with this function. 
-#'   \subsection{Repeat Lenghts (replen)}{
+#'   \subsection{Repeat Lengths (replen)}{
 #'   The \code{replen} argument is crucial for proper analysis of Bruvo's
 #'   distance since the calculation relies on the knowledge of the number of
 #'   steps between alleles. To calculate Bruvo's distance, your raw allele calls
@@ -142,7 +142,7 @@
 #'   this before running Bruvo's distance.
 #'   }
 #'   \subsection{Model Choice}{ The \code{add} and \code{loss} arguments 
-#'   modify the model choice accordingly: \itemize{ \item \strong{Infitine 
+#'   modify the model choice accordingly: \itemize{ \item \strong{Infinite 
 #'   Model:}  \code{add = FALSE, loss = FALSE} \item \strong{Genome Addition 
 #'   Model:}  \code{add = TRUE, loss = FALSE} \item \strong{Genome Loss Model:} 
 #'   \code{add = FALSE, loss = TRUE} \item \strong{Combination Model}

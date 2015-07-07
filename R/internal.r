@@ -742,7 +742,7 @@ final <- function(Iout, result){
 # }
 #==============================================================================#
 # To calculate rbarD, the pairwise variances for each locus needs to be
-# caluclated. 
+# calculated. 
 #
 #
 # DEPRECATED
@@ -787,7 +787,7 @@ final <- function(Iout, result){
 
 #==============================================================================#
 # This creates the results from the pairwise difference matrix used by .Ia.Rd
-# to calcuate the index of association.
+# to calculate the index of association.
 # 
 # Public functions utilizing this function:
 # # none

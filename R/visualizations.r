@@ -724,7 +724,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' @param poppr_msn a \code{list} produced from either \code{\link{poppr.msn}}
 #'   or \code{\link{bruvo.msn}}. This list should contain a graph, a vector of
 #'   population names and a vector of hexadecimal color definitions for each
-#'   popualtion.
+#'   population.
 #'   
 #' @inheritParams greycurve
 #' 
@@ -1064,7 +1064,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #==============================================================================#
 #' Produce a genotype accumulation curve
 #' 
-#' GA curves are useful for determinining the minimum number of loci necessary 
+#' GA curves are useful for determining the minimum number of loci necessary 
 #' to discriminate between individuals in a population. This function will
 #' randomly sample loci without replacement and count the number of multilocus
 #' genotypes observed.

@@ -460,7 +460,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 #'   
 #' @note If you enter a file name that exists, that file will be overwritten. If
 #'   your data set lacks a population structure, it will be coded in the new 
-#'   file as a single population lableled "Pop". Likewise, if you don't have any
+#'   file as a single population labeled "Pop". Likewise, if you don't have any
 #'   labels for your individuals, they will be labeled as "ind1" through 
 #'   "ind\emph{N}", with \emph{N} being the size of your population.
 #'   

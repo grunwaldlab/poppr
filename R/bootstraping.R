@@ -236,7 +236,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
 #==============================================================================#
 #' Produce a table of diversity statistics
 #' 
-#' Calcuate diversity statistics on a matrix containing counts of multilocus
+#' Calculate diversity statistics on a matrix containing counts of multilocus
 #' genotypes per population.
 #' 
 #' @param z a table of integers representing counts of MLGs (columns) per 
@@ -501,13 +501,13 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   }
 #'   \subsection{Rarefaction}{
 #'   Rarefaction in the sense of this function is simply sampling a subset of 
-#'   the data at size \strong{n.rare}. The estimates derived from this metod
+#'   the data at size \strong{n.rare}. The estimates derived from this method
 #'   have straightforward interpretations and allow you to compare diversity
 #'   across populations since you are controlling for sample size.
 #'   }
 #'   \subsection{Plotting}{ Results are plotted as boxplots with point
 #'   estimates. If there is no rarefaction applied, confidence intervals are
-#'   displayed around the point etimates. The boxplots represent the actual
+#'   displayed around the point estimates. The boxplots represent the actual
 #'   values from the bootstrapping and will often appear below the estimates and
 #'   confidence intervals. 
 #'   }

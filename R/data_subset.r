@@ -851,7 +851,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' @param poly a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
 #'   \code{\linkS4class{genpop}} object that has a ploidy of > 2
 #' @param newploidy for genind or genclone objects: if \code{FALSE} (default), the user-defined ploidy will stay
-#'   contstant. if \code{TRUE}, the ploidy for each sample will be determined by
+#'   constant. if \code{TRUE}, the ploidy for each sample will be determined by
 #'   the maximum ploidy observed for each genotype.
 #'   
 #' @param addzero add zeroes onto genind or genclone objects with uneven ploidy?
@@ -864,7 +864,7 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' @details The genind object has two caveats that make it difficult to work 
 #'   with polyploid data sets: \enumerate{\item ploidy must be constant
 #'   throughout the data set \item missing data is treated as "all-or-none"} In
-#'   an ideal world, polyploid genotypes would be just as unambigouous as
+#'   an ideal world, polyploid genotypes would be just as unambiguous as
 #'   diploid or haploid genotypes. Unfortunately, the world we live in is far
 #'   from ideal and a genotype of AB in a tetraploid organism could be AAAB,
 #'   AABB, or ABBB. In order to get polyploid data in to \pkg{adegenet} or

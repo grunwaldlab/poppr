@@ -68,7 +68,7 @@
 #'   
 #' @note When \code{percent = TRUE}, this is exactly the same as
 #'   \code{\link{provesti.dist}}, except that it performs better for large
-#'   numbers of individuals (n > 125) at the cost of avaliable memory.
+#'   numbers of individuals (n > 125) at the cost of available memory.
 #'   
 #' @examples
 #' 

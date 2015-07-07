@@ -44,7 +44,7 @@
 #==============================================================================#
 #' Produce a basic summary table for population genetic analyses.
 #' 
-#' This function allows the user to quickly view indicies of heterozygosity, 
+#' This function allows the user to quickly view indices of heterozygosity, 
 #' evenness, and inbreeding to aid in the decision of a path to further analyze 
 #' a specified dataset. It natively takes \code{\linkS4class{genind}} and 
 #' \code{\linkS4class{genclone}} objects, but can convert any raw data formats 
@@ -239,7 +239,7 @@
 #' poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
 #' 
 #' # The previous version of poppr contained a definition of Hexp, which
-#' # was caluclated as (n/(n - 1))*lambda. It basically looks like an unbiased 
+#' # was calculated as (n/(n - 1))*lambda. It basically looks like an unbiased 
 #' # Simpson's index. This statistic was originally included in poppr because it
 #' # was originally included in the program multilocus. It was finally figured
 #' # to be an unbiased Simpson's diversity metric (Lande, 1996; Good, 1953).
@@ -469,7 +469,7 @@ poppr.all <- function(filelist, ...){
 #'   
 #'   \code{TRUE} prints nothing.
 #'   
-#'   \code{FALSE} (defualt) will print the population name and progress bar.
+#'   \code{FALSE} (default) will print the population name and progress bar.
 #'   
 #' @param missing a character string. see \code{\link{missingno}} for details.
 #'   

@@ -362,7 +362,7 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
 #' Calculate windows of the index of association for genlight objects.
 #' 
 #' Genlight objects can contain millions of loci. Since it does not make much 
-#' sense to caluclate the index of association over that many loci, this
+#' sense to calculate the index of association over that many loci, this
 #' function will scan windows across the loci positions and calculate the index
 #' of association.
 #' 
@@ -386,7 +386,7 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
 #' @return Index of association representing the samples in this genlight
 #'   object.
 #'   
-#' @note this will calculate the standardized index of assocation from Agapow
+#' @note this will calculate the standardized index of association from Agapow
 #' 2001. See \code{\link{ia}} for details.
 #' 
 #' @author Zhian N. Kamvar, Jonah Brooks
@@ -457,12 +457,12 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 #' Calculate random samples of the index of association for genlight objects.
 #' 
 #' Genlight objects can contain millions of loci. Since it does not make much 
-#' sense to caluclate the index of association over that many loci, this
+#' sense to calculate the index of association over that many loci, this
 #' function will randomly sample sites to calculate the index of association.
 #' 
 #' @param x a genlight object.
 #'   
-#' @param n.snp the number of snps to be used to calcuate standardized index
+#' @param n.snp the number of snps to be used to calculate standardized index
 #' of association.
 #' 
 #' @param reps the number of times to perform the calculation.
@@ -477,7 +477,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 #' @param quiet if \code{FALSE}, a progress bar will be printed to the screen.
 #'   
 #'   
-#' @note this will calculate the standardized index of assocation from Agapow
+#' @note this will calculate the standardized index of association from Agapow
 #' 2001. See \code{\link{ia}} for details.
 #' 
 #' @return Index of association representing the samples in this genlight

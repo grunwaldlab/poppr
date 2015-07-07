@@ -21,7 +21,7 @@
 #==============================================================================#
 #' Methods used for MLG objects
 #' 
-#' Default methods for acessing and subsetting MLG objects.
+#' Default methods for accessing and subsetting MLG objects.
 #' 
 #' @rdname MLG-method
 #' @param .Object a character, "MLG"
