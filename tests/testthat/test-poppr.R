@@ -4,6 +4,7 @@ data(Aeut, package = "poppr")
 data(partial_clone, package = "poppr")
 strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 A.tab <- poppr(Aeut, quiet = TRUE)
+
 Aeut_comparison <- structure(list(Pop = structure(1:3, 
     .Label = c("Athena", "Mt. Vernon", "Total"), 
     class = "factor"), 
@@ -91,4 +92,12 @@ test_that("poppr perform clone correction", {
   expect_true(all(res_na$N <= res_p$N))
 
   expect_true(all.equal(res_mv[, -c(4:5)], res_ps[2, -c(4:5)], check.attributes = FALSE))
+})
+
+test_that("poppr skips over sample sizes less than three", {
+  skip_on_cran()
+  expect_output(plt <- poppr(partial_clone[1:8], quiet = TRUE, sample = 10), "^| Total$")
+  expect_is(plt, "popprtable")
+  expect_equivalent(signif(plt$Ia, 3), c(rep(NA, 4), 0.167))
+  expect_equivalent(signif(plt$rbarD, 3), c(rep(NA, 4), 0.0195))
 })

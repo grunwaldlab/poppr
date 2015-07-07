@@ -38,7 +38,7 @@ test_that("multilocus genotype filtering algorithms work", {
 
 test_that("filter_stats works for genind", {
 	skip_on_cran()
-	res <- filter_stats(x, distance = xd, threshold = 100L, plot = TRUE)
+	res <- filter_stats(x, distance = xd, threshold = 100L, plot = TRUE, nclone = 2)
 	maxres <- nmll(x) - 1
 	
 	expect_is(res, "list")
@@ -48,6 +48,14 @@ test_that("filter_stats works for genind", {
 	expect_true(all(vapply(res, length, numeric(1)) == maxres))
 	expect_less_than(res$nearest[maxres], res$average[maxres])
 	expect_less_than(res$average[maxres], res$farthest[maxres])
+
+  cpfart <- cutoff_predictor(res$farthest, 0.75)
+  cpaver <- cutoff_predictor(res$average, 0.75)
+  cpnear <- cutoff_predictor(res$nearest, 0.75)
+
+  expect_equivalent(cpfart, 4)
+  expect_equivalent(cpaver, 3.75)
+  expect_equivalent(cpnear, 3.5)
 })
 
 test_that("filter_stats works for snpclone", {

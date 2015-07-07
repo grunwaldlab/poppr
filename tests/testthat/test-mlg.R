@@ -7,6 +7,10 @@ data(nancycats, package = "adegenet")
 amlg <- mlg.vector(Aeut)
 pmlg <- mlg.vector(partial_clone)
 nmlg <- mlg.vector(nancycats)
+aclone <- as.genclone(Aeut)
+atab   <- mlg.table(Aeut, plot = FALSE)
+ptab   <- mlg.table(partial_clone, plot = FALSE)
+ntab   <- mlg.table(nancycats, plot = FALSE)
 lu <- function(x) length(unique(x))
 
 test_that("multilocus genotype vector is same length as samples", {
@@ -19,10 +23,6 @@ test_that("multilocus genotype vector is same length as samples", {
 })
 
 test_that("multilocus genotype matrix matches mlg.vector and data", {
-  aclone <- as.genclone(Aeut)
-  atab   <- mlg.table(Aeut, plot = FALSE)
-  ptab   <- mlg.table(partial_clone, plot = FALSE)
-  ntab   <- mlg.table(nancycats, plot = FALSE)
   expect_equal(nrow(atab), nPop(Aeut))
   expect_equal(nrow(ptab), nPop(partial_clone))
   expect_equal(nrow(ntab), nPop(nancycats))
@@ -32,6 +32,14 @@ test_that("multilocus genotype matrix matches mlg.vector and data", {
   expect_equal(sum(atab), nInd(Aeut))
   expect_equal(sum(ptab), nInd(partial_clone))
   expect_equal(sum(ntab), nInd(nancycats))
+})
+
+test_that("multilocus genotype matrix works for custom mlgs", {
+  pc <- as.genclone(partial_clone)
+  mll.levels(pc) <- LETTERS
+  expect_identical(LETTERS, colnames(mlg.table(pc, plot = FALSE)))
+  mll(pc) <- "original"
+  expect_identical(ptab, mlg.table(pc, plot = FALSE))
 })
 
 test_that("multilocus genotype matrix can utilize strata", {
@@ -205,6 +213,13 @@ test_that("subsetting and resetting MLGs works", {
   expect_that(pmlg, not(equals(pres)))
   expect_equal(Pinf[mlg.reset = TRUE]@mlg[], pres)
   expect_that(fullmlg, is_more_than(realmlg))
+  mll(Pinf) <- "original"
+  expect_equal(mll(mll.reset(Pinf, TRUE)), pres)
+  mll.custom(Pinf) <- paste("MLL", mll(Pinf))
+  cmll  <- as.numeric(as.character(mll(mll.reset(Pinf, "custom"))))
+  comll <- as.numeric(as.character(mll(mll.reset(Pinf, c("custom", "original")))))
+  expect_equal(cmll, pmlg)
+  expect_equal(comll, pres)
 })
 
 
