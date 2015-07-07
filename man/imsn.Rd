@@ -20,8 +20,7 @@ Creating and plotting MSNs requires three steps:
 \enumerate{
 \item Create a distance matrix from your data
 \item Create a minimum spanning network with your data and the matrix
-\item Visualize the minimum spanning network with your data and the minimum
-spanning network}
+\item Visualize the minimum spanning network}
 The function \code{\link{plot_poppr_msn}} is currently the most flexible way
 of visualizing your minimum spanning network, but with 20 parameters, it can
 become pretty intimidating trying to find the right display for your MSN.

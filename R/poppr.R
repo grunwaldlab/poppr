@@ -122,7 +122,7 @@
 #' \itemize{
 #' \item \code{\link{as.genclone}} - Converts genind objects to genclone objects
 #' \item \code{\link{missingno}} - Handles missing data
-#' \item \code{\link{clonecorrect}} - Clones censors at a specified population hierarchy
+#' \item \code{\link{clonecorrect}} - Clone-censors at a specified population hierarchy
 #' \item \code{\link{informloci}} - Detects and removes phylogenetically uninformative loci
 #' \item \code{\link{popsub}} - Subsets genind objects by population
 #' \item \code{\link{shufflepop}} - Shuffles genotypes at each locus using four different shuffling algorithms
