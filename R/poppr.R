@@ -114,7 +114,7 @@
 #' @section Data import/export:
 #' \itemize{
 #' \item \code{\link{getfile}} - Provides a quick GUI to grab files for import
-#' \item \code{\link{read.genalex}} - Read GenAlEx formatted csv files to a genind object
+#' \item \code{\link{read.genalex}} - Reads GenAlEx formatted csv files to a genind object
 #' \item \code{\link{genind2genalex}} - Converts genind objects to GenAlEx formatted csv files
 #' \item \code{\link{genclone2genind}} - Removes the @@mlg slot from genclone objects
 #' }
@@ -122,11 +122,11 @@
 #' \itemize{
 #' \item \code{\link{as.genclone}} - Converts genind objects to genclone objects
 #' \item \code{\link{missingno}} - Handles missing data
-#' \item \code{\link{clonecorrect}} - Clone censors at a specified population hierarchy
+#' \item \code{\link{clonecorrect}} - Clones censors at a specified population hierarchy
 #' \item \code{\link{informloci}} - Detects and removes phylogenetically uninformative loci
 #' \item \code{\link{popsub}} - Subsets genind objects by population
 #' \item \code{\link{shufflepop}} - Shuffles genotypes at each locus using four different shuffling algorithms
-#' \item \code{\link{recode_polyploids}} - Recode polyploid data sets with missing alleles imported as "0"
+#' \item \code{\link{recode_polyploids}} - Recodes polyploid data sets with missing alleles imported as "0"
 #' }
 #' @section Genetic distances:
 #' \itemize{
@@ -157,8 +157,8 @@
 #' \item \code{\link{mlg.vector}} - Returns a vector of a numeric multilocus genotype assignment for each individual
 #' \item \code{\link{mlg.id}} - Finds all individuals associated with a single multilocus genotype
 #' \item \code{\link{mlg.filter}} - Collapses MLGs by genetic distance
-#' \item \code{\link{filter_stats}} - Calculate mlg.filter for all algorithms and plot
-#' \item \code{\link{cutoff_predictor}} - predict cutoff threshold from mlg.filter. 
+#' \item \code{\link{filter_stats}} - Calculates mlg.filter for all algorithms and plots
+#' \item \code{\link{cutoff_predictor}} - Predicts cutoff threshold from mlg.filter. 
 #' \item \code{\link{mll.custom}} - Allows for the custom definition of multilocus lineages
 #' \item \code{\link{mll.levels}} - Allows the user to change levels of custom MLLs. 
 #' \item \code{\link{diversity_stats}} - Creates a table of diversity indices for multilocus genotypes. 
@@ -180,7 +180,7 @@
 #' }
 #' @section Visualization:
 #' \itemize{
-#' \item \code{\link{imsn}} - interactive construction and visualization of minimum spanning networks
+#' \item \code{\link{imsn}} - Interactive construction and visualization of minimum spanning networks
 #' \item \code{\link{plot_poppr_msn}} - Plots minimum spanning networks produced in poppr with scale bar and legend
 #' \item \code{\link{greycurve}} - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
 #' \item \code{\link{bruvo.msn}} - Produces minimum spanning networks based off Bruvo's distance colored by population
