@@ -145,5 +145,12 @@ test_that("diversity_ci produces boxplots for rarefaction", {
 	expect_output(ciplot$layers[[1]], "geom_boxplot")
 	expect_output(ciplot$layers[[2]], "geom_point")
 	expect_output(ciplot$facet, "facet_wrap\\(Index\\)")
+})
 
+
+test_that("greycurve produces plots", {
+	skip_on_cran()
+	expect_output(greycurve(), "")
+	expect_output(greycurve(scalebar = TRUE), "")
+	expect_output(greycurve(1:100), "")
 })

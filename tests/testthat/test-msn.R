@@ -143,9 +143,67 @@ test_that("Minimum spanning networks can properly account for tied edges", {
 
 })
 
+test_that("Minimum spanning networks also collapse MLGs", {
+  skip_on_cran()
+  gend        <- as.genclone(gend)
+  gend_single <- as.genclone(gend_single)
+  gend_bruvo  <- bruvo.dist(gend, replen = c(1, 1))
+
+  gmsnt  <- bruvo.msn(gend, replen = c(1, 1), threshold = 0.15)
+  pgmsnt <- poppr.msn(gend, distmat = gend_bruvo, threshold = 0.15)
+
+  expect_identical(igraph::V(gmsnt$graph)$pie, igraph::V(pgmsnt$graph)$pie)
+  expect_identical(igraph::E(gmsnt$graph)$weight, igraph::E(pgmsnt$graph)$weight)
+  
+  gmsn   <- bruvo.msn(gend, replen = c(1, 1), showplot = FALSE)
+  pgmsn  <- poppr.msn(gend, distmat = gend_bruvo, showplot = FALSE)
+
+  expect_identical(igraph::V(gmsn$graph)$pie, igraph::V(pgmsn$graph)$pie)
+  expect_identical(igraph::E(gmsn$graph)$weight, igraph::E(pgmsn$graph)$weight)
+
+  expect_equal(length(igraph::V(gmsnt$graph)), 2)
+  expect_equal(length(igraph::V(gmsn$graph)), 4)
+
+  sgmsnt  <- bruvo.msn(gend_single, replen = c(1, 1), threshold = 0.15)
+  psgmsnt <- poppr.msn(gend_single, distmat = gend_bruvo, threshold = 0.15)
+
+  expect_identical(igraph::V(sgmsnt$graph)$pie, igraph::V(psgmsnt$graph)$pie)
+  expect_identical(igraph::E(sgmsnt$graph)$weight, igraph::E(psgmsnt$graph)$weight)
+  
+  sgmsn   <- bruvo.msn(gend_single, replen = c(1, 1), showplot = FALSE)
+  psgmsn  <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE)
+
+  expect_identical(igraph::V(sgmsn$graph)$pie, igraph::V(psgmsn$graph)$pie) 
+  expect_identical(igraph::E(sgmsn$graph)$weight, igraph::E(psgmsn$graph)$weight)
+
+  expect_equal(length(igraph::V(sgmsnt$graph)), 2)
+  expect_equal(length(igraph::V(sgmsn$graph)), 4)
+
+  expect_output(plot_poppr_msn(gend, gmsnt, palette = "cm.colors"), "")
+  expect_output(plot_poppr_msn(gend_single, sgmsnt, palette = "cm.colors"), "")
+})
+
 
 data("partial_clone")
 pc <- as.genclone(partial_clone)
+
+test_that("Minimum spanning networks can subset populations", {
+  bpc  <- bruvo.dist(pc, replen = rep(1, 10))
+  bmsn <- bruvo.msn(pc, replen = rep(1, 10), showplot = FALSE)
+  pmsn <- poppr.msn(pc, bpc, showplot = FALSE)
+  expect_identical(ucl(bmsn), ucl(pmsn))
+  
+  bmsn12 <- bruvo.msn(pc, replen = rep(1, 10), sublist = 1:2, showplot = FALSE)
+  pmsn12 <- poppr.msn(pc, bpc, sublist = 1:2, showplot = FALSE)
+  expect_identical(ucl(bmsn12), ucl(pmsn12))
+
+  bmsn1 <- bruvo.msn(pc, replen = rep(1, 10), sublist = 1, showplot = FALSE)
+  pmsn1 <- poppr.msn(pc, bpc, sublist = 1, showplot = FALSE)
+  expect_identical(ucl(bmsn1), ucl(pmsn1))
+  
+})
+
+
 mll.custom(pc) <- LETTERS[mll(pc)]
 mll.levels(pc)[mll.levels(pc) == "Q"] <- "M"
 mll(pc) <- "custom"
