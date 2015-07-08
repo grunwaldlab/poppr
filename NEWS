@@ -1,4 +1,4 @@
-poppr 1.1.5.99
+poppr 2.0.0
 ===========
 COMPATIBILITY UPDATE
 * poppr has moved to version 2.0 due to adegenet's recent update. The hierarchy slot introduced in version 1.1 is now being moved to adegenet and renamed `strata`. For maximum backwards compatibility, all of the hierarchy methods still exist, but they are deprecated and will print a warning with the proper function to use. If you were accessing the hierarchy slot without using the `*hierarchy()` methods, your code will fail as the hierarchy slot now should only contain a formula object. 
