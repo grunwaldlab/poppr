@@ -68,7 +68,7 @@
 #'   
 #' @note When \code{percent = TRUE}, this is exactly the same as
 #'   \code{\link{provesti.dist}}, except that it performs better for large
-#'   numbers of individuals (n > 125) at the cost of avaliable memory.
+#'   numbers of individuals (n > 125) at the cost of available memory.
 #'   
 #' @examples
 #' 
@@ -90,34 +90,34 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
   if (is(x, "bootgen")){
     ind.names <- x@names
   } else {
-    ind.names <- x@ind.names
+    ind.names <- indNames(x)
   }
   inds      <- nrow(x@tab)
   np        <- choose(inds, 2)
   dist.mat  <- matrix(data = 0, nrow = inds, ncol = inds)
-  numLoci   <- length(x@loc.names)
+  numLoci   <- nLoc(x)
   type      <- x@type
   if (type == "PA"){
     dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
     ploid <- 1
   } else if (is(x, "bootgen")){
     dist_by_locus <- vapply(1:numLoci, function(i){
-      .Call("pairdiffs", get_gen_mat(x[, i]))*(ploid/2)
+      .Call("pairdiffs", get_gen_mat(x[, i]))/2
     }, numeric(np))
   } else {  
     x <- seploc(x)
-    dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)*(ploid/2),
+    dist_by_locus <- vapply(x, function(x) .Call("pairdiffs", x@tab)/2,
                             numeric(np))
   }
   if (is.matrix(dist_by_locus)){
-    dist.mat[lower.tri(dist.mat)] <- rowSums(dist_by_locus)    
+    dist.mat[lower.tri(dist.mat)] <- rowSums(ceiling(dist_by_locus))    
   } else {
-    dist.mat[lower.tri(dist.mat)] <- dist_by_locus
+    dist.mat[lower.tri(dist.mat)] <- ceiling(dist_by_locus)
   }
   colnames(dist.mat) <- ind.names
   rownames(dist.mat) <- ind.names
   if (percent){
-    dist.mat <- dist.mat/(numLoci*ploid)
+    dist.mat <- sweep(dist.mat, 1, ploid * numLoci, "/")
   }
   dist.mat <- as.dist(dist.mat)
   if (mat == TRUE){
@@ -223,12 +223,13 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 #' 
 #==============================================================================#
 nei.dist <- function(x, warning = TRUE){
-  if (is(x, "gen"))
+  if (is(x, "gen")){
     MAT    <- get_gen_mat(x)
-  else if (length(dim(x)) == 2)
+  } else if (length(dim(x)) == 2){
     MAT <- x
-  else
+  } else {
     stop("Object must be a matrix or genind object")
+  }
   IDMAT <- MAT %*% t(MAT)
   vec   <- sqrt(diag(IDMAT))
   IDMAT <- IDMAT/vec[col(IDMAT)]
@@ -250,11 +251,11 @@ nei.dist <- function(x, warning = TRUE){
 edwards.dist <- function(x){
   if (is(x, "gen")){ 
     MAT  <- get_gen_mat(x)
-    nloc <- length(x@loc.names)
+    nloc <- nLoc(x)
   } else if (length(dim(x)) == 2){
     MAT  <- x
     nloc <- ncol(x)
-  } else{
+  } else {
     stop("Object must be a matrix or genind object")
   }
   MAT     <- sqrt(MAT)
@@ -275,23 +276,21 @@ rogers.dist <- function(x){
   if (is(x, "gen")){ 
     if (is.genind(x) && x@type == "PA"){
       MAT     <- x@tab
-      nloc    <- length(x@loc.names)
-      loc.fac <- factor(x@loc.names, levels = x@loc.names)
+      nloc    <- nLoc(x)
+      loc.fac <- factor(locNames(x), levels = locNames(x))
       nlig    <- nrow(x@tab)
     } else {
       MAT     <- get_gen_mat(x)
-      nloc    <- length(x@loc.names)
+      nloc    <- nLoc(x)
       loc.fac <- x@loc.fac
       nlig    <- nrow(x@tab)      
     }
-  }
-  else if (length(dim(x)) == 2){
+  } else if (length(dim(x)) == 2){
     MAT     <- x
     nloc    <- ncol(x)
     loc.fac <- factor(colnames(x), levels = colnames(x))
     nlig    <- nrow(x)
-  }
-  else{
+  } else {
     stop("Object must be a matrix or genind object")
   }
   # kX is a list of K=nloc matrices
@@ -312,13 +311,11 @@ rogers.dist <- function(x){
 reynolds.dist <- function(x){
   if (is(x, "gen")){ 
     MAT    <- get_gen_mat(x)
-    nloc   <- length(x@loc.names)
-  }
-  else if (length(dim(x)) == 2){
+    nloc   <- nLoc(x)
+  } else if (length(dim(x)) == 2){
     MAT  <- x
     nloc <- ncol(x)
-  }
-  else{
+  } else {
     stop("Object must be a matrix or genind object")
   }
   denomi       <- MAT %*% t(MAT)
@@ -341,8 +338,8 @@ reynolds.dist <- function(x){
 provesti.dist <- function(x){
   if (is(x, "gen")){
     MAT   <- get_gen_mat(x)
-    nlig  <- nrow(x@tab)
-    nloc  <- length(x@loc.names)
+    nlig  <- nrow(tab(x))
+    nloc  <- nLoc(x)
     ploid <- x@ploidy
   } else if (length(dim(x)) == 2){
     MAT  <- x
@@ -355,7 +352,7 @@ provesti.dist <- function(x){
   loca <- function(k, nlig, MAT, nLoc){
     w1     <- (k+1):nlig
     resloc <- vapply(w1, function(y) sum(abs(MAT[k, ] - MAT[y, ]), na.rm = TRUE), numeric(1))
-    if (x@type == "codom"){
+    if (is(x, "gen") && x@type == "codom"){
       # This only applies to codominant data because dominant data can only take
       # on a single state. Dividing by two indicates that the observations can
       # occupy co-occurring states.
@@ -364,174 +361,9 @@ provesti.dist <- function(x){
     return(resloc/nloc)
   }
 
-  d    <- unlist(lapply(w0, loca, nlig, MAT, nLoc))
-
+  d    <- unlist(lapply(w0, loca, nlig, MAT, nloc))
   labs <- get_gen_dist_labs(x)
   d    <- make_attributes(d, nlig, labs, "Provesti", match.call())
-
-  # resmat <- matrix(numeric(0), nlig, nlig)
-  # resmat[lower.tri(resmat)] <- d
-  # d <- as.dist(resmat)
-  # attr(d, "Labels") <- labs
   return(d)
 }
 
-
-#==============================================================================#
-#' Calculate a dendrogram with bootstrap support using any distance applicable 
-#' to genind or genclone objects.
-#' 
-#' @param x a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.
-#'   
-#' @param tree a text string or function that can calculate a tree from a
-#'   distance matrix. Defaults to "upgma". Note that you must load the package
-#'   with the function for it to work.
-#'   
-#' @param distance a character or function defining the distance to be applied 
-#'   to x. Defaults to \code{\link{nei.dist}}.
-#'   
-#' @param sample An integer representing the number of bootstrap replicates 
-#'   Default is 100.
-#'   
-#' @param cutoff An integer from 0 to 100 setting the cutoff value to return the
-#'   bootstrap values on the nodes. Default is 0.
-#'   
-#' @param showtree If \code{TRUE} (Default), a dendrogram will be plotted. If 
-#'   \code{FALSE}, nothing will be plotted.
-#'   
-#' @param missing any method to be used by \code{\link{missingno}}: "mean" 
-#'   (default), "zero", "loci", "genotype", or "ignore".
-#'   
-#' @param mcutoff a value between 0 (default) and 1 defining the percentage of 
-#'   tolerable missing data if the \code{missing} parameter is set to "loci" or
-#'   "genotype". This should only be set if the distance metric can handle
-#'   missing data.
-#'   
-#' @param quiet if \code{FALSE} (default), a progress bar will be printed to 
-#'   screen.
-#'  
-#' @param root is the tree rooted? This is a parameter passed off to 
-#'   \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a 
-#'   rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like 
-#'   neighbor-joining), it should be false. When set to \code{NULL} (default),
-#'   the tree will be considered unrooted unless it is a upgma tree.
-#'   
-#' @param ... any parameters to be passed off to the distance method.
-#'   
-#' @return an object of class \code{\link[ape]{phylo}}.
-#'   
-#' @details This function utilizes an internal class called 
-#'   \code{\linkS4class{bootgen}} that allows bootstrapping of objects that 
-#'   inherit the genind class. This is necessary due to the fact that columns in
-#'   the genind matrix are defined as alleles and are thus interrelated. This 
-#'   function will specifically bootstrap loci so that results are biologically 
-#'   relevant. With this function, the user can also define a custom distance to
-#'   be performed on the genind or genclone object.
-#'   
-#' @note \code{\link{provesti.dist}} and \code{\link{diss.dist}} are exactly the
-#'   same, but \code{\link{diss.dist}} scales better for large numbers of 
-#'   individuals (n > 125) at the cost of required memory. \subsection{missing 
-#'   data}{Missing data is not allowed by many of the distances. Thus, one of 
-#'   the first steps of this function is to treat missing data by setting it to 
-#'   the average allele frequency in the data set. If you are using a distance 
-#'   that can handle missing data (Provesti's distance), you can set 
-#'   \code{missing = "ignore"} to allow the distance function to handle any 
-#'   missing data. See \code{\link{missingno}} for details on missing
-#'   data.}\subsection{Bruvo's Distance}{While calculation of Bruvo's distance
-#'   is possible with this function, it is optimized in the function
-#'   \code{\link{bruvo.boot}}.}
-#'   
-#' @seealso \code{\link{nei.dist}} \code{\link{edwards.dist}} 
-#'   \code{\link{rogers.dist}} \code{\link{reynolds.dist}} 
-#'   \code{\link{provesti.dist}} \code{\link{diss.dist}} 
-#'   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}} 
-#'   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
-#'   
-#' @export
-#' @keywords bootstrap
-#' @aliases bootstrap
-#' @examples
-#' 
-#' data(nancycats)
-#' nan9 <- popsub(nancycats, 9)
-#' 
-#' set.seed(9999)
-#' # Generate a tree using nei's distance
-#' neinan <- aboot(nan9, dist = nei.dist)
-#' 
-#' set.seed(9999)
-#' # Generate a tree using custom distance
-#' bindist <- function(x) dist(x$tab, method = "binary")
-#' binnan <- aboot(nan9, dist = bindist)
-#' 
-#' \dontrun{
-#' # AFLP data
-#' data(Aeut)
-#' 
-#' # Nei's distance
-#' anei <- aboot(Aeut, dist = nei.dist, sample = 1000, cutoff = 50)
-#' 
-#' # Rogers' distance
-#' arog <- aboot(Aeut, dist = rogers.dist, sample = 1000, cutoff = 50)
-#' 
-#' # This can also be run on genpop objects
-#' Aeut.gc <- as.genclone(Aeut, hierarchy=other(Aeut)$population_hierarchy[-1])
-#' setpop(Aeut.gc) <- ~Pop/Subpop
-#' Aeut.pop <- genind2genpop(Aeut.gc)
-#' set.seed(5000)
-#' aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
-#' 
-#' # Utilizing other tree methods
-#' 
-#' library("ape")
-#' 
-#' aboot(Aeut.pop, tree = fastme.bal, sample = 1000)
-#' 
-#' # Utilizing options in other tree methods
-#' 
-#' myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
-#' aboot(Aeut.pop, tree = myFastME, sample = 1000)
-#' }
-#==============================================================================#
-aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
-                  cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
-                  quiet = FALSE, root = NULL, ...){
-  if (is.genind(x)){
-    x <- missingno(x, missing, quiet = quiet, cutoff = mcutoff)
-  }
-  if (x@type == "PA"){
-    xboot           <- x@tab
-    colnames(xboot) <- locNames(x)
-    if (is.genpop(x)){
-      rownames(xboot) <- x@pop.names
-    } else {
-      rownames(xboot) <- indNames(x)
-    }
-  } else {
-    xboot <- new("bootgen", x)
-  }
-  treefunk <- tree_generator(tree, distance, ...)
-  xtree    <- treefunk(xboot)
-  if (any(xtree$edge.len < 0)){
-    xtree <- fix_negative_branch(xtree)
-    warning(negative_branch_warning())
-  }
-  treechar <- paste(substitute(tree), collapse = "")
-  if (is.null(root)){
-    root <- grepl("upgma", treechar)
-  }
-  nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root, 
-                         quiet = quiet)
-  nodelabs <- (nodelabs/sample)*100
-  nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
-  if (is.genind(x)){
-    xtree$tip.label <- indNames(x)
-  } else {
-    xtree$tip.label <- x@pop.names
-  }
-  xtree$node.label <- nodelabs
-  if (showtree){
-    poppr.plot.phylo(xtree, treechar, root)
-  }
-  return(xtree)
-}

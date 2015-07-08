@@ -13,12 +13,24 @@ apt_packages:
 r_packages:
   - devtools
 
+r_github_packages:
+  - thibautjombart/adegenet
+  - KlausVigo/phangorn
+  - jimhester/covr
+
+after_success:
+  - Rscript -e 'library(covr);coveralls()'
+  
 notifications:
   email:
     on_success: change
     on_failure: always
+
+
 env:
   global:
+    - CRAN: http://cran.rstudio.com
+    - NOT_CRAN: true
     - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"
     - R_CHECK_ARGS="--as-cran --timings"
     - R_CHECK_TIME="TRUE"

@@ -72,7 +72,7 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #' That is a lot to keep track of. The new \strong{\code{hierarchy}} slot will
 #' allow the user to change the population factor with one function and a formula:
 #' 
-#' \code{setpop(object) <- ~Population/Subpopulation}
+#' \code{setPop(object) <- ~Population/Subpopulation}
 #' 
 #' making this become slightly more intuitive and tractable.
 #' 
@@ -86,39 +86,33 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #' @aliases genclone
 #' @export
 #' @slot mlg a vector representing multilocus genotypes for the data set.
-#' @slot hierarchy a data frame containing hierarchical levels.
 #' @author Zhian N. Kamvar
-#' @seealso \code{\link{as.genclone}} \code{\link{sethierarchy}} \code{\link{setpop}} 
+#' @seealso \code{\link{as.genclone}} \code{\link{strata}} \code{\link{setPop}} 
 #' \code{\linkS4class{genind}} 
 #' @import methods
 #==============================================================================#
 setClass("genclone", 
          contains = "genind",
-         representation = representation(mlg = "mlgORnumeric",
-                                         hierarchy = "data.frame"),
+         representation = representation(mlg = "mlgORnumeric"),
+         prototype(mlg = integer(0))
 )
 
-# valid.genclone <- function(object){
-#   slots   <- slotNames(object)
-#   if (any(!c("mlg", "hierarchy") %in% slots)){
-#     return(FALSE)
-#   }
-#   inds    <- length(object@ind.names)
-#   mlgs    <- length(object@ind.names)
-#   hier    <- length(object@hierarchy)
-#   hierobs <- nrow(object@hierarchy)
-#   if (mlgs != inds){  
-#     cat("Multilocus genotypes do not match the number of observations")
-#     return(FALSE)
-#   }
-#   if (hier > 0 & hierobs != inds){
-#     cat("Hierarchy does not match the number of observations")
-#     return(FALSE)
-#   }
-#   return(TRUE)
-# }
-# 
-# setValidity("genclone", valid.genclone)
+valid.genclone <- function(object){
+  slots   <- slotNames(object)
+  if (any(!"mlg" %in% slots)){
+    return(FALSE)
+  }
+  inds    <- nInd(object)
+  mlgs    <- length(object@mlg)
+  if (mlgs != inds){  
+    message("Multilocus genotypes do not match the number of observations")
+    return(FALSE)
+  }
+  return(TRUE)
+}
+
+setValidity("genclone", valid.genclone)
+
 #==============================================================================#
 #' SNPclone class
 #' 
@@ -140,20 +134,18 @@ setClass("genclone",
 #' @aliases snpclone
 #' @export
 #' @slot mlg a vector representing multilocus genotypes for the data set.
-#' @slot hierarchy a data frame containing hierarchical levels.
 #' @author Zhian N. Kamvar
-#' @seealso \code{\link{as.snpclone}} \code{\link{sethierarchy}} \code{\link{setpop}} 
+#' @seealso \code{\link{as.snpclone}} \code{\linkS4class{genclone}} 
 #' \code{\linkS4class{genlight}} 
 #' @import methods
 #==============================================================================#
 setClass("snpclone",
          contains = "genlight",
-         representation = representation(mlg = "mlgORnumeric",
-                                         hierarchy = "data.frame"
-                                         )
+         representation = representation(mlg = "mlgORnumeric"),
+         prototype = prototype(mlg = integer(0))
 )
 
-
+setValidity("snpclone", valid.genclone)
 #==============================================================================#
 #' bruvomat object
 #' 
@@ -164,8 +156,8 @@ setClass("snpclone",
 #' @name bruvomat-class
 #' @rdname bruvomat-class
 #' @export
-#' @slot mat a matrix of genotypes with one allele per locus. Number of rows will
-#' be equal to (ploidy)*(number of loci)
+#' @slot mat a matrix of genotypes with one allele per locus. Number of rows
+#'   will be equal to (ploidy)*(number of loci)
 #' @slot replen repeat length of microsatellite loci
 #' @slot ploidy the ploidy of the data set
 #' @slot ind.names names of individuals in matrix rows.
@@ -183,9 +175,9 @@ setClass(
   ),
   prototype = prototype(
     mat = matrix(ncol = 0, nrow = 0),
-    replen = 0,
-    ploidy = 2,
-    ind.names = "none"
+    replen = integer(0),
+    ploidy = integer(0),
+    ind.names = character(0)
   )
 )
 
@@ -217,4 +209,10 @@ setClass("bootgen",
                           ploidy = "integer",
                           names = "vector", 
                           alllist = "list"),
+         prototype = prototype(
+          type = character(0),
+          ploidy = integer(0),
+          names = character(0),
+          alllist = list()
+          )
 )

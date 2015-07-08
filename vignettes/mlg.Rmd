@@ -1,0 +1,742 @@
+---
+title: "Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`"
+author: Zhian N. Kamvar and Niklaus J. Grünwald
+date: "`r Sys.Date()`"
+bibliography: the_bibliography.bib
+output:
+  html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Multilocus Genotype Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, tidy = FALSE)
+knitr::opts_chunk$set(fig.align = "center", fig.show = 'asis', fig.height = 5,
+                      fig.width = 5)
+library("knitcitations")
+cite_options(citation_format = "pandoc", max.names = 3, style = "html", 
+             hyperlink = "to.doc")
+bib <- read.bibtex("the_bibliography.bib")
+```
+
+----
+<center>
+# Abstract
+
+A multilocus genotype is a unique combination of alleles across two or more
+loci. For organisms such as plant pathogens that often reproduce clonally,
+multilocus genotypes are invaluable for identifying the mode and spread of an
+organism. This document will describe in detail how you can define multilocus
+genotypes/lineages and how you can use them for your analyses of both genclone
+and snpclone objects.
+<br>
+<br>
+
+<img src="popprlogo.png" width="300">
+</center>
+
+----
+
+# Introduction
+
+
+# Multilocus Genotype Flavors
+
+There are three different ways for constructing multilocus genotypes in *poppr*.
+
+| Method | Description |
+|----|----|
+| `"original"` | Default MLG definition; strict matching |
+| `"contracted"` | Collapsing MLGs by genetic distance with `mlg.filter` |
+| `"custom"` | User-defined multilocus genotypes  |
+
+The first is a simply naïve construction where all alleles must match to make a
+unique multilocus genotype. New in version 2.0 is the ability to use genetic
+distance to collapse multilocus genotypes or define custom multilocus lineages
+based on other information. You can use the function `mll()` to display and
+switch between different multilocus genotypes/lineages.
+
+```{r, warning = TRUE}
+library("poppr")
+data(monpop)
+monpop
+head(mll(monpop, "original"), 20) # Showing the definitions for the first 20 samples
+```
+
+Notice how we got a warning. This is because the `monpop` data set was created
+before `mll()` was implemented. Luckily, this warning gives us information on 
+how to fix it.
+
+```{r}
+mll(monpop) <- "original"
+monpop
+```
+
+We can see that the description says 
+`r gsub("original", "**original**", capture.output(monpop)[6])`. This is how we
+know what the current MLG definition is for our object. Let' see what happens
+when we change it.
+
+```{r}
+mll(monpop) <- "custom"
+monpop
+```
+
+Now it says `r gsub("custom", "**custom**", capture.output(monpop)[6])`. Of 
+course, if we look at the MLGs, we will see that they appear to be the same as
+our original definition:
+
+```{r}
+head(mll(monpop, "custom"), 20) # Showing the definitions for the first 20 samples
+```
+
+
+
+All of these functions will work for both **genclone** and **snpclone** objects.
+In this section, we will demonstrate how to construct each of these three
+multilocus genotype definitions in different data sets.
+
+## Naïve ("original")
+
+This is the default way *poppr* calculates multilocus genotypes. You see it
+immediately when you load a genclone object. Let's use the example `monpop` from
+`r citep(bib["everhart2014finescale"])`. First, we need to reset the data to
+our original MLGs.
+
+```{r}
+mll(monpop) <- "original"
+monpop
+```
+
+You notice that there are 694 samples, yet only 264 multilocus genotypes in the 
+data set over 13 loci. In this sub-section, I will demonstrate how these MLGs
+are constructed.
+
+The naïve definition simply takes strings of alleles and compares them for
+equality. This method is quick and easily interpretable, but means that things
+like genotyping error, hyper-variable loci, and missing data all contribute to a
+unique genotype that might not be truly unique `r citep(bib["kamvar2015novel"])`.
+
+To give an example, let's imagine that we have five samples with alleles typed
+at two loci. 
+
+```{r}
+grid_example <- matrix(c(1, 4,
+                         1, 1,
+                         5, 1,
+                         9, 1,
+                         9, 4), 
+                       ncol = 2,
+                       byrow = TRUE)
+rownames(grid_example) <- LETTERS[1:5]
+colnames(grid_example) <- c("x", "y")
+grid_example
+```
+
+We notice how they all have different multilocus genotypes. Indeed, if we 
+analyze them, we see that there are five multilocus genotypes.
+
+```{r}
+library("poppr")
+x <- as.genclone(df2genind(grid_example, ploidy = 1))
+tab(x)  # Look at the multilocus genotype table
+nmll(x) # count the number of multilocus genotypes
+mll(x)  # show the multilocus genotype definitions
+```
+
+What we did above was to analyze the **tab** slot of the object showing the
+counts of alleles per sample across the two loci. We can clearly see by eye that
+no two samples are alike. The `nmll()` function counts the **n**umber of
+**m**ulti**l**ocus **l**ineages in the sample. the `mll()` function displays the
+assignment of the multilocus lineages in the sample.
+
+> Note: we used `mll()` to show us our multilocus lineages. Later on, we will
+> use this same function to switch between different definitions. See ?mll for
+> details.
+
+Now let's say we included another sample with partial missing data. Let's say it
+was typed as allele "5" at the **x** locus, but missing the allele at the **y**
+locus.
+
+```{r}
+x <- as.genclone(df2genind(rbind(grid_example, new = c(5, NA)), ploidy = 1))
+tab(x)  # Note the missing data at locus 2. 
+nmll(x)
+mll(x)
+```
+
+Now we see that we have 6 multilocus genotypes even though one of them contains
+missing data.
+
+Let's also imagine that we included yet another sample that had a low-frequency
+allele at locus **y**, 2, but had the allele "5" at locus **x**.
+
+```{r}
+grid_new <- rbind(grid_example, 
+                  new = c(5, NA), 
+                  mut = c(5, 2)
+                  )
+x <- as.genclone(df2genind(grid_new, ploidy = 1))
+tab(x)
+nmll(x)
+mll(x)
+```
+
+Again, we get completely different genotypes, but notice how the genotypes we 
+added are closer to the genotype that shares the 5 allele. The reason this 
+happens is because the naïve algorithm reports the rank of the concatenated 
+alleles like so:
+
+```{r}
+(xt <- apply(tab(x), 1, paste, collapse = ""))
+rank(xt, ties.method = "first")
+```
+
+Even though we have reason to believe that the samples "new" and "mut" might
+actually have the genotype x.5 and y.1 (the MLG of sample C), the algorithm sees
+them as different. If we calculate the pairwise euclidean distances between
+samples, we see that "new", "mut" and, "C" are very similar to each other:
+
+```{r, fig.width = 5, fig.height = 5}
+library("phangorn")
+raw_dist <- function(x){
+  dist(genind2df(x, usepop = FALSE))
+}
+(xdis <- raw_dist(x))
+plot.phylo(upgma(xdis))
+```
+
+Therefore, we might want to consider "new", "mut" and, "C" to be the same MLG.
+In the next section, you will see how to collapse multilocus genotypes by
+genetic distance.
+
+## Filtered ("contracted")
+
+To remedy the issues with a naïve definition of multilocus genotypes, we can
+utilize genetic distance, which will allow us to collapse multilocus genotypes
+that are under a specific distance threshold. The main function we will use in
+this section is `mlg.filter()`. By default, it will calculate Nei's genetic
+distance `r citep(bib[c("nei1972genetic")])` on the data and then filter based
+off of that matrix. You can also utilize your own supplied distance matrix or
+distance function.
+
+### Collapsing
+
+Let's continue our example by using the euclidean distance of the raw alleles.
+To do the collapsing, we will use the function `mlg.filter()`. 
+
+```{r}
+mlg.filter(x, distance = xdis, threshold = 1)
+```
+
+Notice that we now have the last two MLGs collapsed together into one MLL. 
+Unfortunately, we wanted to collapse three MLGs. What happened?
+
+Remember that the distance between "mut" and "C" was 1. We need to set the 
+threshold above where we want the collapse to happen. In order to do this, we
+should add a tiny number to the threshold:
+
+```{r}
+(e <- .Machine$double.eps^0.5) # A very tiny number
+mlg.filter(x, distance = xdis, threshold = 1 + e)
+```
+
+
+### Minimum spanning networks
+
+Now we have all of our MLGs collapsed together, but perhaps a better way to 
+visualize it would be to use `poppr.msn()`: 
+
+```{r}
+# Threshold of 1
+set.seed(9001)
+g1 <- poppr.msn(x, xdis, threshold = 1, include.ties = TRUE, 
+                vertex.label.color = "firebrick", vertex.label.font = 2)
+# Threshold of 1 + e
+set.seed(9001)
+g2 <- poppr.msn(x, xdis, threshold = 1 + e, include.ties = TRUE, 
+                vertex.label.color = "firebrick", vertex.label.font = 2)
+```
+
+Notice how the genotypes collapse into a single node. Both `poppr.msn()` and
+`bruvo.msn()` will calculate and plot these minimum spanning networks. 
+
+### Setting the genotypes
+
+If we wanted to reassign our sample genotypes to the collapsed version, all
+we would have to do is use the `mlg.filter()` commands above, but use the `<-` 
+operator to specify the threshold. Note that I will be using `mlg.table()` to show
+the distribution of the multilocus genotypes before and after filtering.
+
+```{r}
+x
+mlg.table(x) # Before: 7 MLGs
+mlg.filter(x, distance = xdis) <- 1 + e
+x
+mlg.table(x) # After: 5 MLGs
+```
+
+Notice how the information you see has changed. You can see that it's printed
+out that you have 5 **contracted** multilocus genotypes, but you have some
+cryptic code underneath:
+
+| symbol | meaning |
+|:----:|:----|
+| **[t]** | threshold |
+| **[d]** | distance (can be matrix or function) |
+| **[a]** | algorithm (see the next section) |
+
+Genclone and snpclone objects will always remember what parameters were used for
+filtering multilocus genotypes, but the only catch is that, if you use your own
+supplied distance (matrix or function), you must be very careful not to delete
+it or change the object name.
+
+This means that you don't always have to specify the distance when assigning a
+threshold:
+
+```{r}
+mlg.filter(x) <- 4.51
+x
+mlg.table(x)
+```
+
+> DANGER! DANGER! While this is a convenient function, if you use a matrix or
+> function that was created by you, you **must not delete it or change its name**. 
+> Only the name of the matrix/function is stored, so if you delete the
+> matrix/function used to inform your filtering, you will get an error:
+
+```{r, errors = TRUE}
+rm(xdis) # NOOOOOO!
+try(mlg.filter(x) <- 1 + e)
+```
+
+```{r, echo = FALSE}
+cat(" Error: cannot evaluate distance function, it might be missing.")
+```
+
+Basically, your object thinks that there should be a matrix called **xdis**, but
+it can't find it anywhere. But don't worry, we can restore it if we have the
+function available. We will use the `raw_dist()` function that we defined
+earlier.
+
+```{r}
+mlg.filter(x, distance = raw_dist) <- 1 + e
+x
+```
+
+The safest way, perhaps, is to use a function defined in *poppr*. For example,
+we'll use Bruvo's distance since it takes into account the real value of the
+alleles `r citep(bib["Bruvo:2004"])`.
+
+> The arguments to your distance function will be stored in the object as well!
+
+```{r}
+bruvo.dist(x, replen = c(1, 1))
+mlg.filter(x, distance = bruvo.dist, replen = c(1, 1)) <- 0.44
+x
+```
+
+Of course, our multilocus genotypes are not changed forever, they are
+just stored in a different place. We can access the original, naïve multilocus
+genotypes by using the `mll()` function:
+
+```{r}
+mll(x, "original")
+mll(x) # contracted
+mll(x) <- "original"
+mll(x) # original
+```
+
+### Tie breakers (algorithms)
+
+Underlying `mlg.filter` are three algorithms that decide what genotypes go
+together `r citep(bib["kamvar2015novel"])`:
+
+ - nearest neighbor
+ - farthest neighbor (default)
+ - average neighbor (UPGMA)
+
+You can specify which algorithm you want to use in clustering with the
+`algorithm` argument. Each of these algorithms have different behaviors when it
+comes to collapsing multilocus genotypes. In short, farthest neighbor is the
+most conservative, nearest neighbor can have a chaining effect, and average
+neighbor is somewhere in between. Your choice of algorithm really depends on 
+the biology of your organism.
+
+To help visualize this, there is the function `filter_stats()`, which will plot
+the output of the filtering algorithm. For simplicity, we will use the `Pinf`
+data set. 
+
+```{r}
+data(Pinf)
+Pinf
+```
+```{r, eval = FALSE}
+pinfreps <- c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)
+pinf_filtered <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE)
+```
+```{r, echo = FALSE}
+pinf_filtered <- structure(list(farthest = structure(list(THRESHOLDS = c(0.00946969696969697, 
+0.0218986742424242, 0.0227272727272727, 0.0227272727272727, 0.0321969696969697, 
+0.0340909090909091, 0.0416666666666667, 0.0426136363636364, 0.0454545440998944, 
+0.0469933712121212, 0.0475852031900425, 0.0568181818181818, 0.0583570075757576, 
+0.0625, 0.0645123106060606, 0.0681818181818182, 0.071969696969697, 
+0.0787168560606061, 0.0795454545454545, 0.0877274792603772, 0.0887784090909091, 
+0.096875, 0.0972222218459303, 0.101444128787879, 0.102272727272727, 
+0.105113636363636, 0.124999997019768, 0.1373046875, 0.144886363636364, 
+0.144886363636364, 0.146875, 0.166883656472871, 0.1810546875, 
+0.202888257575758, 0.204534355889667, 0.210227261890065, 0.212712894786488, 
+0.21417297979798, 0.215909090909091, 0.224423495205966, 0.2310546875, 
+0.24147722937844, 0.244318138469349, 0.254296875, 0.272017021070827, 
+0.274999999592546, 0.283380660143766, 0.283639612818734, 0.286517494856709, 
+0.299999999999997, 0.300423362038352, 0.303216722276476, 0.3132568359375, 
+0.314364346590909, 0.324951028823853, 0.329367886890065, 0.336390339246273, 
+0.349216449260712, 0.350672249503509, 0.351752541279314, 0.356195056438446, 
+0.393820264122703, 0.400924682617178, 0.40845954576225, 0.425906093960459, 
+0.43447858095167, 0.442915470762686, 0.449020385742188, 0.508324856228299, 
+0.531248589808291, 0.570909273293283)), .Names = "THRESHOLDS"), 
+    average = structure(list(THRESHOLDS = c(0.00946969696969697, 
+    0.0218986742424242, 0.0227272727272727, 0.0227272727272727, 
+    0.025094696969697, 0.0340909090909091, 0.0416666666666667, 
+    0.0426136363636364, 0.0454545440998944, 0.0455137310606061, 
+    0.0466678503787879, 0.0475852031900425, 0.0511659564393939, 
+    0.0545526883417508, 0.0568181818181818, 0.0625, 0.0681818181818182, 
+    0.071969696969697, 0.0740477613327078, 0.0795454545454545, 
+    0.0801767673004757, 0.0838660037878788, 0.0866477272727273, 
+    0.0888060248259342, 0.096875, 0.102272727272727, 0.115597666045766, 
+    0.124999997019768, 0.1373046875, 0.144886363636364, 0.146875, 
+    0.161045311584517, 0.166883656472871, 0.16710372960373, 0.1810546875, 
+    0.184232867847789, 0.202558907595548, 0.204534355889667, 
+    0.206436427885836, 0.210227261890065, 0.214071994357639, 
+    0.215014662619261, 0.215909090909091, 0.223154024025062, 
+    0.231697651008991, 0.232942396941574, 0.234374967488376, 
+    0.24108716573077, 0.256249999592546, 0.26269802216063, 0.267573954791508, 
+    0.270312499999997, 0.273674976370344, 0.274394785567667, 
+    0.286255415107566, 0.287522453250307, 0.288763944769339, 
+    0.289302857948453, 0.299724045206423, 0.303216722276476, 
+    0.306365737283497, 0.321009861969742, 0.324542172166621, 
+    0.32717027165268, 0.337866076140844, 0.341214240671925, 0.357475861900184, 
+    0.367269792813813, 0.381709199021638, 0.386264138520478, 
+    0.402997007671042)), .Names = "THRESHOLDS"), nearest = structure(list(
+        THRESHOLDS = c(0.00946969696969697, 0.0218986742424242, 
+        0.0227272727272727, 0.0227272727272727, 0.0227272727272727, 
+        0.0340909090909091, 0.0340909090909091, 0.0397727272727273, 
+        0.0416666666666667, 0.0426136363636364, 0.0440340909090909, 
+        0.0440340909090909, 0.0454545440998944, 0.0475852031900425, 
+        0.0568181818181818, 0.0568181818181818, 0.0625, 0.0631313127550212, 
+        0.0653409090909091, 0.0681818181818182, 0.0681818181818182, 
+        0.0681818181818182, 0.071969696969697, 0.0795454545454545, 
+        0.0823863636363636, 0.096875, 0.102272727272727, 0.1248046875, 
+        0.124999997019768, 0.130681818181818, 0.1373046875, 0.144886363636364, 
+        0.146070075757576, 0.146875, 0.146875, 0.151909718910853, 
+        0.15625, 0.15625, 0.1591796875, 0.159326171875, 0.161024305141634, 
+        0.166883656472871, 0.172743055555556, 0.173295454545455, 
+        0.177582464036014, 0.1810546875, 0.181818168271672, 0.181818180463531, 
+        0.184374998509884, 0.186520385742187, 0.190625, 0.193749997019768, 
+        0.200760041824495, 0.201704545454545, 0.204534355889667, 
+        0.20625, 0.210227261890065, 0.213068181140856, 0.21484375, 
+        0.215277776949935, 0.21589728918678, 0.218747171488675, 
+        0.237304686009884, 0.240624999999997, 0.241137550292405, 
+        0.246679684519768, 0.249126849903001, 0.249951165169477, 
+        0.259232954545455, 0.260652021928267, 0.287280261516571
+        )), .Names = "THRESHOLDS")), .Names = c("farthest", "average", 
+"nearest"))
+
+plot_filter_stats(Pinf, pinf_filtered, 0.6)
+```
+
+We can see that the different algorithms behave quite differently. 
+
+## Custom ("custom")
+
+Sometimes multilocus genotypes are defined by more than just genetic data and it
+would be useful to be able to analyze these genotype definitions. Luckily,
+there is a way to do this. *Poppr* has support for custom multilocus genotypes.
+For example, we have a simulated data set that has 50 samples with 26 multilocus
+genotypes. 
+
+```{r}
+data(partial_clone)
+pc <- as.genclone(partial_clone)
+mll(pc)
+```
+
+Let's change the MLGs to letters instead of numbers. We will use `mll.custom()`
+to do this.
+
+```{r}
+LETTERS[mll(pc)]  # The new MLGs
+mll.custom(pc) <- LETTERS[mll(pc)]
+mlg.table(pc)
+```
+
+This even works with minimum spanning networks:
+
+```{r}
+pcpal <- colorRampPalette(c("blue", "gold"))
+set.seed(9001)
+pcmsn <- bruvo.msn(pc, replen = rep(1, nLoc(pc)), palette = pcpal,
+                   vertex.label.color = "firebrick", vertex.label.font = 2,
+                   vertex.label.cex = 1.5)
+``` 
+
+Let's say that we realized that we have strong evidence for MLG "Q" being the
+same as MLG "M". If we wanted to change those, we could simply change the
+factor levels:
+
+```{r}
+mll.levels(pc)[mll.levels(pc) == "Q"] <- "M"
+```
+
+And we can plot again
+
+```{r}
+set.seed(9001)
+pcmsn <- bruvo.msn(pc, replen = rep(1, nLoc(pc)), palette = pcpal,
+                   vertex.label.color = "firebrick", vertex.label.font = 2,
+                   vertex.label.cex = 1.5)
+```
+
+Notice how the minimum spanning network architecture stayed the same, but the
+labels had changed. 
+
+# Diversity Analysis
+
+In the **Data Import and Manipulation** vignette, the first command demonstrated
+was the `poppr()`, command, which produced a table of diversity statistics, most
+of which were calculated on counts of multilocus genotypes. These statistics can
+be replicated by using the function `diversity_stats()`. This function
+calculates diversity statistics based off of a table of multilocus genotypes.
+Let's analyze the diversity of the peach brown rot pathogen, *Monilinia
+fructicola*, structured by Symptom (Fruit Rot:FR and Blossom Blight:BB) and Year
+`r citep(bib["everhart2014finescale"])`. Let's first look at the distribution of
+multilocus genotypes:
+
+```{r}
+data(monpop)
+splitStrata(monpop) <- ~Tree/Year/Symptom
+montab <- mlg.table(monpop, strata = ~Symptom/Year)
+```
+
+We can see from these plots that the Fruit Rot (FR) have a lot more clones in
+the canopies than Blossom Blight (BB). This makes biological sense since Fruit
+Rot infections are clonally propagated, whereas Blossom Blight infections are
+from sexual propagules `r citep(bib["everhart2014finescale"])`. Let's look at
+the diversity metrics.
+
+## Basic Statistics
+
+The function `diversity_stats()` is used to get basic diversity statistics:
+
+```{r}
+(monstat <- diversity_stats(montab))
+```
+
+## Confidence Intervals
+
+We can get confidence intervals for these statistics using `diversity_ci()`:
+
+```{r, message = TRUE, warning = TRUE}
+diversity_ci(montab, n = 100L, raw = FALSE)
+```
+
+You can see that there was a warning about centering the confidence interval.
+The boxplots you see are the distribution of the bootstrapped replicates, but
+they are known to be biased. We invite users to please read the documentation
+for `diversity_ci()` by typing `?diversity_ci`. It is very important to be careful
+when interpreting these results because sometimes confidence the confidence
+intervals exist outside of the possible range, as exemplified by 
+`r paste(rownames(monstat)[monstat[, "E.5"] > 0.9], collapse = " and ")`.
+
+## Custom Statistics
+
+In all of the `diversity_*` functions, you can use your own custom diversity
+statistics. A common one we get requests for is the clonal fraction,
+$\frac{MLG}{N}$ or the number of multilocus genotypes over the number of
+samples. You can add it in by writing your own function. Keep in mind, that you
+should write it for both a matrix and a vector of counts if you want to be able
+to bootstrap it.
+
+```{r}
+myCF <- function(x){
+ x <- drop(as.matrix(x))
+ if (length(dim(x)) > 1){ # if it's a matrix
+   res <- rowSums(x > 0)/rowSums(x)
+ } else {                 # if it's a vector
+   res <- sum(x > 0)/sum(x)
+ }
+ return(res)
+}
+(monstat2 <- diversity_stats(montab, CF = myCF))
+```
+
+You can use filtered or custom MLGs to compare diversity. Here, I'm filtering
+genotypes in `monpop` that are different by only a single mutational step 
+`r citep(bib["Bruvo:2004"])`.
+
+```{r, eval = FALSE}
+# Repeat lengths are necessary
+reps <- c(CHMFc4 = 7, CHMFc5 = 2, CHMFc12 = 4, 
+          SEA = 4, SED = 4, SEE = 2, SEG = 6,
+          SEI = 3, SEL = 4, SEN = 2, 
+          SEP = 4, SEQ = 2, SER = 4)
+
+# Adding a little bit, so the threshold is included.
+e <- .Machine$double.eps^0.5
+
+# Using the default farthest neighbor algorithm to collapse genotypes
+mlg.filter(monpop, distance = bruvo.dist, replen = reps) <- (0.5/13) + e
+montabf <- mlg.table(monpop, strata = ~Symptom/Year)
+```
+```{r, echo = FALSE}
+monpop@mlg <- new("MLG", monpop@mlg)
+filts <- c(260L, 179L, 168L, 168L, 167L, 221L, 152L, 133L, 144L, 78L, 
+78L, 79L, 81L, 44L, 40L, 40L, 40L, 38L, 119L, 120L, 93L, 29L, 
+10L, 239L, 38L, 93L, 96L, 172L, 114L, 60L, 72L, 82L, 78L, 129L, 
+138L, 89L, 203L, 120L, 34L, 21L, 21L, 222L, 32L, 104L, 95L, 95L, 
+203L, 190L, 80L, 95L, 95L, 82L, 82L, 21L, 95L, 95L, 222L, 138L, 
+51L, 222L, 222L, 222L, 222L, 222L, 104L, 212L, 95L, 222L, 170L, 
+95L, 251L, 35L, 258L, 151L, 83L, 156L, 25L, 241L, 130L, 210L, 
+163L, 234L, 196L, 205L, 233L, 159L, 161L, 227L, 216L, 216L, 206L, 
+161L, 216L, 161L, 161L, 194L, 161L, 47L, 157L, 161L, 70L, 161L, 
+216L, 161L, 216L, 207L, 204L, 134L, 216L, 204L, 161L, 56L, 136L, 
+161L, 159L, 216L, 161L, 194L, 161L, 204L, 47L, 227L, 70L, 174L, 
+161L, 47L, 134L, 70L, 134L, 47L, 216L, 216L, 55L, 70L, 194L, 
+216L, 161L, 161L, 216L, 216L, 216L, 70L, 216L, 47L, 47L, 110L, 
+197L, 161L, 42L, 258L, 258L, 235L, 256L, 85L, 18L, 103L, 52L, 
+14L, 57L, 250L, 213L, 77L, 62L, 195L, 5L, 106L, 53L, 148L, 192L, 
+112L, 71L, 185L, 19L, 31L, 178L, 153L, 20L, 101L, 96L, 111L, 
+59L, 54L, 199L, 54L, 99L, 54L, 242L, 212L, 28L, 91L, 65L, 212L, 
+40L, 175L, 175L, 175L, 184L, 175L, 212L, 176L, 91L, 91L, 122L, 
+44L, 91L, 91L, 91L, 175L, 91L, 175L, 91L, 28L, 175L, 175L, 65L, 
+65L, 28L, 63L, 175L, 125L, 91L, 91L, 175L, 126L, 91L, 28L, 91L, 
+93L, 91L, 91L, 91L, 91L, 27L, 91L, 65L, 91L, 175L, 90L, 184L, 
+220L, 175L, 175L, 175L, 91L, 91L, 91L, 91L, 65L, 91L, 91L, 93L, 
+91L, 91L, 91L, 91L, 91L, 28L, 90L, 91L, 222L, 95L, 21L, 95L, 
+175L, 95L, 95L, 95L, 222L, 122L, 173L, 173L, 222L, 222L, 105L, 
+222L, 222L, 222L, 222L, 222L, 34L, 222L, 211L, 92L, 80L, 3L, 
+222L, 92L, 80L, 173L, 222L, 262L, 222L, 261L, 261L, 222L, 95L, 
+222L, 222L, 222L, 222L, 222L, 222L, 113L, 261L, 73L, 261L, 95L, 
+261L, 73L, 222L, 172L, 95L, 172L, 80L, 93L, 21L, 95L, 60L, 21L, 
+21L, 95L, 95L, 95L, 95L, 95L, 95L, 211L, 95L, 80L, 95L, 246L, 
+211L, 95L, 96L, 95L, 95L, 96L, 124L, 177L, 95L, 222L, 95L, 222L, 
+82L, 95L, 203L, 120L, 120L, 173L, 222L, 173L, 95L, 173L, 37L, 
+173L, 124L, 222L, 37L, 173L, 173L, 173L, 173L, 173L, 173L, 173L, 
+154L, 154L, 173L, 222L, 173L, 95L, 173L, 95L, 222L, 222L, 173L, 
+120L, 21L, 120L, 120L, 95L, 173L, 173L, 222L, 219L, 104L, 67L, 
+64L, 67L, 255L, 217L, 255L, 225L, 61L, 258L, 36L, 252L, 181L, 
+88L, 110L, 50L, 237L, 224L, 33L, 237L, 164L, 110L, 12L, 12L, 
+68L, 12L, 12L, 25L, 255L, 110L, 76L, 259L, 25L, 164L, 254L, 164L, 
+258L, 110L, 110L, 25L, 50L, 258L, 110L, 237L, 12L, 68L, 76L, 
+68L, 12L, 180L, 164L, 76L, 12L, 12L, 255L, 12L, 181L, 251L, 47L, 
+237L, 67L, 67L, 36L, 237L, 110L, 255L, 255L, 50L, 12L, 47L, 12L, 
+67L, 237L, 200L, 200L, 68L, 127L, 258L, 237L, 243L, 74L, 187L, 
+196L, 115L, 209L, 130L, 187L, 187L, 164L, 181L, 100L, 237L, 12L, 
+196L, 257L, 146L, 140L, 54L, 139L, 242L, 54L, 242L, 87L, 183L, 
+242L, 149L, 54L, 54L, 59L, 242L, 213L, 2L, 54L, 242L, 139L, 242L, 
+226L, 59L, 244L, 208L, 242L, 242L, 242L, 242L, 242L, 242L, 22L, 
+182L, 242L, 242L, 182L, 54L, 87L, 43L, 242L, 242L, 183L, 140L, 
+140L, 242L, 54L, 199L, 9L, 87L, 242L, 242L, 213L, 242L, 182L, 
+18L, 18L, 48L, 242L, 242L, 54L, 22L, 191L, 87L, 59L, 242L, 140L, 
+165L, 19L, 86L, 242L, 242L, 4L, 4L, 54L, 22L, 236L, 54L, 242L, 
+242L, 242L, 54L, 9L, 96L, 146L, 87L, 87L, 208L, 214L, 18L, 214L, 
+98L, 189L, 189L, 98L, 98L, 75L, 16L, 189L, 162L, 115L, 110L, 
+16L, 46L, 110L, 209L, 135L, 25L, 193L, 189L, 84L, 84L, 16L, 245L, 
+232L, 196L, 196L, 115L, 227L, 115L, 245L, 110L, 110L, 1L, 227L, 
+196L, 110L, 16L, 187L, 1L, 150L, 196L, 209L, 193L, 16L, 209L, 
+209L, 193L, 180L, 11L, 196L, 1L, 110L, 16L, 55L, 75L, 115L, 180L, 
+193L, 1L, 198L, 193L, 110L, 209L, 64L, 110L, 209L, 16L, 209L, 
+16L, 217L, 209L, 16L, 1L, 189L, 180L, 115L, 110L, 255L, 109L, 
+16L, 115L, 16L, 115L, 227L, 245L, 110L, 162L, 1L, 189L, 25L, 
+12L, 187L, 186L, 115L, 115L, 49L, 67L, 209L, 16L, 198L, 110L, 
+16L, 98L, 127L, 201L, 1L, 16L, 16L, 196L, 74L, 115L, 228L, 1L, 
+110L, 231L, 110L, 110L, 110L, 215L, 142L, 7L, 218L, 230L, 58L
+)
+monpop@mlg@mlg$contracted <- filts
+mll(monpop) <- "contracted"
+montabf <- mlg.table(monpop, strata = ~Symptom/Year)
+```
+
+```{r}
+(monstatf <- diversity_stats(montabf, CF = myCF))
+monstat2 - monstatf # Take the difference from the unfiltered
+```
+
+We can see that filtered MLLs tend to be less diverse. This makes intuitive
+sense as it is creating larger classes of multilocus genotypes.
+
+```{r}
+mll(monpop) <- "original"
+```
+
+## Jack-knife rarefaction
+
+The function `diversity_ci()` and `diversity_boot()` have the option to perform
+jack knife rarefaction calculations. This means that your data will be randomly
+sub-sampled to either the smallest population size, or whatever is specified
+in the parameter `n.rare`, whichever is bigger. Here's an example with the
+previous data set:
+
+```{r, message = TRUE}
+(monrare <- diversity_ci(montab, n = 100L, rarefy = TRUE, raw = FALSE))
+```
+
+This can give you comparable estimates of diversity when not all samples are of 
+equal size.
+
+# Clone Correction
+
+Clone-correction works hierarchically and only uses the first MLG copy
+encountered in the data per population. This is straightforward for naïve MLGs,
+but for MLLs collapsed by genetic distance or custom MLLs, this might change the
+results very slightly. As an example, let's look at the `monpop` filtered
+MLLs that we created earlier.
+
+```{r}
+nmll(monpop, "original")
+nmll(monpop, "contracted")
+mll(monpop) <- "contracted"
+```
+
+To show how the order of the samples can affect the sampling, we will take the
+sum of all pairwise distances between clone-corrected samples (corrected without
+respect to populations):
+
+```{r}
+mcc <- clonecorrect(monpop, strata = NA)
+sum(dist(mcc))
+```
+
+Now, what happens when we randomly sample individuals?
+
+```{r}
+set.seed(999)
+mcc1 <- clonecorrect(monpop[sample(nInd(monpop))], strata = NA)
+sum(dist(mcc1))
+
+set.seed(1000)
+mcc2 <- clonecorrect(monpop[sample(nInd(monpop))], strata = NA)
+sum(dist(mcc2))
+```
+
+Notice how we are getting different results based on the order of samples. This
+does not mean that the procedure doesn't work, it just means that we must be
+careful when clone-correcting modified multilocus genotypes. 
+
+# Conclusions
+
+We have demonstrated here new methods for treating multilocus genotypes on
+microsatellite data, but it is important to remember that all of these functions
+can work with any source of data stored in either a **genclone** or **snpclone**
+(derived from **genlight**) object. Especially with `mlg.filter()`, these new
+functions will allow for a more flexible analysis of WGS data of clonal
+organisms where true clones may differ by more than a few
+mutations/errors/missing data. As with all analyses, it is important to
+understand the algorithms used and take them into account when interpreting
+results.
+
+# References
