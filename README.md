@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=2.0-rc)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=2.0-rc)](https://coveralls.io/r/grunwaldlab/poppr?branch=2.0-rc)
-<!--[![Coverage Status](http://codecov.io/github/grunwaldlab/poppr/coverage.svg?branch=2.0-rc)](http://codecov.io/github/grunwaldlab/poppr?branch=2.0-rc)-->
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
 
 # Poppr version 2.0
 
@@ -10,8 +9,10 @@ to try out poppr version 2.0, you must install adegenet 2.0 first. See the
 Installation section below.
 
 ```R
-devtools::install_github("thibautjombart/adegenet")
-devtools::install_github("grunwaldlab/poppr@2.0-rc", build_vignettes = TRUE)
+if (packageVersion("adegenet") < package_version("2.0.0")){ 
+  devtools::install_github("thibautjombart/adegenet")
+}
+devtools::install_github("grunwaldlab/poppr", build_vignettes = TRUE)
 ```
 
 ## Welcome 
@@ -47,7 +48,7 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 For full details, see the NEWS file or type in your R console:
 
 ```R
-news(Version == "1.1.5.99", package = "poppr")
+news(Version == "2.0.0", package = "poppr")
 ```
 
 ## Citation
