@@ -1,19 +1,14 @@
+# Poppr version 2.0
+
+In development:    
 [![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
 [![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
 
-# Poppr version 2.0
+On CRAN:    
+[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
+[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
+[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://www.r-pkg.org/pkg/poppr)
 
-This version of poppr is version 2.0 and is only compatible with 
-[adegenet version 2.0](https://github.com/thibautjombart/adegenet). If you want 
-to try out poppr version 2.0, you must install adegenet 2.0 first. See the 
-Installation section below.
-
-```R
-if (packageVersion("adegenet") < package_version("2.0.0")){ 
-  devtools::install_github("thibautjombart/adegenet")
-}
-devtools::install_github("grunwaldlab/poppr", build_vignettes = TRUE)
-```
 
 ## Welcome 
 
@@ -79,10 +74,6 @@ citation(package = "poppr")
 
 ### From CRAN
 
-[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
-[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
-[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://www.r-pkg.org/pkg/poppr)
-
 Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/package=poppr).
 
 To install, make sure R is at least version 2.15.1 (the authors recommend &ge; 3.0), and in your console, type:
@@ -110,14 +101,14 @@ Now you can use the `install_github()` function:
 #### For the latest stable release:    
 
 ```R
-devtools::install_github(repo = "grunwaldlab/poppr@current")
+devtools::install_github(repo = "grunwaldlab/poppr", build_vignettes = TRUE)
 library("poppr")
 ```
 
 #### For the bleeding edge (development) version:
 
 ```R
-devtools::install_github(repo = "grunwaldlab/poppr")
+devtools::install_github(repo = "grunwaldlab/poppr@devel", build_vignettes = TRUE)
 library("poppr")
 ```
 
