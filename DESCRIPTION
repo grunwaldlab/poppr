@@ -2,7 +2,7 @@ Package: poppr
 Type: Package
 Title: Genetic Analysis of Populations with Mixed Reproduction
 Version: 2.0.0
-Date: 2015-07-07
+Date: 2015-07-08
 Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "kamvarz@science.oregonstate.edu"),
     person(c("Javier", "F."), "Tabima", role = "aut",
@@ -22,7 +22,7 @@ MailingList: http://groups.google.com/group/poppr
 BugReports: https://github.com/grunwaldlab/poppr/issues
 Depends:
     R (>= 2.15.1),
-    adegenet (>= 2.0-0)
+    adegenet (>= 2.0.0)
 Imports:
     stats,
     graphics,
