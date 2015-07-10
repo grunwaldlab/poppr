@@ -14,8 +14,6 @@ r_packages:
   - devtools
 
 r_github_packages:
-  - thibautjombart/adegenet
-  - KlausVigo/phangorn
   - jimhester/covr
 
 after_success:
