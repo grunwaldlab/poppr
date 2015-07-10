@@ -4,6 +4,7 @@
 \name{mll}
 \alias{mll}
 \alias{mll,genclone-method}
+\alias{mll,genind-method}
 \alias{mll,snpclone-method}
 \alias{mll<-}
 \alias{mll<-,genclone-method}

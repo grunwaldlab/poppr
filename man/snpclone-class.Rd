@@ -20,8 +20,6 @@ correcting and analyzing data over multiple levels of population hierarchy.
 
 \describe{
 \item{\code{mlg}}{a vector representing multilocus genotypes for the data set.}
-
-\item{\code{hierarchy}}{a data frame containing hierarchical levels.}
 }}
 \section{Extends}{
 
@@ -31,7 +29,7 @@ Class \code{"\linkS4class{genlight}"}, directly.
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{as.snpclone}} \code{\link{sethierarchy}} \code{\link{setpop}}
+\code{\link{as.snpclone}} \code{\linkS4class{genclone}}
 \code{\linkS4class{genlight}}
 }
 

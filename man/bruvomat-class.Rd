@@ -11,8 +11,8 @@ Not intended for user interaction.
 \section{Slots}{
 
 \describe{
-\item{\code{mat}}{a matrix of genotypes with one allele per locus. Number of rows will
-be equal to (ploidy)*(number of loci)}
+\item{\code{mat}}{a matrix of genotypes with one allele per locus. Number of rows
+will be equal to (ploidy)*(number of loci)}
 
 \item{\code{replen}}{repeat length of microsatellite loci}
 

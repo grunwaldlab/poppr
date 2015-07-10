@@ -1,5 +1,21 @@
-poppr 1.1.5.99
+poppr 2.0.0
 ===========
+COMPATIBILITY UPDATE
+* poppr has moved to version 2.0 due to adegenet's recent update. The hierarchy slot introduced in version 1.1 is now being moved to adegenet and renamed `strata`. For maximum backwards compatibility, all of the hierarchy methods still exist, but they are deprecated and will print a warning with the proper function to use. If you were accessing the hierarchy slot without using the `*hierarchy()` methods, your code will fail as the hierarchy slot now should only contain a formula object. 
+
+NEW DEPENDENCIES
+* poppr now imports elements from dplyr and shiny
+* As required as of 2015-06-29, poppr now explicitly imports: stats, graphics, grDevices, and utils
+
+NEW SUGGESTS
+* poppr now suggests the cowplot, poweRlaw, and polysat packages.
+
+NEW DATA
+* A data set called `Pram` containing SSR genotypes from the Sudden Oak Death pathogen _Phytophthora ramorum_ (Kamvar et.al., 2015)
+
+NEW MINT FLAVOR
+* refreshing!
+
 NEW FEATURES
 * The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
 * The function `poppr` will now plot all populations in a single faceted plot instead of one plot per population.
@@ -7,24 +23,42 @@ NEW FEATURES
 * The mlg slot in the genclone object can now optionally hold an MLG class object. This object will contain different definitions of multilocus genotypes, allowing the user to switch between observed, custom, and mlgs defined given a genetic distance threshold.
 * minimum spanning network functions gain the ability to include reticulations using the option `include.ties`
 * minimum spanning network functions gain the ability to collapse multilocus genotypes by genetic distance with the option `threshold`.
+* `poppr.amova` gains the ability to filter multilocus genotypes before calculation.
+* `informloci` gains the argument "MAF", which allows the specification of a minor allele frequency cutoff in addition to the cutoff argument. Examples have been updated.
+* `aboot` can now take genlight objects.
+* `poppr.msn` and `plot_poppr_msn` can now take genlight objects.
+* `plot_poppr_msn` now gives users the option to exclude the legends.
+* Default plotting for `mlg.table` will no longer produce one plot per population. It will now produce a single ggplot object for all populations. Note that the bars are no longer colored by count.
+* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calucluated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
+* `poppr` can now take any statistic that can be caluclated from a table of multilocus genotype counts. 
+* `genind2genalex` gains the ability to selectively write different strata.
 
 NEW FUNCTIONS
 * `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
-* `bitwise.dist` can efficiently calculate absolute genetic distance for genlight objects. 
+* `filter_stats` will show you graphical output of all the algorithms in `mlg.filter`.
+* `cutoff_predictor` will predict the cutoff threshold from `mlg.filter`.
+* `bitwise.dist` can efficiently calculate absolute genetic distance for genlight objects.
 * `mll` "multilocus lineages" is a new replacement for `mlg.vector` which gains the functionality of selecting the multilocus genotype definition from the mlg slot.
 * `nmll` counts the number of multilocus lineages
 * `mll.custom` allows the user to define custom multilocus genotypes.
 * `mll.levels` allows the user to edit the names of custom multilocus genotypes.
 * `poppr_has_parallel` will return `TRUE` if poppr was built with OpenMP parallel library.
 * `win.ia` calculates windows of \bar{r}_d along genlight chromosomes.
-* `samp.ia` calculates \bar{r}_d for genlight object by ranomly sampling a user-defined number of SNPs.
+* `samp.ia` calculates \bar{r}_d for genlight object by randomly sampling a user-defined number of SNPs.
 * `test_replen` will test repeat lengths of microsatellite markers for consistency.
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
+* `diversity_stats` returns a matrix containing diversity statistics. Defaults to 4 found in `poppr`, but can be extended to any statistic that can be calculated on a vector of MLG counts.
+* `diviersity_boot` will bootstrap a MLG matrix over the statistics specified for `get_stats`. Can also perform rarefaction bootstrap.
+* `diversity_ci` will calculate and plot confidence intervals for bootstrap resampling of an MLG matrix. This includes rarefaction to the smallest sample size.
+* `imsn` provides an interactive shiny interface for construction of minimum spanning networks.
+* `pair.ia` will calculate the index of association for pairs of loci and plot heatmaps. 
 
 NEW CLASSES
-* snpclone is an extension of the genlight object that acts very much like genclone. It contains a hierarchy and mlg slot. 
+* snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 
 * MLG is an internal class that lives inside the mlg slot of snpclone and genclone objects. It allows the user to easily switch between multilocus genotype definitions.
 
+BUG FIXES
+* I was going too fast to count.
 
 poppr 1.1.5
 ===========

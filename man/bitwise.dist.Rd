@@ -41,6 +41,13 @@ This function does pairwise comparisons between diploid samples in a genlight
 object. The number representing the distance between two samples is equal to
 the number of alleles in the samples that do not have the same zygosity.
 }
+\examples{
+set.seed(999)
+x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+x
+system.time(xd <- bitwise.dist(x))
+xd
+}
 \author{
 Zhian N. Kamvar, Jonah Brooks
 }

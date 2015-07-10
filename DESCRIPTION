@@ -1,8 +1,8 @@
 Package: poppr
 Type: Package
 Title: Genetic Analysis of Populations with Mixed Reproduction
-Version: 1.1.5.99-227
-Date: 2015-05-15
+Version: 2.0.0.99-3
+Date: 2015-07-09
 Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "kamvarz@science.oregonstate.edu"),
     person(c("Javier", "F."), "Tabima", role = "aut",
@@ -22,8 +22,12 @@ MailingList: http://groups.google.com/group/poppr
 BugReports: https://github.com/grunwaldlab/poppr/issues
 Depends:
     R (>= 2.15.1),
-    adegenet (>= 1.4-2)
+    adegenet (>= 2.0.0)
 Imports:
+    stats,
+    graphics,
+    grDevices,
+    utils,
     vegan,
     ggplot2,
     phangorn,
@@ -32,10 +36,17 @@ Imports:
     methods,
     ade4,
     pegas,
-    reshape2
+    reshape2,
+    dplyr (>= 0.4),
+    boot,
+    shiny
 Suggests:
     testthat,
     knitr,
-    polysat
+    rmarkdown,
+    knitcitations,
+    polysat,
+    poweRlaw,
+    cowplot
 License: GPL-2 | GPL-3
 VignetteBuilder: knitr

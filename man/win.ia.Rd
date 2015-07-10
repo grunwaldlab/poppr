@@ -4,7 +4,7 @@
 \alias{win.ia}
 \title{Calculate windows of the index of association for genlight objects.}
 \usage{
-win.ia(x, window = 100L, min.snps = 3L, threads = 1L)
+win.ia(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 }
 \arguments{
 \item{x}{a genlight object.}
@@ -21,6 +21,8 @@ win.ia(x, window = 100L, min.snps = 3L, threads = 1L)
   will force the function to run serially, which may increase stability on
   some systems. Other values may be specified, but should be used with
   caution.}
+
+\item{quiet}{if \code{FALSE}, a progress bar will be printed to the screen.}
 }
 \value{
 Index of association representing the samples in this genlight
@@ -28,12 +30,12 @@ Index of association representing the samples in this genlight
 }
 \description{
 Genlight objects can contain millions of loci. Since it does not make much
-sense to caluclate the index of association over that many loci, this
+sense to calculate the index of association over that many loci, this
 function will scan windows across the loci positions and calculate the index
 of association.
 }
 \note{
-this will calculate the standardized index of assocation from Agapow
+this will calculate the standardized index of association from Agapow
 2001. See \code{\link{ia}} for details.
 }
 \examples{

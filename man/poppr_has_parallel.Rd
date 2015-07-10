@@ -12,6 +12,9 @@ FALSE if openMP is not supported, TRUE if it is
 \description{
 Determines whether openMP is support on this system.
 }
+\examples{
+poppr_has_parallel()
+}
 \author{
 Zhian N. Kamvar, Jonah Brooks
 }
