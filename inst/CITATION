@@ -1,7 +1,8 @@
-citHeader("To cite poppr in publications, please use:")
-
 vers <- paste("R package version", meta$Version) 
 umlaut <- iconv("\x9f", from = "MAC", to = "UTF-8") # paste0("u", "\u0308")
+header <- paste("To cite poppr in publications, please specify poppr version",
+				meta$Version, "and with the following citation:")
+citHeader(header)
 
 citEntry(entry = 'article',
  title = "\\textit{Poppr}: an {R} package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction.",
@@ -19,6 +20,25 @@ citEntry(entry = 'article',
  url = "http://dx.doi.org/10.7717/peerj.281",
  doi = "10.7717/peerj.281",
  journal = "PeerJ",
- textVersion = paste0("Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281 http://dx.doi.org/10.7717/peerj.281")
+ textVersion = paste0("Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281. doi: 10.7717/peerj.281")
 )
+
+citEntry(entry = 'article',
+ title = "{Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality}",
+ author = personList(as.person("Zhian N. Kamvar"),
+                     as.person("Jonah C. Brooks"),
+                     as.person(paste0("Niklaus J. Gr", umlaut, "nwald"))
+          ),
+ year = "2015",
+ month = "6",
+ volume = "6",
+ pages = "208",
+ keywords = "clonality, population genomics, bootstrap, index of association, hierarchical analysis, sliding window",
+ key = "kamvar2015novel",
+ url = "http://dx.doi.org/10.3389/fgene.2015.00208",
+ doi = "10.3389/fgene.2015.00208",
+ journal = "Front. Genet.",
+ textVersion = paste0("Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality. Front. Genet. 6:208. doi: 10.3389/fgene.2015.00208")
+)
+
 

@@ -11,16 +11,21 @@ A class to store multilocus genotypes in genclone objects.
 \section{Slots}{
 
 \describe{
-\item{\code{mlg}}{a list containing four vectors, one for each type of MLG manipulation.}
+\item{\code{mlg}}{a list containing four vectors, one for each type of MLG
+manipulation.}
 
-\item{\code{visible}}{a character specifying which MLG type is to be displayed and accessed.}
+\item{\code{visible}}{a character specifying which MLG type is to be displayed and
+accessed.}
 
-\item{\code{distname}}{the name of the distance function used to collapse mlgs.}
+\item{\code{distname}}{the name of the distance function or matrix used to collapse
+mlgs.}
 
 \item{\code{distargs}}{the arguments provided to compute the distance function.}
 
-\item{\code{cutoff}}{Two numbers specifying the cutoff value for expanding and collapsing
-MLGs.}
+\item{\code{distalgo}}{the algorithm used to contract multilocus genotypes.}
+
+\item{\code{cutoff}}{Two numbers specifying the cutoff value for expanding and
+collapsing MLGs.}
 }}
 \author{
 Zhian N. Kamvar

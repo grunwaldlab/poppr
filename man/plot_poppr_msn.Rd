@@ -8,16 +8,17 @@ plot_poppr_msn(x, poppr_msn, gscale = TRUE, gadj = 3,
   mlg.compute = "original", glim = c(0, 0.8), gweight = 1,
   wscale = TRUE, nodebase = 1.15, nodelab = 2, inds = "ALL",
   mlg = FALSE, quantiles = TRUE, cutoff = NULL, palette = NULL,
-  layfun = layout.auto, beforecut = FALSE, ...)
+  layfun = layout.auto, beforecut = FALSE, pop.leg = TRUE,
+  scale.leg = TRUE, ...)
 }
 \arguments{
-\item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+\item{x}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}}
   object from which \code{poppr_msn} was derived.}
 
 \item{poppr_msn}{a \code{list} produced from either \code{\link{poppr.msn}}
   or \code{\link{bruvo.msn}}. This list should contain a graph, a vector of
   population names and a vector of hexadecimal color definitions for each
-  popualtion.}
+  population.}
 
 \item{gscale}{"grey scale". If this is \code{TRUE}, this will scale the color
   of the edges proportional to the observed distance, with the lines becoming
@@ -77,6 +78,14 @@ between more distantly related nodes.}
   before any edges are removed with \code{cutoff}. If \code{FALSE} (Default),
   the layout will be computed after any edges are removed.}
 
+\item{pop.leg}{if \code{TRUE}, a legend indicating the populations will
+  appear in the top right corner of the graph, but will not overlap. Setting
+  \code{pop.leg = FALSE} disables this legend. See details.}
+
+\item{scale.leg}{if \code{TRUE}, a scale bar indicating the distance will
+  appear under the graph. Setting \code{scale.leg = FALSE} suppresses this
+  bar. See details.}
+
 \item{...}{any other parameters to be passed on to
   \code{\link[igraph]{plot.igraph}}.}
 }
@@ -133,6 +142,12 @@ The previous incarnation of msn plotting in poppr simply plotted the
   clone correction will be done via the computed multilocus genotypes, either
   "original" or "contracted". This is specified in the \code{mlg.compute}
   argument, above.}
+
+  \subsection{legends}{ To avoid drawing the legend over the graph, legends
+  are separated by different plotting areas. This means that if legends are
+  included, you cannot plot multiple MSNs in a single plot. The scale bar (to
+  be added in manually) can be obtained from \code{\link{greycurve}} and the
+  legend can be plotted with \code{\link{legend}}.}
 }
 \examples{
 # Using a data set of the Aphanomyces eutieches root rot pathogen.

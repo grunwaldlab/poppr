@@ -1,13 +1,13 @@
 context("Population subset tests")
 
 test_that("subsetting needs a genind object", {
-  expect_error(popsub(1:10), "popsub requires a genind object\n")
+  expect_error(popsub(1:10), "popsub requires a genind or genlight object\n")
 })
 
 test_that("sublist needs to match populations", {
   data(microbov, package = "adegenet")
   expect_error(popsub(microbov, "missingno"), 
-               poppr:::unmatched_pops_warning(microbov@pop.names, "missingno"))
+               poppr:::unmatched_pops_warning(popNames(microbov), "missingno"))
 })
 
 test_that("sum of the pops equal the whole", {
@@ -27,28 +27,28 @@ test_that("subsetting works with populations", {
   # Matrices equivalent
   expect_that(nan48@tab, equals(p48@tab))
   ## Dropping columns
-  expect_that(popsub(nan48, "4")@tab, equals(p4@tab))
+  expect_that(popsub(nan48, "P04")@tab, equals(p4@tab))
   expect_that(popsub(nan48, 1)@tab, equals(p4@tab))
   expect_that(popsub(nancycats, 4)@tab, equals(p4@tab))
   # Populations equivalent
   expect_that(as.character(pop(nan48)), is_identical_to(as.character(pop(p48))))
   # Individuals equivalent
-  expect_that(nan48@ind.names, is_identical_to(p48@ind.names))
+  expect_that(indNames(nan48), is_identical_to(indNames(p48)))
   # Rejects unknown populations
   expect_that(popsub(nancycats, 18), gives_warning())
   # Rejects equivalent blacklist and sublist
   ## As numeric
   expect_that(popsub(nancycats, sublist = 1, blacklist = 1), gives_warning())
   ## As characters
-  expect_that(popsub(nancycats, sublist = "1", blacklist = "1"), gives_warning())
-  expect_that(popsub(nancycats, sublist = "1", blacklist = 1), gives_warning())
-  expect_that(popsub(nancycats, sublist = 1, blacklist = "1"), gives_warning())
+  expect_that(popsub(nancycats, sublist = "P01", blacklist = "P01"), gives_warning())
+  expect_that(popsub(nancycats, sublist = "P01", blacklist = 1), gives_warning())
+  expect_that(popsub(nancycats, sublist = 1, blacklist = "P01"), gives_warning())
   expect_that(popsub(nancycats, sublist = c(4, 8), blacklist = c(4, 8)), 
               gives_warning())
-  expect_that(popsub(nancycats, sublist = c(4, 8), blacklist = "8")@tab, 
+  expect_that(popsub(nancycats, sublist = c(4, 8), blacklist = "P08")@tab, 
               equals(p4@tab))
   # numeric and character are the same
-  expect_that(popsub(nancycats, c("4", "8"), drop = FALSE)@tab, equals(nan48@tab))
+  expect_that(popsub(nancycats, c("P04", "P08"), drop = FALSE)@tab, equals(nan48@tab))
 })
 
 test_that("subsetting doesn't work without populations", {
@@ -71,26 +71,26 @@ test_that("subsetting works with genclone objects", {
   # Matrices equivalent
   expect_that(nan48@tab, equals(p48@tab))
   ## Dropping columns
-  expect_that(popsub(nan48, "4")@tab, equals(p4@tab))
+  expect_that(popsub(nan48, "P04")@tab, equals(p4@tab))
   expect_that(popsub(nan48, 1)@tab, equals(p4@tab))
   expect_that(popsub(nancycats, 4)@tab, equals(p4@tab))
   # Populations equivalent
   expect_that(as.character(pop(nan48)), is_identical_to(as.character(pop(p48))))
   # Individuals equivalent
-  expect_that(nan48@ind.names, is_identical_to(p48@ind.names))
+  expect_that(indNames(nan48), is_identical_to(indNames(p48)))
   # Rejects unknown populations
   expect_that(popsub(nancycats, 18), gives_warning())
   # Rejects equivalent blacklist and sublist
   ## As numeric
   expect_that(popsub(nancycats, sublist = 1, blacklist = 1), gives_warning())
   ## As characters
-  expect_that(popsub(nancycats, sublist = "1", blacklist = "1"), gives_warning())
-  expect_that(popsub(nancycats, sublist = "1", blacklist = 1), gives_warning())
-  expect_that(popsub(nancycats, sublist = 1, blacklist = "1"), gives_warning())
+  expect_that(popsub(nancycats, sublist = "P01", blacklist = "P01"), gives_warning())
+  expect_that(popsub(nancycats, sublist = "P01", blacklist = 1), gives_warning())
+  expect_that(popsub(nancycats, sublist = 1, blacklist = "P01"), gives_warning())
   expect_that(popsub(nancycats, sublist = c(4, 8), blacklist = c(4, 8)), 
               gives_warning())
-  expect_that(popsub(nancycats, sublist = c(4, 8), blacklist = "8")@tab, 
+  expect_that(popsub(nancycats, sublist = c(4, 8), blacklist = "P08")@tab, 
               equals(p4@tab))
   # numeric and character are the same
-  expect_that(popsub(nancycats, c("4", "8"), drop = FALSE)@tab, equals(nan48@tab))
+  expect_that(popsub(nancycats, c("P04", "P08"), drop = FALSE)@tab, equals(nan48@tab))
 })

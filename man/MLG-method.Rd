@@ -67,7 +67,7 @@ all MLG values or only the numeric.}
 \item{na.rm}{passed on to summary methods}
 }
 \description{
-Default methods for acessing and subsetting MLG objects.
+Default methods for accessing and subsetting MLG objects.
 }
 \author{
 Zhian N. Kamvar

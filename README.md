@@ -1,4 +1,16 @@
-## Welcome
+# Poppr version 2.0
+
+In development:    
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
+
+On CRAN:    
+[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
+[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
+[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://www.r-pkg.org/pkg/poppr)
+
+
+## Welcome 
 
 Poppr is an R package designed for analysis of populations with mixed modes of 
 sexual and clonal reproduction. It is built around the framework of [adegenet's](http://adegenet.r-forge.r-project.org/)
@@ -16,6 +28,23 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 - batch processing on any server that has R ( &ge; 2.15.1) installed
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
 - import of data from and export to [GenAlEx](http://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
+
+### New in version 2.0:
+
+- handling of genomic SNP data
+- custom multilocus genotype definitions
+- collapse multilocus lineages by genetic distance
+- calculate reticulate minimum spanning networks
+- calculate index of association in a sliding window across snps
+- bootstrapping of MLG diversity statistics
+- [interactive exploration of minimum spanning networks](https://github.com/zkamvar/poppr_msn_shiny)
+- and more!
+
+For full details, see the NEWS file or type in your R console:
+
+```R
+news(Version == "2.0.0", package = "poppr")
+```
 
 ## Citation
 
@@ -37,7 +66,7 @@ Please also cite:
   
 You can obtain citation information in R by typing:
 
-```s
+```R
 citation(package = "poppr")
 ```
 
@@ -45,14 +74,11 @@ citation(package = "poppr")
 
 ### From CRAN
 
-[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
-[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://cran.r-project.org/web/packages/poppr/index.html)
-
-Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/web/packages/poppr/index.html).
+Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/package=poppr).
 
 To install, make sure R is at least version 2.15.1 (the authors recommend &ge; 3.0), and in your console, type:
 
-```s
+```R
 install.packages("poppr")
 ```
 
@@ -62,13 +88,9 @@ If you want the absolute latest version of *poppr*, see about installing from gi
 
 ### Stable and Development versions
 
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.png?branch=devel)](https://travis-ci.org/grunwaldlab/poppr?branch=master)
-
-If the image above says "Passing", then that means it should be safe to install with the latest version of R. If it does not say "Passing", I am probably trying to fix whatever problem is causing it as fast as I can.
-
 To install this package from github, make sure you have the following:
 
-- [Xcode](https://developer.apple.com/xcode/) (OSX)
+- [Xcode](https://developer.apple.com/xcode) (OSX)
     OR [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
 - [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
 
@@ -78,15 +100,15 @@ Now you can use the `install_github()` function:
 
 #### For the latest stable release:    
 
-```s
-devtools::install_github(repo = "grunwaldlab/poppr")
+```R
+devtools::install_github(repo = "grunwaldlab/poppr", build_vignettes = TRUE)
 library("poppr")
 ```
 
 #### For the bleeding edge (development) version:
 
-```s
-devtools::install_github(repo = "grunwaldlab/poppr@devel")
+```R
+devtools::install_github(repo = "grunwaldlab/poppr@devel", build_vignettes = TRUE)
 library("poppr")
 ```
 
@@ -98,10 +120,14 @@ Users who have any questions/comments/suggestions regarding any version of poppr
 
 ### Vignettes
 
-Two vignettes have been written for poppr:
+A few vignettes have been written for poppr:
 
-1. Data Import and Manipulation (`vignette("poppr_manual", package = "poppr")`)
-2. Algorithms and Equation Utilized (`vignette("algo", package = "poppr")`)
+|Title                          |Command                               |
+|:------------------------------|:-------------------------------------|
+|Algorightms and Equations      |`vignette("algo", "poppr")`           |
+|Data import and manipulation   |`vignette("poppr_manual", "poppr")`   |
+|Migration from poppr version 1 |`vignette("how_to_migrate", "poppr")` |
+|Multilocus Genotype Analysis   |`vignette("mlg", "poppr")`            |
 
 ### Book/Primer
 

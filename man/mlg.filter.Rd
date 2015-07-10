@@ -14,11 +14,11 @@
 \alias{mlg.filter<-,snpclone-method}
 \title{Statistics on Clonal Filtering of Genotype Data}
 \usage{
-mlg.filter(pop, threshold = 0, missing = "mean", memory = FALSE,
+mlg.filter(pop, threshold = 0, missing = "asis", memory = FALSE,
   algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
   stats = "MLGs", ...)
 
-mlg.filter(pop, missing = "mean", memory = FALSE,
+mlg.filter(pop, missing = "asis", memory = FALSE,
   algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
   ...) <- value
 }
@@ -29,8 +29,8 @@ object.}
 \item{threshold}{the desired minimum distance between distinct genotypes.
 Defaults to 0, which will only merge identical genotypes}
 
-\item{missing}{any method to be used by \code{\link{missingno}}: "mean"
-(default), "zero", "loci", "genotype", or "ignore".}
+\item{missing}{any method to be used by \code{\link{missingno}}: "mean",
+"zero", "loci", "genotype", or "asis" (default).}
 
 \item{memory}{whether this function should remember the last distance matrix
 it generated. TRUE will attempt to reuse the last distance matrix if the
@@ -46,8 +46,9 @@ points in either cluster. This is the loosest of the three.
 every pair of points between clusters.}
 
 \item{distance}{a character or function defining the distance to be applied
-to pop. Defaults to \code{\link{nei.dist}}. A matrix or table containing
-distances between individuals (such as the output of
+to pop. Defaults to \code{\link{nei.dist}} for genclone objects and
+\code{\link{bitwise.dist}} for snpclone objects. A matrix or table
+containing distances between individuals (such as the output of
 \code{\link{nei.dist}}) is also accepted for this parameter.}
 
 \item{threads}{The maximum number of parallel threads to be used within this
@@ -71,16 +72,36 @@ return a list of all 4.}
 \item{value}{the threshold at which genotypes should be collapsed.}
 }
 \value{
-\subsection{mlg.stats}{
-a numeric vector naming the multilocus genotype of each individual in the
-dataset. Each genotype is at least the specified distance apart, as
-calculated by the selected algorithm. If stats is set to \code{TRUE}, this
-function will return the thresholds had which each cluster merger occurred
-instead of the new cluster assignments.
+Default, the collapsed multilocus genotypes. Otherwise, any
+  combination of the following:
+\subsection{MLGs}{
+  a numeric vector naming the multilocus genotype of each individual in the
+  dataset. Each genotype is at least the specified distance apart, as
+  calculated by the selected algorithm. If stats is set to \code{TRUE}, this
+  function will return the thresholds had which each cluster merger occurred
+  instead of the new cluster assignments.
+}
+\subsection{THRESHOLDS}{
+  A numeric vector representing the thresholds beyond which clusters of
+  multilocus genotypes were collapsed.
+}
+\subsection{DISTANCES}{
+  A square matrix representing the distances between each cluster.
+}
+\subsection{SIZES}{
+ The sizes of the multilocus genotype clusters in order.
 }
 }
 \description{
 Create a vector of multilocus genotype indices filtered by minimum distance.
+}
+\details{
+This function will take in any distance matrix or function and
+collapse multilocus genotypes below a given threshold. If you use this
+function as the assignment method (mlg.filter(myData, distance = myDist) <-
+0.5), the distance function or matrix will be remembered by the object. This
+means that if you define your own distance matrix or function, you must keep
+it in memory to further utilize mlg.filter.
 }
 \note{
 \code{mlg.vector} makes use of \code{mlg.vector} grouping prior to
@@ -101,5 +122,30 @@ pc # 26 mlgs
 # Set MLGs at threshold 0.05
 mlg.filter(pc, distance = "nei.dist") <- 0.05
 pc # 25 mlgs
+
+\dontrun{
+# The distance definition is persistant
+mlg.filter(pc) <- 0.1
+pc # 24 mlgs
+
+# You can still change the definition
+mlg.filter(pc, distance = diss.dist, percent = TRUE) <- 0.1
+pc
+
+# Even with custom definitions
+data(Pinf)
+Pinf
+mlg.filter(Pinf, distance = function(x) dist(tab(x))) <- 3
+Pinf
+mlg.filter(Pinf) <- 4
+Pinf
+
+# on genlight/snpclone objects
+set.seed(999)
+gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2))
+gc # 100 mlgs
+mlg.filter(gc) <- 0.25
+gc # 82 mlgs
+}
 }
 

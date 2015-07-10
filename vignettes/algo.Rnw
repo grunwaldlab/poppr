@@ -14,6 +14,7 @@
 \usepackage{mathtools}
 \usepackage{makeidx}
 \usepackage{longtable}
+\usepackage{natbib}
 
 % for bold symbols in mathmode
 \usepackage{bm}
@@ -51,7 +52,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 1.1.5.99-236}
+\title{Algorithms and equations utilized in poppr version \Sexpr{packageVersion("poppr")}}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -67,7 +68,7 @@ knitr::opts_knit$set(out.format = "latex")
 thm <- knitr::knit_theme$get("acid")
 knitr::knit_theme$set(thm)
 knitr::opts_chunk$set(concordance=TRUE)
-knitr::opts_chunk$set(size = 'footnotesize', message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 knitr::opts_chunk$set(out.width = '0.95\\linewidth', fig.align = "center", fig.show = 'asis')
 @
 \maketitle
@@ -79,13 +80,13 @@ Many of these are previously described in other papers and it would be prudent
 to cite them properly if they are used.
 \end{abstract}
 
-% \begin{figure}[b]   
-%   \centering
-%   \label{logo}   
-%   \includegraphics{popprlogo} 
-% \end{figure} 
-% 
-% \newpage 
+\begin{figure}[b]   
+  \centering
+  \label{logo}   
+  \includegraphics{popprlogo} 
+\end{figure} 
+
+\newpage 
 \begingroup
   \hypersetup{linkcolor=black} 
   \tableofcontents 
@@ -98,6 +99,12 @@ based on the same data structure, a matrix with samples in rows and alleles in
 columns. The number of columns is equal to the total number of alleles observed
 in the data set. Much of this description is derived from \adegenet{}'s
 \texttt{dist.genpop} manual page.
+
+\subsection{Caveat}
+
+The information here describes the data as it would be passed into the distance
+functions. Data represented in the genind objects are now counts of alleles
+instead of frequencies of alleles. Otherwise, these equations still hold. 
 
 \begin{quote}
 Let \textbf{A} be a table containing allelic frequencies with $t$
@@ -175,7 +182,7 @@ of populations (or individuals).
 
 The index of association was originally developed by A.H.D. Brown analyzing
 population structure of wheat and has been widely used as a tool to detect
-clonal reproduction within populations \cite{Brown:1980, Smith:1993}.
+clonal reproduction within populations \citep{Brown:1980, Smith:1993}.
 Populations whose members are undergoing sexual reproduction, whether it be
 selfing or out-crossing, will produce gametes via meiosis, and thus have a
 chance to shuffle alleles in the next generation. Populations whose members are
@@ -186,9 +193,9 @@ mutation. The rate of mutation varies from species to species, but it is rarely
 sufficiently high to approximate a random shuffling of alleles. The index of
 association is a calculation based on the ratio of the variance of the raw
 number of differences between individuals and the sum of those variances over
-each locus \cite{Smith:1993}. It can also be thought of as the observed variance
+each locus \citep{Smith:1993}. It can also be thought of as the observed variance
 over the expected variance. If both variances are equal, then the index is zero
-after subtracting one (from Maynard-Smith, 1993 \cite{Smith:1993}):
+after subtracting one (from Maynard-Smith, 1993 \citep{Smith:1993}):
 \begin{equation}
 \label{eq:I_A}
 I_A = \frac{V_O}{V_E}-1
@@ -231,7 +238,7 @@ These values are calculated over all possible combinations of individuals in the
 data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{}\nu$
 values of $d$ and ${n \choose 2}$ values of $D$. Calculating the observed
 variances is fairly straightforward (modified from Agapow and Burt, 2001)
-\cite{Agapow:2001}:
+\citep{Agapow:2001}:
 
 \begin{equation}
 \label{eq:V_O}
@@ -240,7 +247,7 @@ V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - \frac{\left(\displa
 
 Calculating the expected variance is the sum of each of the variances of the
 individual loci. The calculation at a single locus, $j$ is the same as the
-previous equation, substituting values of $D$ for $d$ \cite{Agapow:2001}:
+previous equation, substituting values of $D$ for $d$ \citep{Agapow:2001}:
 
 \begin{equation}
 \label{eq:var_j}
@@ -248,7 +255,7 @@ var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - \frac{\left(\disp
 \end{equation}
 
 The expected variance is then the sum of all the variances over all $\nu$ loci
-\cite{Agapow:2001}:
+\citep{Agapow:2001}:
 
 \begin{equation}
 \label{eq:V_E}
@@ -259,9 +266,9 @@ Now you can plug the sums of equations (\ref{eq:V_O}) and (\ref{eq:V_E}) into
 equation (\ref{eq:I_A}) to get the index of association. Of course, Agapow and
 Burt showed that this index increases steadily with the number of loci, so they
 came up with an approximation that is widely used, $\bar r_d$
-\cite{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}.
+\citep{Agapow:2001}. For the derivation, see the manual for \textit{multilocus}.
 The equation is as follows, utilizing equations (\ref{eq:V_O}),
-(\ref{eq:var_j}), and (\ref{eq:V_E}) \cite{Agapow:2001}:
+(\ref{eq:var_j}), and (\ref{eq:V_E}) \citep{Agapow:2001}:
 
 \begin{equation}
 \label{eq:r_d}
@@ -286,14 +293,14 @@ as well (with the exception of Bruvo's distance).
   \hline
  Method & Function & Assumption & Euclidean & Citation\\ 
   \hline
-Provesti & \texttt{provesti.dist} & - & No & \cite{prevosti1975distances}\\
+Provesti & \texttt{provesti.dist} & - & No & \citep{prevosti1975distances}\\
  & \texttt{diss.dist} & & & \\
-Nei & \texttt{nei.dist} & Infinite Alleles & No & \cite{nei1972genetic, nei1978estimation}\\
+Nei & \texttt{nei.dist} & Infinite Alleles & No & \citep{nei1972genetic, nei1978estimation}\\
  & & Genetic Drift & & \\
-Edwards & \texttt{edwards.dist} & Genetic Drift & Yes & \cite{edwards1971distances}\\
-Reynolds & \texttt{reynolds.dist} & Genetic Drift & Yes & \cite{reynolds1983estimation}\\
-Rogers & \texttt{rogers.dist} & - & Yes & \cite{rogers1972measures}\\
-Bruvo & \texttt{bruvo.dist} & Stepwise Mutation & No & \cite{Bruvo:2004}\\
+Edwards & \texttt{edwards.dist} & Genetic Drift & Yes & \citep{edwards1971distances}\\
+Reynolds & \texttt{reynolds.dist} & Genetic Drift & Yes & \citep{reynolds1983estimation}\\
+Rogers & \texttt{rogers.dist} & - & Yes & \citep{rogers1972measures}\\
+Bruvo & \texttt{bruvo.dist} & Stepwise Mutation & No & \citep{Bruvo:2004}\\
    \hline
 \end{tabular}
 \end{table}
@@ -351,9 +358,9 @@ Note: for AFLP data, the $2$ is dropped.
 
 Bruvo's distance between two individuals calculates the minimum distance across
 all combinations of possible pairs of alleles at a single locus and then
-averaging that distance across all loci \cite{Bruvo:2004}. The distance between
+averaging that distance across all loci \citep{Bruvo:2004}. The distance between
 each pair of alleles is calculated as\footnote{Notation presented unmodified
-from Bruvo et al, 2004}\cite{Bruvo:2004}:
+from Bruvo et al, 2004}\citep{Bruvo:2004}:
 
 \begin{equation}
 \label{eq:m_x}
@@ -372,7 +379,7 @@ each of these alleles would be $228/4 = 57$ and $244/4 =61$, respectively. The
 number of steps between them is then $\mid 57 - 61 \mid = 4$. Bruvo's distance
 at this locus between these two individuals is then $1-2^{-4} = 0.9375$. For
 samples with higher ploidy ($k$), there would be $k$ such distances of which we
-would need to take the sum \cite{Bruvo:2004}.
+would need to take the sum \citep{Bruvo:2004}.
 
 \begin{equation}
 \label{eq:s_i}
@@ -384,7 +391,7 @@ Because of this, we need to take all possible combinations of alleles into
 account. This means that we will have $k^2$ values of $d_a$, when we only want
 $k$. How do we know which $k$ distances we want? We will have to invoke
 parsimony for this and attempt to take the minimum sum of the alleles, of which
-there are $k!$ possibilities \cite{Bruvo:2004}:
+there are $k!$ possibilities \citep{Bruvo:2004}:
 
 \begin{equation}
 \label{eq:d_l}
@@ -392,7 +399,7 @@ d_l = \frac{1}{k}\left(\min_{i \dotsc k!} s_i\right)
 \end{equation}
 \noindent
 Finally, after all of this, we can get the average distance over all loci
-\cite{Bruvo:2004}.
+\citep{Bruvo:2004}.
 
 \begin{equation}
 \label{eq:D}
@@ -409,10 +416,10 @@ calculation of Bruvo's distance. However, since it makes a comparison between
 all alleles at a locus, it only makes sense that the two loci need to have the
 same ploidy level. Unfortunately for polyploids, it's often difficult to fully
 separate distinct alleles at each locus, so you end up with genotypes that
-appear to have a lower ploidy level than the organism \cite{Bruvo:2004}.
+appear to have a lower ploidy level than the organism \citep{Bruvo:2004}.
 
 To help deal with these situations, Bruvo has suggested three methods for dealing
-with these differences in ploidy levels \cite{Bruvo:2004}:
+with these differences in ploidy levels \citep{Bruvo:2004}:
 \begin{itemize}
   \item{Infinite Model -} The simplest way to deal with it is to count all
   missing alleles as infinitely large so that the distance between it and
@@ -476,7 +483,7 @@ Combination (default) & \texttt{add = TRUE, loss = TRUE} \\
 All of these distances were designed for analysis of populations. When applying
 them to individuals, we must change our interpretations. For example, with Nei's
 distance, branch lengths increase linearly with mutation
-\cite{nei1972genetic,nei1978estimation}. When two populations share no alleles,
+\citep{nei1972genetic,nei1978estimation}. When two populations share no alleles,
 then the distance becomes infinite. However, we expect two individuals to
 segregate for different alleles more often than entire populations, thus we
 would expect exaggerated internal branch lengths separating clades. To
@@ -523,7 +530,7 @@ library("ape")
 par(mfrow = c(2, 3))
 x <- lapply(names(dists), function(x){ 
   plot(nj(dists[[x]]), main = x, type = "unrooted") 
-  add.scale.bar(lcol = "red")
+  add.scale.bar(lcol = "red", length = 0.1)
 })
 @
 
@@ -531,46 +538,72 @@ x <- lapply(names(dists), function(x){
 
 AMOVA in \poppr{} acts as a wrapper for the \textit{ade4} implementation, which
 is an implementation of Excoffier's original formulation
-\cite{excoffier1992analysis}. As the calculation relies on a genetic distance
+\citep{excoffier1992analysis}. As the calculation relies on a genetic distance
 matrix, \poppr{} calculates the distance matrix as the number of differing sites
 between two genotypes using equation \ref{eq:ia_D}. This is equivalent to
 Provesti's distance multiplied by the ploidy and number of loci. This is also
-equivalent to Kronecker's delta as presented in \cite{excoffier1992analysis}. It
-should also be mentioned that \textbf{at this moment, it is not possible to calculate
-AMOVA on polyploid data.}
+equivalent to Kronecker's delta as presented in \citep{excoffier1992analysis}. As
+is the practice from \textsc{Arlequin}, within sample variance is calculated by
+default. Within sample variance can only be calculated on diploid data.
 
 \section{Genotypic Diversity}
 
-Many of the calculations of genotypic diversity exist within the package \textit{vegan} in the \texttt{diversity}
-function. Descriptions of most calculations can be found in the paper by Gr\"unwald et al \cite{Grunwald:2003}.
+Many of the calculations of genotypic diversity exist within the package
+\textit{vegan} in the \texttt{diversity} function. Descriptions of most
+calculations can be found in the paper by \cite{Grunwald:2003}.
 
 \subsection{Rarefaction, Shannon-Wiener, Stoddart and Taylor indices}
 
-Stoddart and Taylor's index is also known as Inverse Simpson's index.
-A detailed description of these can be found in the ``Diversity'' vignette in \textit{vegan}. You can access it by typing \texttt{vignette("diversity-vegan")}
+Stoddart and Taylor's index is also known as Inverse Simpson's index. A detailed
+description of these can be found in the ``Diversity'' vignette in
+\textit{vegan}. You can access it by typing \texttt{vignette("diversity-vegan")}
 
 \subsection{Evenness ($E_{5}$)}
-Evenness ($E_{5}$) is essentially the ratio of the number of abundant genotypes to the number of rarer genotypes.
+Evenness ($E_{5}$) is essentially the ratio of the number of abundant genotypes
+to the number of rarer genotypes.
 
 This is simply calculated as 
 
 \begin{equation}
-E_{5} = \frac{(1/\lambda) - 1}{e^{H}}
+E_{5} = \frac{(1/\lambda) - 1}{e^{H} - 1}
 \end{equation}
 
-Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity \cite{Stoddart:1988,Shannon:1948}.
+Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity
+\citep{Stoddart:1988,Shannon:1948}.
 
 \subsection{Hexp}
 
-Essentially, $H_{exp}$ is an analog of Nei's expected heterozygosity and is equivalent to an unbiased estimator for Simpson's index. It was implemented in \poppr{} as it was previously in \textit{multilocus} \cite{Agapow:2001}. The calculation is as follows:
+$H_{exp}$ stands for Nei's 1978 expected heterozygosity \citep{nei1978estimation}.
+Previously, in \poppr{}, it was calcuated over multilocus genotypes, which was
+more analagous to a correction for Simpson's ind eex. This has been corrected in
+version 2.0 and is now correctly calculated over alleles. The following is 
+adapted from equations 2 and 3 in \citep{nei1978estimation}:
 
 \begin{equation}
-H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
+h = \frac{N}{N-1} \sum_{i = 1}^k{x^{2}_{i}}
 \end{equation}
-\noindent
-Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
-genotypes observed and $N$ is the sample size. 
 
-\bibliographystyle{plain}
-\bibliography{poppr_man}
+\begin{equation}
+H_{exp} = \sum_{l = 1}^m{h_l/m}
+\end{equation}
+
+where $x_i$ is the population frequency of the $i^{th}$ allele in a locus and $k$
+is the number of alleles in a particular locus. $h_l$ is the value of $h$ at the
+$l^{th}$ locus.
+
+% 
+% Essentially, $H_{exp}$ is an analog of Nei's expected heterozygosity and is
+% equivalent to an unbiased estimator for Simpson's index. It was implemented in
+% \poppr{} as it was previously in \textit{multilocus} \citep{Agapow:2001}. The
+% calculation is as follows:
+% 
+% \begin{equation}
+% H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
+% \end{equation}
+% \noindent
+% Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
+% genotypes observed and $N$ is the sample size. 
+
+\bibliographystyle{authordate1}
+\bibliography{the_bibliography}
 \end{document}
