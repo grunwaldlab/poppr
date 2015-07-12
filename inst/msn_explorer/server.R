@@ -1,6 +1,14 @@
 library("shiny")
 library("poppr")
+#------------------------------------------------------------------------------#
+# The functions below are those that the server utilizes to parse the data. 
+# Most of these allow the server to parse user input. 
+#------------------------------------------------------------------------------#
 
+#------------------------------------------------------------------------------#
+# Get dist, for example is simply a switch so that the user can select distances
+# from a pull-down menu. This is used if the user does not select "Custom".
+#------------------------------------------------------------------------------#
 get_dist <- function(indist){
   indist <- switch(indist,
       Dissimilarity = "diss.dist",
@@ -13,41 +21,70 @@ get_dist <- function(indist){
   )
   return(indist)
 }
-
-make_dput <- function(x){
-  return(capture.output(dput(x)))
-}
-
-is_usable <- function(object, objclass = c("genind", "genclone")){
-  any(objclass %in% class(get(object, .GlobalEnv)))
-}
-
-
-get_globals <- function(objclass = c("genind", "genclone")){
-  myobjs <- ls(envir = .GlobalEnv)
-  if (length(myobjs) == 0) return(myobjs)
-  gens <- vapply(myobjs, FUN = is_usable, FUN.VALUE = logical(1), objclass)
-  myobjs[gens]
-}
-
-
-globals <- get_globals()
-
-parse_distfun <- function(x)
-{
+#------------------------------------------------------------------------------#
+# If the user does select custom, this function will make sure that it is 
+# encapsulated in parentheses. This makes sure that the entire expression is
+# evaluated.
+#------------------------------------------------------------------------------#
+parse_distfun <- function(x){
   if (grepl("function", x)){
     x <- paste0("(", x, ")")
   }
   return(x)
 }
-
-if (length(getAnywhere("popNames")$objs) == 0){
-  popNames <- function(x) x@pop.names
+#------------------------------------------------------------------------------#
+# This is a function that will print vectors of numerics or characters in a way
+# that can be run directly from R. For example, if the user checks two boxes
+# labeling the populations "pop1" and "pop2", that vector of populations gets 
+# passed onto the popsub function. By default, it will print like so:
+#
+# [1] "pop1" "pop2"
+#
+# You cannot copy and paste this into R because it will throw an error, thus, 
+# this function will print the vector like so:
+#
+# c("pop1", "pop2")
+#
+# This is then usable in the Command tab for the popsub function.
+#------------------------------------------------------------------------------#
+make_dput <- function(x){
+  return(capture.output(dput(x)))
 }
+
+#------------------------------------------------------------------------------#
+# A function to search the user's global environment and grab all of the useable
+# objects. In this case, it's genind and genclone objects, but the objclass
+# argument allows this to be extensible to any class. This is immensely useful
+# so that the user does not have to save their objects as rda files, nor do they
+# have to save them as text files for input.
+#------------------------------------------------------------------------------#
+get_globals <- function(objclass = c("genind", "genclone")){
+  # Grab all object names in users R session.
+  myobjs <- ls(envir = .GlobalEnv) 
+  if (length(myobjs) == 0){
+    return(myobjs)
+  }
+  # Go through each name and test if it is any of the classes in objclass.
+  gens <- vapply(myobjs, FUN = is_usable, FUN.VALUE = logical(1), objclass)
+  myobjs[gens]
+}
+
+#------------------------------------------------------------------------------#
+# This function tests a single object name to see if it is of class objclass.
+# The function is used in get_globals
+#------------------------------------------------------------------------------#
+is_usable <- function(object, objclass = c("genind", "genclone")){
+  any(objclass %in% class(get(object, .GlobalEnv)))
+}
+#------------------------------------------------------------------------------#
+# Here, we query the user's R session to find all of the genind and genclone 
+# objects
+#------------------------------------------------------------------------------#
+globals <- get_globals(c("genind", "genclone"))
 
 shinyServer(function(input, output, session) {
   
-  # Module to add the user's global environment. 
+  
   output$selectUI <- renderUI({
     selectInput("dataset", 
                 "choose dataset",
@@ -259,11 +296,9 @@ shinyServer(function(input, output, session) {
   })
 
   cutoff <- reactive({
-    # isolate({
-      cutoff <- as.numeric(input$cutoff)
-      if (is.na(cutoff)) cutoff <- NULL
-      cutoff      
-    # })
+    cutoff <- as.numeric(input$cutoff)
+    if (is.na(cutoff)) cutoff <- NULL
+    cutoff      
   })
   
   distcmd <- reactive({
@@ -319,9 +354,7 @@ shinyServer(function(input, output, session) {
   })
 
   bcut <- reactive({
-    # isolate({
-      input$beforecut
-    # })
+    input$beforecut
   })
 
   output$summary <- renderPrint({
@@ -344,10 +377,19 @@ shinyServer(function(input, output, session) {
            cex = 1.6, col = "white")
     } else {
       set.seed(seed())
-      plot_poppr_msn(dataset(), minspan(), ind = inds(), gadj = slide(), mlg = input$mlgs,
-                     palette = usrPal(), cutoff = cutoff(), quantiles = FALSE, 
-                     beforecut = bcut(), nodebase = nodebase(), 
-                     pop.leg = popLeg(), scale.leg = scaleLeg())      
+      plot_poppr_msn(dataset(), 
+                     minspan(), 
+                     ind = inds(), 
+                     gadj = slide(), 
+                     mlg = input$mlgs,
+                     palette = usrPal(), 
+                     cutoff = cutoff(), 
+                     quantiles = FALSE, 
+                     beforecut = bcut(), 
+                     nodebase = nodebase(),
+                     pop.leg = popLeg(), 
+                     scale.leg = scaleLeg()
+                    )      
     }
   })
   
@@ -364,10 +406,19 @@ shinyServer(function(input, output, session) {
         # Generate a png
         pdf(file, width = input$pdf_plot_width, height = input$pdf_plot_height)
         set.seed(seed())
-        plot_poppr_msn(dataset(), minspan(), ind = inds(), gadj = slide(), mlg = input$mlgs,
-                       palette = usrPal(), cutoff = cutoff(), quantiles = FALSE, 
-                       beforecut = bcut(), nodebase = nodebase(), 
-                       pop.leg = popLeg(), scale.leg = scaleLeg())
+        plot_poppr_msn(dataset(),
+                       minspan(),
+                       ind = inds(),
+                       gadj = slide(),
+                       mlg = input$mlgs,
+                       palette = usrPal(),
+                       cutoff = cutoff(),
+                       quantiles = FALSE, 
+                       beforecut = bcut(),
+                       nodebase = nodebase(),
+                       pop.leg = popLeg(),
+                       scale.leg = scaleLeg()
+                      )
         dev.off()
       })      
     }
@@ -379,10 +430,19 @@ shinyServer(function(input, output, session) {
         # Generate a png
         png(file, width = input$png_plot_width, height = input$png_plot_height)
         set.seed(seed())
-        plot_poppr_msn(dataset(), minspan(), ind = inds(), gadj = slide(), mlg = input$mlgs,
-                       palette = usrPal(), cutoff = cutoff(), quantiles = FALSE, 
-                       beforecut = bcut(), nodebase = nodebase(), 
-                       pop.leg = popLeg(), scale.leg = scaleLeg())
+        plot_poppr_msn(dataset(),
+                       minspan(),
+                       ind = inds(),
+                       gadj = slide(),
+                       mlg = input$mlgs,
+                       palette = usrPal(),
+                       cutoff = cutoff(),
+                       quantiles = FALSE, 
+                       beforecut = bcut(),
+                       nodebase = nodebase(),
+                       pop.leg = popLeg(),
+                       scale.leg = scaleLeg()
+                      )
         dev.off()
       })      
     }
