@@ -86,6 +86,11 @@ t26 <- monpop \%>\% setPop(~Tree) \%>\% popsub("26") \%>\% setPop(~Year/Symptom)
 t26
 imsn() # select Bruvo's distance and enter "monpop_ssr" into the Repeat Length field.
 
+# It is also possible to run this from github if you are connected to the internet.
+# This allows you to access any bug fixes that may have been updated before a formal
+# release on CRAN
+
+shiny::runGithub("grunwaldlab/poppr", subdir = "inst/msn_explorer")
 }
 }
 \author{
