@@ -82,9 +82,46 @@ is_usable <- function(object, objclass = c("genind", "genclone")){
 #------------------------------------------------------------------------------#
 globals <- get_globals(c("genind", "genclone"))
 
+#==============================================================================|
+# The Server side of things has to balance several things going on at once from
+# the user's side. Many things are dependent on user selections. Most of the
+# plotting is controlled by the three input buttons on the UI side, but some of
+# the UI elements automatically trigger a response from the server. By default,
+# the server does nothing but plot a single plot that gives the user
+# instructions. It is only until the user hits the "Go!" button does everything
+# begin.
+#
+# The Job of the server is split up into two main tasks:
+#
+# 1. Get the data and calculate the minimum spanning network
+#   a. get the data
+#   b. subset it
+#   c. parse the distance function with its arguments.
+#   d. calculate the distance matrix (this is done simultaneously with e if the
+#      distance is bruvo)
+#   e. calculate the minimum spanning network
+# 2. Add the aesthetics to the minimum spanning network and plot it
+#   a. assemble the commands necessary to replicate the plot on the user's end
+#   b. plot the data
+#   c. show the user the session information
+#==============================================================================|
 shinyServer(function(input, output, session) {
   
+  #----------------------------------------------------------------------------#
+  # Data Processing -----------------------------------------------------------|
+  # ---------------------------------------------------------------------------|
+  #
+  # These first steps are necessary to make sure that the user has submitted the
+  # data properly and that the custom functions work. 
+  #============================================================================#
   
+  #-------------------------------------
+  # The first task is for the User to 
+  # choose a data set. Since the user can 
+  # choose a data set that exists within 
+  # their R session, this has to be made
+  # dynamically.
+  #-------------------------------------
   output$selectUI <- renderUI({
     selectInput("dataset", 
                 "choose dataset",
@@ -99,6 +136,11 @@ shinyServer(function(input, output, session) {
     )
   })
 
+  #-------------------------------------
+  # If the data set is an example, load 
+  # and return it, otherwise, get the
+  # data set from the user's environment
+  #-------------------------------------
   in_dataset <- reactive({
     if (!is.null(input$dataset) && !grepl("<choose>", input$dataset)){
       if(grepl("Example: ", input$dataset)){
@@ -133,6 +175,13 @@ shinyServer(function(input, output, session) {
     return(dat)
   })
   
+  #-------------------------------------
+  # This is the first field to change
+  # dynamically with user input. It will
+  # show the user a series of checkboxes
+  # representing the populations 
+  # available.
+  #-------------------------------------
   output$selectPops <- renderUI({
     input$dataset
     checkboxGroupInput("sublist",
@@ -141,15 +190,32 @@ shinyServer(function(input, output, session) {
                 inline = TRUE,
                 selected = popNames(in_dataset()))
   })
-  
+  #-------------------------------------
+  # Simply a reactive for the input above.
+  #-------------------------------------
+  sub_list <- reactive({
+    input$sublist
+  })
+  #-------------------------------------
+  # This parses the data according to 
+  # the selected populations. Notice that
+  # it is only controlled by the 
+  # buttons and not the data set. If this
+  # were controlled by the data set, it
+  # would throw an error every time the
+  # user switches data sets. 
+  #-------------------------------------
   dataset <- reactive({
     input$`update-data`
-    input$dataset
+    input$submit
     isolate({
-      popsub(in_dataset(), input$sublist, drop = FALSE)
+      popsub(in_dataset(), sub_list(), drop = FALSE)
     })
   })
-
+  #-------------------------------------
+  # This grabs the name of the data set
+  # for the command tab.
+  #-------------------------------------
   dataname <- reactive({
     if (!grepl("<choose>", input$dataset)){
       if(grepl("Example: ", input$dataset)){
@@ -163,6 +229,21 @@ shinyServer(function(input, output, session) {
     return(dat)
   })
   
+  #-------------------------------------
+  # If the user selects "Custom" for the
+  # distance function, they must supply
+  # the name of the function. By default
+  # an example of euclidean distance is
+  # displayed.
+  #-------------------------------------
+  output$customDist <- renderUI({
+    textInput("custom_distance", label = "Custom Distance Function", "function(x) dist(tab(x))")
+  })
+  #-------------------------------------
+  # If the distance is a custom function,
+  # it must be treated, otherwise it must
+  # be translated.
+  #-------------------------------------
   distfun <- reactive({ 
     if (input$distance == "Custom"){
       parse_distfun(input$custom_distance)
@@ -171,10 +252,12 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  output$customDist <- renderUI({
-    textInput("custom_distance", label = "Custom Distance Function", "function(x) dist(tab(x))")
-  })
-  
+  #-------------------------------------
+  # All the functions have arguments 
+  # associated with them. This displays
+  # the arguments as text that can be
+  # later parsed as proper R code.
+  #-------------------------------------
   output$distargsUI <- renderUI({
     the_fun <- eval(parse(text = distfun()))
     the_args <- formals(the_fun)[-1]
@@ -182,16 +265,29 @@ shinyServer(function(input, output, session) {
                       collapse = ", ")
     textInput("distargs", label = "Distance arguments", the_args)
   })
-
+  #-------------------------------------
+  # Distance Arguments from above.
+  #-------------------------------------
+  distargs <- reactive({
+    input$distargs     
+  })
+  #-------------------------------------
+  # Should the minimum spanning network
+  # contain reticulate nodes?
+  #-------------------------------------
   reticulation <- reactive({
     input$reticulate        
   })
   
-  
-  distargs <- reactive({
-    input$distargs     
-  })
-  
+  #-------------------------------------
+  # The below reactives represent the
+  # situation in which the user chooses
+  # Bruvo's distance. When this is the
+  # case, since we know the specific
+  # combination of the different models
+  # is not immediately inherent, we give
+  # them the choice. 
+  #-------------------------------------
   addloss <- reactive({
     switch(input$bruvo_model,
            "Genome Addition" = "add = TRUE, loss = FALSE",
@@ -199,7 +295,11 @@ shinyServer(function(input, output, session) {
            "Infinite" = "add = FALSE, loss = FALSE",
            "Average Addition/Loss" = "add = TRUE, loss = TRUE")
   })
-
+  #-------------------------------------
+  # The repeat lengths can be comma
+  # separated numbers or any R expression
+  # or object that's valid. 
+  #-------------------------------------
   replen <- reactive({
     if (!grepl("\\(", input$replen)){
       paste0("replen = c(", input$replen, ")")      
@@ -208,8 +308,28 @@ shinyServer(function(input, output, session) {
     }
   })
 
+  #----------------------------------------------------------------------------#
+  # Distance Matrix and Minimum Spanning Network Construction -----------------|
+  # ---------------------------------------------------------------------------|
+  # 
+  # This single reactive controls the generation of both the distance matrix and
+  # the minimum spanning network. This is controlled by the two buttons, reData
+  # and submit, but it's also controlled by the "reticulate" checkbox. 
+  #
+  # The reason why this is in one function is because it's much more efficient
+  # to process the minimum spanning network with bruvo's distance using
+  # bruvo.msn. One thing to note about this function is that missing data is
+  # always treated with "mean".
+  #============================================================================#
+
+  #-------------------------------------
+  # This reactive calculates the distance
+  # by parsing the distance and then
+  # running the minimum spanning network
+  # on that matrix.
+  #-------------------------------------
   minspan <- reactive({
-    input$dataset
+    # input$dataset
     input$`update-data`
     input$reticulate
     input$submit
@@ -239,41 +359,52 @@ shinyServer(function(input, output, session) {
     })
   })
 
+  #----------------------------------------------------------------------------#
+  # Aesthetic Processing ------------------------------------------------------|
+  # ---------------------------------------------------------------------------|
+  # 
+  # This section contains all of the reactive functions to return basic values
+  # for plotting. They do not affect how the minimum spanning network is
+  # constructed. I will not comment on the ones that are simply one-line
+  # reactive functions.
+  #============================================================================#
   slide <- reactive({
-    # isolate({
-      return(input$greyslide)
-    # })
+    input$greyslide
   })
   
   seed <- reactive({
-    # isolate({
-      return(input$seed)      
-    # })
-
+    input$seed 
   })
 
   nodebase <- reactive({
-    # isolate({
-      return(input$nodebase)
-    # })
+    input$nodebase
   })
 
+  #-------------------------------------
+  # plot_poppr_msn allows the user to
+  # display what node a specific sample
+  # lies. This will take the user input
+  # as a comma separated list of sample
+  # names and pass them on.
+  #-------------------------------------
   inds <- reactive({
-    # isolate({
-      inds <- strsplit(input$inds, "[[:blank:]]*,[[:blank:]]*")[[1]]
-
-      if (input$ind_or_mlg == "sample names" || inds == "ALL" || inds == ""){
-        return(inds)
-      } else {
-        return(as.numeric(inds))
-      }
-    # })
-
+    inds <- strsplit(input$inds, "[[:blank:]]*,[[:blank:]]*")[[1]]
+    if (input$ind_or_mlg == "sample names" || inds == "ALL" || inds == ""){
+      return(inds)
+    } else {
+      return(as.numeric(inds))
+    }
   })
   
+  #-------------------------------------
+  # The user palette can be a custom
+  # palette. I'm not sure why this is
+  # protected by the reactive here...
+  #-------------------------------------
   usrPal <- reactive({
     input$`update-data`
     input$`update-graph`
+    input$submit
     isolate({
       if (input$pal == 'custom'){
         eval(parse(text = input$custom_pal))
@@ -284,15 +415,11 @@ shinyServer(function(input, output, session) {
   })
 
   popLeg <- reactive({
-    # isolate({
-      input$pop.leg
-    # })
+    input$pop.leg
   })
 
   scaleLeg <- reactive({
-    # isolate({
-      input$scale.leg
-    # })
+    input$scale.leg
   })
 
   cutoff <- reactive({
@@ -300,13 +427,34 @@ shinyServer(function(input, output, session) {
     if (is.na(cutoff)) cutoff <- NULL
     cutoff      
   })
-  
+
+  bcut <- reactive({
+    input$beforecut
+  })
+
+  #----------------------------------------------------------------------------#
+  # User-facing Command Construction ------------------------------------------|
+  # ---------------------------------------------------------------------------|
+  # 
+  # The following reactives construct the command the user needs to recreate the
+  # minimum spanning network that has been created. 
+  #============================================================================#
+
+  #-------------------------------------
+  # This constructs the command that
+  # Processes the data, constructs the
+  # distance, and constructs the minimum
+  # spanning network. 
+  #-------------------------------------
   distcmd <- reactive({
     dat      <- dataname()
     distfunk <- distfun()
     args     <- distargs()
     the_pops <- popNames(in_dataset())
     match_pops <- the_pops %in% input$sublist
+
+    # If the number of population selected is greater than half the total
+    # populations, place the unselected populations in the blacklist argument.
     half <- ceiling(length(the_pops)/2)
     if (sum(match_pops) < half){
       first_dat <- paste0(dat, "_sub <- popsub(", dat, ", sublist = ", make_dput(input$sublist), ")\n")
@@ -337,7 +485,13 @@ shinyServer(function(input, output, session) {
     }
     return(paste0(first_dat, return_cmd))
   })
-  
+
+  #-------------------------------------
+  # This one is relatively easy as it
+  # simply just constructs the plotting
+  # function with it's uncomplicated
+  # processing.
+  #-------------------------------------
   cmd <- reactive({
     dat <- dataname()
     pal <- ifelse(input$pal == 'custom', input$custom_pal, input$pal)
@@ -353,15 +507,26 @@ shinyServer(function(input, output, session) {
            ",\n\t       beforecut = ", bcut(), ")")
   })
 
-  bcut <- reactive({
-    input$beforecut
-  })
-
+  #-------------------------------------
+  # This simply shows the data set.
+  #-------------------------------------
   output$summary <- renderPrint({
     dat <- dataset()
     show(dat)
   })
 
+  #----------------------------------------------------------------------------#
+  # Output --------------------------------------------------------------------|
+  # ---------------------------------------------------------------------------|
+  # 
+  # Below are all the tabs for output.
+  #============================================================================#
+
+  #-------------------------------------
+  # The first thing the user sees is the
+  # plot, so it's important to check if
+  # the user has hit "submit" or not.
+  #-------------------------------------
   output$plot <- renderPlot({
     input$pop.leg
     input$scale.leg
@@ -393,17 +558,25 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  #-------------------------------------
+  # For all the lines it took to create
+  # the user-facing commands, three 
+  # lines to print them seem pretty pithy
+  #-------------------------------------
   output$cmd <- renderPrint({
     cat(paste0(distcmd(), "\n"))
     cat(paste0("set.seed(", seed(),")\n"))
     cat(cmd())
   })
 
+  #-------------------------------------
+  # Saving output as PDF
+  #-------------------------------------
   output$save_pdf <- downloadHandler(
     filename = function() paste0('msn-', Sys.Date(), '.pdf'),
     content = function(file) {
       isolate({
-        # Generate a png
+        # Generate a pdf
         pdf(file, width = input$pdf_plot_width, height = input$pdf_plot_height)
         set.seed(seed())
         plot_poppr_msn(dataset(),
@@ -423,6 +596,10 @@ shinyServer(function(input, output, session) {
       })      
     }
   )
+
+  #-------------------------------------
+  # Saving output as PNG
+  #-------------------------------------
   output$save_png <- downloadHandler(
     filename = function() paste0('msn-', Sys.Date(), '.png'),
     content = function(file) {
@@ -447,6 +624,9 @@ shinyServer(function(input, output, session) {
       })      
     }
   )
+  #-------------------------------------
+  # Printing the user's session info.
+  #-------------------------------------
   output$infoRmation <- renderPrint({
     sessionInfo()
   })
