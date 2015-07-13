@@ -91,6 +91,23 @@ imsn() # select Bruvo's distance and enter "monpop_ssr" into the Repeat Length f
 # release on CRAN
 
 shiny::runGithub("grunwaldlab/poppr", subdir = "inst/msn_explorer")
+
+# You can also use your own distance matrices, but there's a small catch.
+# in order to do so, you must write a function that will subset the matrix
+# to whatever populations are in your data. Here's an example with the above
+# data set:
+
+mondist <- bruvo.dist(monpop, replen = monpop_ssr)
+myDist <- function(x, d = mondist){
+ dm <- as.matrix(d)          # Convert the dist object to a square matrix
+ xi <- indNames(x)           # Grab the sample names that exist
+ return(as.dist(dm[xi, xi])) # return only the elements that have the names
+                             # in the data set
+}
+# After executing imsn, choose:
+# Distance: custom
+# myDist
+imsn()
 }
 }
 \author{
