@@ -3,20 +3,19 @@ context("Data import tests")
 data(monpop, package = "poppr")
 data(Pinf, package = "poppr")
 pr <- recode_polyploids(Pinf, newploidy = TRUE)
+y <- "13	6	1	6											
+			7_09_BB											
+Ind	Pop	CHMFc4	CHMFc5	CHMFc12	SEA	SED	SEE	SEG	SEI	SEL	SEN	SEP	SEQ	SER
+A004	7_09_BB	224	85	163	132	133	156	144	116	143	227	257	142	145
+A002	7_09_BB	224	97	159	156	129	156	144	113	143	231	261	136	153
+A011	7_09_BB	224	97	159	160	133	156	126	119	147	227	257	134	149
+A009	7_09_BB	224	97	159	160	133	156	126	119	147	227	261	134	149
+A006	7_09_BB	224	97	159	160	133	156	126	119	147	235	261	134	149
+A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134	149"
 
 test_that("basic text connections work", {
-	y <- "13	6	1	6											
-				7_09_BB											
-	Ind	Pop	CHMFc4	CHMFc5	CHMFc12	SEA	SED	SEE	SEG	SEI	SEL	SEN	SEP	SEQ	SER
-	A004	7_09_BB	224	85	163	132	133	156	144	116	143	227	257	142	145
-	A002	7_09_BB	224	97	159	156	129	156	144	113	143	231	261	136	153
-	A011	7_09_BB	224	97	159	160	133	156	126	119	147	227	257	134	149
-	A009	7_09_BB	224	97	159	160	133	156	126	119	147	227	261	134	149
-	A006	7_09_BB	224	97	159	160	133	156	126	119	147	235	261	134	149
-	A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134	149"
-	
 	gen <- read.genalex(textConnection(y), sep = "\t")
-	expect_equivalent(gen@tab, monpop[1:6, drop = TRUE]@tab)
+	expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
 })
 
 test_that("genclone objects can be saved and restored", {
@@ -87,6 +86,29 @@ test_that("genalex data can be imported with region data to genind and genclone"
 	expect_equal(length(nameStrata(root2re)), 2L)
 	expect_identical(nameStrata(root2re), c("Pop", "Region"))
 })
+
+test_that("genalex data can be imported with a region column", {
+  skip_on_cran()
+  yr <- read.table(textConnection(y), sep = "\t", header = FALSE, row.names = NULL)
+  yr <- as.matrix(yr)
+  yrnums <- yr[1, 1:4]
+  region <- c("", "", "Region", rep(c("one", "two"), 3))
+  blank <- rep("", 9)
+  yr <- cbind(yr[, 2], region, yr[, -c(1:2)], blank, yr[, 1])
+  yr[1, ] <- c(yrnums, rep("", ncol(yr) - 4))
+  yr[1, 5:7] <- c("2", "3", "3")
+  yr[2, 6:7] <- c("one", "two")
+  
+  yrfile <- tempfile()
+  write.table(yr, file = yrfile, quote = FALSE, sep = ",", row.names = FALSE,
+              col.names = FALSE)
+  genind_region <- read.genalex(yrfile, region = TRUE)
+  expect_is(genind_region, "genclone")
+  expect_equal(nameStrata(genind_region), c("Pop", "Region"))
+  setPop(genind_region) <- ~Region
+  expect_equal(popNames(genind_region), c("one", "two"))
+})
+
 
 test_that("genalex can import geographic information", {
 	skip_on_cran()
