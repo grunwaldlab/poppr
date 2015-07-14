@@ -450,7 +450,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 			{
 				if (zerocatch[i] == p - 1)
 				{
-					return minn;
+					goto finalsteps;
 				}
 				zerocatch[i] += 1;
 				// Rprintf("[%d]", zerocatch[i] - 1);
@@ -666,13 +666,14 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 	{
 		finalcalc: minn = mindist(w, p, perm, dist)/p;
 	}
-	R_Free(genos);
 	for (i = 0; i < p; i++)
 	{
 		R_Free(dist[i]);
 	}
 	R_Free(dist);
-	finalsteps: R_Free(zero_ind[0]);
+finalsteps: 
+	R_Free(genos);
+	R_Free(zero_ind[0]);
 	R_Free(zero_ind[1]);
 	R_Free(zero_ind);
 	return minn;
