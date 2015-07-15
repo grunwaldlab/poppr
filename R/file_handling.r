@@ -349,6 +349,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 
     # Treating missing data.
     gena2[gena2 == paste(rep("0", ploidy), collapse = "/")] <- NA_character_
+    gena2[gena2 == paste(rep("NA", ploidy), collapse = "/")] <- NA_character_
     res.gid <- df2genind(gena2, sep="/", ind.names = ind.vec, pop = pop.vec,
                          ploidy = ploidy, type = type)
   } else if (nloci == clm & all(gena.mat %in% as.integer(-1:1))) {

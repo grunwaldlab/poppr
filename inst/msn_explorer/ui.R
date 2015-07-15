@@ -105,18 +105,10 @@ shinyUI(fluidPage(
       conditionalPanel("input.pal == 'custom'",
         textInput("custom_pal", "custom palette/function", "function(x) 'purple'")
       ),
-      conditionalPanel("input.distance == 'Dissimilarity'",
-        numericInput("cutoff", 
-                     "Distance Cutoff",
-                     NULL,
-                     min = 2
-        )
-      ),
-      conditionalPanel("input.distance != 'Dissimilarity'",
-        numericInput("cutoff",
-                     "Distance Cutoff",
-                     NULL,
-                     step = 0.001)
+      numericInput("cutoff",
+                   "Distance Cutoff",
+                   NULL,
+                   step = 0.001
       ),
       checkboxInput("beforecut", "Keep graph position", TRUE)
     ),

@@ -101,3 +101,13 @@ test_that("poppr skips over sample sizes less than three", {
   expect_equivalent(signif(plt$Ia, 3), c(rep(NA, 4), 0.167))
   expect_equivalent(signif(plt$rbarD, 3), c(rep(NA, 4), 0.0195))
 })
+
+test_that("poppr can produce output from input file", {
+  skip_on_cran()
+  afile <- system.file("files/rootrot.csv", package = "poppr")
+  sims <- system.file("files/simulated.dat", package = "poppr")
+  expect_output(out <- poppr(afile, legend = TRUE), "Simpson")
+  expect_output(outs <- poppr(sims, legend = TRUE), "Simpson")
+  expect_is(out, "popprtable")
+  expect_is(outs, "popprtable")
+})

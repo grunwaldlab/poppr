@@ -1,3 +1,14 @@
+poppr 2.0.1
+===========
+BUG FIX
+* Memory leak with Bruvo's distance was fixed by @JonahBrooks in 90facb4 (issue #40)
+* Cutoff field now works for distances other than dissimilarity in `imsn` (issue #41)
+* Switching between data sets no longer shows an error in `imsn`
+* `read.genealex` can now correctly import missing data for diploids (issue #42)
+
+NEW FEATURES
+* Startup message now tells you if poppr was compiled with OMP support.
+
 poppr 2.0.0
 ===========
 COMPATIBILITY UPDATE
