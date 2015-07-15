@@ -43,7 +43,7 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 For full details, see the NEWS file or type in your R console:
 
 ```R
-news(Version == "2.0.0", package = "poppr")
+news(Version == "2.0.1", package = "poppr")
 ```
 
 ## Citation
