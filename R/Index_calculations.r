@@ -334,18 +334,11 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     datploid <- NULL
     Hexp_correction <- N.vec/(N.vec - 1)
   }
-#   the_dots <- list(...)
-#   rarefied <- "rarefy" %in% names(the_dots)
-#   if (sample > 0){
-#     if (!quiet) message("bootstrapping diversity statistics...")
-#     divmat <- boot_se_table(pop.mat, n = sample, ...)
-#     if (!quiet) message("calculating index of association...")
-#   } else {
-    divmat <- diversity_stats(pop.mat, ...)
-  # }
+  divmat <- diversity_stats(pop.mat, ...)
   if (!is.matrix(divmat)){
     divmat <- matrix(divmat, nrow = 1, dimnames = list(NULL, names(divmat)))
   }
+  
   if (!is.null(poplist)){
     # rarefaction giving the standard errors. This will use the minimum pop size
     # above a user-defined threshold.
@@ -355,28 +348,17 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
 
     Hexp <- vapply(lapply(poplist, pegas::as.loci), FUN = get_hexp_from_loci, 
                    FUN.VALUE = numeric(1), ploidy = datploid, type = dat@type)
-    if (any(Hexp_correction > 1)){
-      Hexp   <- data.frame(Mu = Hexp * Hexp_correction)      
-    } else {
-      Hexp   <- data.frame(Hexp = Hexp)
-    }
-    N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
-    # if (!rarefied){
-      IaList  <- lapply(sublist, function(x){
-        namelist <- list(file = namelist$File, population = x)
-        .ia(poplist[[x]], sample = sample, method = method, 
-            quiet = quiet, missing = missing, hist = FALSE,
-            namelist = namelist)
-      })    
-      names(IaList) <- sublist
-#     } else {
-#       IaList <- t(vapply(poplist, rare_ia, numeric(4), n = sample, 
-#                          rare = raremax, obs = TRUE))
-#       colnames(IaList) <- c("Ia", "Ia.sd", "rbarD", "rbarD.sd")
-#     }
-  
-    
-    if (sample > 0){# && !rarefied){
+
+    Hexp   <- data.frame(Hexp = Hexp)
+    N.rare <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
+    IaList <- lapply(sublist, function(x){
+      namelist <- list(file = namelist$File, population = x)
+      .ia(poplist[[x]], sample = sample, method = method, 
+          quiet = quiet, missing = missing, hist = FALSE,
+          namelist = namelist)
+    })    
+    names(IaList) <- sublist
+    if (sample > 0){
       classtest <- summary(IaList)
       classless <- !classtest[, "Class"] %in% "ialist"
       if (any(classless)){
@@ -390,7 +372,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
         try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
       }
       IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
-    } else {#if (!rarefied){
+    } else {
       IaList <- t(as.data.frame(IaList))
     }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
@@ -403,11 +385,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     # the sample is equal to the number of individuals.
     N.rare <- rarefy(pop.mat, sum(pop.mat), se = TRUE)
     Hexp   <- get_hexp_from_loci(pegas::as.loci(dat), ploidy = datploid, type = dat@type)
-    if (any(Hexp_correction > 1)){
-      Hexp   <- data.frame(Mu = Hexp * Hexp_correction)      
-    } else {
-      Hexp   <- data.frame(Hexp = Hexp)
-    }
+    Hexp   <- data.frame(Hexp = Hexp)
     IaList <- .ia(dat, sample=sample, method=method, quiet=quiet, missing=missing,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
@@ -871,12 +849,6 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 locus_table <- function(x, index = "simpson", lev = "allele", 
                         population = "ALL", information = TRUE){
   ploid   <- unique(ploidy(x))
-  if (lev == "allele" && (length(ploid) > 1 || any(ploid > 2))){
-    msg <- paste("cannot calculate Hexp for",
-                 "polyploids or populations with uneven ploidy.")
-    warning(msg)
-    ploid <- NULL
-  }
   type    <- x@type
   INDICES <- c("shannon", "simpson", "invsimpson")
   index   <- match.arg(index, INDICES)
@@ -900,12 +872,7 @@ locus_table <- function(x, index = "simpson", lev = "allele",
     }
     message("\n", divs[1], " = Number of observed ", paste0(divs[1], "s"), appendLF = FALSE)
     message("\n", divs[2], " = ", msg, appendLF = FALSE)
-    if (lev == "allele" && !is.null(ploid)){
-      message("\n", divs[3], " = Nei's 1978 expected heterozygosity\n", appendLF = FALSE)      
-    } else {
-      res[, 3] <- (nInd(x)/(nInd(x) - 1))*res[, 3] 
-      message("\n", divs[3], " = unbiased Simpson index\n", appendLF = FALSE)      
-    }
+    message("\n", divs[3], " = Nei's 1978 gene diversity\n", appendLF = FALSE)
     message("------------------------------------------\n", appendLF = FALSE)
   }
   class(res) <- c("locustable", "matrix")

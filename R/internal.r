@@ -1539,14 +1539,12 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", ploidy = NUL
 
   n    <- sum(unique_types)
   Simp <- vegan::diversity(unique_types, "simp")
-  if (!is.null(ploidy) || lev == "genotype"){
-    nei <- (n/(n-1)) * Simp    
-  } else {
-    nei <- Simp
-  }
+  nei  <- (n/(n-1)) * Simp
+  
   if (hexp_only){
     return(nei)
   }
+  
   N <- length(unique_types) # Resetting N to be the number of unique types.
   H <- vegan::diversity(unique_types)
   G <- vegan::diversity(unique_types, "inv")
@@ -1561,14 +1559,9 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele", ploidy = NUL
     idx        <- G
     names(idx) <- "G"
   }
-  
-  E.5        <- (G - 1)/(exp(H) - 1)
-  names(N)   <- lev
-  if (lev == "allele" && !is.null(ploidy)){
-    return(c(N, idx, Hexp = nei, Evenness = E.5))    
-  } else {
-    return(c(N, idx, Mu = nei, Evenness = E.5))    
-  }
+  E.5      <- (G - 1)/(exp(H) - 1)
+  names(N) <- lev
+  return(c(N, idx, Hexp = nei, Evenness = E.5)) 
 
 }
 #==============================================================================#
@@ -1592,11 +1585,11 @@ remove_zeroes <- function(unique_types, type){
 }
 
 #==============================================================================#
-# This function replaces the old definition of Hexp in poppr and will acutally
+# This function replaces the old definition of Hexp in poppr and will actually
 # return a measure of expected heterozygosity. The only catch is that if an 
 # incoming population has varying ploidy or ploidy greater than two, the
 # returned value is the same as the result of Hs (except missing values do not
-# corrupt the whole calcuation). This is then treated in the poppr function by
+# corrupt the whole calculation). This is then treated in the poppr function by
 # multiplying by the sample size correction to give a corrected simpson's index.
 # 
 # Public functions utilizing this function:
@@ -1606,14 +1599,8 @@ remove_zeroes <- function(unique_types, type){
 # # none
 #==============================================================================#
 get_hexp_from_loci <- function(loci, type = "codom", ploidy = NULL){
-  if (is.null(ploidy)){
-    loci <- vapply(summary(loci), 
-                   function(a) vegan::diversity(remove_zeroes(a[["allele"]], type), "simp"), 
-                   numeric(1))
-  } else {
-    loci <- vapply(summary(loci), FUN = locus_table_pegas, FUN.VALUE = numeric(1),
-                   ploidy = ploidy, type = type, hexp_only = TRUE)    
-  }
+  loci <- vapply(summary(loci), FUN = locus_table_pegas, FUN.VALUE = numeric(1),
+                 ploidy = ploidy, type = type, hexp_only = TRUE)    
   return(mean(loci, na.rm = TRUE))
 }
 
