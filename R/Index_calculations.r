@@ -348,7 +348,11 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
 
     Hexp <- vapply(lapply(poplist, pegas::as.loci), FUN = get_hexp_from_loci, 
                    FUN.VALUE = numeric(1), ploidy = datploid, type = dat@type)
-    Hexp   <- Hexp * Hexp_correction
+    if (any(Hexp_correction > 1)){
+      Hexp   <- data.frame(Mu = Hexp * Hexp_correction)      
+    } else {
+      Hexp   <- data.frame(Hexp = Hexp)
+    }
     N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
     # if (!rarefied){
       IaList  <- lapply(sublist, function(x){
@@ -384,7 +388,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], 
-                               divmat, Hexp = Hexp, IaList, 
+                               divmat, Hexp, IaList, 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
   } else { 
@@ -392,14 +396,18 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     # the sample is equal to the number of individuals.
     N.rare <- rarefy(pop.mat, sum(pop.mat), se = TRUE)
     Hexp   <- get_hexp_from_loci(pegas::as.loci(dat), ploidy = datploid, type = dat@type)
-    Hexp   <- Hexp * Hexp_correction
+    if (any(Hexp_correction > 1)){
+      Hexp   <- data.frame(Mu = Hexp * Hexp_correction)      
+    } else {
+      Hexp   <- data.frame(Hexp = Hexp)
+    }
     IaList <- .ia(dat, sample=sample, method=method, quiet=quiet, missing=missing,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
     
     Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], divmat, 
-                               Hexp = Hexp,
+                               Hexp,
                                as.data.frame(t(IaList)), 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
@@ -806,7 +814,7 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 #'   of information to the R console.
 #'   
 #' @return a table with 4 columns indicating the Number of alleles/genotypes
-#'   observed, Diversity index chosen, Nei's 1978 expected heterozygosity, and
+#'   observed, Diversity index chosen, Nei's 1978 expected heterozygosity*, and
 #'   Evenness.
 #'   
 #' @seealso \code{\link[vegan]{diversity}}, \code{\link{poppr}}

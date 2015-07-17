@@ -28,7 +28,7 @@ locus_table(x, index = "simpson", lev = "allele", population = "ALL",
 }
 \value{
 a table with 4 columns indicating the Number of alleles/genotypes
-  observed, Diversity index chosen, Nei's 1978 expected heterozygosity, and
+  observed, Diversity index chosen, Nei's 1978 expected heterozygosity*, and
   Evenness.
 }
 \description{
