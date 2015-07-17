@@ -85,7 +85,7 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The
   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner
   Diversity index} \item{G}{Stoddard and Taylor's Index}
-  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's
+  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp*}{Nei's
   expected heterozygosity} \item{Ia}{A numeric vector giving the value of the
   Index of Association for each population factor, (see \code{\link{ia}}).}
   \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
@@ -128,8 +128,12 @@ The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
   previously calculated based on the diversity of multilocus genotypes,
   resulting in a value of 1 for sexual populations. This was obviously not
   Nei's 1978 expected heterozygosity. We have thus changed the statistic to
-  be the true value of Hexp by calculating (n/(n-1))*lambda for alleles in
-  each locus and then returning the average.
+  be the true value of Hexp by calculating (kn/(kn-1))*lambda for alleles
+  where kn is the number of observed alleles (Nei, 1978) in each locus and
+  then returning the average. This will be the correct calculation for
+  haploids and diploids, but for populations with mixed ploidy, this will
+  inflate the estimate since the true allelic dosage is not known and rare
+  alleles will have a higher representation.
 }
 \examples{
 data(nancycats)

@@ -127,7 +127,7 @@
 #'   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The 
 #'   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner 
 #'   Diversity index} \item{G}{Stoddard and Taylor's Index} 
-#'   \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's
+#'   \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp*}{Nei's
 #'   expected heterozygosity} \item{Ia}{A numeric vector giving the value of the
 #'   Index of Association for each population factor, (see \code{\link{ia}}).}
 #'   \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
@@ -156,11 +156,15 @@
 #'   groupings is "population" and the name for the x axis is "value".}
 #'   
 #' @note The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
-#'   previously calculated based on the diversity of multilocus genotypes,
-#'   resulting in a value of 1 for sexual populations. This was obviously not
-#'   Nei's 1978 expected heterozygosity. We have thus changed the statistic to
-#'   be the true value of Hexp by calculating (n/(n-1))*lambda for alleles in
-#'   each locus and then returning the average.
+#'   previously calculated based on the diversity of multilocus genotypes, 
+#'   resulting in a value of 1 for sexual populations. This was obviously not 
+#'   Nei's 1978 expected heterozygosity. We have thus changed the statistic to 
+#'   be the true value of Hexp by calculating (kn/(kn-1))*lambda for alleles
+#'   where kn is the number of observed alleles (Nei, 1978) in each locus and
+#'   then returning the average. This will be the correct calculation for 
+#'   haploids and diploids, but for populations with mixed ploidy, this will
+#'   inflate the estimate since the true allelic dosage is not known and rare
+#'   alleles will have a higher representation. 
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
 #'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}, 
@@ -305,6 +309,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     }
     poplist <- .pop.divide(dat)
   }
+
   # Creating the genotype matrix for vegan's diversity analysis.
   pop.mat <- mlg.matrix(dat)
   if (total == TRUE & !is.null(poplist) & length(poplist) > 1){
@@ -320,43 +325,37 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   
   MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
   N.vec   <- rowSums(pop.mat)
-#   the_dots <- list(...)
-#   rarefied <- "rarefy" %in% names(the_dots)
-#   if (sample > 0){
-#     if (!quiet) message("bootstrapping diversity statistics...")
-#     divmat <- boot_se_table(pop.mat, n = sample, ...)
-#     if (!quiet) message("calculating index of association...")
-#   } else {
-    divmat <- diversity_stats(pop.mat, ...)
-  # }
+  datploid <- unique(ploidy(dat))
+  Hexp_correction <- 1
+  if (length(datploid) > 1 || any(datploid > 2)){
+    datploid <- NULL
+    Hexp_correction <- N.vec/(N.vec - 1)
+  }
+  divmat <- diversity_stats(pop.mat, ...)
   if (!is.matrix(divmat)){
     divmat <- matrix(divmat, nrow = 1, dimnames = list(NULL, names(divmat)))
   }
+  
   if (!is.null(poplist)){
     # rarefaction giving the standard errors. This will use the minimum pop size
     # above a user-defined threshold.
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
+
     Hexp <- vapply(lapply(poplist, pegas::as.loci), FUN = get_hexp_from_loci, 
-                   FUN.VALUE = numeric(1), type = dat@type)
-    N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
-    # if (!rarefied){
-      IaList  <- lapply(sublist, function(x){
-        namelist <- list(file = namelist$File, population = x)
-        .ia(poplist[[x]], sample = sample, method = method, 
-            quiet = quiet, missing = missing, hist = FALSE,
-            namelist = namelist)
-      })    
-      names(IaList) <- sublist
-#     } else {
-#       IaList <- t(vapply(poplist, rare_ia, numeric(4), n = sample, 
-#                          rare = raremax, obs = TRUE))
-#       colnames(IaList) <- c("Ia", "Ia.sd", "rbarD", "rbarD.sd")
-#     }
-  
-    
-    if (sample > 0){# && !rarefied){
+                   FUN.VALUE = numeric(1), ploidy = datploid, type = dat@type)
+
+    Hexp   <- data.frame(Hexp = Hexp)
+    N.rare <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
+    IaList <- lapply(sublist, function(x){
+      namelist <- list(file = namelist$File, population = x)
+      .ia(poplist[[x]], sample = sample, method = method, 
+          quiet = quiet, missing = missing, hist = FALSE,
+          namelist = namelist)
+    })    
+    names(IaList) <- sublist
+    if (sample > 0){
       classtest <- summary(IaList)
       classless <- !classtest[, "Class"] %in% "ialist"
       if (any(classless)){
@@ -370,26 +369,27 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
         try(print(poppr.plot(sample = IaList[!classless], file = namelist$File)))
       }
       IaList <- data.frame(t(vapply(IaList, "[[", numeric(4), "index")))
-    } else {#if (!rarefied){
+    } else {
       IaList <- t(as.data.frame(IaList))
     }
     Iout <- as.data.frame(list(Pop=sublist, N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], 
-                               divmat, Hexp = Hexp, IaList, 
+                               divmat, Hexp, IaList, 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
   } else { 
     # rarefaction giving the standard errors. No population structure means that
     # the sample is equal to the number of individuals.
     N.rare <- rarefy(pop.mat, sum(pop.mat), se = TRUE)
-    Hexp   <- get_hexp_from_loci(pegas::as.loci(dat), type = dat@type)
+    Hexp   <- get_hexp_from_loci(pegas::as.loci(dat), ploidy = datploid, type = dat@type)
+    Hexp   <- data.frame(Hexp = Hexp)
     IaList <- .ia(dat, sample=sample, method=method, quiet=quiet, missing=missing,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
     
     Iout <- as.data.frame(list(Pop="Total", N=N.vec, MLG=MLG.vec, 
                                eMLG=N.rare[1, ], SE=N.rare[2, ], divmat, 
-                               Hexp = Hexp,
+                               Hexp,
                                as.data.frame(t(IaList)), 
                                File=namelist$File)) 
     rownames(Iout) <- NULL
@@ -796,13 +796,13 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 #'   of information to the R console.
 #'   
 #' @return a table with 4 columns indicating the Number of alleles/genotypes
-#'   observed, Diversity index chosen, Nei's 1978 expected heterozygosity, and
+#'   observed, Diversity index chosen, Nei's 1978 expected heterozygosity*, and
 #'   Evenness.
 #'   
 #' @seealso \code{\link[vegan]{diversity}}, \code{\link{poppr}}
 #'   
-#' @note This will calculate statistics for polyploids as well by only counting
-#'   observed allelic states.
+#' @note This will calculate statistics for polyploids as well by only counting 
+#'   observed allelic states. See \code{\link{poppr}} for details on Hexp.
 #' 
 #' @author Zhian N. Kamvar
 #' 
@@ -829,20 +829,29 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 #' 
 #'   Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
 #'   Technical Journal, 27:379-423,623-656, 1948
-#' 
+#'   
 #' @export
 #' @examples
+#' 
+#' data(nancycats)
+#' locus_table(nancycats[pop = 5])
+#' \dontrun{
 #' # Analyze locus statistics for the North American population of P. infestans.
+#' # Note that due to the unknown dosage of alleles, many of these statistics
+#' # will be artificially inflated for polyploids.
 #' data(Pinf)
 #' locus_table(Pinf, population = "North America")
+#' }
 #==============================================================================#
 locus_table <- function(x, index = "simpson", lev = "allele", 
                         population = "ALL", information = TRUE){
+  ploid   <- unique(ploidy(x))
+  type    <- x@type
   INDICES <- c("shannon", "simpson", "invsimpson")
   index   <- match.arg(index, INDICES)
   x       <- popsub(x, population, drop = FALSE)
   x.loc   <- summary(as.loci(x))
-  outmat  <- vapply(x.loc, locus_table_pegas, numeric(4), index, lev, x@type)
+  outmat  <- vapply(x.loc, locus_table_pegas, numeric(4), index, lev, ploid, type)
   loci    <- colnames(outmat)
   divs    <- rownames(outmat)
   res     <- matrix(0.0, nrow = ncol(outmat) + 1, ncol = nrow(outmat))
@@ -860,7 +869,7 @@ locus_table <- function(x, index = "simpson", lev = "allele",
     }
     message("\n", divs[1], " = Number of observed ", paste0(divs[1], "s"), appendLF = FALSE)
     message("\n", divs[2], " = ", msg, appendLF = FALSE)
-    message("\n", divs[3], " = Nei's 1978 expected heterozygosity\n", appendLF = FALSE)
+    message("\n", divs[3], " = Nei's 1978 gene diversity\n", appendLF = FALSE)
     message("------------------------------------------\n", appendLF = FALSE)
   }
   class(res) <- c("locustable", "matrix")

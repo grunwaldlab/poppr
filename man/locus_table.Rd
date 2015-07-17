@@ -28,7 +28,7 @@ locus_table(x, index = "simpson", lev = "allele", population = "ALL",
 }
 \value{
 a table with 4 columns indicating the Number of alleles/genotypes
-  observed, Diversity index chosen, Nei's 1978 expected heterozygosity, and
+  observed, Diversity index chosen, Nei's 1978 expected heterozygosity*, and
   Evenness.
 }
 \description{
@@ -36,12 +36,18 @@ Create a table of summary statistics per locus.
 }
 \note{
 This will calculate statistics for polyploids as well by only counting
-  observed allelic states.
+  observed allelic states. See \code{\link{poppr}} for details on Hexp.
 }
 \examples{
+data(nancycats)
+locus_table(nancycats[pop = 5])
+\dontrun{
 # Analyze locus statistics for the North American population of P. infestans.
+# Note that due to the unknown dosage of alleles, many of these statistics
+# will be artificially inflated for polyploids.
 data(Pinf)
 locus_table(Pinf, population = "North America")
+}
 }
 \author{
 Zhian N. Kamvar
