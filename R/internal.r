@@ -1523,23 +1523,25 @@ pool_haplotypes <- function(x){
 # Internal functions utilizing this function:
 # # none
 #==============================================================================#
-locus_table_pegas <- function(x, index = "simpson", lev = "allele", 
+locus_table_pegas <- function(x, index = "simpson", lev = "allele", ploidy = NULL, 
                               type = "codom", hexp_only = FALSE){
   unique_types <- x[[lev]]
   # Removing any zero-typed alleles that would be present with polyploids.
-  zero_names   <- grep("^0+?$", names(unique_types))
-  if (length(zero_names) > 0 & type == "codom"){
-    unique_types <- unique_types[-zero_names]
+  unique_types <- remove_zeroes(unique_types, type)
+
+  n    <- sum(unique_types)
+  Simp <- vegan::diversity(unique_types, "simp")
+  if (!is.null(ploidy) || lev == "genotype"){
+    nei <- (n/(n-1)) * Simp    
+  } else {
+    nei <- Simp
   }
-  
-  N       <- length(unique_types)
-  Simp    <- vegan::diversity(unique_types, "simp")
-  nei     <- (N/(N-1)) * Simp
   if (hexp_only){
     return(nei)
   }
-  H       <- vegan::diversity(unique_types)
-  G       <- vegan::diversity(unique_types, "inv")
+  N <- length(unique_types) # Resetting N to be the number of unique types.
+  H <- vegan::diversity(unique_types)
+  G <- vegan::diversity(unique_types, "inv")
   
   if (index == "simpson"){
     idx        <- Simp
@@ -1554,12 +1556,31 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele",
   
   E.5        <- (G - 1)/(exp(H) - 1)
   names(N)   <- lev
-  return(c(N, idx, Hexp = nei, Evenness = E.5))
+  if (lev == "allele" && !is.null(ploidy)){
+    return(c(N, idx, Hexp = nei, Evenness = E.5))    
+  } else {
+    return(c(N, idx, uSimpson = nei, Evenness = E.5))    
+  }
+
 }
 
-get_hexp_from_loci <- function(loci, type = "codom"){
-  loci <- vapply(summary(loci), FUN = locus_table_pegas, FUN.VALUE = numeric(1),
-                 type = type, hexp_only = TRUE)
+remove_zeroes <- function(unique_types, type){
+  zero_names   <- grep("^0+?$", names(unique_types))
+  if (length(zero_names) > 0 & type == "codom"){
+    unique_types <- unique_types[-zero_names]
+  }
+  return(unique_types)
+}
+
+get_hexp_from_loci <- function(loci, type = "codom", ploidy = NULL){
+  if (is.null(ploidy)){
+    loci <- vapply(summary(loci), 
+                   function(a) vegan::diversity(remove_zeroes(a$alleles, type), "simp"), 
+                   numeric(1))
+  } else {
+    loci <- vapply(summary(loci), FUN = locus_table_pegas, FUN.VALUE = numeric(1),
+                   ploidy = ploidy, type = type, hexp_only = TRUE)    
+  }
   return(mean(loci, na.rm = TRUE))
 }
 
