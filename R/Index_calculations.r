@@ -161,9 +161,10 @@
 #'   Nei's 1978 expected heterozygosity. We have thus changed the statistic to 
 #'   be the true value of Hexp by calculating (kn/(kn-1))*lambda for alleles
 #'   where kn is the number of observed alleles (Nei, 1978) in each locus and
-#'   then returning the average. For polyploids, the number of alleles is
-#'   unknown, so Müller's index: (n/(n-1)) * mean(lambda) will be returned with
-#'   the name "Mu" (Kosman, 2003).
+#'   then returning the average. This will be the correct calculation for 
+#'   haploids and diploids, but for populations with mixed ploidy, this will
+#'   inflate the estimate since the true allelic dosage is not known and rare
+#'   alleles will have a higher representation. 
 #'   
 #' @seealso \code{\link{clonecorrect}}, \code{\link{poppr.all}}, 
 #'   \code{\link{ia}}, \code{\link{missingno}}, \code{\link{mlg}}, 
@@ -223,10 +224,6 @@
 #'   
 #'   J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and 
 #'   prediction in samples. Genetics, 118(4):705-11, 1988.
-#'   
-#'   Kosman, E. Nei's gene diversity and the index of average
-#'   differences are identical measures of diversity within populations. Plant
-#'   Pathology, 52(5), 533-535. 2003,
 #'   
 #'   
 #' @examples
@@ -805,10 +802,7 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 #' @seealso \code{\link[vegan]{diversity}}, \code{\link{poppr}}
 #'   
 #' @note This will calculate statistics for polyploids as well by only counting 
-#'   observed allelic states. The only exception is Nei's expected 
-#'   heterozygosity. Since this requires knowledge of allelic dosage, Müller's 
-#'   index (Mu) will be used instead. It can be thought of as an unbiased
-#'   Simpson's index and is calculated as (n/(n-1))*mean(1-D) (Kosman, 2003)
+#'   observed allelic states. See \code{\link{poppr}} for details on Hexp.
 #' 
 #' @author Zhian N. Kamvar
 #' 
@@ -836,15 +830,18 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 #'   Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
 #'   Technical Journal, 27:379-423,623-656, 1948
 #'   
-#'   Kosman, E. Nei's gene diversity and the index of average differences are
-#'   identical measures of diversity within populations. Plant Pathology, 52(5),
-#'   533-535. 2003.
-#' 
 #' @export
 #' @examples
+#' 
+#' data(nancycats)
+#' locus_table(nancycats[pop = 5])
+#' \dontrun{
 #' # Analyze locus statistics for the North American population of P. infestans.
+#' # Note that due to the unknown dosage of alleles, many of these statistics
+#' # will be artificially inflated for polyploids.
 #' data(Pinf)
 #' locus_table(Pinf, population = "North America")
+#' }
 #==============================================================================#
 locus_table <- function(x, index = "simpson", lev = "allele", 
                         population = "ALL", information = TRUE){

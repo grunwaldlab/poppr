@@ -130,9 +130,10 @@ The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
   Nei's 1978 expected heterozygosity. We have thus changed the statistic to
   be the true value of Hexp by calculating (kn/(kn-1))*lambda for alleles
   where kn is the number of observed alleles (Nei, 1978) in each locus and
-  then returning the average. For polyploids, the number of alleles is
-  unknown, so Müller's index: (n/(n-1)) * mean(lambda) will be returned with
-  the name "Mu" (Kosman, 2003).
+  then returning the average. This will be the correct calculation for
+  haploids and diploids, but for populations with mixed ploidy, this will
+  inflate the estimate since the true allelic dosage is not known and rare
+  alleles will have a higher representation.
 }
 \examples{
 data(nancycats)
@@ -237,10 +238,6 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
 
   J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
   prediction in samples. Genetics, 118(4):705-11, 1988.
-
-  Kosman, E. Nei's gene diversity and the index of average
-  differences are identical measures of diversity within populations. Plant
-  Pathology, 52(5), 533-535. 2003,
 }
 \seealso{
 \code{\link{clonecorrect}}, \code{\link{poppr.all}},

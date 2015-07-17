@@ -36,15 +36,18 @@ Create a table of summary statistics per locus.
 }
 \note{
 This will calculate statistics for polyploids as well by only counting
-  observed allelic states. The only exception is Nei's expected
-  heterozygosity. Since this requires knowledge of allelic dosage, Müller's
-  index (Mu) will be used instead. It can be thought of as an unbiased
-  Simpson's index and is calculated as (n/(n-1))*mean(1-D) (Kosman, 2003)
+  observed allelic states. See \code{\link{poppr}} for details on Hexp.
 }
 \examples{
+data(nancycats)
+locus_table(nancycats[pop = 5])
+\dontrun{
 # Analyze locus statistics for the North American population of P. infestans.
+# Note that due to the unknown dosage of alleles, many of these statistics
+# will be artificially inflated for polyploids.
 data(Pinf)
 locus_table(Pinf, population = "North America")
+}
 }
 \author{
 Zhian N. Kamvar
@@ -72,10 +75,6 @@ Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter
 
   Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
   Technical Journal, 27:379-423,623-656, 1948
-
-  Kosman, E. Nei's gene diversity and the index of average differences are
-  identical measures of diversity within populations. Plant Pathology, 52(5),
-  533-535. 2003.
 }
 \seealso{
 \code{\link[vegan]{diversity}}, \code{\link{poppr}}
