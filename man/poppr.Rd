@@ -85,7 +85,7 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The
   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner
   Diversity index} \item{G}{Stoddard and Taylor's Index}
-  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's
+  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp*}{Nei's
   expected heterozygosity} \item{Ia}{A numeric vector giving the value of the
   Index of Association for each population factor, (see \code{\link{ia}}).}
   \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
@@ -128,8 +128,11 @@ The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
   previously calculated based on the diversity of multilocus genotypes,
   resulting in a value of 1 for sexual populations. This was obviously not
   Nei's 1978 expected heterozygosity. We have thus changed the statistic to
-  be the true value of Hexp by calculating (n/(n-1))*lambda for alleles in
-  each locus and then returning the average.
+  be the true value of Hexp by calculating (kn/(kn-1))*lambda for alleles
+  where kn is the number of observed alleles (Nei, 1978) in each locus and
+  then returning the average. For polyploids, the number of alleles is
+  unknown, so Müller's index: (n/(n-1)) * mean(lambda) will be returned with
+  the name "Mu" (Kosman, 2003).
 }
 \examples{
 data(nancycats)
@@ -234,6 +237,10 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
 
   J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
   prediction in samples. Genetics, 118(4):705-11, 1988.
+
+  Kosman, E. Nei's gene diversity and the index of average
+  differences are identical measures of diversity within populations. Plant
+  Pathology, 52(5), 533-535. 2003,
 }
 \seealso{
 \code{\link{clonecorrect}}, \code{\link{poppr.all}},
