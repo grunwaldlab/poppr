@@ -1575,7 +1575,7 @@ remove_zeroes <- function(unique_types, type){
 get_hexp_from_loci <- function(loci, type = "codom", ploidy = NULL){
   if (is.null(ploidy)){
     loci <- vapply(summary(loci), 
-                   function(a) vegan::diversity(remove_zeroes(a$alleles, type), "simp"), 
+                   function(a) vegan::diversity(remove_zeroes(a[["allele"]], type), "simp"), 
                    numeric(1))
   } else {
     loci <- vapply(summary(loci), FUN = locus_table_pegas, FUN.VALUE = numeric(1),
