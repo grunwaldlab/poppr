@@ -9,10 +9,10 @@ test_that("locus_table correctly treats polyploids", {
 	pinflt <- locus_table(Pinf)
 	pinfpp <- poppr(Pinf, quiet = TRUE)
 	expect_equivalent(pinflt[-(nLoc(Pinf) + 1), "allele"], nAll(Pinf) - 1)
-	expect_equivalent(pinflt["mean", "1-D"], pinfpp[pinfpp$Pop == "Total", "lambda"])
+	expect_equivalent(pinflt["mean", "uSimpson"], pinfpp[pinfpp$Pop == "Total", "Hexp"])
 	salt   <- locus_table(Pinf, population = "South America")
 	expect_equivalent(salt["Pi33", "allele"], 1)
-	expect_equivalent(salt["mean", "1-D"], pinfpp[pinfpp$Pop == "South America", "lambda"])
+	expect_equivalent(salt["mean", "uSimpson"], pinfpp[pinfpp$Pop == "South America", "Hexp"])
 })
 
 test_that("locus_table presents different stats", {
