@@ -305,6 +305,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     }
     poplist <- .pop.divide(dat)
   }
+
   # Creating the genotype matrix for vegan's diversity analysis.
   pop.mat <- mlg.matrix(dat)
   if (total == TRUE & !is.null(poplist) & length(poplist) > 1){
@@ -320,6 +321,12 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   
   MLG.vec <- rowSums(ifelse(pop.mat > 0, 1, 0))
   N.vec   <- rowSums(pop.mat)
+  datploid <- unique(ploidy(dat))
+  Hexp_correction <- 1
+  if (length(datploid) > 1 || any(datploid > 2)){
+    datploid <- NULL
+    Hexp_correction <- N.vec/(N.vec - 1)
+  }
 #   the_dots <- list(...)
 #   rarefied <- "rarefy" %in% names(the_dots)
 #   if (sample > 0){
@@ -338,13 +345,10 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
-    datploid <- unique(ploidy(dat))
-    if (length(datploid) > 1 || any(datploid > 2)){
-      dataploid <- NULL
-    }
+
     Hexp <- vapply(lapply(poplist, pegas::as.loci), FUN = get_hexp_from_loci, 
                    FUN.VALUE = numeric(1), ploidy = datploid, type = dat@type)
-
+    Hexp   <- Hexp * Hexp_correction
     N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
     # if (!rarefied){
       IaList  <- lapply(sublist, function(x){
@@ -387,7 +391,8 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     # rarefaction giving the standard errors. No population structure means that
     # the sample is equal to the number of individuals.
     N.rare <- rarefy(pop.mat, sum(pop.mat), se = TRUE)
-    Hexp   <- get_hexp_from_loci(pegas::as.loci(dat), type = dat@type)
+    Hexp   <- get_hexp_from_loci(pegas::as.loci(dat), ploidy = datploid, type = dat@type)
+    Hexp   <- Hexp * Hexp_correction
     IaList <- .ia(dat, sample=sample, method=method, quiet=quiet, missing=missing,
                   namelist=(list(File=namelist$File, population="Total")),
                   hist=hist)
