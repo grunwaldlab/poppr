@@ -338,8 +338,13 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     raremax <- ifelse(is.null(nrow(pop.mat)), sum(pop.mat), 
                       ifelse(min(rowSums(pop.mat)) > minsamp, 
                              min(rowSums(pop.mat)), minsamp))
+    datploid <- unique(ploidy(dat))
+    if (length(datploid) > 1 || any(datploid > 2)){
+      dataploid <- NULL
+    }
     Hexp <- vapply(lapply(poplist, pegas::as.loci), FUN = get_hexp_from_loci, 
-                   FUN.VALUE = numeric(1), type = dat@type)
+                   FUN.VALUE = numeric(1), ploidy = datploid, type = dat@type)
+
     N.rare  <- suppressWarnings(vegan::rarefy(pop.mat, raremax, se = TRUE))
     # if (!rarefied){
       IaList  <- lapply(sublist, function(x){
@@ -838,11 +843,19 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 #==============================================================================#
 locus_table <- function(x, index = "simpson", lev = "allele", 
                         population = "ALL", information = TRUE){
+  ploid   <- unique(ploidy(x))
+  if (lev == "allele" && (length(ploid) > 1 || any(ploid > 2))){
+    msg <- paste("cannot calculate Hexp for",
+                 "polyploids or populations with uneven ploidy.")
+    warning(msg)
+    ploid <- NULL
+  }
+  type    <- x@type
   INDICES <- c("shannon", "simpson", "invsimpson")
   index   <- match.arg(index, INDICES)
   x       <- popsub(x, population, drop = FALSE)
   x.loc   <- summary(as.loci(x))
-  outmat  <- vapply(x.loc, locus_table_pegas, numeric(4), index, lev, x@type)
+  outmat  <- vapply(x.loc, locus_table_pegas, numeric(4), index, lev, ploid, type)
   loci    <- colnames(outmat)
   divs    <- rownames(outmat)
   res     <- matrix(0.0, nrow = ncol(outmat) + 1, ncol = nrow(outmat))
@@ -860,7 +873,12 @@ locus_table <- function(x, index = "simpson", lev = "allele",
     }
     message("\n", divs[1], " = Number of observed ", paste0(divs[1], "s"), appendLF = FALSE)
     message("\n", divs[2], " = ", msg, appendLF = FALSE)
-    message("\n", divs[3], " = Nei's 1978 expected heterozygosity\n", appendLF = FALSE)
+    if (lev == "allele" && !is.null(ploid)){
+      message("\n", divs[3], " = Nei's 1978 expected heterozygosity\n", appendLF = FALSE)      
+    } else {
+      res[, 3] <- (nInd(x)/(nInd(x) - 1))*res[, 3] 
+      message("\n", divs[3], " = unbiased Simpson index\n", appendLF = FALSE)      
+    }
     message("------------------------------------------\n", appendLF = FALSE)
   }
   class(res) <- c("locustable", "matrix")
