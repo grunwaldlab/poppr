@@ -10,7 +10,7 @@ x  <- as.genclone(df2genind(grid_example, ploidy = 1))
 xd <- dist(grid_example)
 
 set.seed(999)
-gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE))
+gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE), parallel = FALSE)
 
 
 test_that("multilocus genotype filtering algorithms work", {
