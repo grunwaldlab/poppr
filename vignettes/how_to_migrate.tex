@@ -100,7 +100,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Migration from poppr version 1.1 to 2.0.1}
+\title{Migration from poppr version 1.1 to 2.0.2}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -163,8 +163,8 @@ that all code that will fail is wrapped in a \texttt{try()} command.
 \hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{)} \hlcom{# Works!}
 \end{alltt}
 \begin{verbatim}
-##  [1] -1.48221723 -1.63563762  1.02497661 -0.43108979 -1.00407296
-##  [6]  0.96712687 -0.31590176 -0.06745305 -0.14231645 -0.47596328
+##  [1]  0.6584021  0.2270215 -0.9978662  0.4942732  1.5462439 -0.1558781
+##  [7]  0.6819837 -0.3488329 -0.9653140  0.3242500
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -222,7 +222,7 @@ for demonstration. First, we'll load the data.
 \end{alltt}
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: adegenet\\\#\# Loading required package: ade4\\\#\# \\\#\#\ \ \ \ /// adegenet 2.0.0 is loaded ////////////\\\#\# \\\#\#\ \ \ \ > overview: '?adegenet'\\\#\#\ \ \ \ > tutorials/doc/questions: 'adegenetWeb()' \\\#\#\ \ \ \ > bug reports/feature resquests: adegenetIssues()\\\#\# \\\#\# \\\#\# This is poppr version 2.0.1. To get started, type package?poppr\\\#\# OMP parallel support: available}}\begin{alltt}
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: adegenet\\\#\# Loading required package: ade4\\\#\# \\\#\#\ \ \ \ /// adegenet 2.0.0 is loaded ////////////\\\#\# \\\#\#\ \ \ \ > overview: '?adegenet'\\\#\#\ \ \ \ > tutorials/doc/questions: 'adegenetWeb()' \\\#\#\ \ \ \ > bug reports/feature resquests: adegenetIssues()\\\#\# \\\#\# \\\#\# This is poppr version 2.0.2. To get started, type package?poppr\\\#\# OMP parallel support: available}}\begin{alltt}
 \hlkwd{data}\hlstd{(}\hlstr{"old_partial_clone"}\hlstd{,} \hlkwc{package} \hlstd{=} \hlstr{"poppr"}\hlstd{)} \hlcom{# From version 1.1.5}
 \hlkwd{data}\hlstd{(}\hlstr{"partial_clone"}\hlstd{,} \hlkwc{package} \hlstd{=} \hlstr{"poppr"}\hlstd{)}     \hlcom{# From version 2.0.0}
 \end{alltt}

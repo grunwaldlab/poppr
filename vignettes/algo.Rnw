@@ -560,7 +560,8 @@ description of these can be found in the ``Diversity'' vignette in
 
 \subsection{Evenness ($E_{5}$)}
 Evenness ($E_{5}$) is essentially the ratio of the number of abundant genotypes
-to the number of rarer genotypes. 
+to the number of rarer genotypes. For the function \texttt{locus\_table}, these
+indices represent the abundance of alleles.
 
 This is simply calculated as 
 

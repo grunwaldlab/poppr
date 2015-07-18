@@ -28,15 +28,21 @@ locus_table(x, index = "simpson", lev = "allele", population = "ALL",
 }
 \value{
 a table with 4 columns indicating the Number of alleles/genotypes
-  observed, Diversity index chosen, Nei's 1978 expected heterozygosity*, and
-  Evenness.
+  observed, Diversity index chosen, Nei's 1978 gene diversity (expected
+  heterozygosity), and Evenness.
 }
 \description{
 Create a table of summary statistics per locus.
 }
 \note{
-This will calculate statistics for polyploids as well by only counting
-  observed allelic states. See \code{\link{poppr}} for details on Hexp.
+The calculation of \code{Hexp} is \eqn{(\frac{n}{n-1}) 1 - \sum_{i =
+  1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele
+  frequencies at a given locus and n is the number of observed alleles (Nei,
+  1978) in each locus and then returning the average. Caution should be
+  exercised in interpreting the results of Hexp with polyploid organisms with
+  ambiguous ploidy. The lack of allelic dosage information will cause rare
+  alleles to be over-represented and artificially inflate the index. This is
+  especially true with small sample sizes.
 }
 \examples{
 data(nancycats)
