@@ -1,4 +1,4 @@
-poppr 2.0.1.99
+poppr 2.0.2
 ===========
 BUG FIX
 * Definition of Hexp was fixed. It originally was mis-calculated, inflating the metric. It is now correctly calcualted and documented. More information at issue [#47](https://github.com/grunwaldlab/poppr/issues/47)
