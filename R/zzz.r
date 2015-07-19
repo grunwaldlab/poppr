@@ -45,7 +45,7 @@
 .onAttach <- function(...) {
   startupmsg <- paste("This is poppr version", utils::packageVersion("poppr"))
   startupmsg <- paste0(startupmsg, ". To get started, type package?poppr")
-  paralltype <- ifelse(poppr::poppr_has_parallel(), "available", "unvailable")
+  paralltype <- ifelse(poppr::poppr_has_parallel(), "available", "unavailable")
   startupmsg <- paste0(startupmsg, "\nOMP parallel support: ", paralltype)
   packageStartupMessage(startupmsg)
   if (!interactive() || stats::runif(1) > 0.1) return()

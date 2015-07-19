@@ -85,17 +85,18 @@ poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL, sample = 0,
   common sample size (set by the parameter \code{minsamp}.} \item{SE}{The
   standard error for the rarefaction analysis} \item{H}{Shannon-Weiner
   Diversity index} \item{G}{Stoddard and Taylor's Index}
-  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's
-  expected heterozygosity} \item{Ia}{A numeric vector giving the value of the
-  Index of Association for each population factor, (see \code{\link{ia}}).}
-  \item{p.Ia}{A numeric vector indicating the p-value for Ia from the number
-  of reshufflings indicated in \code{sample}. Lowest value is 1/n where n is
-  the number of observed values.} \item{rbarD}{A numeric vector giving the
-  value of the Standardized Index of Association for each population factor,
-  (see \code{\link{ia}}).} \item{p.rD}{A numeric vector indicating the
-  p-value for rbarD from the number of reshuffles indicated in \code{sample}.
-  Lowest value is 1/n where n is the number of observed values.}
-  \item{File}{A vector indicating the name of the original data file.}
+  \item{lambda}{Simpson's index} \item{E.5}{Evenness} \item{Hexp}{Nei's gene
+  diversity (expected heterozygosity)} \item{Ia}{A numeric vector giving the
+  value of the Index of Association for each population factor, (see
+  \code{\link{ia}}).} \item{p.Ia}{A numeric vector indicating the p-value for
+  Ia from the number of reshufflings indicated in \code{sample}. Lowest value
+  is 1/n where n is the number of observed values.} \item{rbarD}{A numeric
+  vector giving the value of the Standardized Index of Association for each
+  population factor, (see \code{\link{ia}}).} \item{p.rD}{A numeric vector
+  indicating the p-value for rbarD from the number of reshuffles indicated in
+  \code{sample}. Lowest value is 1/n where n is the number of observed
+  values.} \item{File}{A vector indicating the name of the original data
+  file.}
 }
 \description{
 This function allows the user to quickly view indices of heterozygosity,
@@ -128,8 +129,14 @@ The calculation of \code{Hexp} has changed from \pkg{poppr} 1.x. It was
   previously calculated based on the diversity of multilocus genotypes,
   resulting in a value of 1 for sexual populations. This was obviously not
   Nei's 1978 expected heterozygosity. We have thus changed the statistic to
-  be the true value of Hexp by calculating (n/(n-1))*lambda for alleles in
-  each locus and then returning the average.
+  be the true value of Hexp by calculating \eqn{(\frac{n}{n-1}) 1 - \sum_{i =
+  1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele
+  frequencies at a given locus and n is the number of observed alleles (Nei,
+  1978) in each locus and then returning the average. Caution should be
+  exercised in interpreting the results of Hexp with polyploid organisms with
+  ambiguous ploidy. The lack of allelic dosage information will cause rare
+  alleles to be over-represented and artificially inflate the index. This is
+  especially true with small sample sizes.
 }
 \examples{
 data(nancycats)
@@ -148,7 +155,7 @@ p + facet_wrap(~population, scales = "free_y", ncol = 1)
 poppr(nancycats, total=FALSE, H = FALSE, G = FALSE, lambda = FALSE, E5 = FALSE)
 
 # The previous version of poppr contained a definition of Hexp, which
-# was calculated as (n/(n - 1))*lambda. It basically looks like an unbiased
+# was calculated as (N/(N - 1))*lambda. It basically looks like an unbiased
 # Simpson's index. This statistic was originally included in poppr because it
 # was originally included in the program multilocus. It was finally figured
 # to be an unbiased Simpson's diversity metric (Lande, 1996; Good, 1953).

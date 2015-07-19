@@ -1509,37 +1509,45 @@ pool_haplotypes <- function(x){
 }
 
 #==============================================================================#
-# The function locus_table_pegas is the internal workhorse. It will process a 
-# summary.loci object into a nice table utilizing the various diversity indices 
+# The function locus_table_pegas is the internal workhorse. It will process a
+# summary.loci object into a nice table utilizing the various diversity indices
 # provided by vegan. Note that it has a catch which will remove all allele names
 # that are any amount of zeroes and nothing else. The reason for this being that
-# these alleles actually represent missing data. 
-# The wrapper for this is locus_table, which will take in a genind object and 
-# send it into locus_table_pegas. 
+# these alleles actually represent missing data. The wrapper for this is
+# locus_table, which will take in a genind object and send it into
+# locus_table_pegas. 
 # Note: lev argument has only the options of "allele" or "genotype"
+# 
+# UPDATE 2015-07-16: I had noticed in issue #47 that the definition of Hexp was
+# completely wrong. It was correcting by the number of classes as opposed to the
+# number of samples, artificially increasing the diversity. It has been
+# corrected with one exception: polyploids will not be able to utilize this
+# correction because the allelic dosage is ambiguous. This is corrected by
+# utilizing Müller's index, which is equivalent to the unbiased Simpson's index.
+# 
 # Public functions utilizing this function:
 # # locus_table
 #
 # Internal functions utilizing this function:
 # # none
 #==============================================================================#
-locus_table_pegas <- function(x, index = "simpson", lev = "allele", 
+locus_table_pegas <- function(x, index = "simpson", lev = "allele", ploidy = NULL, 
                               type = "codom", hexp_only = FALSE){
   unique_types <- x[[lev]]
   # Removing any zero-typed alleles that would be present with polyploids.
-  zero_names   <- grep("^0+?$", names(unique_types))
-  if (length(zero_names) > 0 & type == "codom"){
-    unique_types <- unique_types[-zero_names]
-  }
+  unique_types <- remove_zeroes(unique_types, type)
+
+  n    <- sum(unique_types)
+  Simp <- vegan::diversity(unique_types, "simp")
+  nei  <- (n/(n-1)) * Simp
   
-  N       <- length(unique_types)
-  Simp    <- vegan::diversity(unique_types, "simp")
-  nei     <- (N/(N-1)) * Simp
   if (hexp_only){
     return(nei)
   }
-  H       <- vegan::diversity(unique_types)
-  G       <- vegan::diversity(unique_types, "inv")
+  
+  N <- length(unique_types) # Resetting N to be the number of unique types.
+  H <- vegan::diversity(unique_types)
+  G <- vegan::diversity(unique_types, "inv")
   
   if (index == "simpson"){
     idx        <- Simp
@@ -1551,15 +1559,48 @@ locus_table_pegas <- function(x, index = "simpson", lev = "allele",
     idx        <- G
     names(idx) <- "G"
   }
-  
-  E.5        <- (G - 1)/(exp(H) - 1)
-  names(N)   <- lev
-  return(c(N, idx, Hexp = nei, Evenness = E.5))
+  E.5      <- (G - 1)/(exp(H) - 1)
+  names(N) <- lev
+  return(c(N, idx, Hexp = nei, Evenness = E.5)) 
+
+}
+#==============================================================================#
+# This function takes a vector of allele counts and searches for the names
+# that appear to be zero-length alleles. These alleles are then removed from
+# analysis.
+# 
+# Public functions utilizing this function:
+# # none
+#
+# Internal functions utilizing this function:
+# # locus_table_pegas
+# # get_hexp_from_loci
+#==============================================================================#
+remove_zeroes <- function(unique_types, type){
+  zero_names   <- grep("^0+?$", names(unique_types))
+  if (length(zero_names) > 0 & type == "codom"){
+    unique_types <- unique_types[-zero_names]
+  }
+  return(unique_types)
 }
 
-get_hexp_from_loci <- function(loci, type = "codom"){
+#==============================================================================#
+# This function replaces the old definition of Hexp in poppr and will actually
+# return a measure of expected heterozygosity. The only catch is that if an 
+# incoming population has varying ploidy or ploidy greater than two, the
+# returned value is the same as the result of Hs (except missing values do not
+# corrupt the whole calculation). This is then treated in the poppr function by
+# multiplying by the sample size correction to give a corrected simpson's index.
+# 
+# Public functions utilizing this function:
+# # poppr
+#
+# Internal functions utilizing this function:
+# # none
+#==============================================================================#
+get_hexp_from_loci <- function(loci, type = "codom", ploidy = NULL){
   loci <- vapply(summary(loci), FUN = locus_table_pegas, FUN.VALUE = numeric(1),
-                 type = type, hexp_only = TRUE)
+                 ploidy = ploidy, type = type, hexp_only = TRUE)    
   return(mean(loci, na.rm = TRUE))
 }
 

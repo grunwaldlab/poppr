@@ -43,7 +43,7 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 For full details, see the NEWS file or type in your R console:
 
 ```R
-news(Version == "2.0.1", package = "poppr")
+news(Version == "2.0.0", package = "poppr")
 ```
 
 ## Citation
@@ -69,6 +69,13 @@ You can obtain citation information in R by typing:
 ```R
 citation(package = "poppr")
 ```
+
+## Known issues on CRAN
+
+This R package is not a small package, and because of that, it is not unfathomable that there occasionally might be bugs. For bugs that exist within R code, they can be fixed by visiting https://gist.github.com/zkamvar/b64078a0d04d2452c905 and sourcing the code from there. Below is a list of known issues in version 2.0.2 that are fixed on GitHub, but not yet on CRAN:
+
+- none! :)
+
 
 ## Installation
 

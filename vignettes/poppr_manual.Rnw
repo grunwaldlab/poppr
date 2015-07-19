@@ -512,12 +512,14 @@ First, tell your computer to search R's library, load the \poppr{} package, and
 use \texttt{getfile()}:
 
 <<echo=FALSE>>=
-library("poppr")
 x <- list(files="/path/to/R/poppr/files/rootrot.csv", path="/path/to/R/poppr/files")
 @
 
-<<getfilefunk, eval=FALSE>>=
+<<message = TRUE>>=
 library("poppr")
+@
+
+<<getfilefunk, eval=FALSE>>=
 x <- getfile()
 @
 

@@ -8,7 +8,7 @@ shinyUI(fluidPage(
 
   sidebarLayout(
     sidebarPanel(
-      tags$h5("status"),
+      tags$h5("Status"),
       conditionalPanel(condition="!$('html').hasClass('shiny-busy')",
         tagAppendChild(tags$div(class="progress"),
         tagAppendChild(tags$div(class="progress-bar progress-bar-success", 
@@ -35,9 +35,9 @@ shinyUI(fluidPage(
       uiOutput("selectUI"),
       uiOutput("selectPops"),
       
-      checkboxInput("genclone", "convert to genclone?", TRUE),
+      checkboxInput("genclone", "Convert to genclone?", TRUE),
       selectInput("distance", 
-                  "choose distance calculation", 
+                  "Choose a distance calculation", 
                   choices = c("Dissimilarity",
                               "Bruvo",
                               "Nei",
@@ -63,19 +63,19 @@ shinyUI(fluidPage(
       conditionalPanel("input.distance != 'Bruvo'",
         uiOutput("distargsUI")
       ),
-      checkboxInput("reticulate", "include reticulations?", TRUE), 
+      checkboxInput("reticulate", "Include reticulations?", TRUE), 
       h3("Graphical Parameters"),
-      checkboxInput("pop.leg", "population legend", TRUE), 
-      checkboxInput("scale.leg", "scale bar", TRUE), 
+      checkboxInput("pop.leg", "Population legend", TRUE), 
+      checkboxInput("scale.leg", "Scale bar", TRUE), 
       sliderInput("greyslide",
-                  "Grey Scale",
+                  "Grey scale",
                   min = 0,
                   max = 25,
                   value = 3,
                   step = 1
       ),
       numericInput("nodebase",
-                   "Node Size Scale (log(size, value))",
+                   "Node size scale (log(size, value))",
                    "1.15", 
                    min = 1.0001,
                    step = 0.0001),
@@ -88,7 +88,7 @@ shinyUI(fluidPage(
                    selected = "sample names", inline = TRUE
       ),
       textInput("inds", NULL, "ALL"),
-      checkboxInput("mlgs", "show MLG", FALSE),
+      checkboxInput("mlgs", "Show MLG", FALSE),
       radioButtons("pal", "Indicate a color palette to be used",
                    choices=c("rainbow", 
                             "cm.colors", 
@@ -103,10 +103,10 @@ shinyUI(fluidPage(
                             "custom"), inline = TRUE
       ),
       conditionalPanel("input.pal == 'custom'",
-        textInput("custom_pal", "custom palette/function", "function(x) 'purple'")
+        textInput("custom_pal", "Custom palette/function", "function(x) 'purple'")
       ),
       numericInput("cutoff",
-                   "Distance Cutoff",
+                   "Distance cutoff",
                    NULL,
                    step = 0.001
       ),

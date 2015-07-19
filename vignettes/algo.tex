@@ -101,7 +101,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 2.0.1}
+\title{Algorithms and equations utilized in poppr version 2.0.2}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -596,9 +596,9 @@ is an implementation of Excoffier's original formulation
 matrix, \poppr{} calculates the distance matrix as the number of differing sites
 between two genotypes using equation \ref{eq:ia_D}. This is equivalent to
 Provesti's distance multiplied by the ploidy and number of loci. This is also
-equivalent to Kronecker's delta as presented in \citep{excoffier1992analysis}. As
-is the practice from \textsc{Arlequin}, within sample variance is calculated by
-default. Within sample variance can only be calculated on diploid data.
+equivalent to Kronecker's delta as presented in \citep{excoffier1992analysis}.
+As is the practice from \textsc{Arlequin}, within sample variance is calculated
+by default. Within sample variance can only be calculated on diploid data.
 
 \section{Genotypic Diversity}
 
@@ -614,7 +614,8 @@ description of these can be found in the ``Diversity'' vignette in
 
 \subsection{Evenness ($E_{5}$)}
 Evenness ($E_{5}$) is essentially the ratio of the number of abundant genotypes
-to the number of rarer genotypes.
+to the number of rarer genotypes. For the function \texttt{locus\_table}, these
+indices represent the abundance of alleles.
 
 This is simply calculated as 
 
@@ -623,40 +624,38 @@ E_{5} = \frac{(1/\lambda) - 1}{e^{H} - 1}
 \end{equation}
 
 Where $1/\lambda$ is Stoddart and Taylor's index and $H$ is Shannon diversity
-\citep{Stoddart:1988,Shannon:1948}.
+\citep{Stoddart:1988,Shannon:1948}. The reason for this formulation is because
+$1/\lambda$ is weighted for more abundant genotypes and $H$ is weighted for 
+rarer genotypes.
 
 \subsection{Hexp}
 
-$H_{exp}$ stands for Nei's 1978 expected heterozygosity \citep{nei1978estimation}.
-Previously, in \poppr{}, it was calcuated over multilocus genotypes, which was
-more analagous to a correction for Simpson's ind eex. This has been corrected in
-version 2.0 and is now correctly calculated over alleles. The following is 
-adapted from equations 2 and 3 in \citep{nei1978estimation}:
+$H_{exp}$ stands for Nei's 1978 expected heterozygosity, also known as gene
+diversity \citep{nei1978estimation}. Previously, in \poppr{}, it was calculated
+over multilocus genotypes, which was more analogous to a correction for
+Simpson's index. This has been corrected in version 2.0 and is now correctly
+calculated over alleles. The following is adapted from equations 2 and 3 in
+\citep{nei1978estimation}:
 
 \begin{equation}
-h = \frac{N}{N-1} \sum_{i = 1}^k{x^{2}_{i}}
+h = \left(\frac{n}{n-1}\right) 1 - \sum_{i = 1}^k{p^{2}_{i}}
 \end{equation}
 
 \begin{equation}
 H_{exp} = \sum_{l = 1}^m{h_l/m}
 \end{equation}
 
-where $x_i$ is the population frequency of the $i^{th}$ allele in a locus and $k$
-is the number of alleles in a particular locus. $h_l$ is the value of $h$ at the
-$l^{th}$ locus.
+where $p_i$ is the population frequency of the $i^{th}$ allele in a locus, $k$
+is the number of alleles in a particular locus, $n$ represents the number of
+\textbf{observed alleles} in the population, and $h_l$ is the value of $h$ at
+the $l^{th}$ locus.
 
-% 
-% Essentially, $H_{exp}$ is an analog of Nei's expected heterozygosity and is
-% equivalent to an unbiased estimator for Simpson's index. It was implemented in
-% \poppr{} as it was previously in \textit{multilocus} \citep{Agapow:2001}. The
-% calculation is as follows:
-% 
-% \begin{equation}
-% H_{exp} = \frac{N}{N-1} \sum_{i=1}^{g}{p^{2}_{i}}
-% \end{equation}
-% \noindent
-% Where $p_i$ is the frequency of the $i$th genotype, $g$ is the number of
-% genotypes observed and $N$ is the sample size. 
+Nei's definition originally corrected the sum of squared allele frequencies with
+$2N/(2N - 1)$, where $N$ is the number of diploid samples
+\citep{nei1978estimation}. This definition is still congruent with that since we
+would observe $2N$ alleles in a diploid locus. The only caveat is that
+populations where allelic dosage is unknown will have an inflated estimate of
+allelic diversity due to the inflation of rare alleles.
 
 \bibliographystyle{authordate1}
 \bibliography{the_bibliography}
