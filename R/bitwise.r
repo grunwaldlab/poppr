@@ -557,6 +557,8 @@ snpia <- function(x, threads = 1L){
   varj <- (Sd2 - (Sd*Sd)/np)/np
   Ve <- sum(varj)
   Svarij <- .Call("pairwise_covar", varj, PACKAGE = "poppr")
-  #cat(sprintf("\nnloc:%d\nnind:%d\nnp:%d\nD2:%d\nSD:%d\nVo:%f\nVe:%f\nsumSvarij:%f\n",nloc,nind,np,sum(D*D),SD,Vo,Ve,sum(Svarij)))
+  #cat(sprintf("\nnloc:%d\nnind:%d\nnp:%d\nD2:%d\nSD:%d\nVo:%f\nSd:%d\nSd2:%d\nVe:%f\nsumSvarij:%f\n",nloc,nind,np,sum(D*D),SD,Vo,sum(Sd*Sd),sum(Sd2),Ve,sum(Svarij)))
+  #cat(sprintf("\nSd*Sd/np:%f\nSd2:%d\nvars:%f\n",Sd*Sd/np,Sd2,varj))
+  #cat(sprintf("\n%d",d_mat))
   return((Vo - Ve)/(2 * sum(Svarij)))
 }
