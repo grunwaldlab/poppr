@@ -612,7 +612,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
     }
   }
 
-  // TODO: This should be 32 for all chunks. If this assumption is wrong things will fail.
+  // TODO: This should be 8 for all chunks. If this assumption is wrong things will fail.
   chunk_length = 8;
 
   vars = R_Calloc(num_chunks*chunk_length, double);
@@ -792,25 +792,25 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   // Calculate C(num_gens,2), which will always be (n*n-n)/2 
   Nc2 = (num_gens*num_gens - num_gens)/2.0;
   // Calculate the observed variance using D and D2
-  Vo = (D2 - (D*D)/Nc2) / Nc2;
+  Vo = ((double)D2 - ((double)D*(double)D)/Nc2) / Nc2;
 
   // Calculate and fill a vector of variances
-  for(i = 0; i < num_loci; i++)
+  for(i = 0; i < num_chunks*chunk_length; i++)
   {
-    vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2;
+    vars[i] = ((double)M2[i] - ((double)M[i]*(double)M[i])/Nc2) / Nc2;
   }
   // Calculate the expected variance
   Ve = 0;
-  for(i = 0; i < num_loci; i++)
+  for(i = 0; i < num_chunks*chunk_length; i++)
   {
     Ve += vars[i];
   }
 
   // Calculate the denominator for the index of association
   denom = 0;
-  for(i = 0; i < num_loci; i++)
+  for(i = 0; i < num_chunks*chunk_length; i++)
   {
-    for(j = 0; j < i; j++)  // Or j < i ?
+    for(j = i+1; j < num_chunks*chunk_length; j++)  // Or j = 0; j < i ?
     {
       if(i != j)
       {
@@ -823,6 +823,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   // Calculate and store the index of association
   REAL(R_out)[0] = (Vo - Ve) / denom;
 
+  //printf("\nnloc:%d\nnind:%d\nnp:%f\nD2:%d\nSD:%d\nVo:%f\nVe:%f\nsumSvarij:%f\n",num_loci,num_gens,Nc2,D2,D,Vo,Ve,denom/2.0);
 
   for(i = 0; i < num_gens; i++)
   {
