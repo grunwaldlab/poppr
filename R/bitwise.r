@@ -418,6 +418,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   } else {
     xpos <- seq(nLoc(x))
   }
+  quiet <- TRUE # TODO: Remove this
   diploid <- TRUE # Use this line when bitwise.IA works all(ploidy(x) == 2)
   missing <- FALSE # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
   nwin <- ceiling(max(xpos)/window)
@@ -557,8 +558,10 @@ snpia <- function(x, threads = 1L){
   varj <- (Sd2 - (Sd*Sd)/np)/np
   Ve <- sum(varj)
   Svarij <- .Call("pairwise_covar", varj, PACKAGE = "poppr")
-  #cat(sprintf("\nnloc:%d\nnind:%d\nnp:%d\nD2:%d\nSD:%d\nVo:%f\nSd:%d\nSd2:%d\nVe:%f\nsumSvarij:%f\n",nloc,nind,np,sum(D*D),SD,Vo,sum(Sd*Sd),sum(Sd2),Ve,sum(Svarij)))
+  #cat(sprintf("\nnloc:%d\nnind:%d\nnp:%d\nD2:%d\nSD:%d\nVo:%f\nSd:%f\nSd2:%d\nVe:%f\nsumSvarij:%f\nIA:%f\n",nloc,nind,np,sum(D*D),SD,Vo,sum(Sd*Sd)/np,sum(Sd2),Ve,sum(Svarij),(Vo-Ve)/(2*sum(Svarij))))
   #cat(sprintf("\nSd*Sd/np:%f\nSd2:%d\nvars:%f\n",Sd*Sd/np,Sd2,varj))
-  #cat(sprintf("\n%d",d_mat))
+  #cat(sprintf("\n%d\t%d\t%d\t%d",d_mat[1,9],d_mat[1,10],d_mat[1,15],d_mat[1,16]))
+  #cat(sprintf("\n%d",d_mat[1,]))
+
   return((Vo - Ve)/(2 * sum(Svarij)))
 }
