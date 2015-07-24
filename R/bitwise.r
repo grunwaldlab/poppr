@@ -418,7 +418,6 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   } else {
     xpos <- seq(nLoc(x))
   }
-  quiet <- TRUE # TODO: Remove this
   diploid <- TRUE # Use this line when bitwise.IA works all(ploidy(x) == 2)
   missing <- FALSE # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
   nwin <- ceiling(max(xpos)/window)
@@ -444,21 +443,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
       if (length(posns) < min.snps){
         res_mat[i] <- NA
       } else {
-        #TODO: REMOVE TEST CODE
-        #y <- x[,posns]
-        #nloc <- nLoc(y)
-        #nind <- nInd(y)
-        #np <- choose(nind, 2)
-        #d_mat <- vapply(seq(nloc), function(i) as.vector(bitwise.dist(y[, i], percent = FALSE, threads = threads)), integer(np))
-        #D <- rowSums(d_mat) # TODO: Is mine getting this same outcome?
-        #SD <- sum(D)        # TODO: I should test to see if these sum up to the output of bitwise.dist(x, percent=FALSE)
-        #Sd <- colSums(d_mat)
-        #d_mat2 <- bitwise.dist(y, percent = FALSE, threads = threads)
-
-        #print(all.equal(D, as.vector(d_mat2)))
-        #print(SD == sum(d_mat2))
-        #TODO: END TEST CODE
-        res_mat[i] <- bitwise.IA(x[, posns], threads = threads) #, differences_only=TRUE)
+        res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
       }
       if (!quiet){
         setTxtProgressBar(progbar, i/nwin)
@@ -550,18 +535,13 @@ snpia <- function(x, threads = 1L){
   nind <- nInd(x)
   np <- choose(nind, 2)
   d_mat <- vapply(seq(nloc), function(i) as.vector(bitwise.dist(x[, i], percent = FALSE, threads = threads)), integer(np))
-  D <- rowSums(d_mat) # TODO: This is the equivalent to as.vector(bitwise.dist(x, percent=FALSE)
-  SD <- sum(D)        # TODO: This is sum(bitwise.dist(x, percent=FALSE))
+  D <- rowSums(d_mat) 
+  SD <- sum(D)        
   Sd <- colSums(d_mat)
   Sd2 <- colSums(d_mat*d_mat)
   Vo <- (sum(D*D) - (SD*SD)/np)/np
   varj <- (Sd2 - (Sd*Sd)/np)/np
   Ve <- sum(varj)
   Svarij <- .Call("pairwise_covar", varj, PACKAGE = "poppr")
-  #cat(sprintf("\nnloc:%d\nnind:%d\nnp:%d\nD2:%d\nSD:%d\nVo:%f\nSd:%f\nSd2:%d\nVe:%f\nsumSvarij:%f\nIA:%f\n",nloc,nind,np,sum(D*D),SD,Vo,sum(Sd*Sd)/np,sum(Sd2),Ve,sum(Svarij),(Vo-Ve)/(2*sum(Svarij))))
-  #cat(sprintf("\nSd*Sd/np:%f\nSd2:%d\nvars:%f\n",Sd*Sd/np,Sd2,varj))
-  #cat(sprintf("\n%d\t%d\t%d\t%d",d_mat[1,9],d_mat[1,10],d_mat[1,15],d_mat[1,16]))
-  #cat(sprintf("\n%d",d_mat[1,]))
-
   return((Vo - Ve)/(2 * sum(Svarij)))
 }

@@ -430,6 +430,10 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
           if(missing_match)
           {
             tmp_sim_set |= mask; // Force the missing bit to match
+            if((1&(set_1.c1>>(next_missing_i%8)))!=0 || (1&(set_1.c2>>(next_missing_i%8)))!=0)
+            {
+              Rprintf("\nLocus %d of genotype %d\tmod8:%d,actual:%d/%d\n",next_missing_i,i,next_missing_i%8,(1&(set_1.c1>>(next_missing_i%8))),(1&(set_1.c2>>(next_missing_i%8))));
+            }
           }
           else
           {
@@ -446,6 +450,10 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
           if(missing_match)
           {
             tmp_sim_set |= mask; // Force the missing bit to match
+            if((1&(set_2.c1>>(next_missing_j%8)))!=0 || (1&(set_2.c2>>(next_missing_j%8)))!=0)
+            {
+              Rprintf("\nLocus %d of genotype %d\tmod8:%d,actual:%d/%d\n",next_missing_j,j,next_missing_j%8,(1&(set_2.c1>>(next_missing_j%8))),(1&(set_2.c2>>(next_missing_j%8))));
+            }
           }
           else
           {
@@ -503,27 +511,6 @@ Output: The index of association for this genlight object over the specified loc
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP indices)
 {
 
-  //TODO: Validate input
-  //TODO: Create variables
-  //TODO: Protect output variable
-  //TODO: Allocate arrays: M, M2, N
-
-  //TODO: Fetch one loci chunk to count its length, or assume they are all 32 or less
-  //TODO: Parallelize for loop over loci chunks of that length // Or all loci, then parallelize inside
-    //TODO: Loop over all samples
-      //TODO: Loop over all other samples
-        //TODO: Make and fill zygosity structs
-        //TODO: Make distance variable D=0
-        //TODO: Call and store as S the similarity set between those
-        //TODO: Or together the two structs' H fields, store as Hor
-        //TODO: Loop through i=0 to loci_chunk_length
-          //TODO: If (S>i)&1 != 0 // If they are not the same at this loci
-            //TODO: D++
-            //TODO: If (Hor>i)&1 == 0 // If neither of them are heterozygotes at this loci
-              //TODO: D++
-          //TODO: M[i+chunk_num*chunk_length] += D
-          //TODO: M2[i+chunk_num*chunk_length] += D*D
-
   SEXP R_out;
   SEXP R_gen_symbol;
   SEXP R_chr_symbol;  
@@ -548,6 +535,8 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   int next_missing_index_i;
   int next_missing_index_j;
   int next_missing_i;
+  unsigned char missing_mask_i; // These store a map of missing values in the current locus
+  unsigned char missing_mask_j; // where 1 is a missing value and 0 is non-missing
   int next_missing_j;
   int missing_match;
   int only_differences;
@@ -570,10 +559,6 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   double Ve; // Expected variance
   double Nc2;  // num_gens choose 2
   double denom; // The denominator for the index of association function
-  // TODO: Remove test code
-  int Sd2;
-  int Sd;
-  // TODO: End test code
 
   char** chunk_matrix;
   int cur_distance;
@@ -612,11 +597,10 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
     {
       chunk_matrix[i*2][j] = (char)RAW(R_chr1_1)[j];
       chunk_matrix[i*2+1][j] = (char)RAW(R_chr1_2)[j];
-      // TODO: Correct for missing data here
     }
   }
 
-  // TODO: This should be 8 for all chunks. If this assumption is wrong things will fail.
+  // This should be 8 for all chunks. If this assumption is wrong things will fail.
   chunk_length = 8;
 
   vars = R_Calloc(num_chunks*chunk_length, double);
@@ -646,6 +630,8 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   next_missing_index_j = 0;
   next_missing_i = -1;
   next_missing_j = -1;
+  missing_mask_i = 0;
+  missing_mask_j = 0;
   mask = 0;
   tmp_sim_set = 0;
   nap1_length = 0;
@@ -658,11 +644,9 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   // TODO: Parallelize this
   for(i = 0; i < num_chunks; i++)
   {
-    // TODO: Stuff?
     // Loop through all samples
     for(j = 0; j < num_gens; j++)
     {
-      // TODO: Things?
       // Fill c1 and c2 with the next two chunks, representing a pair
       set_1.c1 = chunk_matrix[j*2][i];
       set_1.c2 = chunk_matrix[j*2+1][i]; // This chunk is the chromosonal pair of the first
@@ -671,6 +655,21 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
       // Prepare for correcting missing data
       R_nap1 = getAttrib(VECTOR_ELT(R_gen,j),R_nap_symbol); // Vector of the indices of missing values
       nap1_length = XLENGTH(R_nap1);
+      next_missing_index_i = 0;
+      next_missing_i = 0;
+      missing_mask_i = 0;
+      // Find the index of each missing value at or before the current locus chunk
+      while(next_missing_index_i < nap1_length && (int)INTEGER(R_nap1)[next_missing_index_i]-1 < ((i+1)*8))
+      {
+        next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i]-1;
+        // If this missing value is in the current locus chunk
+        if(next_missing_i >= (i*8) && next_missing_i < ((i+1)*8))
+        {
+          // Store it's inner-chunk location in the map
+          missing_mask_i |= (1<<(next_missing_i%8));
+        }
+        next_missing_index_i++;
+      }
       // Loop through the rest of the genotypes
       for(k = j+1; k < num_gens; k++)
       {
@@ -687,69 +686,44 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
         // AND together Hnor and Sn to get a set of differing homozygote sites, store as Hs
         Hs = Sn & Hnor;
 
+        // Prepare for correcting missing data
         R_nap2 = getAttrib(VECTOR_ELT(R_gen,k),R_nap_symbol); // Vector of the indices of missing values
         nap2_length = XLENGTH(R_nap2);
-        if(nap2_length > 0)
+        next_missing_index_j = 0;
+        next_missing_j = 0;
+        missing_mask_j = 0;
+        // Find the index of each missing value at or before the current locus chunk
+        while(next_missing_index_j < nap2_length && (int)INTEGER(R_nap2)[next_missing_index_j]-1 < ((i+1)*8))
         {
-          next_missing_index_j = 0; // Next set of chromosomes start back at index 0
-          next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1; //Compensate for Rs 1 based indexing
-        }
-        else
-        {
-          next_missing_index_j = -1;
-          next_missing_j = -1;
-        }
-        if(nap1_length > 0)
-        {
-          next_missing_index_i = 0;
-          next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1; //Compensate for Rs 1 based indexing
-        }
-        else
-        {
-          next_missing_index_i = -1;
-          next_missing_i = -1;
-        }
-        // Check for missing values and force them to match
-        while(next_missing_index_i < nap1_length && next_missing_i < (i+1)*8 && next_missing_i >= (i*8) )
-        {
-          // Handle missing bit in both chromosomes and both samples with mask
-          mask = 1 << (next_missing_i%8); 
-          if(missing_match)
+          next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j]-1;
+          // If this missing value is in the current locus chunk
+          if(next_missing_j >= (i*8) && next_missing_j < ((i+1)*8))
           {
-            Sn &= ~mask; // Force the missing bit to 0 since Sn is matching-not
-            Hs &= ~mask; // Hs is differing homozygote sites, so missing should be 0
-          }
-          else
-          {
-            Sn |= mask; // Force the missing bit to 1 since SN is matching-not
-            Hs |= (~set_2.ch & mask);// Hs should be 1 if set2.ch is 0 at this bit
-                                    // This makes missing data a distance of 1 from a heterozygote site
-                                    // and 2 from either homozygote site.
-          }
-          next_missing_index_i++; 
-          next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
-        }       
-        // Repeat for j
-        while(next_missing_index_j < nap2_length && next_missing_j < (i+1)*8 && next_missing_j >= (i*8))
-        {
-          // Handle missing bit in both chromosomes and both samples with mask
-          mask = 1 << (next_missing_j%8);
-          if(missing_match)
-          {
-            Sn &= ~mask; // Force the missing bit to 0 since Sn is matching-not
-            Hs &= ~mask; // Hs is differing homozygote sites, so missing should be 0
-          }
-          else
-          {
-            Sn |= mask; // Force the missing bit to 1 since SN is matching-not
-            Hs |= (~set_1.ch & mask);// Hs should be 1 if set2.ch is 0 at this bit
-                                    // This makes missing data a distance of 1 from a heterozygote site
-                                    // and 2 from either homozygote site.
+            // Store it's inner-chunk location in the map
+            missing_mask_j |= (1<<(next_missing_j%8));
           }
           next_missing_index_j++;
-          next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
         }
+        // Use the missing data masks to correct for missing data
+        if(missing_match)
+        {
+          Sn &= ~missing_mask_i; // Force the missing bit to 0 since Sn is matching-not
+          Hs &= ~missing_mask_i; // Hs is differing homozygote sites, so missing should be 0
+          Sn &= ~missing_mask_j; // Force the missing bit to 0 since Sn is matching-not
+          Hs &= ~missing_mask_j; // Hs is differing homozygote sites, so missing should be 0
+        }
+        else
+        {
+          Sn |= missing_mask_i; // Force the missing bit to 1 since SN is matching-not
+          Hs |= (~set_2.ch & missing_mask_i);// Hs should be 1 if set2.ch is 0 at this bit
+                                  // This makes missing data a distance of 1 from a heterozygote site
+                                  // and 2 from either homozygote site.
+          Sn |= missing_mask_j; // Force the missing bit to 1 since SN is matching-not
+          Hs |= (~set_1.ch & missing_mask_j);// Hs should be 1 if set2.ch is 0 at this bit
+                                  // This makes missing data a distance of 1 from a heterozygote site
+                                  // and 2 from either homozygote site.
 
+        }
         // Loop through 0 through chunk_length, call this x
         for(x = 0; x < chunk_length; x++)
         {
@@ -768,19 +742,6 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
           M[x + i*chunk_length] += (double)val;
           // Update M2[current locus] with val squared
           M2[x + i*chunk_length] += (double)val*(double)val;
-          // TODO: REMOVE TEST CODE
-          if(k==1 && j==0 && (x+i*chunk_length < num_loci))
-          {
-            //if(x==0)
-            //{ 
-              //Rprintf("\n%d",val);
-            //} else if(x==1 || x==6 || x==7)
-            //{ 
-              //Rprintf("\t%d",val);
-            //}
-              
-          }
-          // TODO: END TEST CODE
         }
       }
     }
@@ -806,21 +767,10 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   // Calculate the observed variance using D and D2
   Vo = ((double)D2 - ((double)D*(double)D)/Nc2) / Nc2;
 
-  // TODO: Remove test code
-  Sd2 = 0;
-  Sd = 0;
-  // TODO: End test code
-
   // Calculate and fill a vector of variances
   for(i = 0; i < num_loci; i++)
   {
     vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2;
-
-  // TODO: Remove test code
-    Sd += M[i]*M[i]/Nc2;
-    Sd2 += M2[i];
-    //Rprintf("\nSd*Sd/np:%f\nSd2:%f\nvars:%f\n",M[i]*M[i]/Nc2,M2[i],vars[i]);
-  // TODO: End test code
   }
   // Calculate the expected variance
   Ve = 0;
@@ -833,7 +783,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   denom = 0;
   for(i = 0; i < num_loci; i++)
   {
-    for(j = i+1; j < num_loci; j++)  // Or j = 0; j < i ?
+    for(j = i+1; j < num_loci; j++)  
     {
       if(i != j)
       {
@@ -845,8 +795,6 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
 
   // Calculate and store the index of association
   REAL(R_out)[0] = (Vo - Ve) / denom;
-
-  //Rprintf("\nnloc:%d\nnind:%d\nnp:%f\nD2:%d\nSD:%d\nVo:%f\nSd:%d\nSd2:%d\nVe:%f\nsumSvarij:%f\nIA:%f\n",num_loci,num_gens,Nc2,D2,D,Vo,Sd,Sd2,Ve,denom/2.0,(Vo-Ve)/denom);
 
   for(i = 0; i < num_gens; i++)
   {
