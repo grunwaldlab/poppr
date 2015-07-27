@@ -424,36 +424,20 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   } else {
     xpos <- seq(nLoc(x))
   }
-  diploid <- TRUE # Use this line when bitwise.IA works all(ploidy(x) == 2)
-  missing <- FALSE # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
   nwin <- ceiling(max(xpos)/window)
   winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
   winmat[, 1] <- winmat[, 1] - window + 1
   res_mat <- vector(mode = "numeric", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  if (missing || !diploid){
-    for (i in seq(nwin)){
-      posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
-      if (length(posns) < min.snps){
-        res_mat[i] <- NA
-      } else {
-        res_mat[i] <- snpia(x[, posns], threads = threads)
-      }
-      if (!quiet){
-        setTxtProgressBar(progbar, i/nwin)
-      }
+  for (i in seq(nwin)){
+    posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+    if (length(posns) < min.snps){
+      res_mat[i] <- NA
+    } else {
+      res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
     }
-  } else {
-    for (i in seq(nwin)){
-      posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
-      if (length(posns) < min.snps){
-        res_mat[i] <- NA
-      } else {
-        res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
-      }
-      if (!quiet){
-        setTxtProgressBar(progbar, i/nwin)
-      }
+    if (!quiet){
+      setTxtProgressBar(progbar, i/nwin)
     }
   }
   return(res_mat)
@@ -514,23 +498,11 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   nloc <- nLoc(x)
   res_mat <- vector(mode = "numeric", length = reps)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  diploid <- FALSE # Use this line when bitwise.IA works all(ploidy(x) == 2)
-  missing <- TRUE  # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
-  if (missing || !diploid){
-    for (i in seq(reps)){
-      posns <- sample(nloc, n.snp)
-      res_mat[i] <- snpia(x[, posns], threads = threads)
-      if (!quiet){
-        setTxtProgressBar(progbar, i/reps)
-      }
-    }  
-  } else {
-    for (i in seq(reps)){
-      posns <- sample(nloc, n.snp)
-      res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
-      if (!quiet){
-        setTxtProgressBar(progbar, i/reps)
-      }
+  for (i in seq(reps)){
+    posns <- sample(nloc, n.snp)
+    res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
+    if (!quiet){
+      setTxtProgressBar(progbar, i/reps)
     }
   }
   return(res_mat)
