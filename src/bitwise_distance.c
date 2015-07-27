@@ -73,6 +73,7 @@ struct locus
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
+SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads, SEXP indices);
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP indices);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
@@ -497,6 +498,286 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
   return R_out;
 }
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates the index of association of a genlight object of haploids.
+
+Input: A genlight object containing samples of diploids.
+       A boolean representing whether or not missing values should match. 
+       A boolean representing whether distances or differences should be counted.
+       An integer representing the number of threads to be used.
+       A vector of locus indices to be used in the calculations.
+Output: The index of association for this genlight object over the specified loci
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads, SEXP indices)
+{
+
+  SEXP R_out;
+  SEXP R_gen_symbol;
+  SEXP R_chr_symbol;  
+  SEXP R_nap_symbol;
+  SEXP R_nloc_symbol; // For accessing the number of SNPs in each genotype
+  SEXP R_gen;
+  int num_gens;
+  int num_chunks;
+  int chunk_length;
+  int num_loci;
+  SEXP R_chr1_1;
+  SEXP R_chr2_1;
+  SEXP R_nap1;
+  SEXP R_nap2;
+  SEXP R_dists;
+  SEXP R_nloc;
+  int nap1_length;
+  int nap2_length;
+  int chr_length;
+  int next_missing_index_i;
+  int next_missing_index_j;
+  int next_missing_i;
+  unsigned char missing_mask_i; // These store a map of missing values in the current locus
+  unsigned char missing_mask_j; // where 1 is a missing value and 0 is non-missing
+  int next_missing_j;
+  int missing_match;
+  int only_differences;
+  int num_threads;
+  char mask;
+  struct zygosity set_1;
+  struct zygosity set_2;
+  int h;
+  int i;
+  int j;
+  int k;
+  int x;
+
+  double* vars; // Variance at each locus
+  double* M;  // Sum of distances at each locus
+  double* M2; // Sum of squared distances at each locus
+  int D;   // Sum of distances between each sample
+  int D2;  // Sum of squared distances between each sample
+  double Vo; // Observed variance
+  double Ve; // Expected variance
+  double Nc2;  // num_gens choose 2
+  double denom; // The denominator for the index of association function
+
+  char** chunk_matrix;
+  int cur_distance;
+  char tmp_sim_set;
+  unsigned char Sn;             // Used for temporary bitwise calculations
+  unsigned char Hnor;
+  unsigned char Hs;
+  unsigned char offset;
+  unsigned char val; 
+
+
+  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
+  PROTECT(R_chr_symbol = install("snp"));
+  PROTECT(R_nap_symbol = install("NA.posi"));  
+  PROTECT(R_nloc_symbol = install("n.loc"));
+
+  // This will be a LIST of type LIST:RAW
+  R_gen = getAttrib(genlight, R_gen_symbol);
+  num_gens = XLENGTH(R_gen);
+
+  R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,0),R_chr_symbol),0); // Chromosome 1
+  num_chunks = XLENGTH(R_chr1_1);
+
+  R_nloc = getAttrib(genlight,R_nloc_symbol);
+  num_loci = INTEGER(R_nloc)[0];
+
+  PROTECT(R_out = allocVector(REALSXP, 1));
+  chunk_matrix = R_Calloc(num_gens,char*);
+  for(i = 0; i < num_gens; i++)
+  {
+    chunk_matrix[i] = R_Calloc(num_chunks,char);
+    R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); // Chromosome 1
+    for(j = 0; j < num_chunks; j++)
+    {
+      chunk_matrix[i][j] = (char)RAW(R_chr1_1)[j];
+    }
+  }
+
+  // This should be 8 for all chunks. If this assumption is wrong things will fail.
+  chunk_length = 8;
+
+  vars = R_Calloc(num_chunks*chunk_length, double);
+  M = R_Calloc(num_chunks*chunk_length, double);
+  M2 = R_Calloc(num_chunks*chunk_length, double);
+
+  #ifdef _OPENMP
+  {
+    // Set the number of threads to be used in each omp parallel region
+    if(INTEGER(requested_threads)[0] == 0)
+    {
+      num_threads = omp_get_max_threads();
+    }
+    else
+    {
+      num_threads = INTEGER(requested_threads)[0];
+    }
+    omp_set_num_threads(num_threads);
+  }
+  #else
+  {
+    num_threads = 1;
+  }
+  #endif
+
+  next_missing_index_i = 0;
+  next_missing_index_j = 0;
+  next_missing_i = -1;
+  next_missing_j = -1;
+  missing_mask_i = 0;
+  missing_mask_j = 0;
+  mask = 0;
+  tmp_sim_set = 0;
+  nap1_length = 0;
+  nap2_length = 0;
+  chr_length = 0;
+  missing_match = asLogical(missing);
+
+  // Loop through all SNP chunks
+  // TODO: Parallelize this
+  for(i = 0; i < num_chunks; i++)
+  {
+    // Loop through all samples
+    for(j = 0; j < num_gens; j++)
+    {
+      // Fill c1 with the next chunk
+      set_1.c1 = chunk_matrix[j][i]; // TODO: There is likely a better way to do this for haploids
+      // Prepare for correcting missing data
+      R_nap1 = getAttrib(VECTOR_ELT(R_gen,j),R_nap_symbol); // Vector of the indices of missing values
+      nap1_length = XLENGTH(R_nap1);
+      next_missing_index_i = 0;
+      next_missing_i = 0;
+      missing_mask_i = 0;
+      // Find the index of each missing value at or before the current locus chunk
+      while(next_missing_index_i < nap1_length && (int)INTEGER(R_nap1)[next_missing_index_i]-1 < ((i+1)*8))
+      {
+        next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i]-1;
+        // If this missing value is in the current locus chunk
+        if(next_missing_i >= (i*8) && next_missing_i < ((i+1)*8))
+        {
+          // Store it's inner-chunk location in the map
+          missing_mask_i |= (1<<(next_missing_i%8));
+        }
+        next_missing_index_i++;
+      }
+      // Loop through the rest of the genotypes
+      for(k = j+1; k < num_gens; k++)
+      {
+        // Fill c1 with the next chunk
+        set_2.c1 = chunk_matrix[k][i]; // TODO: Better way for haploids?
+
+        // Get the locations at which these two chunks differ
+        Sn = (set_1.c1 ^ set_2.c1);
+
+        // Prepare for correcting missing data
+        R_nap2 = getAttrib(VECTOR_ELT(R_gen,k),R_nap_symbol); // Vector of the indices of missing values
+        nap2_length = XLENGTH(R_nap2);
+        next_missing_index_j = 0;
+        next_missing_j = 0;
+        missing_mask_j = 0;
+        // Find the index of each missing value at or before the current locus chunk
+        while(next_missing_index_j < nap2_length && (int)INTEGER(R_nap2)[next_missing_index_j]-1 < ((i+1)*8))
+        {
+          next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j]-1;
+          // If this missing value is in the current locus chunk
+          if(next_missing_j >= (i*8) && next_missing_j < ((i+1)*8))
+          {
+            // Store it's inner-chunk location in the map
+            missing_mask_j |= (1<<(next_missing_j%8));
+          }
+          next_missing_index_j++;
+        }
+        // Use the missing data masks to correct for missing data
+        if(missing_match)
+        {
+          Sn &= ~missing_mask_i; // Force the missing bit to 0 since Sn is matching-not
+          Sn &= ~missing_mask_j; // Force the missing bit to 0 since Sn is matching-not
+        }
+        else
+        {
+          Sn |= missing_mask_i; // Force the missing bit to 1 since SN is matching-not
+          Sn |= missing_mask_j; // Force the missing bit to 1 since SN is matching-not
+        }
+        // Loop through 0 through chunk_length, call this x
+        for(x = 0; x < chunk_length; x++)
+        {
+          // Find the offset for the next bit/locus of interest 
+          offset = x;
+          // Create mask to retrieve just that bit/locus
+          mask = 1<<offset;
+          // If only_differences is set, subtract (mask&Hs)>>offset back off of val
+          val = (mask&Sn)>>offset;
+          // Update M[current locus] with val 
+          M[x + i*chunk_length] += (double)val;
+          // Update M2[current locus] with val squared
+          M2[x + i*chunk_length] += (double)val*(double)val;
+        }
+      }
+    }
+  }
+
+  // Get the distance matrix from bitwise_distance
+  R_dists = bitwise_distance_haploid(genlight, missing, requested_threads);
+
+  // Calculate the sum and squared sum of distances between samples
+  D = 0;
+  D2 = 0;
+  for(i = 0; i < num_gens; i++)
+  {
+    for(j = 0; j < i; j++)
+    {
+      D += INTEGER(R_dists)[i + j*num_gens];
+      D2 += INTEGER(R_dists)[i + j*num_gens]*INTEGER(R_dists)[i + j*num_gens];
+    }
+  }
+
+  // Calculate C(num_gens,2), which will always be (n*n-n)/2 
+  Nc2 = (num_gens*num_gens - num_gens)/2.0;
+  // Calculate the observed variance using D and D2
+  Vo = ((double)D2 - ((double)D*(double)D)/Nc2) / Nc2;
+
+  // Calculate and fill a vector of variances
+  for(i = 0; i < num_loci; i++)
+  {
+    vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2;
+  }
+  // Calculate the expected variance
+  Ve = 0;
+  for(i = 0; i < num_loci; i++)
+  {
+    Ve += vars[i];
+  }
+
+  // Calculate the denominator for the index of association
+  denom = 0;
+  for(i = 0; i < num_loci; i++)
+  {
+    for(j = i+1; j < num_loci; j++)  
+    {
+      if(i != j)
+      {
+        denom += sqrt(vars[i]*vars[j]);
+      }
+    }
+  }
+  denom = 2 * denom;
+
+  // Calculate and store the index of association
+  REAL(R_out)[0] = (Vo - Ve) / denom;
+
+  for(i = 0; i < num_gens; i++)
+  {
+    R_Free(chunk_matrix[i]);
+  }
+  R_Free(chunk_matrix);
+  R_Free(vars);
+  R_Free(M);
+  R_Free(M2);
+  UNPROTECT(5); 
+  return R_out;
+
+}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the index of association of a genlight object of diploids.
@@ -796,7 +1077,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   // Calculate and store the index of association
   REAL(R_out)[0] = (Vo - Ve) / denom;
 
-  for(i = 0; i < num_gens; i++)
+  for(i = 0; i < num_gens*2; i++)
   {
     R_Free(chunk_matrix[i]);
   }

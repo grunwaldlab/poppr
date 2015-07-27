@@ -308,7 +308,7 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
   # Stop if the ploidy of the genlight object is not haploid or diploid
-  stopifnot(min(ploidy(x)) == 2) # Once this handles haploids add:  || min(ploidy(x)) == 1)
+  stopifnot(min(ploidy(x)) == 2 || min(ploidy(x)) == 1)
 
   ploid     <- min(ploidy(x))
   ind.names <- indNames(x)
@@ -330,6 +330,14 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
 #
   # Continue function for genlight objects
 
+  # Threads must be something that can cast to integer
+  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  {
+    stop("Threads must be a non-negative numeric or integer value")
+  }
+  # Cast parameters to proper types before passing them to C
+  threads <- as.integer(threads)
+  indices <- as.integer(indices)
   # Ensure that every SNPbin object has data for all chromosomes
   if(ploid == 2){
     for(i in 1:length(x$gen)){
@@ -337,22 +345,20 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
         x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
       }
     }
+    IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads,indices)
   }
-  # Threads must be something that can cast to integer
-  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  else if(ploid == 1)
   {
-    stop("Threads must be a non-negative numeric or integer value")
+    IA <- .Call("association_index_haploid", x, missing_match,threads,indices)
   }
-
-  # Cast parameters to proper types before passing them to C
-  threads <- as.integer(threads)
-  indices <- as.integer(indices)
-
+  else
+  {
+    stop("bitwise.IA only supports haploids and diploids")
+  }
   #TODO: Allow for automated index generation, such as random or window based
 
   #TODO: Call C function and return
   
-  IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads,indices)
 
   return(IA)
 
