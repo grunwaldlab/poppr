@@ -542,7 +542,6 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   char mask;
   struct zygosity set_1;
   struct zygosity set_2;
-  int h;
   int i;
   int j;
   int k;
@@ -560,10 +559,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
 
   char** chunk_matrix;
   int cur_distance;
-  char tmp_sim_set;
   unsigned char Sn;             // Used for temporary bitwise calculations
-  unsigned char Hnor;
-  unsigned char Hs;
   unsigned char offset;
   unsigned char val; 
 
@@ -628,14 +624,20 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   missing_mask_i = 0;
   missing_mask_j = 0;
   mask = 0;
-  tmp_sim_set = 0;
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
   missing_match = asLogical(missing);
 
   // Loop through all SNP chunks
-  // TODO: Parallelize this
+  #ifdef _OPENMP
+  #pragma omp parallel for \
+    private(i,j,k,x,R_chr1_1,R_chr2_1,R_nap1,R_nap2,Sn,offset,val,\
+            next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,missing_mask_i,missing_mask_j,\
+            set_1,set_2, mask, nap1_length, nap2_length) \
+    shared(M, M2, missing_match, only_differences, R_gen, R_nap_symbol,\
+           num_gens, num_loci, num_chunks, chunk_length, chunk_matrix)
+  #endif
   for(i = 0; i < num_chunks; i++)
   {
     // Loop through all samples
@@ -723,6 +725,9 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   // Calculate the sum and squared sum of distances between samples
   D = 0;
   D2 = 0;
+  #ifdef _OPENMP
+  #pragma omp parallel for reduction(+ : D,D2) private(i,j) 
+  #endif
   for(i = 0; i < num_gens; i++)
   {
     for(j = 0; j < i; j++)
@@ -738,12 +743,14 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   Vo = ((double)D2 - ((double)D*(double)D)/Nc2) / Nc2;
 
   // Calculate and fill a vector of variances
+  //#pragma omp parallel for private(i) shared(Nc2,vars,M2,M,num_loci)
   for(i = 0; i < num_loci; i++)
   {
     vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2;
   }
   // Calculate the expected variance
   Ve = 0;
+  //#pragma omp parallel for reduction(+ : Ve) private(i)
   for(i = 0; i < num_loci; i++)
   {
     Ve += vars[i];
@@ -751,6 +758,9 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
 
   // Calculate the denominator for the index of association
   denom = 0;
+  #ifdef _OPENMP
+  #pragma omp parallel for reduction(+ : denom) private(i, j)
+  #endif
   for(i = 0; i < num_loci; i++)
   {
     for(j = i+1; j < num_loci; j++)  
@@ -816,16 +826,15 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   int next_missing_index_i;
   int next_missing_index_j;
   int next_missing_i;
+  int next_missing_j;
   unsigned char missing_mask_i; // These store a map of missing values in the current locus
   unsigned char missing_mask_j; // where 1 is a missing value and 0 is non-missing
-  int next_missing_j;
   int missing_match;
   int only_differences;
   int num_threads;
   char mask;
   struct zygosity set_1;
   struct zygosity set_2;
-  int h;
   int i;
   int j;
   int k;
@@ -842,8 +851,6 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   double denom; // The denominator for the index of association function
 
   char** chunk_matrix;
-  int cur_distance;
-  char tmp_sim_set;
   unsigned char Sn;             // Used for temporary bitwise calculations
   unsigned char Hnor;
   unsigned char Hs;
@@ -914,7 +921,6 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   missing_mask_i = 0;
   missing_mask_j = 0;
   mask = 0;
-  tmp_sim_set = 0;
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
@@ -922,7 +928,14 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   only_differences = asLogical(differences_only);
 
   // Loop through all SNP chunks
-  // TODO: Parallelize this
+  #ifdef _OPENMP
+  #pragma omp parallel for \
+    private(i,j,k,x,R_chr1_1,R_chr1_2,R_chr2_1,R_chr2_2,R_nap1,R_nap2,Sn,Hnor,Hs,offset,val,\
+            next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,missing_mask_i,missing_mask_j,\
+            set_1,set_2, mask, nap1_length, nap2_length) \
+    shared(M, M2, missing_match, only_differences, R_gen, R_nap_symbol,\
+           num_gens, num_loci, num_chunks, chunk_length, chunk_matrix)
+  #endif
   for(i = 0; i < num_chunks; i++)
   {
     // Loop through all samples
@@ -1034,6 +1047,10 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   // Calculate the sum and squared sum of distances between samples
   D = 0;
   D2 = 0;
+  x = 0;
+  #ifdef _OPENMP
+  #pragma omp parallel for reduction(+ : D,D2) private(i,j) 
+  #endif
   for(i = 0; i < num_gens; i++)
   {
     for(j = 0; j < i; j++)
@@ -1062,6 +1079,9 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
 
   // Calculate the denominator for the index of association
   denom = 0;
+  #ifdef _OPENMP
+  #pragma omp parallel for reduction(+ : denom) private(i, j)
+  #endif
   for(i = 0; i < num_loci; i++)
   {
     for(j = i+1; j < num_loci; j++)  
