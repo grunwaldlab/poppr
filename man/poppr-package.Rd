@@ -227,7 +227,7 @@ of the National Academy of Sciences 111:8791-8796. doi:
 
 Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald, N.
 J. (2015). Spatial and temporal analysis of populations of the sudden oak
-death pathogen in Oregon forests. Phytopathology XXX:X-X. doi:
+death pathogen in Oregon forests. Phytopathology 105:982-989. doi:
 \href{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
 
 

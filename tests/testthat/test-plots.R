@@ -79,14 +79,14 @@ test_that("ia produces histograms", {
 	expect_output(pres, "nancy")
 
 
-	expect_output(iaplot$layers[[1]], "geom_histogram")
+	expect_output(iaplot$layers[[1]], "geom_histogram")# "geom_bar" for ggplot2 1.0.1+
 	expect_output(iaplot$layers[[2]], "geom_rug")
 	expect_output(iaplot$layers[[3]], "geom_vline")
 	expect_output(iaplot$layers[[4]], paste0("geom_text", ".+?", signif(res$index["rbarD"], 3)))
 	expect_output(iaplot$layers[[5]], paste0("geom_text", ".+?", signif(res$index["p.rD"], 3)))
 	expect_output(iaplot$facet, "facet_null\\(\\)")
 
-	expect_output(poplot$layers[[1]], "geom_histogram")
+	expect_output(poplot$layers[[1]], "geom_histogram")# "geom_bar" for ggplot2 1.0.1+
 	expect_output(poplot$layers[[2]], "geom_rug")
 	expect_output(poplot$layers[[3]], "geom_vline")
 	expect_output(poplot$facet, "facet_wrap\\(population\\)")
@@ -104,8 +104,8 @@ test_that("pair.ia produces a heatmap", {
 	plot(nan.pair, limits = NULL)
 	pplot2 <- ggplot2::last_plot()
 	
-	expect_equivalent(pplot, pplot2)
-	expect_that(pplot2, not(is_equivalent_to(pplot_lim)))
+	expect_equivalent(pplot, pplot2) #expect_equivalent(pplot[-8], pplot2[-8])
+	expect_that(pplot2, not(is_equivalent_to(pplot_lim))) #expect_that(pplot2[-8], not(is_equivalent_to(pplot_lim[-8])))
 
 	expect_output(pplot$layers[[1]], "geom_tile")
 	expect_output(pplot$layers[[1]], "stat_identity")
