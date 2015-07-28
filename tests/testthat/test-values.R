@@ -191,7 +191,7 @@ test_that("win.ia can handle missing data for haploids", {
   set.seed(999)
   dat <- sample(c(0, 1, NA), 500, replace = TRUE, prob = c(0.47, 0.47, 0.06))
   mat <- matrix(dat, nrow = 5, ncol = 100)
-  x   <- new("genlight", mat)
+  x   <- new("genlight", mat, parallel = FALSE)
   gid <- df2genind(mat + 1, ind.names = .genlab("", 5), ploidy = 1,
                    loc.names = .genlab("", 100))
   bit.res <- win.ia(x, quiet = TRUE)
@@ -204,7 +204,7 @@ test_that("win.ia can handle missing data for diploids", {
   set.seed(999)
   dat <- sample(c(0, 1, 2, NA), 500, replace = TRUE, prob = c(0.22, 0.5, 0.22, 0.06))
   mat <- matrix(dat, nrow = 5, ncol = 100)
-  x   <- new("genlight", mat)
+  x   <- new("genlight", mat, parallel = FALSE)
   mat[mat == 0]   <- "1/1"
   mat[mat == "1"] <- "1/2"
   mat[mat == "2"] <- "2/2"
