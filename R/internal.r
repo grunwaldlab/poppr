@@ -2573,7 +2573,7 @@ get_boot_se <- function(bootlist, res = "sd"){
 make_windows <- function(maxp, minp = 1L, window = 100L){
   nwin   <- ceiling(maxp/window)
   minwin <- ceiling(minp/window)
-  winmat <- matrix(window * 1:nwin, nrow = nwin, ncol = 2)[minwin:nwin, ]
+  winmat <- matrix(window * seq(nwin), nrow = nwin, ncol = 2)[minwin:nwin, , drop = FALSE]
   winmat[, 1] <- winmat[, 1] - window + 1
   return(winmat)
 }
