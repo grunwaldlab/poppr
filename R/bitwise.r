@@ -424,9 +424,8 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   } else {
     xpos <- seq(nLoc(x))
   }
-  nwin <- ceiling(max(xpos)/window)
-  winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
-  winmat[, 1] <- winmat[, 1] - window + 1
+  winmat  <- make_windows(maxp = max(xpos), minp = min(xpos), window = window)
+  nwin    <- nrow(winmat)
   res_mat <- vector(mode = "numeric", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(nwin)){

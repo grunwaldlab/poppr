@@ -2560,3 +2560,20 @@ get_boot_se <- function(bootlist, res = "sd"){
   return(resmat)
 }
 
+#==============================================================================#
+# Given a maximum and minimum value, this makes an n x 2 matrix of windows that
+# encompass these values.
+# 
+# Public functions utilizing this function:
+# ## win.ia
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+make_windows <- function(maxp, minp = 1L, window = 100L){
+  nwin   <- ceiling(maxp/window)
+  minwin <- ceiling(minp/window)
+  winmat <- matrix(window * 1:nwin, nrow = nwin, ncol = 2)[minwin:nwin, ]
+  winmat[, 1] <- winmat[, 1] - window + 1
+  return(winmat)
+}
