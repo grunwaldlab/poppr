@@ -439,6 +439,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
       setTxtProgressBar(progbar, i/nwin)
     }
   }
+  if (!quiet) cat("\n")
   return(res_mat)
 }
 
@@ -504,6 +505,7 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
       setTxtProgressBar(progbar, i/reps)
     }
   }
+  if (!quiet) cat("\n")
   return(res_mat)
 }
 
