@@ -53,6 +53,8 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
+\DeclareUnicodeCharacter{2032}{~}
+
 \title{Data import and manipulation in poppr version \Sexpr{packageVersion("poppr")}}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
