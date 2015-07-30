@@ -27,11 +27,37 @@ mlgs.}
 \item{\code{cutoff}}{Two numbers specifying the cutoff value for expanding and
 collapsing MLGs.}
 }}
+\examples{
+# These examples will simply show you what you can do with these
+set.seed(5000)
+(x <- sample(10, 20, replace = TRUE))
+(m <- new("MLG", x))
+
+\dontrun{
+ m@visible # original is always default
+
+ m[]       # adding braces after the object will always return a vector of
+           # the same type as defined in "visible"
+
+ m + 1     # You can do math on the numeric ones
+
+ m@visible <- "custom"
+ m + 2     # This should throw a warning
+ # The types are stored in a data frame. You can retrieve them easily:
+ m@visible <- "original"
+ m
+ m[, "custom"]
+
+ # You can also retrieve all of them by selecting all = TRUE
+ m[all = TRUE]
+}
+}
 \author{
 Zhian N. Kamvar
 }
 \seealso{
-\code{\linkS4class{genclone}} \code{\link{mll}} \code{\linkS4class{snpclone}}
+\code{\linkS4class{genclone}} \code{\link{mll}}
+  \code{\linkS4class{snpclone}}
 }
 \keyword{internal}
 
