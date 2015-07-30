@@ -364,7 +364,7 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
   }
   else
   {
-    stop("bitwise.IA only supports haploids and diploids")
+    stop("bitwise.ia only supports haploids and diploids")
   }
   #TODO: Allow for automated index generation, such as random or window based
 
@@ -444,7 +444,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
     if (length(posns) < min.snps){
       res_mat[i] <- NA
     } else {
-      res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
+      res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
     }
     if (!quiet){
       setTxtProgressBar(progbar, i/nwin)
@@ -511,7 +511,7 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(reps)){
     posns <- sample(nloc, n.snp)
-    res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
+    res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
     if (!quiet){
       setTxtProgressBar(progbar, i/reps)
     }
