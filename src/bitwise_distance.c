@@ -73,8 +73,8 @@ struct locus
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
-SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads, SEXP indices);
-SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP indices);
+SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
@@ -505,10 +505,9 @@ Input: A genlight object containing samples of diploids.
        A boolean representing whether or not missing values should match. 
        A boolean representing whether distances or differences should be counted.
        An integer representing the number of threads to be used.
-       A vector of locus indices to be used in the calculations.
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads, SEXP indices)
+SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads)
 {
 
   SEXP R_out;
@@ -796,10 +795,9 @@ Input: A genlight object containing samples of diploids.
        A boolean representing whether or not missing values should match. 
        A boolean representing whether distances or differences should be counted.
        An integer representing the number of threads to be used.
-       A vector of locus indices to be used in the calculations.
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP indices)
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
 {
 
   SEXP R_out;
