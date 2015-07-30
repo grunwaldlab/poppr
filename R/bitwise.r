@@ -348,7 +348,6 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
   }
   # Cast parameters to proper types before passing them to C
   threads <- as.integer(threads)
-  indices <- as.integer(indices)
   # Ensure that every SNPbin object has data for all chromosomes
   if(ploid == 2){
     for(i in 1:length(x$gen)){
