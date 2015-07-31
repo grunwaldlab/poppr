@@ -48,8 +48,10 @@ set.seed(5000)
  m
  m[, "custom"]
 
- # You can also retrieve all of them by selecting all = TRUE
- m[all = TRUE]
+ # Important for subsetting, if you subset the object, normally, it will
+ # return a vector unless you specify all = TRUE
+ m[1:10]             # original vector
+ m[1:10, all = TRUE] # still class MLG
 }
 }
 \author{
