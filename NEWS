@@ -1,3 +1,11 @@
+poppr 2.0.2.99
+===========
+IMPROVEMENTS
+* win.ia and samp.ia gain a significant speedup thanks to Jonah Brooks implementing the code in C. 
+
+MISC
+* Documentation for genclone and snpclone classes are more coherent.
+
 poppr 2.0.2
 ===========
 BUG FIX
