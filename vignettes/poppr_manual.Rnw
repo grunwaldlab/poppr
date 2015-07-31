@@ -310,7 +310,7 @@ sea of genomic data, generate bootstrapped dendrograms with any genetic
 distance, and calculate minimum spanning networks with reticulations to reveal
 the underlying population structure of your clonal data.
 
-\subsection{A note about poppr version 2.0
+\subsection{A note about poppr version 2.0}
 
 In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
 an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
