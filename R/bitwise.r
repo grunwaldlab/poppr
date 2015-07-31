@@ -282,13 +282,24 @@ poppr_has_parallel <- function(){
 #==============================================================================#
 #' Calculate the index of association between samples in a genlight object.
 #' 
-#' TODO: Add description of method
+#' This function parses over a genlight object to calculate and return the
+#' index of association for those samples.
 #'
 #' @param x a genlight object. 
 #'
-#' @param indices A vector of integers indicating which loci should be
-#'   sampled while calculating the index of association. If NULL (default),
-#'   all loci will be used.
+#' @param missing_match a boolean determining whether missing data should be
+#'   considered a match. If TRUE (default) missing data at a locus will match
+#'   with any data at that locus in each comparison. If FALSE, missing data at
+#'   a locus will cause all comparisons to return the maximum possible distance
+#'   at that locus (ie, if sample 1 has missing data at locus 1, and sample 2 
+#'   is heterozygous at locus 1, the distance at that locus will be 1. If sample
+#'   2 was heterozygous or missing at locus 1, the distance would be 2.
+#'
+#' @param differences_only a boolean determining how distance should be counted
+#'   for diploids. Whether TRUE or FALSE the distance between a heterozygous locus
+#'   and a homozygous locus is 1. If FALSE (default) the distance between opposite
+#'   homozygous loci is 2. If TRUE that distance counts as 1, indicating only that
+#'   the two samples differ at that locus.
 #'
 #' @param threads The maximum number of parallel threads to be used within this
 #'   function. A value of 0 (default) will attempt to use as many threads as there
@@ -302,7 +313,7 @@ poppr_has_parallel <- function(){
 #' @export
 #' @keywords internal
 #==============================================================================#
-bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0, indices=NULL){
+bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0){
   stopifnot(class(x)[1] == "genlight")
   #TODO: Use this and pass others to ia(): stopifnot(class(x)[1] %in% c("genlight", "genclone", "genind"))
   # Stop if the ploidy of the genlight object is not consistent
@@ -337,7 +348,6 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
   }
   # Cast parameters to proper types before passing them to C
   threads <- as.integer(threads)
-  indices <- as.integer(indices)
   # Ensure that every SNPbin object has data for all chromosomes
   if(ploid == 2){
     for(i in 1:length(x$gen)){
@@ -345,15 +355,15 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
         x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
       }
     }
-    IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads,indices)
+    IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads)
   }
   else if(ploid == 1)
   {
-    IA <- .Call("association_index_haploid", x, missing_match,threads,indices)
+    IA <- .Call("association_index_haploid", x, missing_match,threads)
   }
   else
   {
-    stop("bitwise.IA only supports haploids and diploids")
+    stop("bitwise.ia only supports haploids and diploids")
   }
   #TODO: Allow for automated index generation, such as random or window based
 
@@ -433,7 +443,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
     if (length(posns) < min.snps){
       res_mat[i] <- NA
     } else {
-      res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
+      res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
     }
     if (!quiet){
       setTxtProgressBar(progbar, i/nwin)
@@ -500,7 +510,7 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(reps)){
     posns <- sample(nloc, n.snp)
-    res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
+    res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
     if (!quiet){
       setTxtProgressBar(progbar, i/reps)
     }

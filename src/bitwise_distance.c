@@ -73,8 +73,8 @@ struct locus
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
-SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads, SEXP indices);
-SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP indices);
+SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
@@ -178,7 +178,7 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
     nap1_length = XLENGTH(R_nap1);
     // Loop through every other genotype
     #ifdef _OPENMP
-    #pragma omp parallel for \
+    #pragma omp parallel for schedule(guided) \
       private(j,cur_distance,R_chr2_1,R_nap2,next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,\
               tmp_sim_set, k, mask, nap2_length) \
       shared(R_nap1, nap1_length, i, distance_matrix)
@@ -377,7 +377,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
     nap1_length = XLENGTH(R_nap1);
     // Loop through every other genotype
     #ifdef _OPENMP
-    #pragma omp parallel for \
+    #pragma omp parallel for schedule(guided) \
       private(j,cur_distance,R_chr2_1,R_chr2_2,R_nap2,next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,\
               set_1,set_2,tmp_sim_set, k, mask, nap2_length) \
       shared(R_nap1, nap1_length, i, distance_matrix)
@@ -505,10 +505,9 @@ Input: A genlight object containing samples of diploids.
        A boolean representing whether or not missing values should match. 
        A boolean representing whether distances or differences should be counted.
        An integer representing the number of threads to be used.
-       A vector of locus indices to be used in the calculations.
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads, SEXP indices)
+SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads)
 {
 
   SEXP R_out;
@@ -631,7 +630,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
 
   // Loop through all SNP chunks
   #ifdef _OPENMP
-  #pragma omp parallel for \
+  #pragma omp parallel for schedule(guided) \
     private(i,j,k,x,R_chr1_1,R_chr2_1,R_nap1,R_nap2,Sn,offset,val,\
             next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,missing_mask_i,missing_mask_j,\
             set_1,set_2, mask, nap1_length, nap2_length) \
@@ -726,7 +725,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   D = 0;
   D2 = 0;
   #ifdef _OPENMP
-  #pragma omp parallel for reduction(+ : D,D2) private(i,j) 
+  #pragma omp parallel for schedule(guided) reduction(+ : D,D2) private(i,j) 
   #endif
   for(i = 0; i < num_gens; i++)
   {
@@ -759,7 +758,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   // Calculate the denominator for the index of association
   denom = 0;
   #ifdef _OPENMP
-  #pragma omp parallel for reduction(+ : denom) private(i, j)
+  #pragma omp parallel for schedule(guided) reduction(+ : denom) private(i, j)
   #endif
   for(i = 0; i < num_loci; i++)
   {
@@ -796,10 +795,9 @@ Input: A genlight object containing samples of diploids.
        A boolean representing whether or not missing values should match. 
        A boolean representing whether distances or differences should be counted.
        An integer representing the number of threads to be used.
-       A vector of locus indices to be used in the calculations.
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP indices)
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
 {
 
   SEXP R_out;
@@ -929,7 +927,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
 
   // Loop through all SNP chunks
   #ifdef _OPENMP
-  #pragma omp parallel for \
+  #pragma omp parallel for schedule(guided) \
     private(i,j,k,x,R_chr1_1,R_chr1_2,R_chr2_1,R_chr2_2,R_nap1,R_nap2,Sn,Hnor,Hs,offset,val,\
             next_missing_index_j,next_missing_j,next_missing_index_i,next_missing_i,missing_mask_i,missing_mask_j,\
             set_1,set_2, mask, nap1_length, nap2_length) \
@@ -1049,7 +1047,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   D2 = 0;
   x = 0;
   #ifdef _OPENMP
-  #pragma omp parallel for reduction(+ : D,D2) private(i,j) 
+  #pragma omp parallel for schedule(guided) reduction(+ : D,D2) private(i,j) 
   #endif
   for(i = 0; i < num_gens; i++)
   {
@@ -1080,7 +1078,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   // Calculate the denominator for the index of association
   denom = 0;
   #ifdef _OPENMP
-  #pragma omp parallel for reduction(+ : denom) private(i, j)
+  #pragma omp parallel for schedule(guided) reduction(+ : denom) private(i, j)
   #endif
   for(i = 0; i < num_loci; i++)
   {
