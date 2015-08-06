@@ -1406,13 +1406,22 @@ setMethod(
   definition = function(pop, missing = "asis", memory = FALSE, 
                        algorithm = "farthest_neighbor", distance = "nei.dist",
                        threads = 0, ..., value){
-    pop <- callNextMethod()
-    the_call <- match.call()
+    pop       <- callNextMethod()
+    the_call  <- match.call()
     callnames <- names(the_call)
-    the_dots <- list(...)
+    the_dots  <- list(...)
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
+    # Thu Aug  6 16:39:25 2015 ------------------------------
+    # Treatment of the incoming distance is not a trivial task.
+    # We want the object to have a memory of what distance function was used so
+    # the user does not have to re-specify the distance measure in the function
+    # call. Thus, there could be three possabilities whenever the user calls
+    # mlg.filter:
+    #  1. The user does not specify a distance
+    #  2. The distance is specified as text
+    #  3. The distance is specified as an actual function. 
     if (!"distance" %in% callnames){
       distance <- pop@mlg@distname
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
