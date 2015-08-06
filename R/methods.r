@@ -1422,8 +1422,14 @@ setMethod(
     #  1. The user does not specify a distance
     #  2. The distance is specified as text
     #  3. The distance is specified as an actual function. 
+    #  
+    # This is dealing with the situation where the user does not specify a 
+    # distance function. In this case, we use the function that was defined in
+    # the object itself. 
     if (!"distance" %in% callnames){
       distance <- pop@mlg@distname
+      # Here, we are trying to evaluate the distance function. If the user has
+      # specified a custom function, we want to ensure that it still exists. 
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
       if ("try-error" %in% class(distfun)){
         stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
@@ -1431,6 +1437,8 @@ setMethod(
       if (is.character(distfun)){
         distfun <- match.fun(distfun)
       }
+      # This part may be unnecessary, but I believe I was having issues with 
+      # passing the call...
       the_call[["distance"]] <- distance
       if (is.function(distfun)){
         the_dots <- pop@mlg@distargs
