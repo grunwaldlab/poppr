@@ -314,9 +314,78 @@ setMethod(
 
 
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# ACCESSORS
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
+#==============================================================================#
+#' Accessors for the MLG object
+#' 
+#' @param x an MLG object
+#' @param value see details
+#' @return see details
+#' @rdname MLG-accessors
+#' @aliases visible,MLG-method
+#' @export
+#' @keywords internal
+#' @examples
+#' 
+#' \dontrun{
+#' # These examples will simply show you what you can do with these
+#' set.seed(5000)
+#' (x <- sample(10, 20, replace = TRUE))
+#' (m <- new("MLG", x))
+#' 
+#' # Visibility ------------------------------
+#' visible(m) # original
+#' visible(m) <- "custom"
+#' m          # shows custom MLGS
+#'
+#' # Conversion to data frame ----------------
+#' MLG2df(m)  # Grab the internal data frame
+#' 
+#' }
+#==============================================================================#
+setGeneric("visible", function(x) {
+  standardGeneric("visible")
+})
 
+setMethod(
+  f = "visible", 
+  signature(x = "MLG"), 
+  definition = function(x) {
+    return(x@visible)
+})
 
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases visible<-,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("visible<-", function(x, value) {
+  standardGeneric("visible<-")
+})
 
+setMethod(
+  f = "visible<-", 
+  signature(x = "MLG"), 
+  definition = function(x, value) {
+    x@visible <- value
+    return(x)
+})
 
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases MLG2df,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("MLG2df", function(x) {
+  standardGeneric("MLG2df")
+})
 
+setMethod(
+  f = "MLG2df", 
+  signature(x = "MLG"), 
+  definition = function(x) {
+    x@mlg
+})
