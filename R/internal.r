@@ -424,7 +424,7 @@ mlg.matrix <- function(x){
   if (is.genclone(x) | is(x, "snpclone")){
     mlgvec <- x@mlg[]
     if (is(x@mlg, "MLG")){
-      visible <- x@mlg@visible
+      visible <- visible(x@mlg)
     }
   } else {
     mlgvec <- mlg.vector(x)
@@ -1147,14 +1147,14 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
       filter.stats <- mlg.filter(gid,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
     }
      # TODO: The following two lines should be a product of mlg.filter
-    gid$mlg@visible <- "contracted"
+    visible(gid$mlg) <- "contracted"
     visible <- "contracted"
     gid$mlg[] <- filter.stats[[1]]
     cgid <- gid[if(is.na(-which(duplicated(gid$mlg[]))[1])) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
     distmat <- filter.stats[[3]]
     if (!is.matrix(distmat)) distmat <- as.matrix(distmat)
   } else {
-      visible  <- gid@mlg@visible
+      visible  <- visible(gid@mlg)
       mll(gid) <- mlg.compute
     to_remove <- .clonecorrector(gid)
     cgid <- gid[to_remove, ]
