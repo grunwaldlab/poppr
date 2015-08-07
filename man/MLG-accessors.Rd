@@ -3,6 +3,22 @@
 \name{visible}
 \alias{MLG2df}
 \alias{MLG2df,MLG-method}
+\alias{cutoff}
+\alias{cutoff,MLG-method}
+\alias{cutoff<-}
+\alias{cutoff<-,MLG-method}
+\alias{distalgo}
+\alias{distalgo,MLG-method}
+\alias{distalgo<-}
+\alias{distalgo<-,MLG-method}
+\alias{distargs}
+\alias{distargs,MLG-method}
+\alias{distargs<-}
+\alias{distargs<-,MLG-method}
+\alias{distname}
+\alias{distname,MLG-method}
+\alias{distname<-}
+\alias{distname<-,MLG-method}
 \alias{visible}
 \alias{visible,MLG-method}
 \alias{visible<-}
@@ -14,17 +30,44 @@ visible(x)
 visible(x) <- value
 
 MLG2df(x)
+
+distname(x)
+
+distname(x) <- value
+
+distargs(x)
+
+distargs(x) <- value
+
+distalgo(x)
+
+distalgo(x) <- value
+
+cutoff(x, vis = "contracted")
+
+cutoff(x, vis = "contracted") <- value
 }
 \arguments{
 \item{x}{an MLG object}
 
 \item{value}{see details}
+
+\item{vis}{a character specifying the element of the cutoff slot}
 }
 \value{
 see details
 }
 \description{
-Accessors for the MLG object
+This documentation is for future developers of poppr. The accessors here are
+preferred over accessing the elements via the @ symbol.
+}
+\details{
+These accessors are intended for internal use only. They only affect
+  MLG objects, not genind objects. Only visible and MLG2df are general for
+  all forms of MLG. The distargs and cutoff are specific for use in
+  mlg.filter or any function that offers filtering as an option. The argument
+  "value" will always take the type defined in the \code{\linkS4class{MLG}}
+  class.
 }
 \examples{
 \dontrun{
@@ -35,11 +78,22 @@ set.seed(5000)
 
 # Visibility ------------------------------
 visible(m) # original
-visible(m) <- "custom"
-m          # shows custom MLGS
+visible(m) <- "contracted"
+m          # shows contracted MLGS
 
 # Conversion to data frame ----------------
 MLG2df(m)  # Grab the internal data frame
+
+# Distance function handling --------------
+distname(m) # nei.dist
+distargs(m) # list()
+distalgo(m) # farthest
+cutoff(m, "contracted")
+
+distname(m) <- substitute("diss.dist")
+distargs(m) <- list(percent = TRUE)
+distalgo(m) <- "average"
+cutoff(m, "contracted") <- 0.2
 
 }
 }

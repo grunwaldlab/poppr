@@ -321,9 +321,20 @@ setMethod(
 #==============================================================================#
 #' Accessors for the MLG object
 #' 
+#' This documentation is for future developers of poppr. The accessors here are 
+#' preferred over accessing the elements via the @@ symbol.
+#' 
 #' @param x an MLG object
 #' @param value see details
+#' @param vis a character specifying the element of the cutoff slot
 #' @return see details
+#' @details These accessors are intended for internal use only. They only affect
+#'   MLG objects, not genind objects. Only visible and MLG2df are general for
+#'   all forms of MLG. The distargs and cutoff are specific for use in
+#'   mlg.filter or any function that offers filtering as an option. The argument
+#'   "value" will always take the type defined in the \code{\linkS4class{MLG}}
+#'   class.
+#'   
 #' @rdname MLG-accessors
 #' @aliases visible,MLG-method
 #' @export
@@ -338,11 +349,22 @@ setMethod(
 #' 
 #' # Visibility ------------------------------
 #' visible(m) # original
-#' visible(m) <- "custom"
-#' m          # shows custom MLGS
-#'
+#' visible(m) <- "contracted"
+#' m          # shows contracted MLGS
+#' 
 #' # Conversion to data frame ----------------
 #' MLG2df(m)  # Grab the internal data frame
+#' 
+#' # Distance function handling --------------
+#' distname(m) # nei.dist
+#' distargs(m) # list()
+#' distalgo(m) # farthest
+#' cutoff(m, "contracted")
+#' 
+#' distname(m) <- substitute("diss.dist")
+#' distargs(m) <- list(percent = TRUE)
+#' distalgo(m) <- "average"
+#' cutoff(m, "contracted") <- 0.2
 #' 
 #' }
 #==============================================================================#
@@ -389,3 +411,138 @@ setMethod(
   definition = function(x) {
     x@mlg
 })
+
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases distname,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("distname", function(x) {
+  standardGeneric("distname")
+})
+
+setMethod(
+  f = "distname", 
+  signature(x = "MLG"), 
+  definition = function(x) {
+    x@distname
+  })
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases distname<-,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("distname<-", function(x, value) {
+  standardGeneric("distname<-")
+})
+
+setMethod(
+  f = "distname<-", 
+  signature(x = "MLG"), 
+  definition = function(x, value) {
+    x@distname <- value
+    return(x)
+  })
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases distargs,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("distargs", function(x) {
+  standardGeneric("distargs")
+})
+
+setMethod(
+  f = "distargs", 
+  signature(x = "MLG"), 
+  definition = function(x) {
+    x@distargs
+})
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases distargs<-,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("distargs<-", function(x, value) {
+  standardGeneric("distargs<-")
+})
+
+setMethod(
+  f = "distargs<-", 
+  signature(x = "MLG"), 
+  definition = function(x, value) {
+    x@distargs <- value
+    return(x)
+  })
+
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases distalgo,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("distalgo", function(x) {
+  standardGeneric("distalgo")
+})
+
+setMethod(
+  f = "distalgo", 
+  signature(x = "MLG"), 
+  definition = function(x) {
+    x@distalgo
+  })
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases distalgo<-,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("distalgo<-", function(x, value) {
+  standardGeneric("distalgo<-")
+})
+
+setMethod(
+  f = "distalgo<-", 
+  signature(x = "MLG"), 
+  definition = function(x, value) {
+    x@distalgo <- value
+    return(x)
+  })
+
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases cutoff,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("cutoff", function(x, vis = "contracted") {
+  standardGeneric("cutoff")
+})
+
+setMethod(
+  f = "cutoff", 
+  signature(x = "MLG"), 
+  definition = function(x, vis = "contracted") {
+    x@cutoff[vis]
+  })
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases cutoff<-,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("cutoff<-", function(x, vis = "contracted", value) {
+  standardGeneric("cutoff<-")
+})
+
+setMethod(
+  f = "cutoff<-", 
+  signature(x = "MLG"), 
+  definition = function(x, vis = "contracted", value) {
+    x@cutoff[vis] <- value
+    return(x)
+  })
