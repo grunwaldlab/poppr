@@ -43,16 +43,14 @@ distalgo(x)
 
 distalgo(x) <- value
 
-cutoff(x, vis = "contracted")
+cutoff(x)
 
-cutoff(x, vis = "contracted") <- value
+cutoff(x) <- value
 }
 \arguments{
 \item{x}{an MLG object}
 
 \item{value}{see details}
-
-\item{vis}{a character specifying the element of the cutoff slot}
 }
 \value{
 see details
@@ -88,12 +86,12 @@ MLG2df(m)  # Grab the internal data frame
 distname(m) # nei.dist
 distargs(m) # list()
 distalgo(m) # farthest
-cutoff(m, "contracted")
+cutoff(m)
 
 distname(m) <- substitute("diss.dist")
 distargs(m) <- list(percent = TRUE)
 distalgo(m) <- "average"
-cutoff(m, "contracted") <- 0.2
+cutoff(m)["contracted"] <- 0.2
 
 }
 }

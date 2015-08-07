@@ -42,7 +42,10 @@ test_that("distalgo returns a specified algorithm", {
 
 test_that("cutoff returns the correct cutoff", {
   skip_on_cran()
-  expect_identical(cutoff(m), setNames(0.0, "contracted"))
-  cutoff(m) <- 0.2
-  expect_identical(cutoff(m), setNames(0.2, "contracted"))
+  zcut <- setNames(c(0.0, 0.0), c("expanded", "contracted"))
+  expect_identical(cutoff(m), zcut)
+  cutoff(m)["contracted"] <- 0.2
+  tcut <- zcut
+  tcut["contracted"] <- 0.2
+  expect_identical(cutoff(m), tcut)
 })

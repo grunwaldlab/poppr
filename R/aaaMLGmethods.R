@@ -326,7 +326,6 @@ setMethod(
 #' 
 #' @param x an MLG object
 #' @param value see details
-#' @param vis a character specifying the element of the cutoff slot
 #' @return see details
 #' @details These accessors are intended for internal use only. They only affect
 #'   MLG objects, not genind objects. Only visible and MLG2df are general for
@@ -359,12 +358,12 @@ setMethod(
 #' distname(m) # nei.dist
 #' distargs(m) # list()
 #' distalgo(m) # farthest
-#' cutoff(m, "contracted")
+#' cutoff(m)
 #' 
 #' distname(m) <- substitute("diss.dist")
 #' distargs(m) <- list(percent = TRUE)
 #' distalgo(m) <- "average"
-#' cutoff(m, "contracted") <- 0.2
+#' cutoff(m)["contracted"] <- 0.2
 #' 
 #' }
 #==============================================================================#
@@ -519,15 +518,15 @@ setMethod(
 #' @aliases cutoff,MLG-method
 #' @export
 #==============================================================================#
-setGeneric("cutoff", function(x, vis = "contracted") {
+setGeneric("cutoff", function(x) {
   standardGeneric("cutoff")
 })
 
 setMethod(
   f = "cutoff", 
   signature(x = "MLG"), 
-  definition = function(x, vis = "contracted") {
-    x@cutoff[vis]
+  definition = function(x) {
+    x@cutoff
   })
 
 #==============================================================================#
@@ -535,14 +534,14 @@ setMethod(
 #' @aliases cutoff<-,MLG-method
 #' @export
 #==============================================================================#
-setGeneric("cutoff<-", function(x, vis = "contracted", value) {
+setGeneric("cutoff<-", function(x, value) {
   standardGeneric("cutoff<-")
 })
 
 setMethod(
   f = "cutoff<-", 
   signature(x = "MLG"), 
-  definition = function(x, vis = "contracted", value) {
-    x@cutoff[vis] <- value
+  definition = function(x, value) {
+    x@cutoff <- value
     return(x)
   })
