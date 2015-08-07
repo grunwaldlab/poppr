@@ -359,7 +359,7 @@ setMethod(
 #       cat(" @hierarchy:", "a data frame with", hierlen, 
 #           "levels: (", nameshow, ")\n")
 #     }
-    the_type <- object@mlg@visible
+    the_type <- visible(object@mlg)
     mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     cat("   @mlg:", length(unique(object@mlg[])), mlgtype)
@@ -574,7 +574,7 @@ setMethod(
     ltab    <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
     pops    <- popNames(object)
     poplen  <- length(pops)
-    the_type <- ifelse(is(object@mlg, "MLG"), object@mlg@visible, "nope")
+    the_type <- ifelse(is(object@mlg, "MLG"), visible(object@mlg), "nope")
     mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     if (the_type == "contracted"){
@@ -649,7 +649,7 @@ setMethod(
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops        <- popNames(x)
     stratanames <- names(x@strata)
-    the_type <- ifelse(is(x@mlg, "MLG"), x@mlg@visible, "nope")
+    the_type <- ifelse(is(x@mlg, "MLG"), visible(x@mlg), "nope")
     mlgtype  <- ifelse(is(x@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     if (the_type == "contracted"){
@@ -853,7 +853,7 @@ mll.internal <- function(x, type = NULL, the_call = match.call()){
     TYPES <- c("original", "expanded", "contracted", "custom")
     type <- match.arg(type, TYPES)
   } else {
-    type <- mlg@visible
+    type <-visible(mlg)
   }
   return(mlg[, type])
 }
@@ -896,7 +896,7 @@ setMethod(
       TYPES <- c("original", "expanded", "contracted", "custom")
       type <- match.arg(type, TYPES)
     } else {
-      type <- mlg@visible
+      type <-visible(mlg)
     }
     return(mlg[, type])
   })
@@ -946,7 +946,7 @@ setMethod(
     if (!"MLG" %in% class(x@mlg)){
       x@mlg <- new("MLG", x@mlg)
     }
-    x@mlg@visible <- value
+    visible(x@mlg) <- value
     return(x)
   })
 
@@ -959,7 +959,7 @@ setMethod(
     if (!"MLG" %in% class(x@mlg)){
       x@mlg <- new("MLG", x@mlg)
     }
-    x@mlg@visible <- value
+    visible(x@mlg) <- value
     return(x)
   })
 
