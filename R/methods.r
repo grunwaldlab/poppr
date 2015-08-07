@@ -1438,28 +1438,32 @@ setMethod(
         distfun <- match.fun(distfun)
       }
       # This part may be unnecessary, but I believe I was having issues with 
-      # passing the call...
+      # passing the call to the main function. The reason for this is that 
+      # dealing with missing data is done in different ways depending on the 
+      # distance function used. If it's diss.dist, nothing is done, if it's
+      # Nei's etc. dist, then the correction is done by converting it to a 
+      # bootgen object since that will quietly convert missing data; otherwise
+      # the function missingno is used.
       the_call[["distance"]] <- distance
       if (is.function(distfun)){
+        # When the distance stored is a function, the arguments should be used.
         the_dots <- pop@mlg@distargs
         the_call <- c(the_call, the_dots)
       }
-      # the_call[["distance"]] <- distance
     }
+    # Storing the specified algorithm.
     if (!"algorithm" %in% callnames){
+      # <simpsonsreference>
+      # Do you have any of thoses arrows that are, like, double arrows?
+      # </simpsonsreference>
       the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
     }
-  
-    if (!is(pop@mlg, "MLG")){
-      pop@mlg <- new("MLG", pop@mlg)
-    }
+
+    # The arguments are built up in a list here and then passed using do.call.
     the_args <- list(gid = pop, threshold = value, missing = missing, 
                      memory = memory, algorithm = algorithm, distance = distance, 
                      threads = threads, stats = "MLGs")
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
-#     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
-#                                  distance, threads, stats = "MLGs", the_call,
-#                                  ...) 
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
@@ -1505,16 +1509,10 @@ setMethod(
       the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
     }
     
-    if (!is(pop@mlg, "MLG")){
-      pop@mlg <- new("MLG", pop@mlg)
-    }
     the_args <- list(gid = pop, threshold = value, missing = missing, 
                      memory = memory, algorithm = algorithm, distance = distance, 
                      threads = threads, stats = "MLGs")
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
-    #     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
-    #                                  distance, threads, stats = "MLGs", the_call,
-    #                                  ...) 
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
