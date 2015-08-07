@@ -1482,15 +1482,30 @@ setMethod(
   definition = function(pop, missing = "mean", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "bitwise.dist",
                         threads = 0, ..., value){
-    pop <- callNextMethod()
-    the_call <- match.call()
+    pop       <- callNextMethod()
+    the_call  <- match.call()
     callnames <- names(the_call)
-    the_dots <- list(...)
+    the_dots  <- list(...)
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
+    # Thu Aug  6 16:39:25 2015 ------------------------------
+    # Treatment of the incoming distance is not a trivial task.
+    # We want the object to have a memory of what distance function was used so
+    # the user does not have to re-specify the distance measure in the function
+    # call. Thus, there could be three possabilities whenever the user calls
+    # mlg.filter:
+    #  1. The user does not specify a distance
+    #  2. The distance is specified as text
+    #  3. The distance is specified as an actual function. 
+    #  
+    # This is dealing with the situation where the user does not specify a 
+    # distance function. In this case, we use the function that was defined in
+    # the object itself. 
     if (!"distance" %in% callnames){
       distance <- pop@mlg@distname
+      # Here, we are trying to evaluate the distance function. If the user has
+      # specified a custom function, we want to ensure that it still exists. 
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
       if ("try-error" %in% class(distfun)){
         stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
@@ -1498,17 +1513,29 @@ setMethod(
       if (is.character(distfun)){
         distfun <- match.fun(distfun)
       }
+      # This part may be unnecessary, but I believe I was having issues with 
+      # passing the call to the main function. The reason for this is that 
+      # dealing with missing data is done in different ways depending on the 
+      # distance function used. If it's diss.dist, nothing is done, if it's
+      # Nei's etc. dist, then the correction is done by converting it to a 
+      # bootgen object since that will quietly convert missing data; otherwise
+      # the function missingno is used.
       the_call[["distance"]] <- distance
       if (is.function(distfun)){
+        # When the distance stored is a function, the arguments should be used.
         the_dots <- pop@mlg@distargs
         the_call <- c(the_call, the_dots)
       }
-      # the_call[["distance"]] <- distance
     }
+    # Storing the specified algorithm.
     if (!"algorithm" %in% callnames){
+      # <simpsonsreference>
+      # Do you have any of thoses arrows that are, like, double arrows?
+      # </simpsonsreference>
       the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
     }
     
+    # The arguments are built up in a list here and then passed using do.call.
     the_args <- list(gid = pop, threshold = value, missing = missing, 
                      memory = memory, algorithm = algorithm, distance = distance, 
                      threads = threads, stats = "MLGs")
