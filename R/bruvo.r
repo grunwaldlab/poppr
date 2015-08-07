@@ -582,14 +582,14 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   # Obtaining population information for all MLGs
   classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
   if (classstat){
-    visible <- gid@mlg@visible
+    visible <- visible(gid@mlg)
     mll(gid)  <- mlg.compute
   }
   # Updating the MLG with filtered data
   if(threshold > 0){
     filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL", add = add, loss = loss)
     # TODO: The following two lines should be a product of mlg.filter
-    gid$mlg@visible <- "contracted"
+    visible(gid$mlg) <- "contracted"
     gid$mlg[] <- filter.stats[[1]]  
     # Obtaining population information for all MLGs
     cgid <- gid[if(length(-which(duplicated(gid$mlg[]))==0)) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]

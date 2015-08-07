@@ -326,7 +326,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
 
   classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
   if (classstat){
-    visible <- gid@mlg@visible
+    visible <- visible(gid@mlg)
     mll(gid)  <- mlg.compute
   }
 
@@ -351,7 +351,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     # Updating MLG with filtered data
     filter.stats <- mlg.filter(gid,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
     # TODO: The following two lines should be a product of mlg.filter
-    gid$mlg@visible <- "contracted"
+    visible(gid$mlg) <- "contracted"
     gid$mlg[] <- filter.stats[[1]]
     cgid <- gid
     cgid <- cgid[if(length(-which(duplicated(cgid$mlg[]))==0)) which(!duplicated(cgid$mlg[])) else -which(duplicated(cgid$mlg[])) ,]
