@@ -45,7 +45,8 @@ setClassUnion("charORLang", c("character", "language"))
 #==============================================================================#
 #' MLG class
 #' 
-#' A class to store multilocus genotypes in genclone objects.
+#' A class to store multilocus genotypes in genclone objects. This is intended
+#' for internal use only.
 #' 
 #' @name MLG-class
 #' @rdname MLG-class
@@ -62,8 +63,8 @@ setClassUnion("charORLang", c("character", "language"))
 #' @slot cutoff Two numbers specifying the cutoff value for expanding and 
 #'   collapsing MLGs.
 #' @author Zhian N. Kamvar
-#' @seealso \code{\linkS4class{genclone}} \code{\link{mll}}
-#'   \code{\linkS4class{snpclone}}
+#' @seealso \code{\linkS4class{genclone}} \code{\linkS4class{snpclone}}
+#'   \code{\link{mll}} For developers: \code{\link{visible}}
 #' @keywords internal
 #' @examples
 #' 
@@ -73,17 +74,17 @@ setClassUnion("charORLang", c("character", "language"))
 #' (m <- new("MLG", x))
 #' 
 #' \dontrun{
-#'  m@@visible # original is always default
+#'  visible(m) # original is always default
 #'  
 #'  m[]       # adding braces after the object will always return a vector of 
 #'            # the same type as defined in "visible"
 #'            
 #'  m + 1     # You can do math on the numeric ones
 #'  
-#'  m@@visible <- "custom"
+#'  visible(m) <- "custom"
 #'  m + 2     # This should throw a warning
 #'  # The types are stored in a data frame. You can retrieve them easily:
-#'  m@@visible <- "original"
+#'  visible(m) <- "original"
 #'  m
 #'  m[, "custom"]
 #'  

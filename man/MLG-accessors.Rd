@@ -56,8 +56,9 @@ cutoff(x) <- value
 see details
 }
 \description{
-This documentation is for future developers of poppr. The accessors here are
-preferred over accessing the elements via the @ symbol.
+\strong{This documentation is for developers of poppr.} The accessors here
+are preferred over accessing the elements via the @ symbol. Please use these
+in your code when accessing MLG objects.
 }
 \details{
 These accessors are intended for internal use only. They only affect
@@ -94,6 +95,11 @@ distalgo(m) <- "average"
 cutoff(m)["contracted"] <- 0.2
 
 }
+}
+\seealso{
+\code{\link{MLG}} \code{\linkS4class{genclone}}
+  \code{\linkS4class{genlight}} \code{\link{initialize,MLG-method}}
+  \code{\link{levels,MLG-method}} \code{\link{unique,MLG-method}}
 }
 \keyword{internal}
 

@@ -6,7 +6,8 @@
 \alias{MLG-class}
 \title{MLG class}
 \description{
-A class to store multilocus genotypes in genclone objects.
+A class to store multilocus genotypes in genclone objects. This is intended
+for internal use only.
 }
 \section{Slots}{
 
@@ -34,17 +35,17 @@ set.seed(5000)
 (m <- new("MLG", x))
 
 \dontrun{
- m@visible # original is always default
+ visible(m) # original is always default
 
  m[]       # adding braces after the object will always return a vector of
            # the same type as defined in "visible"
 
  m + 1     # You can do math on the numeric ones
 
- m@visible <- "custom"
+ visible(m) <- "custom"
  m + 2     # This should throw a warning
  # The types are stored in a data frame. You can retrieve them easily:
- m@visible <- "original"
+ visible(m) <- "original"
  m
  m[, "custom"]
 
@@ -58,8 +59,8 @@ set.seed(5000)
 Zhian N. Kamvar
 }
 \seealso{
-\code{\linkS4class{genclone}} \code{\link{mll}}
-  \code{\linkS4class{snpclone}}
+\code{\linkS4class{genclone}} \code{\linkS4class{snpclone}}
+  \code{\link{mll}} For developers: \code{\link{visible}}
 }
 \keyword{internal}
 

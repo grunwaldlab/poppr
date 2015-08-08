@@ -64,10 +64,14 @@
 #' 
 #' @rdname MLG-method
 #' @param .Object a character, "MLG"
-#' @param mlg a vector where each element assigns the multilocus genotype of
-#' that individual in the data set. 
+#' @param mlg a vector where each element assigns the multilocus genotype of 
+#'   that individual in the data set.
 #' @keywords internal
 #' @docType methods
+#' @seealso \code{\linkS4class{MLG}} \code{\linkS4class{genclone}}
+#'   \code{\linkS4class{snpclone}} \code{\link{visible}} 
+#'   \code{\link{unique,MLG-method}} \code{\link{levels,MLG-method}}
+#'   
 #' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(      
@@ -242,6 +246,10 @@ setGeneric("unique")
 #' @param ... options passed on to the base function \link{unique} or \link{duplicated}.
 #' @export
 #' @keywords internal
+#' @seealso \code{\link{visible}} \code{\linkS4class{MLG}} 
+#' \code{\link{genclone}} \code{\link{snpclone}} 
+#' \code{\link{initialize,MLG-method}} \code{\link{levels,MLG-method}}
+#' 
 #' @docType methods
 #==============================================================================#
 setMethod(
@@ -277,10 +285,13 @@ setGeneric("levels")
 #' @rdname levels-methods
 #' @aliases levels,MLG-method
 #' @param x an MLG object
-#' @return a character vector showing the levels of custom MLGs or NULL if the
-#' visible slot is not set to "custom"
+#' @return a character vector showing the levels of custom MLGs or NULL if the 
+#'   visible slot is not set to "custom"
 #' @export
 #' @keywords internal
+#' @seealso \code{\link{visible}} \code{\linkS4class{MLG}} 
+#' \code{\link{genclone}} \code{\link{snpclone}}
+#' 
 #' @docType methods
 #==============================================================================#
 setMethod(
@@ -321,23 +332,28 @@ setMethod(
 #==============================================================================#
 #' Accessors for the MLG object
 #' 
-#' This documentation is for future developers of poppr. The accessors here are 
-#' preferred over accessing the elements via the @@ symbol.
+#' \strong{This documentation is for developers of poppr.} The accessors here 
+#' are preferred over accessing the elements via the @@ symbol. Please use these
+#' in your code when accessing MLG objects.
 #' 
 #' @param x an MLG object
 #' @param value see details
 #' @return see details
 #' @details These accessors are intended for internal use only. They only affect
-#'   MLG objects, not genind objects. Only visible and MLG2df are general for
-#'   all forms of MLG. The distargs and cutoff are specific for use in
+#'   MLG objects, not genind objects. Only visible and MLG2df are general for 
+#'   all forms of MLG. The distargs and cutoff are specific for use in 
 #'   mlg.filter or any function that offers filtering as an option. The argument
-#'   "value" will always take the type defined in the \code{\linkS4class{MLG}}
+#'   "value" will always take the type defined in the \code{\linkS4class{MLG}} 
 #'   class.
 #'   
 #' @rdname MLG-accessors
 #' @aliases visible,MLG-method
 #' @export
 #' @keywords internal
+#' @seealso \code{\link{MLG}} \code{\linkS4class{genclone}} 
+#'   \code{\linkS4class{genlight}} \code{\link{initialize,MLG-method}}
+#'   \code{\link{levels,MLG-method}} \code{\link{unique,MLG-method}}
+#'   
 #' @examples
 #' 
 #' \dontrun{
