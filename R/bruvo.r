@@ -404,10 +404,9 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   \code{\link{mll.custom}} for details) in your genclone object, this will
 #'   specify which mlg level to calculate the nodes from. See details.
 #'   
-#' @param palette a \code{function} defining the color palette to be used to 
-#'   color the populations on the graph. It defaults to 
-#'   \code{\link{topo.colors}}, but you can easily create new schemes by using 
-#'   \code{\link{colorRampPalette}} (see examples for details)
+#' @param palette a \code{vector} or \code{function} defining the color palette 
+#'   to be used to color the populations on the graph. It defaults to 
+#'   \code{\link{topo.colors}}. See examples for details.
 #'   
 #' @param sublist a \code{vector} of population names or indexes that the user 
 #'   wishes to keep. Default to "ALL".

@@ -143,21 +143,21 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 
 #==============================================================================#
 #
-#' Create a minimum spanning network of selected populations using a distance
+#' Create a minimum spanning network of selected populations using a distance 
 #' matrix.
-#'
-#' @param gid a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object
+#' 
+#' @param gid a \code{\link{genind}}, \code{\link{genclone}},
+#'   \code{\link{genlight}}, or \code{\link{snpclone}} object
 #'   
 #' @param distmat a distance matrix that has been derived from your data set.
-#' 
-#' @param mlg.compute if the multilocus genotypes are set to "custom" (see
-#'   \code{\link{mll.custom}} for details) in your genclone object, this will
+#'   
+#' @param mlg.compute if the multilocus genotypes are set to "custom" (see 
+#'   \code{\link{mll.custom}} for details) in your genclone object, this will 
 #'   specify which mlg level to calculate the nodes from. See details.
 #'   
-#' @param palette a \code{function} defining the color palette to be used to 
-#'   color the populations on the graph. It defaults to
-#'   \code{\link{topo.colors}}, but you can easily create new schemes by using
-#'   \code{\link{colorRampPalette}} (see examples for details)
+#' @param palette a \code{vector} or \code{function} defining the color palette 
+#'   to be used to color the populations on the graph. It defaults to 
+#'   \code{\link{topo.colors}}. See examples for details.
 #'   
 #' @param sublist a \code{vector} of population names or indexes that the user 
 #'   wishes to keep. Default to "ALL".
@@ -166,8 +166,8 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #'   wishes to discard. Default to \code{NULL}
 #'   
 #' @param vertex.label a \code{vector} of characters to label each vertex. There
-#'   are two defaults: \code{"MLG"} will label the nodes with the multilocus
-#'   genotype from the original data set and \code{"inds"} will label the nodes
+#'   are two defaults: \code{"MLG"} will label the nodes with the multilocus 
+#'   genotype from the original data set and \code{"inds"} will label the nodes 
 #'   with the representative individual names.
 #'   
 #' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
@@ -175,7 +175,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #'   darker for more related nodes. See \code{\link{greycurve}} for details.
 #'   
 #' @param glim "grey limit". Two numbers between zero and one. They determine 
-#'   the upper and lower limits for the \code{\link{gray}} function. Default is
+#'   the upper and lower limits for the \code{\link{gray}} function. Default is 
 #'   0 (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
 #'   
 #' @param gadj "grey adjust". a positive \code{integer} greater than zero that 
@@ -183,30 +183,31 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #'   represent that weight. See \code{\link{greycurve}} for details.
 #'   
 #' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale 
-#'   will be weighted to emphasize the differences between closely related
-#'   nodes. If it is 2, the grey scale will be weighted to emphasize the
-#'   differences between more distantly related nodes. See
+#'   will be weighted to emphasize the differences between closely related 
+#'   nodes. If it is 2, the grey scale will be weighted to emphasize the 
+#'   differences between more distantly related nodes. See 
 #'   \code{\link{greycurve}} for details.
 #'   
 #' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be 
-#'   scaled proportional to the inverse of the observed distance , with the
+#'   scaled proportional to the inverse of the observed distance , with the 
 #'   lines becoming thicker for more related nodes.
 #'   
-#' @param showplot logical. If \code{TRUE}, the graph will be plotted. If
+#' @param showplot logical. If \code{TRUE}, the graph will be plotted. If 
 #'   \code{FALSE}, it will simply be returned.
 #'   
-#' @param include.ties logical. If \code{TRUE}, the graph will include all
-#'   edges that were arbitrarily passed over in favor of another edge of equal
-#'   weight. If \code{FALSE}, which is the default, one edge will be arbitrarily 
-#'   selected when two or more edges are tied, resulting in a pure minimum spanning
-#'   network. 
-#'
+#' @param include.ties logical. If \code{TRUE}, the graph will include all edges
+#'   that were arbitrarily passed over in favor of another edge of equal weight.
+#'   If \code{FALSE}, which is the default, one edge will be arbitrarily 
+#'   selected when two or more edges are tied, resulting in a pure minimum
+#'   spanning network.
+#'   
 #' @param threshold numeric. If greater than the default value of 0.0, this will
 #'   be passed to \code{\link{mlg.filter}} prior to creating the msn.
-#'
-#' @param clustering.algorithm string. If \code{threshold} is greater than 0, this
-#'   this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
-#'   For both of these arguments, see \code{\link{mlg.filter}} for more details.
+#'   
+#' @param clustering.algorithm string. If \code{threshold} is greater than 0,
+#'   this this will also be passed to \code{\link{mlg.filter}} prior to creating
+#'   the msn. For both of these arguments, see \code{\link{mlg.filter}} for more
+#'   details.
 #'
 #' @param ... any other arguments that could go into plot.igraph
 #'   
@@ -232,9 +233,10 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' @note The edges of these graphs may cross each other if the graph becomes too
 #'   large.
 #'   
-#' @seealso \code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}}, 
-#'   \code{\link{nodelabels}}, \code{\link{tab}},
-#'   \code{\link{missingno}}, \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
+#' @seealso \code{\link{plot_poppr_msn}} \code{\link{nancycats}},
+#'   \code{\link{upgma}}, \code{\link{nj}}, \code{\link{nodelabels}},
+#'   \code{\link{tab}}, \code{\link{missingno}}, \code{\link{bruvo.msn}},
+#'   \code{\link{greycurve}}
 #' 
 #' @export
 #' @aliases msn.poppr
@@ -304,19 +306,6 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   
   bclone <- as.matrix(distmat)
 
-  # # The clone correction of the matrix needs to be done at this step if there
-  # # is only one or no populations. 
-  # if (is.null(pop(pop)) | length(pop@pop.names) == 1){
-  #   if (is.genclone(pop)){
-  #     mlgs <- mll(pop, mlg.compute)
-  #   } else {
-  #     mlgs <- pop$other$mlg.vec
-  #   }
-  #   bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
-  #   return(singlepop_msn(pop, vertex.label, distmat = bclone, gscale = gscale, 
-  #                        glim = glim, gadj = gadj, wscale = wscale, 
-  #                        palette = palette))
-  # }
   # This will subset both the population and the matrix. 
   if(toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(gid, sublist, blacklist)
@@ -329,11 +318,6 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     visible <- visible(gid@mlg)
     mll(gid)  <- mlg.compute
   }
-
-  # cpop <- pop[.clonecorrector(pop), ]
-
-  # # This will clone correct the incoming matrix. 
-  # bclone <- bclone[!duplicated(mlgs), !duplicated(mlgs)]
   
   if (is.null(pop(gid)) | nPop(gid) == 1){
     return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
