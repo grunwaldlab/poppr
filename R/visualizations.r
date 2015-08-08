@@ -424,11 +424,13 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
       vertex.label <- indNames(cgid)
     }
   }
+
   ###### Color schemes #######  
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
-  palette <- match.fun(palette)
-  color   <- stats::setNames(palette(nPop(gid)), popNames(gid))
+  npop   <- nPop(gid)
+  pnames <- popNames(gid)
+  color  <- palette_parser(palette, npop, pnames)
   
   if(length(cgid@mlg[]) > 1){
     ###### Edge adjustments ######
@@ -436,12 +438,12 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   }
  
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[pnames %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = popNames(gid), 
+    legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pnames, 
            title = "Populations", fill=color, border=NULL)
   }
   V(mst)$size      <- mlg.number
@@ -449,7 +451,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = popNames(gid), colors = color))
+  return(list(graph = mst, populations = pnames, colors = color))
 }
 
 
@@ -718,12 +720,13 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' customize the plot by labeling groups of individuals, size of nodes, and 
 #' adjusting the palette and scale bar.
 #' 
-#' @param x a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}}
-#'   object from which \code{poppr_msn} was derived.
+#' @param x a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
+#'   \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object from
+#'   which \code{poppr_msn} was derived.
 #'   
-#' @param poppr_msn a \code{list} produced from either \code{\link{poppr.msn}}
-#'   or \code{\link{bruvo.msn}}. This list should contain a graph, a vector of
-#'   population names and a vector of hexadecimal color definitions for each
+#' @param poppr_msn a \code{list} produced from either \code{\link{poppr.msn}} 
+#'   or \code{\link{bruvo.msn}}. This list should contain a graph, a vector of 
+#'   population names and a vector of hexadecimal color definitions for each 
 #'   population.
 #'   
 #' @inheritParams greycurve
@@ -830,6 +833,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   be added in manually) can be obtained from \code{\link{greycurve}} and the
 #'   legend can be plotted with \code{\link{legend}}.}
 #' 
+#' @return the modified msn list, invisibly. 
+#' 
 #' @seealso \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 #' \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
 #' \code{\link[igraph]{delete.edges}} \code{\link{palette}}
@@ -881,6 +886,47 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #'   quantiles = FALSE)
 #' plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n", 
 #'   cutoff = 0.3, quantiles = FALSE)
+#'   
+#' ### Utilizing vectors for palettes
+#' 
+#' data(Pram)
+#' Pram_sub <- popsub(Pram, blacklist = c("Nursery_CA", "Nursery_OR"))
+#' 
+#' # Creating the network for the forest
+#' min_span_net_sub <- bruvo.msn(Pram_sub, replen = other(Pram)$REPLEN, 
+#'                               add = TRUE, loss = TRUE, showplot = FALSE, 
+#'                               include.ties = TRUE)
+#'                               
+#' # Creating the network with nurseries
+#' min_span_net     <- bruvo.msn(Pram, replen = other(Pram)$REPLEN, 
+#'                               add = TRUE, loss = TRUE, showplot = FALSE, 
+#'                               include.ties = TRUE)
+#'
+#' # Only forest genotypes
+#' set.seed(70)
+#' plot_poppr_msn(Pram,
+#'                min_span_net_sub,
+#'                inds = "ALL",
+#'                mlg = TRUE,
+#'                gadj = 9,
+#'                nodebase = 1.75,
+#'                palette = other(Pram)$comparePal,
+#'                cutoff = NULL,
+#'                quantiles = FALSE,
+#'                beforecut = TRUE)
+#' 
+#' # With Nurseries
+#' set.seed(70)
+#' plot_poppr_msn(Pram,
+#'                min_span_net,
+#'                inds = "ALL",
+#'                mlg = TRUE,
+#'                gadj = 9,
+#'                nodebase = 1.75,
+#'                palette = other(Pram)$comparePal,
+#'                cutoff = NULL,
+#'                quantiles = FALSE,
+#'                beforecut = TRUE)
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
@@ -899,7 +945,9 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
     stop("graph not compatible")
   }
   if (!is.null(palette)){
-    poppr_msn <- update_poppr_graph(poppr_msn, palette)
+    pal       <- palette
+    newpal    <- palette_parser(pal, length(poppr_msn$populations), poppr_msn$populations)
+    poppr_msn <- update_poppr_graph(poppr_msn, function(x) newpal)
   }
   # Making sure incoming data matches so that the individual names match.
   if (!all(is.na(poppr_msn$populations))){
@@ -908,7 +956,6 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
     } else {
       warning("populations in graph don't match data. Setting to none.")
     }
-    
   }
   
   if (beforecut){
@@ -1058,6 +1105,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
     graphics::par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
     graphics::par(oma=c(0,0,0,0)) # Figure margins
   }
+  return(invisible(poppr_msn))
 }
 
 

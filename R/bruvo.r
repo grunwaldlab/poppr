@@ -650,21 +650,23 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
     }
   }
   ###### Color schemes #######  
-  # The palette is determined by what the user types in the argument. It can be 
+  # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
-  palette <- match.fun(palette)
-  color   <- stats::setNames(palette(nPop(gid)), popNames(gid))
-  if(length(mll(cgid)) > 1){ 
+  npop   <- nPop(gid)
+  pnames <- popNames(gid)
+  color  <- palette_parser(palette, npop, pnames)
+  
+  if (length(mll(cgid)) > 1){ 
     mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   }
 
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[pnames %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    graphics::legend(-1.55, 1, bty = "n", cex = 0.75, legend = popNames(gid), 
+    graphics::legend(-1.55, 1, bty = "n", cex = 0.75, legend = pnames, 
            title = "Populations", fill = color, border = NULL)
   }
   V(mst)$size      <- mlg.number
@@ -672,7 +674,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = popNames(gid), colors = color))
+  return(list(graph = mst, populations = pnames, colors = color))
 }
 #' Test repeat length consistency.
 #' 
