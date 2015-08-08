@@ -364,9 +364,9 @@ setMethod(
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     cat("   @mlg:", length(unique(object@mlg[])), mlgtype)
     if (the_type == "contracted"){
-      thresh <- round(object@mlg@cutoff["contracted"], 3)
-      algo <- strsplit(object@mlg@distalgo, "_")[[1]][1]
-      dist <- object@mlg@distname
+      thresh <- round(cutoff(object@mlg)["contracted"], 3)
+      algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
+      dist <- distname(object@mlg)
       if (!is.character(dist)){
         dist <- paste(utils::capture.output(dist), collapse = "")        
       }
@@ -578,9 +578,9 @@ setMethod(
     mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     if (the_type == "contracted"){
-      thresh <- round(object@mlg@cutoff["contracted"], 3)
-      dist <- object@mlg@distname
-      algo <- strsplit(object@mlg@distalgo, "_")[[1]][1]
+      thresh <- round(cutoff(object@mlg)["contracted"], 3)
+      dist <- distname(object@mlg)
+      algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
       if (!is.character(dist)){
         dist <- paste(utils::capture.output(dist), collapse = "")        
       }
@@ -653,9 +653,9 @@ setMethod(
     mlgtype  <- ifelse(is(x@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     if (the_type == "contracted"){
-      thresh <- round(x@mlg@cutoff["contracted"], 3)
-      dist <- x@mlg@distname
-      algo <- strsplit(x@mlg@distalgo, "_")[[1]][1]
+      thresh <- round(cutoff(x@mlg)["contracted"], 3)
+      dist <- distname(x@mlg)
+      algo <- strsplit(distalgo(x@mlg), "_")[[1]][1]
       if (!is.character(dist)){
         dist <- paste(utils::capture.output(dist), collapse = "")        
       }
@@ -1427,7 +1427,7 @@ setMethod(
     # distance function. In this case, we use the function that was defined in
     # the object itself. 
     if (!"distance" %in% callnames){
-      distance <- pop@mlg@distname
+      distance <- distname(pop@mlg)
       # Here, we are trying to evaluate the distance function. If the user has
       # specified a custom function, we want to ensure that it still exists. 
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
@@ -1447,7 +1447,7 @@ setMethod(
       the_call[["distance"]] <- distance
       if (is.function(distfun)){
         # When the distance stored is a function, the arguments should be used.
-        the_dots <- pop@mlg@distargs
+        the_dots <- distargs(pop@mlg)
         the_call <- c(the_call, the_dots)
       }
     }
@@ -1456,7 +1456,7 @@ setMethod(
       # <simpsonsreference>
       # Do you have any of thoses arrows that are, like, double arrows?
       # </simpsonsreference>
-      the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
+      the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
 
     # The arguments are built up in a list here and then passed using do.call.
@@ -1467,10 +1467,10 @@ setMethod(
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
-    pop@mlg@cutoff["contracted"] <- value
-    pop@mlg@distname <- substitute(distance)
-    pop@mlg@distargs <- the_dots
-    pop@mlg@distalgo <- match.arg(algorithm, algos)
+    cutoff(pop@mlg)["contracted"] <- value
+    distname(pop@mlg) <- substitute(distance)
+    distargs(pop@mlg) <- the_dots
+    distalgo(pop@mlg) <- match.arg(algorithm, algos)
     return(pop)
   }
 )
@@ -1503,7 +1503,7 @@ setMethod(
     # distance function. In this case, we use the function that was defined in
     # the object itself. 
     if (!"distance" %in% callnames){
-      distance <- pop@mlg@distname
+      distance <- distname(pop@mlg)
       # Here, we are trying to evaluate the distance function. If the user has
       # specified a custom function, we want to ensure that it still exists. 
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
@@ -1523,7 +1523,7 @@ setMethod(
       the_call[["distance"]] <- distance
       if (is.function(distfun)){
         # When the distance stored is a function, the arguments should be used.
-        the_dots <- pop@mlg@distargs
+        the_dots <- distargs(pop@mlg)
         the_call <- c(the_call, the_dots)
       }
     }
@@ -1532,7 +1532,7 @@ setMethod(
       # <simpsonsreference>
       # Do you have any of thoses arrows that are, like, double arrows?
       # </simpsonsreference>
-      the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
+      the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
     
     # The arguments are built up in a list here and then passed using do.call.
@@ -1543,10 +1543,10 @@ setMethod(
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
-    pop@mlg@cutoff["contracted"] <- value
-    pop@mlg@distname <- substitute(distance)
-    pop@mlg@distargs <- the_dots
-    pop@mlg@distalgo <- match.arg(algorithm, algos)
+    cutoff(pop@mlg)["contracted"] <- value
+    distname(pop@mlg) <- substitute(distance)
+    distargs(pop@mlg) <- the_dots
+    distalgo(pop@mlg) <- match.arg(algorithm, algos)
     return(pop)
   }
 )
