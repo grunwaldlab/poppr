@@ -12,8 +12,9 @@ plot_poppr_msn(x, poppr_msn, gscale = TRUE, gadj = 3,
   scale.leg = TRUE, ...)
 }
 \arguments{
-\item{x}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}}
-  object from which \code{poppr_msn} was derived.}
+\item{x}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
+  \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object from
+  which \code{poppr_msn} was derived.}
 
 \item{poppr_msn}{a \code{list} produced from either \code{\link{poppr.msn}}
   or \code{\link{bruvo.msn}}. This list should contain a graph, a vector of
@@ -88,6 +89,9 @@ between more distantly related nodes.}
 
 \item{...}{any other parameters to be passed on to
   \code{\link[igraph]{plot.igraph}}.}
+}
+\value{
+the modified msn list, invisibly.
 }
 \description{
 This function allows you to take the output of poppr.msn and bruvo.msn and
@@ -193,6 +197,47 @@ plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
   quantiles = FALSE)
 plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
   cutoff = 0.3, quantiles = FALSE)
+
+### Utilizing vectors for palettes
+
+data(Pram)
+Pram_sub <- popsub(Pram, blacklist = c("Nursery_CA", "Nursery_OR"))
+
+# Creating the network for the forest
+min_span_net_sub <- bruvo.msn(Pram_sub, replen = other(Pram)$REPLEN,
+                              add = TRUE, loss = TRUE, showplot = FALSE,
+                              include.ties = TRUE)
+
+# Creating the network with nurseries
+min_span_net     <- bruvo.msn(Pram, replen = other(Pram)$REPLEN,
+                              add = TRUE, loss = TRUE, showplot = FALSE,
+                              include.ties = TRUE)
+
+# Only forest genotypes
+set.seed(70)
+plot_poppr_msn(Pram,
+               min_span_net_sub,
+               inds = "ALL",
+               mlg = TRUE,
+               gadj = 9,
+               nodebase = 1.75,
+               palette = other(Pram)$comparePal,
+               cutoff = NULL,
+               quantiles = FALSE,
+               beforecut = TRUE)
+
+# With Nurseries
+set.seed(70)
+plot_poppr_msn(Pram,
+               min_span_net,
+               inds = "ALL",
+               mlg = TRUE,
+               gadj = 9,
+               nodebase = 1.75,
+               palette = other(Pram)$comparePal,
+               cutoff = NULL,
+               quantiles = FALSE,
+               beforecut = TRUE)
 }
 }
 \author{

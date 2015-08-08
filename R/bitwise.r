@@ -282,13 +282,24 @@ poppr_has_parallel <- function(){
 #==============================================================================#
 #' Calculate the index of association between samples in a genlight object.
 #' 
-#' TODO: Add description of method
+#' This function parses over a genlight object to calculate and return the
+#' index of association for those samples.
 #'
 #' @param x a genlight object. 
 #'
-#' @param indices A vector of integers indicating which loci should be
-#'   sampled while calculating the index of association. If NULL (default),
-#'   all loci will be used.
+#' @param missing_match a boolean determining whether missing data should be
+#'   considered a match. If TRUE (default) missing data at a locus will match
+#'   with any data at that locus in each comparison. If FALSE, missing data at
+#'   a locus will cause all comparisons to return the maximum possible distance
+#'   at that locus (ie, if sample 1 has missing data at locus 1, and sample 2 
+#'   is heterozygous at locus 1, the distance at that locus will be 1. If sample
+#'   2 was heterozygous or missing at locus 1, the distance would be 2.
+#'
+#' @param differences_only a boolean determining how distance should be counted
+#'   for diploids. Whether TRUE or FALSE the distance between a heterozygous locus
+#'   and a homozygous locus is 1. If FALSE (default) the distance between opposite
+#'   homozygous loci is 2. If TRUE that distance counts as 1, indicating only that
+#'   the two samples differ at that locus.
 #'
 #' @param threads The maximum number of parallel threads to be used within this
 #'   function. A value of 0 (default) will attempt to use as many threads as there
@@ -302,13 +313,13 @@ poppr_has_parallel <- function(){
 #' @export
 #' @keywords internal
 #==============================================================================#
-bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0, indices=NULL){
+bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0){
   stopifnot(class(x)[1] == "genlight")
   #TODO: Use this and pass others to ia(): stopifnot(class(x)[1] %in% c("genlight", "genclone", "genind"))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
   # Stop if the ploidy of the genlight object is not haploid or diploid
-  stopifnot(min(ploidy(x)) == 2) # Once this handles haploids add:  || min(ploidy(x)) == 1)
+  stopifnot(min(ploidy(x)) == 2 || min(ploidy(x)) == 1)
 
   ploid     <- min(ploidy(x))
   ind.names <- indNames(x)
@@ -330,6 +341,13 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
 #
   # Continue function for genlight objects
 
+  # Threads must be something that can cast to integer
+  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  {
+    stop("Threads must be a non-negative numeric or integer value")
+  }
+  # Cast parameters to proper types before passing them to C
+  threads <- as.integer(threads)
   # Ensure that every SNPbin object has data for all chromosomes
   if(ploid == 2){
     for(i in 1:length(x$gen)){
@@ -337,22 +355,20 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
         x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
       }
     }
+    IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads)
   }
-  # Threads must be something that can cast to integer
-  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  else if(ploid == 1)
   {
-    stop("Threads must be a non-negative numeric or integer value")
+    IA <- .Call("association_index_haploid", x, missing_match,threads)
   }
-
-  # Cast parameters to proper types before passing them to C
-  threads <- as.integer(threads)
-  indices <- as.integer(indices)
-
+  else
+  {
+    stop("bitwise.ia only supports haploids and diploids")
+  }
   #TODO: Allow for automated index generation, such as random or window based
 
   #TODO: Call C function and return
   
-  IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads,indices)
 
   return(IA)
 
@@ -418,38 +434,22 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   } else {
     xpos <- seq(nLoc(x))
   }
-  diploid <- FALSE # Use this line when bitwise.IA works all(ploidy(x) == 2)
-  missing <- TRUE  # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
-  nwin <- ceiling(max(xpos)/window)
-  winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
-  winmat[, 1] <- winmat[, 1] - window + 1
+  winmat  <- make_windows(maxp = max(xpos), minp = min(xpos), window = window)
+  nwin    <- nrow(winmat)
   res_mat <- vector(mode = "numeric", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  if (missing || !diploid){
-    for (i in seq(nwin)){
-      posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
-      if (length(posns) < min.snps){
-        res_mat[i] <- NA
-      } else {
-        res_mat[i] <- snpia(x[, posns], threads = threads)
-      }
-      if (!quiet){
-        setTxtProgressBar(progbar, i/nwin)
-      }
+  for (i in seq(nwin)){
+    posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+    if (length(posns) < min.snps){
+      res_mat[i] <- NA
+    } else {
+      res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
     }
-  } else {
-    for (i in seq(nwin)){
-      posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
-      if (length(posns) < min.snps){
-        res_mat[i] <- NA
-      } else {
-        res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
-      }
-      if (!quiet){
-        setTxtProgressBar(progbar, i/nwin)
-      }
+    if (!quiet){
+      setTxtProgressBar(progbar, i/nwin)
     }
   }
+  if (!quiet) cat("\n")
   return(res_mat)
 }
 
@@ -508,25 +508,14 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   nloc <- nLoc(x)
   res_mat <- vector(mode = "numeric", length = reps)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  diploid <- FALSE # Use this line when bitwise.IA works all(ploidy(x) == 2)
-  missing <- TRUE  # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
-  if (missing || !diploid){
-    for (i in seq(reps)){
-      posns <- sample(nloc, n.snp)
-      res_mat[i] <- snpia(x[, posns], threads = threads)
-      if (!quiet){
-        setTxtProgressBar(progbar, i/reps)
-      }
-    }  
-  } else {
-    for (i in seq(reps)){
-      posns <- sample(nloc, n.snp)
-      res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
-      if (!quiet){
-        setTxtProgressBar(progbar, i/reps)
-      }
+  for (i in seq(reps)){
+    posns <- sample(nloc, n.snp)
+    res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
+    if (!quiet){
+      setTxtProgressBar(progbar, i/reps)
     }
   }
+  if (!quiet) cat("\n")
   return(res_mat)
 }
 
@@ -535,8 +524,8 @@ snpia <- function(x, threads = 1L){
   nind <- nInd(x)
   np <- choose(nind, 2)
   d_mat <- vapply(seq(nloc), function(i) as.vector(bitwise.dist(x[, i], percent = FALSE, threads = threads)), integer(np))
-  D <- rowSums(d_mat)
-  SD <- sum(D)
+  D <- rowSums(d_mat) 
+  SD <- sum(D)        
   Sd <- colSums(d_mat)
   Sd2 <- colSums(d_mat*d_mat)
   Vo <- (sum(D*D) - (SD*SD)/np)/np

@@ -72,5 +72,10 @@ Default methods for accessing and subsetting MLG objects.
 \author{
 Zhian N. Kamvar
 }
+\seealso{
+\code{\linkS4class{MLG}} \code{\linkS4class{genclone}}
+  \code{\linkS4class{snpclone}} \code{\link{visible}}
+  \code{\link{unique,MLG-method}} \code{\link{levels,MLG-method}}
+}
 \keyword{internal}
 

@@ -53,6 +53,8 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
+\DeclareUnicodeCharacter{2032}{~}
+
 \title{Data import and manipulation in poppr version \Sexpr{packageVersion("poppr")}}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
@@ -308,7 +310,7 @@ sea of genomic data, generate bootstrapped dendrograms with any genetic
 distance, and calculate minimum spanning networks with reticulations to reveal
 the underlying population structure of your clonal data.
 
-\subsection{A note about poppr version \Sexpr{packageVersion("poppr")}}
+\subsection{A note about poppr version 2.0}
 
 In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
 an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
@@ -384,7 +386,7 @@ citation(package = "poppr")
 
 The formal publication for the first version of \poppr{} was published in the
 journal \textbf{PeerJ}: \url{http://peerj.com/articles/281/} \citep{kamvar2014poppr}. The new features
-in version 2.x were published in \textbf{Frontiers}
+in version 2.0 were published in \textbf{Frontiers}
 \url{http://dx.doi.org/10.3389/fgene.2015.00208} \citep{kamvar2015novel}. 
 
 \section{Installation and Quick Start}

@@ -424,7 +424,7 @@ mlg.matrix <- function(x){
   if (is.genclone(x) | is(x, "snpclone")){
     mlgvec <- x@mlg[]
     if (is(x@mlg, "MLG")){
-      visible <- x@mlg@visible
+      visible <- visible(x@mlg)
     }
   } else {
     mlgvec <- mlg.vector(x)
@@ -1147,14 +1147,14 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
       filter.stats <- mlg.filter(gid,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
     }
      # TODO: The following two lines should be a product of mlg.filter
-    gid$mlg@visible <- "contracted"
+    visible(gid$mlg) <- "contracted"
     visible <- "contracted"
     gid$mlg[] <- filter.stats[[1]]
     cgid <- gid[if(is.na(-which(duplicated(gid$mlg[]))[1])) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
     distmat <- filter.stats[[3]]
     if (!is.matrix(distmat)) distmat <- as.matrix(distmat)
   } else {
-      visible  <- gid@mlg@visible
+      visible  <- visible(gid@mlg)
       mll(gid) <- mlg.compute
     to_remove <- .clonecorrector(gid)
     cgid <- gid[to_remove, ]
@@ -1792,6 +1792,34 @@ make_attributes <- function(d, nlig, labs, method, matched_call){
   return(d)
 }
 
+#==============================================================================#
+# Parse incoming palettes
+# 
+# Color palettes could come in the form of functions, vectors, or named vectors.
+# This internal helper will parse them and return a named vector of colors. 
+#
+# Public functions utilizing this function:
+# ## bruvo.msn poppr.msn
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+palette_parser <- function(pal, npop, pnames){
+  PAL <- try(match.fun(pal), silent = TRUE)
+  if ("try-error" %in% class(PAL)){
+    if (all(pnames %in% names(pal))){
+      color <- pal[pnames]
+    } else if (npop == length(pal)){
+      color <- stats::setNames(pal, pnames)
+    } else {
+      warning("insufficient color palette supplied. Using topo.colors().")
+      color <- stats::setNames(topo.colors(npop), pnames)
+    }
+  } else {
+    color   <- stats::setNames(PAL(npop), pnames)
+  }
+  return(color)
+}
 #==============================================================================#
 # Function used to update colors in poppr msn 
 #
@@ -2560,3 +2588,20 @@ get_boot_se <- function(bootlist, res = "sd"){
   return(resmat)
 }
 
+#==============================================================================#
+# Given a maximum and minimum value, this makes an n x 2 matrix of windows that
+# encompass these values.
+# 
+# Public functions utilizing this function:
+# ## win.ia
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+make_windows <- function(maxp, minp = 1L, window = 100L){
+  nwin   <- ceiling(maxp/window)
+  minwin <- ceiling(minp/window)
+  winmat <- matrix(window * seq(nwin), nrow = nwin, ncol = 2)[minwin:nwin, , drop = FALSE]
+  winmat[, 1] <- winmat[, 1] - window + 1
+  return(winmat)
+}

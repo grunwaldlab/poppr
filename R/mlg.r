@@ -533,7 +533,7 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
   if (is.genclone(gid) | is(gid, "snpclone")){
     vec <- gid@mlg[]
     if (is(gid@mlg, "MLG")){
-      visible <- gid@mlg@visible
+      visible <- visible(gid@mlg)
     }
   } else {
     vec <- mlg.vector(gid) 

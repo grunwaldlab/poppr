@@ -359,14 +359,14 @@ setMethod(
 #       cat(" @hierarchy:", "a data frame with", hierlen, 
 #           "levels: (", nameshow, ")\n")
 #     }
-    the_type <- object@mlg@visible
+    the_type <- visible(object@mlg)
     mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     cat("   @mlg:", length(unique(object@mlg[])), mlgtype)
     if (the_type == "contracted"){
-      thresh <- round(object@mlg@cutoff["contracted"], 3)
-      algo <- strsplit(object@mlg@distalgo, "_")[[1]][1]
-      dist <- object@mlg@distname
+      thresh <- round(cutoff(object@mlg)["contracted"], 3)
+      algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
+      dist <- distname(object@mlg)
       if (!is.character(dist)){
         dist <- paste(utils::capture.output(dist), collapse = "")        
       }
@@ -574,13 +574,13 @@ setMethod(
     ltab    <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
     pops    <- popNames(object)
     poplen  <- length(pops)
-    the_type <- ifelse(is(object@mlg, "MLG"), object@mlg@visible, "nope")
+    the_type <- ifelse(is(object@mlg, "MLG"), visible(object@mlg), "nope")
     mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     if (the_type == "contracted"){
-      thresh <- round(object@mlg@cutoff["contracted"], 3)
-      dist <- object@mlg@distname
-      algo <- strsplit(object@mlg@distalgo, "_")[[1]][1]
+      thresh <- round(cutoff(object@mlg)["contracted"], 3)
+      dist <- distname(object@mlg)
+      algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
       if (!is.character(dist)){
         dist <- paste(utils::capture.output(dist), collapse = "")        
       }
@@ -649,13 +649,13 @@ setMethod(
     ltab  <- vapply(ltab, function(x) substr("       ", 1, x + 1), character(1))
     pops        <- popNames(x)
     stratanames <- names(x@strata)
-    the_type <- ifelse(is(x@mlg, "MLG"), x@mlg@visible, "nope")
+    the_type <- ifelse(is(x@mlg, "MLG"), visible(x@mlg), "nope")
     mlgtype  <- ifelse(is(x@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     if (the_type == "contracted"){
-      thresh <- round(x@mlg@cutoff["contracted"], 3)
-      dist <- x@mlg@distname
-      algo <- strsplit(x@mlg@distalgo, "_")[[1]][1]
+      thresh <- round(cutoff(x@mlg)["contracted"], 3)
+      dist <- distname(x@mlg)
+      algo <- strsplit(distalgo(x@mlg), "_")[[1]][1]
       if (!is.character(dist)){
         dist <- paste(utils::capture.output(dist), collapse = "")        
       }
@@ -853,7 +853,7 @@ mll.internal <- function(x, type = NULL, the_call = match.call()){
     TYPES <- c("original", "expanded", "contracted", "custom")
     type <- match.arg(type, TYPES)
   } else {
-    type <- mlg@visible
+    type <-visible(mlg)
   }
   return(mlg[, type])
 }
@@ -896,7 +896,7 @@ setMethod(
       TYPES <- c("original", "expanded", "contracted", "custom")
       type <- match.arg(type, TYPES)
     } else {
-      type <- mlg@visible
+      type <-visible(mlg)
     }
     return(mlg[, type])
   })
@@ -946,7 +946,7 @@ setMethod(
     if (!"MLG" %in% class(x@mlg)){
       x@mlg <- new("MLG", x@mlg)
     }
-    x@mlg@visible <- value
+    visible(x@mlg) <- value
     return(x)
   })
 
@@ -959,7 +959,7 @@ setMethod(
     if (!"MLG" %in% class(x@mlg)){
       x@mlg <- new("MLG", x@mlg)
     }
-    x@mlg@visible <- value
+    visible(x@mlg) <- value
     return(x)
   })
 
@@ -1406,15 +1406,30 @@ setMethod(
   definition = function(pop, missing = "asis", memory = FALSE, 
                        algorithm = "farthest_neighbor", distance = "nei.dist",
                        threads = 0, ..., value){
-    pop <- callNextMethod()
-    the_call <- match.call()
+    pop       <- callNextMethod()
+    the_call  <- match.call()
     callnames <- names(the_call)
-    the_dots <- list(...)
+    the_dots  <- list(...)
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
+    # Thu Aug  6 16:39:25 2015 ------------------------------
+    # Treatment of the incoming distance is not a trivial task.
+    # We want the object to have a memory of what distance function was used so
+    # the user does not have to re-specify the distance measure in the function
+    # call. Thus, there could be three possabilities whenever the user calls
+    # mlg.filter:
+    #  1. The user does not specify a distance
+    #  2. The distance is specified as text
+    #  3. The distance is specified as an actual function. 
+    #  
+    # This is dealing with the situation where the user does not specify a 
+    # distance function. In this case, we use the function that was defined in
+    # the object itself. 
     if (!"distance" %in% callnames){
-      distance <- pop@mlg@distname
+      distance <- distname(pop@mlg)
+      # Here, we are trying to evaluate the distance function. If the user has
+      # specified a custom function, we want to ensure that it still exists. 
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
       if ("try-error" %in% class(distfun)){
         stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
@@ -1422,34 +1437,40 @@ setMethod(
       if (is.character(distfun)){
         distfun <- match.fun(distfun)
       }
+      # This part may be unnecessary, but I believe I was having issues with 
+      # passing the call to the main function. The reason for this is that 
+      # dealing with missing data is done in different ways depending on the 
+      # distance function used. If it's diss.dist, nothing is done, if it's
+      # Nei's etc. dist, then the correction is done by converting it to a 
+      # bootgen object since that will quietly convert missing data; otherwise
+      # the function missingno is used.
       the_call[["distance"]] <- distance
       if (is.function(distfun)){
-        the_dots <- pop@mlg@distargs
+        # When the distance stored is a function, the arguments should be used.
+        the_dots <- distargs(pop@mlg)
         the_call <- c(the_call, the_dots)
       }
-      # the_call[["distance"]] <- distance
     }
+    # Storing the specified algorithm.
     if (!"algorithm" %in% callnames){
-      the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
+      # <simpsonsreference>
+      # Do you have any of thoses arrows that are, like, double arrows?
+      # </simpsonsreference>
+      the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
-  
-    if (!is(pop@mlg, "MLG")){
-      pop@mlg <- new("MLG", pop@mlg)
-    }
+
+    # The arguments are built up in a list here and then passed using do.call.
     the_args <- list(gid = pop, threshold = value, missing = missing, 
                      memory = memory, algorithm = algorithm, distance = distance, 
                      threads = threads, stats = "MLGs")
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
-#     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
-#                                  distance, threads, stats = "MLGs", the_call,
-#                                  ...) 
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
-    pop@mlg@cutoff["contracted"] <- value
-    pop@mlg@distname <- substitute(distance)
-    pop@mlg@distargs <- the_dots
-    pop@mlg@distalgo <- match.arg(algorithm, algos)
+    cutoff(pop@mlg)["contracted"] <- value
+    distname(pop@mlg) <- substitute(distance)
+    distargs(pop@mlg) <- the_dots
+    distalgo(pop@mlg) <- match.arg(algorithm, algos)
     return(pop)
   }
 )
@@ -1461,15 +1482,30 @@ setMethod(
   definition = function(pop, missing = "mean", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "bitwise.dist",
                         threads = 0, ..., value){
-    pop <- callNextMethod()
-    the_call <- match.call()
+    pop       <- callNextMethod()
+    the_call  <- match.call()
     callnames <- names(the_call)
-    the_dots <- list(...)
+    the_dots  <- list(...)
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
+    # Thu Aug  6 16:39:25 2015 ------------------------------
+    # Treatment of the incoming distance is not a trivial task.
+    # We want the object to have a memory of what distance function was used so
+    # the user does not have to re-specify the distance measure in the function
+    # call. Thus, there could be three possabilities whenever the user calls
+    # mlg.filter:
+    #  1. The user does not specify a distance
+    #  2. The distance is specified as text
+    #  3. The distance is specified as an actual function. 
+    #  
+    # This is dealing with the situation where the user does not specify a 
+    # distance function. In this case, we use the function that was defined in
+    # the object itself. 
     if (!"distance" %in% callnames){
-      distance <- pop@mlg@distname
+      distance <- distname(pop@mlg)
+      # Here, we are trying to evaluate the distance function. If the user has
+      # specified a custom function, we want to ensure that it still exists. 
       distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
       if ("try-error" %in% class(distfun)){
         stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
@@ -1477,34 +1513,40 @@ setMethod(
       if (is.character(distfun)){
         distfun <- match.fun(distfun)
       }
+      # This part may be unnecessary, but I believe I was having issues with 
+      # passing the call to the main function. The reason for this is that 
+      # dealing with missing data is done in different ways depending on the 
+      # distance function used. If it's diss.dist, nothing is done, if it's
+      # Nei's etc. dist, then the correction is done by converting it to a 
+      # bootgen object since that will quietly convert missing data; otherwise
+      # the function missingno is used.
       the_call[["distance"]] <- distance
       if (is.function(distfun)){
-        the_dots <- pop@mlg@distargs
+        # When the distance stored is a function, the arguments should be used.
+        the_dots <- distargs(pop@mlg)
         the_call <- c(the_call, the_dots)
       }
-      # the_call[["distance"]] <- distance
     }
+    # Storing the specified algorithm.
     if (!"algorithm" %in% callnames){
-      the_call[["algorithm"]] <- pop@mlg@distalgo -> algorithm
+      # <simpsonsreference>
+      # Do you have any of thoses arrows that are, like, double arrows?
+      # </simpsonsreference>
+      the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
     
-    if (!is(pop@mlg, "MLG")){
-      pop@mlg <- new("MLG", pop@mlg)
-    }
+    # The arguments are built up in a list here and then passed using do.call.
     the_args <- list(gid = pop, threshold = value, missing = missing, 
                      memory = memory, algorithm = algorithm, distance = distance, 
                      threads = threads, stats = "MLGs")
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
-    #     fmlgs <- mlg.filter.internal(pop, value, missing, memory, algorithm, 
-    #                                  distance, threads, stats = "MLGs", the_call,
-    #                                  ...) 
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
-    pop@mlg@cutoff["contracted"] <- value
-    pop@mlg@distname <- substitute(distance)
-    pop@mlg@distargs <- the_dots
-    pop@mlg@distalgo <- match.arg(algorithm, algos)
+    cutoff(pop@mlg)["contracted"] <- value
+    distname(pop@mlg) <- substitute(distance)
+    distargs(pop@mlg) <- the_dots
+    distalgo(pop@mlg) <- match.arg(algorithm, algos)
     return(pop)
   }
 )

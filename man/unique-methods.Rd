@@ -18,5 +18,10 @@
 \description{
 internal use
 }
+\seealso{
+\code{\link{visible}} \code{\linkS4class{MLG}}
+\code{\link{genclone}} \code{\link{snpclone}}
+\code{\link{initialize,MLG-method}} \code{\link{levels,MLG-method}}
+}
 \keyword{internal}
 

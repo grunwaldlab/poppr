@@ -215,3 +215,29 @@ test_that("msn works with custom MLLs", {
   expect_that(plot_poppr_msn(pc, pcmsn), not(throws_error()))
   expect_that(plot_poppr_msn(pc, pcmsn, mlg = TRUE), not(throws_error()))
 })
+
+test_that("vectors can be used to color graphs", {
+  skip_on_cran()
+  data(Aeut)
+  A.dist <- diss.dist(Aeut)
+  
+  # Graph it.
+  A.msn <- poppr.msn(Aeut, A.dist, gadj=15, vertex.label=NA, showplot = FALSE)
+  unpal <- c("black", "orange")
+  fpal  <- function(x) unpal
+  npal  <- setNames(unpal, c("Athena", "Mt. Vernon"))
+  xpal  <- c(npal, JoMo = "awesome")
+  # Using palette without names
+  uname_pal  <- plot_poppr_msn(Aeut, A.msn, palette = unpal)$colors
+  # Using palette with function
+  fun_pal    <- plot_poppr_msn(Aeut, A.msn, palette = fpal)$colors
+  # Using palette with names
+  name_pal   <- plot_poppr_msn(Aeut, A.msn, palette = npal[2:1])$colors
+  # Using palette with extra names
+  xname_pal  <- plot_poppr_msn(Aeut, A.msn, palette = xpal)$colors
+  
+  expect_identical(uname_pal, npal)
+  expect_identical(fun_pal, npal)
+  expect_identical(name_pal, npal)
+  expect_identical(xname_pal, npal)
+})
