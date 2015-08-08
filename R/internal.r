@@ -1793,6 +1793,34 @@ make_attributes <- function(d, nlig, labs, method, matched_call){
 }
 
 #==============================================================================#
+# Parse incoming palettes
+# 
+# Color palettes could come in the form of functions, vectors, or named vectors.
+# This internal helper will parse them and return a named vector of colors. 
+#
+# Public functions utilizing this function:
+# ## bruvo.msn poppr.msn
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+palette_parser <- function(pal, npop, pnames){
+  PAL <- try(match.fun(pal), silent = TRUE)
+  if ("try-error" %in% class(PAL)){
+    if (all(pnames %in% names(pal))){
+      color <- pal[pnames]
+    } else if (npop == length(pal)){
+      color <- stats::setNames(pal, pnames)
+    } else {
+      warning("insufficient color palette supplied. Using topo.colors().")
+      color <- stats::setNames(topo.colors(npop), pnames)
+    }
+  } else {
+    color   <- stats::setNames(PAL(npop), pnames)
+  }
+  return(color)
+}
+#==============================================================================#
 # Function used to update colors in poppr msn 
 #
 # Public functions utilizing this function:
