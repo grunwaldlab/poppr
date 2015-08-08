@@ -29,10 +29,9 @@ bruvo.msn(gid, replen = 1, add = TRUE, loss = TRUE,
   \code{\link{mll.custom}} for details) in your genclone object, this will
   specify which mlg level to calculate the nodes from. See details.}
 
-\item{palette}{a \code{function} defining the color palette to be used to
-  color the populations on the graph. It defaults to
-  \code{\link{topo.colors}}, but you can easily create new schemes by using
-  \code{\link{colorRampPalette}} (see examples for details)}
+\item{palette}{a \code{vector} or \code{function} defining the color palette
+  to be used to color the populations on the graph. It defaults to
+  \code{\link{topo.colors}}. See examples for details.}
 
 \item{sublist}{a \code{vector} of population names or indexes that the user
   wishes to keep. Default to "ALL".}

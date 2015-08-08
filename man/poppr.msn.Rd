@@ -13,14 +13,14 @@ poppr.msn(gid, distmat, palette = topo.colors, mlg.compute = "original",
   clustering.algorithm = "farthest_neighbor", ...)
 }
 \arguments{
-\item{gid}{a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object}
+\item{gid}{a \code{\link{genind}}, \code{\link{genclone}},
+  \code{\link{genlight}}, or \code{\link{snpclone}} object}
 
 \item{distmat}{a distance matrix that has been derived from your data set.}
 
-\item{palette}{a \code{function} defining the color palette to be used to
-  color the populations on the graph. It defaults to
-  \code{\link{topo.colors}}, but you can easily create new schemes by using
-  \code{\link{colorRampPalette}} (see examples for details)}
+\item{palette}{a \code{vector} or \code{function} defining the color palette
+  to be used to color the populations on the graph. It defaults to
+  \code{\link{topo.colors}}. See examples for details.}
 
 \item{mlg.compute}{if the multilocus genotypes are set to "custom" (see
   \code{\link{mll.custom}} for details) in your genclone object, this will
@@ -62,18 +62,19 @@ poppr.msn(gid, distmat, palette = topo.colors, mlg.compute = "original",
 \item{showplot}{logical. If \code{TRUE}, the graph will be plotted. If
   \code{FALSE}, it will simply be returned.}
 
-\item{include.ties}{logical. If \code{TRUE}, the graph will include all
-  edges that were arbitrarily passed over in favor of another edge of equal
-  weight. If \code{FALSE}, which is the default, one edge will be arbitrarily
-  selected when two or more edges are tied, resulting in a pure minimum spanning
-  network.}
+\item{include.ties}{logical. If \code{TRUE}, the graph will include all edges
+  that were arbitrarily passed over in favor of another edge of equal weight.
+  If \code{FALSE}, which is the default, one edge will be arbitrarily
+  selected when two or more edges are tied, resulting in a pure minimum
+  spanning network.}
 
 \item{threshold}{numeric. If greater than the default value of 0.0, this will
   be passed to \code{\link{mlg.filter}} prior to creating the msn.}
 
-\item{clustering.algorithm}{string. If \code{threshold} is greater than 0, this
-  this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
-  For both of these arguments, see \code{\link{mlg.filter}} for more details.}
+\item{clustering.algorithm}{string. If \code{threshold} is greater than 0,
+  this this will also be passed to \code{\link{mlg.filter}} prior to creating
+  the msn. For both of these arguments, see \code{\link{mlg.filter}} for more
+  details.}
 
 \item{...}{any other arguments that could go into plot.igraph}
 }
@@ -145,8 +146,9 @@ edge.label.color = "red")
 Javier F. Tabima, Zhian N. Kamvar, Jonah Brooks
 }
 \seealso{
-\code{\link{nancycats}}, \code{\link{upgma}}, \code{\link{nj}},
-  \code{\link{nodelabels}}, \code{\link{tab}},
-  \code{\link{missingno}}, \code{\link{bruvo.msn}}, \code{\link{greycurve}}.
+\code{\link{plot_poppr_msn}} \code{\link{nancycats}},
+  \code{\link{upgma}}, \code{\link{nj}}, \code{\link{nodelabels}},
+  \code{\link{tab}}, \code{\link{missingno}}, \code{\link{bruvo.msn}},
+  \code{\link{greycurve}}
 }
 
