@@ -52,6 +52,8 @@ If you use *poppr* at all, please cite:
 
 > Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281 [http://dx.doi.org/10.7717/peerj.281](http://dx.doi.org/10.7717/peerj.281)
 
+If you use *poppr* in a presentation please mention it as the *poppr* R package and use our [logo](http://grunwaldlab.cgrb.oregonstate.edu/sites/default/files/u5/poppr_test.png).
+
 Additionally, if you use any following functionalities:
 
 - minimum spanning networks with reticulation
