@@ -13,9 +13,41 @@ A009	7_09_BB	224	97	159	160	133	156	126	119	147	227	261	134	149
 A006	7_09_BB	224	97	159	160	133	156	126	119	147	235	261	134	149
 A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134	149"
 
+zz <- "1	6	1	6
+7_09_BB			
+Ind	Pop	CHMFc4	CHMFc5
+A004	7_09_BB	224	85
+A002	7_09_BB	224	97
+A011	7_09_BB	224	97
+A009	7_09_BB	224	97
+A006	7_09_BB	224	97
+A013	7_09_BB	224	97"
+
+z <- "1	6	1	6
+7_09_BB			
+Ind	Pop	CHMFc4	
+A004	7_09_BB	224	 
+A002	7_09_BB	224	 
+A011	7_09_BB	224	 
+A009	7_09_BB	224	 
+A006	7_09_BB	224	 
+A013	7_09_BB	224	 "
+
 test_that("basic text connections work", {
 	gen <- read.genalex(textConnection(y), sep = "\t")
 	expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
+})
+
+test_that("single locus diploids can be imported", {
+  gen <- read.genalex(textConnection(zz), sep = "\t")
+  expect_equivalent(nLoc(gen), 1L)
+  expect_output(gen, "diploid")
+})
+
+test_that("single locus haploids can be imported", {
+  gen <- read.genalex(textConnection(z), sep = "\t")
+  expect_equivalent(nLoc(gen), 1L)
+  expect_output(gen, "haploid")
 })
 
 test_that("genclone objects can be saved and restored", {
