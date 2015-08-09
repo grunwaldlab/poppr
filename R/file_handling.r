@@ -251,7 +251,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   
   # Removing all null columns 
   if (any(is.na(gena[1, ]))){
-    gena <- gena[, !is.na(gena[1, ])]
+    gena <- gena[, !is.na(gena[1, ]), drop = FALSE]
   }
   
   #----------------------------------------------------------------------------#
@@ -286,11 +286,11 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
       if (geo == TRUE){
         geoinds <- c((clm - 1), clm)
         xy      <- gena[, geoinds]
-        gena    <- gena[, -geoinds]
+        gena    <- gena[, -geoinds, drop = FALSE]
       } else {
         xy <- NULL
       }
-      gena <- gena[, c(-1, -2)]
+      gena <- gena[, c(-1, -2), drop = FALSE]
       
     } else {
       
@@ -302,12 +302,12 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
       if (geo == TRUE){
         geoinds <- c((clm-1), clm)
         xy      <- gena[, geoinds]
-        gena    <- gena[, -geoinds]
+        gena    <- gena[, -geoinds, drop = FALSE]
       } else {
         xy <- NULL
       }
       ind.vec <- gena[, clm] # Individual Vector
-      gena    <- gena[, -c(1, 2, clm)] # removing the non-genotypic columns
+      gena    <- gena[, -c(1, 2, clm), drop = FALSE] # removing the non-genotypic columns
     }
   } else if (geo == TRUE & length(pop.info) == npops){
     # There are no Regions specified, but there are geographic coordinates
@@ -315,14 +315,14 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     pop.vec <- gena[, 2]
     ind.vec <- gena[, 1]
     xy      <- gena[, c((clm-1), clm)]
-    gena    <- gena[, -c(1, 2, (clm-1), clm)]
+    gena    <- gena[, -c(1, 2, (clm-1), clm), drop = FALSE]
   } else {
     # There are no Regions or geographic coordinates
     reg.vec <- NULL
     pop.vec <- gena[, 2]
     ind.vec <- gena[, 1]
     xy <- NULL
-    gena <- gena[, -c(1, 2)]
+    gena <- gena[, -c(1, 2), drop = FALSE]
   }
   
   #----------------------------------------------------------------------------#
@@ -341,7 +341,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     }
     type  <- 'codom'
     loci  <- which((1:clm) %% ploidy == 1)
-    gena2 <- gena[, loci]
+    gena2 <- gena[, loci, drop = FALSE]
 
     # Collapsing all alleles into single loci.
     lapply(loci, function(x) gena2[, ((x-1)/ploidy)+1] <<-
