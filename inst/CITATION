@@ -1,7 +1,6 @@
 vers <- paste("R package version", meta$Version) 
 umlaut <- iconv("\x9f", from = "MAC", to = "UTF-8") # paste0("u", "\u0308")
-header <- paste("To cite poppr in publications, please specify poppr version",
-				meta$Version, "and with the following citation:")
+header <- paste("To cite poppr in publications or presentations, please specify poppr version", meta$Version, "and with the following citation:")
 citHeader(header)
 
 citEntry(entry = 'article',
