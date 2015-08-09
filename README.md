@@ -48,11 +48,16 @@ news(Version == "2.0.0", package = "poppr")
 
 ## Citation
 
-If you use *poppr* at all, please cite:
+If you use *poppr* at all, please specify the version and cite:
 
-> Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic analysis of populations with clonal, partially clonal, and/or sexual reproduction. PeerJ 2:e281 [http://dx.doi.org/10.7717/peerj.281](http://dx.doi.org/10.7717/peerj.281)
+> Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
+> analysis of populations with clonal, partially clonal, and/or sexual
+> reproduction. PeerJ 2:e281
+> [http://dx.doi.org/10.7717/peerj.281](http://dx.doi.org/10.7717/peerj.281)
 
-If you use *poppr* in a presentation please mention it as the *poppr* R package and use our [logo](http://grunwaldlab.cgrb.oregonstate.edu/sites/default/files/u5/poppr_test.png).
+If you use *poppr* in a presentation please mention it as the *poppr* R package,
+specify the version, and use our
+[logo](http://github.com/grunwaldlab/poppr/tree/master/vignettes/popprlogo.png).
 
 Additionally, if you use any following functionalities:
 
@@ -64,7 +69,10 @@ Additionally, if you use any following functionalities:
 
 Please also cite:
 
-> Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality. Front. Genet. 6:208. doi: [10.3389/fgene.2015.00208](http://journal.frontiersin.org/article/10.3389/fgene.2015.00208/abstract)
+> Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
+> genome-wide population genetic data with emphasis on clonality. Front. Genet.
+> 6:208. doi:
+> [10.3389/fgene.2015.00208](http://journal.frontiersin.org/article/10.3389/fgene.2015.00208/abstract)
   
 You can obtain citation information in R by typing:
 
@@ -74,9 +82,14 @@ citation(package = "poppr")
 
 ## Known issues on CRAN
 
-This R package is not a small package, and because of that, it is not unfathomable that there occasionally might be bugs. For bugs that exist within R code, they can be fixed by visiting https://gist.github.com/zkamvar/b64078a0d04d2452c905 and sourcing the code from there. Below is a list of known issues in version 2.0.2 that are fixed on GitHub, but not yet on CRAN:
+This R package is not a small package, and because of that, it is not
+unfathomable that there occasionally might be bugs. For bugs that exist within R
+code, they can be fixed by visiting
+https://gist.github.com/zkamvar/b64078a0d04d2452c905 and sourcing the code from
+there. Below is a list of known issues in version 2.0.2 that are fixed on
+GitHub, but not yet on CRAN:
 
-- none! :)
+- The function `read.genalex()` cannot read in single-locus data. See issue [#58](https://github.com/grunwaldlab/poppr/issues/58) for details.
 
 
 ## Installation
@@ -85,13 +98,15 @@ This R package is not a small package, and because of that, it is not unfathomab
 
 Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/package=poppr).
 
-To install, make sure R is at least version 2.15.1 (the authors recommend &ge; 3.0), and in your console, type:
+To install, make sure R is at least version 2.15.1 (the authors recommend &ge;
+3.0), and in your console, type:
 
 ```R
 install.packages("poppr")
 ```
 
-If you want the absolute latest version of *poppr*, see about installing from github below.
+If you want the absolute latest version of *poppr*, see about installing from
+github below.
 
 ***
 
@@ -125,7 +140,9 @@ library("poppr")
 
 ### User Group
 
-Users who have any questions/comments/suggestions regarding any version of poppr (stable or development) should direct their comments to the [Poppr google group](http://groups.google.com/group/poppr)
+Users who have any questions/comments/suggestions regarding any version of poppr
+(stable or development) should direct their comments to the [Poppr google
+group](http://groups.google.com/group/poppr)
 
 ### Vignettes
 
