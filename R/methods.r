@@ -197,10 +197,10 @@ setMethod(
     if (missing(gen)){
       return(.Object)
     }
+    replen <- match_replen_to_loci(locNames(gen), replen)
     if (missing(replen)){
       replen <- vapply(gen@all.names, function(y) guesslengths(as.numeric(y)), 1)
     }
-    replen <- match_replen_to_loci(locNames(gen), replen)
     ploid  <- max(ploidy(gen))
     popdf  <- genind2df(gen, sep = "/", usepop = FALSE)
     mat    <- generate_bruvo_mat(popdf, maxploid = ploid, sep = "/", mat = TRUE)
