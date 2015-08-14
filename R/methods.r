@@ -186,7 +186,7 @@ setMethod(
 #' @param .Object a character, "bruvomat"
 #' @param gen \code{"\linkS4class{genind}"} object
 #' @param replen a vector of numbers indicating the repeat length for each 
-#' microsatellite locus. 
+#'   microsatellite locus.
 #' @keywords internal
 #' @author Zhian N. Kamvar
 #==============================================================================#
@@ -200,9 +200,10 @@ setMethod(
     if (missing(replen)){
       replen <- vapply(gen@all.names, function(y) guesslengths(as.numeric(y)), 1)
     }
-    ploid <- max(ploidy(gen))
-    popdf <- genind2df(gen, sep = "/", usepop = FALSE)
-    mat   <- generate_bruvo_mat(popdf, maxploid = ploid, sep = "/", mat = TRUE)
+    replen <- match_replen_to_loci(locNames(gen), replen)
+    ploid  <- max(ploidy(gen))
+    popdf  <- genind2df(gen, sep = "/", usepop = FALSE)
+    mat    <- generate_bruvo_mat(popdf, maxploid = ploid, sep = "/", mat = TRUE)
     mat[is.na(mat)] <- 0
     slot(.Object, "mat")       <- mat
     slot(.Object, "replen")    <- replen

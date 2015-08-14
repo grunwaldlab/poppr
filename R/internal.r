@@ -1280,6 +1280,27 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
   return(dist.mat)
 }
 
+
+#==============================================================================#
+# match repeat lengths to loci present in data
+#
+# Public functions utilizing this function:
+# ## initialize bruvomat
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+match_replen_to_loci <- function(gid_loci, replen){
+  if (is.genind(gid_loci)){
+    gid_loci <- locNames(gid)
+  }
+  if (is.null(names(replen))){
+    return(replen)
+  } else {
+    return(replen[gid_loci])
+  }
+}
+
 #==============================================================================#
 # A function for creating a population hierarchy using a formula and data frame
 # 
