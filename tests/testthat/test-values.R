@@ -14,13 +14,18 @@ test_that("Bruvo's distance works as expected.", {
   expect_equal(ADDLOSS, 0.401041518896818)
 })
 
-test_that("Repeat lengths can be in any order if named", {
+test_that("Repeat lengths can be in any order and length if named", {
   skip_on_cran()
   data("Pram")
   p10 <- Pram[sample(nInd(Pram), 10)]
+  # Repeat length as normal
   pbruvo <- bruvo.dist(p10, replen = other(p10)$REPLEN)
+  # Repeat lengths mixed up
   pbruvo_sampled <- bruvo.dist(p10, replen = sample(other(p10)$REPLEN))
+  # Extra value in repeat lengths
+  pbruvo_long <- bruvo.dist(p10, replen = c(other(p10)$REPLEN, NOPE = 23))
   expect_equivalent(pbruvo, pbruvo_sampled)
+  expect_equivalent(pbruvo, pbruvo_long)
 })
 
 test_that("Infinite Alleles Model works.",{
