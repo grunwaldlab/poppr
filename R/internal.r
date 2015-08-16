@@ -2634,3 +2634,20 @@ make_windows <- function(maxp, minp = 1L, window = 100L){
   winmat[, 1] <- winmat[, 1] - window + 1
   return(winmat)
 }
+#==============================================================================#
+# add tied edges to minimum spanning tree
+#
+# Public functions utilizing this function:
+# ## bruvo.msn poppr.msn
+#
+# Internal functions utilizing this function:
+# ## singlepop_msn
+#==============================================================================#
+add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
+  tied_edges <- .Call("msn_tied_edges", as.matrix(mst[]), as.matrix(distmat), tolerance)
+  if (length(tied_edges) > 0){
+    the_edges   <- tied_edges[c(TRUE, TRUE, FALSE)]
+    the_weights <- tied_edges[c(FALSE, FALSE, TRUE)]
+    mst <- add.edges(mst, dimnames(mst[])[[1]][the_edges], weight = the_weights)
+  }
+  return(mst)
