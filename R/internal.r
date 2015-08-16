@@ -1187,11 +1187,8 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
     mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
 
     # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
-    if(include.ties){
-      tied_edges <- .Call("msn_tied_edges", as.matrix(mst[]), as.matrix(distmat),(.Machine$double.eps ^ 0.5))
-      if(length(tied_edges) > 0){
-        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE, TRUE, FALSE)]], weight=tied_edges[c(FALSE, FALSE, TRUE)])
-      }
+    if (include.ties){
+      mst <- add_tied_edges(mst, distmat, tolerance = .Machine$double.eps ^ 0.5)
     }
   } else {
     mst <- minimum.spanning.tree(g)
@@ -2651,3 +2648,4 @@ add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
     mst <- add.edges(mst, dimnames(mst[])[[1]][the_edges], weight = the_weights)
   }
   return(mst)
+}
