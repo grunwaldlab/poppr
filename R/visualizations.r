@@ -336,14 +336,14 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     filter.stats <- mlg.filter(gid,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
     # TODO: The following two lines should be a product of mlg.filter
     visible(gid$mlg) <- "contracted"
-    gid$mlg[] <- filter.stats[[1]]
-    cgid <- gid
-    cgid <- cgid[if(length(-which(duplicated(cgid$mlg[]))==0)) which(!duplicated(cgid$mlg[])) else -which(duplicated(cgid$mlg[])) ,]
+    gid$mlg[]        <- filter.stats[[1]]
+    cgid             <- gid[.clonecorrector(gid), ]
     # Preserve MLG membership of individuals
     mlg.number <- table(filter.stats[[1]])[rank(cgid@mlg[])]
-    
-    bclone <- filter.stats[[3]]
-    if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
+    bclone     <- filter.stats[[3]]
+    if (!is.matrix(bclone)){
+      bclone <- as.matrix(bclone)
+    }
   }
   else {  
     cgid <- gid[.clonecorrector(gid), ]
