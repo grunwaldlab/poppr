@@ -1290,7 +1290,7 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
 #==============================================================================#
 match_replen_to_loci <- function(gid_loci, replen){
   if (is.genind(gid_loci)){
-    gid_loci <- locNames(gid)
+    gid_loci <- locNames(gid_loci)
   }
   if (is.null(names(replen))){
     return(replen)
