@@ -1142,16 +1142,15 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
   # First, clone correct and get the number of individuals per MLG in order.
   if(threshold > 0){
     if (is.null(distmat) & !is.null(replen)){
-      filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+      filter.stats <- mlg.filter(gid, threshold, distance=bruvo.dist, algorithm=clustering.algorithm, replen=replen, stats="ALL")
     } else {
-      filter.stats <- mlg.filter(gid,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+      filter.stats <- mlg.filter(gid, threshold, distance=distmat, algorithm=clustering.algorithm, replen=replen, stats="ALL")
     }
      # TODO: The following two lines should be a product of mlg.filter
-    visible(gid$mlg) <- "contracted"
-    visible <- "contracted"
+    visible(gid$mlg) <- "contracted" -> visible
     gid$mlg[] <- filter.stats[[1]]
-    cgid <- gid[if(is.na(-which(duplicated(gid$mlg[]))[1])) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
-    distmat <- filter.stats[[3]]
+    cgid      <- gid[.clonecorrector(gid), ]
+    distmat   <- filter.stats[[3]]
     if (!is.matrix(distmat)) distmat <- as.matrix(distmat)
   } else {
       visible  <- visible(gid@mlg)
