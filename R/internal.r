@@ -1921,7 +1921,7 @@ get_local_ploidy <- function(x){
   }
   tabx   <- tab(x)
   cols   <- split(colnames(tabx), locFac(x))
-  locmat <- vapply(cols, function(i) rowSums(tabx[, i]), numeric(nInd(x)))
+  locmat <- vapply(cols, function(i) rowSums(tabx[, i, drop = FALSE]), numeric(nInd(x)))
   return(locmat)
 }
 #==============================================================================#
