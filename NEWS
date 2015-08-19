@@ -2,17 +2,12 @@ poppr 2.0.2.99
 ===========
 IMPROVEMENTS
 * `win.ia` and `samp.ia` gain a significant speedup thanks to Jonah Brooks implementing the code in C.
-<<<<<<< HEAD
 
 NEW FEATURES
-* `poppr.msn`, `bruvo.msn`, and `plot_poppr_msn` gain the ability to take character vectors for color palettes. 
-* `plot_poppr_msn` returns the modified graph.
-* `aboot` gains the argument strata so that you can automatically convert genind to genpop.
-=======
 * `poppr.msn`, `bruvo.msn`, and `plot_poppr_msn` gain the ability to take character vectors for color palettes. See issue #55 (https://github.com/grunwaldlab/poppr/issues/55) for details.
 * `plot_poppr_msn` returns the modified graph.
 * All functions related to Bruvo's distance can now take a named vector of repeat lengths in any order. See issue #61 (https://github.com/grunwaldlab/poppr/issues/61) for details.
->>>>>>> 5efbb2667c19c6ae7ff64ab462be36af6081f4ce
+* `aboot` gains the argument strata so that you can automatically convert genind to genpop.
 
 MISC
 * Documentation for genclone and snpclone classes are more coherent.
