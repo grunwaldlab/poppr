@@ -198,7 +198,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
-  if (length(replen) != length(locNames(pop))){
+  if (length(replen) < length(locNames(pop))){
     replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
@@ -334,7 +334,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
-  if (length(replen) != length(locNames(pop))){
+  if (length(replen) < length(locNames(pop))){
     replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
@@ -585,13 +585,13 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
     mll(gid)  <- mlg.compute
   }
   # Updating the MLG with filtered data
-  if(threshold > 0){
+  if (threshold > 0){
     filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL", add = add, loss = loss)
     # TODO: The following two lines should be a product of mlg.filter
     visible(gid$mlg) <- "contracted"
     gid$mlg[] <- filter.stats[[1]]  
     # Obtaining population information for all MLGs
-    cgid <- gid[if(length(-which(duplicated(gid$mlg[]))==0)) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
+    cgid   <- gid[.clonecorrector(gid), ]
     bclone <- filter.stats[[3]]
     if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
   } else {
@@ -621,14 +621,11 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
-  if(length(cgid@mlg[]) > 1){ 
+  if (length(cgid@mlg[]) > 1){ 
     mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
     # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
-    if(include.ties){
-      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
-      if(length(tied_edges) > 0){
-        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
-      }
+    if (include.ties){
+      mst <- add_tied_edges(mst, bclone, tolerance = .Machine$double.eps ^ 0.5)
     }
   } else {
     mst <- minimum.spanning.tree(g)

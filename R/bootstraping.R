@@ -49,6 +49,9 @@
 #'   \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone}, or
 #'   \link{matrix} object.
 #'   
+#' @param strata a formula specifying the strata to be used to convert x to a
+#'   genclone object if x is a genind object. Defaults to NULL. See details.
+#' 
 #' @param tree a text string or function that can calculate a tree from a 
 #'   distance matrix. Defaults to "upgma". Note that you must load the package 
 #'   with the function for it to work.
@@ -93,6 +96,13 @@
 #'   function will specifically bootstrap loci so that results are biologically 
 #'   relevant. With this function, the user can also define a custom distance to
 #'   be performed on the genind or genclone object.
+#'   
+#'   \subsection{the strata argument}{
+#'   There is an argument called \code{strata}. This argument is useful for when
+#'   you want to bootstrap by populations from a \code{\link[adegenet]{genind}}
+#'   object. When you specify strata, the genind object will be converted to
+#'   \code{\link[adegenet]{genpop}} with the specified strata.
+#'   }
 #'   
 #' @note \code{\link{provesti.dist}} and \code{\link{diss.dist}} are exactly the
 #'   same, but \code{\link{diss.dist}} scales better for large numbers of 
@@ -148,6 +158,10 @@
 #' set.seed(5000)
 #' aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
 #' 
+#' # You can also use the strata argument to convert to genpop inside the function.
+#' set.seed(5000)
+#' aboot(Aeut.gc, strata = ~Pop/Subpop, sample = 1000)
+#' 
 #' # And genlight objects 
 #' # From glSim:
 #' ## 1,000 non structured SNPs, 100 structured SNPs
@@ -167,9 +181,16 @@
 #' 
 #' }
 #==============================================================================#
-aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
-                  cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
-                  quiet = FALSE, root = NULL, ...){
+aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist", 
+                  sample = 100, cutoff = 0, showtree = TRUE, missing = "mean", 
+                  mcutoff = 0, quiet = FALSE, root = NULL, ...){
+  if (!is.null(strata)){
+    if (!is.genind(x)){
+      warning("The strata argument can only be used with genind objects.")
+    } else {
+      x <- genind2genpop(x, pop = strata, quiet = TRUE, process.other = FALSE)
+    }
+  }
   if (!is(x, "genlight") && x@type == "PA"){
     xboot           <- x@tab
     colnames(xboot) <- locNames(x)
@@ -221,7 +242,7 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
   nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
   if (!is.genpop(x)){
     if (!is.null(indNames(x))){
-      xtree$tip.label <- indNames(x)      
+      xtree$tip.label <- indNames(x)
     }
   } else {
     xtree$tip.label <- popNames(x)

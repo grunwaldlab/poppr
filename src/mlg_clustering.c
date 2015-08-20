@@ -51,6 +51,20 @@
 SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads);
 void fill_distance_matrix(double** cluster_distance_martix, double*** private_distance_matrix, int* out_vector, int* cluster_size, SEXP dist, char algo, int num_individuals, int num_mlgs, int num_threads);
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reassigns genotypes from mlg into new clusters based on a minimum genetic distance
+between clusters using one of three clustering algorithms. 
+The result will be a new list of mll assignments based on those rules.
+
+Input: A square matrix of numeric distances between each pair of samples.
+       A vector of initial mlg assignments for each sample.
+       A real used to govern the minimum distance between clusters/mlls.
+       A string determining the algorithm to use. Must start with a lowercase
+        "n", "f", or "a". Representing "nearest neighbor", "farthest neighbor",
+        and "average neighbor" (otherwise known as UPGMA) respectively.
+       An integer representing the number of threads that should be used.
+Output: A vector of mll assignments based on the algorithm and threshold used.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads)
 {
   // This function uses various clustering algorithms to
@@ -99,6 +113,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   SEXP Rout_sizes;
   SEXP Rdim;
 
+  // Convert the R object arguments into C data types
   algo = *CHAR(STRING_ELT(algorithm,0));
   thresh = REAL(threshold)[0];
   Rdim = getAttrib(dist, R_DimSymbol);
@@ -119,6 +134,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     num_mlgs = num_individuals;
   }
   
+  // Generate and protect the output R object as well as its components
   PROTECT(Rout_vects = allocVector(INTSXP, num_individuals)); // MLG assignments 
   PROTECT(Rout_stats = allocVector(REALSXP, num_mlgs));       // Threshold for each merge
   PROTECT(Rout_dists = allocMatrix(REALSXP, num_mlgs, num_mlgs)); // Resulting distance matrix
@@ -129,6 +145,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   cluster_matrix = R_Calloc(num_mlgs, int*);
   cluster_distance_matrix = R_Calloc(num_mlgs, double*);
 
+  // Initialize output and intermediate matrices with sentinel value -1
   for(int i = 0; i < num_mlgs; i++)
   {
     REAL(Rout_stats)[i] = -1;
@@ -170,6 +187,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   }
   #endif
 
+  // Initialize a 3D array so that each thread can work on its
+  // own private distance matrix
   private_distance_matrix = R_Calloc(num_threads, double**);
   for(int i = 0; i < num_threads; i++)
   {
@@ -192,11 +211,12 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   num_clusters = 0;
   for(int i = 0; i < num_individuals; i++)
   {
-    cur_mlg = INTEGER(mlg)[i]; // Get the initial cluster of this individual / Casts as int implicitly
+    cur_mlg = INTEGER(mlg)[i]; // Get the initial cluster of this individual / Casts as int 
     // Insert index of individual in the result vector  
     out_vector[i] = cur_mlg-1;    
-    // Then add this individual to the next open slot in its cluster
+    // Then add this individual's index location to the next open slot in its cluster
     cluster_matrix[cur_mlg-1][cluster_size[cur_mlg-1]] = i;
+    // And increase the size of this cluster
     cluster_size[cur_mlg-1]++;
 
     // If this is the first individual in this cluster, increment num_clusters
@@ -207,7 +227,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   }
 
   // Main processing loop.
-  // Finds the two closest cluster
+  // Finds the two closest clusters
   // then merges them together if they are within threshold of each other
   // Repeats until no clusters are withing threshold of each other
   //  or only one cluster remains
@@ -219,6 +239,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     closest_pair[1] = -1;
     // Fill the distance matrix with the new distances between each cluster
     fill_distance_matrix(cluster_distance_matrix,private_distance_matrix,out_vector,cluster_size,dist,algo,num_individuals,num_mlgs,num_threads);
+    // Loop through each pairing of MLGs to find the pair whose clusters are separated by the smallest distance
     for(int i = 0; i < num_mlgs; i++)
     {
       for(int j = 0; j < num_mlgs; j++)
@@ -231,12 +252,10 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
           closest_pair[0] = i;
           closest_pair[1] = j;
         }
-        // Erase this distance to prepare for the next loop
-        //cluster_distance_matrix[i][j] = -1.0;
       }
     }
-    // Merge the two closest clusters together into the lower numbered cluster
-    //  if they are within the threshold distance from each other
+    // Merge the two closest clusters together based on which is closer to the other clusters
+    //  if both clusters are within the threshold distance from each other
     if(min_cluster_distance < 0 || closest_pair[0] < 0 || closest_pair[1] < 0)
     {
       warning("\nThe data resulted in a negative or invalid distance or cluster id. Result vector is incomplete.\n");
@@ -244,14 +263,14 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     }
     else if(min_cluster_distance < thresh)
     {
-      // Store the distance at which this merge occurred 
+      // Store the distance at which this merge occurred in reverse order, since we
+      // want them listed from largest distance to smallest
       REAL(Rout_stats)[num_mlgs-num_clusters] = min_cluster_distance;
 
 
       // Determine which cluster should "survive" the merger, and which should be consumed
+      // Merge to the cluster that is closest to all other clusters
       //  closest_pair[0] will survive, and closest_pair[1] will move to closest_pair[0]
-      // TODO: Pass an argument that decides how this is done: largest first, smallest mean distance, largest mean pgen, etc      
-      // By default, merge to the cluster that is closest to all other clusters
       double mean0 = 0.0;
       double mean1 = 0.0;
       for(int i = 0; i < num_clusters; i++)
@@ -274,6 +293,9 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
         closest_pair[1] = tmp;
       }
 
+      // Now merge the two together, collapsing the (new) closest_pair[1] into closest_pair[0]
+      // This is done by stepping through all the individuals in closest_pair[1] and assigning 
+      //  them to closest_pair[0] instead.
       for(int i = 0; i < cluster_size[closest_pair[1]] && cluster_matrix[closest_pair[1]][i] > -1; i++)
       {
         // Change the assignment for this individual in the result vector
@@ -283,6 +305,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
         cluster_matrix[closest_pair[1]][i] = -1;
         cluster_size[closest_pair[0]]++;
       }
+      // Now effectively erase the cluster that was merged into closest_pair[0]
       cluster_size[closest_pair[1]] = 0;
       num_clusters--;
       // Erase distance matrix to prepare for the next loop
@@ -391,6 +414,8 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
         {
           if(out_vector[i] != out_vector[j])
           {
+            // Get the distance, as seen by this thread, between the clusters containing
+            //  samples i and j.
             dist_ij = &(private_distance_matrix[thread_id][out_vector[i]][out_vector[j]]);
             dist_ji = &(private_distance_matrix[thread_id][out_vector[j]][out_vector[i]]);
             if(ISNA(REAL(dist)[(i) + (j)*num_individuals]) || ISNAN(REAL(dist)[(i) + (j)*num_individuals]) 
@@ -400,11 +425,15 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
             }
             else if(algo=='n' && ((REAL(dist)[(i) + (j)*num_individuals] < *dist_ij) || *dist_ij < -0.5))
             { // Nearest Neighbor clustering
+              // These will update and store the smallest distance between an individual in one cluster
+              //  and an individual in another. Note that the pointer nature of dist_ij means this is
+              //  actually updating the private distance matrix itself in order to keep track of the
+              //  distances between every pairing of clusters.
               *dist_ij = REAL(dist)[(i) + (j)*num_individuals];
               *dist_ji = REAL(dist)[(i) + (j)*num_individuals];
             }
             else if(algo=='a')
-            { // Average Neighbor clustering
+            { // Average Neighbor clustering, otherwise known as UPGMA
               // The average distance will be sum(D(xi,yi))/(|x|*|y|)
               // Since |x| and |y| are constant for now, that term can be moved into the sum
               // Which lets us add the elements in one at a time divided by the product of cluster sizes
@@ -416,6 +445,8 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
               }
               else
               { 
+                // This is adding to the existing value in order to find the mean distance between all
+                // individuals in cluster a with all individuals in cluster b, for all combinations of a and b.
                 double portion = REAL(dist)[i + j*num_individuals] / (double)(cluster_size[out_vector[i]]*cluster_size[out_vector[j]]); 
                 *dist_ij += portion;
                 *dist_ji += portion;
@@ -423,7 +454,8 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
             }
             else if(algo=='f' && REAL(dist)[(i) + (j)*num_individuals] > *dist_ij)
             { // Farthest Neighbor clustering
-              // This is the default, so it will execute even if the algorithm argument is invalid
+              // This functions exactly like Nearest Neighbor, but using the maximum distance between
+              // any individual in one cluster to any individual in another.
               *dist_ij = REAL(dist)[(i) + (j)*num_individuals];
               *dist_ji = REAL(dist)[(i) + (j)*num_individuals];
             }
@@ -432,6 +464,8 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
       }
     }
     // Merge the private distance matrices back into the global distance matrix 
+    // Since each thread has its own private matrix, all matrices need to be merged
+    //  to get the final distance matrix.
     #ifdef _OPENMP
     #pragma omp barrier
     #pragma omp critical
@@ -443,7 +477,8 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
         if(cluster_size[i] * cluster_size[j] != 0)
         {
           if(algo=='n')
-          { // Min every element with this thread's distances
+          { // Min every element with this thread's distances, since the one we want in the 
+            // final matrix is the minimum distance found by any thread.
             if(private_distance_matrix[thread_id][i][j] > -0.5)
             {
               if(cluster_distance_matrix[i][j] < -0.5)
@@ -452,6 +487,8 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
               }
               else
               { // Set the value to the min of the stored value and this thread's value
+                // The ternary operator ?: functions like an in-line if else statement
+                //  in this case updating cluster_distance_matrix with the smaller of the two operands
                 cluster_distance_matrix[i][j] = (private_distance_matrix[thread_id][i][j] < cluster_distance_matrix[i][j]) ? (private_distance_matrix[thread_id][i][j]) : (cluster_distance_matrix[i][j]);
               }
             }
@@ -466,6 +503,9 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
               }
               else
               {
+                // Since average neighbor is the mean value, and each element has already been
+                // divided by the total number, we just need to sum up all the values found
+                // by the threads to get the full distance.
                 cluster_distance_matrix[i][j] += private_distance_matrix[thread_id][i][j];
               }
             }
@@ -475,6 +515,7 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
             if(private_distance_matrix[thread_id][i][j] > -0.5)
             {
               // Max every element with this thread's distances
+              // This is exactly like the nearest neighbor version, but used to find the maximum.
               cluster_distance_matrix[i][j] = (private_distance_matrix[thread_id][i][j] > cluster_distance_matrix[i][j]) ? (private_distance_matrix[thread_id][i][j]) : (cluster_distance_matrix[i][j]);
             }
           }

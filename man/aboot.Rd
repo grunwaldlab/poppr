@@ -6,14 +6,17 @@
 \title{Calculate a dendrogram with bootstrap support using any distance applicable
 to genind or genclone objects.}
 \usage{
-aboot(x, tree = "upgma", distance = "nei.dist", sample = 100,
-  cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
-  quiet = FALSE, root = NULL, ...)
+aboot(x, strata = NULL, tree = "upgma", distance = "nei.dist",
+  sample = 100, cutoff = 0, showtree = TRUE, missing = "mean",
+  mcutoff = 0, quiet = FALSE, root = NULL, ...)
 }
 \arguments{
 \item{x}{a \linkS4class{genind}, \linkS4class{genpop},
   \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone}, or
   \link{matrix} object.}
+
+\item{strata}{a formula specifying the strata to be used to convert x to a
+  genclone object if x is a genind object. Defaults to NULL. See details.}
 
 \item{tree}{a text string or function that can calculate a tree from a
   distance matrix. Defaults to "upgma". Note that you must load the package
@@ -65,6 +68,13 @@ This function utilizes an internal class called
   function will specifically bootstrap loci so that results are biologically
   relevant. With this function, the user can also define a custom distance to
   be performed on the genind or genclone object.
+
+  \subsection{the strata argument}{
+  There is an argument called \code{strata}. This argument is useful for when
+  you want to bootstrap by populations from a \code{\link[adegenet]{genind}}
+  object. When you specify strata, the genind object will be converted to
+  \code{\link[adegenet]{genpop}} with the specified strata.
+  }
 }
 \note{
 \code{\link{provesti.dist}} and \code{\link{diss.dist}} are exactly the
@@ -110,6 +120,10 @@ setPop(Aeut.gc) <- ~Pop/Subpop
 Aeut.pop <- genind2genpop(Aeut.gc)
 set.seed(5000)
 aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
+
+# You can also use the strata argument to convert to genpop inside the function.
+set.seed(5000)
+aboot(Aeut.gc, strata = ~Pop/Subpop, sample = 1000)
 
 # And genlight objects
 # From glSim:

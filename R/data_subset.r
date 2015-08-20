@@ -965,7 +965,7 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
   non_zero_cols_vector <- unlist(non_zero_cols_list, use.names = FALSE)
 
   poly@loc.fac   <- fac[non_zero_cols_vector]
-  poly@loc.n.all  <- stats::setNames(tabulate(locFac(poly)), locNames(poly))
+  poly@loc.n.all  <- stats::setNames(tabulate(locFac(poly), nbins = nLoc(poly)), locNames(poly))
   poly@tab       <- MAT[, non_zero_cols_vector, drop = FALSE]
   poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list,
                            SIMPLIFY = FALSE)

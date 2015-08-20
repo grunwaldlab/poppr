@@ -336,14 +336,14 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     filter.stats <- mlg.filter(gid,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
     # TODO: The following two lines should be a product of mlg.filter
     visible(gid$mlg) <- "contracted"
-    gid$mlg[] <- filter.stats[[1]]
-    cgid <- gid
-    cgid <- cgid[if(length(-which(duplicated(cgid$mlg[]))==0)) which(!duplicated(cgid$mlg[])) else -which(duplicated(cgid$mlg[])) ,]
+    gid$mlg[]        <- filter.stats[[1]]
+    cgid             <- gid[.clonecorrector(gid), ]
     # Preserve MLG membership of individuals
     mlg.number <- table(filter.stats[[1]])[rank(cgid@mlg[])]
-    
-    bclone <- filter.stats[[3]]
-    if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
+    bclone     <- filter.stats[[3]]
+    if (!is.matrix(bclone)){
+      bclone <- as.matrix(bclone)
+    }
   }
   else {  
     cgid <- gid[.clonecorrector(gid), ]
@@ -384,10 +384,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
     # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
     if(include.ties){
-      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
-      if(length(tied_edges) > 0){
-        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
-      }
+      mst <- add_tied_edges(mst, bclone, tolerance = .Machine$double.eps ^ 0.5)
     }
   } else {
     mst <- minimum.spanning.tree(g)

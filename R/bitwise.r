@@ -518,19 +518,24 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   if (!quiet) cat("\n")
   return(res_mat)
 }
-
-snpia <- function(x, threads = 1L){
-  nloc <- nLoc(x)
-  nind <- nInd(x)
-  np <- choose(nind, 2)
-  d_mat <- vapply(seq(nloc), function(i) as.vector(bitwise.dist(x[, i], percent = FALSE, threads = threads)), integer(np))
-  D <- rowSums(d_mat) 
-  SD <- sum(D)        
-  Sd <- colSums(d_mat)
-  Sd2 <- colSums(d_mat*d_mat)
-  Vo <- (sum(D*D) - (SD*SD)/np)/np
-  varj <- (Sd2 - (Sd*Sd)/np)/np
-  Ve <- sum(varj)
-  Svarij <- .Call("pairwise_covar", varj, PACKAGE = "poppr")
-  return((Vo - Ve)/(2 * sum(Svarij)))
-}
+# Sat Aug 15 20:02:40 2015 ------------------------------
+# 
+# This function was used in place of bitwise.ia before it
+# was fixed. Since it has no purpose now, it is being 
+# commented out, but kept here for reference.
+# 
+# snpia <- function(x, threads = 1L){
+#   nloc <- nLoc(x)
+#   nind <- nInd(x)
+#   np <- choose(nind, 2)
+#   d_mat <- vapply(seq(nloc), function(i) as.vector(bitwise.dist(x[, i], percent = FALSE, threads = threads)), integer(np))
+#   D <- rowSums(d_mat) 
+#   SD <- sum(D)        
+#   Sd <- colSums(d_mat)
+#   Sd2 <- colSums(d_mat*d_mat)
+#   Vo <- (sum(D*D) - (SD*SD)/np)/np
+#   varj <- (Sd2 - (Sd*Sd)/np)/np
+#   Ve <- sum(varj)
+#   Svarij <- .Call("pairwise_covar", varj, PACKAGE = "poppr")
+#   return((Vo - Ve)/(2 * sum(Svarij)))
+# }
