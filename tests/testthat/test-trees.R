@@ -57,10 +57,21 @@ test_that("aboot can handle populations", {
 	expect_false(ape::is.ultrametric(AtreeF))
 })
 
+test_that("aboot can convert genind to genpop", {
+  skip_on_cran()
+  set.seed(999)
+  Atree <- aboot(Aeut, strata = ~Pop/Subpop, sample = 20, quiet = TRUE)
+  
+  expect_equal(ape::Ntip(Atree), 18L)
+})
+
 test_that("aboot can handle genlight objects", {
 	skip_on_cran()
 	set.seed(999)
 	gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE))
 	gtree <- aboot(gc, distance = bitwise.dist, sample = 5, quiet = TRUE)
+	expect_warning(gwarn <- aboot(gc, strata = ~none, distance = bitwise.dist, sample = 5, quiet = TRUE))
 	expect_is(gtree, "phylo")
+	expect_is(gwarn, "phylo")
+	expect_equal(ape::Ntip(gtree), ape::Ntip(gwarn))
 })
