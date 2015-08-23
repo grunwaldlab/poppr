@@ -121,7 +121,7 @@ SEXP mlg_round_robin(SEXP mat)
   genotype_matrix = INTEGER(mat);
   
   mask_matrix = R_Calloc(rows, struct mask);
-  for (i = 0; i < rows + 1; i++)
+  for (i = 0; i < rows; i++)
   {
     mask_matrix[i].ind = R_Calloc(cols, int);
     mask_matrix[i].i = i;
