@@ -58,6 +58,7 @@ struct mask {
 int mlg_round_robin_cmpr (const void *a, const void *b){
   struct mask *ia = *(struct mask **)a;
   struct mask *ib = *(struct mask **)b;
+  // Something here doesn't work :(
   return strcmp( (const char *)(const int *)ia->ind, (const char *)(const int *)ib->ind );
 }
 /*
