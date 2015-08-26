@@ -53,13 +53,14 @@ SEXP mlg_round_robin(SEXP mat);
 struct mask {
   int* ind;
   int i;
+  int n;
 };
 
 int mlg_round_robin_cmpr (const void *a, const void *b){
   struct mask *ia = *(struct mask **)a;
   struct mask *ib = *(struct mask **)b;
   // Something here doesn't work :(
-  return strcmp( (const char *)(const int *)ia->ind, (const char *)(const int *)ib->ind );
+  return memcmp( (const void *)(ia->ind), (const void *)(ib->ind), ia->n );
 }
 /*
 * This will be a function to calculate round-robin multilocus genotypes using
@@ -124,6 +125,7 @@ SEXP mlg_round_robin(SEXP mat)
   {
     mask_matrix[i].ind = R_Calloc(cols, int);
     mask_matrix[i].i = i;
+    mask_matrix[i].n = cols*sizeof(int);
     // Initializing the pointers.
     for (j = 0; j < cols - 1; j++)
     {
@@ -140,7 +142,7 @@ SEXP mlg_round_robin(SEXP mat)
     mask_col = (j == 0) ? cols - 1 : j - 1;
     
     
-    qsort(mask_matrix, rows, sizeof(struct mask*), mlg_round_robin_cmpr);
+    qsort(mask_matrix, rows, sizeof(struct mask), mlg_round_robin_cmpr);
     
     
     for (i = 0; i < rows; i++)
