@@ -120,6 +120,25 @@ Output: A distance matrix representing the number of differences between each sa
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads)
 {
+  // This function calculates the raw genetic distance between samples in 
+  // a genlight object. The general flow of this function is as follows:
+    // Define and initialize variables
+    // Retrieve data from R objects passed in as arguments
+    // Prepare for multithreading if compiled to do so
+    // Initialize variables needed for the next loop
+    // Loop through every genotype/sample in the genlight object, call each on i:
+      // Retrieve genetic data and information for sample i from R objects
+      // initialize multi threading for the next loop, if compiled to do so
+      // Loop through every genotype up to and not including i to cover all pairings:
+        // Retrieve data for sample j
+        // Prepare to correct for missing data in both i and j
+        // Loop through each chunk of 8 loci of both i and j, call each chunk k:
+          // Find the locations in chunk k in which i and j are the same
+          // Correct for missing data by forcing a match (or not match)
+          // Update the output matrix with the distances found in this chunk.
+    // Fill the final R return object and return it.
+
+
   SEXP R_out;               // output matrix (n x n)
   SEXP R_gen_symbol;        // gen slot
   SEXP R_chr_symbol;        // snp slot
@@ -421,6 +440,24 @@ Output: A distance matrix representing the distance between each sample in the
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
 {
+  // This function calculates the raw genetic distance between samples in 
+  // a genlight object. The general flow of this function is as follows:
+    // Define and initialize variables
+    // Retrieve data from R objects passed in as arguments
+    // Prepare for multithreading if compiled to do so
+    // Initialize variables needed for the next loop
+    // Loop through every genotype/sample in the genlight object, call each on i:
+      // Retrieve genetic data and information on both chromosomes for sample i from R objects
+      // initialize multi threading for the next loop, if compiled to do so
+      // Loop through every genotype up to and not including i to cover all pairings:
+        // Retrieve data for both chromosomes of sample j
+        // Prepare to correct for missing data in both i and j
+        // Loop through each chunk of 8 loci of both i and j, call each chunk k:
+          // Use the zygosity struct to find the locations in chunk k in which i and j are the same
+          // Correct for missing data by forcing a match (or not match)
+          // Update the output matrix with the distances found in this chunk.
+    // Fill the final R return object and return it.
+
   SEXP R_out;
   SEXP R_gen_symbol;
   SEXP R_chr_symbol;  
@@ -699,6 +736,37 @@ Output: The index of association for this genlight object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads)
 {
+  // This function calculates the index of association for samples in 
+  // a genlight object. The general flow of this function is as follows:
+    // Define and initialize variables
+    // Retrieve data from R objects passed in as arguments
+    // Fill chunk_matrix with all the genetic data in the genlight object for quick access
+    // Prepare for multithreading if compiled to do so
+    // Initialize variables needed for the next loop
+    // initialize multi threading for the next loop, if compiled to do so
+    // Loop through every chunk of 8 loci in the genlight object, call each on i:
+      // Loop through every genotype in the genlight object, call each one j:
+      // Prepare the genetic data for j stored in chunk_matrix for comparison
+      // Prepare to correct for missing data in j
+      // Loop through every genotype from j on to cover all pairings, call this k:
+        // Prepare the genetic data for k stored in chunk_matrix for comparison
+        // Find locations at which j and k differ
+        // Correct for missing data in j and k
+        // Loop through each locus in this chunk, called x:
+          // Sum the distance between j and k at each locus in this chunk in its
+          // corresponding element in M with the previous distances
+          // Do the same for M2 but summing in the squared distance at that locus.
+    // Retrieve the distance matrix for this genlight object from the bitwise_distance functions
+    // Loop over this distance matrix:
+      // Sum the distances between all pairs of samples into D
+      // Sum the squared distances between all pairs of samples into D2
+    // Calculate N choose 2, store as Nc2
+    // Calculate the observed variance, Vo = (D2 - D*D/Nc2) / Nc2
+    // Calculate the variance at each loci using vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2
+    // Calculate the expected variance by summing over vars: Ve = sumi(vars[i])
+    // Calculate the denominator of the final formula by summing over all pairs of loci:
+      // denom = 2*sumij(sqrt(vars[i]*vars[j])), such that all combinations of i and j are covered once
+    // Store and return the final value for the index of association, (Ve - Vo)/denom
 
   SEXP R_out;
   SEXP R_gen_symbol;
@@ -1034,6 +1102,37 @@ Output: The index of association for this genlight object over the specified loc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
 {
+  // This function calculates the index of association for samples in 
+  // a genlight object. The general flow of this function is as follows:
+    // Define and initialize variables
+    // Retrieve data from R objects passed in as arguments
+    // Fill chunk_matrix with all the genetic data in the genlight object for quick access
+    // Prepare for multithreading if compiled to do so
+    // Initialize variables needed for the next loop
+    // initialize multi threading for the next loop, if compiled to do so
+    // Loop through every chunk of 8 loci in the genlight object, call each on i:
+      // Loop through every genotype in the genlight object, call each one j:
+      // Prepare the genetic data for j stored in chunk_matrix for comparison
+      // Prepare to correct for missing data in j
+      // Loop through every genotype from j on to cover all pairings, call this k:
+        // Prepare the genetic data for k stored in chunk_matrix for comparison
+        // Find locations at which j and k differ
+        // Correct for missing data in j and k
+        // Loop through each locus in this chunk, called x:
+          // Sum the distance between j and k at each locus in this chunk in its
+          // corresponding element in M with the previous distances
+          // Do the same for M2 but summing in the squared distance at that locus.
+    // Retrieve the distance matrix for this genlight object from the bitwise_distance functions
+    // Loop over this distance matrix:
+      // Sum the distances between all pairs of samples into D
+      // Sum the squared distances between all pairs of samples into D2
+    // Calculate N choose 2, store as Nc2
+    // Calculate the observed variance, Vo = (D2 - D*D/Nc2) / Nc2
+    // Calculate the variance at each loci using vars[i] = (M2[i] - (M[i]*M[i])/Nc2) / Nc2
+    // Calculate the expected variance by summing over vars: Ve = sumi(vars[i])
+    // Calculate the denominator of the final formula by summing over all pairs of loci:
+      // denom = 2*sumij(sqrt(vars[i]*vars[j])), such that all combinations of i and j are covered once
+    // Store and return the final value for the index of association, (Ve - Vo)/denom
 
   SEXP R_out;
   SEXP R_gen_symbol;

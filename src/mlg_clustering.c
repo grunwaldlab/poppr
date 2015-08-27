@@ -392,7 +392,6 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
     }
     #endif
     // Clear the distance matrices before filling them
-    #pragma omp critical
     for(int i = 0; i < num_mlgs; i++)
     {
       for(int j = 0; j < num_mlgs; j++)
@@ -404,7 +403,6 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
         }
       }
     }
-    #pragma omp critical
     for(int i = 0; i < num_individuals; i++)
     {
       // Divvy up the work via thread number and genotype assignment
