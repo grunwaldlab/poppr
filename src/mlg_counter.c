@@ -151,11 +151,11 @@ SEXP mlg_round_robin(SEXP mat)
       {
         if (k == cols - 1)
         {
-          Rprintf("%d\t", mask_matrix[i].i);
+         // Rprintf("%d\t", mask_matrix[i].i);
         }
         else
         {
-          Rprintf("%d\t", mask_matrix[i].ind[k]);
+         // Rprintf("%d\t", mask_matrix[i].ind[k]);
         }
       }
       if (i != 0)
@@ -176,9 +176,9 @@ SEXP mlg_round_robin(SEXP mat)
         mask_position = mask_matrix[i].i;
         mask_matrix[i].ind[j] = genotype_matrix[mask_position + mask_col*rows];
       }
-      Rprintf("\n");
+      // Rprintf("\n");
     }
-    Rprintf("\n");
+    // Rprintf("\n");
     INTEGER(Rout)[mask_col] = nmlg;
     nmlg = 0;
   }
