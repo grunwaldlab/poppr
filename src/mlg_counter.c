@@ -42,6 +42,7 @@
 
 int mlg_round_robin_cmpr (const void *a, const void *b);
 SEXP mlg_round_robin(SEXP mat);
+int NLOCI = 0;
 
 
 /*
@@ -53,14 +54,14 @@ SEXP mlg_round_robin(SEXP mat);
 struct mask {
   int* ind;
   int i;
-  int n;
+  // int n;
 };
 
 int mlg_round_robin_cmpr (const void *a, const void *b){
   struct mask *ia = (struct mask *)a;
   struct mask *ib = (struct mask *)b;
   // Something here doesn't work :(
-  return memcmp( (const int *)(ia->ind), (const int *)(ib->ind), ia->n );
+  return memcmp( (const int *)(ia->ind), (const int *)(ib->ind), NLOCI );
 }
 /*
 * This will be a function to calculate round-robin multilocus genotypes using
@@ -107,6 +108,8 @@ SEXP mlg_round_robin(SEXP mat)
   int i;
   int j;
   int k;
+  int is_missing;
+  int new_genotype;
   int mask_col;
   int mask_position;
   int nmlg;
@@ -116,8 +119,9 @@ SEXP mlg_round_robin(SEXP mat)
   Rdim = getAttrib(mat, R_DimSymbol);
   rows = INTEGER(Rdim)[0];
   cols = INTEGER(Rdim)[1];
-  PROTECT(Rout = allocVector(INTSXP, cols));
+  PROTECT(Rout = allocMatrix(INTSXP, rows, cols));
   
+  NLOCI = (cols - 1)*sizeof(int);
   genotype_matrix = INTEGER(mat);
   
   mask_matrix = R_Calloc(rows, struct mask);
@@ -125,7 +129,7 @@ SEXP mlg_round_robin(SEXP mat)
   {
     mask_matrix[i].ind = R_Calloc(cols, int);
     mask_matrix[i].i = i;
-    mask_matrix[i].n = (cols - 1)*sizeof(int);
+    // mask_matrix[i].n = (cols - 1)*sizeof(int);
     // Initializing the pointers.
     for (j = 0; j < cols - 1; j++)
     {
@@ -140,24 +144,24 @@ SEXP mlg_round_robin(SEXP mat)
   for (j = 0; j < cols; j++)
   {
     mask_col = (j == 0) ? cols - 1 : j - 1;
-    
-    
+
     qsort(mask_matrix, rows, sizeof(struct mask), mlg_round_robin_cmpr);
-    
-    
+
     for (i = 0; i < rows; i++)
     {
+/*
       for (k = 0; k < cols; k++)
       {
-        if (k == cols - 1)
+        if (k < cols - 1)
         {
-         // Rprintf("%d\t", mask_matrix[i].i);
+          Rprintf("%d\t", mask_matrix[i].ind[k]);
         }
-        else
+        else 
         {
-         // Rprintf("%d\t", mask_matrix[i].ind[k]);
+          Rprintf("%d\t", mask_matrix[i].i);
         }
       }
+*/
       if (i != 0)
       {
         if (memcmp(mask_matrix[i].ind, mask_matrix[i - 1].ind, sizeof(int)*(cols - 1)) != 0)
@@ -165,21 +169,25 @@ SEXP mlg_round_robin(SEXP mat)
           nmlg++;
         }
         mask_position = mask_matrix[i - 1].i;
-        mask_matrix[i - 1].ind[j] = genotype_matrix[mask_position + mask_col*rows];
+        is_missing = genotype_matrix[mask_position + mask_col*rows] == NA_INTEGER;
+        new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + mask_col*rows];
+        mask_matrix[i - 1].ind[j] = new_genotype;
       }
       else
       {
         nmlg = 1;
       }
+      INTEGER(Rout)[mask_matrix[i].i + mask_col*rows] = nmlg;
       if (i == (rows - 1))
       {
         mask_position = mask_matrix[i].i;
-        mask_matrix[i].ind[j] = genotype_matrix[mask_position + mask_col*rows];
+        is_missing = genotype_matrix[mask_position + mask_col*rows] == NA_INTEGER;
+        new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + mask_col*rows];
+        mask_matrix[i].ind[j] = new_genotype;
       }
-      // Rprintf("\n");
+      Rprintf("\n");
     }
-    // Rprintf("\n");
-    INTEGER(Rout)[mask_col] = nmlg;
+    Rprintf("\n");
     nmlg = 0;
   }
   
