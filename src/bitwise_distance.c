@@ -1571,8 +1571,8 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
     {
       if(indices[i*num_loci*2 + index] == -1) // And therefore also [~ index+1] == -1
       {
-        // Set the pgen value of this genotype at this locus to 0
-        pgens[i + j*num_gens] = 1;
+        // Set the pgen value of this genotype at this locus to missing.
+        pgens[i + j*num_gens] = NA_REAL;
       }
       else
       {
