@@ -19,6 +19,10 @@ This function utilizes \code{\link{rrmlg}} to calculate multilocus genotypes
 and then subsets each locus by the resulting MLGs to calculate the
 round-robin allele frequencies used for pgen and psex.
 }
+\note{
+If the genotype frequency for a certain allele ends up being zero, it
+  will be corrected to 1/n.
+}
 \author{
 Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
 }

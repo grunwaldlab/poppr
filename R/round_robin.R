@@ -91,6 +91,9 @@ rrmlg <- function(gid){
 #' @param gid a genind or genclone object
 #' @param res Either "list" (default) or "vector".
 #' 
+#' @note If the genotype frequency for a certain allele ends up being zero, it 
+#'   will be corrected to 1/n.
+#' 
 #' @return a vector or list of allele frequencies
 #' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
