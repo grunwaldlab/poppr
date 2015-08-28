@@ -4,12 +4,15 @@
 \alias{rraf}
 \title{Round Robin Allele Frequencies}
 \usage{
-rraf(gid, res = "list")
+rraf(gid, res = "list", correction = TRUE)
 }
 \arguments{
 \item{gid}{a genind or genclone object}
 
-\item{res}{Either "list" (default) or "vector".}
+\item{res}{Either "list" (default), "vector", or "data.frame".}
+
+\item{correction}{a logical indicating whether or not zero value allele
+  frequencies should be set to 1/n (Default: \code{TRUE})}
 }
 \value{
 a vector or list of allele frequencies
@@ -19,11 +22,39 @@ This function utilizes \code{\link{rrmlg}} to calculate multilocus genotypes
 and then subsets each locus by the resulting MLGs to calculate the
 round-robin allele frequencies used for pgen and psex.
 }
-\note{
-If the genotype frequency for a certain allele ends up being zero, it
-  will be corrected to 1/n.
+\examples{
+data(Pram)
+# Round robin allele frequencies.
+rraf(Pram)
+
+
+\dontrun{
+
+# Compare to without round robin:
+PrLoc <- seploc(Pram, res = "mat") # get locus by matrix
+lapply(PrLoc, colMeans, na.rm = TRUE)
+
+# Without round robin, clone corrected:
+Pcc <- clonecorrect(Pram, strata = NA) # indiscriminantly clone correct
+PccLoc <- seploc(Pcc, res = "mat")
+lapply(PccLoc, colMeans, na.rm = TRUE)
+
+# Get vector output.
+rraf(Pram, type = "vector")
+
+# Get data frame output and plot.
+(Prdf <- rraf(Pram, res = "data.frame"))
+library("ggplot2")
+ggplot(Prdf, aes(y = allele, x = frequency)) +
+  geom_point() +
+  facet_wrap(~locus, ncol = 1, scale = "free_x") +
+  scale_x_continuous(limits = c(0, NA))
+}
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
+}
+\seealso{
+\code{\link{rrmlg}}
 }
 

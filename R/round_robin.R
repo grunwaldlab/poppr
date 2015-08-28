@@ -57,6 +57,7 @@
 #'   loci.
 #'
 #' @export
+#' @seealso \code{\link{rraf}}
 #' @examples
 #' 
 #' # Find out the round-robin multilocus genotype assignments for P. ramorum
@@ -89,34 +90,61 @@ rrmlg <- function(gid){
 #' round-robin allele frequencies used for pgen and psex.
 #' 
 #' @param gid a genind or genclone object
-#' @param res Either "list" (default) or "vector".
-#' 
-#' @note If the genotype frequency for a certain allele ends up being zero, it 
-#'   will be corrected to 1/n.
+#' @param res Either "list" (default), "vector", or "data.frame".
+#' @param correction a logical indicating whether or not zero value allele
+#'   frequencies should be set to 1/n (Default: \code{TRUE})
 #' 
 #' @return a vector or list of allele frequencies
 #' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
 #' @export
+#' @seealso \code{\link{rrmlg}}
+#' @examples
+#' 
+#' data(Pram)
+#' # Round robin allele frequencies.
+#' rraf(Pram)
+#' 
+#' 
+#' \dontrun{
+#' 
+#' # Compare to without round robin:
+#' PrLoc <- seploc(Pram, res = "mat") # get locus by matrix
+#' lapply(PrLoc, colMeans, na.rm = TRUE)
+#' 
+#' # Without round robin, clone corrected:
+#' Pcc <- clonecorrect(Pram, strata = NA) # indiscriminantly clone correct
+#' PccLoc <- seploc(Pcc, res = "mat")
+#' lapply(PccLoc, colMeans, na.rm = TRUE)
+#' 
+#' # Get vector output.
+#' rraf(Pram, type = "vector")
+#' 
+#' # Get data frame output and plot.
+#' (Prdf <- rraf(Pram, res = "data.frame"))
+#' library("ggplot2")
+#' ggplot(Prdf, aes(y = allele, x = frequency)) +
+#'   geom_point() +
+#'   facet_grid(locus ~ ., scale = "free_y", space = "free")
+#' }
 #==============================================================================#
-rraf <- function(gid, res = "list"){
-  RES     <- c("list", "vector")
+rraf <- function(gid, res = "list", correction = TRUE){
+  RES     <- c("list", "vector", "data.frame")
   res     <- match.arg(res, RES)
-  loclist <- seploc(gid, res = "matrix")
+  loclist <- seploc(gid)
   mlgs    <- rrmlg(gid)
-  out     <- lapply(locNames(gid), rrcc, loclist, mlgs)
+  out     <- lapply(locNames(gid), rrcc, loclist, mlgs, correction)
+  
   names(out) <- locNames(gid)
   if (res == "vector"){
     out <- unlist(out, use.names = FALSE)
     names(out) <- colnames(tab(gid))
+  } else if (res == "data.frame"){
+    outdf <- reshape2::melt(out)
+    names(outdf)        <- c("frequency", "locus")
+    levels(outdf$locus) <- locNames(gid)
+    outdf <- cbind(outdf, allele = unlist(lapply(out, names), use.names = FALSE))
+    return(outdf)
   }
   return(out)
-}
-
-
-rrcc <- function(i, loclist, mlgs){
-  cc  <- !duplicated(mlgs[, i])
-  res <- colMeans(loclist[[i]][cc, , drop = FALSE], na.rm = TRUE)
-  res[res < .Machine$double.eps^0.5] <- 1/length(cc)
-  return(res)
 }
