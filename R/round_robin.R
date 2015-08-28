@@ -50,14 +50,14 @@
 #' 
 #' @param gid a genind, genclone, or loci object.
 #' 
-#' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
+#' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
 #' 
 #' @return a matrix of multilocus genotype assignments by masked locus. There 
 #'   will be n rows and m columns where n = number of samples and m = number of
 #'   loci.
 #'
 #' @export
-#' @seealso \code{\link{rraf}}
+#' @seealso \code{\link{rraf}}, \code{\link{pgen}}, \code{\link{psex}}
 #' @examples
 #' 
 #' # Find out the round-robin multilocus genotype assignments for P. ramorum
@@ -100,9 +100,9 @@ rrmlg <- function(gid){
 #' @note When \code{by_pop = TRUE}, the output will be a matrix of allele 
 #'   frequencies.
 #' 
-#' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
+#' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
 #' @export
-#' @seealso \code{\link{rrmlg}}
+#' @seealso \code{\link{rrmlg}}, \code{\link{pgen}}, \code{\link{psex}}
 #' @examples
 #' 
 #' data(Pram)
@@ -151,8 +151,6 @@ rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
   } else {
     out <- lapply(locNames(gid), rrcc, loclist, mlgs, correction)
   }
-
-  
   names(out) <- locNames(gid)
   if (res == "vector"){
     out <- unlist(out, use.names = FALSE)
@@ -165,4 +163,91 @@ rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
     return(outdf)
   }
   return(out)
+}
+#==============================================================================#
+#' Genotype Probability
+#'
+#' @param x a genind or genclone object. 
+#'
+#' @param log a \code{logical} if \code{log =TRUE} (default), the values
+#'   returned will be log(Pgen). If \code{log = FALSE}, the values returned will
+#'   be Pgen.
+#'
+#' @param by_pop a \code{logical} to determine whether allelic frequencies
+#'   should be calculated per population (\code{TRUE}, default) or across all
+#'   populations in the data (\code{FALSE}).
+#'   
+#' @note Pgen can only be applied to diploids. 
+#'
+#' @return A vector containing Pgen values per locus for each genotype in the 
+#'   object.
+#' @author Zhian N. Kamvar, Jonah Brooks, Stacy Hadfield
+#' @seealso \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}
+#' @export
+#' @examples
+#' data(Pram)
+#' head(pgen(Pram, log = FALSE))
+#' 
+#' \dontrun{
+#' # You can get the Pgen values over all loci by summing over the logged results:
+#' exp(rowSums(pgen(Pram, log = TRUE)))
+#' 
+#' # You can also take the product of the non-logged results:
+#' apply(pgen(Pram, log = FALSE), 1, prod)
+#' }
+#==============================================================================#
+pgen <- function(x, log = TRUE, by_pop = TRUE){
+  stopifnot(is.genind(x))
+  # Stop if the ploidy of the object is not diploid
+  stopifnot(all(ploidy(x) == 2)) 
+
+  # Ensure there is a population assignment for every genotype
+  if (is.null(pop(x)) || !by_pop){
+    pop(x) <- rep(1, nInd(x))
+  }   
+  pops  <- pop(x)
+  freqs <- rraf(x, by_pop = TRUE)
+  
+  pgen_matrix <- .Call("get_pgen_matrix_genind", x, freqs, pops, nlevels(pops), 
+                       PACKAGE = "poppr")
+  if (!log)
+  {
+    pgen_matrix <- exp(pgen_matrix)
+  }
+  dimnames(pgen_matrix) <- list(indNames(x), locNames(x))
+
+  return(pgen_matrix);
+}
+#==============================================================================#
+#' Probability of encountering a genotype more than once by chance
+#' 
+#' @param x a genind or genclone object.
+#' @param by_pop a \code{logical} to determine whether allelic frequencies
+#'   should be calculated per population (\code{TRUE}, default) or across all
+#'   populations in the data (\code{FALSE}).
+#' @return a vector of Psex for each sample.
+#' @note The values of Psex represent the value for each multilocus genotype.
+#' 
+#' @author Zhian N. Kamvar, Jonah Brooks, Stacy Hadfield
+#' @seealso \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}}
+#' @export
+#' @examples
+#' 
+#' data(Pram)
+#' Pram_psex <- psex(Pram, by_pop = FALSE)
+#' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+#' abline(h = 0.05, lty = 2)
+#' \dontrun{
+#' # This can be also done assuming populations structure
+#' Pram_psex <- psex(Pram, by_pop = TRUE)
+#' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+#' abline(h = 0.05, lty = 2)
+#' }
+#==============================================================================#
+psex <- function(x, by_pop = TRUE){
+  xpgen   <- pgen(x, by_pop = by_pop)
+  G       <- mlg(x, quiet = TRUE)
+  xpgen   <- exp(rowSums(xpgen, na.rm = TRUE))
+  pNotGen <- (1 - xpgen)^G
+  return(1 - pNotGen)
 }
