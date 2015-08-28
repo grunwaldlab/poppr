@@ -157,111 +157,6 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differe
   return(dist.mat)
 }
 
-
-
-#==============================================================================#
-#~ Probability of genotypes (under development)
-#~
-#~ @param x a genind or genlight object. 
-#~
-#~ @param log a \code{logical} to determine whether the values should be
-#~   returned as percentages or logarithms of percentages. \code{TRUE} is the
-#~   default, and returns the logarithmic values rather than the percentage
-#~   values. This option has a much larger range and is highly recommended.
-#~   \code{FALSE} returns the percentage chance for each genotype to be produced
-#~   via random mating, rather than the log equivalent.
-#~
-#~ @param by.pop a \code{logical} to determine whether allelic frequencies
-#~   should be calculated per population (\code{TRUE}, default) or across all
-#~   populations in the data (\code{FALSE}).
-#~
-#~ @param window.size an \code{integer} to determine how many SNPs should be 
-#~   included in each pgen calculation. The default is 1, causing every SNP to 
-#~   have its own pgen value in the result matrix. Higher values can be used to
-#~   reduce matrix size, but may result in precision errors if pgen values are 
-#~   too small. This argument only affects processing of genlight objects.
-#~
-#~ @return A vector containing one Pgen value for each genotype in the genlight
-#~   object.
-#~ @author Zhian N. Kamvar, Jonah Brooks
-#~ 
-#~ 
-#==============================================================================#
-pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
-  stopifnot(class(x)[1] == "genlight" || is.genind(x))
-  # Stop if the ploidy of the genlight object is not consistent
-  stopifnot(min(ploidy(x)) == max(ploidy(x))) 
-  # Stop if the ploidy of the genlight object is not diploid
-  stopifnot(min(ploidy(x)) == 2)
-  # Warn if window size is unusable
-  if(!is.integer(window.size) && !is.numeric(window.size) && window.size <= 0){
-    warning("window.size must be a positive integer or numeric. Using default value of 1.")
-    window.size = as.integer(1)
-  }
-  else {
-    window.size = as.integer(window.size)
-  }
-
-  if(is(x, "genlight")){
-    # Ensure that every SNPbin object has data for both chromosomes
-    for(i in 1:length(x$gen)){
-      if(length(x$gen[[i]]$snp) == 1){
-        x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
-      }
-    }
-
-    # Ensure there is a population assignment for every genotype
-    if(is.null(x$pop) || by.pop == FALSE){
-      x$pop <- as.factor(rep(1, length(x$gen)))
-    }   
- 
-    # TODO: Support haploids
-
-    pgen_matrix <- .Call("get_pgen_matrix_genlight", x, window.size, PACKAGE = "poppr")
-
-    if (!log)
-    {
-      pgen_matrix <- exp(pgen_matrix)
-    }
-
-    dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/window.size))
-    rownames(pgen_matrix) <- indNames(x)
-    if(window.size == 1) {
-      colnames(pgen_matrix) <- locNames(x)
-    }
-  }
-  else if(is.genind(x)){
-    # Ensure there is a population assignment for every genotype
-    if (is.null(pop(x)) || by.pop == FALSE){
-      pop(x) <- rep(1, nInd(x))
-    }   
-    pops  <- pop(x)
-    freqs <- rraf(x, by_pop = TRUE)
-    
-    pgen_matrix <- .Call("get_pgen_matrix_genind", x, freqs, pops, nlevels(pops), PACKAGE = "poppr")
-    # TODO: calculate in log form in C, then convert back here.
-    if (!log)
-    {
-      pgen_matrix <- exp(pgen_matrix)
-    }
-    dim(pgen_matrix)      <- c(nInd(x), nLoc(x))
-    colnames(pgen_matrix) <- locNames(x)
-    rownames(pgen_matrix) <- indNames(x)
-  }
-  else{
-    stop("Object provided must be a genlight, genind, or genclone object.")
-  }
-  return(pgen_matrix);
-}
-
-psex <- function(x, by.pop = TRUE){
-  xpgen   <- pgen(x, by.pop = by.pop)
-  G       <- mlg(x, quiet = TRUE)
-  xpgen   <- exp(rowSums(xpgen))
-  pNotGen <- (1 - xpgen)^G
-  return(1 - pNotGen)
-}
-
 #==============================================================================#
 #' Determines whether openMP is support on this system.
 #'
@@ -321,7 +216,7 @@ poppr_has_parallel <- function(){
 #' @keywords internal
 #==============================================================================#
 bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0){
-  stopifnot(!class(x)[1] %in% c("genlight", "snpclone"))
+  stopifnot(class(x)[1] %in% c("genlight", "snpclone"))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
   # Stop if the ploidy of the genlight object is not haploid or diploid
