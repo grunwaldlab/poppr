@@ -955,8 +955,8 @@ If we wanted to assign a geographic coordinate to each individual, we can use
 this trick knowing that there are 17 populations in the data set:
 <<nancy_grow_xy>>=
 nan2 <- nancycats
-other(nan2)$xy <- other(nan2)$xy[rep(1:17, table(pop(nan2))), ]
-head(other(nan2)$xy)
+other(nan2)$xy <- other(nan2)$xy[pop(nan2), ]
+tail(other(nan2)$xy)
 @
 
 Now we can export it to a different file.
