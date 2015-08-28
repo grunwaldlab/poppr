@@ -217,7 +217,7 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
  
     # TODO: Support haploids
 
-    pgen_matrix <- .Call("get_pgen_matrix_genlight", x, window.size)
+    pgen_matrix <- .Call("get_pgen_matrix_genlight", x, window.size, PACKAGE = "poppr")
 
     if (!log)
     {
@@ -225,27 +225,28 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
     }
 
     dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/window.size))
-    rownames(pgen_matrix)            <- indNames(x)
+    rownames(pgen_matrix) <- indNames(x)
     if(window.size == 1) {
-      colnames(pgen_matrix)          <- locNames(x)
+      colnames(pgen_matrix) <- locNames(x)
     }
   }
   else if(is.genind(x)){
     # Ensure there is a population assignment for every genotype
-    if(is.null(x$pop) || by.pop == FALSE){
-      pop(x) <- as.factor(rep(1,dim(x$tab)[1]))
+    if (is.null(pop(x)) || by.pop == FALSE){
+      pop(x) <- rep(1, nInd(x))
     }   
-    pops <- pop(x)
-    freqs <- tab(genind2genpop(x, quiet = TRUE), freq = TRUE)
-    pgen_matrix <- .Call("get_pgen_matrix_genind", x, freqs, pops)
+    pops  <- pop(x)
+    freqs <- rraf(x, by_pop = TRUE)
+    
+    pgen_matrix <- .Call("get_pgen_matrix_genind", x, freqs, pops, nlevels(pops), PACKAGE = "poppr")
     # TODO: calculate in log form in C, then convert back here.
-    if(!log)
+    if (!log)
     {
       pgen_matrix <- exp(pgen_matrix)
     }
-    dim(pgen_matrix) <- c(dim(x$tab)[1],length(locNames(x)))
-    colnames(pgen_matrix)            <- locNames(x)
-    rownames(pgen_matrix)            <- indNames(x)
+    dim(pgen_matrix)      <- c(nInd(x), nLoc(x))
+    colnames(pgen_matrix) <- locNames(x)
+    rownames(pgen_matrix) <- indNames(x)
   }
   else{
     stop("Object provided must be a genlight, genind, or genclone object.")
@@ -253,7 +254,13 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
   return(pgen_matrix);
 }
 
-
+psex <- function(x, by.pop = TRUE){
+  xpgen   <- pgen(x, by.pop = by.pop)
+  G       <- mlg(x, quiet = TRUE)
+  xpgen   <- exp(rowSums(xpgen))
+  pNotGen <- (1 - xpgen)^G
+  return(1 - pNotGen)
+}
 
 #==============================================================================#
 #' Determines whether openMP is support on this system.
@@ -267,7 +274,7 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
 #==============================================================================#
 poppr_has_parallel <- function(){
 
-  supported <- .Call("omp_test")
+  supported <- .Call("omp_test", PACKAGE = "poppr")
 
   if(supported == 0) {
     return(FALSE)
@@ -314,32 +321,13 @@ poppr_has_parallel <- function(){
 #' @keywords internal
 #==============================================================================#
 bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0){
-  stopifnot(class(x)[1] == "genlight")
-  #TODO: Use this and pass others to ia(): stopifnot(class(x)[1] %in% c("genlight", "genclone", "genind"))
+  stopifnot(!class(x)[1] %in% c("genlight", "snpclone"))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
   # Stop if the ploidy of the genlight object is not haploid or diploid
   stopifnot(min(ploidy(x)) == 2 || min(ploidy(x)) == 1)
 
   ploid     <- min(ploidy(x))
-  ind.names <- indNames(x)
-  inds      <- nInd(x)
-  numPairs   <- nLoc(x)
-
-  # Use Provesti if this is a genclone or genind object
-#  if(class(x)[1] != "genlight"){
-#    dist.mat <- provesti.dist(x)
-#    if (percent == FALSE){
-#      dist.mat <- dist.mat*ploid*numPairs
-#    }
-#    if (mat == TRUE){
-#      dist.mat <- as.matrix(dist.mat)
-#    }
-#    # Return this matrix and exit function
-#    return(dist.mat)
-#  }
-#
-  # Continue function for genlight objects
 
   # Threads must be something that can cast to integer
   if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
@@ -355,11 +343,13 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
         x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
       }
     }
-    IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads)
+    IA <- .Call("association_index_diploid", x, missing_match, differences_only, 
+                threads, PACKAGE = "poppr")
   }
   else if(ploid == 1)
   {
-    IA <- .Call("association_index_haploid", x, missing_match,threads)
+    IA <- .Call("association_index_haploid", x, missing_match, threads, 
+                PACKAGE = "poppr")
   }
   else
   {
