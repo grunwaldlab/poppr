@@ -61,9 +61,9 @@ ggplot(Prdf, aes(y = allele, x = frequency)) +
 }
 }
 \author{
-Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
+Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
 }
 \seealso{
-\code{\link{rrmlg}}
+\code{\link{rrmlg}}, \code{\link{pgen}}, \code{\link{psex}}
 }
 

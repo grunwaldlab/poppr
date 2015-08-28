@@ -31,9 +31,9 @@ colSums(!apply(pmlg_rr, 2, duplicated))
 }
 }
 \author{
-Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
+Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
 }
 \seealso{
-\code{\link{rraf}}
+\code{\link{rraf}}, \code{\link{pgen}}, \code{\link{psex}}
 }
 
