@@ -33,4 +33,7 @@ colSums(!apply(pmlg_rr, 2, duplicated))
 \author{
 Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
 }
+\seealso{
+\code{\link{rraf}}
+}
 
