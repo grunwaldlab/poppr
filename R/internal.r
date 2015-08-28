@@ -2649,3 +2649,28 @@ add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
   }
   return(mst)
 }
+
+#==============================================================================#
+# round robin clone-correct allele frequency estimates
+# 
+# This will take in
+# - i the index of the locus.
+# - loclist a list of genind objects each one locus.
+# - mlgs a matrix from rrmlg
+#
+# Public functions utilizing this function:
+# ## rraf
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+rrcc <- function(i, loclist, mlgs, correction = TRUE){
+  cc  <- !duplicated(mlgs[, i])
+  mat <- tab(loclist[[i]], freq = TRUE)
+  res <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
+  names(res) <- alleles(loclist[[i]])[[1]]
+  if (correction){
+    res[res < .Machine$double.eps^0.5] <- 1/length(cc)    
+  }
+  return(res)
+}
