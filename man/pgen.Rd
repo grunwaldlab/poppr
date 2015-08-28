@@ -4,7 +4,7 @@
 \alias{pgen}
 \title{Genotype Probability}
 \usage{
-pgen(x, log = TRUE, by_pop = TRUE)
+pgen(x, log = TRUE, by_pop = TRUE, freq = NULL)
 }
 \arguments{
 \item{x}{a genind or genclone object.}
@@ -16,6 +16,10 @@ pgen(x, log = TRUE, by_pop = TRUE)
 \item{by_pop}{a \code{logical} to determine whether allelic frequencies
   should be calculated per population (\code{TRUE}, default) or across all
   populations in the data (\code{FALSE}).}
+
+\item{freq}{a vector or matrix of allele frequencies. This defaults to
+  \code{NULL}, indicating that the frequencies will be determined via
+  round-robin approach.}
 }
 \value{
 A vector containing Pgen values per locus for each genotype in the
@@ -33,10 +37,10 @@ head(pgen(Pram, log = FALSE))
 
 \dontrun{
 # You can get the Pgen values over all loci by summing over the logged results:
-exp(rowSums(pgen(Pram, log = TRUE)))
+exp(rowSums(pgen(Pram, log = TRUE, na.rm = TRUE)))
 
 # You can also take the product of the non-logged results:
-apply(pgen(Pram, log = FALSE), 1, prod)
+apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 }
 }
 \author{

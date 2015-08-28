@@ -177,6 +177,10 @@ rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
 #'   should be calculated per population (\code{TRUE}, default) or across all
 #'   populations in the data (\code{FALSE}).
 #'   
+#' @param freq a vector or matrix of allele frequencies. This defaults to
+#'   \code{NULL}, indicating that the frequencies will be determined via
+#'   round-robin approach.
+#'   
 #' @note Pgen can only be applied to diploids. 
 #'
 #' @return A vector containing Pgen values per locus for each genotype in the 
@@ -190,13 +194,13 @@ rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
 #' 
 #' \dontrun{
 #' # You can get the Pgen values over all loci by summing over the logged results:
-#' exp(rowSums(pgen(Pram, log = TRUE)))
+#' exp(rowSums(pgen(Pram, log = TRUE, na.rm = TRUE)))
 #' 
 #' # You can also take the product of the non-logged results:
-#' apply(pgen(Pram, log = FALSE), 1, prod)
+#' apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 #' }
 #==============================================================================#
-pgen <- function(x, log = TRUE, by_pop = TRUE){
+pgen <- function(x, log = TRUE, by_pop = TRUE, freq = NULL){
   stopifnot(is.genind(x))
   # Stop if the ploidy of the object is not diploid
   stopifnot(all(ploidy(x) == 2)) 
@@ -206,7 +210,19 @@ pgen <- function(x, log = TRUE, by_pop = TRUE){
     pop(x) <- rep(1, nInd(x))
   }   
   pops  <- pop(x)
-  freqs <- rraf(x, by_pop = TRUE)
+  if (is.null(freq)){
+    freqs <- rraf(x, by_pop = TRUE)
+  } else if (is.matrix(freq)){
+    if (nrow(freq) != nlevels(pops) || ncol(freq) != ncol(tab(x))){
+      stop("frequency matrix must have the same dimensions as the data.")
+    }
+    freqs <- freq
+  } else if (is.numeric(freq) && length(freq) == ncol(tab(x))){
+    freqs <- freq
+    pops <- factor(rep(1, nInd(x)))
+  } else {
+    stop("frequencies must be the same length as the number of alleles.")
+  }
   
   pgen_matrix <- .Call("get_pgen_matrix_genind", x, freqs, pops, nlevels(pops), 
                        PACKAGE = "poppr")
@@ -225,6 +241,11 @@ pgen <- function(x, log = TRUE, by_pop = TRUE){
 #' @param by_pop a \code{logical} to determine whether allelic frequencies
 #'   should be calculated per population (\code{TRUE}, default) or across all
 #'   populations in the data (\code{FALSE}).
+#' @param freq a vector or matrix of allele frequencies. This defaults to
+#'   \code{NULL}, indicating that the frequencies will be determined via
+#'   round-robin approach.
+#' @param G an integer specifying the number of observed genets. If NULL, this
+#'   will be the number of original multilocus genotypes.
 #' @return a vector of Psex for each sample.
 #' @note The values of Psex represent the value for each multilocus genotype.
 #' 
@@ -242,11 +263,32 @@ pgen <- function(x, log = TRUE, by_pop = TRUE){
 #' Pram_psex <- psex(Pram, by_pop = TRUE)
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
+#' 
+#' ## An example of supplying previously calculated frequencies and G
+#' # From Parks and Werth, 1993, using the first three genotypes.
+#' x <- "
+#' Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
+#' 54 12 12 12 23 22 11
+#' 36 22 22 11 22 33 11
+#' 10 23 22 11 33 13 13"
+#' 
+#' xtab <- read.table(text = x, header = TRUE, row.names = 1)
+#' xgid <- df2genind(xtab[rep(rownames(xtab), as.integer(rownames(xtab))), ], ncode = 1)
+#' afreq <- c(Hk.1 = 0.167, Hk.2 = 0.795, Hk.3 = 0.038, 
+#'            Lap.1 = 0.190, Lap.2 = 0.798, Lap.3 = 0.012,
+#'            Mdh2.0 = 0.011, Mdh2.1 = 0.967, Mdh2.2 = 0.022,
+#'            Pgm1.2 = 0.279, Pgm1.3 = 0.529, Pgm1.4 = 0.162, Pgm1.5 = 0.029,
+#'            Pgm2.1 = 0.128, Pgm2.2 = 0.385, Pgm2.3 = 0.487,
+#'            X6Pgd2.1 = 0.526, X6Pgd2.2 = 0.051, X6Pgd2.3 = 0.423)
+#' freqs <- afreq[colnames(tab(xgid))]
+#' pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
+#' res <- matrix(c( unique(xpgen), unique(1 - pNotGen)), ncol = 2)
+#' colnames(res) <- c("Pgen", "Psex")
 #' }
 #==============================================================================#
-psex <- function(x, by_pop = TRUE){
-  xpgen   <- pgen(x, by_pop = by_pop)
-  G       <- mlg(x, quiet = TRUE)
+psex <- function(x, by_pop = TRUE, freq = NULL, G = NULL){
+  xpgen   <- pgen(x, by_pop = by_pop, freq = freq)
+  G       <- ifelse(is.null(G), mlg(x, quiet = TRUE), G)
   xpgen   <- exp(rowSums(xpgen, na.rm = TRUE))
   pNotGen <- (1 - xpgen)^G
   return(1 - pNotGen)

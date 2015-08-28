@@ -4,7 +4,7 @@
 \alias{psex}
 \title{Probability of encountering a genotype more than once by chance}
 \usage{
-psex(x, by_pop = TRUE)
+psex(x, by_pop = TRUE, freq = NULL, G = NULL)
 }
 \arguments{
 \item{x}{a genind or genclone object.}
@@ -12,6 +12,13 @@ psex(x, by_pop = TRUE)
 \item{by_pop}{a \code{logical} to determine whether allelic frequencies
 should be calculated per population (\code{TRUE}, default) or across all
 populations in the data (\code{FALSE}).}
+
+\item{freq}{a vector or matrix of allele frequencies. This defaults to
+\code{NULL}, indicating that the frequencies will be determined via
+round-robin approach.}
+
+\item{G}{an integer specifying the number of observed genets. If NULL, this
+will be the number of original multilocus genotypes.}
 }
 \value{
 a vector of Psex for each sample.
@@ -32,6 +39,27 @@ abline(h = 0.05, lty = 2)
 Pram_psex <- psex(Pram, by_pop = TRUE)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
+
+## An example of supplying previously calculated frequencies and G
+# From Parks and Werth, 1993, using the first three genotypes.
+x <- "
+Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
+54 12 12 12 23 22 11
+36 22 22 11 22 33 11
+10 23 22 11 33 13 13"
+
+xtab <- read.table(text = x, header = TRUE, row.names = 1)
+xgid <- df2genind(xtab[rep(rownames(xtab), as.integer(rownames(xtab))), ], ncode = 1)
+afreq <- c(Hk.1 = 0.167, Hk.2 = 0.795, Hk.3 = 0.038,
+           Lap.1 = 0.190, Lap.2 = 0.798, Lap.3 = 0.012,
+           Mdh2.0 = 0.011, Mdh2.1 = 0.967, Mdh2.2 = 0.022,
+           Pgm1.2 = 0.279, Pgm1.3 = 0.529, Pgm1.4 = 0.162, Pgm1.5 = 0.029,
+           Pgm2.1 = 0.128, Pgm2.2 = 0.385, Pgm2.3 = 0.487,
+           X6Pgd2.1 = 0.526, X6Pgd2.2 = 0.051, X6Pgd2.3 = 0.423)
+freqs <- afreq[colnames(tab(xgid))]
+pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
+res <- matrix(c( unique(xpgen), unique(1 - pNotGen)), ncol = 2)
+colnames(res) <- c("Pgen", "Psex")
 }
 }
 \author{

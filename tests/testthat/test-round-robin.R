@@ -75,15 +75,17 @@ test_that("psex and pgen internals produce expected results", {
              Pgm1.2 = 0.279, Pgm1.3 = 0.529, Pgm1.4 = 0.162, Pgm1.5 = 0.029,
              Pgm2.1 = 0.128, Pgm2.2 = 0.385, Pgm2.3 = 0.487,
              X6Pgd2.1 = 0.526, X6Pgd2.2 = 0.051, X6Pgd2.3 = 0.423)
-  freqs <- afreq[colnames(tab(xgid))]
-  pops <- rep(1L, nInd(xgid))
-  pgenmat <- .Call("get_pgen_matrix_genind", xgid, freqs, pops, 1L, PACKAGE = "poppr")
-  dimnames(pgenmat) <- list(indNames(xgid), locNames(xgid))
-  G <- 45 # Number of MLGs observed
-  xpgen <- exp(rowSums(pgenmat))
-  pNotGen <- (1 - xpgen)^G
-  1 - pNotGen
-  res <- matrix(c( unique(xpgen), unique(1 - pNotGen)), ncol = 2)
+  freqs   <- afreq[colnames(tab(xgid))]
+  pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
+  xpgen   <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = freqs)))
+#   pops <- rep(1L, nInd(xgid))
+#   pgenmat <- .Call("get_pgen_matrix_genind", xgid, freqs, pops, 1L, PACKAGE = "poppr")
+#   dimnames(pgenmat) <- list(indNames(xgid), locNames(xgid))
+#   G <- 45 # Number of MLGs observed
+#   xpgen <- exp(rowSums(pgenmat))
+#   pNotGen <- (1 - xpgen)^G
+#   1 - pNotGen
+  res <- matrix(c( unique(xpgen), unique(pNotGen)), ncol = 2)
   
   expected_result <- structure(c(4.14726753733799e-05, 0.00192234266749449, 0.000558567714432373, 
                                  0.00186456862059092, 0.0829457730256321, 0.024829127718338), 
