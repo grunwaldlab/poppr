@@ -98,7 +98,7 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
 SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
-SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
+SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop);
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
 void fill_loci(struct locus *loc, SEXP genlight);
@@ -1395,9 +1395,10 @@ the genind or genclone  object.
 Input: A genind or genclone object containing samples of diploids.
        A frequency matrix constructed in R with makefreq(genind2genpop(genind)).
        A vector of population indices for all samples.
+       An integer specifying the number of populations.
 Output: A matrix containing the Pgen value of each genotype at each locus.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops)
+SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
 {
   SEXP R_out;
   SEXP R_tab_symbol;
@@ -1405,10 +1406,9 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops)
   SEXP R_pop_symbol;
   SEXP R_tab;
   PROTECT(R_tab_symbol = install("tab")); // Used for accessing the named elements of the genind object
-  PROTECT(R_loc_symbol = install("loc.names"));
-  PROTECT(R_pop_symbol = install("pop.names"));
-  double *pgens;
-  int *indices;
+  PROTECT(R_loc_symbol = install("loc.n.all"));
+  double* pgens;
+  int* indices;
   int num_gens;
   int num_loci;
   int num_alleles;
@@ -1422,12 +1422,13 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops)
   num_gens = INTEGER(getAttrib(R_tab, R_DimSymbol))[0];
   num_alleles = INTEGER(getAttrib(R_tab, R_DimSymbol))[1];
   num_loci = XLENGTH(getAttrib(genind, R_loc_symbol));
-  num_pops = XLENGTH(getAttrib(genind, R_pop_symbol));
+  num_pops = INTEGER(npop)[0];
   missing_last = 0;
   size = num_gens*num_loci;
-  pgens = R_Calloc(size, double);
+  //pgens = R_Calloc(size, double);
   indices = R_Calloc(size*2, int);
-  PROTECT(R_out = allocVector(REALSXP,size));
+  PROTECT(R_out = allocVector(REALSXP, size));
+  pgens = REAL(R_out);
 
   // Fill indices with the indices inside freqs of alleles found in each genotype
   // Note that R_tab is column-major ordered due to being passed from R
@@ -1436,7 +1437,7 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops)
     index = 0;
     for(int j = 0; j < num_alleles; j++)
     {
-      if(ISNA(REAL(R_tab)[i + j*num_gens]))
+      if(INTEGER(R_tab)[i + j*num_gens] == NA_INTEGER)
       {
         // Add missing value sentinels into the index array once for each missing locus
         if(missing_last == 0)
@@ -1447,14 +1448,14 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops)
           missing_last = 1;
         }
       }
-      else if(REAL(R_tab)[i + j*num_gens] > 0.75)
+      else if(INTEGER(R_tab)[i + j*num_gens] == 2)
       {
         indices[i*num_loci*2 + index] = j;
-        indices[i*num_loci*2 + index+1] = j;
+        indices[i*num_loci*2 + index + 1] = j;
         index += 2;
         missing_last = 0;
       }
-      else if(REAL(R_tab)[i+ j*num_gens] < 0.75 && REAL(R_tab)[i + j*num_gens] > 0.25)
+      else if(INTEGER(R_tab)[i+ j*num_gens] == 1)
       {
         indices[i*num_loci*2 + index] = j;
         index += 1;
@@ -1465,40 +1466,40 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops)
 
   for(int i = 0; i < num_gens; i++)
   {
-    pop = INTEGER(pops)[i]-1;
+    pop = INTEGER(pops)[i] - 1;
     index = 0;
     for(int j = 0; j < num_loci; j++)
     {
       if(indices[i*num_loci*2 + index] == -1) // And therefore also [~ index+1] == -1
       {
         // Set the pgen value of this genotype at this locus to 0
-        pgens[i*num_loci +j] = 1;
+        pgens[i + j*num_gens] = 1;
       }
       else
       {
-        pgens[i*num_loci + j] = log(REAL(freqs)[pop + indices[i*num_loci*2 + index]*num_pops]) + log(REAL(freqs)[pop + indices[i*num_loci*2 + index+1]*num_pops]);
+        pgens[i + j*num_gens] = log(REAL(freqs)[pop + indices[i*num_loci*2 + index]*num_pops]) + log(REAL(freqs)[pop + indices[i*num_loci*2 + index+1]*num_pops]);
         // Account for both permutations of heterozygous loci
-        if(indices[i*num_loci*2 + index] != indices[i*num_loci*2 + index+1])
+        if (indices[i*num_loci*2 + index] != indices[i*num_loci*2 + index + 1])
         {
-          pgens[i*num_loci + j] += log(2);
+          pgens[i + j*num_gens] += log(2);
         }
       }
       index += 2;
     }
   }
 
-  for(int i = 0; i < num_gens; i++)
-  {
-    for(int j = 0; j < num_loci; j++)
-    {
-      // Transpose the matrix into column-major ordering before returning to R
-      REAL(R_out)[i + j*num_gens] = (pgens[i*num_loci + j]);
-    }
-  }
+  //for(int i = 0; i < num_gens; i++)
+  //{
+  //  for(int j = 0; j < num_loci; j++)
+  //  {
+  //    // Transpose the matrix into column-major ordering before returning to R
+  //    REAL(R_out)[i + j*num_gens] = (pgens[i*num_loci + j]);
+  //  }
+  //}
 
   R_Free(indices);
-  R_Free(pgens);
-  UNPROTECT(4);
+  // R_Free(pgens);
+  UNPROTECT(3);
   return R_out;
 }
 
