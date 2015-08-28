@@ -267,7 +267,7 @@ pgen <- function(x, log = TRUE, by_pop = TRUE, freq = NULL){
 #' ## An example of supplying previously calculated frequencies and G
 #' # From Parks and Werth, 1993, using the first three genotypes.
 #' x <- "
-#' Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
+#'  Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
 #' 54 12 12 12 23 22 11
 #' 36 22 22 11 22 33 11
 #' 10 23 22 11 33 13 13"
@@ -280,10 +280,12 @@ pgen <- function(x, log = TRUE, by_pop = TRUE, freq = NULL){
 #'            Pgm1.2 = 0.279, Pgm1.3 = 0.529, Pgm1.4 = 0.162, Pgm1.5 = 0.029,
 #'            Pgm2.1 = 0.128, Pgm2.2 = 0.385, Pgm2.3 = 0.487,
 #'            X6Pgd2.1 = 0.526, X6Pgd2.2 = 0.051, X6Pgd2.3 = 0.423)
-#' freqs <- afreq[colnames(tab(xgid))]
+#' freqs   <- afreq[colnames(tab(xgid))]
 #' pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
-#' res <- matrix(c( unique(xpgen), unique(1 - pNotGen)), ncol = 2)
+#' pGen    <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = freqs)))
+#' res     <- matrix(c(unique(pGen), unique(pNotGen)), ncol = 2)
 #' colnames(res) <- c("Pgen", "Psex")
+#' res
 #' }
 #==============================================================================#
 psex <- function(x, by_pop = TRUE, freq = NULL, G = NULL){
