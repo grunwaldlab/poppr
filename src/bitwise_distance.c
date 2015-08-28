@@ -1427,7 +1427,7 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
   size = num_gens*num_loci;
   //pgens = R_Calloc(size, double);
   indices = R_Calloc(size*2, int);
-  PROTECT(R_out = allocVector(REALSXP, size));
+  PROTECT(R_out = allocMatrix(REALSXP, num_gens, num_loci));
   pgens = REAL(R_out);
 
   // Fill indices with the indices inside freqs of alleles found in each genotype
