@@ -4,12 +4,15 @@
 \alias{rraf}
 \title{Round Robin Allele Frequencies}
 \usage{
-rraf(gid, res = "list", correction = TRUE)
+rraf(gid, res = "list", by_pop = FALSE, correction = TRUE)
 }
 \arguments{
 \item{gid}{a genind or genclone object}
 
 \item{res}{Either "list" (default), "vector", or "data.frame".}
+
+\item{by_pop}{When this is \code{TRUE}, the calculation will be done by
+population. Defaults to \code{FALSE}}
 
 \item{correction}{a logical indicating whether or not zero value allele
   frequencies should be set to 1/n (Default: \code{TRUE})}
@@ -21,6 +24,10 @@ a vector or list of allele frequencies
 This function utilizes \code{\link{rrmlg}} to calculate multilocus genotypes
 and then subsets each locus by the resulting MLGs to calculate the
 round-robin allele frequencies used for pgen and psex.
+}
+\note{
+When \code{by_pop = TRUE}, the output will be a matrix of allele
+  frequencies.
 }
 \examples{
 data(Pram)
@@ -47,8 +54,7 @@ rraf(Pram, type = "vector")
 library("ggplot2")
 ggplot(Prdf, aes(y = allele, x = frequency)) +
   geom_point() +
-  facet_wrap(~locus, ncol = 1, scale = "free_x") +
-  scale_x_continuous(limits = c(0, NA))
+  facet_grid(locus ~ ., scale = "free_y", space = "free")
 }
 }
 \author{

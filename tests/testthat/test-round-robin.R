@@ -48,3 +48,12 @@ test_that("rraf produces a data frame", {
   expect_is(rrx_df, "data.frame")
   expect_equivalent(names(rrx_df), c("frequency", "locus", "allele"))
 })
+
+test_that("rraf calculates per population", {
+  skip_on_cran()
+  data(Pram)
+  rrx_matrix <- rraf(Pram, by_pop = TRUE, correction = FALSE)
+  expect_is(rrx_matrix, "matrix")
+  expect_equivalent(dim(rrx_matrix), c(nPop(Pram), ncol(tab(Pram))))
+  expect_equivalent(rownames(rrx_matrix), popNames(Pram))
+})

@@ -86,15 +86,19 @@ rrmlg <- function(gid){
 #' Round Robin Allele Frequencies
 #' 
 #' This function utilizes \code{\link{rrmlg}} to calculate multilocus genotypes 
-#' and then subsets each locus by the resulting MLGs to calculate the
+#' and then subsets each locus by the resulting MLGs to calculate the 
 #' round-robin allele frequencies used for pgen and psex.
 #' 
 #' @param gid a genind or genclone object
 #' @param res Either "list" (default), "vector", or "data.frame".
-#' @param correction a logical indicating whether or not zero value allele
+#' @param by_pop When this is \code{TRUE}, the calculation will be done by
+#'   population. Defaults to \code{FALSE}
+#' @param correction a logical indicating whether or not zero value allele 
 #'   frequencies should be set to 1/n (Default: \code{TRUE})
-#' 
+#'   
 #' @return a vector or list of allele frequencies
+#' @note When \code{by_pop = TRUE}, the output will be a matrix of allele 
+#'   frequencies.
 #' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hatfield
 #' @export
@@ -120,6 +124,9 @@ rrmlg <- function(gid){
 #' # Get vector output.
 #' rraf(Pram, type = "vector")
 #' 
+#' # Get frequencies per population (matrix only)
+#' rraf(Pram, by_pop = TRUE, correction = FALSE)
+#' 
 #' # Get data frame output and plot.
 #' (Prdf <- rraf(Pram, res = "data.frame"))
 #' library("ggplot2")
@@ -128,12 +135,23 @@ rrmlg <- function(gid){
 #'   facet_grid(locus ~ ., scale = "free_y", space = "free")
 #' }
 #==============================================================================#
-rraf <- function(gid, res = "list", correction = TRUE){
+rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
   RES     <- c("list", "vector", "data.frame")
   res     <- match.arg(res, RES)
   loclist <- seploc(gid)
   mlgs    <- rrmlg(gid)
-  out     <- lapply(locNames(gid), rrcc, loclist, mlgs, correction)
+  if (by_pop & !is.null(pop(gid))){
+    out <- matrix(numeric(0), nrow = nPop(gid), ncol = ncol(tab(gid)))
+    for (i in locNames(gid)){
+      out[, locFac(gid) %in% i] <- rrccbp(i, loclist, mlgs, correction, popNames(gid))
+    }
+    rownames(out) <- popNames(gid)
+    colnames(out) <- colnames(tab(gid))
+    return(out)
+  } else {
+    out <- lapply(locNames(gid), rrcc, loclist, mlgs, correction)
+  }
+
   
   names(out) <- locNames(gid)
   if (res == "vector"){

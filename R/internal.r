@@ -2657,6 +2657,8 @@ add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
 # - i the index of the locus.
 # - loclist a list of genind objects each one locus.
 # - mlgs a matrix from rrmlg
+# - correction a logical indicating if zeroes should be replaced with the
+# smallest value
 #
 # Public functions utilizing this function:
 # ## rraf
@@ -2672,5 +2674,41 @@ rrcc <- function(i, loclist, mlgs, correction = TRUE){
   if (correction){
     res[res < .Machine$double.eps^0.5] <- 1/length(cc)    
   }
+  return(res)
+}
+#==============================================================================#
+# round robin clone-correct allele frequency estimates by population
+# 
+# This will take in
+# - i the index of the locus.
+# - loclist a list of genind objects each one locus.
+# - mlgs a matrix from rrmlg
+# - correction a logical indicating if zeroes should be replaced with the
+# smallest value
+# - pnames the population names.
+#
+# Public functions utilizing this function:
+# ## rraf
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
+  
+  mat  <- tab(loclist[[i]], freq = TRUE)
+  npop <- length(pnames)
+  res  <- matrix(numeric(ncol(mat)*npop), nrow = npop)
+  rownames(res) <- pnames
+  colnames(res) <- colnames(mat)
+  pops <- pop(loclist[[i]])
+  for (p in pnames){
+    psub     <- pops %in% p
+    cc       <- which(!duplicated(mlgs[psub, i]))
+    res[p, ] <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
+  }
+  if (correction){
+    res[res < .Machine$double.eps^0.5] <- 1/length(cc)    
+  }
+  
   return(res)
 }
