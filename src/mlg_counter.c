@@ -185,9 +185,9 @@ SEXP mlg_round_robin(SEXP mat)
         new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + mask_col*rows];
         mask_matrix[i].ind[j] = new_genotype;
       }
-      Rprintf("\n");
+     // Rprintf("\n");
     }
-    Rprintf("\n");
+    // Rprintf("\n");
     nmlg = 0;
   }
   
