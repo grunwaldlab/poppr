@@ -2702,12 +2702,13 @@ rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
   colnames(res) <- colnames(mat)
   pops <- pop(loclist[[i]])
   for (p in pnames){
-    psub     <- pops %in% p
-    cc       <- which(!duplicated(mlgs[psub, i]))
-    res[p, ] <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
-  }
-  if (correction){
-    res[res < .Machine$double.eps^0.5] <- 1/length(cc)    
+    psub <- pops %in% p
+    cc   <- which(!duplicated(mlgs[psub, i]))
+    out  <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
+    if (correction){
+      out[out < .Machine$double.eps^0.5] <- 1/length(cc)
+    }
+    res[p, ] <- out
   }
   
   return(res)

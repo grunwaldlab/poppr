@@ -49,6 +49,9 @@ lapply(PccLoc, colMeans, na.rm = TRUE)
 # Get vector output.
 rraf(Pram, type = "vector")
 
+# Get frequencies per population (matrix only)
+rraf(Pram, by_pop = TRUE, correction = FALSE)
+
 # Get data frame output and plot.
 (Prdf <- rraf(Pram, res = "data.frame"))
 library("ggplot2")
