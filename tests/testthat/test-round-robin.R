@@ -106,6 +106,5 @@ test_that("pgen produces a matrix", {
 test_that("pgen and psex work for haploids", {
   skip_on_cran()
   data(monpop)
-  monfreq <- rraf(monpop, by_pop = FALSE, res = "vector")
-  expect_is(psex(monpop[1:6], freq = monfreq, G = mlg(monpop, quiet = TRUE)), "numeric")
+  expect_is(psex(monpop, by_pop = FALSE), "numeric")
 })
