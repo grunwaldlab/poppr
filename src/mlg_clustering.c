@@ -1,8 +1,8 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee,
@@ -377,6 +377,18 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
   double* dist_ij; // Variables to store distances inside loops
   double* dist_ji;
   int thread_id;
+
+  #ifdef _OPENMP
+  {
+    // Set the number of threads to be used in each omp parallel region
+    omp_set_num_threads(num_threads);
+  }
+  #else
+  {
+    // Make sure it works in serial
+    num_threads = 1;
+  }
+  #endif
 
   #ifdef _OPENMP
   #pragma omp parallel private(dist_ij, dist_ji, thread_id) shared(out_vector,dist,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix,num_threads)

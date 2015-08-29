@@ -49,6 +49,6 @@ system.time(xd <- bitwise.dist(x))
 xd
 }
 \author{
-Zhian N. Kamvar, Jonah Brooks
+Zhian N. Kamvar, Jonah C. Brooks
 }
 

@@ -37,7 +37,7 @@ This function parses over a genlight object to calculate and return the
 index of association for those samples.
 }
 \author{
-Zhian N. Kamvar, Jonah Brooks
+Zhian N. Kamvar, Jonah C. Brooks
 }
 \keyword{internal}
 

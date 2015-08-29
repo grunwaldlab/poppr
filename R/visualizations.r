@@ -6,8 +6,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -240,7 +240,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' 
 #' @export
 #' @aliases msn.poppr
-#' @author Javier F. Tabima, Zhian N. Kamvar, Jonah Brooks
+#' @author Javier F. Tabima, Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
 #' 
 #' # Load the data set and calculate the distance matrix for all individuals.
