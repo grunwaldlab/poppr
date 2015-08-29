@@ -143,7 +143,7 @@ edge.label.color = "red")
 }
 }
 \author{
-Javier F. Tabima, Zhian N. Kamvar, Jonah Brooks
+Javier F. Tabima, Zhian N. Kamvar, Jonah C. Brooks
 }
 \seealso{
 \code{\link{plot_poppr_msn}} \code{\link{nancycats}},

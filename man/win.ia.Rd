@@ -56,6 +56,6 @@ plot(res, type = "l")
 }
 }
 \author{
-Zhian N. Kamvar, Jonah Brooks
+Zhian N. Kamvar, Jonah C. Brooks
 }
 

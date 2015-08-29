@@ -16,6 +16,6 @@ Determines whether openMP is support on this system.
 poppr_has_parallel()
 }
 \author{
-Zhian N. Kamvar, Jonah Brooks
+Zhian N. Kamvar, Jonah C. Brooks
 }
 

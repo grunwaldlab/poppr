@@ -54,6 +54,6 @@ hist(res)
 }
 }
 \author{
-Zhian N. Kamvar, Jonah Brooks
+Zhian N. Kamvar, Jonah C. Brooks
 }
 

@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -75,7 +75,7 @@
 #'
 #' 
 #' @return Pairwise distances between individuals present in the genlight object.
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #' 
 #' @export
 #' @examples
@@ -183,7 +183,7 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differe
 #~
 #~ @return A vector containing one Pgen value for each genotype in the genlight
 #~   object.
-#~ @author Zhian N. Kamvar, Jonah Brooks
+#~ @author Zhian N. Kamvar, Jonah C. Brooks
 #~ 
 #~ 
 #==============================================================================#
@@ -259,7 +259,7 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
 #' Determines whether openMP is support on this system.
 #'
 #' @return FALSE if openMP is not supported, TRUE if it is
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #' 
 #' @export
 #' @examples
@@ -308,7 +308,7 @@ poppr_has_parallel <- function(){
 #'   Other values may be specified, but should be used with caution.
 #'
 #' @return Index of association representing the samples in this genlight object.
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #' 
 #' @export
 #' @keywords internal
@@ -405,7 +405,7 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #' @note this will calculate the standardized index of association from Agapow
 #' 2001. See \code{\link{ia}} for details.
 #' 
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #'   
 #' @export
 #' @examples
@@ -482,7 +482,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 #' 
 #' @return Index of association representing the samples in this genlight
 #'   object.
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #'   
 #' @export
 #' 
