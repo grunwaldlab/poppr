@@ -379,6 +379,18 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
   int thread_id;
 
   #ifdef _OPENMP
+  {
+    // Set the number of threads to be used in each omp parallel region
+    omp_set_num_threads(num_threads);
+  }
+  #else
+  {
+    // Make sure it works in serial
+    num_threads = 1;
+  }
+  #endif
+
+  #ifdef _OPENMP
   #pragma omp parallel private(dist_ij, dist_ji, thread_id) shared(out_vector,dist,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix,num_threads)
   #endif
   {
