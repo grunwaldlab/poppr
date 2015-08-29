@@ -29,7 +29,7 @@ A vector containing Pgen values per locus for each genotype in the
 Genotype Probability
 }
 \note{
-Pgen can only be applied to diploids.
+For haploids, Pgen at a particular locus is the allele frequency.
 }
 \examples{
 data(Pram)

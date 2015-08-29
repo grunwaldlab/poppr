@@ -181,7 +181,7 @@ rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
 #'   \code{NULL}, indicating that the frequencies will be determined via
 #'   round-robin approach.
 #'   
-#' @note Pgen can only be applied to diploids. 
+#' @note For haploids, Pgen at a particular locus is the allele frequency.
 #'
 #' @return A vector containing Pgen values per locus for each genotype in the 
 #'   object.
@@ -203,7 +203,7 @@ rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
 pgen <- function(x, log = TRUE, by_pop = TRUE, freq = NULL){
   stopifnot(is.genind(x))
   # Stop if the ploidy of the object is not diploid
-  stopifnot(all(ploidy(x) == 2)) 
+  stopifnot(all(ploidy(x) %in% 1:2)) 
 
   # Ensure there is a population assignment for every genotype
   if (is.null(pop(x)) || !by_pop){

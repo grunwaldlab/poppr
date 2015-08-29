@@ -1503,11 +1503,14 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
   SEXP R_tab_symbol;
   SEXP R_loc_symbol;
   SEXP R_pop_symbol;
+  SEXP R_ploidy_symbol;
   SEXP R_tab;
   PROTECT(R_tab_symbol = install("tab")); // Used for accessing the named elements of the genind object
   PROTECT(R_loc_symbol = install("loc.n.all"));
+  PROTECT(R_ploidy_symbol = install("ploidy"));
   double* pgens;
   int* indices;
+  int* ploidy;
   int num_gens;
   int num_loci;
   int num_alleles;
@@ -1522,9 +1525,9 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
   num_alleles = INTEGER(getAttrib(R_tab, R_DimSymbol))[1];
   num_loci = XLENGTH(getAttrib(genind, R_loc_symbol));
   num_pops = INTEGER(npop)[0];
+  ploidy = INTEGER(getAttrib(genind, R_ploidy_symbol));
   missing_last = 0;
   size = num_gens*num_loci;
-  //pgens = R_Calloc(size, double);
   indices = R_Calloc(size*2, int);
   PROTECT(R_out = allocMatrix(REALSXP, num_gens, num_loci));
   pgens = REAL(R_out);
@@ -1574,6 +1577,12 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
         // Set the pgen value of this genotype at this locus to missing.
         pgens[i + j*num_gens] = NA_REAL;
       }
+      else if (ploidy[i] == 1)
+      {
+        // If the ploidy is 1, the probability of a genotype at that locus 
+        // is the allele frequency
+        pgens[i + j*num_gens] = log(REAL(freqs)[pop + indices[i*num_loci*2 + index]*num_pops]);
+      }
       else
       {
         pgens[i + j*num_gens] = log(REAL(freqs)[pop + indices[i*num_loci*2 + index]*num_pops]) + log(REAL(freqs)[pop + indices[i*num_loci*2 + index+1]*num_pops]);
@@ -1586,19 +1595,8 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
       index += 2;
     }
   }
-
-  //for(int i = 0; i < num_gens; i++)
-  //{
-  //  for(int j = 0; j < num_loci; j++)
-  //  {
-  //    // Transpose the matrix into column-major ordering before returning to R
-  //    REAL(R_out)[i + j*num_gens] = (pgens[i*num_loci + j]);
-  //  }
-  //}
-
   R_Free(indices);
-  // R_Free(pgens);
-  UNPROTECT(3);
+  UNPROTECT(4);
   return R_out;
 }
 
