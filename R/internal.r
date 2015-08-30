@@ -2064,14 +2064,16 @@ mlg_barplot <- function(mlgt, color_table = NULL){
 #
 # Private functions utilizing this function:
 # # none
+# 
+# DEPRECATED
 #==============================================================================#
-get_sample_mlg <- function(size, samp, nloci, gen, progbar){
-  if (!is.null(progbar)){
-    setTxtProgressBar(progbar, size/(nloci-1))
-  }
-  out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
-  return(out)
-}
+# get_sample_mlg <- function(size, samp, nloci, gen, progbar){
+#   if (!is.null(progbar)){
+#     setTxtProgressBar(progbar, size/(nloci-1))
+#   }
+#   out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
+#   return(out)
+# }
 
 #==============================================================================#
 # Internal function for creating title for index of association histogram.

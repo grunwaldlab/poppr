@@ -1093,26 +1093,26 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #==============================================================================#
 #' Produce a genotype accumulation curve
 #' 
-#' GA curves are useful for determining the minimum number of loci necessary 
-#' to discriminate between individuals in a population. This function will
-#' randomly sample loci without replacement and count the number of multilocus
-#' genotypes observed.
+#' GA curves are useful for determining the minimum number of loci necessary to
+#' discriminate between individuals in a population. This function will randomly
+#' sample loci without replacement and count the number of multilocus genotypes
+#' observed.
 #' 
-#' @param gen a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' @param gen a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
 #'   object.
 #'   
-#' @param sample an \code{integer} defining the number of times loci will be
+#' @param sample an \code{integer} defining the number of times loci will be 
 #'   resampled.
 #'   
-#' @param quiet if \code{FALSE}, a progress bar will be displayed. If
+#' @param quiet if \code{FALSE}, a progress bar will be displayed. If 
 #'   \code{TRUE}, nothing is printed to screen as the function runs.
 #'   
 #' @param thresh a number from 0 to 1. This will draw a line at this fraction of
 #'   multilocus genotypes.
 #'   
-#' @return (invisibly) a matrix of integers showing the results of each randomization.
-#'   Columns represent the number of loci sampled and rows represent an
-#'   independent sample.
+#' @return (invisibly) a matrix of integers showing the results of each
+#'   randomization. Columns represent the number of loci sampled and rows
+#'   represent an independent sample.
 #'   
 #' @author Zhian N. Kamvar
 #' @export
@@ -1149,9 +1149,12 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
 #   } else {
 #     progbar <- NULL
 #   }
-  # out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
-  out <- .Call("genotype_curve", genloc, as.integer(sample), PACKAGE = "poppr")
-  colnames(out) <- 1:(nloci-1)
+#   out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
+  sample <- as.integer(sample)
+  report <- ifelse(quiet, 0, as.integer(sample/10))
+  out    <- .Call("genotype_curve", genloc, sample, report, PACKAGE = "poppr")
+  if (!quiet) cat("\n")
+  colnames(out) <- seq(nloci-1)
   threshdf <- data.frame(x = mlg(gen, quiet = TRUE)*thresh)
   outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
   aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
