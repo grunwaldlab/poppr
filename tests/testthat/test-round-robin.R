@@ -24,10 +24,15 @@ test_that("rrmlg produces the correct mlgs", {
   expect_equivalent(rrx_m, mlg_truth)
 })
 
+test_that("rrmlg can take loci objects", {
+  skip_on_cran()
+  expect_equivalent(rrmlg(pegas::as.loci(x)), rrx_m)
+})
+
 test_that("rraf produces correct allele frequencies", {
   skip_on_cran()
   expect_equivalent(rrx_f, freq_truth)
-  expect_equivalent(rraf(x, "vector"), unlist(freq_truth))
+  expect_equivalent(rraf(x, res = "vector"), unlist(freq_truth))
 })
 
 test_that("rraf will correct or not correct allele frequencies when asked", {
@@ -44,7 +49,7 @@ test_that("rraf will correct or not correct allele frequencies when asked", {
 
 test_that("rraf produces a data frame", {
   skip_on_cran()
-  rrx_df <- rraf(x, "data.frame")
+  rrx_df <- rraf(x, res = "data.frame")
   expect_is(rrx_df, "data.frame")
   expect_equivalent(names(rrx_df), c("frequency", "locus", "allele"))
 })
@@ -56,6 +61,16 @@ test_that("rraf calculates per population", {
   expect_is(rrx_matrix, "matrix")
   expect_equivalent(dim(rrx_matrix), c(nPop(Pram), ncol(tab(Pram))))
   expect_equivalent(rownames(rrx_matrix), popNames(Pram))
+})
+
+test_that("rraf calculates per population when supplied with a population factor", {
+  skip_on_cran()
+  data(Pram)
+  rrx_matrix <- rraf(Pram, by_pop = TRUE, correction = FALSE)
+  rr_pop_factor <- rraf(Pram, pop = as.character(pop(Pram)), correction = FALSE)
+  rr_formula <- rraf(Pram, pop = ~SOURCE/STATE, correction = FALSE)
+  expect_equivalent(rrx_matrix, rr_pop_factor)
+  expect_equivalent(rrx_matrix, rr_formula)
 })
 
 test_that("psex and pgen internals produce expected results", {
@@ -95,12 +110,32 @@ test_that("psex produces a vector", {
   expect_equal(length(psexpram), nInd(Pram))
 })
 
+test_that("psex can take population factors", {
+  skip_on_cran()
+  data(Pram)
+  psexpram <- psex(Pram)
+  psexpop  <- psex(Pram, pop = as.character(pop(Pram)))
+  psexform <- psex(Pram, pop = ~SOURCE/STATE)
+  expect_equivalent(psexpram, psexpop)
+  expect_equivalent(psexpram, psexform)
+})
+
 test_that("pgen produces a matrix", {
   skip_on_cran()
   data(Pram)
   pgenlog <- pgen(Pram, by_pop = FALSE)
   expect_is(pgenlog, "matrix")
   expect_equivalent(exp(pgenlog), pgen(Pram, by_pop = FALSE, log = FALSE))
+})
+
+test_that("psex can take population factors", {
+  skip_on_cran()
+  data(Pram)
+  pgenpram <- pgen(Pram)
+  pgenpop  <- pgen(Pram, pop = as.character(pop(Pram)))
+  pgenform <- pgen(Pram, pop = ~SOURCE/STATE)
+  expect_equivalent(pgenpram, pgenpop)
+  expect_equivalent(pgenpram, pgenform)
 })
 
 test_that("pgen and psex work for haploids", {
