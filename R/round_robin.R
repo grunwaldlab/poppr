@@ -71,7 +71,7 @@
 #' }
 #==============================================================================#
 rrmlg <- function(gid){
-  if (is.genind(gid)){
+  if (class(gid)[1] %in% c("genind", "genclone")){
     gid <- pegas::as.loci(gid)
   }
   the_loci <- attr(gid, "locicol")
@@ -137,6 +137,9 @@ rrmlg <- function(gid){
 #==============================================================================#
 rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
   RES     <- c("list", "vector", "data.frame")
+  if ("loci" %in% class(gid)){
+    gid <- pegas::loci2genind(gid)
+  }
   res     <- match.arg(res, RES)
   loclist <- seploc(gid)
   mlgs    <- rrmlg(gid)
