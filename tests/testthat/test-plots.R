@@ -65,6 +65,13 @@ test_that("genotype_curve produces boxplots", {
 	expect_output(pg$layers[[3]], "geom_text")
 })
 
+test_that("genotype_curve shows output if not quiet", {
+	skip_on_cran()
+	data("partial_clone", package = "poppr")
+
+	expect_output(genotype_curve(partial_clone, sample = 100), "100%")
+})
+
 test_that("ia produces histograms", {
 	skip_on_cran()
 	res    <- ia(nancy, sample = 20, valuereturn = TRUE, quiet = TRUE)
