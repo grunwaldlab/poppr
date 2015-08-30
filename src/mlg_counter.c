@@ -40,10 +40,10 @@
 #include <R.h>
 
 int mlg_round_robin_cmpr (const void *a, const void *b);
+void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples);
 SEXP mlg_round_robin(SEXP mat);
 SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report);
-SEXP SWR(SEXP populationSize, SEXP sampleSize);
-void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples);
+// global variable indicating the size of array to use for comparison in memcmp.
 int NLOCI = 0;
 
 
@@ -52,6 +52,10 @@ int NLOCI = 0;
 * columns, where m represents the number of loci in the data set. The integer i
 * represents the initial position of the sample in the data set for back
 * reference.
+* 
+* Note that there is a potential extra value for the struct: n
+* This vaule would contain the comparison size needed for memcmp. If this code
+* were to be parallelized, make sure this part of the struct is available.
 */
 struct mask {
   int* ind;
@@ -62,9 +66,44 @@ struct mask {
 int mlg_round_robin_cmpr (const void *a, const void *b){
   struct mask *ia = (struct mask *)a;
   struct mask *ib = (struct mask *)b;
-  // Something here doesn't work :(
+  // Note: this depends on the global variable NLOCI. This potentially means
+  // that it's not possible in its current form to go parallel unless the
+  // variable is moved into the struct.
   return memcmp( (const int *)(ia->ind), (const int *)(ib->ind), NLOCI );
 }
+
+
+// Adapted from http://stackoverflow.com/a/311716/2752888
+// Algorithm 3.4.2S by Donald Knuth
+void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples)
+{
+    
+    // Use Knuth's variable names
+    int n = sampleSize;
+    int N = populationSize;
+    int t = 0; // total input records dealt with
+    int m = 0; // number of items selected so far
+    double u;
+    
+    GetRNGstate();
+    while (m < n)
+    {
+        u = unif_rand(); // call a uniform(0,1) random number generator
+
+        if ( (N - t)*u >= n - m )
+        {
+            t++;
+        }
+        else
+        {
+            samples[m] = t;
+            t++; m++;
+        }
+    }
+    PutRNGstate();
+}
+
+
 /*
 * This will be a function to calculate round-robin multilocus genotypes using
 * qsort. It currenlty takes in an integer matrix and spits out a vector that
@@ -151,19 +190,6 @@ SEXP mlg_round_robin(SEXP mat)
 
     for (i = 0; i < rows; i++)
     {
-/*
-      for (k = 0; k < cols; k++)
-      {
-        if (k < cols - 1)
-        {
-          Rprintf("%d\t", mask_matrix[i].ind[k]);
-        }
-        else 
-        {
-          Rprintf("%d\t", mask_matrix[i].i);
-        }
-      }
-*/
       if (i != 0)
       {
         if (memcmp(mask_matrix[i].ind, mask_matrix[i - 1].ind, sizeof(int)*(cols - 1)) != 0)
@@ -187,9 +213,7 @@ SEXP mlg_round_robin(SEXP mat)
         new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + mask_col*rows];
         mask_matrix[i].ind[j] = new_genotype;
       }
-     // Rprintf("\n");
     }
-    // Rprintf("\n");
     nmlg = 0;
   }
   
@@ -203,6 +227,21 @@ SEXP mlg_round_robin(SEXP mat)
   return(Rout);
 }
 
+/*
+* This function will randomly sample with replacement 1..m-1 loci and calculate
+* the number of multilocus genotypes to give a genotype accumulation curve.
+* 
+* Input:
+*   - mat an n x m integer matrix where n = number of samples and m = number of 
+*       loci. The integers represent different genotypes.
+*   - iter an integer specifying the number of iterations per locus. This will
+*       be the number of rows in the the output matrix.
+*   - report an integer specifying after how many steps you want the function
+*       to report progess.
+* Output:
+*   - A matrix with iter rows and m - 1 columns filled with counts of the number
+*       of multilocus genotypes for j loci. 
+*/
 SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
 {
   SEXP Rout;
@@ -227,7 +266,7 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
   Rdim = getAttrib(mat, R_DimSymbol);
   rows = INTEGER(Rdim)[0];
   cols = INTEGER(Rdim)[1];
-  REPORT = asLogical(report);
+  REPORT = INTEGER(report)[0];
   PROTECT(Rout = allocMatrix(INTSXP, INTEGER(iter)[0], cols - 1));
   
   genotype_matrix = INTEGER(mat);
@@ -238,29 +277,65 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
     mask_matrix[i].ind = R_Calloc(cols, int);
     mask_matrix[i].i = i;
   }
-  
+  // Step 1: Loop over the number of loci
   while (nloci < cols)
   {
+    // Initialize the global variable to be the number of loci we want to 
+    // compare. 
     NLOCI = nloci*sizeof(int);
+      
+    // iterate the number of times defined by the user. 
     while (iteration < INTEGER(iter)[0])
     {
+      // sampled_loci here is an array of integers specifying the columns to
+      // copy from the genotype_matrix.
+      SampleWithoutReplacement(cols, nloci, sampled_loci);
+      
+      // If it's the first iteration, the matrix needs to be initialized.
+      // We have to get three things for this:
+      //  1. The position of the sample in the genotype matrix
+      //  2. The locus in the genotype matrix
+      //  3. If the value is missing.
+      if (iteration == 0)
+      {
+        for (i = 0; i < rows; i++)
+        {
+          mask_position = mask_matrix[i].i; // position in genotype_matrix
+          for (j = 0; j < nloci; j++)
+          {
+            selected_locus = sampled_loci[j]*rows; // locus in genotype_matrix
+            is_missing = genotype_matrix[mask_position + selected_locus] == NA_INTEGER;
+            new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + selected_locus];
+            mask_matrix[i].ind[j] = new_genotype;
+          }
+        }
+        // Since it's the first iteration, sample again to set up the next 
+        // iteration.
+        SampleWithoutReplacement(cols, nloci, sampled_loci);
+      }
       if (REPORT > 0 && (iteration + 1) % REPORT == 0)
       {
-        Rprintf("\rCalculating genotypes for %d out of %d loci. Iteration: %d", nloci, cols, iteration + 1);
+        Rprintf("\rCalculating genotypes for %2d/%d loci. Completed iterations: %3.0f%%", nloci, cols, (float)((iteration + 1)*100)/(INTEGER(iter)[0]));
       }
-      SampleWithoutReplacement(cols, nloci, sampled_loci);
+      // Here, we sort the mask_matrix and then iterate through, counting up the
+      // number of times we see a change in genotype. We also fill the matrix 
+      // with the values for the next iteration.
       qsort(mask_matrix, rows, sizeof(struct mask), mlg_round_robin_cmpr);
       for (i = 0; i < rows; i++)
       {
+        // Here, we compare the current sample with the previous to determine if
+        // the number of MLGs needs to go up. 
         if (i != 0)
         {
           if (memcmp(mask_matrix[i].ind, mask_matrix[i - 1].ind, NLOCI) != 0)
           {
             nmlg++;
           }
+          // We don't need the previous sample any more, so we replace it with 
+          // the genotype for the next iteration.
+          mask_position = mask_matrix[i - 1].i;
           for (j = 0; j < nloci; j++)
           {
-            mask_position = mask_matrix[i - 1].i;
             selected_locus = sampled_loci[j]*rows;
             is_missing = genotype_matrix[mask_position + selected_locus] == NA_INTEGER;
             new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + selected_locus];
@@ -271,11 +346,13 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
         {
           nmlg = 1;
         }
+        // If this is the last sample, we replace it with the genotype for the
+        // next iteration.
         if (i == (rows - 1))
         {
+          mask_position = mask_matrix[i].i;
           for (j = 0; j < nloci; j++)
           {
-            mask_position = mask_matrix[i].i;
             selected_locus = sampled_loci[j]*rows;
             is_missing = genotype_matrix[mask_position + selected_locus] == NA_INTEGER;
             new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + selected_locus];
@@ -283,10 +360,14 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
           }
         }
       }
+      // After going through the samples, we add the value into our output 
+      // matrix, reset the MLG counter and increase the iterations.
       INTEGER(Rout)[iteration + (nloci - 1)*INTEGER(iter)[0]] = nmlg;
       nmlg = 0;
       iteration++;
     }
+    // Once all the iterations are done, reset the counter and increase the
+    // number of loci.
     iteration = 0;
     nloci++;
   }
@@ -296,49 +377,6 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
     R_Free(mask_matrix[i].ind);
   }
   R_Free(mask_matrix);
-  
   UNPROTECT(1);
   return(Rout);
 }
-
-SEXP SWR(SEXP populationSize, SEXP sampleSize)
-{
-  SEXP samples;
-  int* sampoint;
-  PROTECT(samples = allocVector(INTSXP, INTEGER(sampleSize)[0]));
-  sampoint = INTEGER(samples);
-  SampleWithoutReplacement(*INTEGER(populationSize), *INTEGER(sampleSize), sampoint);
-  UNPROTECT(1);
-  return samples;
-}
-
-// Adapted from http://stackoverflow.com/a/311716/2752888
-// Algorithm 3.4.2S by Donald Knuth
-void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples)
-{
-    
-    // Use Knuth's variable names
-    int n = sampleSize;
-    int N = populationSize;
-    int t = 0; // total input records dealt with
-    int m = 0; // number of items selected so far
-    double u;
-    
-    GetRNGstate();
-    while (m < n)
-    {
-        u = unif_rand(); // call a uniform(0,1) random number generator
-
-        if ( (N - t)*u >= n - m )
-        {
-            t++;
-        }
-        else
-        {
-            samples[m] = t;
-            t++; m++;
-        }
-    }
-    PutRNGstate();
-}
-
