@@ -4,31 +4,33 @@
 \alias{genotype_curve}
 \title{Produce a genotype accumulation curve}
 \usage{
-genotype_curve(gen, sample = 100, quiet = FALSE, thresh = 0.9)
+genotype_curve(gen, sample = 100, quiet = FALSE, thresh = 1)
 }
 \arguments{
 \item{gen}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
   object.}
 
 \item{sample}{an \code{integer} defining the number of times loci will be
-  resampled.}
+  resampled without replacement.}
 
-\item{quiet}{if \code{FALSE}, a progress bar will be displayed. If
-  \code{TRUE}, nothing is printed to screen as the function runs.}
+\item{quiet}{if \code{FALSE} (default), Progress of the iterations will be
+  displayed. If \code{TRUE}, nothing is printed to screen as the function
+  runs.}
 
-\item{thresh}{a number from 0 to 1. This will draw a line at this fraction of
-  multilocus genotypes.}
+\item{thresh}{a number from 0 to 1. This will draw a line at that fraction of
+  multilocus genotypes, rounded. Defaults to 1, which will draw a line at the
+  maximum number of observable genotypes.}
 }
 \value{
-(invisibly) a matrix of integers showing the results of each randomization.
-  Columns represent the number of loci sampled and rows represent an
-  independent sample.
+(invisibly) a matrix of integers showing the results of each
+  randomization. Columns represent the number of loci sampled and rows
+  represent an independent sample.
 }
 \description{
-GA curves are useful for determining the minimum number of loci necessary
-to discriminate between individuals in a population. This function will
-randomly sample loci without replacement and count the number of multilocus
-genotypes observed.
+GA curves are useful for determining the minimum number of loci necessary to
+discriminate between individuals in a population. This function will randomly
+sample loci without replacement and count the number of multilocus genotypes
+observed.
 }
 \examples{
 data(nancycats)

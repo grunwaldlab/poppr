@@ -1102,13 +1102,16 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #'   object.
 #'   
 #' @param sample an \code{integer} defining the number of times loci will be 
-#'   resampled.
+#'   resampled without replacement.
 #'   
-#' @param quiet if \code{FALSE}, a progress bar will be displayed. If 
-#'   \code{TRUE}, nothing is printed to screen as the function runs.
+#' @param quiet if \code{FALSE} (default), Progress of the iterations will be 
+#'   displayed. If \code{TRUE}, nothing is printed to screen as the function
+#'   runs.
 #'   
-#' @param thresh a number from 0 to 1. This will draw a line at this fraction of
-#'   multilocus genotypes.
+#' @param thresh a number from 0 to 1. This will draw a line at that fraction of
+#'   multilocus genotypes, rounded. Defaults to 1, which will draw a line at the
+#'   maximum number of observable genotypes.
+#' 
 #'   
 #' @return (invisibly) a matrix of integers showing the results of each
 #'   randomization. Columns represent the number of loci sampled and rows
@@ -1133,43 +1136,42 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' mongeno <- genotype_curve(monpop)}
 #==============================================================================#
 
-genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
+genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 1){
   datacall <- match.call()
   if (!is.genind(gen)){
     stop(paste(datacall[2], "must be a genind object"))
+  }
+  if (!is.genclone(gen)){
+    gen <- as.genclone(gen)
   }
   genloc   <- pegas::as.loci(gen)
   the_loci <- attr(genloc, "locicol")
   res      <- integer(nrow(genloc))
   suppressWarnings(genloc <- vapply(genloc[the_loci], as.integer, res))
   nloci  <- nLoc(gen)
-#   if (!quiet){
-#     cat("Calculating genotype accumulation for", nloci - 1, "loci...\n")
-#     progbar <- txtProgressBar(style = 3)
-#   } else {
-#     progbar <- NULL
-#   }
-#   out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
   sample <- as.integer(sample)
-  report <- ifelse(quiet, 0, as.integer(sample/10))
+  report <- ifelse(quiet, 0, as.integer(sample/100))
   out    <- .Call("genotype_curve", genloc, sample, report, PACKAGE = "poppr")
   if (!quiet) cat("\n")
   colnames(out) <- seq(nloci-1)
-  threshdf <- data.frame(x = mlg(gen, quiet = TRUE)*thresh)
-  outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
+  suppressWarnings(max_obs  <- nmll(gen, "original"))
+  threshdf <- data.frame(x = round(max_obs*thresh))
+  outmelt  <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
   aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
   outplot <- ggplot(outmelt, aesthetics) + geom_boxplot() + 
              labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
                        y = "Number of multilocus genotypes",
                        x = "Number of loci sampled")) 
   if (!is.null(thresh)){
-    outbreaks <- sort(c(seq(min(out), max(out), length.out = 5), threshdf$x))
+    outbreaks <- sort(c(pretty(0:max_obs), threshdf$x))
+    tjust <- ifelse(thresh > 0.9, 1.5, -1)
     outplot <- outplot + geom_hline(aes_string(yintercept = "x"), 
                                     data = threshdf, color = "red", linetype = 2) + 
-                         annotate("text", x = 1, y = threshdf$x, vjust = -1, 
+                         annotate("text", x = 1, y = threshdf$x, vjust = tjust, 
                                   label = paste0(thresh*100, "%"), 
                                   color = "red", hjust = 0) +
-                         scale_y_continuous(breaks = outbreaks)
+                         scale_y_continuous(breaks = outbreaks, 
+                                            limits = c(0, max_obs))
   }
   print(outplot)
   return(invisible(out))
