@@ -1154,7 +1154,7 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 1){
   suppressWarnings(genloc <- vapply(genloc[the_loci], as.integer, res))
   nloci  <- nLoc(gen)
   sample <- as.integer(sample)
-  report <- ifelse(quiet, 0, as.integer(sample/100))
+  report <- ifelse(quiet, 0L, as.integer(sample/100))
   out    <- .Call("genotype_curve", genloc, sample, report, PACKAGE = "poppr")
   if (!quiet) cat("\n")
   colnames(out) <- seq(nloci-1)
