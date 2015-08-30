@@ -41,6 +41,9 @@
 
 int mlg_round_robin_cmpr (const void *a, const void *b);
 SEXP mlg_round_robin(SEXP mat);
+SEXP genotype_curve(SEXP mat, SEXP iter);
+SEXP SWR(SEXP populationSize, SEXP sampleSize);
+void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples);
 int NLOCI = 0;
 
 
@@ -198,5 +201,140 @@ SEXP mlg_round_robin(SEXP mat)
   
   UNPROTECT(1);
   return(Rout);
-  
 }
+
+SEXP genotype_curve(SEXP mat, SEXP iter)
+{
+  SEXP Rout;
+  SEXP Rdim;
+  int rows;
+  int cols;
+  int iteration = 0;
+  int nloci = 1;
+  int i;
+  int j;
+  int is_missing;
+  int new_genotype;
+  int mask_col;
+  int mask_position;
+  int nmlg;
+  int* genotype_matrix;
+  int* sampled_loci;
+  int selected_locus;
+  struct mask* mask_matrix;
+  
+  Rdim = getAttrib(mat, R_DimSymbol);
+  rows = INTEGER(Rdim)[0];
+  cols = INTEGER(Rdim)[1];
+  PROTECT(Rout = allocMatrix(INTSXP, INTEGER(iter)[0], cols - 1));
+  
+
+  genotype_matrix = INTEGER(mat);
+  sampled_loci = R_Calloc(cols - 1, int);
+  mask_matrix = R_Calloc(rows, struct mask);
+  for (i = 0; i < rows; i++)
+  {
+    mask_matrix[i].ind = R_Calloc(cols, int);
+    mask_matrix[i].i = i;
+  }
+  
+  while (nloci < cols)
+  {
+    NLOCI = nloci*sizeof(int);
+    while (iteration < INTEGER(iter)[0])
+    {
+      SampleWithoutReplacement(cols, nloci, sampled_loci);
+      qsort(mask_matrix, rows, sizeof(struct mask), mlg_round_robin_cmpr);
+  
+      for (i = 0; i < rows; i++)
+      {
+        if (i != 0)
+        {
+          if (memcmp(mask_matrix[i].ind, mask_matrix[i - 1].ind, NLOCI) != 0)
+          {
+            nmlg++;
+          }
+          for (j = 0; j < nloci; j++)
+          {
+            mask_position = mask_matrix[i - 1].i;
+            selected_locus = sampled_loci[j]*rows;
+            is_missing = genotype_matrix[mask_position + selected_locus] == NA_INTEGER;
+            new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + selected_locus];
+            mask_matrix[i - 1].ind[j] = new_genotype;
+          }
+        }
+        else
+        {
+          nmlg = 1;
+        }
+        if (i == (rows - 1))
+        {
+          for (j = 0; j < nloci; j++)
+          {
+            mask_position = mask_matrix[i].i;
+            selected_locus = sampled_loci[j]*rows;
+            is_missing = genotype_matrix[mask_position + selected_locus] == NA_INTEGER;
+            new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + selected_locus];
+            mask_matrix[i].ind[j] = new_genotype;
+          }
+        }
+      }
+      INTEGER(Rout)[iteration + (nloci - 1)*INTEGER(iter)[0]] = nmlg;
+      nmlg = 0;
+      iteration++;
+    }
+    iteration = 0;
+    nloci++;
+  }
+  
+  for (i = 0; i < rows; i++)
+  {
+    R_Free(mask_matrix[i].ind);
+  }
+  R_Free(mask_matrix);
+  
+  UNPROTECT(1);
+  return(Rout);
+}
+
+SEXP SWR(SEXP populationSize, SEXP sampleSize)
+{
+  SEXP samples;
+  int* sampoint;
+  PROTECT(samples = allocVector(INTSXP, INTEGER(sampleSize)[0]));
+  sampoint = INTEGER(samples);
+  SampleWithoutReplacement(*INTEGER(populationSize), *INTEGER(sampleSize), sampoint);
+  UNPROTECT(1);
+  return samples;
+}
+
+// Adapted from http://stackoverflow.com/a/311716/2752888
+// Algorithm 3.4.2S by Donald Knuth
+void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples)
+{
+    
+    // Use Knuth's variable names
+    int n = sampleSize;
+    int N = populationSize;
+    int t = 0; // total input records dealt with
+    int m = 0; // number of items selected so far
+    double u;
+    
+    GetRNGstate();
+    while (m < n)
+    {
+        u = unif_rand(); // call a uniform(0,1) random number generator
+
+        if ( (N - t)*u >= n - m )
+        {
+            t++;
+        }
+        else
+        {
+            samples[m] = t;
+            t++; m++;
+        }
+    }
+    PutRNGstate();
+}
+

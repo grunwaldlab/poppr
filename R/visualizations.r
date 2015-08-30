@@ -1138,18 +1138,19 @@ genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
   if (!is.genind(gen)){
     stop(paste(datacall[2], "must be a genind object"))
   }
-  genloc <- as.loci(gen)
-  if (!is.null(pop(gen))){
-    genloc <- genloc[-1]
-  }
+  genloc   <- pegas::as.loci(gen)
+  the_loci <- attr(genloc, "locicol")
+  res      <- integer(nrow(genloc))
+  suppressWarnings(genloc <- vapply(genloc[the_loci], as.integer, res))
   nloci  <- nLoc(gen)
-  if (!quiet){
-    cat("Calculating genotype accumulation for", nloci - 1, "loci...\n")
-    progbar <- txtProgressBar(style = 3)
-  } else {
-    progbar <- NULL
-  }
-  out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
+#   if (!quiet){
+#     cat("Calculating genotype accumulation for", nloci - 1, "loci...\n")
+#     progbar <- txtProgressBar(style = 3)
+#   } else {
+#     progbar <- NULL
+#   }
+  # out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
+  out <- .Call("genotype_curve", genloc, as.integer(sample), PACKAGE = "poppr")
   colnames(out) <- 1:(nloci-1)
   threshdf <- data.frame(x = mlg(gen, quiet = TRUE)*thresh)
   outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
