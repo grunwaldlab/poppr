@@ -41,7 +41,7 @@
 
 int mlg_round_robin_cmpr (const void *a, const void *b);
 SEXP mlg_round_robin(SEXP mat);
-SEXP genotype_curve(SEXP mat, SEXP iter);
+SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report);
 SEXP SWR(SEXP populationSize, SEXP sampleSize);
 void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples);
 int NLOCI = 0;
@@ -203,7 +203,7 @@ SEXP mlg_round_robin(SEXP mat)
   return(Rout);
 }
 
-SEXP genotype_curve(SEXP mat, SEXP iter)
+SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
 {
   SEXP Rout;
   SEXP Rdim;
@@ -213,6 +213,7 @@ SEXP genotype_curve(SEXP mat, SEXP iter)
   int nloci = 1;
   int i;
   int j;
+  int REPORT;
   int is_missing;
   int new_genotype;
   int mask_col;
@@ -226,9 +227,9 @@ SEXP genotype_curve(SEXP mat, SEXP iter)
   Rdim = getAttrib(mat, R_DimSymbol);
   rows = INTEGER(Rdim)[0];
   cols = INTEGER(Rdim)[1];
+  REPORT = asLogical(report);
   PROTECT(Rout = allocMatrix(INTSXP, INTEGER(iter)[0], cols - 1));
   
-
   genotype_matrix = INTEGER(mat);
   sampled_loci = R_Calloc(cols - 1, int);
   mask_matrix = R_Calloc(rows, struct mask);
@@ -243,9 +244,12 @@ SEXP genotype_curve(SEXP mat, SEXP iter)
     NLOCI = nloci*sizeof(int);
     while (iteration < INTEGER(iter)[0])
     {
+      if (REPORT > 0 && (iteration + 1) % REPORT == 0)
+      {
+        Rprintf("\rCalculating genotypes for %d out of %d loci. Iteration: %d", nloci, cols, iteration + 1);
+      }
       SampleWithoutReplacement(cols, nloci, sampled_loci);
       qsort(mask_matrix, rows, sizeof(struct mask), mlg_round_robin_cmpr);
-  
       for (i = 0; i < rows; i++)
       {
         if (i != 0)
