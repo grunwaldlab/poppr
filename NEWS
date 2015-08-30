@@ -9,6 +9,7 @@ NEW FEATURES
 * `plot_poppr_msn` returns the modified graph.
 * All functions related to Bruvo's distance can now take a named vector of repeat lengths in any order. See issue #61 (https://github.com/grunwaldlab/poppr/issues/61) for details.
 * `aboot` gains the argument strata so that you can automatically convert genind to genpop.
+* `genotype_curve` can now take in loci objects from pegas.
 
 NEW FUNCTIONS
 * `rrmlg` will calculate round-robin multilocus genotypes for each locus.
@@ -20,6 +21,7 @@ MISC
 * Documentation for genclone and snpclone classes are more coherent.
 * Accessors added for internal MLG objects (for developers).
 * The genotype accumulation curve displays the iteration and locus number instead of a progress bar.
+* The genotype accumulation plot is now scaled from 0 to the number of observed mlgs.
 
 BUG FIX
 * Single locus data sets can now be read in with `read.genalex`. This was brought up in issue [#58](https://github.com/grunwaldlab/poppr/issues/58) (Thanks to Nick Wong for spotting it).

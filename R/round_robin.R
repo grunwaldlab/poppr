@@ -126,7 +126,7 @@ rrmlg <- function(gid){
 #' lapply(PccLoc, colMeans, na.rm = TRUE)
 #' 
 #' # Get vector output.
-#' rraf(Pram, type = "vector")
+#' rraf(Pram, res = "vector")
 #' 
 #' # Get frequencies per population (matrix only)
 #' rraf(Pram, by_pop = TRUE, correction = FALSE)
