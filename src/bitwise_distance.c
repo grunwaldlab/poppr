@@ -1020,6 +1020,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   }
 
   // Get the distance matrix from bitwise_distance
+  PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
   R_dists = bitwise_distance_haploid(genlight, missing, requested_threads);
 
   // Calculate the sum and squared sum of distances between samples
@@ -1086,7 +1087,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   R_Free(vars);
   R_Free(M);
   R_Free(M2);
-  UNPROTECT(5); 
+  UNPROTECT(6); 
   return R_out;
 
 }
@@ -1417,6 +1418,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   }
 
   // Get the distance matrix from bitwise_distance
+  PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
   R_dists = bitwise_distance_diploid(genlight, missing, differences_only, requested_threads);
 
   // Calculate the sum and squared sum of distances between samples
@@ -1480,7 +1482,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   R_Free(vars);
   R_Free(M);
   R_Free(M2);
-  UNPROTECT(5); 
+  UNPROTECT(6); 
   return R_out;
 
 }
