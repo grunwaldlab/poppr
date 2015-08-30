@@ -1135,16 +1135,20 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' data(monpop)
 #' mongeno <- genotype_curve(monpop)}
 #==============================================================================#
-
+#' @importFrom pegas loci2genind
 genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 1){
   datacall <- match.call()
-  if (!is.genind(gen)){
-    stop(paste(datacall[2], "must be a genind object"))
+  if (!class(gen)[1] %in% c("genind", "genclone", "loci")){
+    stop(paste(datacall[2], "must be a genind or loci object"))
   }
-  if (!is.genclone(gen)){
-    gen <- as.genclone(gen)
+  if (class(gen)[1] %in% "loci"){
+    genloc <- gen
+    gen    <- pegas::loci2genind(gen)
+  } else {
+    genloc   <- pegas::as.loci(gen)    
   }
-  genloc   <- pegas::as.loci(gen)
+  if (!is.genclone(gen)) gen <- as.genclone(gen)
+  
   the_loci <- attr(genloc, "locicol")
   res      <- integer(nrow(genloc))
   suppressWarnings(genloc <- vapply(genloc[the_loci], as.integer, res))
