@@ -34,7 +34,9 @@ A vector containing Pgen values per locus for each genotype in the
 Genotype Probability
 }
 \note{
-For haploids, Pgen at a particular locus is the allele frequency.
+For haploids, Pgen at a particular locus is the allele frequency. This
+  function cannot handle polyploids. Additionally, when the argument
+  \code{pop} is not \code{NULL}, \code{by_pop} is automatically \code{TRUE}.
 }
 \examples{
 data(Pram)

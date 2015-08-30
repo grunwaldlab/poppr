@@ -31,6 +31,8 @@ Probability of encountering a genotype more than once by chance
 }
 \note{
 The values of Psex represent the value for each multilocus genotype.
+  Additionally, when the argument \code{pop} is not \code{NULL},
+  \code{by_pop} is automatically \code{TRUE}.
 }
 \examples{
 data(Pram)

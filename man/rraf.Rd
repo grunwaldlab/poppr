@@ -31,7 +31,8 @@ round-robin allele frequencies used for pgen and psex.
 }
 \note{
 When \code{by_pop = TRUE}, the output will be a matrix of allele
-  frequencies.
+  frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
+  \code{by_pop} is automatically \code{TRUE}.
 }
 \examples{
 data(Pram)

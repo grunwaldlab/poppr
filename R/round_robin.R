@@ -101,7 +101,8 @@ rrmlg <- function(gid){
 #'   
 #' @return a vector or list of allele frequencies
 #' @note When \code{by_pop = TRUE}, the output will be a matrix of allele 
-#'   frequencies.
+#'   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
+#'   \code{by_pop} is automatically \code{TRUE}.
 #' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
 #' @export
@@ -147,6 +148,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
     } else {
       setPop(gid) <- pop
     }
+    by_pop <- TRUE
   }
   loclist <- seploc(gid)
   mlgs    <- rrmlg(gid)
@@ -189,7 +191,9 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'   \code{NULL}, indicating that the frequencies will be determined via
 #'   round-robin approach.
 #'   
-#' @note For haploids, Pgen at a particular locus is the allele frequency.
+#' @note For haploids, Pgen at a particular locus is the allele frequency. This
+#'   function cannot handle polyploids. Additionally, when the argument
+#'   \code{pop} is not \code{NULL}, \code{by_pop} is automatically \code{TRUE}.
 #'
 #' @return A vector containing Pgen values per locus for each genotype in the 
 #'   object.
@@ -218,6 +222,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
     } else {
       setPop(gid) <- pop
     }
+    by_pop <- TRUE
   }
   # Ensure there is a population assignment for every genotype
   if (is.null(pop(gid)) || !by_pop){
@@ -256,6 +261,8 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #'   will be the number of original multilocus genotypes.
 #' @return a vector of Psex for each sample.
 #' @note The values of Psex represent the value for each multilocus genotype.
+#'   Additionally, when the argument \code{pop} is not \code{NULL}, 
+#'   \code{by_pop} is automatically \code{TRUE}.
 #' 
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy Hadfield
 #' @seealso \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}}
@@ -297,13 +304,14 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' }
 #==============================================================================#
 psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL){
-  stopifnot(is.genind(x))
+  stopifnot(is.genind(gid))
   if (!is.null(pop)){
     if (!is.language(pop)){
       pop(gid) <- pop
     } else {
       setPop(gid) <- pop
     }
+    by_pop <- TRUE
   }
   xpgen   <- pgen(gid, by_pop = by_pop, freq = freq)
   G       <- ifelse(is.null(G), mlg(gid, quiet = TRUE), G)
