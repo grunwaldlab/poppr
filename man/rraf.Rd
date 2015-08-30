@@ -4,10 +4,14 @@
 \alias{rraf}
 \title{Round Robin Allele Frequencies}
 \usage{
-rraf(gid, res = "list", by_pop = FALSE, correction = TRUE)
+rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE)
 }
 \arguments{
 \item{gid}{a genind or genclone object}
+
+\item{pop}{either a formula to set the population factor from the
+\code{\link{strata}} slot or a vector specifying the population factor for
+each sample. Defaults to NULL.}
 
 \item{res}{Either "list" (default), "vector", or "data.frame".}
 

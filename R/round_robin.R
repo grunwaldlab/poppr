@@ -90,6 +90,9 @@ rrmlg <- function(gid){
 #' round-robin allele frequencies used for pgen and psex.
 #' 
 #' @param gid a genind or genclone object
+#' @param pop either a formula to set the population factor from the
+#'   \code{\link{strata}} slot or a vector specifying the population factor for
+#'   each sample. Defaults to NULL. 
 #' @param res Either "list" (default), "vector", or "data.frame".
 #' @param by_pop When this is \code{TRUE}, the calculation will be done by
 #'   population. Defaults to \code{FALSE}
@@ -135,12 +138,16 @@ rrmlg <- function(gid){
 #'   facet_grid(locus ~ ., scale = "free_y", space = "free")
 #' }
 #==============================================================================#
-rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
+rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE){
   RES     <- c("list", "vector", "data.frame")
-  if ("loci" %in% class(gid)){
-    gid <- pegas::loci2genind(gid)
-  }
   res     <- match.arg(res, RES)
+  if (!is.null(pop)){
+    if (!is.language(pop)){
+      pop(gid) <- pop
+    } else {
+      setPop(gid) <- pop
+    }
+  }
   loclist <- seploc(gid)
   mlgs    <- rrmlg(gid)
   if (by_pop & !is.null(pop(gid))){
@@ -170,15 +177,13 @@ rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
 #==============================================================================#
 #' Genotype Probability
 #'
+#' @inheritParams rraf
+#' 
 #' @param x a genind or genclone object. 
 #'
 #' @param log a \code{logical} if \code{log =TRUE} (default), the values
 #'   returned will be log(Pgen). If \code{log = FALSE}, the values returned will
 #'   be Pgen.
-#'
-#' @param by_pop a \code{logical} to determine whether allelic frequencies
-#'   should be calculated per population (\code{TRUE}, default) or across all
-#'   populations in the data (\code{FALSE}).
 #'   
 #' @param freq a vector or matrix of allele frequencies. This defaults to
 #'   \code{NULL}, indicating that the frequencies will be determined via
@@ -203,50 +208,50 @@ rraf <- function(gid, res = "list", by_pop = FALSE, correction = TRUE){
 #' apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 #' }
 #==============================================================================#
-pgen <- function(x, log = TRUE, by_pop = TRUE, freq = NULL){
-  stopifnot(is.genind(x))
+pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
+  stopifnot(is.genind(gid))
   # Stop if the ploidy of the object is not diploid
-  stopifnot(all(ploidy(x) %in% 1:2)) 
-
+  stopifnot(all(ploidy(gid) %in% 1:2)) 
+  if (!is.null(pop)){
+    if (!is.language(pop)){
+      pop(gid) <- pop
+    } else {
+      setPop(gid) <- pop
+    }
+  }
   # Ensure there is a population assignment for every genotype
-  if (is.null(pop(x)) || !by_pop){
-    pop(x) <- rep(1, nInd(x))
+  if (is.null(pop(gid)) || !by_pop){
+    pop(gid) <- rep(1, nInd(gid))
   }   
-  pops  <- pop(x)
+  pops <- pop(gid)
   if (is.null(freq)){
-    freqs <- rraf(x, by_pop = TRUE)
+    freqs <- rraf(gid, by_pop = TRUE)
   } else if (is.matrix(freq)){
-    if (nrow(freq) != nlevels(pops) || ncol(freq) != ncol(tab(x))){
+    if (nrow(freq) != nlevels(pops) || ncol(freq) != ncol(tab(gid))){
       stop("frequency matrix must have the same dimensions as the data.")
     }
     freqs <- freq
-  } else if (is.numeric(freq) && length(freq) == ncol(tab(x))){
+  } else if (is.numeric(freq) && length(freq) == ncol(tab(gid))){
     freqs <- freq
-    pops <- factor(rep(1, nInd(x)))
+    pops <- factor(rep(1, nInd(gid)))
   } else {
     stop("frequencies must be the same length as the number of alleles.")
   }
   
-  pgen_matrix <- .Call("get_pgen_matrix_genind", x, freqs, pops, nlevels(pops), 
+  pgen_matrix <- .Call("get_pgen_matrix_genind", gid, freqs, pops, nlevels(pops), 
                        PACKAGE = "poppr")
   if (!log)
   {
     pgen_matrix <- exp(pgen_matrix)
   }
-  dimnames(pgen_matrix) <- list(indNames(x), locNames(x))
+  dimnames(pgen_matrix) <- list(indNames(gid), locNames(gid))
 
   return(pgen_matrix);
 }
 #==============================================================================#
 #' Probability of encountering a genotype more than once by chance
 #' 
-#' @param x a genind or genclone object.
-#' @param by_pop a \code{logical} to determine whether allelic frequencies
-#'   should be calculated per population (\code{TRUE}, default) or across all
-#'   populations in the data (\code{FALSE}).
-#' @param freq a vector or matrix of allele frequencies. This defaults to
-#'   \code{NULL}, indicating that the frequencies will be determined via
-#'   round-robin approach.
+#' @inheritParams pgen
 #' @param G an integer specifying the number of observed genets. If NULL, this
 #'   will be the number of original multilocus genotypes.
 #' @return a vector of Psex for each sample.
@@ -291,9 +296,17 @@ pgen <- function(x, log = TRUE, by_pop = TRUE, freq = NULL){
 #' res
 #' }
 #==============================================================================#
-psex <- function(x, by_pop = TRUE, freq = NULL, G = NULL){
-  xpgen   <- pgen(x, by_pop = by_pop, freq = freq)
-  G       <- ifelse(is.null(G), mlg(x, quiet = TRUE), G)
+psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL){
+  stopifnot(is.genind(x))
+  if (!is.null(pop)){
+    if (!is.language(pop)){
+      pop(gid) <- pop
+    } else {
+      setPop(gid) <- pop
+    }
+  }
+  xpgen   <- pgen(gid, by_pop = by_pop, freq = freq)
+  G       <- ifelse(is.null(G), mlg(gid, quiet = TRUE), G)
   xpgen   <- exp(rowSums(xpgen, na.rm = TRUE))
   pNotGen <- (1 - xpgen)^G
   return(1 - pNotGen)

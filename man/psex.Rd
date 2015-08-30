@@ -4,18 +4,21 @@
 \alias{psex}
 \title{Probability of encountering a genotype more than once by chance}
 \usage{
-psex(x, by_pop = TRUE, freq = NULL, G = NULL)
+psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL)
 }
 \arguments{
-\item{x}{a genind or genclone object.}
+\item{gid}{a genind or genclone object}
 
-\item{by_pop}{a \code{logical} to determine whether allelic frequencies
-should be calculated per population (\code{TRUE}, default) or across all
-populations in the data (\code{FALSE}).}
+\item{pop}{either a formula to set the population factor from the
+\code{\link{strata}} slot or a vector specifying the population factor for
+each sample. Defaults to NULL.}
+
+\item{by_pop}{When this is \code{TRUE}, the calculation will be done by
+population. Defaults to \code{FALSE}}
 
 \item{freq}{a vector or matrix of allele frequencies. This defaults to
-\code{NULL}, indicating that the frequencies will be determined via
-round-robin approach.}
+  \code{NULL}, indicating that the frequencies will be determined via
+  round-robin approach.}
 
 \item{G}{an integer specifying the number of observed genets. If NULL, this
 will be the number of original multilocus genotypes.}
