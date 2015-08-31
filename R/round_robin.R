@@ -202,7 +202,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'
 #' @inheritParams rraf
 #' 
-#' @param x a genind or genclone object. 
+#' @param gid a genind or genclone object. 
 #'
 #' @param log a \code{logical} if \code{log =TRUE} (default), the values
 #'   returned will be log(Pgen). If \code{log = FALSE}, the values returned will

@@ -7,7 +7,7 @@
 psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL)
 }
 \arguments{
-\item{gid}{a genind or genclone object}
+\item{gid}{a genind or genclone object.}
 
 \item{pop}{either a formula to set the population factor from the
 \code{\link{strata}} slot or a vector specifying the population factor for

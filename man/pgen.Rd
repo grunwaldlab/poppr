@@ -7,7 +7,7 @@
 pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL)
 }
 \arguments{
-\item{gid}{a genind or genclone object}
+\item{gid}{a genind or genclone object.}
 
 \item{pop}{either a formula to set the population factor from the
 \code{\link{strata}} slot or a vector specifying the population factor for
@@ -23,8 +23,6 @@ population. Defaults to \code{FALSE}}
 \item{freq}{a vector or matrix of allele frequencies. This defaults to
   \code{NULL}, indicating that the frequencies will be determined via
   round-robin approach.}
-
-\item{x}{a genind or genclone object.}
 }
 \value{
 A vector containing Pgen values per locus for each genotype in the
