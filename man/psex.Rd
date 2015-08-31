@@ -29,6 +29,18 @@ a vector of Psex for each sample.
 \description{
 Probability of encountering a genotype more than once by chance
 }
+\details{
+Psex is the probability of encountering a given genotype more than
+  once by chance. The basic equation is \deqn{p_{sex} = 1 - (1 -
+  p_{gen})^{G})}{psex = 1 - (1 - pgen)^G} where \emph{G} is the number of
+  multilocus genotypes. See \code{\link{pgen}} for its calculation. For a
+  given value of alpha (e.g. alpha = 0.05), genotypes with psex < alpha can
+  be thought of as a single genet whereas genotypes with psex > alpha do not
+  have strong evidence that members belong to the same genet (Parks and
+  Werth, 1993). The function will automatically calculate the round-robin
+  allele frequencies with \code{\link{rraf}} and \emph{G} with
+  \code{\link{nmll}}.
+}
 \note{
 The values of Psex represent the value for each multilocus genotype.
   Additionally, when the argument \code{pop} is not \code{NULL},
@@ -47,30 +59,56 @@ abline(h = 0.05, lty = 2)
 
 ## An example of supplying previously calculated frequencies and G
 # From Parks and Werth, 1993, using the first three genotypes.
+
+# The row names indicate the number of samples found with that genotype
 x <- "
  Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
 54 12 12 12 23 22 11
 36 22 22 11 22 33 11
 10 23 22 11 33 13 13"
 
-xtab <- read.table(text = x, header = TRUE, row.names = 1)
-xgid <- df2genind(xtab[rep(rownames(xtab), as.integer(rownames(xtab))), ], ncode = 1)
+# Since we aren't representing the whole data set here, we are defining the
+# allele frequencies before the analysis.
 afreq <- c(Hk.1 = 0.167, Hk.2 = 0.795, Hk.3 = 0.038,
            Lap.1 = 0.190, Lap.2 = 0.798, Lap.3 = 0.012,
            Mdh2.0 = 0.011, Mdh2.1 = 0.967, Mdh2.2 = 0.022,
            Pgm1.2 = 0.279, Pgm1.3 = 0.529, Pgm1.4 = 0.162, Pgm1.5 = 0.029,
            Pgm2.1 = 0.128, Pgm2.2 = 0.385, Pgm2.3 = 0.487,
            X6Pgd2.1 = 0.526, X6Pgd2.2 = 0.051, X6Pgd2.3 = 0.423)
-freqs   <- afreq[colnames(tab(xgid))]
-pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
-pGen    <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = freqs)))
-res     <- matrix(c(unique(pGen), unique(pNotGen)), ncol = 2)
+
+xtab <- read.table(text = x, header = TRUE, row.names = 1)
+
+# Here we are expanding the number of samples to their observed values.
+# Since we have already defined the allele frequencies, this step is actually
+# not necessary.
+all_samples <- rep(rownames(xtab), as.integer(rownames(xtab)))
+xgid        <- df2genind(xtab[all_samples, ], ncode = 1)
+
+freqs <- afreq[colnames(tab(xgid))] # only used alleles in the sample
+pSex  <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
+
+# Note, pgen returns log values for each locus, here we take the sum across
+# all loci and take the exponent to give us the value of pgen for each sample
+pGen <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = freqs)))
+
+res  <- matrix(c(unique(pGen), unique(pSex)), ncol = 2)
 colnames(res) <- c("Pgen", "Psex")
-res
+res <- cbind(xtab, nRamet = rownames(xtab), round(res, 5))
+rownames(res) <- 1:3
+res # Compare to the first three rows of Table 2 in Parks & Werth, 1993
 }
 }
 \author{
 Zhian N. Kamvar, Jonah Brooks, Stacy Hadfield
+}
+\references{
+Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+Standardizing methods to address clonality in population studies.
+\emph{Molecular Ecology}, 16(24), 5115-5139.
+
+Parks, J. C., & Werth, C. R. 1993. A study of spatial features of clones in a
+population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
+\emph{American Journal of Botany}, 537-544.
 }
 \seealso{
 \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}}

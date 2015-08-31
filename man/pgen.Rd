@@ -33,6 +33,21 @@ A vector containing Pgen values per locus for each genotype in the
 \description{
 Genotype Probability
 }
+\details{
+Pgen is the probability of a given genotype occuring in a population
+  assuming HWE. Thus, the value for diploids is \deqn{P_{gen} =
+  \(\prod_{i=1}^m p_i\)2^h}{pgen = prod(p_i)*(2^h)} where \eqn{p_i}{p_i} are
+  the allele frequencies and \emph{h} is the count of the number of
+  heterozygous sites in the sample (Arnaud-Hanod et al. 2007; Parks and
+  Werth, 1993). The allele frequencies, by default, are calculated using a
+  round-robin approach where allele frequencies at a particular locus are
+  calculated on the clone-censored genotypes without that locus.
+
+  To avoid issues with numerical precision of small numbers, this function
+  calculates pgen per locus by adding up log-transformed values of allele
+  frequencies. These can easily be transformed to return the true value (see
+  examples).
+}
 \note{
 For haploids, Pgen at a particular locus is the allele frequency. This
   function cannot handle polyploids. Additionally, when the argument
@@ -52,6 +67,15 @@ apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 }
 \author{
 Zhian N. Kamvar, Jonah Brooks, Stacy Hadfield
+}
+\references{
+Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+Standardizing methods to address clonality in population studies.
+\emph{Molecular Ecology}, 16(24), 5115-5139.
+
+Parks, J. C., & Werth, C. R. 1993. A study of spatial features of clones in a
+population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
+\emph{American Journal of Botany}, 537-544.
 }
 \seealso{
 \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}

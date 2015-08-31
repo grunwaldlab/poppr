@@ -33,6 +33,15 @@ colSums(!apply(pmlg_rr, 2, duplicated))
 \author{
 Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
 }
+\references{
+Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+Standardizing methods to address clonality in population studies.
+\emph{Molecular Ecology}, 16(24), 5115-5139.
+
+Parks, J. C., & Werth, C. R. 1993. A study of spatial features of clones in a
+population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
+\emph{American Journal of Botany}, 537-544.
+}
 \seealso{
 \code{\link{rraf}}, \code{\link{pgen}}, \code{\link{psex}}
 }
