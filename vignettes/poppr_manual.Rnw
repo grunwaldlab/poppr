@@ -219,6 +219,7 @@ to its definition and description.
 \texttt{cutoff\_predictor} & predict cutoff threshold from mlg.filter.  \\
 \texttt{mll.custom} & Allows for the custom definition of multilocus lineages \\
 \texttt{mll.levels} & Allows the user to change levels of custom MLLs.  \\
+\texttt{mll.reset} & Reset multilocus lineages.  \\
 \texttt{diversity\_stats} & Creates a table of diversity indices for multilocus genotypes.  \\
 %----------------|
 \hline \\[-1.5ex]
@@ -234,6 +235,10 @@ to its definition and description.
 \texttt{private\_alleles} & Tabulates the occurrences of alleles that only occur \\
  & in one population. \\
 \texttt{locus\_table} & Creates a table of summary statistics per locus. \\
+\texttt{rrmlg} & obtain round-robin estimates of multilocus genotypes. \\
+\texttt{rraf} & obtain round-robin estimates of allele frequencies. \\
+\texttt{pgen} & Genotype probability, $p_{gen}$. \\
+\texttt{psex} & Probability of observing a genotype more than once, $p_{sex}$. \\
 %----------------|
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Visualization}}\\
