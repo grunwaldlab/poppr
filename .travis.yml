@@ -16,7 +16,6 @@ r_binary_packages:
   - phangorn
   - ape
   - igraph
-  - methods
   - ade4
   - pegas
   - reshape2
@@ -27,9 +26,7 @@ r_binary_packages:
   - knitr
   - rmarkdown
   - knitcitations
-  - polysat
   - poweRlaw
-  - cowplot
 
 r_github_packages:
   - jimhester/covr
