@@ -59,3 +59,6 @@
   packageStartupMessage(tip)
 }
 
+.onUnload <- function (libpath) {
+  library.dynam.unload("poppr", libpath)
+}
