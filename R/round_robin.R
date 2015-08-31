@@ -60,7 +60,7 @@
 #' @seealso \code{\link{rraf}}, \code{\link{pgen}}, \code{\link{psex}}
 #' @references
 #' 
-#' Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 #' Standardizing methods to address clonality in population studies.
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 
@@ -118,7 +118,7 @@ rrmlg <- function(gid){
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Stacy Krueger-Hadfield, Erik Sotka
 #' @references
 #' 
-#' Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 #' Standardizing methods to address clonality in population studies.
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 
@@ -220,8 +220,11 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'   object.
 #'   
 #' @details Pgen is the probability of a given genotype occuring in a population
-#'   assuming HWE. Thus, the value for diploids is \deqn{P_{gen} =
-#'   \(\prod_{i=1}^m p_i\)2^h}{pgen = prod(p_i)*(2^h)} where \eqn{p_i}{p_i} are
+#'   assuming HWE. Thus, the value for diploids is 
+#'   
+#'   \deqn{P_{gen} = \left(\prod_{i=1}^m p_i\right)2^h}{pgen = prod(p_i)*(2^h)} 
+#'   
+#'   where \eqn{p_i} are
 #'   the allele frequencies and \emph{h} is the count of the number of
 #'   heterozygous sites in the sample (Arnaud-Hanod et al. 2007; Parks and
 #'   Werth, 1993). The allele frequencies, by default, are calculated using a
@@ -237,7 +240,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #' @seealso \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}
 #' @references
 #' 
-#' Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 #' Standardizing methods to address clonality in population studies.
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 
@@ -313,8 +316,11 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
 #' 
 #' @details Psex is the probability of encountering a given genotype more than
-#'   once by chance. The basic equation is \deqn{p_{sex} = 1 - (1 -
-#'   p_{gen})^{G})}{psex = 1 - (1 - pgen)^G} where \emph{G} is the number of
+#'   once by chance. The basic equation is 
+#'   
+#'   \deqn{p_{sex} = 1 - (1 - p_{gen})^{G})}{psex = 1 - (1 - pgen)^G} 
+#'   
+#'   where \emph{G} is the number of
 #'   multilocus genotypes. See \code{\link{pgen}} for its calculation. For a
 #'   given value of alpha (e.g. alpha = 0.05), genotypes with psex < alpha can
 #'   be thought of as a single genet whereas genotypes with psex > alpha do not
@@ -326,7 +332,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' @seealso \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}}
 #' @references
 #' 
-#' Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 #' Standardizing methods to address clonality in population studies.
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 

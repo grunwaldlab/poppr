@@ -31,8 +31,11 @@ Probability of encountering a genotype more than once by chance
 }
 \details{
 Psex is the probability of encountering a given genotype more than
-  once by chance. The basic equation is \deqn{p_{sex} = 1 - (1 -
-  p_{gen})^{G})}{psex = 1 - (1 - pgen)^G} where \emph{G} is the number of
+  once by chance. The basic equation is
+
+  \deqn{p_{sex} = 1 - (1 - p_{gen})^{G})}{psex = 1 - (1 - pgen)^G}
+
+  where \emph{G} is the number of
   multilocus genotypes. See \code{\link{pgen}} for its calculation. For a
   given value of alpha (e.g. alpha = 0.05), genotypes with psex < alpha can
   be thought of as a single genet whereas genotypes with psex > alpha do not
@@ -102,7 +105,7 @@ res # Compare to the first three rows of Table 2 in Parks & Werth, 1993
 Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
 }
 \references{
-Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
 \emph{Molecular Ecology}, 16(24), 5115-5139.
 

@@ -33,8 +33,11 @@ Genotype Probability
 }
 \details{
 Pgen is the probability of a given genotype occuring in a population
-  assuming HWE. Thus, the value for diploids is \deqn{P_{gen} =
-  \(\prod_{i=1}^m p_i\)2^h}{pgen = prod(p_i)*(2^h)} where \eqn{p_i}{p_i} are
+  assuming HWE. Thus, the value for diploids is
+
+  \deqn{P_{gen} = \left(\prod_{i=1}^m p_i\right)2^h}{pgen = prod(p_i)*(2^h)}
+
+  where \eqn{p_i} are
   the allele frequencies and \emph{h} is the count of the number of
   heterozygous sites in the sample (Arnaud-Hanod et al. 2007; Parks and
   Werth, 1993). The allele frequencies, by default, are calculated using a
@@ -67,7 +70,7 @@ apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
 }
 \references{
-Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
 \emph{Molecular Ecology}, 16(24), 5115-5139.
 
