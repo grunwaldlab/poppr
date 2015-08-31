@@ -50,7 +50,7 @@
 #' 
 #' @param gid a genind, genclone, or loci object.
 #' 
-#' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
+#' @author Zhian N. Kamvar, Jonah C. Brooks, Stacy Krueger-Hadfield, Erik Sotka
 #' 
 #' @return a matrix of multilocus genotype assignments by masked locus. There 
 #'   will be n rows and m columns where n = number of samples and m = number of
@@ -115,7 +115,7 @@ rrmlg <- function(gid){
 #'   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
 #'   \code{by_pop} is automatically \code{TRUE}.
 #' 
-#' @author Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
+#' @author Zhian N. Kamvar, Jonah C. Brooks, Stacy Krueger-Hadfield, Erik Sotka
 #' @references
 #' 
 #' Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
@@ -233,7 +233,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'   frequencies. These can easily be transformed to return the true value (see
 #'   examples).
 #'   
-#' @author Zhian N. Kamvar, Jonah Brooks, Stacy Hadfield
+#' @author Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
 #' @seealso \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}
 #' @references
 #' 
@@ -310,7 +310,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #'   Additionally, when the argument \code{pop} is not \code{NULL}, 
 #'   \code{by_pop} is automatically \code{TRUE}.
 #' 
-#' @author Zhian N. Kamvar, Jonah Brooks, Stacy Hadfield
+#' @author Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
 #' 
 #' @details Psex is the probability of encountering a given genotype more than
 #'   once by chance. The basic equation is \deqn{p_{sex} = 1 - (1 -

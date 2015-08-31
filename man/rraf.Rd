@@ -66,7 +66,7 @@ ggplot(Prdf, aes(y = allele, x = frequency)) +
 }
 }
 \author{
-Zhian N. Kamvar, Jonah C. Brooks, Stacey Hadfield
+Zhian N. Kamvar, Jonah C. Brooks, Stacy Krueger-Hadfield, Erik Sotka
 }
 \references{
 Arnaud‐Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
