@@ -139,6 +139,7 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \item \code{\link{cutoff_predictor}} - Predicts cutoff threshold from mlg.filter.
 \item \code{\link{mll.custom}} - Allows for the custom definition of multilocus lineages
 \item \code{\link{mll.levels}} - Allows the user to change levels of custom MLLs.
+\item \code{\link{mll.reset}} - Reset multilocus lineages.
 \item \code{\link{diversity_stats}} - Creates a table of diversity indices for multilocus genotypes.
 }
 }
@@ -154,6 +155,10 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
 \item \code{\link{private_alleles}} - Tabulates the occurrences of alleles that only occur in one population.
 \item \code{\link{locus_table}} - Creates a table of summary statistics per locus.
+\item \code{\link{rrmlg}} - Round-robin multilocus genotype estimates.
+\item \code{\link{rraf}} - Round-robin allele frequency estimates.
+\item \code{\link{pgen}} - Probability of genotypes.
+\item \code{\link{psex}} - Probability of observing a genotype more than once.
 }
 }
 }
@@ -187,7 +192,8 @@ ramorum} (Kamvar et. al., 2015; Goss et. al., 2009)
 }
 }
 \author{
-Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Niklaus J. Grünwald
+Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Stacy
+  Krueger-Hadfield, Erik Sotka, Niklaus J. Grünwald
 
 Maintainer: Zhian N. Kamvar
 }

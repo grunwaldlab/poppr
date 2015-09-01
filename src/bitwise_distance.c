@@ -99,9 +99,9 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
 SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop);
-SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
-void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
-void fill_loci(struct locus *loc, SEXP genlight);
+// SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
+// void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
+// void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
 char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
 int get_zeros(char sim_set);
@@ -1602,13 +1602,17 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
   return R_out;
 }
 
+// Mon Aug 31 18:16:46 2015 ------------------------------
+// pgen for genlight objects is taken away since it doesn't particularly make 
+// sense as the value would crash to zero due to the vast number of loci. 
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates and returns a matrix of Pgen values for the given genlight object.
 
 Input: A genlight object containing samples of diploids.
 Output: A matrix containing the Pgen value of each locus in each genotype in the 
         genlight object.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window)
 {
 
@@ -1669,7 +1673,7 @@ SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window)
 }
 
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Fills an array of doubles with the Pgen value associated with each individual
 found in the genlight object. These values represent the probability of each
 individual having been produced via random mating of the population, as estimated
@@ -1684,7 +1688,7 @@ Input: A pointer to an array of doubles to be filled.
        A genlight object from which the individual genotypes can be obtained.
 Output: None. Fills in the array of doubles with the log of the Pgen value of each 
         individual genotype in the genlight object.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
 {
 
@@ -1820,7 +1824,7 @@ void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
 }
 
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Fills an array of struct locus objects based on allelic frequencies found in
 the provided genlight object.
 
@@ -1830,7 +1834,7 @@ Input: A pointer to an array of locus objects to be filled.
        A genlight object from which the alleles and loci can be gathered.
 Output: None. Fills in the allelic frequencies and other information found in
         each locus struct.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 void fill_loci(struct locus *loc, SEXP genlight)
 { 
   // ~Pseudo code~
@@ -1944,7 +1948,7 @@ void fill_loci(struct locus *loc, SEXP genlight)
 }
 
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the zygosity at each location of a given section. The zygosity struct
 must have c1 and c2 filled before calling this function.
 
