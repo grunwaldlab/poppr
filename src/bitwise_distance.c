@@ -1501,103 +1501,112 @@ Output: A matrix containing the Pgen value of each genotype at each locus.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
 {
-  SEXP R_out;
-  SEXP R_tab_symbol;
-  SEXP R_loc_symbol;
-  SEXP R_pop_symbol;
-  SEXP R_ploidy_symbol;
-  SEXP R_tab;
-  PROTECT(R_tab_symbol = install("tab")); // Used for accessing the named elements of the genind object
+  SEXP R_out;           // The output R object. it's pointer is *pgens
+  SEXP R_tab_symbol;    // Symbol for tab slot
+  SEXP R_loc_symbol;    // Symbol for loc.n.all slot
+  SEXP R_ploidy_symbol; // Symbol for ploidy slot
+  SEXP R_tab;           // R object for the genotypes; pointer is *gt
+  SEXP R_nall;          // R object for number of alleles per locus; pointer is
+                        // *ploidy
+
+  // Syntax for accessing the named elements of the genind object
+  PROTECT(R_tab_symbol = install("tab"));
   PROTECT(R_loc_symbol = install("loc.n.all"));
   PROTECT(R_ploidy_symbol = install("ploidy"));
-  double* pgens;
-  int* indices;
-  int* ploidy;
-  int num_gens;
-  int num_loci;
-  int num_alleles;
-  int num_pops;
-  int index;
-  int missing_last;
-  int pop;
-  int size;
+  
+  // Data in and data out ------------------------------
+  int* ploidy;            // Ploidy per sample
+  int* alleles_per_locus; // self explanitory
+  int* gt;                // genotype matrix
+  double* afreq;          // allele frequency matrix
+  double* pgens;          // output
 
-  R_tab = getAttrib(genind, R_tab_symbol); 
-  num_gens = INTEGER(getAttrib(R_tab, R_DimSymbol))[0];
-  num_alleles = INTEGER(getAttrib(R_tab, R_DimSymbol))[1];
-  num_loci = XLENGTH(getAttrib(genind, R_loc_symbol));
-  num_pops = INTEGER(npop)[0];
+  // Benchmarks ------------------------------
+  int num_gens; // number of genotypes (for *pgen and *gt)
+  int num_loci; // number of loci (for *pgen)
+  int num_pops; // number of pops (for *afreq)
+
+  // Iterators ------------------------------
+  int index;        // iterator to store the number of remaining alleles
+  int pop;          // index for the population for each sample
+  int i;            // sample index
+  int j;            // locus index
+  int k;            // allele index
+  int alleles_seen; // number of non-zero alleles seen at a locus
+  
+  // Misc ------------------------------
+  double h; // heterozygosity multiplier. 0 if haploid, log 2 if diploid.
+  
   ploidy = INTEGER(getAttrib(genind, R_ploidy_symbol));
-  missing_last = 0;
-  size = num_gens*num_loci;
-  indices = R_Calloc(size*2, int);
+  R_nall = getAttrib(genind, R_loc_symbol);
+  R_tab = getAttrib(genind, R_tab_symbol); 
+  gt = INTEGER(R_tab);
+  afreq = REAL(freqs);
+  num_gens = INTEGER(getAttrib(R_tab, R_DimSymbol))[0];
+  num_loci = XLENGTH(R_nall);
+  alleles_per_locus = INTEGER(R_nall);
+  num_pops = INTEGER(npop)[0];
   PROTECT(R_out = allocMatrix(REALSXP, num_gens, num_loci));
   pgens = REAL(R_out);
 
-  // Fill indices with the indices inside freqs of alleles found in each genotype
-  // Note that R_tab is column-major ordered due to being passed from R
-  for(int i = 0; i < num_gens; i++)
-  {
-    index = 0;
-    for(int j = 0; j < num_alleles; j++)
-    {
-      if(INTEGER(R_tab)[i + j*num_gens] == NA_INTEGER)
-      {
-        // Add missing value sentinels into the index array once for each missing locus
-        if(missing_last == 0)
-        {
-          indices[i*num_loci*2 + index] = -1;;
-          indices[i*num_loci*2 + index+1] = -1;
-          index += 2;
-          missing_last = 1;
-        }
-      }
-      else if(INTEGER(R_tab)[i + j*num_gens] == 2)
-      {
-        indices[i*num_loci*2 + index] = j;
-        indices[i*num_loci*2 + index + 1] = j;
-        index += 2;
-        missing_last = 0;
-      }
-      else if(INTEGER(R_tab)[i+ j*num_gens] == 1)
-      {
-        indices[i*num_loci*2 + index] = j;
-        index += 1;
-        missing_last = 0;
-      }
-    }
-  } 
+  // Tue Sep  1 11:19:55 2015 ------------------------------
+  // I have sped up this function by removing the uncessecary step of looping
+  // through the entire matrix in order to find the indices of the alleles.
 
-  for(int i = 0; i < num_gens; i++)
+  // Loop through all samples
+  for (i = 0; i < num_gens; i++)
   {
+    // Get the index for the allele frequencies
     pop = INTEGER(pops)[i] - 1;
-    index = 0;
-    for(int j = 0; j < num_loci; j++)
+    // h depends on ploidy. 
+    // It doesn't make sense to have a muliplier for haploids.
+    h = (ploidy[i] == 1) ? 0 : log(2);
+    alleles_seen = 0;
+    k = 0;
+    double res; // variable to make things readable
+    for (j = 0; j < num_loci; j++)
     {
-      if(indices[i*num_loci*2 + index] == -1) // And therefore also [~ index+1] == -1
+      // looping over each locus in a sample. Since we don't know where the
+      // alleles are, we set up a while loop to run through the number of 
+      // alleles we find at the locus.
+      index = alleles_per_locus[j];
+      pgens[i + j*num_gens] = 0; // set the value to zero so we can add to it.
+      while(index > 0)
       {
-        // Set the pgen value of this genotype at this locus to missing.
-        pgens[i + j*num_gens] = NA_REAL;
-      }
-      else if (ploidy[i] == 1)
-      {
-        // If the ploidy is 1, the probability of a genotype at that locus 
-        // is the allele frequency
-        pgens[i + j*num_gens] = log(REAL(freqs)[pop + indices[i*num_loci*2 + index]*num_pops]);
-      }
-      else
-      {
-        pgens[i + j*num_gens] = log(REAL(freqs)[pop + indices[i*num_loci*2 + index]*num_pops]) + log(REAL(freqs)[pop + indices[i*num_loci*2 + index+1]*num_pops]);
-        // Account for both permutations of heterozygous loci
-        if (indices[i*num_loci*2 + index] != indices[i*num_loci*2 + index + 1])
+        if (gt[i + k*num_gens] == NA_INTEGER) // missing data
         {
-          pgens[i + j*num_gens] += log(2);
+          pgens[i + j*num_gens] = NA_REAL;
+          goto reset;
         }
+        else if (gt[i + k*num_gens] == 2) // homozygote
+        {
+          res = afreq[pop + k*num_pops];
+          pgens[i + j*num_gens] = log(res) + log(res); // p^2
+          goto reset;
+        }
+        else if (gt[i + k*num_gens] == 1) // heterozygote/haploid
+        {
+          alleles_seen++;
+          res = afreq[pop + k*num_pops]; 
+          // incremental adding is independent of ploidy
+          pgens[i + j*num_gens] += log(res); 
+          if (alleles_seen == ploidy[i]) // Escape is dependent on ploidy
+          {
+            alleles_seen = 0;
+            pgens[i + j*num_gens] += h; // 2pq
+            goto reset;
+          }
+        }
+        // if none of the conditions were met, we go to the next allele.
+        k++;
+        index--;
       }
-      index += 2;
+      // When all of the alleles have been filled, we move onto the next locus
+      // by incrementing k with the number of alleles left in the locus.
+      reset:
+        k += index;
     }
   }
-  R_Free(indices);
   UNPROTECT(4);
   return R_out;
 }
