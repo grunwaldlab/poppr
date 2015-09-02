@@ -110,6 +110,13 @@ test_that("psex produces a vector", {
   expect_equal(length(psexpram), nInd(Pram))
 })
 
+test_that("psex can use the multiple method (not testing for accuracy)", {
+  skip_on_cran()
+  data(Pram)
+  psexpram <- psex(Pram, method = "multiple")
+  expect_is(psexpram, "numeric")
+  expect_equal(length(psexpram), nInd(Pram))
+})
 test_that("psex can take population factors", {
   skip_on_cran()
   data(Pram)

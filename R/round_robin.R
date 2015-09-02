@@ -306,8 +306,13 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' Probability of encountering a genotype more than once by chance
 #' 
 #' @inheritParams pgen
-#' @param G an integer specifying the number of observed genets. If NULL, this
+#' @param G an integer specifying the number of observed genets. If NULL, this 
 #'   will be the number of original multilocus genotypes.
+#' @param method which method of calculating psex should be used? Using
+#'   \code{method = "single"} (default) indicates that the calculation for psex
+#'   should reflect the probability of encountering a second genotype. Using
+#'   \code{method = "multiple"} gives the probability of encountering multiple
+#'   samples of the same genotype (see details).
 #' @return a vector of Psex for each sample.
 #' @note The values of Psex represent the value for each multilocus genotype.
 #'   Additionally, when the argument \code{pop} is not \code{NULL}, 
@@ -325,7 +330,19 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #'   given value of alpha (e.g. alpha = 0.05), genotypes with psex < alpha can
 #'   be thought of as a single genet whereas genotypes with psex > alpha do not
 #'   have strong evidence that members belong to the same genet (Parks and
-#'   Werth, 1993). The function will automatically calculate the round-robin
+#'   Werth, 1993). 
+#'   
+#'   When \code{method = "multiple"}, the method from Arnaud-Honod (1997) is
+#'   used where the sum of the binomial density is taken:
+#'   
+#'   \deqn{p_{sex} = \sum_{i = 1}^n
+#'   \frac{N!}{i!(N-1)!}\left(p_{gen}\right)^i\left(1 - p_{gen}\right)^i}{psex =
+#'   sum(dbinom(1:N, N, pgen))}
+#'   
+#'   where \emph{N} is the number of samples with the same genotype, \emph{i} is
+#'   the ith sample, and \emph{pgen} is the value of pgen for that genotype.
+#'   
+#'   The function will automatically calculate the round-robin
 #'   allele frequencies with \code{\link{rraf}} and \emph{G} with
 #'   \code{\link{nmll}}.
 #' 
@@ -348,6 +365,12 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
 #' \dontrun{
+#' 
+#' # With multiple encounters
+#' Pram_psex <- psex(Pram, by_pop = FALSE, method = "multiple")
+#' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+#' abline(h = 0.05, lty = 2)
+#' 
 #' # This can be also done assuming populations structure
 #' Pram_psex <- psex(Pram, by_pop = TRUE)
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
@@ -394,7 +417,8 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' res # Compare to the first three rows of Table 2 in Parks & Werth, 1993
 #' }
 #==============================================================================#
-psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL){
+psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL, 
+                 method = c("single", "multiple")){
   stopifnot(is.genind(gid))
   if (!is.null(pop)){
     if (!is.language(pop)){
@@ -404,9 +428,28 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL){
     }
     by_pop <- TRUE
   }
-  xpgen   <- pgen(gid, by_pop = by_pop, freq = freq)
-  G       <- ifelse(is.null(G), mlg(gid, quiet = TRUE), G)
-  xpgen   <- exp(rowSums(xpgen, na.rm = TRUE))
-  pNotGen <- (1 - xpgen)^G
-  return(1 - pNotGen)
+  if (!is.genclone(gid)){
+    gid <- as.genclone(gid)
+  }
+  mll(gid) <- "original"
+  METHOD <- c("single", "multiple")
+  method <- match.arg(method, METHOD)
+  xpgen  <- pgen(gid, by_pop = by_pop, freq = freq)
+  xpgen  <- exp(rowSums(xpgen, na.rm = TRUE))
+  if (method == "single"){
+    G       <- ifelse(is.null(G), nmll(gid), G)
+    pNotGen <- (1 - xpgen)^G
+    return(1 - pNotGen)
+  } else {
+    mlls       <- mll(gid, "original")
+    mll_counts <- table(mlls)
+    mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
+    pSex <- vapply(seq(nInd(gid)), function(i){
+      trials <- seq(mll_counts[i])
+      pgeni  <- xpgen[i]
+      dens   <- dbinom(trials, mll_counts[i], pgeni)
+      sum(dens, na.rm = TRUE)
+    }, numeric(1))
+    return(pSex)
+  }
 }

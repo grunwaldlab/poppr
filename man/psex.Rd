@@ -4,7 +4,8 @@
 \alias{psex}
 \title{Probability of encountering a genotype more than once by chance}
 \usage{
-psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL)
+psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
+  method = c("single", "multiple"))
 }
 \arguments{
 \item{gid}{a genind or genclone object.}
@@ -22,6 +23,12 @@ population. Defaults to \code{FALSE}}
 
 \item{G}{an integer specifying the number of observed genets. If NULL, this
 will be the number of original multilocus genotypes.}
+
+\item{method}{which method of calculating psex should be used? Using
+\code{method = "single"} (default) indicates that the calculation for psex
+should reflect the probability of encountering a second genotype. Using
+\code{method = "multiple"} gives the probability of encountering multiple
+samples of the same genotype (see details).}
 }
 \value{
 a vector of Psex for each sample.
@@ -40,7 +47,19 @@ Psex is the probability of encountering a given genotype more than
   given value of alpha (e.g. alpha = 0.05), genotypes with psex < alpha can
   be thought of as a single genet whereas genotypes with psex > alpha do not
   have strong evidence that members belong to the same genet (Parks and
-  Werth, 1993). The function will automatically calculate the round-robin
+  Werth, 1993).
+
+  When \code{method = "multiple"}, the method from Arnaud-Honod (1997) is
+  used where the sum of the binomial density is taken:
+
+  \deqn{p_{sex} = \sum_{i = 1}^n
+  \frac{N!}{i!(N-1)!}\left(p_{gen}\right)^i\left(1 - p_{gen}\right)^i}{psex =
+  sum(dbinom(1:N, N, pgen))}
+
+  where \emph{N} is the number of samples with the same genotype, \emph{i} is
+  the ith sample, and \emph{pgen} is the value of pgen for that genotype.
+
+  The function will automatically calculate the round-robin
   allele frequencies with \code{\link{rraf}} and \emph{G} with
   \code{\link{nmll}}.
 }
@@ -55,6 +74,12 @@ Pram_psex <- psex(Pram, by_pop = FALSE)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
 \dontrun{
+
+# With multiple encounters
+Pram_psex <- psex(Pram, by_pop = FALSE, method = "multiple")
+plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+abline(h = 0.05, lty = 2)
+
 # This can be also done assuming populations structure
 Pram_psex <- psex(Pram, by_pop = TRUE)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
