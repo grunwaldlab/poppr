@@ -308,53 +308,51 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' @inheritParams pgen
 #' @param G an integer specifying the number of observed genets. If NULL, this 
 #'   will be the number of original multilocus genotypes.
-#' @param method which method of calculating psex should be used? Using
-#'   \code{method = "single"} (default) indicates that the calculation for psex
-#'   should reflect the probability of encountering a second genotype. Using
-#'   \code{method = "multiple"} gives the probability of encountering multiple
+#' @param method which method of calculating psex should be used? Using 
+#'   \code{method = "single"} (default) indicates that the calculation for psex 
+#'   should reflect the probability of encountering a second genotype. Using 
+#'   \code{method = "multiple"} gives the probability of encountering multiple 
 #'   samples of the same genotype (see details).
 #' @return a vector of Psex for each sample.
-#' @note The values of Psex represent the value for each multilocus genotype.
+#' @note The values of Psex represent the value for each multilocus genotype. 
 #'   Additionally, when the argument \code{pop} is not \code{NULL}, 
 #'   \code{by_pop} is automatically \code{TRUE}.
-#' 
+#'   
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
-#' 
-#' @details Psex is the probability of encountering a given genotype more than
-#'   once by chance. The basic equation is 
 #'   
-#'   \deqn{p_{sex} = 1 - (1 - p_{gen})^{G})}{psex = 1 - (1 - pgen)^G} 
+#' @details Psex is the probability of encountering a given genotype more than 
+#'   once by chance. The basic equation is
 #'   
-#'   where \emph{G} is the number of
-#'   multilocus genotypes. See \code{\link{pgen}} for its calculation. For a
-#'   given value of alpha (e.g. alpha = 0.05), genotypes with psex < alpha can
-#'   be thought of as a single genet whereas genotypes with psex > alpha do not
-#'   have strong evidence that members belong to the same genet (Parks and
-#'   Werth, 1993). 
+#'   \deqn{p_{sex} = 1 - (1 - p_{gen})^{G})}{psex = 1 - (1 - pgen)^G}
 #'   
-#'   When \code{method = "multiple"}, the method from Arnaud-Honod (1997) is
-#'   used where the sum of the binomial density is taken:
+#'   where \emph{G} is the number of multilocus genotypes. See
+#'   \code{\link{pgen}} for its calculation. For a given value of alpha (e.g.
+#'   alpha = 0.05), genotypes with psex < alpha can be thought of as a single
+#'   genet whereas genotypes with psex > alpha do not have strong evidence that
+#'   members belong to the same genet (Parks and Werth, 1993).
 #'   
-#'   \deqn{p_{sex} = \sum_{i = 1}^n
+#'   When \code{method = "multiple"}, the method from Arnaud-Hanod et al. (1997)
+#'   is used where the sum of the binomial density is taken:
+#'   
+#'   \deqn{p_{sex} = \sum_{i = 1}^n 
 #'   \frac{N!}{i!(N-1)!}\left(p_{gen}\right)^i\left(1 - p_{gen}\right)^i}{psex =
 #'   sum(dbinom(1:N, N, pgen))}
 #'   
 #'   where \emph{N} is the number of samples with the same genotype, \emph{i} is
 #'   the ith sample, and \emph{pgen} is the value of pgen for that genotype.
 #'   
-#'   The function will automatically calculate the round-robin
-#'   allele frequencies with \code{\link{rraf}} and \emph{G} with
-#'   \code{\link{nmll}}.
-#' 
+#'   The function will automatically calculate the round-robin allele
+#'   frequencies with \code{\link{rraf}} and \emph{G} with \code{\link{nmll}}.
+#'   
 #' @seealso \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}}
 #' @references
 #' 
-#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
-#' Standardizing methods to address clonality in population studies.
+#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007. 
+#' Standardizing methods to address clonality in population studies. 
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 
 #' Parks, J. C., & Werth, C. R. 1993. A study of spatial features of clones in a
-#' population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
+#' population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae). 
 #' \emph{American Journal of Botany}, 537-544.
 #' 
 #' @export
@@ -436,19 +434,29 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
   method <- match.arg(method, METHOD)
   xpgen  <- pgen(gid, by_pop = by_pop, freq = freq)
   xpgen  <- exp(rowSums(xpgen, na.rm = TRUE))
+
   if (method == "single"){
+    # Only caculate for single encounter (Parks and Werth, 1993)
     G       <- ifelse(is.null(G), nmll(gid), G)
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)
   } else {
+    # Calculate for n encounters (Arnaud-Hanod et al, 1997)
+
+    # Wed Sep  2 11:20:56 2015 ------------------------------
+    # First step: get a vector of number of samples per mlg. Since pgen might
+    # have been calculated using population-level frequencies, I'm not clone
+    # correcting here, which results in a lot of redundant computations. I will
+    # come up with a more clever way to handle this later.
     mlls       <- mll(gid, "original")
     mll_counts <- table(mlls)
     mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
+    # Loop over each sample
     pSex <- vapply(seq(nInd(gid)), function(i){
-      trials <- seq(mll_counts[i])
-      pgeni  <- xpgen[i]
-      dens   <- dbinom(trials, mll_counts[i], pgeni)
-      sum(dens, na.rm = TRUE)
+      trials <- seq(mll_counts[i]) # number of samples in the MLG
+      pgeni  <- xpgen[i]           # pgen for that MLG
+      dens   <- dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
+      sum(dens, na.rm = TRUE) # return the sum probability.
     }, numeric(1))
     return(pSex)
   }

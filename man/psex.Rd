@@ -42,15 +42,14 @@ Psex is the probability of encountering a given genotype more than
 
   \deqn{p_{sex} = 1 - (1 - p_{gen})^{G})}{psex = 1 - (1 - pgen)^G}
 
-  where \emph{G} is the number of
-  multilocus genotypes. See \code{\link{pgen}} for its calculation. For a
-  given value of alpha (e.g. alpha = 0.05), genotypes with psex < alpha can
-  be thought of as a single genet whereas genotypes with psex > alpha do not
-  have strong evidence that members belong to the same genet (Parks and
-  Werth, 1993).
+  where \emph{G} is the number of multilocus genotypes. See
+  \code{\link{pgen}} for its calculation. For a given value of alpha (e.g.
+  alpha = 0.05), genotypes with psex < alpha can be thought of as a single
+  genet whereas genotypes with psex > alpha do not have strong evidence that
+  members belong to the same genet (Parks and Werth, 1993).
 
-  When \code{method = "multiple"}, the method from Arnaud-Honod (1997) is
-  used where the sum of the binomial density is taken:
+  When \code{method = "multiple"}, the method from Arnaud-Hanod et al. (1997)
+  is used where the sum of the binomial density is taken:
 
   \deqn{p_{sex} = \sum_{i = 1}^n
   \frac{N!}{i!(N-1)!}\left(p_{gen}\right)^i\left(1 - p_{gen}\right)^i}{psex =
@@ -59,9 +58,8 @@ Psex is the probability of encountering a given genotype more than
   where \emph{N} is the number of samples with the same genotype, \emph{i} is
   the ith sample, and \emph{pgen} is the value of pgen for that genotype.
 
-  The function will automatically calculate the round-robin
-  allele frequencies with \code{\link{rraf}} and \emph{G} with
-  \code{\link{nmll}}.
+  The function will automatically calculate the round-robin allele
+  frequencies with \code{\link{rraf}} and \emph{G} with \code{\link{nmll}}.
 }
 \note{
 The values of Psex represent the value for each multilocus genotype.
