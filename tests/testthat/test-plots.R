@@ -76,8 +76,8 @@ test_that("genotype_curve can take less than m-1 loci", {
   skip_on_cran()
   nc  <- genotype_curve(nancycats, maxloci = 2)
   nc1 <- genotype_curve(nancycats, maxloci = 1)
-  expect_equal(ncol(nc), 2L)
-  expect_equal(ncol(nc1), 1L)
+  expect_equal(ncol(nc), 2L, quiet = TRUE)
+  expect_equal(ncol(nc1), 1L, quiet = TRUE)
   expect_error(genotype_curve(nancycats[loc = 1]), "at least two loci")
 })
 

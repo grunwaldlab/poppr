@@ -4,7 +4,7 @@ set.seed(69)
 x <- matrix(sample(LETTERS[1:3], 15, replace = TRUE), nrow = 5, ncol = 3)
 suppressWarnings(x <- df2genind(x, ploidy = 1))
 rrx_m <- rrmlg(x)
-mlg_truth <- structure(c(3L, 2L, 3L, 1L, 1L, 4L, 3L, 4L, 2L, 1L, 2L, 3L, 2L, 
+mlg_truth <- structure(c(3L, 2L, 3L, 1L, 1L, 2L, 4L, 2L, 3L, 1L, 2L, 3L, 2L, 
                          3L, 1L), 
                        .Dim = c(5L, 3L), 
                        .Dimnames = list(NULL, c("L1", "L2", "L3"))
