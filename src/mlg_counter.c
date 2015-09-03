@@ -42,7 +42,7 @@
 int mlg_round_robin_cmpr (const void *a, const void *b);
 void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples);
 SEXP mlg_round_robin(SEXP mat);
-SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report);
+SEXP genotype_curve(SEXP mat, SEXP iter, SEXP maxloci, SEXP report);
 // global variable indicating the size of array to use for comparison in memcmp.
 int NLOCI = 0;
 
@@ -236,13 +236,14 @@ SEXP mlg_round_robin(SEXP mat)
 *       loci. The integers represent different genotypes.
 *   - iter an integer specifying the number of iterations per locus. This will
 *       be the number of rows in the the output matrix.
+*   - maxloci the maximum number of loci to be analyzed.
 *   - report an integer specifying after how many steps you want the function
 *       to report progess.
 * Output:
 *   - A matrix with iter rows and m - 1 columns filled with counts of the number
 *       of multilocus genotypes for j loci. 
 */
-SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
+SEXP genotype_curve(SEXP mat, SEXP iter, SEXP maxloci, SEXP report)
 {
   SEXP Rout;
   SEXP Rdim;
@@ -258,6 +259,7 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
   int mask_col;
   int mask_position;
   int nmlg;
+  int nmax;
   int* genotype_matrix;
   int* sampled_loci;
   int selected_locus;
@@ -266,19 +268,21 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
   Rdim = getAttrib(mat, R_DimSymbol);
   rows = INTEGER(Rdim)[0];
   cols = INTEGER(Rdim)[1];
+  nmax = (INTEGER(maxloci)[0] < cols - 1) ? INTEGER(maxloci)[0] : cols - 1;
   REPORT = INTEGER(report)[0];
-  PROTECT(Rout = allocMatrix(INTSXP, INTEGER(iter)[0], cols - 1));
+  PROTECT(Rout = allocMatrix(INTSXP, INTEGER(iter)[0], nmax));
+  
   
   genotype_matrix = INTEGER(mat);
-  sampled_loci = R_Calloc(cols - 1, int);
+  sampled_loci = R_Calloc(nmax, int);
   mask_matrix = R_Calloc(rows, struct mask);
   for (i = 0; i < rows; i++)
   {
-    mask_matrix[i].ind = R_Calloc(cols, int);
+    mask_matrix[i].ind = R_Calloc(nmax, int);
     mask_matrix[i].i = i;
   }
   // Step 1: Loop over the number of loci
-  while (nloci < cols)
+  while (nloci < nmax + 1)
   {
     // Initialize the global variable to be the number of loci we want to 
     // compare. 
@@ -315,7 +319,7 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP report)
       }
       if (REPORT > 0 && (iteration + 1) % REPORT == 0)
       {
-        Rprintf("\rCalculating genotypes for %2d/%d loci. Completed iterations: %3.0f%%", nloci, cols, (float)((iteration + 1)*100)/(INTEGER(iter)[0]));
+        Rprintf("\rCalculating genotypes for %2d/%d loci. Completed iterations: %3.0f%%", nloci, nmax, (float)((iteration + 1)*100)/(INTEGER(iter)[0]));
       }
       // Here, we sort the mask_matrix and then iterate through, counting up the
       // number of times we see a change in genotype. We also fill the matrix 
