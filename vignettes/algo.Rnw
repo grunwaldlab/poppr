@@ -603,6 +603,49 @@ would observe $2N$ alleles in a diploid locus. The only caveat is that
 populations where allelic dosage is unknown will have an inflated estimate of
 allelic diversity due to the inflation of rare alleles.
 
+\section{Probability of Genotypes: $p_{gen}$}
+
+The metric $p_{gen}$ represents the probability that a given multilocus genotype
+will occur in a population \citep{parks1993study, arnaud2007standardizing}. For 
+$\nu$ loci, it is calculated as:
+
+\begin{equation}
+h = \begin{cases} 1 \text{ if heterozygous},\\ 0 \text{ if homozygous or haploid}  \end{cases}
+\end{equation}
+
+\begin{equation}
+p_{gen} = \prod_{j = 1}^\nu\left(2^{h}\prod_{i = 1}^{m(j)} p_{ij}\right) \\
+\end{equation}
+
+where $p_{ij}$ represents the allele frequency of the $i^{th}$ allele present in
+the sample at the $j^{th}$ locus derived using the round-robin method
+\citep{parks1993study, arnaud2007standardizing}. The round-robin allele
+frequencies for a given locus are derived by first clone-correcting with the
+genotypes found at all other loci \citep{parks1993study,
+arnaud2007standardizing}. Any allele that ends up with a zero frequency are
+assigned a value of $1/N$, where $N$ is the number of samples.
+
+\section{Probability a genotype is derived from sexual reproduction: $p_{sex}$}
+
+The probability of a genotype can provide information as to how many times we
+expect to see that genotype repeated in our population. \citet{parks1993study}
+defined the probability of encountering a genotype a second time from an
+independent reproductive event as:
+
+\begin{equation}
+p_{sex} = 1 - (1 - p_{gen})^G
+\end{equation}
+
+Where $G$ is the number of multilocus genotypes in the data. Finding a genotype
+$N$ times is derived from the binomial distribution \citep{parks1993study,
+arnaud2007standardizing}:
+
+\begin{equation}
+p_{sex} = \sum_{i = 1}^N {N \choose i} \left(p_{gen}\right)^i\left(1 - p_{gen}\right)^{N - i}
+\end{equation}
+
+The \poppr{} function \texttt{psex()} can calculate both of these quantities. 
+
 \bibliographystyle{authordate1}
 \bibliography{the_bibliography}
 \end{document}
