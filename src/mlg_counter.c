@@ -148,10 +148,8 @@ SEXP mlg_round_robin(SEXP mat)
   int cols;
   int i;
   int j;
-  int k;
   int is_missing;
   int new_genotype;
-  int mask_col;
   int mask_position;
   int nmlg;
   int* genotype_matrix;
@@ -170,22 +168,23 @@ SEXP mlg_round_robin(SEXP mat)
   {
     mask_matrix[i].ind = R_Calloc(cols, int);
     mask_matrix[i].i = i;
-    // mask_matrix[i].n = (cols - 1)*sizeof(int);
     // Initializing the pointers.
-    for (j = 0; j < cols - 1; j++)
+    // The mask matrix will start by masking the first column of the genotype.
+    for (j = 1; j < cols; j++)
     {
-      mask_matrix[i].ind[j] = genotype_matrix[i + j*rows];
-      if (j == cols - 2)
+      mask_matrix[i].ind[j - 1] = genotype_matrix[i + j*rows];
+      if (j == cols - 1)
       {
-        mask_matrix[i].ind[cols - 1] = 0;
+        mask_matrix[i].ind[j] = 0;
       }
     }
   }
   
+  // For each iteration, the genotypes will be calculated and then the current
+  // locus in the mask_matrix (which is j + 1) will be replaced with the jth 
+  // locus in the genotype_matrix, effectively masking the j + 1 locus. 
   for (j = 0; j < cols; j++)
   {
-    mask_col = (j == 0) ? cols - 1 : j - 1;
-
     qsort(mask_matrix, rows, sizeof(struct mask), mlg_round_robin_cmpr);
 
     for (i = 0; i < rows; i++)
@@ -197,20 +196,20 @@ SEXP mlg_round_robin(SEXP mat)
           nmlg++;
         }
         mask_position = mask_matrix[i - 1].i;
-        is_missing = genotype_matrix[mask_position + mask_col*rows] == NA_INTEGER;
-        new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + mask_col*rows];
+        is_missing = genotype_matrix[mask_position + j*rows] == NA_INTEGER;
+        new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + j*rows];
         mask_matrix[i - 1].ind[j] = new_genotype;
       }
       else
       {
         nmlg = 1;
       }
-      INTEGER(Rout)[mask_matrix[i].i + mask_col*rows] = nmlg;
+      INTEGER(Rout)[mask_matrix[i].i + j*rows] = nmlg;
       if (i == (rows - 1))
       {
         mask_position = mask_matrix[i].i;
-        is_missing = genotype_matrix[mask_position + mask_col*rows] == NA_INTEGER;
-        new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + mask_col*rows];
+        is_missing = genotype_matrix[mask_position + j*rows] == NA_INTEGER;
+        new_genotype = (is_missing) ? 0 : genotype_matrix[mask_position + j*rows];
         mask_matrix[i].ind[j] = new_genotype;
       }
     }
@@ -256,7 +255,6 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP maxloci, SEXP report)
   int REPORT;
   int is_missing;
   int new_genotype;
-  int mask_col;
   int mask_position;
   int nmlg;
   int nmax;
