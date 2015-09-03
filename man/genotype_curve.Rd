@@ -4,8 +4,8 @@
 \alias{genotype_curve}
 \title{Produce a genotype accumulation curve}
 \usage{
-genotype_curve(gen, sample = 100, maxloci = .Machine$integer.max,
-  quiet = FALSE, thresh = 1)
+genotype_curve(gen, sample = 100, maxloci = 0L, quiet = FALSE,
+  thresh = 1)
 }
 \arguments{
 \item{gen}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
@@ -14,8 +14,8 @@ genotype_curve(gen, sample = 100, maxloci = .Machine$integer.max,
 \item{sample}{an \code{integer} defining the number of times loci will be
   resampled without replacement.}
 
-\item{maxloci}{the maximum number of loci to sample. This defaults to
-the maximum integer value on your machine}
+\item{maxloci}{the maximum number of loci to sample. By default,
+  \code{maxloci = 0}, which indicates that n - 1 loci are to be used. Note that this will always take min(n - 1, maxloci)}
 
 \item{quiet}{if \code{FALSE} (default), Progress of the iterations will be
   displayed. If \code{TRUE}, nothing is printed to screen as the function

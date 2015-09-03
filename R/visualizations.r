@@ -1104,8 +1104,8 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' @param sample an \code{integer} defining the number of times loci will be 
 #'   resampled without replacement.
 #'   
-#' @param maxloci the maximum number of loci to sample. This defaults to 
-#' the maximum integer value on your machine 
+#' @param maxloci the maximum number of loci to sample. By default,
+#'   \code{maxloci = 0}, which indicates that n - 1 loci are to be used. Note that this will always take min(n - 1, maxloci)
 #'   
 #' @param quiet if \code{FALSE} (default), Progress of the iterations will be 
 #'   displayed. If \code{TRUE}, nothing is printed to screen as the function
@@ -1139,8 +1139,8 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' mongeno <- genotype_curve(monpop)}
 #==============================================================================#
 #' @importFrom pegas loci2genind
-genotype_curve <- function(gen, sample = 100, maxloci = .Machine$integer.max, 
-                           quiet = FALSE, thresh = 1){
+genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE, 
+                           thresh = 1){
   datacall <- match.call()
   if (!class(gen)[1] %in% c("genind", "genclone", "loci")){
     stop(paste(datacall[2], "must be a genind or loci object"))
@@ -1152,11 +1152,14 @@ genotype_curve <- function(gen, sample = 100, maxloci = .Machine$integer.max,
     genloc   <- pegas::as.loci(gen)    
   }
   if (!is.genclone(gen)) gen <- as.genclone(gen)
-  
+  if (nLoc(gen) == 1){
+    stop("genotype_curve needs data with at least two loci.")
+  }
   the_loci <- attr(genloc, "locicol")
   res      <- integer(nrow(genloc))
   suppressWarnings(genloc <- vapply(genloc[the_loci], as.integer, res))
-  nloci  <- as.integer(ifelse(maxloci < nLoc(gen) - 1, maxloci, nLoc(gen) - 1))
+  nloci  <- min(maxloci, nLoc(gen) - 1)
+  nloci  <- as.integer(ifelse(nloci > 0, nloci, nLoc(gen) - 1))
   sample <- as.integer(sample)
   report <- ifelse(quiet, 0L, as.integer(sample/100))
   out    <- .Call("genotype_curve", genloc, sample, nloci, report, PACKAGE = "poppr")
