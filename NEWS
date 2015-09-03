@@ -10,13 +10,14 @@ NEW FEATURES
 * All functions related to Bruvo's distance can now take a named vector of repeat lengths in any order. See issue #61 (https://github.com/grunwaldlab/poppr/issues/61) for details.
 * `aboot` gains the argument strata so that you can automatically convert genind to genpop.
 * `genotype_curve` can now take in loci objects from pegas.
+* You can now specify the maximum number of loci to analyze in `genotype_curve`.
 * `filter_stats` can now optionally plot a histogram in the background.
 
 NEW FUNCTIONS
 * `rrmlg` will calculate round-robin multilocus genotypes for each locus.
 * `rraf` will calculate round-robin allele frequencies for each locus.
 * `pgen` will calculate the probabilities of observed genotypes.
-* `psex` will calculate the probability that an observed genotype will be observed twice by chance.
+* `psex` will calculate the probability that an observed genotype will be observed more than once by chance.
 
 MISC
 * Documentation for genclone and snpclone classes are more coherent.
