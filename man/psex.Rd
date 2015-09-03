@@ -48,12 +48,11 @@ Psex is the probability of encountering a given genotype more than
   genet whereas genotypes with psex > alpha do not have strong evidence that
   members belong to the same genet (Parks and Werth, 1993).
 
-  When \code{method = "multiple"}, the method from Arnaud-Hanod et al. (1997)
+  When \code{method = "multiple"}, the method from Arnaud-Haond et al. (1997)
   is used where the sum of the binomial density is taken:
 
-  \deqn{p_{sex} = \sum_{i = 1}^n
-  \frac{N!}{i!(N-1)!}\left(p_{gen}\right)^i\left(1 - p_{gen}\right)^i}{psex =
-  sum(dbinom(1:N, N, pgen))}
+  \deqn{p_{sex} = \sum_{i = 1}^N {N \choose i} \left(p_{gen}\right)^i\left(1
+  - p_{gen}\right)^{N - i}}{psex = sum(dbinom(1:N, N, pgen))}
 
   where \emph{N} is the number of samples with the same genotype, \emph{i} is
   the ith sample, and \emph{pgen} is the value of pgen for that genotype.
@@ -128,7 +127,7 @@ res # Compare to the first three rows of Table 2 in Parks & Werth, 1993
 Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
 }
 \references{
-Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
 \emph{Molecular Ecology}, 16(24), 5115-5139.
 

@@ -39,7 +39,7 @@ Pgen is the probability of a given genotype occuring in a population
 
   where \eqn{p_i} are
   the allele frequencies and \emph{h} is the count of the number of
-  heterozygous sites in the sample (Arnaud-Hanod et al. 2007; Parks and
+  heterozygous sites in the sample (Arnaud-Haond et al. 2007; Parks and
   Werth, 1993). The allele frequencies, by default, are calculated using a
   round-robin approach where allele frequencies at a particular locus are
   calculated on the clone-censored genotypes without that locus.
@@ -70,7 +70,7 @@ apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
 }
 \references{
-Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
 \emph{Molecular Ecology}, 16(24), 5115-5139.
 

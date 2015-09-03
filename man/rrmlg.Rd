@@ -34,7 +34,7 @@ colSums(!apply(pmlg_rr, 2, duplicated))
 Zhian N. Kamvar, Jonah C. Brooks, Stacy Krueger-Hadfield, Erik Sotka
 }
 \references{
-Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
 \emph{Molecular Ecology}, 16(24), 5115-5139.
 

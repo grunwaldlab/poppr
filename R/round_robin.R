@@ -60,7 +60,7 @@
 #' @seealso \code{\link{rraf}}, \code{\link{pgen}}, \code{\link{psex}}
 #' @references
 #' 
-#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+#' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 #' Standardizing methods to address clonality in population studies.
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 
@@ -118,7 +118,7 @@ rrmlg <- function(gid){
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Stacy Krueger-Hadfield, Erik Sotka
 #' @references
 #' 
-#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+#' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 #' Standardizing methods to address clonality in population studies.
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 
@@ -226,7 +226,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'   
 #'   where \eqn{p_i} are
 #'   the allele frequencies and \emph{h} is the count of the number of
-#'   heterozygous sites in the sample (Arnaud-Hanod et al. 2007; Parks and
+#'   heterozygous sites in the sample (Arnaud-Haond et al. 2007; Parks and
 #'   Werth, 1993). The allele frequencies, by default, are calculated using a
 #'   round-robin approach where allele frequencies at a particular locus are
 #'   calculated on the clone-censored genotypes without that locus. 
@@ -240,7 +240,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #' @seealso \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}
 #' @references
 #' 
-#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+#' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 #' Standardizing methods to address clonality in population studies.
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 
@@ -331,12 +331,11 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #'   genet whereas genotypes with psex > alpha do not have strong evidence that
 #'   members belong to the same genet (Parks and Werth, 1993).
 #'   
-#'   When \code{method = "multiple"}, the method from Arnaud-Hanod et al. (1997)
+#'   When \code{method = "multiple"}, the method from Arnaud-Haond et al. (1997)
 #'   is used where the sum of the binomial density is taken:
 #'   
-#'   \deqn{p_{sex} = \sum_{i = 1}^n 
-#'   \frac{N!}{i!(N-1)!}\left(p_{gen}\right)^i\left(1 - p_{gen}\right)^i}{psex =
-#'   sum(dbinom(1:N, N, pgen))}
+#'   \deqn{p_{sex} = \sum_{i = 1}^N {N \choose i} \left(p_{gen}\right)^i\left(1
+#'   - p_{gen}\right)^{N - i}}{psex = sum(dbinom(1:N, N, pgen))}
 #'   
 #'   where \emph{N} is the number of samples with the same genotype, \emph{i} is
 #'   the ith sample, and \emph{pgen} is the value of pgen for that genotype.
@@ -347,7 +346,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' @seealso \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}}
 #' @references
 #' 
-#' Arnaud-Hanod, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007. 
+#' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007. 
 #' Standardizing methods to address clonality in population studies. 
 #' \emph{Molecular Ecology}, 16(24), 5115-5139.
 #' 
@@ -441,7 +440,7 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)
   } else {
-    # Calculate for n encounters (Arnaud-Hanod et al, 1997)
+    # Calculate for n encounters (Arnaud-Haond et al, 1997)
 
     # Wed Sep  2 11:20:56 2015 ------------------------------
     # First step: get a vector of number of samples per mlg. Since pgen might
