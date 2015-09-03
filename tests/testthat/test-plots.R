@@ -74,10 +74,10 @@ test_that("genotype_curve shows output if not quiet", {
 
 test_that("genotype_curve can take less than m-1 loci", {
   skip_on_cran()
-  nc  <- genotype_curve(nancycats, maxloci = 2)
-  nc1 <- genotype_curve(nancycats, maxloci = 1)
-  expect_equal(ncol(nc), 2L, quiet = TRUE)
-  expect_equal(ncol(nc1), 1L, quiet = TRUE)
+  nc  <- genotype_curve(nancycats, maxloci = 2, quiet = TRUE)
+  nc1 <- genotype_curve(nancycats, maxloci = 1, quiet = TRUE)
+  expect_equal(ncol(nc), 2L)
+  expect_equal(ncol(nc1), 1L)
   expect_error(genotype_curve(nancycats[loc = 1]), "at least two loci")
 })
 
