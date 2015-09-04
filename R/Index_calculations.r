@@ -657,15 +657,9 @@ poppr.all <- function(filelist, ...){
 #'   plotlist[[i]] <- ggplot2::last_plot() # save the last plot
 #' }
 #' 
-#' # Use the plot_grid function to plot. We could do it manually since there are
-#' # only 4 populations:
-#' plot_grid(plotlist[[1]], plotlist[[2]], plotlist[[3]], plotlist[[4]], 
-#'           labels = paste("Tree", popNames(monpop)))
-#'  
-#' # This gets tedious with many populations, so we can use the do.call function
-#' # to help us!
+#' # Use the plot_grid function to plot.
+#' plot_grid(plotlist = plotlist, labels = paste("Tree", popNames(monpop)))
 #' 
-#' do.call(plot_grid, c(plotlist, list(labels = paste("Tree", popNames(monpop)))))
 #' }
 #==============================================================================#
 ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore", 
