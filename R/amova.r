@@ -303,7 +303,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   }
   if (!is.euclid(xdist)){
     CORRECTIONS <- c("cailliez", "quasieuclid", "lingoes")
-    try(correct <- match.arg(correction, CORRECTIONS))
+    try(correct <- match.arg(correction, CORRECTIONS), silent = TRUE)
     if (!exists("correct")){
       stop(not_euclid_msg(correction))
     } else {

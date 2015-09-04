@@ -2715,3 +2715,56 @@ rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
   
   return(res)
 }
+
+#==============================================================================#
+# Pairwise index of association calculation
+# 
+# Arguments
+# - pair a character vector of length 3 containing the pair of loci and the 
+#   iteration.
+# - V a choose(n, 2) x m matrix containing the distances at all loci. 
+# - np choose(n, 2)
+# - progbar either NULL or a progressbar object.
+# - iterations the number of loci combinations.
+#
+# Public functions utilizing this function:
+# ## pair.ia
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+ia_pair_loc <- function(pair, V, np, progbar, iterations){
+  if (!is.null(progbar)){
+    setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
+  }
+  newV <- V[, pair[-3]]
+  V    <- list(d.vector  = colSums(newV), 
+               d2.vector = colSums(newV * newV), 
+               D.vector  = rowSums(newV)
+  )
+  return(ia_from_d_and_D(V, np))
+}
+#==============================================================================#
+# Get the index of association from sums of distances over loci and samples
+# 
+# This will take in a list called that contains 3 vectors:
+# 1. d.vector : a vector containing sums of distances per locus
+# 2. d2.vector : like d.vector, but containing sums of squares
+# 3. D.vector : a vector containing the distance over all samples.
+#
+# Public functions utilizing this function:
+# ## none
+#
+# Internal functions utilizing this function:
+# ## ia_pair_loc
+#==============================================================================#
+ia_from_d_and_D <- function(V, np){
+  varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
+  vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
+  sigVarj <- sum(vard.vector)
+  rm(vard.vector)
+  Ia <- (varD/sigVarj) - 1
+  rbarD <- (varD - sigVarj)/(2 * sum(vardpair.vector))
+  return(c(Ia, rbarD))
+}
