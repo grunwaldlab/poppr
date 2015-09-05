@@ -96,10 +96,7 @@ SEXP pairwise_covar(SEXP pair_vec)
 	return Rout;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Calculates the absolute yes or no distance of the alleles at a locus. Note
-that since this is based on integers (due to the absolute value function
-conversion), The matrix incoming should only be integers, so if it's a diploid
-organism, multiply the matrix by 2. Divide the result by 2 to get the distances.
+Calculates the absolute yes or no distance of the alleles at a locus. 
 
 Input: An n x m matrix where n is the number of individuals, and m is the number
 of alleles at a single locus. 
@@ -108,48 +105,40 @@ Output: A vector of length n*(n-1)/2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP pairdiffs(SEXP freq_mat)
 {
-
-	int I;
-	int J;
+	int rows;
+	int cols;
 	int i;
 	int j;
-	int z;
-	int P;
+	int k;
+	int val;
 	int count;
 	SEXP Rout;
 	SEXP Rdim;
-	SEXP pair_matrix;
 	Rdim = getAttrib(freq_mat, R_DimSymbol);
-	I = INTEGER(Rdim)[0]; // Rows
-	J = INTEGER(Rdim)[1]; // Columns
-	PROTECT(pair_matrix = allocVector(INTSXP, J*2));
-	int* pairmat = INTEGER(pair_matrix);
+	rows = INTEGER(Rdim)[0];
+	cols = INTEGER(Rdim)[1];
 	int* inmat = INTEGER(freq_mat);
 	count = 0;
-	PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
+	PROTECT(Rout = allocVector(INTSXP, rows*(rows-1)/2));
 
-	for(i = 0; i < I-1; i++)
+	for(i = 0; i < rows-1; i++)
 	{
-		for(z = 0; z < J; z++)
+		for(j = i+1; j < rows; j++)
 		{
-			pairmat[z] = inmat[i+(I)*z];
-		}
-		for(j = i+1; j < I; j++)
-		{
-			P = 0;
-			for(z = 0; z < J; z++)
+			val = 0;
+			for (k = 0; k < cols; k++)
 			{
-				if(pairmat[0] == NA_INTEGER || inmat[j + (I)*z] == NA_INTEGER)
+				if (inmat[i + k*rows] == NA_INTEGER || inmat[j + k*rows] == NA_INTEGER)
 				{
-					P = 0;
+					val = 0;
 					break;
 				}
-				P += abs(pairmat[z] - inmat[j + (I)*z]);
+				val += abs(inmat[i + k*rows] - inmat[j + k*rows]);
 			}
-			INTEGER(Rout)[count++] = P;
+			INTEGER(Rout)[count++] = val;
 		}
 	}
-	UNPROTECT(2);
+	UNPROTECT(1);
 	return Rout;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
