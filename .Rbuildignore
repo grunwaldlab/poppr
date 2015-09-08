@@ -11,3 +11,4 @@
 ^\.travis\.yml$
 ^vignettes/figure
 ^tests/testthat/Rplots.pdf
+^CONDUCT\.md$
