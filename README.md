@@ -1,4 +1,4 @@
-# Poppr version 2.0
+# Poppr version 2
 
 In development:    
 [![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=devel)](https://travis-ci.org/grunwaldlab/poppr)
@@ -7,7 +7,7 @@ In development:
 On CRAN:    
 [![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
 [![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
-[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://www.r-pkg.org/pkg/poppr)
+[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://cran.r-project.org/package=poppr)
 
 
 ## Welcome 
@@ -43,7 +43,7 @@ or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standa
 For full details, see the NEWS file or type in your R console:
 
 ```R
-news(Version == "2.0.0", package = "poppr")
+news(Version >= "2.0.0", package = "poppr")
 ```
 
 ## Citation
@@ -118,7 +118,9 @@ To install this package from github, make sure you have the following:
     OR [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
 - [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
 
-For Linux users, make sure that the function `getOption("unzip")` returns `"unzip"` or `"internal"`. If it doesn't, then run `options(unzip = "internal")`.
+For Linux users, make sure that the function `getOption("unzip")` returns
+`"unzip"` or `"internal"`. If it doesn't, then run `options(unzip =
+"internal")`.
 
 Now you can use the `install_github()` function:
 
@@ -157,5 +159,13 @@ A few vignettes have been written for poppr:
 
 ### Book/Primer
 
-In Spring of 2014, Dr. Niklaus J. Grünwald, Dr. Sydney E. Everhart and Zhian N. Kamvar wrote a primer for population genetic analysis in R located at http://grunwaldlab.github.io/Population_Genetics_in_R.
+In Spring of 2014, Dr. Niklaus J. Grünwald, Dr. Sydney E. Everhart and Zhian N.
+Kamvar wrote a primer for population genetic analysis in R located at
+http://grunwaldlab.github.io/Population_Genetics_in_R.
 
+## Contributing
+
+Please note that this project is released with a [Contributor Code of
+Conduct](CONDUCT.md). By participating in this project you agree to abide by its
+terms. If you wish to contribute code to *poppr*, please fork the repository and
+create a pull request with your added feature.
