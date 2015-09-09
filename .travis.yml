@@ -4,14 +4,29 @@ sudo: required
 
 os:
   - linux
-  - osx
 
 apt_packages:
   - latex-xcolor
   - texlive-latex3 # attempt to fix mathtools.sty not found error
 
-r_packages:
+r_binary_packages:
   - devtools
+  - vegan
+  - ggplot2
+  - phangorn
+  - ape
+  - igraph
+  - ade4
+  - pegas
+  - reshape2
+  - dplyr
+  - boot
+  - shiny
+  - testthat
+  - knitr
+  - rmarkdown
+  - knitcitations
+  - poweRlaw
 
 r_github_packages:
   - jimhester/covr
