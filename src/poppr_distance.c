@@ -43,7 +43,12 @@
 #include <stdlib.h>
 int perm_count;
 
+SEXP pairwise_covar(SEXP pair_vec);
+SEXP pairdiffs(SEXP freq_mat);
+SEXP permuto(SEXP perm);
+SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss);
 double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
+void swap(int *x, int *y);  
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
 double mindist(int perms, int alleles, int *perm, double **dist);
@@ -91,10 +96,7 @@ SEXP pairwise_covar(SEXP pair_vec)
 	return Rout;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Calculates the absolute yes or no distance of the alleles at a locus. Note
-that since this is based on integers (due to the absolute value function
-conversion), The matrix incoming should only be integers, so if it's a diploid
-organism, multiply the matrix by 2. Divide the result by 2 to get the distances.
+Calculates the absolute yes or no distance of the alleles at a locus. 
 
 Input: An n x m matrix where n is the number of individuals, and m is the number
 of alleles at a single locus. 
@@ -103,48 +105,40 @@ Output: A vector of length n*(n-1)/2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP pairdiffs(SEXP freq_mat)
 {
-
-	int I;
-	int J;
+	int rows;
+	int cols;
 	int i;
 	int j;
-	int z;
-	int P;
+	int k;
+	int val;
 	int count;
 	SEXP Rout;
 	SEXP Rdim;
-	SEXP pair_matrix;
 	Rdim = getAttrib(freq_mat, R_DimSymbol);
-	I = INTEGER(Rdim)[0]; // Rows
-	J = INTEGER(Rdim)[1]; // Columns
-	PROTECT(pair_matrix = allocVector(INTSXP, J*2));
-	int* pairmat = INTEGER(pair_matrix);
+	rows = INTEGER(Rdim)[0];
+	cols = INTEGER(Rdim)[1];
 	int* inmat = INTEGER(freq_mat);
 	count = 0;
-	PROTECT(Rout = allocVector(INTSXP, I*(I-1)/2));
+	PROTECT(Rout = allocVector(INTSXP, rows*(rows-1)/2));
 
-	for(i = 0; i < I-1; i++)
+	for(i = 0; i < rows-1; i++)
 	{
-		for(z = 0; z < J; z++)
+		for(j = i+1; j < rows; j++)
 		{
-			pairmat[z] = inmat[i+(I)*z];
-		}
-		for(j = i+1; j < I; j++)
-		{
-			P = 0;
-			for(z = 0; z < J; z++)
+			val = 0;
+			for (k = 0; k < cols; k++)
 			{
-				if(pairmat[0] == NA_INTEGER || inmat[j + (I)*z] == NA_INTEGER)
+				if (inmat[i + k*rows] == NA_INTEGER || inmat[j + k*rows] == NA_INTEGER)
 				{
-					P = 0;
+					val = 0;
 					break;
 				}
-				P += abs(pairmat[z] - inmat[j + (I)*z]);
+				val += abs(inmat[i + k*rows] - inmat[j + k*rows]);
 			}
-			INTEGER(Rout)[count++] = P;
+			INTEGER(Rout)[count++] = val;
 		}
 	}
-	UNPROTECT(2);
+	UNPROTECT(1);
 	return Rout;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -198,103 +192,62 @@ distance algorithm in turn will return a distance of 100 for any individuals
 with missing data. In the wrapping R function, 100s will be converted to NAs
 and then the average over all loci will be taken. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-SEXP single_bruvo(SEXP b_mat, SEXP permutations, SEXP alleles, SEXP add, SEXP loss)
-{
-	int A;
-	int P;
-	int *pA;
-	int *pP;
-	SEXP Rval;
-	//SEXP Rdim;
-	P = length(permutations);
-	alleles = coerceVector(alleles, INTSXP);
-	loss = coerceVector(loss, INTSXP);
-	add = coerceVector(add, INTSXP);
-	A = INTEGER(alleles)[0];
-	pA = &A;
-	pP = &P;
-	b_mat = coerceVector(b_mat, INTSXP);
-	permutations = coerceVector(permutations, INTSXP);
-	PROTECT(Rval = allocVector(REALSXP, 1));
-	REAL(Rval)[0] = bruvo_dist(INTEGER(b_mat), pA, INTEGER(permutations),
-                                    pP, INTEGER(loss), INTEGER(add));
-	UNPROTECT(1);
-	return Rval;
-    
-}
-
 SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss)
 {
-	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	I = number of rows in bruvo_mat
-	J = number of columns in bruvo_mat
-	A = ploidy
-	P = A*A!
-	*pA = pointer to A
-	*pP = pointer to P
+	int rows;   // number of rows
+	int cols;   // number of columns
+	int ploidy; // maximum ploidy
+	int P;      // The number of factorial combinations of alleles.
+	int loss;   // indicator for genome loss model.
+	int add;    // indicator for genome addition model.
+	int* perm;  // pointer to permutation vector.
+	int* pmat;  // pointer to pair of samples.
 	
-	A matrix in R is built row by row. That's why there is a triple 'for' loop.
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-	int I;
-	int J;
-	int A;
-	int P;
-	int i;
-	int j;
-	int a;
-	int count = 0;
-	int *pA;
-	int *pP;
-	//Initialization of R vectors.
-	SEXP Rdim;
-	SEXP Rval;
-	SEXP pair_matrix;
+	// indices ------------------------------
+	int allele; // allele index
+	int i;      // sample one
+	int j;      // sample two
+	int locus;  // index for the first column of a locus
+	int clm;    // index for the column shift in the incoming matrix
+	int count;  // counter for the output
+	
+	// R objects ------------------------------
+	SEXP Rdim;        // dimensions of the bruvo_mat
+	SEXP Rval;        // output vector
+	SEXP pair_matrix; // temporary array to store two samples at a single locus
+	
+	// Initialization ------------------------------
+	count = 0;
 	P = length(permutations);
 	Rdim = getAttrib(bruvo_mat, R_DimSymbol);
-	I = INTEGER(Rdim)[0]; // Rows
-	J = INTEGER(Rdim)[1]; // Columns
-	alleles = coerceVector(alleles, INTSXP);
-	A = INTEGER(alleles)[0];
-	pA = &A;
-	pP = &P;
-	m_loss = coerceVector(m_loss, INTSXP);
-	m_add = coerceVector(m_add, INTSXP);
+	rows = INTEGER(Rdim)[0];
+	cols = INTEGER(Rdim)[1];
+	ploidy = INTEGER(coerceVector(alleles, INTSXP))[0];
+	loss = asLogical(m_loss);
+	add = asLogical(m_add);
 	bruvo_mat = coerceVector(bruvo_mat, INTSXP);
-	permutations = coerceVector(permutations, INTSXP);
-	// Protecting the vectors that will be modified. Rval is the output
-	PROTECT(Rval = allocMatrix(REALSXP, I*(I-1)/2, J/A ));
-	// pair_matrix is the input for individual bruvo distances. 
-	PROTECT(pair_matrix = allocVector(INTSXP, 2*A));
+	perm = INTEGER(coerceVector(permutations, INTSXP));
+	PROTECT(Rval = allocMatrix(REALSXP, rows*(rows-1)/2, cols/ploidy));
+	PROTECT(pair_matrix = allocVector(INTSXP, 2*ploidy));
+	pmat = INTEGER(pair_matrix);
 	
-	/*	First step, loop over each set of columns defined by the number of
-		alleles. So for a diploid, it will loop over the first two columns. */
-	for(a = 0; a < J; a += A)
+	for(locus = 0; locus < cols; locus += ploidy)
 	{
-	//	Looping over n-1 individuals. 
-		for(i = 0; i < I; i++)
+		for(i = 0; i < rows - 1; i++)
 		{
-			int z;
-			//	Populating the allele array from the reference individual.
-			for(z = 0; z < A; z++) 
+			for(allele = 0; allele < ploidy; allele++) 
 			{
-			/*	i = reference individual, a = the locus, z = the allele
-				(a+z)*I = The combination of locus, allele and total number
-				of individuals to move across the matrix. 
-				This will supply the reference genotype. */
-				INTEGER(pair_matrix)[z] = INTEGER(bruvo_mat)[i+(a+z)*I];
+				clm = (allele + locus)*rows;
+				pmat[allele] = INTEGER(bruvo_mat)[i + clm];
 			}
-			//	Looping over individuals for pairwise comparison.
-			for(j = i+1; j < I; j++)
+			for(j = i + 1; j < rows; j++)
 			{
-				//	Populating allele array from the comparison individual.
-				for(z = A; z < A*2 ; z++)
+				for(allele = 0; allele < ploidy ; allele++)
 				{
-					INTEGER(pair_matrix)[z] = INTEGER(bruvo_mat)[j+(a+z-A)*I];
+					clm = (allele + locus)*rows;
+					pmat[allele + ploidy] = INTEGER(bruvo_mat)[j + clm];
 				}
-				// Calculating Bruvo's distance over these two. 
-				REAL(Rval)[count++] = bruvo_dist(INTEGER(pair_matrix), pA,
-					INTEGER(permutations), pP, INTEGER(m_loss), INTEGER(m_add));
+				REAL(Rval)[count++] = bruvo_dist(pmat, &ploidy, perm, &P, &loss, &add);
 			}
 		}
 	}

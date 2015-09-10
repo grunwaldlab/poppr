@@ -159,62 +159,19 @@ rare_ia <- function(x, n = 1000, rare = 10, obs = FALSE){
 }
 
 
-old_pair_ia <- function(pop){
-  
-  if(pop@type == "codom"){
-    pop_loci <- seploc(pop)
-    loci_pairs <- combn(locNames(pop), 2)
-    pair_ia_vector <- apply(loci_pairs, 2, function(x) .Ia.Rd(pop_loci[x]))
-    colnames(pair_ia_vector) <- apply(loci_pairs, 2, paste, collapse = ":")
-  } else {
-    loci_pairs <- combn(1:nLoc(pop), 2)
-    pair_ia_vector <- apply(loci_pairs, 2, function(x) .PA.Ia.Rd(pop[, x], missing = "ignore"))
-    colnames(pair_ia_vector) <- apply(combn(locNames(pop), 2), 2, paste, collapse = ":")
-  }
-  rownames(pair_ia_vector) <- c("Ia", "rbarD")    
-  return(pair_ia_vector)
-}
 
+# ia_pair_loc <- function(pair, V, np, progbar, iterations){
+#   if (!is.null(progbar)){
+#     setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
+#   }
+#   newV <- V[, pair[-3]]
+#   V    <- list(d.vector  = colSums(newV), 
+#                d2.vector = colSums(newV * newV), 
+#                D.vector  = rowSums(newV)
+#   )
+#   return(jack.calc(V, np))
+# }
 
-
-
-ia_pair_loc <- function(pair, V, np, progbar, iterations){
-  if (!is.null(progbar)){
-    setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
-  }
-  newV <- V[, pair[-3]]
-  V    <- list(d.vector  = colSums(newV), 
-               d2.vector = colSums(newV * newV), 
-               D.vector  = rowSums(newV)
-  )
-  return(jack.calc(V, np))
-}
-
-
-poppr.pair.ia <- function(pop){
-  if(is.null(pop(pop))){
-    return(pair.ia(pop))
-  }
-  pops       <- seppop(pop, drop = FALSE)
-  loci_pairs <- choose(nLoc(pop), 2)
-  res_mat    <- matrix(0.5, 2, loci_pairs)
-  pops_array <- vapply(pops, pair.ia, res_mat)
-  return(pops_array)
-}
-
-testing_funk <- function(){
-  cat("This test worked...maybe.\n")
-}
-
-getinds <- function(x){
-  # x is a vector indicating the size of loci in a data set (must be continuous).
-  # The sum of x is equal to the number of observations.
-  indices <- matrix(ncol = 2, nrow = length(x))
-  to   <- cumsum(x)
-  from <- c(1, to[-length(to)]+1)
-  indices[] <- as.integer(c(from, to))
-  return(indices)
-}
 
 #==============================================================================#
 # bootjack is a function that will calculate values of the index of association

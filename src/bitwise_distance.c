@@ -98,10 +98,10 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
 SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
-SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops);
-SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
-void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
-void fill_loci(struct locus *loc, SEXP genlight);
+SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop);
+// SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
+// void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
+// void fill_loci(struct locus *loc, SEXP genlight);
 void fill_zygosity(struct zygosity *ind);
 char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
 int get_zeros(char sim_set);
@@ -1020,6 +1020,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   }
 
   // Get the distance matrix from bitwise_distance
+  PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
   R_dists = bitwise_distance_haploid(genlight, missing, requested_threads);
 
   // Calculate the sum and squared sum of distances between samples
@@ -1086,7 +1087,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   R_Free(vars);
   R_Free(M);
   R_Free(M2);
-  UNPROTECT(5); 
+  UNPROTECT(6); 
   return R_out;
 
 }
@@ -1417,6 +1418,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   }
 
   // Get the distance matrix from bitwise_distance
+  PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
   R_dists = bitwise_distance_diploid(genlight, missing, differences_only, requested_threads);
 
   // Calculate the sum and squared sum of distances between samples
@@ -1480,7 +1482,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   R_Free(vars);
   R_Free(M);
   R_Free(M2);
-  UNPROTECT(5); 
+  UNPROTECT(6); 
   return R_out;
 
 }
@@ -1494,112 +1496,124 @@ the genind or genclone  object.
 Input: A genind or genclone object containing samples of diploids.
        A frequency matrix constructed in R with makefreq(genind2genpop(genind)).
        A vector of population indices for all samples.
+       An integer specifying the number of populations.
 Output: A matrix containing the Pgen value of each genotype at each locus.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops)
+SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
 {
-  SEXP R_out;
-  SEXP R_tab_symbol;
-  SEXP R_loc_symbol;
-  SEXP R_pop_symbol;
-  SEXP R_tab;
-  PROTECT(R_tab_symbol = install("tab")); // Used for accessing the named elements of the genind object
-  PROTECT(R_loc_symbol = install("loc.names"));
-  PROTECT(R_pop_symbol = install("pop.names"));
-  double *pgens;
-  int *indices;
-  int num_gens;
-  int num_loci;
-  int num_alleles;
-  int num_pops;
-  int index;
-  int missing_last;
-  int pop;
-  int size;
+  SEXP R_out;           // The output R object. it's pointer is *pgens
+  SEXP R_tab_symbol;    // Symbol for tab slot
+  SEXP R_loc_symbol;    // Symbol for loc.n.all slot
+  SEXP R_ploidy_symbol; // Symbol for ploidy slot
+  SEXP R_tab;           // R object for the genotypes; pointer is *gt
+  SEXP R_nall;          // R object for number of alleles per locus; pointer is
+                        // *ploidy
 
+  // Syntax for accessing the named elements of the genind object
+  PROTECT(R_tab_symbol = install("tab"));
+  PROTECT(R_loc_symbol = install("loc.n.all"));
+  PROTECT(R_ploidy_symbol = install("ploidy"));
+  
+  // Data in and data out ------------------------------
+  int* ploidy;            // Ploidy per sample
+  int* alleles_per_locus; // self explanitory
+  int* gt;                // genotype matrix
+  double* afreq;          // allele frequency matrix
+  double* pgens;          // output
+
+  // Benchmarks ------------------------------
+  int num_gens; // number of genotypes (for *pgen and *gt)
+  int num_loci; // number of loci (for *pgen)
+  int num_pops; // number of pops (for *afreq)
+
+  // Iterators ------------------------------
+  int index;        // iterator to store the number of remaining alleles
+  int pop;          // index for the population for each sample
+  int i;            // sample index
+  int j;            // locus index
+  int k;            // allele index
+  int alleles_seen; // number of non-zero alleles seen at a locus
+  
+  // Misc ------------------------------
+  double h; // heterozygosity multiplier. 0 if haploid, log 2 if diploid.
+  
+  ploidy = INTEGER(getAttrib(genind, R_ploidy_symbol));
+  R_nall = getAttrib(genind, R_loc_symbol);
   R_tab = getAttrib(genind, R_tab_symbol); 
+  gt = INTEGER(R_tab);
+  afreq = REAL(freqs);
   num_gens = INTEGER(getAttrib(R_tab, R_DimSymbol))[0];
-  num_alleles = INTEGER(getAttrib(R_tab, R_DimSymbol))[1];
-  num_loci = XLENGTH(getAttrib(genind, R_loc_symbol));
-  num_pops = XLENGTH(getAttrib(genind, R_pop_symbol));
-  missing_last = 0;
-  size = num_gens*num_loci;
-  pgens = R_Calloc(size, double);
-  indices = R_Calloc(size*2, int);
-  PROTECT(R_out = allocVector(REALSXP,size));
+  num_loci = XLENGTH(R_nall);
+  alleles_per_locus = INTEGER(R_nall);
+  num_pops = INTEGER(npop)[0];
+  PROTECT(R_out = allocMatrix(REALSXP, num_gens, num_loci));
+  pgens = REAL(R_out);
 
-  // Fill indices with the indices inside freqs of alleles found in each genotype
-  // Note that R_tab is column-major ordered due to being passed from R
-  for(int i = 0; i < num_gens; i++)
-  {
-    index = 0;
-    for(int j = 0; j < num_alleles; j++)
-    {
-      if(ISNA(REAL(R_tab)[i + j*num_gens]))
-      {
-        // Add missing value sentinels into the index array once for each missing locus
-        if(missing_last == 0)
-        {
-          indices[i*num_loci*2 + index] = -1;;
-          indices[i*num_loci*2 + index+1] = -1;
-          index += 2;
-          missing_last = 1;
-        }
-      }
-      else if(REAL(R_tab)[i + j*num_gens] > 0.75)
-      {
-        indices[i*num_loci*2 + index] = j;
-        indices[i*num_loci*2 + index+1] = j;
-        index += 2;
-        missing_last = 0;
-      }
-      else if(REAL(R_tab)[i+ j*num_gens] < 0.75 && REAL(R_tab)[i + j*num_gens] > 0.25)
-      {
-        indices[i*num_loci*2 + index] = j;
-        index += 1;
-        missing_last = 0;
-      }
-    }
-  } 
+  // Tue Sep  1 11:19:55 2015 ------------------------------
+  // I have sped up this function by removing the uncessecary step of looping
+  // through the entire matrix in order to find the indices of the alleles.
 
-  for(int i = 0; i < num_gens; i++)
+  // Loop through all samples
+  for (i = 0; i < num_gens; i++)
   {
-    pop = INTEGER(pops)[i]-1;
-    index = 0;
-    for(int j = 0; j < num_loci; j++)
+    // Get the index for the allele frequencies
+    pop = INTEGER(pops)[i] - 1;
+    // h depends on ploidy. 
+    // It doesn't make sense to have a muliplier for haploids.
+    h = (ploidy[i] == 1) ? 0 : log(2);
+    alleles_seen = 0;
+    k = 0;
+    double res; // variable to make things readable
+    for (j = 0; j < num_loci; j++)
     {
-      if(indices[i*num_loci*2 + index] == -1) // And therefore also [~ index+1] == -1
+      // looping over each locus in a sample. Since we don't know where the
+      // alleles are, we set up a while loop to run through the number of 
+      // alleles we find at the locus.
+      index = alleles_per_locus[j];
+      pgens[i + j*num_gens] = 0; // set the value to zero so we can add to it.
+      while(index > 0)
       {
-        // Set the pgen value of this genotype at this locus to 0
-        pgens[i*num_loci +j] = 1;
-      }
-      else
-      {
-        pgens[i*num_loci + j] = log(REAL(freqs)[pop + indices[i*num_loci*2 + index]*num_pops]) + log(REAL(freqs)[pop + indices[i*num_loci*2 + index+1]*num_pops]);
-        // Account for both permutations of heterozygous loci
-        if(indices[i*num_loci*2 + index] != indices[i*num_loci*2 + index+1])
+        if (gt[i + k*num_gens] == NA_INTEGER) // missing data
         {
-          pgens[i*num_loci + j] += log(2);
+          pgens[i + j*num_gens] = NA_REAL;
+          goto reset;
         }
+        else if (gt[i + k*num_gens] == 2) // homozygote
+        {
+          res = afreq[pop + k*num_pops];
+          pgens[i + j*num_gens] = log(res) + log(res); // p^2
+          goto reset;
+        }
+        else if (gt[i + k*num_gens] == 1) // heterozygote/haploid
+        {
+          alleles_seen++;
+          res = afreq[pop + k*num_pops]; 
+          // incremental adding is independent of ploidy
+          pgens[i + j*num_gens] += log(res); 
+          if (alleles_seen == ploidy[i]) // Escape is dependent on ploidy
+          {
+            alleles_seen = 0;
+            pgens[i + j*num_gens] += h; // 2pq
+            goto reset;
+          }
+        }
+        // if none of the conditions were met, we go to the next allele.
+        k++;
+        index--;
       }
-      index += 2;
+      // When all of the alleles have been filled, we move onto the next locus
+      // by incrementing k with the number of alleles left in the locus.
+      reset:
+        k += index;
     }
   }
-
-  for(int i = 0; i < num_gens; i++)
-  {
-    for(int j = 0; j < num_loci; j++)
-    {
-      // Transpose the matrix into column-major ordering before returning to R
-      REAL(R_out)[i + j*num_gens] = (pgens[i*num_loci + j]);
-    }
-  }
-
-  R_Free(indices);
-  R_Free(pgens);
   UNPROTECT(4);
   return R_out;
 }
+
+// Mon Aug 31 18:16:46 2015 ------------------------------
+// pgen for genlight objects is taken away since it doesn't particularly make 
+// sense as the value would crash to zero due to the vast number of loci. 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates and returns a matrix of Pgen values for the given genlight object.
@@ -1607,7 +1621,7 @@ Calculates and returns a matrix of Pgen values for the given genlight object.
 Input: A genlight object containing samples of diploids.
 Output: A matrix containing the Pgen value of each locus in each genotype in the 
         genlight object.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window)
 {
 
@@ -1668,7 +1682,7 @@ SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window)
 }
 
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Fills an array of doubles with the Pgen value associated with each individual
 found in the genlight object. These values represent the probability of each
 individual having been produced via random mating of the population, as estimated
@@ -1683,7 +1697,7 @@ Input: A pointer to an array of doubles to be filled.
        A genlight object from which the individual genotypes can be obtained.
 Output: None. Fills in the array of doubles with the log of the Pgen value of each 
         individual genotype in the genlight object.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
 {
 
@@ -1819,7 +1833,7 @@ void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
 }
 
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Fills an array of struct locus objects based on allelic frequencies found in
 the provided genlight object.
 
@@ -1829,7 +1843,7 @@ Input: A pointer to an array of locus objects to be filled.
        A genlight object from which the alleles and loci can be gathered.
 Output: None. Fills in the allelic frequencies and other information found in
         each locus struct.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 void fill_loci(struct locus *loc, SEXP genlight)
 { 
   // ~Pseudo code~
@@ -1943,7 +1957,7 @@ void fill_loci(struct locus *loc, SEXP genlight)
 }
 
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the zygosity at each location of a given section. The zygosity struct
 must have c1 and c2 filled before calling this function.
 

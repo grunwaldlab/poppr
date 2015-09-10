@@ -2,16 +2,28 @@ poppr 2.0.2.99
 ===========
 IMPROVEMENTS
 * `win.ia` and `samp.ia` gain a significant speedup thanks to Jonah Brooks implementing the code in C.
+* The internal code for the `genotype_curve` has been implemented in C for a 10x increase in speed.
 
 NEW FEATURES
 * `poppr.msn`, `bruvo.msn`, and `plot_poppr_msn` gain the ability to take character vectors for color palettes. See issue #55 (https://github.com/grunwaldlab/poppr/issues/55) for details.
 * `plot_poppr_msn` returns the modified graph.
 * All functions related to Bruvo's distance can now take a named vector of repeat lengths in any order. See issue #61 (https://github.com/grunwaldlab/poppr/issues/61) for details.
 * `aboot` gains the argument strata so that you can automatically convert genind to genpop.
+* `genotype_curve` can now take in loci objects from pegas.
+* You can now specify the maximum number of loci to analyze in `genotype_curve`.
+* `filter_stats` can now optionally plot a histogram in the background.
+
+NEW FUNCTIONS
+* `rrmlg` will calculate round-robin multilocus genotypes for each locus.
+* `rraf` will calculate round-robin allele frequencies for each locus.
+* `pgen` will calculate the probabilities of observed genotypes.
+* `psex` will calculate the probability that an observed genotype will be observed more than once by chance.
 
 MISC
 * Documentation for genclone and snpclone classes are more coherent.
 * Accessors added for internal MLG objects (for developers).
+* The genotype accumulation curve displays the iteration and locus number instead of a progress bar.
+* The genotype accumulation plot is now scaled from 0 to the number of observed mlgs.
 
 BUG FIX
 * Single locus data sets can now be read in with `read.genalex`. This was brought up in issue [#58](https://github.com/grunwaldlab/poppr/issues/58) (Thanks to Nick Wong for spotting it).

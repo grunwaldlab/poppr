@@ -43,10 +43,16 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 .onAttach <- function(...) {
-  startupmsg <- paste("This is poppr version", utils::packageVersion("poppr"))
+  poppr_vers <- utils::packageVersion("poppr")
+  if (length(unlist(poppr_vers)) > 3){
+    appendix <- "\n\nThis version of poppr is under development.\nIf you find any bugs, please report them at https://github.com/grunwaldlab/poppr/issues"
+  } else {
+    appendix <- ""
+  }
+  startupmsg <- paste("This is poppr version", poppr_vers)
   startupmsg <- paste0(startupmsg, ". To get started, type package?poppr")
   paralltype <- ifelse(poppr::poppr_has_parallel(), "available", "unavailable")
-  startupmsg <- paste0(startupmsg, "\nOMP parallel support: ", paralltype)
+  startupmsg <- paste0(startupmsg, "\nOMP parallel support: ", paralltype, appendix)
   packageStartupMessage(startupmsg)
   if (!interactive() || stats::runif(1) > 0.1) return()
 
@@ -59,3 +65,6 @@
   packageStartupMessage(tip)
 }
 
+.onUnload <- function (libpath) {
+  library.dynam.unload("poppr", libpath)
+}

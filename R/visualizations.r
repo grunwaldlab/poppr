@@ -1093,26 +1093,32 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #==============================================================================#
 #' Produce a genotype accumulation curve
 #' 
-#' GA curves are useful for determining the minimum number of loci necessary 
-#' to discriminate between individuals in a population. This function will
-#' randomly sample loci without replacement and count the number of multilocus
-#' genotypes observed.
+#' GA curves are useful for determining the minimum number of loci necessary to
+#' discriminate between individuals in a population. This function will randomly
+#' sample loci without replacement and count the number of multilocus genotypes
+#' observed.
 #' 
-#' @param gen a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' @param gen a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
 #'   object.
 #'   
-#' @param sample an \code{integer} defining the number of times loci will be
-#'   resampled.
+#' @param sample an \code{integer} defining the number of times loci will be 
+#'   resampled without replacement.
 #'   
-#' @param quiet if \code{FALSE}, a progress bar will be displayed. If
-#'   \code{TRUE}, nothing is printed to screen as the function runs.
+#' @param maxloci the maximum number of loci to sample. By default,
+#'   \code{maxloci = 0}, which indicates that n - 1 loci are to be used. Note that this will always take min(n - 1, maxloci)
 #'   
-#' @param thresh a number from 0 to 1. This will draw a line at this fraction of
-#'   multilocus genotypes.
+#' @param quiet if \code{FALSE} (default), Progress of the iterations will be 
+#'   displayed. If \code{TRUE}, nothing is printed to screen as the function
+#'   runs.
 #'   
-#' @return (invisibly) a matrix of integers showing the results of each randomization.
-#'   Columns represent the number of loci sampled and rows represent an
-#'   independent sample.
+#' @param thresh a number from 0 to 1. This will draw a line at that fraction of
+#'   multilocus genotypes, rounded. Defaults to 1, which will draw a line at the
+#'   maximum number of observable genotypes.
+#' 
+#'   
+#' @return (invisibly) a matrix of integers showing the results of each
+#'   randomization. Columns represent the number of loci sampled and rows
+#'   represent an independent sample.
 #'   
 #' @author Zhian N. Kamvar
 #' @export
@@ -1132,40 +1138,51 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' data(monpop)
 #' mongeno <- genotype_curve(monpop)}
 #==============================================================================#
-
-genotype_curve <- function(gen, sample = 100, quiet = FALSE, thresh = 0.9){
+#' @importFrom pegas loci2genind
+genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE, 
+                           thresh = 1){
   datacall <- match.call()
-  if (!is.genind(gen)){
-    stop(paste(datacall[2], "must be a genind object"))
+  if (!class(gen)[1] %in% c("genind", "genclone", "loci")){
+    stop(paste(datacall[2], "must be a genind or loci object"))
   }
-  genloc <- as.loci(gen)
-  if (!is.null(pop(gen))){
-    genloc <- genloc[-1]
-  }
-  nloci  <- nLoc(gen)
-  if (!quiet){
-    cat("Calculating genotype accumulation for", nloci - 1, "loci...\n")
-    progbar <- txtProgressBar(style = 3)
+  if (class(gen)[1] %in% "loci"){
+    genloc <- gen
+    gen    <- pegas::loci2genind(gen)
   } else {
-    progbar <- NULL
+    genloc   <- pegas::as.loci(gen)    
   }
-  out <- vapply(1:(nloci-1), get_sample_mlg, integer(sample), sample, nloci, genloc, progbar)
-  colnames(out) <- 1:(nloci-1)
-  threshdf <- data.frame(x = mlg(gen, quiet = TRUE)*thresh)
-  outmelt <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
+  if (!is.genclone(gen)) gen <- as.genclone(gen)
+  if (nLoc(gen) == 1){
+    stop("genotype_curve needs data with at least two loci.")
+  }
+  the_loci <- attr(genloc, "locicol")
+  res      <- integer(nrow(genloc))
+  suppressWarnings(genloc <- vapply(genloc[the_loci], as.integer, res))
+  nloci  <- min(maxloci, nLoc(gen) - 1)
+  nloci  <- as.integer(ifelse(nloci > 0, nloci, nLoc(gen) - 1))
+  sample <- as.integer(sample)
+  report <- ifelse(quiet, 0L, as.integer(sample/100))
+  out    <- .Call("genotype_curve", genloc, sample, nloci, report, PACKAGE = "poppr")
+  if (!quiet) cat("\n")
+  colnames(out) <- seq(nloci)
+  suppressWarnings(max_obs  <- nmll(gen, "original"))
+  threshdf <- data.frame(x = round(max_obs*thresh))
+  outmelt  <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
   aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
   outplot <- ggplot(outmelt, aesthetics) + geom_boxplot() + 
              labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
                        y = "Number of multilocus genotypes",
                        x = "Number of loci sampled")) 
   if (!is.null(thresh)){
-    outbreaks <- sort(c(seq(min(out), max(out), length.out = 5), threshdf$x))
+    outbreaks <- sort(c(pretty(0:max_obs), threshdf$x))
+    tjust <- ifelse(thresh > 0.9, 1.5, -1)
     outplot <- outplot + geom_hline(aes_string(yintercept = "x"), 
                                     data = threshdf, color = "red", linetype = 2) + 
-                         annotate("text", x = 1, y = threshdf$x, vjust = -1, 
+                         annotate("text", x = 1, y = threshdf$x, vjust = tjust, 
                                   label = paste0(thresh*100, "%"), 
                                   color = "red", hjust = 0) +
-                         scale_y_continuous(breaks = outbreaks)
+                         scale_y_continuous(breaks = outbreaks, 
+                                            limits = c(0, max_obs))
   }
   print(outplot)
   return(invisible(out))

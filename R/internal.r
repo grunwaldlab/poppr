@@ -2064,14 +2064,16 @@ mlg_barplot <- function(mlgt, color_table = NULL){
 #
 # Private functions utilizing this function:
 # # none
+# 
+# DEPRECATED
 #==============================================================================#
-get_sample_mlg <- function(size, samp, nloci, gen, progbar){
-  if (!is.null(progbar)){
-    setTxtProgressBar(progbar, size/(nloci-1))
-  }
-  out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
-  return(out)
-}
+# get_sample_mlg <- function(size, samp, nloci, gen, progbar){
+#   if (!is.null(progbar)){
+#     setTxtProgressBar(progbar, size/(nloci-1))
+#   }
+#   out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
+#   return(out)
+# }
 
 #==============================================================================#
 # Internal function for creating title for index of association histogram.
@@ -2648,4 +2650,121 @@ add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
     mst <- add.edges(mst, dimnames(mst[])[[1]][the_edges], weight = the_weights)
   }
   return(mst)
+}
+
+#==============================================================================#
+# round robin clone-correct allele frequency estimates
+# 
+# This will take in
+# - i the index of the locus.
+# - loclist a list of genind objects each one locus.
+# - mlgs a matrix from rrmlg
+# - correction a logical indicating if zeroes should be replaced with the
+# smallest value
+#
+# Public functions utilizing this function:
+# ## rraf
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+rrcc <- function(i, loclist, mlgs, correction = TRUE){
+  cc  <- !duplicated(mlgs[, i])
+  mat <- tab(loclist[[i]], freq = TRUE)
+  res <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
+  names(res) <- alleles(loclist[[i]])[[1]]
+  if (correction){
+    res[res < .Machine$double.eps^0.5] <- 1/length(cc)    
+  }
+  return(res)
+}
+#==============================================================================#
+# round robin clone-correct allele frequency estimates by population
+# 
+# This will take in
+# - i the index of the locus.
+# - loclist a list of genind objects each one locus.
+# - mlgs a matrix from rrmlg
+# - correction a logical indicating if zeroes should be replaced with the
+# smallest value
+# - pnames the population names.
+#
+# Public functions utilizing this function:
+# ## rraf
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
+  
+  mat  <- tab(loclist[[i]], freq = TRUE)
+  npop <- length(pnames)
+  res  <- matrix(numeric(ncol(mat)*npop), nrow = npop)
+  rownames(res) <- pnames
+  colnames(res) <- colnames(mat)
+  pops <- pop(loclist[[i]])
+  for (p in pnames){
+    psub <- pops %in% p
+    cc   <- which(!duplicated(mlgs[psub, i]))
+    out  <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
+    if (correction){
+      out[out < .Machine$double.eps^0.5] <- 1/length(cc)
+    }
+    res[p, ] <- out
+  }
+  
+  return(res)
+}
+
+#==============================================================================#
+# Pairwise index of association calculation
+# 
+# Arguments
+# - pair a character vector of length 3 containing the pair of loci and the 
+#   iteration.
+# - V a choose(n, 2) x m matrix containing the distances at all loci. 
+# - np choose(n, 2)
+# - progbar either NULL or a progressbar object.
+# - iterations the number of loci combinations.
+#
+# Public functions utilizing this function:
+# ## pair.ia
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+ia_pair_loc <- function(pair, V, np, progbar, iterations){
+  if (!is.null(progbar)){
+    setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
+  }
+  newV <- V[, pair[-3]]
+  V    <- list(d.vector  = colSums(newV), 
+               d2.vector = colSums(newV * newV), 
+               D.vector  = rowSums(newV)
+  )
+  return(ia_from_d_and_D(V, np))
+}
+#==============================================================================#
+# Get the index of association from sums of distances over loci and samples
+# 
+# This will take in a list called that contains 3 vectors:
+# 1. d.vector : a vector containing sums of distances per locus
+# 2. d2.vector : like d.vector, but containing sums of squares
+# 3. D.vector : a vector containing the distance over all samples.
+#
+# Public functions utilizing this function:
+# ## none
+#
+# Internal functions utilizing this function:
+# ## ia_pair_loc
+#==============================================================================#
+ia_from_d_and_D <- function(V, np){
+  varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
+  vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
+  sigVarj <- sum(vard.vector)
+  rm(vard.vector)
+  Ia <- (varD/sigVarj) - 1
+  rbarD <- (varD - sigVarj)/(2 * sum(vardpair.vector))
+  return(c(Ia, rbarD))
 }

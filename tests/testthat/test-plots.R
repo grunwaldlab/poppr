@@ -65,6 +65,22 @@ test_that("genotype_curve produces boxplots", {
 	expect_output(pg$layers[[3]], "geom_text")
 })
 
+test_that("genotype_curve shows output if not quiet", {
+	skip_on_cran()
+	data("partial_clone", package = "poppr")
+
+	expect_output(genotype_curve(partial_clone, sample = 100), "100%")
+})
+
+test_that("genotype_curve can take less than m-1 loci", {
+  skip_on_cran()
+  nc  <- genotype_curve(nancycats, maxloci = 2, quiet = TRUE)
+  nc1 <- genotype_curve(nancycats, maxloci = 1, quiet = TRUE)
+  expect_equal(ncol(nc), 2L)
+  expect_equal(ncol(nc1), 1L)
+  expect_error(genotype_curve(nancycats[loc = 1]), "at least two loci")
+})
+
 test_that("ia produces histograms", {
 	skip_on_cran()
 	res    <- ia(nancy, sample = 20, valuereturn = TRUE, quiet = TRUE)

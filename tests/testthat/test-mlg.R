@@ -89,6 +89,25 @@ test_that("mlg.crosspop will work with subsetted genclone objects", {
   expect_warning(z <- mlg.crosspop(Athena, mlgsub = c(14, 2:5)), "The following multilocus genotypes are not defined in this dataset: 2, 3, 4, 5")
 })
 
+test_that("mlg.crosspop can take sublist and blacklist", {
+  skip_on_cran()
+  strata(Aeut) <- other(Aeut)$population_hierarchy
+  agc          <- as.genclone(Aeut)
+  Athena       <- popsub(agc, "Athena")
+  
+  setPop(Athena) <- ~Subpop
+  expectation <- structure(list(MLG.13 = structure(c(1L, 1L), .Names = c("8", 
+"9")), MLG.23 = structure(c(1L, 1L), .Names = c("4", "6")), MLG.24 = structure(c(1L, 
+1L), .Names = c("9", "10")), MLG.32 = structure(c(1L, 1L), .Names = c("7", 
+"9")), MLG.52 = structure(c(1L, 1L), .Names = c("5", "9"))), .Names = c("MLG.13", 
+"MLG.23", "MLG.24", "MLG.32", "MLG.52"))
+  
+  expect_output(mlg.crosspop(Athena, blacklist = 1), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(mlg.crosspop(Athena, blacklist = "1"), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1"), "MLG.13: \\(2 inds\\) 8 9")
+  expect_equivalent(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1", quiet = TRUE), expectation)
+})
+
 test_that("mlg.id Aeut works", {
   expected_output <- structure(list(`1` = "055", `2` = c("101", "103"), `3` = "111", 
                                     `4` = "112", `5` = "110", `6` = "102", `7` = "020", `8` = "007", 

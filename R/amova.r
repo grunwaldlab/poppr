@@ -253,10 +253,10 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     }
     dist <- as.dist(filt_stats$DISTANCE)
     # Forcing this. Probably should make an explicit method for this.
-    x@mlg@mlg["contracted"]    <- filt_stats$MLGS
-    x@mlg@distname             <- "diss.dist"
-    x@mlg@distalgo             <- algorithm
-    x@mlg@cutoff["contracted"] <- threshold
+    x@mlg@mlg["contracted"]     <- filt_stats$MLGS
+    distname(x@mlg)             <- "diss.dist"
+    distalgo(x@mlg)             <- algorithm
+    cutoff(x@mlg)["contracted"] <- threshold
     mll(x) <- "contracted"
     if (!quiet) message("Contracted multilocus genotypes ... ", nmll(x))
   }
@@ -303,7 +303,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   }
   if (!is.euclid(xdist)){
     CORRECTIONS <- c("cailliez", "quasieuclid", "lingoes")
-    try(correct <- match.arg(correction, CORRECTIONS))
+    try(correct <- match.arg(correction, CORRECTIONS), silent = TRUE)
     if (!exists("correct")){
       stop(not_euclid_msg(correction))
     } else {

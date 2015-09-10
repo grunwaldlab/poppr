@@ -4,7 +4,8 @@
 \alias{plot_filter_stats}
 \title{Plot the results of filter_stats}
 \usage{
-plot_filter_stats(x, fstats, distmat, cols = NULL, nclone = NULL)
+plot_filter_stats(x, fstats, distmat, cols = NULL, nclone = NULL,
+  breaks = NULL)
 }
 \arguments{
 \item{x}{a genlight of genind object}
@@ -13,7 +14,8 @@ plot_filter_stats(x, fstats, distmat, cols = NULL, nclone = NULL)
 
 \item{distmat}{a distance matrix passed from \code{\link{filter_stats}}}
 
-\item{cols}{colors to use for each algorithm (defaults to \pkg{RColorBrewer} set 1)}
+\item{cols}{colors to use for each algorithm (defaults to \pkg{RColorBrewer}
+set 1)}
 
 \item{nclone}{see \code{\link{filter_stats}}}
 }
@@ -32,14 +34,15 @@ This function originally appeared in
 Zhian N. Kamvar
 }
 \references{
-ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary Material for
-Frontiers Plant Genetics and Genomics 'Novel R tools for analysis of
-genome-wide population genetic data with emphasis on clonality'. DOI:
-\href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
+ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
+Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
+analysis of genome-wide population genetic data with emphasis on clonality'.
+DOI: \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
 
 Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
-6:208. doi: \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+6:208. doi:
+\href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
 }
 \keyword{internal}
 
