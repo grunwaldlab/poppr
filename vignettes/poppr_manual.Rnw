@@ -188,12 +188,12 @@ to its definition and description.
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Distances}}\\
 \texttt{bruvo.dist} & Bruvo's distance \\
-\texttt{diss.dist} & Absolute genetic distance (see \texttt{provesti.dist}) \\
+\texttt{diss.dist} & Absolute genetic distance (see \texttt{prevosti.dist}) \\
 \texttt{nei.dist} & Nei's 1978 genetic distance \\
 \texttt{rogers.dist} & Rogers' euclidean distance \\
 \texttt{reynolds.dist} & Reynolds' coancestry distance \\
 \texttt{edwards.dist} & Edwards' angular distance \\
-\texttt{provesti.dist} & Provesti's absolute genetic distance \\
+\texttt{prevosti.dist} & Prevosti's absolute genetic distance \\
 %----------------|
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Bootstrapping}}\\
