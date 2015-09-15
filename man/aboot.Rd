@@ -77,13 +77,13 @@ This function utilizes an internal class called
   }
 }
 \note{
-\code{\link{provesti.dist}} and \code{\link{diss.dist}} are exactly the
+\code{\link{prevosti.dist}} and \code{\link{diss.dist}} are exactly the
   same, but \code{\link{diss.dist}} scales better for large numbers of
   individuals (n > 125) at the cost of required memory. \subsection{missing
   data}{Missing data is not allowed by many of the distances. Thus, one of
   the first steps of this function is to treat missing data by setting it to
   the average allele frequency in the data set. If you are using a distance
-  that can handle missing data (Provesti's distance), you can set
+  that can handle missing data (Prevosti's distance), you can set
   \code{missing = "ignore"} to allow the distance function to handle any
   missing data. See \code{\link{missingno}} for details on missing
   data.}\subsection{Bruvo's Distance}{While calculation of Bruvo's distance
@@ -147,7 +147,7 @@ aboot(Aeut.pop, tree = myFastME, sample = 1000)
 \seealso{
 \code{\link{nei.dist}} \code{\link{edwards.dist}}
   \code{\link{rogers.dist}} \code{\link{reynolds.dist}}
-  \code{\link{provesti.dist}} \code{\link{diss.dist}}
+  \code{\link{prevosti.dist}} \code{\link{diss.dist}}
   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}}
   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
 }

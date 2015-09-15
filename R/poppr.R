@@ -131,12 +131,12 @@
 #' @section Genetic distances:
 #' \itemize{
 #' \item \code{\link{bruvo.dist}} - Bruvo's distance (see also: \code{\link{fix_replen}})
-#' \item \code{\link{diss.dist}} - Absolute genetic distance (see provesti.dist)
+#' \item \code{\link{diss.dist}} - Absolute genetic distance (see prevosti.dist)
 #' \item \code{\link{nei.dist}} - Nei's 1978 genetic distance
 #' \item \code{\link{rogers.dist}} - Rogers' euclidean distance
 #' \item \code{\link{reynolds.dist}} - Reynolds' coancestry distance
 #' \item \code{\link{edwards.dist}} - Edwards' angular distance
-#' \item \code{\link{provesti.dist}} - Provesti's absolute genetic distance
+#' \item \code{\link{prevosti.dist}} - Prevosti's absolute genetic distance
 #' \item \code{\link{bitwise.dist}} - Calculates fast pairwise distances for genlight objects. 
 #' }
 #' @section Bootstrapping:

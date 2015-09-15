@@ -3,6 +3,7 @@
 \name{nei.dist}
 \alias{edwards.dist}
 \alias{nei.dist}
+\alias{prevosti.dist}
 \alias{provesti.dist}
 \alias{reynolds.dist}
 \alias{rogers.dist}
@@ -17,6 +18,8 @@ rogers.dist(x)
 reynolds.dist(x)
 
 provesti.dist(x)
+
+prevosti.dist(x)
 }
 \arguments{
 \item{x}{a \linkS4class{genind}, \linkS4class{genclone}, or matrix object.}
@@ -42,9 +45,12 @@ It is important to be careful with the interpretation of these
   the distance matrix without infinite values.
 }
 \note{
-Provesti's distance is identical to \code{\link{diss.dist}}, except
+Prevosti's distance is identical to \code{\link{diss.dist}}, except
   that \code{\link{diss.dist}} is optimized for a larger number of
-  individuals (n > 125) at the cost of required memory.
+  individuals (n > 125) at the cost of required memory. Both
+  \code{prevosti.dist} and \code{provesti.dist} are the same function,
+  \code{provesti.dist} is a spelling error and exists for backwards
+  compatibility.
 
   These distances were adapted from the \pkg{adegenet} function
   \code{\link{dist.genpop}} to work with \code{\linkS4class{genind}} objects.
@@ -56,7 +62,7 @@ neinan <- nei.dist(nan9)
 ednan <- edwards.dist(nan9)
 rodnan <- rogers.dist(nan9)
 reynan <- reynolds.dist(nan9)
-pronan <- provesti.dist(nan9)
+pronan <- prevosti.dist(nan9)
 }
 \author{
 Zhian N. Kamvar (poppr adaptation)

@@ -97,9 +97,9 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differe
   inds      <- nInd(x)
   numPairs   <- nLoc(x)
 
-  # Use Provesti if this is a genclone or genind object
+  # Use Prevosti if this is a genclone or genind object
   if(!is(x, "genlight")){
-    dist.mat <- provesti.dist(x)
+    dist.mat <- prevosti.dist(x)
     if (percent == FALSE){
       dist.mat <- dist.mat*ploid*numPairs
     }

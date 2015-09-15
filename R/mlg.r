@@ -371,9 +371,9 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
         the_dist <- as.character(substitute(the_call[["distance"]]))
         call_len <- length(the_dist)
         is_diss_dist <- the_dist %in% "diss.dist"
-        any_dist <- the_dist %in% c("diss.dist", "nei.dist", "provesti.dist",
+        any_dist <- the_dist %in% c("diss.dist", "nei.dist", "prevosti.dist",
                                     "edwards.dist", "reynolds.dist", 
-                                    "rogers.dist")
+                                    "rogers.dist", "provesti.dist")
         if (missing == "mean" && call_len == 1 && is_diss_dist){
           # if (is_diss_dist){
             disswarn <- paste("Cannot use function diss.dist and correct for", 
