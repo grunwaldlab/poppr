@@ -4,6 +4,7 @@ data("nancycats", package = "adegenet")
 data("Pinf", package = "poppr")
 nancy <- popsub(nancycats, c(1, 9))
 ggversion <- packageVersion("ggplot2")
+oldgg <- package_version("1.0.1")
 
 test_that("info_table plots work", {
 	skip_on_cran()
@@ -95,7 +96,7 @@ test_that("ia produces histograms", {
 	expect_is(pres, "popprtable")
 	expect_output(pres, "nancy")
 
-	if (ggversion <= package_version("1.0.1")){
+	if (ggversion <= oldgg){
 	  expect_output(iaplot$layers[[1]], "geom_histogram")
 	} else {
 	  expect_output(iaplot$layers[[1]], "geom_bar")
@@ -103,11 +104,11 @@ test_that("ia produces histograms", {
 	
 	expect_output(iaplot$layers[[2]], "geom_rug")
 	expect_output(iaplot$layers[[3]], "geom_vline")
-	expect_output(iaplot$layers[[4]], paste0("geom_text", ".+?", signif(res$index["rbarD"], 3)))
-	expect_output(iaplot$layers[[5]], paste0("geom_text", ".+?", signif(res$index["p.rD"], 3)))
+	expect_output(iaplot$layers[[4]], "geom_text")
+	expect_output(iaplot$layers[[5]], "geom_text")
 	expect_output(iaplot$facet, "facet_null\\(\\)")
 
-	if (ggversion <= package_version("1.0.1")){
+	if (ggversion <= oldgg){
 	  expect_output(poplot$layers[[1]], "geom_histogram")
 	} else {
 	  expect_output(poplot$layers[[1]], "geom_bar")
