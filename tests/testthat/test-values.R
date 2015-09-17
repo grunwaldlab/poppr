@@ -28,6 +28,16 @@ test_that("Repeat lengths can be in any order and length if named", {
   expect_equivalent(pbruvo, pbruvo_long)
 })
 
+test_that("Bruvo's distance can be calculated per locus", {
+  skip_on_cran()
+  data("Pram")
+  p10 <- Pram[sample(nInd(Pram), 10)]
+  pbruvo <- bruvo.dist(p10, replen = other(p10)$REPLEN, by_locus = TRUE)
+  expect_is(pbruvo, "list")
+  expect_is(pbruvo[[1]], "dist")
+  expect_equal(length(pbruvo), nLoc(p10))
+})
+
 test_that("Infinite Alleles Model works.",{
   x <- structure(list(V3 = c("228/236/242", "000/211/226"), 
                       V6 = c("190/210/214", "000/190/203")), 
@@ -150,6 +160,7 @@ test_that("ia and pair.ia return same values", {
   pc_pair <- pair.ia(partial_clone, plot = FALSE, quiet = TRUE)
   
   # Randomly sample two loci
+  set.seed(9001)
   locpair <- sample(locNames(partial_clone), 2)
   
   # Calculate ia for those

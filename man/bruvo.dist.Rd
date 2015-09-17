@@ -4,7 +4,7 @@
 \alias{bruvo.dist}
 \title{Bruvo's distance for microsatellites}
 \usage{
-bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
+bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALSE)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} object}
@@ -20,9 +20,15 @@ bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE)
 \item{loss}{if \code{TRUE}, genotypes with zero values will be treated under
   the genome loss model presented in Bruvo et al. 2004. See the
   \strong{Note} section for options.}
+
+\item{by_locus}{indicator to get the results per locus. The default setting
+  is \code{by_locus = FALSE}, indicating that Bruvo's distance is to be
+  averaged over all loci. When \code{by_locus = TRUE}, a list of distance
+  matrices will be returned.}
 }
 \value{
-an object of class \code{\link{dist}}
+an object of class \code{\link{dist}} or a list of these objects if
+  \code{by_locus = TRUE}
 }
 \description{
 Calculate the average Bruvo's distance over all loci in a population.
@@ -129,8 +135,12 @@ test_replen(nancycats, ssr)         # Are the repeat lengths consistent?
 # Analyze the first population in nancycats
 bruvo.dist(popsub(nancycats, 1), replen = ssr)
 
-# View each population as a heatmap.
 \dontrun{
+
+# get the per locus estimates:
+bruvo.dist(popsub(nancycats, 1), replen = ssr, by_locus = TRUE)
+
+# View each population as a heatmap.
 sapply(popNames(nancycats), function(x)
 heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 }

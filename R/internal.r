@@ -1244,7 +1244,7 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
 #==============================================================================#
 
 bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, 
-                            loss = TRUE){
+                            loss = TRUE, by_locus = FALSE){
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
   replen <- bruvomat@replen
@@ -1264,18 +1264,27 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
   # comparison is not made. These are changed to NA.
   distmat[distmat == 100] <- NA
 
-  # Obtaining the average distance over all loci.
-  avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+  if (!by_locus){
+    # Obtaining the average distance over all loci.
+    avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+  
+    # presenting the information in a lower triangle distance matrix.
+    dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
+    dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
+    dist.mat <- as.dist(dist.mat)
+  
+    attr(dist.mat, "Labels") <- bruvomat@ind.names
+    attr(dist.mat, "method") <- "Bruvo"
+    attr(dist.mat, "call")   <- funk_call
+    return(dist.mat)    
+  } else {
+    n    <- nrow(x)
+    cols <- seq(ncol(distmat))
+    labs <- bruvomat@ind.names
+    meth <- "Bruvo"
+    return(lapply(cols, function(i) make_attributes(distmat[, i], n, labs, meth, funk_call)))
+  }
 
-  # presenting the information in a lower triangle distance matrix.
-  dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
-  dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
-  dist.mat <- as.dist(dist.mat)
-
-  attr(dist.mat, "Labels") <- bruvomat@ind.names
-  attr(dist.mat, "method") <- "Bruvo"
-  attr(dist.mat, "call")   <- funk_call
-  return(dist.mat)
 }
 
 
@@ -1796,6 +1805,12 @@ get_gen_dist_labs <- function(x){
 #==============================================================================#
 # This will give attributes to genetic distance matrices. 
 #
+# Input: 
+#  - d a vector to be coerced into a distance matrix.
+#  - nlig number of samples
+#  - labs the names of the samples
+#  - method the name of the method used to create the distances
+#  - matched_call the call that created the matrix.
 # Public functions utilizing this function:
 # *.dist
 #

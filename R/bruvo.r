@@ -68,7 +68,13 @@
 #'   the genome loss model presented in Bruvo et al. 2004. See the
 #'   \strong{Note} section for options.
 #'   
-#' @return an object of class \code{\link{dist}}
+#' @param by_locus indicator to get the results per locus. The default setting
+#'   is \code{by_locus = FALSE}, indicating that Bruvo's distance is to be
+#'   averaged over all loci. When \code{by_locus = TRUE}, a list of distance
+#'   matrices will be returned.
+#'   
+#' @return an object of class \code{\link{dist}} or a list of these objects if
+#'   \code{by_locus = TRUE}
 #'   
 #' @details 
 #'   Bruvo's distance between two alleles is calculated as 
@@ -182,14 +188,18 @@
 #' # Analyze the first population in nancycats
 #' bruvo.dist(popsub(nancycats, 1), replen = ssr)
 #' 
-#' # View each population as a heatmap.
 #' \dontrun{
+#' 
+#' # get the per locus estimates:
+#' bruvo.dist(popsub(nancycats, 1), replen = ssr, by_locus = TRUE)
+#' 
+#' # View each population as a heatmap.
 #' sapply(popNames(nancycats), function(x) 
 #' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 #' }
 #==============================================================================#
 #' @useDynLib poppr
-bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
+bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALSE){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if (pop@type != "codom" || all(is.na(unlist(lapply(alleles(pop), as.numeric))))){
@@ -198,7 +208,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
-  if (length(replen) < length(locNames(pop))){
+  if (length(replen) < nLoc(pop)){
     replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
@@ -207,7 +217,10 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   if (length(add) != 1 || !is.logical(add) || length(loss) != 1 || !is.logical(loss)){
     stop("add and loss flags must be either TRUE or FALSE. Please check your input.")
   }
-  dist.mat  <- bruvos_distance(bruvomat, funk_call = funk_call, add, loss)
+  dist.mat <- bruvos_distance(bruvomat, funk_call = funk_call, add, loss, by_locus)
+  if (by_locus){
+    names(dist.mat) <- locNames(pop)
+  }
   return(dist.mat)
 }
 

@@ -12,6 +12,7 @@ NEW FEATURES
 * `genotype_curve` can now take in loci objects from pegas.
 * You can now specify the maximum number of loci to analyze in `genotype_curve`.
 * `filter_stats` can now optionally plot a histogram in the background.
+* `bruvo.dist` can now optionally return distance matrices by locus. This is addresed in issue #60 (https://github.com/grunwaldlab/poppr/issues/60)
 
 NEW FUNCTIONS
 * `rrmlg` will calculate round-robin multilocus genotypes for each locus.
@@ -31,7 +32,7 @@ BUG FIX
 poppr 2.0.2
 ===========
 BUG FIX
-* Definition of Hexp was fixed. It originally was mis-calculated, inflating the metric. It is now correctly calcualted and documented. More information at issue [#47](https://github.com/grunwaldlab/poppr/issues/47)
+* Definition of Hexp was fixed. It originally was mis-calculated, inflating the metric. It is now correctly calculated and documented. More information at issue [#47](https://github.com/grunwaldlab/poppr/issues/47)
 
 poppr 2.0.1
 ===========
@@ -75,8 +76,8 @@ NEW FEATURES
 * `poppr.msn` and `plot_poppr_msn` can now take genlight objects.
 * `plot_poppr_msn` now gives users the option to exclude the legends.
 * Default plotting for `mlg.table` will no longer produce one plot per population. It will now produce a single ggplot object for all populations. Note that the bars are no longer colored by count.
-* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calucluated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
-* `poppr` can now take any statistic that can be caluclated from a table of multilocus genotype counts. 
+* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calumniated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
+* `poppr` can now take any statistic that can be calculated from a table of multilocus genotype counts. 
 * `genind2genalex` gains the ability to selectively write different strata.
 
 NEW FUNCTIONS
@@ -94,7 +95,7 @@ NEW FUNCTIONS
 * `test_replen` will test repeat lengths of microsatellite markers for consistency.
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
 * `diversity_stats` returns a matrix containing diversity statistics. Defaults to 4 found in `poppr`, but can be extended to any statistic that can be calculated on a vector of MLG counts.
-* `diviersity_boot` will bootstrap a MLG matrix over the statistics specified for `get_stats`. Can also perform rarefaction bootstrap.
+* `diversity_boot` will bootstrap a MLG matrix over the statistics specified for `get_stats`. Can also perform rarefaction bootstrap.
 * `diversity_ci` will calculate and plot confidence intervals for bootstrap resampling of an MLG matrix. This includes rarefaction to the smallest sample size.
 * `imsn` provides an interactive shiny interface for construction of minimum spanning networks.
 * `pair.ia` will calculate the index of association for pairs of loci and plot heatmaps. 
