@@ -28,6 +28,7 @@ MISC
 
 BUG FIX
 * Single locus data sets can now be read in with `read.genalex`. This was brought up in issue [#58](https://github.com/grunwaldlab/poppr/issues/58) (Thanks to Nick Wong for spotting it).
+* A bug in `informloci` where the MAF argument wasn't being applied to P/A data has been fixed.
 
 poppr 2.0.2
 ===========
