@@ -776,25 +776,23 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
   }
   if (pop@type == "PA"){
     # cutoff applies to too many or too few typed individuals in AFLP cases.
-    locivals <- apply(pop@tab, 2, sum) %in% min_ind:(nInd(pop) - min_ind)
-    if(!isTRUE(quiet)){
-      if(all(locivals == TRUE)){
-        message("No sites found with fewer than", min_ind, 
-                "different samples.")
-      }
-      else{
-        message(sum(!locivals), "uninformative", 
-            ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
-            paste(locNames(pop)[!locivals], collapse = ", "))
-      }
-    }
-    return(pop[, locivals])
-  } 
-  # as.loci will put the population factor first when creating the data frame.
-  if (is.null(pop(pop))){
-    glocivals <- apply(as.loci(pop), 2, test_table, min_ind, nInd(pop))
+    glocivals <- apply(tab(pop), 2, sum) %in% min_ind:(nInd(pop) - min_ind)
+    # if(!isTRUE(quiet)){
+    #   if(all(locivals == TRUE)){
+    #     message("No sites found with fewer than ", min_ind, 
+    #             " different samples.")
+    #   }
+    #   else{
+    #     message(sum(!locivals), "uninformative", 
+    #         ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
+    #         paste(locNames(pop)[!locivals], collapse = ", "))
+    #   }
+    # }
+    # return(pop[, locivals])
   } else {
-    glocivals <- apply(as.loci(pop)[-1], 2, test_table, min_ind, nInd(pop))
+    genloc    <- as.loci(pop)
+    the_loci  <- attr(genloc, "locicol")
+    glocivals <- apply(genloc[the_loci], 2, test_table, min_ind, nInd(pop))
   }
 
   alocivals <- isPoly(pop, "locus", thres = MAF)
@@ -831,7 +829,10 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
   if (!isTRUE(quiet)){
     message(msg)
   }
-
+  
+  if (pop@type == "PA"){
+    return(pop[, locivals])
+  }
   return(pop[, loc = locNames(pop)[locivals]])
 }
 #==============================================================================#
