@@ -1,6 +1,6 @@
 context("Informloci tests")
 
-
+data("Aeut", package = "poppr")
 genos <- c("A/A", "A/B", "A/C", "B/B", "B/C", "C/C")
 
 v  <- sample(genos, 100, replace = TRUE)
@@ -30,4 +30,10 @@ test_that("informloci finds both", {
   expect_message(out <- informloci(dat), "Found 3 uninformative loci")
   expect_equal(nLoc(out), 2)
   expect_equivalent(locNames(out), c("v", "z"))
+})
+
+test_that("informloci works for Presence/Absence data", {
+  skip_on_cran()
+  expect_message(informloci(Aeut), "All sites polymorphic")
+  expect_message(informloci(Aeut, MAF = 0.5), "Fewer than 2 loci found informative")
 })
