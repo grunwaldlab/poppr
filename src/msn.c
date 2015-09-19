@@ -86,6 +86,8 @@ SEXP msn_tied_edges(SEXP mst, SEXP bclone, SEXP epsi)
   int num_edges = 0;
   int num_vertices = 0;
   double mn;
+  double candidate_edge;
+  double this_edge;
   double *edges = R_Calloc(edges_size,double);
   num_vertices = INTEGER(getAttrib(bclone,R_DimSymbol))[1];
   for(int i = 0; i < num_vertices; i++)
@@ -94,28 +96,34 @@ SEXP msn_tied_edges(SEXP mst, SEXP bclone, SEXP epsi)
     mn = -1;
     for(int j = 0; j < num_vertices; j++)
     {
+      this_edge = REAL(mst)[i + j*num_vertices];
       // Set mn to REAL(mst)[i][j] if it is smaller than mn, or it mn is still -1
       // ie, this loop finds the shortest path out of node i
-      mn = ((mn < 0 || REAL(mst)[i + j*num_vertices] < mn) && REAL(mst)[i + j*num_vertices] > 0) ? (REAL(mst)[i + j*num_vertices]) : (mn);
+      mn = ((mn < 0 || this_edge < mn) && this_edge > 0) ? this_edge : mn;
     }
     // Find all paths out of this vertex that are tied in length with the minimum
     for(int j = i+1; j < num_vertices; j++)
     {
+      candidate_edge = REAL(bclone)[i + j*num_vertices];
+      this_edge = REAL(mst)[i + j*num_vertices];
       // Check for matching edges that do not already exist in this graph
-      // For each path out of node i, check to see if its length is no more than epsi larger than the minimum
-      if(fabs(REAL(bclone)[i + j*num_vertices] - mn) < asReal(epsi) && !(REAL(mst)[i + j*num_vertices] > 0))
+      // For each path out of node i, check to see if its length is no more than
+      // epsi larger than the minimum
+      if(fabs(candidate_edge - mn) < asReal(epsi) && !(this_edge > 0))
       {
-        // Resize the edges array if it does not have room for another set of three values
+        // Resize the edges array if it does not have room for another set of 
+        // three values
         if(num_edges+2 >= edges_size)
         {
           edges = R_Realloc(edges, edges_size*2, double);
           edges_size *= 2;
         }
         // add i, j, and mn to a vector to return
-        // This sets edges[x] and edges[x+1] to be end points of a path of size edges[x+2] = mn
+        // This sets edges[x] and edges[x+1] to be end points of a path of size 
+        // edges[x+2] = mn
         edges[num_edges] = (double)(i+1);
         edges[num_edges+1] = (double)(j+1);
-        edges[num_edges+2] = mn;
+        edges[num_edges+2] = candidate_edge;
         num_edges += 3;
       }
     }
