@@ -22,6 +22,24 @@ test_that("multilocus genotype vector is same length as samples", {
   expect_equal(lu(nmlg), mlg(nancycats, quiet = TRUE))
 })
 
+test_that("clone correction works for specified levels and throws errors", {
+  skip_on_cran()
+  strata(aclone) <- other(aclone)[[1]][-1]
+  ac <- aclone
+  indNames(ac) <- rep("", nInd(ac))
+  expect_equal(nmll(aclone), 119L)
+  expect_equal(nInd(clonecorrect(aclone, ~Pop)), 120L)
+  expect_equal(nInd(clonecorrect(ac, ~Pop)), 120L) # no sample names
+  expect_equal(nInd(clonecorrect(aclone, 1L)), 120L) # works with numeric input
+  expect_equal(nInd(clonecorrect(aclone, ~Pop/Subpop)), 141L) # with formula
+  expect_equal(nInd(clonecorrect(aclone, NA)), 119L) # with nothing
+  
+  # Errors for unexpected behavior.
+  expect_error(clonecorrect(1), "1 is not")
+  expect_error(clonecorrect(aclone, ~field/sample), "field/sample") 
+  expect_error(clonecorrect(aclone, 1L:4L), "NA")
+})
+
 test_that("multilocus genotype matrix matches mlg.vector and data", {
   expect_equal(nrow(atab), nPop(Aeut))
   expect_equal(nrow(ptab), nPop(partial_clone))
