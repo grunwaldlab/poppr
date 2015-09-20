@@ -558,7 +558,7 @@ setMethod(
   definition = function(object){
     ploid  <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
-    ploid  <- paste0(unique(ploid[object@ploidy]), "ploid")
+    ploid  <- paste0(unique(ploid[sort(object@ploidy)]), "ploid")
     if (length(ploid) > 1){
       ploid  <- paste(ploid, paste0("(", table(object@ploidy), ")"))
       ploid1 <- paste0(ploid[-length(ploid)], collapse = ", ")
@@ -633,7 +633,7 @@ setMethod(
     nmlg  <- length(unique(x@mlg))
     ploid  <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
-    ploid  <- paste0(unique(ploid[x@ploidy]), "ploid")
+    ploid  <- paste0(unique(ploid[sort(x@ploidy)]), "ploid")
     if (length(ploid) > 1){
       ploid  <- paste(ploid, paste0("(", table(x@ploidy), ")"))
       ploid1 <- paste0(ploid[-length(ploid)], collapse = ", ")
