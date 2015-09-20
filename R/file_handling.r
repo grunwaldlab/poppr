@@ -336,8 +336,10 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   if (nloci == clm/ploidy & ploidy > 1){
     # Missing data in genalex is coded as "0" for non-presence/absence data.
     # this converts it to "NA" for adegenet.
-    if(any(gena.mat == "0") & ploidy < 3){
+    if (any(gena.mat == "0") & ploidy < 3){
       gena[gena.mat == "0"] <- NA
+    } else if (any(is.na(gena.mat)) & ploidy > 2) {
+      gena[is.na(gena.mat)] <- "0"
     }
     type  <- 'codom'
     loci  <- which((1:clm) %% ploidy == 1)
