@@ -607,6 +607,8 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
     cgid   <- gid[.clonecorrector(gid), ]
     bclone <- filter.stats[[3]]
     if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
+    # Fix issue #66
+    rownames(bclone) <- indNames(cgid) -> colnames(bclone)
   } else {
     cgid <- gid[.clonecorrector(gid), ]
     bclone <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))

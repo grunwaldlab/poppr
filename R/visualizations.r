@@ -321,9 +321,11 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   
   if (is.null(pop(gid)) | nPop(gid) == 1){
     return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, mlg.compute = mlg.compute,
-                         palette = palette, include.ties = include.ties, showplot=showplot,
-                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
+                         glim = glim, gadj = gadj, wscale = wscale, 
+                         mlg.compute = mlg.compute, palette = palette, 
+                         include.ties = include.ties, showplot = showplot,
+                         threshold = threshold, 
+                         clustering.algorithm = clustering.algorithm, ...))
   }
 
   if (class(gid$mlg) != "MLG"){
@@ -333,7 +335,9 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
 
   if(threshold > 0){
     # Updating MLG with filtered data
-    filter.stats <- mlg.filter(gid,threshold,distance=bclone,algorithm=clustering.algorithm,stats="ALL")
+    filter.stats <- mlg.filter(gid, threshold, distance = bclone, 
+                               algorithm = clustering.algorithm,
+                               stats = "ALL")
     # TODO: The following two lines should be a product of mlg.filter
     visible(gid$mlg) <- "contracted"
     gid$mlg[]        <- filter.stats[[1]]
@@ -344,6 +348,8 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     if (!is.matrix(bclone)){
       bclone <- as.matrix(bclone)
     }
+    # Fix issue #66
+    rownames(bclone) <- indNames(cgid) -> colnames(bclone)
   }
   else {  
     cgid <- gid[.clonecorrector(gid), ]
