@@ -46,8 +46,8 @@
 #' to genind or genclone objects.
 #' 
 #' @param x a \linkS4class{genind}, \linkS4class{genpop},
-#'   \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone}, or
-#'   \link{matrix} object.
+#'   \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone} or
+#'   \link{matrix}, object.
 #'   
 #' @param strata a formula specifying the strata to be used to convert x to a
 #'   genclone object if x is a genind object. Defaults to NULL. See details.
@@ -191,7 +191,11 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
       x <- genind2genpop(x, pop = strata, quiet = TRUE, process.other = FALSE)
     }
   }
-  if (!is(x, "genlight") && x@type == "PA"){
+  if (is.matrix(x)){
+    if (is.null(rownames(x))) rownames(x) <- .genlab("", nrow(x))
+    if (is.null(colnames(x))) colnames(x) <- .genlab("L", ncol(x))
+    xboot <- x
+  } else if (!is(x, "genlight") && x@type == "PA"){
     xboot           <- x@tab
     colnames(xboot) <- locNames(x)
     if (is.genpop(x)){
@@ -241,7 +245,9 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
   nodelabs <- (nodelabs/sample)*100
   nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
   if (!is.genpop(x)){
-    if (!is.null(indNames(x))){
+    if (is.matrix(x)){
+      xtree$tip.label <- rownames(x)
+    } else if (!is.null(indNames(x))){
       xtree$tip.label <- indNames(x)
     }
   } else {
