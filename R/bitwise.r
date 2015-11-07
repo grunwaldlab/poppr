@@ -370,7 +370,6 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #'   
 #' @export
-#' 
 #' @examples
 #' \dontrun{
 #' # with structured snps assuming 1e4 positions

@@ -764,7 +764,6 @@ consistent_replen <- function(index, alleles, replen){
 #'   to the user to determine if the fault is in the allele calls or the repeat
 #'   lengths.
 #' @export
-#' 
 #' @references Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
 #'   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
 #'   and temporal population dynamics of the sudden oak death epidemic in Oregon

@@ -828,7 +828,6 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' 
 #' @author Zhian N. Kamvar
 #' @export
-#' 
 #' @examples
 #' # Using a data set of the Aphanomyces eutieches root rot pathogen.
 #' data(Aeut)
