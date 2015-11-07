@@ -26,6 +26,7 @@ NEW FEATURES
 * `filter_stats` can now optionally plot a histogram in the background.
 * `bruvo.dist` can now optionally return distance matrices by locus. This is
   addresed in issue #60 (https://github.com/grunwaldlab/poppr/issues/60)
+* `aboot` can now handle matrices as previously specified in the documentation.
 
 NEW FUNCTIONS
 -----------
@@ -45,6 +46,7 @@ MISC
   instead of a progress bar.
 * The genotype accumulation plot is now scaled from 0 to the number of observed
   mlgs.
+* Documentation for `poppr.amova` no longer references the "hierarchy" slot.
 
 BUG FIX
 -----------
