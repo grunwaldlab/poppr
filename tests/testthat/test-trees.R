@@ -27,6 +27,17 @@ test_that("bruvo.boot rejects non-ssr data", {
 	expect_error(bruvo.boot(Aeut))
 })
 
+test_that("aboot can take in matrices", {
+  skip_on_cran()
+  Aeut.tab <- tab(Aeut.pop)
+  apop <- aboot(Aeut.pop, showtree = FALSE, quiet = TRUE)
+  amat <- aboot(Aeut.tab, showtree = FALSE, quiet = TRUE)
+  expect_equal(apop$tip.label, amat$tip.label)
+  dimnames(Aeut.tab) <- NULL
+  amat <- aboot(Aeut.tab, quiet = TRUE)
+  expect_equal(amat$tip.label, .genlab("", nrow(Aeut.tab)))
+})
+
 test_that("aboot can also produce trees from any function", {
 	skip_on_cran()
 
