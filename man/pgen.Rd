@@ -67,7 +67,7 @@ apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 }
 }
 \author{
-Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
+Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 }
 \references{
 Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.

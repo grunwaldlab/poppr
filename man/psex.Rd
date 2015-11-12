@@ -125,7 +125,7 @@ res # Compare to the first three rows of Table 2 in Parks & Werth, 1993
 }
 }
 \author{
-Zhian N. Kamvar, Jonah Brooks, Stacy Krueger-Hadfield, Erik Sotka
+Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 }
 \references{
 Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007. 
