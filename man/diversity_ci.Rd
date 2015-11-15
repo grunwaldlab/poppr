@@ -9,16 +9,17 @@ diversity_ci(tab, n = 1000, n.boot = 1L, ci = 95, total = TRUE,
   ...)
 }
 \arguments{
-\item{tab}{a genind object OR a matrix produced from 
+\item{tab}{a \code{\link{genind}}, \code{\link{genclone}},
+\code{\link{snpclone}}, OR a matrix produced from 
 \code{\link[poppr]{mlg.table}}.}
 
 \item{n}{an integer defining the number of bootstrap replicates (defaults to 
 1000).}
 
 \item{n.boot}{an integer specifying the number of samples to be drawn in each
-bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples
-drawn for each bootstrap replicate will be equal to the number of samples in
-the data set. See Details.}
+bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples 
+drawn for each bootstrap replicate will be equal to the number of samples
+in the data set. See Details.}
 
 \item{ci}{the percent for confidence interval.}
 
@@ -26,11 +27,11 @@ the data set. See Details.}
 \code{tab} is a genind object.}
 
 \item{rarefy}{if \code{TRUE}, bootstrapping will be performed on the smallest
-population size or the value of \code{n.rare}, whichever is larger.
-Defaults to \code{FALSE}, indicating that bootstrapping will be performed
+population size or the value of \code{n.rare}, whichever is larger. 
+Defaults to \code{FALSE}, indicating that bootstrapping will be performed 
 respective to each population size.}
 
-\item{n.rare}{an integer specifying the smallest size at which to resample
+\item{n.rare}{an integer specifying the smallest size at which to resample 
 data. This is only used if \code{rarefy = TRUE}.}
 
 \item{plot}{If \code{TRUE} (default), boxplots will be produced for each 
@@ -38,10 +39,10 @@ population, grouped by statistic. Colored dots will indicate the observed
 value.This plot can be retrieved by using \code{p <- last_plot()} from the 
 \pkg{ggplot2} package.}
 
-\item{raw}{if \code{TRUE} (default) a list containing three elements will be
+\item{raw}{if \code{TRUE} (default) a list containing three elements will be 
 returned}
 
-\item{center}{if \code{TRUE} (default), the confidence interval will be
+\item{center}{if \code{TRUE} (default), the confidence interval will be 
 centered around the observed statistic. Otherwise, if \code{FALSE}, the 
 confidence interval will be bias-corrected normal CI as reported from 
 \code{\link[boot]{boot.ci}}}
@@ -70,7 +71,7 @@ three decimal places. }
 \description{
 This function is for calculating bootstrap statistics and their confidence 
 intervals. It is important to note that the calculation of confidence 
-intervals is not perfect (See Details). Please be cautious when interpreting
+intervals is not perfect (See Details). Please be cautious when interpreting 
 the results.
 }
 \details{
