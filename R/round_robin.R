@@ -113,7 +113,8 @@ rrmlg <- function(gid){
 #' @return a vector or list of allele frequencies
 #' @note When \code{by_pop = TRUE}, the output will be a matrix of allele 
 #'   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
-#'   \code{by_pop} is automatically \code{TRUE}.
+#'   \code{by_pop} is automatically \code{TRUE}. When \code{correction = TRUE},
+#'   \emph{n} refers to the population size.
 #' 
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 #' @references
@@ -203,14 +204,19 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #' @inheritParams rraf
 #' 
 #' @param gid a genind or genclone object. 
+#' 
+#' @param by_pop When this is \code{TRUE} (default), the calculation will be
+#'   done by population.
 #'
 #' @param log a \code{logical} if \code{log =TRUE} (default), the values
 #'   returned will be log(Pgen). If \code{log = FALSE}, the values returned will
 #'   be Pgen.
 #'   
-#' @param freq a vector or matrix of allele frequencies. This defaults to
-#'   \code{NULL}, indicating that the frequencies will be determined via
-#'   round-robin approach.
+#' @param freq a vector or matrix of allele frequencies. This defaults to 
+#'   \code{NULL}, indicating that the frequencies will be determined via 
+#'   round-robin approach. \strong{If \code{by_pop = TRUE}, zero-value allele
+#'   frequencies will automatically be corrected by 1/n.} See \code{\link{rraf}}
+#'   for details.
 #'   
 #' @note For haploids, Pgen at a particular locus is the allele frequency. This
 #'   function cannot handle polyploids. Additionally, when the argument
@@ -273,7 +279,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
     }
     by_pop <- TRUE
   }
-  # Ensure there is a population assignment for every genotype
+  # Set single population if none exists OR if user explicitly said by_pop = FALSE
   if (is.null(pop(gid)) || !by_pop){
     pop(gid) <- rep(1, nInd(gid))
   }   

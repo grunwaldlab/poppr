@@ -14,12 +14,14 @@ psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
 \code{\link{strata}} slot or a vector specifying the population factor for
 each sample. Defaults to NULL.}
 
-\item{by_pop}{When this is \code{TRUE}, the calculation will be done by
-population. Defaults to \code{FALSE}}
+\item{by_pop}{When this is \code{TRUE} (default), the calculation will be
+done by population.}
 
-\item{freq}{a vector or matrix of allele frequencies. This defaults to
-\code{NULL}, indicating that the frequencies will be determined via
-round-robin approach.}
+\item{freq}{a vector or matrix of allele frequencies. This defaults to 
+\code{NULL}, indicating that the frequencies will be determined via 
+round-robin approach. \strong{If \code{by_pop = TRUE}, zero-value allele
+frequencies will automatically be corrected by 1/n.} See \code{\link{rraf}}
+for details.}
 
 \item{G}{an integer specifying the number of observed genets. If NULL, this 
 will be the number of original multilocus genotypes.}

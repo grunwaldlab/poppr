@@ -13,16 +13,18 @@ pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL)
 \code{\link{strata}} slot or a vector specifying the population factor for
 each sample. Defaults to NULL.}
 
-\item{by_pop}{When this is \code{TRUE}, the calculation will be done by
-population. Defaults to \code{FALSE}}
+\item{by_pop}{When this is \code{TRUE} (default), the calculation will be
+done by population.}
 
 \item{log}{a \code{logical} if \code{log =TRUE} (default), the values
 returned will be log(Pgen). If \code{log = FALSE}, the values returned will
 be Pgen.}
 
-\item{freq}{a vector or matrix of allele frequencies. This defaults to
-\code{NULL}, indicating that the frequencies will be determined via
-round-robin approach.}
+\item{freq}{a vector or matrix of allele frequencies. This defaults to 
+\code{NULL}, indicating that the frequencies will be determined via 
+round-robin approach. \strong{If \code{by_pop = TRUE}, zero-value allele
+frequencies will automatically be corrected by 1/n.} See \code{\link{rraf}}
+for details.}
 }
 \value{
 A vector containing Pgen values per locus for each genotype in the 
