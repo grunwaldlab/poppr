@@ -27,6 +27,8 @@ NEW FEATURES
 * `bruvo.dist` can now optionally return distance matrices by locus. This is
   addresed in issue #60 (https://github.com/grunwaldlab/poppr/issues/60)
 * `aboot` can now handle matrices as previously specified in the documentation.
+* `aboot` can now take custom functions to calculate distance for genlight 
+  objects.
 
 NEW FUNCTIONS
 -----------
