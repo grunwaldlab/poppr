@@ -11,7 +11,7 @@ pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL)
 
 \item{pop}{either a formula to set the population factor from the
 \code{\link{strata}} slot or a vector specifying the population factor for
-each sample. Defaults to NULL.}
+each sample. Defaults to \code{NULL}.}
 
 \item{by_pop}{When this is \code{TRUE} (default), the calculation will be
 done by population.}
@@ -22,9 +22,9 @@ be Pgen.}
 
 \item{freq}{a vector or matrix of allele frequencies. This defaults to 
 \code{NULL}, indicating that the frequencies will be determined via 
-round-robin approach. \strong{If \code{by_pop = TRUE}, zero-value allele
-frequencies will automatically be corrected by 1/n.} See \code{\link{rraf}}
-for details.}
+round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
+TRUE}, and this matrix or vector is not provided, zero-value allele 
+frequencies will automatically be corrected by 1/n.}}
 }
 \value{
 A vector containing Pgen values per locus for each genotype in the 
@@ -39,12 +39,11 @@ Pgen is the probability of a given genotype occuring in a population
   
   \deqn{P_{gen} = \left(\prod_{i=1}^m p_i\right)2^h}{pgen = prod(p_i)*(2^h)} 
   
-  where \eqn{p_i} are
-  the allele frequencies and \emph{h} is the count of the number of
-  heterozygous sites in the sample (Arnaud-Haond et al. 2007; Parks and
-  Werth, 1993). The allele frequencies, by default, are calculated using a
-  round-robin approach where allele frequencies at a particular locus are
-  calculated on the clone-censored genotypes without that locus. 
+  where \eqn{p_i} are the allele frequencies and \emph{h} is the count of the
+  number of heterozygous sites in the sample (Arnaud-Haond et al. 2007; Parks
+  and Werth, 1993). The allele frequencies, by default, are calculated using
+  a round-robin approach where allele frequencies at a particular locus are 
+  calculated on the clone-censored genotypes without that locus.
   
   To avoid issues with numerical precision of small numbers, this function 
   calculates pgen per locus by adding up log-transformed values of allele 
@@ -52,8 +51,11 @@ Pgen is the probability of a given genotype occuring in a population
   examples).
 }
 \note{
-For haploids, Pgen at a particular locus is the allele frequency. This
-  function cannot handle polyploids. Additionally, when the argument
+Any zero-value allele frequencies will be corrected by 1/n. This is to
+  avoid any zero-probability genotypes. To counteract this, you can supply
+  your own allele frequencies with the \code{freq} argument (see example).
+  For haploids, Pgen at a particular locus is the allele frequency. This 
+  function cannot handle polyploids. Additionally, when the argument 
   \code{pop} is not \code{NULL}, \code{by_pop} is automatically \code{TRUE}.
 }
 \examples{
@@ -66,6 +68,26 @@ exp(rowSums(pgen(Pram, log = TRUE, na.rm = TRUE)))
 
 # You can also take the product of the non-logged results:
 apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
+
+## Dealing with zero-frequency allele correction
+# By default, allele frequencies are calculated with rraf with 
+# correction = TRUE. This is normally benign when analyzing large populations,
+# but it can have a great effect on small populations. Here's a way to supply
+# your own correction.
+
+# First, calculate round robin allele frequencies by population with no 
+# correction. There are many zero values.
+(my_rraf <- rraf(Pram, by_pop = TRUE, correction = FALSE))
+
+# When you run pgen with these zero value allele frequencies, the
+# probabilities of some genotypes crash to zero.
+head(pgen(Pram, log = FALSE, freq = my_rraf))
+
+# One solution: set the allele frequencies to 1/[samples in data]:
+my_rraf[my_rraf == 0] <- 1/nInd(Pram)
+
+# Now we don't have genotype probabilites of zero.
+head(pgen(Pram, log = FALSE, freq = my_rraf))
 }
 }
 \author{

@@ -103,7 +103,7 @@ rrmlg <- function(gid){
 #' @param gid a genind or genclone object
 #' @param pop either a formula to set the population factor from the
 #'   \code{\link{strata}} slot or a vector specifying the population factor for
-#'   each sample. Defaults to NULL. 
+#'   each sample. Defaults to \code{NULL}. 
 #' @param res Either "list" (default), "vector", or "data.frame".
 #' @param by_pop When this is \code{TRUE}, the calculation will be done by
 #'   population. Defaults to \code{FALSE}
@@ -111,6 +111,22 @@ rrmlg <- function(gid){
 #'   frequencies should be set to 1/n (Default: \code{TRUE})
 #'   
 #' @return a vector or list of allele frequencies
+#' @details Calculating allele frequencies for clonal populations is a difficult
+#'   task. Frequencies calculated on non-clone-corrected data suffer from bias
+#'   due to non-independent samples. On the other hand, frequencies calculated
+#'   on clone-corrected data artificially increases the significance of rare
+#'   alleles. The method of round-robin allele frequencies as presented in Parks
+#'   and Werth (1993) provides a method of calculating allele frequencies in a
+#'   way that minimizes both of these effects. Allele frequencies at a given
+#'   locus are calculated based on samples that are \strong{clone corrected
+#'   without that locus}. This means that rare alleles might not be represented,
+#'   giving them an allele frequency of "0". For some analyses, this value is
+#'   perfectly fine, but for analyses such as \code{\link{pgen}} and
+#'   \code{\link{psex}}, this could result in genotype probabilities of "0". One
+#'   remedy for this is in the \code{correction} option. This will replace any 
+#'   zero-frequency alleles by 1/n, but it will mean that the sum of allele
+#'   frequencies at that locus will no longer be 1.
+#'   
 #' @note When \code{by_pop = TRUE}, the output will be a matrix of allele 
 #'   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
 #'   \code{by_pop} is automatically \code{TRUE}. When \code{correction = TRUE},
@@ -138,6 +154,8 @@ rrmlg <- function(gid){
 #' 
 #' \dontrun{
 #' 
+#' ## Round robin allele frequencies will be different than observed
+#' 
 #' # Compare to without round robin:
 #' PrLoc <- seploc(Pram, res = "mat") # get locus by matrix
 #' lapply(PrLoc, colMeans, na.rm = TRUE)
@@ -147,11 +165,10 @@ rrmlg <- function(gid){
 #' PccLoc <- seploc(Pcc, res = "mat")
 #' lapply(PccLoc, colMeans, na.rm = TRUE)
 #' 
+#' ## Different methods of obtaining round robin allele frequencies
+#' 
 #' # Get vector output.
 #' rraf(Pram, res = "vector")
-#' 
-#' # Get frequencies per population (matrix only)
-#' rraf(Pram, by_pop = TRUE, correction = FALSE)
 #' 
 #' # Get data frame output and plot.
 #' (Prdf <- rraf(Pram, res = "data.frame"))
@@ -159,6 +176,19 @@ rrmlg <- function(gid){
 #' ggplot(Prdf, aes(y = allele, x = frequency)) +
 #'   geom_point() +
 #'   facet_grid(locus ~ ., scale = "free_y", space = "free")
+#' 
+#' ## Round Robin allele frequencies by populations (matrix only)
+#' 
+#' # Get frequencies per population without correction for zero-frequency alleles
+#' (Prbp <- rraf(Pram, by_pop = TRUE, correction = FALSE))
+#' # You can set the zero-frequency alleles to be 1/nInd(Pram)
+#' Prbp[Prbp == 0] <- 1/nInd(Pram)
+#' Prbp
+#' 
+#' # Get frequencies per population, but set zero-frequency alleles to 1/n
+#' (Prbp <- rraf(Pram, by_pop = TRUE, correction = TRUE))
+#' 
+#' 
 #' }
 #==============================================================================#
 rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE){
@@ -214,14 +244,17 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'   
 #' @param freq a vector or matrix of allele frequencies. This defaults to 
 #'   \code{NULL}, indicating that the frequencies will be determined via 
-#'   round-robin approach. \strong{If \code{by_pop = TRUE}, zero-value allele
-#'   frequencies will automatically be corrected by 1/n.} See \code{\link{rraf}}
-#'   for details.
+#'   round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
+#'   TRUE}, and this matrix or vector is not provided, zero-value allele 
+#'   frequencies will automatically be corrected by 1/n.}
 #'   
-#' @note For haploids, Pgen at a particular locus is the allele frequency. This
-#'   function cannot handle polyploids. Additionally, when the argument
+#' @note Any zero-value allele frequencies will be corrected by 1/n. This is to
+#'   avoid any zero-probability genotypes. To counteract this, you can supply
+#'   your own allele frequencies with the \code{freq} argument (see example).
+#'   For haploids, Pgen at a particular locus is the allele frequency. This 
+#'   function cannot handle polyploids. Additionally, when the argument 
 #'   \code{pop} is not \code{NULL}, \code{by_pop} is automatically \code{TRUE}.
-#'
+#'   
 #' @return A vector containing Pgen values per locus for each genotype in the 
 #'   object.
 #'   
@@ -230,12 +263,11 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'   
 #'   \deqn{P_{gen} = \left(\prod_{i=1}^m p_i\right)2^h}{pgen = prod(p_i)*(2^h)} 
 #'   
-#'   where \eqn{p_i} are
-#'   the allele frequencies and \emph{h} is the count of the number of
-#'   heterozygous sites in the sample (Arnaud-Haond et al. 2007; Parks and
-#'   Werth, 1993). The allele frequencies, by default, are calculated using a
-#'   round-robin approach where allele frequencies at a particular locus are
-#'   calculated on the clone-censored genotypes without that locus. 
+#'   where \eqn{p_i} are the allele frequencies and \emph{h} is the count of the
+#'   number of heterozygous sites in the sample (Arnaud-Haond et al. 2007; Parks
+#'   and Werth, 1993). The allele frequencies, by default, are calculated using
+#'   a round-robin approach where allele frequencies at a particular locus are 
+#'   calculated on the clone-censored genotypes without that locus.
 #'   
 #'   To avoid issues with numerical precision of small numbers, this function 
 #'   calculates pgen per locus by adding up log-transformed values of allele 
@@ -265,6 +297,26 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #' 
 #' # You can also take the product of the non-logged results:
 #' apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
+#' 
+#' ## Dealing with zero-frequency allele correction
+#' # By default, allele frequencies are calculated with rraf with 
+#' # correction = TRUE. This is normally benign when analyzing large populations,
+#' # but it can have a great effect on small populations. Here's a way to supply
+#' # your own correction.
+#' 
+#' # First, calculate round robin allele frequencies by population with no 
+#' # correction. There are many zero values.
+#' (my_rraf <- rraf(Pram, by_pop = TRUE, correction = FALSE))
+#' 
+#' # When you run pgen with these zero value allele frequencies, the
+#' # probabilities of some genotypes crash to zero.
+#' head(pgen(Pram, log = FALSE, freq = my_rraf))
+#' 
+#' # One solution: set the allele frequencies to 1/[samples in data]:
+#' my_rraf[my_rraf == 0] <- 1/nInd(Pram)
+#' 
+#' # Now we don't have genotype probabilites of zero.
+#' head(pgen(Pram, log = FALSE, freq = my_rraf))
 #' }
 #==============================================================================#
 pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
@@ -377,6 +429,14 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' # This can be also done assuming populations structure
 #' Pram_psex <- psex(Pram, by_pop = TRUE)
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+#' abline(h = 0.05, lty = 2)
+#' 
+#' # The above, but correcting zero-value alleles by 1/nInd(Pram)
+#' # See the documentation for rraf and pgen for details.
+#' pram_af <- rraf(Pram, by_pop = TRUE, correction = FALSE)
+#' pram_af[pram_af == 0] <- 1/nInd(Pram)
+#' Pram_psex2 <- psex(Pram, by_pop = TRUE, freq = pram_af)
+#' plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
 #' 
 #' ## An example of supplying previously calculated frequencies and G

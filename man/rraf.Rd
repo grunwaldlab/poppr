@@ -11,7 +11,7 @@ rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE)
 
 \item{pop}{either a formula to set the population factor from the
 \code{\link{strata}} slot or a vector specifying the population factor for
-each sample. Defaults to NULL.}
+each sample. Defaults to \code{NULL}.}
 
 \item{res}{Either "list" (default), "vector", or "data.frame".}
 
@@ -29,6 +29,23 @@ This function utilizes \code{\link{rrmlg}} to calculate multilocus genotypes
 and then subsets each locus by the resulting MLGs to calculate the 
 round-robin allele frequencies used for pgen and psex.
 }
+\details{
+Calculating allele frequencies for clonal populations is a difficult
+  task. Frequencies calculated on non-clone-corrected data suffer from bias
+  due to non-independent samples. On the other hand, frequencies calculated
+  on clone-corrected data artificially increases the significance of rare
+  alleles. The method of round-robin allele frequencies as presented in Parks
+  and Werth (1993) provides a method of calculating allele frequencies in a
+  way that minimizes both of these effects. Allele frequencies at a given
+  locus are calculated based on samples that are \strong{clone corrected
+  without that locus}. This means that rare alleles might not be represented,
+  giving them an allele frequency of "0". For some analyses, this value is
+  perfectly fine, but for analyses such as \code{\link{pgen}} and
+  \code{\link{psex}}, this could result in genotype probabilities of "0". One
+  remedy for this is in the \code{correction} option. This will replace any 
+  zero-frequency alleles by 1/n, but it will mean that the sum of allele
+  frequencies at that locus will no longer be 1.
+}
 \note{
 When \code{by_pop = TRUE}, the output will be a matrix of allele 
   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
@@ -44,6 +61,8 @@ rraf(Pram)
 
 \dontrun{
 
+## Round robin allele frequencies will be different than observed
+
 # Compare to without round robin:
 PrLoc <- seploc(Pram, res = "mat") # get locus by matrix
 lapply(PrLoc, colMeans, na.rm = TRUE)
@@ -53,11 +72,10 @@ Pcc <- clonecorrect(Pram, strata = NA) # indiscriminantly clone correct
 PccLoc <- seploc(Pcc, res = "mat")
 lapply(PccLoc, colMeans, na.rm = TRUE)
 
+## Different methods of obtaining round robin allele frequencies
+
 # Get vector output.
 rraf(Pram, res = "vector")
-
-# Get frequencies per population (matrix only)
-rraf(Pram, by_pop = TRUE, correction = FALSE)
 
 # Get data frame output and plot.
 (Prdf <- rraf(Pram, res = "data.frame"))
@@ -65,6 +83,19 @@ library("ggplot2")
 ggplot(Prdf, aes(y = allele, x = frequency)) +
   geom_point() +
   facet_grid(locus ~ ., scale = "free_y", space = "free")
+
+## Round Robin allele frequencies by populations (matrix only)
+
+# Get frequencies per population without correction for zero-frequency alleles
+(Prbp <- rraf(Pram, by_pop = TRUE, correction = FALSE))
+# You can set the zero-frequency alleles to be 1/nInd(Pram)
+Prbp[Prbp == 0] <- 1/nInd(Pram)
+Prbp
+
+# Get frequencies per population, but set zero-frequency alleles to 1/n
+(Prbp <- rraf(Pram, by_pop = TRUE, correction = TRUE))
+
+
 }
 }
 \author{
