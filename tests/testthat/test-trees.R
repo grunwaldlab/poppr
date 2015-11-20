@@ -27,6 +27,17 @@ test_that("bruvo.boot rejects non-ssr data", {
 	expect_error(bruvo.boot(Aeut))
 })
 
+test_that("aboot can take in matrices", {
+  skip_on_cran()
+  Aeut.tab <- tab(Aeut.pop)
+  apop <- aboot(Aeut.pop, showtree = FALSE, quiet = TRUE)
+  amat <- aboot(Aeut.tab, showtree = FALSE, quiet = TRUE)
+  expect_equal(apop$tip.label, amat$tip.label)
+  dimnames(Aeut.tab) <- NULL
+  amat <- aboot(Aeut.tab, quiet = TRUE)
+  expect_equal(amat$tip.label, .genlab("", nrow(Aeut.tab)))
+})
+
 test_that("aboot can also produce trees from any function", {
 	skip_on_cran()
 
@@ -57,10 +68,21 @@ test_that("aboot can handle populations", {
 	expect_false(ape::is.ultrametric(AtreeF))
 })
 
+test_that("aboot can convert genind to genpop", {
+  skip_on_cran()
+  set.seed(999)
+  Atree <- aboot(Aeut, strata = ~Pop/Subpop, sample = 20, quiet = TRUE)
+  
+  expect_equal(ape::Ntip(Atree), 18L)
+})
+
 test_that("aboot can handle genlight objects", {
 	skip_on_cran()
 	set.seed(999)
 	gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE))
 	gtree <- aboot(gc, distance = bitwise.dist, sample = 5, quiet = TRUE)
+	expect_warning(gwarn <- aboot(gc, strata = ~none, distance = bitwise.dist, sample = 5, quiet = TRUE))
 	expect_is(gtree, "phylo")
+	expect_is(gwarn, "phylo")
+	expect_equal(ape::Ntip(gtree), ape::Ntip(gwarn))
 })

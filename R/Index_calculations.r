@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -44,8 +44,13 @@
 #==============================================================================#
 #' Produce a basic summary table for population genetic analyses.
 #' 
+#' @description
+#' 
+#' For the \pkg{poppr} package description, please see
+#' \code{\link[=poppr-package]{package?poppr}}
+#' 
 #' This function allows the user to quickly view indices of heterozygosity, 
-#' evenness, and inbreeding to aid in the decision of a path to further analyze 
+#' evenness, and linkage to aid in the decision of a path to further analyze 
 #' a specified dataset. It natively takes \code{\linkS4class{genind}} and 
 #' \code{\linkS4class{genclone}} objects, but can convert any raw data formats 
 #' that adegenet can take (fstat, structure, genetix, and genpop) as well as 
@@ -652,15 +657,9 @@ poppr.all <- function(filelist, ...){
 #'   plotlist[[i]] <- ggplot2::last_plot() # save the last plot
 #' }
 #' 
-#' # Use the plot_grid function to plot. We could do it manually since there are
-#' # only 4 populations:
-#' plot_grid(plotlist[[1]], plotlist[[2]], plotlist[[3]], plotlist[[4]], 
-#'           labels = paste("Tree", popNames(monpop)))
-#'  
-#' # This gets tedious with many populations, so we can use the do.call function
-#' # to help us!
+#' # Use the plot_grid function to plot.
+#' plot_grid(plotlist = plotlist, labels = paste("Tree", popNames(monpop)))
 #' 
-#' do.call(plot_grid, c(plotlist, list(labels = paste("Tree", popNames(monpop)))))
 #' }
 #==============================================================================#
 ia <- function(gid, sample=0, method=1, quiet=FALSE, missing="ignore", 

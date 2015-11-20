@@ -1,337 +1,675 @@
 poppr 2.0.2.99
 ===========
+
+IMPROVEMENTS
+-----------
+
+* `win.ia` and `samp.ia` gain a significant speedup thanks to Jonah Brooks
+  implementing the code in C.
+* The internal code for the `genotype_curve` has been implemented in C for a 10x
+  increase in speed.
+
+NEW FEATURES
+-----------
+
+* `poppr.msn`, `bruvo.msn`, and `plot_poppr_msn` gain the ability to take
+  character vectors for color palettes. See issue #55
+  (https://github.com/grunwaldlab/poppr/issues/55) for details.
+* `plot_poppr_msn` returns the modified graph.
+* All functions related to Bruvo's distance can now take a named vector of
+  repeat lengths in any order. See issue #61
+  (https://github.com/grunwaldlab/poppr/issues/61) for details.
+* `aboot` gains the argument strata so that you can automatically convert genind
+  to genpop.
+* `genotype_curve` can now take in loci objects from pegas.
+* You can now specify the maximum number of loci to analyze in `genotype_curve`.
+* `filter_stats` can now optionally plot a histogram in the background.
+* `bruvo.dist` can now optionally return distance matrices by locus. This is
+  addresed in issue #60 (https://github.com/grunwaldlab/poppr/issues/60)
+* `aboot` can now handle matrices as previously specified in the documentation.
+* `aboot` can now take custom functions to calculate distance for genlight 
+  objects.
+
+NEW FUNCTIONS
+-----------
+
+* `rrmlg` will calculate round-robin multilocus genotypes for each locus.
+* `rraf` will calculate round-robin allele frequencies for each locus.
+* `pgen` will calculate the probabilities of observed genotypes.
+* `psex` will calculate the probability that an observed genotype will be
+  observed more than once by chance.
+
+MISC
+-----------
+
+* Documentation for genclone and snpclone classes are more coherent.
+* Accessors added for internal MLG objects (for developers).
+* The genotype accumulation curve displays the iteration and locus number
+  instead of a progress bar.
+* The genotype accumulation plot is now scaled from 0 to the number of observed
+  mlgs.
+* Documentation for `poppr.amova` no longer references the "hierarchy" slot.
+
 BUG FIX
-* Single locus data sets can now be read in with `read.genalex`. This was brought up in issue [#58](https://github.com/grunwaldlab/poppr/issues/58) (Thanks to Nick Wong for spotting it).
+-----------
+
+* Single locus data sets can now be read in with `read.genalex`. This was
+  brought up in issue [#58](https://github.com/grunwaldlab/poppr/issues/58)
+  (Thanks to Nick Wong for spotting it).
+* A bug in `informloci` where the MAF argument wasn't being applied to P/A data
+  has been fixed.
+* Printing of genclone objects with mixed ploidies previously reported
+  erroneously due to a sorting error. This has been fixed.
+* Edge case where a missing cell in the genalex matrix was interpreted as a
+  literal "NA" was fixed.
+* msn functions now return nodes that are correctly named. See Issue #66
+  (https://github.com/grunwaldlab/poppr/issues/66) for details.
 
 poppr 2.0.2
 ===========
+
 BUG FIX
-* Definition of Hexp was fixed. It originally was mis-calculated, inflating the metric. It is now correctly calcualted and documented. More information at issue [#47](https://github.com/grunwaldlab/poppr/issues/47)
+-----------
+
+* Definition of Hexp was fixed. It originally was mis-calculated, inflating the
+  metric. It is now correctly calculated and documented. More information at
+  issue [#47](https://github.com/grunwaldlab/poppr/issues/47)
 
 poppr 2.0.1
 ===========
+
 BUG FIX
-* Memory leak with Bruvo's distance was fixed by @JonahBrooks in 90facb4 (issue #40)
-* Cutoff field now works for distances other than dissimilarity in `imsn` (issue #41)
+-----------
+
+* Memory leak with Bruvo's distance was fixed by @JonahBrooks in 90facb4 (issue
+  #40)
+* Cutoff field now works for distances other than dissimilarity in `imsn` (issue
+  #41)
 * Switching between data sets no longer shows an error in `imsn`
 * `read.genealex` can now correctly import missing data for diploids (issue #42)
 
 NEW FEATURES
+-----------
+
 * Startup message now tells you if poppr was compiled with OMP support.
 
 poppr 2.0.0
 ===========
+
 COMPATIBILITY UPDATE
-* poppr has moved to version 2.0 due to adegenet's recent update. The hierarchy slot introduced in version 1.1 is now being moved to adegenet and renamed `strata`. For maximum backwards compatibility, all of the hierarchy methods still exist, but they are deprecated and will print a warning with the proper function to use. If you were accessing the hierarchy slot without using the `*hierarchy()` methods, your code will fail as the hierarchy slot now should only contain a formula object. 
+-----------
+
+* poppr has moved to version 2.0 due to adegenet's recent update. The hierarchy
+  slot introduced in version 1.1 is now being moved to adegenet and renamed
+  `strata`. For maximum backwards compatibility, all of the hierarchy methods
+  still exist, but they are deprecated and will print a warning with the proper
+  function to use. If you were accessing the hierarchy slot without using the
+  `*hierarchy()` methods, your code will fail as the hierarchy slot now should
+  only contain a formula object.
 
 NEW DEPENDENCIES
+-----------
+
 * poppr now imports elements from dplyr and shiny
-* As required as of 2015-06-29, poppr now explicitly imports: stats, graphics, grDevices, and utils
+* As required as of 2015-06-29, poppr now explicitly imports: stats, graphics,
+  grDevices, and utils
 
 NEW SUGGESTS
+-----------
+
 * poppr now suggests the cowplot, poweRlaw, and polysat packages.
 
 NEW DATA
-* A data set called `Pram` containing SSR genotypes from the Sudden Oak Death pathogen _Phytophthora ramorum_ (Kamvar et.al., 2015)
+-----------
+
+* A data set called `Pram` containing SSR genotypes from the Sudden Oak Death
+  pathogen _Phytophthora ramorum_ (Kamvar et.al., 2015)
 
 NEW MINT FLAVOR
+-----------
+
 * refreshing!
 
 NEW FEATURES
-* The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (`index = "rbarD"`, default) or the classic index of association (`index = "Ia"`). If the user uses the function `ia` with the argument `valuereturn = TRUE`, then the resulting object can be plotted with the plot function. 
-* The function `poppr` will now plot all populations in a single faceted plot instead of one plot per population.
-* `aboot` and `bruvo.boot` will now be able to utilize any function to generate trees (suggested in issue #18).
-* The mlg slot in the genclone object can now optionally hold an MLG class object. This object will contain different definitions of multilocus genotypes, allowing the user to switch between observed, custom, and mlgs defined given a genetic distance threshold.
-* minimum spanning network functions gain the ability to include reticulations using the option `include.ties`
-* minimum spanning network functions gain the ability to collapse multilocus genotypes by genetic distance with the option `threshold`.
-* `poppr.amova` gains the ability to filter multilocus genotypes before calculation.
-* `informloci` gains the argument "MAF", which allows the specification of a minor allele frequency cutoff in addition to the cutoff argument. Examples have been updated.
+-----------
+
+* The default plot for the index of association will now be a single histogram.
+  The user has the option to visualize the standardized index of association
+  (`index = "rbarD"`, default) or the classic index of association (`index =
+  "Ia"`). If the user uses the function `ia` with the argument `valuereturn =
+  TRUE`, then the resulting object can be plotted with the plot function.
+* The function `poppr` will now plot all populations in a single faceted plot
+  instead of one plot per population.
+* `aboot` and `bruvo.boot` will now be able to utilize any function to generate
+  trees (suggested in issue #18).
+* The mlg slot in the genclone object can now optionally hold an MLG class
+  object. This object will contain different definitions of multilocus
+  genotypes, allowing the user to switch between observed, custom, and mlgs
+  defined given a genetic distance threshold.
+* minimum spanning network functions gain the ability to include reticulations
+  using the option `include.ties`
+* minimum spanning network functions gain the ability to collapse multilocus
+  genotypes by genetic distance with the option `threshold`.
+* `poppr.amova` gains the ability to filter multilocus genotypes before
+  calculation.
+* `informloci` gains the argument "MAF", which allows the specification of a
+  minor allele frequency cutoff in addition to the cutoff argument. Examples
+  have been updated.
 * `aboot` can now take genlight objects.
 * `poppr.msn` and `plot_poppr_msn` can now take genlight objects.
 * `plot_poppr_msn` now gives users the option to exclude the legends.
-* Default plotting for `mlg.table` will no longer produce one plot per population. It will now produce a single ggplot object for all populations. Note that the bars are no longer colored by count.
-* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be calucluated, but the old index can be retrieved by using (N/(N - 1))*lambda. 
-* `poppr` can now take any statistic that can be caluclated from a table of multilocus genotype counts. 
+* Default plotting for `mlg.table` will no longer produce one plot per
+  population. It will now produce a single ggplot object for all populations.
+  Note that the bars are no longer colored by count.
+* `poppr` will no longer calculate "Hexp". Instead, Simpson's index will be
+  calumniated, but the old index can be retrieved by using (N/(N - 1))*lambda.
+* `poppr` can now take any statistic that can be calculated from a table of
+  multilocus genotype counts.
 * `genind2genalex` gains the ability to selectively write different strata.
 
 NEW FUNCTIONS
-* `mlg.filter` will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.
-* `filter_stats` will show you graphical output of all the algorithms in `mlg.filter`.
+-----------
+
+* `mlg.filter` will contract multilocus genotypes given a genetic distance and
+  threshold using one of three algorithms. It can report statistics such as the
+  multilocus genotypes returned, the number of samples within each multilocus
+  genotype, the thresholds at which multilocus genotypes were collapsed, and the
+  genetic distance matrix that represents the new multilocus genotypes.
+* `filter_stats` will show you graphical output of all the algorithms in
+  `mlg.filter`.
 * `cutoff_predictor` will predict the cutoff threshold from `mlg.filter`.
-* `bitwise.dist` can efficiently calculate absolute genetic distance for genlight objects.
-* `mll` "multilocus lineages" is a new replacement for `mlg.vector` which gains the functionality of selecting the multilocus genotype definition from the mlg slot.
+* `bitwise.dist` can efficiently calculate absolute genetic distance for
+  genlight objects.
+* `mll` "multilocus lineages" is a new replacement for `mlg.vector` which gains
+  the functionality of selecting the multilocus genotype definition from the mlg
+  slot.
 * `nmll` counts the number of multilocus lineages
 * `mll.custom` allows the user to define custom multilocus genotypes.
 * `mll.levels` allows the user to edit the names of custom multilocus genotypes.
-* `poppr_has_parallel` will return `TRUE` if poppr was built with OpenMP parallel library.
+* `poppr_has_parallel` will return `TRUE` if poppr was built with OpenMP
+  parallel library.
 * `win.ia` calculates windows of \bar{r}_d along genlight chromosomes.
-* `samp.ia` calculates \bar{r}_d for genlight object by randomly sampling a user-defined number of SNPs.
-* `test_replen` will test repeat lengths of microsatellite markers for consistency.
+* `samp.ia` calculates \bar{r}_d for genlight object by randomly sampling a
+  user-defined number of SNPs.
+* `test_replen` will test repeat lengths of microsatellite markers for
+  consistency.
 * `fix_replen` will fix inconsistent repeat lengths for microsatellite markers.
-* `diversity_stats` returns a matrix containing diversity statistics. Defaults to 4 found in `poppr`, but can be extended to any statistic that can be calculated on a vector of MLG counts.
-* `diviersity_boot` will bootstrap a MLG matrix over the statistics specified for `get_stats`. Can also perform rarefaction bootstrap.
-* `diversity_ci` will calculate and plot confidence intervals for bootstrap resampling of an MLG matrix. This includes rarefaction to the smallest sample size.
-* `imsn` provides an interactive shiny interface for construction of minimum spanning networks.
-* `pair.ia` will calculate the index of association for pairs of loci and plot heatmaps. 
+* `diversity_stats` returns a matrix containing diversity statistics. Defaults
+  to 4 found in `poppr`, but can be extended to any statistic that can be
+  calculated on a vector of MLG counts.
+* `diversity_boot` will bootstrap a MLG matrix over the statistics specified for
+  `get_stats`. Can also perform rarefaction bootstrap.
+* `diversity_ci` will calculate and plot confidence intervals for bootstrap
+  resampling of an MLG matrix. This includes rarefaction to the smallest sample
+  size.
+* `imsn` provides an interactive shiny interface for construction of minimum
+  spanning networks.
+* `pair.ia` will calculate the index of association for pairs of loci and plot
+  heatmaps.
 
 NEW CLASSES
-* snpclone is an extension of the genlight object that acts very much like genclone. It contains an mlg slot. 
-* MLG is an internal class that lives inside the mlg slot of snpclone and genclone objects. It allows the user to easily switch between multilocus genotype definitions.
+-----------
+
+* snpclone is an extension of the genlight object that acts very much like
+  genclone. It contains an mlg slot.
+* MLG is an internal class that lives inside the mlg slot of snpclone and
+  genclone objects. It allows the user to easily switch between multilocus
+  genotype definitions.
 
 BUG FIXES
+-----------
+
 * I was going too fast to count.
 
 poppr 1.1.5
 ===========
+
 BUG FIX
-* Fixed internal bug for `fix_negative_branch` when only one branch had a negative edge.
+-----------
+
+* Fixed internal bug for `fix_negative_branch` when only one branch had a
+  negative edge.
 * Fixed bug in `diss.dist` where a single locus would return an error.
-* Fixed bug in `poppr.amova` where a single locus would return an error due to `repool_haplotypes`.
-* Fixed bug from the future! mlg.table will now return a matrix all the time (Fix #25).
+* Fixed bug in `poppr.amova` where a single locus would return an error due to
+  `repool_haplotypes`.
+* Fixed bug from the future! mlg.table will now return a matrix all the time
+  (Fix #25).
 
 poppr 1.1.4
 ===========
+
 BUG FIX
+-----------
+
 * Fixed an internal bug that fails only on Windows OS.
 
 poppr 1.1.3
 ===========
+
 NEW FEATURES
-* new arguments to `plot_poppr_msn` to allow for easier manipulation of node sizes and of labeling
+-----------
+
+* new arguments to `plot_poppr_msn` to allow for easier manipulation of node
+  sizes and of labeling
 * read.genalex can now take read text connections as input. Addresses issue #8
 * users can now specify cutoff for missing values in `aboot`
 
 BUG FIX
+-----------
+
 * Fixed issue where monomorphic loci would cause an error in `recode_polyploids`
-* Fixed logical error that would cause The infinite alleles model of Bruvo's distance to inflate the distance. (Found by Michael Metzger. Addresses issue #5).
+* Fixed logical error that would cause The infinite alleles model of Bruvo's
+  distance to inflate the distance. (Found by Michael Metzger. Addresses issue
+  #5).
 * AMOVA can now take subset genclone objects (Addresses issue #7).
-* in `mlg.table`, the mlgsub argument will now subset by name instead of index (fixed in #7).
-* Fixed issue for neighbor-joining trees where the internal function to fix negative branch lengths was accidentally shuffling the corrected branches. Addresses issue #11.
+* in `mlg.table`, the mlgsub argument will now subset by name instead of index
+  (fixed in #7).
+* Fixed issue for neighbor-joining trees where the internal function to fix
+  negative branch lengths was accidentally shuffling the corrected branches.
+  Addresses issue #11.
 * `diss.dist` can now be used with `aboot`
 
 MISC
-* `info_table` will print a discrete scale as opposed to colorbar when type = "ploidy"
-* attempted to make model choices for Bruvo's distance more clear in the documentation
+-----------
+
+* `info_table` will print a discrete scale as opposed to colorbar when type =
+  "ploidy"
+* attempted to make model choices for Bruvo's distance more clear in the
+  documentation
 
 poppr 1.1.2
 ===========
+
 BUG FIX
+-----------
+
 * Fixed memory allocation bug (Further addresses issue #2).
 * Memory allocated in C function bruvo_dist is now properly freed.
 
 poppr 1.1.1
 ===========
+
 BUG FIX
-* Fixed bug where the loss and add options for Bruvo's distance were switched. 
-* Fixed illegal memory access error by UBSAN. Made memory management of internal C functions more sane. (Addresses issue #2).
-* Fixed directional quotes and em-dashes produced by Mavericks (Addresses issue #3).
+-----------
+
+* Fixed bug where the loss and add options for Bruvo's distance were switched.
+* Fixed illegal memory access error by UBSAN. Made memory management of internal
+  C functions more sane. (Addresses issue #2).
+* Fixed directional quotes and em-dashes produced by Mavericks (Addresses issue
+  #3).
 
 poppr 1.1.0
 ===========
+
 NEW FEATURES
-* Polyploids with ambiguous genotypes are now supported in poppr. See documentation for `recode_polyploids` for details. 
-* Calculations of Bruvo's distance now features correction for partial missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004. 
-* `diss.dist` now has options to return raw distances and a matrix instead of a dist object.
-* `read.genalex` now has the option to import as a genclone object. This is the default action.
+-----------
+
+* Polyploids with ambiguous genotypes are now supported in poppr. See
+  documentation for `recode_polyploids` for details.
+* Calculations of Bruvo's distance now features correction for partial missing
+  data utilizing genome addition and genome loss models as presented in Bruvo et
+  al. 2004.
+* `diss.dist` now has options to return raw distances and a matrix instead of a
+  dist object.
+* `read.genalex` now has the option to import as a genclone object. This is the
+  default action.
 * `poppr.all` will be able to analyze lists of genind or genclone objects.
 * `ia` now has the argument valuereturn which will return the sampled data.
 * `[bruvo,poppr].msn` functions now give the user the choice to show the graph.
-* `bruvo.boot` has a cleaner plot style. 
+* `bruvo.boot` has a cleaner plot style.
 
 NEW DATA CLASSES
-* The `genclone` object is a new extension of the `genind` object from adegenet. This object contains slots containing population hierarchies and multilocus genotype definitions and will work with all analyses in adegenet and poppr. 
+-----------
+
+* The `genclone` object is a new extension of the `genind` object from adegenet.
+  This object contains slots containing population hierarchies and multilocus
+  genotype definitions and will work with all analyses in adegenet and poppr.
 
 NEW FUNCTIONS
-* [get,set,name,split,add]hierarchy - functions that will manipulate the hierarchy slot in a `genclone` object utilizing hierarchical formulae as arguments for simplification.
-* `setpop` will set the population of a `genclone` object utilizing model formulae regarding the hierarchy slot.
+-----------
+
+* [get,set,name,split,add]hierarchy - functions that will manipulate the
+  hierarchy slot in a `genclone` object utilizing hierarchical formulae as
+  arguments for simplification.
+* `setpop` will set the population of a `genclone` object utilizing model
+  formulae regarding the hierarchy slot.
 * `as.genclone` will automatically convert genind objects to genclone objects.
 * `is.genclone` checks the validity of genclone objects.
-* `poppr.amova` will run amova on any hierarchical level. This also includes the feature to run amova on clone censored data sets. It utilizes the ade4 version of amova. 
-* `info_table` will calculate missing data per population per locus or ploidy per individual per locus and gives the user the option to visualize this as a heatmap.
-* `locus_table` will calculate diversity and evenness statistics over all loci in a genind or genclone object.
-* `*.dist` functions will calculate Nei's distance, Rogers' Distance, Edwards' Distance, Reynolds' Distance, and Provestis' Distance.
-* `aboot` will allow the user to create bootstrapped dendrograms for ANY distance that can be calculated on genind or genpop objects.
-* `plot_poppr_msn` will plot minimum spanning networks produced with poppr. 
-* `private_alleles` will give information about the presence of private alleles within a genind or genclone object. 
-* `recode_polyploids` will take in a polyploid genind/genclone object (with missing alleles coded as extra zero-value allele) and recode them to have frequencies relative to the observed number of alleles.
-* `genotype_curve` will create a genotype accumulation curve for increasing number of loci.
-* `mlg.id` will return a list indicating the samples belonging to a specific multilocus genotype.
+* `poppr.amova` will run amova on any hierarchical level. This also includes the
+  feature to run amova on clone censored data sets. It utilizes the ade4 version
+  of amova.
+* `info_table` will calculate missing data per population per locus or ploidy
+  per individual per locus and gives the user the option to visualize this as a
+  heatmap.
+* `locus_table` will calculate diversity and evenness statistics over all loci
+  in a genind or genclone object.
+* `*.dist` functions will calculate Nei's distance, Rogers' Distance, Edwards'
+  Distance, Reynolds' Distance, and Provestis' Distance.
+* `aboot` will allow the user to create bootstrapped dendrograms for ANY
+  distance that can be calculated on genind or genpop objects.
+* `plot_poppr_msn` will plot minimum spanning networks produced with poppr.
+* `private_alleles` will give information about the presence of private alleles
+  within a genind or genclone object.
+* `recode_polyploids` will take in a polyploid genind/genclone object (with
+  missing alleles coded as extra zero-value allele) and recode them to have
+  frequencies relative to the observed number of alleles.
+* `genotype_curve` will create a genotype accumulation curve for increasing
+  number of loci.
+* `mlg.id` will return a list indicating the samples belonging to a specific
+  multilocus genotype.
 
 NEW DATA SETS
-* Pinf - a data set of 86 isolates from different populations of the late blight pathogen, Phytophthora infestans. Provided by Erica Goss
-* monpop - a large data set of 694 Monilinia fructicola isolates from a single orchard over three years. Provided by Sydney E. Everhart
+-----------
+
+* Pinf - a data set of 86 isolates from different populations of the late blight
+  pathogen, Phytophthora infestans. Provided by Erica Goss
+* monpop - a large data set of 694 Monilinia fructicola isolates from a single
+  orchard over three years. Provided by Sydney E. Everhart
 
 NEW CAR
+-----------
+
 * Not really.
 
 NAMESPACE CHANGES
+-----------
+
 * poppr no longer depends on pegas.
 * ade4 and reshape2 are now explicitly required.
 
 IMPROVEMENTS
+-----------
+
 * default shuffling algorithm has been implemented in C to increase speed.
-* output of the mlg functions are now represented as integers to decrease their size in memory.
-* `mlg.matrix` is now calculated faster utilizing R's internal tabulating capabilities.
-* The function `poppr` will no longer return rounded results, but rather is printed with three significant digits.
+* output of the mlg functions are now represented as integers to decrease their
+  size in memory.
+* `mlg.matrix` is now calculated faster utilizing R's internal tabulating
+  capabilities.
+* The function `poppr` will no longer return rounded results, but rather is
+  printed with three significant digits.
 
 MISC
+-----------
+
 * Added unit tests.
-* The poppr user manual has been shortened to only include instructions on data manipulation. 
-* A new vignette, "Algorithms and Equations" gives algorithmic details for calculations performed in poppr. 
+* The poppr user manual has been shortened to only include instructions on data
+  manipulation.
+* A new vignette, "Algorithms and Equations" gives algorithmic details for
+  calculations performed in poppr.
 
 poppr 1.0.7
 ===========
+
 UPDATE
+-----------
+
 * Updated README to include link to poppr google group.
 
 BUG FIX UPDATE
+-----------
+
 * Made last bug fix more stable (corrected on ape side).
 
 poppr 1.0.6
 ===========
+
 BUG FIX
-* Fixed bug for users who have downloaded ape version 3.1 or higher where bruvo.boot would throw an error. 
+-----------
+
+* Fixed bug for users who have downloaded ape version 3.1 or higher where
+  bruvo.boot would throw an error.
 
 MISC
+-----------
+
 * Updated citation information.
 
 poppr 1.0.5
 ===========
+
 NOTABLE CHANGE
-* The default shuffling algorithm for calculating the index of association has changed from multilocus-style sampling to permutation of alleles. All of the 4 methods are available, but new assignments are as follows: Method 1: permute alleles, Method 2: parametric bootstrap, Method 3: non-parametric bootstrap, Method 4: Multilocus-style sampling. Previously, Multilocus was 1 and the rest followed in the same order. There should be no compatibility issues with this change. Functions affected: `ia`, `poppr` `shufflepop`
+-----------
+
+* The default shuffling algorithm for calculating the index of association has
+  changed from multilocus-style sampling to permutation of alleles. All of the 4
+  methods are available, but new assignments are as follows: Method 1: permute
+  alleles, Method 2: parametric bootstrap, Method 3: non-parametric bootstrap,
+  Method 4: Multilocus-style sampling. Previously, Multilocus was 1 and the rest
+  followed in the same order. There should be no compatibility issues with this
+  change. Functions affected: `ia`, `poppr` `shufflepop`
 
 BUG FIX
-* Bootstrapping algorithm for `bruvo.boot` function was not shuffling the repeat lengths for each locus resulting in potentially erroneous bootstrap support values. This has been fixed by implementing an internal S4 class that will allow direct bootstrapping of the data and repeat lengths together.
-* An occasional error, "INTEGER() can only be applied to a 'integer', not a 'NULL'" in `bruvo.boot` or `bruvo.dist` fixed.
+-----------
+
+* Bootstrapping algorithm for `bruvo.boot` function was not shuffling the repeat
+  lengths for each locus resulting in potentially erroneous bootstrap support
+  values. This has been fixed by implementing an internal S4 class that will
+  allow direct bootstrapping of the data and repeat lengths together.
+* An occasional error, "INTEGER() can only be applied to a 'integer', not a
+  'NULL'" in `bruvo.boot` or `bruvo.dist` fixed.
 
 IMPROVEMENTS
+-----------
+
 * Changes to `bruvo.boot` allow for ever so slightly faster bootstrapping.
 
 MISC
-* Permutations for I_A and \bar{r}_d are now visualized as a progress bar as opposed to dots.
+-----------
+
+* Permutations for I_A and \bar{r}_d are now visualized as a progress bar as
+  opposed to dots.
 
 poppr 1.0.4
 ===========
+
 BUG FIX
-* A previous error where bootstrap values greater than 100 were reported from `bruvo.boot` on UPGMA trees has been fixed. 
-* Fixed correction of negative branch lengths using Kuhner and Felsenstein (1994) normalization for NJ trees.
+-----------
+
+* A previous error where bootstrap values greater than 100 were reported from
+  `bruvo.boot` on UPGMA trees has been fixed.
+* Fixed correction of negative branch lengths using Kuhner and Felsenstein
+  (1994) normalization for NJ trees.
 
 MISC
-* github repository for poppr has changed from github.com/poppr/poppr to github.com/grunwaldlab/poppr
+-----------
+
+* github repository for poppr has changed from github.com/poppr/poppr to
+  github.com/grunwaldlab/poppr
 
 poppr 1.0.3
 ===========
+
 IMPROVEMENTS
+-----------
+
 * Optimized internal sampling function to run up to 2x faster.
-* Utilized rmultinom function to increase speed of bootstrap sampling methods for shufflepop and ia. 
+* Utilized rmultinom function to increase speed of bootstrap sampling methods
+  for shufflepop and ia.
 
 NEW FEATURES
+-----------
+
 * Function `informloci` will remove phylogenetically uninformative loci.
 
 NAMESPACE
+-----------
+
 * Now importing specific functions from igraph and ape due to dependency issues.
-* Removed igraph, ape, ggplot2, and phangorn form "Dependencies", but keeping them in "Imports".
+* Removed igraph, ape, ggplot2, and phangorn form "Dependencies", but keeping
+  them in "Imports".
 
 BUG FIXES
-* `read.genalex` will no longer insert an "X" in front of loci with numeric names. 
+-----------
+
+* `read.genalex` will no longer insert an "X" in front of loci with numeric
+  names.
 
 poppr 1.0.2
 ===========
+
 BUG FIXES
-* Fixed bug in diss.dist function that would return an inflated distance for haploids.
+-----------
+
+* Fixed bug in diss.dist function that would return an inflated distance for
+  haploids.
 
 DOCUMENTATION
+-----------
+
 * Added explanation for the index of association in poppr_manual.
-* Expanded installation section to include installation instructions from github.
+* Expanded installation section to include installation instructions from
+  github.
 
 MISC
+-----------
+
 * internal permutation algorithm no longer lists permutations in reverse order
 
 poppr 1.0.1
 ===========
+
 IMPROVEMENTS
+-----------
+
 * Algorithm for the index of association was updated to increase speed.
 
 BUG FIXES
+-----------
+
 * Removed unnecessary rounding factor for missing data in `bruvo.dist`.
 * Corrected handling of duplicate entries for `read.genind`.
-* Input values that are not multiples of the specified repeat length for Bruvo's distance are now rounded (as opposed to being forced as integers).
+* Input values that are not multiples of the specified repeat length for Bruvo's
+  distance are now rounded (as opposed to being forced as integers).
 
 MISC
+-----------
+
 * Vignette updated for aesthetics and to reflect algorithmic changes.
 
 poppr 1.0.0
 ===========
+
 MISC
-* Poppr has been confirmed to work on Linux, Mac, and Windows systems with R 3.0.0.
+-----------
+
+* Poppr has been confirmed to work on Linux, Mac, and Windows systems with R
+  3.0.0.
 * Vignette `poppr_manual` now has cross-references to different sections.
-* Vignette `poppr_manual` is quicker loading. 
+* Vignette `poppr_manual` is quicker loading.
 
 BUG FIXES
-* removed alpha channel from plot for resampled values of I_A and \bar{r}_d due to warnings.
+-----------
+
+* removed alpha channel from plot for resampled values of I_A and \bar{r}_d due
+  to warnings.
 
 poppr 0.4.1
 ===========
+
 NEW FEATURES
-* `getfile` has a new argument, "combine", which will automatically add the path to the list of files, so they can be read without switching working directory.
-* information printed to screen from `missingno` and `mlg.crosspop` will now be wrapped to 80 characters.
+-----------
+
+* `getfile` has a new argument, "combine", which will automatically add the path
+  to the list of files, so they can be read without switching working directory.
+* information printed to screen from `missingno` and `mlg.crosspop` will now be
+  wrapped to 80 characters.
 
 BUG FIXES
-* `poppr` will now be able to correctly recognize GenAlEx files with both geographic and regional data.
-* calculation of the index of association on P/A data with missing values will no longer return an error. 
+-----------
+
+* `poppr` will now be able to correctly recognize GenAlEx files with both
+  geographic and regional data.
+* calculation of the index of association on P/A data with missing values will
+  no longer return an error.
 
 poppr 0.4
 ===========
+
 BUG FIXES
-* mistake in Bruvo's distance where it did not correctly check for ploidy level was fixed.
-* `read.genalex` will be able to correctly distinguish between SNP and AFLP data.
-* `read.genalex` can now correctly recognize regional formatting without an extra column.
+-----------
+
+* mistake in Bruvo's distance where it did not correctly check for ploidy level
+  was fixed.
+* `read.genalex` will be able to correctly distinguish between SNP and AFLP
+  data.
+* `read.genalex` can now correctly recognize regional formatting without an
+  extra column.
 
 NEW FEATURES
-* `read.genalex` will now be able to take in a file that is formatted with both regional and geographic data.
-* `genind2genalex` can now export xy coordinates into the GenAlEx format. 
+-----------
+
+* `read.genalex` will now be able to take in a file that is formatted with both
+  regional and geographic data.
+* `genind2genalex` can now export xy coordinates into the GenAlEx format.
 * `poppr_manual` vignette now contains images of example GenAlEx files.
 
 NEW FILES
+-----------
+
 * `rootrot2.csv` is an example of a GenAlEx file formatted with regional data.
 
 OTHER UPDATES
-* function for guessing repeat lengths for Bruvo's distance moved into internal file. 
+-----------
+
+* function for guessing repeat lengths for Bruvo's distance moved into internal
+  file.
 * redundancy in `read.genalex` was removed.
 * changed instructions in README
 
 poppr 0.3.1
 ===========
+
 BUG FIXES
-* `read.genalex` will now give a warning whenever the input file is not comma delimited. 
+-----------
+
+* `read.genalex` will now give a warning whenever the input file is not comma
+  delimited.
 
 poppr 0.3
 ===========
+
 NEW FUNCTIONS
-* `poppr.msn` will draw a minimum spanning network for any distance matrix derived from your data set.
+-----------
+
+* `poppr.msn` will draw a minimum spanning network for any distance matrix
+  derived from your data set.
 
 NEW FEATURES
-* vignette now has sections describing `poppr.msn`, `diss.dist`, `greycurve`, and a section discussing how to export graphics.
+-----------
+
+* vignette now has sections describing `poppr.msn`, `diss.dist`, `greycurve`,
+  and a section discussing how to export graphics.
 
 BUG FIXES
-* The graphs output by `poppr` and `ia` will now display \bar{r}_d instead of \bar{r}_D.
+-----------
+
+* The graphs output by `poppr` and `ia` will now display \bar{r}_d instead of
+  \bar{r}_D.
 * `bruvo.boot` now has a dedicated `quiet` argument.
 
 poppr 0.2.2
 ===========
+
 NEW FEATURES
+-----------
+
 * index of association distributions will now feature a rug plot at the bottom
   as a better way to visualize the distribution of the index of association from
   the shuffled data sets.
 
 poppr 0.2.1
 ===========
+
 NEW FUNCTIONS
+-----------
+
 * `diss.dist` will produce a distance matrix based on discreet distances.
-* `greycurve` will produce a grey scale adjusted to user-supplied parameters. This
-  will be useful for future minimum spanning network functions. 
+* `greycurve` will produce a grey scale adjusted to user-supplied parameters.
+  This will be useful for future minimum spanning network functions.
 
 NEW FEATURES
+-----------
+
 * `bruvo.msn` can now adjust the edge grey level to be weighted toward either
   closely or distantly weighted individuals.
 * `bruvo.msn` will now return a list giving the user the graph with all of the
@@ -339,12 +677,16 @@ NEW FEATURES
   legend arguments are also returned.
 
 BUG FIXES
+-----------
+
 * fixed shufflepop so that it will now shuffle PA markers with a specific method
-* fixed warning message mistakes in clonecorrect function. 
+* fixed warning message mistakes in clonecorrect function.
 
 poppr 0.2
 =========
 NEW FEATURES
+-----------
+
 * Added NEWS file and will now be incrementing version number (3/15/2013)
 
 

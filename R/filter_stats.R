@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -41,6 +41,7 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+#==============================================================================#
 #' Utilize all algorithms of mlg.filter
 #' 
 #' This function is a wrapper to mlg.filter. It will calculate all of the stats 
@@ -51,27 +52,32 @@
 #' @param threshold a threshold to be passed to mlg.filter
 #' @param stats what statistics should be calculated.
 #' @param missing how to treat missing data with mlg.filter
-#' @param plot If the threshold is a maximum threshold, should the statistics be 
+#' @param plot If the threshold is a maximum threshold, should the statistics be
 #'   plotted (Figure 2)
-#' @param cols the colors to use for each algorithm (defaults to set1 of \pkg{RColorBrewer}).
+#' @param cols the colors to use for each algorithm (defaults to set1 of
+#'   \pkg{RColorBrewer}).
 #' @param nclone the number of multilocus genotypes you expect for the data. 
-#'   This will draw horizontal line on the graph at the value nclone and then
+#'   This will draw horizontal line on the graph at the value nclone and then 
 #'   vertical lines showing the cutoff thresholds for each algorithm.
+#' @param hist if you want a histogram to be plotted behind the statistics, 
+#'   select a method here. Available methods are "sturges", "fd", or "scott"
+#'   (default) as documented in \code{\link[graphics]{hist}}. If you don't want
+#'   to plot the histogram, set \code{hist = NULL}.
 #' @param ... extra parameters passed on to the distance function.
 #'   
 #' @return a list of results from mlg.filter from the three algorithms.
 #' @export
-#' @note This function originally appeared in
+#' @note This function originally appeared in 
 #'   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
-#' @references
-#' ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary Material for
-#' Frontiers Plant Genetics and Genomics 'Novel R tools for analysis of
-#' genome-wide population genetic data with emphasis on clonality'. DOI:
-#' \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
+#' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
+#' Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
+#' analysis of genome-wide population genetic data with emphasis on clonality'.
+#' DOI: \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
 #' 
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. Front. Genet.
-#' 6:208. doi: \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+#' 6:208. doi:
+#' \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
 #' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
@@ -79,10 +85,11 @@
 #' data(Pinf)
 #' filter_stats(Pinf, distance = diss.dist, percent = TRUE, plot = TRUE)
 #' }
+#==============================================================================#
 filter_stats <- function(x, distance = bitwise.dist, 
                          threshold = 1 + .Machine$double.eps^0.5, 
                          stats = "All", missing = "ignore", plot = FALSE, 
-                         cols = NULL, nclone = NULL, ...){
+                         cols = NULL, nclone = NULL, hist = "Scott", ...){
   if (!"dist" %in% class(distance)){
     DIST    <- match.fun(distance)
     x       <- missingno(x, type = missing)
@@ -98,16 +105,13 @@ filter_stats <- function(x, distance = bitwise.dist,
                   stats = stats, ...)
   fanlist <- list(farthest = f, average = a, nearest = n)
   if (stats == "All"){
-#     for (i in names(fanlist)){
-#       names(fanlist[[i]]) <- c("MLG", "thresholds", "mat", "size")
-#     }
     if (plot){
-      plot_filter_stats(x, fanlist, distmat, cols, nclone)
+      plot_filter_stats(x, fanlist, distmat, cols, nclone, hist)
     }
   }
   return(fanlist)
 }
-
+#==============================================================================#
 #' Predict cutoff thresholds for use with mlg.filter
 #' 
 #' Given a series of thresholds for a data set that collapse it into one giant 
@@ -115,26 +119,26 @@ filter_stats <- function(x, distance = bitwise.dist,
 #' the largest difference. The average between the thresholds spanning that 
 #' difference is the cutoff threshold defining the clonal lineage threshold.
 #' 
-#' @param thresholds a vector of numerics coming from mlg.filter where the
+#' @param thresholds a vector of numerics coming from mlg.filter where the 
 #'   threshold has been set to the maximum threshold theoretically possible.
 #' @param fraction the fraction of the data to seek the threshold.
-#' 
-#' @return a numeric value representing the threshold at which multilocus
+#'   
+#' @return a numeric value representing the threshold at which multilocus 
 #'   lineages should be defined.
 #'   
-#' @note This function originally appeared in
-#'   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}.
+#' @note This function originally appeared in 
+#'   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}. 
 #'   This is a bit of a blunt instrument.
 #' @export
-#' @references
-#' ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary Material for
-#' Frontiers Plant Genetics and Genomics 'Novel R tools for analysis of
-#' genome-wide population genetic data with emphasis on clonality'. DOI:
-#' \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
+#' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
+#' Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
+#' analysis of genome-wide population genetic data with emphasis on clonality'.
+#' DOI: \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
 #' 
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. Front. Genet.
-#' 6:208. doi: \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+#' 6:208. doi:
+#' \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
 #' 
 #' @author Zhian N. Kamvar
 #' @examples
@@ -144,6 +148,7 @@ filter_stats <- function(x, distance = bitwise.dist,
 #'                       threshold = 1.1, stats = "THRESH")
 #' cutoff_predictor(pthresh)
 #' }
+#==============================================================================#
 cutoff_predictor <- function(thresholds, fraction = 0.5){
   frac <- 1:round(length(thresholds)*fraction)
   diffs <- diff(thresholds[frac])
@@ -151,34 +156,42 @@ cutoff_predictor <- function(thresholds, fraction = 0.5){
   mean(thresholds[diffmax:(diffmax + 1)])
 }
 
+#==============================================================================#
 #' Plot the results of filter_stats
 #' 
 #' @param x a genlight of genind object
 #' @param fstats the list passed from \code{\link{filter_stats}}
 #' @param distmat a distance matrix passed from \code{\link{filter_stats}}
-#' @param cols colors to use for each algorithm (defaults to \pkg{RColorBrewer} set 1)
+#' @param cols colors to use for each algorithm (defaults to \pkg{RColorBrewer}
+#'   set 1)
 #' @param nclone see \code{\link{filter_stats}}
 #'   
 #' @return a plot depicting how many MLLs are collapsed as the genetic distance 
 #'   increases for each algorithm.
 #' @export
-#' @note This function originally appeared in
+#' @note This function originally appeared in 
 #'   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
 #' @author Zhian N. Kamvar
-#' @references
-#' ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary Material for
-#' Frontiers Plant Genetics and Genomics 'Novel R tools for analysis of
-#' genome-wide population genetic data with emphasis on clonality'. DOI:
-#' \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
+#' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
+#' Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
+#' analysis of genome-wide population genetic data with emphasis on clonality'.
+#' DOI: \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
 #' 
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. Front. Genet.
-#' 6:208. doi: \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+#' 6:208. doi:
+#' \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
 #' 
 #' @keywords internal
-plot_filter_stats <- function(x, fstats, distmat, cols = NULL, nclone = NULL){
+#==============================================================================#
+plot_filter_stats <- function(x, fstats, distmat, cols = NULL, nclone = NULL, breaks = NULL){
   upper <- round(max(distmat), digits = 1)
   ylims <- c(ifelse(is.genind(x), mlg(x, quiet = TRUE), nInd(x)), 1)
+  if (!is.null(breaks)){
+    graphics::hist(distmat, breaks = breaks, xlab = "", ylab = "", axes = FALSE,
+                   xlim = c(0, upper), main = "")
+    par(new = TRUE)
+  }
   plot(x = c(upper, 0), y = ylims, type = "n",
        ylab = "Number of Multilocus Lineages",
        xlab = "Genetic Distance Cutoff")

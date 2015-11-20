@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -44,51 +44,41 @@
 #==============================================================================#
 setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #==============================================================================#
-#' Genclone class
+#' GENclone and SNPclone classes
 #' 
-#' Genclone is an S4 class that extends the \code{\linkS4class{genind}}
-#' from the \pkg{\link{adegenet}} package. It will have all of the same
-#' attributes as the \code{\linkS4class{genind}}, but it will contain two
-#' extra slots that will help retain information about population hierarchies
-#' and multilocus genotypes.
-#' 
-#' @section Extends: 
-#' Class \code{"\linkS4class{genind}"}, directly.
-#' 
-#' @details The genclone class will allow for more optimized methods of clone
-#' correcting and analyzing data over multiple levels of population hierarchy.
-#' 
-#' Previously, for hierarchical analysis to work in a \code{\link{genind}} 
-#' object, the user had to place a data frame in the \code{\link{other}} slot of
-#' the object. The suggested name of the data frame was 
-#' \code{population_hierarchy}, and this was used to be able to store the 
-#' hierarchical information inside the object so that the user did not have to 
-#' keep track of that information. This method worked, but it became apparent 
-#' that it was a bit confusing to the user as the method for changing the
-#' population of an object became:
-#' 
-#' \code{pop(object) <- other(object)$population_hierarchy$population_name}
-#' 
-#' That is a lot to keep track of. The new \strong{\code{hierarchy}} slot will
-#' allow the user to change the population factor with one function and a formula:
-#' 
-#' \code{setPop(object) <- ~Population/Subpopulation}
-#' 
-#' making this become slightly more intuitive and tractable.
-#' 
-#' Previously for \linkS4class{genind} objects, multilocus genotypes were not
-#' retained after a data set was subset by population. The new 
-#' \strong{\code{mlg}} slot allows us to assign the multilocus genotypes and 
-#' retain that information no matter how we subset the data set.
-#' 
+#' @description \strong{GENclone} is an S4 class that extends the 
+#'   \code{\linkS4class{genind}} object.\cr \strong{SNPclone} is an S4 class
+#'   that extends the \code{\linkS4class{genlight}} object.\cr\cr They will have
+#'   all of the same attributes as their parent classes, but they will contain
+#'   one extra slot to store extra information about multilocus genotypes.
+#'   
+#' @section Extends: The \code{genclone} class extends class 
+#'   \code{"\linkS4class{genind}"}, directly. \cr The \code{snpclone} class 
+#'   extends class \code{"\linkS4class{genlight}"}, directly.
+#'   
+#' @details The genclone and snpclone classes will allow for more optimized 
+#'   methods of clone correction.
+#'   
+#'   Previously for \linkS4class{genind} and \linkS4class{genlight} objects, 
+#'   multilocus genotypes were not retained after a data set was subset by 
+#'   population. The new \strong{\code{mlg}} slot allows us to assign the 
+#'   multilocus genotypes and retain that information no matter how we subset 
+#'   the data set. This new slot can either contain numeric values for 
+#'   multilocus genotypes OR it can contain a special internal 
+#'   \code{\linkS4class{MLG}} class that allows for custom multilocus genotype 
+#'   definitions and filtering.
+#'   
 #' @name genclone-class
 #' @rdname genclone-class
 #' @aliases genclone
 #' @export
-#' @slot mlg a vector representing multilocus genotypes for the data set.
+#' @slot mlg a vector representing multilocus genotypes for the data set OR an 
+#'   object of class \code{\linkS4class{MLG}}.
 #' @author Zhian N. Kamvar
-#' @seealso \code{\link{as.genclone}} \code{\link{strata}} \code{\link{setPop}} 
-#' \code{\linkS4class{genind}} 
+#' @seealso \code{\link{as.genclone}} \code{\link{as.snpclone}} 
+#'   \code{\linkS4class{genind}} \code{\linkS4class{genlight}} 
+#'   \code{\link[adegenet]{strata}} \code{\link[adegenet]{setPop}} 
+#'   \code{\link{MLG}} \code{\link{mll}}
 #' @import methods
 #==============================================================================#
 setClass("genclone", 
@@ -102,7 +92,7 @@ valid.genclone <- function(object){
   if (any(!"mlg" %in% slots)){
     return(FALSE)
   }
-  inds    <- nInd(object)
+  inds    <- adegenet::nInd(object)
   mlgs    <- length(object@mlg)
   if (mlgs != inds){  
     message("Multilocus genotypes do not match the number of observations")
@@ -114,30 +104,10 @@ valid.genclone <- function(object){
 setValidity("genclone", valid.genclone)
 
 #==============================================================================#
-#' SNPclone class
-#' 
-#' SNPclone is an S4 class that extends the \code{\linkS4class{genlight}}
-#' from the \pkg{\link{adegenet}} package. It will have all of the same
-#' attributes as the \code{\linkS4class{genlight}}, but it will contain two
-#' extra slots that will help retain information about population hierarchies
-#' and multilocus genotypes.
-#' 
-#' @section Extends: 
-#' Class \code{"\linkS4class{genlight}"}, directly.
-#' 
-#' @details The snpclone class will allow for more optimized methods of clone
-#' correcting and analyzing data over multiple levels of population hierarchy.
-#' 
-#' 
 #' @name snpclone-class
-#' @rdname snpclone-class
+#' @rdname genclone-class
 #' @aliases snpclone
 #' @export
-#' @slot mlg a vector representing multilocus genotypes for the data set.
-#' @author Zhian N. Kamvar
-#' @seealso \code{\link{as.snpclone}} \code{\linkS4class{genclone}} 
-#' \code{\linkS4class{genlight}} 
-#' @import methods
 #==============================================================================#
 setClass("snpclone",
          contains = "genlight",

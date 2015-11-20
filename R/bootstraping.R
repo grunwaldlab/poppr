@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -46,9 +46,12 @@
 #' to genind or genclone objects.
 #' 
 #' @param x a \linkS4class{genind}, \linkS4class{genpop},
-#'   \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone}, or
-#'   \link{matrix} object.
+#'   \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone} or
+#'   \link{matrix}, object.
 #'   
+#' @param strata a formula specifying the strata to be used to convert x to a
+#'   genclone object if x is a genind object. Defaults to NULL. See details.
+#' 
 #' @param tree a text string or function that can calculate a tree from a 
 #'   distance matrix. Defaults to "upgma". Note that you must load the package 
 #'   with the function for it to work.
@@ -94,13 +97,20 @@
 #'   relevant. With this function, the user can also define a custom distance to
 #'   be performed on the genind or genclone object.
 #'   
-#' @note \code{\link{provesti.dist}} and \code{\link{diss.dist}} are exactly the
+#'   \subsection{the strata argument}{
+#'   There is an argument called \code{strata}. This argument is useful for when
+#'   you want to bootstrap by populations from a \code{\link[adegenet]{genind}}
+#'   object. When you specify strata, the genind object will be converted to
+#'   \code{\link[adegenet]{genpop}} with the specified strata.
+#'   }
+#'   
+#' @note \code{\link{prevosti.dist}} and \code{\link{diss.dist}} are exactly the
 #'   same, but \code{\link{diss.dist}} scales better for large numbers of 
 #'   individuals (n > 125) at the cost of required memory. \subsection{missing 
 #'   data}{Missing data is not allowed by many of the distances. Thus, one of 
 #'   the first steps of this function is to treat missing data by setting it to 
 #'   the average allele frequency in the data set. If you are using a distance 
-#'   that can handle missing data (Provesti's distance), you can set 
+#'   that can handle missing data (Prevosti's distance), you can set 
 #'   \code{missing = "ignore"} to allow the distance function to handle any 
 #'   missing data. See \code{\link{missingno}} for details on missing 
 #'   data.}\subsection{Bruvo's Distance}{While calculation of Bruvo's distance 
@@ -109,7 +119,7 @@
 #'   
 #' @seealso \code{\link{nei.dist}} \code{\link{edwards.dist}} 
 #'   \code{\link{rogers.dist}} \code{\link{reynolds.dist}} 
-#'   \code{\link{provesti.dist}} \code{\link{diss.dist}} 
+#'   \code{\link{prevosti.dist}} \code{\link{diss.dist}} 
 #'   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}} 
 #'   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
 #'   
@@ -148,6 +158,10 @@
 #' set.seed(5000)
 #' aboot(Aeut.pop, sample = 1000) # compare to Grunwald et al. 2006
 #' 
+#' # You can also use the strata argument to convert to genpop inside the function.
+#' set.seed(5000)
+#' aboot(Aeut.gc, strata = ~Pop/Subpop, sample = 1000)
+#' 
 #' # And genlight objects 
 #' # From glSim:
 #' ## 1,000 non structured SNPs, 100 structured SNPs
@@ -167,10 +181,21 @@
 #' 
 #' }
 #==============================================================================#
-aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
-                  cutoff = 0, showtree = TRUE, missing = "mean", mcutoff = 0,
-                  quiet = FALSE, root = NULL, ...){
-  if (!is(x, "genlight") && x@type == "PA"){
+aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist", 
+                  sample = 100, cutoff = 0, showtree = TRUE, missing = "mean", 
+                  mcutoff = 0, quiet = FALSE, root = NULL, ...){
+  if (!is.null(strata)){
+    if (!is.genind(x)){
+      warning("The strata argument can only be used with genind objects.")
+    } else {
+      x <- genind2genpop(x, pop = strata, quiet = TRUE, process.other = FALSE)
+    }
+  }
+  if (is.matrix(x)){
+    if (is.null(rownames(x))) rownames(x) <- .genlab("", nrow(x))
+    if (is.null(colnames(x))) colnames(x) <- .genlab("L", ncol(x))
+    xboot <- x
+  } else if (!is(x, "genlight") && x@type == "PA"){
     xboot           <- x@tab
     colnames(xboot) <- locNames(x)
     if (is.genpop(x)){
@@ -198,7 +223,10 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
     }
   } else if (is(x, "genlight")){
     xboot <- x
-    if (!as.character(substitute(distance)) %in% "bitwise.dist"){
+    my_dists <- c("diss.dist", "nei.dist", "prevosti.dist", "edwards.dist", 
+                  "reynolds.dist", "rogers.dist", "provesti.dist")
+    wrong_dist <- any(as.character(substitute(distance)) %in% my_dists)
+    if (wrong_dist){
       warning("distance from genlight objects can only be calculated by bitwise.dist.")
       distance <- bitwise.dist
     }
@@ -220,8 +248,10 @@ aboot <- function(x, tree = "upgma", distance = "nei.dist", sample = 100,
   nodelabs <- (nodelabs/sample)*100
   nodelabs <- ifelse(nodelabs >= cutoff, nodelabs, NA)
   if (!is.genpop(x)){
-    if (!is.null(indNames(x))){
-      xtree$tip.label <- indNames(x)      
+    if (is.matrix(x)){
+      xtree$tip.label <- rownames(x)
+    } else if (!is.null(indNames(x))){
+      xtree$tip.label <- indNames(x)
     }
   } else {
     xtree$tip.label <- popNames(x)
@@ -423,33 +453,34 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #' 
 #' This function is for calculating bootstrap statistics and their confidence 
 #' intervals. It is important to note that the calculation of confidence 
-#' intervals is not perfect (See Details). Please be cautious when interpreting
+#' intervals is not perfect (See Details). Please be cautious when interpreting 
 #' the results.
 #' 
-#' @param tab a genind object OR a matrix produced from 
+#' @param tab a \code{\link{genind}}, \code{\link{genclone}},
+#'   \code{\link{snpclone}}, OR a matrix produced from 
 #'   \code{\link[poppr]{mlg.table}}.
 #' @param n an integer defining the number of bootstrap replicates (defaults to 
 #'   1000).
 #' @param n.boot an integer specifying the number of samples to be drawn in each
-#'   bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples
-#'   drawn for each bootstrap replicate will be equal to the number of samples in
-#'   the data set. See Details.
+#'   bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples 
+#'   drawn for each bootstrap replicate will be equal to the number of samples
+#'   in the data set. See Details.
 #' @param ci the percent for confidence interval.
 #' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if 
 #'   \code{tab} is a genind object.
 #' @param rarefy if \code{TRUE}, bootstrapping will be performed on the smallest
-#'   population size or the value of \code{n.rare}, whichever is larger.
-#'   Defaults to \code{FALSE}, indicating that bootstrapping will be performed
+#'   population size or the value of \code{n.rare}, whichever is larger. 
+#'   Defaults to \code{FALSE}, indicating that bootstrapping will be performed 
 #'   respective to each population size.
-#' @param n.rare an integer specifying the smallest size at which to resample
+#' @param n.rare an integer specifying the smallest size at which to resample 
 #'   data. This is only used if \code{rarefy = TRUE}.
 #' @param plot If \code{TRUE} (default), boxplots will be produced for each 
 #'   population, grouped by statistic. Colored dots will indicate the observed 
 #'   value.This plot can be retrieved by using \code{p <- last_plot()} from the 
 #'   \pkg{ggplot2} package.
-#' @param raw if \code{TRUE} (default) a list containing three elements will be
+#' @param raw if \code{TRUE} (default) a list containing three elements will be 
 #'   returned
-#' @param center if \code{TRUE} (default), the confidence interval will be
+#' @param center if \code{TRUE} (default), the confidence interval will be 
 #'   centered around the observed statistic. Otherwise, if \code{FALSE}, the 
 #'   confidence interval will be bias-corrected normal CI as reported from 
 #'   \code{\link[boot]{boot.ci}}
@@ -584,7 +615,8 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 diversity_ci <- function(tab, n = 1000, n.boot = 1L, ci = 95, total = TRUE, 
                          rarefy = FALSE, n.rare = 10, plot = TRUE, raw = TRUE, 
                          center = TRUE, ...){
-  if (!is.matrix(tab) & is.genind(tab) | is(tab, "genlight")){
+  allowed_objects <- c("genind", "genclone", "snpclone")
+  if (!is.matrix(tab) & inherits(tab, allowed_objects)){
     tab <- mlg.table(tab, total = total, plot = FALSE)
   }
   rareval <- NULL

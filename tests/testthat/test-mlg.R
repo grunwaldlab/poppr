@@ -22,6 +22,24 @@ test_that("multilocus genotype vector is same length as samples", {
   expect_equal(lu(nmlg), mlg(nancycats, quiet = TRUE))
 })
 
+test_that("clone correction works for specified levels and throws errors", {
+  skip_on_cran()
+  strata(aclone) <- other(aclone)[[1]][-1]
+  ac <- aclone
+  indNames(ac) <- rep("", nInd(ac))
+  expect_equal(nmll(aclone), 119L)
+  expect_equal(nInd(clonecorrect(aclone, ~Pop)), 120L)
+  expect_equal(nInd(clonecorrect(ac, ~Pop)), 120L) # no sample names
+  expect_equal(nInd(clonecorrect(aclone, 1L)), 120L) # works with numeric input
+  expect_equal(nInd(clonecorrect(aclone, ~Pop/Subpop)), 141L) # with formula
+  expect_equal(nInd(clonecorrect(aclone, NA)), 119L) # with nothing
+  
+  # Errors for unexpected behavior.
+  expect_error(clonecorrect(1), "1 is not")
+  expect_error(clonecorrect(aclone, ~field/sample), "field/sample") 
+  expect_error(clonecorrect(aclone, 1L:4L), "NA")
+})
+
 test_that("multilocus genotype matrix matches mlg.vector and data", {
   expect_equal(nrow(atab), nPop(Aeut))
   expect_equal(nrow(ptab), nPop(partial_clone))
@@ -87,6 +105,25 @@ test_that("mlg.crosspop will work with subsetted genclone objects", {
   expect_equal(x <- mlg.crosspop(Athena, quiet = TRUE), expected_output)
   expect_equal(y <- mlg.crosspop(Athena, indexreturn = TRUE), expected_mlgout)
   expect_warning(z <- mlg.crosspop(Athena, mlgsub = c(14, 2:5)), "The following multilocus genotypes are not defined in this dataset: 2, 3, 4, 5")
+})
+
+test_that("mlg.crosspop can take sublist and blacklist", {
+  skip_on_cran()
+  strata(Aeut) <- other(Aeut)$population_hierarchy
+  agc          <- as.genclone(Aeut)
+  Athena       <- popsub(agc, "Athena")
+  
+  setPop(Athena) <- ~Subpop
+  expectation <- structure(list(MLG.13 = structure(c(1L, 1L), .Names = c("8", 
+"9")), MLG.23 = structure(c(1L, 1L), .Names = c("4", "6")), MLG.24 = structure(c(1L, 
+1L), .Names = c("9", "10")), MLG.32 = structure(c(1L, 1L), .Names = c("7", 
+"9")), MLG.52 = structure(c(1L, 1L), .Names = c("5", "9"))), .Names = c("MLG.13", 
+"MLG.23", "MLG.24", "MLG.32", "MLG.52"))
+  
+  expect_output(mlg.crosspop(Athena, blacklist = 1), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(mlg.crosspop(Athena, blacklist = "1"), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1"), "MLG.13: \\(2 inds\\) 8 9")
+  expect_equivalent(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1", quiet = TRUE), expectation)
 })
 
 test_that("mlg.id Aeut works", {

@@ -53,6 +53,8 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
+\DeclareUnicodeCharacter{2032}{~}
+
 \title{Data import and manipulation in poppr version \Sexpr{packageVersion("poppr")}}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
@@ -186,12 +188,12 @@ to its definition and description.
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Distances}}\\
 \texttt{bruvo.dist} & Bruvo's distance \\
-\texttt{diss.dist} & Absolute genetic distance (see \texttt{provesti.dist}) \\
+\texttt{diss.dist} & Absolute genetic distance (see \texttt{prevosti.dist}) \\
 \texttt{nei.dist} & Nei's 1978 genetic distance \\
 \texttt{rogers.dist} & Rogers' euclidean distance \\
 \texttt{reynolds.dist} & Reynolds' coancestry distance \\
 \texttt{edwards.dist} & Edwards' angular distance \\
-\texttt{provesti.dist} & Provesti's absolute genetic distance \\
+\texttt{prevosti.dist} & Prevosti's absolute genetic distance \\
 %----------------|
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Bootstrapping}}\\
@@ -217,6 +219,7 @@ to its definition and description.
 \texttt{cutoff\_predictor} & predict cutoff threshold from mlg.filter.  \\
 \texttt{mll.custom} & Allows for the custom definition of multilocus lineages \\
 \texttt{mll.levels} & Allows the user to change levels of custom MLLs.  \\
+\texttt{mll.reset} & Reset multilocus lineages.  \\
 \texttt{diversity\_stats} & Creates a table of diversity indices for multilocus genotypes.  \\
 %----------------|
 \hline \\[-1.5ex]
@@ -232,6 +235,10 @@ to its definition and description.
 \texttt{private\_alleles} & Tabulates the occurrences of alleles that only occur \\
  & in one population. \\
 \texttt{locus\_table} & Creates a table of summary statistics per locus. \\
+\texttt{rrmlg} & obtain round-robin estimates of multilocus genotypes. \\
+\texttt{rraf} & obtain round-robin estimates of allele frequencies. \\
+\texttt{pgen} & Genotype probability, $p_{gen}$. \\
+\texttt{psex} & Probability of observing a genotype more than once, $p_{sex}$. \\
 %----------------|
 \hline \\[-1.5ex]
 \multicolumn{2}{l}{\Large\textsc{Visualization}}\\
@@ -308,7 +315,7 @@ sea of genomic data, generate bootstrapped dendrograms with any genetic
 distance, and calculate minimum spanning networks with reticulations to reveal
 the underlying population structure of your clonal data.
 
-\subsection{A note about poppr version \Sexpr{packageVersion("poppr")}}
+\subsection{A note about poppr version 2.0}
 
 In \poppr{} version 1.1, the \texttt{genclone} object was introduced. This was
 an extension of \adegenet{}'s \texttt{genind} object by adding two new slots:
@@ -384,7 +391,7 @@ citation(package = "poppr")
 
 The formal publication for the first version of \poppr{} was published in the
 journal \textbf{PeerJ}: \url{http://peerj.com/articles/281/} \citep{kamvar2014poppr}. The new features
-in version 2.x were published in \textbf{Frontiers}
+in version 2.0 were published in \textbf{Frontiers}
 \url{http://dx.doi.org/10.3389/fgene.2015.00208} \citep{kamvar2015novel}. 
 
 \section{Installation and Quick Start}

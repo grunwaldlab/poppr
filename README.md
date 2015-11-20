@@ -1,14 +1,14 @@
 # Poppr version 2
 
 In development:    
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=devel)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=devel)](https://coveralls.io/r/grunwaldlab/poppr?branch=devel)
 
 On CRAN:    
 [![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
 [![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
 [![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://cran.r-project.org/package=poppr)
-
+[![Research software impact](http://depsy.org/api/package/cran/poppr/badge.svg)](http://depsy.org/package/r/poppr)
 
 ## Welcome 
 

@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -128,8 +128,6 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 
 
 #==============================================================================#
-# Calculating Nei's distance for a genind object. Lifted from dist.genpop with
-# modifications.
 #' Calculate Genetic Distance for a genind or genclone object.
 #' 
 #' These functions are modified from the function \link[adegenet]{dist.genpop} to
@@ -151,9 +149,12 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 #'   this happens, infinite values are corrected to be 10 * max(D) where D is
 #'   the distance matrix without infinite values.
 #'   
-#' @note Provesti's distance is identical to \code{\link{diss.dist}}, except
-#'   that \code{\link{diss.dist}} is optimized for a larger number of
-#'   individuals (n > 125) at the cost of required memory.
+#' @note Prevosti's distance is identical to \code{\link{diss.dist}}, except 
+#'   that \code{\link{diss.dist}} is optimized for a larger number of 
+#'   individuals (n > 125) at the cost of required memory. Both
+#'   \code{prevosti.dist} and \code{provesti.dist} are the same function,
+#'   \code{provesti.dist} is a spelling error and exists for backwards
+#'   compatibility.
 #'   
 #'   These distances were adapted from the \pkg{adegenet} function
 #'   \code{\link{dist.genpop}} to work with \code{\linkS4class{genind}} objects.
@@ -219,7 +220,7 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 #' ednan <- edwards.dist(nan9)
 #' rodnan <- rogers.dist(nan9)
 #' reynan <- reynolds.dist(nan9)
-#' pronan <- provesti.dist(nan9)
+#' pronan <- prevosti.dist(nan9)
 #' 
 #==============================================================================#
 nei.dist <- function(x, warning = TRUE){
@@ -367,3 +368,8 @@ provesti.dist <- function(x){
   return(d)
 }
 
+# Making an alias to correct the spelling to fix issue #65
+prevosti.dist <- provesti.dist
+#' @rdname genetic_distance
+#' @export
+"prevosti.dist"

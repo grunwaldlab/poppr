@@ -101,7 +101,7 @@
   \scalebox{-1}[1]{\jala{}}
 }
 
-\title{Algorithms and equations utilized in poppr version 2.0.2}
+\title{Algorithms and equations utilized in poppr version 2.0.2.99.186}
 \author{Zhian N. Kamvar$^{1}$\ and Niklaus J. Gr\"unwald$^{1,2}$\\\scriptsize{1)
 Department of Botany and Plant Pathology, Oregon State University, Corvallis,
 OR}\\\scriptsize{2) Horticultural Crops Research Laboratory, USDA-ARS,
@@ -271,7 +271,7 @@ you just take $d$ over $\nu$ loci, a value we'll call $D$:
 \label{eq:ia_D}
 D(a,b) = \displaystyle \sum_{i=1}^{\nu} d_i
 \end{equation}
-An interesting observation: $D(a,b)/(l\nu)$ is Provesti's distance.
+An interesting observation: $D(a,b)/(l\nu)$ is Prevosti's distance.
 
 These values are calculated over all possible combinations of individuals in the
 data set, ${n \choose 2}$ after which you end up with ${n \choose 2}\cdot{}\nu$
@@ -332,7 +332,7 @@ as well (with the exception of Bruvo's distance).
   \hline
  Method & Function & Assumption & Euclidean & Citation\\ 
   \hline
-Provesti & \texttt{provesti.dist} & - & No & \citep{prevosti1975distances}\\
+Prevosti & \texttt{prevosti.dist} & - & No & \citep{prevosti1975distances}\\
  & \texttt{diss.dist} & & & \\
 Nei & \texttt{nei.dist} & Infinite Alleles & No & \citep{nei1972genetic, nei1978estimation}\\
  & & Genetic Drift & & \\
@@ -383,10 +383,10 @@ to an order of magnitude greater than the largest finite value.
 \end{equation}
 
 
-\subsubsection{Provesti's absolute genetic distance}
-\label{distance:provesti}
+\subsubsection{Prevosti's absolute genetic distance}
+\label{distance:prevosti}
 \begin{equation}
-  D_{Provesti}(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
+  D_{Prevosti}(a,b)=\frac{1}{2{\nu}} \sum_{k=1}^{\nu} \sum_{j=1}^{m(k)}
   |p_{ajk} - p_{bjk}|
 \end{equation}
 Note: for AFLP data, the $2$ is dropped. 
@@ -562,7 +562,7 @@ different distance measures on the tree topology.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.933, 0.933, 0.933}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{distances} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"Nei"}\hlstd{,} \hlstr{"Rogers"}\hlstd{,} \hlstr{"Edwards"}\hlstd{,} \hlstr{"Reynolds"}\hlstd{,} \hlstr{"Provesti"}\hlstd{)}
+\hlstd{distances} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"Nei"}\hlstd{,} \hlstr{"Rogers"}\hlstd{,} \hlstr{"Edwards"}\hlstd{,} \hlstr{"Reynolds"}\hlstd{,} \hlstr{"Prevosti"}\hlstd{)}
 \hlstd{dists} \hlkwb{<-} \hlkwd{lapply}\hlstd{(distances,} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)\{}
   \hlstd{DISTFUN} \hlkwb{<-} \hlkwd{match.fun}\hlstd{(}\hlkwd{paste}\hlstd{(}\hlkwd{tolower}\hlstd{(x),} \hlstr{"dist"}\hlstd{,} \hlkwc{sep} \hlstd{=} \hlstr{"."}\hlstd{))}
   \hlkwd{DISTFUN}\hlstd{(dat)}
@@ -595,7 +595,7 @@ is an implementation of Excoffier's original formulation
 \citep{excoffier1992analysis}. As the calculation relies on a genetic distance
 matrix, \poppr{} calculates the distance matrix as the number of differing sites
 between two genotypes using equation \ref{eq:ia_D}. This is equivalent to
-Provesti's distance multiplied by the ploidy and number of loci. This is also
+Prevosti's distance multiplied by the ploidy and number of loci. This is also
 equivalent to Kronecker's delta as presented in \citep{excoffier1992analysis}.
 As is the practice from \textsc{Arlequin}, within sample variance is calculated
 by default. Within sample variance can only be calculated on diploid data.
@@ -656,6 +656,49 @@ $2N/(2N - 1)$, where $N$ is the number of diploid samples
 would observe $2N$ alleles in a diploid locus. The only caveat is that
 populations where allelic dosage is unknown will have an inflated estimate of
 allelic diversity due to the inflation of rare alleles.
+
+\section{Probability of Genotypes: $p_{gen}$}
+
+The metric $p_{gen}$ represents the probability that a given multilocus genotype
+will occur in a population \citep{parks1993study, arnaud2007standardizing}. For 
+$\nu$ loci, it is calculated as:
+
+\begin{equation}
+h = \begin{cases} 1 \text{ if heterozygous},\\ 0 \text{ if homozygous or haploid}  \end{cases}
+\end{equation}
+
+\begin{equation}
+p_{gen} = \prod_{j = 1}^\nu\left(2^{h}\prod_{i = 1}^{m(j)} p_{ij}\right) \\
+\end{equation}
+
+where $p_{ij}$ represents the allele frequency of the $i^{th}$ allele present in
+the sample at the $j^{th}$ locus derived using the round-robin method
+\citep{parks1993study, arnaud2007standardizing}. The round-robin allele
+frequencies for a given locus are derived by first clone-correcting with the
+genotypes found at all other loci \citep{parks1993study,
+arnaud2007standardizing}. Any allele that ends up with a zero frequency are
+assigned a value of $1/N$, where $N$ is the number of samples.
+
+\section{Probability a genotype is derived from sexual reproduction: $p_{sex}$}
+
+The probability of a genotype can provide information as to how many times we
+expect to see that genotype repeated in our population. \citet{parks1993study}
+defined the probability of encountering a genotype a second time from an
+independent reproductive event as:
+
+\begin{equation}
+p_{sex} = 1 - (1 - p_{gen})^G
+\end{equation}
+
+Where $G$ is the number of multilocus genotypes in the data. Finding a genotype
+$N$ times is derived from the binomial distribution \citep{parks1993study,
+arnaud2007standardizing}:
+
+\begin{equation}
+p_{sex} = \sum_{i = 1}^N {N \choose i} \left(p_{gen}\right)^i\left(1 - p_{gen}\right)^{N - i}
+\end{equation}
+
+The \poppr{} function \texttt{psex()} can calculate both of these quantities. 
 
 \bibliographystyle{authordate1}
 \bibliography{the_bibliography}

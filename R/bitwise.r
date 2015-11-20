@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -75,7 +75,7 @@
 #'
 #' 
 #' @return Pairwise distances between individuals present in the genlight object.
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #' 
 #' @export
 #' @examples
@@ -97,9 +97,9 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differe
   inds      <- nInd(x)
   numPairs   <- nLoc(x)
 
-  # Use Provesti if this is a genclone or genind object
+  # Use Prevosti if this is a genclone or genind object
   if(!is(x, "genlight")){
-    dist.mat <- provesti.dist(x)
+    dist.mat <- prevosti.dist(x)
     if (percent == FALSE){
       dist.mat <- dist.mat*ploid*numPairs
     }
@@ -157,109 +157,11 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differe
   return(dist.mat)
 }
 
-
-
-#==============================================================================#
-#~ Probability of genotypes (under development)
-#~
-#~ @param x a genind or genlight object. 
-#~
-#~ @param log a \code{logical} to determine whether the values should be
-#~   returned as percentages or logarithms of percentages. \code{TRUE} is the
-#~   default, and returns the logarithmic values rather than the percentage
-#~   values. This option has a much larger range and is highly recommended.
-#~   \code{FALSE} returns the percentage chance for each genotype to be produced
-#~   via random mating, rather than the log equivalent.
-#~
-#~ @param by.pop a \code{logical} to determine whether allelic frequencies
-#~   should be calculated per population (\code{TRUE}, default) or across all
-#~   populations in the data (\code{FALSE}).
-#~
-#~ @param window.size an \code{integer} to determine how many SNPs should be 
-#~   included in each pgen calculation. The default is 1, causing every SNP to 
-#~   have its own pgen value in the result matrix. Higher values can be used to
-#~   reduce matrix size, but may result in precision errors if pgen values are 
-#~   too small. This argument only affects processing of genlight objects.
-#~
-#~ @return A vector containing one Pgen value for each genotype in the genlight
-#~   object.
-#~ @author Zhian N. Kamvar, Jonah Brooks
-#~ 
-#~ 
-#==============================================================================#
-pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
-  stopifnot(class(x)[1] == "genlight" || is.genind(x))
-  # Stop if the ploidy of the genlight object is not consistent
-  stopifnot(min(ploidy(x)) == max(ploidy(x))) 
-  # Stop if the ploidy of the genlight object is not diploid
-  stopifnot(min(ploidy(x)) == 2)
-  # Warn if window size is unusable
-  if(!is.integer(window.size) && !is.numeric(window.size) && window.size <= 0){
-    warning("window.size must be a positive integer or numeric. Using default value of 1.")
-    window.size = as.integer(1)
-  }
-  else {
-    window.size = as.integer(window.size)
-  }
-
-  if(is(x, "genlight")){
-    # Ensure that every SNPbin object has data for both chromosomes
-    for(i in 1:length(x$gen)){
-      if(length(x$gen[[i]]$snp) == 1){
-        x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
-      }
-    }
-
-    # Ensure there is a population assignment for every genotype
-    if(is.null(x$pop) || by.pop == FALSE){
-      x$pop <- as.factor(rep(1, length(x$gen)))
-    }   
- 
-    # TODO: Support haploids
-
-    pgen_matrix <- .Call("get_pgen_matrix_genlight", x, window.size)
-
-    if (!log)
-    {
-      pgen_matrix <- exp(pgen_matrix)
-    }
-
-    dim(pgen_matrix) <- c(length(x$gen), ceiling(x$n.loc/window.size))
-    rownames(pgen_matrix)            <- indNames(x)
-    if(window.size == 1) {
-      colnames(pgen_matrix)          <- locNames(x)
-    }
-  }
-  else if(is.genind(x)){
-    # Ensure there is a population assignment for every genotype
-    if(is.null(x$pop) || by.pop == FALSE){
-      pop(x) <- as.factor(rep(1,dim(x$tab)[1]))
-    }   
-    pops <- pop(x)
-    freqs <- tab(genind2genpop(x, quiet = TRUE), freq = TRUE)
-    pgen_matrix <- .Call("get_pgen_matrix_genind", x, freqs, pops)
-    # TODO: calculate in log form in C, then convert back here.
-    if(!log)
-    {
-      pgen_matrix <- exp(pgen_matrix)
-    }
-    dim(pgen_matrix) <- c(dim(x$tab)[1],length(locNames(x)))
-    colnames(pgen_matrix)            <- locNames(x)
-    rownames(pgen_matrix)            <- indNames(x)
-  }
-  else{
-    stop("Object provided must be a genlight, genind, or genclone object.")
-  }
-  return(pgen_matrix);
-}
-
-
-
 #==============================================================================#
 #' Determines whether openMP is support on this system.
 #'
 #' @return FALSE if openMP is not supported, TRUE if it is
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #' 
 #' @export
 #' @examples
@@ -267,7 +169,7 @@ pgen <- function(x, log=TRUE, by.pop=TRUE, window.size=1) {
 #==============================================================================#
 poppr_has_parallel <- function(){
 
-  supported <- .Call("omp_test")
+  supported <- .Call("omp_test", PACKAGE = "poppr")
 
   if(supported == 0) {
     return(FALSE)
@@ -282,13 +184,24 @@ poppr_has_parallel <- function(){
 #==============================================================================#
 #' Calculate the index of association between samples in a genlight object.
 #' 
-#' TODO: Add description of method
+#' This function parses over a genlight object to calculate and return the
+#' index of association for those samples.
 #'
 #' @param x a genlight object. 
 #'
-#' @param indices A vector of integers indicating which loci should be
-#'   sampled while calculating the index of association. If NULL (default),
-#'   all loci will be used.
+#' @param missing_match a boolean determining whether missing data should be
+#'   considered a match. If TRUE (default) missing data at a locus will match
+#'   with any data at that locus in each comparison. If FALSE, missing data at
+#'   a locus will cause all comparisons to return the maximum possible distance
+#'   at that locus (ie, if sample 1 has missing data at locus 1, and sample 2 
+#'   is heterozygous at locus 1, the distance at that locus will be 1. If sample
+#'   2 was heterozygous or missing at locus 1, the distance would be 2.
+#'
+#' @param differences_only a boolean determining how distance should be counted
+#'   for diploids. Whether TRUE or FALSE the distance between a heterozygous locus
+#'   and a homozygous locus is 1. If FALSE (default) the distance between opposite
+#'   homozygous loci is 2. If TRUE that distance counts as 1, indicating only that
+#'   the two samples differ at that locus.
 #'
 #' @param threads The maximum number of parallel threads to be used within this
 #'   function. A value of 0 (default) will attempt to use as many threads as there
@@ -297,39 +210,27 @@ poppr_has_parallel <- function(){
 #'   Other values may be specified, but should be used with caution.
 #'
 #' @return Index of association representing the samples in this genlight object.
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #' 
 #' @export
 #' @keywords internal
 #==============================================================================#
-bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0, indices=NULL){
-  stopifnot(class(x)[1] == "genlight")
-  #TODO: Use this and pass others to ia(): stopifnot(class(x)[1] %in% c("genlight", "genclone", "genind"))
+bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0){
+  stopifnot(class(x)[1] %in% c("genlight", "snpclone"))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
   # Stop if the ploidy of the genlight object is not haploid or diploid
-  stopifnot(min(ploidy(x)) == 2) # Once this handles haploids add:  || min(ploidy(x)) == 1)
+  stopifnot(min(ploidy(x)) == 2 || min(ploidy(x)) == 1)
 
   ploid     <- min(ploidy(x))
-  ind.names <- indNames(x)
-  inds      <- nInd(x)
-  numPairs   <- nLoc(x)
 
-  # Use Provesti if this is a genclone or genind object
-#  if(class(x)[1] != "genlight"){
-#    dist.mat <- provesti.dist(x)
-#    if (percent == FALSE){
-#      dist.mat <- dist.mat*ploid*numPairs
-#    }
-#    if (mat == TRUE){
-#      dist.mat <- as.matrix(dist.mat)
-#    }
-#    # Return this matrix and exit function
-#    return(dist.mat)
-#  }
-#
-  # Continue function for genlight objects
-
+  # Threads must be something that can cast to integer
+  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  {
+    stop("Threads must be a non-negative numeric or integer value")
+  }
+  # Cast parameters to proper types before passing them to C
+  threads <- as.integer(threads)
   # Ensure that every SNPbin object has data for all chromosomes
   if(ploid == 2){
     for(i in 1:length(x$gen)){
@@ -337,22 +238,22 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
         x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
       }
     }
+    IA <- .Call("association_index_diploid", x, missing_match, differences_only, 
+                threads, PACKAGE = "poppr")
   }
-  # Threads must be something that can cast to integer
-  if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
+  else if(ploid == 1)
   {
-    stop("Threads must be a non-negative numeric or integer value")
+    IA <- .Call("association_index_haploid", x, missing_match, threads, 
+                PACKAGE = "poppr")
   }
-
-  # Cast parameters to proper types before passing them to C
-  threads <- as.integer(threads)
-  indices <- as.integer(indices)
-
+  else
+  {
+    stop("bitwise.ia only supports haploids and diploids")
+  }
   #TODO: Allow for automated index generation, such as random or window based
 
   #TODO: Call C function and return
   
-  IA <- .Call("association_index_diploid", x, missing_match,differences_only,threads,indices)
 
   return(IA)
 
@@ -389,7 +290,7 @@ bitwise.IA <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0,
 #' @note this will calculate the standardized index of association from Agapow
 #' 2001. See \code{\link{ia}} for details.
 #' 
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #'   
 #' @export
 #' @examples
@@ -418,38 +319,22 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   } else {
     xpos <- seq(nLoc(x))
   }
-  diploid <- FALSE # Use this line when bitwise.IA works all(ploidy(x) == 2)
-  missing <- TRUE  # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
-  nwin <- ceiling(max(xpos)/window)
-  winmat <- matrix(window*1:nwin, nrow = nwin, ncol = 2)
-  winmat[, 1] <- winmat[, 1] - window + 1
+  winmat  <- make_windows(maxp = max(xpos), minp = min(xpos), window = window)
+  nwin    <- nrow(winmat)
   res_mat <- vector(mode = "numeric", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  if (missing || !diploid){
-    for (i in seq(nwin)){
-      posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
-      if (length(posns) < min.snps){
-        res_mat[i] <- NA
-      } else {
-        res_mat[i] <- snpia(x[, posns], threads = threads)
-      }
-      if (!quiet){
-        setTxtProgressBar(progbar, i/nwin)
-      }
+  for (i in seq(nwin)){
+    posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+    if (length(posns) < min.snps){
+      res_mat[i] <- NA
+    } else {
+      res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
     }
-  } else {
-    for (i in seq(nwin)){
-      posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
-      if (length(posns) < min.snps){
-        res_mat[i] <- NA
-      } else {
-        res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
-      }
-      if (!quiet){
-        setTxtProgressBar(progbar, i/nwin)
-      }
+    if (!quiet){
+      setTxtProgressBar(progbar, i/nwin)
     }
   }
+  if (!quiet) cat("\n")
   return(res_mat)
 }
 
@@ -482,10 +367,9 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 #' 
 #' @return Index of association representing the samples in this genlight
 #'   object.
-#' @author Zhian N. Kamvar, Jonah Brooks
+#' @author Zhian N. Kamvar, Jonah C. Brooks
 #'   
 #' @export
-#' 
 #' @examples
 #' \dontrun{
 #' # with structured snps assuming 1e4 positions
@@ -508,40 +392,34 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   nloc <- nLoc(x)
   res_mat <- vector(mode = "numeric", length = reps)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  diploid <- FALSE # Use this line when bitwise.IA works all(ploidy(x) == 2)
-  missing <- TRUE  # any(vapply(x@gen, function(i) length(i@NA.posi) > 0, logical(1)))
-  if (missing || !diploid){
-    for (i in seq(reps)){
-      posns <- sample(nloc, n.snp)
-      res_mat[i] <- snpia(x[, posns], threads = threads)
-      if (!quiet){
-        setTxtProgressBar(progbar, i/reps)
-      }
-    }  
-  } else {
-    for (i in seq(reps)){
-      posns <- sample(nloc, n.snp)
-      res_mat[i] <- bitwise.IA(x[, posns], threads = threads)
-      if (!quiet){
-        setTxtProgressBar(progbar, i/reps)
-      }
+  for (i in seq(reps)){
+    posns <- sample(nloc, n.snp)
+    res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
+    if (!quiet){
+      setTxtProgressBar(progbar, i/reps)
     }
   }
+  if (!quiet) cat("\n")
   return(res_mat)
 }
-
-snpia <- function(x, threads = 1L){
-  nloc <- nLoc(x)
-  nind <- nInd(x)
-  np <- choose(nind, 2)
-  d_mat <- vapply(seq(nloc), function(i) as.vector(bitwise.dist(x[, i], percent = FALSE, threads = threads)), integer(np))
-  D <- rowSums(d_mat)
-  SD <- sum(D)
-  Sd <- colSums(d_mat)
-  Sd2 <- colSums(d_mat*d_mat)
-  Vo <- (sum(D*D) - (SD*SD)/np)/np
-  varj <- (Sd2 - (Sd*Sd)/np)/np
-  Ve <- sum(varj)
-  Svarij <- .Call("pairwise_covar", varj, PACKAGE = "poppr")
-  return((Vo - Ve)/(2 * sum(Svarij)))
-}
+# Sat Aug 15 20:02:40 2015 ------------------------------
+# 
+# This function was used in place of bitwise.ia before it
+# was fixed. Since it has no purpose now, it is being 
+# commented out, but kept here for reference.
+# 
+# snpia <- function(x, threads = 1L){
+#   nloc <- nLoc(x)
+#   nind <- nInd(x)
+#   np <- choose(nind, 2)
+#   d_mat <- vapply(seq(nloc), function(i) as.vector(bitwise.dist(x[, i], percent = FALSE, threads = threads)), integer(np))
+#   D <- rowSums(d_mat) 
+#   SD <- sum(D)        
+#   Sd <- colSums(d_mat)
+#   Sd2 <- colSums(d_mat*d_mat)
+#   Vo <- (sum(D*D) - (SD*SD)/np)/np
+#   varj <- (Sd2 - (Sd*Sd)/np)/np
+#   Ve <- sum(varj)
+#   Svarij <- .Call("pairwise_covar", varj, PACKAGE = "poppr")
+#   return((Vo - Ve)/(2 * sum(Svarij)))
+# }

@@ -31,21 +31,7 @@ test_that("bitwise.dist can actually handle genind objects", {
 
 test_that("bitwise.dist produces reasonable results", {
 
-skip_on_cran()
-
-# Required to circumvent a windows specific error in adegenet
-# if ((.Platform)$OS.type == "windows"){
-#   mclapply <- function (X, FUN, ..., mc.preschedule = TRUE, mc.set.seed = TRUE,
-#     mc.silent = FALSE, mc.cores = 1L, mc.cleanup = TRUE,
-#     mc.allow.recursive = TRUE){
-#       cores <- as.integer(mc.cores)
-#       if (cores < 1L)
-#         stop("'mc.cores' must be >= 1")
-#       if (cores > 1L)
-#         lapply(X, FUN, ...)
-#     }
-# }
-
+  skip_on_cran()
   dat <- list(c(2,2,2,2,2,2,2,2,2,0),
               c(1,1,1,0,0,0,0,0,0,2),
               c(2,2,2,2,2,2,2,2,2,2),
@@ -72,38 +58,4 @@ skip_on_cran()
   
   expect_equivalent(missing_match_dist, expected_match_dist)
   #expect_equivalent(missing_nomatch, expected_nomatch)
- })
-
-
-
-
-test_that("pgen produces reasonable results", {
-
-skip_on_cran()
-
-# Required to circumvent a windows specific error in adegenet
-#   if ((.Platform)$OS.type == "windows"){
-#     mclapply <- function (X, FUN, ..., mc.preschedule = TRUE, mc.set.seed = TRUE,
-#       mc.silent = FALSE, mc.cores = 1L, mc.cleanup = TRUE,
-#       mc.allow.recursive = TRUE){
-#         cores <- as.integer(mc.cores)
-#         if (cores < 1L)
-#           stop("'mc.cores' must be >= 1")
-#         if (cores > 1L)
-#           lapply(X, FUN, ...)
-#       }
-#   }
-
-  single_pop <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2), parallel = FALSE)
-  results_single_pop <- pgen(single_pop,log=FALSE)
-  expected_single_pop <- structure(c(0.25, 0.5, 0.5, 0.25), .Dim = c(4L, 1L))
-
-  multi_pop <- new("genlight", list(0, 1, 1, 2), ploidy=c(2,2,2,2), parallel = FALSE)
-  multi_pop$pop <- as.factor(1:4)
-  results_multi_pop <- pgen(multi_pop,log=FALSE)
-  expected_multi_pop <- structure(c(1, 0.5, 0.5, 1), .Dim = c(4L, 1L))
- 
-  expect_equivalent(results_single_pop, expected_single_pop)
-  expect_equivalent(results_multi_pop, expected_multi_pop)
-  expect_equivalent(pgen(multi_pop,log=FALSE,by.pop=FALSE), expected_single_pop)
  })

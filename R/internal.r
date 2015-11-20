@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -108,9 +108,9 @@ NULL
 #' @references Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia 
 #'   Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha 
 #'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen 
-#'   \emph{Phytophthora infestans} originated in central Mexico rather than the
-#'   Andes." Proceedings of the National Academy of Sciences 111:8791-8796.
-#'   doi: \href{http://dx.doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
+#'   \emph{Phytophthora infestans} originated in central Mexico rather than the 
+#'   Andes." Proceedings of the National Academy of Sciences 111:8791-8796. doi:
+#'   \href{http://dx.doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
 #==============================================================================#
 NULL
 #==============================================================================#
@@ -125,35 +125,39 @@ NULL
 #' @rdname Pram
 #' @docType data
 #' @usage data(Pram)
-#' @description This is the data set from
-#'   \url{http://dx.doi.org/10.5281/zenodo.13007}. It has been converted to the
-#'   genclone object as of poppr version 2.0. It contains 729 samples of the
-#'   Sudden Oak Death pathogen \emph{Phytophthora ramorum} genotyped over five
-#'   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected
-#'   from forests in Curry County, OR from 2001 to mid-2014 (labeled by
-#'   watershed region). The other 216 samples represents genotypes collected
-#'   from Nurseries in OR and CA from Goss et. al. (2009).
+#' @description This is the data set from 
+#'   \url{http://dx.doi.org/10.5281/zenodo.13007}. It has been converted to the 
+#'   genclone object as of poppr version 2.0. It contains 729 samples of the 
+#'   Sudden Oak Death pathogen \emph{Phytophthora ramorum} genotyped over five 
+#'   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from
+#'   forests in Curry County, OR from 2001 to mid-2014 (labeled by watershed
+#'   region). The other 216 samples represents genotypes collected from
+#'   Nurseries in OR and CA from Goss et. al. (2009).
 #'   
 #' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
-#'   called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a
-#'   named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy
-#'   coordinates for the forest samples called \strong{"xy"}, and a palette to
+#'   called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a 
+#'   named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy 
+#'   coordinates for the forest samples called \strong{"xy"}, and a palette to 
 #'   color the ~SOURCE/STATE stratification called \strong{"comparePal"}.
 #'   
 #' @references Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & 
 #'   Grünwald, N. J. (2015). Spatial and temporal analysis of populations of the
 #'   sudden oak death pathogen in Oregon forests. Phytopathology 105:982-989. 
-#'   doi: \href{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+#'   doi:
+#'   \href{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+#'   
 #'   
 #'   Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. Hansen, & 
 #'   Niklaus J. Grünwald. 2014. Sudden_Oak_Death_in_Oregon_Forests: Spatial and 
 #'   temporal population dynamics of the sudden oak death epidemic in Oregon 
-#'   Forests. ZENODO, doi: \href{http://doi.org/10.5281/zenodo.13007}{10.5281/zenodo.13007}
+#'   Forests. ZENODO, doi:
+#'   \href{http://doi.org/10.5281/zenodo.13007}{10.5281/zenodo.13007}
 #'   
 #'   Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
 #'   J. 2009. Population genetic analysis infers migration pathways of 
-#'   \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. 
-#'   doi: \href{http://dx.doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
+#'   \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
+#'   \href{http://dx.doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
+#'   
 #' @examples
 #' data(Pram)
 #' 
@@ -184,8 +188,10 @@ NULL
 #'   coded into one population factor. These are named "Tree", "Year", and 
 #'   "Symptom"
 #' @references SE Everhart, H Scherm, (2015) Fine-scale genetic structure of 
-#'   \emph{Monilinia fructicola} during brown rot epidemics within individual peach 
-#'   tree canopies. Phytopathology 105:542-549 doi: \href{http://dx.doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
+#'   \emph{Monilinia fructicola} during brown rot epidemics within individual
+#'   peach tree canopies. Phytopathology 105:542-549 doi:
+#'   \href{http://dx.doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
+#'   
 #' @examples
 #' data(monpop)
 #' splitStrata(monpop) <- ~Tree/Year/Symptom
@@ -324,22 +330,20 @@ round.poppr <- function(x){
 # This will be used to join heirarchical population vectors for the purposes of
 # maintaining hierarchy. 
 # Public functions utilizing this function:
-# # splitcombine
+# ## read.genalex
 #
 # Internal functions utilizing this function:
-# # none
+# ## none
 #==============================================================================#
 
 pop_combiner <- function(df, hier=c(1), sep="_"){
-  if(!is.list(df)){
+  if (!is.list(df)){
     warning("df must be a data frame or a list")
     return(df)
-  }
-  else{
+  } else {
     if(length(hier)==1){
       return(df[[hier]])
-    }
-    else{
+    } else {
       comb <- vector(length=length(df[[hier[1]]]))
       comb <- df[[hier[1]]]
       lapply(hier[-1], function(x) comb <<- paste(comb, df[[x]], sep=sep))
@@ -348,20 +352,17 @@ pop_combiner <- function(df, hier=c(1), sep="_"){
   }
 }
 #==============================================================================#
-# Subsetting the population. 
+# Subsetting the population and returning the indices.
+# 
 # Public functions utilizing this function:
-# # mlg.crosspop
+# ## mlg.crosspop poppr.msn
 #
 # Internal functions utilizing this function:
-# # none
+# ## none
 #==============================================================================#
 sub_index <- function(pop, sublist="ALL", blacklist=NULL){
-  if (!is.genind(pop) & !is(pop, "genlight")){
-    stop("pop.subset requires a genind or genlight object\n")
-  }
   numList <- seq(nInd(pop))
   if (is.null(pop(pop))){
-    warning("No population structure. Subsetting not taking place.")
     return(numList)
   }
   if(toupper(sublist[1]) == "ALL"){
@@ -406,15 +407,16 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
     warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
     return(seq(nInd(pop)))
   } 
-  #cat("Sublist:\n",sublist,"\n")
+  #cat("Sublist:\n", sublist,"\n")
   return(numList[sublist])
 }
 
 
 #==============================================================================#
 # Internal function to create mlg.table.
+# 
 # Public functions utilizing this function:
-# # mlg.table, mlg.crosspop
+# # mlg.table mlg.crosspop
 #
 # Internal functions utilizing this function:
 # # none
@@ -424,7 +426,7 @@ mlg.matrix <- function(x){
   if (is.genclone(x) | is(x, "snpclone")){
     mlgvec <- x@mlg[]
     if (is(x@mlg, "MLG")){
-      visible <- x@mlg@visible
+      visible <- visible(x@mlg)
     }
   } else {
     mlgvec <- mlg.vector(x)
@@ -459,7 +461,7 @@ mlg.matrix <- function(x){
 #     # columns are the genotype indicator.
 #     mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0L)
 #     # populating (no, pun intended.) the matrix with genotype counts.
-#     lapply(levels(x@pop),function(z){
+#     lapply(levels(x@pop), function(z){
 #                            # This first part gets the index for the row names. 
 #                            count <- as.numeric(substr(z, 2, nchar(z)))
 #                            sapply(mlgvec[which(x@pop==z)], 
@@ -506,7 +508,7 @@ mlg.matrix <- function(x){
   #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
   # Starting the actual calculations. 
   #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
-	V <- .PA.pairwise.differences(pop,numLoci, np, missing=missing)
+	V <- .PA.pairwise.differences(pop, numLoci, np, missing=missing)
 	# First, set the variance of D	
 	varD <- ((sum(V$D.vector^2)-((sum(V$D.vector))^2)/np))/np
 	# Next is to create a vector containing all of the variances of d (there
@@ -549,8 +551,8 @@ mlg.matrix <- function(x){
   if( missing == "MEAN" ){
     # this will round all of the values if the missing indicator is "mean"  
     temp.d.vector <- vapply(seq(numLoci), 
-                            function(x) as.vector(dist(pop@tab[,x])), 
-                            temp.d.vector[,1])
+                            function(x) as.vector(dist(pop@tab[, x])), 
+                            temp.d.vector[, 1])
     # since the replacement was with "mean", the missing data will not produce
     # a binary distance. The way we will handle this is to replace numbers that
     # are not one or zero with a rounded value. 
@@ -558,8 +560,8 @@ mlg.matrix <- function(x){
     temp.d.vector[tempz] <- vapply(temp.d.vector[tempz], round.poppr, 1)
   } else {    
     temp.d.vector <- vapply(seq(numLoci), 
-                          function(x) as.vector(dist(pop@tab[,x])), 
-                          temp.d.vector[,1])
+                          function(x) as.vector(dist(pop@tab[, x])), 
+                          temp.d.vector[, 1])
     # checking for missing data and imputing the comparison to zero.
     if(any(is.na(temp.d.vector))){
       temp.d.vector[which(is.na(temp.d.vector))] <- 0
@@ -626,13 +628,13 @@ final <- function(Iout, result){
   # if there are less than three individuals in the population, the calculation
   # does not proceed. 
   if (nInd(pop) < 3){
-    IarD <- as.numeric(c(NA,NA))
+    IarD <- as.numeric(c(NA, NA))
     names(IarD) <- c("Ia", "rbarD")
     if(sample==0){
       return(IarD)
     }
     else{
-      IarD <- as.numeric(rep(NA,4))
+      IarD <- as.numeric(rep(NA, 4))
       names(IarD) <- c("Ia","p.Ia","rbarD","p.rD")
       return(IarD)
     }
@@ -692,14 +694,14 @@ final <- function(Iout, result){
 #
 # # DEPRECATED
 # #==============================================================================#
-# .pairwise.differences <- function(pop,numLoci,np, missing){  
+# .pairwise.differences <- function(pop, numLoci, np, missing){  
 #   temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
 #   if( missing == "MEAN" )
 #     temp.d.vector <- matrix(nrow=np, ncol=numLoci,
 #                             data=vapply(vapply(pop, pairwisematrix, 
-#                                         temp.d.vector[,1], np),round.poppr,1))  
+#                                         temp.d.vector[, 1], np), round.poppr, 1))  
 #   else    
-#     temp.d.vector <- vapply(pop, pairwisematrix, temp.d.vector[,1], np)
+#     temp.d.vector <- vapply(pop, pairwisematrix, temp.d.vector[, 1], np)
 #   d.vector  <- as.vector(colSums(temp.d.vector))
 #   d2.vector <- as.vector(colSums(temp.d.vector^2))
 #   D.vector  <- as.vector(rowSums(temp.d.vector))
@@ -828,13 +830,13 @@ pair_matrix <- function(pop, numLoci, np)
 #==============================================================================#
 # Internal counter...probably DEPRECATED.
 #==============================================================================#
-.new_counter <- function() {
-  i <- 0
-  function() {
-    i <<- i + 1
-    i
-  }
-}
+# .new_counter <- function() {
+#   i <- 0
+#   function() {
+#     i <<- i + 1
+#     i
+#   }
+# }
 
 #==============================================================================#
 # Bruvo's distance calculation that takes in an SSR matrix. Note the conditions
@@ -951,7 +953,7 @@ update_edge_scales <- function(mst, wscale = TRUE, gscale = TRUE, glim, gadj){
 #
 #==============================================================================#
 
-adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE, 
+adjustcurve <- function(weights, glim = c(0, 0.8), correction = 3, show=FALSE, 
   scalebar = FALSE, smooth = TRUE){
   w    <- weights
   w    <- rerange(w)
@@ -977,20 +979,20 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE,
           main=paste("Grey adjustment\n min:", 
                      min(glim), 
                      "max:", max(glim), 
-                     "adjust:",abs(correction)))
+                     "adjust:", abs(correction)))
     if (correction < 0){
-      graphics::text(bquote(frac(bgroup("(",frac(scriptstyle(x)^.(abs(correction)),
+      graphics::text(bquote(frac(bgroup("(", frac(scriptstyle(x)^.(abs(correction)),
                                        .(ming)^-1),")") + .(1-ming), 
                        .(maxg)^-1)) , 
            x = min(weights) + (0.25*max(weights)), y=0.75, col="red")
     } else {
-      graphics::text(bquote(frac(1-bgroup("(",frac((1-scriptstyle(x))^.(abs(correction)),
+      graphics::text(bquote(frac(1-bgroup("(", frac((1-scriptstyle(x))^.(abs(correction)),
                                          .(ming)^-1),")"), 
                        .(maxg)^-1)) , 
            x= min(weights) + (0.15*max(weights)), y=0.75, col="red")
     }
-    graphics::lines(x=xlims, y=c(min(glim),min(glim)), col="yellow")
-    graphics::lines(x=xlims, y=c(max(glim),max(glim)), col="yellow")    
+    graphics::lines(x=xlims, y=c(min(glim), min(glim)), col="yellow")
+    graphics::lines(x=xlims, y=c(max(glim), max(glim)), col="yellow")    
   } else {
     with_quantiles <- sort(weights)
     wq_raster      <- t(grDevices::as.raster(as.matrix(grDevices::gray(sort(adj)), nrow = 1)))
@@ -1010,8 +1012,8 @@ adjustcurve <- function(weights, glim = c(0,0.8), correction = 3, show=FALSE,
     graphics::text(0.5, 0, labels = "Quantiles From Smoothing", font = 2, cex = 1.5, adj = c(0.5, 0))
     # Return top level plot to defau lts.
     graphics::layout(matrix(c(1), ncol=1, byrow=T))
-    graphics::par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
-    graphics::par(oma=c(0,0,0,0)) # Figure margins
+    graphics::par(mar=c(5, 4, 4, 2) + 0.1) # number of lines of margin specified.
+    graphics::par(oma=c(0, 0, 0, 0)) # Figure margins
   }
 }
 
@@ -1142,20 +1144,24 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
   # First, clone correct and get the number of individuals per MLG in order.
   if(threshold > 0){
     if (is.null(distmat) & !is.null(replen)){
-      filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+      filter.stats <- mlg.filter(gid, threshold, distance=bruvo.dist, 
+                                 algorithm=clustering.algorithm, 
+                                 replen=replen, stats="ALL")
     } else {
-      filter.stats <- mlg.filter(gid,threshold,distance=distmat,algorithm=clustering.algorithm,replen=replen,stats="ALL")
+      filter.stats <- mlg.filter(gid, threshold, distance=distmat, 
+                                 algorithm=clustering.algorithm,
+                                 stats="ALL")
     }
      # TODO: The following two lines should be a product of mlg.filter
-    gid$mlg@visible <- "contracted"
-    visible <- "contracted"
+    visible(gid$mlg) <- "contracted" -> visible
     gid$mlg[] <- filter.stats[[1]]
-    cgid <- gid[if(is.na(-which(duplicated(gid$mlg[]))[1])) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
-    distmat <- filter.stats[[3]]
+    cgid      <- gid[.clonecorrector(gid), ]
+    distmat   <- filter.stats[[3]]
     if (!is.matrix(distmat)) distmat <- as.matrix(distmat)
+    rownames(distmat) <- indNames(cgid) -> colnames(distmat)
   } else {
-      visible  <- gid@mlg@visible
-      mll(gid) <- mlg.compute
+    visible  <- visible(gid@mlg)
+    mll(gid) <- mlg.compute
     to_remove <- .clonecorrector(gid)
     cgid <- gid[to_remove, ]
     # Calculate distance matrix if not supplied (Bruvo's distance)
@@ -1186,11 +1192,8 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
     mst <- minimum.spanning.tree(g, algorithm="prim", weights=E(g)$weight)
 
     # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
-    if(include.ties){
-      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(distmat),(.Machine$double.eps ^ 0.5))
-      if(length(tied_edges) > 0){
-        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
-      }
+    if (include.ties){
+      mst <- add_tied_edges(mst, distmat, tolerance = .Machine$double.eps ^ 0.5)
     }
   } else {
     mst <- minimum.spanning.tree(g)
@@ -1222,7 +1225,7 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color,  
                 vertex.label = vertex.label, vertex.size = mlg.number*3, 
                 vertex.color = palette(1),  ...)
-    graphics::legend(-1.55,1,bty = "n", cex = 0.75, 
+    graphics::legend(-1.55, 1, bty = "n", cex = 0.75, 
            legend = populations, title = "Populations", fill = palette(1), 
            border = NULL)
   }
@@ -1246,7 +1249,7 @@ singlepop_msn <- function(gid, vertex.label, replen = NULL, add = TRUE,
 #==============================================================================#
 
 bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, 
-                            loss = TRUE){
+                            loss = TRUE, by_locus = FALSE){
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
   replen <- bruvomat@replen
@@ -1266,18 +1269,48 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
   # comparison is not made. These are changed to NA.
   distmat[distmat == 100] <- NA
 
-  # Obtaining the average distance over all loci.
-  avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+  if (!by_locus){
+    # Obtaining the average distance over all loci.
+    avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+  
+    # presenting the information in a lower triangle distance matrix.
+    dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
+    dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
+    dist.mat <- as.dist(dist.mat)
+  
+    attr(dist.mat, "Labels") <- bruvomat@ind.names
+    attr(dist.mat, "method") <- "Bruvo"
+    attr(dist.mat, "call")   <- funk_call
+    return(dist.mat)    
+  } else {
+    n    <- nrow(x)
+    cols <- seq(ncol(distmat))
+    labs <- bruvomat@ind.names
+    meth <- "Bruvo"
+    return(lapply(cols, function(i) make_attributes(distmat[, i], n, labs, meth, funk_call)))
+  }
 
-  # presenting the information in a lower triangle distance matrix.
-  dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
-  dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
-  dist.mat <- as.dist(dist.mat)
+}
 
-  attr(dist.mat, "Labels") <- bruvomat@ind.names
-  attr(dist.mat, "method") <- "Bruvo"
-  attr(dist.mat, "call")   <- funk_call
-  return(dist.mat)
+
+#==============================================================================#
+# match repeat lengths to loci present in data
+#
+# Public functions utilizing this function:
+# ## initialize,bruvomat-method
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+match_replen_to_loci <- function(gid_loci, replen){
+  if (is.genind(gid_loci)){
+    gid_loci <- locNames(gid_loci)
+  }
+  if (is.null(names(replen))){
+    return(replen)
+  } else {
+    return(replen[gid_loci])
+  }
 }
 
 #==============================================================================#
@@ -1295,27 +1328,29 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
 #
 # Public functions utilizing this function:
 #
-# # poppr.amova, setPop, strata
+# ## none
 #
 # Internal functions utilizing this function:
-# # none
+# ## none
+# 
+# DEPRECATED
 #==============================================================================#
-make_hierarchy <- function(hier, df, expand_label = FALSE){
-  newlevs <- attr(terms(hier), "term.labels")
-  levs <- all.vars(hier)
-  if (length(levs) > 1){
-    newlevs <- gsub(":", "_", newlevs)
-  }
-  if (!all(levs %in% names(df))){
-    stop(hier_incompatible_warning(levs, df))
-  }
-  newdf <- df[levs[1]]
-  if (!expand_label){
-    newlevs <- levs
-  }
-  lapply(1:length(levs), function(x) newdf[[newlevs[x]]] <<- as.factor(pop_combiner(df, levs[1:x])))
-  return(newdf)
-}
+# make_hierarchy <- function(hier, df, expand_label = FALSE){
+#   newlevs <- attr(terms(hier), "term.labels")
+#   levs <- all.vars(hier)
+#   if (length(levs) > 1){
+#     newlevs <- gsub(":", "_", newlevs)
+#   }
+#   if (!all(levs %in% names(df))){
+#     stop(hier_incompatible_warning(levs, df))
+#   }
+#   newdf <- df[levs[1]]
+#   if (!expand_label){
+#     newlevs <- levs
+#   }
+#   lapply(1:length(levs), function(x) newdf[[newlevs[x]]] <<- as.factor(pop_combiner(df, levs[1:x])))
+#   return(newdf)
+# }
 
 #==============================================================================#
 # Function for creating the structure data frame needed for ade4's AMOVA
@@ -1775,6 +1810,12 @@ get_gen_dist_labs <- function(x){
 #==============================================================================#
 # This will give attributes to genetic distance matrices. 
 #
+# Input: 
+#  - d a vector to be coerced into a distance matrix.
+#  - nlig number of samples
+#  - labs the names of the samples
+#  - method the name of the method used to create the distances
+#  - matched_call the call that created the matrix.
 # Public functions utilizing this function:
 # *.dist
 #
@@ -1792,6 +1833,34 @@ make_attributes <- function(d, nlig, labs, method, matched_call){
   return(d)
 }
 
+#==============================================================================#
+# Parse incoming palettes
+# 
+# Color palettes could come in the form of functions, vectors, or named vectors.
+# This internal helper will parse them and return a named vector of colors. 
+#
+# Public functions utilizing this function:
+# ## bruvo.msn poppr.msn
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+palette_parser <- function(pal, npop, pnames){
+  PAL <- try(match.fun(pal), silent = TRUE)
+  if ("try-error" %in% class(PAL)){
+    if (all(pnames %in% names(pal))){
+      color <- pal[pnames]
+    } else if (npop == length(pal)){
+      color <- stats::setNames(pal, pnames)
+    } else {
+      warning("insufficient color palette supplied. Using topo.colors().")
+      color <- stats::setNames(topo.colors(npop), pnames)
+    }
+  } else {
+    color   <- stats::setNames(PAL(npop), pnames)
+  }
+  return(color)
+}
 #==============================================================================#
 # Function used to update colors in poppr msn 
 #
@@ -1840,16 +1909,18 @@ update_colors <- function(colorvec, lookup){
 # Function used to update colors in poppr msn 
 #
 # Public functions utilizing this function:
-# none
+# ## none
 #
 # Private functions utilizing this function:
-# # update_colors
+# ## none
+# 
+# DEPRECATED
 #==============================================================================#
-update_single_color <- function(x, lookup, colorvec){
-  update   <- lookup[[2]]
-  original <- lookup[[1]]
-  return(update[original %in% colorvec[x]])
-}
+# update_single_color <- function(x, lookup, colorvec){
+#   update   <- lookup[[2]]
+#   original <- lookup[[1]]
+#   return(update[original %in% colorvec[x]])
+# }
 
 #==============================================================================#
 # Function used to obtain information about local ploidy in a genind data set
@@ -1870,7 +1941,7 @@ get_local_ploidy <- function(x){
   }
   tabx   <- tab(x)
   cols   <- split(colnames(tabx), locFac(x))
-  locmat <- vapply(cols, function(i) rowSums(tabx[, i]), numeric(nInd(x)))
+  locmat <- vapply(cols, function(i) rowSums(tabx[, i, drop = FALSE]), numeric(nInd(x)))
   return(locmat)
 }
 #==============================================================================#
@@ -1916,27 +1987,29 @@ test_zeroes <- function(x){
 # Internal plotting function for mlg.table
 #
 # Public functions utilizing this function:
-# none
+# ## none
 #
 # Private functions utilizing this function:
-# # print_mlg_barplot
+# ## print_mlg_barplot
+# 
+# DEPRECATED
 #==============================================================================#
-old_mlg_barplot <- function(mlgt){
-
-  # create a data frame that ggplot2 can read.
-  mlgt.df <- as.data.frame(list(MLG   = colnames(mlgt), 
-                                count = as.vector(mlgt)), 
-                           stringsAsFactors = FALSE)
-
-  # Organize the data frame by count in descending order.
-  rearranged <- order(mlgt.df$count, decreasing = TRUE)
-  mlgt.df <- mlgt.df[rearranged, , drop = FALSE]
-  mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
-
-  # plot it
-  return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
-         geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
-}
+# old_mlg_barplot <- function(mlgt){
+# 
+#   # create a data frame that ggplot2 can read.
+#   mlgt.df <- as.data.frame(list(MLG   = colnames(mlgt), 
+#                                 count = as.vector(mlgt)), 
+#                            stringsAsFactors = FALSE)
+# 
+#   # Organize the data frame by count in descending order.
+#   rearranged <- order(mlgt.df$count, decreasing = TRUE)
+#   mlgt.df <- mlgt.df[rearranged, , drop = FALSE]
+#   mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
+# 
+#   # plot it
+#   return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
+#          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
+# }
 #==============================================================================#
 # Internal plotting function for mlg.table
 #
@@ -1980,27 +2053,28 @@ mlg_barplot <- function(mlgt, color_table = NULL){
 # Internal plotting function for mlg.table
 #
 # Public functions utilizing this function:
-# mlg.table
+# ## none
 #
 # Private functions utilizing this function:
-# # none
+# ## old_mlg_barplot
+# 
+# DEPRECATED
 #==============================================================================#
-
-print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
-  if(!quiet) cat("|",n,"\n")
-
-  # Gather all nonzero values
-  mlgt <- mlgtab[n, mlgtab[n, ] > 0, drop=FALSE]
-
-  # controlling for the situation where the population size is 1.
-  if (sum(mlgtab[n, ]) > 1){ 
-    print(old_mlg_barplot(mlgt) +
-            theme_classic() %+replace%
-            theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) + 
-            labs(title=paste("Population:", n, "\nN =", sum(mlgtab[n, ]),
-                             "MLG =", length(mlgt))))
-  }
-}
+# print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
+#   if(!quiet) cat("|", n,"\n")
+# 
+#   # Gather all nonzero values
+#   mlgt <- mlgtab[n, mlgtab[n, ] > 0, drop=FALSE]
+# 
+#   # controlling for the situation where the population size is 1.
+#   if (sum(mlgtab[n, ]) > 1){ 
+#     print(old_mlg_barplot(mlgt) +
+#             theme_classic() %+replace%
+#             theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) + 
+#             labs(title=paste("Population:", n, "\nN =", sum(mlgtab[n, ]),
+#                              "MLG =", length(mlgt))))
+#   }
+# }
 
 #==============================================================================#
 # Internal function for resampling loci for genotype accumulation curve.
@@ -2010,14 +2084,16 @@ print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
 #
 # Private functions utilizing this function:
 # # none
+# 
+# DEPRECATED
 #==============================================================================#
-get_sample_mlg <- function(size, samp, nloci, gen, progbar){
-  if (!is.null(progbar)){
-    setTxtProgressBar(progbar, size/(nloci-1))
-  }
-  out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
-  return(out)
-}
+# get_sample_mlg <- function(size, samp, nloci, gen, progbar){
+#   if (!is.null(progbar)){
+#     setTxtProgressBar(progbar, size/(nloci-1))
+#   }
+#   out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
+#   return(out)
+# }
 
 #==============================================================================#
 # Internal function for creating title for index of association histogram.
@@ -2560,3 +2636,155 @@ get_boot_se <- function(bootlist, res = "sd"){
   return(resmat)
 }
 
+#==============================================================================#
+# Given a maximum and minimum value, this makes an n x 2 matrix of windows that
+# encompass these values.
+# 
+# Public functions utilizing this function:
+# ## win.ia
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+make_windows <- function(maxp, minp = 1L, window = 100L){
+  nwin   <- ceiling(maxp/window)
+  minwin <- ceiling(minp/window)
+  winmat <- matrix(window * seq(nwin), nrow = nwin, ncol = 2)[minwin:nwin, , drop = FALSE]
+  winmat[, 1] <- winmat[, 1] - window + 1
+  return(winmat)
+}
+#==============================================================================#
+# add tied edges to minimum spanning tree
+#
+# Public functions utilizing this function:
+# ## bruvo.msn poppr.msn
+#
+# Internal functions utilizing this function:
+# ## singlepop_msn
+#==============================================================================#
+add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
+  tied_edges <- .Call("msn_tied_edges", as.matrix(mst[]), as.matrix(distmat), tolerance)
+  if (length(tied_edges) > 0){
+    the_edges   <- tied_edges[c(TRUE, TRUE, FALSE)]
+    the_weights <- tied_edges[c(FALSE, FALSE, TRUE)]
+    mst <- add.edges(mst, dimnames(mst[])[[1]][the_edges], weight = the_weights)
+  }
+  return(mst)
+}
+
+#==============================================================================#
+# round robin clone-correct allele frequency estimates
+# 
+# This will take in
+# - i the index of the locus.
+# - loclist a list of genind objects each one locus.
+# - mlgs a matrix from rrmlg
+# - correction a logical indicating if zeroes should be replaced with the
+# smallest value
+#
+# Public functions utilizing this function:
+# ## rraf
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+rrcc <- function(i, loclist, mlgs, correction = TRUE){
+  cc  <- !duplicated(mlgs[, i])
+  mat <- tab(loclist[[i]], freq = TRUE)
+  res <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
+  names(res) <- alleles(loclist[[i]])[[1]]
+  if (correction){
+    res[res < .Machine$double.eps^0.5] <- 1/length(cc)    
+  }
+  return(res)
+}
+#==============================================================================#
+# round robin clone-correct allele frequency estimates by population
+# 
+# This will take in
+# - i the index of the locus.
+# - loclist a list of genind objects each one locus.
+# - mlgs a matrix from rrmlg
+# - correction a logical indicating if zeroes should be replaced with the
+# smallest value
+# - pnames the population names.
+#
+# Public functions utilizing this function:
+# ## rraf
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
+  
+  mat  <- tab(loclist[[i]], freq = TRUE)
+  npop <- length(pnames)
+  res  <- matrix(numeric(ncol(mat)*npop), nrow = npop)
+  rownames(res) <- pnames
+  colnames(res) <- colnames(mat)
+  pops <- pop(loclist[[i]])
+  for (p in pnames){
+    psub <- pops %in% p
+    cc   <- which(!duplicated(mlgs[psub, i]))
+    out  <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
+    if (correction){
+      out[out < .Machine$double.eps^0.5] <- 1/length(cc)
+    }
+    res[p, ] <- out
+  }
+  
+  return(res)
+}
+
+#==============================================================================#
+# Pairwise index of association calculation
+# 
+# Arguments
+# - pair a character vector of length 3 containing the pair of loci and the 
+#   iteration.
+# - V a choose(n, 2) x m matrix containing the distances at all loci. 
+# - np choose(n, 2)
+# - progbar either NULL or a progressbar object.
+# - iterations the number of loci combinations.
+#
+# Public functions utilizing this function:
+# ## pair.ia
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+ia_pair_loc <- function(pair, V, np, progbar, iterations){
+  if (!is.null(progbar)){
+    setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
+  }
+  newV <- V[, pair[-3]]
+  V    <- list(d.vector  = colSums(newV), 
+               d2.vector = colSums(newV * newV), 
+               D.vector  = rowSums(newV)
+  )
+  return(ia_from_d_and_D(V, np))
+}
+#==============================================================================#
+# Get the index of association from sums of distances over loci and samples
+# 
+# This will take in a list called that contains 3 vectors:
+# 1. d.vector : a vector containing sums of distances per locus
+# 2. d2.vector : like d.vector, but containing sums of squares
+# 3. D.vector : a vector containing the distance over all samples.
+#
+# Public functions utilizing this function:
+# ## none
+#
+# Internal functions utilizing this function:
+# ## ia_pair_loc
+#==============================================================================#
+ia_from_d_and_D <- function(V, np){
+  varD <- ((sum(V$D.vector^2) - ((sum(V$D.vector))^2)/np))/np
+  vard.vector <- ((V$d2.vector - ((V$d.vector^2)/np))/np)
+  vardpair.vector <- .Call("pairwise_covar", vard.vector, PACKAGE = "poppr")
+  sigVarj <- sum(vard.vector)
+  rm(vard.vector)
+  Ia <- (varD/sigVarj) - 1
+  rbarD <- (varD - sigVarj)/(2 * sum(vardpair.vector))
+  return(c(Ia, rbarD))
+}

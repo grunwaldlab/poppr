@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -68,7 +68,13 @@
 #'   the genome loss model presented in Bruvo et al. 2004. See the
 #'   \strong{Note} section for options.
 #'   
-#' @return an object of class \code{\link{dist}}
+#' @param by_locus indicator to get the results per locus. The default setting
+#'   is \code{by_locus = FALSE}, indicating that Bruvo's distance is to be
+#'   averaged over all loci. When \code{by_locus = TRUE}, a list of distance
+#'   matrices will be returned.
+#'   
+#' @return an object of class \code{\link{dist}} or a list of these objects if
+#'   \code{by_locus = TRUE}
 #'   
 #' @details 
 #'   Bruvo's distance between two alleles is calculated as 
@@ -182,14 +188,18 @@
 #' # Analyze the first population in nancycats
 #' bruvo.dist(popsub(nancycats, 1), replen = ssr)
 #' 
-#' # View each population as a heatmap.
 #' \dontrun{
+#' 
+#' # get the per locus estimates:
+#' bruvo.dist(popsub(nancycats, 1), replen = ssr, by_locus = TRUE)
+#' 
+#' # View each population as a heatmap.
 #' sapply(popNames(nancycats), function(x) 
 #' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 #' }
 #==============================================================================#
 #' @useDynLib poppr
-bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
+bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALSE){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
   if (pop@type != "codom" || all(is.na(unlist(lapply(alleles(pop), as.numeric))))){
@@ -198,7 +208,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
-  if (length(replen) != length(locNames(pop))){
+  if (length(replen) < nLoc(pop)){
     replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
@@ -207,7 +217,10 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE){
   if (length(add) != 1 || !is.logical(add) || length(loss) != 1 || !is.logical(loss)){
     stop("add and loss flags must be either TRUE or FALSE. Please check your input.")
   }
-  dist.mat  <- bruvos_distance(bruvomat, funk_call = funk_call, add, loss)
+  dist.mat <- bruvos_distance(bruvomat, funk_call = funk_call, add, loss, by_locus)
+  if (by_locus){
+    names(dist.mat) <- locNames(pop)
+  }
   return(dist.mat)
 }
 
@@ -334,7 +347,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   # Bruvo's distance depends on the knowledge of the repeat length. If the user
   # does not provide the repeat length, it can be estimated by the smallest
   # repeat difference greater than 1. This is not a preferred method. 
-  if (length(replen) != length(locNames(pop))){
+  if (length(replen) < length(locNames(pop))){
     replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
   }
@@ -404,10 +417,9 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   \code{\link{mll.custom}} for details) in your genclone object, this will
 #'   specify which mlg level to calculate the nodes from. See details.
 #'   
-#' @param palette a \code{function} defining the color palette to be used to 
-#'   color the populations on the graph. It defaults to 
-#'   \code{\link{topo.colors}}, but you can easily create new schemes by using 
-#'   \code{\link{colorRampPalette}} (see examples for details)
+#' @param palette a \code{vector} or \code{function} defining the color palette 
+#'   to be used to color the populations on the graph. It defaults to 
+#'   \code{\link{topo.colors}}. See examples for details.
 #'   
 #' @param sublist a \code{vector} of population names or indexes that the user 
 #'   wishes to keep. Default to "ALL".
@@ -582,19 +594,21 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   # Obtaining population information for all MLGs
   classstat <- (is.genclone(gid) | is(gid, "snpclone")) && is(gid@mlg, "MLG")
   if (classstat){
-    visible <- gid@mlg@visible
+    visible <- visible(gid@mlg)
     mll(gid)  <- mlg.compute
   }
   # Updating the MLG with filtered data
-  if(threshold > 0){
+  if (threshold > 0){
     filter.stats <- mlg.filter(gid,threshold,distance=bruvo.dist,algorithm=clustering.algorithm,replen=replen,stats="ALL", add = add, loss = loss)
     # TODO: The following two lines should be a product of mlg.filter
-    gid$mlg@visible <- "contracted"
+    visible(gid$mlg) <- "contracted"
     gid$mlg[] <- filter.stats[[1]]  
     # Obtaining population information for all MLGs
-    cgid <- gid[if(length(-which(duplicated(gid$mlg[]))==0)) which(!duplicated(gid$mlg[])) else -which(duplicated(gid$mlg[])) ,]
+    cgid   <- gid[.clonecorrector(gid), ]
     bclone <- filter.stats[[3]]
     if (!is.matrix(bclone)) bclone <- as.matrix(bclone)
+    # Fix issue #66
+    rownames(bclone) <- indNames(cgid) -> colnames(bclone)
   } else {
     cgid <- gid[.clonecorrector(gid), ]
     bclone <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))
@@ -622,14 +636,11 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   
   ###### Create a graph #######
   g   <- graph.adjacency(as.matrix(bclone), weighted = TRUE, mode = "undirected")
-  if(length(cgid@mlg[]) > 1){ 
+  if (length(cgid@mlg[]) > 1){ 
     mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
     # Add any relevant edges that were cut from the mst while still being tied for the title of optimal edge
-    if(include.ties){
-      tied_edges <- .Call("msn_tied_edges",as.matrix(mst[]),as.matrix(bclone),(.Machine$double.eps ^ 0.5))
-      if(length(tied_edges) > 0){
-        mst <- add.edges(mst, dimnames(mst[])[[1]][tied_edges[c(TRUE,TRUE,FALSE)]], weight=tied_edges[c(FALSE,FALSE,TRUE)])
-      }
+    if (include.ties){
+      mst <- add_tied_edges(mst, bclone, tolerance = .Machine$double.eps ^ 0.5)
     }
   } else {
     mst <- minimum.spanning.tree(g)
@@ -650,21 +661,23 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
     }
   }
   ###### Color schemes #######  
-  # The palette is determined by what the user types in the argument. It can be 
+  # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
-  palette <- match.fun(palette)
-  color   <- stats::setNames(palette(nPop(gid)), popNames(gid))
-  if(length(mll(cgid)) > 1){ 
+  npop   <- nPop(gid)
+  pnames <- popNames(gid)
+  color  <- palette_parser(palette, npop, pnames)
+  
+  if (length(mll(cgid)) > 1){ 
     mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
   }
 
   # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[popNames(gid) %in% names(x)])
+  mlg.color <- lapply(mlg.cp, function(x) color[pnames %in% names(x)])
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
          vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-    graphics::legend(-1.55, 1, bty = "n", cex = 0.75, legend = popNames(gid), 
+    graphics::legend(-1.55, 1, bty = "n", cex = 0.75, legend = pnames, 
            title = "Populations", fill = color, border = NULL)
   }
   V(mst)$size      <- mlg.number
@@ -672,7 +685,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
   V(mst)$label     <- vertex.label
-  return(list(graph = mst, populations = popNames(gid), colors = color))
+  return(list(graph = mst, populations = pnames, colors = color))
 }
 #' Test repeat length consistency.
 #' 
@@ -751,7 +764,6 @@ consistent_replen <- function(index, alleles, replen){
 #'   to the user to determine if the fault is in the allele calls or the repeat
 #'   lengths.
 #' @export
-#' 
 #' @references Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
 #'   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
 #'   and temporal population dynamics of the sudden oak death epidemic in Oregon

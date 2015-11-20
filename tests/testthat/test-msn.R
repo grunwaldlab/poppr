@@ -153,12 +153,15 @@ test_that("Minimum spanning networks also collapse MLGs", {
   pgmsnt <- poppr.msn(gend, distmat = gend_bruvo, threshold = 0.15)
 
   expect_identical(igraph::V(gmsnt$graph)$pie, igraph::V(pgmsnt$graph)$pie)
+  expect_identical(igraph::V(gmsnt$graph)$name, igraph::V(pgmsnt$graph)$name)
   expect_identical(igraph::E(gmsnt$graph)$weight, igraph::E(pgmsnt$graph)$weight)
+  
   
   gmsn   <- bruvo.msn(gend, replen = c(1, 1), showplot = FALSE)
   pgmsn  <- poppr.msn(gend, distmat = gend_bruvo, showplot = FALSE)
 
   expect_identical(igraph::V(gmsn$graph)$pie, igraph::V(pgmsn$graph)$pie)
+  expect_identical(igraph::V(gmsn$graph)$name, igraph::V(pgmsn$graph)$name)
   expect_identical(igraph::E(gmsn$graph)$weight, igraph::E(pgmsn$graph)$weight)
 
   expect_equal(length(igraph::V(gmsnt$graph)), 2)
@@ -168,12 +171,14 @@ test_that("Minimum spanning networks also collapse MLGs", {
   psgmsnt <- poppr.msn(gend_single, distmat = gend_bruvo, threshold = 0.15)
 
   expect_identical(igraph::V(sgmsnt$graph)$pie, igraph::V(psgmsnt$graph)$pie)
+  expect_identical(igraph::V(sgmsnt$graph)$name, igraph::V(psgmsnt$graph)$name)
   expect_identical(igraph::E(sgmsnt$graph)$weight, igraph::E(psgmsnt$graph)$weight)
   
   sgmsn   <- bruvo.msn(gend_single, replen = c(1, 1), showplot = FALSE)
   psgmsn  <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE)
 
-  expect_identical(igraph::V(sgmsn$graph)$pie, igraph::V(psgmsn$graph)$pie) 
+  expect_identical(igraph::V(sgmsn$graph)$pie, igraph::V(psgmsn$graph)$pie)
+  expect_identical(igraph::V(sgmsn$graph)$name, igraph::V(psgmsn$graph)$name)
   expect_identical(igraph::E(sgmsn$graph)$weight, igraph::E(psgmsn$graph)$weight)
 
   expect_equal(length(igraph::V(sgmsnt$graph)), 2)
@@ -183,6 +188,47 @@ test_that("Minimum spanning networks also collapse MLGs", {
   expect_output(plot_poppr_msn(gend_single, sgmsnt, palette = "cm.colors"), "")
 })
 
+
+test_that("Filtered minimum spanning networks retain original names", {
+  skip_on_cran()
+  # setup ----------------------------------------------------
+  grid_example <- matrix(c(1, 4,
+                           1, 1,
+                           5, 1,
+                           9, 1,
+                           9, 4), 
+                         ncol = 2,
+                         byrow = TRUE)
+  rownames(grid_example) <- LETTERS[1:5]
+  colnames(grid_example) <- c("x", "y")
+  grid_new <- rbind(grid_example, 
+                    new = c(5, NA), 
+                    mut = c(5, 2)
+                    )
+  x <- as.genclone(df2genind(grid_new, ploidy = 1))
+  indNames(x)
+  ## [1] "A"   "B"   "C"   "D"   "E"   "new" "mut"
+  
+  raw_dist <- function(x){
+    dist(genind2df(x, usepop = FALSE))
+  }
+  (xdis <- raw_dist(x))
+  
+  # normal ---------------------------------------------------
+  set.seed(9001)
+  g1 <- poppr.msn(x, xdis, include.ties = TRUE, showplot = FALSE,
+                  vertex.label.color = "firebrick", vertex.label.font = 2)
+  all_names <- igraph::V(g1$graph)$name
+  ## [1] "A"   "B"   "C"   "D"   "E"   "new" "mut"
+  
+  # filtered ---------------------------------------------------
+  set.seed(9001)
+  g1.1 <- poppr.msn(x, xdis, threshold = 1, include.ties = TRUE, showplot = FALSE,
+                  vertex.label.color = "firebrick", vertex.label.font = 2)
+  cc_names <- igraph::V(g1.1$graph)$name
+  ## [1] "A"   "B"   "C"   "D"   "E"   "new"
+  expect_identical(cc_names, head(all_names, -1))
+})
 
 data("partial_clone")
 pc <- as.genclone(partial_clone)
@@ -214,4 +260,30 @@ test_that("msn works with custom MLLs", {
   expect_equivalent(sort(unique(igraph::V(pcmsn$graph)$label)), sort(mll.levels(pc)))
   expect_that(plot_poppr_msn(pc, pcmsn), not(throws_error()))
   expect_that(plot_poppr_msn(pc, pcmsn, mlg = TRUE), not(throws_error()))
+})
+
+test_that("vectors can be used to color graphs", {
+  skip_on_cran()
+  data(Aeut)
+  A.dist <- diss.dist(Aeut)
+  
+  # Graph it.
+  A.msn <- poppr.msn(Aeut, A.dist, gadj=15, vertex.label=NA, showplot = FALSE)
+  unpal <- c("black", "orange")
+  fpal  <- function(x) unpal
+  npal  <- setNames(unpal, c("Athena", "Mt. Vernon"))
+  xpal  <- c(npal, JoMo = "awesome")
+  # Using palette without names
+  uname_pal  <- plot_poppr_msn(Aeut, A.msn, palette = unpal)$colors
+  # Using palette with function
+  fun_pal    <- plot_poppr_msn(Aeut, A.msn, palette = fpal)$colors
+  # Using palette with names
+  name_pal   <- plot_poppr_msn(Aeut, A.msn, palette = npal[2:1])$colors
+  # Using palette with extra names
+  xname_pal  <- plot_poppr_msn(Aeut, A.msn, palette = xpal)$colors
+  
+  expect_identical(uname_pal, npal)
+  expect_identical(fun_pal, npal)
+  expect_identical(name_pal, npal)
+  expect_identical(xname_pal, npal)
 })

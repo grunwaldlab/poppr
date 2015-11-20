@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -371,9 +371,9 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
         the_dist <- as.character(substitute(the_call[["distance"]]))
         call_len <- length(the_dist)
         is_diss_dist <- the_dist %in% "diss.dist"
-        any_dist <- the_dist %in% c("diss.dist", "nei.dist", "provesti.dist",
+        any_dist <- the_dist %in% c("diss.dist", "nei.dist", "prevosti.dist",
                                     "edwards.dist", "reynolds.dist", 
-                                    "rogers.dist")
+                                    "rogers.dist", "provesti.dist")
         if (missing == "mean" && call_len == 1 && is_diss_dist){
           # if (is_diss_dist){
             disswarn <- paste("Cannot use function diss.dist and correct for", 
@@ -533,7 +533,7 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
   if (is.genclone(gid) | is(gid, "snpclone")){
     vec <- gid@mlg[]
     if (is(gid@mlg, "MLG")){
-      visible <- gid@mlg@visible
+      visible <- visible(gid@mlg)
     }
   } else {
     vec <- mlg.vector(gid) 

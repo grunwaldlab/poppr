@@ -14,6 +14,30 @@ test_that("Bruvo's distance works as expected.", {
   expect_equal(ADDLOSS, 0.401041518896818)
 })
 
+test_that("Repeat lengths can be in any order and length if named", {
+  skip_on_cran()
+  data("Pram")
+  p10 <- Pram[sample(nInd(Pram), 10)]
+  # Repeat length as normal
+  pbruvo <- bruvo.dist(p10, replen = other(p10)$REPLEN)
+  # Repeat lengths mixed up
+  pbruvo_sampled <- bruvo.dist(p10, replen = sample(other(p10)$REPLEN))
+  # Extra value in repeat lengths
+  pbruvo_long <- bruvo.dist(p10, replen = c(other(p10)$REPLEN, NOPE = 23))
+  expect_equivalent(pbruvo, pbruvo_sampled)
+  expect_equivalent(pbruvo, pbruvo_long)
+})
+
+test_that("Bruvo's distance can be calculated per locus", {
+  skip_on_cran()
+  data("Pram")
+  p10 <- Pram[sample(nInd(Pram), 10)]
+  pbruvo <- bruvo.dist(p10, replen = other(p10)$REPLEN, by_locus = TRUE)
+  expect_is(pbruvo, "list")
+  expect_is(pbruvo[[1]], "dist")
+  expect_equal(length(pbruvo), nLoc(p10))
+})
+
 test_that("Infinite Alleles Model works.",{
   x <- structure(list(V3 = c("228/236/242", "000/211/226"), 
                       V6 = c("190/210/214", "000/190/203")), 
@@ -136,6 +160,7 @@ test_that("ia and pair.ia return same values", {
   pc_pair <- pair.ia(partial_clone, plot = FALSE, quiet = TRUE)
   
   # Randomly sample two loci
+  set.seed(9001)
   locpair <- sample(locNames(partial_clone), 2)
   
   # Calculate ia for those
@@ -174,15 +199,56 @@ test_that("win.ia produces expected results", {
   win.nopos   <- win.ia(x, window = 300L, quiet = TRUE)
   expect_equivalent(win.pos, pos.res)
   expect_equivalent(win.nopos, nopos.res)
+  
+  # Making sure that the genind version does the same thing.
+  xmat <- as.matrix(x)
+  xmat[xmat == 0]   <- "1/1"
+  xmat[xmat == "1"] <- "1/2"
+  xmat[xmat == "2"] <- "2/2"
+  xgid <- df2genind(xmat[, 1:300], sep = "/", ind.names = .genlab("", 10), 
+                    loc.names = .genlab("", 300L))
+  gid.res <- ia(xgid)["rbarD"]
+  expect_equivalent(gid.res, nopos.res[1])
+})
+
+test_that("win.ia can handle missing data for haploids", {
+  skip_on_cran()
+  set.seed(999)
+  dat <- sample(c(0, 1, NA), 500, replace = TRUE, prob = c(0.47, 0.47, 0.06))
+  mat <- matrix(dat, nrow = 5, ncol = 100)
+  x   <- new("genlight", mat, parallel = FALSE)
+  gid <- df2genind(mat + 1, ind.names = .genlab("", 5), ploidy = 1,
+                   loc.names = .genlab("", 100))
+  bit.res <- win.ia(x, quiet = TRUE)
+  gid.res <- ia(gid)["rbarD"]
+  expect_equivalent(bit.res, gid.res)
+})
+
+test_that("win.ia can handle missing data for diploids", {
+  skip_on_cran()
+  set.seed(999)
+  dat <- sample(c(0, 1, 2, NA), 500, replace = TRUE, prob = c(0.22, 0.5, 0.22, 0.06))
+  mat <- matrix(dat, nrow = 5, ncol = 100)
+  x   <- new("genlight", mat, parallel = FALSE)
+  mat[mat == 0]   <- "1/1"
+  mat[mat == "1"] <- "1/2"
+  mat[mat == "2"] <- "2/2"
+  gid <- df2genind(mat, ind.names = .genlab("", 5), ploidy = 2, sep = "/",
+                   loc.names = .genlab("", 100))
+  bit.res <- win.ia(x, quiet = TRUE)
+  gid.res <- ia(gid)["rbarD"]
+  expect_equivalent(bit.res, gid.res)
 })
 
 test_that("win.ia knows the batman theme", {
   skip_on_cran()
   set.seed(999)
-  x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
-  position(x) <- sort(sample(1e4, 1e3))
-  res <- win.ia(x, window = 300L, min.snps = 100L, quiet = TRUE)
+  x <- glSim(n.ind = 10, n.snp.nonstruc = 2.5e2, n.snp.struc = 2.5e2, ploidy = 2)
+  position(x) <- sort(sample(5e3, 5e2))
+  res <- win.ia(x, window = 325L, min.snps = 100L, quiet = TRUE)
   expect_true(all(is.na(res)))
+  # NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+  # BATMAN!
 })
 
 test_that("samp.ia works",{

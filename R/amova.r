@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -42,41 +42,9 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-# Implementation of ade4's AMOVA function. Note that this cannot be used at the
-# moment to calculate within individual variances. It will either compute a
-# distance matrix or take in a distance matrix. Missing data must be treated
-# here and is currently treated as extra alleles, but this can be modified by
-# the user. Since ade4 needs a euclidean matrix, this function will, by default,
-# correct the distance via the cailliez correction, which will add a number to 
-# all the distances to satisfy euclidean nature. 
-# Clone correction at the lowest level of the hierarchy is possible. 
-#
-# Note: This takes a nested formula argument. If you want to analyze the
-# hierarchy of Year to Population to Subpopulation, you should make sure you
-# have the right data frame in your "other" slot and then write the formula
-# thusly: ~ Year/Population/Subpopulation
-#
-# arguments:
-#
-# x            = a genind object
-# hier         = a formula such as ~Pop/Subpop
-# clonecorrect = This refers to clone correction of the final output relative to
-#                The lowest hierarchical level. FALSE
-# within       = should within individual variation be calculated? TRUE
-# dist         = A user provided distance matrix NULL
-# squared      = Is the distance matrix squared? TRUE
-# correction   = A correction for non-euclidean distances provided by ade4.
-#                The default, "quasieuclid", seems to give the best results.
-# dfname       = the data frame containing the population hierarchy.
-#                "population_hierarchy"
-# sep          = the separator for the population hierarchy levels. "_"
-# missing      = how to deal with missing data. Default is "loci".
-# cutoff       = a cutoff for percent missing data to tolerate. 0.05
-# quiet        = Should messages be printed? TRUE
-#==============================================================================#
 #' Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.
 #' 
-#' This function utilizes the ade4 implementation of AMOVA. See 
+#' This function utilizes the \pkg{ade4} implementation of AMOVA. See 
 #' \code{\link[ade4]{amova}} for details on the specific implementation.
 #' 
 #' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
@@ -94,7 +62,9 @@
 #'   \code{FALSE}, The lowest level of the hierarchy will be the sample level.
 #'   See Details below.
 #'   
-#' @param dist an optional distance matrix calculated on your data.
+#' @param dist an optional distance matrix calculated on your data. If this is
+#'   set to \code{NULL} (default), the raw pairwise distances will be calculated
+#'   via \code{\link{diss.dist}}.
 #'   
 #' @param squared if a distance matrix is supplied, this indicates whether or
 #'   not it represents squared distances.
@@ -138,26 +108,26 @@
 #'   \item a distance matrix on all unique genotypes (haplotypes)
 #'   \item a data frame defining the hierarchy of the distance matrix 
 #'   \item  a genotype (haplotype) frequency table.} 
-#'   All of this data can be constructed from a 
-#'   \code{\linkS4class{genind}} object, but can be daunting for a novice R 
-#'   user. \emph{This function automates the entire process}. Since there are many 
-#'   variables regarding genetic data, some points need to be highlighted: 
+#'   All of this data can be constructed from a \code{\linkS4class{genind}}
+#'   object, but can be daunting for a novice R user. \emph{This function
+#'   automates the entire process}. Since there are many variables regarding
+#'   genetic data, some points need to be highlighted:
+#'   
+#'   \subsection{On Hierarchies:}{The hierarchy is defined by different 
+#'   population strata that separate your data hierarchically. These strata are
+#'   defined in the \strong{strata} slot of \code{\linkS4class{genind}} and
+#'   \code{\linkS4class{genclone}}} objects. They are useful for defining the
+#'   population factor for your data. See the function \code{\link{strata}} for
+#'   details on how to properly define these strata.
 #'
-#'   \subsection{On Hierarchies:}{The hierarchy is defined by different hierarchical
-#'   levels that separate your data. In a \code{\linkS4class{genclone}} object,
-#'   these levels are inherently defined in the \code{hierarchy} slot. For
-#'   \code{\linkS4class{genind}} objects, these levels must be defined in a data
-#'   frame located within the \code{\link[adegenet]{other}} slot. It is best
-#'   practice to name this data frame \code{"population_hierarchy"}.}
-#'
-#'   \subsection{On Within Individual Variance:}{ Heterozygosities within diploid
-#'   genotypes are sources of variation from within individuals and can be
-#'   quantified in AMOVA. When \code{within = TRUE}, poppr will split diploid
-#'   genotypes into haplotypes and use those to calculate within-individual
-#'   variance. No estimation of phase is made. This acts much like the default
-#'   settings for AMOVA in the Arlequin software package. Within individual
-#'   variance will not be calculated for haploid individuals or dominant
-#'   markers.} 
+#'   \subsection{On Within Individual Variance:}{ Heterozygosities within
+#'   diploid genotypes are sources of variation from within individuals and can
+#'   be quantified in AMOVA. When \code{within = TRUE}, poppr will split diploid
+#'   genotypes into haplotypes and use those to calculate within-individual 
+#'   variance. No estimation of phase is made. This acts much like the default 
+#'   settings for AMOVA in the Arlequin software package. Within individual 
+#'   variance will not be calculated for haploid individuals or dominant 
+#'   markers.}
 #'
 #'   \subsection{On Euclidean Distances:}{ AMOVA, as defined by
 #'   Excoffier et al., utilizes an absolute genetic distance measured in the
@@ -253,10 +223,10 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     }
     dist <- as.dist(filt_stats$DISTANCE)
     # Forcing this. Probably should make an explicit method for this.
-    x@mlg@mlg["contracted"]    <- filt_stats$MLGS
-    x@mlg@distname             <- "diss.dist"
-    x@mlg@distalgo             <- algorithm
-    x@mlg@cutoff["contracted"] <- threshold
+    x@mlg@mlg["contracted"]     <- filt_stats$MLGS
+    distname(x@mlg)             <- "diss.dist"
+    distalgo(x@mlg)             <- algorithm
+    cutoff(x@mlg)["contracted"] <- threshold
     mll(x) <- "contracted"
     if (!quiet) message("Contracted multilocus genotypes ... ", nmll(x))
   }
@@ -303,7 +273,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   }
   if (!is.euclid(xdist)){
     CORRECTIONS <- c("cailliez", "quasieuclid", "lingoes")
-    try(correct <- match.arg(correction, CORRECTIONS))
+    try(correct <- match.arg(correction, CORRECTIONS), silent = TRUE)
     if (!exists("correct")){
       stop(not_euclid_msg(correction))
     } else {

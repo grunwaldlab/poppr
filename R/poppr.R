@@ -5,8 +5,8 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #
 # This software was authored by Zhian N. Kamvar and Javier F. Tabima, graduate 
-# students at Oregon State University; and Dr. Nik Grünwald, an employee of 
-# USDA-ARS.
+# students at Oregon State University; Jonah C. Brooks, undergraduate student at
+# Oregon State University; and Dr. Nik Grünwald, an employee of USDA-ARS.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for educational, research and non-profit purposes, without fee, 
@@ -131,12 +131,12 @@
 #' @section Genetic distances:
 #' \itemize{
 #' \item \code{\link{bruvo.dist}} - Bruvo's distance (see also: \code{\link{fix_replen}})
-#' \item \code{\link{diss.dist}} - Absolute genetic distance (see provesti.dist)
+#' \item \code{\link{diss.dist}} - Absolute genetic distance (see prevosti.dist)
 #' \item \code{\link{nei.dist}} - Nei's 1978 genetic distance
 #' \item \code{\link{rogers.dist}} - Rogers' euclidean distance
 #' \item \code{\link{reynolds.dist}} - Reynolds' coancestry distance
 #' \item \code{\link{edwards.dist}} - Edwards' angular distance
-#' \item \code{\link{provesti.dist}} - Provesti's absolute genetic distance
+#' \item \code{\link{prevosti.dist}} - Prevosti's absolute genetic distance
 #' \item \code{\link{bitwise.dist}} - Calculates fast pairwise distances for genlight objects. 
 #' }
 #' @section Bootstrapping:
@@ -161,6 +161,7 @@
 #' \item \code{\link{cutoff_predictor}} - Predicts cutoff threshold from mlg.filter. 
 #' \item \code{\link{mll.custom}} - Allows for the custom definition of multilocus lineages
 #' \item \code{\link{mll.levels}} - Allows the user to change levels of custom MLLs. 
+#' \item \code{\link{mll.reset}} - Reset multilocus lineages. 
 #' \item \code{\link{diversity_stats}} - Creates a table of diversity indices for multilocus genotypes. 
 #' }
 #' }
@@ -176,6 +177,10 @@
 #' \item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
 #' \item \code{\link{private_alleles}} - Tabulates the occurrences of alleles that only occur in one population.
 #' \item \code{\link{locus_table}} - Creates a table of summary statistics per locus.
+#' \item \code{\link{rrmlg}} - Round-robin multilocus genotype estimates.
+#' \item \code{\link{rraf}} - Round-robin allele frequency estimates.
+#' \item \code{\link{pgen}} - Probability of genotypes.
+#' \item \code{\link{psex}} - Probability of observing a genotype more than once.
 #' }
 #' }
 #' @section Visualization:
@@ -203,7 +208,8 @@
 #' ramorum} (Kamvar et. al., 2015; Goss et. al., 2009)
 #' }
 #' 
-#' @author Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Niklaus J. Grünwald
+#' @author Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Stacy
+#'   Krueger-Hadfield, Erik Sotka, Niklaus J. Grünwald
 #' 
 #' Maintainer: Zhian N. Kamvar
 #' 
