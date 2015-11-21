@@ -8,7 +8,8 @@
 poppr.amova(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   dist = NULL, squared = TRUE, correction = "quasieuclid", sep = "_",
   filter = FALSE, threshold = 0, algorithm = "farthest_neighbor",
-  missing = "loci", cutoff = 0.05, quiet = FALSE)
+  missing = "loci", cutoff = 0.05, quiet = FALSE, method = c("ade4",
+  "pegas"), nperm = 0)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
@@ -69,14 +70,24 @@ removed/modified. See \code{\link{missingno}} for details.}
 \item{quiet}{\code{logical} If \code{FALSE} (Default), messages regarding any
 corrections will be printed to the screen. If \code{TRUE}, no messages will
 be printed.}
+
+\item{method}{Which method for calculating AMOVA should be used? Choices
+refer to package implementations: "ade4" or "pegas". See details for
+differences.}
+
+\item{nperm}{the number of permutations passed to the pegas implementation of
+amova.}
 }
 \value{
 a list of class \code{amova} from the ade4 package. See 
   \code{\link[ade4]{amova}} for details.
 }
 \description{
-This function utilizes the \pkg{ade4} implementation of AMOVA. See 
-\code{\link[ade4]{amova}} for details on the specific implementation.
+This function simplifies the process necessary for performing AMOVA in R. It
+gives user the choice of utilizing either the \pkg{ade4} or the \pkg{pegas}
+implementation of AMOVA. See \code{\link[ade4]{amova}} (ade4) and
+\code{\link[pegas]{amova}} (pegas) for details on the specific
+implementation.
 }
 \details{
 The poppr implementation of AMOVA is a very detailed wrapper for the
@@ -128,6 +139,16 @@ The poppr implementation of AMOVA is a very detailed wrapper for the
   multilocus genotype clusters. One useful way to utilize this feature is to
   correct for genotypes that have equivalent distance due to missing data. 
   (See example below.)}
+  
+  \subsection{On Methods:}{ Both \pkg{ade4} and \pkg{pegas} have
+  implementations of AMOVA, both of which are appropriately called "amova".
+  The ade4 version is faster, but there have been questions raised as to the
+  validity of the code utilized. The pegas version is slower, but careful
+  measures have been implemented as to the accuracy of the method. It must be
+  noted that there appears to be a bug regarding permuting analyses where
+  within individual variance is accounted for (\code{within = TRUE}) in the
+  pegas implementation. If you want to perform permutation analyses on the
+  pegas implementation, you must set \code{within = FALSE}.}
 }
 \examples{
 data(Aeut)
@@ -146,6 +167,12 @@ amova.cc.test <- randtest(amova.cc.result)
 plot(amova.cc.test)
 amova.cc.test
 
+# You can get the same results with the pegas implementation
+amova.pegas <- poppr.amova(agc, ~Pop/Subpop, method = "pegas")
+amova.pegas
+amova.pegas$varcomp/sum(amova.pegas$varcomp)
+
+
 # Example with filtering
 data(monpop)
 splitStrata(monpop) <- ~Tree/Year/Symptom
@@ -160,8 +187,8 @@ application to human mitochondrial DNA restriction data. \emph{Genetics},
 \strong{131}, 479-491.
 }
 \seealso{
-\code{\link[ade4]{amova}} \code{\link{clonecorrect}}
-  \code{\link{diss.dist}} \code{\link{missingno}}
+\code{\link[ade4]{amova}} \code{\link[pegas]{amova}} 
+  \code{\link{clonecorrect}} \code{\link{diss.dist}} \code{\link{missingno}} 
   \code{\link[ade4]{is.euclid}} \code{\link{strata}}
 }
 \keyword{amova}
