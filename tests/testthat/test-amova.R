@@ -88,3 +88,21 @@ test_that("AMOVA can calculate within individual variance for diploids", {
   expect_equal(dim(micwithin$componentsofcovariance), c(4, 2))
   expect_equal(dim(micwithout$componentsofcovariance), c(3, 2))
 })
+
+test_that("AMOVA can utilize pegas implementation", {
+  skip_on_cran()
+  pres    <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, method = "pegas")
+  prescc  <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, clonecorrect = TRUE, 
+                         method = "pegas")
+  resper <- c(70.0067859292295, 8.40748251295027, 21.5857315578203)
+  ressig <- c(11.0634458464745, 1.3286673034988, 3.41127747798475)
+  expect_equivalent(pres$varcomp, ressig)
+  expect_equivalent(pres$varcomp/sum(pres$varcomp), resper/100)
+  expect_output(pres, "Variance components:")
+  
+  presccper <- c(66.7776803325885, 6.10535452127678, 27.1169651461347)
+  presccsig <- c(10.4131525344064, 0.952054452775842, 4.22855500416477)
+  
+  expect_equivalent(prescc$varcomp, presccsig)
+  expect_equivalent(prescc$varcomp/sum(prescc$varcomp), presccper/100)
+})
