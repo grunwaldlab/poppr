@@ -39,8 +39,7 @@ non-euclidean distances. Options are \code{\link[ade4]{quasieuclid}}
 (Default), \code{\link[ade4]{lingoes}}, and \code{\link[ade4]{cailliez}}.
 See Details below.}
 
-\item{sep}{A single character used to separate the hierarchical levels. This
-defaults to "_".}
+\item{sep}{Deprecated. As of poppr version 2, this argument serves no purpose.}
 
 \item{filter}{\code{logical} When set to \code{TRUE}, mlg.filter will be run 
 to determine genotypes from the distance matrix. It defaults to 
@@ -71,9 +70,9 @@ removed/modified. See \code{\link{missingno}} for details.}
 corrections will be printed to the screen. If \code{TRUE}, no messages will
 be printed.}
 
-\item{method}{Which method for calculating AMOVA should be used? Choices
-refer to package implementations: "ade4" or "pegas". See details for
-differences.}
+\item{method}{Which method for calculating AMOVA should be used? Choices 
+refer to package implementations: "ade4" (default) or "pegas". See details
+for differences.}
 
 \item{nperm}{the number of permutations passed to the pegas implementation of
 amova.}
@@ -140,15 +139,17 @@ The poppr implementation of AMOVA is a very detailed wrapper for the
   correct for genotypes that have equivalent distance due to missing data. 
   (See example below.)}
   
-  \subsection{On Methods:}{ Both \pkg{ade4} and \pkg{pegas} have
-  implementations of AMOVA, both of which are appropriately called "amova".
-  The ade4 version is faster, but there have been questions raised as to the
-  validity of the code utilized. The pegas version is slower, but careful
+  \subsection{On Methods:}{ Both \pkg{ade4} and \pkg{pegas} have 
+  implementations of AMOVA, both of which are appropriately called "amova". 
+  The ade4 version is faster, but there have been questions raised as to the 
+  validity of the code utilized. The pegas version is slower, but careful 
   measures have been implemented as to the accuracy of the method. It must be
-  noted that there appears to be a bug regarding permuting analyses where
-  within individual variance is accounted for (\code{within = TRUE}) in the
-  pegas implementation. If you want to perform permutation analyses on the
-  pegas implementation, you must set \code{within = FALSE}.}
+  noted that there appears to be a bug regarding permuting analyses where 
+  within individual variance is accounted for (\code{within = TRUE}) in the 
+  pegas implementation. If you want to perform permutation analyses on the 
+  pegas implementation, you must set \code{within = FALSE}. In addition,
+  while clone correction is implemented for both methods, filtering is only
+  implemented for the ade4 version.}
 }
 \examples{
 data(Aeut)
@@ -160,17 +161,20 @@ amova.result
 amova.test <- randtest(amova.result) # Test for significance
 plot(amova.test)
 amova.test
+
 \dontrun{
-amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
-amova.cc.result
-amova.cc.test <- randtest(amova.cc.result)
-plot(amova.cc.test)
-amova.cc.test
 
 # You can get the same results with the pegas implementation
 amova.pegas <- poppr.amova(agc, ~Pop/Subpop, method = "pegas")
 amova.pegas
 amova.pegas$varcomp/sum(amova.pegas$varcomp)
+
+# Clone correction is possible
+amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
+amova.cc.result
+amova.cc.test <- randtest(amova.cc.result)
+plot(amova.cc.test)
+amova.cc.test
 
 
 # Example with filtering
@@ -187,7 +191,7 @@ application to human mitochondrial DNA restriction data. \emph{Genetics},
 \strong{131}, 479-491.
 }
 \seealso{
-\code{\link[ade4]{amova}} \code{\link[pegas]{amova}} 
+\code{\link[ade4]{amova}} (ade4) \code{\link[pegas]{amova}} (pegas) 
   \code{\link{clonecorrect}} \code{\link{diss.dist}} \code{\link{missingno}} 
   \code{\link[ade4]{is.euclid}} \code{\link{strata}}
 }

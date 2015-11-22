@@ -77,8 +77,7 @@
 #'   (Default), \code{\link[ade4]{lingoes}}, and \code{\link[ade4]{cailliez}}.
 #'   See Details below.
 #'   
-#' @param sep A single character used to separate the hierarchical levels. This
-#' defaults to "_".
+#' @param sep Deprecated. As of poppr version 2, this argument serves no purpose.
 #' 
 #' @param filter \code{logical} When set to \code{TRUE}, mlg.filter will be run 
 #'   to determine genotypes from the distance matrix. It defaults to 
@@ -98,9 +97,9 @@
 #'   corrections will be printed to the screen. If \code{TRUE}, no messages will
 #'   be printed.
 #'  
-#' @param method Which method for calculating AMOVA should be used? Choices
-#'   refer to package implementations: "ade4" or "pegas". See details for
-#'   differences.
+#' @param method Which method for calculating AMOVA should be used? Choices 
+#'   refer to package implementations: "ade4" (default) or "pegas". See details
+#'   for differences.
 #'   
 #' @param nperm the number of permutations passed to the pegas implementation of
 #'   amova.
@@ -160,15 +159,17 @@
 #'   correct for genotypes that have equivalent distance due to missing data. 
 #'   (See example below.)}
 #'   
-#'   \subsection{On Methods:}{ Both \pkg{ade4} and \pkg{pegas} have
-#'   implementations of AMOVA, both of which are appropriately called "amova".
-#'   The ade4 version is faster, but there have been questions raised as to the
-#'   validity of the code utilized. The pegas version is slower, but careful
+#'   \subsection{On Methods:}{ Both \pkg{ade4} and \pkg{pegas} have 
+#'   implementations of AMOVA, both of which are appropriately called "amova". 
+#'   The ade4 version is faster, but there have been questions raised as to the 
+#'   validity of the code utilized. The pegas version is slower, but careful 
 #'   measures have been implemented as to the accuracy of the method. It must be
-#'   noted that there appears to be a bug regarding permuting analyses where
-#'   within individual variance is accounted for (\code{within = TRUE}) in the
-#'   pegas implementation. If you want to perform permutation analyses on the
-#'   pegas implementation, you must set \code{within = FALSE}.}
+#'   noted that there appears to be a bug regarding permuting analyses where 
+#'   within individual variance is accounted for (\code{within = TRUE}) in the 
+#'   pegas implementation. If you want to perform permutation analyses on the 
+#'   pegas implementation, you must set \code{within = FALSE}. In addition,
+#'   while clone correction is implemented for both methods, filtering is only
+#'   implemented for the ade4 version.}
 #'   
 #' @keywords amova
 #' @aliases amova
@@ -178,7 +179,7 @@
 #' application to human mitochondrial DNA restriction data. \emph{Genetics},
 #' \strong{131}, 479-491.
 #' 
-#' @seealso \code{\link[ade4]{amova}} \code{\link[pegas]{amova}} 
+#' @seealso \code{\link[ade4]{amova}} (ade4) \code{\link[pegas]{amova}} (pegas) 
 #'   \code{\link{clonecorrect}} \code{\link{diss.dist}} \code{\link{missingno}} 
 #'   \code{\link[ade4]{is.euclid}} \code{\link{strata}}
 #' @export
@@ -192,17 +193,20 @@
 #' amova.test <- randtest(amova.result) # Test for significance
 #' plot(amova.test)
 #' amova.test
+#' 
 #' \dontrun{
-#' amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
-#' amova.cc.result
-#' amova.cc.test <- randtest(amova.cc.result)
-#' plot(amova.cc.test)
-#' amova.cc.test
 #' 
 #' # You can get the same results with the pegas implementation
 #' amova.pegas <- poppr.amova(agc, ~Pop/Subpop, method = "pegas")
 #' amova.pegas
 #' amova.pegas$varcomp/sum(amova.pegas$varcomp)
+#' 
+#' # Clone correction is possible
+#' amova.cc.result <- poppr.amova(agc, ~Pop/Subpop, clonecorrect = TRUE)
+#' amova.cc.result
+#' amova.cc.test <- randtest(amova.cc.result)
+#' plot(amova.cc.test)
+#' amova.cc.test
 #' 
 #' 
 #' # Example with filtering
@@ -221,8 +225,6 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
                         method = c("ade4", "pegas"), nperm = 0){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   if (is.null(hier)) stop("A population hierarchy must be specified")
-  parsed_hier <- gsub(":", sep, attr(terms(hier), "term.labels"))
-  # full_hier <- parsed_hier[length(parsed_hier)]
   methods <- c("ade4", "pegas")
   method <- match.arg(method, methods)
   setPop(x) <- hier
@@ -276,7 +278,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   # remove individuals at cutoff
   x       <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
   hierdf  <- strata(x, formula = hier)
-  xstruct <- make_ade_df(hier, hierdf)
+  if (method == "ade4") xstruct <- make_ade_df(hier, hierdf)
   if (is.null(dist)){
     if (method == "ade4"){
       xdist <- sqrt(diss.dist(clonecorrect(x, strata = NA), percent = FALSE))
@@ -296,10 +298,11 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     } else if(length(dist) == mlglength){
       xdist <- dist
     } else {
+      distobs <- ceiling(sqrt(length(dist)*2))
       msg <- paste("\nDistance matrix does not match the data.\n",
       "\n\tUncorrected observations expected..........", nInd(x),
       "\n\tClone corrected observations expected......", mlgs,
-      "\n\tObservations in provided distance matrix...", ceiling(sqrt(length(dist)*2)),
+      "\n\tObservations in provided distance matrix...", distobs,
       ifelse(within == TRUE, "\n\n\tTry setting within = FALSE.", "\n"))
       stop(msg)
     }
@@ -316,17 +319,18 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       correct_fun <- match.fun(correct)
       if (correct == CORRECTIONS[2]){
         message("Distance matrix is non-euclidean.")
-        message("Utilizing quasieuclid correction method. See ?quasieuclid for details.")
+        message(c("Utilizing quasieuclid correction method.",
+                  " See ?quasieuclid for details."))
         xdist <- correct_fun(xdist)        
       } else {
         xdist <- correct_fun(xdist, print = TRUE, cor.zero = FALSE)        
       }
     }
   }
-  allmlgs <- unique(mlg.vector(x))
-  xtab    <- t(mlg.table(x, plot = FALSE, quiet = TRUE, mlgsub = allmlgs))
-  xtab    <- as.data.frame(xtab)
   if (method == "ade4"){
+    allmlgs <- unique(mlg.vector(x))
+    xtab    <- t(mlg.table(x, plot = FALSE, quiet = TRUE, mlgsub = allmlgs))
+    xtab    <- as.data.frame(xtab)
     return(ade4::amova(samples = xtab, distances = xdist, structures = xstruct))
   } else {
     form <- paste(all.vars(hier), collapse = "/")
