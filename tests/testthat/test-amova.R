@@ -7,26 +7,43 @@ agc    <- as.genclone(Aeut)
 Athena <- popsub(agc, "Athena")
 res    <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE)
 rescc  <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, clonecorrect = TRUE)
-
+resper <- c(70.0067859292295, 8.40748251295027, 21.5857315578203, 100)
+ressig <- c(11.0634458464745, 1.3286673034988, 
+            3.41127747798475, 15.8033906279581)
+resccper <- c(66.7776803325885, 6.10535452127678, 27.1169651461347, 100)
+resccsig <- c(10.4131525344064, 0.952054452775842, 
+              4.22855500416477, 15.593761991347)
 
 test_that("Amova returns published values", {
-  resper <- c(70.0067859292295, 8.40748251295027, 21.5857315578203, 100)
-  ressig <- c(11.0634458464745, 1.3286673034988, 
-              3.41127747798475, 15.8033906279581)
+
+  skip_on_cran()
 	expect_equivalent(res$componentsofcovariance[, 2], resper)
 	expect_equivalent(res$componentsofcovariance[, 1], ressig)
 
-  resccper <- c(66.7776803325885, 6.10535452127678, 27.1169651461347, 100)
-  resccsig <- c(10.4131525344064, 0.952054452775842, 
-                4.22855500416477, 15.593761991347)
-
 	expect_equivalent(rescc$componentsofcovariance[, 2], resccper)
 	expect_equivalent(rescc$componentsofcovariance[, 1], resccsig)
+
 })
 
+test_that("pegas implemenation returns published values", {
+  
+  skip_on_cran()
+  pres    <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, method = "pegas")
+  prescc  <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, clonecorrect = TRUE, 
+                         method = "pegas")
+
+  expect_equivalent(pres$varcomp, ressig[-4])
+  expect_equivalent(pres$varcomp/sum(pres$varcomp), resper[-4]/100)
+  expect_output(pres, "Variance components:")
+  
+  expect_equivalent(prescc$varcomp, resccsig[-4])
+  expect_equivalent(prescc$varcomp/sum(prescc$varcomp), resccper[-4]/100)
+})
+
+
 test_that("AMOVA handles subsetted genclone objects", {
-	Athena.mlg <- mlg.vector(Athena)
-	agc.mlg <- mlg.vector(agc)
+	Athena.mlg   <- mlg.vector(Athena)
+	agc.mlg      <- mlg.vector(agc)
 	Athena.AMOVA <- poppr.amova(Athena, ~Subpop, quiet = TRUE)
 
 	# All MLGs are represented
@@ -87,22 +104,4 @@ test_that("AMOVA can calculate within individual variance for diploids", {
   expect_output(micwithout <- poppr.amova(mics, ~breed, within = FALSE), "Removing")
   expect_equal(dim(micwithin$componentsofcovariance), c(4, 2))
   expect_equal(dim(micwithout$componentsofcovariance), c(3, 2))
-})
-
-test_that("AMOVA can utilize pegas implementation", {
-  skip_on_cran()
-  pres    <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, method = "pegas")
-  prescc  <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, clonecorrect = TRUE, 
-                         method = "pegas")
-  resper <- c(70.0067859292295, 8.40748251295027, 21.5857315578203)
-  ressig <- c(11.0634458464745, 1.3286673034988, 3.41127747798475)
-  expect_equivalent(pres$varcomp, ressig)
-  expect_equivalent(pres$varcomp/sum(pres$varcomp), resper/100)
-  expect_output(pres, "Variance components:")
-  
-  presccper <- c(66.7776803325885, 6.10535452127678, 27.1169651461347)
-  presccsig <- c(10.4131525344064, 0.952054452775842, 4.22855500416477)
-  
-  expect_equivalent(prescc$varcomp, presccsig)
-  expect_equivalent(prescc$varcomp/sum(prescc$varcomp), presccper/100)
 })
