@@ -520,7 +520,7 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     pSex <- vapply(seq(nInd(gid)), function(i){
       trials <- seq(mll_counts[i]) # number of samples in the MLG
       pgeni  <- xpgen[i]           # pgen for that MLG
-      dens   <- dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
+      dens   <- stats::dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
       sum(dens, na.rm = TRUE) # return the sum probability.
     }, numeric(1))
     return(pSex)

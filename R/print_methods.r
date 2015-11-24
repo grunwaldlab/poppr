@@ -78,7 +78,7 @@ print.amova <- function(x, full = FALSE, ...)
     cat("\nVariance components:\n")
     if (is.data.frame(x$varcomp)) {
         x$varcomp["Error", "P.value"] <- NA
-        printCoefmat(x$varcomp, na.print = "")
+        stats::printCoefmat(x$varcomp, na.print = "")
     }
     else print(x$varcomp)
     cat("\nVariance coefficients:\n")

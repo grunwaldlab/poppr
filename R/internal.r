@@ -45,7 +45,7 @@
 #'   points polygon rasterImage text title
 #' @importFrom grDevices as.raster gray grey topo.colors
 #' @importFrom stats as.dist as.formula df dist median quantile rmultinom sd
-#'   setNames terms update var
+#'   setNames terms update var dbinom printCoefmat
 #' @importFrom utils combn head read.table setTxtProgressBar tail txtProgressBar
 #'   write.table capture.output
 NULL
