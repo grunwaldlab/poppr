@@ -41,7 +41,7 @@ notifications:
 
 env:
   global:
-    - CRAN: http://cran.rstudio.com
+    - CRAN: http://cran.at.r-project.org
     - NOT_CRAN: true
     - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"
     - R_CHECK_ARGS="--as-cran --timings"
