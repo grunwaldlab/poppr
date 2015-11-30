@@ -203,6 +203,7 @@ samples, we see that "new", "mut" and, "C" are very similar to each other:
 
 ```{r, fig.width = 5, fig.height = 5}
 library("phangorn")
+library("ape")
 raw_dist <- function(x){
   dist(genind2df(x, usepop = FALSE))
 }
