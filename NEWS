@@ -1,4 +1,4 @@
-poppr 2.0.2.99
+poppr 2.1.0
 ===========
 
 IMPROVEMENTS
@@ -39,6 +39,11 @@ NEW FUNCTIONS
 * `pgen` will calculate the probabilities of observed genotypes.
 * `psex` will calculate the probability that an observed genotype will be
   observed more than once by chance.
+  
+NEW TRADITIONALISTS
+-----------
+
+* because we're through being cool.
 
 MISC
 -----------
