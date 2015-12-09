@@ -31,40 +31,49 @@ shinyUI(fluidPage(
           actionButton("update-graph", "reGraph", icon("refresh"))
         )
       ),
-      h3("Data Parameters"),
-      uiOutput("selectUI"),
-      uiOutput("selectPops"),
-      
-      checkboxInput("genclone", "Convert to genclone?", TRUE),
-      selectInput("distance", 
-                  "Choose a distance calculation", 
-                  choices = c("Dissimilarity",
-                              "Bruvo",
-                              "Nei",
-                              "Rogers",
-                              "Edwards",
-                              "Provesti",
-                              "Reynolds",
-                              "Custom")
+      # http://stackoverflow.com/a/21715813/2752888
+      HTML("<a data-toggle='collapse' data-target='#dparams' aria-expanded='true' aria-controls='collapseOne'> 
+           <h3>Data Parameters</h3>
+           </a>"),
+      div(id = "dparams", class = "collapse in", 
+        # h3("Data Parameters"),
+        uiOutput("selectUI"),
+        uiOutput("selectPops"),
+        
+        checkboxInput("genclone", "Convert to genclone?", TRUE),
+        selectInput("distance", 
+                    "Choose a distance calculation", 
+                    choices = c("Dissimilarity",
+                                "Bruvo",
+                                "Nei",
+                                "Rogers",
+                                "Edwards",
+                                "Provesti",
+                                "Reynolds",
+                                "Custom")
+        ),
+        conditionalPanel("input.distance == 'Custom'",
+          uiOutput("customDist")
+        ),
+        conditionalPanel("input.distance == 'Bruvo'",
+          selectInput("bruvo_model",
+                      "Select a model for missing data",
+                      choices = c("Genome Addition",
+                                  "Genome Loss",
+                                  "Infinite",
+                                  "Average Addition/Loss"),
+                      selected = "Average Addition/Loss"),
+          textInput("replen", "SSR repeat lengths\n(comma separated or a valid R expression)", "1, 2, 3")
+        ),
+        conditionalPanel("input.distance != 'Bruvo'",
+          uiOutput("distargsUI")
+        ),
+        checkboxInput("reticulate", "Include reticulations?", TRUE)
       ),
-      conditionalPanel("input.distance == 'Custom'",
-        uiOutput("customDist")
-      ),
-      conditionalPanel("input.distance == 'Bruvo'",
-        selectInput("bruvo_model",
-                    "Select a model for missing data",
-                    choices = c("Genome Addition",
-                                "Genome Loss",
-                                "Infinite",
-                                "Average Addition/Loss"),
-                    selected = "Average Addition/Loss"),
-        textInput("replen", "SSR repeat lengths\n(comma separated or a valid R expression)", "1, 2, 3")
-      ),
-      conditionalPanel("input.distance != 'Bruvo'",
-        uiOutput("distargsUI")
-      ),
-      checkboxInput("reticulate", "Include reticulations?", TRUE), 
-      h3("Graphical Parameters"),
+      HTML("<a data-toggle='collapse' data-target='#gparams' aria-expanded='true' aria-controls='collapseOne'> 
+            <h3>Graphical Parameters</h3>
+            </a>"),
+      div(id = "gparams", class = "collapse in", 
       checkboxInput("pop.leg", "Population legend", TRUE), 
       checkboxInput("scale.leg", "Scale bar", TRUE), 
       sliderInput("greyslide",
@@ -111,6 +120,7 @@ shinyUI(fluidPage(
                    step = 0.001
       ),
       checkboxInput("beforecut", "Keep graph position", TRUE)
+      )
     ),
 
 
