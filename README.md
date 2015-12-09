@@ -86,10 +86,10 @@ This R package is not a small package, and because of that, it is not
 unfathomable that there occasionally might be bugs. For bugs that exist within R
 code, they can be fixed by visiting
 https://gist.github.com/zkamvar/b64078a0d04d2452c905 and sourcing the code from
-there. Below is a list of known issues in version 2.0.2 that are fixed on
+there. Below is a list of known issues in version 2.1.0 that are fixed on
 GitHub, but not yet on CRAN:
 
-- The function `read.genalex()` cannot read in single-locus data. See issue [#58](https://github.com/grunwaldlab/poppr/issues/58) for details.
+- none :)
 
 
 ## Installation
