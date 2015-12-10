@@ -32,9 +32,14 @@ shinyUI(fluidPage(
         )
       ),
       # http://stackoverflow.com/a/21715813/2752888
-      HTML("<a data-toggle='collapse' data-target='#dparams' aria-expanded='true' aria-controls='collapseOne'> 
-           <h3>Data Parameters</h3>
-           </a>"),
+      HTML("
+      <h3>
+        Data 
+        <button type = 'button' class = 'btn btn-secondary btn-xs' data-toggle='collapse' data-target='#dparams' aria-expanded='true' aria-controls='collapseOne'> 
+          show/hide
+        </button>
+      </h3>
+      "),
       div(id = "dparams", class = "collapse in", 
         # h3("Data Parameters"),
         uiOutput("selectUI"),
@@ -70,9 +75,14 @@ shinyUI(fluidPage(
         ),
         checkboxInput("reticulate", "Include reticulations?", TRUE)
       ),
-      HTML("<a data-toggle='collapse' data-target='#gparams' aria-expanded='true' aria-controls='collapseOne'> 
-            <h3>Graphical Parameters</h3>
-            </a>"),
+      HTML("
+      <h3>
+        Display
+        <button type = 'button' class = 'btn btn-secondary btn-xs'  data-toggle='collapse' data-target='#gparams' aria-expanded='true' aria-controls='collapseOne'>
+          show/hide
+        </a>
+      </h3>
+      "),
       div(id = "gparams", class = "collapse in", 
       checkboxInput("pop.leg", "Population legend", TRUE), 
       checkboxInput("scale.leg", "Scale bar", TRUE), 
