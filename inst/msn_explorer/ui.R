@@ -123,7 +123,7 @@ shinyUI(fluidPage(
                             "custom"), inline = TRUE
       ),
       conditionalPanel("input.pal == 'custom'",
-        textInput("custom_pal", "Custom palette/function", "function(x) 'purple'")
+        textInput("custom_pal", "Custom palette/function", "'purple'")
       ),
       numericInput("cutoff",
                    "Distance cutoff",
