@@ -4,7 +4,8 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  titlePanel(paste("Minimum spanning networks in", "poppr")),
+  title = "MSN poppr",
+  titlePanel("Minimum spanning networks in poppr"),
 
   sidebarLayout(
     sidebarPanel(
