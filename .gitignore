@@ -10,8 +10,6 @@ src/*.dll
 src-x86_64
 src-i386
 
-poppr.Rproj
-
 # OSX derivative
 .DS_Store
 
