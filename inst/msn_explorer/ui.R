@@ -36,7 +36,7 @@ shinyUI(fluidPage(
       HTML("
       <h3>
         Data 
-        <button type = 'button' class = 'btn btn-secondary btn-xs' data-toggle='collapse' data-target='#dparams' aria-expanded='true' aria-controls='collapseOne'> 
+        <button type = 'button' class = 'btn btn-secondary btn-xs' data-toggle='collapse' data-target='#dparams' aria-expanded='true' aria-controls='dparams'> 
           show/hide
         </button>
       </h3>
@@ -79,7 +79,7 @@ shinyUI(fluidPage(
       HTML("
       <h3>
         Display
-        <button type = 'button' class = 'btn btn-secondary btn-xs'  data-toggle='collapse' data-target='#gparams' aria-expanded='true' aria-controls='collapseOne'>
+        <button type = 'button' class = 'btn btn-secondary btn-xs'  data-toggle='collapse' data-target='#gparams' aria-expanded='true' aria-controls='gparams'>
           show/hide
         </a>
       </h3>
