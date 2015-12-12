@@ -1192,3 +1192,36 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   print(outplot)
   return(invisible(out))
 }
+
+#' Create a circular plot to show MLGs crossing populations [EXPERIMENTAL]
+#'
+#' @param gid a genind/genclone/genlight/snpclone object
+#' @param pop an optional population factor or formula to be passed to \code{\link{setPop}}
+#' @param temporal a character specifying the temporal strata.
+#' @param palette a color palette to use for coloring edges.
+#'
+#' @author Zhian N. Kamvar
+#' @return an igraph object
+#' @export
+#'
+#' @examples
+#' data(Pram)
+#' x <- mlg.crossplot(Pram)
+#' plot(x)
+#' \dontrun{
+#' # You can use the viridis palette
+#' if (require("viridis")){
+#'   plot(mlg.crossplot(Pram, palette = viridis_pal()))
+#' }
+#' }
+mlg.crossplot <- function(gid, pop = NULL, temporal = NULL, palette = grey.colors){
+  crosses <- ifelse(mlg.table(gid, plot = FALSE) > 0, 1, 0)
+  adjmat  <- crosses %*% t(crosses)
+  x <- igraph::graph_from_adjacency_matrix(adjmat, mode = "undirected", 
+                                           weighted = TRUE, diag = FALSE)
+  x$layout <- igraph::layout_in_circle(x)
+  E(x)$width <- E(x)$weight
+  E(x)$color <- palette(max(E(x)$weight))[E(x)$weight]
+  
+  return(x)
+}
