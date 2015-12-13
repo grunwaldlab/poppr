@@ -44,6 +44,7 @@ Imports:
     pegas,
     reshape2,
     dplyr (>= 0.4),
+    lazyeval,
     boot,
     shiny
 Suggests:

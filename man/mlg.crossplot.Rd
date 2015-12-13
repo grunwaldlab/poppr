@@ -4,7 +4,7 @@
 \alias{mlg.crossplot}
 \title{Create a circular plot to show MLGs crossing populations [EXPERIMENTAL]}
 \usage{
-mlg.crossplot(gid, pop = NULL, temporal = NULL, palette = grey.colors)
+mlg.crossplot(gid, pop = NULL, temporal = NULL, PAL = grey.colors)
 }
 \arguments{
 \item{gid}{a genind/genclone/genlight/snpclone object}
@@ -13,7 +13,7 @@ mlg.crossplot(gid, pop = NULL, temporal = NULL, palette = grey.colors)
 
 \item{temporal}{a character specifying the temporal strata.}
 
-\item{palette}{a color palette to use for coloring edges.}
+\item{PAL}{a color palette to use for coloring edges.}
 }
 \value{
 an igraph object
@@ -23,12 +23,12 @@ Create a circular plot to show MLGs crossing populations [EXPERIMENTAL]
 }
 \examples{
 data(Pram)
-x <- mlg.crossplot(Pram)
+x <- mlg.crossplot(Pram, ~SOURCE/STATE, ~YEAR)
 plot(x)
 \dontrun{
 # You can use the viridis palette
 if (require("viridis")){
-  plot(mlg.crossplot(Pram, palette = viridis_pal()))
+  plot(mlg.crossplot(Pram, ~SOURCE/STATE, ~YEAR, PAL = viridis_pal()))
 }
 }
 }
