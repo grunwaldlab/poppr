@@ -1198,7 +1198,7 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
 #' @param gid a genind/genclone/genlight/snpclone object
 #' @param pop an optional population factor or formula to be passed to \code{\link{setPop}}
 #' @param temporal a character specifying the temporal strata.
-#' @param palette a color palette to use for coloring edges.
+#' @param PAL a color palette to use for coloring edges.
 #'
 #' @author Zhian N. Kamvar
 #' @return an igraph object
@@ -1206,22 +1206,50 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
 #'
 #' @examples
 #' data(Pram)
-#' x <- mlg.crossplot(Pram)
+#' x <- mlg.crossplot(Pram, ~SOURCE/STATE, ~YEAR)
 #' plot(x)
 #' \dontrun{
 #' # You can use the viridis palette
 #' if (require("viridis")){
-#'   plot(mlg.crossplot(Pram, palette = viridis_pal()))
+#'   plot(mlg.crossplot(Pram, ~SOURCE/STATE, ~YEAR, PAL = viridis_pal()))
 #' }
 #' }
-mlg.crossplot <- function(gid, pop = NULL, temporal = NULL, palette = grey.colors){
+#' @importFrom lazyeval interp
+mlg.crossplot <- function(gid, pop = NULL, temporal = NULL, PAL = grey.colors){
+  
+  if (!is.null(pop)){
+    if (is.language(pop)){
+      setPop(gid) <- pop
+    } else {
+      pop(gid) <- pop
+    }
+  }
+  if (!is.null(temporal)){
+    stopifnot(all.vars(temporal) %in% nameStrata(gid))
+    pop(gid) <- paste(pop(gid), strata(gid, temporal)[[1]], sep = "_")
+  }
   crosses <- ifelse(mlg.table(gid, plot = FALSE) > 0, 1, 0)
   adjmat  <- crosses %*% t(crosses)
-  x <- igraph::graph_from_adjacency_matrix(adjmat, mode = "undirected", 
-                                           weighted = TRUE, diag = FALSE)
+  
+  remove_last  <- function(i) gsub("(.*)_[^_]*$", "\\1", i)
+  keep_last    <- function(i) gsub(".*_([^_]*)$", "\\1", i)
+  dots <- list(lazyeval::interp(~x != y, 
+                                .values = list(x = quote(Var1), y = quote(Var2))))
+  muts <- list(t1 = lazyeval::interp(~keep_last(x), x = quote(Var1)), 
+               t2 = lazyeval::interp(~keep_last(y), y = quote(Var2)))
+  tmuts <- list(Var1 = lazyeval::interp(~remove_last(x), x = quote(Var1)), 
+                Var2 = lazyeval::interp(~remove_last(y), y = quote(Var2)))
+  adjdf <- reshape2::melt(adjmat, value.name = "weight") %>%
+    dplyr::tbl_df() %>%
+    dplyr::filter_(.dots = "weight > 0") %>%
+    dplyr::mutate_(.dots = muts) %>%
+    dplyr::mutate_(.dots = tmuts) %>%
+    dplyr::filter_(.dots = dots)
+  
+  x <- igraph::graph_from_data_frame(adjdf, directed = FALSE)
   x$layout <- igraph::layout_in_circle(x)
   E(x)$width <- E(x)$weight
-  E(x)$color <- palette(max(E(x)$weight))[E(x)$weight]
+  E(x)$color <- PAL(max(E(x)$weight))[E(x)$weight]
   
   return(x)
 }
