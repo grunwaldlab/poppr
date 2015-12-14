@@ -1246,8 +1246,8 @@ mlg.crossplot <- function(gid, pop = NULL, temporal = NULL, PAL = grey.colors){
     dplyr::mutate_(.dots = tmuts) %>%
     dplyr::filter_(.dots = dots)
   
-  x <- igraph::graph_from_data_frame(adjdf, directed = FALSE)
-  x$layout <- igraph::layout_in_circle(x)
+  x <- igraph::graph_from_data_frame(adjdf, directed = FALSE) %>%
+    igraph::add_layout_(igraph::in_circle())
   E(x)$width <- E(x)$weight
   E(x)$color <- PAL(max(E(x)$weight))[E(x)$weight]
   
