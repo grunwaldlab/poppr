@@ -1,11 +1,11 @@
 # prepare the package for release
 NEWS     = NEWS
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
-# PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename `pwd`)
 DATE	:= $(shell date +%F)
 VERSION := $(shell ./tools/convertversion.sh)
 UNAME := $(shell uname -s)
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 ifeq ($(UNAME),Darwin)
 	WGET := curl -O
@@ -37,9 +37,11 @@ cleandevel:
 	cd ..;\
 	$(RM) -r R-devel*
 
+branchup:
+	perl -pi -e "s/branch=.+?\)/branch=$(BRANCH))/g" README.md
 
 # Make files do not like a $ there, so you have to double it to escape.
-update: 
+update: branchup 
 	perl -pi -e "s/^Date:.+?$$/Date: $(DATE)/" DESCRIPTION
 	rm -fv vignettes/*bbl
 	rm -fv vignettes/*toc
