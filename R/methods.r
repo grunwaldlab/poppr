@@ -820,6 +820,7 @@ setMethod(
 #'   
 #' @rdname mll-method
 #' @aliases mll,genclone-method mll,snpclone-method mll,genind-method
+#'   mll,genlight-method
 #' @docType methods
 #' @author Zhian N. Kamvar
 #' @seealso \code{\link{mll.custom}} \code{\link{mlg.table}}
@@ -838,6 +839,7 @@ mll <- function(x, type = NULL) standardGeneric("mll")
 #' @export
 setGeneric("mll")
 
+# For clone type objects
 mll.internal <- function(x, type = NULL, the_call = match.call()){
   mlg <- x@mlg
   if (!"MLG" %in% class(mlg)){
@@ -860,16 +862,28 @@ mll.internal <- function(x, type = NULL, the_call = match.call()){
   return(mlg[, type])
 }
 
+# For genind and genlight objects
+mll.gen <- function(x, type = NULL){
+  if (!is.null(type)){
+    msg <- paste("The object you are using is a genind object and does not",
+                 "contain an mlg slot. Returning the results of mlg.vector().")
+    warning(msg)
+  }
+  mlg.vector(x)
+}
+
 setMethod(
   f = "mll",
   signature(x = "genind"),
   definition = function(x, type = NULL){
-    if (!is.null(type)){
-      msg <- paste("The object you are using is a genind object and does not",
-                   "contain an mlg slot. Returning the results of mlg.vector().")
-      warning(msg)
-    }
-    mlg.vector(x)
+    mll.gen(x, type)
+  })
+
+setMethod(
+  f = "mll",
+  signature(x = "genlight"),
+  definition = function(x, type = NULL){
+    mll.gen(x, type)
   })
 
 setMethod(
@@ -886,27 +900,11 @@ setMethod(
     mll.internal(x, type, match.call())
   })
 
-setMethod(
-  f = "mll",
-  signature(x = "snpclone"),
-  definition = function(x, type = NULL){
-    mlg <- x@mlg
-    if (!"MLG" %in% class(mlg)){
-      return(mlg)
-    }
-    if (!is.null(type)){
-      TYPES <- c("original", "expanded", "contracted", "custom")
-      type <- match.arg(type, TYPES)
-    } else {
-      type <-visible(mlg)
-    }
-    return(mlg[, type])
-  })
-
 #==============================================================================#
 #' @export
 #' @rdname mll-method
-#' @aliases nmll,genclone-method nmll,snpclone-method
+#' @aliases nmll,genclone-method nmll,snpclone-methodn mll,genind-method
+#'   nmll,genlight-method
 #' @docType methods
 #==============================================================================#
 nmll <- function(x, type = NULL) standardGeneric("nmll")
@@ -926,6 +924,20 @@ setMethod(
   signature(x = "snpclone"),
   definition = function(x, type = NULL){
     length(unique(mll(x, type)))
+  })
+
+setMethod(
+  f = "nmll",
+  signature(x = "genind"),
+  definition = function(x, type = NULL){
+    mlg(x, quiet = TRUE)
+  })
+
+setMethod(
+  f = "nmll",
+  signature(x = "genlight"),
+  definition = function(x, type = NULL){
+    mlg(x, quiet = TRUE)
   })
 
 #==============================================================================#
