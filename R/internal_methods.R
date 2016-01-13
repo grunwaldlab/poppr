@@ -47,111 +47,71 @@
 # slots. Having the methods specific to these internal slots ensures that the 
 # code is a) DRY and b) debuggable (by calling the internal function).
 #==============================================================================#
-# gethierarchy.internal <- function(x, formula = NULL, combine = TRUE){
-# 	if (is.null(formula)) return(x@hierarchy)
-# 	vars <- all.vars(formula)
-# 	if (any(!vars %in% names(x@hierarchy))){
-# 	  stop(hier_incompatible_warning(vars, x@hierarchy))
-# 	}
-# 	if (combine){
-# 	  hier <- make_hierarchy(formula, x@hierarchy)
-# 	} else {
-# 	  hier <- x@hierarchy[all.vars(formula)]
-# 	}
-# 	invisible(return(hier))
-# }
-
-# sethierarchy.internal <- function(x, value){
-#   if (!inherits(value, "data.frame")){
-#     stop(paste(substitute(value), "is not a data frame"))
-#   }
-#   if (nrow(value) != nInd(x)){
-#     stop("Number of rows in data frame not equal to number of individuals in object.")
-#   }
-#   value <- data.frame(lapply(value, function(f) factor(f, unique(f))))
-#   x@hierarchy <- value
-#   return(x)
-# }
-
-# namehierarchy.internal <- function(x, value){
-#   if (is.language(value)){
-#     value <- all.vars(value)
-#   }
-#   if (!is.vector(value) | length(value) != length(x@hierarchy)){
-#     stop(paste("Hierarchy, needs a vector argument of length", length(x@hierarchy)))
-#   }
-#   names(x@hierarchy) <- value
-#   return(x)
-# }
-
-# splithierarchy.internal <- function(x, value, sep = "_"){
-#   if (is.language(value)){
-#     # valterms <- attr(terms(value), "term.labels")
-#     # valterms <- valterms[length(valterms)]
-#     # valterms <- gsub(":", sep, valterms)
-#     value    <- all.vars(value)
-#   } else {
-#     stop("value must be a formula.")
-#   }
-#   if (length(value) < 1){
-#     stop("value must have more than one hierarchical level.")
-#   }
-#   hierarchy  <- x@hierarchy
-#   if (length(hierarchy) > 1){
-#     warning("Hierarchy must be length 1. Taking the first column.")
-#     hierarchy <- hierarchy[1]
-#   }
-#   seps     <- gregexpr(sep, hierarchy[[1]])
-#   sepmatch <- vapply(seps, function(val) all(as.integer(val) > 0), logical(1))
-#   seps     <- vapply(seps, length, numeric(1))
-#   all_seps_match <- all(sepmatch)
-#   given_seps     <- length(value) - 1 
-#   if (!all_seps_match | all(seps != given_seps)){
-#     seps <- ifelse(all_seps_match, seps[1], 0) + 1
-#     msg1 <- paste("\n  Data has", seps, ifelse(seps == 1, "level", "levels"),
-#                   "of hierarchy with the separator", sep, ".")
-#     msg2 <- paste("Here is the fist column of the data:", hierarchy[1, ])
-#     stop(paste(msg1, "\n ", msg2))
-#   }
-#   x@hierarchy <- reshape2::colsplit(as.character(hierarchy[[1]]), pattern = sep, value)
-#   x@hierarchy <- data.frame(lapply(x@hierarchy, function(f) factor(f, levels = unique(f))))
-#   # names(hierarchy) <- value
-#   # x@hierarchy      <- hierarchy
-#   return(x) 
-# }
-
-# addhierarchy.internal <- function(x, value, name = "NEW"){    
-#   hierarchy  <- x@hierarchy
-#   if ((is.vector(value) | is.factor(value)) & length(value) == nrow(hierarchy)){
-#     value <- factor(value, levels = unique(value))
-#     NEW <- data.frame(value)
-#     names(NEW) <- name
-#     hierarchy <- cbind(hierarchy, NEW)
-#   } else if (is.data.frame(value) && nrow(value) == nrow(hierarchy)){
-#     value <- data.frame(lapply(value, function(f) factor(f, unique(f))))
-#     hierarchy <- cbind(hierarchy, value)
-#   } else {
-#     stop("value must be a vector or data frame.")
-#   }
-#   x@hierarchy <- hierarchy
-#   return(x) 
-# }
-
-# setpop.internal <- function(x, formula = NULL){
-#   if (is.null(formula) | !is.language(formula)){
-#     stop(paste(substitute(formula), "must be a valid formula object."))
-#   }
-#   vars <- all.vars(formula)
-#   if (!all(vars %in% names(x@hierarchy))){
-#     stop(hier_incompatible_warning(vars, x@hierarchy))
-#   }
-#   pop(x) <- make_hierarchy(formula, x@hierarchy)[[length(vars)]]
-#   return(x)
-# }
 #==============================================================================#
 # Internal functions to deal with the MLG class.
 #==============================================================================#
 
+#==============================================================================#
+# internal function for mll method of clone type objects
+#
+# Public functions utilizing this function:
+# ## mll mll<- (genclone and snpclone)
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+mll.internal <- function(x, type = NULL, the_call = match.call()){
+  mlg <- x@mlg
+  if (!"MLG" %in% class(mlg)){
+    the_obj <- as.character(the_call[["x"]])
+    the_type <- as.character(the_call[["type"]])
+    if (length(the_type) == 0) the_type <- "original"
+    msg <- paste("\n The @mlg slot does not contain an MLG class object.\n",
+                 "Returning the original mlgs. Please use:\n\n",
+                 paste0('mll(', the_obj, ') <- "', the_type, '"\n'),
+                 "\n to convert your object.")
+    warning(msg, call. = FALSE)
+    return(mlg)
+  }
+  if (!is.null(type)){
+    TYPES <- c("original", "expanded", "contracted", "custom")
+    type <- match.arg(type, TYPES)
+  } else {
+    type <- visible(mlg)
+  }
+  return(mlg[, type])
+}
+
+#==============================================================================#
+# wrapper for mlg.vector
+#
+# This serves as a wrapper due to the fact that mll should be available for
+# genind and genlight objects to avoid unnecessary checking of type.
+# 
+# Public functions utilizing this function:
+# ## mll (genind and genlight)
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+mll.gen.internal <- function(x, type = NULL){
+  if (!is.null(type)){
+    msg <- paste("The object you are using is a genind object and does not",
+                 "contain an mlg slot. Returning the results of mlg.vector().")
+    warning(msg)
+  }
+  mlg.vector(x)
+}
+
+#==============================================================================#
+# internal function to reset multilocus genotypes of clone type objects
+#
+# Public functions utilizing this function:
+# ## mll.reset mll.reset<-
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
 mll.reset.internal <- function(x, value){
   if (!is(x@mlg, "MLG")){
     x@mlg <- new("MLG", x@mlg)
@@ -186,7 +146,15 @@ mll.reset.internal <- function(x, value){
   return(x)
 }
 
-
+#==============================================================================#
+# internal function to get and set custom values for clone type objects
+#
+# Public functions utilizing this function:
+# ## mll.custom mll.custom<-
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
 mll.custom.internal <- function(x, set = TRUE, value){
   if (!is(x@mlg, "MLG")){
     x@mlg <- new("MLG", x@mlg)
@@ -209,6 +177,15 @@ mll.custom.internal <- function(x, set = TRUE, value){
   return(x)
 }
 
+#==============================================================================#
+# internal function to get and set levels for custom mlls
+#
+# Public functions utilizing this function:
+# ## mll.levels mll.levels<-
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
 mll.levels.internal <- function(x, set = TRUE, value){
   if (!is(x@mlg, "MLG")){
     x@mlg <- new("MLG", x)
@@ -230,4 +207,140 @@ mll.levels.internal <- function(x, set = TRUE, value){
   x@mlg        <- mlgs
   mll(x)       <- vis
   return(x)
+}
+
+#==============================================================================#
+# internal function for mlg.filter
+#
+# Public functions utilizing this function:
+# ## mlg.filter mlg.filter<-
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis", 
+                                memory = FALSE, algorithm = "farthest_neighbor", 
+                                distance = "nei.dist", threads = 0, 
+                                stats = "MLGs", the_call = match.call(), ...){
+
+  # This will return a vector indicating the multilocus genotypes after applying
+  # a minimum required distance threshold between multilocus genotypes.
+  if (is.character(distance) || is.function(distance)) {
+    if (memory==TRUE && identical(c(gid, distance, ...), .last.value.param$get())){
+      dis <- .last.value.dist$get()
+    } else {
+      if (is.genind(gid)) {
+        the_dist <- as.character(substitute(the_call[["distance"]]))
+        call_len <- length(the_dist)
+        is_diss_dist <- the_dist %in% "diss.dist"
+        any_dist <- the_dist %in% c("diss.dist", "nei.dist", "prevosti.dist",
+                                    "edwards.dist", "reynolds.dist", 
+                                    "rogers.dist", "provesti.dist")
+        if (missing == "mean" && call_len == 1 && is_diss_dist){
+          disswarn <- paste("Cannot use function diss.dist and correct for", 
+                            "mean values.", "diss.dist will automatically",
+                            "ignore missing data.") 
+          warning(disswarn, call. = FALSE)
+          mpop <- gid
+        } else if (call_len == 1 && any_dist) {
+          mpop <- new("bootgen", gid, na = missing, 
+                      freq = ifelse(is_diss_dist, FALSE, TRUE))
+        } else {
+          mpop <- missingno(gid, type = missing, quiet = TRUE)
+        }
+      } else {
+        mpop <- gid
+      }
+      DISTFUN <- match.fun(distance)
+      dis <- DISTFUN(mpop, ...)
+      dis <- as.matrix(dis)
+      if (memory == TRUE)
+      {
+        .last.value.param$set(c(gid, distance, ...))
+        .last.value.dist$set(dis)
+      }
+    }
+  } else {
+    # Treating distance as a distance table 
+    # Warning: Missing data in distance matrix or data uncorrelated with gid may
+    # produce unexpected results.
+    dis <- as.matrix(distance)
+  }
+  if (any(is.na(dis))){
+    msg <- paste("The resulting distance matrix contains missing data.\n",
+                 "Please treat your missing data by using the missing",
+                 "argument.\n")
+    stop(msg)
+  }
+  if (!is.clone(gid))
+  {
+    if (is(gid, "genlight")){
+      gid <- as.snpclone(gid)
+    } else {
+      gid <- as.genclone(gid)
+    }
+  }
+  else
+  {
+    if (!is(gid@mlg, "MLG")){
+      gid@mlg <- new("MLG", gid@mlg)
+    }
+    mll(gid) <- "original"
+  }
+  basemlg <- mlg.vector(gid)
+  # Input validation before passing arguments to C
+
+    #  dist is an n by n matrix containing distances between individuals
+  if ((!is.numeric(dis) && !is.integer(dis)) || dim(dis)[1] != dim(dis)[2]){
+    stop("Distance matrix must be a square matrix of numeric or integer values.")
+  } 
+    #  mlg is a vector of length n containing mlg assignments
+  if ((!is.numeric(basemlg) && !is.integer(basemlg)) || length(basemlg) != dim(dis)[1]){
+    stop("MLG must contain one numeric or integer entry for each individual in the population.")
+  }
+    # Threshold must be something that can cast to numeric
+  if (!is.numeric(threshold) && !is.integer(threshold)){
+    stop("Threshold must be a numeric or integer value")
+  } 
+    # Threads must be something that can cast to integer
+  if (!is.numeric(threads) && !is.integer(threads) && threads >= 0){
+    stop("Threads must be a non-negative numeric or integer value")
+  } 
+    # Stats must be logical
+  STATARGS <- c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")
+  stats <- match.arg(toupper(stats), STATARGS)
+
+  # Cast parameters to proper types before passing them to C
+  dis_dim   <- dim(dis)
+  dis       <- as.numeric(dis)
+  dim(dis)  <- dis_dim # Turn it back into a matrix
+  threshold <- as.numeric(threshold)
+  algo      <- tolower(as.character(algorithm))
+  threads   <- as.integer(threads)
+  
+  if (!isTRUE(all.equal(basemlg, as.integer(basemlg))))
+  {
+    warning("MLG contains non-integer values. MLGs differing only in decimal values will be merged.")
+  }
+  basemlg <- as.integer(basemlg)
+  
+  result_list <- .Call("neighbor_clustering", dis, basemlg, threshold, algo, threads) 
+  
+  # Cut out empty values from result_list[[2]]
+  result_list[[2]] <- result_list[[2]][result_list[[2]] > -0.05]
+  # Format result_list[[3]]
+  mlgs  <- unique(result_list[[1]])
+  dists <- result_list[[3]]
+  dists <- dists[mlgs,mlgs]
+  if (length(mlgs) > 1){
+    rownames(dists) <- mlgs
+    colnames(dists) <- mlgs
+  }
+  result_list[[3]] <- dists
+  names(result_list) <- c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES")
+  if (toupper(stats) == "ALL"){
+    return(result_list)
+  } else {
+    return(result_list[[stats]])
+  } 
 }
