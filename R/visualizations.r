@@ -1224,6 +1224,14 @@ mlg.crossplot <- function(gid, pop = NULL, temporal = NULL, PAL = grey.colors){
       pop(gid) <- pop
     }
   }
+  if (!is.clone(gid)){
+    if (inherits(gid, "genlight")){
+      gid <- as.snpclone(gid)
+    } else {
+      gid <- as.genclone(gid)
+    }
+  }
+  
   if (!is.null(temporal)){
     stopifnot(all.vars(temporal) %in% nameStrata(gid))
     pop(gid) <- paste(pop(gid), strata(gid, temporal)[[1]], sep = "_")
