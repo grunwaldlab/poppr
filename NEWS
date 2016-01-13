@@ -1,10 +1,11 @@
 poppr 2.1.0.99
 ===========
 
-IMPROVEMENTS
+NEW FEATURES
 -----------
 
-* `imsn` now has collapsible side panels
+* `imsn()` now has collapsible side panels
+* `nmll()` and `mll()` will now handle genind and genlight objects
 
 poppr 2.1.0
 ===========
