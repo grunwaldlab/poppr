@@ -839,51 +839,18 @@ mll <- function(x, type = NULL) standardGeneric("mll")
 #' @export
 setGeneric("mll")
 
-# For clone type objects
-mll.internal <- function(x, type = NULL, the_call = match.call()){
-  mlg <- x@mlg
-  if (!"MLG" %in% class(mlg)){
-    the_obj <- as.character(the_call[["x"]])
-    the_type <- as.character(the_call[["type"]])
-    if (length(the_type) == 0) the_type <- "original"
-    msg <- paste("\n The @mlg slot does not contain an MLG class object.\n",
-                 "Returning the original mlgs. Please use:\n\n",
-                 paste0('mll(', the_obj, ') <- "', the_type, '"\n'),
-                 "\n to convert your object.")
-    warning(msg, call. = FALSE)
-    return(mlg)
-  }
-  if (!is.null(type)){
-    TYPES <- c("original", "expanded", "contracted", "custom")
-    type <- match.arg(type, TYPES)
-  } else {
-    type <-visible(mlg)
-  }
-  return(mlg[, type])
-}
-
-# For genind and genlight objects
-mll.gen <- function(x, type = NULL){
-  if (!is.null(type)){
-    msg <- paste("The object you are using is a genind object and does not",
-                 "contain an mlg slot. Returning the results of mlg.vector().")
-    warning(msg)
-  }
-  mlg.vector(x)
-}
-
 setMethod(
   f = "mll",
   signature(x = "genind"),
   definition = function(x, type = NULL){
-    mll.gen(x, type)
+    mll.gen.internal(x, type)
   })
 
 setMethod(
   f = "mll",
   signature(x = "genlight"),
   definition = function(x, type = NULL){
-    mll.gen(x, type)
+    mll.gen.internal(x, type)
   })
 
 setMethod(
