@@ -12,8 +12,9 @@
 \alias{mll<-,snpclone-method}
 \alias{nmll}
 \alias{nmll,genclone-method}
+\alias{nmll,genind-method}
 \alias{nmll,genlight-method}
-\alias{nmll,snpclone-methodn}
+\alias{nmll,snpclone-method}
 \title{Access and manipulate multilocus lineages.}
 \usage{
 mll(x, type = NULL)
