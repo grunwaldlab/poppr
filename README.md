@@ -10,6 +10,9 @@ On CRAN:
 [![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://cran.r-project.org/package=poppr)
 [![Research software impact](http://depsy.org/api/package/cran/poppr/badge.svg)](http://depsy.org/package/r/poppr)
 
+Impact:
+[![Research software impact](http://depsy.org/api/package/cran/poppr/badge.svg)](http://depsy.org/package/r/poppr)
+
 ## Welcome 
 
 Poppr is an R package designed for analysis of populations with mixed modes of 
