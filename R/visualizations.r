@@ -1217,6 +1217,10 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
 #' @importFrom lazyeval interp
 mlg.crossplot <- function(gid, pop = NULL, temporal = NULL, PAL = grey.colors){
   
+  if (suppressWarnings(nmll(gid) == nInd(gid))){
+    msg <- paste0("Your data contain no duplicated multilocus genotypes.")
+    stop(msg)
+  }
   if (!is.null(pop)){
     if (is.language(pop)){
       setPop(gid) <- pop
@@ -1231,7 +1235,6 @@ mlg.crossplot <- function(gid, pop = NULL, temporal = NULL, PAL = grey.colors){
       gid <- as.genclone(gid)
     }
   }
-  
   if (!is.null(temporal)){
     stopifnot(all.vars(temporal) %in% nameStrata(gid))
     pop(gid) <- paste(pop(gid), strata(gid, temporal)[[1]], sep = "_")
