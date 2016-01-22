@@ -49,4 +49,7 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
 6:208. doi:
 \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
 }
+\seealso{
+\code{\link{filter_stats}} \code{\link{mlg.filter}}
+}
 

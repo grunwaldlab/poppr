@@ -15,11 +15,11 @@
 \title{Statistics on Clonal Filtering of Genotype Data}
 \usage{
 mlg.filter(pop, threshold = 0, missing = "asis", memory = FALSE,
-  algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
+  algorithm = "farthest_neighbor", distance = "diss.dist", threads = 0,
   stats = "MLGs", ...)
 
 mlg.filter(pop, missing = "asis", memory = FALSE,
-  algorithm = "farthest_neighbor", distance = "nei.dist", threads = 0,
+  algorithm = "farthest_neighbor", distance = "diss.dist", threads = 0,
   ...) <- value
 }
 \arguments{
@@ -46,10 +46,10 @@ points in either cluster. This is the loosest of the three.
 every pair of points between clusters.}
 
 \item{distance}{a character or function defining the distance to be applied 
-to pop. Defaults to \code{\link{nei.dist}} for genclone objects and
+to pop. Defaults to \code{\link{diss.dist}} for genclone objects and
 \code{\link{bitwise.dist}} for snpclone objects. A matrix or table
 containing distances between individuals (such as the output of 
-\code{\link{nei.dist}}) is also accepted for this parameter.}
+\code{\link{rogers.dist}}) is also accepted for this parameter.}
 
 \item{threads}{The maximum number of parallel threads to be used within this 
 function. A value of 0 (default) will attempt to use as many threads as 
@@ -147,5 +147,10 @@ gc # 100 mlgs
 mlg.filter(gc) <- 0.25
 gc # 82 mlgs
 }
+}
+\seealso{
+\code{\link{filter_stats}} 
+  \code{\link{cutoff_predictor}} 
+  \code{\link{mll}}
 }
 
