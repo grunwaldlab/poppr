@@ -49,12 +49,13 @@
 #' 
 #' @param x a genind or genlight object
 #' @param distance a distance function or matrix
-#' @param threshold a threshold to be passed to mlg.filter
+#' @param threshold a threshold to be passed to \code{\link{mlg.filter}}
+#'   (Default: 1e6)
 #' @param stats what statistics should be calculated.
 #' @param missing how to treat missing data with mlg.filter
 #' @param plot If the threshold is a maximum threshold, should the statistics be
 #'   plotted (Figure 2)
-#' @param cols the colors to use for each algorithm (defaults to set1 of
+#' @param cols the colors to use for each algorithm (defaults to set1 of 
 #'   \pkg{RColorBrewer}).
 #' @param nclone the number of multilocus genotypes you expect for the data. 
 #'   This will draw horizontal line on the graph at the value nclone and then 
@@ -67,6 +68,10 @@
 #'   
 #' @return a list of results from mlg.filter from the three algorithms.
 #' @export
+#' @seealso \code{\link{mlg.filter}} 
+#'   \code{\link{cutoff_predictor}} 
+#'   \code{\link{bitwise.dist}} 
+#'   \code{\link{diss.dist}}
 #' @note This function originally appeared in 
 #'   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
 #' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
@@ -87,7 +92,7 @@
 #' }
 #==============================================================================#
 filter_stats <- function(x, distance = bitwise.dist, 
-                         threshold = 1 + .Machine$double.eps^0.5, 
+                         threshold = 1e6 + .Machine$double.eps^0.5, 
                          stats = "All", missing = "ignore", plot = FALSE, 
                          cols = NULL, nclone = NULL, hist = "Scott", ...){
   if (!"dist" %in% class(distance)){
@@ -125,7 +130,7 @@ filter_stats <- function(x, distance = bitwise.dist,
 #'   
 #' @return a numeric value representing the threshold at which multilocus 
 #'   lineages should be defined.
-#'   
+#' @seealso \code{\link{filter_stats}} \code{\link{mlg.filter}}
 #' @note This function originally appeared in 
 #'   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}. 
 #'   This is a bit of a blunt instrument.
@@ -169,6 +174,7 @@ cutoff_predictor <- function(thresholds, fraction = 0.5){
 #' @return a plot depicting how many MLLs are collapsed as the genetic distance 
 #'   increases for each algorithm.
 #' @export
+#' @seealso \code{\link{filter_stats}}
 #' @note This function originally appeared in 
 #'   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
 #' @author Zhian N. Kamvar
