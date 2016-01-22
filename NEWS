@@ -1,3 +1,13 @@
+poppr 2.1.0.99
+===========
+
+MISC
+-----------
+
+* `mlg.filter()` now defaults to using `diss.dist()`
+* default threshold for `filter_stats()` is now 1e+6
+* `mlg.filter()` now returns a list instead of a pairlist
+
 poppr 2.1.0
 ===========
 
