@@ -139,8 +139,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   PROTECT(Rout_stats = allocVector(REALSXP, num_mlgs));       // Threshold for each merge
   PROTECT(Rout_dists = allocMatrix(REALSXP, num_mlgs, num_mlgs)); // Resulting distance matrix
   PROTECT(Rout_sizes = allocVector(INTSXP,  num_mlgs));           // Sizes of new clusters
-  PROTECT(Rout = CONS(Rout_vects, CONS(Rout_stats, CONS(Rout_dists, CONS(Rout_sizes, R_NilValue))))); 
-
+  //PROTECT(Rout = CONS(Rout_vects, CONS(Rout_stats, CONS(Rout_dists, CONS(Rout_sizes, R_NilValue))))); 
+  PROTECT(Rout = allocVector(VECSXP, 4));
   // Allocate empty matrix for storing clusters
   cluster_matrix = R_Calloc(num_mlgs, int*);
   cluster_distance_matrix = R_Calloc(num_mlgs, double*);
@@ -356,6 +356,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     R_Free(private_distance_matrix[i]);
   }
   R_Free(private_distance_matrix);
+  
   // Free memory allocated for the various arrays and matrices
   for(int i = 0; i < num_mlgs; i++)
   { 
@@ -366,6 +367,12 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   R_Free(cluster_distance_matrix);
   R_Free(cluster_size);
   R_Free(out_vector);
+  
+  SET_VECTOR_ELT(Rout, 0, Rout_vects);
+  SET_VECTOR_ELT(Rout, 1, Rout_stats);
+  SET_VECTOR_ELT(Rout, 2, Rout_dists);
+  SET_VECTOR_ELT(Rout, 3, Rout_sizes);
+  
   UNPROTECT(5);
   
   return Rout;
