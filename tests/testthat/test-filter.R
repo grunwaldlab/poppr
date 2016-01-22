@@ -66,6 +66,7 @@ test_that("filter_stats works for snpclone", {
 	
 	expect_is(res, "list")
 	expect_equal(names(res), c("farthest", "average", "nearest"))
+	expect_is(res$nearest, "list")
 	res <- lapply(res, "[[", "THRESHOLDS")
 	expect_true(all(vapply(res, length, numeric(1)) == maxres))
 	expect_less_than(res$nearest[maxres], res$average[maxres])

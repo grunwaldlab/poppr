@@ -7,6 +7,13 @@ NEW FEATURES
 * `imsn()` now has collapsible side panels
 * `nmll()` and `mll()` will now handle genind and genlight objects
 
+MISC
+-----------
+
+* `mlg.filter()` now defaults to using `diss.dist()`
+* default threshold for `filter_stats()` is now 1e+6
+* `mlg.filter()` now returns a list instead of a pairlist
+
 poppr 2.1.0
 ===========
 

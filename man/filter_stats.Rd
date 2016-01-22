@@ -4,7 +4,7 @@
 \alias{filter_stats}
 \title{Utilize all algorithms of mlg.filter}
 \usage{
-filter_stats(x, distance = bitwise.dist, threshold = 1 +
+filter_stats(x, distance = bitwise.dist, threshold = 1e+06 +
   .Machine$double.eps^0.5, stats = "All", missing = "ignore",
   plot = FALSE, cols = NULL, nclone = NULL, hist = "Scott", ...)
 }
@@ -13,7 +13,8 @@ filter_stats(x, distance = bitwise.dist, threshold = 1 +
 
 \item{distance}{a distance function or matrix}
 
-\item{threshold}{a threshold to be passed to mlg.filter}
+\item{threshold}{a threshold to be passed to \code{\link{mlg.filter}}
+(Default: 1e6)}
 
 \item{stats}{what statistics should be calculated.}
 
@@ -22,7 +23,7 @@ filter_stats(x, distance = bitwise.dist, threshold = 1 +
 \item{plot}{If the threshold is a maximum threshold, should the statistics be
 plotted (Figure 2)}
 
-\item{cols}{the colors to use for each algorithm (defaults to set1 of
+\item{cols}{the colors to use for each algorithm (defaults to set1 of 
 \pkg{RColorBrewer}).}
 
 \item{nclone}{the number of multilocus genotypes you expect for the data. 
@@ -66,5 +67,11 @@ Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
 6:208. doi:
 \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+}
+\seealso{
+\code{\link{mlg.filter}} 
+  \code{\link{cutoff_predictor}} 
+  \code{\link{bitwise.dist}} 
+  \code{\link{diss.dist}}
 }
 
