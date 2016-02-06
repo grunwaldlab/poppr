@@ -22,7 +22,7 @@ of loci.}
 Pairwise distances between individuals present in the genind object.
 }
 \description{
-diss.dist uses the same discreet dissimilarity matrix utilized by the index 
+diss.dist uses the same discrete dissimilarity matrix utilized by the index 
 of association (see \code{\link{ia}} for details). By default, it returns a
 distance reflecting the number of allelic differences between two
 individuals. When \code{percent = TRUE}, it returns a ratio of the number of
