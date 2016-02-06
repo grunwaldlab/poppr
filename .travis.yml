@@ -8,7 +8,6 @@ os:
 apt_packages:
   - latex-xcolor
   - texlive-latex3 # attempt to fix mathtools.sty not found error
-  - texlive-latex-extra
 
 r_binary_packages:
   - devtools
@@ -31,6 +30,9 @@ r_binary_packages:
 r_github_packages:
   - jimhester/covr
 
+before_install:
+  - tlmgr install fullpage
+
 after_success:
   - Rscript -e 'library(covr);coveralls()'
   
@@ -44,7 +46,7 @@ env:
   global:
     - CRAN: http://cran.at.r-project.org
     - NOT_CRAN: true
-    - R_BUILD_ARGS="--resave-data --no-vignettes"
+    - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"
     - R_CHECK_ARGS="--as-cran --timings"
     - R_CHECK_TIME="TRUE"
     - R_CHECK_TESTS="TRUE"
