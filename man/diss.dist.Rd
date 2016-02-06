@@ -30,6 +30,11 @@ observed differences by the number of possible differences. Eg. two
 individuals who share half of the same alleles will have a distance of 0.5.
 This function can analyze distances for any marker system.
 }
+\details{
+The distance calculated here is quite simple and goes by many names,
+  depending on its application. The most familiar name might be the Hamming
+  distance, or the number of differences between two strings.
+}
 \note{
 When \code{percent = TRUE}, this is exactly the same as
   \code{\link{provesti.dist}}, except that it performs better for large
@@ -49,5 +54,9 @@ mean(diss.dist(Aeut))
 }
 \author{
 Zhian N. Kamvar
+}
+\seealso{
+\code{\link{prevosti.dist}},
+   \code{\link{bitwise.dist}} (for SNP data)
 }
 

@@ -39,5 +39,8 @@ index of association for those samples.
 \author{
 Zhian N. Kamvar, Jonah C. Brooks
 }
+\seealso{
+\code{\link{win.ia}}, \code{\link{samp.ia}}
+}
 \keyword{internal}
 

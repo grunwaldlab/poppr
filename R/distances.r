@@ -66,10 +66,16 @@
 #' @return Pairwise distances between individuals present in the genind object.
 #' @author Zhian N. Kamvar
 #'   
+#' @details The distance calculated here is quite simple and goes by many names,
+#'   depending on its application. The most familiar name might be the Hamming
+#'   distance, or the number of differences between two strings.
+#'   
 #' @note When \code{percent = TRUE}, this is exactly the same as
 #'   \code{\link{provesti.dist}}, except that it performs better for large
 #'   numbers of individuals (n > 125) at the cost of available memory.
-#'   
+#'
+#' @seealso \code{\link{prevosti.dist}},
+#'    \code{\link{bitwise.dist}} (for SNP data)
 #' @examples
 #' 
 #' # A simple example. Let's analyze the mean distance among populations of A.
@@ -215,12 +221,12 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
 #' @examples
 #' 
 #' data(nancycats)
-#' nan9 <- popsub(nancycats, 9)
-#' neinan <- nei.dist(nan9)
-#' ednan <- edwards.dist(nan9)
-#' rodnan <- rogers.dist(nan9)
-#' reynan <- reynolds.dist(nan9)
-#' pronan <- prevosti.dist(nan9)
+#' (nan9   <- popsub(nancycats, 9))
+#' (neinan <- nei.dist(nan9))
+#' (ednan  <- edwards.dist(nan9))
+#' (rodnan <- rogers.dist(nan9))
+#' (reynan <- reynolds.dist(nan9))
+#' (pronan <- prevosti.dist(nan9))
 #' 
 #==============================================================================#
 nei.dist <- function(x, warning = TRUE){

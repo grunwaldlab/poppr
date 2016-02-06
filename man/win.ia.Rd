@@ -60,4 +60,11 @@ plot(res, type = "l")
 \author{
 Zhian N. Kamvar, Jonah C. Brooks
 }
+\seealso{
+\code{\link[adegenet]{genlight}},
+   \code{\link{snpclone}},
+   \code{\link{samp.ia}},
+   \code{\link{ia}},
+   \code{\link{bitwise.dist}}
+}
 

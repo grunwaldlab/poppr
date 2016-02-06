@@ -56,4 +56,11 @@ hist(res, breaks = "fd")
 \author{
 Zhian N. Kamvar, Jonah C. Brooks
 }
+\seealso{
+\code{\link[adegenet]{genlight}},
+   \code{\link{snpclone}},
+   \code{\link{win.ia}},
+   \code{\link{ia}},
+   \code{\link{bitwise.dist}}
+}
 

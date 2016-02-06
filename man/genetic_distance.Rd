@@ -58,12 +58,12 @@ Prevosti's distance is identical to \code{\link{diss.dist}}, except
 \examples{
 
 data(nancycats)
-nan9 <- popsub(nancycats, 9)
-neinan <- nei.dist(nan9)
-ednan <- edwards.dist(nan9)
-rodnan <- rogers.dist(nan9)
-reynan <- reynolds.dist(nan9)
-pronan <- prevosti.dist(nan9)
+(nan9   <- popsub(nancycats, 9))
+(neinan <- nei.dist(nan9))
+(ednan  <- edwards.dist(nan9))
+(rodnan <- rogers.dist(nan9))
+(reynan <- reynolds.dist(nan9))
+(pronan <- prevosti.dist(nan9))
 
 }
 \author{
