@@ -95,7 +95,7 @@ bitwise.dist <- function(x, percent=TRUE, mat=FALSE, missing_match=TRUE, differe
   ploid     <- min(ploidy(x))
   ind.names <- indNames(x)
   inds      <- nInd(x)
-  numPairs   <- nLoc(x)
+  numPairs  <- nLoc(x)
 
   # Use Prevosti if this is a genclone or genind object
   if(!is(x, "genlight")){
@@ -371,21 +371,21 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 #'   
 #' @export
 #' @examples
-#' \dontrun{
 #' # with structured snps assuming 1e4 positions
 #' set.seed(999)
-#' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+#' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, 
+#'            n.snp.struc = 5e2, ploidy = 2,
+#'            parallel = FALSE)
 #' position(x) <- sort(sample(1e4, 1e3))
 #' res <- samp.ia(x)
-#' hist(res)
+#' hist(res, breaks = "fd")
 #' 
 #' # with unstructured snps assuming 1e4 positions
 #' set.seed(999)
 #' x <- glSim(n.ind = 10, n.snp.nonstruc = 1e3, ploidy = 2)
 #' position(x) <- sort(sample(1e4, 1e3))
 #' res <- samp.ia(x)
-#' hist(res)
-#' }
+#' hist(res, breaks = "fd")
 #==============================================================================#
 samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   stopifnot(is(x, "genlight"))

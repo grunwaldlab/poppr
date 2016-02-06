@@ -37,21 +37,21 @@ this will calculate the standardized index of association from Agapow
 2001. See \code{\link{ia}} for details.
 }
 \examples{
-\dontrun{
 # with structured snps assuming 1e4 positions
 set.seed(999)
-x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, 
+           n.snp.struc = 5e2, ploidy = 2,
+           parallel = FALSE)
 position(x) <- sort(sample(1e4, 1e3))
 res <- samp.ia(x)
-hist(res)
+hist(res, breaks = "fd")
 
 # with unstructured snps assuming 1e4 positions
 set.seed(999)
 x <- glSim(n.ind = 10, n.snp.nonstruc = 1e3, ploidy = 2)
 position(x) <- sort(sample(1e4, 1e3))
 res <- samp.ia(x)
-hist(res)
-}
+hist(res, breaks = "fd")
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks
