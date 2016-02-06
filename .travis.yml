@@ -44,7 +44,7 @@ env:
   global:
     - CRAN: http://cran.at.r-project.org
     - NOT_CRAN: true
-    - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"
+    - R_BUILD_ARGS="--resave-data --no-vignettes"
     - R_CHECK_ARGS="--as-cran --timings"
     - R_CHECK_TIME="TRUE"
     - R_CHECK_TESTS="TRUE"
