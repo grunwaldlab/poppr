@@ -8,6 +8,7 @@ os:
 apt_packages:
   - latex-xcolor
   - texlive-latex3 # attempt to fix mathtools.sty not found error
+  - texlive-latex-extra
 
 r_binary_packages:
   - devtools
