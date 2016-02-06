@@ -31,7 +31,7 @@ r_github_packages:
   - jimhester/covr
 
 before_install:
-  - tlmgr install fullpage
+  - tlmgr install preprint
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
