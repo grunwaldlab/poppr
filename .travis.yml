@@ -1,54 +1,29 @@
-language: r 
+language: R
+sudo: false
 
-sudo: required
+cache: packages
 
-os:
-  - linux
-
-apt_packages:
-  - latex-xcolor
-  - texlive-latex3 # attempt to fix mathtools.sty not found error
-
-r_binary_packages:
-  - devtools
-  - vegan
-  - ggplot2
-  - phangorn
-  - igraph
-  - ade4
-  - pegas
-  - reshape2
-  - dplyr
-  - boot
-  - shiny
-  - testthat
-  - knitr
-  - rmarkdown
-  - knitcitations
-  - poweRlaw
+cran: http://cran.at.r-project.org
 
 r_github_packages:
   - jimhester/covr
 
 before_install:
-  - tlmgr install graphicx array color fullpage makeidx longtable natbib bm
+  - tlmgr install natbib
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
-  
+
 notifications:
   email:
     on_success: change
     on_failure: always
 
-
 env:
   global:
-    - CRAN: http://cran.at.r-project.org
     - NOT_CRAN: true
     - R_BUILD_ARGS="--resave-data --compact-vignettes=gs+qpdf"
     - R_CHECK_ARGS="--as-cran --timings"
     - R_CHECK_TIME="TRUE"
     - R_CHECK_TESTS="TRUE"
     - _R_CHECK_TIMINGS_="0"
-    - $BOOTSTRAP_LATEX="TRUE"
