@@ -133,7 +133,7 @@
 clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   
   if (!is.genind(pop) & !is(pop, "snpclone")){
-    stop(deparse(substitute(pop)), "is not a genind or snpclone object.\n")
+    stop(deparse(substitute(pop)), " is not a genind or snpclone object.\n")
   }
   if (is.null(strata(pop))){
     msg <- paste0("Strata is not set for ", deparse(substitute(pop)),
