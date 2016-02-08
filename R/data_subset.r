@@ -131,15 +131,23 @@
 #==============================================================================#
 
 clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
-  clonecall <- match.call()$pop
-  if(!is.genind(pop) & !is(pop, "snpclone")){
-    stop(paste(paste(substitute(pop), collapse=""), "is not a genind or snpclone object.\n"))
+  
+  if (!is.genind(pop) & !is(pop, "snpclone")){
+    stop(deparse(substitute(pop)), "is not a genind or snpclone object.\n")
   }
+  if (is.null(strata(pop))){
+    msg <- paste0("Strata is not set for ", deparse(substitute(pop)),
+                  ". Clone correct will be performed without population",
+                  " information.")
+    warning(msg)
+    strata <- NA
+  } 
   if (is.language(strata)){
     strataformula <- strata
     strata        <- all.vars(strata)
   }
   if (is.genind(pop)) popcall <- match.call()
+  
   if (is.na(strata[1])){
     return(pop[.clonecorrector(pop), ])
   }
@@ -154,11 +162,11 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   setPop(pop) <- strataformula
   # Corrects the individual names of the object. This is fo the fact that the
   # clone corrector relies on the unique individual names for it to work.
-  if(all(indNames(pop) == "")){
+  if (all(indNames(pop) == "")){
     indNames(pop) <- as.character(1:nInd(pop))
   }
 
-  cpop <- nPop(pop)  
+  cpop <- nPop(pop)
 
   # Steps for correction:
   # Subset by population factor.
@@ -172,9 +180,9 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
   }
   
   ccpop <- unlist(lapply(1:cpop, corWrecked, pop))
-  pop <- pop[ccpop, ]
+  pop   <- pop[ccpop, ]
   
-  if(!combine){
+  if (!combine){
     # When the combine flag is not true, the default is to keep the first level
     # of the strata. The keep flag is a numeric vector corresponding to the
     # strata flag indicating which levels the user wants to keep.
