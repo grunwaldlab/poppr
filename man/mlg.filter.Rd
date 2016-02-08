@@ -23,8 +23,8 @@ mlg.filter(pop, missing = "asis", memory = FALSE,
   ...) <- value
 }
 \arguments{
-\item{pop}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} 
-object.}
+\item{pop}{a \code{\linkS4class{genclone}}, \code{\linkS4class{snpclone}}, or
+\code{\linkS4class{genind}} object.}
 
 \item{threshold}{the desired minimum distance between distinct genotypes. 
 Defaults to 0, which will only merge identical genotypes}
@@ -152,5 +152,9 @@ gc # 82 mlgs
 \code{\link{filter_stats}} 
   \code{\link{cutoff_predictor}} 
   \code{\link{mll}}
+  \code{\link{genclone}}
+  \code{\link{snpclone}}
+  \code{\link{diss.dist}}
+  \code{\link{bruvo.dist}}
 }
 
