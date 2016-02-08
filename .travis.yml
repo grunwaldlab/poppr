@@ -1,9 +1,8 @@
 language: R
 sudo: false
+cran: http://cran.at.r-project.org
 
 cache: packages
-
-cran: http://cran.at.r-project.org
 
 r_github_packages:
   - jimhester/covr
