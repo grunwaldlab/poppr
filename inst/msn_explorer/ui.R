@@ -4,7 +4,8 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  titlePanel(paste("Minimum spanning networks in", "poppr")),
+  title = "MSN poppr",
+  titlePanel("Minimum spanning networks in poppr"),
 
   sidebarLayout(
     sidebarPanel(
@@ -31,40 +32,59 @@ shinyUI(fluidPage(
           actionButton("update-graph", "reGraph", icon("refresh"))
         )
       ),
-      h3("Data Parameters"),
-      uiOutput("selectUI"),
-      uiOutput("selectPops"),
-      
-      checkboxInput("genclone", "Convert to genclone?", TRUE),
-      selectInput("distance", 
-                  "Choose a distance calculation", 
-                  choices = c("Dissimilarity",
-                              "Bruvo",
-                              "Nei",
-                              "Rogers",
-                              "Edwards",
-                              "Provesti",
-                              "Reynolds",
-                              "Custom")
+      # http://stackoverflow.com/a/21715813/2752888
+      HTML("
+      <h3>
+        Data 
+        <button type = 'button' class = 'btn btn-secondary btn-xs' data-toggle='collapse' data-target='#dparams' aria-expanded='true' aria-controls='dparams'> 
+          show/hide
+        </button>
+      </h3>
+      "),
+      div(id = "dparams", class = "collapse in", 
+        # h3("Data Parameters"),
+        uiOutput("selectUI"),
+        uiOutput("selectPops"),
+        
+        checkboxInput("genclone", "Convert to genclone?", TRUE),
+        selectInput("distance", 
+                    "Choose a distance calculation", 
+                    choices = c("Dissimilarity",
+                                "Bruvo",
+                                "Nei",
+                                "Rogers",
+                                "Edwards",
+                                "Provesti",
+                                "Reynolds",
+                                "Custom")
+        ),
+        conditionalPanel("input.distance == 'Custom'",
+          uiOutput("customDist")
+        ),
+        conditionalPanel("input.distance == 'Bruvo'",
+          selectInput("bruvo_model",
+                      "Select a model for missing data",
+                      choices = c("Genome Addition",
+                                  "Genome Loss",
+                                  "Infinite",
+                                  "Average Addition/Loss"),
+                      selected = "Average Addition/Loss"),
+          textInput("replen", "SSR repeat lengths\n(comma separated or a valid R expression)", "1, 2, 3")
+        ),
+        conditionalPanel("input.distance != 'Bruvo'",
+          uiOutput("distargsUI")
+        ),
+        checkboxInput("reticulate", "Include reticulations?", TRUE)
       ),
-      conditionalPanel("input.distance == 'Custom'",
-        uiOutput("customDist")
-      ),
-      conditionalPanel("input.distance == 'Bruvo'",
-        selectInput("bruvo_model",
-                    "Select a model for missing data",
-                    choices = c("Genome Addition",
-                                "Genome Loss",
-                                "Infinite",
-                                "Average Addition/Loss"),
-                    selected = "Average Addition/Loss"),
-        textInput("replen", "SSR repeat lengths\n(comma separated or a valid R expression)", "1, 2, 3")
-      ),
-      conditionalPanel("input.distance != 'Bruvo'",
-        uiOutput("distargsUI")
-      ),
-      checkboxInput("reticulate", "Include reticulations?", TRUE), 
-      h3("Graphical Parameters"),
+      HTML("
+      <h3>
+        Display
+        <button type = 'button' class = 'btn btn-secondary btn-xs'  data-toggle='collapse' data-target='#gparams' aria-expanded='true' aria-controls='gparams'>
+          show/hide
+        </a>
+      </h3>
+      "),
+      div(id = "gparams", class = "collapse in", 
       checkboxInput("pop.leg", "Population legend", TRUE), 
       checkboxInput("scale.leg", "Scale bar", TRUE), 
       sliderInput("greyslide",
@@ -103,7 +123,7 @@ shinyUI(fluidPage(
                             "custom"), inline = TRUE
       ),
       conditionalPanel("input.pal == 'custom'",
-        textInput("custom_pal", "Custom palette/function", "function(x) 'purple'")
+        textInput("custom_pal", "Custom palette/function", "'purple'")
       ),
       numericInput("cutoff",
                    "Distance cutoff",
@@ -111,6 +131,7 @@ shinyUI(fluidPage(
                    step = 0.001
       ),
       checkboxInput("beforecut", "Keep graph position", TRUE)
+      )
     ),
 
 

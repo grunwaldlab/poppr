@@ -89,10 +89,10 @@ setMethod(
     ## Resetting all factors that need to be set. 
     slot(x, "tab")       <- res
     slot(x, "loc.fac")   <- factor(locnames, names(allnames))
-    # slot(x, "loc.names") <- names(allnames)
-    slot(x, "loc.n.all")  <- locnall
+    slot(x, "loc.n.all") <- locnall
     slot(x, "all.names") <- allnames
-    slot(x, "alllist")   <- .Call("expand_indices", cumsum(locnall), length(j), PACKAGE = "poppr")
+    slot(x, "alllist")   <- .Call("expand_indices", cumsum(locnall), 
+                                  length(j), PACKAGE = "poppr")
     slot(x, "names")     <- slot(x, "names")[i]
     return(x)
   }
@@ -161,7 +161,8 @@ setMethod(
     slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")
     slot(.Object, "loc.n.all") <- num_alleles  
     slot(.Object, "all.names") <- slot(gen, "all.names") 
-    slot(.Object, "alllist")   <- .Call("expand_indices", cumsum(num_alleles), num_loci, PACKAGE = "poppr")
+    slot(.Object, "alllist")   <- .Call("expand_indices", cumsum(num_alleles), 
+                                        num_loci, PACKAGE = "poppr")
     slot(.Object, "names")     <- objnames
     slot(.Object, "type")      <- slot(gen, "type")
     slot(.Object, "ploidy")    <- as.integer(slot(gen, "ploidy"))
@@ -539,7 +540,7 @@ setMethod(
       
     } else {
       if (class(x@mlg)[1] != "MLG"){
-        x@mlg <- mlg.vector(x, reset = TRUE)        
+        x@mlg <- mlg.vector(x, reset = TRUE)
       } else {
         x@mlg <- new("MLG", mlg.vector(x, reset = TRUE))
       }
@@ -565,7 +566,7 @@ setMethod(
       sep    <- ifelse(length(ploid) > 2, ", ", " ")
       ploid  <- paste0(ploid1, sep, "and ", ploid[length(ploid)])
     }
-    nind    <- nInd(object)     
+    nind    <- nInd(object)
     type    <- ifelse(object@type == "PA", "dominant", "codominant")
     nmlg    <- length(unique(object@mlg))
     nloc    <- nLoc(object)
@@ -584,11 +585,12 @@ setMethod(
       dist <- distname(object@mlg)
       algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
       if (!is.character(dist)){
-        dist <- paste(utils::capture.output(dist), collapse = "")        
+        dist <- paste(utils::capture.output(dist), collapse = "")
       }
       contab <- max(chars)
       contab <- substr("             ", 1, contab + 4)
-      mlgthresh <- paste0("\n", contab, "(", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]")
+      mlgthresh <- paste0("\n", contab, 
+                          "(", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]")
       mlgtype  <- paste0(mlgtype, mlgthresh)
     }
     if (poplen > 7) 
@@ -604,14 +606,14 @@ setMethod(
       ltab[2], nind, ploid, "individuals\n", 
       ltab[3], nloc, type, "loci\n\n"
       )
-    popstrata <- ifelse(strata > 1, "strata -", "stratification -")
+    popstrata <- ifelse(strata > 1, "strata -", "stratum -")
     if (strata == 0) popstrata <- "strata."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
     cat("", ltab[4], strata, popstrata, stratanames, fill = TRUE)
     if (!is.null(object@hierarchy)){
-      cat("", ltab[5], "1", "hierarchy -", paste(object@hierarchy, collapse = ""), 
-          fill = TRUE)
+      cat("", ltab[5], "1", "hierarchy -", 
+          paste(object@hierarchy, collapse = ""), fill = TRUE)
     }
     cat("", ltab[6], npop, "populations", popdef, pops, fill = TRUE)
     
@@ -659,18 +661,19 @@ setMethod(
       dist <- distname(x@mlg)
       algo <- strsplit(distalgo(x@mlg), "_")[[1]][1]
       if (!is.character(dist)){
-        dist <- paste(utils::capture.output(dist), collapse = "")        
+        dist <- paste(utils::capture.output(dist), collapse = "")
       }
       contab <- max(chars)
       contab <- substr("             ", 1, contab + 4)
-      mlgthresh <- paste0("\n", contab, "(", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]")
+      mlgthresh <- paste0("\n", contab, 
+                          "(", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]")
       mlgtype  <- paste0(mlgtype, mlgthresh)
     }
     if (!fullnames){
       poplen <- length(pops)
       stratalen <- length(stratanames)
       if (poplen > 7){
-        pops <- c(pops[1:3], "...", pops[(poplen-2):poplen])        
+        pops <- c(pops[1:3], "...", pops[(poplen-2):poplen])
       }
       if (stratalen > 7){
         stratanames <- c(stratanames[1:3], "...", stratanames[(stratalen-2):stratalen])
@@ -683,7 +686,7 @@ setMethod(
       ltab[2], nind, ploid, "individuals\n", 
       ltab[3], nloc, type, "loci\n\n",
       fill = TRUE)
-    popstrata <- ifelse(strata > 1, "strata -", "stratification -")
+    popstrata <- ifelse(strata > 1, "strata -", "stratum -")
     if (strata == 0) popstrata <- "strata."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
@@ -819,7 +822,10 @@ setMethod(
 #'   - user-defined MLGs }
 #'   
 #' @rdname mll-method
-#' @aliases mll,genclone-method mll,snpclone-method mll,genind-method
+#' @aliases mll,genclone-method 
+#'   mll,snpclone-method 
+#'   mll,genind-method
+#'   mll,genlight-method
 #' @docType methods
 #' @author Zhian N. Kamvar
 #' @seealso \code{\link{mll.custom}} \code{\link{mlg.table}}
@@ -838,38 +844,18 @@ mll <- function(x, type = NULL) standardGeneric("mll")
 #' @export
 setGeneric("mll")
 
-mll.internal <- function(x, type = NULL, the_call = match.call()){
-  mlg <- x@mlg
-  if (!"MLG" %in% class(mlg)){
-    the_obj <- as.character(the_call[["x"]])
-    the_type <- as.character(the_call[["type"]])
-    if (length(the_type) == 0) the_type <- "original"
-    msg <- paste("\n The @mlg slot does not contain an MLG class object.\n",
-                 "Returning the original mlgs. Please use:\n\n",
-                 paste0('mll(', the_obj, ') <- "', the_type, '"\n'),
-                 "\n to convert your object.")
-    warning(msg, call. = FALSE)
-    return(mlg)
-  }
-  if (!is.null(type)){
-    TYPES <- c("original", "expanded", "contracted", "custom")
-    type <- match.arg(type, TYPES)
-  } else {
-    type <-visible(mlg)
-  }
-  return(mlg[, type])
-}
-
 setMethod(
   f = "mll",
   signature(x = "genind"),
   definition = function(x, type = NULL){
-    if (!is.null(type)){
-      msg <- paste("The object you are using is a genind object and does not",
-                   "contain an mlg slot. Returning the results of mlg.vector().")
-      warning(msg)
-    }
-    mlg.vector(x)
+    mll.gen.internal(x, type)
+  })
+
+setMethod(
+  f = "mll",
+  signature(x = "genlight"),
+  definition = function(x, type = NULL){
+    mll.gen.internal(x, type)
   })
 
 setMethod(
@@ -886,27 +872,13 @@ setMethod(
     mll.internal(x, type, match.call())
   })
 
-setMethod(
-  f = "mll",
-  signature(x = "snpclone"),
-  definition = function(x, type = NULL){
-    mlg <- x@mlg
-    if (!"MLG" %in% class(mlg)){
-      return(mlg)
-    }
-    if (!is.null(type)){
-      TYPES <- c("original", "expanded", "contracted", "custom")
-      type <- match.arg(type, TYPES)
-    } else {
-      type <-visible(mlg)
-    }
-    return(mlg[, type])
-  })
-
 #==============================================================================#
 #' @export
 #' @rdname mll-method
-#' @aliases nmll,genclone-method nmll,snpclone-method
+#' @aliases nmll,genclone-method 
+#'   nmll,snpclone-method 
+#'   nmll,genind-method
+#'   nmll,genlight-method
 #' @docType methods
 #==============================================================================#
 nmll <- function(x, type = NULL) standardGeneric("nmll")
@@ -928,10 +900,25 @@ setMethod(
     length(unique(mll(x, type)))
   })
 
+setMethod(
+  f = "nmll",
+  signature(x = "genind"),
+  definition = function(x, type = NULL){
+    mlg(x, quiet = TRUE)
+  })
+
+setMethod(
+  f = "nmll",
+  signature(x = "genlight"),
+  definition = function(x, type = NULL){
+    mlg(x, quiet = TRUE)
+  })
+
 #==============================================================================#
 #' @export
 #' @rdname mll-method
-#' @aliases mll<-,genclone-method mll<-,snpclone-method
+#' @aliases mll<-,genclone-method 
+#'   mll<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "mll<-" <- function(x, value) standardGeneric("mll<-")
@@ -980,7 +967,8 @@ setMethod(
 #'   the MLGs.
 #' @return an object of the same type as x
 #' @rdname mll.reset-method
-#' @aliases mll.reset,genclone-method mll.reset,snpclone-method
+#' @aliases mll.reset,genclone-method 
+#'   mll.reset,snpclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
 #' @seealso \code{\link{mll}} \code{\link{mlg.table}} \code{\link{mll.custom}}
@@ -1055,7 +1043,8 @@ setMethod(
 #' 
 #' @return an object of the same type as x
 #' @rdname mll.custom
-#' @aliases mll.custom,genclone-method mll.custom,snpclone-method
+#' @aliases mll.custom,genclone-method 
+#'   mll.custom,snpclone-method
 #' @docType methods
 #' @author Zhian N. Kamvar
 #' @seealso \code{\link{mll}} \code{\link{mlg.table}}
@@ -1095,7 +1084,8 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.custom<-,genclone-method mll.custom<-,snpclone-method
+#' @aliases mll.custom<-,genclone-method 
+#'   mll.custom<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "mll.custom<-" <- function(x, set = TRUE, value) standardGeneric("mll.custom<-")
@@ -1120,7 +1110,8 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.levels,genclone-method mll.levels,snpclone-method
+#' @aliases mll.levels,genclone-method 
+#'   mll.levels,snpclone-method
 #' @docType methods
 #==============================================================================#
 mll.levels <- function(x, set = TRUE, value) standardGeneric("mll.levels")
@@ -1148,7 +1139,8 @@ setMethod(
 #==============================================================================#
 #' @export
 #' @rdname mll.custom
-#' @aliases mll.levels<-,genclone-method mll.levels<-,snpclone-method
+#' @aliases mll.levels<-,genclone-method 
+#'   mll.levels<-,snpclone-method
 #' @docType methods
 #==============================================================================#
 "mll.levels<-" <- function(x, set = TRUE, value) standardGeneric("mll.levels<-")
@@ -1257,8 +1249,10 @@ setMethod(
 #'   \code{\link{bruvo.dist}}
 #' @export
 #' @rdname mlg.filter
-#' @aliases mlg.filter,genclone-method mlg.filter,snpclone-method 
-#'   mlg.filter,genind-method mlg.filter,genlight-method
+#' @aliases mlg.filter,genclone-method 
+#'   mlg.filter,snpclone-method 
+#'   mlg.filter,genind-method 
+#'   mlg.filter,genlight-method
 #' @docType methods
 #' @examples 
 #' data(partial_clone)
@@ -1357,8 +1351,10 @@ setMethod(
 #' @export
 #' @rdname mlg.filter
 #' @param value the threshold at which genotypes should be collapsed.
-#' @aliases mlg.filter<-,genclone-method mlg.filter<-,genind-method 
-#'   mlg.filter<-,snpclone-method mlg.filter<-,genlight-method
+#' @aliases mlg.filter<-,genclone-method 
+#'   mlg.filter<-,genind-method 
+#'   mlg.filter<-,snpclone-method 
+#'   mlg.filter<-,genlight-method
 #' @docType methods
 #==============================================================================#
 "mlg.filter<-" <- function(pop, missing = "asis", memory = FALSE, 

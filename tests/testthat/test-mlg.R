@@ -11,6 +11,7 @@ aclone <- as.genclone(Aeut)
 atab   <- mlg.table(Aeut, plot = FALSE)
 ptab   <- mlg.table(partial_clone, plot = FALSE)
 ntab   <- mlg.table(nancycats, plot = FALSE)
+sim    <- adegenet::glSim(10, 1e2, ploidy = 2, parallel = FALSE)
 lu <- function(x) length(unique(x))
 
 test_that("multilocus genotype vector is same length as samples", {
@@ -69,9 +70,18 @@ test_that("multilocus genotype matrix can utilize strata", {
   expect_equal(nrow(pcont), 2)
 })
 
-test_that("mll works for genind objects", {
+test_that("mll and nmll works for genind objects", {
   expect_warning(atest <- mll(Aeut, "original"))
+  nAeut <- nmll(Aeut)
   expect_equal(atest, amlg)
+  expect_equal(nAeut, lu(amlg))
+})
+
+test_that("mll and nmll works for genlight objects", {
+  expect_warning(atest <- mll(sim, "original"))
+  nAeut <- nmll(sim)
+  expect_equal(atest, 1:10)
+  expect_equal(nAeut, 10)
 })
 
 test_that("mll can convert a numeric mlg slot to MLG", {
@@ -287,15 +297,25 @@ test_that("multilocus genotype filtering functions correctly", {
 
   # The different methods of passing distance should produce the same results
   adis <- diss.dist(missingno(Aeut, "mean", quiet=TRUE))
-  pdis <- diss.dist(missingno(partial_clone, "mean", quiet=TRUE))
-  ndis <- diss.dist(missingno(nancycats, "mean", quiet=TRUE))
+  suppressWarnings({
+    pdis <- diss.dist(missingno(partial_clone, "mean", quiet=TRUE))
+    ndis <- diss.dist(missingno(nancycats, "mean", quiet=TRUE))
+  })
 
-  expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis),  mlg.filter(Aeut, 0.3, missing="mean", distance=diss.dist))
-  expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis),  mlg.filter(Aeut, 0.3, missing="mean", distance="diss.dist"))
-  expect_equal(mlg.filter(nancycats, 0.3, missing="mean", distance=ndis),  mlg.filter(nancycats, 0.3, missing="mean", distance=diss.dist))
-  expect_equal(mlg.filter(nancycats, 0.3, missing="mean", distance=ndis),  mlg.filter(nancycats, 0.3, missing="mean", distance="diss.dist"))
-  expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis),  mlg.filter(partial_clone, 0.3, missing="mean", distance=diss.dist))
-  expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis),  mlg.filter(partial_clone, 0.3, missing="mean", distance="diss.dist"))
+  expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis), 
+               mlg.filter(Aeut, 0.3, missing="mean", distance=diss.dist))
+  expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis),  
+               mlg.filter(Aeut, 0.3, missing="mean", distance="diss.dist"))
+  suppressWarnings({
+    expect_equal(mlg.filter(nancycats, 0.3, missing="mean", distance=ndis), 
+                 mlg.filter(nancycats, 0.3, missing="mean", distance=diss.dist))
+    expect_equal(mlg.filter(nancycats, 0.3, missing="mean", distance=ndis), 
+                 mlg.filter(nancycats, 0.3, missing="mean", distance="diss.dist"))
+  })
+  expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis), 
+               mlg.filter(partial_clone, 0.3, missing="mean", distance=diss.dist))
+  expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis), 
+               mlg.filter(partial_clone, 0.3, missing="mean", distance="diss.dist"))
 })
 
 
