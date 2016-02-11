@@ -2,18 +2,19 @@
 % Please edit documentation in R/data_subset.r
 \name{popsub}
 \alias{popsub}
-\title{Subset a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object by population}
+\title{Subset data by population}
 \usage{
 popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
 }
 \arguments{
-\item{gid}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.}
+\item{gid}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
+\code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object.}
 
 \item{sublist}{a \code{vector} of population names or indexes that the user
-wishes to keep. Default to "ALL".}
+wishes to keep. Default to \code{"ALL"}.}
 
 \item{blacklist}{a \code{vector} of population names or indexes that the user
-wishes to discard. Default to \code{NULL}}
+wishes to discard. Default to \code{NULL}.}
 
 \item{mat}{a \code{matrix} object produced by \code{\link{mlg.table}} to be
 subsetted. If this is present, the subsetted matrix will be returned instead

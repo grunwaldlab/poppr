@@ -7,12 +7,13 @@
 recode_polyploids(poly, newploidy = FALSE, addzero = FALSE)
 }
 \arguments{
-\item{poly}{a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
+\item{poly}{a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or 
 \code{\linkS4class{genpop}} object that has a ploidy of > 2}
 
-\item{newploidy}{for genind or genclone objects: if \code{FALSE} (default), the user-defined ploidy will stay
-constant. if \code{TRUE}, the ploidy for each sample will be determined by
-the maximum ploidy observed for each genotype.}
+\item{newploidy}{for genind or genclone objects: if \code{FALSE} (default),
+the user-defined ploidy will stay constant. if \code{TRUE}, the ploidy for
+each sample will be determined by the maximum ploidy observed for each
+genotype.}
 
 \item{addzero}{add zeroes onto genind or genclone objects with uneven ploidy?
 if \code{TRUE}, objects with uneven ploidies will have zeroes appended to all
@@ -36,14 +37,16 @@ single locus per individual. See the examples for more details.
 }
 \details{
 The genind object has two caveats that make it difficult to work 
-  with polyploid data sets: \enumerate{\item ploidy must be constant
-  throughout the data set \item missing data is treated as "all-or-none"} In
-  an ideal world, polyploid genotypes would be just as unambiguous as
-  diploid or haploid genotypes. Unfortunately, the world we live in is far
-  from ideal and a genotype of AB in a tetraploid organism could be AAAB,
-  AABB, or ABBB. In order to get polyploid data in to \pkg{adegenet} or
-  \pkg{poppr}, we must code all loci to have the same number of allelic
-  states as the ploidy or largest observed heterozygote (if ploidy is
+  with polyploid data sets: 
+  \enumerate{
+    \item ploidy must be constant throughout the data set 
+    \item missing data is treated as "all-or-none"
+  } In an ideal world, polyploid genotypes would be just as unambiguous as 
+  diploid or haploid genotypes. Unfortunately, the world we live in is far 
+  from ideal and a genotype of AB in a tetraploid organism could be AAAB, 
+  AABB, or ABBB. In order to get polyploid data in to \pkg{adegenet} or 
+  \pkg{poppr}, we must code all loci to have the same number of allelic 
+  states as the ploidy or largest observed heterozygote (if ploidy is 
   unknown). The way to do this is to insert zeroes to pad the alleles. So, to
   import two genotypes of:
 

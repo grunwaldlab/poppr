@@ -45,8 +45,8 @@
 #' 
 #' @name mlg
 #'   
-#' @param gid a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
-#'   object.
+#' @param gid a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
+#'   \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object.
 #'  
 #' @param strata a formula specifying the strata at which computation is to be
 #'   performed.
@@ -94,8 +94,13 @@
 #' \subsection{mlg.id}{ a list of multilocus genotypes with the associated
 #' individual names per MLG. }
 #' 
-#' @seealso \code{\link[vegan]{diversity}} \code{\link{popsub}}
-#' @author Zhian N. Kamvar, Jonah C. Brooks
+#' @seealso \code{\link[vegan]{diversity}} 
+#'  \code{\link{popsub}}
+#'  \code{\link{mll}}
+#'  \code{\link{mlg.filter}}
+#'  \code{\link{mll.custom}}
+#'  
+#' @author Zhian N. Kamvar
 #' @examples
 #' 
 #' # Load the data set
@@ -177,7 +182,7 @@ mlg <- function(gid, quiet=FALSE){
   if (!is(gid, "genlight") & !is(gid, "genind")){
     stop(paste(substitute(gid), "is not a genind or genlight object"))
   }
-  if ((is.snpclone(gid) | is.genclone(gid)) && length(gid@mlg) == nrow(gid@tab)){
+  if (is.clone(gid) && length(gid@mlg) == nrow(gid@tab)){
     out <- length(unique(gid@mlg[]))
   } else {
     if (is(gid, "genlight")) return(nInd(gid))
@@ -204,7 +209,9 @@ mlg <- function(gid, quiet=FALSE){
 #' 
 #' @export
 #==============================================================================#
-mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE, quiet = FALSE){  
+mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, 
+                      mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE, 
+                      quiet = FALSE){  
   if (!is.genind(gid) & !is(gid, "snpclone")){
     stop("This function requires a genind object.")
   }
@@ -253,8 +260,6 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, mlg
       # } else {
     }
     print(mlg_barplot(mlgtab) + 
-            # theme_classic() %+replace%
-            # theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) +
             myTheme + 
             labs(title = paste("Data:", the_data, "\nN =",
                                sum(mlgtab), "MLG =", ncol(mlgtab))))
@@ -292,7 +297,7 @@ mlg.vector <- function(gid, reset = FALSE){
   # Step 4: evaluate strings in sorted vector and increment to the respective 
   # # index vector each time a unique string occurs.
   # Step 4: Rearrange index vector with the indices from the original vector.
-  if (!reset && (is.snpclone(gid) || is.genclone(gid)) && length(gid@mlg) == nInd(gid)){
+  if (!reset && is.clone(gid) && length(gid@mlg) == nInd(gid)){
     return(gid@mlg[])
   }
   if (is(gid, "genlight")){

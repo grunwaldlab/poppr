@@ -22,13 +22,18 @@ of loci.}
 Pairwise distances between individuals present in the genind object.
 }
 \description{
-diss.dist uses the same discreet dissimilarity matrix utilized by the index 
+diss.dist uses the same discrete dissimilarity matrix utilized by the index 
 of association (see \code{\link{ia}} for details). By default, it returns a
 distance reflecting the number of allelic differences between two
 individuals. When \code{percent = TRUE}, it returns a ratio of the number of
 observed differences by the number of possible differences. Eg. two
 individuals who share half of the same alleles will have a distance of 0.5.
 This function can analyze distances for any marker system.
+}
+\details{
+The distance calculated here is quite simple and goes by many names,
+  depending on its application. The most familiar name might be the Hamming
+  distance, or the number of differences between two strings.
 }
 \note{
 When \code{percent = TRUE}, this is exactly the same as
@@ -49,5 +54,9 @@ mean(diss.dist(Aeut))
 }
 \author{
 Zhian N. Kamvar
+}
+\seealso{
+\code{\link{prevosti.dist}},
+   \code{\link{bitwise.dist}} (for SNP data)
 }
 

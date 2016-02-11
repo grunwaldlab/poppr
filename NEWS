@@ -13,6 +13,14 @@ MISC
 * `mlg.filter()` now defaults to using `diss.dist()`
 * default threshold for `filter_stats()` is now 1e+6
 * `mlg.filter()` now returns a list instead of a pairlist
+* the "hist" argument for `poppr()` is now deprecated in favor of "plot"
+* minor documentation improvements
+
+BUG FIX
+------------
+
+* When supplied an object with no strata, `clonecorrect()` will default to
+  `strata = NA`.
 
 poppr 2.1.0
 ===========

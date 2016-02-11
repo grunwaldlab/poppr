@@ -39,6 +39,8 @@ test_that("clone correction works for specified levels and throws errors", {
   expect_error(clonecorrect(1), "1 is not")
   expect_error(clonecorrect(aclone, ~field/sample), "field/sample") 
   expect_error(clonecorrect(aclone, 1L:4L), "NA")
+  strata(ac) <- NULL
+  expect_warning(clonecorrect(ac), "Strata is not set for ac")
 })
 
 test_that("multilocus genotype matrix matches mlg.vector and data", {

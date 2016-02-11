@@ -1169,8 +1169,8 @@ setMethod(
 #' 
 #' Create a vector of multilocus genotype indices filtered by minimum distance.
 #'   
-#' @param pop a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}} 
-#'   object.
+#' @param pop a \code{\linkS4class{genclone}}, \code{\linkS4class{snpclone}}, or
+#'   \code{\linkS4class{genind}} object.
 #' @param threshold the desired minimum distance between distinct genotypes. 
 #'   Defaults to 0, which will only merge identical genotypes
 #' @param missing any method to be used by \code{\link{missingno}}: "mean", 
@@ -1243,6 +1243,10 @@ setMethod(
 #' @seealso \code{\link{filter_stats}} 
 #'   \code{\link{cutoff_predictor}} 
 #'   \code{\link{mll}}
+#'   \code{\link{genclone}}
+#'   \code{\link{snpclone}}
+#'   \code{\link{diss.dist}}
+#'   \code{\link{bruvo.dist}}
 #' @export
 #' @rdname mlg.filter
 #' @aliases mlg.filter,genclone-method 
