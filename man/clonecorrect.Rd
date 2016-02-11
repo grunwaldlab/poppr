@@ -8,14 +8,15 @@ object.}
 clonecorrect(pop, strata = 1, combine = FALSE, keep = 1)
 }
 \arguments{
-\item{pop}{a \code{\link{genind}} object}
+\item{pop}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, or
+\code{\linkS4class{snpclone}} object}
 
-\item{strata}{a hierarchical formula or numeric vector. This will define the columns of the 
-data frame in the strata slot to use.}
+\item{strata}{a hierarchical formula or numeric vector. This will define the
+columns of the data frame in the strata slot to use.}
 
-\item{combine}{\code{logical}. When set to TRUE, the strata will be 
-combined to create a new population for the clone-corrected genind or 
-genclone object.}
+\item{combine}{\code{logical}. When set to TRUE, the strata will be combined
+to create a new population for the clone-corrected genind or genclone
+object.}
 
 \item{keep}{\code{integer}. When \code{combine} is set to \code{FALSE}, you 
 can use this flag to choose the levels of your population strata. For 
@@ -24,8 +25,8 @@ example: if your clone correction strata is set to "Pop", "Subpop", and
 can set \code{keep = c(1,3)}.}
 }
 \value{
-a clone corrected \code{\linkS4class{genclone}} or
-  \code{\linkS4class{genind}} object.
+a clone corrected \code{\linkS4class{genclone}}, 
+  \code{\linkS4class{snpclone}}, or \code{\linkS4class{genind}} object.
 }
 \description{
 This function removes any duplicated multilocus genotypes from any specified 

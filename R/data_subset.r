@@ -48,14 +48,15 @@
 #' This function removes any duplicated multilocus genotypes from any specified 
 #' population strata.
 #' 
-#' @param pop a \code{\link{genind}} object
+#' @param pop a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}}, or
+#'   \code{\linkS4class{snpclone}} object
 #'   
-#' @param strata a hierarchical formula or numeric vector. This will define the columns of the 
-#'   data frame in the strata slot to use. 
+#' @param strata a hierarchical formula or numeric vector. This will define the
+#'   columns of the data frame in the strata slot to use.
 #'   
-#' @param combine \code{logical}. When set to TRUE, the strata will be 
-#'   combined to create a new population for the clone-corrected genind or 
-#'   genclone object.
+#' @param combine \code{logical}. When set to TRUE, the strata will be combined
+#'   to create a new population for the clone-corrected genind or genclone
+#'   object.
 #'   
 #' @param keep \code{integer}. When \code{combine} is set to \code{FALSE}, you 
 #'   can use this flag to choose the levels of your population strata. For 
@@ -63,12 +64,12 @@
 #'   "Year", and you want to analyze your populations with respect to year, you 
 #'   can set \code{keep = c(1,3)}.
 #'   
-#' @return a clone corrected \code{\linkS4class{genclone}} or
-#'   \code{\linkS4class{genind}} object.
+#' @return a clone corrected \code{\linkS4class{genclone}}, 
+#'   \code{\linkS4class{snpclone}}, or \code{\linkS4class{genind}} object.
 #'   
 #' @details This function will clone correct based on the stratification 
 #'   provided. To clone correct indiscriminately of population structure, set 
-#'   \code{strata = NA}. 
+#'   \code{strata = NA}.
 #'   
 #'   
 #' @export
@@ -199,18 +200,19 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 
 
 #==============================================================================#
-#' Subset a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object by population
+#' Subset data by population
 #' 
 #' Create a new dataset with specified populations or exclude specified
 #' populations from the dataset.
 #' 
-#' @param gid a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
+#' @param gid a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
+#'   \code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object.
 #' 
 #' @param sublist a \code{vector} of population names or indexes that the user
-#' wishes to keep. Default to "ALL".
+#' wishes to keep. Default to \code{"ALL"}.
 #'
 #' @param blacklist a \code{vector} of population names or indexes that the user
-#' wishes to discard. Default to \code{NULL}
+#' wishes to discard. Default to \code{NULL}.
 #'
 #' @param mat a \code{matrix} object produced by \code{\link{mlg.table}} to be
 #' subsetted. If this is present, the subsetted matrix will be returned instead
@@ -247,7 +249,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     stop("popsub requires a genind or genlight object\n")
   }
   if (is.null(pop(gid))){
-    if(sublist[1] != "ALL")
+    if (sublist[1] != "ALL")
       warning("No population structure. Subsetting not taking place.")
     return(gid)
   }
@@ -326,9 +328,10 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 }
 
 #==============================================================================#
-#'How to deal with missing data in a genind object.
+#' Treat missing data
 #'
-#'missingno gives the user four options to deal with missing data.
+#' missingno gives the user four options to deal with missing data: remove loci,
+#' remove samples, replace with zeroes, or replace with average allele counts.
 #'
 #'@param pop a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
 #'  object.
@@ -355,18 +358,24 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #'  Using this function with polyploid data (where missing data is coded as "0")
 #'  may give spurious results.
 #'  
-#'  \subsection{Treatment types}{ \itemize{ \item{\code{"ignore"} - does not 
-#'  remove or replace missing data.} \item{\code{"loci"} - removes all loci 
-#'  containing missing data in the entire data set. } \item{\code{"genotype"} - 
-#'  removes any genotypes/isolates/individuals with missing data.} 
+#'  \subsection{Treatment types}{ 
+#'  \itemize{ 
+#'  \item{\code{"ignore"} - does not remove or replace missing data.} 
+#'  \item{\code{"loci"} - removes all loci containing missing data in the entire
+#'  data set. }
+#'  \item{\code{"genotype"} - removes any genotypes/isolates/individuals with
+#'  missing data.}
 #'  \item{\code{"mean"} - replaces all NA's with the mean of the alleles for the
-#'  entire data set.} \item{\code{"zero"} or \code{"0"} - replaces all NA's with
-#'  "0". Introduces more diversity.}}}
+#'  entire data set.} 
+#'  \item{\code{"zero"} or \code{"0"} - replaces all NA's with "0". Introduces
+#'  more diversity.}
+#'  }
+#'  }
 #'@return a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
 #'  
 #'@note \emph{"wild missingno appeared!"}
 #'  
-#'@seealso \code{\link{tab}}, \code{\link{poppr}}, \code{\link{poppr.amova}},
+#'@seealso \code{\link[adegenet]{tab}}, \code{\link{poppr}}, \code{\link{poppr.amova}},
 #'  \code{\link{nei.dist}}, \code{\link{aboot}}
 #'  
 #'@export
@@ -488,212 +497,6 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
   return(pop)
 }
 
-# #==============================================================================#
-# #~ Split a or combine items within a data frame in \code{\link{genind}} objects (DEPRECATED).
-# #~
-# #~ Often, one way a lot of file formats fail is that they do not allow multiple
-# #~ population hierarchies. This can be circumvented, however, by coding all of
-# #~ the hierarchies in one string in the input file with a common separator (eg.
-# #~ "_"). \code{splitcombine} will be able to recognise those separators and
-# #~ create a data frame of all the population structures for whatever sub-setting
-# #~ you might need. 
-# #~
-# #~ @param pop a \code{\link{genind}} object.
-# #~
-# #~ @param method an \code{integer}, 1 for splitting, 2 for combining.
-# #~
-# #~ @param dfname the name of the data frame containing the population structure.
-# #~ for the splitting method, the combined population structure must be in the
-# #~ first column. 
-# #~
-# #~ @param sep The separator used for separating or combining the data. See note.
-# #~
-# #~ @param hier a \code{vector} containing the population hierarchy you wish to
-# #~ split or combine. 
-# #~
-# #~ @param setPopulation \code{logical}. if \code{TRUE}, the population of the
-# #~ resulting genind object will be that of the highest population structure
-# #~ (split method) or the combined populations (combine method).
-# #~
-# #~ @param fixed \code{logical}. An argument to be passed onto
-# #~ \code{\link{strsplit}}. If \code{TRUE}, \code{sep} must match exactly to the
-# #~ populations for the split method. 
-# #~
-# #~ @return a \code{\link{genind}} object with a modified data frame in the
-# #~ \code{\link{other}} slot.
-# #~
-# #~ @note 
-# #~ This function has been deprecated and replaced by functions like
-# #~ \code{\link{splitStrata}}. Please consider using the
-# #~ \code{\linkS4class{genclone}} object for storing hierarchies. 
-# #~
-# #~ The separator
-# #~ field is sensitive to regular expressions. If you do not know what those are,
-# #~ please use the default underscore to separate your populations. Use \code{fixed
-# #~ = TRUE} to ignore regular expressions. If you do not set the \code{hier} flag
-# #~ for the split method, your new data frame will have the names "comb", "h1", "h2"
-# #~ and so on; for the combine method, your data frame will return the first column
-# #~ of your data frame.
-# #~
-# #~ @export
-# #~ @author Zhian N. Kamvar
-# #~ @examples
-# #~ \dontrun{
-# #~ # Method 1: Splitting.
-# #~ Aeut <- read.genalex(system.file("files/rootrot.csv", package="poppr"))
-# #~ 
-# #~ # We have 19 different "populations", but really, there is a hierarchy.
-# #~ popNames(Aeut)
-# #~ 
-# #~ # Let's split them up. The default data frame from read.genalex is the same
-# #~ # as the default for this function. 
-# #~ Aeut <- splitcombine(Aeut, hier=c("Pop", "Subpop"))
-# #~ 
-# #~ # Much better!
-# #~ popNames(Aeut)
-# #~
-# #~ # Method 2: Combining.
-# #~ 
-# #~ data(H3N2)
-# #~ # Create a new data set combining the population factors of year and country
-# #~ H.comb <- splitcombine(H3N2, method=2, dfname="x", hier=c("year", "country"))
-# #~ 
-# #~ # Checking to make sure they were actually combined.
-# #~ utils::head(H.comb$other$x$year_country)
-# #~ # Creating new data frame in the object to mess around with. 
-# #~ H.comb$other$year_country <- data.frame(H.comb$other$x$year_country)
-# #~ 
-# #~ # Splitting those factors into their original components and setting the
-# #~ # population to year.
-# #~ H.comb <- splitcombine(H.comb, method=1, dfname="year_country", hier=c("year", "country"))
-# #~ }
-# #==============================================================================#
-# splitcombine <- function(pop, method=1, dfname="population_hierarchy", sep="_", hier=1, setPopulation=TRUE, fixed=TRUE){
-  
-#   # As this function is deprecated, the following lines will attempt to give the
-#   # user equivalent code in poppr >v.1.1.0 
-#   ##########
-#   sccall <- substitute(pop)
-#   depmsg <- paste0("Use:\n'", sccall, " <- as.genclone(", sccall, ", hier = ")
-#   if (method == 1){
-#     newhier <- paste0("other(", sccall, ")$", dfname, "[1]")
-#     if (!is.numeric(hier)){
-#       newform <- paste0("~", paste(hier, collapse = "/"))
-#       sugg <- paste0(newhier, "); splitStrata(", sccall, ") <- ", newform, "'\n")
-#     } else {
-#       sugg <- paste0(newhier, ")' and 'splitStrata'\n")
-#     }
-#   } else {
-#     newhier <- paste0("other(", sccall, ")$", dfname)
-#     if (!is.numeric(hier)){
-#       newform <- paste0("~", paste(hier, collapse = "/"))
-#       sugg <- paste0(newhier, "); setPop(", sccall, ") <- ", newform, "'\n")
-#     } else {
-#       sugg <- paste0(newhier, ")' and 'setPop'\n") 
-#     }
-#   }
-#   dmsg <- c("'splitcombine' is deprecated.\n\n",
-#             paste0(depmsg, sugg), "\n",
-#             "See help(\"genclone\"), help(\"setPop\"), ",
-#             "and help(\"splitStrata\") for details.")
-#   .Deprecated("genclone", package = "poppr", dmsg)
-#   ###########
-  
-#   if (!is.genind(pop)){
-#     stop(paste(paste(substitute(pop), collapse=""), "is not a genind object.\n"))
-#   }
-#   if (!is.data.frame(pop$other[[dfname]])){
-#     stop(paste("There is no data frame in ",paste(substitute(pop), collapse=""), "@other called ",dfname,".\n", sep=""))
-#   }
-#   METHODS = c("Split", "Combine")
-#   if (all((1:2)!=method)) {
-#     cat("1 = Split\n")
-#     cat("2 = Combine\n")
-#     cat("Select an integer (1 or 2): ")
-#     method <- as.integer(readLines(n = 1))
-#   }
-#   if (all((1:2)!=method)) (stop ("Non convenient method number"))
-#   # Splitting !
-#   if(method == 1){
-#     # Remember, this acts on the first column of the data frame.
-#     # It will split the population factors in that data frame by sep. 
-#     df <- pop_splitter(pop$other[[dfname]], sep=sep)
-    
-#     # This makes sure that the length of the given hierarchy is the same as the
-#     # hierarchy in the original population factor. It's renaming the original
-#     # factor the population hierarchy separated by sep.
-#     # eg. df: Pop_Subpop_Year, Pop, Subpop, Year
-#     if(length(df) - 1 == length(hier)){
-#       names(df) <- c(paste(hier, collapse=sep), hier)
-#     }
-#     # In the case that the number of columns added to the new df is the same
-#     # as the number of hierarchies specified.
-#     else if(length(df) - length(hier) == length(pop$other[[dfname]]) ){
-#       names(df)[(length(df) - length(hier) + 1):length(df)] <- hier
-#     }
-
-#     # Checking to see if there was only one column in the original data frame
-#     # This is necessary to avoid overwriting data.
-#     if(length(pop$other[[dfname]] == 1)){
-#       pop$other[[dfname]] <- df
-#     }
-    
-#     # If there are other columns in the data frame, we check to see if any of
-#     # the names in the new data frame are the same. 
-#     else if(any(names(pop$other[[dfname]]) %in% names(df[-1]))){
-#       # Removing the combined column. It will remain the same.
-#       df <- df[-1]
-#       # Gathering the index of names that are the same as the split hierarchy.
-#       dfcols <- which(names(pop$other[[dfname]]) %in% names(df))
-      
-#       # All the names are equal, so we replace those columns with the newly
-#       # subsetted columns.
-#       if(length(names(df)) == length(dfcols))
-#         pop$other[[dfname]][dfcols] <- df
-      
-#       # Not all columns match, so you replace the ones that do and then bind
-#       # the new ones.
-#       else{
-#         popothernames <- which(names(df) %in% names(pop$other[[dfname]][dfcols]))
-#         pop$other[[dfname]][dfcols] <- df[popothernames]
-#         pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-dfcols])
-#       }
-#     }
-    
-#     # If there are no names in the new data frame that match the original,
-#     # simply tack the new data frame on to the end. These will have the names
-#     # h1, h2, h3, etc.
-#     else{  
-#       pop$other[[dfname]] <- cbind(pop$other[[dfname]], df[-1])
-#     }
-    
-#     # Set the population to the highest level of the hierarchy.
-#     if(setPopulation == TRUE){
-#       hier <- ifelse(is.numeric(hier), as.character(hier), hier)
-#       pop(pop) <- pop$other[[dfname]][[hier[1]]]
-#       names(popNames(pop)) <- levels(pop$pop)
-#     }
-#     return(pop)
-#   }
-  
-#   # Combining !
-#   else if(method == 2){
-#     newdf <- pop_combiner(pop$other[[dfname]], hier=hier, sep=sep)
-#     if(all(is.na(newdf))){
-#       stop(paste("\n\nError in combining population factors.\nCheck your hier flag and make sure that the columns",paste(hier, collapse=" and "),
-#                  "exist within the data frame called",dfname,
-#                  "in the @other slot of your genind object.\n\n"))
-#     }
-#     # Combining the hierarchy. This will no longer give you numbers as names,
-#     # rather it will return the names.
-#     pop$other[[dfname]][[paste(names(pop$other[[dfname]][hier]), collapse=sep)]] <- newdf
-#     if(setPopulation == TRUE){
-#       pop(pop) <- newdf
-#       names(popNames(pop)) <- levels(pop$pop)
-#     }
-#     return(pop)
-#   }
-# }
 #==============================================================================#
 #' Remove all non-phylogentically informative loci
 #' 
@@ -785,18 +588,6 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
   if (pop@type == "PA"){
     # cutoff applies to too many or too few typed individuals in AFLP cases.
     glocivals <- apply(tab(pop), 2, sum) %in% min_ind:(nInd(pop) - min_ind)
-    # if(!isTRUE(quiet)){
-    #   if(all(locivals == TRUE)){
-    #     message("No sites found with fewer than ", min_ind, 
-    #             " different samples.")
-    #   }
-    #   else{
-    #     message(sum(!locivals), "uninformative", 
-    #         ifelse(sum(!locivals) > 1, "loci", "locus"), "found:", 
-    #         paste(locNames(pop)[!locivals], collapse = ", "))
-    #   }
-    # }
-    # return(pop[, locivals])
   } else {
     genloc    <- as.loci(pop)
     the_loci  <- attr(genloc, "locicol")
@@ -857,11 +648,12 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #' allele frequencies are coded based on the number of alleles observed at a 
 #' single locus per individual. See the examples for more details.
 #' 
-#' @param poly a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
+#' @param poly a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or 
 #'   \code{\linkS4class{genpop}} object that has a ploidy of > 2
-#' @param newploidy for genind or genclone objects: if \code{FALSE} (default), the user-defined ploidy will stay
-#'   constant. if \code{TRUE}, the ploidy for each sample will be determined by
-#'   the maximum ploidy observed for each genotype.
+#' @param newploidy for genind or genclone objects: if \code{FALSE} (default),
+#'   the user-defined ploidy will stay constant. if \code{TRUE}, the ploidy for
+#'   each sample will be determined by the maximum ploidy observed for each
+#'   genotype.
 #'   
 #' @param addzero add zeroes onto genind or genclone objects with uneven ploidy?
 #' if \code{TRUE}, objects with uneven ploidies will have zeroes appended to all
@@ -871,14 +663,16 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
 #'   \code{\linkS4class{genpop}} object.
 #'   
 #' @details The genind object has two caveats that make it difficult to work 
-#'   with polyploid data sets: \enumerate{\item ploidy must be constant
-#'   throughout the data set \item missing data is treated as "all-or-none"} In
-#'   an ideal world, polyploid genotypes would be just as unambiguous as
-#'   diploid or haploid genotypes. Unfortunately, the world we live in is far
-#'   from ideal and a genotype of AB in a tetraploid organism could be AAAB,
-#'   AABB, or ABBB. In order to get polyploid data in to \pkg{adegenet} or
-#'   \pkg{poppr}, we must code all loci to have the same number of allelic
-#'   states as the ploidy or largest observed heterozygote (if ploidy is
+#'   with polyploid data sets: 
+#'   \enumerate{
+#'     \item ploidy must be constant throughout the data set 
+#'     \item missing data is treated as "all-or-none"
+#'   } In an ideal world, polyploid genotypes would be just as unambiguous as 
+#'   diploid or haploid genotypes. Unfortunately, the world we live in is far 
+#'   from ideal and a genotype of AB in a tetraploid organism could be AAAB, 
+#'   AABB, or ABBB. In order to get polyploid data in to \pkg{adegenet} or 
+#'   \pkg{poppr}, we must code all loci to have the same number of allelic 
+#'   states as the ploidy or largest observed heterozygote (if ploidy is 
 #'   unknown). The way to do this is to insert zeroes to pad the alleles. So, to
 #'   import two genotypes of:
 #'
@@ -974,7 +768,8 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
   non_zero_cols_vector <- unlist(non_zero_cols_list, use.names = FALSE)
 
   poly@loc.fac   <- fac[non_zero_cols_vector]
-  poly@loc.n.all  <- stats::setNames(tabulate(locFac(poly), nbins = nLoc(poly)), locNames(poly))
+  poly@loc.n.all <- stats::setNames(tabulate(locFac(poly), nbins = nLoc(poly)), 
+                                    locNames(poly))
   poly@tab       <- MAT[, non_zero_cols_vector, drop = FALSE]
   poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list,
                            SIMPLIFY = FALSE)

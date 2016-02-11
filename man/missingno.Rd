@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_subset.r
 \name{missingno}
 \alias{missingno}
-\title{How to deal with missing data in a genind object.}
+\title{Treat missing data}
 \usage{
 missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE,
   freq = FALSE)
@@ -30,7 +30,8 @@ instead.}
 a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} object.
 }
 \description{
-missingno gives the user four options to deal with missing data.
+missingno gives the user four options to deal with missing data: remove loci,
+remove samples, replace with zeroes, or replace with average allele counts.
 }
 \details{
 These methods provide a way to deal with systematic missing data and 
@@ -40,13 +41,19 @@ These methods provide a way to deal with systematic missing data and
  Using this function with polyploid data (where missing data is coded as "0")
  may give spurious results.
  
- \subsection{Treatment types}{ \itemize{ \item{\code{"ignore"} - does not 
- remove or replace missing data.} \item{\code{"loci"} - removes all loci 
- containing missing data in the entire data set. } \item{\code{"genotype"} - 
- removes any genotypes/isolates/individuals with missing data.} 
+ \subsection{Treatment types}{ 
+ \itemize{ 
+ \item{\code{"ignore"} - does not remove or replace missing data.} 
+ \item{\code{"loci"} - removes all loci containing missing data in the entire
+ data set. }
+ \item{\code{"genotype"} - removes any genotypes/isolates/individuals with
+ missing data.}
  \item{\code{"mean"} - replaces all NA's with the mean of the alleles for the
- entire data set.} \item{\code{"zero"} or \code{"0"} - replaces all NA's with
- "0". Introduces more diversity.}}}
+ entire data set.} 
+ \item{\code{"zero"} or \code{"0"} - replaces all NA's with "0". Introduces
+ more diversity.}
+ }
+ }
 }
 \note{
 \emph{"wild missingno appeared!"}
@@ -84,7 +91,7 @@ nancy.mean <- missingno(nancycats, type = "mean")
 Zhian N. Kamvar
 }
 \seealso{
-\code{\link{tab}}, \code{\link{poppr}}, \code{\link{poppr.amova}},
+\code{\link[adegenet]{tab}}, \code{\link{poppr}}, \code{\link{poppr.amova}},
  \code{\link{nei.dist}}, \code{\link{aboot}}
 }
 

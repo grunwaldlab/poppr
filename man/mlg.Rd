@@ -22,8 +22,8 @@ mlg.crosspop(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
 mlg.id(gid)
 }
 \arguments{
-\item{gid}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
-object.}
+\item{gid}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
+\code{\linkS4class{genlight}}, or \code{\linkS4class{snpclone}} object.}
 
 \item{quiet}{\code{Logical}. If FALSE, progress of functions will be printed 
 to the screen.}
@@ -162,9 +162,13 @@ new.H <- H3N2[H.vec \%in\% inds, ]
 }
 }
 \author{
-Zhian N. Kamvar, Jonah C. Brooks
+Zhian N. Kamvar
 }
 \seealso{
-\code{\link[vegan]{diversity}} \code{\link{popsub}}
+\code{\link[vegan]{diversity}} 
+ \code{\link{popsub}}
+ \code{\link{mll}}
+ \code{\link{mlg.filter}}
+ \code{\link{mll.custom}}
 }
 
