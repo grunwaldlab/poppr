@@ -121,7 +121,9 @@ details).
 This table is intended to be a first look into the dynamics of 
   mutlilocus genotype diversity. Many of the statistics (except for the the 
   index of association) are simply based on counts of multilocus genotypes 
-  and do not take into account the actual allelic states. 
+  and do not take into account the actual allelic states.
+  \strong{Descriptions of the statistics can be found in the Algorithms and
+  Equations vignette}: \code{vignette("algo", package = "poppr")}.
   \subsection{sampling}{The sampling procedure is explicitly for testing the
   index of association. None of the other diversity statistics (H, G, lambda,
   E.5) are tested with this sampling due to the differing data types. To
