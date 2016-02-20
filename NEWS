@@ -15,6 +15,7 @@ MISC
 * `mlg.filter()` now returns a list instead of a pairlist
 * the "hist" argument for `poppr()` is now deprecated in favor of "plot"
 * minor documentation improvements
+* the show method for snpclone objects now looks distinct from genlight
 
 BUG FIX
 ------------
