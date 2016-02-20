@@ -101,6 +101,7 @@ test_that("poppr skips over sample sizes less than three", {
   expect_is(plt, "popprtable")
   expect_equivalent(signif(plt$Ia, 3), c(rep(NA, 4), 0.167))
   expect_equivalent(signif(plt$rbarD, 3), c(rep(NA, 4), 0.0195))
+  expect_output(print(plt, digits = 2), "0.69")
 })
 
 test_that("poppr can produce output from input file", {
