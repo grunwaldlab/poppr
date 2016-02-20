@@ -307,6 +307,12 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
                   plot = TRUE, hist = TRUE, index = "rbarD", minsamp = 10, 
                   legend = FALSE, ...){
 
+  if (inherits(dat, c("genlight", "snpclone"))){
+    msg <- "The poppr function will not work with genlight or snpclone objects"
+    msg <- paste0(msg, "\nIf you want to calculate genotypic diversity, use ",
+                  "the function diversity_table().")
+    stop(msg)
+  }
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
                     clonecorrect = clonecorrect, strata = strata,
                     keep = keep, quiet = TRUE)  
@@ -479,8 +485,8 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
 #' }
 #==============================================================================# 
 poppr.all <- function(filelist, ...){
-	result <- NULL
-	for(a in seq(length(filelist))){
+  result <- NULL
+  for(a in seq(length(filelist))){
     cat(" \\    \n")
     input <- filelist[[a]]
     if (is.genind(input)){
@@ -496,9 +502,9 @@ poppr.all <- function(filelist, ...){
     cat(file, "\n /    \n")
     res      <- poppr(input, ...)
     res$File <- file
-		result   <- rbind(result, res)
-	}
-	return(result)
+    result   <- rbind(result, res)
+  }
+  return(result)
 }
 #==============================================================================#
 #' Index of Association
