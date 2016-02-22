@@ -25,6 +25,14 @@ test_that("A genclone object contains a genind object", {
 	expect_identical(pc@mlg[], mlg.vector(partial_clone))
 })
 
+test_that("A genclone object is a valid object", {
+  skip_on_cran()
+  expect_true(validObject(pc))
+  pcno <- pc
+  pcno@mlg <- 1:26
+  expect_error(validObject(pcno), "invalid class")
+})
+
 test_that("Strata methods work for genclone objects.", {
   
   expect_equal(length(strata(agc)), 3)

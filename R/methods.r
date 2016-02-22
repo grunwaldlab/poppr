@@ -350,31 +350,28 @@ setMethod(
   f = "show", 
   signature("snpclone"),
   definition = function(object){
-    callNextMethod()
-    cat(" // snpclone contents ---\n")
-#     if (length(object@hierarchy) > 0){
-#       hiernames <- names(object@hierarchy)
-#       hierlen <- length(hiernames)
-#       nameshow <- ifelse(hierlen > 6, 
-#                          c(utils::head(hiernames, 3), "...", utils::tail(hiernames, 3)), 
-#                          hiernames)
-#       nameshow <- paste(nameshow, collapse = ", ")
-#       cat(" @hierarchy:", "a data frame with", hierlen, 
-#           "levels: (", nameshow, ")\n")
-#     }
+    y <- utils::capture.output(callNextMethod())
+    y <- gsub("GENLIGHT", "SNPCLONE", y)
+    y <- gsub("/", "|", y)
+    genspot <- grepl("@gen", y)
+    
     the_type <- visible(object@mlg)
     mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
-    cat("   @mlg:", length(unique(object@mlg[])), mlgtype)
+
+    msg <- paste("   @mlg:", length(unique(object@mlg[])), mlgtype)
     if (the_type == "contracted"){
       thresh <- round(cutoff(object@mlg)["contracted"], 3)
       algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
       dist <- distname(object@mlg)
       if (!is.character(dist)){
-        dist <- paste(utils::capture.output(dist), collapse = "")        
+        dist <- paste0(utils::capture.output(dist), collapse = "")
       }
-      cat(" (", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]", sep = "")
+      msg <- paste0(msg, "\n         ",
+                    "(", thresh, ") [t], (", dist, ") [d], (", algo, ") [a]")
     }
+    y[genspot] <- paste(y[genspot], msg, sep = "\n")
+    cat(y, sep = "\n")
   }
 )
 

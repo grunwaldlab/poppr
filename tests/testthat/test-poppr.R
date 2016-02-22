@@ -4,6 +4,8 @@ data(Aeut, package = "poppr")
 data(partial_clone, package = "poppr")
 strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 A.tab <- poppr(Aeut, quiet = TRUE)
+afile <- system.file("files/rootrot.csv", package = "poppr")
+sims <- system.file("files/simulated.dat", package = "poppr")
 
 Aeut_comparison <- structure(list(Pop = structure(1:3, 
     .Label = c("Athena", "Mt. Vernon", "Total"), 
@@ -101,14 +103,18 @@ test_that("poppr skips over sample sizes less than three", {
   expect_is(plt, "popprtable")
   expect_equivalent(signif(plt$Ia, 3), c(rep(NA, 4), 0.167))
   expect_equivalent(signif(plt$rbarD, 3), c(rep(NA, 4), 0.0195))
+  expect_output(print(plt, digits = 2), "0.69")
 })
 
 test_that("poppr can produce output from input file", {
   skip_on_cran()
-  afile <- system.file("files/rootrot.csv", package = "poppr")
-  sims <- system.file("files/simulated.dat", package = "poppr")
   expect_output(out <- poppr(afile, legend = TRUE), "Simpson")
   expect_output(outs <- poppr(sims, legend = TRUE), "Simpson")
   expect_is(out, "popprtable")
   expect_is(outs, "popprtable")
+})
+
+test_that("poppr.all works on list of files", {
+  skip_on_cran()
+  expect_output(out <- poppr.all(list(afile, pc = partial_clone)), " | File: rootrot.csv")
 })

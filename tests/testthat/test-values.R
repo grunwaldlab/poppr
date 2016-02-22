@@ -158,6 +158,7 @@ test_that("ia and pair.ia return same values", {
   skip_on_cran()
   data(partial_clone)
   pc_pair <- pair.ia(partial_clone, plot = FALSE, quiet = TRUE)
+  expect_output(pc_pair, "Locus_1:Locus_2")
   
   # Randomly sample two loci
   set.seed(9001)
