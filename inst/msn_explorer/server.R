@@ -73,14 +73,14 @@ get_globals <- function(objclass = c("genind", "genclone")){
 # This function tests a single object name to see if it is of class objclass.
 # The function is used in get_globals
 #------------------------------------------------------------------------------#
-is_usable <- function(object, objclass = c("genind", "genclone")){
-  any(objclass %in% class(get(object, .GlobalEnv)))
+is_usable <- function(object, objclass = c("genind", "genclone", "genlight", "snpclone")){
+  inherits(get(object, .GlobalEnv), objclass)
 }
 #------------------------------------------------------------------------------#
 # Here, we query the user's R session to find all of the genind and genclone 
 # objects
 #------------------------------------------------------------------------------#
-globals <- get_globals(c("genind", "genclone"))
+globals <- get_globals(c("genind", "genclone", "genlight", "snpclone"))
 
 #==============================================================================|
 # The Server side of things has to balance several things going on at once from
@@ -171,7 +171,13 @@ shinyServer(function(input, output, session) {
     } else {
       dat <- new("genind")
     }
-    if (input$genclone) dat <- as.genclone(dat)
+    if (input$genclone) {
+      if (inherits(dat, "genlight")){
+        dat <- as.snpclone(dat)
+      } else {
+        dat <- as.genclone(dat)
+      }
+    }
     return(dat)
   })
   
@@ -246,10 +252,14 @@ shinyServer(function(input, output, session) {
   #-------------------------------------
   distfun <- reactive({ 
     if (input$distance == "Custom"){
-      parse_distfun(input$custom_distance)
+      the_dist <- parse_distfun(input$custom_distance)
     } else {
-      get_dist(input$distance) 
+      the_dist <- get_dist(input$distance) 
+      if (inherits(in_dataset(), "genlight") && the_dist == "diss.dist"){
+        the_dist <- "bitwise.dist"
+      }
     }
+    return(the_dist)
   })
 
   #-------------------------------------
@@ -261,7 +271,7 @@ shinyServer(function(input, output, session) {
   output$distargsUI <- renderUI({
     the_fun <- eval(parse(text = distfun()))
     the_args <- formals(the_fun)[-1]
-    the_args <- paste(names(the_args), unlist(the_args), sep = " = ", 
+    the_args <- paste(names(the_args), the_args, sep = " = ", 
                       collapse = ", ")
     textInput("distargs", label = "Distance arguments", the_args)
   })
@@ -302,7 +312,7 @@ shinyServer(function(input, output, session) {
   #-------------------------------------
   replen <- reactive({
     if (!grepl("\\(", input$replen)){
-      paste0("replen = c(", input$replen, ")")      
+      paste0("replen = c(", input$replen, ")")
     } else {
       paste0("replen = ", input$replen)
     }
@@ -342,7 +352,7 @@ shinyServer(function(input, output, session) {
         fun <- paste0("bruvo.msn(dataset(), ", args, ", showplot = FALSE, include.ties = ret)")
         out <- eval(parse(text = fun))
       } else {
-        if (indist != "diss.dist"){
+        if (indist != "diss.dist" && inherits(dataset(), "genind")){
           dat <- missingno(dataset(), "mean")
         } else {
           dat <- dataset()

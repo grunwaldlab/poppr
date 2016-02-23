@@ -90,7 +90,7 @@ imsn() # select Bruvo's distance and enter "monpop_ssr" into the Repeat Length f
 # This allows you to access any bug fixes that may have been updated before a formal
 # release on CRAN
 
-shiny::runGithub("grunwaldlab/poppr", subdir = "inst/msn_explorer")
+shiny::runGitHub("grunwaldlab/poppr", subdir = "inst/msn_explorer")
 
 # You can also use your own distance matrices, but there's a small catch.
 # in order to do so, you must write a function that will subset the matrix
