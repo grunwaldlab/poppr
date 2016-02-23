@@ -2688,14 +2688,10 @@ add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-rrcc <- function(i, loclist, mlgs, correction = TRUE){
+rrcc <- function(i, loclist, mlgs){
   cc  <- !duplicated(mlgs[, i])
   mat <- tab(loclist[[i]], freq = TRUE)
   res <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
-  names(res) <- alleles(loclist[[i]])[[1]]
-  if (correction){
-    res[res < .Machine$double.eps^0.5] <- 1/length(cc)    
-  }
   return(res)
 }
 #==============================================================================#
@@ -2715,7 +2711,7 @@ rrcc <- function(i, loclist, mlgs, correction = TRUE){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
+rrccbp <- function(i, loclist, mlgs, pnames){
   
   mat  <- tab(loclist[[i]], freq = TRUE)
   npop <- length(pnames)
@@ -2727,9 +2723,6 @@ rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
     psub <- pops %in% p
     cc   <- which(!duplicated(mlgs[psub, i]))
     out  <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
-    if (correction){
-      out[out < .Machine$double.eps^0.5] <- 1/length(cc)
-    }
     res[p, ] <- out
   }
   
