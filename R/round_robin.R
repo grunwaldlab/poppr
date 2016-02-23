@@ -328,7 +328,8 @@ get_minor_allele_divisor <- function(rrmlg, d, m, mlg = NULL){
   } else if (d == "mlg"){
     e <- (1/mlg) * m
   } else {
-    e <- setNames((1/colSums(rrmlg)) * m, colnames(rrmlg))
+    clones <- !apply(rrmlg, 2, duplicated)
+    e      <- setNames((1/colSums(clones)) * m, colnames(rrmlg))
   }
   return(e)
 }
