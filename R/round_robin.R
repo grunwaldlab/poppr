@@ -228,6 +228,36 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
   }
   return(out)
 }
+
+#==============================================================================#
+#' Correct minor allele frequencies derived from rraf
+#'
+#' @param rraf a vector or matrix produced from rraf (with \code{correction =
+#'   FALSE})
+#' @param rrmlg a matrix containing multilocus genotypes per locus
+#' @param e a numeric epsilon value to use for all missing allele frequencies.
+#' @param skim when \code{TRUE}, the original frequencies will be reduced so
+#'   that all allele frequencies will sum to one. \strong{Default: \code{FALSE}}
+#' @param spread when \code{TRUE}, the added value is spread accross all
+#'   alleles. When \code{FALSE}, each missing allele is given this value.
+#' @param div the unit by which to take the reciprocal. \code{div = "sample"}
+#'   will be 1/(n samples). \code{div = "mlg"} will be 1/(n mlg at that locus).
+#'   This is overridden by \code{e}.
+#' @param mdiv a multiplier for div. Default is \code{mult = 0.5}, which
+#'   indicates you have a diploid sample. This parameter is overridden by
+#'   \code{e}.
+#'   
+#' @details By default, this will add 1/(n samples) to all zero-value alleles.
+#'
+#' @return a matrix or vector the same type as rraf
+#' @keywords internal
+#'
+#' @examples
+#==============================================================================#
+minor_allele_correction <- function(rraf, rrmlg, e = NULL, skim = FALSE, 
+                                    div = c("sample", "mlg"), mult = 0.5){
+  
+}
 #==============================================================================#
 #' Genotype Probability
 #'
