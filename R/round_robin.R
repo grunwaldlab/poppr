@@ -267,6 +267,9 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 #' @return a matrix or vector the same type as rraf
 #' @keywords internal
 #' @author Zhian N. Kamvar
+#' @seealso \code{\link{rraf}},
+#'   \code{\link{pgen}},
+#'   \code{\link{psex}}
 #'   
 #' @examples
 #' data(Pram)
