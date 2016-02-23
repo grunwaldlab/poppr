@@ -4,7 +4,7 @@
 \alias{pgen}
 \title{Genotype Probability}
 \usage{
-pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL)
+pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object.}
@@ -25,6 +25,8 @@ be Pgen.}
 round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
 TRUE}, and this matrix or vector is not provided, zero-value allele 
 frequencies will automatically be corrected by 1/n.}}
+
+\item{...}{options passed to \code{\link{minor_allele_correction}}}
 }
 \value{
 A vector containing Pgen values per locus for each genotype in the 

@@ -5,7 +5,7 @@
 \title{Probability of encountering a genotype more than once by chance}
 \usage{
 psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
-  method = c("single", "multiple"))
+  method = c("single", "multiple"), ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object.}
@@ -31,6 +31,8 @@ will be the number of original multilocus genotypes.}
 should reflect the probability of encountering a second genotype. Using 
 \code{method = "multiple"} gives the probability of encountering multiple 
 samples of the same genotype (see details).}
+
+\item{...}{options passed to \code{\link{minor_allele_correction}}}
 }
 \value{
 a vector of Psex for each sample.

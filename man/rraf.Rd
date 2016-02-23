@@ -4,7 +4,8 @@
 \alias{rraf}
 \title{Round Robin Allele Frequencies}
 \usage{
-rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE)
+rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE,
+  ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object}
@@ -20,6 +21,8 @@ population. Defaults to \code{FALSE}}
 
 \item{correction}{a logical indicating whether or not zero value allele 
 frequencies should be set to 1/n (Default: \code{TRUE})}
+
+\item{...}{options passed to \code{\link{minor_allele_correction}}}
 }
 \value{
 a vector or list of allele frequencies
