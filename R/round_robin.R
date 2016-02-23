@@ -109,6 +109,7 @@ rrmlg <- function(gid){
 #'   population. Defaults to \code{FALSE}
 #' @param correction a logical indicating whether or not zero value allele 
 #'   frequencies should be set to 1/n (Default: \code{TRUE})
+#' @param ... options passed to \code{\link{minor_allele_correction}}
 #'   
 #' @return a vector or list of allele frequencies
 #' @details Calculating allele frequencies for clonal populations is a difficult
@@ -191,7 +192,8 @@ rrmlg <- function(gid){
 #' 
 #' }
 #==============================================================================#
-rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE){
+rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, 
+                 correction = TRUE, ...){
   RES     <- c("list", "vector", "data.frame")
   res     <- match.arg(res, RES)
   if (!is.null(pop)){
@@ -202,20 +204,28 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
     }
     by_pop <- TRUE
   }
+  gid     <- as.genclone(gid)
   loclist <- seploc(gid)
   mlgs    <- rrmlg(gid)
   if (by_pop & !is.null(pop(gid))){
     out <- matrix(numeric(0), nrow = nPop(gid), ncol = ncol(tab(gid)))
     for (i in locNames(gid)){
-      out[, locFac(gid) %in% i] <- rrccbp(i, loclist, mlgs, correction, popNames(gid))
+      out[, locFac(gid) %in% i] <- rrccbp(i, loclist, mlgs, popNames(gid))
     }
     rownames(out) <- popNames(gid)
     colnames(out) <- colnames(tab(gid))
+    if (correction){
+      out <- minor_allele_correction(out, mlgs, mlg = nmll(gid), pop = pop(gid),
+                                     locfac = locFac(gid), ...)
+    }
     return(out)
   } else {
-    out <- lapply(locNames(gid), rrcc, loclist, mlgs, correction)
+    out <- lapply(locNames(gid), rrcc, loclist, mlgs)
   }
   names(out) <- locNames(gid)
+  if (correction){
+    out <- minor_allele_correction(out, mlgs, mlg = nmll(gid), ...)
+  }
   if (res == "vector"){
     out <- unlist(out, use.names = FALSE)
     names(out) <- colnames(tab(gid))
@@ -231,33 +241,93 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 
 #==============================================================================#
 #' Correct minor allele frequencies derived from rraf
-#'
-#' @param rraf a vector or matrix produced from rraf (with \code{correction =
+#' 
+#' @param rraf a list or matrix produced from rraf (with \code{correction = 
 #'   FALSE})
 #' @param rrmlg a matrix containing multilocus genotypes per locus
+#' @param mlg the number of MLGs in the sample. Only required if \code{d = 
+#'   "mlg"}.
+#' @param pop a vector of factors that define the population definition for each
+#'   observation in \code{rrmlg}. This must be supplied if \code{rraf} is a 
+#'   matrix.
+#' @param locfac a vector of factors that define the columns belonging to the 
+#'   loci.
 #' @param e a numeric epsilon value to use for all missing allele frequencies.
-#' @param skim when \code{TRUE}, the original frequencies will be reduced so
-#'   that all allele frequencies will sum to one. \strong{Default: \code{FALSE}}
-#' @param spread when \code{TRUE}, the added value is spread accross all
-#'   alleles. When \code{FALSE}, each missing allele is given this value.
-#' @param d the unit by which to take the reciprocal. \code{div = "sample"} 
-#'   will be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div
-#'   = "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.
-#' @param m a multiplier for div. Default is \code{mult = 0.5}, which
-#'   indicates you have a diploid sample. This parameter is overridden by
-#'   \code{e}.
+#' @param sum_to_one when \code{TRUE}, the original frequencies will be reduced 
+#'   so that all allele frequencies will sum to one. \strong{Default: 
+#'   \code{FALSE}}
+#' @param d the unit by which to take the reciprocal. \code{div = "sample"} will
+#'   be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div = 
+#'   "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.
+#' @param m a multiplier for div. Default is \code{mult = 1}. This parameter is
+#'   overridden by \code{e}
 #'   
 #' @details By default, this will add 1/(n samples) to all zero-value alleles.
-#'
+#'   
 #' @return a matrix or vector the same type as rraf
 #' @keywords internal
-#'
+#' @author Zhian N. Kamvar
+#'   
 #' @examples
+#' data(Pram)
+#' prrmlg <- rrmlg(Pram)
+#' pramaf <- rraf(Pram, correction = FALSE)
+#' minor_allele_correction(pramaf, prrmlg)
 #==============================================================================#
-minor_allele_correction <- function(rraf, rrmlg, e = NULL, skim = FALSE, 
-                                    spread = FALSE, 
-                                    d = c("sample", "mlg", "rrmlg"), m = 0.5){
+minor_allele_correction <- function(rraf, rrmlg, mlg = NULL, pop = NULL, 
+                                    locfac = NULL, e = NULL, sum_to_one = FALSE, 
+                                    d = c("sample", "mlg", "rrmlg"), m = 1){
   
+  d <- match.arg(d, c("sample", "mlg", "rrmlg"))
+
+  if (is.list(rraf)){
+    if (is.null(e)){
+      e <- get_minor_allele_divisor(rrmlg, d, m, mlg)
+    }
+    if (length(e) == 1){
+      e <- setNames(rep(e, ncol(rrmlg)), colnames(rrmlg))
+    }
+    res        <- lapply(names(rraf), replace_zeroes, rraf, e, sum_to_one)
+    names(res) <- names(rraf)
+  } else if (is.matrix(rraf)){
+    
+    # split matrix by population and locus
+    poplist <- apply(rraf, 1, split, locfac)
+    
+    # loop over populations and call this function again on the list of loci
+    res <- lapply(names(poplist), function(i){
+      prraf  <- poplist[[i]]
+      prrmlg <- rrmlg[pop[pop == i], ]
+      minor_allele_correction(prraf, prrmlg, mlg = mlg, e = e, d = d, m = m, 
+                              sum_to_one = sum_to_one)
+    })
+    
+    # make this list of loci a matrix again
+    res           <- t(vapply(res, unlist, rraf[1, , drop = TRUE]))
+    dimnames(res) <- dimnames(rraf)
+  } 
+  return(res)
+}
+
+replace_zeroes <- function(i, loci, e, sum_to_one = FALSE){
+  locus           <- loci[[i]]
+  missing_alleles <- locus <= .Machine$double.eps^0.5
+  locus[missing_alleles] <- e[i]
+  if (sum_to_one){
+    locus <- locus/sum(locus)
+  }
+  return(locus)
+}
+
+get_minor_allele_divisor <- function(rrmlg, d, m, mlg = NULL){
+  if (d == "sample"){
+    e <- (1/nrow(rrmlg)) * m
+  } else if (d == "mlg"){
+    e <- (1/mlg) * m
+  } else {
+    e <- setNames((1/colSums(rrmlg)) * m, colnames(rrmlg))
+  }
+  return(e)
 }
 #==============================================================================#
 #' Genotype Probability
@@ -278,6 +348,8 @@ minor_allele_correction <- function(rraf, rrmlg, e = NULL, skim = FALSE,
 #'   round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
 #'   TRUE}, and this matrix or vector is not provided, zero-value allele 
 #'   frequencies will automatically be corrected by 1/n.}
+#'   
+#' @param ... options passed to \code{\link{minor_allele_correction}}
 #'   
 #' @note Any zero-value allele frequencies will be corrected by 1/n. This is to
 #'   avoid any zero-probability genotypes. To counteract this, you can supply
@@ -350,7 +422,7 @@ minor_allele_correction <- function(rraf, rrmlg, e = NULL, skim = FALSE,
 #' head(pgen(Pram, log = FALSE, freq = my_rraf))
 #' }
 #==============================================================================#
-pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
+pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
   stopifnot(is.genind(gid))
   # Stop if the ploidy of the object is not diploid
   stopifnot(all(ploidy(gid) %in% 1:2)) 
@@ -368,7 +440,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
   }   
   pops <- pop(gid)
   if (is.null(freq)){
-    freqs <- rraf(gid, by_pop = TRUE)
+    freqs <- rraf(gid, by_pop = TRUE, ...)
   } else if (is.matrix(freq)){
     if (nrow(freq) != nlevels(pops) || ncol(freq) != ncol(tab(gid))){
       stop("frequency matrix must have the same dimensions as the data.")
@@ -402,6 +474,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #'   should reflect the probability of encountering a second genotype. Using 
 #'   \code{method = "multiple"} gives the probability of encountering multiple 
 #'   samples of the same genotype (see details).
+#' @param ... options passed to \code{\link{minor_allele_correction}}
 #' @return a vector of Psex for each sample.
 #' @note The values of Psex represent the value for each multilocus genotype. 
 #'   Additionally, when the argument \code{pop} is not \code{NULL}, 
@@ -512,7 +585,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' }
 #==============================================================================#
 psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL, 
-                 method = c("single", "multiple")){
+                 method = c("single", "multiple"), ...){
   stopifnot(is.genind(gid))
   if (!is.null(pop)){
     if (!is.language(pop)){
@@ -528,7 +601,7 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
   mll(gid) <- "original"
   METHOD <- c("single", "multiple")
   method <- match.arg(method, METHOD)
-  xpgen  <- pgen(gid, by_pop = by_pop, freq = freq)
+  xpgen  <- pgen(gid, by_pop = by_pop, freq = freq, ...)
   xpgen  <- exp(rowSums(xpgen, na.rm = TRUE))
 
   if (method == "single"){
