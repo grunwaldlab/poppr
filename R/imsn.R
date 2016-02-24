@@ -131,7 +131,7 @@
 #' # This allows you to access any bug fixes that may have been updated before a formal
 #' # release on CRAN
 #' 
-#' shiny::runGitHub("grunwaldlab/poppr", subdir = "inst/msn_explorer")
+#' shiny::runGitHub("grunwaldlab/poppr", subdir = "inst/shiny/msn_explorer")
 #' 
 #' # You can also use your own distance matrices, but there's a small catch.
 #' # in order to do so, you must write a function that will subset the matrix
@@ -152,6 +152,6 @@
 #' }
 #' @import shiny
 imsn <- function(){
-  shiny::runApp(system.file("msn_explorer", package = "poppr"))
+  shiny::runApp(system.file("shiny", "msn_explorer", package = "poppr"))
   invisible(NULL)
 }
