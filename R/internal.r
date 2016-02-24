@@ -2730,6 +2730,61 @@ rrccbp <- function(i, loclist, mlgs, pnames){
 }
 
 #==============================================================================#
+# replace missing allele frequencies with a specified value
+# 
+# @param i the name or index of a locus
+# @param loci a list of allele frequencies by locus derived from the round-robin
+#   method
+# @param e a value to replace zero-value frequencies with
+# @param sum_to_one a boolean indicating whether or not allele frequencies at a
+#   single locus should sum to one.
+#
+# Public functions utilizing this function:
+# ## minor_allele_correction
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+
+replace_zeroes <- function(i, loci, e, sum_to_one = FALSE){
+  locus           <- loci[[i]]
+  missing_alleles <- locus <= .Machine$double.eps^0.5
+  locus[missing_alleles] <- e[i]
+  if (sum_to_one){
+    locus <- locus/sum(locus)
+  }
+  return(locus)
+}
+
+#==============================================================================#
+# prepare the value to set the minor allele
+#
+# @param rrmlg a matrix derived from rrmlg
+# @param d one of "sample", "mlg", or "rrmlg"
+# @param m a multiplier
+# @param mlg an integer or NULL specifying the number of unique multilocus
+#   genotypes in the sample.
+#
+# Public functions utilizing this function:
+# ## minor_allele_correction
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+
+get_minor_allele_replacement <- function(rrmlg, d, m, mlg = NULL){
+  if (d == "sample"){
+    e <- (1/nrow(rrmlg)) * m
+  } else if (d == "mlg"){
+    e <- (1/mlg) * m
+  } else {
+    clones <- !apply(rrmlg, 2, duplicated)
+    e      <- setNames((1/colSums(clones)) * m, colnames(rrmlg))
+  }
+  return(e)
+}
+
+#==============================================================================#
 # Pairwise index of association calculation
 # 
 # Arguments

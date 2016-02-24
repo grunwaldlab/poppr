@@ -286,7 +286,7 @@ minor_allele_correction <- function(rraf, rrmlg, mlg = NULL, pop = NULL,
 
   if (is.list(rraf)){
     if (is.null(e)){
-      e <- get_minor_allele_divisor(rrmlg, d, m, mlg)
+      e <- get_minor_allele_replacement(rrmlg, d, m, mlg)
     }
     if (length(e) == 1){
       e <- setNames(rep(e, ncol(rrmlg)), colnames(rrmlg))
@@ -313,27 +313,6 @@ minor_allele_correction <- function(rraf, rrmlg, mlg = NULL, pop = NULL,
   return(res)
 }
 
-replace_zeroes <- function(i, loci, e, sum_to_one = FALSE){
-  locus           <- loci[[i]]
-  missing_alleles <- locus <= .Machine$double.eps^0.5
-  locus[missing_alleles] <- e[i]
-  if (sum_to_one){
-    locus <- locus/sum(locus)
-  }
-  return(locus)
-}
-
-get_minor_allele_divisor <- function(rrmlg, d, m, mlg = NULL){
-  if (d == "sample"){
-    e <- (1/nrow(rrmlg)) * m
-  } else if (d == "mlg"){
-    e <- (1/mlg) * m
-  } else {
-    clones <- !apply(rrmlg, 2, duplicated)
-    e      <- setNames((1/colSums(clones)) * m, colnames(rrmlg))
-  }
-  return(e)
-}
 #==============================================================================#
 #' Genotype Probability
 #'
