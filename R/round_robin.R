@@ -334,8 +334,9 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 #' 
 #' # When we calculate these frequencies based on population, they are heavily
 #' # influenced by the number of observed mlgs. 
-#' rraf(Pram, by_pop = TRUE, d = "rrmlg", m = 1/2, sum_to_one = TRUE)
-#' #
+#' rraf(Pram, by_pop = TRUE, d = "rrmlg", m = 1/2)
+#' # This can be fixed by specifying a specific value
+#' rraf(Pram, by_pop = TRUE, e = 0.01)
 #' 
 #' }
 #' 
