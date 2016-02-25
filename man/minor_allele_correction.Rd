@@ -69,33 +69,45 @@ be \emph{rrmlg > mlg > sample}
 }
 \examples{
 \dontrun{
+
 data(Pram)
+#-------------------------------------
 
 # If you set correction = FALSE, you'll notice the zero-valued alleles
+
 rraf(Pram, correction = FALSE)
 
 # By default, however, the data will be corrected by 1/n
+
 rraf(Pram)
 
 # Of course, this is a diploid organism, we might want to set 1/2n
+
 rraf(Pram, m = 1/2)
 
 # To set MAF = 1/2mlg
+
 rraf(Pram, d = "mlg", m = 1/2)
 
 # Another way to think about this is, since these allele frequencies were
 # derived at each locus with different sample sizes, it's only appropriate to
 # correct based on those sample sizes.
+
 rraf(Pram, d = "rrmlg", m = 1/2)
 
 # If we were going to use these frequencies for simulations, we might want to
 # ensure that they all sum to one. 
+
 rraf(Pram, d = "mlg", m = 1/2, sum_to_one = TRUE) 
 
+#-------------------------------------
 # When we calculate these frequencies based on population, they are heavily
 # influenced by the number of observed mlgs. 
+
 rraf(Pram, by_pop = TRUE, d = "rrmlg", m = 1/2)
+
 # This can be fixed by specifying a specific value
+
 rraf(Pram, by_pop = TRUE, e = 0.01)
 
 }

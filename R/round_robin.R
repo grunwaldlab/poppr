@@ -82,8 +82,11 @@
 #' }
 #==============================================================================#
 rrmlg <- function(gid){
-  if (class(gid)[1] %in% c("genind", "genclone")){
+  if (inherits(gid, c("genind", "genclone"))){
     gid <- pegas::as.loci(gid)
+  }
+  if (!inherits(gid, "loci")){
+    stop("input must be a loci, genind, or genclone object.")
   }
   the_loci <- attr(gid, "locicol")
   res      <- integer(nrow(gid))
@@ -309,33 +312,45 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 #'   
 #' @examples
 #' \dontrun{
+#' 
 #' data(Pram)
+#' #-------------------------------------
 #' 
 #' # If you set correction = FALSE, you'll notice the zero-valued alleles
+#' 
 #' rraf(Pram, correction = FALSE)
 #' 
 #' # By default, however, the data will be corrected by 1/n
+#' 
 #' rraf(Pram)
 #' 
 #' # Of course, this is a diploid organism, we might want to set 1/2n
+#' 
 #' rraf(Pram, m = 1/2)
 #' 
 #' # To set MAF = 1/2mlg
+#' 
 #' rraf(Pram, d = "mlg", m = 1/2)
 #' 
 #' # Another way to think about this is, since these allele frequencies were
 #' # derived at each locus with different sample sizes, it's only appropriate to
 #' # correct based on those sample sizes.
+#' 
 #' rraf(Pram, d = "rrmlg", m = 1/2)
 #' 
 #' # If we were going to use these frequencies for simulations, we might want to
 #' # ensure that they all sum to one. 
+#' 
 #' rraf(Pram, d = "mlg", m = 1/2, sum_to_one = TRUE) 
 #' 
+#' #-------------------------------------
 #' # When we calculate these frequencies based on population, they are heavily
 #' # influenced by the number of observed mlgs. 
+#' 
 #' rraf(Pram, by_pop = TRUE, d = "rrmlg", m = 1/2)
+#' 
 #' # This can be fixed by specifying a specific value
+#' 
 #' rraf(Pram, by_pop = TRUE, e = 0.01)
 #' 
 #' }
@@ -345,6 +360,14 @@ minor_allele_correction <- function(rraf, rrmlg, e = NULL, sum_to_one = FALSE,
                                     d = c("sample", "mlg", "rrmlg"), m = 1, 
                                     mlg = NULL, pop = NULL, locfac = NULL){
   
+  if (identical(parent.frame(), globalenv())){
+    msg <- paste0("\n\n\n",
+                  "    !!! minor_allele_correction() is for internal use only !!!",
+                  "\n\n",
+                  "    Input types are not checked within this function and may\n",
+                  "    result in an error. USE AT YOUR OWN RISK.\n\n\n")
+    warning(msg, immediate. = TRUE)
+  }
   d <- match.arg(d, c("sample", "mlg", "rrmlg"))
 
   if (is.list(rraf)){

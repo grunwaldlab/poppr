@@ -24,6 +24,11 @@ test_that("rrmlg produces the correct mlgs", {
   expect_equivalent(rrx_m, mlg_truth)
 })
 
+test_that("rrmlg will not work on genlight objects", {
+  skip_on_cran()
+  expect_error(rrmlg(glSim(10, 10, 10)))
+})
+
 test_that("rrmlg can take loci objects", {
   skip_on_cran()
   expect_equivalent(rrmlg(pegas::as.loci(x)), rrx_m)
@@ -35,6 +40,10 @@ test_that("rraf produces correct allele frequencies", {
   expect_equivalent(rraf(x, res = "vector"), unlist(freq_truth))
 })
 
+test_that("minor_allele_correction gets angry if called from global environment", {
+  skip_on_cran()
+  expect_warning(poppr:::minor_allele_correction(rrx_f, rrx_m))
+})
 
 test_that("correction is properly applied in rraf", {
   skip_on_cran()
@@ -98,10 +107,12 @@ test_that("rraf produces a data frame", {
 test_that("rraf calculates per population", {
   skip_on_cran()
   data(Pram)
-  rrx_matrix <- rraf(Pram, by_pop = TRUE, correction = FALSE)
+  rrx_matrix <- rraf(Pram, by_pop = TRUE)
   expect_is(rrx_matrix, "matrix")
   expect_equivalent(dim(rrx_matrix), c(nPop(Pram), ncol(tab(Pram))))
   expect_equivalent(rownames(rrx_matrix), popNames(Pram))
+  # The correction is 1/N per pop. PistolRSF_OR has a pop size of 4
+  expect_equivalent(rrx_matrix[nrow(rrx_matrix), ncol(rrx_matrix)], 1/4)
 })
 
 test_that("rraf calculates per population when supplied with a population factor", {
