@@ -35,16 +35,57 @@ test_that("rraf produces correct allele frequencies", {
   expect_equivalent(rraf(x, res = "vector"), unlist(freq_truth))
 })
 
-test_that("rraf will correct or not correct allele frequencies when asked", {
+
+test_that("correction is properly applied in rraf", {
   skip_on_cran()
   data(monpop)
-  monc  <- rraf(monpop)
-  monc_vec <- vapply(monc, sum, numeric(1))
-  monnc <- rraf(monpop, correction = FALSE)
-  monnc_vec <- vapply(monnc, sum, numeric(1))
+  mll(monpop) <- "original"
+  monrrmlg    <- 1/colSums(!apply(rrmlg(monpop), 2, duplicated))
   
+  monc       <- rraf(monpop)                    # default
+  monnc      <- rraf(monpop, correction = FALSE)# No correction
+  monc_sto   <- rraf(monpop, sum_to_one = TRUE) # summed to one
+  monc_mlg   <- rraf(monpop, d = "mlg")         # by multilocus genotype
+  monc_rrmlg <- rraf(monpop, d = "rrmlg")       # by round-robin multilocus genotype
+  monc_m     <- rraf(monpop, m = 0.5)           # assume diploid (not true here, though)
+  monc_e     <- rraf(monpop, e = pi)            # A ridiculous correction
+  monc_e2    <- rraf(monpop, e = pi, d = "rrmlg", m = 0.5) # e overrides
+
+  SER <- function(x) x$SER["SER.147"]
+  SED <- function(x) x$SED["SED.187"]
+  
+  # Correction can be turned off and on
+  monc_vec  <- vapply(monc, sum, numeric(1))
+  monnc_vec <- vapply(monnc, sum, numeric(1))
   expect_more_than(sum(monc_vec), sum(monnc_vec))
-  expect_equivalent(monnc_vec, rep(1, nLoc(monpop)))
+  expect_equivalent(sum(monnc_vec), nLoc(monpop))
+  
+  # sum_to_one argument augments does what it says
+  monc_sum2one <- vapply(monc_sto, sum, numeric(1))
+  expect_equal(sum(monc_sum2one), nLoc(monpop))
+  expect_true(all(monc_vec >= monc_sum2one))
+  
+  # The default is 1/n
+  expect_equivalent(SER(monc), 1/nInd(monpop))
+  expect_true(identical(SER(monc)[[1]], SED(monc)[[1]]))
+  
+  # The multiplier works
+  expect_equivalent(SER(monc)/2, SER(monc_m))
+  
+  # Works by MLG
+  expect_equivalent(SER(monc_mlg), 1/nmll(monpop))
+  
+  # Works by rrMLG
+  expect_equivalent(SER(monc_rrmlg), monrrmlg["SER"])
+  # We would not expect cross-loci corrections to be equal
+  expect_false(identical(SER(monc_rrmlg)[[1]], SED(monc_rrmlg)[[1]]))
+  
+  # Works by custom value
+  expect_equivalent(SER(monc_e), pi)
+  
+  # Custom value overrides anything else
+  expect_equivalent(SED(monc_e), SED(monc_e2))
+  
 })
 
 test_that("rraf produces a data frame", {
