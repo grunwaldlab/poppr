@@ -6,6 +6,10 @@ NEW FEATURES
 
 * `imsn()` now has collapsible side panels
 * `nmll()` and `mll()` will now handle genind and genlight objects
+* `rraf()` now gives options for minor allele correction encompassed in the 
+  internal function `minor_allele_correction()`. This extends also to `pgen()` 
+  and `psex()`, which must correct minor allele frequencies by default. See 
+    issue #81 for details (https://github.com/grunwaldlab/poppr/issues/81).
 
 MISC
 -----------

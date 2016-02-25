@@ -2,27 +2,17 @@
 % Please edit documentation in R/round_robin.R
 \name{minor_allele_correction}
 \alias{minor_allele_correction}
-\title{Correct minor allele frequencies derived from rraf}
+\title{Correct minor allele frequencies derived from rraf (INTERNAL)}
 \usage{
-minor_allele_correction(rraf, rrmlg, mlg = NULL, pop = NULL,
-  locfac = NULL, e = NULL, sum_to_one = FALSE, d = c("sample", "mlg",
-  "rrmlg"), m = 1)
+minor_allele_correction(rraf, rrmlg, e = NULL, sum_to_one = FALSE,
+  d = c("sample", "mlg", "rrmlg"), m = 1, mlg = NULL, pop = NULL,
+  locfac = NULL)
 }
 \arguments{
 \item{rraf}{a list or matrix produced from rraf (with \code{correction = 
 FALSE})}
 
 \item{rrmlg}{a matrix containing multilocus genotypes per locus}
-
-\item{mlg}{the number of MLGs in the sample. Only required if \code{d = 
-"mlg"}.}
-
-\item{pop}{a vector of factors that define the population definition for each
-observation in \code{rrmlg}. This must be supplied if \code{rraf} is a 
-matrix.}
-
-\item{locfac}{a vector of factors that define the columns belonging to the 
-loci.}
 
 \item{e}{a numeric epsilon value to use for all missing allele frequencies.}
 
@@ -36,21 +26,47 @@ be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div =
 
 \item{m}{a multiplier for div. Default is \code{mult = 1}. This parameter is
 overridden by \code{e}}
+
+\item{mlg}{the number of MLGs in the sample. Only required if \code{d = 
+"mlg"}.}
+
+\item{pop}{a vector of factors that define the population definition for each
+observation in \code{rrmlg}. This must be supplied if \code{rraf} is a 
+matrix.}
+
+\item{locfac}{a vector of factors that define the columns belonging to the 
+loci.}
 }
 \value{
 a matrix or vector the same type as rraf
 }
 \description{
-Correct minor allele frequencies derived from rraf
+\strong{This is an internal function.} The documentation is for use with 
+\code{\link{rraf}}, \code{\link{pgen}}, and \code{\link{psex}}. Do not
+attempt to use this function directly.
 }
 \details{
+Arguments of interest to the user are: 
+\itemize{
+ \item e
+ \item sum_to_one
+ \item d
+ \item m
+}
+
 By default, this will add 1/(n samples) to all zero-value alleles.
 }
 \examples{
+\dontrun{
 data(Pram)
-prrmlg <- rrmlg(Pram)
-pramaf <- rraf(Pram, correction = FALSE)
-minor_allele_correction(pramaf, prrmlg)
+rraf(Pram, sum_to_one = TRUE) # ensure that all allele frequencies sum to one
+rraf(Pram, e = 0.0001)        # give a specific value for MAF
+rraf(Pram, d = "sample")      # default: MAF == 1/nInd(Pram)
+rraf(Pram, d = "mlg")         # MAF == 1/nmll(Pram)
+rraf(Pram, d = "rrmlg")       # MAF == 1/nmll at each locus
+rraf(Pram, d = "rrmlg", m = 0.5) # MAF = 1/2nmll at each locus
+}
+
 }
 \author{
 Zhian N. Kamvar
