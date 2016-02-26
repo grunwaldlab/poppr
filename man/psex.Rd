@@ -10,8 +10,8 @@ psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
 \arguments{
 \item{gid}{a genind or genclone object.}
 
-\item{pop}{either a formula to set the population factor from the
-\code{\link{strata}} slot or a vector specifying the population factor for
+\item{pop}{either a formula to set the population factor from the 
+\code{\link{strata}} slot or a vector specifying the population factor for 
 each sample. Defaults to \code{NULL}.}
 
 \item{by_pop}{When this is \code{TRUE} (default), the calculation will be
@@ -87,11 +87,9 @@ Pram_psex <- psex(Pram, by_pop = TRUE)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
 
-# The above, but correcting zero-value alleles by 1/nInd(Pram)
-# See the documentation for rraf and pgen for details.
-pram_af <- rraf(Pram, by_pop = TRUE, correction = FALSE)
-pram_af[pram_af == 0] <- 1/nInd(Pram)
-Pram_psex2 <- psex(Pram, by_pop = TRUE, freq = pram_af)
+# The above, but correcting zero-value alleles by 1/(2*rrmlg)
+# See the documentation for minor_allele_correction for details.
+Pram_psex2 <- psex(Pram, by_pop = TRUE, d = "rrmlg", mul = 1/2)
 plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
 

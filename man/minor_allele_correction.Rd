@@ -5,7 +5,7 @@
 \title{Correct minor allele frequencies derived from rraf (INTERNAL)}
 \usage{
 minor_allele_correction(rraf, rrmlg, e = NULL, sum_to_one = FALSE,
-  d = c("sample", "mlg", "rrmlg"), m = 1, mlg = NULL, pop = NULL,
+  d = c("sample", "mlg", "rrmlg"), mul = 1, mlg = NULL, pop = NULL,
   locfac = NULL)
 }
 \arguments{
@@ -25,9 +25,6 @@ so that all allele frequencies will sum to one. \strong{Default:
 be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div = 
 "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.}
 
-\item{m}{a multiplier for div. Default is \code{mult = 1}. This parameter is 
-overridden by \code{e}}
-
 \item{mlg}{\emph{internal} the number of MLGs in the sample. Only required if
 \code{d = "mlg"}.}
 
@@ -37,6 +34,9 @@ definition for each observation in \code{rrmlg}. This must be supplied if
 
 \item{locfac}{\emph{internal} a vector of factors that define the columns
 belonging to the loci.}
+
+\item{m}{a multiplier for div. Default is \code{mult = 1}. This parameter is 
+overridden by \code{e}}
 }
 \value{
 a matrix or vector the same type as rraf
@@ -59,7 +59,7 @@ Arguments of interest to the user are:
  \item \strong{d}
  \item \strong{m}
 }
-By default (\code{d = "sample", e = NULL, sum_to_one = FALSE, m = 1}), this
+By default (\code{d = "sample", e = NULL, sum_to_one = FALSE, mul = 1}), this
 will add 1/(n samples) to all zero-value alleles. The basic formula is
 \strong{1/(d * m)} unless \strong{e} is specified. If \code{sum_to_one =
 TRUE}, then the frequencies will be scaled as x/sum(x) AFTER correction,
@@ -83,28 +83,28 @@ rraf(Pram)
 
 # Of course, this is a diploid organism, we might want to set 1/2n
 
-rraf(Pram, m = 1/2)
+rraf(Pram, mul = 1/2)
 
 # To set MAF = 1/2mlg
 
-rraf(Pram, d = "mlg", m = 1/2)
+rraf(Pram, d = "mlg", mul = 1/2)
 
 # Another way to think about this is, since these allele frequencies were
 # derived at each locus with different sample sizes, it's only appropriate to
 # correct based on those sample sizes.
 
-rraf(Pram, d = "rrmlg", m = 1/2)
+rraf(Pram, d = "rrmlg", mul = 1/2)
 
 # If we were going to use these frequencies for simulations, we might want to
 # ensure that they all sum to one. 
 
-rraf(Pram, d = "mlg", m = 1/2, sum_to_one = TRUE) 
+rraf(Pram, d = "mlg", mul = 1/2, sum_to_one = TRUE) 
 
 #-------------------------------------
 # When we calculate these frequencies based on population, they are heavily
 # influenced by the number of observed mlgs. 
 
-rraf(Pram, by_pop = TRUE, d = "rrmlg", m = 1/2)
+rraf(Pram, by_pop = TRUE, d = "rrmlg", mul = 1/2)
 
 # This can be fixed by specifying a specific value
 

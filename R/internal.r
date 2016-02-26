@@ -2679,8 +2679,6 @@ add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
 # - i the index of the locus.
 # - loclist a list of genind objects each one locus.
 # - mlgs a matrix from rrmlg
-# - correction a logical indicating if zeroes should be replaced with the
-# smallest value
 #
 # Public functions utilizing this function:
 # ## rraf
@@ -2701,8 +2699,6 @@ rrcc <- function(i, loclist, mlgs){
 # - i the index of the locus.
 # - loclist a list of genind objects each one locus.
 # - mlgs a matrix from rrmlg
-# - correction a logical indicating if zeroes should be replaced with the
-# smallest value
 # - pnames the population names.
 #
 # Public functions utilizing this function:

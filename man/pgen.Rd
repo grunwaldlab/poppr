@@ -9,8 +9,8 @@ pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...)
 \arguments{
 \item{gid}{a genind or genclone object.}
 
-\item{pop}{either a formula to set the population factor from the
-\code{\link{strata}} slot or a vector specifying the population factor for
+\item{pop}{either a formula to set the population factor from the 
+\code{\link{strata}} slot or a vector specifying the population factor for 
 each sample. Defaults to \code{NULL}.}
 
 \item{by_pop}{When this is \code{TRUE} (default), the calculation will be
@@ -26,14 +26,16 @@ round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
 TRUE}, and this matrix or vector is not provided, zero-value allele 
 frequencies will automatically be corrected by 1/n.}}
 
-\item{...}{options passed to \code{\link{minor_allele_correction}}}
+\item{...}{options passed to \code{\link{minor_allele_correction}}. The
+default is to correct allele frequencies to 1/n}
 }
 \value{
 A vector containing Pgen values per locus for each genotype in the 
   object.
 }
 \description{
-Genotype Probability
+Calculate the probability of genotypes based on the product of allele
+frequencies over all loci.
 }
 \details{
 Pgen is the probability of a given genotype occuring in a population
@@ -53,10 +55,7 @@ Pgen is the probability of a given genotype occuring in a population
   examples).
 }
 \note{
-Any zero-value allele frequencies will be corrected by 1/n. This is to
-  avoid any zero-probability genotypes. To counteract this, you can supply
-  your own allele frequencies with the \code{freq} argument (see example).
-  For haploids, Pgen at a particular locus is the allele frequency. This 
+For haploids, Pgen at a particular locus is the allele frequency. This 
   function cannot handle polyploids. Additionally, when the argument 
   \code{pop} is not \code{NULL}, \code{by_pop} is automatically \code{TRUE}.
 }
@@ -66,16 +65,16 @@ head(pgen(Pram, log = FALSE))
 
 \dontrun{
 # You can get the Pgen values over all loci by summing over the logged results:
-exp(rowSums(pgen(Pram, log = TRUE, na.rm = TRUE)))
+exp(rowSums(pgen(Pram, log = TRUE, na.rmul = TRUE)))
 
 # You can also take the product of the non-logged results:
-apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
+apply(pgen(Pram, log = FALSE), 1, prod, na.rmul = TRUE)
 
-## Dealing with zero-frequency allele correction
+## Minor Allele Correction --------------------------------------------------
 # By default, allele frequencies are calculated with rraf with 
 # correction = TRUE. This is normally benign when analyzing large populations,
-# but it can have a great effect on small populations. Here's a way to supply
-# your own correction.
+# but it can have a great effect on small populations. You can pass arguments 
+# for the function minor_allele_correction() to correct the allele f
 
 # First, calculate round robin allele frequencies by population with no 
 # correction. There are many zero values.
@@ -105,6 +104,7 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \emph{American Journal of Botany}, 537-544.
 }
 \seealso{
-\code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}
+\code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
+\code{\link{minor_allele_correction}}
 }
 
