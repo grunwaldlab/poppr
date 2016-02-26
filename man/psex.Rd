@@ -19,9 +19,10 @@ done by population.}
 
 \item{freq}{a vector or matrix of allele frequencies. This defaults to 
 \code{NULL}, indicating that the frequencies will be determined via 
-round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
-TRUE}, and this matrix or vector is not provided, zero-value allele 
-frequencies will automatically be corrected by 1/n.}}
+round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+vector is not provided, zero-value allele frequencies will automatically be
+corrected by \code{\link{rare_allele_correction}}.} Please see the
+documentation for details.}
 
 \item{G}{an integer specifying the number of observed genets. If NULL, this 
 will be the number of original multilocus genotypes.}

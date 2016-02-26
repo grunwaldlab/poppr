@@ -424,9 +424,10 @@ rare_allele_correction <- function(rraf, rrmlg, e = NULL, sum_to_one = FALSE,
 #'   
 #' @param freq a vector or matrix of allele frequencies. This defaults to 
 #'   \code{NULL}, indicating that the frequencies will be determined via 
-#'   round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
-#'   TRUE}, and this matrix or vector is not provided, zero-value allele 
-#'   frequencies will automatically be corrected by 1/n.}
+#'   round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+#'   vector is not provided, zero-value allele frequencies will automatically be
+#'   corrected by \code{\link{rare_allele_correction}}.} Please see the
+#'   documentation for details.
 #'   
 #' @note For haploids, Pgen at a particular locus is the allele frequency. This 
 #'   function cannot handle polyploids. Additionally, when the argument 

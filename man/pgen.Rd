@@ -22,9 +22,10 @@ be Pgen.}
 
 \item{freq}{a vector or matrix of allele frequencies. This defaults to 
 \code{NULL}, indicating that the frequencies will be determined via 
-round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
-TRUE}, and this matrix or vector is not provided, zero-value allele 
-frequencies will automatically be corrected by 1/n.}}
+round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+vector is not provided, zero-value allele frequencies will automatically be
+corrected by \code{\link{rare_allele_correction}}.} Please see the
+documentation for details.}
 
 \item{...}{options passed to \code{\link{rare_allele_correction}}. The
 default is to correct allele frequencies to 1/n}
