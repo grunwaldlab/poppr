@@ -264,7 +264,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 #' 
 #' @param rraf \emph{internal} a list or matrix produced from \code{\link{rraf}}
 #'   (with uncorrected MAF)
-#' @param rrmlg \emph{internal} a matrix containing multilocus genotypes per
+#' @param rrmlg \emph{internal} a matrix containing multilocus genotypes per 
 #'   locus derived from \code{\link{rrmlg}}
 #' @param e a numeric epsilon value to use for all missing allele frequencies.
 #' @param sum_to_one when \code{TRUE}, the original frequencies will be reduced 
@@ -273,14 +273,14 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 #' @param d the unit by which to take the reciprocal. \code{div = "sample"} will
 #'   be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div = 
 #'   "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.
-#' @param m a multiplier for div. Default is \code{mult = 1}. This parameter is 
-#'   overridden by \code{e}
+#' @param mul a multiplier for div. Default is \code{mult = 1}. This parameter
+#'   is overridden by \code{e}
 #' @param mlg \emph{internal} the number of MLGs in the sample. Only required if
 #'   \code{d = "mlg"}.
-#' @param pop \emph{internal} a vector of factors that define the population
-#'   definition for each observation in \code{rrmlg}. This must be supplied if
+#' @param pop \emph{internal} a vector of factors that define the population 
+#'   definition for each observation in \code{rrmlg}. This must be supplied if 
 #'   \code{rraf} is a matrix.
-#' @param locfac \emph{internal} a vector of factors that define the columns
+#' @param locfac \emph{internal} a vector of factors that define the columns 
 #'   belonging to the loci.
 #'   
 #' @details Arguments of interest to the user are: 

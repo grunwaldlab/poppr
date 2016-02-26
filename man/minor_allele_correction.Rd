@@ -12,7 +12,7 @@ minor_allele_correction(rraf, rrmlg, e = NULL, sum_to_one = FALSE,
 \item{rraf}{\emph{internal} a list or matrix produced from \code{\link{rraf}}
 (with uncorrected MAF)}
 
-\item{rrmlg}{\emph{internal} a matrix containing multilocus genotypes per
+\item{rrmlg}{\emph{internal} a matrix containing multilocus genotypes per 
 locus derived from \code{\link{rrmlg}}}
 
 \item{e}{a numeric epsilon value to use for all missing allele frequencies.}
@@ -25,18 +25,18 @@ so that all allele frequencies will sum to one. \strong{Default:
 be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div = 
 "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.}
 
+\item{mul}{a multiplier for div. Default is \code{mult = 1}. This parameter
+is overridden by \code{e}}
+
 \item{mlg}{\emph{internal} the number of MLGs in the sample. Only required if
 \code{d = "mlg"}.}
 
-\item{pop}{\emph{internal} a vector of factors that define the population
-definition for each observation in \code{rrmlg}. This must be supplied if
+\item{pop}{\emph{internal} a vector of factors that define the population 
+definition for each observation in \code{rrmlg}. This must be supplied if 
 \code{rraf} is a matrix.}
 
-\item{locfac}{\emph{internal} a vector of factors that define the columns
+\item{locfac}{\emph{internal} a vector of factors that define the columns 
 belonging to the loci.}
-
-\item{m}{a multiplier for div. Default is \code{mult = 1}. This parameter is 
-overridden by \code{e}}
 }
 \value{
 a matrix or vector the same type as rraf
