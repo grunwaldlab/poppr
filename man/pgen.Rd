@@ -65,10 +65,10 @@ head(pgen(Pram, log = FALSE))
 
 \dontrun{
 # You can get the Pgen values over all loci by summing over the logged results:
-exp(rowSums(pgen(Pram, log = TRUE, na.rmul = TRUE)))
+exp(rowSums(pgen(Pram, log = TRUE, na.rm = TRUE)))
 
 # You can also take the product of the non-logged results:
-apply(pgen(Pram, log = FALSE), 1, prod, na.rmul = TRUE)
+apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 
 ## Minor Allele Correction --------------------------------------------------
 # By default, allele frequencies are calculated with rraf with 

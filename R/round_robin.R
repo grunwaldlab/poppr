@@ -549,7 +549,6 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #'   should reflect the probability of encountering a second genotype. Using 
 #'   \code{method = "multiple"} gives the probability of encountering multiple 
 #'   samples of the same genotype (see details).
-#' @param ... options passed to \code{\link{minor_allele_correction}}
 #' @return a vector of Psex for each sample.
 #' @note The values of Psex represent the value for each multilocus genotype. 
 #'   Additionally, when the argument \code{pop} is not \code{NULL}, 
@@ -610,9 +609,10 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
 #' 
-#' # The above, but correcting zero-value alleles by 1/(2*rrmlg)
+#' # The above, but correcting zero-value alleles by 1/(2*rrmlg) with no 
+#' # population structure assumed
 #' # See the documentation for minor_allele_correction for details.
-#' Pram_psex2 <- psex(Pram, by_pop = TRUE, d = "rrmlg", mul = 1/2)
+#' Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2)
 #' plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
 #' 

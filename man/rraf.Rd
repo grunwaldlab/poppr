@@ -72,12 +72,12 @@ rraf(Pram)
 
 # Compare to without round robin:
 PrLoc <- seploc(Pram, res = "mat") # get locus by matrix
-lapply(PrLoc, colMeans, na.rmul = TRUE)
+lapply(PrLoc, colMeans, na.rm = TRUE)
 
 # Without round robin, clone corrected:
 Pcc    <- clonecorrect(Pram, strata = NA) # indiscriminantly clone correct
 PccLoc <- seploc(Pcc, res = "mat")
-lapply(PccLoc, colMeans, na.rmul = TRUE)
+lapply(PccLoc, colMeans, na.rm = TRUE)
 
 ## Different methods of obtaining round robin allele frequencies
 
