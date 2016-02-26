@@ -40,9 +40,9 @@ test_that("rraf produces correct allele frequencies", {
   expect_equivalent(rraf(x, res = "vector"), unlist(freq_truth))
 })
 
-test_that("minor_allele_correction gets angry if called from global environment", {
+test_that("rare_allele_correction gets angry if called from global environment", {
   skip_on_cran()
-  expect_warning(do.call(poppr:::minor_allele_correction, 
+  expect_warning(do.call(poppr:::rare_allele_correction, 
                          args = list(rrx_f, rrx_m), envir = .GlobalEnv))
 })
 

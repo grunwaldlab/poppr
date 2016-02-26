@@ -2736,7 +2736,7 @@ rrccbp <- function(i, loclist, mlgs, pnames){
 #   single locus should sum to one.
 #
 # Public functions utilizing this function:
-# ## minor_allele_correction
+# ## rare_allele_correction
 #
 # Internal functions utilizing this function:
 # ## none
@@ -2762,7 +2762,7 @@ replace_zeroes <- function(i, loci, e, sum_to_one = FALSE){
 #   genotypes in the sample.
 #
 # Public functions utilizing this function:
-# ## minor_allele_correction
+# ## rare_allele_correction
 #
 # Internal functions utilizing this function:
 # ## none

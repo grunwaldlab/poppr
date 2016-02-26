@@ -21,9 +21,9 @@ population. Defaults to \code{FALSE}}
 
 \item{correction}{a logical indicating whether or not zero-valued allele 
 frequencies should be corrected by the function
-\code{\link{minor_allele_correction}} (Default: \code{TRUE})}
+\code{\link{rare_allele_correction}} (Default: \code{TRUE})}
 
-\item{...}{options passed to \code{\link{minor_allele_correction}}. The
+\item{...}{options passed to \code{\link{rare_allele_correction}}. The
 default is to correct allele frequencies to 1/n}
 }
 \value{
@@ -50,8 +50,8 @@ Calculating allele frequencies for clonal populations is a difficult
   \code{\link{psex}}, this could result in undefined values. Setting
   \code{correction = TRUE} will allow you to control how these zero-valued
   allele frequencies are corrected by passing arguments to the internal
-  function \code{\link{minor_allele_correction}}. See the documentation for
-  \code{\link{minor_allele_correction}} and the examples for details}
+  function \code{\link{rare_allele_correction}}. See the documentation for
+  \code{\link{rare_allele_correction}} and the examples for details}
 }
 \note{
 When \code{by_pop = TRUE}, the output will be a matrix of allele 
@@ -99,7 +99,7 @@ ggplot(Prdf, aes(y = allele, x = frequency)) +
 # This might be problematic because populations like PistolRSF_OR has a 
 # population size of four.
 
-# By using the 'e' argument to minor_allele_correction, this can be set to a
+# By using the 'e' argument to rare_allele_correction, this can be set to a
 # more reasonable value.
 (Prbp <- rraf(Pram, by_pop = TRUE, e = 1/nInd(Pram)))
 

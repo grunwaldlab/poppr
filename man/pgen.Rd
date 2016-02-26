@@ -26,7 +26,7 @@ round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
 TRUE}, and this matrix or vector is not provided, zero-value allele 
 frequencies will automatically be corrected by 1/n.}}
 
-\item{...}{options passed to \code{\link{minor_allele_correction}}. The
+\item{...}{options passed to \code{\link{rare_allele_correction}}. The
 default is to correct allele frequencies to 1/n}
 }
 \value{
@@ -74,7 +74,7 @@ apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 # By default, allele frequencies are calculated with rraf with 
 # correction = TRUE. This is normally benign when analyzing large populations,
 # but it can have a great effect on small populations. You can pass arguments 
-# for the function minor_allele_correction() to correct the allele f
+# for the function rare_allele_correction() to correct the allele f
 
 # First, calculate round robin allele frequencies by population with no 
 # correction. There are many zero values.
@@ -105,6 +105,6 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 }
 \seealso{
 \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
-\code{\link{minor_allele_correction}}
+\code{\link{rare_allele_correction}}
 }
 

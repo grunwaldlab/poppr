@@ -32,7 +32,7 @@ should reflect the probability of encountering a second genotype. Using
 \code{method = "multiple"} gives the probability of encountering multiple 
 samples of the same genotype (see details).}
 
-\item{...}{options passed to \code{\link{minor_allele_correction}}. The
+\item{...}{options passed to \code{\link{rare_allele_correction}}. The
 default is to correct allele frequencies to 1/n}
 }
 \value{
@@ -90,7 +90,7 @@ abline(h = 0.05, lty = 2)
 
 # The above, but correcting zero-value alleles by 1/(2*rrmlg) with no 
 # population structure assumed
-# See the documentation for minor_allele_correction for details.
+# See the documentation for rare_allele_correction for details.
 Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2)
 plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
