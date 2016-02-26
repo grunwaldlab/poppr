@@ -78,8 +78,25 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #' @seealso \code{\link{as.genclone}} \code{\link{as.snpclone}} 
 #'   \code{\linkS4class{genind}} \code{\linkS4class{genlight}} 
 #'   \code{\link[adegenet]{strata}} \code{\link[adegenet]{setPop}} 
-#'   \code{\link{MLG}} \code{\link{mll}}
+#'   \code{\link{MLG}} \code{\link{mll}} \code{\link{mlg.filter}}
 #' @import methods
+#' @examples
+#' 
+#' # genclone objects can be created from genind objects
+#' #
+#' data(partial_clone)
+#' partial_clone
+#' (pc <- as.genclone(partial_clone))
+#' 
+#' # snpclone objects can be created from genlight objects
+#' #
+#' set.seed(999)
+#' (gl <- glSim(100, 0, n.snp.struc = 1e3, ploidy = 2))
+#' (sc <- as.snpclone(gl))
+#' # 
+#' # Use mlg.filter to create a distance threshold to define multilocus genotypes.
+#' mlg.filter(sc) <- 0.25
+#' sc # 82 mlgs
 #==============================================================================#
 setClass("genclone", 
          contains = "genind",

@@ -54,7 +54,7 @@
 #' 
 #' Calculate the average Bruvo's distance over all loci in a population.
 #' 
-#' @param pop a \code{\link{genind}} object
+#' @param pop a \code{\link{genind}} or \code{\link{genclone}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus. E.g. a locus with a (CAT) 
@@ -229,7 +229,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALS
 #
 #' Create a tree using Bruvo's Distance with non-parametric bootstrapping.
 #' 
-#' @param pop a \code{\link{genind}} object
+#' @param pop a \code{\link{genind}} or \code{\link{genclone}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus.
@@ -402,7 +402,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' Create minimum spanning network of selected populations using Bruvo's 
 #' distance.
 #' 
-#' @param gid a \code{\link{genind}} object
+#' @param gid a \code{\link{genind}} or \code{\link{genclone}} object
 #'   
 #' @param replen a \code{vector} of \code{integers} indicating the length of the
 #'   nucleotide repeats for each microsatellite locus.
@@ -691,7 +691,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
 #' 
 #' This function will test for consistency in the sense that all alleles are 
 #' able to be represented as discrete units after division and rounding.
-#' @param gid a genind object
+#' @param gid a \code{\link{genind}} or \code{\link{genclone}} object
 #' @param replen a numeric vector of repeat motif lengths.
 #' @return a logical vector indicating whether or not the repeat motif length is
 #'   consistent.
@@ -737,7 +737,7 @@ consistent_replen <- function(index, alleles, replen){
 #' 
 #' Attempts to fix inconsistent repeat lengths found by \code{test_replen}
 #' 
-#' @param gid a genind object
+#' @param gid a \code{\link{genind}} or \code{\link{genclone}} object
 #' @param replen a numeric vector of repeat motif lengths.
 #' @param e a number to be subtracted or added to inconsistent repeat lengths to
 #'   allow for proper rounding.

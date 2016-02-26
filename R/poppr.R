@@ -138,7 +138,7 @@
 #' \item \code{\link{informloci}} (m) - Detects and removes phylogenetically uninformative loci
 #' \item \code{\link{popsub}} (m | s) - Subsets genind objects by population
 #' \item \code{\link{shufflepop}} (m) - Shuffles genotypes at each locus using four different shuffling algorithms
-#' \item \code{\link{recode_polyploids}} (m) - Recodes polyploid data sets with missing alleles imported as "0"
+#' \item \code{\link{recode_polyploids}} (m|x) - Recodes polyploid data sets with missing alleles imported as "0"
 #' }
 #' @section Genetic distances:
 #' \itemize{

@@ -7,7 +7,7 @@
 samp.ia(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE)
 }
 \arguments{
-\item{x}{a genlight object.}
+\item{x}{a \code{\link{genlight}} or \code{\link{snpclone}} object.}
 
 \item{n.snp}{the number of snps to be used to calculate standardized index
 of association.}

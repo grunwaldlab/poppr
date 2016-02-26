@@ -515,8 +515,7 @@ poppr.all <- function(filelist, ...){
 #' The function \code{ia} will calculate this over the whole data set while
 #' \code{pair.ia} will calculate the index pairwise per locus. 
 #' 
-#' @param gid a \code{\link{genind}} object OR any fstat, structure, genetix, 
-#'   genpop, or genalex formatted files.
+#' @param gid a \code{\link{genind}} or \code{\link{genclone}} object.
 #'   
 #' @param sample an integer indicating the number of permutations desired (eg 
 #'   999).

@@ -14,7 +14,7 @@ bruvo.msn(gid, replen = 1, add = TRUE, loss = TRUE,
   clustering.algorithm = "farthest_neighbor", ...)
 }
 \arguments{
-\item{gid}{a \code{\link{genind}} object}
+\item{gid}{a \code{\link{genind}} or \code{\link{genclone}} object}
 
 \item{replen}{a \code{vector} of \code{integers} indicating the length of the
 nucleotide repeats for each microsatellite locus.}

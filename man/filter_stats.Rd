@@ -9,7 +9,7 @@ filter_stats(x, distance = bitwise.dist, threshold = 1e+06 +
   plot = FALSE, cols = NULL, nclone = NULL, hist = "Scott", ...)
 }
 \arguments{
-\item{x}{a genind or genlight object}
+\item{x}{a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object}
 
 \item{distance}{a distance function or matrix}
 
