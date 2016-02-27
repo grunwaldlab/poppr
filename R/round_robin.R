@@ -672,13 +672,13 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     gid <- as.genclone(gid)
   }
   mll(gid) <- "original"
-  METHOD <- c("single", "multiple")
-  method <- match.arg(method, METHOD)
-  xpgen  <- pgen(gid, by_pop = by_pop, freq = freq, ...)
-  xpgen  <- exp(rowSums(xpgen, na.rm = TRUE))
+  METHOD   <- c("single", "multiple")
+  method   <- match.arg(method, METHOD)
+  xpgen    <- pgen(gid, by_pop = by_pop, freq = freq, ...)
+  xpgen    <- exp(rowSums(xpgen, na.rm = TRUE))
 
   if (method == "single"){
-    # Only caculate for single encounter (Parks and Werth, 1993)
+    # Only calculate for single encounter (Parks and Werth, 1993)
     G       <- ifelse(is.null(G), nmll(gid), G)
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)
