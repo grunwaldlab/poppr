@@ -23,6 +23,16 @@ A009	7_09_BB	224	97
 A006	7_09_BB	224	97
 A013	7_09_BB	224	97"
 
+zzna <- "13	6	1	6											
+			7_09_BB											
+Ind	Pop	CHMFc4	CHMFc5	CHMFc12	SEA	SED	SEE	SEG	SEI	SEL	SEN	SEP	SEQ	SER
+A004	7_09_BB	224	85	163	132	133	156	 	116	143	227	257	142	145
+A002	7_09_BB	224	97	159	156	129	156	144	113	143	231	261	136	153
+A011	7_09_BB	224	97	159	160	133	156	126	119	147	227	257	134	149
+A009	7_09_BB	224	97	159	160	133	156	126	119	147	227	261	134	149
+A006	7_09_BB	224	97	159	160	133	156	126	119	147	235	261	134	149
+A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134	149"
+
 z <- "1	6	1	6
 7_09_BB			
 Ind	Pop	CHMFc4	
@@ -46,6 +56,13 @@ A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134"
 test_that("basic text connections work", {
 	gen <- read.genalex(textConnection(y), sep = "\t")
 	expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
+})
+
+test_that("missing rows and columns are eliminated", {
+  gen <- read.genalex(textConnection(zzna), sep = "\t")
+  expect_true(any(is.na(tab(gen))))
+  expect_equal(nInd(gen), 6L)
+  expect_equal(nLoc(gen), 13L)
 })
 
 test_that("single locus diploids can be imported", {

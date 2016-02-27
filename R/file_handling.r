@@ -238,7 +238,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   gencall  <- match.call()
 
   all.info <- strsplit(readLines(genalex, n = 2), sep)
-  cskip    <- ifelse("connection" %in% class(genalex), 0, 2)
+  cskip    <- ifelse(inherits(genalex, "connection"), 0, 2)
   gena     <- utils::read.table(genalex, sep = sep, header = TRUE, skip = cskip, 
                                 stringsAsFactors = FALSE, check.names = FALSE)
   num.info <- as.numeric(all.info[[1]])
@@ -249,10 +249,10 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   ninds    <- num.info[2]
   npops    <- num.info[3]
   
-  # Removing all null columns 
-  if (any(is.na(gena[1, ]))){
-    gena <- gena[, !is.na(gena[1, ]), drop = FALSE]
-  }
+  # Ensuring that all rows and columns have data
+  data_rows <- apply(gena, 1, function(i) !all(is.na(i)))
+  data_cols <- apply(gena, 2, function(i) !all(is.na(i)))
+  gena      <- gena[data_rows, data_cols]
   
   #----------------------------------------------------------------------------#
   # Checking for extra information such as Regions or XY coordinates
@@ -336,7 +336,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   if (nloci == clm/ploidy & ploidy > 1){
     # Missing data in genalex is coded as "0" for non-presence/absence data.
     # this converts it to "NA" for adegenet.
-    if (any(gena.mat == "0") & ploidy < 3){
+    if (any(gena.mat == "0", na.rm = TRUE) & ploidy < 3){
       gena[gena.mat == "0"] <- NA
     } else if (any(is.na(gena.mat)) & ploidy > 2) {
       gena[is.na(gena.mat)] <- "0"
@@ -366,7 +366,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
                          ploidy = ploidy, type = type, ncode = 1)
   } else if (nloci == clm & !all(gena.mat %in% as.integer(-1:1))) {
     # Checking for haploid microsatellite data or SNP data
-    if(any(gena.mat == "0")){
+    if(any(gena.mat == "0", na.rm = TRUE)){
       gena[gena.mat == "0"] <- NA
     }
     type    <- 'codom'
