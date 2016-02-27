@@ -55,15 +55,11 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
   \url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a
   message on the groups. Personal emails are highly discouraged as they do 
   not allow others to learn.}
-  
-  Below are descriptions and links to functions found in \pkg{poppr}. Be
-  aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
-  available.
 }
-\section{A note about version 2.0}{
+\section{A note about version 2}{
 
-  \pkg{Poppr} has recently moved to version 2.0 partially because
-  \pkg{adegenet} has also moved to version 2.0, and partially because we
+  \pkg{Poppr} has recently moved to version 2 partially because
+  \pkg{adegenet} has also moved to version 2, and partially because we
   needed to change the way a few things were done. Major changes that have
   affected both packages: the main data structure in \pkg{adegenet}, the
   \code{\linkS4class{genind}} object, has changed drastically and reduced in
@@ -76,50 +72,67 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
   Grünwald (2015), linked below.
 }
 
+\section{Functions in \pkg{poppr}}{
+
+
+  Below are descriptions and links to functions found in \pkg{poppr}. Be
+  aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
+  available. The functions are documented as:
+  \itemize{
+  \item \code{function} (data type) - Description
+  }
+  Where \sQuote{data type} refers to the type of data that can be used:
+  \tabular{ll}{
+    \strong{m} \tab a genclone or genind object \cr
+    \strong{s} \tab a snpclone or genlight object \cr
+    \strong{x} \tab a different data type (e.g. a matrix from \code{\link{mlg.table}})
+  }
+}
+
 \section{Data import/export}{
 
 \itemize{
-\item \code{\link{getfile}} - Provides a quick GUI to grab files for import
-\item \code{\link{read.genalex}} - Reads GenAlEx formatted csv files to a genind object
-\item \code{\link{genind2genalex}} - Converts genind objects to GenAlEx formatted csv files
-\item \code{\link{genclone2genind}} - Removes the @mlg slot from genclone objects
+\item \code{\link{getfile}} (x) - Provides a quick GUI to grab files for import
+\item \code{\link{read.genalex}} (x) - Reads GenAlEx formatted csv files to a genind object
+\item \code{\link{genind2genalex}} (m) - Converts genind objects to GenAlEx formatted csv files
+\item \code{\link{genclone2genind}} (m) - Removes the @mlg slot from genclone objects
 }
 }
 
 \section{Data manipulation}{
 
 \itemize{
-\item \code{\link{as.genclone}} - Converts genind objects to genclone objects
-\item \code{\link{missingno}} - Handles missing data
-\item \code{\link{clonecorrect}} - Clone-censors at a specified population hierarchy
-\item \code{\link{informloci}} - Detects and removes phylogenetically uninformative loci
-\item \code{\link{popsub}} - Subsets genind objects by population
-\item \code{\link{shufflepop}} - Shuffles genotypes at each locus using four different shuffling algorithms
-\item \code{\link{recode_polyploids}} - Recodes polyploid data sets with missing alleles imported as "0"
+\item \code{\link{as.genclone}} (m) - Converts genind objects to genclone objects
+\item \code{\link{missingno}} (m) - Handles missing data
+\item \code{\link{clonecorrect}} (m | s) - Clone-censors at a specified population hierarchy
+\item \code{\link{informloci}} (m) - Detects and removes phylogenetically uninformative loci
+\item \code{\link{popsub}} (m | s) - Subsets genind objects by population
+\item \code{\link{shufflepop}} (m) - Shuffles genotypes at each locus using four different shuffling algorithms
+\item \code{\link{recode_polyploids}} (m|x) - Recodes polyploid data sets with missing alleles imported as "0"
 }
 }
 
 \section{Genetic distances}{
 
 \itemize{
-\item \code{\link{bruvo.dist}} - Bruvo's distance (see also: \code{\link{fix_replen}})
-\item \code{\link{diss.dist}} - Absolute genetic distance (see prevosti.dist)
-\item \code{\link{nei.dist}} - Nei's 1978 genetic distance
-\item \code{\link{rogers.dist}} - Rogers' euclidean distance
-\item \code{\link{reynolds.dist}} - Reynolds' coancestry distance
-\item \code{\link{edwards.dist}} - Edwards' angular distance
-\item \code{\link{prevosti.dist}} - Prevosti's absolute genetic distance
-\item \code{\link{bitwise.dist}} - Calculates fast pairwise distances for genlight objects. 
+\item \code{\link{bruvo.dist}} (m) - Bruvo's distance (see also: \code{\link{fix_replen}})
+\item \code{\link{diss.dist}} (m) - Absolute genetic distance (see prevosti.dist)
+\item \code{\link{nei.dist}} (m | x) - Nei's 1978 genetic distance
+\item \code{\link{rogers.dist}} (m | x) - Rogers' euclidean distance
+\item \code{\link{reynolds.dist}} (m | x) - Reynolds' coancestry distance
+\item \code{\link{edwards.dist}} (m | x) - Edwards' angular distance
+\item \code{\link{prevosti.dist}} (m | x) - Prevosti's absolute genetic distance
+\item \code{\link{bitwise.dist}} (s) - Calculates fast pairwise distances for genlight objects. 
 }
 }
 
 \section{Bootstrapping}{
 
 \itemize{
-\item \code{\link{aboot}} - Creates a bootstrapped dendrogram for any distance measure
-\item \code{\link{bruvo.boot}} - Produces dendrograms with bootstrap support based on Bruvo's distance
-\item \code{\link{diversity_boot}} - Generates boostrap distributions of diversity statistics for multilocus genotypes
-\item \code{\link{diversity_ci}} - Generates confidence intervals for multilocus genotype diversity.
+\item \code{\link{aboot}} (m | s | x) - Creates a bootstrapped dendrogram for any distance measure
+\item \code{\link{bruvo.boot}} (m) - Produces dendrograms with bootstrap support based on Bruvo's distance
+\item \code{\link{diversity_boot}} (x) - Generates boostrap distributions of diversity statistics for multilocus genotypes
+\item \code{\link{diversity_ci}} (m | s | x) - Generates confidence intervals for multilocus genotype diversity.
 }
 }
 
@@ -127,38 +140,38 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 
 \subsection{Multilocus Genotypes}{
 \itemize{
-\item \code{\link{mlg}} - Calculates the number of multilocus genotypes
-\item \code{\link{mll}} - Displays the current multilocus lineages (genotypes) defined.
-\item \code{\link{nmll}} - Same as \code{\link{mlg}}.
-\item \code{\link{mlg.crosspop}} - Finds all multilocus genotypes that cross populations
-\item \code{\link{mlg.table}} - Returns a table of populations by multilocus genotypes
-\item \code{\link{mlg.vector}} - Returns a vector of a numeric multilocus genotype assignment for each individual
-\item \code{\link{mlg.id}} - Finds all individuals associated with a single multilocus genotype
-\item \code{\link{mlg.filter}} - Collapses MLGs by genetic distance
-\item \code{\link{filter_stats}} - Calculates mlg.filter for all algorithms and plots
-\item \code{\link{cutoff_predictor}} - Predicts cutoff threshold from mlg.filter. 
-\item \code{\link{mll.custom}} - Allows for the custom definition of multilocus lineages
-\item \code{\link{mll.levels}} - Allows the user to change levels of custom MLLs. 
-\item \code{\link{mll.reset}} - Reset multilocus lineages. 
-\item \code{\link{diversity_stats}} - Creates a table of diversity indices for multilocus genotypes. 
+\item \code{\link{mlg}} (m | s) - Calculates the number of multilocus genotypes
+\item \code{\link{mll}} (m | s) - Displays the current multilocus lineages (genotypes) defined.
+\item \code{\link{nmll}} (m | s) - Same as \code{\link{mlg}}.
+\item \code{\link{mlg.crosspop}} (m | s) - Finds all multilocus genotypes that cross populations
+\item \code{\link{mlg.table}} (m | s) - Returns a table of populations by multilocus genotypes
+\item \code{\link{mlg.vector}} (m | s) - Returns a vector of a numeric multilocus genotype assignment for each individual
+\item \code{\link{mlg.id}} (m | s) - Finds all individuals associated with a single multilocus genotype
+\item \code{\link{mlg.filter}} (m | s) - Collapses MLGs by genetic distance
+\item \code{\link{filter_stats}} (m | s) - Calculates mlg.filter for all algorithms and plots
+\item \code{\link{cutoff_predictor}} (x) - Predicts cutoff threshold from mlg.filter. 
+\item \code{\link{mll.custom}} (m | s) - Allows for the custom definition of multilocus lineages
+\item \code{\link{mll.levels}} (m | s) - Allows the user to change levels of custom MLLs. 
+\item \code{\link{mll.reset}} (m | s) - Reset multilocus lineages. 
+\item \code{\link{diversity_stats}} (x) - Creates a table of diversity indices for multilocus genotypes. 
 }
 }
 \subsection{Other}{
 \itemize{
 
-\item \code{\link{poppr.amova}} - Analysis of Molecular Variance (as implemented in ade4)
-\item \code{\link{ia}} - Calculates the index of association
-\item \code{\link{pair.ia}} - Calculates the index of association for all loci pairs.
-\item \code{\link{win.ia}} - Index of association windows for genlight objects.
-\item \code{\link{samp.ia}} - Index of association on random subsets of loci for genlight objects.
-\item \code{\link{poppr}} - Returns a diversity table by population
-\item \code{\link{poppr.all}} - Returns a diversity table by population for all compatible files specified
-\item \code{\link{private_alleles}} - Tabulates the occurrences of alleles that only occur in one population.
-\item \code{\link{locus_table}} - Creates a table of summary statistics per locus.
-\item \code{\link{rrmlg}} - Round-robin multilocus genotype estimates.
-\item \code{\link{rraf}} - Round-robin allele frequency estimates.
-\item \code{\link{pgen}} - Probability of genotypes.
-\item \code{\link{psex}} - Probability of observing a genotype more than once.
+\item \code{\link{poppr.amova}} (m) - Analysis of Molecular Variance (as implemented in ade4)
+\item \code{\link{ia}} (m) - Calculates the index of association
+\item \code{\link{pair.ia}} (m) - Calculates the index of association for all loci pairs.
+\item \code{\link{win.ia}} (s) - Index of association windows for genlight objects.
+\item \code{\link{samp.ia}} (s) - Index of association on random subsets of loci for genlight objects.
+\item \code{\link{poppr}} (m | x) - Returns a diversity table by population
+\item \code{\link{poppr.all}} (m | x) - Returns a diversity table by population for all compatible files specified
+\item \code{\link{private_alleles}} (m) - Tabulates the occurrences of alleles that only occur in one population.
+\item \code{\link{locus_table}} (m) - Creates a table of summary statistics per locus.
+\item \code{\link{rrmlg}} (m | x) - Round-robin multilocus genotype estimates.
+\item \code{\link{rraf}} (m) - Round-robin allele frequency estimates.
+\item \code{\link{pgen}} (m) - Probability of genotypes.
+\item \code{\link{psex}} (m) - Probability of observing a genotype more than once.
 }
 }
 }
@@ -166,13 +179,13 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \section{Visualization}{
 
 \itemize{
-\item \code{\link{imsn}} - Interactive construction and visualization of minimum spanning networks
-\item \code{\link{plot_poppr_msn}} - Plots minimum spanning networks produced in poppr with scale bar and legend
-\item \code{\link{greycurve}} - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
-\item \code{\link{bruvo.msn}} - Produces minimum spanning networks based off Bruvo's distance colored by population
-\item \code{\link{poppr.msn}} - Produces a minimum spanning network for any pairwise distance matrix related to the data
-\item \code{\link{info_table}} - Creates a heatmap representing missing data or observed ploidy
-\item \code{\link{genotype_curve}} - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 
+\item \code{\link{imsn}} (m | s) - Interactive construction and visualization of minimum spanning networks
+\item \code{\link{plot_poppr_msn}} (m | s | x) - Plots minimum spanning networks produced in poppr with scale bar and legend
+\item \code{\link{greycurve}} (x) - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
+\item \code{\link{bruvo.msn}} (m) - Produces minimum spanning networks based off Bruvo's distance colored by population
+\item \code{\link{poppr.msn}} (m | s | x) - Produces a minimum spanning network for any pairwise distance matrix related to the data
+\item \code{\link{info_table}} (m) - Creates a heatmap representing missing data or observed ploidy
+\item \code{\link{genotype_curve}} (m | x) - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 
 }
 }
 

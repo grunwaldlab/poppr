@@ -6,6 +6,10 @@ NEW FEATURES
 
 * `imsn()` now has collapsible side panels
 * `nmll()` and `mll()` will now handle genind and genlight objects
+* `rraf()` now gives options for minor allele correction encompassed in the 
+  internal function `rare_allele_correction()`. This extends also to `pgen()` 
+  and `psex()`, which must correct minor allele frequencies by default. See 
+    issue #81 for details (https://github.com/grunwaldlab/poppr/issues/81).
 
 MISC
 -----------
@@ -14,7 +18,7 @@ MISC
 * default threshold for `filter_stats()` is now 1e+6
 * `mlg.filter()` now returns a list instead of a pairlist
 * the "hist" argument for `poppr()` is now deprecated in favor of "plot"
-* minor documentation improvements
+* documentation improvements
 * the show method for snpclone objects now looks distinct from genlight
 
 BUG FIX

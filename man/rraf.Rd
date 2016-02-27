@@ -4,22 +4,27 @@
 \alias{rraf}
 \title{Round Robin Allele Frequencies}
 \usage{
-rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE)
+rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE,
+  ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object}
 
-\item{pop}{either a formula to set the population factor from the
-\code{\link{strata}} slot or a vector specifying the population factor for
+\item{pop}{either a formula to set the population factor from the 
+\code{\link{strata}} slot or a vector specifying the population factor for 
 each sample. Defaults to \code{NULL}.}
 
-\item{res}{Either "list" (default), "vector", or "data.frame".}
+\item{res}{either "list" (default), "vector", or "data.frame".}
 
-\item{by_pop}{When this is \code{TRUE}, the calculation will be done by
+\item{by_pop}{When this is \code{TRUE}, the calculation will be done by 
 population. Defaults to \code{FALSE}}
 
-\item{correction}{a logical indicating whether or not zero value allele 
-frequencies should be set to 1/n (Default: \code{TRUE})}
+\item{correction}{a logical indicating whether or not zero-valued allele 
+frequencies should be corrected by the function
+\code{\link{rare_allele_correction}} (Default: \code{TRUE})}
+
+\item{...}{options passed to \code{\link{rare_allele_correction}}. The
+default is to correct allele frequencies to 1/n}
 }
 \value{
 a vector or list of allele frequencies
@@ -31,31 +36,33 @@ round-robin allele frequencies used for pgen and psex.
 }
 \details{
 Calculating allele frequencies for clonal populations is a difficult
-  task. Frequencies calculated on non-clone-corrected data suffer from bias
-  due to non-independent samples. On the other hand, frequencies calculated
-  on clone-corrected data artificially increases the significance of rare
+  task. Frequencies calculated on non-clone-corrected data suffer from bias 
+  due to non-independent samples. On the other hand, frequencies calculated 
+  on clone-corrected data artificially increases the significance of rare 
   alleles. The method of round-robin allele frequencies as presented in Parks
-  and Werth (1993) provides a method of calculating allele frequencies in a
-  way that minimizes both of these effects. Allele frequencies at a given
-  locus are calculated based on samples that are \strong{clone corrected
-  without that locus}. This means that rare alleles might not be represented,
-  giving them an allele frequency of "0". For some analyses, this value is
-  perfectly fine, but for analyses such as \code{\link{pgen}} and
-  \code{\link{psex}}, this could result in genotype probabilities of "0". One
-  remedy for this is in the \code{correction} option. This will replace any 
-  zero-frequency alleles by 1/n, but it will mean that the sum of allele
-  frequencies at that locus will no longer be 1.
+  and Werth (1993) provides a method of calculating allele frequencies in a 
+  way that minimizes both of these effects. 
+  \subsection{Rare Alleles}{Allele frequencies at a given locus are
+  calculated based on samples that are \strong{clone corrected without that
+  locus}. When this happens, rare alleles have a high likelihood of dropping
+  out, giving them a frequency of "0". For some analyses, this is a perfectly
+  fine outcome, but for analyses such as \code{\link{pgen}} and
+  \code{\link{psex}}, this could result in undefined values. Setting
+  \code{correction = TRUE} will allow you to control how these zero-valued
+  allele frequencies are corrected by passing arguments to the internal
+  function \code{\link{rare_allele_correction}}. See the documentation for
+  \code{\link{rare_allele_correction}} and the examples for details}
 }
 \note{
 When \code{by_pop = TRUE}, the output will be a matrix of allele 
   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
-  \code{by_pop} is automatically \code{TRUE}. When \code{correction = TRUE},
-  \emph{n} refers to the population size.
+  \code{by_pop} is automatically \code{TRUE}.
 }
 \examples{
 
 data(Pram)
-# Round robin allele frequencies.
+
+# Round robin allele frequencies, correcting zero-valued frequencies to 1/nInd(Pram)
 rraf(Pram)
 
 
@@ -68,7 +75,7 @@ PrLoc <- seploc(Pram, res = "mat") # get locus by matrix
 lapply(PrLoc, colMeans, na.rm = TRUE)
 
 # Without round robin, clone corrected:
-Pcc <- clonecorrect(Pram, strata = NA) # indiscriminantly clone correct
+Pcc    <- clonecorrect(Pram, strata = NA) # indiscriminantly clone correct
 PccLoc <- seploc(Pcc, res = "mat")
 lapply(PccLoc, colMeans, na.rm = TRUE)
 
@@ -77,23 +84,25 @@ lapply(PccLoc, colMeans, na.rm = TRUE)
 # Get vector output.
 rraf(Pram, res = "vector")
 
-# Get data frame output and plot.
+# Getting the output as a data frame allows us to use ggplot2 to visualize
 (Prdf <- rraf(Pram, res = "data.frame"))
 library("ggplot2")
 ggplot(Prdf, aes(y = allele, x = frequency)) +
   geom_point() +
   facet_grid(locus ~ ., scale = "free_y", space = "free")
 
-## Round Robin allele frequencies by populations (matrix only)
+## Round Robin allele frequencies by population (matrix only)
 
-# Get frequencies per population without correction for zero-frequency alleles
-(Prbp <- rraf(Pram, by_pop = TRUE, correction = FALSE))
-# You can set the zero-frequency alleles to be 1/nInd(Pram)
-Prbp[Prbp == 0] <- 1/nInd(Pram)
-Prbp
+# By default, allele frequencies will be corrected by 1/n per population
+(Prbp <- rraf(Pram, by_pop = TRUE))
 
-# Get frequencies per population, but set zero-frequency alleles to 1/n
-(Prbp <- rraf(Pram, by_pop = TRUE, correction = TRUE))
+# This might be problematic because populations like PistolRSF_OR has a 
+# population size of four.
+
+# By using the 'e' argument to rare_allele_correction, this can be set to a
+# more reasonable value.
+(Prbp <- rraf(Pram, by_pop = TRUE, e = 1/nInd(Pram)))
+
 
 
 }

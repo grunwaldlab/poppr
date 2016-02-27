@@ -5,13 +5,13 @@
 \title{Probability of encountering a genotype more than once by chance}
 \usage{
 psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
-  method = c("single", "multiple"))
+  method = c("single", "multiple"), ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object.}
 
-\item{pop}{either a formula to set the population factor from the
-\code{\link{strata}} slot or a vector specifying the population factor for
+\item{pop}{either a formula to set the population factor from the 
+\code{\link{strata}} slot or a vector specifying the population factor for 
 each sample. Defaults to \code{NULL}.}
 
 \item{by_pop}{When this is \code{TRUE} (default), the calculation will be
@@ -19,9 +19,10 @@ done by population.}
 
 \item{freq}{a vector or matrix of allele frequencies. This defaults to 
 \code{NULL}, indicating that the frequencies will be determined via 
-round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
-TRUE}, and this matrix or vector is not provided, zero-value allele 
-frequencies will automatically be corrected by 1/n.}}
+round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+vector is not provided, zero-value allele frequencies will automatically be
+corrected by \code{\link{rare_allele_correction}}.} Please see the
+documentation for details.}
 
 \item{G}{an integer specifying the number of observed genets. If NULL, this 
 will be the number of original multilocus genotypes.}
@@ -31,6 +32,9 @@ will be the number of original multilocus genotypes.}
 should reflect the probability of encountering a second genotype. Using 
 \code{method = "multiple"} gives the probability of encountering multiple 
 samples of the same genotype (see details).}
+
+\item{...}{options passed to \code{\link{rare_allele_correction}}. The
+default is to correct allele frequencies to 1/n}
 }
 \value{
 a vector of Psex for each sample.
@@ -85,11 +89,10 @@ Pram_psex <- psex(Pram, by_pop = TRUE)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
 
-# The above, but correcting zero-value alleles by 1/nInd(Pram)
-# See the documentation for rraf and pgen for details.
-pram_af <- rraf(Pram, by_pop = TRUE, correction = FALSE)
-pram_af[pram_af == 0] <- 1/nInd(Pram)
-Pram_psex2 <- psex(Pram, by_pop = TRUE, freq = pram_af)
+# The above, but correcting zero-value alleles by 1/(2*rrmlg) with no 
+# population structure assumed
+# See the documentation for rare_allele_correction for details.
+Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2)
 plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
 

@@ -82,8 +82,11 @@
 #' }
 #==============================================================================#
 rrmlg <- function(gid){
-  if (class(gid)[1] %in% c("genind", "genclone")){
+  if (inherits(gid, c("genind", "genclone"))){
     gid <- pegas::as.loci(gid)
+  }
+  if (!inherits(gid, "loci")){
+    stop("input must be a loci, genind, or genclone object.")
   }
   the_loci <- attr(gid, "locicol")
   res      <- integer(nrow(gid))
@@ -101,36 +104,40 @@ rrmlg <- function(gid){
 #' round-robin allele frequencies used for pgen and psex.
 #' 
 #' @param gid a genind or genclone object
-#' @param pop either a formula to set the population factor from the
-#'   \code{\link{strata}} slot or a vector specifying the population factor for
-#'   each sample. Defaults to \code{NULL}. 
-#' @param res Either "list" (default), "vector", or "data.frame".
-#' @param by_pop When this is \code{TRUE}, the calculation will be done by
+#' @param pop either a formula to set the population factor from the 
+#'   \code{\link{strata}} slot or a vector specifying the population factor for 
+#'   each sample. Defaults to \code{NULL}.
+#' @param res either "list" (default), "vector", or "data.frame".
+#' @param by_pop When this is \code{TRUE}, the calculation will be done by 
 #'   population. Defaults to \code{FALSE}
-#' @param correction a logical indicating whether or not zero value allele 
-#'   frequencies should be set to 1/n (Default: \code{TRUE})
+#' @param correction a logical indicating whether or not zero-valued allele 
+#'   frequencies should be corrected by the function
+#'   \code{\link{rare_allele_correction}} (Default: \code{TRUE})
+#' @param ... options passed to \code{\link{rare_allele_correction}}. The
+#'   default is to correct allele frequencies to 1/n
 #'   
 #' @return a vector or list of allele frequencies
 #' @details Calculating allele frequencies for clonal populations is a difficult
-#'   task. Frequencies calculated on non-clone-corrected data suffer from bias
-#'   due to non-independent samples. On the other hand, frequencies calculated
-#'   on clone-corrected data artificially increases the significance of rare
+#'   task. Frequencies calculated on non-clone-corrected data suffer from bias 
+#'   due to non-independent samples. On the other hand, frequencies calculated 
+#'   on clone-corrected data artificially increases the significance of rare 
 #'   alleles. The method of round-robin allele frequencies as presented in Parks
-#'   and Werth (1993) provides a method of calculating allele frequencies in a
-#'   way that minimizes both of these effects. Allele frequencies at a given
-#'   locus are calculated based on samples that are \strong{clone corrected
-#'   without that locus}. This means that rare alleles might not be represented,
-#'   giving them an allele frequency of "0". For some analyses, this value is
-#'   perfectly fine, but for analyses such as \code{\link{pgen}} and
-#'   \code{\link{psex}}, this could result in genotype probabilities of "0". One
-#'   remedy for this is in the \code{correction} option. This will replace any 
-#'   zero-frequency alleles by 1/n, but it will mean that the sum of allele
-#'   frequencies at that locus will no longer be 1.
+#'   and Werth (1993) provides a method of calculating allele frequencies in a 
+#'   way that minimizes both of these effects. 
+#'   \subsection{Rare Alleles}{Allele frequencies at a given locus are
+#'   calculated based on samples that are \strong{clone corrected without that
+#'   locus}. When this happens, rare alleles have a high likelihood of dropping
+#'   out, giving them a frequency of "0". For some analyses, this is a perfectly
+#'   fine outcome, but for analyses such as \code{\link{pgen}} and
+#'   \code{\link{psex}}, this could result in undefined values. Setting
+#'   \code{correction = TRUE} will allow you to control how these zero-valued
+#'   allele frequencies are corrected by passing arguments to the internal
+#'   function \code{\link{rare_allele_correction}}. See the documentation for
+#'   \code{\link{rare_allele_correction}} and the examples for details}
 #'   
 #' @note When \code{by_pop = TRUE}, the output will be a matrix of allele 
 #'   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
-#'   \code{by_pop} is automatically \code{TRUE}. When \code{correction = TRUE},
-#'   \emph{n} refers to the population size.
+#'   \code{by_pop} is automatically \code{TRUE}.
 #' 
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 #' @references
@@ -148,7 +155,8 @@ rrmlg <- function(gid){
 #' @examples
 #' 
 #' data(Pram)
-#' # Round robin allele frequencies.
+#' 
+#' # Round robin allele frequencies, correcting zero-valued frequencies to 1/nInd(Pram)
 #' rraf(Pram)
 #' 
 #' 
@@ -161,7 +169,7 @@ rrmlg <- function(gid){
 #' lapply(PrLoc, colMeans, na.rm = TRUE)
 #' 
 #' # Without round robin, clone corrected:
-#' Pcc <- clonecorrect(Pram, strata = NA) # indiscriminantly clone correct
+#' Pcc    <- clonecorrect(Pram, strata = NA) # indiscriminantly clone correct
 #' PccLoc <- seploc(Pcc, res = "mat")
 #' lapply(PccLoc, colMeans, na.rm = TRUE)
 #' 
@@ -170,28 +178,31 @@ rrmlg <- function(gid){
 #' # Get vector output.
 #' rraf(Pram, res = "vector")
 #' 
-#' # Get data frame output and plot.
+#' # Getting the output as a data frame allows us to use ggplot2 to visualize
 #' (Prdf <- rraf(Pram, res = "data.frame"))
 #' library("ggplot2")
 #' ggplot(Prdf, aes(y = allele, x = frequency)) +
 #'   geom_point() +
 #'   facet_grid(locus ~ ., scale = "free_y", space = "free")
 #' 
-#' ## Round Robin allele frequencies by populations (matrix only)
+#' ## Round Robin allele frequencies by population (matrix only)
 #' 
-#' # Get frequencies per population without correction for zero-frequency alleles
-#' (Prbp <- rraf(Pram, by_pop = TRUE, correction = FALSE))
-#' # You can set the zero-frequency alleles to be 1/nInd(Pram)
-#' Prbp[Prbp == 0] <- 1/nInd(Pram)
-#' Prbp
+#' # By default, allele frequencies will be corrected by 1/n per population
+#' (Prbp <- rraf(Pram, by_pop = TRUE))
 #' 
-#' # Get frequencies per population, but set zero-frequency alleles to 1/n
-#' (Prbp <- rraf(Pram, by_pop = TRUE, correction = TRUE))
+#' # This might be problematic because populations like PistolRSF_OR has a 
+#' # population size of four.
+#' 
+#' # By using the 'e' argument to rare_allele_correction, this can be set to a
+#' # more reasonable value.
+#' (Prbp <- rraf(Pram, by_pop = TRUE, e = 1/nInd(Pram)))
+#' 
 #' 
 #' 
 #' }
 #==============================================================================#
-rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE){
+rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, 
+                 correction = TRUE, ...){
   RES     <- c("list", "vector", "data.frame")
   res     <- match.arg(res, RES)
   if (!is.null(pop)){
@@ -202,20 +213,28 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
     }
     by_pop <- TRUE
   }
+  gid     <- as.genclone(gid)
   loclist <- seploc(gid)
   mlgs    <- rrmlg(gid)
   if (by_pop & !is.null(pop(gid))){
     out <- matrix(numeric(0), nrow = nPop(gid), ncol = ncol(tab(gid)))
     for (i in locNames(gid)){
-      out[, locFac(gid) %in% i] <- rrccbp(i, loclist, mlgs, correction, popNames(gid))
+      out[, locFac(gid) %in% i] <- rrccbp(i, loclist, mlgs, popNames(gid))
     }
     rownames(out) <- popNames(gid)
     colnames(out) <- colnames(tab(gid))
+    if (correction){
+      out <- rare_allele_correction(out, mlgs, mlg = nmll(gid), pop = pop(gid),
+                                     locfac = locFac(gid), ...)
+    }
     return(out)
   } else {
-    out <- lapply(locNames(gid), rrcc, loclist, mlgs, correction)
+    out <- lapply(locNames(gid), rrcc, loclist, mlgs)
   }
   names(out) <- locNames(gid)
+  if (correction){
+    out <- rare_allele_correction(out, mlgs, mlg = nmll(gid), ...)
+  }
   if (res == "vector"){
     out <- unlist(out, use.names = FALSE)
     names(out) <- colnames(tab(gid))
@@ -228,8 +247,169 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
   }
   return(out)
 }
+
+#==============================================================================#
+#' Correct minor allele frequencies derived from rraf (INTERNAL)
+#' 
+#' 
+#' Minor alleles are often lost when calculating allele frequencies from a 
+#' round-robin approach, resulting in zero-valued allele frequencies 
+#' (Arnaud-Haond et al. 2007, Parks and Werth 1993). This can be problematic 
+#' when calculating values for \code{\link{pgen}} and \code{\link{psex}}. This 
+#' function gives options for giving a value to these zero-valued frequencies. 
+#' \strong{This is an internal function. The documentation is for use with 
+#' \code{\link{rraf}}, \code{\link{pgen}}, and \code{\link{psex}}. Do not 
+#' attempt to use this function directly.}
+#' 
+#' 
+#' @param rraf \emph{internal} a list or matrix produced from \code{\link{rraf}}
+#'   (with uncorrected MAF)
+#' @param rrmlg \emph{internal} a matrix containing multilocus genotypes per 
+#'   locus derived from \code{\link{rrmlg}}
+#' @param e a numeric epsilon value to use for all missing allele frequencies.
+#' @param sum_to_one when \code{TRUE}, the original frequencies will be reduced 
+#'   so that all allele frequencies will sum to one. \strong{Default: 
+#'   \code{FALSE}}
+#' @param d the unit by which to take the reciprocal. \code{div = "sample"} will
+#'   be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div = 
+#'   "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.
+#' @param mul a multiplier for div. Default is \code{mult = 1}. This parameter
+#'   is overridden by \code{e}
+#' @param mlg \emph{internal} the number of MLGs in the sample. Only required if
+#'   \code{d = "mlg"}.
+#' @param pop \emph{internal} a vector of factors that define the population 
+#'   definition for each observation in \code{rrmlg}. This must be supplied if 
+#'   \code{rraf} is a matrix.
+#' @param locfac \emph{internal} a vector of factors that define the columns 
+#'   belonging to the loci.
+#'   
+#' @details Arguments of interest to the user are: 
+#' \itemize{
+#'  \item \strong{e}
+#'  \item \strong{sum_to_one}
+#'  \item \strong{d}
+#'  \item \strong{m}
+#' }
+#' By default (\code{d = "sample", e = NULL, sum_to_one = FALSE, mul = 1}), this
+#' will add 1/(n samples) to all zero-value alleles. The basic formula is
+#' \strong{1/(d * m)} unless \strong{e} is specified. If \code{sum_to_one =
+#' TRUE}, then the frequencies will be scaled as x/sum(x) AFTER correction,
+#' indicating that the allele frequencies will be reduced. See the examples for
+#' details. The general pattern of correction is that the value of the MAF will
+#' be \emph{rrmlg > mlg > sample} 
+#'   
+#' @return a matrix or vector the same type as rraf
+#' @keywords internal
+#' @author Zhian N. Kamvar
+#' @references
+#' 
+#' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
+#' Standardizing methods to address clonality in population studies.
+#' \emph{Molecular Ecology}, 16(24), 5115-5139.
+#' 
+#' Parks, J. C., & Werth, C. R. 1993. A study of spatial features of clones in a
+#' population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
+#' \emph{American Journal of Botany}, 537-544.
+#' 
+#' @seealso \code{\link{rraf}}, 
+#'   \code{\link{pgen}}, 
+#'   \code{\link{psex}}, 
+#'   \code{\link{rrmlg}}
+#'   
+#' @examples
+#' \dontrun{
+#' 
+#' data(Pram)
+#' #-------------------------------------
+#' 
+#' # If you set correction = FALSE, you'll notice the zero-valued alleles
+#' 
+#' rraf(Pram, correction = FALSE)
+#' 
+#' # By default, however, the data will be corrected by 1/n
+#' 
+#' rraf(Pram)
+#' 
+#' # Of course, this is a diploid organism, we might want to set 1/2n
+#' 
+#' rraf(Pram, mul = 1/2)
+#' 
+#' # To set MAF = 1/2mlg
+#' 
+#' rraf(Pram, d = "mlg", mul = 1/2)
+#' 
+#' # Another way to think about this is, since these allele frequencies were
+#' # derived at each locus with different sample sizes, it's only appropriate to
+#' # correct based on those sample sizes.
+#' 
+#' rraf(Pram, d = "rrmlg", mul = 1/2)
+#' 
+#' # If we were going to use these frequencies for simulations, we might want to
+#' # ensure that they all sum to one. 
+#' 
+#' rraf(Pram, d = "mlg", mul = 1/2, sum_to_one = TRUE) 
+#' 
+#' #-------------------------------------
+#' # When we calculate these frequencies based on population, they are heavily
+#' # influenced by the number of observed mlgs. 
+#' 
+#' rraf(Pram, by_pop = TRUE, d = "rrmlg", mul = 1/2)
+#' 
+#' # This can be fixed by specifying a specific value
+#' 
+#' rraf(Pram, by_pop = TRUE, e = 0.01)
+#' 
+#' }
+#' 
+#==============================================================================#
+rare_allele_correction <- function(rraf, rrmlg, e = NULL, sum_to_one = FALSE, 
+                                    d = c("sample", "mlg", "rrmlg"), mul = 1, 
+                                    mlg = NULL, pop = NULL, locfac = NULL){
+  
+  if (identical(parent.frame(), globalenv())){
+    msg <- paste0("\n\n\n",
+                  "    !!! rare_allele_correction() is for internal use only !!!",
+                  "\n\n",
+                  "    Input types are not checked within this function and may\n",
+                  "    result in an error. USE AT YOUR OWN RISK.\n\n\n")
+    warning(msg, immediate. = TRUE)
+  }
+  d <- match.arg(d, c("sample", "mlg", "rrmlg"))
+
+  if (is.list(rraf)){
+    if (is.null(e)){
+      e <- get_minor_allele_replacement(rrmlg, d, mul, mlg)
+    }
+    if (length(e) == 1){
+      e <- setNames(rep(e, ncol(rrmlg)), colnames(rrmlg))
+    }
+    res        <- lapply(names(rraf), replace_zeroes, rraf, e, sum_to_one)
+    names(res) <- names(rraf)
+  } else if (is.matrix(rraf)){
+    
+    # split matrix by population and locus
+    poplist <- apply(rraf, 1, split, locfac)
+    
+    # loop over populations and call this function again on the list of loci
+    res <- lapply(names(poplist), function(i){
+      prraf  <- poplist[[i]]
+      prrmlg <- rrmlg[pop == i, ]
+      rare_allele_correction(prraf, prrmlg, mlg = mlg, e = e, d = d, mul = mul, 
+                              sum_to_one = sum_to_one)
+    })
+    
+    # make this list of loci a matrix again
+    res           <- t(vapply(res, unlist, rraf[1, , drop = TRUE]))
+    dimnames(res) <- dimnames(rraf)
+  } 
+  return(res)
+}
+
 #==============================================================================#
 #' Genotype Probability
+#'
+#' Calculate the probability of genotypes based on the product of allele
+#' frequencies over all loci.
 #'
 #' @inheritParams rraf
 #' 
@@ -244,14 +424,12 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'   
 #' @param freq a vector or matrix of allele frequencies. This defaults to 
 #'   \code{NULL}, indicating that the frequencies will be determined via 
-#'   round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
-#'   TRUE}, and this matrix or vector is not provided, zero-value allele 
-#'   frequencies will automatically be corrected by 1/n.}
+#'   round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+#'   vector is not provided, zero-value allele frequencies will automatically be
+#'   corrected by \code{\link{rare_allele_correction}}.} Please see the
+#'   documentation for details.
 #'   
-#' @note Any zero-value allele frequencies will be corrected by 1/n. This is to
-#'   avoid any zero-probability genotypes. To counteract this, you can supply
-#'   your own allele frequencies with the \code{freq} argument (see example).
-#'   For haploids, Pgen at a particular locus is the allele frequency. This 
+#' @note For haploids, Pgen at a particular locus is the allele frequency. This 
 #'   function cannot handle polyploids. Additionally, when the argument 
 #'   \code{pop} is not \code{NULL}, \code{by_pop} is automatically \code{TRUE}.
 #'   
@@ -275,7 +453,8 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #'   examples).
 #'   
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
-#' @seealso \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}
+#' @seealso \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
+#' \code{\link{rare_allele_correction}}
 #' @references
 #' 
 #' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
@@ -293,33 +472,32 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRU
 #' 
 #' \dontrun{
 #' # You can get the Pgen values over all loci by summing over the logged results:
-#' exp(rowSums(pgen(Pram, log = TRUE, na.rm = TRUE)))
+#' exp(rowSums(pgen(Pram, log = TRUE), na.rm = TRUE))
 #' 
 #' # You can also take the product of the non-logged results:
 #' apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 #' 
-#' ## Dealing with zero-frequency allele correction
+#' ## Rare Allele Correction ---------------------------------------------------
+#' ##
 #' # By default, allele frequencies are calculated with rraf with 
 #' # correction = TRUE. This is normally benign when analyzing large populations,
-#' # but it can have a great effect on small populations. Here's a way to supply
-#' # your own correction.
+#' # but it can have a great effect on small populations. You can pass arguments 
+#' # for the function rare_allele_correction() to correct the allele frequencies
+#' # that were lost in the round robin calculations.
 #' 
-#' # First, calculate round robin allele frequencies by population with no 
-#' # correction. There are many zero values.
-#' (my_rraf <- rraf(Pram, by_pop = TRUE, correction = FALSE))
+#' # Default is to correct by 1/n per population. Since the calculation is 
+#' # performed on a smaller sample size due to round robin clone correction, it
+#' # would be more appropriate to correct by 1/rrmlg at each locus. This is 
+#' # acheived by setting d = "rrmlg". Since this is a diploid, we would want to
+#' # account for the number of chromosomes, and so we set mul = 1/2
+#' head(pgen(Pram, log = FALSE, d = "rrmlg", mul = 1/2)) # compare with the output above
 #' 
-#' # When you run pgen with these zero value allele frequencies, the
-#' # probabilities of some genotypes crash to zero.
-#' head(pgen(Pram, log = FALSE, freq = my_rraf))
-#' 
-#' # One solution: set the allele frequencies to 1/[samples in data]:
-#' my_rraf[my_rraf == 0] <- 1/nInd(Pram)
-#' 
-#' # Now we don't have genotype probabilites of zero.
-#' head(pgen(Pram, log = FALSE, freq = my_rraf))
+#' # If you wanted to treat all alleles as equally rare, then you would set a
+#' # specific value (let's say the rare alleles are 1/100):
+#' head(pgen(Pram, log = FALSE, e = 1/100))
 #' }
 #==============================================================================#
-pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
+pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
   stopifnot(is.genind(gid))
   # Stop if the ploidy of the object is not diploid
   stopifnot(all(ploidy(gid) %in% 1:2)) 
@@ -337,7 +515,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
   }   
   pops <- pop(gid)
   if (is.null(freq)){
-    freqs <- rraf(gid, by_pop = TRUE)
+    freqs <- rraf(gid, by_pop = TRUE, ...)
   } else if (is.matrix(freq)){
     if (nrow(freq) != nlevels(pops) || ncol(freq) != ncol(tab(gid))){
       stop("frequency matrix must have the same dimensions as the data.")
@@ -431,11 +609,10 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
 #' 
-#' # The above, but correcting zero-value alleles by 1/nInd(Pram)
-#' # See the documentation for rraf and pgen for details.
-#' pram_af <- rraf(Pram, by_pop = TRUE, correction = FALSE)
-#' pram_af[pram_af == 0] <- 1/nInd(Pram)
-#' Pram_psex2 <- psex(Pram, by_pop = TRUE, freq = pram_af)
+#' # The above, but correcting zero-value alleles by 1/(2*rrmlg) with no 
+#' # population structure assumed
+#' # See the documentation for rare_allele_correction for details.
+#' Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2)
 #' plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
 #' 
@@ -481,7 +658,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL){
 #' }
 #==============================================================================#
 psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL, 
-                 method = c("single", "multiple")){
+                 method = c("single", "multiple"), ...){
   stopifnot(is.genind(gid))
   if (!is.null(pop)){
     if (!is.language(pop)){
@@ -495,13 +672,13 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     gid <- as.genclone(gid)
   }
   mll(gid) <- "original"
-  METHOD <- c("single", "multiple")
-  method <- match.arg(method, METHOD)
-  xpgen  <- pgen(gid, by_pop = by_pop, freq = freq)
-  xpgen  <- exp(rowSums(xpgen, na.rm = TRUE))
+  METHOD   <- c("single", "multiple")
+  method   <- match.arg(method, METHOD)
+  xpgen    <- pgen(gid, by_pop = by_pop, freq = freq, ...)
+  xpgen    <- exp(rowSums(xpgen, na.rm = TRUE))
 
   if (method == "single"){
-    # Only caculate for single encounter (Parks and Werth, 1993)
+    # Only calculate for single encounter (Parks and Werth, 1993)
     G       <- ifelse(is.null(G), nmll(gid), G)
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)

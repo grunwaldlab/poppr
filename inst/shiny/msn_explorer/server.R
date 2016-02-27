@@ -1,87 +1,11 @@
 library("shiny")
 library("poppr")
-#------------------------------------------------------------------------------#
-# The functions below are those that the server utilizes to parse the data. 
-# Most of these allow the server to parse user input. 
-#------------------------------------------------------------------------------#
-
-#------------------------------------------------------------------------------#
-# Get dist, for example is simply a switch so that the user can select distances
-# from a pull-down menu. This is used if the user does not select "Custom".
-#------------------------------------------------------------------------------#
-get_dist <- function(indist){
-  indist <- switch(indist,
-      Dissimilarity = "diss.dist",
-      Bruvo         = "bruvo.dist",
-      Nei           = "nei.dist",
-      Rogers        = "rogers.dist",
-      Edwards       = "edwards.dist",
-      Provesti      = "provesti.dist",
-      Reynolds      = "reynolds.dist"
-  )
-  return(indist)
-}
-#------------------------------------------------------------------------------#
-# If the user does select custom, this function will make sure that it is 
-# encapsulated in parentheses. This makes sure that the entire expression is
-# evaluated.
-#------------------------------------------------------------------------------#
-parse_distfun <- function(x){
-  if (grepl("function", x)){
-    x <- paste0("(", x, ")")
-  }
-  return(x)
-}
-#------------------------------------------------------------------------------#
-# This is a function that will print vectors of numerics or characters in a way
-# that can be run directly from R. For example, if the user checks two boxes
-# labeling the populations "pop1" and "pop2", that vector of populations gets 
-# passed onto the popsub function. By default, it will print like so:
-#
-# [1] "pop1" "pop2"
-#
-# You cannot copy and paste this into R because it will throw an error, thus, 
-# this function will print the vector like so:
-#
-# c("pop1", "pop2")
-#
-# This is then usable in the Command tab for the popsub function.
-#------------------------------------------------------------------------------#
-make_dput <- function(x){
-  return(capture.output(dput(x)))
-}
-
-#------------------------------------------------------------------------------#
-# A function to search the user's global environment and grab all of the useable
-# objects. In this case, it's genind and genclone objects, but the objclass
-# argument allows this to be extensible to any class. This is immensely useful
-# so that the user does not have to save their objects as rda files, nor do they
-# have to save them as text files for input.
-#------------------------------------------------------------------------------#
-get_globals <- function(objclass = c("genind", "genclone")){
-  # Grab all object names in users R session.
-  myobjs <- ls(envir = .GlobalEnv) 
-  if (length(myobjs) == 0){
-    return(myobjs)
-  }
-  # Go through each name and test if it is any of the classes in objclass.
-  gens <- vapply(myobjs, FUN = is_usable, FUN.VALUE = logical(1), objclass)
-  myobjs[gens]
-}
-
-#------------------------------------------------------------------------------#
-# This function tests a single object name to see if it is of class objclass.
-# The function is used in get_globals
-#------------------------------------------------------------------------------#
-is_usable <- function(object, objclass = c("genind", "genclone")){
-  any(objclass %in% class(get(object, .GlobalEnv)))
-}
+source("../utils.R")
 #------------------------------------------------------------------------------#
 # Here, we query the user's R session to find all of the genind and genclone 
 # objects
 #------------------------------------------------------------------------------#
-globals <- get_globals(c("genind", "genclone"))
-
+globals <- get_globals(c("genind", "genclone", "genlight", "snpclone"))
 #==============================================================================|
 # The Server side of things has to balance several things going on at once from
 # the user's side. Many things are dependent on user selections. Most of the
@@ -171,7 +95,13 @@ shinyServer(function(input, output, session) {
     } else {
       dat <- new("genind")
     }
-    if (input$genclone) dat <- as.genclone(dat)
+    if (input$genclone) {
+      if (inherits(dat, "genlight")){
+        dat <- as.snpclone(dat)
+      } else {
+        dat <- as.genclone(dat)
+      }
+    }
     return(dat)
   })
   
@@ -246,10 +176,14 @@ shinyServer(function(input, output, session) {
   #-------------------------------------
   distfun <- reactive({ 
     if (input$distance == "Custom"){
-      parse_distfun(input$custom_distance)
+      the_dist <- parse_distfun(input$custom_distance)
     } else {
-      get_dist(input$distance) 
+      the_dist <- get_dist(input$distance) 
+      if (inherits(in_dataset(), "genlight") && the_dist == "diss.dist"){
+        the_dist <- "bitwise.dist"
+      }
     }
+    return(the_dist)
   })
 
   #-------------------------------------
@@ -261,7 +195,7 @@ shinyServer(function(input, output, session) {
   output$distargsUI <- renderUI({
     the_fun <- eval(parse(text = distfun()))
     the_args <- formals(the_fun)[-1]
-    the_args <- paste(names(the_args), unlist(the_args), sep = " = ", 
+    the_args <- paste(names(the_args), the_args, sep = " = ", 
                       collapse = ", ")
     textInput("distargs", label = "Distance arguments", the_args)
   })
@@ -302,7 +236,7 @@ shinyServer(function(input, output, session) {
   #-------------------------------------
   replen <- reactive({
     if (!grepl("\\(", input$replen)){
-      paste0("replen = c(", input$replen, ")")      
+      paste0("replen = c(", input$replen, ")")
     } else {
       paste0("replen = ", input$replen)
     }
@@ -342,7 +276,7 @@ shinyServer(function(input, output, session) {
         fun <- paste0("bruvo.msn(dataset(), ", args, ", showplot = FALSE, include.ties = ret)")
         out <- eval(parse(text = fun))
       } else {
-        if (indist != "diss.dist"){
+        if (indist != "diss.dist" && inherits(dataset(), "genind")){
           dat <- missingno(dataset(), "mean")
         } else {
           dat <- dataset()

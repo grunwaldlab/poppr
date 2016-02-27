@@ -4,13 +4,13 @@
 \alias{pgen}
 \title{Genotype Probability}
 \usage{
-pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL)
+pgen(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object.}
 
-\item{pop}{either a formula to set the population factor from the
-\code{\link{strata}} slot or a vector specifying the population factor for
+\item{pop}{either a formula to set the population factor from the 
+\code{\link{strata}} slot or a vector specifying the population factor for 
 each sample. Defaults to \code{NULL}.}
 
 \item{by_pop}{When this is \code{TRUE} (default), the calculation will be
@@ -22,16 +22,21 @@ be Pgen.}
 
 \item{freq}{a vector or matrix of allele frequencies. This defaults to 
 \code{NULL}, indicating that the frequencies will be determined via 
-round-robin approach in \code{\link{rraf}}. \strong{If \code{by_pop =
-TRUE}, and this matrix or vector is not provided, zero-value allele 
-frequencies will automatically be corrected by 1/n.}}
+round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+vector is not provided, zero-value allele frequencies will automatically be
+corrected by \code{\link{rare_allele_correction}}.} Please see the
+documentation for details.}
+
+\item{...}{options passed to \code{\link{rare_allele_correction}}. The
+default is to correct allele frequencies to 1/n}
 }
 \value{
 A vector containing Pgen values per locus for each genotype in the 
   object.
 }
 \description{
-Genotype Probability
+Calculate the probability of genotypes based on the product of allele
+frequencies over all loci.
 }
 \details{
 Pgen is the probability of a given genotype occuring in a population
@@ -51,10 +56,7 @@ Pgen is the probability of a given genotype occuring in a population
   examples).
 }
 \note{
-Any zero-value allele frequencies will be corrected by 1/n. This is to
-  avoid any zero-probability genotypes. To counteract this, you can supply
-  your own allele frequencies with the \code{freq} argument (see example).
-  For haploids, Pgen at a particular locus is the allele frequency. This 
+For haploids, Pgen at a particular locus is the allele frequency. This 
   function cannot handle polyploids. Additionally, when the argument 
   \code{pop} is not \code{NULL}, \code{by_pop} is automatically \code{TRUE}.
 }
@@ -64,30 +66,29 @@ head(pgen(Pram, log = FALSE))
 
 \dontrun{
 # You can get the Pgen values over all loci by summing over the logged results:
-exp(rowSums(pgen(Pram, log = TRUE, na.rm = TRUE)))
+exp(rowSums(pgen(Pram, log = TRUE), na.rm = TRUE))
 
 # You can also take the product of the non-logged results:
 apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 
-## Dealing with zero-frequency allele correction
+## Rare Allele Correction ---------------------------------------------------
+##
 # By default, allele frequencies are calculated with rraf with 
 # correction = TRUE. This is normally benign when analyzing large populations,
-# but it can have a great effect on small populations. Here's a way to supply
-# your own correction.
+# but it can have a great effect on small populations. You can pass arguments 
+# for the function rare_allele_correction() to correct the allele frequencies
+# that were lost in the round robin calculations.
 
-# First, calculate round robin allele frequencies by population with no 
-# correction. There are many zero values.
-(my_rraf <- rraf(Pram, by_pop = TRUE, correction = FALSE))
+# Default is to correct by 1/n per population. Since the calculation is 
+# performed on a smaller sample size due to round robin clone correction, it
+# would be more appropriate to correct by 1/rrmlg at each locus. This is 
+# acheived by setting d = "rrmlg". Since this is a diploid, we would want to
+# account for the number of chromosomes, and so we set mul = 1/2
+head(pgen(Pram, log = FALSE, d = "rrmlg", mul = 1/2)) # compare with the output above
 
-# When you run pgen with these zero value allele frequencies, the
-# probabilities of some genotypes crash to zero.
-head(pgen(Pram, log = FALSE, freq = my_rraf))
-
-# One solution: set the allele frequencies to 1/[samples in data]:
-my_rraf[my_rraf == 0] <- 1/nInd(Pram)
-
-# Now we don't have genotype probabilites of zero.
-head(pgen(Pram, log = FALSE, freq = my_rraf))
+# If you wanted to treat all alleles as equally rare, then you would set a
+# specific value (let's say the rare alleles are 1/100):
+head(pgen(Pram, log = FALSE, e = 1/100))
 }
 }
 \author{
@@ -103,6 +104,7 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \emph{American Journal of Botany}, 537-544.
 }
 \seealso{
-\code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}
+\code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
+\code{\link{rare_allele_correction}}
 }
 

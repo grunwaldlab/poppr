@@ -7,7 +7,7 @@
 test_replen(gid, replen)
 }
 \arguments{
-\item{gid}{a genind object}
+\item{gid}{a \code{\link{genind}} or \code{\link{genclone}} object}
 
 \item{replen}{a numeric vector of repeat motif lengths.}
 }

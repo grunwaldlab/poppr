@@ -2679,8 +2679,6 @@ add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
 # - i the index of the locus.
 # - loclist a list of genind objects each one locus.
 # - mlgs a matrix from rrmlg
-# - correction a logical indicating if zeroes should be replaced with the
-# smallest value
 #
 # Public functions utilizing this function:
 # ## rraf
@@ -2688,14 +2686,10 @@ add_tied_edges <- function(mst, distmat, tolerance = .Machine$double.eps ^ 0.5){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-rrcc <- function(i, loclist, mlgs, correction = TRUE){
+rrcc <- function(i, loclist, mlgs){
   cc  <- !duplicated(mlgs[, i])
   mat <- tab(loclist[[i]], freq = TRUE)
   res <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
-  names(res) <- alleles(loclist[[i]])[[1]]
-  if (correction){
-    res[res < .Machine$double.eps^0.5] <- 1/length(cc)    
-  }
   return(res)
 }
 #==============================================================================#
@@ -2705,8 +2699,6 @@ rrcc <- function(i, loclist, mlgs, correction = TRUE){
 # - i the index of the locus.
 # - loclist a list of genind objects each one locus.
 # - mlgs a matrix from rrmlg
-# - correction a logical indicating if zeroes should be replaced with the
-# smallest value
 # - pnames the population names.
 #
 # Public functions utilizing this function:
@@ -2715,7 +2707,7 @@ rrcc <- function(i, loclist, mlgs, correction = TRUE){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
+rrccbp <- function(i, loclist, mlgs, pnames){
   
   mat  <- tab(loclist[[i]], freq = TRUE)
   npop <- length(pnames)
@@ -2727,13 +2719,65 @@ rrccbp <- function(i, loclist, mlgs, correction = TRUE, pnames){
     psub <- pops %in% p
     cc   <- which(!duplicated(mlgs[psub, i]))
     out  <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
-    if (correction){
-      out[out < .Machine$double.eps^0.5] <- 1/length(cc)
-    }
     res[p, ] <- out
   }
   
   return(res)
+}
+
+#==============================================================================#
+# replace missing allele frequencies with a specified value
+# 
+# @param i the name or index of a locus
+# @param loci a list of allele frequencies by locus derived from the round-robin
+#   method
+# @param e a value to replace zero-value frequencies with
+# @param sum_to_one a boolean indicating whether or not allele frequencies at a
+#   single locus should sum to one.
+#
+# Public functions utilizing this function:
+# ## rare_allele_correction
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+
+replace_zeroes <- function(i, loci, e, sum_to_one = FALSE){
+  locus           <- loci[[i]]
+  missing_alleles <- locus <= .Machine$double.eps^0.5
+  locus[missing_alleles] <- e[i]
+  if (sum_to_one){
+    locus <- locus/sum(locus)
+  }
+  return(locus)
+}
+
+#==============================================================================#
+# prepare the value to set the minor allele
+#
+# @param rrmlg a matrix derived from rrmlg
+# @param d one of "sample", "mlg", or "rrmlg"
+# @param m a multiplier
+# @param mlg an integer or NULL specifying the number of unique multilocus
+#   genotypes in the sample.
+#
+# Public functions utilizing this function:
+# ## rare_allele_correction
+#
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+
+get_minor_allele_replacement <- function(rrmlg, d, m, mlg = NULL){
+  if (d == "sample"){
+    e <- (1/nrow(rrmlg)) * m
+  } else if (d == "mlg"){
+    e <- (1/mlg) * m
+  } else {
+    clones <- !apply(rrmlg, 2, duplicated)
+    e      <- setNames((1/colSums(clones)) * m, colnames(rrmlg))
+  }
+  return(e)
 }
 
 #==============================================================================#

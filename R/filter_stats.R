@@ -47,7 +47,7 @@
 #' This function is a wrapper to mlg.filter. It will calculate all of the stats 
 #' for mlg.filter utilizing all of the algorithms.
 #' 
-#' @param x a genind or genlight object
+#' @param x a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object
 #' @param distance a distance function or matrix
 #' @param threshold a threshold to be passed to \code{\link{mlg.filter}}
 #'   (Default: 1e6)

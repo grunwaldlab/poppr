@@ -12,8 +12,7 @@ pair.ia(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
   limits = NULL, index = "rbarD")
 }
 \arguments{
-\item{gid}{a \code{\link{genind}} object OR any fstat, structure, genetix, 
-genpop, or genalex formatted files.}
+\item{gid}{a \code{\link{genind}} or \code{\link{genclone}} object.}
 
 \item{sample}{an integer indicating the number of permutations desired (eg 
 999).}
