@@ -95,9 +95,11 @@ filter_stats <- function(x, distance = bitwise.dist,
                          threshold = 1e6 + .Machine$double.eps^0.5, 
                          stats = "All", missing = "ignore", plot = FALSE, 
                          cols = NULL, nclone = NULL, hist = "Scott", ...){
-  if (!"dist" %in% class(distance)){
-    DIST    <- match.fun(distance)
-    x       <- missingno(x, type = missing)
+  if (!inherits(distance, "dist")){
+    DIST <- match.fun(distance)
+    if (inherits(x, "genind")){
+      x <- missingno(x, type = missing)
+    }
     distmat <- DIST(x, ...)
   } else {
     distmat <- distance
