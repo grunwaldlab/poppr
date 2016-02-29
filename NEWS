@@ -20,6 +20,7 @@ MISC
 * the "hist" argument for `poppr()` is now deprecated in favor of "plot"
 * documentation improvements
 * the show method for snpclone objects now looks distinct from genlight
+* genlight objects no longer get passed to `missingno()` in `filter_stats()`
 
 BUG FIX
 ------------
