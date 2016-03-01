@@ -89,7 +89,8 @@
 #' @examples
 #' \dontrun{
 #' data(Pinf)
-#' filter_stats(Pinf, distance = diss.dist, percent = TRUE, plot = TRUE)
+#' pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
+#' filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE)
 #' }
 #==============================================================================#
 filter_stats <- function(x, distance = bitwise.dist, 
@@ -150,12 +151,17 @@ filter_stats <- function(x, distance = bitwise.dist,
 #' 
 #' @author Zhian N. Kamvar
 #' @examples
-#' \dontrun{
 #' data(Pinf)
-#' pthresh <- mlg.filter(Pinf, distance = diss.dist, percent = TRUE, 
-#'                       threshold = 1.1, stats = "THRESH")
-#' cutoff_predictor(pthresh)
-#' }
+#' pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
+#' pthresh  <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, 
+#'                          plot = TRUE, stats = "THRESHOLD")
+#' 
+#' # prediction for farthest neighbor
+#' cutoff_predictor(pthresh$farthest)
+#' 
+#' # prediction for all algorithms
+#' p <- sapply(pthresh, cutoff_predictor)
+#' abline(v = p, col = RColorBrewer::brewer.pal(3, "Set1"))
 #==============================================================================#
 cutoff_predictor <- function(thresholds, fraction = 0.5){
   frac    <- 1:round(length(thresholds)*fraction)

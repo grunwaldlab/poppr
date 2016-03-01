@@ -28,12 +28,17 @@ This function originally appeared in
   This is a bit of a blunt instrument.
 }
 \examples{
-\dontrun{
 data(Pinf)
-pthresh <- mlg.filter(Pinf, distance = diss.dist, percent = TRUE, 
-                      threshold = 1.1, stats = "THRESH")
-cutoff_predictor(pthresh)
-}
+pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
+pthresh  <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, 
+                         plot = TRUE, stats = "THRESHOLD")
+
+# prediction for farthest neighbor
+cutoff_predictor(pthresh$farthest)
+
+# prediction for all algorithms
+p <- sapply(pthresh, cutoff_predictor)
+abline(v = p, col = RColorBrewer::brewer.pal(3, "Set1"))
 }
 \author{
 Zhian N. Kamvar

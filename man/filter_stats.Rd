@@ -53,7 +53,8 @@ This function originally appeared in
 \examples{
 \dontrun{
 data(Pinf)
-filter_stats(Pinf, distance = diss.dist, percent = TRUE, plot = TRUE)
+pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
+filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE)
 }
 }
 \author{
