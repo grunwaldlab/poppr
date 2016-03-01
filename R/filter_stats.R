@@ -161,7 +161,7 @@ filter_stats <- function(x, distance = bitwise.dist,
 #' 
 #' # prediction for all algorithms
 #' p <- sapply(pthresh, cutoff_predictor)
-#' abline(v = p, col = RColorBrewer::brewer.pal(3, "Set1"))
+#' abline(v = p)
 #==============================================================================#
 cutoff_predictor <- function(thresholds, fraction = 0.5){
   frac    <- 1:round(length(thresholds)*fraction)
