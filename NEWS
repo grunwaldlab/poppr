@@ -21,6 +21,7 @@ MISC
 * documentation improvements
 * the show method for snpclone objects now looks distinct from genlight
 * genlight objects no longer get passed to `missingno()` in `filter_stats()`
+* `filter_stats()` now returns invisibly
 
 BUG FIX
 ------------

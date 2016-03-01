@@ -47,9 +47,10 @@
 #' This function is a wrapper to mlg.filter. It will calculate all of the stats 
 #' for mlg.filter utilizing all of the algorithms.
 #' 
-#' @param x a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object
+#' @param x a \code{\link{genind}}, \code{\link{genclone}},
+#'   \code{\link{genlight}}, or \code{\link{snpclone}} object
 #' @param distance a distance function or matrix
-#' @param threshold a threshold to be passed to \code{\link{mlg.filter}}
+#' @param threshold a threshold to be passed to \code{\link{mlg.filter}} 
 #'   (Default: 1e6)
 #' @param stats what statistics should be calculated.
 #' @param missing how to treat missing data with mlg.filter
@@ -61,29 +62,29 @@
 #'   This will draw horizontal line on the graph at the value nclone and then 
 #'   vertical lines showing the cutoff thresholds for each algorithm.
 #' @param hist if you want a histogram to be plotted behind the statistics, 
-#'   select a method here. Available methods are "sturges", "fd", or "scott"
-#'   (default) as documented in \code{\link[graphics]{hist}}. If you don't want
+#'   select a method here. Available methods are "sturges", "fd", or "scott" 
+#'   (default) as documented in \code{\link[graphics]{hist}}. If you don't want 
 #'   to plot the histogram, set \code{hist = NULL}.
 #' @param ... extra parameters passed on to the distance function.
 #'   
-#' @return a list of results from mlg.filter from the three algorithms.
+#' @return (invisibly) a list of results from mlg.filter from the three
+#'   algorithms.
 #' @export
-#' @seealso \code{\link{mlg.filter}} 
-#'   \code{\link{cutoff_predictor}} 
-#'   \code{\link{bitwise.dist}} 
-#'   \code{\link{diss.dist}}
+#' @seealso \code{\link{mlg.filter}} \code{\link{cutoff_predictor}} 
+#'   \code{\link{bitwise.dist}} \code{\link{diss.dist}}
 #' @note This function originally appeared in 
 #'   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
-#' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
-#' Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
-#' analysis of genome-wide population genetic data with emphasis on clonality'.
-#' DOI: \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
-#' 
-#' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
-#' genome-wide population genetic data with emphasis on clonality. Front. Genet.
-#' 6:208. doi:
-#' \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
-#' 
+#' @references ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary 
+#'   Material for Frontiers Plant Genetics and Genomics 'Novel R tools for 
+#'   analysis of genome-wide population genetic data with emphasis on
+#'   clonality'. DOI:
+#'   \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
+#'   
+#'   Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
+#'   genome-wide population genetic data with emphasis on clonality. Front.
+#'   Genet. 6:208. doi: 
+#'   \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+#'   
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
 #' \dontrun{
@@ -116,7 +117,7 @@ filter_stats <- function(x, distance = bitwise.dist,
       plot_filter_stats(x, fanlist, distmat, cols, nclone, hist)
     }
   }
-  return(fanlist)
+  return(invisible(fanlist))
 }
 #==============================================================================#
 #' Predict cutoff thresholds for use with mlg.filter
@@ -157,8 +158,8 @@ filter_stats <- function(x, distance = bitwise.dist,
 #' }
 #==============================================================================#
 cutoff_predictor <- function(thresholds, fraction = 0.5){
-  frac <- 1:round(length(thresholds)*fraction)
-  diffs <- diff(thresholds[frac])
+  frac    <- 1:round(length(thresholds)*fraction)
+  diffs   <- diff(thresholds[frac])
   diffmax <- which.max(diffs)
   mean(thresholds[diffmax:(diffmax + 1)])
 }

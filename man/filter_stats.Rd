@@ -9,11 +9,12 @@ filter_stats(x, distance = bitwise.dist, threshold = 1e+06 +
   plot = FALSE, cols = NULL, nclone = NULL, hist = "Scott", ...)
 }
 \arguments{
-\item{x}{a \code{\link{genind}}, \code{\link{genclone}}, \code{\link{genlight}}, or \code{\link{snpclone}} object}
+\item{x}{a \code{\link{genind}}, \code{\link{genclone}},
+\code{\link{genlight}}, or \code{\link{snpclone}} object}
 
 \item{distance}{a distance function or matrix}
 
-\item{threshold}{a threshold to be passed to \code{\link{mlg.filter}}
+\item{threshold}{a threshold to be passed to \code{\link{mlg.filter}} 
 (Default: 1e6)}
 
 \item{stats}{what statistics should be calculated.}
@@ -31,14 +32,15 @@ This will draw horizontal line on the graph at the value nclone and then
 vertical lines showing the cutoff thresholds for each algorithm.}
 
 \item{hist}{if you want a histogram to be plotted behind the statistics, 
-select a method here. Available methods are "sturges", "fd", or "scott"
-(default) as documented in \code{\link[graphics]{hist}}. If you don't want
+select a method here. Available methods are "sturges", "fd", or "scott" 
+(default) as documented in \code{\link[graphics]{hist}}. If you don't want 
 to plot the histogram, set \code{hist = NULL}.}
 
 \item{...}{extra parameters passed on to the distance function.}
 }
 \value{
-a list of results from mlg.filter from the three algorithms.
+(invisibly) a list of results from mlg.filter from the three
+  algorithms.
 }
 \description{
 This function is a wrapper to mlg.filter. It will calculate all of the stats 
@@ -58,20 +60,19 @@ filter_stats(Pinf, distance = diss.dist, percent = TRUE, plot = TRUE)
 Zhian N. Kamvar, Jonah C. Brooks
 }
 \references{
-ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
-Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
-analysis of genome-wide population genetic data with emphasis on clonality'.
-DOI: \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
-
-Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
-genome-wide population genetic data with emphasis on clonality. Front. Genet.
-6:208. doi:
-\href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
+ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary 
+  Material for Frontiers Plant Genetics and Genomics 'Novel R tools for 
+  analysis of genome-wide population genetic data with emphasis on
+  clonality'. DOI:
+  \href{http://dx.doi.org/10.5281/zenodo.17424}{10.5281/zenodo.17424}
+  
+  Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
+  genome-wide population genetic data with emphasis on clonality. Front.
+  Genet. 6:208. doi: 
+  \href{http://dx.doi.org/10.3389/fgene.2015.00208}{10.3389/fgene.2015.00208}
 }
 \seealso{
-\code{\link{mlg.filter}} 
-  \code{\link{cutoff_predictor}} 
-  \code{\link{bitwise.dist}} 
-  \code{\link{diss.dist}}
+\code{\link{mlg.filter}} \code{\link{cutoff_predictor}} 
+  \code{\link{bitwise.dist}} \code{\link{diss.dist}}
 }
 
