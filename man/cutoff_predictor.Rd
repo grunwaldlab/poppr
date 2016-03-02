@@ -38,7 +38,7 @@ cutoff_predictor(pthresh$farthest)
 
 # prediction for all algorithms
 p <- sapply(pthresh, cutoff_predictor)
-abline(v = p, col = RColorBrewer::brewer.pal(3, "Set1"))
+abline(v = p)
 }
 \author{
 Zhian N. Kamvar
