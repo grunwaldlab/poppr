@@ -67,8 +67,8 @@
 #'   to plot the histogram, set \code{hist = NULL}.
 #' @param ... extra parameters passed on to the distance function.
 #'   
-#' @return (invisibly) a list of results from mlg.filter from the three
-#'   algorithms.
+#' @return a list of results from mlg.filter from the three
+#'   algorithms. (returns invisibly if \code{plot = TRUE})
 #' @export
 #' @seealso \code{\link{mlg.filter}} \code{\link{cutoff_predictor}} 
 #'   \code{\link{bitwise.dist}} \code{\link{diss.dist}}
@@ -116,9 +116,10 @@ filter_stats <- function(x, distance = bitwise.dist,
   if (stats == "All"){
     if (plot){
       plot_filter_stats(x, fanlist, distmat, cols, nclone, hist)
+      return(invisible(fanlist))
     }
   }
-  return(invisible(fanlist))
+  return(fanlist)
 }
 #==============================================================================#
 #' Predict cutoff thresholds for use with mlg.filter

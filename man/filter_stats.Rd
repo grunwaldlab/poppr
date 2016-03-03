@@ -39,8 +39,8 @@ to plot the histogram, set \code{hist = NULL}.}
 \item{...}{extra parameters passed on to the distance function.}
 }
 \value{
-(invisibly) a list of results from mlg.filter from the three
-  algorithms.
+a list of results from mlg.filter from the three
+  algorithms. (returns invisibly if \code{plot = TRUE})
 }
 \description{
 This function is a wrapper to mlg.filter. It will calculate all of the stats 
