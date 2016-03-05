@@ -47,8 +47,8 @@ test_that("filter_stats works for genind", {
 	res <- lapply(res, "[[", "THRESHOLDS")
 	expect_true(all(unlist(lapply(res, "[", 1:2), use.names = FALSE) == 3))
 	expect_true(all(vapply(res, length, numeric(1)) == maxres))
-	expect_less_than(res$nearest[maxres], res$average[maxres])
-	expect_less_than(res$average[maxres], res$farthest[maxres])
+	expect_lt(res$nearest[maxres], res$average[maxres])
+	expect_lt(res$average[maxres], res$farthest[maxres])
 
   cpfart <- cutoff_predictor(res$farthest, 0.75)
   cpaver <- cutoff_predictor(res$average, 0.75)
@@ -69,8 +69,8 @@ test_that("filter_stats works for snpclone", {
 	expect_is(res$nearest, "list")
 	res <- lapply(res, "[[", "THRESHOLDS")
 	expect_true(all(vapply(res, length, numeric(1)) == maxres))
-	expect_less_than(res$nearest[maxres], res$average[maxres])
-	expect_less_than(res$average[maxres], res$farthest[maxres])
+	expect_lt(res$nearest[maxres], res$average[maxres])
+	expect_lt(res$average[maxres], res$farthest[maxres])
 })
 
 
