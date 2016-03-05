@@ -67,7 +67,7 @@ test_that("correction is properly applied in rraf", {
   # Correction can be turned off and on
   monc_vec  <- vapply(monc, sum, numeric(1))
   monnc_vec <- vapply(monnc, sum, numeric(1))
-  expect_more_than(sum(monc_vec), sum(monnc_vec))
+  expect_gt(sum(monc_vec), sum(monnc_vec))
   expect_equivalent(sum(monnc_vec), nLoc(monpop))
   
   # sum_to_one argument augments does what it says
