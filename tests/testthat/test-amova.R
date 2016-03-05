@@ -34,7 +34,7 @@ test_that("pegas implemenation returns published values", {
 
   expect_equivalent(pres$varcomp, ressig[-4])
   expect_equivalent(pres$varcomp/sum(pres$varcomp), resper[-4]/100)
-  expect_output(pres, "Variance components:")
+  expect_output(print(pres), "Variance components:")
   
   expect_equivalent(prescc$varcomp, resccsig[-4])
   expect_equivalent(prescc$varcomp/sum(prescc$varcomp), resccper[-4]/100)

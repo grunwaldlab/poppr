@@ -37,7 +37,7 @@ test_that("clone correction works for specified levels and throws errors", {
   
   # Errors for unexpected behavior.
   expect_error(clonecorrect(1), "1 is not")
-  expect_error(clonecorrect(aclone, ~field/sample), "field/sample") 
+  expect_error(clonecorrect(aclone, ~field/sample), "field, sample") 
   expect_error(clonecorrect(aclone, 1L:4L), "NA")
   strata(ac) <- NULL
   expect_warning(clonecorrect(ac), "Strata is not set for ac")
@@ -92,11 +92,11 @@ test_that("mll can convert a numeric mlg slot to MLG", {
 
 test_that("MLG class can print expected", {
   mll(Pinf) <- "original"
-  expect_output(Pinf@mlg, "86 original mlgs.")
+  expect_output(show(Pinf@mlg), "86 original mlgs.")
   mll(Pinf) <- "custom"
-  expect_output(Pinf@mlg, "86 custom mlgs.")
+  expect_output(show(Pinf@mlg), "86 custom mlgs.")
   mll(Pinf) <- "contracted"
-  expect_output(Pinf@mlg, "86 contracted mlgs with a cutoff of 0 based on the function nei.dist")
+  expect_output(show(Pinf@mlg), "86 contracted mlgs with a cutoff of 0 based on the function nei.dist")
   mll(Pinf) <- "original"
 })
 
@@ -132,9 +132,9 @@ test_that("mlg.crosspop can take sublist and blacklist", {
 "9")), MLG.52 = structure(c(1L, 1L), .Names = c("5", "9"))), .Names = c("MLG.13", 
 "MLG.23", "MLG.24", "MLG.32", "MLG.52"))
   
-  expect_output(mlg.crosspop(Athena, blacklist = 1), "MLG.13: \\(2 inds\\) 8 9")
-  expect_output(mlg.crosspop(Athena, blacklist = "1"), "MLG.13: \\(2 inds\\) 8 9")
-  expect_output(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1"), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(show(mlg.crosspop(Athena, blacklist = 1)), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(show(mlg.crosspop(Athena, blacklist = "1")), "MLG.13: \\(2 inds\\) 8 9")
+  expect_output(show(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1")), "MLG.13: \\(2 inds\\) 8 9")
   expect_equivalent(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1", quiet = TRUE), expectation)
 })
 
