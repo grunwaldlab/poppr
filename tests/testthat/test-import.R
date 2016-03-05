@@ -123,7 +123,7 @@ test_that("errors are reported", {
 	file2 <- tempfile()
 	genind2genalex(Pinf, filename = file1, quiet = TRUE)
 	genind2genalex(pr, filename = file2, quiet = TRUE)
-	expect_that(Pinf2 <- read.genalex(file1, ploidy = 4), not(throws_error()))
+	expect_error(Pinf2 <- read.genalex(file1, ploidy = 4), NA)
 
 	expect_error(Pinf2 <- read.genalex(file1), "set the flag?")
 	expect_error(Pinf2 <- read.genalex(file1, geo = TRUE), "geo = TRUE")

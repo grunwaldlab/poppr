@@ -261,7 +261,7 @@ test_that("subsetting and resetting MLGs works", {
   expect_equal(pmlg, Pinf@mlg[])
   expect_that(pmlg, not(equals(pres)))
   expect_equal(Pinf[mlg.reset = TRUE]@mlg[], pres)
-  expect_that(fullmlg, is_gt(realmlg))
+  expect_gt(fullmlg, realmlg)
   mll(Pinf) <- "original"
   expect_equal(mll(mll.reset(Pinf, TRUE)), pres)
   mll.custom(Pinf) <- paste("MLL", mll(Pinf))

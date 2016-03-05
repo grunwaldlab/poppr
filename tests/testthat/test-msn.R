@@ -256,10 +256,10 @@ mll(pc) <- "custom"
 
 test_that("msn works with custom MLLs", {
   skip_on_cran()
-  expect_that(pcmsn <- bruvo.msn(pc, replen = rep(1, 10)), not(throws_error()))
+  expect_error(pcmsn <- bruvo.msn(pc, replen = rep(1, 10)), NA)
   expect_equivalent(sort(unique(igraph::V(pcmsn$graph)$label)), sort(mll.levels(pc)))
-  expect_that(plot_poppr_msn(pc, pcmsn), not(throws_error()))
-  expect_that(plot_poppr_msn(pc, pcmsn, mlg = TRUE), not(throws_error()))
+  expect_error(plot_poppr_msn(pc, pcmsn), NA)
+  expect_error(plot_poppr_msn(pc, pcmsn, mlg = TRUE), NA)
 })
 
 test_that("vectors can be used to color graphs", {
