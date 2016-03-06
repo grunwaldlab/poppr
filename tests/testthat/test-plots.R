@@ -135,8 +135,11 @@ test_that("pair.ia produces a heatmap", {
 	  expect_equivalent(pplot, pplot2)
 	  expect_that(pplot2, not(is_equivalent_to(pplot_lim))) 
 	} else {
-	  expect_equivalent(pplot[-8], pplot2[-8])
-	  expect_that(pplot2[-8], not(is_equivalent_to(pplot_lim[-8])))
+	  pplotlim     <- pplot$scales$get_scales("fill")$get_limits()
+	  pplot2lim    <- pplot2$scales$get_scales("fill")$get_limits()
+	  pplot_limlim <- pplot_lim$scales$get_scales("fill")$get_limits()
+	  expect_equivalent(pplotlim, pplot2lim)
+	  expect_false(identical(pplotlim, pplot_limlim))
 	}
 	
 	

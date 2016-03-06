@@ -88,7 +88,7 @@ test_that("poppr perform clone correction", {
   expect_that(nrow(res_na), equals(nrow(Aeut_comparison)))
   expect_that(nrow(res_p), equals(nrow(Aeut_comparison)))
   expect_that(nrow(res_ps), equals(nrow(Aeut_comparison)))
-  expect_that(nrow(res_ps2), not(equals(nrow(Aeut_comparison))))
+  expect_gt(nrow(res_ps2), nrow(Aeut_comparison))
 
   expect_true(all(res_ps$N < Aeut_comparison$N))
   expect_true(all(res_p$N < res_ps$N))

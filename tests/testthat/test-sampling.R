@@ -30,10 +30,10 @@ test_that("shuffling methods behave as expected with polyploids", {
 
 	s2rows <- rowSums(tab(s2), na.rm = TRUE)
 	s3rows <- rowSums(tab(s3), na.rm = TRUE)
-	expect_that(rowSums(tab(s1)), equals(rowSums(tab(pr))))
+	expect_identical(rowSums(tab(s1)), rowSums(tab(pr)))
 	expect_true(all(s2rows == sample(s2rows, 1)))
 	expect_true(all(s3rows == sample(s3rows, 1)))
-	expect_that(rowSums(tab(s4)), not(equals(rowSums(tab(pr)))))
+	expect_false(identical(rowSums(tab(s4)), rowSums(tab(pr))))
 
 })
 
