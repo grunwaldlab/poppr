@@ -9,7 +9,7 @@ NEW FEATURES
 * `rraf()` now gives options for minor allele correction encompassed in the 
   internal function `rare_allele_correction()`. This extends also to `pgen()` 
   and `psex()`, which must correct minor allele frequencies by default. See 
-    issue #81 for details (https://github.com/grunwaldlab/poppr/issues/81).
+    https://github.com/grunwaldlab/poppr/issues/81 for details.
 
 MISC
 -----------
@@ -21,7 +21,8 @@ MISC
 * documentation improvements
 * the show method for snpclone objects now looks distinct from genlight
 * genlight objects no longer get passed to `missingno()` in `filter_stats()`
-* `filter_stats()` now returns invisibly
+* `filter_stats()` now returns invisibly when plot = TRUE; see 
+  https://github.com/grunwaldlab/poppr/issues/87 for details.
 
 BUG FIX
 ------------
