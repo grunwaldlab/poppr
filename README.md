@@ -8,13 +8,15 @@ On CRAN:
 [![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
 [![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
 [![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://cran.r-project.org/package=poppr)
+
+Impact:    
 [![Research software impact](http://depsy.org/api/package/cran/poppr/badge.svg)](http://depsy.org/package/r/poppr)
 
-## Welcome 
+## What is *poppr*?
 
-Poppr is an R package designed for analysis of populations with mixed modes of 
-sexual and clonal reproduction. It is built around the framework of [adegenet's](http://adegenet.r-forge.r-project.org/)
-genind object and offers the following implementations:
+*Poppr* is an R package designed for analysis of populations with mixed modes of 
+sexual and clonal reproduction. It is built around the framework of [adegenet's](http://github.com/thibautjombart/adegenet/)
+genind and genlight objects and offers the following implementations:
 
 - clone censoring of populations at any of multiple levels of a hierarchy
 - convenient counting of multilocus genotypes and sub-setting of populations with multiple levels of hierarchy
@@ -80,23 +82,11 @@ You can obtain citation information in R by typing:
 citation(package = "poppr")
 ```
 
-## Known issues on CRAN
-
-This R package is not a small package, and because of that, it is not
-unfathomable that there occasionally might be bugs. For bugs that exist within R
-code, they can be fixed by visiting
-https://gist.github.com/zkamvar/b64078a0d04d2452c905 and sourcing the code from
-there. Below is a list of known issues in version 2.1.0 that are fixed on
-GitHub, but not yet on CRAN:
-
-- none :)
-
-
 ## Installation
 
 ### From CRAN
 
-Binary versions for mac and windows are available for R &ge; 2.15.1 [**here**](http://cran.r-project.org/package=poppr).
+[Binary versions for mac and windows are available for R &ge; 2.15.1 **here**](http://cran.r-project.org/package=poppr).
 
 To install, make sure R is at least version 2.15.1 (the authors recommend &ge;
 3.0), and in your console, type:
@@ -122,16 +112,27 @@ For Linux users, make sure that the function `getOption("unzip")` returns
 `"unzip"` or `"internal"`. If it doesn't, then run `options(unzip =
 "internal")`.
 
-Now you can use the `install_github()` function:
+Once you have devtools and a C compiler installed, you can use the 
+`install_github()` function to install the current version from github.
 
-#### For the latest stable release:    
+#### Stable version
+
+This release will contain bug fixes and new, documented, and stable features 
+that will be included in future releases. Note: if you don't have LaTeX
+installed, you should set `build_vignettes = FALSE`.
 
 ```R
 devtools::install_github(repo = "grunwaldlab/poppr", build_vignettes = TRUE)
 library("poppr")
 ```
 
-#### For the bleeding edge (development) version:
+#### Unstable/Development versions
+
+All new features in testing will be released on different branches. These 
+features will be in various stages of development and may or may not be 
+documented. Install with caution. The below command would install features on 
+the the branch called "devel". Note that these branches might be out of date
+from the master branch.
 
 ```R
 devtools::install_github(repo = "grunwaldlab/poppr@devel", build_vignettes = TRUE)
@@ -140,11 +141,13 @@ library("poppr")
 
 ## Help / Documentation
 
-### User Group
+### R documentation
 
-Users who have any questions/comments/suggestions regarding any version of poppr
-(stable or development) should direct their comments to the [Poppr google
-group](http://groups.google.com/group/poppr)
+To access a descriptive index of help files in *poppr*, type in your console:
+
+```r
+package?poppr
+```
 
 ### Vignettes
 
@@ -156,6 +159,12 @@ A few vignettes have been written for poppr:
 |Data import and manipulation   |`vignette("poppr_manual", "poppr")`   |
 |Migration from poppr version 1 |`vignette("how_to_migrate", "poppr")` |
 |Multilocus Genotype Analysis   |`vignette("mlg", "poppr")`            |
+
+### User Group
+
+Users who have any questions/comments/suggestions regarding any version of poppr
+(stable or development) should direct their comments to the [Poppr google
+group](http://groups.google.com/group/poppr)
 
 ### Book/Primer
 
