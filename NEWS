@@ -28,6 +28,8 @@ BUG FIX
 
 * When supplied an object with no strata, `clonecorrect()` will default to
   `strata = NA`.
+* `read.genalex()` will no longer fail if missing data is not coded as zero;
+  see https://github.com/grunwaldlab/poppr/issues/84 for details
 
 poppr 2.1.0
 ===========
