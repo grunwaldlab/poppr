@@ -442,12 +442,9 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
               paste0(cutoff*100,"%")," found.\n")
         } else {
           remloc <- locNames(pop)[!cumsum(nAll(pop)) %in% navals]
-          message("\n Found ", sum(is.na(tab(pop)))," missing values.")
-          loci   <- paste(length(remloc), ifelse(length(remloc) == 1, "locus", 
-                          "loci"))
-          cat("\n", loci, "contained missing values greater than",
-              paste0(cutoff*100,"%."))
-          cat("\n Removing", loci, ":", remloc,"\n", fill = 80)
+          rem    <- sum(is.na(tab(pop)))
+          missing_messenger(remloc, type = c("locus", "loci"), nremoved = rem, 
+                            cutoff = cutoff)
         }
       }
       pop <- pop[, navals]
@@ -458,12 +455,9 @@ missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FAL
               paste0(cutoff*100, "%")," found.\n")
         } else {
           remgeno <- indNames(pop)[-navals]
-          message("\n Found ", sum(is.na(tab(pop)))," missing values.")
-          geno    <- paste(length(remgeno), ifelse(length(remgeno) == 1, 
-                           "genotype", "genotypes"))
-          cat("\n", geno, "contained missing values greater than",
-              paste0(cutoff*100,"%."))
-          cat("\n Removing", geno, ":", remgeno,"\n", fill = 80)
+          rem     <- sum(is.na(tab(pop)))
+          missing_messenger(remgeno, type = c("genotype", "genotypes"),
+                            nremoved = rem, cutoff = cutoff)
         }
       }
       pop <- pop[navals, ]

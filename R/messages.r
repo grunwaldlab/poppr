@@ -54,20 +54,23 @@
 #==============================================================================#
 
 poppr_message <- function(){
-  cat("-----------------------------------------------------------------------|\n")
-  cat("Pop     = Population name (Total == Pooled)\n")
-  cat("N       = Census population size\n")
-  cat("MLG     = Number of unique multilocus genotypes (MLG) observed\n")
-  cat("eMLG    = Number of expected MLG based on rarefaction at smallest N >= 10\n")
-  cat("SE      = Standard error of rarefaction analysis\n")
-  cat("H       = Shannon-Wiener Index of MLG diversity\n")
-  cat("G       = Stoddart and Taylor's Index of MLG diversity\n")
-  cat("lambda  = Simpson's index\n")
-  cat("E.5     = Evenness\n")
-  cat("Hexp    = Nei's 1978 expected heterozygosity\n")
-  cat("Ia      = Index of association\n")
-  cat("rbarD   = Standardized index of association\n")
-  cat("-----------------------------------------------------------------------|\n")
+  msg <- paste0(
+  "-------------------------------------------------------------------------|\n",
+  "Pop     = Population name (Total == Pooled)\n",
+  "N       = Census population size\n",
+  "MLG     = Number of unique multilocus genotypes (MLG) observed\n",
+  "eMLG    = Number of expected MLG based on rarefaction at smallest N >= 10\n",
+  "SE      = Standard error of rarefaction analysis\n",
+  "H       = Shannon-Wiener Index of MLG diversity\n",
+  "G       = Stoddart and Taylor's Index of MLG diversity\n",
+  "lambda  = Simpson's index\n",
+  "E.5     = Evenness\n",
+  "Hexp    = Nei's 1978 expected heterozygosity\n",
+  "Ia      = Index of association\n",
+  "rbarD   = Standardized index of association\n",
+  "-------------------------------------------------------------------------|\n"
+  )
+  message(msg)
 }
 
 #==============================================================================#
@@ -175,4 +178,31 @@ mlg_sub_warning <- function(mlgs){
   msg <- paste0("The following multilocus genotypes are not defined in this ",
                 "dataset: ", paste(mlgs, collapse = ", "))
   return(msg)
+}
+
+
+#==============================================================================#
+# create a message about missing data
+#
+# param things a character vector of names that are removed
+# param type a vector of length two giving the singular and plural of things
+# param nremoved the number of removed items
+# param cutoff the cutoff at which items were removed
+# 
+# Public functions utilizing this function:
+# ## missingno
+# 
+# Internal functions utilizing this function:
+# ## none
+#==============================================================================#
+missing_messenger <- function(things, type = c("locus", "loci"), nremoved = 1, 
+                              cutoff = 0.05){
+  type <- ifelse(length(things) == 1, type[1], type[2])
+  cutoff <- cutoff*100
+  msg <- paste0("\nFound ", nremoved, " missing values.\n\n",
+                length(things), " ", type, 
+                " contained missing values greater than ", cutoff, "%\n\n",
+                "Removing ", length(things), " ", type, ":\n", 
+                format_char_width(things, width = getOption("width") - 10))
+  message(msg)
 }
