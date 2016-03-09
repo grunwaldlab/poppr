@@ -88,7 +88,7 @@ test_that("poppr perform clone correction", {
   expect_that(nrow(res_na), equals(nrow(Aeut_comparison)))
   expect_that(nrow(res_p), equals(nrow(Aeut_comparison)))
   expect_that(nrow(res_ps), equals(nrow(Aeut_comparison)))
-  expect_that(nrow(res_ps2), not(equals(nrow(Aeut_comparison))))
+  expect_gt(nrow(res_ps2), nrow(Aeut_comparison))
 
   expect_true(all(res_ps$N < Aeut_comparison$N))
   expect_true(all(res_p$N < res_ps$N))
@@ -108,8 +108,8 @@ test_that("poppr skips over sample sizes less than three", {
 
 test_that("poppr can produce output from input file", {
   skip_on_cran()
-  expect_output(out <- poppr(afile, legend = TRUE), "Simpson")
-  expect_output(outs <- poppr(sims, legend = TRUE), "Simpson")
+  expect_message(out <- poppr(afile, legend = TRUE), "Simpson")
+  expect_message(outs <- poppr(sims, legend = TRUE), "Simpson")
   expect_is(out, "popprtable")
   expect_is(outs, "popprtable")
 })

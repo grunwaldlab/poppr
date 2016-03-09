@@ -7,9 +7,9 @@ set.seed(5000)
 
 test_that("visible accessor works", {
   skip_on_cran()
-  expect_output(visible(m), "original")
+  expect_output(show(visible(m)), "original")
   visible(m) <- "contracted"
-  expect_output(m, "contracted")
+  expect_output(show(m), "contracted")
 })
 
 test_that("MLG2df produces a data frame", {

@@ -22,16 +22,16 @@ test_that("info_table plots work", {
 	expect_equivalent(nancy.count[1, 1], 2)
 	expect_equal(Pinf.ploid["PiCO01", "Pi4B"], 3)
 
-	expect_output(pp$layers[[1]], "geom_tile")
-	expect_output(pp$facet, "facet_null\\(\\)")
+	expect_output(print(pp$layers[[1]]), "geom_tile")
+	expect_output(print(pp$facet), "facet_null\\(\\)")
 
-	expect_output(np$layers[[1]], "geom_tile")
-	expect_output(np$layers[[2]], "geom_hline")
-	expect_output(np$layers[[3]], "geom_vline")
-	expect_output(np$layers[[4]], "geom_text")
+	expect_output(print(np$layers[[1]]), "geom_tile")
+	expect_output(print(np$layers[[2]]), "geom_hline")
+	expect_output(print(np$layers[[3]]), "geom_vline")
+	expect_output(print(np$layers[[4]]), "geom_text")
 
 	expect_equal(length(nc$layers), 3)
-	expect_output(np$facet, "facet_null\\(\\)")
+	expect_output(print(np$facet), "facet_null\\(\\)")
 })
 
 test_that("info_table plots ploidy for diploids", {
@@ -47,8 +47,8 @@ test_that("mlg.table produces barplots", {
 	pt <- ggplot2::last_plot()
 	expect_is(pt, "ggplot")
 	expect_equal(names(pt$data), c("Population", "MLG", "count", "fac"))
-	expect_output(pt$facet, "facet_wrap\\(Population\\)")
-	expect_output(pt$layers, "geom_bar")
+	expect_output(print(pt$facet), "facet_wrap\\(Population\\)")
+	expect_output(print(pt$layers), "geom_bar")
 })
 
 test_that("genotype_curve produces boxplots", {
@@ -60,10 +60,10 @@ test_that("genotype_curve produces boxplots", {
 	pg <- ggplot2::last_plot()
 	expect_is(pg, "ggplot")
 	expect_equal(names(pg$data), c("sample", "NumLoci", "MLG"))
-	expect_output(pg$facet, "facet_null\\(\\)")
-	expect_output(pg$layers[[1]], "geom_boxplot")
-	expect_output(pg$layers[[2]], "geom_hline")
-	expect_output(pg$layers[[3]], "geom_text")
+	expect_output(print(pg$facet), "facet_null\\(\\)")
+	expect_output(print(pg$layers[[1]]), "geom_boxplot")
+	expect_output(print(pg$layers[[2]]), "geom_hline")
+	expect_output(print(pg$layers[[3]]), "geom_text")
 })
 
 test_that("genotype_curve shows output if not quiet", {
@@ -87,36 +87,36 @@ test_that("ia produces histograms", {
 	res    <- ia(nancy, sample = 20, valuereturn = TRUE, quiet = TRUE)
 	iaplot <- ggplot2::last_plot()
 	expect_is(res, "ialist")
-	expect_output(res, "Index")
+	expect_output(print(res), "Index")
 	plot(res)
 	expect_equivalent(iaplot$data, ggplot2::last_plot()$data)
 
 	pres   <- poppr(nancy, sample = 20, quiet = TRUE, total = FALSE)
 	poplot <- ggplot2::last_plot()
 	expect_is(pres, "popprtable")
-	expect_output(pres, "nancy")
+	expect_output(print(pres), "nancy")
 
 	if (ggversion <= oldgg){
-	  expect_output(iaplot$layers[[1]], "geom_histogram")
+	  expect_output(print(iaplot$layers[[1]]), "geom_histogram")
 	} else {
-	  expect_output(iaplot$layers[[1]], "geom_bar")
+	  expect_output(print(iaplot$layers[[1]]), "geom_bar")
 	}
 	
-	expect_output(iaplot$layers[[2]], "geom_rug")
-	expect_output(iaplot$layers[[3]], "geom_vline")
-	expect_output(iaplot$layers[[4]], "geom_text")
-	expect_output(iaplot$layers[[5]], "geom_text")
-	expect_output(iaplot$facet, "facet_null\\(\\)")
+	expect_output(print(iaplot$layers[[2]]), "geom_rug")
+	expect_output(print(iaplot$layers[[3]]), "geom_vline")
+	expect_output(print(iaplot$layers[[4]]), "geom_text")
+	expect_output(print(iaplot$layers[[5]]), "geom_text")
+	expect_output(print(iaplot$facet), "facet_null\\(\\)")
 
 	if (ggversion <= oldgg){
-	  expect_output(poplot$layers[[1]], "geom_histogram")
+	  expect_output(print(poplot$layers[[1]]), "geom_histogram")
 	} else {
-	  expect_output(poplot$layers[[1]], "geom_bar")
+	  expect_output(print(poplot$layers[[1]]), "geom_bar")
 	}
 	
-	expect_output(poplot$layers[[2]], "geom_rug")
-	expect_output(poplot$layers[[3]], "geom_vline")
-	expect_output(poplot$facet, "facet_wrap\\(population\\)")
+	expect_output(print(poplot$layers[[2]]), "geom_rug")
+	expect_output(print(poplot$layers[[3]]), "geom_vline")
+	expect_output(print(poplot$facet), "facet_wrap\\(population\\)")
 })
 
 test_that("pair.ia produces a heatmap", {
@@ -135,16 +135,19 @@ test_that("pair.ia produces a heatmap", {
 	  expect_equivalent(pplot, pplot2)
 	  expect_that(pplot2, not(is_equivalent_to(pplot_lim))) 
 	} else {
-	  expect_equivalent(pplot[-8], pplot2[-8])
-	  expect_that(pplot2[-8], not(is_equivalent_to(pplot_lim[-8])))
+	  pplotlim     <- pplot$scales$get_scales("fill")$get_limits()
+	  pplot2lim    <- pplot2$scales$get_scales("fill")$get_limits()
+	  pplot_limlim <- pplot_lim$scales$get_scales("fill")$get_limits()
+	  expect_equivalent(pplotlim, pplot2lim)
+	  expect_false(identical(pplotlim, pplot_limlim))
 	}
 	
 	
 
-	expect_output(pplot$layers[[1]], "geom_tile")
-	expect_output(pplot$layers[[1]], "stat_identity")
-	expect_output(pplot$layers[[1]], "position_identity")
-	expect_output(pplot$facet, "facet_null\\(\\)")
+	expect_output(print(pplot$layers[[1]]), "geom_tile")
+	expect_output(print(pplot$layers[[1]]), "stat_identity")
+	expect_output(print(pplot$layers[[1]]), "position_identity")
+	expect_output(print(pplot$facet), "facet_null\\(\\)")
 })
 
 test_that("diversity_ci produces boxplots and correct output", {
@@ -154,13 +157,13 @@ test_that("diversity_ci produces boxplots and correct output", {
 	expect_message(datdf <- diversity_ci(Pinf, n = 10, raw = FALSE), msg)
 	ciplot <- ggplot2::last_plot()
 	expect_is(datdf, "popprtable")
-	expect_output(datdf, "\\(\\d\\.\\d{3}, \\d\\.\\d{3})")
+	expect_output(print(datdf), "\\(\\d\\.\\d{3}, \\d\\.\\d{3})")
 	expect_is(ciplot, "ggplot")
 
-	expect_output(ciplot$layers[[1]], "geom_boxplot")
-	expect_output(ciplot$layers[[2]], "geom_point")
-	expect_output(ciplot$layers[[3]], "geom_errorbar")
-	expect_output(ciplot$facet, "facet_wrap\\(Index\\)")
+	expect_output(print(ciplot$layers[[1]]), "geom_boxplot")
+	expect_output(print(ciplot$layers[[2]]), "geom_point")
+	expect_output(print(ciplot$layers[[3]]), "geom_errorbar")
+	expect_output(print(ciplot$facet), "facet_wrap\\(Index\\)")
 
 })
 
@@ -171,14 +174,14 @@ test_that("diversity_ci produces boxplots for rarefaction", {
 	expect_message(datdf <- diversity_ci(Pinf, n = 10, raw = FALSE, rarefy = TRUE), msg)
 	ciplot <- ggplot2::last_plot()
 	expect_is(datdf, "popprtable")
-	expect_output(datdf, "\\(\\d\\.\\d{3}, \\d\\.\\d{3})")
-	expect_output(datdf, "NA")
+	expect_output(print(datdf), "\\(\\d\\.\\d{3}, \\d\\.\\d{3})")
+	expect_output(print(datdf), "NA")
 	expect_is(ciplot, "ggplot")
 
 	expect_equal(length(ciplot$layers), 2)
-	expect_output(ciplot$layers[[1]], "geom_boxplot")
-	expect_output(ciplot$layers[[2]], "geom_point")
-	expect_output(ciplot$facet, "facet_wrap\\(Index\\)")
+	expect_output(print(ciplot$layers[[1]]), "geom_boxplot")
+	expect_output(print(ciplot$layers[[2]]), "geom_point")
+	expect_output(print(ciplot$facet), "facet_wrap\\(Index\\)")
 })
 
 

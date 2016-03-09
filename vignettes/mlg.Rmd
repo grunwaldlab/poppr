@@ -381,6 +381,8 @@ pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
 pinf_filtered <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE)
 ```
 ```{r, echo = FALSE}
+pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
+pinf_dist <- bruvo.dist(Pinf, replen = pinfreps)
 pinf_filtered <- structure(list(farthest = structure(list(THRESHOLDS = c(0.0126262626262626, 
 0.0218986742424242, 0.0227272727272727, 0.0227272727272727, 0.0353535353535354, 
 0.0416666666666667, 0.0426136363636364, 0.0454545440998944, 0.0469933712121212, 
@@ -447,7 +449,7 @@ pinf_filtered <- structure(list(farthest = structure(list(THRESHOLDS = c(0.01262
     0.287377917766571)), .Names = "THRESHOLDS")), .Names = c("farthest", 
 "average", "nearest"))
 
-plot_filter_stats(Pinf, pinf_filtered, 0.6)
+plot_filter_stats(Pinf, pinf_filtered, pinf_dist, breaks = "Scott")
 ```
 
 We can see that the different algorithms behave quite differently. 

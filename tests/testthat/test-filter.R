@@ -47,8 +47,8 @@ test_that("filter_stats works for genind", {
 	res <- lapply(res, "[[", "THRESHOLDS")
 	expect_true(all(unlist(lapply(res, "[", 1:2), use.names = FALSE) == 3))
 	expect_true(all(vapply(res, length, numeric(1)) == maxres))
-	expect_less_than(res$nearest[maxres], res$average[maxres])
-	expect_less_than(res$average[maxres], res$farthest[maxres])
+	expect_lt(res$nearest[maxres], res$average[maxres])
+	expect_lt(res$average[maxres], res$farthest[maxres])
 
   cpfart <- cutoff_predictor(res$farthest, 0.75)
   cpaver <- cutoff_predictor(res$average, 0.75)
@@ -69,8 +69,8 @@ test_that("filter_stats works for snpclone", {
 	expect_is(res$nearest, "list")
 	res <- lapply(res, "[[", "THRESHOLDS")
 	expect_true(all(vapply(res, length, numeric(1)) == maxres))
-	expect_less_than(res$nearest[maxres], res$average[maxres])
-	expect_less_than(res$average[maxres], res$farthest[maxres])
+	expect_lt(res$nearest[maxres], res$average[maxres])
+	expect_lt(res$average[maxres], res$farthest[maxres])
 })
 
 
@@ -85,52 +85,52 @@ test_that("mlg.filter can remember things", {
   suppressWarnings(mlg.filter(gc) <- 0)
   
   # Code is shown after modification and values are set to 0, nei and farthest
-  expect_output(x, tda)
+  expect_output(show(x), tda)
   original_vals <- "(0).+?(nei.dist).+?(farthest).+?"
   gc_original_vals <- "(0).+?(bitwise.dist).+?(farthest).+?"
-  expect_output(x, original_vals)
-  expect_output(gc, gc_original_vals)
+  expect_output(show(x), original_vals)
+  expect_output(show(gc), gc_original_vals)
   
   # supplied distance matrices work
   assign("x20150702210257_distance", xd, envir = .GlobalEnv)
   assign("x20150703173505_distance", bitwise.dist(gc, differences_only = TRUE), envir = .GlobalEnv)
   mlg.filter(x, distance = x20150702210257_distance) <- 0
   mlg.filter(gc, distance = x20150703173505_distance) <- 0
-  expect_output(x, "x20150702210257_distance")
-  expect_output(gc, "x20150703173505_distance")
+  expect_output(show(x), "x20150702210257_distance")
+  expect_output(show(gc), "x20150703173505_distance")
   
   # choosing different algorithms work
   mlg.filter(x, algo = "average") <- 0
   mlg.filter(gc, algo = "average") <- 0
-  expect_output(x, "average")
-  expect_output(gc, "average")
+  expect_output(show(x), "average")
+  expect_output(show(gc), "average")
   
   # and the distance is still persistent
-  expect_output(x, "x20150702210257_distance")
-  expect_output(gc, "x20150703173505_distance")
+  expect_output(show(x), "x20150702210257_distance")
+  expect_output(show(gc), "x20150703173505_distance")
 
   # choosing different distances with parameters works
   mlg.filter(x, distance = diss.dist, percent = TRUE) <- 0
   expect_equal(nmll(x), 5)
-  expect_output(x, "diss.dist")
+  expect_output(show(x), "diss.dist")
   
   mlg.filter(gc, distance = bitwise.dist, percent = FALSE) <- 0
   expect_equal(nmll(gc), 100)
-  expect_output(gc, "bitwise.dist")
+  expect_output(show(gc), "bitwise.dist")
   
   # algorithms are persistant
-  expect_output(x, "average")
-  expect_output(gc, "average")
+  expect_output(show(x), "average")
+  expect_output(show(gc), "average")
   
   # Parameters are kept (default for diss.dist is percent = FALSE)
   mlg.filter(x) <- 0.75
   expect_equal(nmll(x), 3)
-  expect_output(x, "0.75")
+  expect_output(show(x), "0.75")
   
   # (default for bitwise.dist is percent = TRUE)
   mlg.filter(gc) <- 500
   expect_equal(nmll(gc), 81)
-  expect_output(gc, "500")
+  expect_output(show(gc), "500")
   
   mlg.filter(x, distance = x20150702210257_distance) <- 4.51
   expect_equal(nmll(x), 2)

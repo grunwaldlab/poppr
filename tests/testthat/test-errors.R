@@ -13,7 +13,7 @@ test_that("bruvo.dist throws an error when given non-microsatellite data", {
 	data("Aeut", package = "poppr")
 	data("H3N2", package = "adegenet")
 	expect_error(bruvo.dist(Aeut))
-	expect_error(bruvo.dist(H3N2))
+	expect_error(suppressWarnings(bruvo.dist(H3N2)))
 })
 
 test_that("bruvo.dist estimates repeat length when replen is not present", {

@@ -97,8 +97,8 @@ test_that("mlg.matrix returns a matrix and not table", {
   mat1row <- poppr:::mlg.matrix(partial_clone)
   expect_that(mat4row, is_a("matrix"))
   expect_that(mat1row, is_a("matrix"))
-  expect_that(mat1row, not(is_a("table")))
-  expect_that(mat4row, not(is_a("table")))
+  expect_false(inherits(mat1row, "table"))
+  expect_false(inherits(mat4row, "table"))
 })
 
 test_that("diversity_stats returns expected values", {
@@ -158,7 +158,7 @@ test_that("ia and pair.ia return same values", {
   skip_on_cran()
   data(partial_clone)
   pc_pair <- pair.ia(partial_clone, plot = FALSE, quiet = TRUE)
-  expect_output(pc_pair, "Locus_1:Locus_2")
+  expect_output(print(pc_pair), "Locus_1:Locus_2")
   
   # Randomly sample two loci
   set.seed(9001)
