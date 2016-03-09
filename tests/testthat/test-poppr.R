@@ -108,8 +108,8 @@ test_that("poppr skips over sample sizes less than three", {
 
 test_that("poppr can produce output from input file", {
   skip_on_cran()
-  expect_output(out <- poppr(afile, legend = TRUE), "Simpson")
-  expect_output(outs <- poppr(sims, legend = TRUE), "Simpson")
+  expect_message(out <- poppr(afile, legend = TRUE), "Simpson")
+  expect_message(outs <- poppr(sims, legend = TRUE), "Simpson")
   expect_is(out, "popprtable")
   expect_is(outs, "popprtable")
 })

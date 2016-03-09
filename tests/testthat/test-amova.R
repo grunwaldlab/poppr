@@ -97,11 +97,11 @@ test_that("AMOVA can calculate within individual variance for diploids", {
   data("microbov", package = "adegenet")
   strata(microbov) <- data.frame(other(microbov))
   mics <- microbov[pop = 1:2]
-  expect_output(micwithin  <- poppr.amova(mics, ~breed), "Removing")
+  expect_message(micwithin  <- poppr.amova(mics, ~breed), "Removing")
   expect_output(poppr.amova(mics, ~breed, correction = "cai"), "Cailliez constant")
   expect_output(poppr.amova(mics, ~breed, correction = "lin"), "Lingoes constant")
   expect_error(poppr.amova(mics, ~breed, correction = "wha", quiet = TRUE), "cailliez")
-  expect_output(micwithout <- poppr.amova(mics, ~breed, within = FALSE), "Removing")
+  expect_message(micwithout <- poppr.amova(mics, ~breed, within = FALSE), "Removing")
   expect_equal(dim(micwithin$componentsofcovariance), c(4, 2))
   expect_equal(dim(micwithout$componentsofcovariance), c(3, 2))
 })

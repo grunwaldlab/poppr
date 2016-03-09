@@ -31,6 +31,8 @@ BUG FIX
   `strata = NA`.
 * `read.genalex()` will no longer fail if missing data is not coded as zero;
   see https://github.com/grunwaldlab/poppr/issues/84 for details
+* `missingno()` no longer removes genotypes AT specified threshold;
+  see https://github.com/grunwaldlab/poppr/issues/90 for details
 
 poppr 2.1.0
 ===========
