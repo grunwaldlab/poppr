@@ -295,10 +295,11 @@ process_file <- function(input, quiet=TRUE, missing="ignore", cutoff=0.05,
 percent_missing <- function(pop, type="loci", cutoff=0.05){
   if (toupper(type) == "LOCI"){
     missing_loci        <- 1 - propTyped(pop, "loc")
-    names(missing_loci) <- levels(locFac(pop))
-    missing_loci        <- missing_loci[missing_loci > cutoff]
-    misslist            <- 1:ncol(pop@tab)
-    filter              <- !locFac(pop) %in% names(missing_loci)
+    locfac              <- locFac(pop)
+    names(missing_loci) <- levels(locfac)
+    missing_loci        <- missing_loci[missing_loci <= cutoff]
+    misslist            <- 1:length(locfac)
+    filter              <- locfac %in% names(missing_loci)
   } else {
     missing_geno <- 1 - propTyped(pop, "ind")
     misslist     <- 1:nInd(pop)
@@ -307,6 +308,27 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
   return(misslist[filter])
 }
 
+#==============================================================================#
+# format character width for messages
+#
+# Public functions utilizing this function:
+# ## none
+#
+# Internal functions utilizing this function:
+# ## missing_messenger
+#==============================================================================#
+
+format_char_width <- function(x, width = 81, newline = "\n", line_start = "\t"){
+  x <- paste0(x, " ")
+  chars    <- nchar(x)
+  word_end <- cumsum(chars)
+  new_lines <- word_end %% width %in% 1:max(chars)
+  x[1] <- paste0(line_start, x[1])
+  new_lines[1] <- FALSE
+  x[new_lines] <- paste0(x[new_lines], newline)
+  x[which(new_lines) + 1] <- paste0(line_start, x[which(new_lines) + 1])
+  return(paste(x, collapse = ""))
+}
 #==============================================================================#
 # This implements rounding against the IEEE standard and rounds 0.5 up
 # Public functions utilizing this function:
