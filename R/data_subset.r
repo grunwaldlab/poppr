@@ -409,16 +409,16 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
 #' 
 #' ## Replaced 617 missing values 
 #==============================================================================#
-  #####
-  #####
-  #####
-  #####
-#######
-#######
-#######
-#######
-#######
-#######
+# ###'' 
+# --,,` 
+# ##,`+ 
+# #.-`. 
+# --','-. 
+# `+&#-+' 
+# .`','## 
+# &`''#*' 
+# `&-'-'# 
+# '`##.-, 
 missingno <- function(pop, type = "loci", cutoff = 0.05, quiet=FALSE, freq = FALSE){
   if (is(pop, "genlight")){
     warning("missingno cannot be applied to genlight objects at this time.")
