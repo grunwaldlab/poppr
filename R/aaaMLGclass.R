@@ -73,7 +73,6 @@ setClassUnion("charORLang", c("character", "language"))
 #' (x <- sample(10, 20, replace = TRUE))
 #' (m <- new("MLG", x))
 #' 
-#' \dontrun{
 #'  visible(m) # original is always default
 #'  
 #'  m[]       # adding braces after the object will always return a vector of 
@@ -92,7 +91,6 @@ setClassUnion("charORLang", c("character", "language"))
 #'  # return a vector unless you specify all = TRUE
 #'  m[1:10]             # original vector
 #'  m[1:10, all = TRUE] # still class MLG
-#' }
 #' 
 #==============================================================================#
 setClass("MLG", 
