@@ -41,5 +41,6 @@ l.197 \end{Section}
 
 
 ## Downstream dependencies
-popprxl: pending
-vcfR: pending
+
+- popprxl: pending
+- vcfR: pending
