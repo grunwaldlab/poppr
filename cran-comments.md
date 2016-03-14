@@ -10,6 +10,7 @@
 
 ### NOTE on win-builder devel:
 
+```
 * checking CRAN incoming feasibility ... NOTE
 Maintainer: 'Zhian N. Kamvar <kamvarz@science.oregonstate.edu>'
 
@@ -18,11 +19,14 @@ Found the following (possibly) invalid URLs:
     From: README.md
     Status: 401
     Message: Unauthorized
+```
 
 This is indeed a valid URL
 
+
 ### WARNING with version 3.2.4
 
+```
 * checking PDF version of manual ... WARNING
 LaTeX errors when creating PDF version.
 This typically indicates Rd problems.
@@ -33,6 +37,8 @@ fstartlink.
                                                   \fi \fi 
 l.197 \end{Section}
 !  ==> Fatal error occurred, no output PDF file produced!
+```
+
 
 ## Downstream dependencies
 popprxl: pending
