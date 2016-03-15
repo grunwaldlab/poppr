@@ -39,6 +39,7 @@ object of class \code{\linkS4class{MLG}}.}
   extends class \code{"\linkS4class{genlight}"}, directly.
 }
 \examples{
+\dontrun{
 
 # genclone objects can be created from genind objects
 #
@@ -55,6 +56,8 @@ set.seed(999)
 # Use mlg.filter to create a distance threshold to define multilocus genotypes.
 mlg.filter(sc) <- 0.25
 sc # 82 mlgs
+
+}
 }
 \author{
 Zhian N. Kamvar

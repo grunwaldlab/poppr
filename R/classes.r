@@ -81,6 +81,7 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #'   \code{\link{MLG}} \code{\link{mll}} \code{\link{mlg.filter}}
 #' @import methods
 #' @examples
+#' \dontrun{
 #' 
 #' # genclone objects can be created from genind objects
 #' #
@@ -97,6 +98,8 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #' # Use mlg.filter to create a distance threshold to define multilocus genotypes.
 #' mlg.filter(sc) <- 0.25
 #' sc # 82 mlgs
+#' 
+#' }
 #==============================================================================#
 setClass("genclone", 
          contains = "genind",
