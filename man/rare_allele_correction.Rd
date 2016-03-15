@@ -42,14 +42,14 @@ belonging to the loci.}
 a matrix or vector the same type as rraf
 }
 \description{
-Minor alleles are often lost when calculating allele frequencies from a 
-round-robin approach, resulting in zero-valued allele frequencies 
-(Arnaud-Haond et al. 2007, Parks and Werth 1993). This can be problematic 
-when calculating values for \code{\link{pgen}} and \code{\link{psex}}. This 
-function gives options for giving a value to these zero-valued frequencies. 
 \strong{This is an internal function. The documentation is for use with 
 \code{\link{rraf}}, \code{\link{pgen}}, and \code{\link{psex}}. Do not 
-attempt to use this function directly.}
+attempt to use this function directly.} Minor alleles are often lost when
+calculating allele frequencies from a round-robin approach, resulting in
+zero-valued allele frequencies (Arnaud-Haond et al. 2007, Parks and Werth
+1993). This can be problematic when calculating values for \code{\link{pgen}}
+and \code{\link{psex}}. This function gives options for giving a value to
+these zero-valued frequencies.
 }
 \details{
 Arguments of interest to the user are: 
@@ -131,5 +131,4 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
   \code{\link{psex}}, 
   \code{\link{rrmlg}}
 }
-\keyword{internal}
 
