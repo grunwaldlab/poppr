@@ -9,8 +9,8 @@ This has been fixed and re-tested.
 ## Test environments
 
 * local OS X install, R 3.2.4
-* ubuntu 12.04 (on travis-ci), devel [2016-03-14 r70328] and R 3.2.3
-* win-builder (devel [2016-03-14 r70328] and release [3.2.4])
+* ubuntu 12.04 (on travis-ci), devel [2016-03-15 r70332] and R 3.2.3
+* win-builder (devel [2016-03-14 r70331] and release [3.2.4])
 
 ## R CMD check results
 
