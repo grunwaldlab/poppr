@@ -1,10 +1,18 @@
 ## Resubmission
 
-This resubmission is to address a failure building the package documentation,
-The location of the error was idenitified by Kurt Hornik, and I believe it was 
-caused by an errant '\#' in a URL. 
+This resubmission is to address a bizarre accumulation of user time from two
+examples (spotted by Kurt):
 
-This has been fixed and re-tested.
+```
+* checking examples ... [69s/23s] OK
+Examples with CPU or elapsed time > 5s
+                  user system elapsed
+cutoff_predictor 33.812  0.012   2.500
+genclone-class   14.164  0.180   1.316
+```
+
+Behavior of these examples is normally well under a second, but I have set them
+to not run. 
 
 ## Test environments
 
