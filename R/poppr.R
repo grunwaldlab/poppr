@@ -88,7 +88,7 @@
 #'   
 #'   \subsection{Getting help}{ If you have a specific question or issue with 
 #'   \pkg{poppr}, feel free to contribute to the google group at 
-#'   \url{https://groups.google.com/forum/#!forum/poppr}. If you find a bug and 
+#'   \url{https://groups.google.com/group/poppr}. If you find a bug and 
 #'   are a github user, you can submit bug reports at 
 #'   \url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a
 #'   message on the groups. Personal emails are highly discouraged as they do 
