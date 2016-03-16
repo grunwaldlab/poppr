@@ -600,23 +600,25 @@ informloci <- function(pop, cutoff = 2/nInd(pop), MAF = 0.01, quiet = FALSE){
                   "lower cutoff value?\nReturning with no changes.")
     locivals <- rep(TRUE, nLoc(pop))
   } else {
-    glocsum <- sum(!glocivals)
-    alocsum <- sum(!alocivals)
-    locsum  <- sum(!locivals)
-    fmsg <- paste("Found", locsum, "uninformative", 
-                  ifelse(locsum != 1, "loci", "locus"), "\n",
-                  "============================")
-    gmsg <- paste(glocsum, 
-                  ifelse(glocsum != 1, "loci", "locus"), "found with",
-                  "a cutoff of", min_ind, ind, 
-                  ifelse(glocsum == 0, "", ":\n"),
-                  paste(locNames(pop)[!glocivals], collapse = ", "))
-    amsg <- paste(alocsum, 
-                  ifelse(alocsum != 1, "loci", "locus"),
-                  "found with MAF <", signif(MAF, 3), 
-                  ifelse(alocsum == 0, "", ":\n"),
-                  paste(locNames(pop)[!alocivals], collapse = ", "))
-    msg <- paste("\n", fmsg, "\n", gmsg, "\n", amsg)
+    msg <- uninformative_loci_message(pop, glocivals, alocivals, locivals, 
+                                      min_ind, ind, MAF)
+    # glocsum <- sum(!glocivals)
+    # alocsum <- sum(!alocivals)
+    # locsum  <- sum(!locivals)
+    # fmsg <- paste("Found", locsum, "uninformative", 
+    #               ifelse(locsum != 1, "loci", "locus"), "\n",
+    #               "============================")
+    # gmsg <- paste(glocsum, 
+    #               ifelse(glocsum != 1, "loci", "locus"), "found with",
+    #               "a cutoff of", min_ind, ind, 
+    #               ifelse(glocsum == 0, "", ":\n"),
+    #               paste(locNames(pop)[!glocivals], collapse = ", "))
+    # amsg <- paste(alocsum, 
+    #               ifelse(alocsum != 1, "loci", "locus"),
+    #               "found with MAF <", signif(MAF, 3), 
+    #               ifelse(alocsum == 0, "", ":\n"),
+    #               paste(locNames(pop)[!alocivals], collapse = ", "))
+    # msg <- paste("\n", fmsg, "\n", gmsg, "\n", amsg)
   }
 
   if (!isTRUE(quiet)){

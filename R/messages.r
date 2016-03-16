@@ -209,4 +209,27 @@ missing_messenger <- function(things, type = c("locus", "loci"), nremoved = 1,
   message(msg)
 }
 
-
+uninformative_loci_message <- function(pop, glocivals, alocivals, locivals, 
+                                       min_ind, ind, MAF){
+  glocsum <- sum(!glocivals)
+  alocsum <- sum(!alocivals)
+  locsum  <- sum(!locivals)
+  lnames  <- locNames(pop)
+  cutoff  <- paste(lnames[!glocivals], collapse = ", ")
+  MAFloc  <- paste(lnames[!alocivals], collapse = ", ")
+  fmsg <- paste("Found", locsum, "uninformative", 
+                ifelse(locsum != 1, "loci", "locus"), "\n",
+                "============================")
+  gmsg <- paste(glocsum, 
+                ifelse(glocsum != 1, "loci", "locus"), "found with",
+                "a cutoff of", min_ind, ind, 
+                ifelse(glocsum == 0, "", ":\n"),
+                paste(strwrap(cutoff), collapse = "\n"))
+  amsg <- paste(alocsum, 
+                ifelse(alocsum != 1, "loci", "locus"),
+                "found with MAF <", signif(MAF, 3), 
+                ifelse(alocsum == 0, "", ":\n"),
+                paste(strwrap(MAFloc), collapse = "\n"))
+  msg <- paste("\n", fmsg, "\n", gmsg, "\n", amsg)
+  return(msg)
+}
