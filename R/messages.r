@@ -208,3 +208,5 @@ missing_messenger <- function(things, type = c("locus", "loci"), nremoved = 1,
                 paste(strwrap(things_no_more), collapse = "\n"))
   message(msg)
 }
+
+
