@@ -152,21 +152,18 @@ filter_stats <- function(x, distance = bitwise.dist,
 #' 
 #' @author Zhian N. Kamvar
 #' @examples
-#' \dontrun{
 #' 
 #' data(Pinf)
 #' pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
 #' pthresh  <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, 
-#'                          plot = TRUE, stats = "THRESHOLD")
+#'                          plot = TRUE, stats = "THRESHOLD", threads = 1L)
 #' 
 #' # prediction for farthest neighbor
 #' cutoff_predictor(pthresh$farthest)
 #' 
 #' # prediction for all algorithms
-#' p <- sapply(pthresh, cutoff_predictor)
-#' abline(v = p)
+#' sapply(pthresh, cutoff_predictor)
 #' 
-#' }
 #==============================================================================#
 cutoff_predictor <- function(thresholds, fraction = 0.5){
   frac    <- 1:round(length(thresholds)*fraction)

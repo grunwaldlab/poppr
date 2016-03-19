@@ -92,11 +92,11 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #' # snpclone objects can be created from genlight objects
 #' #
 #' set.seed(999)
-#' (gl <- glSim(100, 0, n.snp.struc = 1e3, ploidy = 2))
-#' (sc <- as.snpclone(gl))
+#' (gl <- glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE))
+#' (sc <- as.snpclone(gl, parallel = FALSE))
 #' # 
 #' # Use mlg.filter to create a distance threshold to define multilocus genotypes.
-#' mlg.filter(sc) <- 0.25
+#' mlg.filter(sc, threads = 1L) <- 0.25
 #' sc # 82 mlgs
 #' 
 #' }

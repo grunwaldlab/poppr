@@ -6,7 +6,8 @@
 \usage{
 filter_stats(x, distance = bitwise.dist, threshold = 1e+06 +
   .Machine$double.eps^0.5, stats = "All", missing = "ignore",
-  plot = FALSE, cols = NULL, nclone = NULL, hist = "Scott", ...)
+  plot = FALSE, cols = NULL, nclone = NULL, hist = "Scott",
+  threads = 0L, ...)
 }
 \arguments{
 \item{x}{a \code{\link{genind}}, \code{\link{genclone}},
@@ -36,6 +37,8 @@ select a method here. Available methods are "sturges", "fd", or "scott"
 (default) as documented in \code{\link[graphics]{hist}}. If you don't want 
 to plot the histogram, set \code{hist = NULL}.}
 
+\item{threads}{the number of threads to use. Passed on to \code{\link{mlg.filter}}.}
+
 \item{...}{extra parameters passed on to the distance function.}
 }
 \value{
@@ -51,11 +54,9 @@ This function originally appeared in
   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
 }
 \examples{
-\dontrun{
 data(Pinf)
 pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
-filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE)
-}
+filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE, threads = 1L)
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks

@@ -28,21 +28,18 @@ This function originally appeared in
   This is a bit of a blunt instrument.
 }
 \examples{
-\dontrun{
 
 data(Pinf)
 pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
 pthresh  <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, 
-                         plot = TRUE, stats = "THRESHOLD")
+                         plot = TRUE, stats = "THRESHOLD", threads = 1L)
 
 # prediction for farthest neighbor
 cutoff_predictor(pthresh$farthest)
 
 # prediction for all algorithms
-p <- sapply(pthresh, cutoff_predictor)
-abline(v = p)
+sapply(pthresh, cutoff_predictor)
 
-}
 }
 \author{
 Zhian N. Kamvar
