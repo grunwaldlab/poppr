@@ -1,6 +1,12 @@
 poppr 2.1.1.99
 ===========
 
+NEW FEATURES
+-----------
+
+* Threshold argument added to `filter_stats()` 
+  (see https://github.com/grunwaldlab/poppr/issues/94)
+
 poppr 2.1.1
 ===========
 
