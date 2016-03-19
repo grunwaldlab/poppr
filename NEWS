@@ -6,6 +6,12 @@ NEW FEATURES
 
 * Threshold argument added to `filter_stats()` 
   (see https://github.com/grunwaldlab/poppr/issues/94)
+  
+BUG FIX
+-----------
+
+* An issue that caused errors in the `imsn()` code output was fixed
+  (see https://github.com/grunwaldlab/poppr/issues/93)
 
 poppr 2.1.1
 ===========

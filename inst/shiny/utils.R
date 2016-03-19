@@ -37,7 +37,8 @@ parse_distfun <- function(x){
 # This is then usable in the Command tab for the popsub function.
 #------------------------------------------------------------------------------#
 make_dput <- function(x){
-  return(capture.output(dput(x)))
+  the_dput <- capture.output(dput(x))
+  return(paste(the_dput, collapse = ""))
 }
 
 #------------------------------------------------------------------------------#
