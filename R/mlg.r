@@ -82,7 +82,9 @@
 #'   
 #' @return \subsection{mlg}{ an integer describing the number of multilocus
 #' genotypes observed. } \subsection{mlg.table}{ a matrix with columns
-#' indicating unique multilocus genotypes and rows indicating populations. } 
+#' indicating unique multilocus genotypes and rows indicating populations. The
+#' diversity metrics are the Shannon-Weaver index (H), Stoddart and Taylor's 
+#' index (aka inverse Simpson's index; G), Simpson's index (lambda) and evenness (E5).} 
 #' \subsection{mlg.vector}{ a numeric vector naming the multilocus genotype of
 #' each individual in the dataset. } \subsection{mlg.crosspop}{ \itemize{ 
 #' \item{default}{ a \code{list} where each element contains a named integer
@@ -95,6 +97,7 @@
 #' individual names per MLG. }
 #' 
 #' @seealso \code{\link[vegan]{diversity}} 
+#'  \code{\link{diversity_stats}}
 #'  \code{\link{popsub}}
 #'  \code{\link{mll}}
 #'  \code{\link{mlg.filter}}
