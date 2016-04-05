@@ -32,6 +32,17 @@ Genlight objects can contain millions of loci. Since it does not make much
 sense to calculate the index of association over that many loci, this
 function will randomly sample sites to calculate the index of association.
 }
+\details{
+The index of association is a summary of linkage disequilibrium among many loci.
+More information on the index of association can be found associated with the funciton \code{ia}.
+This function will call the function \code{bitwise.ia} for \code{reps} times to calculate the index of association over \code{n.snp} loci.
+The standardized index of association ('rbarD') will be calculated \code{reps} times.
+The range of this index is zero (linkage equilibrium) to one (linkage disequilibrium).
+These esitmates of linkage disequilibrium from random genomic fractions can then be summarized (e.g., using a histogram) as an estimate of genome-wide linkage disequilibrium.
+
+
+This function currently only works for objects of class genlight or snpclone that are of a single ploidy level and that ploidy is either haploid or diploid.
+}
 \note{
 this will calculate the standardized index of association from Agapow
 2001. See \code{\link{ia}} for details.
@@ -62,5 +73,6 @@ Zhian N. Kamvar, Jonah C. Brooks
    \code{\link{win.ia}},
    \code{\link{ia}},
    \code{\link{bitwise.dist}}
+   \code{\link{bitwise.ia}}
 }
 
