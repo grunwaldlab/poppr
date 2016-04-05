@@ -90,8 +90,8 @@ Calculate the Index of Association and Standardized Index of Association.
 Obtain p-values from one-sided permutation tests.
 }
 \details{
-The function \code{ia} will calculate this over the whole data set while
-\code{pair.ia} will calculate the index pairwise per locus.
+The function \code{ia} will calculate the index of association over all loci in the data set while
+\code{pair.ia} will calculate the index in a pairwise manner among all loci.
 
 The index of association was originally developed by A.H.D. Brown 
   analyzing population structure of wheat (Brown, 1980). It has been widely 
@@ -108,7 +108,7 @@ The index of association was originally developed by A.H.D. Brown
   variances over each locus . You can also think of it as the observed 
   variance over the expected variance. If they  are the same, then the index 
   is zero after subtracting one (from Maynard-Smith, 1993): \deqn{I_A = 
-  \frac{V_O}{V_E}-1}{Ia = Vo/Ve} Since the distance is more or less a binary 
+  \frac{V_O}{V_E}-1}{Ia = (Vo/Ve) - 1} Since the distance is more or less a binary 
   distance, any sort of marker can be used for this analysis. In the 
   calculation, phase is not considered, and any difference increases the 
   distance between two individuals. Remember that each column represents a 
