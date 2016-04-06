@@ -385,7 +385,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 #' More information on the index of association can be found associated with the funciton \code{ia}.
 #' This function will call the function \code{bitwise.ia} for \code{reps} times to calculate the index of association over \code{n.snp} loci.
 #' The standardized index of association ('rbarD') will be calculated \code{reps} times.
-#' The range of this index is zero (linkage equilibrium) to one (linkage disequilibrium).
+#' The range of this index is negative one to one where a value of zero indicates that the observed variance in among individual distance is equal to the expected variance (linkage equilibrium).
 #' However, if the observed variance in distance among individuals is less than the expected, mildly negative values may be observed.
 #' These esitmates of linkage disequilibrium from random genomic fractions can then be summarized (e.g., using a histogram) as an estimate of genome-wide linkage disequilibrium.
 #' 
