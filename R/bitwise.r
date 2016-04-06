@@ -382,8 +382,8 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 #' @param quiet if \code{FALSE}, a progress bar will be printed to the screen.
 #'
 #' @details The index of association is a summary of linkage disequilibrium among many loci.
-#' More information on the index of association can be found associated with the funciton \code{ia}.
-#' This function will call the function \code{bitwise.ia} for \code{reps} times to calculate the index of association over \code{n.snp} loci.
+#' More information on the index of association can be found associated with the funciton \code{\link{ia}}.
+#' This function will call the function \code{\link{bitwise.ia}} for \code{reps} times to calculate the index of association over \code{n.snp} loci.
 #' The standardized index of association ('rbarD') will be calculated \code{reps} times.
 #' The range of this index is negative one to one where a value of zero indicates that the observed variance in among individual distance is equal to the expected variance (linkage equilibrium).
 #' However, if the observed variance in distance among individuals is less than the expected, mildly negative values may be observed.
