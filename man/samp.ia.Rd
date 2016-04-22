@@ -33,16 +33,24 @@ sense to calculate the index of association over that many loci, this
 function will randomly sample sites to calculate the index of association.
 }
 \details{
-The index of association is a summary of linkage disequilibrium among many loci.
-More information on the index of association can be found associated with the funciton \code{\link{ia}}.
-This function will call the function \code{\link{bitwise.ia}} for \code{reps} times to calculate the index of association over \code{n.snp} loci.
-The standardized index of association ('rbarD') will be calculated \code{reps} times.
-The range of this index is negative one to one where a value of zero indicates that the observed variance in among individual distance is equal to the expected variance (linkage equilibrium).
-However, if the observed variance in distance among individuals is less than the expected, mildly negative values may be observed.
-These esitmates of linkage disequilibrium from random genomic fractions can then be summarized (e.g., using a histogram) as an estimate of genome-wide linkage disequilibrium.
+The index of association is a summary of linkage disequilibrium 
+  among many loci. More information on the index of association can be found 
+  associated with the funciton \code{\link{ia}}. A value near or at zero
+  indicator of linkage equilibrium, whereas values significantly greater than
+  zero indicate linkage disequilibrium. However, if the observed variance in 
+  distance among individuals is less than the expected, mildly negative 
+  values may be observed (as the range of this index is negative one to one).
+  This function will call the function \code{\link{bitwise.ia}} for
+  \code{reps} times to calculate the index of association over \code{n.snp}
+  loci. The standardized index of association ('rbarD') will be calculated
+  \code{reps} times. These esitmates of linkage disequilibrium from random
+  genomic fractions can then be summarized (e.g., using a histogram) as an
+  estimate of genome-wide linkage disequilibrium.
+  
 
-
-This function currently only works for objects of class genlight or snpclone that are of a single ploidy level and that ploidy is either haploid or diploid.
+This function currently only works for objects of class genlight or snpclone
+that are of a single ploidy level and that ploidy is either haploid or
+diploid.
 }
 \note{
 this will calculate the standardized index of association from Agapow
