@@ -249,53 +249,31 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 }
 
 #==============================================================================#
-#' Correct minor allele frequencies derived from rraf (INTERNAL)
+#' Correct rare allele frequencies derived from rraf
 #' 
-#' \strong{This is an internal function. The documentation is for use with 
-#' \code{\link{rraf}}, \code{\link{pgen}}, and \code{\link{psex}}. Do not 
-#' attempt to use this function directly.} Minor alleles are often lost when
-#' calculating allele frequencies from a round-robin approach, resulting in
-#' zero-valued allele frequencies (Arnaud-Haond et al. 2007, Parks and Werth
-#' 1993). This can be problematic when calculating values for \code{\link{pgen}}
-#' and \code{\link{psex}}. This function gives options for giving a value to
-#' these zero-valued frequencies.
+#' Rare alleles are often lost when calculating allele frequencies from a 
+#' round-robin approach, resulting in zero-valued allele frequencies 
+#' (Arnaud-Haond et al. 2007, Parks and Werth 1993). This can be problematic 
+#' when calculating values for \code{\link{pgen}} and \code{\link{psex}}. These 
+#' options provide guidelines for giving a value to the zero-valued frequencies.
 #' 
-#' 
-#' @param rraf \emph{internal} a list or matrix produced from \code{\link{rraf}}
-#'   (with uncorrected MAF)
-#' @param rrmlg \emph{internal} a matrix containing multilocus genotypes per 
-#'   locus derived from \code{\link{rrmlg}}
 #' @param e a numeric epsilon value to use for all missing allele frequencies.
-#' @param sum_to_one when \code{TRUE}, the original frequencies will be reduced 
-#'   so that all allele frequencies will sum to one. \strong{Default: 
-#'   \code{FALSE}}
 #' @param d the unit by which to take the reciprocal. \code{div = "sample"} will
 #'   be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div = 
 #'   "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.
-#' @param mul a multiplier for div. Default is \code{mult = 1}. This parameter
+#' @param mul a multiplier for div. Default is \code{mul = 1}. This parameter 
 #'   is overridden by \code{e}
-#' @param mlg \emph{internal} the number of MLGs in the sample. Only required if
-#'   \code{d = "mlg"}.
-#' @param pop \emph{internal} a vector of factors that define the population 
-#'   definition for each observation in \code{rrmlg}. This must be supplied if 
-#'   \code{rraf} is a matrix.
-#' @param locfac \emph{internal} a vector of factors that define the columns 
-#'   belonging to the loci.
+#' @param sum_to_one when \code{TRUE}, the original frequencies will be reduced 
+#'   so that all allele frequencies will sum to one. \strong{Default: 
+#'   \code{FALSE}}
 #'   
-#' @details Arguments of interest to the user are: 
-#' \itemize{
-#'  \item \strong{e}
-#'  \item \strong{sum_to_one}
-#'  \item \strong{d}
-#'  \item \strong{m}
-#' }
-#' By default (\code{d = "sample", e = NULL, sum_to_one = FALSE, mul = 1}), this
-#' will add 1/(n samples) to all zero-value alleles. The basic formula is
-#' \strong{1/(d * m)} unless \strong{e} is specified. If \code{sum_to_one =
-#' TRUE}, then the frequencies will be scaled as x/sum(x) AFTER correction,
-#' indicating that the allele frequencies will be reduced. See the examples for
-#' details. The general pattern of correction is that the value of the MAF will
-#' be \emph{rrmlg > mlg > sample} 
+#' @details By default (\code{d = "sample", e = NULL, sum_to_one = FALSE, mul =
+#' 1}), this will add 1/(n samples) to all zero-value alleles. The basic formula
+#' is \strong{1/(d * m)} unless \strong{e} is specified. If \code{sum_to_one = 
+#' TRUE}, then the frequencies will be scaled as x/sum(x) AFTER correction, 
+#' indicating that the allele frequencies will be reduced. See the examples for 
+#' details. The general pattern of correction is that the value of the MAF will 
+#' be \emph{rrmlg > mlg > sample}
 #'   
 #' @return a matrix or vector the same type as rraf
 #' @author Zhian N. Kamvar
@@ -358,50 +336,9 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 #' rraf(Pram, by_pop = TRUE, e = 0.01)
 #' 
 #' }
-#' 
+#' @name rare_allele_correction
 #==============================================================================#
-rare_allele_correction <- function(rraf, rrmlg, e = NULL, sum_to_one = FALSE, 
-                                    d = c("sample", "mlg", "rrmlg"), mul = 1, 
-                                    mlg = NULL, pop = NULL, locfac = NULL){
-  
-  if (identical(parent.frame(), globalenv())){
-    msg <- paste0("\n\n\n",
-                  "    !!! rare_allele_correction() is for internal use only !!!",
-                  "\n\n",
-                  "    Input types are not checked within this function and may\n",
-                  "    result in an error. USE AT YOUR OWN RISK.\n\n\n")
-    warning(msg, immediate. = TRUE)
-  }
-  d <- match.arg(d, c("sample", "mlg", "rrmlg"))
-
-  if (is.list(rraf)){
-    if (is.null(e)){
-      e <- get_minor_allele_replacement(rrmlg, d, mul, mlg)
-    }
-    if (length(e) == 1){
-      e <- setNames(rep(e, ncol(rrmlg)), colnames(rrmlg))
-    }
-    res        <- lapply(names(rraf), replace_zeroes, rraf, e, sum_to_one)
-    names(res) <- names(rraf)
-  } else if (is.matrix(rraf)){
-    
-    # split matrix by population and locus
-    poplist <- apply(rraf, 1, split, locfac)
-    
-    # loop over populations and call this function again on the list of loci
-    res <- lapply(names(poplist), function(i){
-      prraf  <- poplist[[i]]
-      prrmlg <- rrmlg[pop == i, ]
-      rare_allele_correction(prraf, prrmlg, mlg = mlg, e = e, d = d, mul = mul, 
-                              sum_to_one = sum_to_one)
-    })
-    
-    # make this list of loci a matrix again
-    res           <- t(vapply(res, unlist, rraf[1, , drop = TRUE]))
-    dimnames(res) <- dimnames(rraf)
-  } 
-  return(res)
-}
+NULL
 
 #==============================================================================#
 #' Genotype Probability
