@@ -99,7 +99,7 @@ test_that("poppr perform clone correction", {
 
 test_that("poppr skips over sample sizes less than three", {
   skip_on_cran()
-  expect_output(plt <- poppr(partial_clone[1:8], quiet = TRUE, sample = 10), "^| Total$")
+  expect_output(plt <- poppr(partial_clone[1:8], sample = 10), "^| Total$")
   expect_is(plt, "popprtable")
   expect_equivalent(signif(plt$Ia, 3), c(rep(NA, 4), 0.167))
   expect_equivalent(signif(plt$rbarD, 3), c(rep(NA, 4), 0.0195))
@@ -108,8 +108,8 @@ test_that("poppr skips over sample sizes less than three", {
 
 test_that("poppr can produce output from input file", {
   skip_on_cran()
-  expect_message(out <- poppr(afile, legend = TRUE), "Simpson")
-  expect_message(outs <- poppr(sims, legend = TRUE), "Simpson")
+  expect_message(out <- poppr(afile, legend = TRUE, quiet = TRUE), "Simpson")
+  expect_message(outs <- poppr(sims, legend = TRUE, quiet = TRUE), "Simpson")
   expect_is(out, "popprtable")
   expect_is(outs, "popprtable")
 })

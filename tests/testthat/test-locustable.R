@@ -23,7 +23,7 @@ test_that("locus_table presents different stats", {
 	expect_message(nanlt <- locus_table(nancy, index = "invsimpson"), "Taylor")
 	expect_message(nangt <- locus_table(nancy, lev = "genotype"), "genotype")
 	expect_gt(nangt[randall, "genotype"], nanlt[randall, "allele"])
-	expect_output(nanlt <- locus_table(nancy, information = FALSE), "")
+	expect_output(nanlt <- locus_table(nancy, information = FALSE), NA)
 })
 
 test_that("locus_table will accurately calculate Hexp", {

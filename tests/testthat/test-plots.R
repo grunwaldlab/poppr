@@ -187,7 +187,7 @@ test_that("diversity_ci produces boxplots for rarefaction", {
 
 test_that("greycurve produces plots", {
 	skip_on_cran()
-	expect_output(greycurve(), "")
-	expect_output(greycurve(scalebar = TRUE), "")
-	expect_output(greycurve(1:100), "")
+	expect_output(greycurve(), NA)
+	expect_output(greycurve(scalebar = TRUE), NA)
+	expect_output(greycurve(1:100), NA)
 })

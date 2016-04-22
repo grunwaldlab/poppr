@@ -184,8 +184,8 @@ test_that("Minimum spanning networks also collapse MLGs", {
   expect_equal(length(igraph::V(sgmsnt$graph)), 2)
   expect_equal(length(igraph::V(sgmsn$graph)), 4)
 
-  expect_output(plot_poppr_msn(gend, gmsnt, palette = "cm.colors"), "")
-  expect_output(plot_poppr_msn(gend_single, sgmsnt, palette = "cm.colors"), "")
+  expect_output(plot_poppr_msn(gend, gmsnt, palette = "cm.colors"), NA)
+  expect_output(plot_poppr_msn(gend_single, sgmsnt, palette = "cm.colors"), NA)
 })
 
 
