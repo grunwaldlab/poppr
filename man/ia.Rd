@@ -94,7 +94,7 @@ The function \code{ia} will calculate the index of association over all loci in 
 \code{pair.ia} will calculate the index in a pairwise manner among all loci.
 
 The index of association was originally developed by A.H.D. Brown 
-  analyzing population structure of wheat (Brown, 1980). It has been widely 
+  analyzing population structure of wild barley (Brown, 1980). It has been widely 
   used as a tool to detect clonal reproduction within populations . 
   Populations whose members are undergoing sexual reproduction, whether it be
   selfing or out-crossing, will produce gametes via meiosis, and thus have a 
