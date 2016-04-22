@@ -19,10 +19,10 @@ done by population.}
 
 \item{freq}{a vector or matrix of allele frequencies. This defaults to 
 \code{NULL}, indicating that the frequencies will be determined via 
-round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+round-robin approach in \code{\link{rraf}}. \strong{If this matrix or 
 vector is not provided, zero-value allele frequencies will automatically be
-corrected by \code{\link{rare_allele_correction}}.} Please see the
-documentation for details.}
+corrected.} For details, please see the documentation on
+\link[=rare_allele_correction]{correcting rare alleles}.}
 
 \item{G}{an integer specifying the number of observed genets. If NULL, this 
 will be the number of original multilocus genotypes.}
@@ -33,8 +33,8 @@ should reflect the probability of encountering a second genotype. Using
 \code{method = "multiple"} gives the probability of encountering multiple 
 samples of the same genotype (see details).}
 
-\item{...}{options passed to \code{\link{rare_allele_correction}}. The
-default is to correct allele frequencies to 1/n}
+\item{...}{options from \link[=rare_allele_correction]{correcting rare
+alleles}. The default is to correct allele frequencies to 1/n}
 }
 \value{
 a vector of Psex for each sample.
@@ -150,6 +150,7 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \emph{American Journal of Botany}, 537-544.
 }
 \seealso{
-\code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}}
+\code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}},
+\code{\link[=rare_allele_correction]{correcting rare alleles}}
 }
 

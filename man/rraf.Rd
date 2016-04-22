@@ -20,11 +20,12 @@ each sample. Defaults to \code{NULL}.}
 population. Defaults to \code{FALSE}}
 
 \item{correction}{a logical indicating whether or not zero-valued allele 
-frequencies should be corrected by the function
-\code{\link{rare_allele_correction}} (Default: \code{TRUE})}
+frequencies should be corrected using the methods outlined in 
+\link[=rare_allele_correction]{correcting rare alleles}. 
+(Default: \code{TRUE})}
 
-\item{...}{options passed to \code{\link{rare_allele_correction}}. The
-default is to correct allele frequencies to 1/n}
+\item{...}{options from \link[=rare_allele_correction]{correcting rare
+alleles}. The default is to correct allele frequencies to 1/n}
 }
 \value{
 a vector or list of allele frequencies
@@ -47,11 +48,10 @@ Calculating allele frequencies for clonal populations is a difficult
   locus}. When this happens, rare alleles have a high likelihood of dropping
   out, giving them a frequency of "0". For some analyses, this is a perfectly
   fine outcome, but for analyses such as \code{\link{pgen}} and
-  \code{\link{psex}}, this could result in undefined values. Setting
-  \code{correction = TRUE} will allow you to control how these zero-valued
-  allele frequencies are corrected by passing arguments to the internal
-  function \code{\link{rare_allele_correction}}. See the documentation for
-  \code{\link{rare_allele_correction}} and the examples for details}
+  \code{\link{psex}}, this could result in undefined values. Setting 
+  \code{correction = TRUE} will allow you to control how these zero-valued 
+  allele frequencies are corrected. For details, please see the documentation
+  on \link[=rare_allele_correction]{correcting rare alleles} and examples.}
 }
 \note{
 When \code{by_pop = TRUE}, the output will be a matrix of allele 

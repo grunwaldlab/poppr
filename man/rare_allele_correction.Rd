@@ -2,12 +2,12 @@
 % Please edit documentation in R/round_robin.R
 \name{rare_allele_correction}
 \alias{rare_allele_correction}
-\title{Correct rare allele frequencies derived from rraf}
+\title{Correcting rare allele frequencies}
 \arguments{
 \item{e}{a numeric epsilon value to use for all missing allele frequencies.}
 
 \item{d}{the unit by which to take the reciprocal. \code{div = "sample"} will
-be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div = 
+be 1/(n samples), \code{d = "mlg"} will be 1/(n mlg), and \code{d = 
 "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.}
 
 \item{mul}{a multiplier for div. Default is \code{mul = 1}. This parameter 
@@ -17,15 +17,10 @@ is overridden by \code{e}}
 so that all allele frequencies will sum to one. \strong{Default: 
 \code{FALSE}}}
 }
-\value{
-a matrix or vector the same type as rraf
-}
 \description{
-Rare alleles are often lost when calculating allele frequencies from a 
-round-robin approach, resulting in zero-valued allele frequencies 
-(Arnaud-Haond et al. 2007, Parks and Werth 1993). This can be problematic 
-when calculating values for \code{\link{pgen}} and \code{\link{psex}}. These 
-options provide guidelines for giving a value to the zero-valued frequencies.
+The following is a set of arguments for use in \code{\link{rraf}}, 
+\code{\link{pgen}}, and \code{\link{psex}} to correct rare allele frequencies
+that were lost in estimating round-robin allele frequencies.
 }
 \details{
 By default (\code{d = "sample", e = NULL, sum_to_one = FALSE, mul =
@@ -35,6 +30,32 @@ TRUE}, then the frequencies will be scaled as x/sum(x) AFTER correction,
 indicating that the allele frequencies will be reduced. See the examples for 
 details. The general pattern of correction is that the value of the MAF will 
 be \emph{rrmlg > mlg > sample}
+}
+\section{Motivation}{
+
+
+When \link[=rraf]{calculating allele frequencies from a round-robin
+approach}, rare alleles are often lost resulting in zero-valued allele
+frequencies (Arnaud-Haond et al. 2007, Parks and Werth 1993). This can be
+problematic when calculating values for \code{\link{pgen}} and
+\code{\link{psex}} because frequencies of zero will result in undefined
+values for samples that contain those rare alleles. The solution to this
+problem is to give an estimate for the frequency of those rare alleles, but
+the question of HOW to do that arises. These arguments provide a way to
+define how rare alleles are to be estimated/corrected.
+}
+
+\section{Using these arguments}{
+
+
+These arguments are for use in the functions \code{\link{rraf}}, 
+\code{\link{pgen}}, and \code{\link{psex}}. They will replace the dots (...) 
+that appear at the end of the function call. For example, if you want to set 
+the minor allele frequencies to a specific value (let's say 0.001),
+regardless of locus, you can insert \code{e = 0.001} along with any other 
+arguments (note, position is not specific): \preformatted{
+pgen(my_data, e = 0.001, log = FALSE) 
+psex(my_data, method = "multiple", e = 0.001)}
 }
 \examples{
 \dontrun{

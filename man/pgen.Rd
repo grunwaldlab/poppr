@@ -22,13 +22,13 @@ be Pgen.}
 
 \item{freq}{a vector or matrix of allele frequencies. This defaults to 
 \code{NULL}, indicating that the frequencies will be determined via 
-round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+round-robin approach in \code{\link{rraf}}. \strong{If this matrix or 
 vector is not provided, zero-value allele frequencies will automatically be
-corrected by \code{\link{rare_allele_correction}}.} Please see the
-documentation for details.}
+corrected.} For details, please see the documentation on
+\link[=rare_allele_correction]{correcting rare alleles}.}
 
-\item{...}{options passed to \code{\link{rare_allele_correction}}. The
-default is to correct allele frequencies to 1/n}
+\item{...}{options from \link[=rare_allele_correction]{correcting rare
+alleles}. The default is to correct allele frequencies to 1/n}
 }
 \value{
 A vector containing Pgen values per locus for each genotype in the 
@@ -105,6 +105,6 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 }
 \seealso{
 \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
-\code{\link{rare_allele_correction}}
+\code{\link[=rare_allele_correction]{correcting rare alleles}}
 }
 

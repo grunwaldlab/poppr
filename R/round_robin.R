@@ -111,10 +111,11 @@ rrmlg <- function(gid){
 #' @param by_pop When this is \code{TRUE}, the calculation will be done by 
 #'   population. Defaults to \code{FALSE}
 #' @param correction a logical indicating whether or not zero-valued allele 
-#'   frequencies should be corrected by the function
-#'   \code{\link{rare_allele_correction}} (Default: \code{TRUE})
-#' @param ... options passed to \code{\link{rare_allele_correction}}. The
-#'   default is to correct allele frequencies to 1/n
+#'   frequencies should be corrected using the methods outlined in 
+#'   \link[=rare_allele_correction]{correcting rare alleles}. 
+#'   (Default: \code{TRUE})
+#' @param ... options from \link[=rare_allele_correction]{correcting rare
+#'   alleles}. The default is to correct allele frequencies to 1/n
 #'   
 #' @return a vector or list of allele frequencies
 #' @details Calculating allele frequencies for clonal populations is a difficult
@@ -129,11 +130,10 @@ rrmlg <- function(gid){
 #'   locus}. When this happens, rare alleles have a high likelihood of dropping
 #'   out, giving them a frequency of "0". For some analyses, this is a perfectly
 #'   fine outcome, but for analyses such as \code{\link{pgen}} and
-#'   \code{\link{psex}}, this could result in undefined values. Setting
-#'   \code{correction = TRUE} will allow you to control how these zero-valued
-#'   allele frequencies are corrected by passing arguments to the internal
-#'   function \code{\link{rare_allele_correction}}. See the documentation for
-#'   \code{\link{rare_allele_correction}} and the examples for details}
+#'   \code{\link{psex}}, this could result in undefined values. Setting 
+#'   \code{correction = TRUE} will allow you to control how these zero-valued 
+#'   allele frequencies are corrected. For details, please see the documentation
+#'   on \link[=rare_allele_correction]{correcting rare alleles} and examples.}
 #'   
 #' @note When \code{by_pop = TRUE}, the output will be a matrix of allele 
 #'   frequencies. Additionally, when the argument \code{pop} is not \code{NULL},
@@ -249,17 +249,39 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 }
 
 #==============================================================================#
-#' Correct rare allele frequencies derived from rraf
+#' Correcting rare allele frequencies
 #' 
-#' Rare alleles are often lost when calculating allele frequencies from a 
-#' round-robin approach, resulting in zero-valued allele frequencies 
-#' (Arnaud-Haond et al. 2007, Parks and Werth 1993). This can be problematic 
-#' when calculating values for \code{\link{pgen}} and \code{\link{psex}}. These 
-#' options provide guidelines for giving a value to the zero-valued frequencies.
+#' The following is a set of arguments for use in \code{\link{rraf}}, 
+#' \code{\link{pgen}}, and \code{\link{psex}} to correct rare allele frequencies
+#' that were lost in estimating round-robin allele frequencies.
+#' 
+#' @section Motivation:
+#' 
+#' When \link[=rraf]{calculating allele frequencies from a round-robin
+#' approach}, rare alleles are often lost resulting in zero-valued allele
+#' frequencies (Arnaud-Haond et al. 2007, Parks and Werth 1993). This can be
+#' problematic when calculating values for \code{\link{pgen}} and
+#' \code{\link{psex}} because frequencies of zero will result in undefined
+#' values for samples that contain those rare alleles. The solution to this
+#' problem is to give an estimate for the frequency of those rare alleles, but
+#' the question of HOW to do that arises. These arguments provide a way to
+#' define how rare alleles are to be estimated/corrected.
+#' 
+#' @section Using these arguments:
+#' 
+#' These arguments are for use in the functions \code{\link{rraf}}, 
+#' \code{\link{pgen}}, and \code{\link{psex}}. They will replace the dots (...) 
+#' that appear at the end of the function call. For example, if you want to set 
+#' the minor allele frequencies to a specific value (let's say 0.001),
+#' regardless of locus, you can insert \code{e = 0.001} along with any other 
+#' arguments (note, position is not specific): \preformatted{
+#' pgen(my_data, e = 0.001, log = FALSE) 
+#' psex(my_data, method = "multiple", e = 0.001)}
+#'
 #' 
 #' @param e a numeric epsilon value to use for all missing allele frequencies.
 #' @param d the unit by which to take the reciprocal. \code{div = "sample"} will
-#'   be 1/(n samples), \code{div = "mlg"} will be 1/(n mlg), and \code{div = 
+#'   be 1/(n samples), \code{d = "mlg"} will be 1/(n mlg), and \code{d = 
 #'   "rrmlg"} will be 1/(n mlg at that locus). This is overridden by \code{e}.
 #' @param mul a multiplier for div. Default is \code{mul = 1}. This parameter 
 #'   is overridden by \code{e}
@@ -275,7 +297,6 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
 #' details. The general pattern of correction is that the value of the MAF will 
 #' be \emph{rrmlg > mlg > sample}
 #'   
-#' @return a matrix or vector the same type as rraf
 #' @author Zhian N. Kamvar
 #' @references
 #' 
@@ -359,10 +380,10 @@ NULL
 #'   
 #' @param freq a vector or matrix of allele frequencies. This defaults to 
 #'   \code{NULL}, indicating that the frequencies will be determined via 
-#'   round-robin approach in \code{\link{rraf}}. \strong{If this matrix or
+#'   round-robin approach in \code{\link{rraf}}. \strong{If this matrix or 
 #'   vector is not provided, zero-value allele frequencies will automatically be
-#'   corrected by \code{\link{rare_allele_correction}}.} Please see the
-#'   documentation for details.
+#'   corrected.} For details, please see the documentation on
+#'   \link[=rare_allele_correction]{correcting rare alleles}.
 #'   
 #' @note For haploids, Pgen at a particular locus is the allele frequency. This 
 #'   function cannot handle polyploids. Additionally, when the argument 
@@ -389,7 +410,7 @@ NULL
 #'   
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 #' @seealso \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
-#' \code{\link{rare_allele_correction}}
+#' \code{\link[=rare_allele_correction]{correcting rare alleles}}
 #' @references
 #' 
 #' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
@@ -514,7 +535,8 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #'   The function will automatically calculate the round-robin allele
 #'   frequencies with \code{\link{rraf}} and \emph{G} with \code{\link{nmll}}.
 #'   
-#' @seealso \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}}
+#' @seealso \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}},
+#' \code{\link[=rare_allele_correction]{correcting rare alleles}}
 #' @references
 #' 
 #' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007. 
