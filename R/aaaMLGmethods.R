@@ -90,7 +90,7 @@ setMethod(
     slot(.Object, "cutoff")   <- c(expanded = 0.0, contracted = 0.0) 
     slot(.Object, "mlg")      <- mlg
     slot(.Object, "visible")  <- "original"
-    slot(.Object, "distname") <- "nei.dist"
+    slot(.Object, "distname") <- "diss.dist"
     slot(.Object, "distargs") <- list()
     slot(.Object, "distalgo") <- "farthest_neighbor"
     return(.Object)

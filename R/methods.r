@@ -335,7 +335,7 @@ setMethod(
     }
     if (mlgclass){
       mlg <- new("MLG", mlg)
-      mlg@distname <- "bitwise.dist"
+      distname(mlg) <- "bitwise.dist"
     }
     slot(.Object, "mlg") <- mlg
     return(.Object)
