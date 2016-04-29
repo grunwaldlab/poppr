@@ -125,12 +125,8 @@ bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
   # Continue function for genlight objects
 
   # Ensure that every SNPbin object has data for all chromosomes
-  if(ploid == 2){
-    for(i in 1:length(x$gen)){
-      if(length(x$gen[[i]]$snp) == 1){
-        x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
-      }
-    }
+  if (ploid == 2){
+    x <- fix_uneven_diploid(x)
   }
   # Threads must be something that can cast to integer
   if(!is.numeric(threads) && !is.integer(threads) && threads >= 0)
@@ -247,12 +243,8 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
   # Cast parameters to proper types before passing them to C
   threads <- as.integer(threads)
   # Ensure that every SNPbin object has data for all chromosomes
-  if(ploid == 2){
-    for(i in 1:length(x$gen)){
-      if(length(x$gen[[i]]$snp) == 1){
-        x$gen[[i]]$snp <- append(x$gen[[i]]$snp, list(as.raw(rep(0,length(x$gen[[i]]$snp[[1]])))))
-      }
-    }
+  if (ploid == 2){
+    x  <- fix_uneven_diploid(x)
     IA <- .Call("association_index_diploid", x, missing_match, differences_only, 
                 threads, PACKAGE = "poppr")
   }
@@ -265,11 +257,6 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
   {
     stop("bitwise.ia only supports haploids and diploids")
   }
-  #TODO: Allow for automated index generation, such as random or window based
-
-  #TODO: Call C function and return
-  
-
   return(IA)
 
 }
