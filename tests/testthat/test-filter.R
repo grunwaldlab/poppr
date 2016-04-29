@@ -86,7 +86,7 @@ test_that("mlg.filter can remember things", {
   
   # Code is shown after modification and values are set to 0, nei and farthest
   expect_output(show(x), tda)
-  original_vals <- "(0).+?(nei.dist).+?(farthest).+?"
+  original_vals <- "(0).+?(diss.dist).+?(farthest).+?"
   gc_original_vals <- "(0).+?(bitwise.dist).+?(farthest).+?"
   expect_output(show(x), original_vals)
   expect_output(show(gc), gc_original_vals)
@@ -148,3 +148,14 @@ test_that("mlg.filter can remember things", {
   
 })
 
+test_that("filtering algorithms imply diss.dist by default", {
+  skip_on_cran()
+  x <- structure(c(4, 1, 2, 2, 1, NA, 4, 4, 1, 1, 3, NA, 2, 1, 4, 2, 
+  1, 4, 4, 2, 1, NA, 4, 4, 4, 1, 4, 2, 1, 4, 4, 2, 2, 1, 4, 4, 
+  2, 1, 3, 2, 1, 4, 4, 4, 2, 1, 4, 4, 2, 1, 2, 2, 1, 4, 4, 3, 4, 
+  1, 4, 4), .Dim = c(12L, 5L))
+  y <- as.genclone(df2genind(x, ploidy = 1))
+  mlg.filter(y) <- 0.001
+  expect_gt(nmll(y, "original"), nmll(y, "contracted"))
+  expect_output(show(y), "diss.dist")
+})

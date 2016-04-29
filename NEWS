@@ -12,6 +12,8 @@ BUG FIX
 
 * An issue that caused errors in the `imsn()` code output was fixed
   (see https://github.com/grunwaldlab/poppr/issues/93)
+* Caught bug where the `mlg.filter()` assignment method was using `nei.dist()`
+  instead of `diss.dist()` when no distance was specified.
 
 poppr 2.1.1
 ===========

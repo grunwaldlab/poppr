@@ -21,13 +21,14 @@ test_that("MLG2df produces a data frame", {
 
 test_that("distname returns a name", {
   skip_on_cran()
-  expect_identical(distname(m), "nei.dist")
-  distname(m) <- substitute("diss.dist")
   expect_identical(distname(m), "diss.dist")
+  distname(m) <- substitute("nei.dist")
+  expect_identical(distname(m), "nei.dist")
 })
 
 test_that("distargs returns a list", {
   skip_on_cran()
+  distname(m) <- substitute("diss.dist")
   expect_identical(distargs(m), list())
   distargs(m) <- list(percent = TRUE)
   expect_identical(distargs(m), list(percent = TRUE))

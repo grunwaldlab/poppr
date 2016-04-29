@@ -96,7 +96,7 @@ test_that("MLG class can print expected", {
   mll(Pinf) <- "custom"
   expect_output(show(Pinf@mlg), "86 custom mlgs.")
   mll(Pinf) <- "contracted"
-  expect_output(show(Pinf@mlg), "86 contracted mlgs with a cutoff of 0 based on the function nei.dist")
+  expect_output(show(Pinf@mlg), "86 contracted mlgs with a cutoff of 0 based on the function diss.dist")
   mll(Pinf) <- "original"
 })
 
