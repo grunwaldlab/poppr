@@ -47,7 +47,8 @@ Imports:
     reshape2,
     dplyr (>= 0.4),
     boot,
-    shiny
+    shiny,
+    magrittr
 Suggests:
     testthat,
     knitr,
