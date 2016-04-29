@@ -220,7 +220,7 @@ mll.levels.internal <- function(x, set = TRUE, value){
 #==============================================================================#
 mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis", 
                                 memory = FALSE, algorithm = "farthest_neighbor", 
-                                distance = "nei.dist", threads = 0, 
+                                distance = "diss.dist", threads = 0, 
                                 stats = "MLGs", the_call = match.call(), ...){
 
   # This will return a vector indicating the multilocus genotypes after applying
