@@ -5,7 +5,9 @@ NEW FEATURES
 -----------
 
 * Threshold argument added to `filter_stats()` 
-  (see https://github.com/grunwaldlab/poppr/issues/94)
+  (see https://github.com/grunwaldlab/poppr/issues/94) 
+* The pipe operator (`%>%`) is now exported from
+  magrittr to make chaining commands easier.
   
 BUG FIX
 -----------
