@@ -1176,8 +1176,8 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   double* vars; // Variance at each locus
   double* M;  // Sum of distances at each locus
   double* M2; // Sum of squared distances at each locus
-  int D;   // Sum of distances between each sample
-  int D2;  // Sum of squared distances between each sample
+  long int D;   // Sum of distances between each sample
+  long int D2;  // Sum of squared distances between each sample
   double Vo; // Observed variance
   double Ve; // Expected variance
   double Nc2;  // num_gens choose 2
@@ -1437,6 +1437,10 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
     }
   }
 
+  if (D2 < 0)
+  {
+    warning("\nAn integer overflow has occured and the resulting index will not be accurate.\nPlease consider using a smaller sample.\n");
+  }  
   // Calculate C(num_gens,2), which will always be (n*n-n)/2 
   Nc2 = (num_gens*num_gens - num_gens)/2.0;
   // Calculate the observed variance using D and D2
