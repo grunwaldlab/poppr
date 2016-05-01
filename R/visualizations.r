@@ -1098,32 +1098,40 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #==============================================================================#
 #' Produce a genotype accumulation curve
 #' 
-#' GA curves are useful for determining the minimum number of loci necessary to
-#' discriminate between individuals in a population. This function will randomly
-#' sample loci without replacement and count the number of multilocus genotypes
-#' observed.
+#' Genotype accumulation curves are useful for determining the minimum number of
+#' loci necessary to discriminate between individuals in a population. This 
+#' function will randomly sample loci without replacement and count the number 
+#' of multilocus genotypes observed.
 #' 
-#' @param gen a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
-#'   object.
+#' @param gen a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
+#'   \code{\link[pegas]{loci}} object.
 #'   
 #' @param sample an \code{integer} defining the number of times loci will be 
 #'   resampled without replacement.
 #'   
-#' @param maxloci the maximum number of loci to sample. By default,
-#'   \code{maxloci = 0}, which indicates that n - 1 loci are to be used. Note that this will always take min(n - 1, maxloci)
+#' @param maxloci the maximum number of loci to sample. By default, 
+#'   \code{maxloci = 0}, which indicates that n - 1 loci are to be used. Note 
+#'   that this will always take min(n - 1, maxloci)
 #'   
 #' @param quiet if \code{FALSE} (default), Progress of the iterations will be 
-#'   displayed. If \code{TRUE}, nothing is printed to screen as the function
+#'   displayed. If \code{TRUE}, nothing is printed to screen as the function 
 #'   runs.
 #'   
 #' @param thresh a number from 0 to 1. This will draw a line at that fraction of
 #'   multilocus genotypes, rounded. Defaults to 1, which will draw a line at the
 #'   maximum number of observable genotypes.
-#' 
 #'   
-#' @return (invisibly) a matrix of integers showing the results of each
-#'   randomization. Columns represent the number of loci sampled and rows
+#' @return (invisibly) a matrix of integers showing the results of each 
+#'   randomization. Columns represent the number of loci sampled and rows 
 #'   represent an independent sample.
+#'   
+#' @details Internally, this function works by converting the data into a 
+#'   \code{\link[pegas]{loci}} object, which represents genotypes as a data 
+#'   frame of factors. Random samples are taken of 1 to n-1 columns of the 
+#'   matrix and the number of unique rows are counted to determine the number of
+#'   multilocus genotypes in that random sample. This function does not take 
+#'   into account any definitions of MLGs via \code{\link{mlg.filter}} or 
+#'   \code{\link{mll.custom}}.
 #'   
 #' @author Zhian N. Kamvar
 #' @export
@@ -1147,14 +1155,14 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE, 
                            thresh = 1){
   datacall <- match.call()
-  if (!class(gen)[1] %in% c("genind", "genclone", "loci")){
+  if (!inherits(gen, c("genind", "genclone", "loci"))){
     stop(paste(datacall[2], "must be a genind or loci object"))
   }
-  if (class(gen)[1] %in% "loci"){
+  if (inherits(gen, "loci")){
     genloc <- gen
     gen    <- pegas::loci2genind(gen)
   } else {
-    genloc   <- pegas::as.loci(gen)    
+    genloc   <- pegas::as.loci(gen)
   }
   if (!is.genclone(gen)) gen <- as.genclone(gen)
   if (nLoc(gen) == 1){
