@@ -1162,14 +1162,19 @@ setMethod(
 )
 
 #==============================================================================#
-#' Statistics on Clonal Filtering of Genotype Data
+#' MLG definitions based on genetic distance
 #' 
-#' Create a vector of multilocus genotype indices filtered by minimum distance.
+#' Multilocus genotypes are initially defined by naive string matching, but this
+#' definition does not take into account missing data or genotyping error,
+#' casting these as unique genotypes. Defining multilocus genotypes by genetic
+#' distance allows you to incorporate genotypes that have missing data o
+#' genotyping error into their parent clusters.
 #'   
 #' @param pop a \code{\linkS4class{genclone}}, \code{\linkS4class{snpclone}}, or
 #'   \code{\linkS4class{genind}} object.
-#' @param threshold the desired minimum distance between distinct genotypes. 
-#'   Defaults to 0, which will only merge identical genotypes
+#' @param threshold a number indicating the minimum distance two MLGs must be
+#'   separated by to be considered different. Defaults to 0, which will reflect
+#'   the original (naive) MLG definition.
 #' @param missing any method to be used by \code{\link{missingno}}: "mean", 
 #'   "zero", "loci", "genotype", or "asis" (default).
 #' @param memory whether this function should remember the last distance matrix 
@@ -1221,8 +1226,8 @@ setMethod(
 #'   instead of the new cluster assignments.
 #' }
 #' \subsection{THRESHOLDS}{
-#'   A numeric vector representing the thresholds beyond which clusters of 
-#'   multilocus genotypes were collapsed. 
+#'   A numeric vector representing the thresholds \strong{beyond} which clusters
+#'   of multilocus genotypes were collapsed. 
 #' }
 #' \subsection{DISTANCES}{
 #'   A square matrix representing the distances between each cluster.
@@ -1252,10 +1257,14 @@ setMethod(
 #'   mlg.filter,genlight-method
 #' @docType methods
 #' @examples 
+#' 
 #' data(partial_clone)
 #' pc <- as.genclone(partial_clone) # convert to genclone object
+#'
+#' # Basic Use ---------------------------------------------------------------
 #' 
-#' # Get MLGs at threshold 0.05
+#' 
+#' # Show MLGs at threshold 0.05
 #' mlg.filter(pc, threshold = 0.05, distance = "nei.dist")
 #' pc # 26 mlgs
 #' 
@@ -1264,6 +1273,7 @@ setMethod(
 #' pc # 25 mlgs
 #' 
 #' \dontrun{
+#' 
 #' # The distance definition is persistant
 #' mlg.filter(pc) <- 0.1
 #' pc # 24 mlgs
@@ -1272,7 +1282,31 @@ setMethod(
 #' mlg.filter(pc, distance = diss.dist, percent = TRUE) <- 0.1
 #' pc
 #' 
-#' # Even with custom definitions
+#' # Special case: threshold = 0 ---------------------------------------------
+#' 
+#' 
+#' # It's important to remember that a threshold of 0 is equal to the original
+#' # MLG definition. This example will show a data set that contains genotypes
+#' # with missing data that share all alleles with other genotypes except for 
+#' # the missing one.
+#' 
+#' data(monpop)
+#' monpop # 264 mlg
+#' mlg.filter(monpop) <- 0
+#' nmll(monpop) # 264 mlg
+#' 
+#' # In order to merge these genotypes with missing data, we should set the 
+#' # threshold to be slightly higher than 0. We will use the smallest fraction 
+#' # the computer can store.
+#' 
+#' mlg.filter(monpop) <- .Machine$double.eps ^ 0.5
+#' nmll(monpop) # 236
+#' 
+#' # Custom distance ---------------------------------------------------------
+#' 
+#' # Custom genetic distances can be used either in functions from other
+#' # packages or user-defined functions
+#' 
 #' data(Pinf)
 #' Pinf
 #' mlg.filter(Pinf, distance = function(x) dist(tab(x))) <- 3
@@ -1280,12 +1314,15 @@ setMethod(
 #' mlg.filter(Pinf) <- 4
 #' Pinf
 #' 
-#' # on genlight/snpclone objects
+#' # genlight / snpclone objects ---------------------------------------------
+#' 
+#' 
 #' set.seed(999)
 #' gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2))
 #' gc # 100 mlgs
 #' mlg.filter(gc) <- 0.25
 #' gc # 82 mlgs
+#' 
 #' }
 #==============================================================================#
 mlg.filter <- function(pop, threshold=0.0, missing="asis", memory=FALSE, 
