@@ -18,6 +18,11 @@ BUG FIX
   instead of `diss.dist()` when no distance was specified.
 * A bug that resulted in significantly negative values from `bitwise.ia()` with
   large samplesizes was fixed. (see https://github.com/grunwaldlab/poppr/issues/100)
+  
+MISC
+-----------
+
+* Documentation updates
 
 poppr 2.1.1
 ===========
