@@ -17,7 +17,8 @@ BUG FIX
 * Caught bug where the `mlg.filter()` assignment method was using `nei.dist()`
   instead of `diss.dist()` when no distance was specified.
 * A bug that resulted in significantly negative values from `bitwise.ia()` with
-  large samplesizes was fixed. (see https://github.com/grunwaldlab/poppr/issues/100)
+  large sample sizes was fixed. 
+  (see https://github.com/grunwaldlab/poppr/issues/100)
 * Fixed issue where plot_filter_stats wasn't displaying the full range of MLGs
   
 MISC
