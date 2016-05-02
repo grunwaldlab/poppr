@@ -1181,13 +1181,16 @@ setMethod(
 #'   it generated. TRUE will attempt to reuse the last distance matrix if the 
 #'   other parameters are the same. (default) FALSE will ignore any stored 
 #'   matrices and not store any it generates.
-#' @param algorithm determines the type of clustering to be done. (default) 
-#'   "farthest_neighbor" merges clusters based on the maximum distance between 
-#'   points in either cluster. This is the strictest of the three. 
-#'   "nearest_neighbor" merges clusters based on the minimum distance between 
-#'   points in either cluster. This is the loosest of the three. 
-#'   "average_neighbor" merges clusters based on the average distance between 
-#'   every pair of points between clusters.
+#' @param algorithm determines the type of clustering to be done. 
+#' \describe{
+#'   \item{"farthest_neighbor"}{\emph{ (default) }merges clusters based on the 
+#'   maximum distance between points in either cluster. This is the strictest of
+#'   the three.}
+#'   \item{"nearest_neighbor"}{ merges clusters based on the minimum distance
+#'   between points in either cluster. This is the loosest of the three.}
+#'   \item{"average_neighbor"}{ merges clusters based on the average distance
+#'   between every pair of points between clusters.}
+#' }
 #' @param distance a character or function defining the distance to be applied 
 #'   to pop. Defaults to \code{\link{diss.dist}} for genclone objects and
 #'   \code{\link{bitwise.dist}} for snpclone objects. A matrix or table
@@ -1199,14 +1202,10 @@ setMethod(
 #'   will force the function to run serially, which may increase stability on 
 #'   some systems. Other values may be specified, but should be used with 
 #'   caution.
-#' @param stats determines which statistics this function should return on 
-#'   cluster mergers. If (default) "MLGs", this function will return a vector of
-#'   cluster assignments, similar to that of \code{\link{mlg.vector}}. If 
-#'   "thresholds", the threshold at which each cluster was merged will be 
-#'   returned instead of the cluster assignment. "distances" will return a 
-#'   distance matrix of the new distances between each new cluster. If "sizes", 
-#'   the size of each remaining cluster will be returned. Finally, "all" will 
-#'   return a list of all 4.
+#' @param stats a character vector specifying which statistics should be
+#'   returned (details below). Choices are "MLG", "THRESHOLDS", "DISTANCES",
+#'   "SIZES", or "ALL". If choosing "ALL" or more than one, a named list will be
+#'   returned.
 #' @param ... any parameters to be passed off to the distance method.
 #'   
 #' @details This function will take in any distance matrix or function and
@@ -1216,14 +1215,13 @@ setMethod(
 #' means that if you define your own distance matrix or function, you must keep
 #' it in memory to further utilize mlg.filter.
 #' 
-#' @return Default, the collapsed multilocus genotypes. Otherwise, any
+#' @return Default, a vector of collapsed multilocus genotypes. Otherwise, any
 #'   combination of the following:
 #' \subsection{MLGs}{
-#'   a numeric vector naming the multilocus genotype of each individual in the 
-#'   dataset. Each genotype is at least the specified distance apart, as 
-#'   calculated by the selected algorithm. If stats is set to \code{TRUE}, this 
-#'   function will return the thresholds had which each cluster merger occurred 
-#'   instead of the new cluster assignments.
+#'   a numeric vector defining the multilocus genotype cluster of each
+#'   individual in the dataset. Each genotype cluster is separated from every
+#'   other genotype cluster by at least the defined threshold value, as 
+#'   calculated by the selected algorithm.
 #' }
 #' \subsection{THRESHOLDS}{
 #'   A numeric vector representing the thresholds \strong{beyond} which clusters
@@ -1240,14 +1238,14 @@ setMethod(
 #'   applying the given threshold. Genotype numbers returned by
 #'   \code{mlg.vector} represent the lowest numbered genotype (as returned by
 #'   \code{mlg.vector}) in in each new multilocus genotype. Therefore
-#'   \code{mlg.vector} and \code{mlg.vector} return the same vector when
-#'   threshold is set to 0 or less.
-#' @seealso \code{\link{filter_stats}} 
-#'   \code{\link{cutoff_predictor}} 
-#'   \code{\link{mll}}
-#'   \code{\link{genclone}}
-#'   \code{\link{snpclone}}
-#'   \code{\link{diss.dist}}
+#'   \strong{\code{mlg.filter} and \code{mlg.vector} return the same vector when
+#'   threshold is set to 0 or less}.
+#' @seealso \code{\link{filter_stats}}, 
+#'   \code{\link{cutoff_predictor}}, 
+#'   \code{\link{mll}}, 
+#'   \code{\link{genclone}}, 
+#'   \code{\link{snpclone}}, 
+#'   \code{\link{diss.dist}}, 
 #'   \code{\link{bruvo.dist}}
 #' @export
 #' @rdname mlg.filter
@@ -1259,17 +1257,17 @@ setMethod(
 #' @examples 
 #' 
 #' data(partial_clone)
-#' pc <- as.genclone(partial_clone) # convert to genclone object
+#' pc <- as.genclone(partial_clone, threads = 1L) # convert to genclone object
 #'
 #' # Basic Use ---------------------------------------------------------------
 #' 
 #' 
 #' # Show MLGs at threshold 0.05
-#' mlg.filter(pc, threshold = 0.05, distance = "nei.dist")
+#' mlg.filter(pc, threshold = 0.05, distance = "nei.dist", threads = 1L)
 #' pc # 26 mlgs
 #' 
 #' # Set MLGs at threshold 0.05
-#' mlg.filter(pc, distance = "nei.dist") <- 0.05
+#' mlg.filter(pc, distance = "nei.dist", threads = 1L) <- 0.05
 #' pc # 25 mlgs
 #' 
 #' \dontrun{
@@ -1278,9 +1276,37 @@ setMethod(
 #' mlg.filter(pc) <- 0.1
 #' pc # 24 mlgs
 #' 
-#' # You can still change the definition
-#' mlg.filter(pc, distance = diss.dist, percent = TRUE) <- 0.1
+#' # But you can still change the definition
+#' mlg.filter(pc, distance = "diss.dist", percent = TRUE) <- 0.1
 #' pc
+#' 
+#' # Choosing a threshold ----------------------------------------------------
+#' 
+#' 
+#' # Thresholds for collapsing multilocus genotypes should not be arbitrary. It
+#' # is important to consider what threshold is suitable. One method of choosing
+#' # a threshold is to find a gap in the distance distribution that represents
+#' # clonal groups. You can look at this by analyzing the distribution of all
+#' # possible thresholds with the function "cutoff_predictor".
+#' 
+#' # For this example, we'll use Bruvo's distance to predict the cutoff for
+#' # P. infestans.
+#' 
+#' data(Pinf)
+#' Pinf
+#' # Repeat lengths are necessary for Bruvo's distance
+#' (pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)))
+#' 
+#' # Now we can collect information of the thresholds. We can set threshold = 1
+#' # because we know that this will capture the maximum possible distance:
+#' (thresholds <- mlg.filter(Pinf, distance = bruvo.dist, stats = "THRESHOLDS",
+#'                           replen = pinfreps, threshold = 1))
+#' # We can use these thresholds to find an appropriate cutoff
+#' (pcut <- cutoff_predictor(thresholds))
+#' mlg.filter(Pinf, distance = bruvo.dist, replen = pinfreps) <- pcut
+#' Pinf
+#' 
+#' # This can also be visualized with the "filter_stats" function.
 #' 
 #' # Special case: threshold = 0 ---------------------------------------------
 #' 
@@ -1300,7 +1326,7 @@ setMethod(
 #' # the computer can store.
 #' 
 #' mlg.filter(monpop) <- .Machine$double.eps ^ 0.5
-#' nmll(monpop) # 236
+#' nmll(monpop) # 236 mlg
 #' 
 #' # Custom distance ---------------------------------------------------------
 #' 
