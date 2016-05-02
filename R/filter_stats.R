@@ -203,7 +203,7 @@ cutoff_predictor <- function(thresholds, fraction = 0.5){
 #==============================================================================#
 plot_filter_stats <- function(x, fstats, distmat, cols = NULL, nclone = NULL, breaks = NULL){
   upper <- round(max(distmat), digits = 1)
-  ylims <- c(ifelse(is.genind(x), mlg(x, quiet = TRUE), nInd(x)), 1)
+  ylims <- c(ifelse(is.genind(x), suppressWarnings(nmll(x, "original")), nInd(x)), 1)
   if (!is.null(breaks)){
     graphics::hist(distmat, breaks = breaks, xlab = "", ylab = "", axes = FALSE,
                    xlim = c(0, upper), main = "")
