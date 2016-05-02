@@ -220,30 +220,60 @@ genetic distance.
 To remedy the issues with a naïve definition of multilocus genotypes, we can
 utilize genetic distance, which will allow us to collapse multilocus genotypes
 that are under a specific distance threshold. The main function we will use in
-this section is `mlg.filter()`. By default, it will calculate Nei's genetic
-distance `r citep(bib[c("nei1972genetic")])` on the data and then filter based
-off of that matrix. You can also utilize your own supplied distance matrix or
-distance function.
+this section is `mlg.filter()`. By default, it will create a dissimiliarity
+distance matrix from the data and then filter based off of that matrix. You can
+also utilize your own supplied distance matrix or distance function.
+
+### Main usage
+
+The function `mlg.filter()` is mainly used to define multilocus genotypes in
+your data based on a genetic distance threshold. This threshold defines the
+minimum distance to consider two genotypes unique, so anything below that will
+be clustered into the same MLG. In practice, it's used like this:
+
+```{r}
+x # We have 7 MLGs before filtering
+mlg.filter(x, distance = xdis) <- 1 + .Machine$double.eps^0.5
+x # Now we have 5 MLGs
+mll(x) <- "original" # We'll reset to the naive definition
+```
+
+Here, we told `mlg.filter()` to set the threshold to 1 plus a very tiny number
+(this will be explained in the next section) based off of the distance matrix
+**xdis**. This is a way to manipulate the object in place. In this section,
+there will be examples of retrieving the MLGs and other statistics from the
+function as well as how to use different distance functions and reset the MLGs.
 
 ### Collapsing
 
-Let's continue our example by using the euclidean distance of the raw alleles.
-To do the collapsing, we will use the function `mlg.filter()`. 
+Let's continue our example by using the euclidean distance of the raw alleles. 
+We can see in the distance matrix above that the smallest distance (other than
+zero) is 1, which represents our "mut" sample. If we set the threshold to 1,
+what would we expect the MLLs to look like?
 
 ```{r}
+mll(x, "original")
 mlg.filter(x, distance = xdis, threshold = 1)
 ```
 
-Notice that we now have the last two MLGs collapsed together into one MLL. 
-Unfortunately, we wanted to collapse three MLGs. What happened?
-
-Remember that the distance between "mut" and "C" was 1. We need to set the 
-threshold above where we want the collapse to happen. In order to do this, we
-should add a tiny number to the threshold:
+Notice that we now have the last two MLGs collapsed together into one MLL, but 
+the third MLG ("mut") has not collapsed. Remember that the distance between
+"mut" and "C" was 1. We need to set the threshold above where we want the
+collapse to happen. In order to do this, we should add a tiny number to the
+threshold:
 
 ```{r}
 (e <- .Machine$double.eps^0.5) # A very tiny number
 mlg.filter(x, distance = xdis, threshold = 1 + e)
+```
+
+Now we have 5 unique MLLs. Because of this, it's important to note that, given
+a threshold of 0, the contracted MLGs will be the same as the original
+
+```{r}
+mlg.filter(x, distance = xdis, threshold = 0)
+mll(x, "original")
+mlg.filter(x, distance = xdis, threshold = e)
 ```
 
 
