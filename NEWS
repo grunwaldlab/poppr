@@ -8,6 +8,7 @@ NEW FEATURES
   (see https://github.com/grunwaldlab/poppr/issues/94) 
 * The pipe operator (`%>%`) is now exported from
   magrittr to make chaining commands easier.
+* `mlg.filter()` can now return multiple statistics.
   
 BUG FIX
 -----------
