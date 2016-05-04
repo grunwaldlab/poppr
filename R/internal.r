@@ -1846,13 +1846,16 @@ make_attributes <- function(d, nlig, labs, method, matched_call){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-palette_parser <- function(pal, npop, pnames){
-  PAL <- try(match.fun(pal), silent = TRUE)
+palette_parser <- function(inPAL, npop, pnames){
+  PAL <- try(match.fun(inPAL, descend = FALSE), silent = TRUE)
   if ("try-error" %in% class(PAL)){
-    if (all(pnames %in% names(pal))){
-      color <- pal[pnames]
-    } else if (npop == length(pal)){
-      color <- stats::setNames(pal, pnames)
+    if (all(pnames %in% names(inPAL))){
+      color <- inPAL[pnames]
+    } else if (npop == length(inPAL)){
+      color <- stats::setNames(inPAL, pnames)
+    } else if (npop < length(inPAL)){
+      warning("Number of populations less than number of colors supplied. Discarding extra colors.")
+      color <- stats::setNames(inPAL[1:npop], pnames)
     } else {
       warning("insufficient color palette supplied. Using topo.colors().")
       color <- stats::setNames(topo.colors(npop), pnames)
