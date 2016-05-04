@@ -18,9 +18,12 @@ BUG FIX
 * Caught bug where the `mlg.filter()` assignment method was using `nei.dist()`
   instead of `diss.dist()` when no distance was specified.
 * A bug that resulted in significantly negative values from `bitwise.ia()` with
-  large sample sizes was fixed. 
+  large sample sizes was fixed. Spotted by @knausb
   (see https://github.com/grunwaldlab/poppr/issues/100)
 * Fixed issue where plot_filter_stats wasn't displaying the full range of MLGs
+* Color vectors are now correctly parsed when passed to msn functions 
+  (see https://github.com/grunwaldlab/poppr/issues/55) for details. Long color
+  vectors are now accepted, albiet with warning.
   
 MISC
 -----------
