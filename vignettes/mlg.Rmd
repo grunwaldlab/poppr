@@ -610,15 +610,19 @@ myCF <- function(x){
 ```
 
 You can use filtered or custom MLGs to compare diversity. Here, I'm filtering
-genotypes in `monpop` that are different by only a single mutational step 
+genotypes in `monpop` that are different by only a single mutational step
 `r citep(bib["Bruvo:2004"])`.
+
+> One mutational step for a single allele in Bruvo's distance is equivalent to
+> 0.5, so a single mutational step for a haploid organism with 13 loci is 0.5/13.
 
 ```{r, eval = FALSE}
 # Repeat lengths are necessary
-reps <- c(CHMFc4 = 7, CHMFc5 = 2, CHMFc12 = 4, 
-          SEA = 4, SED = 4, SEE = 2, SEG = 6,
-          SEI = 3, SEL = 4, SEN = 2, 
-          SEP = 4, SEQ = 2, SER = 4)
+reps <- fix_replen(monpop, 
+                   c(CHMFc4 = 7, CHMFc5 = 2, CHMFc12 = 4, 
+                     SEA = 4, SED = 4, SEE = 2, SEG = 6,
+                     SEI = 3, SEL = 4, SEN = 2, 
+                     SEP = 4, SEQ = 2, SER = 4))
 
 # Adding a little bit, so the threshold is included.
 e <- .Machine$double.eps^0.5
@@ -742,20 +746,26 @@ sum of all pairwise distances between clone-corrected samples (corrected without
 respect to populations):
 
 ```{r}
-mcc <- clonecorrect(monpop, strata = NA)
-sum(dist(mcc))
+monpop %>% 
+  clonecorrect(strata = NA) %>%  # 1. clone correct whole data set
+  dist() %>%                     # 2. calculate distance
+  sum()                          # 3. take the sum of the distance
 ```
 
 Now, what happens when we randomly sample individuals?
 
 ```{r}
 set.seed(999)
-mcc1 <- clonecorrect(monpop[sample(nInd(monpop))], strata = NA)
-sum(dist(mcc1))
+monpop[sample(nInd(monpop))] %>% # 1. shuffle samples
+  clonecorrect(strata = NA) %>%  # 2. clone correct whole data set
+  dist() %>%                     # 3. calculate distance
+  sum()                          # 4. take the sum of the distance
 
 set.seed(1000)
-mcc2 <- clonecorrect(monpop[sample(nInd(monpop))], strata = NA)
-sum(dist(mcc2))
+monpop[sample(nInd(monpop))] %>% # 1. shuffle samples
+  clonecorrect(strata = NA) %>%  # 2. clone correct whole data set
+  dist() %>%                     # 3. calculate distance
+  sum()                          # 4. take the sum of the distance
 ```
 
 Notice how we are getting different results based on the order of samples. This
