@@ -60,9 +60,11 @@ print.ialist <- function(x, ...){
 
 #' @method plot ialist
 #' @export
-plot.ialist <- function(x, y = NULL, ..., index = "rbarD"){
+plot.ialist <- function(x, y = NULL, ..., index = "rbarD", labsize = rel(3), 
+                        linesize = rel(1)){
   poppr.plot(x$samples, pval = x$index[c(2, 4)], file = substitute(x),
-             observed = x$index[c(1, 3)], index = index, ...)
+             observed = x$index[c(1, 3)], index = index, labsize = labsize,
+             linesize = linesize, ...)
 }
 
 #' @method print amova

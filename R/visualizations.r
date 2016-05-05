@@ -46,7 +46,9 @@
 poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05), 
                        pop = NULL, file = NULL, N = NULL,
                        observed = c(Ia = 0, rbarD = 0), 
-                       index = c("rbarD", "Ia")){
+                       index = c("rbarD", "Ia"),
+                       labsize = rel(3),
+                       linesize = rel(1)){
   INDEX_ARGS <- c("rbarD", "Ia")
   index      <- match.arg(index, INDEX_ARGS)
   if (!class(sample) %in% "ialist" & class(sample) %in% "list"){
@@ -116,7 +118,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   if (!exists("annot_color")){
     annot_color <- "blue"
     vline       <- geom_vline(xintercept = observed[index], color = "blue", 
-                              linetype = 2)
+                              linetype = 2, size = linesize)
     obs         <- signif(observed[index], 3)
   }
   obslab  <- paste(labs[index], ":", obs, sep = "")
@@ -129,9 +131,9 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
     geom_rug() + 
     vline +
     annotate(geom = "text", x = xval, y = Inf, label = obslab, color = annot_color, 
-             vjust = 2, hjust = just, parse = TRUE) + 
+             vjust = 2, hjust = just, parse = TRUE, size = labsize) + 
     annotate(geom = "text", x = xval, y = Inf, label = plab, color = annot_color, 
-             vjust = 4, hjust = just)
+             vjust = 4, hjust = just, size = labsize)
   if (index == "rbarD"){
     thePlot <- thePlot + xlab(expression(paste(bar(r)[d])))
   } else if (index == "Ia"){

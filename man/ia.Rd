@@ -173,16 +173,20 @@ plot(res, low = "black", high = "green", index = "Ia")
 
 \dontrun{
 
-# Get the indices back and plot them using base R graphics:
+# Get the indices back and plot the distributions.
 nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
-layout(matrix(c(1,1,2,2), 2, 2, byrow = TRUE))
-hist(nansamp$samples$Ia); abline(v = nansamp$index[1])
-hist(nansamp$samples$rbarD); abline(v = nansamp$index[3])
-layout(matrix(c(1,1,1,1), 1, 1))
 
-# You can also view them directly:
 plot(nansamp, index = "Ia")
 plot(nansamp, index = "rbarD")
+
+# You can also adjust the parameters for how large to display the text
+# so that it's easier to export it for publication/presentations.
+library("ggplot2")
+plot(nansamp, labsize = 5, linesize = 2) +
+  theme_bw() +                                      # adding a theme
+  theme(text = element_text(size = rel(5))) +       # changing text size
+  theme(plot.title = element_text(size = rel(4))) + # changing title size
+  ggtitle("Index of Association of nancycats")      # adding a new title
 
 # Get the index for each population.
 lapply(seppop(nancycats), ia)
