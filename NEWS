@@ -6,9 +6,12 @@ NEW FEATURES
 
 * Threshold argument added to `filter_stats()` 
   (see https://github.com/grunwaldlab/poppr/issues/94) 
-* The pipe operator (`%>%`) is now exported from
-  magrittr to make chaining commands easier.
+* The pipe operator (`%>%`) is now exported from magrittr to make chaining 
+  commands easier.
 * `mlg.filter()` can now return multiple statistics.
+* The user can now control the size of the labels in the index of association 
+  plots with the labsize and linesize arguments in the plot method.
+  
   
 BUG FIX
 -----------
