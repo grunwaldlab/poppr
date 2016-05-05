@@ -65,19 +65,26 @@ data(Pram)
 head(pgen(Pram, log = FALSE))
 
 \dontrun{
+# You can also supply the observed allele frequencies
+pramfreq <- Pram \%>\% genind2genpop() \%>\% tab(freq = TRUE)
+head(pgen(Pram, log = FALSE, freq = pramfreq))
+
 # You can get the Pgen values over all loci by summing over the logged results:
-exp(rowSums(pgen(Pram, log = TRUE), na.rm = TRUE))
+pgen(Pram, log = TRUE) \%>\%  # calculate pgen matrix
+  rowSums(na.rm = TRUE) \%>\% # take the sum of each row
+  exp()                     # take the exponent of the results
 
 # You can also take the product of the non-logged results:
 apply(pgen(Pram, log = FALSE), 1, prod, na.rm = TRUE)
 
 ## Rare Allele Correction ---------------------------------------------------
 ##
-# By default, allele frequencies are calculated with rraf with 
-# correction = TRUE. This is normally benign when analyzing large populations,
-# but it can have a great effect on small populations. You can pass arguments 
-# for the function rare_allele_correction() to correct the allele frequencies
-# that were lost in the round robin calculations.
+# If you don't supply a table of frequencies, they are calculated with rraf 
+# with correction = TRUE. This is normally benign when analyzing large 
+# populations, but it can have a great effect on small populations. To help 
+# control this, you can supply arguments described in 
+# help("rare_allele_correction"). 
+
 
 # Default is to correct by 1/n per population. Since the calculation is 
 # performed on a smaller sample size due to round robin clone correction, it
