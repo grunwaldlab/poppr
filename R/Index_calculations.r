@@ -958,6 +958,9 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #'   will return the observed number of alleles private to each population. If 
 #'   \code{FALSE}, each private allele will be counted once, regardless of 
 #'   dosage.
+#' 
+#' @param drop \code{logical}. if \code{TRUE}, populations/individuals without 
+#'   private alleles will be dropped from the result. Defaults to \code{FALSE}.
 #'   
 #' @return a matrix, data.frame, or vector defining the populations or
 #'   individuals containing private alleles. If vector is chosen, alleles are
@@ -997,7 +1000,8 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #' }
 #==============================================================================#
 private_alleles <- function(gid, form = alleles ~ ., report = "table", 
-                            level = "population", count.alleles = TRUE){
+                            level = "population", count.alleles = TRUE,
+                            drop = FALSE){
   REPORTARGS <- c("table", "vector", "data.frame")
   LEVELARGS  <- c("individual", "population")
   LHS_ARGS <- c("alleles", "locus", "loci")
@@ -1039,7 +1043,10 @@ private_alleles <- function(gid, form = alleles ~ ., report = "table",
       privates <- ifelse(privates > 0, 1, 0)
     }
     
-    privates <- privates[rowSums(privates, na.rm = TRUE) > 0, , drop = FALSE]
+    if (drop){
+      privates <- privates[rowSums(privates, na.rm = TRUE) > 0, , drop = FALSE]
+    }
+    
     if (marker != "alleles"){
       private_fac <- locFac(gid)[private_columns]
       privates <- vapply(unique(private_fac), function(l){

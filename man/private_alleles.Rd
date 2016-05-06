@@ -5,7 +5,7 @@
 \title{Tabulate alleles the occur in only one population.}
 \usage{
 private_alleles(gid, form = alleles ~ ., report = "table",
-  level = "population", count.alleles = TRUE)
+  level = "population", count.alleles = TRUE, drop = FALSE)
 }
 \arguments{
 \item{gid}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
@@ -26,6 +26,9 @@ individuals in rows and alleles in columns. Data frames are long form.}
 will return the observed number of alleles private to each population. If 
 \code{FALSE}, each private allele will be counted once, regardless of 
 dosage.}
+
+\item{drop}{\code{logical}. if \code{TRUE}, populations/individuals without 
+private alleles will be dropped from the result. Defaults to \code{FALSE}.}
 }
 \value{
 a matrix, data.frame, or vector defining the populations or
