@@ -139,9 +139,9 @@ mll.reset.internal <- function(x, value){
   }
   x@mlg@mlg <- new_mlg
   if ("contracted" %in% types){
-    x@mlg@cutoff["contracted"] <- 0
-    x@mlg@distname             <- "nei.dist"
-    x@mlg@distargs             <- list()
+    cutoff(x@mlg)["contracted"] <- 0
+    distname(x@mlg) <- if (inherits(x, "genclone")) "diss.dist" else "bitwise.dist"
+    distargs(x@mlg) <- list()
   }
   return(x)
 }

@@ -271,6 +271,21 @@ test_that("subsetting and resetting MLGs works", {
   expect_equal(comll, pres)
 })
 
+test_that("mll.reset works with non-MLG class slots", {
+  skip_on_cran()
+  Pinf@mlg <- Pinf@mlg[]
+  expect_is(Pinf@mlg, "integer")
+  Pinf <- mll.reset(Pinf)
+  expect_is(Pinf@mlg, "MLG")
+})
+
+test_that("mll.reset will reset filtered MLGs", {
+  skip_on_cran()
+  mlg.filter(Pinf, dist = dist) <- 3
+  Pinf.res <- mll.reset(Pinf, "contracted")
+  expect_lt(lu(mll(Pinf)), lu(mll(Pinf.res)))
+  expect_equal(mll(Pinf, "original"), mll(Pinf.res, "contracted"))
+})
 
 test_that("multilocus genotype filtering functions correctly", {
   skip_on_cran()
