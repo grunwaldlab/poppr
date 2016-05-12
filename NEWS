@@ -33,6 +33,8 @@ MISC
 -----------
 
 * Documentation for `mlg.filter()` was clarified and updated with more examples.
+* The vignette "Migration from poppr version 1" has been removed.
+* Previously deprecated `*hierarchy()` functions have been removed.
 
 poppr 2.1.1
 ===========
