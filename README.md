@@ -157,7 +157,6 @@ A few vignettes have been written for poppr:
 |:------------------------------|:-------------------------------------|
 |Algorightms and Equations      |`vignette("algo", "poppr")`           |
 |Data import and manipulation   |`vignette("poppr_manual", "poppr")`   |
-|Migration from poppr version 1 |`vignette("how_to_migrate", "poppr")` |
 |Multilocus Genotype Analysis   |`vignette("mlg", "poppr")`            |
 
 ### User Group

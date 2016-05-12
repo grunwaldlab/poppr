@@ -32,7 +32,6 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
   
   \tabular{ll}{
     \strong{Vignette}              \tab \strong{command}\cr
-    Migration from poppr version 1 \tab \code{vignette("how_to_migrate", "poppr")}\cr
     Data import and manipulation   \tab \code{vignette("poppr_manual", "poppr")}\cr
     Algorithms and Equations      \tab \code{vignette("algo", "poppr")}\cr
     Multilocus Genotype Analysis   \tab \code{vignette("mlg", "poppr")}  
@@ -56,22 +55,6 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
   message on the groups. Personal emails are highly discouraged as they do 
   not allow others to learn.}
 }
-\section{A note about version 2}{
-
-  \pkg{Poppr} has recently moved to version 2 partially because
-  \pkg{adegenet} has also moved to version 2, and partially because we
-  needed to change the way a few things were done. Major changes that have
-  affected both packages: the main data structure in \pkg{adegenet}, the
-  \code{\linkS4class{genind}} object, has changed drastically and reduced in
-  size. You must convert your data if you want to use the new functionality.
-  See the vignette "Migration from poppr version 1" by typing
-  \code{vignette("how_to_migrate", "poppr")} for more details on
-  major changes and how to deal with them.
-  
-  Many new features in \pkg{poppr} are described in Kamvar, Brooks, and
-  Grünwald (2015), linked below.
-}
-
 \section{Functions in \pkg{poppr}}{
 
 
