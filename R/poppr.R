@@ -75,15 +75,13 @@
 #'     Multilocus Genotype Analysis   \tab \code{vignette("mlg", "poppr")}  
 #'   }
 #'   
-#'   Important notes on the changes from poppr version 1 to poppr version 2 are
-#'   in \emph{Migration from poppr version 1}, essential functions for importing
-#'   and manipulating data are detailed within the \emph{Data import and 
-#'   manipulation} vignette, details on algorithms used in \pkg{poppr} are
-#'   within the \emph{Algorithms and equations} vignette, and details for
-#'   working with multilocus genotypes are in \emph{Multilocus Genotype
-#'   Analysis}. Examples of analyses are available in a primer written by 
-#'   Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E. Everhart at 
-#'   \url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
+#'   Essential functions for importing and manipulating data are detailed within
+#'   the \emph{Data import and manipulation} vignette, details on algorithms
+#'   used in \pkg{poppr} are within the \emph{Algorithms and equations}
+#'   vignette, and details for working with multilocus genotypes are in
+#'   \emph{Multilocus Genotype Analysis}. Examples of analyses are available in
+#'   a primer written by Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E.
+#'   Everhart at \url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
 #'   
 #'   \subsection{Getting help}{ If you have a specific question or issue with 
 #'   \pkg{poppr}, feel free to contribute to the google group at 
@@ -123,7 +121,7 @@
 #' \item \code{\link{informloci}} (m) - Detects and removes phylogenetically uninformative loci
 #' \item \code{\link{popsub}} (m | s) - Subsets genind objects by population
 #' \item \code{\link{shufflepop}} (m) - Shuffles genotypes at each locus using four different shuffling algorithms
-#' \item \code{\link{recode_polyploids}} (m|x) - Recodes polyploid data sets with missing alleles imported as "0"
+#' \item \code{\link{recode_polyploids}} (m | x) - Recodes polyploid data sets with missing alleles imported as "0"
 #' }
 #' @section Genetic distances:
 #' \itemize{
