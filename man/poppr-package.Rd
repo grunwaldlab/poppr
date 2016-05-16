@@ -186,8 +186,8 @@ ramorum} (Kamvar et. al., 2015; Goss et. al., 2009)
 }
 }
 \author{
-Zhian N. Kamvar, Jonah C. Brooks, Javier F. Tabima, Stacy
-  Krueger-Hadfield, Erik Sotka, Niklaus J. Grünwald
+Zhian N. Kamvar, Jonah C. Brooks, Sydney E. Everhart, Javier F. 
+  Tabima, Stacy Krueger-Hadfield, Erik Sotka, Niklaus J. Grünwald
 
 Maintainer: Zhian N. Kamvar
 }
