@@ -275,7 +275,8 @@ test_that("mll.reset works with non-MLG class slots", {
   skip_on_cran()
   Pinf@mlg <- Pinf@mlg[]
   expect_is(Pinf@mlg, "integer")
-  Pinf <- mll.reset(Pinf)
+  expect_error(mll.reset(Pinf), "please")
+  Pinf <- mll.reset(Pinf, TRUE)
   expect_is(Pinf@mlg, "MLG")
 })
 
