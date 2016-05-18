@@ -287,6 +287,14 @@ test_that("mll.reset will reset filtered MLGs", {
   expect_equal(mll(Pinf, "original"), mll(Pinf.res, "contracted"))
 })
 
+test_that("mll.reset will reset subset genclone with no MLG class", {
+  skip_on_cran()
+  data(monpop)
+  expect_equal(suppressWarnings(monpop %>% nmll()), 264L)
+  expect_equal(suppressWarnings(monpop[loc = 1:2, reset = TRUE] %>% nmll()), 14L)
+  expect_equal(suppressWarnings(monpop[loc = 1:2] %>% mll.reset(TRUE) %>% nmll()), 14L)
+})
+
 test_that("multilocus genotype filtering functions correctly", {
   skip_on_cran()
   # amlg  <- mlg.vector(Aeut)

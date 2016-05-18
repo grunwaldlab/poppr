@@ -113,11 +113,8 @@ mll.gen.internal <- function(x, type = NULL){
 # ## none
 #==============================================================================#
 mll.reset.internal <- function(x, value){
-  if (!is(x@mlg, "MLG")){
-    x@mlg <- new("MLG", x@mlg)
-    return(x)
-  }
-  if (is.logical(value) && length(value) == 1 && value == TRUE){
+  true_value <- is.logical(value) && length(value) == 1 && value == TRUE
+  if (!is(x@mlg, "MLG") | true_value){
     x@mlg <- new("MLG", mlg.vector(x, reset = TRUE))
     return(x)
   }

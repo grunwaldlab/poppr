@@ -28,6 +28,8 @@ BUG FIX
 * Color vectors are now correctly parsed when passed to msn functions 
   (see https://github.com/grunwaldlab/poppr/issues/55) for details. Long color
   vectors are now accepted, albiet with warning.
+* An issue where `mll.reset()` did not reset non-MLG class objects in the mlg
+  slot was fixed. 
   
 MISC
 -----------
