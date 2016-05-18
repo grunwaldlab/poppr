@@ -291,7 +291,7 @@ test_that("mll.reset will reset subset genclone with no MLG class", {
   skip_on_cran()
   data(monpop)
   expect_equal(suppressWarnings(monpop %>% nmll()), 264L)
-  expect_equal(suppressWarnings(monpop[loc = 1:2, reset = TRUE] %>% nmll()), 14L)
+  expect_equal(suppressWarnings(monpop[loc = 1:2, mlg.reset = TRUE] %>% nmll()), 14L)
   expect_equal(suppressWarnings(monpop[loc = 1:2] %>% mll.reset(TRUE) %>% nmll()), 14L)
 })
 
