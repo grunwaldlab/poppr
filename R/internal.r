@@ -1978,12 +1978,11 @@ test_zeroes <- function(x){
   if (test_microsat(x)){
     
     allnames  <- as.numeric(unlist(alleles(x), use.names = FALSE))
-    ploid     <- unique(ploidy(x))
-    ploidtest <- length(ploid) > 1 | any(ploid > 2)
-
-    if (any(allnames == 0) && any(nAll(x) > 2) && ploidtest){
+    
+    if (any(allnames == 0)){
       return(TRUE)
     }
+    
   }
   return(FALSE)
 }

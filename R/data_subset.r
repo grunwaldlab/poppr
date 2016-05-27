@@ -760,14 +760,14 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
   MAT <- tab(poly)
   fac <- locFac(poly)
 
-  non_zero_cols_list   <- lapply(poly@all.names, function(x) as.numeric(x) > 0)
+  non_zero_cols_list   <- lapply(alleles(poly), function(x) as.numeric(x) > 0)
   non_zero_cols_vector <- unlist(non_zero_cols_list, use.names = FALSE)
 
   poly@loc.fac   <- fac[non_zero_cols_vector]
   poly@loc.n.all <- stats::setNames(tabulate(locFac(poly), nbins = nLoc(poly)), 
                                     locNames(poly))
   poly@tab       <- MAT[, non_zero_cols_vector, drop = FALSE]
-  poly@all.names <- mapply("[", poly@all.names, non_zero_cols_list,
+  alleles(poly)  <- mapply("[", alleles(poly), non_zero_cols_list,
                            SIMPLIFY = FALSE)
 
   if (newploidy && is.genind(poly)){
