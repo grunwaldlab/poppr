@@ -12,6 +12,7 @@ NEW FEATURES
 * The user can now control the size of the labels in the index of association 
   plots with the labsize and linesize arguments in the plot method.
 * `private_alleles()` gains a drop argument.
+* `recode_polyploids()` can now take haplodiploid data.
   
   
 BUG FIX
