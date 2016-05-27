@@ -27,3 +27,16 @@ test_that("recode_polyploids will go there and back again", {
 	rectab <- tab(przpr)
 	expect_equivalent(rectab[, colnames(tab(pr))], tab(pr))
 })
+
+
+test_that("haplodiploids will work", {
+  skip_on_cran()
+  df <- matrix(c("0/2", "2/1", "3/0", 
+                 "0/1", "2/2", "1/1"), nrow = 3)
+  x <- df2genind(df, sep = "/")
+  expect_equal(ploidy(x), rep(2L, 3))
+  y <- recode_polyploids(x, newploidy = TRUE)
+  expect_equal(ploidy(y), c(1L, 2L, 2L))
+  z <- recode_polyploids(y, addzero = TRUE)
+  expect_equal(tab(x), tab(z))
+})
