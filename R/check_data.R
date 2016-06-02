@@ -42,35 +42,38 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-#' Check for samples with incompatible missing data
+#' Check for samples that are incomparable due to missing data
 #'
 #'
 #' If two samples share no loci typed in common, they are incomparable and will
 #' produce missing data in a distance matrix, which could lead to problems with
 #' further analyses. This function finds these samples and returns a matrix of
-#' how many other samples these are incompatible with.
+#' how many other samples these are incomparable with.
 #' 
 #' 
-#' @param gid a genind object
+#' @param gid a genind or genclone object
 #'
-#' @return a square matrix with samples that are incompatible
+#' @return a square matrix with samples that are incomparable
 #' @export
 #'
 #' @examples
 #' 
 #' data(nancycats)
-#' # These two populations have no incompatibilities
-#' cromulent(nancycats[pop = c(1, 17)])
-#' # If you reduce the number of loci, we find that there are incompatibilities
-#' cromulent(nancycats[pop = c(1, 17), loc = c(1, 4)])
-cromulent <- function(gid){
+#' # These two populations have no samples that are incomparable
+#' incomp(nancycats[pop = c(1, 17)])
+#' 
+#' # If you reduce the number of loci, we find that there are 
+#' # incomparable samples.
+#' incomp(nancycats[pop = c(1, 17), loc = c(1, 4)])
+incomp <- function(gid){
   miss  <- adegenet::propTyped(gid, by = "both")
   nind  <- nInd(gid)
   combs <- utils::combn(nind, 2)
-  cromulence <- apply(combs, 2, function(i) any(miss[i[1], ] & miss[i[2], ]))
-  
+  NC2U  <- apply(combs, 2, function(i) any(miss[i[1], ] & miss[i[2], ]))
+  # RIP prince
+
   dmat   <- dist(seq_len(nind))
-  dmat[] <- cromulence
+  dmat[] <- NC2U
   dmat   <- as.matrix(dmat)
   dimnames(dmat) <- list(indNames(gid), indNames(gid))
   
