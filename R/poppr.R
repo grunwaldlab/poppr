@@ -176,6 +176,7 @@
 #' \item \code{\link{rraf}} (m) - Round-robin allele frequency estimates.
 #' \item \code{\link{pgen}} (m) - Probability of genotypes.
 #' \item \code{\link{psex}} (m) - Probability of observing a genotype more than once.
+#' \item \code{\link{incomp}} (m) - Check data for incomparable samples.
 #' }
 #' }
 #' @section Visualization:

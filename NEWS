@@ -1,6 +1,11 @@
 poppr 2.1.1.99
 ===========
 
+NEW FUNCTIONS
+-----------
+
+* `incomp()` will check your data to see if there are any incomparable samples.
+
 NEW FEATURES
 -----------
 

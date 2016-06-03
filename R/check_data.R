@@ -72,13 +72,12 @@ incomp <- function(gid){
   NC2U  <- apply(combs, 2, function(i) any(miss[i[1], ] & miss[i[2], ]))
   # RIP prince
 
-  dmat   <- dist(seq_len(nind))
+  dmat   <- stats::dist(seq_len(nind))
   dmat[] <- NC2U
   dmat   <- as.matrix(dmat)
   dimnames(dmat) <- list(indNames(gid), indNames(gid))
   
   diag(dmat) <- rep(1L, nind)
   res        <- dmat[rowSums(dmat) < nind, colSums(dmat) < nind]
-  
   return(res)
 }
