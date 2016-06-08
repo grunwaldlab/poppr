@@ -1,24 +1,8 @@
-## Resubmission
-
-This resubmission is to address a bizarre accumulation of user time from two
-examples (spotted by Kurt):
-
-```
-* checking examples ... [69s/23s] OK
-Examples with CPU or elapsed time > 5s
-                  user system elapsed
-cutoff_predictor 33.812  0.012   2.500
-genclone-class   14.164  0.180   1.316
-```
-
-Behavior of these examples is normally well under a second, but I have set them
-to not run. 
-
 ## Test environments
 
 * local OS X install, R 3.3.0
 * ubuntu 12.04 (on travis-ci), devel [2016-03-15 r70332] and R 3.3.0
-* win-builder (devel [2016-03-14 r70331] and release [3.2.4])
+* win-builder (devel [2016-06-06 r70718] and release [3.2.4])
 
 ## R CMD check results
 
@@ -33,6 +17,34 @@ Found the following (possibly) invalid URLs:
     From: README.md
     Status: 401
     Message: Unauthorized
+```
+
+### WARNING on win-builder devel:
+
+```
+* checking re-building of vignette outputs ... WARNING
+Error in re-building vignettes:
+  ...
+Loading required package: adegenet
+Loading required package: ade4
+
+   /// adegenet 2.0.1 is loaded ////////////
+
+   > overview: '?adegenet'
+   > tutorials/doc/questions: 'adegenetWeb()' 
+   > bug reports/feature requests: adegenetIssues()
+
+
+This is poppr version 2.1.1.99.67. To get started, type package?poppr
+OMP parallel support: available
+
+This version of poppr is under development.
+If you find any bugs, please report them at https://github.com/grunwaldlab/poppr/issues
+Loading required package: ape
+Quitting from lines 287-295 (mlg.Rmd) 
+Error: processing vignette 'mlg.Rmd' failed with diagnostics:
+invalid gray level, must be in [0,1].
+Execution halted
 ```
 
 This is indeed a valid URL
