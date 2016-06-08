@@ -1,7 +1,7 @@
 ## Test environments
 
 * local OS X install, R 3.3.0
-* ubuntu 12.04 (on travis-ci), devel [2016-06-08 r70732] and R 3.3.0
+* ubuntu 12.04 (on travis-ci), devel [2016-06-08 r70734] and R 3.3.0
 * win-builder (devel [2016-06-08 r70728])
 
 ## R CMD check results
