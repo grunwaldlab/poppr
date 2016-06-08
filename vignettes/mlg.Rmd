@@ -278,25 +278,6 @@ Notice that all the MLGs are the same as the originally defined MLGs. Using a
 threshold of zero allows two MLGs separated by zero genetic distance to remain
 mutually unique.
 
-### Minimum spanning networks
-
-Now we have all of our MLLs collapsed together, but perhaps a better way to 
-visualize it would be to use `poppr.msn()`: 
-
-```{r}
-# Threshold of 1
-set.seed(9001)
-g1 <- poppr.msn(x, xdis, threshold = 1, include.ties = TRUE, 
-                vertex.label.color = "firebrick", vertex.label.font = 2)
-# Threshold of 1 + e
-set.seed(9001)
-g2 <- poppr.msn(x, xdis, threshold = 1 + e, include.ties = TRUE, 
-                vertex.label.color = "firebrick", vertex.label.font = 2)
-```
-
-Notice how the genotypes collapse into a single node. Both `poppr.msn()` and
-`bruvo.msn()` will calculate and plot these minimum spanning networks. 
-
 ### Setting the genotypes
 
 As demonstrated at the beginning of this section, if we wanted to reassign our
