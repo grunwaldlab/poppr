@@ -162,9 +162,14 @@ amsn <- poppr.msn(Aeut, adist, showplot = FALSE)
 # Default
 library("igraph") # To get all the layouts.
 set.seed(500)
-plot_poppr_msn(Aeut, amsn, gadj = 15, beforecut = TRUE)
+plot_poppr_msn(Aeut, amsn, gadj = 15)
 
 \dontrun{
+
+# Different layouts (from igraph) can be used by supplying the function name.
+set.seed(500)
+plot_poppr_msn(Aeut, amsn, gadj = 15, layfun = layout_with_kk)
+
 # Removing link between populations (cutoff = 0.2) and labelling no individuals
 set.seed(500)
 plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 0.2)
@@ -173,20 +178,31 @@ plot_poppr_msn(Aeut, amsn, inds = "none", gadj = 15, beforecut = TRUE, cutoff = 
 # Showing clusters of MLGS with at most 5\% variation
 # Notice that the Mt. Vernon population appears to be more clonal
 set.seed(50) 
-plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "57")
+plot_poppr_msn(Aeut, amsn, gadj = 15, cutoff = 0.05, inds = "057")
 
 
 data(partial_clone)
 pcmsn <- bruvo.msn(partial_clone, replen = rep(1, 10))
 
+# You can plot using a color palette or a vector of named colors
+# Here's a way to define the colors beforehand
+pc_colors <- nPop(partial_clone) \%>\% 
+  RColorBrewer::brewer.pal("Set2") \%>\% 
+  setNames(popNames(partial_clone))
+
+pc_colors
+
 # Labelling the samples contained in multilocus genotype 9
-plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = 9)
+set.seed(999)
+plot_poppr_msn(partial_clone, pcmsn, palette = pc_colors, inds = 9)
 
 # Doing the same thing, but using one of the sample names as input.
-plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "sim 20")
+set.seed(999)
+plot_poppr_msn(partial_clone, pcmsn, palette = pc_colors, inds = "sim 20")
 
 # Note that this is case sensitive. Nothing is labeled. 
-plot_poppr_msn(partial_clone, pcmsn, palette = rainbow, inds = "Sim 20")
+set.seed(999)
+plot_poppr_msn(partial_clone, pcmsn, palette = pc_colors, inds = "Sim 20")
 
 # Something pretty
 data(microbov)
