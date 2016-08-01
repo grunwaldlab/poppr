@@ -516,9 +516,13 @@ genind2genalex <- function(gid, filename = "genalex.csv", quiet = FALSE, pop = N
   # Constructing the locus names. GenAlEx separates the alleles of the loci, so
   # There is one locus name for every p ploidy columns you have.
   if(all(ploid > 1) & gid@type == "codom"){
-    locnames <- unlist(strsplit(paste(locNames(gid), 
-                                      paste(rep(" ", ploidy(gid)[1] - 1), 
-                                            collapse="/"), sep="/"),"/"))
+    # To intersperse spaces between the locus names, make a ploidy x loci
+    # matrix, fill the first row with the loci names, fill the rest with
+    # emptiness, and then convert it into a vector.
+    locnames       <- matrix(character(nLoc(gid)*max(ploid)), nrow = max(ploid))
+    locnames[1, ]  <- locNames(gid)
+    locnames[-1, ] <- " "
+    dim(locnames)  <- NULL
   } else {
     locnames <- locNames(gid)
   }
