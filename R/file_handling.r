@@ -545,7 +545,9 @@ genind2genalex <- function(gid, filename = "genalex.csv", quiet = FALSE, pop = N
   if(!quiet) cat("Extracting the table ... ")
   the_gid <- as.character(pop(gid))
   df      <- genind2df(gid, sep = "/", usepop = FALSE)
-  df      <- generate_bruvo_mat(df, maxploid = max(ploid), sep = "/", mat = TRUE)
+  if (any(ploid) > 1){
+    df <- generate_bruvo_mat(df, maxploid = max(ploid), sep = "/", mat = TRUE)
+  }
   df[is.na(df)] <- 0
   
   # making sure that the individual names are included.
