@@ -2,6 +2,7 @@ context("Data import tests")
 
 data(monpop, package = "poppr")
 data(Pinf, package = "poppr")
+data(H3N2, package = "adegenet")
 pr <- recode_polyploids(Pinf, newploidy = TRUE)
 y <- "13	6	1	6											
 			7_09_BB											
@@ -85,6 +86,8 @@ test_that("missing cells are converted to zeroes for polyploids", {
   expect_output(show(recode_polyploids(gen, newploidy = TRUE)), "triploid \\(1\\) and tetraploid \\(5\\)")
 })
 
+context("Data export tests")
+
 test_that("genclone objects can be saved and restored", {
 	mp <- file()
 	genind2genalex(monpop, filename = mp, quiet = TRUE)
@@ -117,6 +120,22 @@ test_that("diploid missing data is handled correctly", {
   expect_identical(summary(nancycats, verbose = FALSE), summary(nan, verbose = FALSE))
 })
 
+test_that("sequence data is handled correctly", {
+  skip_on_cran()
+  tmp <- tempfile()
+  htab <- tab(H3N2[1:10, loc = 1:10, drop = TRUE])
+  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp)
+  h3n2 <- read.genalex(tmp)
+  # The alleles are imported in a different order, so I have to resort with the
+  # column names.
+  expect_equivalent(htab, tab(h3n2)[, colnames(htab)])
+  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, sequence = TRUE)
+  h3n2numbers <- read.genalex(tmp)
+  # The sequence option converts letters to numbers. If the last test worked,
+  # then this test should work, too.
+  expect_equivalent(tab(h3n2), tab(h3n2numbers))
+})
+
 test_that("errors are reported", {
 	skip_on_cran()
 	file1 <- tempfile()
@@ -130,6 +149,7 @@ test_that("errors are reported", {
 	expect_error(Pinf2 <- read.genalex(file1, region = TRUE), "region = TRUE")
 })
 
+context("Extra info data import tests")
 
 test_that("genalex data can be imported with region data to genind and genclone", {
 	skip_on_cran()
