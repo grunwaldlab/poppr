@@ -1,3 +1,12 @@
+poppr 2.2.0.99
+===========
+
+BUG FIX
+-------
+
+* A problem exporting haploid sequence data to genalex format was fixed 
+  (see https://github.com/grunwaldlab/poppr/issues/108)
+
 poppr 2.2.0
 ===========
 
