@@ -461,6 +461,9 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 #' @param sep a character specifying what character to use to separate columns. 
 #'   Defaults to ",".
 #'   
+#' @param sequence when \code{TRUE}, sequence data will be converted to integers
+#'   as per the GenAlEx specifications.
+#'   
 #' @note If you enter a file name that exists, that file will be overwritten. If
 #'   your data set lacks a population structure, it will be coded in the new 
 #'   file as a single population labeled "Pop". Likewise, if you don't have any
@@ -479,7 +482,8 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 #' }
 #==============================================================================#
 genind2genalex <- function(gid, filename = "genalex.csv", quiet = FALSE, pop = NULL, 
-                           allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ","){
+                           allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ",",
+                           sequence = FALSE){
   if (!is.genind(gid)) stop("A genind object is needed.")
   if (nchar(sep) != 1) stop("sep must be one byte/character (eg. \",\")")
   
@@ -541,11 +545,14 @@ genind2genalex <- function(gid, filename = "genalex.csv", quiet = FALSE, pop = N
   }
   infolines <- rbind(topline, secondline, thirdline)
 
-  
-  # converting to a data frame
-  # if(any gid@tab %in% c(0, ((1:ploid)/ploid), 1, NA))){
-  #   gid@tab[ gid@tab %in% c(0, ((1:ploid)/ploid), 1, NA)] <- NA
-  # }
+  if (sequence){
+    alleles(gid) <- lapply(alleles(gid), function(i){
+      i <- tolower(i)
+      vapply(i, switch, integer(1), 
+             a = 1L, c = 2L, g = 3L, t = 4L, 
+             "-" = 5L, ":" = 5L, 0L)
+    })
+  }
   if(!quiet) cat("Extracting the table ... ")
   the_gid <- as.character(pop(gid))
   df      <- genind2df(gid, sep = "/", usepop = FALSE)

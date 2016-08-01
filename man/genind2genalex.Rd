@@ -5,7 +5,8 @@
 \title{Exporting data from genind objects to genalex formatted *.csv files.}
 \usage{
 genind2genalex(gid, filename = "genalex.csv", quiet = FALSE, pop = NULL,
-  allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ",")
+  allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ",",
+  sequence = FALSE)
 }
 \arguments{
 \item{gid}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
@@ -36,6 +37,9 @@ It defaults to "xy".}
 
 \item{sep}{a character specifying what character to use to separate columns. 
 Defaults to ",".}
+
+\item{sequence}{when \code{TRUE}, sequence data will be converted to integers
+as per the GenAlEx specifications.}
 }
 \description{
 genind2genalex will export a genclone or genind object to a *.csv file
