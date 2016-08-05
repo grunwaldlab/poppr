@@ -257,6 +257,25 @@ shinyServer(function(input, output, session) {
   #============================================================================#
 
   #-------------------------------------
+  # If the user selects "Custom" for the
+  # distance function, they must supply
+  # the name of the function. By default
+  # an example of euclidean distance is
+  # displayed.
+  #-------------------------------------
+  output$customLayout <- renderUI({
+    textInput("custom_layout", label = "Custom Layout Function", "function(x) matrix(rnorm(igraph::vcount(x)*2), ncol = 2)")
+  })
+  
+  layfun <- reactive({ 
+    if (input$layout == "Custom"){
+      the_lay <- parse_distfun(input$custom_layout)
+    } else {
+      the_lay <- paste0("igraph::", input$layout)
+    }
+    return(the_lay)
+  })
+  #-------------------------------------
   # This reactive calculates the distance
   # by parsing the distance and then
   # running the minimum spanning network
@@ -487,7 +506,8 @@ shinyServer(function(input, output, session) {
                      beforecut = bcut(), 
                      nodebase = nodebase(),
                      pop.leg = popLeg(), 
-                     scale.leg = scaleLeg()
+                     scale.leg = scaleLeg(),
+                     layfun = eval(parse(text = layfun()))
                     )      
     }
   })
@@ -524,7 +544,8 @@ shinyServer(function(input, output, session) {
                        beforecut = bcut(),
                        nodebase = nodebase(),
                        pop.leg = popLeg(),
-                       scale.leg = scaleLeg()
+                       scale.leg = scaleLeg(),
+                       layfun = eval(parse(text = layfun()))
                       )
         dev.off()
       })      
@@ -552,7 +573,8 @@ shinyServer(function(input, output, session) {
                        beforecut = bcut(),
                        nodebase = nodebase(),
                        pop.leg = popLeg(),
-                       scale.leg = scaleLeg()
+                       scale.leg = scaleLeg(),
+                       layfun = eval(parse(text = layfun()))
                       )
         dev.off()
       })      

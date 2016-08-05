@@ -10,6 +10,7 @@ get_dist <- function(indist){
   )
   return(indist)
 }
+
 #------------------------------------------------------------------------------#
 # If the user does select custom, this function will make sure that it is 
 # encapsulated in parentheses. This makes sure that the entire expression is
