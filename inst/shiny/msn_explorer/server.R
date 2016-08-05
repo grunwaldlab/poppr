@@ -124,7 +124,7 @@ shinyServer(function(input, output, session) {
   # Simply a reactive for the input above.
   #-------------------------------------
   sub_list <- reactive({
-    input$sublist
+    if (is.null(input$sublist)) NA else input$sublist
   })
   #-------------------------------------
   # This parses the data according to 
