@@ -1105,9 +1105,12 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
       graphics::text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
     }
     # Return top level plot to defaults.
-    graphics::layout(matrix(c(1), ncol=1, byrow=T))
-    graphics::par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
-    graphics::par(oma=c(0,0,0,0)) # Figure margins
+    on.exit({
+      graphics::layout(matrix(1, ncol=1, byrow=TRUE))
+      graphics::par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
+      graphics::par(oma=c(0,0,0,0)) # Figure margins      
+    })
+
   }
   return(invisible(poppr_msn))
 }
