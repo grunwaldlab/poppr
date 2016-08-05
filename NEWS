@@ -6,6 +6,7 @@ BUG FIX
 
 * A problem exporting haploid sequence data to genalex format was fixed 
   (see https://github.com/grunwaldlab/poppr/issues/108)
+* Data without population structure no longer throws an error in `imsn()`
 
 poppr 2.2.0
 ===========
