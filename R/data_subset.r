@@ -249,7 +249,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     stop("popsub requires a genind or genlight object\n")
   }
   if (is.null(pop(gid))){
-    if (sublist[1] != "ALL")
+    if (!is.na(sublist[1]) && sublist[1] != "ALL")
       warning("No population structure. Subsetting not taking place.")
     return(gid)
   }
