@@ -448,16 +448,19 @@ shinyServer(function(input, output, session) {
   cmd <- reactive({
     dat <- dataname()
     pal <- ifelse(input$pal == 'custom', input$custom_pal, input$pal)
+    padding <- paste(rep(" ", 15), collapse = "")
     paste0("plot_poppr_msn(", dat, 
-           ",\n\t       min_span_net", 
-           ",\n\t       inds = ", make_dput(inds()), 
-           ",\n\t       mlg = ", input$mlgs,
-           ",\n\t       gadj = ", input$greyslide,
-           ",\n\t       nodebase = ", input$nodebase,
-           ",\n\t       palette = ", pal,
-           ",\n\t       cutoff = ", ifelse(is.null(cutoff()), "NULL", cutoff()),
-           ",\n\t       quantiles = FALSE",
-           ",\n\t       beforecut = ", bcut(), ")")
+           ",\n", padding, "min_span_net", 
+           ",\n", padding, "inds = ", make_dput(inds()), 
+           ",\n", padding, "mlg = ", input$mlgs,
+           ",\n", padding, "gadj = ", input$greyslide,
+           ",\n", padding, "nodebase = ", input$nodebase,
+           ",\n", padding, "palette = ", pal,
+           ",\n", padding, "cutoff = ", ifelse(is.null(cutoff()), "NULL", cutoff()),
+           ",\n", padding, "quantiles = FALSE",
+           ",\n", padding, "beforecut = ", bcut(), 
+           ",\n", padding, "layfun = ", layfun(), 
+           ")")
   })
 
   #-------------------------------------
