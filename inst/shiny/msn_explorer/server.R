@@ -1,6 +1,6 @@
 library("shiny")
 library("poppr")
-source("../utils.R")
+source("../utils.R", local = TRUE)
 #------------------------------------------------------------------------------#
 # Here, we query the user's R session to find all of the genind and genclone 
 # objects
