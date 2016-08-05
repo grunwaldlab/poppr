@@ -124,12 +124,12 @@ test_that("sequence data is handled correctly", {
   skip_on_cran()
   tmp <- tempfile()
   htab <- tab(H3N2[1:10, loc = 1:10, drop = TRUE])
-  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp)
+  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, quiet = TRUE)
   h3n2 <- read.genalex(tmp)
   # The alleles are imported in a different order, so I have to resort with the
   # column names.
   expect_equivalent(htab, tab(h3n2)[, colnames(htab)])
-  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, sequence = TRUE)
+  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, sequence = TRUE, quiet = TRUE)
   h3n2numbers <- read.genalex(tmp)
   # The sequence option converts letters to numbers. If the last test worked,
   # then this test should work, too.
