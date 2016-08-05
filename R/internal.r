@@ -1876,8 +1876,9 @@ palette_parser <- function(inPAL, npop, pnames){
 #==============================================================================#
 update_poppr_graph <- function(graphlist, PALETTE){
   PALETTE <- match.fun(PALETTE)
+  updates <- setNames(PALETTE(length(graphlist$populations)), NULL)
   lookup  <- data.frame(old    = graphlist$populations, 
-                        update = PALETTE(length(graphlist$populations)), 
+                        update = updates, 
                         stringsAsFactors = FALSE)
   if (nrow(lookup) > 1){
     colorlist                    <- V(graphlist$graph)$pie.color
