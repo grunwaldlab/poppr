@@ -566,7 +566,8 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
                                       clustering.algorithm,
                                       bruvo_args = bruvo_args)
     distmat <- filtered$indist
-    cgid    <- filtered$gid
+    cgid    <- filtered$cgid
+    gid     <- filtered$gid
   } else {
     cgid    <- gid[.clonecorrector(gid), ]
     distmat <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))

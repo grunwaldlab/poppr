@@ -86,7 +86,7 @@ filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
   indist <- if (!is.matrix(indist)) as.matrix(indist) else indist
   # Fix issue #66
   rownames(indist) <- indNames(cgid) -> colnames(indist)
-  return(list(gid = cgid, indist = indist))
+  return(list(gid = gid, cgid = cgid, indist = indist))
 }
 
 #' Construct Minimum Spanning Networks

@@ -377,7 +377,8 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
                                     clustering.algorithm,
                                     bruvo_args = NULL)
     distmat <- filtered$indist
-    cgid   <- filtered$gid
+    cgid    <- filtered$cgid
+    gid     <- filtered$gid
   } else {  
     cgid    <- gid[.clonecorrector(gid), ]
     singles <- !duplicated(mll(gid))
