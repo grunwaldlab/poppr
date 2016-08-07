@@ -79,7 +79,7 @@ msn_constructor <-
   function(gid,
            cgid,
            palette,
-           bclone,
+           indist,
            include.ties,
            mlg.compute,
            vlab,
@@ -98,38 +98,44 @@ msn_constructor <-
     cmlg <- as.character(cmlg)
   }
   
-  # Creating data for pie colors --------------------------------------------
-  # Obtaining population information for all MLGs
-  subs   <- sort(unique(mlgs))
-  mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
-  if (is.numeric(mlgs)){
-    names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
-  }
-  # This will determine the size of the nodes based on the number of individuals
-  # in the MLG. Subsetting by the MLG vector of the clone corrected set will
-  # give us the numbers and the population information in the correct order.
-  # Note: rank is used to correctly subset the data
-  mlg.number <- table(mlgs)[rank(cmlg)]
-  mlg.cp     <- mlg.cp[rank(cmlg)]  
   
+  # MSN colors --------------------------------------------------------------
   ## Color schemes 
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   npop   <- nPop(gid)
   pnames <- popNames(gid)
   color  <- palette_parser(palette, npop, pnames)
-  # This creates a list of colors corresponding to populations.
-  mlg.color <- lapply(mlg.cp, function(x) color[pnames %in% names(x)])
-  
+  # This will determine the size of the nodes based on the number of
+  # individuals in the MLG. Subsetting by the MLG vector of the clone
+  # corrected set will give us the numbers and the population information in
+  # the correct order. Note: rank is used to correctly subset the data
+  mlg.number <- table(mlgs)[rank(cmlg)]
+  # The MSN should not be drawn as a pie if there is a single population or
+  # there is no population structure.
+  piece_of_pie <- !is.null(pnames) && npop > 1
+  if (piece_of_pie){
+    # Obtaining population information for all MLGs
+    subs   <- sort(unique(mlgs))
+    mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
+    if (is.numeric(mlgs)){
+      names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
+    }
+    mlg.cp <- mlg.cp[rank(cmlg)]  
+    # This creates a list of colors corresponding to populations.
+    mlg.color <- lapply(mlg.cp, function(x) color[pnames %in% names(x)])
+  }
+
+
   # Creating the Minimum Spanning Network -----------------------------------
-  g <- graph.adjacency(bclone, weighted = TRUE, mode = "undirected")
+  g <- graph.adjacency(indist, weighted = TRUE, mode = "undirected")
 
   if (length(cmlg) > 1){
     mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
     # Add any relevant edges that were cut from the mst while still being tied
     # for the title of optimal edge.
     if (include.ties){
-      mst <- add_tied_edges(mst, bclone, tolerance = .Machine$double.eps ^ 0.5)
+      mst <- add_tied_edges(mst, indist, tolerance = .Machine$double.eps ^ 0.5)
     }
   } else { # if there's only one clone
     mst <- minimum.spanning.tree(g)
@@ -155,16 +161,49 @@ msn_constructor <-
   }
 
   if (showplot){
-    plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
-         vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
-         vertex.pie.color = mlg.color, vertex.label = vlab, ...)
-    graphics::legend(-1.55, 1, bty = "n", cex = 0.75, legend = pnames, 
-           title = "Populations", fill = color, border = NULL)
+    if (piece_of_pie){
+      plot.igraph(
+        mst,
+        edge.width = E(mst)$width,
+        edge.color = E(mst)$color,
+        vertex.size = mlg.number * 3,
+        vertex.shape = "pie",
+        vertex.pie = mlg.cp,
+        vertex.pie.color = mlg.color,
+        vertex.label = vlab,
+        ...
+      )      
+    } else {
+      plot.igraph(
+        mst,
+        edge.width = E(mst)$width,
+        edge.color = E(mst)$color,
+        vertex.label = vlab,
+        vertex.size = mlg.number * 3,
+        vertex.color = color,
+        ...
+      )
+    }
+    graphics::legend(
+      -1.55,
+      1,
+      bty = "n",
+      cex = 0.75,
+      legend = pnames,
+      title = "Populations",
+      fill = color,
+      border = NULL
+    )
   }
-  V(mst)$size      <- mlg.number
-  V(mst)$shape     <- "pie"
-  V(mst)$pie       <- mlg.cp
-  V(mst)$pie.color <- mlg.color
-  V(mst)$label     <- vlab
+  
+  V(mst)$size  <- mlg.number
+  if (piece_of_pie){
+    V(mst)$shape     <- "pie"
+    V(mst)$pie       <- mlg.cp
+    V(mst)$pie.color <- mlg.color    
+  } else {
+    V(mst)$color     <- color
+  }
+  V(mst)$label <- vlab
   return(list(graph = mst, populations = pnames, colors = color))
 }

@@ -587,13 +587,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   if (toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
     gid <- popsub(gid, sublist, blacklist)
   }
-  if (is.null(pop(gid)) | nPop(gid) == 1){
-    return(singlepop_msn(gid, vertex.label, add = add, loss = loss, 
-                         replen = replen, gscale = gscale, mlg.compute = mlg.compute,
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         palette = palette, include.ties = include.ties,
-                         threshold=threshold, clustering.algorithm=clustering.algorithm, ...))
-  }
+
   # Updating the MLG with filtered data
   if (threshold > 0){
     bruvo_args <- list(replen = replen, add = add, loss = loss)

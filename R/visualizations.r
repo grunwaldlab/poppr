@@ -330,15 +330,6 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     gid    <- popsub(gid, sublist, blacklist)
   }
 
-  
-  if (is.null(pop(gid)) | nPop(gid) == 1){
-    return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
-                         glim = glim, gadj = gadj, wscale = wscale, 
-                         mlg.compute = mlg.compute, palette = palette, 
-                         include.ties = include.ties, showplot = showplot,
-                         threshold = threshold, 
-                         clustering.algorithm = clustering.algorithm, ...))
-  }
   # Clone correcting the matrix ---------------------------------------------
   if (threshold > 0){
     filtered <- filter_at_threshold(gid, 
