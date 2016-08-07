@@ -57,6 +57,9 @@
 #' @noRd
 filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
                                 bruvo_args){
+  if (is.null(clustering.algorithm)){
+    clustering.algorithm <- "farthest_neighbor"
+  }
   if (is.null(indist)){
     filter.stats <- mlg.filter(gid, 
                                threshold, 

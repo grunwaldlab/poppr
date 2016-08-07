@@ -370,7 +370,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   }
 
   # Clone correcting the matrix ---------------------------------------------
-  if (threshold > 0){
+  if (!is.null(threshold)){
     filtered <- filter_at_threshold(gid, 
                                     threshold, 
                                     indist = distmat,

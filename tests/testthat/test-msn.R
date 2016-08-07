@@ -7,10 +7,14 @@ ucl <- function(x){
 
 set.seed(9005)
 
-gend <-new("genind"
-           , tab = structure(c(0.5, 0.5, 0, 0, 0.5, 0.5, 1, 1, 0, 0.5, 0.5, 0, 1,
-                               0.5, 0.5, 1)*2, .Dim = c(4L, 4L), .Dimnames = list(c("1", "2",
-                                                                                  "3", "4"), c("loc-1.1", "loc-1.2", "loc-2.1", "loc-2.2")))
+gend <- new("genind"
+           , tab = structure(c(1L, 1L, 0L, 0L, 
+                               1L, 1L, 2L, 2L,
+                               0L, 1L, 1L, 0L, 
+                               2L, 1L, 1L, 2L), 
+              .Dim = c(4L, 4L), 
+              .Dimnames = list(c("1", "2", "3", "4"), 
+                               c("loc-1.1", "loc-1.2", "loc-2.1", "loc-2.2")))
            , loc.names = structure(c("loc-1", "loc-2"), .Names = c("loc-1", "loc-2"))
            , loc.fac = structure(c(1L, 1L, 2L, 2L), .Label = c("loc-1", "loc-2"), class = "factor")
            , loc.nall = structure(c(2L, 2L), .Names = c("loc-1", "loc-2"))
@@ -26,24 +30,12 @@ gend <-new("genind"
            , other = NULL
 )
 
+gend_gc <- as.genclone(gend)
+
 set.seed(9005)
 
-gend_single <- new("genind"
-    , tab = structure(c(0.5, 0.5, 0, 0, 0.5, 0.5, 1, 1, 0, 0.5, 0.5, 0, 1, 0.5, 0.5, 1)*2, .Dim = c(4L, 4L), .Dimnames = list(c("1", "2",
-"3", "4"), c("loc-1.1", "loc-1.2", "loc-2.1", "loc-2.2")))
-    , loc.names = structure(c("loc-1", "loc-2"), .Names = c("loc-1", "loc-2"))
-    , loc.fac = structure(c(1L, 1L, 2L, 2L), .Label = c("loc-1", "loc-2"), class = "factor")
-    , loc.nall = structure(c(2L, 2L), .Names = c("loc-1", "loc-2"))
-    , all.names = structure(list(`loc-1` = structure(c("3", "4"), .Names = c("1", "2")), `loc-2` = structure(c("3", "4"), .Names = c("1", "2"))), .Names = c("loc-1",
-"loc-2"))
-    , call = NULL
-    , ind.names = structure(c("", "", "", ""), .Names = c("1", "2", "3", "4"))
-    , pop = structure(c(1,1,1,1), .Label = c("1"), class = "factor")
-    , pop.names = structure(c("1","1","1","1"))
-    , ploidy = 2L
-    , type = "codom"
-    , other = NULL
-)
+gend_single <- gend
+pop(gend_single) <- rep(1, 4)
 
 no_ties <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3), c(0,
 1, 2), c(1, 0, 2), c(0, 1, 2), c(0, 0, 0, 1, 3), c(0, 1, 2, 3,

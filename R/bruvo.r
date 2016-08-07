@@ -558,7 +558,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   }
 
   # Updating the MLG with filtered data
-  if (threshold > 0){
+  if (!is.null(threshold)){
     bruvo_args <- list(replen = replen, add = add, loss = loss)
     filtered   <- filter_at_threshold(gid, 
                                       threshold, 
