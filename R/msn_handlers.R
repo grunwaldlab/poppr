@@ -42,9 +42,22 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
+#' Filter a distance matrix and genind/genlight object at a given threshold
+#'
+#' @param gid a genind/genclone or genlight/snpclone object
+#' @param threshold a numeric value specifying the threshold at which to filter
+#' @param indist a distance matrix OR NULL. If NULL, the distance will be
+#'   calculated with Bruvo's distance
+#' @param clustering.algorithm the clustering algorithm to be passed to
+#'   mlg.filter
+#' @param bruvo_args a list of arguments for Bruvo's distance.
+#'
+#' @return a list containing the clone-corrected data (gid) and distance matrix
+#'   (gid)
+#' @noRd
 filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
                                 bruvo_args){
-  if (!is.null(bruvo_args)){
+  if (is.null(indist)){
     filter.stats <- mlg.filter(gid, 
                                threshold, 
                                distance = bruvo.dist, 
@@ -73,23 +86,30 @@ filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
   return(list(gid = cgid, indist = indist))
 }
 
-
-
+#' Construct Minimum Spanning Networks
+#'
+#' @param gid a genind/genclone or genlight/snpclone
+#' @param cgid the clone corrected version of that above
+#' @param palette a character vector or palette function
+#' @param indist a square distance matrix
+#' @param include.ties logical. When TRUE, this will include exact ties in the
+#'   minimum spanning network
+#' @param mlg.compute character. Either "original" or "contracted". This is how
+#'   to compute the MLGs when the input data is set to "custom"
+#' @param vlab vertex labels. Either "INDS", "MLGS" or a vector of labels
+#' @param visible_mlg This is the mlg status of the original data
+#' @param wscale width scale
+#' @param gscale grey scale
+#' @param glim grey limit
+#' @param gadj grey adjust
+#' @param showplot logical whether to show the plot
+#' @param ... params to be passed to igraph
+#'
+#' @return a list containing a graph, population names, and colors
+#' @noRd
 msn_constructor <-
-  function(gid,
-           cgid,
-           palette,
-           indist,
-           include.ties,
-           mlg.compute,
-           vlab,
-           visible_mlg,
-           wscale,
-           gscale,
-           glim,
-           gadj,
-           showplot,
-           ...) {
+  function(gid, cgid, palette, indist, include.ties, mlg.compute, vlab, 
+           visible_mlg, wscale, gscale, glim, gadj, showplot, ...) {
     
   mlgs <- mll(gid)
   cmlg <- mll(cgid)

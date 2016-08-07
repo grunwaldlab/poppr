@@ -596,26 +596,26 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
                                       indist = NULL,
                                       clustering.algorithm,
                                       bruvo_args = bruvo_args)
-    bclone <- filtered$indist
-    cgid   <- filtered$gid
+    distmat <- filtered$indist
+    cgid    <- filtered$gid
   } else {
-    cgid   <- gid[.clonecorrector(gid), ]
-    bclone <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))
+    cgid    <- gid[.clonecorrector(gid), ]
+    distmat <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))
   }
   poppr_msn_list <- msn_constructor(
-    gid,
-    cgid,
-    palette,
-    bclone,
-    include.ties,
-    mlg.compute,
+    gid = gid,
+    cgid = cgid,
+    palette = palette,
+    indist = distmat,
+    include.ties = include.ties,
+    mlg.compute = mlg.compute,
     vlab = vertex.label,
-    visible_mlg,
-    wscale,
-    gscale,
-    glim,
-    gadj,
-    showplot,
+    visible_mlg = visible_mlg,
+    wscale = wscale,
+    gscale = gscale,
+    glim = glim,
+    gadj = gadj,
+    showplot = showplot,
     ...)
   return(poppr_msn_list)
 }

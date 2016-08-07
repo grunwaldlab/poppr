@@ -318,7 +318,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   } else {
     stop("The distance matrix is neither a dist object nor a matrix.\n")
   }
-  bclone <- as.matrix(distmat)
+  distmat <- as.matrix(distmat)
   gadj   <- ifelse(gweight == 1, gadj, -gadj)
   
 
@@ -326,7 +326,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   # This will subset both the population and the matrix. 
   if (toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
     sublist_blacklist <- sub_index(gid, sublist, blacklist)
-    bclone <- bclone[sublist_blacklist, sublist_blacklist, drop = FALSE]
+    distmat <- distmat[sublist_blacklist, sublist_blacklist, drop = FALSE]
     gid    <- popsub(gid, sublist, blacklist)
   }
 
@@ -334,31 +334,31 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   if (threshold > 0){
     filtered <- filter_at_threshold(gid, 
                                     threshold, 
-                                    indist = bclone,
+                                    indist = distmat,
                                     clustering.algorithm,
                                     bruvo_args = NULL)
-    bclone <- filtered$indist
+    distmat <- filtered$indist
     cgid   <- filtered$gid
   } else {  
     cgid    <- gid[.clonecorrector(gid), ]
     singles <- !duplicated(mll(gid))
-    bclone  <- bclone[singles, singles, drop = FALSE]
+    distmat  <- distmat[singles, singles, drop = FALSE]
   }
-  rownames(bclone) <- indNames(cgid) -> colnames(bclone)
+  rownames(distmat) <- indNames(cgid) -> colnames(distmat)
   poppr_msn_list <- msn_constructor(
-    gid,
-    cgid,
-    palette,
-    bclone,
-    include.ties,
-    mlg.compute,
+    gid = gid,
+    cgid = cgid,
+    palette = palette,
+    indist = distmat,
+    include.ties = include.ties,
+    mlg.compute = mlg.compute,
     vlab = vertex.label,
-    visible_mlg,
-    wscale,
-    gscale,
-    glim,
-    gadj,
-    showplot,
+    visible_mlg = visible_mlg,
+    wscale = wscale,
+    gscale = gscale,
+    glim = glim,
+    gadj = gadj,
+    showplot = showplot,
     ...)
   return(poppr_msn_list)
 }
