@@ -285,7 +285,8 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale=TRUE, showplot = TRUE, 
-                       include.ties = FALSE, threshold = 0.0, clustering.algorithm="farthest_neighbor", ...){
+                       include.ties = FALSE, threshold = NULL, 
+                       clustering.algorithm = NULL, ...){
   
   # testing gid -------------------------------------------------------------
   if (!inherits(gid, c("genclone", "snpclone"))){
@@ -301,9 +302,21 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     gid@mlg <- new("MLG", gid@mlg)
   }
   
+  
+  # Handling MLG type -------------------------------------------------------
   visible_mlg <- visible(gid@mlg)
   if (visible_mlg == "custom"){
     mll(gid) <- mlg.compute
+  } else if (visible_mlg == "contracted"){
+    
+    if (is.null(threshold)){
+      threshold <- cutoff(gid@mlg)["contracted"]
+    }
+    
+    if (is.null(clustering.algorithm)){
+      clustering.algorithm <- distalgo(gid@mlg)
+    } 
+    
   }
   
   # testing dist ------------------------------------------------------------
@@ -321,7 +334,6 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   distmat <- as.matrix(distmat)
   gadj   <- ifelse(gweight == 1, gadj, -gadj)
   
-
   # Subsetting the population -----------------------------------------------
   # This will subset both the population and the matrix. 
   if (toupper(sublist[1]) != "ALL" | !is.null(blacklist)){

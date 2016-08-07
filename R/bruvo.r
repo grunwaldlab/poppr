@@ -564,8 +564,8 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
                        sublist = "All", blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, showplot = TRUE, 
-                       include.ties = FALSE, threshold = 0.0, 
-                       clustering.algorithm="farthest_neighbor", ...){
+                       include.ties = FALSE, threshold = NULL, 
+                       clustering.algorithm = NULL, ...){
   if (!inherits(gid, "genind")){
     stop("Bruvo's distance only works for microsatellite markers. gid must be a genind/genclone object.")
   }
@@ -577,9 +577,22 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
     gid@mlg <- new("MLG", gid@mlg)
   }
   
+  
+  
+  # Handling MLG type -------------------------------------------------------
   visible_mlg <- visible(gid@mlg)
   if (visible_mlg == "custom"){
     mll(gid) <- mlg.compute
+  } else if (visible_mlg == "contracted"){
+    
+    if (is.null(threshold)){
+      threshold <- cutoff(gid@mlg)["contracted"]
+    }
+    
+    if (is.null(clustering.algorithm)){
+      clustering.algorithm <- distalgo(gid@mlg)
+    } 
+    
   }
   
   gadj <- ifelse(gweight == 1, gadj, -gadj)

@@ -9,8 +9,8 @@ matrix.}
 poppr.msn(gid, distmat, palette = topo.colors, mlg.compute = "original",
   sublist = "All", blacklist = NULL, vertex.label = "MLG",
   gscale = TRUE, glim = c(0, 0.8), gadj = 3, gweight = 1,
-  wscale = TRUE, showplot = TRUE, include.ties = FALSE, threshold = 0,
-  clustering.algorithm = "farthest_neighbor", ...)
+  wscale = TRUE, showplot = TRUE, include.ties = FALSE,
+  threshold = NULL, clustering.algorithm = NULL, ...)
 }
 \arguments{
 \item{gid}{a \code{\link{genind}}, \code{\link{genclone}},
