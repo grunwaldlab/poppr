@@ -311,7 +311,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   is_mat  <- inherits(distmat, "matrix")
   if (is_dist | is_mat){
     n       <- nInd(gid)
-    eq_size <- if (is_dist) n != attr(distmat, "Size") else n != nrow(distmat)
+    eq_size <- if (is_dist) n == attr(distmat, "Size") else n == nrow(distmat)
     if (!eq_size){
       stop("The size of the distance matrix does not match the size of the data.\n")
     }
