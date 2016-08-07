@@ -362,7 +362,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
                                     palette,
                                     bclone,
                                     include.ties,
-                                    vertex.label,
+                                    vlab = vertex.label,
                                     visible_mlg,
                                     wscale,
                                     gscale,

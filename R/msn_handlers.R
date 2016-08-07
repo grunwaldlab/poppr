@@ -43,7 +43,7 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
 filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
-                                bruvo_args, ...){
+                                bruvo_args){
   if (!is.null(bruvo_args)){
     filter.stats <- mlg.filter(gid, 
                                threshold, 
@@ -76,8 +76,8 @@ filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
 
 
 msn_constructor <- function(gid, cgid, palette, bclone, include.ties, 
-                            vertex.label, visible_mlg, wscale, gscale, glim, 
-                            gadj, showplot){
+                            vlab, visible_mlg, wscale, gscale, glim, 
+                            gadj, showplot, ...){
   mlgs <- mll(gid)
   cmlg <- mll(cgid)
   if (!is.numeric(mlgs)){
@@ -123,16 +123,16 @@ msn_constructor <- function(gid, cgid, palette, bclone, include.ties,
   }
 
   # Handling vertex labels --------------------------------------------------
-  if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
-    if (toupper(vertex.label) == "MLG"){
+  if (!is.na(vlab[1]) & length(vlab) == 1){
+    if (toupper(vlab) == "MLG"){
       if (is.numeric(cmlg)){
-        vertex.label <- paste0("MLG.", cmlg)        
+        vlab <- paste0("MLG.", cmlg)        
       } else if (visible_mlg == "custom"){
         mll(gid) <- visible_mlg
-        vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
+        vlab <- correlate_custom_mlgs(gid, mlg.compute)
       }
-    } else if(toupper(vertex.label) == "INDS"){
-      vertex.label <- indNames(cgid)
+    } else if (toupper(vlab) == "INDS"){
+      vlab <- indNames(cgid)
     }
   }
 
@@ -144,7 +144,7 @@ msn_constructor <- function(gid, cgid, palette, bclone, include.ties,
   if (showplot){
     plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
          vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
-         vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
+         vertex.pie.color = mlg.color, vertex.label = vlab, ...)
     graphics::legend(-1.55, 1, bty = "n", cex = 0.75, legend = pnames, 
            title = "Populations", fill = color, border = NULL)
   }
@@ -152,6 +152,6 @@ msn_constructor <- function(gid, cgid, palette, bclone, include.ties,
   V(mst)$shape     <- "pie"
   V(mst)$pie       <- mlg.cp
   V(mst)$pie.color <- mlg.color
-  V(mst)$label     <- vertex.label
+  V(mst)$label     <- vlab
   return(list(graph = mst, populations = pnames, colors = color))
 }
