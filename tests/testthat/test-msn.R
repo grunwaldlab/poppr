@@ -167,6 +167,8 @@ test_that("Minimum spanning networks also collapse MLGs", {
   gmsnot  <- bruvo.msn(gend, replen = c(1, 1)) # no threshold supplied
   gmsnone <- bruvo.msn(gend, replen = c(1, 1), threshold = 0.3)
   expect_equal(igraph::vcount(gmsnone$graph), 1)
+  gmsnall  <- bruvo.msn(gend, replen = c(1, 1), threshold = 0)
+  expect_equal(igraph::vcount(gmsnall$graph), 4)
 
   expect_identical(igraph::V(gmsnt$graph)$pie, igraph::V(pgmsnt$graph)$pie)
   expect_identical(igraph::V(gmsnot$graph)$pie, igraph::V(pgmsnt$graph)$pie)
@@ -183,8 +185,13 @@ test_that("Minimum spanning networks also collapse MLGs", {
   pgmsn  <- poppr.msn(gend, distmat = gend_bruvo, showplot = FALSE)
 
   expect_identical(igraph::V(gmsn$graph)$pie, igraph::V(pgmsn$graph)$pie)
+  expect_identical(igraph::V(gmsn$graph)$pie, igraph::V(gmsnall$graph)$pie)
+  
   expect_identical(igraph::V(gmsn$graph)$name, igraph::V(pgmsn$graph)$name)
+  expect_identical(igraph::V(gmsn$graph)$name, igraph::V(gmsnall$graph)$name)
+  
   expect_identical(igraph::E(gmsn$graph)$weight, igraph::E(pgmsn$graph)$weight)
+  expect_identical(igraph::E(gmsn$graph)$weight, igraph::E(gmsnall$graph)$weight)
   
 })
 
