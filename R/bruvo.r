@@ -413,64 +413,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' @param loss if \code{TRUE}, genotypes with zero values will be treated under 
 #'   the genome loss model presented in Bruvo et al. 2004.
 #'   
-#' @param mlg.compute if the multilocus genotypes are set to "custom" (see
-#'   \code{\link{mll.custom}} for details) in your genclone object, this will
-#'   specify which mlg level to calculate the nodes from. See details.
-#'   
-#' @param palette a \code{vector} or \code{function} defining the color palette 
-#'   to be used to color the populations on the graph. It defaults to 
-#'   \code{\link{topo.colors}}. See examples for details.
-#'   
-#' @param sublist a \code{vector} of population names or indexes that the user 
-#'   wishes to keep. Default to "ALL".
-#'   
-#' @param blacklist a \code{vector} of population names or indexes that the user
-#'   wishes to discard. Default to \code{NULL}
-#'   
-#' @param vertex.label a \code{vector} of characters to label each vertex. There
-#'   are two defaults: \code{"MLG"} will label the nodes with the multilocus 
-#'   genotype from the original data set and \code{"inds"} will label the nodes 
-#'   with the representative individual names.
-#'   
-#' @param gscale "grey scale". If this is \code{TRUE}, this will scale the color
-#'   of the edges proportional to Bruvo's distance, with the lines becoming 
-#'   darker for more related nodes. See \code{\link{greycurve}} for details.
-#'   
-#' @param glim "grey limit". Two numbers between zero and one. They determine 
-#'   the upper and lower limits for the \code{\link{gray}} function. Default is 
-#'   0 (black) and 0.8 (20\% black). See \code{\link{greycurve}} for details.
-#'   
-#' @param gadj "grey adjust". a positive \code{integer} greater than zero that 
-#'   will serve as the exponent to the edge weight to scale the grey value to 
-#'   represent that weight. See \code{\link{greycurve}} for details.
-#'   
-#' @param gweight "grey weight". an \code{integer}. If it's 1, the grey scale 
-#'   will be weighted to emphasize the differences between closely related 
-#'   nodes. If it is 2, the grey scale will be weighted to emphasize the 
-#'   differences between more distantly related nodes. See 
-#'   \code{\link{greycurve}} for details.
-#'   
-#' @param wscale "width scale". If this is \code{TRUE}, the edge widths will be 
-#'   scaled proportional to Bruvo's distance, with the lines becoming thicker
-#'   for more related nodes.
-#'   
-#' @param showplot logical. If \code{TRUE}, the graph will be plotted. If 
-#'   \code{FALSE}, it will simply be returned.
-#'
-#' @param include.ties logical. If \code{TRUE}, the graph will include all
-#'   edges that were arbitrarily passed over in favor of another edge of equal
-#'   weight. If \code{FALSE}, which is the default, one edge will be arbitrarily 
-#'   selected when two or more edges are tied, resulting in a pure minimum spanning
-#'   network. 
-#'   
-#' @param threshold numeric. If greater than the default value of 0.0, this will
-#'   be passed to \code{\link{mlg.filter}} prior to creating the msn.
-#'
-#' @param clustering.algorithm string. If \code{threshold} is greater than 0, this
-#'   this will also be passed to \code{\link{mlg.filter}} prior to creating the msn.
-#'   For both of these arguments, see \code{\link{mlg.filter}} for more details.
-#'
-#' @param ... any other arguments that could go into plot.igraph
+#' @inheritParams poppr.msn
 #'   
 #' @return \item{graph}{a minimum spanning network with nodes corresponding to 
 #'   MLGs within the data set. Colors of the nodes represent population 
@@ -502,6 +445,19 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   clone correction will be done via the computed multilocus genotypes, either
 #'   "original" or "contracted". This is specified in the \code{mlg.compute}
 #'   argument, above.}
+#'   \subsection{contracted multilocus genotypes}{
+#'   If your incoming data set is of the class \code{\linkS4class{genclone}},
+#'   and it contains contracted multilocus genotypes, this function will retain
+#'   that information for creating the minimum spanning network. You can use the
+#'   arguments \code{threshold} and \code{clustering.algorithm} to change the
+#'   threshold or clustering algorithm used in the network. For example, if you
+#'   have a data set that has a threshold of 0.1 and you wish to have a minimum
+#'   spanning network without a threshold, you can simply add 
+#'   \code{threshold = 0.0}, and no clustering will happen. 
+#'   
+#'   The \code{threshold} and \code{clustering.algorithm} arguments can also be
+#'   used to filter un-contracted data sets.
+#'   }
 #'   
 #' @seealso \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
 #'   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{minimum.spanning.tree}} 
@@ -584,7 +540,7 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   if (visible_mlg == "custom"){
     mll(gid) <- mlg.compute
   } else if (visible_mlg == "contracted"){
-    
+    mll(gid) <- "original"
     if (is.null(threshold)){
       threshold <- cutoff(gid@mlg)["contracted"]
     }
