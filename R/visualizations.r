@@ -357,19 +357,21 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     bclone  <- bclone[singles, singles, drop = FALSE]
   }
   rownames(bclone) <- indNames(cgid) -> colnames(bclone)
-  poppr_msn_list <- msn_constructor(gid,
-                                    cgid,
-                                    palette,
-                                    bclone,
-                                    include.ties,
-                                    vlab = vertex.label,
-                                    visible_mlg,
-                                    wscale,
-                                    gscale,
-                                    glim,
-                                    gadj,
-                                    showplot,
-                                    ...)
+  poppr_msn_list <- msn_constructor(
+    gid,
+    cgid,
+    palette,
+    bclone,
+    include.ties,
+    mlg.compute,
+    vlab = vertex.label,
+    visible_mlg,
+    wscale,
+    gscale,
+    glim,
+    gadj,
+    showplot,
+    ...)
   return(poppr_msn_list)
   # 
   # mlgs <- mll(gid)

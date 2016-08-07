@@ -75,9 +75,22 @@ filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
 
 
 
-msn_constructor <- function(gid, cgid, palette, bclone, include.ties, 
-                            vlab, visible_mlg, wscale, gscale, glim, 
-                            gadj, showplot, ...){
+msn_constructor <-
+  function(gid,
+           cgid,
+           palette,
+           bclone,
+           include.ties,
+           mlg.compute,
+           vlab,
+           visible_mlg,
+           wscale,
+           gscale,
+           glim,
+           gadj,
+           showplot,
+           ...) {
+    
   mlgs <- mll(gid)
   cmlg <- mll(cgid)
   if (!is.numeric(mlgs)){
@@ -125,11 +138,11 @@ msn_constructor <- function(gid, cgid, palette, bclone, include.ties,
   # Handling vertex labels --------------------------------------------------
   if (!is.na(vlab[1]) & length(vlab) == 1){
     if (toupper(vlab) == "MLG"){
-      if (is.numeric(cmlg)){
-        vlab <- paste0("MLG.", cmlg)        
-      } else if (visible_mlg == "custom"){
+       if (visible_mlg == "custom"){
         mll(gid) <- visible_mlg
-        vlab <- correlate_custom_mlgs(gid, mlg.compute)
+        vlab     <- correlate_custom_mlgs(gid, mlg.compute)
+      } else if (is.numeric(cmlg)){
+        vlab <- paste0("MLG.", cmlg)        
       }
     } else if (toupper(vlab) == "INDS"){
       vlab <- indNames(cgid)

@@ -608,19 +608,21 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
     cgid   <- gid[.clonecorrector(gid), ]
     bclone <- as.matrix(bruvo.dist(cgid, replen=replen, add = add, loss = loss))
   }
-  poppr_msn_list <- msn_constructor(gid,
-                                    cgid,
-                                    palette,
-                                    bclone,
-                                    include.ties,
-                                    vlab = vertex.label,
-                                    visible_mlg,
-                                    wscale,
-                                    gscale,
-                                    glim,
-                                    gadj,
-                                    showplot,
-                                    ...)
+  poppr_msn_list <- msn_constructor(
+    gid,
+    cgid,
+    palette,
+    bclone,
+    include.ties,
+    mlg.compute,
+    vlab = vertex.label,
+    visible_mlg,
+    wscale,
+    gscale,
+    glim,
+    gadj,
+    showplot,
+    ...)
   return(poppr_msn_list)
   # mlgs <- mll(gid)
   # cmlg <- mll(cgid)
