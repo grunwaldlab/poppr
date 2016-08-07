@@ -1,4 +1,4 @@
-context("Multilocus genotype tests")
+context("Basic multilocus genotype tests")
 
 data(Pinf, package = "poppr")
 data(Aeut, package = "poppr")
@@ -14,6 +14,7 @@ ntab   <- mlg.table(nancycats, plot = FALSE)
 sim    <- adegenet::glSim(10, 1e2, ploidy = 2, parallel = FALSE)
 lu <- function(x) length(unique(x))
 
+
 test_that("multilocus genotype vector is same length as samples", {
   expect_equal(length(amlg), nInd(Aeut))
   expect_equal(length(pmlg), nInd(partial_clone))
@@ -22,6 +23,28 @@ test_that("multilocus genotype vector is same length as samples", {
   expect_equal(lu(pmlg), mlg(partial_clone, quiet = TRUE))
   expect_equal(lu(nmlg), mlg(nancycats, quiet = TRUE))
 })
+
+
+test_that("subsetting and resetting MLGs works", {
+  pmlg    <- mlg.vector(Pinf)
+  pres    <- mlg.vector(Pinf, reset = TRUE)
+  fullmlg <- mlg(Pinf[loc = locNames(Pinf)[-c(1:5)]], quiet = TRUE)
+  realmlg <- mlg(Pinf[loc = locNames(Pinf)[-c(1:5)], mlg.reset = TRUE], quiet = TRUE)
+  expect_equal(pmlg, Pinf@mlg[])
+  expect_false(identical(pmlg, pres))
+  expect_equal(Pinf[mlg.reset = TRUE]@mlg[], pres)
+  expect_gt(fullmlg, realmlg)
+  mll(Pinf) <- "original"
+  expect_equal(mll(mll.reset(Pinf, TRUE)), pres)
+  mll.custom(Pinf) <- paste("MLL", mll(Pinf))
+  cmll  <- as.numeric(as.character(mll(mll.reset(Pinf, "custom"))))
+  comll <- as.numeric(as.character(mll(mll.reset(Pinf, c("custom", "original")))))
+  expect_equal(cmll, pmlg)
+  expect_equal(comll, pres)
+})
+
+
+context("Basic clone correction tests")
 
 test_that("clone correction works for specified levels and throws errors", {
   skip_on_cran()
@@ -42,6 +65,8 @@ test_that("clone correction works for specified levels and throws errors", {
   strata(ac) <- NULL
   expect_warning(clonecorrect(ac), "Strata is not set for ac")
 })
+
+context("mlg.table tests")
 
 test_that("multilocus genotype matrix matches mlg.vector and data", {
   expect_equal(nrow(atab), nPop(Aeut))
@@ -70,6 +95,7 @@ test_that("multilocus genotype matrix can utilize strata", {
   expect_equal(nrow(pcont), 2)
 })
 
+context("mll and nmll function tests")
 test_that("mll and nmll works for genind objects", {
   expect_warning(atest <- mll(Aeut, "original"))
   nAeut <- nmll(Aeut)
@@ -90,6 +116,8 @@ test_that("mll can convert a numeric mlg slot to MLG", {
   expect_is(Pinf@mlg, "MLG")
 })
 
+context("MLG class printing")
+
 test_that("MLG class can print expected", {
   mll(Pinf) <- "original"
   expect_output(show(Pinf@mlg), "86 original mlgs.")
@@ -99,6 +127,8 @@ test_that("MLG class can print expected", {
   expect_output(show(Pinf@mlg), "86 contracted mlgs with a cutoff of 0 based on the function diss.dist")
   mll(Pinf) <- "original"
 })
+
+context("mlg.crosspop tests")
 
 test_that("mlg.crosspop will work with subsetted genclone objects", {
   strata(Aeut) <- other(Aeut)$population_hierarchy
@@ -137,6 +167,8 @@ test_that("mlg.crosspop can take sublist and blacklist", {
   expect_output(show(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1")), "MLG.13: \\(2 inds\\) 8 9")
   expect_equivalent(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1", quiet = TRUE), expectation)
 })
+
+context("mlg.id tests")
 
 test_that("mlg.id Aeut works", {
   expected_output <- structure(list(`1` = "055", `2` = c("101", "103"), `3` = "111", 
@@ -252,24 +284,7 @@ test_that("mlg.id Pinf works", {
   expect_equal(names(x[1]), "1")
 })
 
-
-test_that("subsetting and resetting MLGs works", {
-  pmlg    <- mlg.vector(Pinf)
-  pres    <- mlg.vector(Pinf, reset = TRUE)
-  fullmlg <- mlg(Pinf[loc = locNames(Pinf)[-c(1:5)]], quiet = TRUE)
-  realmlg <- mlg(Pinf[loc = locNames(Pinf)[-c(1:5)], mlg.reset = TRUE], quiet = TRUE)
-  expect_equal(pmlg, Pinf@mlg[])
-  expect_false(identical(pmlg, pres))
-  expect_equal(Pinf[mlg.reset = TRUE]@mlg[], pres)
-  expect_gt(fullmlg, realmlg)
-  mll(Pinf) <- "original"
-  expect_equal(mll(mll.reset(Pinf, TRUE)), pres)
-  mll.custom(Pinf) <- paste("MLL", mll(Pinf))
-  cmll  <- as.numeric(as.character(mll(mll.reset(Pinf, "custom"))))
-  comll <- as.numeric(as.character(mll(mll.reset(Pinf, c("custom", "original")))))
-  expect_equal(cmll, pmlg)
-  expect_equal(comll, pres)
-})
+context("mll.reset tests")
 
 test_that("mll.reset works with non-MLG class slots", {
   skip_on_cran()
@@ -295,6 +310,8 @@ test_that("mll.reset will reset subset genclone with no MLG class", {
   expect_equal(suppressWarnings(monpop[loc = 1:2, mlg.reset = TRUE] %>% nmll()), 14L)
   expect_equal(suppressWarnings(monpop[loc = 1:2] %>% mll.reset(TRUE) %>% nmll()), 14L)
 })
+
+context("mlg.filter tests")
 
 test_that("multilocus genotype filtering functions correctly", {
   skip_on_cran()

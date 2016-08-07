@@ -1,5 +1,3 @@
-context("Minimum spanning network functions")
-
 options(warn = -1)
 ucl <- function(x){
   unclass(x$graph)[-10]
