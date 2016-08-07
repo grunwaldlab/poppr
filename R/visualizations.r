@@ -331,7 +331,6 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   }
 
   
-  
   if (is.null(pop(gid)) | nPop(gid) == 1){
     return(singlepop_msn(gid, vertex.label, distmat = bclone, gscale = gscale, 
                          glim = glim, gadj = gadj, wscale = wscale, 
@@ -340,8 +339,6 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
                          threshold = threshold, 
                          clustering.algorithm = clustering.algorithm, ...))
   }
-
-  
   # Clone correcting the matrix ---------------------------------------------
   if (threshold > 0){
     filtered <- filter_at_threshold(gid, 
@@ -373,84 +370,6 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
     showplot,
     ...)
   return(poppr_msn_list)
-  # 
-  # mlgs <- mll(gid)
-  # cmlg <- mll(cgid)
-  # if (!is.numeric(mlgs)){
-  #   mlgs <- as.character(mlgs)
-  #   cmlg <- as.character(cmlg)
-  # }
-  # 
-  # # Creating data for pie colors --------------------------------------------
-  # # Obtaining population information for all MLGs
-  # subs   <- sort(unique(mlgs))
-  # mlg.cp <- mlg.crosspop(gid, mlgsub = subs, quiet=TRUE)
-  # if (is.numeric(mlgs)){
-  #   names(mlg.cp) <- paste0("MLG.", sort(unique(mlgs)))    
-  # }
-  # # This will determine the size of the nodes based on the number of individuals
-  # # in the MLG. Subsetting by the MLG vector of the clone corrected set will
-  # # give us the numbers and the population information in the correct order.
-  # # Note: rank is used to correctly subset the data
-  # mlg.number <- table(mlg)[rank(cmlg)]
-  # mlg.cp     <- mlg.cp[rank(cmlg)]  
-  # 
-  # ## Color schemes 
-  # # The pallete is determined by what the user types in the argument. It can be 
-  # # rainbow, topo.colors, heat.colors ...etc.
-  # npop   <- nPop(gid)
-  # pnames <- popNames(gid)
-  # color  <- palette_parser(palette, npop, pnames)
-  # # This creates a list of colors corresponding to populations.
-  # mlg.color <- lapply(mlg.cp, function(x) color[pnames %in% names(x)])
-  # 
-  # # Creating the Minimum Spanning Network -----------------------------------
-  # g <- graph.adjacency(bclone, weighted = TRUE, mode = "undirected")
-  # 
-  # if (length(cmlg) > 1){
-  #   mst <- minimum.spanning.tree(g, algorithm = "prim", weights = E(g)$weight)
-  #   # Add any relevant edges that were cut from the mst while still being tied
-  #   # for the title of optimal edge.
-  #   if (include.ties){
-  #     mst <- add_tied_edges(mst, bclone, tolerance = .Machine$double.eps ^ 0.5)
-  #   }
-  # } else { # if there's only one clone
-  #   mst <- minimum.spanning.tree(g)
-  # }
-  # 
-  # # Handling vertex labels --------------------------------------------------
-  # if (!is.na(vertex.label[1]) & length(vertex.label) == 1){
-  #   if (toupper(vertex.label) == "MLG"){
-  #     if (is.numeric(cmlg)){
-  #       vertex.label <- paste0("MLG.", cmlg)        
-  #     } else if (visible_mlg == "custom"){
-  #       mll(gid) <- visible_mlg
-  #       vertex.label <- correlate_custom_mlgs(gid, mlg.compute)
-  #     }
-  #   } else if(toupper(vertex.label) == "INDS"){
-  #     vertex.label <- indNames(cgid)
-  #   }
-  # }
-  # 
-  # 
-  # # Adjusting edge color/thickness ------------------------------------------
-  # if (length(cmlg) > 1){
-  #   mst <- update_edge_scales(mst, wscale, gscale, glim, gadj)
-  # }
-  # 
-  # if (showplot){
-  #   plot.igraph(mst, edge.width = E(mst)$width, edge.color = E(mst)$color, 
-  #        vertex.size = mlg.number*3, vertex.shape = "pie", vertex.pie = mlg.cp, 
-  #        vertex.pie.color = mlg.color, vertex.label = vertex.label, ...)
-  #   legend(-1.55 ,1 ,bty = "n", cex = 0.75, legend = pnames, 
-  #          title = "Populations", fill=color, border=NULL)
-  # }
-  # V(mst)$size      <- mlg.number
-  # V(mst)$shape     <- "pie"
-  # V(mst)$pie       <- mlg.cp
-  # V(mst)$pie.color <- mlg.color
-  # V(mst)$label     <- vertex.label
-  # return(list(graph = mst, populations = pnames, colors = color))
 }
 
 
