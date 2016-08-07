@@ -382,7 +382,7 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   } else {  
     cgid    <- gid[.clonecorrector(gid), ]
     singles <- !duplicated(mll(gid))
-    distmat  <- distmat[singles, singles, drop = FALSE]
+    distmat <- distmat[singles, singles, drop = FALSE]
   }
   rownames(distmat) <- indNames(cgid) -> colnames(distmat)
   poppr_msn_list <- msn_constructor(
