@@ -12,6 +12,8 @@ NEW FEATURES
 -----------
 
 * You can now specify layout parameters in `imsn()`
+* The *.msn functions will now take into account whether or not your data is set
+  to collapsed MLGs. (see https://github.com/grunwaldlab/poppr/issues/107)
 
 poppr 2.2.0
 ===========
