@@ -230,7 +230,7 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
       dis <- .last.value.dist$get()
     } else {
       if (is.genind(gid)) {
-        the_dist <- as.character(substitute(the_call[["distance"]]))
+        the_dist <- as.character(the_call[["distance"]])
         call_len <- length(the_dist)
         is_diss_dist <- the_dist %in% "diss.dist"
         any_dist <- the_dist %in% c("diss.dist", "nei.dist", "prevosti.dist",
@@ -264,47 +264,59 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
     # Treating distance as a distance table 
     # Warning: Missing data in distance matrix or data uncorrelated with gid may
     # produce unexpected results.
-    dis <- as.matrix(distance)
+    dis <- as.matrix(eval(distance))
   }
-  if (any(is.na(dis))){
-    msg <- paste("The resulting distance matrix contains missing data.\n",
-                 "Please treat your missing data by using the missing",
-                 "argument.\n")
-    stop(msg)
-  }
-  if (!is.clone(gid))
-  {
+  
+  if (!is.clone(gid)) {
     if (is(gid, "genlight")){
       gid <- as.snpclone(gid)
     } else {
       gid <- as.genclone(gid)
     }
-  }
-  else
-  {
+  } else {
     if (!is(gid@mlg, "MLG")){
       gid@mlg <- new("MLG", gid@mlg)
     }
     mll(gid) <- "original"
   }
   basemlg <- mlg.vector(gid)
-  # Input validation before passing arguments to C
-
-    #  dist is an n by n matrix containing distances between individuals
-  if ((!is.numeric(dis) && !is.integer(dis)) || dim(dis)[1] != dim(dis)[2]){
-    stop("Distance matrix must be a square matrix of numeric or integer values.")
-  } 
-    #  mlg is a vector of length n containing mlg assignments
-  if ((!is.numeric(basemlg) && !is.integer(basemlg)) || length(basemlg) != dim(dis)[1]){
-    stop("MLG must contain one numeric or integer entry for each individual in the population.")
+  
+  
+  
+  # Input validation --------------------------------------------------------
+  # 
+  if (any(is.na(dis))){
+    msg <- paste("The resulting distance matrix contains missing data.\n",
+                 "Please treat your missing data by using the missing",
+                 "argument.\n")
+    stop(msg, call. = FALSE)
+  }
+  
+  if (!is.numeric(dis) && !is.integer(dis)){
+    stop("Distance matrix must be a square matrix of numeric or integer values.",
+         call. = FALSE)
+  }
+  if (nrow(dis) != ncol(dis)){
+    stop("The distance matrix must be a square matrix", call. = FALSE)
+  }
+  
+  if (nrow(dis) != nInd(gid)){
+    msg <- paste0("The number of observations in the distance matrix (",
+                  nrow(dis), ") are not equal to the number of observations in",
+                  " the data (", nInd(gid), ").")
+    if (nrow(dis) == nPop(gid)){
+      msg <- paste(msg, "\n\nPlease check your distance function to make sure",
+                   "it calculates distances between samples, not populations.")
+    }
+    stop(msg, call. = FALSE)
   }
     # Threshold must be something that can cast to numeric
   if (!is.numeric(threshold) && !is.integer(threshold)){
-    stop("Threshold must be a numeric or integer value")
+    stop("Threshold must be a numeric or integer value", .call = FALSE)
   } 
     # Threads must be something that can cast to integer
   if (!is.numeric(threads) && !is.integer(threads) && threads >= 0){
-    stop("Threads must be a non-negative numeric or integer value")
+    stop("Threads must be a non-negative numeric or integer value", .call  = FALSE)
   } 
     # Stats must be logical
   STATARGS <- c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")

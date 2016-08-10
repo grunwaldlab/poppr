@@ -1522,10 +1522,11 @@ setMethod(
       # </simpsonsreference>
       the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
-
+    distfun <- is.function(distance) || is.character(distance)
     # The arguments are built up in a list here and then passed using do.call.
     the_args <- list(gid = pop, threshold = value, missing = missing, 
-                     memory = memory, algorithm = algorithm, distance = distance, 
+                     memory = memory, algorithm = algorithm, 
+                     distance = if (distfun) substitute(distance) else distance,
                      threads = threads, stats = "MLGs")
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
@@ -1598,10 +1599,11 @@ setMethod(
       # </simpsonsreference>
       the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
-    
+    distfun <- is.function(distance) || is.character(distance)
     # The arguments are built up in a list here and then passed using do.call.
     the_args <- list(gid = pop, threshold = value, missing = missing, 
-                     memory = memory, algorithm = algorithm, distance = distance, 
+                     memory = memory, algorithm = algorithm, 
+                     distance = if (distfun) substitute(distance) else distance, 
                      threads = threads, stats = "MLGs")
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")

@@ -8,6 +8,7 @@ rownames(grid_example) <- LETTERS[1:5]
 colnames(grid_example) <- c("x", "y")
 x  <- as.genclone(df2genind(grid_example, ploidy = 1))
 xd <- dist(grid_example)
+xdm <- as.matrix(xd)
 
 set.seed(999)
 gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE), parallel = FALSE)
@@ -159,3 +160,53 @@ test_that("filtering algorithms imply diss.dist by default", {
   expect_gt(nmll(y, "original"), nmll(y, "contracted"))
   expect_output(show(y), "diss.dist")
 })
+
+
+context("mlg.filter error messages")
+
+data("monpop", package = "poppr")
+assign("x20160810_mon20", monpop[1:20], envir = .GlobalEnv)
+assign("x20160810_let", matrix(letters[1:9], 3, 3), envir = .GlobalEnv)
+assign("x20160810_neifun", function(x) nei.dist(genind2genpop(x, quiet = TRUE)), envir = .GlobalEnv)
+
+test_that("mlg.filter errors when distance matrix is not square", {
+  skip_on_cran()
+  mat <- matrix(rnorm(nInd(monpop)*10), nInd(monpop), 10)
+  msg <- "must be a square matrix"
+  expect_error(mlg.filter(monpop, distance = mat) <- 0, msg)
+})
+
+test_that("mlg.filter errors when distance matrix contains missing data", {
+  skip_on_cran()
+  expect_error(mlg.filter(x20160810_mon20, distance = nei.dist) <- 0, "contains missing data")
+})
+
+test_that("mlg.filter errors when the distance matrix is not of equal size", {
+  skip_on_cran()
+  expect_error(mlg.filter(monpop, distance = diss.dist(x20160810_mon20)) <- 0, "distance matrix \\(20\\)")
+  expect_error(mlg.filter(monpop, distance = x20160810_neifun) <- 0, "samples, not populations")
+})
+
+test_that("mlg.filter throws a warning when attempting to use 'mean' with diss.dist", {
+  skip_on_cran()
+  expect_warning(mlg.filter(x20160810_mon20, distance = diss.dist, missing = "mean") <- 0)
+})
+
+test_that("mlg.filter throws an error if the threshold is not a number", {
+  skip_on_cran()
+  expect_error(mlg.filter(x) <- "A", "Threshold must be")
+})
+
+test_that("mlg.filter throws an error if the threads is not a number", {
+  skip_on_cran()
+  expect_error(mlg.filter(x, threads = "A") <- 1L, "Threads must be")
+})
+
+test_that("mlg.filter throws an error if the distance is not numeric", {
+  skip_on_cran()
+  expect_error(mlg.filter(x, distance = xdm > 4) <- 1, "Distance matrix must be")
+})
+
+rm("x20160810_mon20", envir = .GlobalEnv)
+rm("x20160810_let", envir = .GlobalEnv)
+rm("x20160810_neifun", envir = .GlobalEnv)
