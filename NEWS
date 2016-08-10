@@ -15,6 +15,12 @@ NEW FEATURES
 * The *.msn functions will now take into account whether or not your data is set
   to collapsed MLGs. (see https://github.com/grunwaldlab/poppr/issues/107)
 
+MISC
+----
+
+* Errors from mlg.filter now make more sense. 
+  (see https://github.com/grunwaldlab/poppr/issues/109)
+
 poppr 2.2.0
 ===========
 
