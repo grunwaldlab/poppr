@@ -507,7 +507,7 @@ print_command(funk)
     into the hierarchy of the `genclone` object.
 
 -   `genclone -` This flag will convert your data into a `genclone`
-    object (see [Send in the clones](intro:genclone) for more info).
+    object (see [Send in the clones](#intro:genclone) for more info).
 
 -   `sep -` The separator argument for columns in your data. It defaults
     to ",".
