@@ -1,0 +1,14 @@
+#exercise {
+  display: block;
+  width: 100%;
+  font-weight: bold;
+  background: #e6ffff;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px 25px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: #1695A3;
+  border-radius: 20px;
+  /*box-shadow: 10px 10px 20px -5px gray;*/
+}

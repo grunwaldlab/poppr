@@ -4,7 +4,7 @@ author: Zhian N. Kamvar and Niklaus J. Grünwald
 date: "`r Sys.Date()`"
 bibliography: the_bibliography.bib
 output:
-  html_vignette:
+  rmarkdown::html_vignette:
     toc: true
     toc_depth: 2
     fig_width: 5
@@ -12,7 +12,7 @@ output:
 vignette: >
   %\VignetteIndexEntry{Multilocus Genotype Analysis}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
