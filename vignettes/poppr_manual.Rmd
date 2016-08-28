@@ -513,7 +513,7 @@ print_command(funk)
     to ",".
 
 -   `recode -` If your data is polyploid data, this gives you the option
-    to recode it. (See [About Polyploid Data](intro:import:polyploid) for details)
+    to recode it. (See [About Polyploid Data](#intro:import:polyploid) for details)
 
 ------------------------------------------------------------------------
 
