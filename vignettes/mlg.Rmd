@@ -37,7 +37,7 @@ and snpclone objects.
 <br>
 <br>
 
-<img src="popprlogo.png" width="300">
+<img src="jalapeno_logo.png" width="300">
 </center>
 
 ----
