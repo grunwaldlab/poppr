@@ -9,18 +9,15 @@ src/*.so
 src/*.dll
 src-x86_64
 src-i386
-
 # OSX derivative
 .DS_Store
-
 # vignette derivatives
 README.html
 vignettes/*.gz
 vignettes/poppr_manual-*.pdf
 vignettes/*.log
-
 # I believe this was for vi mistakes
 *.swp
-
 # plots from tests
 tests/testthat/Rplots.pdf
+inst/doc
