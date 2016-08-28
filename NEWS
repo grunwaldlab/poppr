@@ -1,4 +1,4 @@
-poppr 2.2.0.99
+poppr 2.2.1
 ===========
 
 BUG FIX
@@ -20,6 +20,8 @@ MISC
 
 * Errors from mlg.filter now make more sense. 
   (see https://github.com/grunwaldlab/poppr/issues/109)
+* The vignette poppr_manual has been converted to HTML format.
+  (see https://github.com/grunwaldlab/poppr/issues/113)
 
 poppr 2.2.0
 ===========
