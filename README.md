@@ -58,8 +58,8 @@ If you use *poppr* at all, please specify the version and cite:
 > [http://dx.doi.org/10.7717/peerj.281](http://dx.doi.org/10.7717/peerj.281)
 
 If you use *poppr* in a presentation please mention it as the *poppr* R package,
-specify the version, and use our
-[logo](http://github.com/grunwaldlab/poppr/tree/master/vignettes/popprlogo.png).
+specify the version, and use our logo: 
+[(png)](http://github.com/grunwaldlab/poppr/tree/master/vignettes/jalapeno_logo.png) | [(svg)](http://github.com/grunwaldlab/poppr/tree/master/vignettes/jalapeno_logo.svg).
 
 Additionally, if you use any following functionalities:
 
