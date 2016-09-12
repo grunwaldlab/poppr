@@ -532,8 +532,9 @@ poppr.all <- function(filelist, ...){
 #'   
 #' @param missing a character string. see \code{\link{missingno}} for details.
 #'   
-#' @param plot \code{logical} if \code{TRUE} (default) and \code{sampling > 0}, 
-#'   a histogram will be produced for each population.
+#' @param plot When \code{TRUE} (default), a heatmap of the values per locus
+#'   pair will be plotted (for pair.ia). For `ia()`, if \code{sampling > 0, a
+#'   histogram will be produced for each population.
 #'   
 #' @param hist \code{logical} Deprecated. Use plot.
 #' 
@@ -784,8 +785,6 @@ ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 
 #==============================================================================#
 #' @rdname ia
-#' @param plot (for pair.ia) when \code{TRUE} (default), a heatmap of the values
-#'   per locus pair will be plotted.
 #' @param low (for pair.ia) a color to use for low values when \code{plot =
 #'   TRUE}
 #' @param high (for pair.ia) a color to use for low values when \code{plot =
