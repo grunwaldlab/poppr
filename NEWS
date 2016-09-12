@@ -1,3 +1,11 @@
+poppr 2.2.1.99
+===========
+
+MISC
+----
+
+* The `hist` argument in the `ia()` is deprecated in favor of `plot`.
+
 poppr 2.2.1
 ===========
 
