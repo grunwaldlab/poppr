@@ -29,6 +29,10 @@ performing calculations?
 
 \item{missing}{a character string. see \code{\link{missingno}} for details.}
 
+\item{plot}{When \code{TRUE} (default), a heatmap of the values per locus
+pair will be plotted (for pair.ia). For `ia()`, if \code{sampling > 0}, a
+histogram will be produced for each population.}
+
 \item{hist}{\code{logical} Deprecated. Use plot.}
 
 \item{index}{\code{character} either "Ia" or "rbarD". If \code{hist = TRUE}, 
