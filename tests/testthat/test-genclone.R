@@ -79,3 +79,11 @@ test_that("print method will show all populations", {
   expect_output(print(agc), paste(popNames(agc)[1:5], collapse = " "))
   expect_output(print(agc, fullnames = FALSE), "...")
 })
+
+test_that("subsetting a genclone object retains the MLG definitions", {
+  idn <- mlg.id(pc)[[1]]
+  idl <- indNames(pc) %in% idn
+  idi <- which(idl)
+  expect_equal(mll(pc[idn]), mll(pc[idl]))
+  expect_equal(mll(pc[idi]), mll(pc[idl]))
+})

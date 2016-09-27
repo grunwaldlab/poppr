@@ -305,8 +305,10 @@ setMethod(
 
     # handle MLG indices
     ismlgclass <- inherits(x@mlg, "MLG")
-    mlgi       <- handle_mlg_index(i, x)
-    mlg        <- if (ismlgclass) x@mlg[mlgi, all = TRUE] else x@mlg[mlgi]
+    # Tue Sep 27 12:08:37 2016 ------------------------------
+    # Methods for subsetting genind object by sample name currently don't exist
+    i          <- handle_mlg_index(i, x)
+    mlg        <- if (ismlgclass) x@mlg[i, all = TRUE] else x@mlg[i]
     
     # Subset data; replace MLGs    
     x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
