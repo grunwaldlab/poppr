@@ -2,9 +2,16 @@ poppr 2.2.1.99
 ===========
 
 MISC
-----
+-----------
 
 * The `hist` argument in the `ia()` is deprecated in favor of `plot`.
+
+BUG FIX
+-----------
+
+* The subsetting methods will now properly handle mlgs when using sample names
+  to subset genclone and snpclone objects. See
+  https://github.com/grunwaldlab/poppr/issues/114 for details.
 
 poppr 2.2.1
 ===========
