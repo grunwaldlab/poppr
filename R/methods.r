@@ -302,14 +302,14 @@ setMethod(
   signature(x = "snpclone", i = "ANY", j = "ANY", drop = "ANY"),
   definition = function(x, i, j, ..., drop = FALSE){
     if (missing(i)) i <- TRUE
-    ismlgclass <- "MLG" %in% class(x@mlg)
 
-    if (ismlgclass){
-      mlg <- x@mlg[i, all = TRUE]
-    } else {
-      mlg <- x@mlg[i]
-    }
-    x <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
+    # handle MLG indices
+    ismlgclass <- inherits(x@mlg, "MLG")
+    mlgi       <- handle_mlg_index(i, x)
+    mlg        <- if (ismlgclass) x@mlg[mlgi, all = TRUE] else x@mlg[mlgi]
+    
+    # Subset data; replace MLGs    
+    x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
     x@mlg <- mlg
     return(x)
   })
@@ -516,27 +516,23 @@ setMethod(
   definition = function(x, i, j, ..., mlg.reset = FALSE, drop = FALSE){
     if (missing(i)) i <- TRUE
     newi <- i
-    ## HANDLE 'POP'
+    # Handling populations. This takes precedence over sample subsetting.
     dots <- list(...)
     if (any(names(dots) == "pop")){
-      pop <- dots[["pop"]]
-      if (!is.null(pop) && !is.null(pop(x))){
-        if (is.factor(pop)) pop <- as.character(pop)
-        if (!is.character(pop)) pop <- popNames(x)[pop]
-        newi <- pop(x) %in% pop
-      }      
+      newi <- handle_pops_index(dots[["pop"]], x)
     }
-    x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
+    mlgi <- handle_mlg_index(newi, x)
+    
+    x    <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
     
     if (!mlg.reset){
-      if (is(x@mlg, "MLG")){
-        x@mlg <- x@mlg[newi, all = TRUE]
+      if (inherits(x@mlg, "MLG")){
+        x@mlg <- x@mlg[mlgi, all = TRUE]
       } else {
-        x@mlg <- x@mlg[newi]
+        x@mlg <- x@mlg[mlgi]
       }
-      
     } else {
-      if (class(x@mlg)[1] != "MLG"){
+      if (!inherits(x@mlg, "MLG")){
         x@mlg <- mlg.vector(x, reset = TRUE)
       } else {
         x@mlg <- new("MLG", mlg.vector(x, reset = TRUE))
@@ -545,7 +541,6 @@ setMethod(
     return(x)
   }
 )
-
 #==============================================================================#
 #' @rdname genclone-method
 #' @param object a genclone object
