@@ -53,6 +53,10 @@ nan_geno <- genotype_curve(nancycats)
 # With AFLP data, it is often necessary to include more markers for resolution
 data(Aeut)
 Ageno <- genotype_curve(Aeut)
+# Trendlines: you can add a smoothed trendline with geom_smooth()
+library("ggplot2")
+p <- last_plot()
+p + geom_smooth()
 
 # Many microsatellite data sets have hypervariable markers
 data(microbov)
@@ -60,7 +64,18 @@ mgeno <- geotype_curve(microbov)
 
 # This data set has been pre filtered
 data(monpop)
-mongeno <- genotype_curve(monpop)}
+mongeno <- genotype_curve(monpop)
+
+# Here, we add a curve and a title for publication
+p <- last_plot()
+mytitle <- expression(paste("Genotype Accumulation Curve for ", 
+                            italic("M. fructicola")))
+p + geom_smooth() + 
+  theme_bw() + 
+  theme(text = element_text(size = 12, family = "serif")) +
+  theme(title = element_text(size = 14)) +
+  ggtitle(mytitle)
+}
 }
 \author{
 Zhian N. Kamvar

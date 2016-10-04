@@ -1125,6 +1125,10 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' # With AFLP data, it is often necessary to include more markers for resolution
 #' data(Aeut)
 #' Ageno <- genotype_curve(Aeut)
+#' # Trendlines: you can add a smoothed trendline with geom_smooth()
+#' library("ggplot2")
+#' p <- last_plot()
+#' p + geom_smooth()
 #' 
 #' # Many microsatellite data sets have hypervariable markers
 #' data(microbov)
@@ -1132,7 +1136,18 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' 
 #' # This data set has been pre filtered
 #' data(monpop)
-#' mongeno <- genotype_curve(monpop)}
+#' mongeno <- genotype_curve(monpop)
+#' 
+#' # Here, we add a curve and a title for publication
+#' p <- last_plot()
+#' mytitle <- expression(paste("Genotype Accumulation Curve for ", 
+#'                             italic("M. fructicola")))
+#' p + geom_smooth() + 
+#'   theme_bw() + 
+#'   theme(text = element_text(size = 12, family = "serif")) +
+#'   theme(title = element_text(size = 14)) +
+#'   ggtitle(mytitle)
+#' }
 #==============================================================================#
 #' @importFrom pegas loci2genind
 genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE, 
@@ -1168,8 +1183,9 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   outplot <- ggplot(outmelt, aesthetics) + 
              geom_boxplot(aes_string(group = "factor(NumLoci)")) + 
              labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
-                       y = "Number of multilocus genotypes",
-                       x = "Number of loci sampled")) 
+                       y           = "Number of multilocus genotypes",
+                       x           = "Number of loci sampled")) +
+             scale_x_continuous(breaks = seq(nloci), expand = c(0, 0.125))
   if (!is.null(thresh)){
     outbreaks <- sort(c(pretty(0:max_obs), threshdf$x))
     tjust <- ifelse(thresh > 0.9, 1.5, -1)
@@ -1179,9 +1195,7 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
                                   label = paste0(thresh*100, "%"), 
                                   color = "red", hjust = 0) +
                          scale_y_continuous(breaks = outbreaks, 
-                                            limits = c(0, max_obs)) +
-                         scale_x_continuous(breaks = seq(nloci),
-                                            expand = c(0, 0.125))
+                                            limits = c(0, max_obs))
   }
   print(outplot)
   return(invisible(out))
