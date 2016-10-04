@@ -1164,8 +1164,9 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   suppressWarnings(max_obs  <- nmll(gen, "original"))
   threshdf <- data.frame(x = round(max_obs*thresh))
   outmelt  <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
-  aesthetics <- aes_string(x = "factor(NumLoci)", y = "MLG", group = "NumLoci")
-  outplot <- ggplot(outmelt, aesthetics) + geom_boxplot() + 
+  aesthetics <- aes_string(x = "NumLoci", y = "MLG")
+  outplot <- ggplot(outmelt, aesthetics) + 
+             geom_boxplot(aes_string(group = "factor(NumLoci)")) + 
              labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
                        y = "Number of multilocus genotypes",
                        x = "Number of loci sampled")) 
@@ -1178,7 +1179,9 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
                                   label = paste0(thresh*100, "%"), 
                                   color = "red", hjust = 0) +
                          scale_y_continuous(breaks = outbreaks, 
-                                            limits = c(0, max_obs))
+                                            limits = c(0, max_obs)) +
+                         scale_x_continuous(breaks = seq(nloci),
+                                            expand = c(0, 0.125))
   }
   print(outplot)
   return(invisible(out))
