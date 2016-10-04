@@ -5,6 +5,10 @@ MISC
 -----------
 
 * The `hist` argument in the `ia()` is deprecated in favor of `plot`.
+* The x axis for the `genotype_curve()` plot is now numeric, allowing you to
+  fit a smoothing function over the points without having to use the hack
+  `geom_smooth(aes(group = 1))`. This is thanks to Kara Woo for pointing this
+  out on twitter (https://twitter.com/kara_woo/status/783336540407685120).
 
 BUG FIX
 -----------
