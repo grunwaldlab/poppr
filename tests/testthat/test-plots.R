@@ -5,6 +5,7 @@ data("Pinf", package = "poppr")
 nancy <- popsub(nancycats, c(1, 9))
 ggversion <- packageVersion("ggplot2")
 oldgg <- package_version("1.0.1")
+pcap <- function(x) print(capture.output(x))
 
 test_that("info_table plots work", {
 	skip_on_cran()
@@ -76,6 +77,14 @@ test_that("genotype_curve can take less than m-1 loci", {
   expect_equal(ncol(nc), 2L)
   expect_equal(ncol(nc1), 1L)
   expect_error(genotype_curve(nancycats[loc = 1]), "at least two loci")
+})
+
+test_that("genotype_curve will not plot if you tell it", {
+  skip_on_cran()
+  # No output here
+  expect_output(pcap(genotype_curve(nancycats, maxloci = 1, quiet = TRUE)), "character\\(0\\)")
+  # Some output here
+  expect_output(pcap(genotype_curve(nancycats, maxloci = 1, quiet = TRUE, plot = FALSE)))
 })
 
 test_that("ia produces histograms", {
