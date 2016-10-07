@@ -1,6 +1,12 @@
 poppr 2.2.1.99
 ===========
 
+NEW FEATURES
+------------
+
+* There is now a `plot` parameter for the genotype curve to enable or suppress
+  plotting.
+
 MISC
 -----------
 
