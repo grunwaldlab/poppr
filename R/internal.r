@@ -1925,7 +1925,7 @@ mlg_barplot <- function(mlgt, color_table = NULL){
           axis.text.x = element_text(size = 10, angle = 90, 
                                      hjust = 1, vjust = 1)) +
     xlab("MLG") + 
-    scale_y_continuous(expand = c(0, -.75))
+    scale_y_continuous(expand = c(0, 0), breaks = the_breaks)
   return(the_plot)
 }
 
