@@ -25,6 +25,8 @@ BUG FIX
 * The subsetting methods will now properly handle mlgs when using sample names
   to subset genclone and snpclone objects. See
   https://github.com/grunwaldlab/poppr/issues/114 for details.
+* A plotting bug for `mlg.table()` was fixed so that the plots now show the
+  maximum value.
 
 poppr 2.2.1
 ===========
