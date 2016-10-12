@@ -604,12 +604,12 @@ setMethod(
     if (strata == 0) popstrata <- "strata."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
-    cat("", ltab[4], strata, popstrata, stratanames, fill = TRUE)
+    cat("", ltab[4], strata, popstrata, paste(stratanames, collapse = ", "), fill = TRUE)
     if (!is.null(object@hierarchy)){
       cat("", ltab[5], "1", "hierarchy -", 
           paste(object@hierarchy, collapse = ""), fill = TRUE)
     }
-    cat("", ltab[6], npop, "populations", popdef, pops, fill = TRUE)
+    cat("", ltab[6], npop, "populations", popdef, paste(pops, collapse = ", "), fill = TRUE)
     
   })
 
