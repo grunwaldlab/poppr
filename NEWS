@@ -15,6 +15,9 @@ MISC
   fit a smoothing function over the points without having to use the hack
   `geom_smooth(aes(group = 1))`. This is thanks to Kara Woo for pointing this
   out on twitter (https://twitter.com/kara_woo/status/783336540407685120).
+* The "show" method for genclone objects now delimits populations and strata
+  by a comma, avoiding confusion with multi-word population names. Thanks to
+  @knausb for the fix in https://github.com/grunwaldlab/poppr/pull/116.  
 
 BUG FIX
 -----------
