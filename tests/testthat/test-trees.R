@@ -56,6 +56,16 @@ test_that("aboot can utilize anonymous functions", {
 	expect_is(nantree, "phylo")
 })
 
+test_that("aboot can utilize bootgen2genind", {
+  skip_on_cran()
+  suppressWarnings(nantreebg <- aboot(nan9, dist = function(x) nei.dist(bootgen2genind(x)), sample = 20, quiet = TRUE))
+  suppressWarnings(nantree   <- aboot(nan9, dist = "nei.dist", sample = 20, quiet = TRUE))
+  expect_is(nantreebg, "phylo")
+  expect_is(nantree, "phylo")
+  expect_equivalent(nantreebg$edge.length, nantree$edge.length)
+})
+
+
 test_that("aboot can handle populations", {
   skip_on_cran()
 	set.seed(999)

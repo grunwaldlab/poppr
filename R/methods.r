@@ -157,7 +157,7 @@ setMethod(
     }
     num_alleles                <- slot(gen, "loc.n.all")
     num_loci                   <- length(num_alleles)
-    slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = freq)     
+    slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = freq)
     slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")
     slot(.Object, "loc.n.all") <- num_alleles  
     slot(.Object, "all.names") <- slot(gen, "all.names") 
@@ -174,6 +174,30 @@ setMethod(
   signature = "bootgen",
   definition = function(x, freq = TRUE){ # freq is a dummy argument
     return(x@tab)
+  })
+
+#==============================================================================#
+#' @export
+#' @rdname coercion-methods
+#' @param bg a bootgen object
+#' @aliases bootgen2genind,bootgen-method
+#' @docType methods
+#==============================================================================#
+bootgen2genind <- function(bg){
+  standardGeneric("bootgen2genind")
+}
+
+#' @export
+setGeneric("bootgen2genind")
+
+setMethod(
+  f = "bootgen2genind",
+  signature = "bootgen",
+  definition = function(bg){
+    xtab <- tab(bg)
+    if (is.numeric(xtab)) xtab[] <- as.integer(xtab*bg@ploidy)
+    res <- new("genind", tab = xtab)
+    return(res)
   })
 
 ################################################################################
@@ -713,6 +737,7 @@ setMethod(
 #'   
 #' @seealso \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
 #'   \code{\link{read.genalex}}
+#'   \code{\link{aboot}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' data(Aeut)
@@ -721,6 +746,11 @@ setMethod(
 #' Aeut.gc
 #' Aeut.gi <- genclone2genind(Aeut.gc)
 #' Aeut.gi
+#' data(nancycats)
+#' nan.bg  <- new("bootgen", nancycats[pop = 9])
+#' nan.bg
+#' nan.gid <- bootgen2genind(nan)
+#' nan.gid
 #==============================================================================#
 as.genclone <- function(x, ..., mlg, mlgclass = TRUE){
   standardGeneric("as.genclone")
