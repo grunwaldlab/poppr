@@ -2933,3 +2933,25 @@ handle_pops_index <- function(pops, gid){
   } 
   return(newi)
 }
+
+#' Should poppr be quiet?
+#' 
+#' If it's not an interactive session or it's in a knitr document, messages in
+#' poppr should be suppressed UNLESS poppr.debug is set to TRUE
+#'
+#' @return TRUE or FALSE
+#' @noRd
+#'
+#' @examples
+should_poppr_be_quiet <- function(quiet){
+  # Suppress the noise if it's not interactive or in knitr
+  # This is thanks to @jimhester
+  # https://github.com/hadley/dplyr/commit/c8beb59217620614b36cd82df0a7e89c556fb374
+  in_knitr    <- !is.null(getOption("knitr.in.progress"))
+  in_script   <- !interactive()
+  poppr_debug <- getOption("poppr.debug")
+  if ((in_script || in_knitr) && !poppr_debug){
+    quiet <- TRUE
+  }
+  return(quiet)
+}

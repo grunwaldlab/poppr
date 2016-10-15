@@ -313,6 +313,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
                   "the function diversity_table().")
     stop(msg)
   }
+  quiet <- should_poppr_be_quiet(quiet)
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
                     clonecorrect = clonecorrect, strata = strata,
                     keep = keep, quiet = TRUE)  
@@ -728,7 +729,7 @@ ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   popx    <- gid
   missing <- toupper(missing)
   type    <- gid@type
-  
+  quiet   <- should_poppr_be_quiet(quiet)
   if (type == "PA"){
     .Ia.Rd <- .PA.Ia.Rd
   } else {
@@ -801,6 +802,7 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
   lnames  <- locNames(gid)
   np      <- choose(N, 2)
   nploci  <- choose(numLoci, 2)
+  quiet   <- should_poppr_be_quiet(quiet)
   if (gid@type == "codom"){
     V <- pair_matrix(seploc(gid), numLoci, np)
   } else { # P/A case

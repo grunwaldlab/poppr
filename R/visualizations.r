@@ -1159,15 +1159,7 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   if (!inherits(gen, c("genind", "genclone", "loci"))){
     stop(paste(datacall[2], "must be a genind or loci object"))
   }
-  # Suppress the progress bar if it's not interactive or in knitr
-  # This is thanks to @jimhester
-  # https://github.com/hadley/dplyr/commit/c8beb59217620614b36cd82df0a7e89c556fb374
-  in_knitr    <- !is.null(getOption("knitr.in.progress"))
-  in_script   <- !interactive()
-  poppr_debug <- getOption("poppr.debug")
-  if ((in_script || in_knitr) && !poppr_debug){
-    quiet <- TRUE
-  }
+  quiet <- should_poppr_be_quiet(quiet)
   if (inherits(gen, "loci")){
     genloc <- gen
     gen    <- pegas::loci2genind(gen)
