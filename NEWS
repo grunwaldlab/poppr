@@ -14,6 +14,11 @@ NEW FEATURES
 
 * There is now a `plot` parameter for the genotype curve to enable or suppress
   plotting.
+* Progress bars are now automatically suppressed when running non-interactively.
+  to turn them on when running non-interactively, use 
+  `options(poppr.debug = TRUE)`.
+* The progress bar for `ia()` and `poppr()` will now show estimated time. This
+  is from dplyr's `progress_estimated()`.
 
 MISC
 -----------
