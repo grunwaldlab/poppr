@@ -48,6 +48,7 @@
 #'   setNames terms update var dbinom printCoefmat
 #' @importFrom utils combn head read.table setTxtProgressBar tail txtProgressBar
 #'   write.table capture.output
+#' @importFrom dplyr progress_estimated
 NULL
 #==============================================================================#
 #' Oomycete root rot pathogen \emph{Aphanomyces euteiches} AFLP data
