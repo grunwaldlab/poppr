@@ -1,6 +1,14 @@
 poppr 2.2.1.99
 ===========
 
+NEW FUNCTIONS
+------------
+
+* The function `bootgen2genind()` will help users take advantage of 
+  bootstrapping distance functions from other packages that require genind 
+  objects. For details, see https://github.com/grunwaldlab/poppr/issues/112 and
+  https://github.com/grunwaldlab/poppr/issues/111
+
 NEW FEATURES
 ------------
 
