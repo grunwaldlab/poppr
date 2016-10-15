@@ -43,6 +43,13 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 .onAttach <- function(...) {
+  op <- options()
+  op.poppr <- list(
+    poppr.debug = FALSE # flag for verbosity
+  )
+  toset <- !(names(op.poppr) %in% names(op))
+  if(any(toset)) options(op.poppr[toset])
+  
   poppr_vers <- utils::packageVersion("poppr")
   if (length(unlist(poppr_vers)) > 3){
     appendix <- "\n\nThis version of poppr is under development.\nIf you find any bugs, please report them at https://github.com/grunwaldlab/poppr/issues"
