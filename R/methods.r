@@ -749,7 +749,7 @@ setMethod(
 #' data(nancycats)
 #' nan.bg  <- new("bootgen", nancycats[pop = 9])
 #' nan.bg
-#' nan.gid <- bootgen2genind(nan)
+#' nan.gid <- bootgen2genind(nan.bg)
 #' nan.gid
 #==============================================================================#
 as.genclone <- function(x, ..., mlg, mlgclass = TRUE){
