@@ -77,6 +77,8 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \item \code{\link{read.genalex}} (x) - Reads GenAlEx formatted csv files to a genind object
 \item \code{\link{genind2genalex}} (m) - Converts genind objects to GenAlEx formatted csv files
 \item \code{\link{genclone2genind}} (m) - Removes the @mlg slot from genclone objects
+\item \code{\link{genclone2genind}} (m) - Removes the @mlg slot from genclone objects
+\item \code{\link{bootgen2genind}} (x) - see \code{\link{aboot}} for details)
 }
 }
 
