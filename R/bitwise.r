@@ -326,6 +326,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
   } else {
     xpos <- seq(nLoc(x))
   }
+  quiet <- should_poppr_be_quiet(quiet)
   winmat  <- make_windows(maxp = max(xpos), minp = min(xpos), window = window)
   nwin    <- nrow(winmat)
   res_mat <- vector(mode = "numeric", length = nwin)
@@ -422,6 +423,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   stopifnot(is(x, "genlight"))
   nloc <- nLoc(x)
+  quiet <- should_poppr_be_quiet(quiet)
   res_mat <- vector(mode = "numeric", length = reps)
   if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(reps)){
