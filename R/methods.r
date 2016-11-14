@@ -77,8 +77,7 @@ setMethod(
     # Taking Names
     locnall         <- x@loc.n.all[j]
     allnames        <- x@all.names[j]
-    namevec         <- seq_along(allnames)
-    names(allnames) <- names(x@all.names)[namevec]
+    names(allnames) <- names(x@all.names)[seq_along(allnames)]
     names(locnall)  <- names(allnames)
     alllist         <- slot(x, "alllist")[j]
     indices         <- unlist(alllist)
@@ -93,7 +92,7 @@ setMethod(
     slot(x, "loc.n.all") <- locnall
     slot(x, "all.names") <- allnames
     slot(x, "alllist")   <- .Call("expand_indices", cumsum(locnall), 
-                                  length(j), PACKAGE = "poppr")
+                                  length(alllist), PACKAGE = "poppr")
     slot(x, "names")     <- slot(x, "names")[i]
     return(x)
   }
