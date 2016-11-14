@@ -40,6 +40,8 @@ BUG FIX
   https://github.com/grunwaldlab/poppr/issues/114 for details.
 * A plotting bug for `mlg.table()` was fixed so that the plots now show the
   maximum value.
+* Bugs with subsetting bootgen and bruvomat objects with no loci specified were 
+  fixed. See https://github.com/grunwaldlab/poppr/issues/118 for details.
 
 poppr 2.2.1
 ===========
