@@ -272,9 +272,15 @@ setMethod(
     if (missing(j)) j <- TRUE
     x@replen    <- x@replen[j]
     x@ind.names <- x@ind.names[i]
-    cols        <- rep(1:ncol(x), each = x@ploidy)
-    replacement <- vapply(j, function(ind) which(cols == ind), 1:x@ploidy)
-    x@mat       <- x@mat[i, as.vector(replacement), drop = FALSE]
+    cols        <- rep(seq(ncol(x)), each = x@ploidy)
+    if (length(j) == 1 && is.logical(j)){
+      replacement <- j
+    } else if (is.logical(j)){
+      replacement <- rep(j, each = x@ploidy)
+    } else {
+      replacement <- vapply(j, function(ind) which(cols == ind), 1:x@ploidy)
+    }
+    x@mat <- x@mat[i, as.vector(replacement), drop = FALSE]
     return(x)
   }
 )
