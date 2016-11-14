@@ -77,7 +77,8 @@ setMethod(
     # Taking Names
     locnall         <- x@loc.n.all[j]
     allnames        <- x@all.names[j]
-    names(allnames) <- names(x@all.names)[1:length(j)]
+    namevec         <- seq_along(allnames)
+    names(allnames) <- names(x@all.names)[namevec]
     names(locnall)  <- names(allnames)
     alllist         <- slot(x, "alllist")[j]
     indices         <- unlist(alllist)
