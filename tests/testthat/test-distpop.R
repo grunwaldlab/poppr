@@ -18,7 +18,7 @@ test_that("dist.genpop matches distance", {
 test_that("aboot works with diss.dist", {
   data(nancycats, package = "adegenet")
   nan1 <- popsub(nancycats, 9)
-  ab <- aboot(nan1, dist = diss.dist, sample = 2, quiet = TRUE, showtree = FALSE)
+  expect_warning(ab <- aboot(nan1, dist = diss.dist, sample = 2, quiet = TRUE, showtree = FALSE))
   expect_equal(class(ab), "phylo")
 })
 
