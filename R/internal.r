@@ -2942,7 +2942,6 @@ handle_pops_index <- function(pops, gid){
 #' @return TRUE or FALSE
 #' @noRd
 #'
-#' @examples
 should_poppr_be_quiet <- function(quiet){
   # Suppress the noise if it's not interactive or in knitr
   # This is thanks to @jimhester
