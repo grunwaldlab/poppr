@@ -31,6 +31,8 @@ MISC
 * The "show" method for genclone objects now delimits populations and strata
   by a comma, avoiding confusion with multi-word population names. Thanks to
   @knausb for the fix in https://github.com/grunwaldlab/poppr/pull/116.  
+* Documentation for `poppr.amova` now contains a note about significance testing
+  with the ade4 function `randtest.amova`.
 
 BUG FIX
 -----------

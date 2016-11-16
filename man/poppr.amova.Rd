@@ -155,6 +155,13 @@ The poppr implementation of AMOVA is a very detailed wrapper for the
   while clone correction is implemented for both methods, filtering is only
   implemented for the ade4 version.}
 }
+\note{
+The ade4 function \code{\link[ade4]{randtest.amova}} contains a slight 
+  bug as of version 1.7.4 which causes the wrong alternative hypothesis to be
+  applied on every 4th heirarchical level. Luckily, there is a way to fix it
+  by re-converting the results with the function
+  \code{\link[ade4]{as.krandtest}}. See examples for details.
+}
 \examples{
 data(Aeut)
 strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
@@ -186,6 +193,15 @@ data(monpop)
 splitStrata(monpop) <- ~Tree/Year/Symptom
 poppr.amova(monpop, ~Symptom/Year) # gets a warning of zero distances
 poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = 0.1) # no warning
+
+# Correcting incorrect alternate hypotheses with >2 heirarchical levels
+# 
+mon.amova <- poppr.amova(monpop, ~Symptom/Year/Tree)
+mon.test  <- randtest(mon.amova)
+mon.test # Note alter is less, greater, greater, less
+alt <- c("less", "greater", "greater", "greater") # extend this to the number of levels
+with(mon.test, as.krandtest(sim, obs, alter = alt, call = call, names = names))
+
 }
 }
 \references{
