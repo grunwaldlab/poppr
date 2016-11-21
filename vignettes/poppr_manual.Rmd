@@ -178,7 +178,7 @@ Installation {#intro:install}
 ------------
 
 This manual assumes you have installed R. If you have not, please refer
-to The CRAN home page at <http://cran.r-project.org/>. We also recommend
+to The CRAN home page at <https://cran.r-project.org/>. We also recommend
 the Rstudio IDE (<http://www.rstudio.com/>), which allows the user to
 view the R console, environment, scripts, and plots in a single window.
 
@@ -193,7 +193,7 @@ install.packages("poppr", repos = "http://cloud.r-project.org/")
 
 All dependencies will also be installed. In the unfortunate case this does not 
 work, please consult
-<http://cran.r-project.org/doc/manuals/R-admin.html#Installing-packages>.
+<https://cran.r-project.org/doc/manuals/R-admin.html#Installing-packages>.
 
 ### From GitHub
 
@@ -206,7 +206,7 @@ are on Windows or OSX, you might need to download some special tools:
 
 Windows
 
-:   Download Rtools: <http://cran.r-project.org/bin/windows/Rtools/>
+:   Download Rtools: <https://cran.r-project.org/bin/windows/Rtools/>
 
 OSX
 
