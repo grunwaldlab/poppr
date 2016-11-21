@@ -1,25 +1,16 @@
 ## Test environments
 
-* local OS X install, R 3.3.1
-* ubuntu 12.04 (on travis-ci), devel [2016-08-28 r71162] and R 3.3.1
-* win-builder (devel [2016-08-27 r71160])
+* local OS X install, R 3.3.2
+* ubuntu 12.04 (on travis-ci), devel [2016-11-14 r71659] and R 3.3.1
+* R-hub windows, R 3.3.2
+* R-hub with valgrind, R 3.3.1
+* R-hub with ASAN/UBSAN, R devel [2016-09-18 r71304]
+* R-hub fedora, R devel [2016-10-30 r71610]
+
 
 ## R CMD check results
 
-### NOTE on win-builder devel:
-
-```
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Zhian N. Kamvar <kamvarz@science.oregonstate.edu>'
-
-Found the following (possibly) invalid URLs:
-  URL: https://developer.apple.com/xcode
-    From: README.md
-    Status: 401
-    Message: Unauthorized
-```
-
-This is indeed a valid URL
+Windows gave threw a warning due to MiKTeX errors.
 
 ## valgrind
 
