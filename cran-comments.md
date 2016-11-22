@@ -1,3 +1,25 @@
+## Resubmission
+
+* Fixed CRAN URLs to use https. 
+* Current problems:
+
+> URL: https://developer.apple.com/xcode
+>   From: inst/doc/poppr_manual.html
+>         README.md
+>   Status: Error
+>   Message: libcurl error code 35
+>   	Unknown SSL protocol error in connection to developer.apple.com:443
+> URL: https://doi.org/10.1093/bioinformatics/btn129
+>   From: inst/doc/poppr_manual.html
+>   Status: 400
+>   Message: Bad Request
+> URL: https://doi.org/10.1093/bioinformatics/bts460
+>   From: inst/doc/poppr_manual.html
+>   Status: 400
+>   Message: Bad Request
+
+These are valid URLs. I have no control over their behavior.
+
 ## Test environments
 
 * local OS X install, R 3.3.2
@@ -6,7 +28,6 @@
 * R-hub with valgrind, R 3.3.1
 * R-hub with ASAN/UBSAN, R devel [2016-09-18 r71304]
 * R-hub fedora, R devel [2016-10-30 r71610]
-
 
 ## R CMD check results
 
