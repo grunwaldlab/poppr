@@ -12,7 +12,7 @@ mlg(gid, quiet = FALSE)
 
 mlg.table(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
   mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE,
-  quiet = FALSE)
+  color = FALSE, quiet = FALSE)
 
 mlg.vector(gid, reset = FALSE)
 
@@ -49,6 +49,9 @@ population.}
 
 \item{total}{\code{logical} If \code{TRUE}, a row containing the sum of all 
 represented MLGs is appended to the matrix produced by mlg.table.}
+
+\item{color}{an option to display a single barchart for mlg.table, colored by
+population.}
 
 \item{reset}{logical. For genclone objects, the MLGs are defined by the input
 data, but they do not change if more or less information is added (i.e.

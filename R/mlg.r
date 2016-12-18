@@ -207,6 +207,9 @@ mlg <- function(gid, quiet=FALSE){
 }
 #==============================================================================#
 #' @rdname mlg 
+#' 
+#' @param color an option to display a single barchart for mlg.table, colored by
+#'   population.
 #'
 #' @note The resulting matrix of \code{mlg.table} can be used for analysis with 
 #' the \code{\link{vegan}} package.
@@ -215,7 +218,7 @@ mlg <- function(gid, quiet=FALSE){
 #==============================================================================#
 mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, 
                       mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE, 
-                      quiet = FALSE){  
+                      color = FALSE, quiet = FALSE){  
   if (!is.genind(gid) & !is(gid, "snpclone")){
     stop("This function requires a genind object.")
   }
@@ -242,7 +245,7 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
     mlgtab <- mlgtab[popNames(gid), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
-  if (total == TRUE && nrow(mlgtab) > 1 ){
+  if (total == TRUE && nrow(mlgtab) > 1 && !color){
     mlgtab <- rbind(mlgtab, colSums(mlgtab))
     rownames(mlgtab)[nrow(mlgtab)] <- "Total"
   }
@@ -256,14 +259,14 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
     # If there is a population structure
     if(!is.null(popNames(gid))){
       popnames <- popNames(gid)
-      if(total & nrow(mlgtab) > 1){
+      if(total & nrow(mlgtab) > 1 && !color){
         popnames[length(popnames) + 1] <- "Total"
       }
       # Apply this over all populations. 
       # invisible(lapply(popnames, print_mlg_barplot, mlgtab, quiet=quiet))
       # } else {
     }
-    print(mlg_barplot(mlgtab) + 
+    print(mlg_barplot(mlgtab, color = color) + 
             myTheme + 
             labs(title = paste("Data:", the_data, "\nN =",
                                sum(mlgtab), "MLG =", ncol(mlgtab))))
