@@ -42,11 +42,26 @@ test_that("info_table plots ploidy for diploids", {
 
 test_that("mlg.table produces barplots", {
 	skip_on_cran()
-	expect_is(mlg.table(Pinf), "matrix")
-	pt <- ggplot2::last_plot()
+  pm <- mlg.table(Pinf)
+  pt <- ggplot2::last_plot()
+	expect_is(pm, "matrix")
+	expect_identical(pm, mlg.table(Pinf, color = TRUE))
+	ptc <- ggplot2::last_plot()
 	expect_is(pt, "ggplot")
-	expect_equal(names(pt$data), c("Population", "MLG", "count", "fac"))
+	expect_is(ptc, "ggplot")
+	expect_equal(names(pt$data), c("Population", "MLG", "count", "order"))
+	expect_equal(names(ptc$data), c("MLG", "Population", "count", "order"))
 	expect_output(print(pt$layers), "geom_bar")
+})
+
+test_that("mlg.table will plot color plot without total", {
+  skip_on_cran()
+  invisible(mlg.table(Pinf, total = TRUE, color = TRUE))
+  pttc <- ggplot2::last_plot()
+  p    <- unique(pttc$data$Population) %>% 
+    as.character() %>% 
+    sort()
+  expect_equal(p, sort(popNames(Pinf)))
 })
 
 test_that("genotype_curve produces boxplots", {
