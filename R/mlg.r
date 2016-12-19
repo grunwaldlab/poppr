@@ -119,7 +119,7 @@
 #' avec 
 #' 
 #' # Get a table
-#' atab <- mlg.table(Aeut, plot = FALSE)
+#' atab <- mlg.table(Aeut, color = TRUE)
 #' atab
 #' 
 #' # See where multilocus genotypes cross populations
@@ -234,7 +234,7 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
   mlgtab <- mlg.matrix(gid)
   if (!is.null(mlgsub)){
     if (is.numeric(mlgsub)){
-      mlgsub <- paste("MLG", mlgsub, sep = ".")      
+      mlgsub <- paste("MLG", mlgsub, sep = ".")
     }
     mlgtab <- mlgtab[, mlgsub, drop = FALSE]
     mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), , drop = FALSE]
@@ -252,19 +252,12 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
 
   # Dealing with the visualizations.
   if (plot){
-#     color_table <- NULL
-#     if (!is.null(color_by)){
-#       color_table <- mlg.matrix(setPop(gid, color_by))
-#     }
     # If there is a population structure
     if(!is.null(popNames(gid))){
       popnames <- popNames(gid)
       if(total & nrow(mlgtab) > 1){
         popnames[length(popnames) + 1] <- "Total"
       }
-      # Apply this over all populations. 
-      # invisible(lapply(popnames, print_mlg_barplot, mlgtab, quiet=quiet))
-      # } else {
     }
     if (total && nrow(mlgtab) > 1 && color){
       ggmlg <- mlg_barplot(mlgtab[-nrow(mlgtab), , drop = FALSE], color = color)
@@ -275,7 +268,6 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
             myTheme + 
             labs(title = paste("Data:", the_data, "\nN =",
                                sum(mlgtab), "MLG =", ncol(mlgtab))))
-    # }
   }
   mlgtab <- mlgtab[, which(colSums(mlgtab) > 0), drop = FALSE]
   return(mlgtab)

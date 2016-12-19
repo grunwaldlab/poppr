@@ -111,7 +111,7 @@ avec <- mlg.vector(Aeut)
 avec 
 
 # Get a table
-atab <- mlg.table(Aeut, plot = FALSE)
+atab <- mlg.table(Aeut, color = TRUE)
 atab
 
 # See where multilocus genotypes cross populations

@@ -1,8 +1,8 @@
 # Poppr version 2
 
 In development:    
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=jackknife-ia)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=jackknife-ia)](https://coveralls.io/r/grunwaldlab/poppr?branch=jackknife-ia)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
 
 On CRAN:    
 [![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
