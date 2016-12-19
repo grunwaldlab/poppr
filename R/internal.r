@@ -1900,51 +1900,55 @@ test_zeroes <- function(x){
 # Private functions utilizing this function:
 # # print_mlg_barplot
 #==============================================================================#
-#' @importFrom dplyr %>% arrange_ group_by_ ungroup distinct
+#' @importFrom dplyr %>% arrange_ group_by_ ungroup
 mlg_barplot <- function(mlgt, color = FALSE){
   names(dimnames(mlgt)) <- c("Population", "MLG")
   mlgt.df <- reshape2::melt(mlgt, value.name = "count")
-  mlgt.df <- mlgt.df[mlgt.df$count > 0, ] #%>% 
-    # arrange_(~desc(count)) %>%
-    # mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG))))
+  
+  # Ensure that the population is a factor
+  mlgt.df <- mlgt.df %>%
+    dplyr::filter_("count > 0") %>% 
+    dplyr::mutate_(.dots = list(Population = ~factor(Population, unique(Population))))
+  
   if (color){
+    # summarize with the total counts, and merge with original data
     mlgt.df <- mlgt.df %>% 
-      group_by_("MLG") %>%
-      summarize_(.dots = list(n = ~sum(count))) %>%
-      full_join(mlgt.df, by = "MLG") %>%
-      arrange_(~desc(n)) %>%
-      ungroup() %>%
-      mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG)))) %>%
-      filter_("count > 0")
+      dplyr::group_by_("MLG") %>%
+      dplyr::summarize_(.dots = list(n = ~sum(count))) %>%
+      dplyr::full_join(mlgt.df, by = "MLG") %>%
+      dplyr::arrange_(~dplyr::desc(n)) %>%
+      dplyr::select_("-n") %>%
+      dplyr::mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG))))
   } else {
     mlgt.df <- mlgt.df %>%
-      group_by_("Population") %>%
-      do_(~arrange(., desc(count))) %>%
-      ungroup() %>% 
-      mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG))))
+      dplyr::group_by_("Population") %>%
+      dplyr::do_(~dplyr::arrange(., dplyr::desc(count)))
   }
-  # # Organize the data frame by count in descending order.
-  # mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
-  #   dplyr::arrange_("count")
-  # mlgt.df <- mlgt.df %>% dplyr::ungroup() %>% unique()
-  # mlgt.df$fac <- seq(nrow(mlgt.df), 1)
-  # mlgt.df$fac <- factor(mlgt.df$fac, rev(mlgt.df$fac))
+  mlgt.df <- mlgt.df %>%
+    dplyr::ungroup() %>%
+    unique() %>%
+    dplyr::filter_("count > 0") %>%
+    dplyr::mutate_(.dots = list(order = ~seq(nrow(.)))) %>%
+    dplyr::mutate_(.dots = list(order = ~factor(order, unique(order))))
 
-  # the_breaks <- pretty(mlgt.df$count)
-  # the_breaks <- the_breaks[the_breaks %% 1 == 0]
-  # plot it
+  the_breaks <- pretty(mlgt.df$count)
+  the_breaks <- the_breaks[the_breaks %% 1 == 0]
+  # Conditionals for plotting
+  x    <- if (color) "MLG" else "order"
   baes <- if (color) aes_string(fill = "Population") else aes_string()
-  the_plot <- ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
+  
+  
+  the_plot <- ggplot(mlgt.df, aes_string(x = x, y = "count")) + 
     geom_bar(baes, stat = "identity") + 
-    # scale_x_discrete(labels = mlgt.df$MLG, breaks = mlgt.df$fac) +
     theme(panel.grid.major.x = element_blank(), 
           panel.grid.minor.x = element_blank(),
           axis.text.x = element_text(size = 10, angle = 90, 
                                      hjust = 1, vjust = 1)) +
     xlab("MLG") + 
-    scale_y_continuous(expand = c(0, 0))
+    scale_y_continuous(expand = c(0, 0), breaks = the_breaks)
   if (!color){
     the_plot <- the_plot +
+      scale_x_discrete(labels = mlgt.df$MLG, breaks = mlgt.df$order) +
       facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE)
   }
   return(the_plot)
