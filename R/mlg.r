@@ -245,7 +245,7 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
     mlgtab <- mlgtab[popNames(gid), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
-  if (total == TRUE && nrow(mlgtab) > 1 && !color){
+  if (total == TRUE && nrow(mlgtab) > 1){
     mlgtab <- rbind(mlgtab, colSums(mlgtab))
     rownames(mlgtab)[nrow(mlgtab)] <- "Total"
   }
@@ -259,14 +259,19 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
     # If there is a population structure
     if(!is.null(popNames(gid))){
       popnames <- popNames(gid)
-      if(total & nrow(mlgtab) > 1 && !color){
+      if(total & nrow(mlgtab) > 1){
         popnames[length(popnames) + 1] <- "Total"
       }
       # Apply this over all populations. 
       # invisible(lapply(popnames, print_mlg_barplot, mlgtab, quiet=quiet))
       # } else {
     }
-    print(mlg_barplot(mlgtab, color = color) + 
+    if (total && nrow(mlgtab) > 1 && color){
+      ggmlg <- mlg_barplot(mlgtab[-nrow(mlgtab), , drop = FALSE], color = color)
+    } else {
+      ggmlg <- mlg_barplot(mlgtab, color = color)
+    }
+    print(ggmlg + 
             myTheme + 
             labs(title = paste("Data:", the_data, "\nN =",
                                sum(mlgtab), "MLG =", ncol(mlgtab))))
