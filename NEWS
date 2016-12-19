@@ -1,3 +1,20 @@
+poppr 2.3.0.99
+===========
+
+NEW FUNCTIONS
+-------------
+
+* `jack.ia()` will randomly jackknife your sample to a specified n (default
+  is the number of MLG), and calculate the index of association over 
+  multiple iterations, giving a distribution of possible values at a given
+  sample size.
+
+NEW FEATURES
+------------
+
+* The function `mlg.table()` gains a new "color" parameter. This will create
+  a single barplot with colors representing populations.
+
 poppr 2.3.0
 ===========
 
