@@ -285,6 +285,10 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #'   caution.
 #'   
 #' @param quiet if \code{FALSE}, a progress bar will be printed to the screen.
+#' 
+#' @param chromosome_buffer if \code{TRUE} (default), buffers will be placed 
+#'   between adjacent chromosomal positions to prevent windows from spanning two
+#'   chromosomes.
 #'   
 #' @return Index of association representing the samples in this genlight
 #'   object.
@@ -319,33 +323,72 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #' }
 #' 
 #==============================================================================#
-win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE){
+win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
+                   chromosome_buffer = TRUE){
   stopifnot(is(x, "genlight"))
-  if (!is.null(position(x))){
-    xpos <- position(x)
-  } else {
-    xpos <- seq(nLoc(x))
+  if (is.null(position(x))){
+    position(x) <- seq(nLoc(x))
   }
-  quiet <- should_poppr_be_quiet(quiet)
+  chromos <- !is.null(chromosome(x))
+  if (chromos){
+    CHROM <- chromosome(x)
+    x     <- adjust_position(x, chromosome_buffer, window)
+  } else {
+    if (any(duplicated(position(x)))){
+      msg <- paste("There are duplicate positions in the data without any",
+                   "chromosome structure. All positions must be unique.\n\n",
+                   "Please the function chromosome() to add chromosome",
+                   "coordinates or modify the positions.")
+      stop(msg, call. = FALSE)
+    }
+  }
+  xpos    <- position(x)
+  quiet   <- should_poppr_be_quiet(quiet)
   winmat  <- make_windows(maxp = max(xpos), minp = min(xpos), window = window)
   nwin    <- nrow(winmat)
   res_mat <- vector(mode = "numeric", length = nwin)
+  if (chromos) res_names <- vector(mode = "character", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(nwin)){
-    posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+    posns    <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+    last_pos <- posns[length(posns)]
     if (length(posns) < min.snps){
       res_mat[i] <- NA
     } else {
       res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
+    }
+    if (chromos && !is.na(last_pos) && length(last_pos) > 0){
+      res_names[i] <- CHROM[last_pos]
     }
     if (!quiet){
       setTxtProgressBar(progbar, i/nwin)
     }
   }
   if (!quiet) cat("\n")
+  if (chromos) names(res_mat) <- res_names
   return(res_mat)
 }
 
+
+adjust_position <- function(x, chromosome_buffer = TRUE, window){
+  xpos  <- position(x)
+  # Each chromosome has it's own position.
+  # In this case, get large round number for each chromosome break.
+  maxp <- 10^ceiling(log(max(xpos), 10))
+  # The buffer prevents the window from crossing into the next chromosome
+  buffer <- chromosome_buffer*window
+  if (length(unique(pmin(xpos))) < nLoc(x)){
+    lpos <- split(xpos, chromosome(x))
+    for (p in seq(lpos)){
+      # adding the large round number plus a buffer (if applicable). This will
+      # ensure that chromosomes don't overlap.
+      lpos[[p]] <- lpos[[p]] + (maxp*(p - 1)) + (buffer*(p - 1)) + 1
+    }
+    xpos <- unlist(lpos, use.names = FALSE)
+  }
+  position(x) <- xpos  
+  return(x)
+}
 #==============================================================================#
 #' Calculate random samples of the index of association for genlight objects.
 #' 
