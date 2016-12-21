@@ -14,6 +14,10 @@ NEW FEATURES
 
 * The function `mlg.table()` gains a new "color" parameter. This will create
   a single barplot with colors representing populations.
+* The function `win.ia()` will now take into consideration chromosomal
+  coordinates when constructing windows. It has additionally acquired a new
+  parameter `chromosome_buffer`, which allows the user to specify whether or not
+  the window should be limited to within chromosomes.
 
 poppr 2.3.0
 ===========
