@@ -18,6 +18,12 @@ NEW FEATURES
   coordinates when constructing windows. It has additionally acquired a new
   parameter `chromosome_buffer`, which allows the user to specify whether or not
   the window should be limited to within chromosomes.
+  
+NOTABLE CHANGES
+---------------
+
+* An error will be thrown when attempting to use `mlg.crosspop()` with an object
+  that has < 2 populations.
 
 poppr 2.3.0
 ===========

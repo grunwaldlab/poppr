@@ -376,9 +376,10 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
                          mlgsub = NULL,
                          indexreturn = FALSE, df = FALSE, quiet = FALSE){
 
-  if (length(sublist) == 1 & sublist[1] != "ALL" | is.null(pop(gid))){
-    cat("Multiple populations are needed for this analysis.\n")
-    return(0)
+  insufficient_subset <- length(sublist) == 1 && sublist[1] != "ALL"
+  insufficient_pop    <- is.null(pop(gid)) || nPop(gid) == 1
+  if (insufficient_subset | insufficient_pop){
+    stop("Multiple populations are needed for this analysis.\n")
   }
   visible <- "original"
   if (is.genclone(gid) | is(gid, "snpclone")){
@@ -421,8 +422,8 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
 
     mlgs <- colSums(ifelse(mlgtab == 0L, 0L, 1L)) > 1
     if (sum(mlgs) == 0){
-      cat("No multilocus genotypes were detected across populations\n")
-      return(0)
+      message("No multilocus genotypes were detected across populations\n")
+      return(NULL)
     }
   }
   if (indexreturn){
@@ -430,7 +431,7 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
       mlgout <- names(mlgs[mlgs])
     } else {
       mlgout <- unlist(strsplit(names(mlgs[mlgs]), "\\."))
-      mlgout <- as.numeric(mlgout[!mlgout %in% "MLG"])        
+      mlgout <- as.numeric(mlgout[!mlgout %in% "MLG"])
     }
     return(mlgout)
   }
