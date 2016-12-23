@@ -1917,12 +1917,14 @@ mlg_barplot <- function(mlgt, color = FALSE){
       dplyr::summarize_(.dots = list(n = ~sum(count))) %>%
       dplyr::full_join(mlgt.df, by = "MLG") %>%
       dplyr::arrange_(~dplyr::desc(n)) %>%
-      dplyr::select_("-n") %>%
       dplyr::mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG))))
+    the_breaks <- pretty(mlgt.df$n)
+    mlgt.df    <- dplyr::select_(mlgt.df, "-n")
   } else {
     mlgt.df <- mlgt.df %>%
       dplyr::group_by_("Population") %>%
       dplyr::do_(~dplyr::arrange(., dplyr::desc(count)))
+    the_breaks <- pretty(mlgt.df$count)
   }
   mlgt.df <- mlgt.df %>%
     dplyr::ungroup() %>%
@@ -1931,7 +1933,6 @@ mlg_barplot <- function(mlgt, color = FALSE){
     dplyr::mutate_(.dots = list(order = ~seq(nrow(.)))) %>%
     dplyr::mutate_(.dots = list(order = ~factor(order, unique(order))))
 
-  the_breaks <- pretty(mlgt.df$count)
   the_breaks <- the_breaks[the_breaks %% 1 == 0]
   # Conditionals for plotting
   x    <- if (color) "MLG" else "order"
