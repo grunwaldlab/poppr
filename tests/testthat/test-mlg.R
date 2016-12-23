@@ -7,6 +7,7 @@ data(nancycats, package = "adegenet")
 amlg <- mlg.vector(Aeut)
 pmlg <- mlg.vector(partial_clone)
 nmlg <- mlg.vector(nancycats)
+strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 aclone <- as.genclone(Aeut)
 atab   <- mlg.table(Aeut, plot = FALSE)
 ptab   <- mlg.table(partial_clone, plot = FALSE)
@@ -95,7 +96,21 @@ test_that("multilocus genotype matrix can utilize strata", {
   expect_equal(nrow(pcont), 2)
 })
 
+test_that("mlg.table can take a subset of sublist and blacklist", {
+  skip_on_cran()
+  nomex <- mlg.table(Pinf, strata = ~Country, sublist = 1:4, blacklist = 3, plot = FALSE)
+  expect_equal(nrow(nomex), 3)
+  expect_true(!"Mexico" %in% rownames(nomex))
+  expect_true(all(rownames(nomex) %in% popNames(setPop(Pinf, ~Country))))
+})
+
+test_that("the parameter bar is deprecated in mlg.table", {
+  skip_on_cran()
+  expect_warning(mlg.table(partial_clone, bar = FALSE))
+})
+
 context("mll and nmll function tests")
+
 test_that("mll and nmll works for genind objects", {
   expect_warning(atest <- mll(Aeut, "original"))
   nAeut <- nmll(Aeut)
@@ -167,6 +182,42 @@ test_that("mlg.crosspop can take sublist and blacklist", {
   expect_output(show(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1")), "MLG.13: \\(2 inds\\) 8 9")
   expect_equivalent(mlg.crosspop(Athena, sublist = 1:10, blacklist = "1", quiet = TRUE), expectation)
 })
+
+test_that("mlg.crosspop can return a data frame", {
+  skip_on_cran()
+  df <- mlg.crosspop(aclone, df = TRUE, quiet = TRUE)
+  expect_is(df, "data.frame")
+  expect_equal(nrow(df), 2L)
+  expect_equal(ncol(df), 3L)
+})
+
+test_that("mlg.crosspop works with custom mlgs", {
+  skip_on_cran()
+  pc <- as.genclone(partial_clone)
+  mll.custom(pc) <- LETTERS[mll(pc)]
+  rosebud <- mlg.crosspop(pc, mlgsub = c("R", "O", "S", "E", "B", "U", "D"), quiet = TRUE)
+  expect_is(rosebud, "list")
+  expect_equal(length(rosebud), nchar("rosebud"))
+})
+
+test_that("mlg.crosspop will throw an error when no populations are present", {
+  skip_on_cran()
+  expect_error(n1 <- mlg.crosspop(Aeut[pop = 1]))
+  expect_error(n2 <- mlg.crosspop(Aeut, sublist = 1))
+})
+
+test_that("mlg.crosspop will send a message and return NULL if no cross-population MLGs are detected", {
+  skip_on_cran()
+  expect_message(n <- mlg.crosspop(nancycats))
+  expect_null(n)
+})
+
+test_that("mlg.crosspop will handle strata", {
+  skip_on_cran()
+  sp <- mlg.crosspop(aclone, strata = ~Subpop, quiet = TRUE)
+  expect_equal(length(sp), 17L)
+})
+
 
 context("mlg.id tests")
 
@@ -359,4 +410,17 @@ test_that("multilocus genotype filtering functions correctly", {
                mlg.filter(partial_clone, 0.3, missing="mean", distance="diss.dist"))
 })
 
+context("misc. mlg tests")
 
+test_that("mlg functions require genind/genlight objects", {
+  skip_on_cran()
+  expect_error(mlg(1:10))
+  expect_error(mlg.id(1:10))
+  expect_error(mlg.table(1:10))
+})
+
+test_that("a value of 1 is returned for a single row genind object", {
+  skip_on_cran()
+  expect_output(pcres.gi <- mlg(partial_clone[1]), "###")
+  expect_equal(pcres.gi, 1L)
+})

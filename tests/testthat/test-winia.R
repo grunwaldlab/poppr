@@ -1,5 +1,5 @@
 context("win.ia tests")
-
+options(poppr.debug = FALSE)
 set.seed(999)
 chrom_pos <- vapply(1:10, function(i) sort(sample(1e3, 100)), integer(100)) %>%
   as.vector()
