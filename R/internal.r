@@ -1901,16 +1901,17 @@ test_zeroes <- function(x){
 # # print_mlg_barplot
 #==============================================================================#
 #' @importFrom dplyr %>% arrange_ group_by_ ungroup
-mlg_barplot <- function(mlgt, color = FALSE){
+mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
   names(dimnames(mlgt)) <- c("Population", "MLG")
   mlgt.df <- reshape2::melt(mlgt, value.name = "count")
   
   # Ensure that the population is a factor
   mlgt.df <- mlgt.df %>%
-    dplyr::filter_("count > 0") %>% 
-    dplyr::mutate_(.dots = list(Population = ~factor(Population, unique(Population))))
+    dplyr::mutate_(.dots = list(Population = ~factor(Population, unique(Population)))) %>%
+    dplyr::filter_("count > 0")
+    
   
-  if (color){
+  if (color | background){
     # summarize with the total counts, and merge with original data
     mlgt.df <- mlgt.df %>% 
       dplyr::group_by_("MLG") %>%
@@ -1919,7 +1920,6 @@ mlg_barplot <- function(mlgt, color = FALSE){
       dplyr::arrange_(~dplyr::desc(n)) %>%
       dplyr::mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG))))
     the_breaks <- pretty(mlgt.df$n)
-    mlgt.df    <- dplyr::select_(mlgt.df, "-n")
   } else {
     mlgt.df <- mlgt.df %>%
       dplyr::group_by_("Population") %>%
@@ -1932,14 +1932,22 @@ mlg_barplot <- function(mlgt, color = FALSE){
     dplyr::filter_("count > 0") %>%
     dplyr::mutate_(.dots = list(order = ~seq(nrow(.)))) %>%
     dplyr::mutate_(.dots = list(order = ~factor(order, unique(order))))
-
+  if (color | background){
+    mlgt.df <- mlgt.df %>%
+      dplyr::select_(~Population, ~MLG, ~count, ~order, ~n)
+  }
   the_breaks <- the_breaks[the_breaks %% 1 == 0]
   # Conditionals for plotting
   x    <- if (color) "MLG" else "order"
   baes <- if (color) aes_string(fill = "Population") else aes_string()
   
   
-  the_plot <- ggplot(mlgt.df, aes_string(x = x, y = "count")) + 
+  the_plot <- ggplot(mlgt.df, aes_string(x = x, y = "count")) 
+  if (background){
+    the_plot <- the_plot + 
+      geom_bar(aes_string(y = "n"), color = "grey25", alpha = 0, stat = "identity")
+  }
+  the_plot <- the_plot + 
     geom_bar(baes, stat = "identity") + 
     theme(panel.grid.major.x = element_blank(), 
           panel.grid.minor.x = element_blank(),
@@ -1947,9 +1955,10 @@ mlg_barplot <- function(mlgt, color = FALSE){
                                      hjust = 1, vjust = 1)) +
     xlab("MLG") + 
     scale_y_continuous(expand = c(0, 0), breaks = the_breaks)
-  if (!color){
+  if (!color || (color && background)){
+    xbreak <- if (color) mlgt.df$MLG else mlgt.df$order
     the_plot <- the_plot +
-      scale_x_discrete(labels = mlgt.df$MLG, breaks = mlgt.df$order) +
+      scale_x_discrete(labels = mlgt.df$MLG, breaks = xbreak) +
       facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE)
   }
   return(the_plot)

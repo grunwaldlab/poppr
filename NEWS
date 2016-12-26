@@ -12,8 +12,11 @@ NEW FUNCTIONS
 NEW FEATURES
 ------------
 
-* The function `mlg.table()` gains a new "color" parameter. This will create
-  a single barplot with colors representing populations.
+* The function `mlg.table()` gains new parameters, "color" and "background". The
+  "color" parameter will create a single barplot with colors representing 
+  populations while the "background" parameter will create a background plot 
+  showing the abundance of MLGs across populations within the facets.
+
 * The function `win.ia()` will now take into consideration chromosomal
   coordinates when constructing windows. It has additionally acquired a new
   parameter `chromosome_buffer`, which allows the user to specify whether or not

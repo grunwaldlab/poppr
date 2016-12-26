@@ -131,6 +131,12 @@
 #' 
 #' \dontrun{
 #' 
+#' # For the mlg.table, you can also choose to display the number of MLGs across
+#' # populations in the background
+#' 
+#' mlg.table(Aeut, background = TRUE)
+#' mlg.table(Aeut, background = TRUE, color = TRUE)
+#' 
 #' # A simple example. 10 individuals, 5 genotypes.
 #' mat1 <- matrix(ncol=5, 25:1)
 #' mat1 <- rbind(mat1, mat1)
@@ -143,31 +149,31 @@
 #' # Now for a more complicated example.
 #' # Data set of 1903 samples of the H3N2 flu virus genotyped at 125 SNP loci.
 #' data(H3N2)
-#' mlg(H3N2, quiet=FALSE)
+#' mlg(H3N2, quiet = FALSE)
 #' 
 #' H.vec <- mlg.vector(H3N2)
 #' 
 #' # Changing the population vector to indicate the years of each epidemic.
 #' pop(H3N2) <- other(H3N2)$x$country
-#' H.tab <- mlg.table(H3N2, plot=FALSE, total=TRUE)
+#' H.tab <- mlg.table(H3N2, plot = FALSE, total = TRUE)
 #' 
 #' # Show which genotypes exist accross populations in the entire dataset.
-#' res <- mlg.crosspop(H3N2, quiet=FALSE)
+#' res <- mlg.crosspop(H3N2, quiet = FALSE)
 #' 
 #' # Let's say we want to visualize the multilocus genotype distribution for the
 #' # USA and Russia
-#' mlg.table(H3N2, sublist=c("USA", "Russia"), bar=TRUE)
+#' mlg.table(H3N2, sublist = c("USA", "Russia"), bar=TRUE)
 #' 
 #' # An exercise in subsetting the output of mlg.table and mlg.vector.
 #' # First, get the indices of each MLG duplicated across populations.
-#' inds <- mlg.crosspop(H3N2, quiet=FALSE, indexreturn=TRUE)
+#' inds <- mlg.crosspop(H3N2, quiet = FALSE, indexreturn = TRUE)
 #' 
 #' # Since the columns of the table from mlg.table are equal to the number of
 #' # MLGs, we can subset with just the columns.
 #' H.sub <- H.tab[, inds]
 #' 
 #' # We can also do the same by using the mlgsub flag.
-#' H.sub <- mlg.table(H3N2, mlgsub=inds)
+#' H.sub <- mlg.table(H3N2, mlgsub = inds)
 #' 
 #' # We can subset the original data set using the output of mlg.vector to
 #' # analyze only the MLGs that are duplicated across populations. 
@@ -209,7 +215,10 @@ mlg <- function(gid, quiet=FALSE){
 #' @rdname mlg 
 #' 
 #' @param color an option to display a single barchart for mlg.table, colored by
-#'   population.
+#'   population (note, this becomes facetted if \code{background = TRUE}).
+#'   
+#' @param background an option to display the the total number of MLGs across
+#'   populations per facet in the background of the plot.
 #'
 #' @note The resulting matrix of \code{mlg.table} can be used for analysis with 
 #' the \code{\link{vegan}} package.
@@ -218,7 +227,7 @@ mlg <- function(gid, quiet=FALSE){
 #==============================================================================#
 mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, 
                       mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE, 
-                      color = FALSE, quiet = FALSE){  
+                      color = FALSE, background = FALSE, quiet = FALSE){  
   if (!is.genind(gid) & !is(gid, "snpclone")){
     stop("This function requires a genind object.")
   }
@@ -259,10 +268,11 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
         popnames[length(popnames) + 1] <- "Total"
       }
     }
-    if (total && nrow(mlgtab) > 1 && color){
-      ggmlg <- mlg_barplot(mlgtab[-nrow(mlgtab), , drop = FALSE], color = color)
+    if (total && nrow(mlgtab) > 1 && (color | background)){
+      ggmlg <- mlg_barplot(mlgtab[-nrow(mlgtab), , drop = FALSE], 
+                           color = color, background = background)
     } else {
-      ggmlg <- mlg_barplot(mlgtab, color = color)
+      ggmlg <- mlg_barplot(mlgtab, color = color, background = background)
     }
     print(ggmlg + 
             myTheme + 

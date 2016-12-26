@@ -47,10 +47,21 @@ test_that("mlg.table produces barplots", {
 	expect_is(pm, "matrix")
 	expect_identical(pm, mlg.table(Pinf, color = TRUE))
 	ptc <- ggplot2::last_plot()
+	expect_identical(pm, mlg.table(Pinf, background = TRUE))
+	ptb <- ggplot2::last_plot()
 	expect_is(pt, "ggplot")
 	expect_is(ptc, "ggplot")
+	expect_is(ptb, "ggplot")
 	expect_equal(names(pt$data), c("Population", "MLG", "count", "order"))
-	expect_equal(names(ptc$data), c("MLG", "Population", "count", "order"))
+	expect_equal(names(ptc$data), c("Population", "MLG", "count", "order", "n"))
+	expect_equal(names(ptb$data), c("Population", "MLG", "count", "order", "n"))
+	
+	expect_identical(ptb$data, ptc$data)
+	expect_false(identical(ptb$data, pt$data))
+	
+	expect_identical(pt$mapping$x, ptb$mapping$x)
+	expect_false(identical(ptc$mapping$x, ptb$mapping$x))
+	
 	expect_output(print(pt$layers), "geom_bar")
 })
 
