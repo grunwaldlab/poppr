@@ -83,7 +83,7 @@ to cite them properly if they are used.
 \begin{figure}[b]   
   \centering
   \label{logo}   
-  \includegraphics{popprlogo} 
+  \includegraphics{jalapeno_logo} 
 \end{figure} 
 
 \newpage 
