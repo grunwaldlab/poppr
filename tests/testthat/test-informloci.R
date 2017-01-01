@@ -2,6 +2,7 @@ context("Informloci tests")
 
 data("Aeut", package = "poppr")
 genos <- c("A/A", "A/B", "A/C", "B/B", "B/C", "C/C")
+options(poppr.debug = FALSE)
 
 v  <- sample(genos, 100, replace = TRUE)
 w  <- c(rep(genos[2], 99), genos[3])           # found by cutoff

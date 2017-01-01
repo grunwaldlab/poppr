@@ -1,11 +1,19 @@
-context("plotting tests")
+# Setup -------------------------------------------------------------------
 
 data("nancycats", package = "adegenet")
 data("Pinf", package = "poppr")
+data("Pram", package = "poppr")
 nancy <- popsub(nancycats, c(1, 9))
 ggversion <- packageVersion("ggplot2")
 oldgg <- package_version("1.0.1")
 pcap <- function(x) print(capture.output(x))
+mll(Pram) <- "original"
+options(poppr.debug = FALSE)
+
+# info_table plots --------------------------------------------------------
+
+
+context("info_table plots")
 
 test_that("info_table plots work", {
 	skip_on_cran()
@@ -39,6 +47,11 @@ test_that("info_table plots ploidy for diploids", {
 	np          <- ggplot2::last_plot()
 	expect_equal(unique(np$data$Observed_Ploidy), c(NA, 2))
 })
+
+context("mlg.table plots")
+
+# mlg.table plots ---------------------------------------------------------
+
 
 test_that("mlg.table produces barplots", {
 	skip_on_cran()
@@ -74,6 +87,13 @@ test_that("mlg.table will plot color plot without total", {
     sort()
   expect_equal(p, sort(popNames(Pinf)))
 })
+
+
+context("genotype_curve plots")
+
+# genotype_curve plots ----------------------------------------------------
+
+
 
 test_that("genotype_curve produces boxplots", {
 	skip_on_cran()
@@ -113,6 +133,11 @@ test_that("genotype_curve will not plot if you tell it", {
   expect_output(pcap(genotype_curve(nancycats, maxloci = 1, quiet = TRUE, plot = FALSE)))
 })
 
+context("ia plots")
+
+# ia plots ----------------------------------------------------------------
+
+
 test_that("ia produces histograms", {
 	skip_on_cran()
 	res    <- ia(nancy, sample = 20, valuereturn = TRUE, quiet = TRUE)
@@ -148,6 +173,27 @@ test_that("ia produces histograms", {
 	expect_output(print(poplot$layers[[3]]), "geom_vline")
 })
 
+
+test_that("ia will still plot if the observed value is NA or NaN", {
+  skip_on_cran()
+  res <- ia(Pram[pop = 9], sample = 99)
+  expect_true(is.nan(res["rbarD"]))
+  expect_true(is.na(res["p.rD"]))
+})
+
+
+test_that("ia will know where to place the label depending on the mean", {
+  skip_on_cran()
+  set.seed(99)
+  res <- ia(Pram[pop = 7], sample = 99)
+  p <- ggplot2::last_plot()
+  prange <- range(p$data$value)
+  ptext  <- p$layers[[4]]$data$x
+  expect_true(ptext %in% prange)
+  expect_false(identical(res[["rbarD"]], ptext))
+})
+
+
 test_that("pair.ia produces a heatmap", {
 	skip_on_cran()
 	nan.pair <- pair.ia(nancy, quiet = TRUE)
@@ -177,6 +223,11 @@ test_that("pair.ia produces a heatmap", {
 	expect_output(print(pplot$layers[[1]]), "stat_identity")
 	expect_output(print(pplot$layers[[1]]), "position_identity")
 })
+
+context("diversity_ci plots")
+
+# diversity_ci plots ------------------------------------------------------
+
 
 test_that("diversity_ci produces boxplots and correct output", {
 	skip_on_cran()
@@ -209,6 +260,10 @@ test_that("diversity_ci produces boxplots for rarefaction", {
 	expect_output(print(ciplot$layers[[1]]), "geom_boxplot")
 	expect_output(print(ciplot$layers[[2]]), "geom_point")
 })
+
+context("greycurve plots")
+
+# greycurve plots ---------------------------------------------------------
 
 
 test_that("greycurve produces plots", {
