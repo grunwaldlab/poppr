@@ -8,7 +8,6 @@ ggversion <- packageVersion("ggplot2")
 oldgg <- package_version("1.0.1")
 pcap <- function(x) print(capture.output(x))
 mll(Pram) <- "original"
-options(poppr.debug = FALSE)
 
 # info_table plots --------------------------------------------------------
 
