@@ -34,6 +34,12 @@ BUG FIX
 * The error given when a genlight object is passed to `poppr()` now correctly
   identifies the substitute function as `diversity_stats()` and not diversity
   table (see https://github.com/grunwaldlab/poppr/issues/123). 
+  
+MISC
+----
+
+* The documentation for `bitwise.dist()` clarifies the role of the
+  `differences_only` flag (see https://github.com/grunwaldlab/poppr/issues/119).
 
 poppr 2.3.0
 ===========

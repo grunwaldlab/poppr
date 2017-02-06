@@ -45,7 +45,8 @@
 #' Calculate a dissimilarity distance matrix for SNP data.
 #' 
 #' This function performs the same task as \code{\link{diss.dist}}, calculating 
-#' the number of allelic differences between two samples.
+#' the fraction or number of different alleles between two genlight or snpclone
+#' objects.
 #' 
 #' @param x a \code{\link{genlight}}, \code{\link{genind}},
 #'   \code{\link{genclone}}, or \code{\link{snpclone}} object.
@@ -63,9 +64,10 @@
 #'   with anything. \code{FALSE} forces missing data to not match with any other
 #'   information.
 #'   
-#' @param differences_only \code{logical}. Determines whether the matrix should 
-#'   count differences or distances. For instance, 0 to 2 would be a distance of
-#'   2 but a difference of 1.
+#' @param differences_only \code{logical}. When \code{differences_only = TRUE},
+#'   the output will reflect the number of different loci. The default setting,
+#'   \code{differences_only = FALSE}, reflects the number of different alleles.
+#'   Note: this has no effect on haploid organisms since 1 locus = 1 allele.
 #'   
 #' @param threads The maximum number of parallel threads to be used within this 
 #'   function. A value of 0 (default) will attempt to use as many threads as 
@@ -78,6 +80,9 @@
 #' @details The distance calculated here is quite simple and goes by many names,
 #'   depending on its application. The most familiar name might be the Hamming 
 #'   distance, or the number of differences between two strings.
+#'   
+#' @note If the user supplies a \code{genind} or \code{genclone} object,
+#'   \code{\link{prevosti.dist}} will be used for calculation.
 #'   
 #' @return A dist object containing pairwise distances between samples.
 #'   
@@ -93,8 +98,13 @@
 #' set.seed(999)
 #' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
 #' x
+#' # Assess fraction of different alleles (finer measure, usually the most sensible)
 #' system.time(xd <- bitwise.dist(x))
 #' xd
+#' 
+#' # Assess fraction of different loci (coarse measure)
+#' system.time(xdt <- bitwise.dist(x, differences_only = TRUE))
+#' xdt
 #==============================================================================#
 bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE, 
                          differences_only = FALSE, threads = 0){
