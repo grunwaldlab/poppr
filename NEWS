@@ -27,6 +27,13 @@ NOTABLE CHANGES
 
 * An error will be thrown when attempting to use `mlg.crosspop()` with an object
   that has < 2 populations.
+  
+BUG FIX
+-------
+
+* The error given when a genlight object is passed to `poppr()` now correctly
+  identifies the substitute function as `diversity_stats()` and not diversity
+  table (see https://github.com/grunwaldlab/poppr/issues/123). 
 
 poppr 2.3.0
 ===========
