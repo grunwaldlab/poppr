@@ -252,8 +252,21 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   # Ensuring that all rows and columns have data
   data_rows <- apply(gena, 1, function(i) !all(is.na(i)))
   data_cols <- apply(gena, 2, function(i) !all(is.na(i)))
+  gcols <- colnames(gena)
+  dups  <- duplicated(gcols)
+  if (any(dups) && any(gcols[dups] != "")){
+    locations <- which(dups)
+    locations <- locations[gcols[dups] != ""]
+    colnames(gena) <- make.unique(gcols, sep = "_")
+    the_loci  <- gcols[dups & gcols != ""]
+    renamed   <- colnames(gena)[dups & gcols != ""]
+    msg <- "\n I found duplicate column names in your data.\n They are being renamed:\n"
+    renamed_data <- paste0("col ", locations, ": ", 
+                           the_loci, " -> ", renamed, collapse = "\n ")
+    msg <- paste(msg, renamed_data)
+    warning(msg, immediate. = TRUE)
+  }
   gena      <- gena[data_rows, data_cols]
-  
   #----------------------------------------------------------------------------#
   # Checking for extra information such as Regions or XY coordinates
   #----------------------------------------------------------------------------#

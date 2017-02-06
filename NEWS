@@ -16,7 +16,6 @@ NEW FEATURES
   "color" parameter will create a single barplot with colors representing 
   populations while the "background" parameter will create a background plot 
   showing the abundance of MLGs across populations within the facets.
-
 * The function `win.ia()` will now take into consideration chromosomal
   coordinates when constructing windows. It has additionally acquired a new
   parameter `chromosome_buffer`, which allows the user to specify whether or not
@@ -34,6 +33,9 @@ BUG FIX
 * The error given when a genlight object is passed to `poppr()` now correctly
   identifies the substitute function as `diversity_stats()` and not diversity
   table (see https://github.com/grunwaldlab/poppr/issues/123). 
+* GenAlEx files imported with duplicate loci will generate a warning telling the
+  user that the duplicated loci have been renamed (usually to <locus name>_1)
+  (see https://github.com/grunwaldlab/poppr/issues/122).
   
 MISC
 ----

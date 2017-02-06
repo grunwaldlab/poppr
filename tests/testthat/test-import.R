@@ -86,6 +86,19 @@ test_that("missing cells are converted to zeroes for polyploids", {
   expect_output(show(recode_polyploids(gen, newploidy = TRUE)), "triploid \\(1\\) and tetraploid \\(5\\)")
 })
 
+test_that("duplicate columns are flagged and fixed", {
+  skip_on_cran()
+  f <- "4,5,1,5,,,,,,
+,,,Admix,,,,,,
+Ind,Pop,RM127, ,RM22, ,RM22, ,RM127, 
+1,Admix,210,210,200,200,195,195,130,110
+2,Admix,230,230,185,185,200,200,110,120
+3,Admix,210,210,200,200,195,195,130,130
+4,Admix,230,230,200,200,195,195,130,130
+5,Admix,210,230,200,200,200,200,120,120"
+  expect_warning(read.genalex(textConnection(f)), "col 7: RM22 -> RM22_1")
+})
+
 context("Data export tests")
 
 test_that("genclone objects can be saved and restored", {
