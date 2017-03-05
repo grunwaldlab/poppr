@@ -24,4 +24,3 @@ Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia
   Andes." Proceedings of the National Academy of Sciences 111:8791-8796. doi:
   \href{http://dx.doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
 }
-

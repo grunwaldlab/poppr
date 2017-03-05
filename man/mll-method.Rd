@@ -4,17 +4,17 @@
 \name{mll}
 \alias{mll}
 \alias{mll,genclone-method}
+\alias{mll,snpclone-method}
 \alias{mll,genind-method}
 \alias{mll,genlight-method}
-\alias{mll,snpclone-method}
+\alias{nmll}
+\alias{nmll,genclone-method}
+\alias{nmll,snpclone-method}
+\alias{nmll,genind-method}
+\alias{nmll,genlight-method}
 \alias{mll<-}
 \alias{mll<-,genclone-method}
 \alias{mll<-,snpclone-method}
-\alias{nmll}
-\alias{nmll,genclone-method}
-\alias{nmll,genind-method}
-\alias{nmll,genlight-method}
-\alias{nmll,snpclone-method}
 \title{Access and manipulate multilocus lineages.}
 \usage{
 mll(x, type = NULL)
@@ -58,10 +58,9 @@ mll(pc)
 mll.levels(pc) <- LETTERS
 mll(pc)
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{mll.custom}} \code{\link{mlg.table}}
 }
-
+\author{
+Zhian N. Kamvar
+}

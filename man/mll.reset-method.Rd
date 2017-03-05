@@ -64,10 +64,9 @@ mll(Pinf.new, "contracted")
 }
 
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{mll}} \code{\link{mlg.table}} \code{\link{mll.custom}}
 }
-
+\author{
+Zhian N. Kamvar
+}

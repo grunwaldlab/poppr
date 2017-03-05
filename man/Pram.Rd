@@ -50,4 +50,3 @@ Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., &
   \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
   \href{http://dx.doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
 }
-

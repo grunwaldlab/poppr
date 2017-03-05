@@ -2,9 +2,9 @@
 % Please edit documentation in R/methods.r
 \docType{methods}
 \name{[,bootgen,ANY,ANY,ANY-method}
-\alias{$,bootgen-method}
 \alias{[,bootgen,ANY,ANY,ANY-method}
 \alias{dim,bootgen-method}
+\alias{$,bootgen-method}
 \alias{initialize,bootgen-method}
 \title{Methods used for the bootgen object.}
 \usage{
@@ -45,4 +45,3 @@ This is not designed for user interaction.
 Zhian N. Kamvar
 }
 \keyword{internal}
-

@@ -51,4 +51,3 @@ miclrg <- popsub(microbov, sublist=c("BlondeAquitaine", "Charolais"))
 \author{
 Zhian N. Kamvar
 }
-

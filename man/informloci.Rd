@@ -77,4 +77,3 @@ informloci(H3N2)
 \author{
 Zhian N. Kamvar
 }
-

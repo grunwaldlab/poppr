@@ -256,12 +256,11 @@ plot_poppr_msn(Pram,
                beforecut = TRUE)
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
 \code{\link[igraph]{delete.edges}} \code{\link{palette}}
 }
-
+\author{
+Zhian N. Kamvar
+}

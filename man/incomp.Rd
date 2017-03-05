@@ -28,4 +28,3 @@ incomp(nancycats[pop = c(1, 17)])
 # incomparable samples.
 incomp(nancycats[pop = c(1, 17), loc = c(1, 4)])
 }
-

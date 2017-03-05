@@ -2,8 +2,8 @@
 % Please edit documentation in R/internal.r
 \docType{data}
 \name{partial_clone}
-\alias{old_partial_clone}
 \alias{partial_clone}
+\alias{old_partial_clone}
 \title{Simulated data illustrating a Minimum Spanning Network based on Bruvo's
 Distance}
 \format{a \code{\link{genind}} object with 50 individuals, 10 loci, and four 
@@ -22,4 +22,3 @@ Bo Peng and Christopher Amos (2008) Forward-time simulations of
   nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11):
   1408-1409.
 }
-

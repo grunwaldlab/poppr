@@ -2,10 +2,10 @@
 % Please edit documentation in R/methods.r
 \docType{methods}
 \name{bootgen2genind}
-\alias{as.genclone}
-\alias{as.genclone,genind-method}
 \alias{bootgen2genind}
 \alias{bootgen2genind,bootgen-method}
+\alias{as.genclone}
+\alias{as.genclone,genind-method}
 \alias{genclone2genind}
 \alias{genclone2genind,genclone-method}
 \title{Switch between genind and genclone objects.}
@@ -49,12 +49,11 @@ nan.bg
 nan.gid <- bootgen2genind(nan.bg)
 nan.gid
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
   \code{\link{read.genalex}}
   \code{\link{aboot}}
 }
-
+\author{
+Zhian N. Kamvar
+}

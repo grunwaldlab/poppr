@@ -92,9 +92,6 @@ ggplot(res_tidy, aes(x = window, y = rd, color = chromosome)) +
 }
 
 }
-\author{
-Zhian N. Kamvar, Jonah C. Brooks
-}
 \seealso{
 \code{\link[adegenet]{genlight}},
    \code{\link{snpclone}},
@@ -102,4 +99,6 @@ Zhian N. Kamvar, Jonah C. Brooks
    \code{\link{ia}},
    \code{\link{bitwise.dist}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah C. Brooks
+}

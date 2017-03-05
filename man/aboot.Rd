@@ -174,4 +174,3 @@ aboot(Aeut.pop, tree = myFastME, sample = 1000)
   \code{\link{bootgen2genind}} \code{\linkS4class{bootgen}}
 }
 \keyword{bootstrap}
-

@@ -107,9 +107,6 @@ ggplot(Prdf, aes(y = allele, x = frequency)) +
 
 }
 }
-\author{
-Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
-}
 \references{
 Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
@@ -122,4 +119,6 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \seealso{
 \code{\link{rrmlg}}, \code{\link{pgen}}, \code{\link{psex}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
+}

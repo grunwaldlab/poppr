@@ -31,9 +31,6 @@ head(pmlg_rr)
 colSums(!apply(pmlg_rr, 2, duplicated))
 }
 }
-\author{
-Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
-}
 \references{
 Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
@@ -46,4 +43,6 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \seealso{
 \code{\link{rraf}}, \code{\link{pgen}}, \code{\link{psex}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
+}

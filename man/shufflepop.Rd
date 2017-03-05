@@ -59,11 +59,10 @@ summary(shufflepop(Zebu, method=3))
 summary(shufflepop(Zebu, method=4))
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Paul-Michael Agapow and Austin Burt. 2001. Indices of multilocus
   linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102
 }
-
+\author{
+Zhian N. Kamvar
+}

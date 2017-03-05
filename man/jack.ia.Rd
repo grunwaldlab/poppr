@@ -35,4 +35,3 @@ jack.ia(Pinf, reps = 99)
 \code{\link{ia}}, 
   \code{\link{pair.ia}}
 }
-

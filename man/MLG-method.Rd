@@ -2,15 +2,15 @@
 % Please edit documentation in R/aaaMLGmethods.R
 \docType{methods}
 \name{initialize,MLG-method}
-\alias{Math,MLG-method}
-\alias{Math2,MLG-method}
-\alias{Ops,MLG,ANY-method}
-\alias{Summary,MLG-method}
+\alias{initialize,MLG-method}
 \alias{[,MLG,ANY,ANY,ANY-method}
 \alias{[<-,MLG,ANY,ANY,ANY-method}
-\alias{initialize,MLG-method}
-\alias{length,MLG-method}
 \alias{show,MLG-method}
+\alias{length,MLG-method}
+\alias{Ops,MLG,ANY-method}
+\alias{Math,MLG-method}
+\alias{Math2,MLG-method}
+\alias{Summary,MLG-method}
 \title{Methods used for MLG objects}
 \usage{
 \S4method{initialize}{MLG}(.Object, mlg)
@@ -69,13 +69,12 @@ all MLG values or only the numeric.}
 \description{
 Default methods for accessing and subsetting MLG objects.
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\linkS4class{MLG}} \code{\linkS4class{genclone}}
   \code{\linkS4class{snpclone}} \code{\link{visible}} 
   \code{\link{unique,MLG-method}} \code{\link{levels,MLG-method}}
 }
+\author{
+Zhian N. Kamvar
+}
 \keyword{internal}
-

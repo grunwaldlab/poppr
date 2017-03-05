@@ -31,10 +31,9 @@ setwd(x$path)
 poppr.all(x$files)
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{poppr}}, \code{\link{getfile}}
 }
-
+\author{
+Zhian N. Kamvar
+}

@@ -87,13 +87,12 @@ system.time(diversity_boot(tab, 10000L, parallel = "multicore", ncpus = 4L))
 system.time(diversity_boot(tab, 10000L))
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{diversity_stats}} for basic statistic calculation, 
    \code{\link{diversity_ci}} for confidence intervals and plotting, and 
    \code{\link{poppr}}. For bootstrap sampling:
    \code{\link[stats]{rmultinom}} \code{\link[boot]{boot}}
 }
-
+\author{
+Zhian N. Kamvar
+}

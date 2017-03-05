@@ -20,12 +20,13 @@ allele.}
 
 \item{\code{names}}{a vector containing names of the observed samples.}
 }}
+
 \section{Extends}{
  
 Virtual Class \code{"\linkS4class{gen}"}.
 }
+
 \author{
 Zhian N. Kamvar
 }
 \keyword{internal}
-

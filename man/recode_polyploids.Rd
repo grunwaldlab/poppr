@@ -112,4 +112,3 @@ add.scale.bar(lcol = "red", length = 0.02)
 \author{
 Zhian N. Kamvar
 }
-

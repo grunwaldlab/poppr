@@ -17,4 +17,3 @@ Convert an old genclone object to a new genclone object
 \author{
 Zhian N. Kamvar
 }
-

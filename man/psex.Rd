@@ -137,9 +137,6 @@ rownames(res) <- 1:3
 res # Compare to the first three rows of Table 2 in Parks & Werth, 1993
 }
 }
-\author{
-Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
-}
 \references{
 Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007. 
 Standardizing methods to address clonality in population studies. 
@@ -153,4 +150,6 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}},
 \code{\link[=rare_allele_correction]{correcting rare alleles}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
+}

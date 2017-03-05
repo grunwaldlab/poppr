@@ -69,6 +69,7 @@ PDF or PNG image.
 }
 }
 }
+
 \examples{
 \dontrun{
 
@@ -110,12 +111,11 @@ myDist <- function(x, d = mondist){
 imsn() 
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{plot_poppr_msn}} \code{\link{diss.dist}}
   \code{\link{bruvo.dist}} \code{\link{bruvo.msn}} \code{\link{poppr.msn}}
   \code{\link{nei.dist}} \code{\link{popsub}} \code{\link{missingno}}
 }
-
+\author{
+Zhian N. Kamvar
+}

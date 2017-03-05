@@ -2,8 +2,8 @@
 % Please edit documentation in R/aaaMLGmethods.R
 \docType{methods}
 \name{unique,MLG-method}
-\alias{duplicated,MLG-method}
 \alias{unique,MLG-method}
+\alias{duplicated,MLG-method}
 \title{Unique and Duplicated implementations for MLG objects}
 \usage{
 \S4method{unique}{MLG}(x, incomparables = FALSE, ...)
@@ -24,4 +24,3 @@ internal use
 \code{\link{initialize,MLG-method}} \code{\link{levels,MLG-method}}
 }
 \keyword{internal}
-

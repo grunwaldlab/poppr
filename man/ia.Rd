@@ -216,9 +216,6 @@ plot_grid(plotlist = plotlist, labels = paste("Tree", popNames(monpop)))
 
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Paul-Michael Agapow and Austin Burt. Indices of multilocus 
   linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102, 
@@ -235,4 +232,6 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
   \code{\link{import2genind}}, \code{\link{read.genalex}}, 
   \code{\link{clonecorrect}}, \code{\link{win.ia}}, \code{\link{samp.ia}}
 }
-
+\author{
+Zhian N. Kamvar
+}

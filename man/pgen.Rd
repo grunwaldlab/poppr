@@ -98,9 +98,6 @@ head(pgen(Pram, log = FALSE, d = "rrmlg", mul = 1/2)) # compare with the output 
 head(pgen(Pram, log = FALSE, e = 1/100))
 }
 }
-\author{
-Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
-}
 \references{
 Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
@@ -114,4 +111,6 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
 \code{\link[=rare_allele_correction]{correcting rare alleles}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
+}
