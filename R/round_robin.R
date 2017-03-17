@@ -663,6 +663,12 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     ipgen      <- which(!duplicated(mlls))
     ipgen      <- ipgen[order(unique(mlls))]
     upgen      <- xpgen[ipgen]
+    # Better idea:
+    # 
+    # Make a data frame that contains three columns:
+    #  mlg   pgen  sample_indices
+    # <int>  <dbl> <list>
+    # This way, we don't have to worry about keeping track of sorting
     original_order <- seq(nInd(gid))[order(mlls)] # this may not work
     # mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
     # # Loop over each sample
