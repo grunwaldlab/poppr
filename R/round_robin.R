@@ -654,16 +654,32 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     # have been calculated using population-level frequencies, I'm not clone
     # correcting here, which results in a lot of redundant computations. I will
     # come up with a more clever way to handle this later.
+    # not sum(dbinom(seq(n_samples_in_mlg), n_samples_in_mlg, pgen))
+    # 
+    # dbinom(seq(n_samples_in_mlg) - 1, n_samples, pgen)
     mlls       <- mll(gid, "original")
     mll_counts <- table(mlls)
-    mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
-    # Loop over each sample
-    pSex <- vapply(seq(nInd(gid)), function(i){
-      trials <- seq(mll_counts[i]) # number of samples in the MLG
-      pgeni  <- xpgen[i]           # pgen for that MLG
-      dens   <- stats::dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
-      sum(dens, na.rm = TRUE) # return the sum probability.
-    }, numeric(1))
+    # gather pgen indices
+    ipgen      <- which(!duplicated(mlls))
+    ipgen      <- ipgen[order(unique(mlls))]
+    upgen      <- xpgen[ipgen]
+    original_order <- seq(nInd(gid))[order(mlls)] # this may not work
+    # mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
+    # # Loop over each sample
+    # pSex <- vapply(seq(nInd(gid)), function(i){
+    #   trials <- seq(mll_counts[i]) # number of samples in the MLG
+    #   pgeni  <- xpgen[i]           # pgen for that MLG
+    #   dens   <- stats::dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
+    #   sum(dens, na.rm = TRUE) # return the sum probability.
+    # }, numeric(1))
+    pSex <- lapply(seq(mll_counts), make_psex, mll_counts, upgen, nInd(Pram))
+    pSex <- unlist(pSex, use.names = TRUE)[original_order]
     return(pSex)
   }
+}
+
+make_psex <- function(i, mll_table, pgens, n_samples){
+  n_encounters <- seq(mll_table[i]) - 1
+  p_genotype   <- pgens[i]
+  dbinom(n_encounters, n_samples, p_genotype)
 }
