@@ -622,7 +622,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #' }
 #==============================================================================#
 psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL, 
-                 method = c("single", "multiple"), ...){
+                 method = c("single", "multiple"), new = TRUE, ...){
   stopifnot(is.genind(gid))
   if (!is.null(pop)){
     if (!is.language(pop)){
@@ -659,33 +659,33 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     # dbinom(seq(n_samples_in_mlg) - 1, n_samples, pgen)
     mlls       <- mll(gid, "original")
     mll_counts <- table(mlls)
-    # gather pgen indices
-    ipgen      <- which(!duplicated(mlls))
-    ipgen      <- ipgen[order(unique(mlls))]
-    upgen      <- xpgen[ipgen]
-    # Better idea:
-    # 
-    # Make a data frame that contains three columns:
-    #  mlg   pgen  sample_indices
-    # <int>  <dbl> <list>
-    # This way, we don't have to worry about keeping track of sorting
-    original_order <- seq(nInd(gid))[order(mlls)] # this may not work
-    # mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
-    # # Loop over each sample
-    # pSex <- vapply(seq(nInd(gid)), function(i){
-    #   trials <- seq(mll_counts[i]) # number of samples in the MLG
-    #   pgeni  <- xpgen[i]           # pgen for that MLG
-    #   dens   <- stats::dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
-    #   sum(dens, na.rm = TRUE) # return the sum probability.
-    # }, numeric(1))
-    pSex <- lapply(seq(mll_counts), make_psex, mll_counts, upgen, nInd(Pram))
-    pSex <- unlist(pSex, use.names = TRUE)[original_order]
+    if (new){
+      # gather pgen indices
+      ipgen          <- which(!duplicated(mlls))
+      ipgen          <- ipgen[order(unique(mlls))]
+      upgen          <- xpgen[ipgen]
+      sample_ids     <- mlg.id(gid)
+      original_order <- unlist(split(seq(nInd(gid)), mlls), use.names = FALSE)
+      pSex           <- mapply(make_psex, mll_counts, upgen, sample_ids, nInd(gid), SIMPLIFY = FALSE)
+      names(pSex)    <- NULL
+      pSex           <- unlist(pSex)[indNames(gid)]
+    } else {
+      mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
+      # Loop over each sample
+      pSex <- vapply(seq(nInd(gid)), function(i){
+        trials <- seq(mll_counts[i]) # number of samples in the MLG
+        pgeni  <- xpgen[i]           # pgen for that MLG
+        dens   <- stats::dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
+        sum(dens, na.rm = TRUE) # return the sum probability.
+      }, numeric(1))
+    }
     return(pSex)
   }
 }
 
-make_psex <- function(i, mll_table, pgens, n_samples){
-  n_encounters <- seq(mll_table[i]) - 1
-  p_genotype   <- pgens[i]
-  dbinom(n_encounters, n_samples, p_genotype)
+make_psex <- function(n_encounters, p_genotype, sample_ids, n_samples){
+  encounters <- seq(n_encounters) - 1
+  out <- dbinom(encounters, n_samples, p_genotype)
+  names(out) <- sample_ids
+  return(out)
 }
