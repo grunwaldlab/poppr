@@ -58,7 +58,7 @@ Psex is the probability of encountering a given genotype more than
   is used where the sum of the binomial density is taken:
   
   \deqn{p_{sex} = \sum_{i = 1}^N {N \choose i} \left(p_{gen}\right)^i\left(1
-  - p_{gen}\right)^{N - i}}{psex = sum(dbinom(1:N, N, pgen))}
+  - p_{gen}\right)^{N - i}}{psex = dbinom(encounter, N, pgen)}
   
   where \emph{N} is the number of samples with the same genotype, \emph{i} is
   the ith sample, and \emph{pgen} is the value of pgen for that genotype.
