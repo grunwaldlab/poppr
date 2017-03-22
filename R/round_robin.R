@@ -206,11 +206,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
   RES     <- c("list", "vector", "data.frame")
   res     <- match.arg(res, RES)
   if (!is.null(pop)){
-    if (!is.language(pop)){
-      pop(gid) <- pop
-    } else {
-      setPop(gid) <- pop
-    }
+    gid    <- set_pop_from_strata_or_vector(gid, pop)
     by_pop <- TRUE
   }
   gid     <- as.genclone(gid)
@@ -465,19 +461,17 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
   # Stop if the ploidy of the object is not diploid
   stopifnot(all(ploidy(gid) %in% 1:2)) 
   if (!is.null(pop)){
-    if (!is.language(pop)){
-      pop(gid) <- pop
-    } else {
-      setPop(gid) <- pop
-    }
+    gid    <- set_pop_from_strata_or_vector(gid, pop)
     by_pop <- TRUE
   }
-  # Set single population if none exists OR if user explicitly said by_pop = FALSE
+  # Set single population if none exists OR if user explicitly said by_pop =
+  # FALSE This is done so that rraf is forced to return a matrix.
   if (is.null(pop(gid)) || !by_pop){
     pop(gid) <- rep(1, nInd(gid))
   }   
   pops <- pop(gid)
   if (is.null(freq)){
+    # The above lines guarantee that a matrix will return here.
     freqs <- rraf(gid, by_pop = TRUE, ...)
   } else if (is.matrix(freq)){
     if (nrow(freq) != nlevels(pops) || ncol(freq) != ncol(tab(gid))){
@@ -625,11 +619,7 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
                  method = c("single", "multiple"), ...){
   stopifnot(is.genind(gid))
   if (!is.null(pop)){
-    if (!is.language(pop)){
-      pop(gid) <- pop
-    } else {
-      setPop(gid) <- pop
-    }
+    gid    <- set_pop_from_strata_or_vector(gid, pop)
     by_pop <- TRUE
   }
   if (!is.genclone(gid)){

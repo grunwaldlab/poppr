@@ -2988,3 +2988,18 @@ should_poppr_be_quiet <- function(quiet){
   }
   return(quiet)
 }
+#' Set the population from a formula or vector
+#'
+#' @param gid a genind/genclone/genlight/snpclone object
+#' @param pop a formula or factor specifying population
+#'
+#' @return the object with the population set in the pop slot
+#' @noRd
+set_pop_from_strata_or_vector <- function(gid, pop) {
+  if (is.language(pop)){ # incoming is a formula, e.g. ~Country/Year
+    setPop(gid) <- pop
+  } else {               # incoming is a vector
+       pop(gid) <- pop
+  }
+  gid
+}
