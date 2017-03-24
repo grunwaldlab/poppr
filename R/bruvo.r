@@ -198,7 +198,7 @@
 #' heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 #' }
 #==============================================================================#
-#' @useDynLib poppr
+#' @useDynLib poppr, .registration = TRUE
 bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALSE){
   # This attempts to make sure the data is true microsatellite data. It will
   # reject snp and aflp data. 
