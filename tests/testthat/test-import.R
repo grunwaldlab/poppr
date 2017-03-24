@@ -54,6 +54,14 @@ A009	7_09_BB	224	97	159	160	133	156	126	119	147	227	261	134
 A006	7_09_BB	224	97	159	160	133	156	126	119	147	235	261	134
 A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134"
 
+hapdip <- "6	4	1	4											
+			7_09_BB											
+Ind	Pop	CHMFc4	CHMFc5	CHMFc12	SEA	SED	SEE	SEG	SEI	SEL	SEN	SEP	SEQ
+A011	7_09_BB	224	0	159	0	133	0	126	0	147		257	0
+A009	7_09_BB	224	97	159	160	133	156	126	119	147	227	261	134
+A006	7_09_BB	224	97	159	160	133	156	126	119	147	235	261	134
+A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134"
+
 test_that("basic text connections work", {
 	gen <- read.genalex(textConnection(y), sep = "\t")
 	expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
@@ -84,6 +92,14 @@ test_that("missing cells are converted to zeroes for polyploids", {
   expect_equivalent(nLoc(gen), 3L)
   expect_output(show(gen), "tetraploid")
   expect_output(show(recode_polyploids(gen, newploidy = TRUE)), "triploid \\(1\\) and tetraploid \\(5\\)")
+})
+
+test_that("haplodiploids can be imported correctly", {
+  skip_on_cran()
+  gen <- read.genalex(textConnection(hapdip), sep = "\t")
+  expect_equivalent(nLoc(gen), 6L)
+  expect_output(show(gen), "diploid")
+  expect_output(show(recode_polyploids(gen, newploidy = TRUE)), "haploid \\(1\\) and diploid \\(3\\)")
 })
 
 test_that("duplicate columns are flagged and fixed", {

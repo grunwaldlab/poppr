@@ -348,29 +348,36 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   # Checking for greater than haploid data.
   if (nloci == clm/ploidy & ploidy > 1){
     # Missing data in genalex is coded as "0" for non-presence/absence data.
-    # this converts it to "NA" for adegenet.
-    if (any(gena.mat == "0", na.rm = TRUE) & ploidy < 3){
-      gena[gena.mat == "0"] <- NA
-    } else if (any(is.na(gena.mat)) & ploidy > 2) {
-      gena[is.na(gena.mat)] <- "0"
-    }
+    # We will convert these data later, but this will take care of the 
+    # data that's considered missing here
+    gena[is.na(gena.mat)] <- "0"
+    
     type  <- 'codom'
+    # The remainder of the position when divided by ploidy is 1, which means
+    # that this is the first column starting the locus
     loci  <- which(seq(clm) %% ploidy == 1)
     gena2 <- gena[, loci, drop = FALSE]
 
-    # Collapsing all alleles into single loci.
+    # Collapsing all alleles over all loci into their respective loci.
     for (pos in loci){
+      # Get the locus position in gena2. Example, in a triploid, the second
+      # locus would be at gena[, 4:6], so the second element in pos would be 4
+      # because position %% ploidy is 4 %% 3 == 1
+      # We get our position out by:
+      #  1. subtracting 1 to account for the modulo
+      #  2. divide by ploidy
+      #  3. add 1 to bring it up to R's 1-index
       pos_out <- ((pos - 1)/ploidy) + 1
-      pos_in  <- pos:(pos + ploidy - 1)
-      donor   <- pop_combiner(gena, hier = pos_in, sep = "/")
+      pos_in  <- pos:(pos + ploidy - 1) # allele positions in gena
+      # paste columns of locus together
+      donor   <- do.call("paste", c(gena[pos_in], list(sep = "/")))
       gena2[, pos_out] <- donor
     }
-    # lapply(loci, function(x) gena2[, ((x-1)/ploidy)+1] <<-
-    #          pop_combiner(gena, hier = x:(x+ploidy-1), sep = "/"))
 
     # Treating missing data.
     gena2[gena2 == paste(rep("0", ploidy), collapse = "/")] <- NA_character_
-    gena2[gena2 == paste(rep("NA", ploidy), collapse = "/")] <- NA_character_
+    
+    # Importing
     res.gid <- df2genind(gena2, sep="/", ind.names = ind.vec, pop = pop.vec,
                          ploidy = ploidy, type = type)
   } else if (nloci == clm & all(gena.mat %in% as.integer(-1:1))) {
@@ -385,7 +392,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
                          ploidy = ploidy, type = type, ncode = 1)
   } else if (nloci == clm & !all(gena.mat %in% as.integer(-1:1))) {
     # Checking for haploid microsatellite data or SNP data
-    if(any(gena.mat == "0", na.rm = TRUE)){
+    if (any(gena.mat == "0", na.rm = TRUE)){
       gena[gena.mat == "0"] <- NA
     }
     type    <- 'codom'
