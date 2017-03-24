@@ -327,32 +327,6 @@ round.poppr <- function(x){
     x <- round(x)
   return(x)
 }
-
-#==============================================================================#
-# This will be used to join heirarchical population vectors for the purposes of
-# maintaining hierarchy. 
-# Public functions utilizing this function:
-# ## read.genalex
-#
-# Internal functions utilizing this function:
-# ## none
-#==============================================================================#
-
-pop_combiner <- function(df, hier=c(1), sep="_"){
-  if (!is.list(df)){
-    warning("df must be a data frame or a list")
-    return(df)
-  } else {
-    if(length(hier)==1){
-      return(df[[hier]])
-    } else {
-      comb <- vector(length=length(df[[hier[1]]]))
-      comb <- df[[hier[1]]]
-      lapply(hier[-1], function(x) comb <<- paste(comb, df[[x]], sep=sep))
-      return(comb)
-    }
-  }
-}
 #==============================================================================#
 # Subsetting the population and returning the indices.
 # 
@@ -2988,3 +2962,6 @@ should_poppr_be_quiet <- function(quiet){
   }
   return(quiet)
 }
+
+# poppr's theme for ggplot2 (mainly rotating x axis labels)
+myTheme <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))

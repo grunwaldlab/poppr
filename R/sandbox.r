@@ -49,43 +49,8 @@ new.read.genalex <- function(genalex, ploidy=2, geo=FALSE, region=FALSE){
 
 
 
-myTheme <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
-read_allele_columns <- function(x, ploidy = 2){
-  clm <- ncol(x)
-  if (length(ploidy) == 1){
-    if (clm %% ploidy == 0){
-      ploidy <- rep(ploidy, clm/ploidy)
-    } else {
-      stop("ploidy specified does not match number of columns.")
-    }
-  }
-  loci  <- first_allele_col(ploidy)
-  x2    <- x[, loci]
-  lapply(1:length(loci), function(a) x2[, a] <<-
-           pop_combiner(x, hier = loci[a]:(loci[a]+ploidy[a]-1), sep = "/"))
-  
-  x2 <- data.frame(lapply(x2, add_zeroes,  ploidy = max(ploidy)))
-  x2[apply(x2, 2, function(na) grepl("NA", na))] <- NA
-  return(x2)
-}
 
-first_allele_col <- function(ploidies) cumsum(ploidies) - ploidies + 1
-
-# Function that will add extra zeroes onto genotypes that are deficient in the 
-# right number of alleles.
-add_zeroes <- function(x, ploidy = 3){
-  extras <- ploidy - vapply(strsplit(x, "/"), length, 69)
-  vapply(1:length(extras), zero_adder, character(1), extras, x)
-}
-
-zero_adder <- function(index, extras, df){
-  if(extras[index] > 0){
-    return(paste(c(rep(0, extras[index]), df[index]), collapse = "/"))
-  } else {
-    return(df[index])
-  }
-}
 
 
 
