@@ -43,6 +43,9 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
 setClassUnion("mlgORnumeric", c("MLG", "numeric"))
+# Warning message:
+# In .removePreviousCoerce(class1, class2, where, prevIs) :
+#   methods currently exist for coercing from “MLG” to “mlgORnumeric”; they will be replaced.
 #==============================================================================#
 #' GENclone and SNPclone classes
 #' 
