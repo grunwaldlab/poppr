@@ -15,7 +15,7 @@ before_install:
   - Rscript -e 'update.packages(ask = FALSE)'
 
 after_success:
-  - Rscript -e 'library(covr);coveralls(exclusions = "R/sandbox.r")'
+  - Rscript -e 'library(covr);coveralls(line_exclusions = "R/sandbox.r")'
 
 notifications:
   email:

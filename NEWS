@@ -36,6 +36,8 @@ BUG FIX
 * GenAlEx files imported with duplicate loci will generate a warning telling the
   user that the duplicated loci have been renamed (usually to <locus name>_1)
   (see https://github.com/grunwaldlab/poppr/issues/122).
+* Haplodiploids imported in genalex files will be properly treated 
+  (see https://github.com/grunwaldlab/poppr/issues/124).
   
 MISC
 ----
