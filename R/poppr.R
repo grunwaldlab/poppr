@@ -168,6 +168,7 @@
 #' \item \code{\link{poppr.amova}} (m) - Analysis of Molecular Variance (as implemented in ade4)
 #' \item \code{\link{ia}} (m) - Calculates the index of association
 #' \item \code{\link{pair.ia}} (m) - Calculates the index of association for all loci pairs.
+#' \item \code{\link{jack.ia}} (m) - Calculates the index of association over subsets of data.
 #' \item \code{\link{win.ia}} (s) - Index of association windows for genlight objects.
 #' \item \code{\link{samp.ia}} (s) - Index of association on random subsets of loci for genlight objects.
 #' \item \code{\link{poppr}} (m | x) - Returns a diversity table by population
@@ -259,4 +260,164 @@
 #' @name poppr-package
 #' @docType package
 #==============================================================================#
+NULL
+#==============================================================================#
+#' Oomycete root rot pathogen \emph{Aphanomyces euteiches} AFLP data
+#' 
+#' @name Aeut
+#' @docType data
+#' @usage data(Aeut)
+#' @description The Aeut dataset consists of 187 isolates of the Oomycete root 
+#'   rot pathogen, \emph{Aphanomyces euteiches} collected from two different 
+#'   fields in NW Oregon and W Washington, USA.
+#' @format a \code{\link{genind}} object with two populations containing a data
+#'   frame in the \code{other} slot called \code{population_hierarchy}. This
+#'   data frame gives indices of the populations and subpopulations for the data
+#'   set.
+#' @references Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
+#'   Diversity, Selfing, and Genetic Differentiation in Populations of the 
+#'   Oomycete \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141
+#'   doi: \href{http://dx.doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
+#==============================================================================#
+NULL
+#==============================================================================#
+#' Simulated data illustrating a Minimum Spanning Network based on Bruvo's
+#' Distance
+#' 
+#' @name partial_clone
+#' @rdname partial_clone
+#' @docType data
+#' @usage data(partial_clone)
+#' @description These data were simulated using SimuPOP version 1.0.8 with 
+#'   99.9\% clonal reproduction over 10,000 generations. Populations were
+#'   assigned post-hoc and are simply present for the purposes of demonstrating
+#'   a minimum spanning network with Bruvo's distance.
+#' @format a \code{\link{genind}} object with 50 individuals, 10 loci, and four 
+#'   populations.
+#' @references Bo Peng and Christopher Amos (2008) Forward-time simulations of 
+#'   nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11):
+#'   1408-1409.
+#==============================================================================#
+NULL
+#==============================================================================#
+#' @name old_partial_clone
+#' @rdname partial_clone
+#==============================================================================#
+NULL
+#==============================================================================#
+#' Phytophthora infestans data from Mexico and South America.
+#' 
+#' @name Pinf
+#' @rdname Pinf
+#' @docType data
+#' @usage data(Pinf)
+#' @description The Pinf data set contains 86 isolates genotyped over 11 
+#'   microsatellite loci collected from Mexico, Peru, Columbia, and Ecuador. 
+#'   This is a subset of the data used for the reference below.
+#' @format a \code{\linkS4class{genclone}} object with 2 hierarchical levels 
+#'   called "Continent" and "Country" that contain 2 and 4 populations, 
+#'   respectively.
+#' @references Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia 
+#'   Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha 
+#'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen 
+#'   \emph{Phytophthora infestans} originated in central Mexico rather than the 
+#'   Andes." Proceedings of the National Academy of Sciences 111:8791-8796. doi:
+#'   \href{http://dx.doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
+#==============================================================================#
+NULL
+#==============================================================================#
+#' @name old_Pinf
+#' @rdname Pinf
+#==============================================================================#
+NULL
+#==============================================================================#
+#' Phytophthora ramorum data from OR Forests and Nurseries (OR and CA)
+#' 
+#' @name Pram
+#' @rdname Pram
+#' @docType data
+#' @usage data(Pram)
+#' @description This is the data set from 
+#'   \url{http://dx.doi.org/10.5281/zenodo.13007}. It has been converted to the 
+#'   genclone object as of poppr version 2.0. It contains 729 samples of the 
+#'   Sudden Oak Death pathogen \emph{Phytophthora ramorum} genotyped over five 
+#'   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from
+#'   forests in Curry County, OR from 2001 to mid-2014 (labeled by watershed
+#'   region). The other 216 samples represents genotypes collected from
+#'   Nurseries in OR and CA from Goss et. al. (2009).
+#'   
+#' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
+#'   called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a 
+#'   named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy 
+#'   coordinates for the forest samples called \strong{"xy"}, and a palette to 
+#'   color the ~SOURCE/STATE stratification called \strong{"comparePal"}.
+#'   
+#' @references Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & 
+#'   Grünwald, N. J. (2015). Spatial and temporal analysis of populations of the
+#'   sudden oak death pathogen in Oregon forests. Phytopathology 105:982-989. 
+#'   doi:
+#'   \href{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+#'   
+#'   
+#'   Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. Hansen, & 
+#'   Niklaus J. Grünwald. 2014. Sudden_Oak_Death_in_Oregon_Forests: Spatial and 
+#'   temporal population dynamics of the sudden oak death epidemic in Oregon 
+#'   Forests. ZENODO, doi:
+#'   \href{http://doi.org/10.5281/zenodo.13007}{10.5281/zenodo.13007}
+#'   
+#'   Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
+#'   J. 2009. Population genetic analysis infers migration pathways of 
+#'   \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
+#'   \href{http://dx.doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
+#'   
+#' @examples
+#' data(Pram)
+#' 
+#' # Repeat lengths (previously processed via fix_replen)
+#' other(Pram)$REPLEN
+#' 
+#' # Color palette for source by state. Useful for minimum spanning networks
+#' other(Pram)$comparePal
+#==============================================================================#
+NULL
+#==============================================================================#
+#' Peach brown rot pathogen \emph{Monilinia fructicola}
+#' 
+#' @name monpop
+#' @docType data
+#' @usage data(monpop)
+#' @description This is microsatellite data for a population of the haploid 
+#'   plant pathogen \emph{Monilinia fructicola} that causes disease within peach
+#'   tree canopies (Everhart & Scherm, 2014). Entire populations within trees
+#'   were sampled across 3 years (2009, 2010, and 2011) in a total of four
+#'   trees, where one tree was sampled in all three years, for a total of 6
+#'   within-tree populations. Within each year, samples in the spring were taken
+#'   from affected blossoms (termed "BB" for blossom blight) and in late summer
+#'   from affected fruits (termed "FR" for fruit rot). There are a total of 694 
+#'   isolates with 65 to 173 isolates within each canopy population that were 
+#'   characterized using a set of 13 microsatellite markers.
+#' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
+#'   coded into one population factor. These are named "Tree", "Year", and 
+#'   "Symptom"
+#' @references SE Everhart, H Scherm, (2015) Fine-scale genetic structure of 
+#'   \emph{Monilinia fructicola} during brown rot epidemics within individual
+#'   peach tree canopies. Phytopathology 105:542-549 doi:
+#'   \href{http://dx.doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
+#'   
+#' @examples
+#' data(monpop)
+#' splitStrata(monpop) <- ~Tree/Year/Symptom
+#' setPop(monpop) <- ~Symptom/Year
+#' monpop
+#==============================================================================#
+NULL
+#' @importFrom graphics abline axis frame hist layout legend lines par plot.new
+#'   points polygon rasterImage text title
+#' @importFrom grDevices as.raster gray grey topo.colors
+#' @importFrom stats as.dist as.formula df dist median quantile rmultinom sd
+#'   setNames terms update var dbinom printCoefmat
+#' @importFrom utils combn head read.table setTxtProgressBar tail txtProgressBar
+#'   write.table capture.output
+#' @importFrom dplyr progress_estimated
+#' @useDynLib poppr, .registration = TRUE
 NULL

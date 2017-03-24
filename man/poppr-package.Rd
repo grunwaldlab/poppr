@@ -145,6 +145,7 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \item \code{\link{poppr.amova}} (m) - Analysis of Molecular Variance (as implemented in ade4)
 \item \code{\link{ia}} (m) - Calculates the index of association
 \item \code{\link{pair.ia}} (m) - Calculates the index of association for all loci pairs.
+\item \code{\link{jack.ia}} (m) - Calculates the index of association over subsets of data.
 \item \code{\link{win.ia}} (s) - Index of association windows for genlight objects.
 \item \code{\link{samp.ia}} (s) - Index of association on random subsets of loci for genlight objects.
 \item \code{\link{poppr}} (m | x) - Returns a diversity table by population
