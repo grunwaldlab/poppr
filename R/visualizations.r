@@ -1177,7 +1177,12 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   nloci  <- as.integer(ifelse(nloci > 0, nloci, nLoc(gen) - 1))
   sample <- as.integer(sample)
   report <- ifelse(quiet, 0L, as.integer(sample/100))
-  out    <- .Call("genotype_curve", genloc, sample, nloci, report, PACKAGE = "poppr")
+  out    <- .Call(.NAME   = "genotype_curve_internal", 
+                  mat     = genloc, 
+                  iter    = sample, 
+                  maxloci = nloci, 
+                  report  = report, 
+                  PACKAGE = "poppr")
   if (!quiet) cat("\n")
   colnames(out) <- seq(nloci)
   # Visibly return the data if plot = FALSE

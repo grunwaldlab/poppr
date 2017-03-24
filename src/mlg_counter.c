@@ -42,7 +42,7 @@
 int mlg_round_robin_cmpr (const void *a, const void *b);
 void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples);
 SEXP mlg_round_robin(SEXP mat);
-SEXP genotype_curve(SEXP mat, SEXP iter, SEXP maxloci, SEXP report);
+SEXP genotype_curve_internal(SEXP mat, SEXP iter, SEXP maxloci, SEXP report);
 // global variable indicating the size of array to use for comparison in memcmp.
 int NLOCI = 0;
 
@@ -242,7 +242,7 @@ SEXP mlg_round_robin(SEXP mat)
 *   - A matrix with iter rows and m - 1 columns filled with counts of the number
 *       of multilocus genotypes for j loci. 
 */
-SEXP genotype_curve(SEXP mat, SEXP iter, SEXP maxloci, SEXP report)
+SEXP genotype_curve_internal(SEXP mat, SEXP iter, SEXP maxloci, SEXP report)
 {
   SEXP Rout;
   SEXP Rdim;
