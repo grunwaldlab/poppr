@@ -355,12 +355,18 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
       gena[is.na(gena.mat)] <- "0"
     }
     type  <- 'codom'
-    loci  <- which((1:clm) %% ploidy == 1)
+    loci  <- which(seq(clm) %% ploidy == 1)
     gena2 <- gena[, loci, drop = FALSE]
 
     # Collapsing all alleles into single loci.
-    lapply(loci, function(x) gena2[, ((x-1)/ploidy)+1] <<-
-             pop_combiner(gena, hier = x:(x+ploidy-1), sep = "/"))
+    for (pos in loci){
+      pos_out <- ((pos - 1)/ploidy) + 1
+      pos_in  <- pos:(pos + ploidy - 1)
+      donor   <- pop_combiner(gena, hier = pos_in, sep = "/")
+      gena2[, pos_out] <- donor
+    }
+    # lapply(loci, function(x) gena2[, ((x-1)/ploidy)+1] <<-
+    #          pop_combiner(gena, hier = x:(x+ploidy-1), sep = "/"))
 
     # Treating missing data.
     gena2[gena2 == paste(rep("0", ploidy), collapse = "/")] <- NA_character_
