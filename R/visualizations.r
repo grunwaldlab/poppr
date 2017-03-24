@@ -1012,6 +1012,11 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   
   # Plotting parameters.
   def.par <- par(no.readonly = TRUE)
+  # Return top level plot to defaults.
+  on.exit({
+    graphics::layout(matrix(1, ncol = 1, byrow = TRUE))
+    graphics::par(def.par)
+  })
   
   if (!pop.leg & !scale.leg){
     plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
@@ -1066,13 +1071,6 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
       graphics::axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
       graphics::text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
     }
-    # Return top level plot to defaults.
-    on.exit({
-      graphics::layout(matrix(1, ncol=1, byrow=TRUE))
-      graphics::par(mar=c(5,4,4,2) + 0.1) # number of lines of margin specified.
-      graphics::par(oma=c(0,0,0,0)) # Figure margins      
-    })
-
   }
   return(invisible(poppr_msn))
 }
@@ -1106,6 +1104,14 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #'   
 #' @param plot if \code{TRUE} (default), the genotype curve will be plotted via 
 #'   ggplot2. If \code{FALSE}, the resulting matrix will be visibly returned.
+#'   
+#' @param drop if \code{TRUE} (default), monomorphic loci will be removed before
+#'   analysis as these loci affect the shape of the curve.
+#'
+#' @param dropna if \code{TRUE} (default) and \code{drop = TRUE}, NAs will be
+#'   ignored when determining if a locus is monomorphic. When \code{FALSE},
+#'   presence of NAs will result in the locus being retained. This argument has
+#'   no effect when \code{drop = FALSE}
 #'   
 #' @return (invisibly by deafuls) a matrix of integers showing the results of
 #'   each randomization. Columns represent the number of loci sampled and rows 
@@ -1154,7 +1160,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #==============================================================================#
 #' @importFrom pegas loci2genind
 genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE, 
-                           thresh = 1, plot = TRUE){
+                           thresh = 1, plot = TRUE, drop = TRUE, dropna = TRUE){
   datacall <- match.call()
   if (!inherits(gen, c("genind", "genclone", "loci"))){
     stop(paste(datacall[2], "must be a genind or loci object"))
@@ -1173,6 +1179,17 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   the_loci <- attr(genloc, "locicol")
   res      <- integer(nrow(genloc))
   suppressWarnings(genloc <- vapply(genloc[the_loci], as.integer, res))
+  if (drop){
+    nas <- if (dropna) !is.na(genloc) else TRUE
+    polymorphic <- colSums(!apply(genloc, 2, duplicated) & nas) > 1
+    lnames      <- locNames(gen)
+    gen         <- gen[loc = polymorphic]
+    genloc      <- genloc[, polymorphic, drop = FALSE]
+    if (sum(!polymorphic) > 0){
+      msg <- paste("Dropping monomorphic loci:", paste(lnames[!polymorphic], collapse = ", "))
+      message(msg)
+    }
+  }
   nloci  <- min(maxloci, nLoc(gen) - 1)
   nloci  <- as.integer(ifelse(nloci > 0, nloci, nLoc(gen) - 1))
   sample <- as.integer(sample)

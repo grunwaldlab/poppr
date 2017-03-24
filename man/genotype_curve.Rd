@@ -5,7 +5,7 @@
 \title{Produce a genotype accumulation curve}
 \usage{
 genotype_curve(gen, sample = 100, maxloci = 0L, quiet = FALSE,
-  thresh = 1, plot = TRUE)
+  thresh = 1, plot = TRUE, drop = TRUE, dropna = TRUE)
 }
 \arguments{
 \item{gen}{a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
@@ -28,6 +28,14 @@ maximum number of observable genotypes.}
 
 \item{plot}{if \code{TRUE} (default), the genotype curve will be plotted via 
 ggplot2. If \code{FALSE}, the resulting matrix will be visibly returned.}
+
+\item{drop}{if \code{TRUE} (default), monomorphic loci will be removed before
+analysis as these loci affect the shape of the curve.}
+
+\item{dropna}{if \code{TRUE} (default) and \code{drop = TRUE}, NAs will be
+ignored when determining if a locus is monomorphic. When \code{FALSE},
+presence of NAs will result in the locus being retained. This argument has
+no effect when \code{drop = FALSE}}
 }
 \value{
 (invisibly by deafuls) a matrix of integers showing the results of
