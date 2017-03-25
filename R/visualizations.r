@@ -1131,18 +1131,25 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #' data(nancycats)
 #' nan_geno <- genotype_curve(nancycats)
 #' \dontrun{
+#' 
+#' # Marker Type Comparison --------------------------------------------------
 #' # With AFLP data, it is often necessary to include more markers for resolution
 #' data(Aeut)
 #' Ageno <- genotype_curve(Aeut)
-#' # Trendlines: you can add a smoothed trendline with geom_smooth()
-#' library("ggplot2")
-#' p <- last_plot()
-#' p + geom_smooth()
 #' 
 #' # Many microsatellite data sets have hypervariable markers
 #' data(microbov)
 #' mgeno <- geotype_curve(microbov)
 #' 
+#' # Adding a trendline ------------------------------------------------------
+#' 
+#' # Trendlines: you can add a smoothed trendline with geom_smooth()
+#' library("ggplot2")
+#' p <- last_plot()
+#' p + geom_smooth()
+#' 
+#' # Producing Figures for Publication ---------------------------------------
+#'
 #' # This data set has been pre filtered
 #' data(monpop)
 #' mongeno <- genotype_curve(monpop)
@@ -1157,6 +1164,7 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
 #'   theme(title = element_text(size = 14)) +
 #'   ggtitle(mytitle)
 #' }
+#' 
 #==============================================================================#
 #' @importFrom pegas loci2genind
 genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE, 
@@ -1230,3 +1238,4 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
   print(outplot)
   return(invisible(out))
 }
+

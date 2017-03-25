@@ -61,17 +61,24 @@ Internally, this function works by converting the data into a
 data(nancycats)
 nan_geno <- genotype_curve(nancycats)
 \dontrun{
+
+# Marker Type Comparison --------------------------------------------------
 # With AFLP data, it is often necessary to include more markers for resolution
 data(Aeut)
 Ageno <- genotype_curve(Aeut)
+
+# Many microsatellite data sets have hypervariable markers
+data(microbov)
+mgeno <- geotype_curve(microbov)
+
+# Adding a trendline ------------------------------------------------------
+
 # Trendlines: you can add a smoothed trendline with geom_smooth()
 library("ggplot2")
 p <- last_plot()
 p + geom_smooth()
 
-# Many microsatellite data sets have hypervariable markers
-data(microbov)
-mgeno <- geotype_curve(microbov)
+# Producing Figures for Publication ---------------------------------------
 
 # This data set has been pre filtered
 data(monpop)
@@ -87,6 +94,7 @@ p + geom_smooth() +
   theme(title = element_text(size = 14)) +
   ggtitle(mytitle)
 }
+
 }
 \author{
 Zhian N. Kamvar
