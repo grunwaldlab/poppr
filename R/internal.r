@@ -2820,3 +2820,23 @@ set_pop_from_strata_or_vector <- function(gid, pop) {
 }
 # poppr's theme for ggplot2 (mainly rotating x axis labels)
 myTheme <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
+#' Calculate Psex for a given genotype
+#'
+#' @param n_encounters integer the number of observations of an MLG
+#' @param p_genotype numeric the probability of the given MLG
+#' @param sample_ids list the names of the given MLG
+#' @param n_samples integer the number of samples observed
+#'
+#' @return a vector of probabilities
+#' @noRd
+#'
+#' @examples
+#' make_psex(10, 0.005, n_samples = 100)
+make_psex <- function(n_encounters, p_genotype, sample_ids = NULL, n_samples){
+  encounters <- seq(n_encounters) - 1
+  out        <- dbinom(encounters, n_samples, p_genotype)
+  names(out) <- sample_ids
+  return(out)
+}

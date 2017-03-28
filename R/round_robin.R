@@ -633,52 +633,33 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
 
   if (method == "single"){
     # Only calculate for single encounter (Parks and Werth, 1993)
-    G       <- ifelse(is.null(G), nmll(gid), G)
+    G       <- if (is.null(G)) nmll(gid) else G
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)
   } else {
     # Calculate for n encounters (Arnaud-Haond et al, 1997)
 
-    # Wed Sep  2 11:20:56 2015 ------------------------------
-    # First step: get a vector of number of samples per mlg. Since pgen might
-    # have been calculated using population-level frequencies, I'm not clone
-    # correcting here, which results in a lot of redundant computations. I will
-    # come up with a more clever way to handle this later.
-    # not sum(dbinom(seq(n_samples_in_mlg), n_samples_in_mlg, pgen))
+    # Tue Mar 28 17:16:57 2017 ------------------------------
+    # The initial version of this was calculated as
+    # sum(dbinom(seq(n_samples_in_mlg), n_samples_in_mlg, pgen)) where each
+    # sample in the MLG had the same pgen value. The correct formuation is:
     # 
     # dbinom(seq(n_samples_in_mlg) - 1, n_samples, pgen)
-    mlls       <- mll(gid, "original")
-    mll_counts <- table(mlls)
-    # if (new){
-      # gather pgen indices
-      ipgen          <- which(!duplicated(mlls))
-      ipgen          <- ipgen[order(unique(mlls))]
-      upgen          <- xpgen[ipgen]
-      sample_ids     <- mlg.id(gid)
-      pSex           <- mapply(make_psex, 
-                               n_encounters = mll_counts, 
-                               p_genotype   = upgen, 
-                               sample_ids, 
-                               n_samples = nInd(gid), SIMPLIFY = FALSE)
-      names(pSex)    <- NULL
-      pSex           <- unlist(pSex)[indNames(gid)]
-    # } else {
-    #   mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
-    #   # Loop over each sample
-    #   pSex <- vapply(seq(nInd(gid)), function(i){
-    #     trials <- seq(mll_counts[i]) # number of samples in the MLG
-    #     pgeni  <- xpgen[i]           # pgen for that MLG
-    #     dens   <- stats::dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
-    #     sum(dens, na.rm = TRUE) # return the sum probability.
-    #   }, numeric(1))
-    # }
+    mlls        <- mll(gid, "original")
+    mll_counts  <- table(mlls)
+    ipgen       <- which(!duplicated(mlls))
+    ipgen       <- ipgen[order(unique(mlls))]
+    upgen       <- xpgen[ipgen]
+    sample_ids  <- mlg.id(gid)
+    N           <- if (is.null(G)) nInd(gid) else G # custom sample size
+    pSex        <- mapply(make_psex, 
+                          n_encounters = mll_counts, 
+                          p_genotype   = upgen, 
+                          sample_ids   = sample_ids, 
+                          n_samples    = N, 
+                          SIMPLIFY     = FALSE)
+    names(pSex) <- NULL
+    pSex        <- unlist(pSex)[indNames(gid)]
     return(pSex)
   }
-}
-
-make_psex <- function(n_encounters, p_genotype, sample_ids, n_samples){
-  encounters <- seq(n_encounters) - 1
-  out <- dbinom(encounters, n_samples, p_genotype)
-  names(out) <- sample_ids
-  return(out)
 }

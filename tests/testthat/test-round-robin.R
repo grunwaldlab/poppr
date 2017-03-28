@@ -128,13 +128,16 @@ test_that("rraf calculates per population when supplied with a population factor
 
 test_that("psex and pgen internals produce expected results", {
   skip_on_cran()
+
+  # setup -------------------------------------------------------------------
+
   # From Parks and Werth, 1993
   x <- "
- Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
-54 12 12 12 23 22 11
-36 22 22 11 22 33 11
-10 23 22 11 33 13 13"
-  
+   Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
+  54 12 12 12 23 22 11
+  36 22 22 11 22 33 11
+  10 23 22 11 33 13 13"
+    
   xtab <- read.table(text = x, header = TRUE, row.names = 1)
   xgid <- df2genind(xtab[rep(rownames(xtab), as.integer(rownames(xtab))), ], ncode = 1)
   afreq <- c(Hk.1 = 0.167, Hk.2 = 0.795, Hk.3 = 0.038, 
@@ -146,14 +149,29 @@ test_that("psex and pgen internals produce expected results", {
   freqs   <- afreq[colnames(tab(xgid))]
   pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
   pGen   <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = freqs)))
-  res <- matrix(c(unique(pGen), unique(pNotGen)), ncol = 2)
-  
+  res    <- matrix(c(unique(pGen), unique(pNotGen)), ncol = 2)
+  pSex   <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45, method = "multiple")
+  n      <- c(54, 36, 10)
+  pSex   <- split(pSex, rep(n, n))
   expected_result <- structure(c(4.14726753733799e-05, 0.00192234266749449, 0.000558567714432373, 
                                  0.00186456862059092, 0.0829457730256321, 0.024829127718338), 
                                .Dim = c(3L,2L))
+  
+  # tests -------------------------------------------------------------------
+  # Testing single encounter
   expect_equivalent(res, expected_result)
+  # Testing multiple encounter (with custom N)
+  # for (i in seq(n)){
+  #   N        <- n[i]
+  #   singl    <- res[i, 2]
+  #   expected <- pSex[[as.character(N)]]
+  #   p_sex    <- setNames(dbinom(seq(N) - 1, 45, res[i, 1]), names(expected))
+  #   expect_equal(p_sex, expected, label = paste("all :", N))
+  #   expect_equal(p_sex[[2]], singl, label = paste("first :", N))
+  # }
   
 })
+
 
 test_that("psex produces a vector", {
   skip_on_cran()
