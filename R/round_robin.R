@@ -633,6 +633,18 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
 
   if (method == "single"){
     # Only calculate for single encounter (Parks and Werth, 1993)
+    # Wed Mar 29 11:07:40 2017 ------------------------------
+    # This approximation may not be correct. Parks and Werth gave the situation
+    # for a single encounter as 
+    # 
+    # pSex = 1 - (1 - pGen)^G
+    # 
+    # But the problem is that this is not the reduction of the binomial 
+    # expression for a single trial. The reduction for a single trial is
+    # 
+    # pSex = (G * pGen) * ((1 - pGen)^(G - 1))
+    # 
+    # See: https://www.wolframalpha.com/input/?i=binomial+density+where+x+is+1
     G       <- if (is.null(G)) nmll(gid) else G
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)
