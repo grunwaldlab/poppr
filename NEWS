@@ -43,6 +43,8 @@ BUG FIX
   (see https://github.com/grunwaldlab/poppr/issues/122).
 * Haplodiploids imported in genalex files will be properly treated 
   (see https://github.com/grunwaldlab/poppr/issues/124).
+* `read.genalex()` will now implicitly check for the correct number of 
+  individuals in the data (see https://github.com/grunwaldlab/poppr/issues/128).
   
 MISC
 ----
