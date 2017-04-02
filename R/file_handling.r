@@ -267,6 +267,16 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     warning(msg, immediate. = TRUE)
   }
   gena      <- gena[data_rows, data_cols]
+  if (nrow(gena) != ninds) {
+    theData <- if (inherits(genalex, "character")) genalex else deparse(substitute(genalex))
+    msg <- paste0("\n The number of rows in your data do not match the number ",
+                 "of individuals specified.",
+                 "\n\t", ninds,      " individuals specified",
+                 "\n\t", nrow(gena), " rows in data",
+                 "\n Please inspect ", theData, " to ensure it's a properly ",
+                 "formatted GenAlEx file.\n")
+    stop(msg)
+  }
   #----------------------------------------------------------------------------#
   # Checking for extra information such as Regions or XY coordinates
   #----------------------------------------------------------------------------#
