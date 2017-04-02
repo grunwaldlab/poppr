@@ -386,13 +386,14 @@ setMethod(
     y <- gsub("GENLIGHT", "SNPCLONE", y)
     y <- gsub("/", "|", y)
     genspot <- grepl("@gen", y)
+    ismlg <- inherits(object@mlg, "MLG")
     
-    the_type <- visible(object@mlg)
-    mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
+    mlgtype <- if (ismlg) paste0(visible(object@mlg), " ") else ""
+    # mlgtype  <- ifelse(ismlg, paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
 
     msg <- paste("   @mlg:", length(unique(object@mlg[])), mlgtype)
-    if (the_type == "contracted"){
+    if (mlgtype == "contracted "){
       thresh <- round(cutoff(object@mlg)["contracted"], 3)
       algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
       dist <- distname(object@mlg)
