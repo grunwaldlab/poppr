@@ -393,7 +393,7 @@ setMethod(
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
 
     msg <- paste("   @mlg:", length(unique(object@mlg[])), mlgtype)
-    if (mlgtype == "contracted "){
+    if (mlgtype == "contracted multilocus genotypes"){
       thresh <- round(cutoff(object@mlg)["contracted"], 3)
       algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
       dist <- distname(object@mlg)
