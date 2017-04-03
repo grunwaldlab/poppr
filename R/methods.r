@@ -324,13 +324,15 @@ is.clone <- function(x){
 #' @param i vector of numerics indicating number of individuals desired
 #' @param j a vector of numerics corresponding to the loci desired.
 #' @param ... passed on to the \code{\linkS4class{genlight}} object.
+#' @param mlg.reset logical. Defaults to \code{FALSE}. If \code{TRUE}, the mlg
+#'   vector will be reset
 #' @param drop set to \code{FALSE} 
 #' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(
   f = "[",
   signature(x = "snpclone", i = "ANY", j = "ANY", drop = "ANY"),
-  definition = function(x, i, j, ..., drop = FALSE){
+  definition = function(x, i, j, ..., mlg.reset = FALSE, drop = FALSE){
     if (missing(i)) i <- TRUE
 
     # handle MLG indices
@@ -338,11 +340,25 @@ setMethod(
     # Tue Sep 27 12:08:37 2016 ------------------------------
     # Methods for subsetting genind object by sample name currently don't exist
     i          <- handle_mlg_index(i, x)
-    mlg        <- if (ismlgclass) x@mlg[i, all = TRUE] else x@mlg[i]
+    # mlg        <- if (ismlgclass) x@mlg[i, all = TRUE] else x@mlg[i]
     
     # Subset data; replace MLGs    
     x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
-    x@mlg <- mlg
+    if (!mlg.reset){
+      if (inherits(x@mlg, "MLG")){
+        x@mlg <- x@mlg[i, all = TRUE]
+      } else {
+        x@mlg <- x@mlg[i]
+      }
+    } else {
+      if (!inherits(x@mlg, "MLG")){
+        x@mlg <- mlg.vector(x, reset = TRUE)
+      } else {
+        x@mlg <- new("MLG", mlg.vector(x, reset = TRUE))
+      }
+    }
+    
+    # x@mlg <- mlg
     return(x)
   })
 
