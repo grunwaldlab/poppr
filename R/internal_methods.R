@@ -269,7 +269,7 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
   
   if (!is.clone(gid)) {
     if (is(gid, "genlight")){
-      gid <- as.snpclone(gid)
+      gid <- as.snpclone(gid, mlg = seq_len(nInd(gid)))
     } else {
       gid <- as.genclone(gid)
     }

@@ -314,8 +314,12 @@ mlg.vector <- function(gid, reset = FALSE){
   if (!reset && is.clone(gid) && length(gid@mlg) == nInd(gid)){
     return(gid@mlg[])
   }
-  if (is(gid, "genlight")){
-    return(seq_len(nInd(gid)))
+  if (inherits(gid, "genlight")){
+    if (is.clone(gid)) gid@mlg <- seq_len(nInd(gid))
+    return(mlg.filter(gid, 
+                      threshold = .Machine$double.eps ^ 0.5,
+                      distance = bitwise.dist,
+                      missing_match = FALSE))
   } 
   xtab <- gid@tab
   # concatenating each genotype into one long string.
