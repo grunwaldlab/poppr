@@ -87,3 +87,9 @@ test_that("subsetting a genclone object retains the MLG definitions", {
   expect_equal(mll(pc[idn]), mll(pc[idl]))
   expect_equal(mll(pc[idi]), mll(pc[idl]))
 })
+
+test_that("genclone objects can be subset with character strings or factors", {
+  idn <- mlg.id(pc)[[1]]
+  idf <- as.factor(idn)
+  expect_equal(mll(pc[idn]), mll(pc[idf]))
+})
