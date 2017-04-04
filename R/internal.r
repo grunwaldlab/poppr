@@ -2753,13 +2753,10 @@ handle_mlg_index <- function(i, gid){
   if (is.logical(i) || is.numeric(i)){
     return(i)
   }
-  if (is.factor(i)){
-    i <- as.character(i)
-  } else {
-    i <- match(i, indNames(gid))         # match to the index names
-    i <- i[!is.na(i)]                    # remove missing indices
-    i <- if (length(i) == 0) TRUE else i # ignore if no result
-  }
+  i <- if (is.factor(i)) as.character(i) else i
+  i <- match(i, indNames(gid))         # match to the index names
+  i <- i[!is.na(i)]                    # remove missing indices
+  i <- if (length(i) == 0) TRUE else i # ignore if no result
   return(i)
 }
 

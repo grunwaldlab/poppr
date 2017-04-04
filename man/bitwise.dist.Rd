@@ -22,7 +22,7 @@ represented as integers from 1 to n where n is the number of loci.}
 by missing data in a location should be counted as matching at that 
 location. Default set to \code{TRUE}, which forces missing data to match 
 with anything. \code{FALSE} forces missing data to not match with any other
-information.}
+information, \strong{including other missing data}.}
 
 \item{differences_only}{\code{logical}. When \code{differences_only = TRUE},
 the output will reflect the number of different loci. The default setting,

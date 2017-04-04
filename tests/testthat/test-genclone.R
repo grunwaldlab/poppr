@@ -87,3 +87,16 @@ test_that("subsetting a genclone object retains the MLG definitions", {
   expect_equal(mll(pc[idn]), mll(pc[idl]))
   expect_equal(mll(pc[idi]), mll(pc[idl]))
 })
+
+test_that("genclone objects can be subset with character strings or factors", {
+  idn <- mlg.id(pc)[[1]]
+  idf <- as.factor(idn)
+  expect_equal(mll(pc[idn]), mll(pc[idf]))
+})
+
+test_that("mlg.filter<- works for genclone, but not genind", {
+  skip_on_cran()
+  mlg.filter(pc, distance = nei.dist) <- 0.1
+  expect_equal(nmll(pc), 24)
+  expect_warning(mlg.filter(partial_clone) <- 0.1)
+})
