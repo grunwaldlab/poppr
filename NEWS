@@ -24,6 +24,10 @@ NEW FEATURES
 NOTABLE CHANGES
 ---------------
 
+* calculation of MLGs for snpclone and genlight objects will be performed via 
+  distance-based methods by default. This is in contrast to the previous behavior
+  where individuals were assumed to have unique genotypes. 
+  see https://github.com/grunwaldlab/poppr/issues/125 for details.
 * An error will be thrown when attempting to use `mlg.crosspop()` with an object
   that has < 2 populations.
 * `genotype_curve()` will now remove monomorphic loci before calculation by
