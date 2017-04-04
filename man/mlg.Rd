@@ -92,6 +92,24 @@ a \code{list} containing vectors of population names for each MLG.
 \description{
 Create counts, vectors, and matrices of multilocus genotypes.
 }
+\details{
+Multilocus genotypes are the unique combination of alleles across
+  all loci. For details of how these are calculated see \code{vignette("mlg",
+  package = "poppr")}. In short, for genind and genclone objects, they are
+  calculated by using a rank function on strings of alleles, which is
+  sensitive to missing data. For genlight and snpclone objects, they are
+  calculated with distance methods via \code{\link{bitwise.dist}} and
+  \code{\link{mlg.filter}}, which means that these are insensitive to missing
+  data. Three different types of MLGs can be defined in \pkg{poppr}: \itemize{ 
+  \item{original - }{the default definition of multilocus genotypes as
+  detailed above} \item{contracted - }{these are multilocus genotypes
+  collapsed into multilocus lineages (\code{\link{mll}}) with genetic
+  distance via \code{\link{mlg.filter}}} \item{custom - }{user-defined
+  multilocus genotypes. These are useful for information such as mycelial
+  compatibility groups}}
+  \strong{All of the functions documented here will work on any of the MLG
+  types defined in \pkg{poppr}}
+}
 \note{
 The resulting matrix of \code{mlg.table} can be used for analysis with 
 the \code{\link{vegan}} package.

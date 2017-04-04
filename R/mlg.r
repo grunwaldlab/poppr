@@ -97,6 +97,24 @@
 #' \subsection{mlg.id}{ a list of multilocus genotypes with the associated
 #' individual names per MLG. }
 #' 
+#' @details Multilocus genotypes are the unique combination of alleles across
+#'   all loci. For details of how these are calculated see \code{vignette("mlg",
+#'   package = "poppr")}. In short, for genind and genclone objects, they are
+#'   calculated by using a rank function on strings of alleles, which is
+#'   sensitive to missing data. For genlight and snpclone objects, they are
+#'   calculated with distance methods via \code{\link{bitwise.dist}} and
+#'   \code{\link{mlg.filter}}, which means that these are insensitive to missing
+#'   data. Three different types of MLGs can be defined in \pkg{poppr}: \itemize{ 
+#'   \item{original - }{the default definition of multilocus genotypes as
+#'   detailed above} \item{contracted - }{these are multilocus genotypes
+#'   collapsed into multilocus lineages (\code{\link{mll}}) with genetic
+#'   distance via \code{\link{mlg.filter}}} \item{custom - }{user-defined
+#'   multilocus genotypes. These are useful for information such as mycelial
+#'   compatibility groups}}
+#'   \strong{All of the functions documented here will work on any of the MLG
+#'   types defined in \pkg{poppr}}
+#'   
+#' 
 #' @seealso \code{\link[vegan]{diversity}} 
 #'  \code{\link{diversity_stats}}
 #'  \code{\link{popsub}}
@@ -319,7 +337,7 @@ mlg.vector <- function(gid, reset = FALSE){
     return(mlg.filter(gid, 
                       threshold = .Machine$double.eps ^ 0.5,
                       distance = bitwise.dist,
-                      missing_match = FALSE))
+                      missing_match = TRUE))
   } 
   xtab <- gid@tab
   # concatenating each genotype into one long string.
