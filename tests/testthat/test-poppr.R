@@ -99,7 +99,7 @@ test_that("poppr perform clone correction", {
 
 test_that("poppr skips over sample sizes less than three", {
   skip_on_cran()
-  expect_output(plt <- poppr(partial_clone[1:8], sample = 10), "^| Total$")
+  expect_warning(plt <- poppr(partial_clone[1:8], sample = 10, quiet = TRUE), "could not be plotted")
   expect_is(plt, "popprtable")
   expect_equivalent(signif(plt$Ia, 3), c(rep(NA, 4), 0.167))
   expect_equivalent(signif(plt$rbarD, 3), c(rep(NA, 4), 0.0195))
@@ -117,4 +117,12 @@ test_that("poppr can produce output from input file", {
 test_that("poppr.all works on list of files", {
   skip_on_cran()
   expect_output(out <- poppr.all(list(afile, pc = partial_clone)), " | File: rootrot.csv")
+})
+
+test_that("poppr without sampling works on data without populations", {
+  skip_on_cran()
+  pop(partial_clone) <- NULL
+  out <- poppr(partial_clone, sample = 9, quiet = TRUE)
+  expect_is(out, "data.frame")
+  expect_equal(nrow(out), 1L)
 })

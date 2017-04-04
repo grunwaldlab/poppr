@@ -439,7 +439,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
                  namelist = list(File = namelist$File, population = "Total"),
                  hist = plot
                 )
-    
+    IaList <- if (sample > 0) IaList$index else IaList
     Iout <- as.data.frame(list(
       Pop = "Total",
       N = N.vec,

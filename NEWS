@@ -45,6 +45,8 @@ BUG FIX
   (see https://github.com/grunwaldlab/poppr/issues/124).
 * `read.genalex()` will now implicitly check for the correct number of 
   individuals in the data (see https://github.com/grunwaldlab/poppr/issues/128).
+* The function `poppr()` no longer throws an error if the sample > 0 and the 
+  data has no population (see https://github.com/grunwaldlab/poppr/issues/130).
   
 MISC
 ----
