@@ -268,6 +268,10 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
 
       // Set R_nap2 to be genlight@gen[[j]]@NA.posi aka a vector of integers 
       // each representing the location of a locus with missing data
+      // 
+      // TODO: use deque to assess shared missing sites between R_nap1 and
+      //       R_nap2 so the behavior is closer to that of mlg.vector for
+      //       genind objects.
       R_nap2 = getAttrib(VECTOR_ELT(R_gen,j),R_nap_symbol);
 
       // Set nap2_length to be the number of loci containing missing data in 
