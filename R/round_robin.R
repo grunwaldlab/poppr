@@ -657,21 +657,27 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     # sample in the MLG had the same pgen value. The correct formuation is:
     # 
     # dbinom(seq(n_samples_in_mlg) - 1, n_samples, pgen)
-    mlls        <- mll(gid, "original")
-    mll_counts  <- table(mlls)
-    ipgen       <- which(!duplicated(mlls))
-    ipgen       <- ipgen[order(unique(mlls))]
-    upgen       <- xpgen[ipgen]
-    sample_ids  <- mlg.id(gid)
-    N           <- if (is.null(G)) nInd(gid) else G # custom sample size
-    pSex        <- mapply(make_psex, 
-                          n_encounters = mll_counts, 
-                          p_genotype   = upgen, 
-                          sample_ids   = sample_ids, 
-                          n_samples    = N, 
-                          SIMPLIFY     = FALSE)
-    names(pSex) <- NULL
-    pSex        <- unlist(pSex)[indNames(gid)]
+    pop(gid) <- if (by_pop & !is.null(pop(gid))) pop(gid) else rep("A", nInd(gid))
+    pSex     <- setNames(vector(mode = "numeric", length = nInd(gid)), indNames(gid))
+    for (p in popNames(gid)){
+      pgid       <- gid[pop = p]
+      pxpgen     <- xpgen[pop(gid) == p]
+      mlls       <- mll(pgid, "original")
+      mll_counts <- table(mlls)
+      ipgen      <- which(!duplicated(mlls))
+      ipgen      <- ipgen[order(unique(mlls))]
+      upgen      <- pxpgen[ipgen]
+      sample_ids <- mlg.id(pgid)
+      N          <- if (is.null(G)) nInd(pgid) else G # custom sample size
+      pSexp      <- mapply(make_psex, 
+                           n_encounters = mll_counts, 
+                           p_genotype   = upgen, 
+                           sample_ids   = sample_ids, 
+                           n_samples    = N, 
+                           SIMPLIFY     = FALSE)
+      names(pSexp)         <- NULL
+      pSex[indNames(pgid)] <- unlist(pSexp)[indNames(pgid)]
+    }
     return(pSex)
   }
 }
