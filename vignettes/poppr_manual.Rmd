@@ -31,8 +31,8 @@ print_command <- function(funk){
   fargs <- formals(funk)
 
   lapply(names(fargs), function(arg_name, fargs){
-    arg <- fargs[[arg_name]]
-    if (missing(arg)){
+    arg <- utils::capture.output(print(fargs[[arg_name]]))
+    if (arg == ""){
       fargs[[arg_name]] <<- as.symbol(arg_name)
       names(fargs)[names(fargs) == arg_name] <<- ""
     }
