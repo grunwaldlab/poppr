@@ -654,7 +654,7 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     if (nPop(gid) == 0){
       nmlls <- nmll(gid)
     } else {
-      nmlls <- vapply(seppop(gid), nmll, integer(1))
+      nmlls <- rowSums(mlg.matrix(gid) > 0)
       nmlls <- nmlls[pop(gid)]
     }
     G       <- treat_G(G, nmlls, gid, NULL, "single")
