@@ -2577,19 +2577,20 @@ rrcc <- function(i, loclist, mlgs){
   return(res)
 }
 #==============================================================================#
-# round robin clone-correct allele frequency estimates by population
-# 
-# This will take in
-# - i the index of the locus.
-# - loclist a list of genind objects each one locus.
-# - mlgs a matrix from rrmlg
-# - pnames the population names.
-#
-# Public functions utilizing this function:
-# ## rraf
-#
-# Internal functions utilizing this function:
-# ## none
+#' round robin clone-correct allele frequency estimates by population
+#' 
+#' @pram i the index of the locus.
+#' @pram loclist a list of genind objects each one locus.
+#' @pram mlgs a matrix from rrmlg
+#' @pram pnames the population names.
+#'
+#' @note
+#' Public functions utilizing this function:
+#' ## rraf
+#'
+#' Internal functions utilizing this function:
+#' ## none
+#' @noRd
 #==============================================================================#
 rrccbp <- function(i, loclist, mlgs, pnames){
   
@@ -2600,8 +2601,8 @@ rrccbp <- function(i, loclist, mlgs, pnames){
   colnames(res) <- colnames(mat)
   pops <- pop(loclist[[i]])
   for (p in pnames){
-    psub <- pops %in% p
-    cc   <- which(!duplicated(mlgs[psub, i]))
+    psub <- which(pops %in% p)
+    cc   <- psub[!duplicated(mlgs[psub, i])]
     out  <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
     res[p, ] <- out
   }

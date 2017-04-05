@@ -51,6 +51,9 @@ BUG FIX
   individuals in the data (see https://github.com/grunwaldlab/poppr/issues/128).
 * The function `poppr()` no longer throws an error if the sample > 0 and the 
   data has no population (see https://github.com/grunwaldlab/poppr/issues/130).
+* A bug where round-robin allele frequencies calculated with by_pop = TRUE were
+  inaccurate for all but the first population was fixed. For details, see
+  https://github.com/grunwaldlab/poppr/issues/132.
   
 MISC
 ----
