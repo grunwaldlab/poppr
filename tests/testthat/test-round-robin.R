@@ -224,3 +224,42 @@ test_that("pgen and psex work for haploids", {
   data(monpop)
   expect_is(psex(monpop, by_pop = FALSE), "numeric")
 })
+
+
+test_that("psex is accurate", {
+  skip_on_cran()
+  skip_if_not_installed("RClone")
+  # Setup
+  # 
+  data("zostera", package = "RClone")
+  rzos <- RClone::convert_GC(zostera[, -c(1:3)], num = 3)
+  pzos <- as.genclone(df2genind(zostera[, -c(1:3)], ncode = 3, pop = zostera[, 1],
+                      strata = zostera[, 1, drop = FALSE]))
+  extract_psex <- function(x){
+  as.numeric(x$psex)
+  #
+  # Testing basic equality, no population
+  rzpsex <- RClone::psex(rzos, RR = TRUE) %>% 
+    extract_psex %>% 
+    setNames(indNames(pzos))
+  pzpsex <- poppr::psex(pzos, by_pop = FALSE, method = "multiple")
+  nas    <- is.na(rzpsex)
+  
+  expect_equal(rzpsex[!nas], pzpsex[!nas])
+  #
+  # Testing equality with population
+  rzpsex <- RClone::psex(rzos, RR = TRUE, vecpop = pop(pzos)) %>% 
+    lapply(extract_psex) %>%
+    unlist() %>%
+    setNames(indNames(pzos))
+  gtab    <- table(pop(pzos))
+  pzpsex  <- poppr::psex(pzos, by_pop = TRUE, method = "multiple")
+  pzpsex2 <- poppr::psex(pzos, by_pop = TRUE, G = gtab, method = "multiple")
+  pzpsex3 <- poppr::psex(pzos, by_pop = TRUE, G = as.vector(gtab), method = "multiple")
+  nas <- is.na(rzpsex)
+  expect_equal(rzpsex[!nas], pzpsex[!nas])
+  expect_equal(rzpsex[!nas], pzpsex2[!nas])
+  expect_equal(rzpsex[!nas], pzpsex3[!nas])
+}
+
+})

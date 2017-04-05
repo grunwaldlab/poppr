@@ -693,38 +693,3 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     return(pSex)
   }
 }
-
-
-#' Treat the optional "G" argument for psex
-#'
-#' @param G either NULL or an integer vector that can be named or not
-#' @param N an integer or integer vector
-#' @param dat a data set
-#' @param population a population name
-#' @param method passed from psex
-#'
-#' @return a value for G
-#' @noRd
-treat_G <- function(G, N, dat, population, method){
-  if (is.null(G)){
-    return(N)
-  } else if (length(G) == 1){
-    return(G)
-  } else if (all(names(G) %in% popNames(dat))){
-    if (method == "multiple"){
-      G <- G[population]
-    } else {
-      G <- G[pop(dat)]
-    }
-  } else if (length(G) == nPop(dat)){
-    if (method == "multiple"){
-      G <- G[popNames(dat) == population]
-    } else {
-      G <- rep(G, each = table(pop(dat)))
-    }
-  } else {
-    stop("G must be NULL or an integer vector of length 1 or nPop(gid)", 
-         call. = FALSE)
-  }
-  G
-}
