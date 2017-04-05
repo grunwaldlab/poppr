@@ -26,7 +26,7 @@ test_that("rrmlg produces the correct mlgs", {
 
 test_that("rrmlg will not work on genlight objects", {
   skip_on_cran()
-  expect_error(rrmlg(glSim(10, 10, 10)))
+  expect_error(rrmlg(glSim(10, 10, 10, parallel = FALSE)))
 })
 
 test_that("rrmlg can take loci objects", {
@@ -109,19 +109,22 @@ test_that("rraf calculates per population", {
   skip_on_cran()
   data(Pram)
   rrx_matrix <- rraf(Pram, by_pop = TRUE)
+  nout <- numeric(ncol(tab(Pram)))
+  exp_matrix <- t(vapply(seppop(Pram), rraf, nout, res = "vector"))
   expect_is(rrx_matrix, "matrix")
   expect_equivalent(dim(rrx_matrix), c(nPop(Pram), ncol(tab(Pram))))
   expect_equivalent(rownames(rrx_matrix), popNames(Pram))
   # The correction is 1/N per pop. PistolRSF_OR has a pop size of 4
   expect_equivalent(rrx_matrix[nrow(rrx_matrix), ncol(rrx_matrix)], 1/4)
+  expect_equal(rrx_matrix, exp_matrix)
 })
 
 test_that("rraf calculates per population when supplied with a population factor", {
   skip_on_cran()
   data(Pram)
-  rrx_matrix <- rraf(Pram, by_pop = TRUE, correction = FALSE)
+  rrx_matrix    <- rraf(Pram, by_pop = TRUE, correction = FALSE)
   rr_pop_factor <- rraf(Pram, pop = as.character(pop(Pram)), correction = FALSE)
-  rr_formula <- rraf(Pram, pop = ~SOURCE/STATE, correction = FALSE)
+  rr_formula    <- rraf(Pram, pop = ~SOURCE/STATE, correction = FALSE)
   expect_equivalent(rrx_matrix, rr_pop_factor)
   expect_equivalent(rrx_matrix, rr_formula)
 })
