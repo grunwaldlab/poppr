@@ -37,6 +37,7 @@
 #include <Rinternals.h>
 #include <Rdefines.h>
 #include <R.h>
+#include <R_ext/Utils.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
@@ -82,17 +83,18 @@ SEXP pairwise_covar(SEXP pair_vec)
 	int count;
 	SEXP Rout;
 	I = length(pair_vec);
-	pair_vec = coerceVector(pair_vec, REALSXP);
+	PROTECT(pair_vec = coerceVector(pair_vec, REALSXP));
 	PROTECT(Rout = allocVector(REALSXP, (I*(I-1)/2) ));
 	count = 0;
 	for(i = 0; i < I-1; i++)
 	{
+		R_CheckUserInterrupt();
 		for(j = i+1; j < I; j++)
 		{
 			REAL(Rout)[count++] = sqrt(REAL(pair_vec)[i] * REAL(pair_vec)[j]);
 		}
 	}
-	UNPROTECT(1);
+	UNPROTECT(2); // pair_vec; Rout
 	return Rout;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,6 +125,7 @@ SEXP pairdiffs(SEXP freq_mat)
 
 	for(i = 0; i < rows-1; i++)
 	{
+		R_CheckUserInterrupt();
 		for(j = i+1; j < rows; j++)
 		{
 			val = 0;
@@ -225,7 +228,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add,
 	ploidy = INTEGER(coerceVector(alleles, INTSXP))[0];
 	loss = asLogical(m_loss);
 	add = asLogical(m_add);
-	bruvo_mat = coerceVector(bruvo_mat, INTSXP);
+	PROTECT(bruvo_mat = coerceVector(bruvo_mat, INTSXP));
 	perm = INTEGER(coerceVector(permutations, INTSXP));
 	PROTECT(Rval = allocMatrix(REALSXP, rows*(rows-1)/2, cols/ploidy));
 	PROTECT(pair_matrix = allocVector(INTSXP, 2*ploidy));
@@ -235,6 +238,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add,
 	{
 		for(i = 0; i < rows - 1; i++)
 		{
+			R_CheckUserInterrupt(); // in case the user wants to quit
 			for(allele = 0; allele < ploidy; allele++) 
 			{
 				clm = (allele + locus)*rows;
@@ -251,7 +255,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add,
 			}
 		}
 	}
-	UNPROTECT(2);
+	UNPROTECT(3); // bruvo_mat; Rval; pair_matrix
 	return Rval;
 }
 
@@ -365,6 +369,7 @@ polysat_bruvo() == poppr_bruvo()
 ==============================================================================*/
 double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 {
+	// R_CheckUserInterrupt();
 	int i; 
 	int j; 
 	int counter = 0;    // counter used for building arrays
@@ -662,6 +667,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double **dist,
 	int zeroes, int *zero_ind, int curr_zero, int miss_ind, int *replacement, 
 	int inds, int curr_ind, double *genome_add_sum, int *tracker)
 {
+	// R_CheckUserInterrupt();
 	int i;
 	int j;
 	//==========================================================================
@@ -749,6 +755,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
 		int *loss_tracker)
 {
+	// R_CheckUserInterrupt();
 	int i; 
 	int full_ind;
 	full_ind = 1 + (0 - miss_ind);
@@ -800,6 +807,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
 		int *tracker)
 {
+	// R_CheckUserInterrupt();
 	int i; //full_ind;
 	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
 		genos[miss_ind*nalleles + replacement[curr_ind]];
