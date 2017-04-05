@@ -499,8 +499,11 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #' Probability of encountering a genotype more than once by chance
 #' 
 #' @inheritParams pgen
-#' @param G an integer specifying the number of observed genets. If NULL, this 
-#'   will be the number of original multilocus genotypes.
+#' @param G an integer vector specifying the number of observed genets. If NULL,
+#'   this will be the number of original multilocus genotypes for 
+#'   \code{method = "single"} and the number of populations for 
+#'   \code{method = "multiple"}. \code{G} can also be a named integer vector for
+#'   each population if \code{by_pop = TRUE}.
 #' @param method which method of calculating psex should be used? Using 
 #'   \code{method = "single"} (default) indicates that the calculation for psex 
 #'   should reflect the probability of encountering a second genotype. Using 
@@ -622,6 +625,8 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     gid    <- set_pop_from_strata_or_vector(gid, pop)
     by_pop <- TRUE
   }
+  pop(gid) <- if (by_pop & !is.null(pop(gid))) pop(gid) else rep("A", nInd(gid))
+  
   if (!is.genclone(gid)){
     gid <- as.genclone(gid)
   }
@@ -645,7 +650,14 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     # pSex = (G * pGen) * ((1 - pGen)^(G - 1))
     # 
     # See: https://www.wolframalpha.com/input/?i=binomial+density+where+x+is+1
-    G       <- if (is.null(G)) nmll(gid) else G
+    # G       <- if (is.null(G)) nmll(gid) else G
+    if (nPop(gid) == 0){
+      nmlls <- nmll(gid)
+    } else {
+      nmlls <- vapply(seppop(gid), nmll, integer(1))
+      nmlls <- nmlls[pop(gid)]
+    }
+    G       <- treat_G(G, nmlls, gid, NULL, "single")
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)
   } else {
@@ -657,8 +669,8 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     # sample in the MLG had the same pgen value. The correct formuation is:
     # 
     # dbinom(seq(n_samples_in_mlg) - 1, n_samples, pgen)
-    pop(gid) <- if (by_pop & !is.null(pop(gid))) pop(gid) else rep("A", nInd(gid))
-    pSex     <- setNames(vector(mode = "numeric", length = nInd(gid)), indNames(gid))
+    pSex <- setNames(vector(mode = "numeric", length = nInd(gid)), indNames(gid))
+    
     for (p in popNames(gid)){
       pgid       <- gid[pop = p]
       pxpgen     <- xpgen[pop(gid) == p]
@@ -668,7 +680,7 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
       ipgen      <- ipgen[order(unique(mlls))]
       upgen      <- pxpgen[ipgen]
       sample_ids <- mlg.id(pgid)
-      N          <- if (is.null(G)) nInd(pgid) else G # custom sample size
+      N          <- treat_G(G, nInd(pgid), gid, p, "multiple")
       pSexp      <- mapply(make_psex, 
                            n_encounters = mll_counts, 
                            p_genotype   = upgen, 
@@ -680,4 +692,39 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     }
     return(pSex)
   }
+}
+
+
+#' Treat the optional "G" argument for psex
+#'
+#' @param G either NULL or an integer vector that can be named or not
+#' @param N an integer or integer vector
+#' @param dat a data set
+#' @param population a population name
+#' @param method passed from psex
+#'
+#' @return a value for G
+#' @noRd
+treat_G <- function(G, N, dat, population, method){
+  if (is.null(G)){
+    return(N)
+  } else if (length(G) == 1){
+    return(G)
+  } else if (all(names(G) %in% popNames(dat))){
+    if (method == "multiple"){
+      G <- G[population]
+    } else {
+      G <- G[pop(dat)]
+    }
+  } else if (length(G) == nPop(dat)){
+    if (method == "multiple"){
+      G <- G[popNames(dat) == population]
+    } else {
+      G <- rep(G, each = table(pop(dat)))
+    }
+  } else {
+    stop("G must be NULL or an integer vector of length 1 or nPop(gid)", 
+         call. = FALSE)
+  }
+  G
 }

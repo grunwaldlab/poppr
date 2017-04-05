@@ -24,8 +24,11 @@ vector is not provided, zero-value allele frequencies will automatically be
 corrected.} For details, please see the documentation on
 \link[=rare_allele_correction]{correcting rare alleles}.}
 
-\item{G}{an integer specifying the number of observed genets. If NULL, this 
-will be the number of original multilocus genotypes.}
+\item{G}{an integer vector specifying the number of observed genets. If NULL,
+this will be the number of original multilocus genotypes for 
+\code{method = "single"} and the number of populations for 
+\code{method = "multiple"}. \code{G} can also be a named integer vector for
+each population if \code{by_pop = TRUE}.}
 
 \item{method}{which method of calculating psex should be used? Using 
 \code{method = "single"} (default) indicates that the calculation for psex 
