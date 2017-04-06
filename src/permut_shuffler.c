@@ -70,7 +70,8 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP ploidy)
 	int* inmat = INTEGER(locus);
 	int* outmat = INTEGER(Rout);
 	int* alle = INTEGER(alleles);
-	R_CheckUserInterrupt();
+	R_CheckUserInterrupt(); // This function doesn't run very long so, checking
+	                        // at this point is fine.
 	for(i = 0; i < rows; i++)
 	{
 		// loop through all columns first and initialize
@@ -126,6 +127,7 @@ SEXP expand_indices(SEXP indices, SEXP length) {
 	int max;
 	int min = 1;
 	rows = INTEGER(length)[0];
+	R_CheckUserInterrupt();
 	PROTECT(res = allocVector(VECSXP, rows));
 	for (i = 0; i < rows; i++)
 	{

@@ -54,12 +54,20 @@ BUG FIX
 * A bug where round-robin allele frequencies calculated with by_pop = TRUE were
   inaccurate for all but the first population was fixed. For details, see
   https://github.com/grunwaldlab/poppr/issues/132.
+* A potential integer overflow was fixed in `SEXP association_index_haploid`.
+  This was a ghost from https://github.com/grunwaldlab/poppr/issues/100.
+* PROTECT statements were placed around allocation statements. For details, see
+  https://github.com/grunwaldlab/poppr/issues/133.
   
 MISC
 ----
 
 * The documentation for `bitwise.dist()` clarifies the role of the
   `differences_only` flag (see https://github.com/grunwaldlab/poppr/issues/119).
+* Interruptions in C code is now handled gracefully via `R_CheckUserInterrupt()`.
+  The benefit is that long-running calculations are interrupted near instantly, 
+  but at the cost of a few more milliseconds of computation time.
+  (see https://github.com/grunwaldlab/poppr/issues/86)
 
 poppr 2.3.0
 ===========
