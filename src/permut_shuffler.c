@@ -34,6 +34,7 @@
 #
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 #include <Rinternals.h>
+#include <R_ext/Utils.h>
 #include <R.h>
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A slightly faster method of permuting alleles at a locus. 
@@ -63,12 +64,14 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP ploidy)
 	rows = INTEGER(Rdim)[0]; 
 	cols = INTEGER(Rdim)[1]; 
 	PROTECT(Rout = allocMatrix(INTSXP, rows, cols));
-	alleles = coerceVector(alleles, INTSXP);
-	ploidy = coerceVector(ploidy, INTSXP);
+	PROTECT(alleles = coerceVector(alleles, INTSXP));
+	PROTECT(ploidy = coerceVector(ploidy, INTSXP));
 	ploid = INTEGER(ploidy);
 	int* inmat = INTEGER(locus);
 	int* outmat = INTEGER(Rout);
 	int* alle = INTEGER(alleles);
+	R_CheckUserInterrupt(); // This function doesn't run very long so, checking
+	                        // at this point is fine.
 	for(i = 0; i < rows; i++)
 	{
 		// loop through all columns first and initialize
@@ -97,7 +100,7 @@ SEXP permute_shuff(SEXP locus, SEXP alleles, SEXP ploidy)
 			}
 		}
 	}
-	UNPROTECT(1);
+	UNPROTECT(3); // Rout; alleles; ploidy
 	return Rout;
 }
 
@@ -124,6 +127,7 @@ SEXP expand_indices(SEXP indices, SEXP length) {
 	int max;
 	int min = 1;
 	rows = INTEGER(length)[0];
+	R_CheckUserInterrupt();
 	PROTECT(res = allocVector(VECSXP, rows));
 	for (i = 0; i < rows; i++)
 	{
@@ -135,9 +139,9 @@ SEXP expand_indices(SEXP indices, SEXP length) {
 			INTEGER(tempvec)[j] = min + j;
 		}
 		SET_VECTOR_ELT(res, i, tempvec);
-		UNPROTECT(1);
+		UNPROTECT(1); // for tempvec
 		min = ind[i] + 1;
 	}
-	UNPROTECT(1);
+	UNPROTECT(1); // for res
 	return res;
 }

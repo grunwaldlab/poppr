@@ -36,6 +36,7 @@
 
 #include <stdio.h>
 #include <Rinternals.h>
+#include <R_ext/Utils.h>
 #include <Rdefines.h>
 #include <R.h>
 #include <math.h>
@@ -234,6 +235,7 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   min_cluster_distance = -1;
   while(min_cluster_distance < thresh && num_clusters > 1)
   {
+    R_CheckUserInterrupt();
     min_cluster_distance = -1;
     closest_pair[0] = -1;
     closest_pair[1] = -1;

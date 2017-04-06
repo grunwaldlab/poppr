@@ -36,6 +36,7 @@
 
 #include <stdio.h>
 #include <Rinternals.h>
+#include <R_ext/Utils.h>
 #include <Rdefines.h>
 #include <R.h>
 #include <math.h>
@@ -227,6 +228,7 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
   // Loop through every genotype 
   for(i = 0; i < num_gens; i++)
   {
+    R_CheckUserInterrupt();
     // Set R_chr1_1 to be genlight@gen[[i]]@snp[[1]], aka a raw list
     // representing the entire first set of chromosomes in this genotype
     R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0);
@@ -549,6 +551,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
   // Loop through every genotype 
   for(i = 0; i < num_gens; i++)
   {
+    R_CheckUserInterrupt();
     // Set R_chr1_1 to be genlight@gen[[i]]@snp[[1]], 
     // aka a raw list representing the entire first set of chromosomes in this genotype
     R_chr1_1 = VECTOR_ELT(getAttrib(VECTOR_ELT(R_gen,i),R_chr_symbol),0); 
@@ -811,8 +814,8 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   double* vars; // Variance at each locus
   double* M;  // Sum of distances at each locus
   double* M2; // Sum of squared distances at each locus
-  int D;   // Sum of distances between each sample
-  int D2;  // Sum of squared distances between each sample
+  long int D;   // Sum of distances between each sample
+  long int D2;  // Sum of squared distances between each sample
   double Vo; // Observed variance
   double Ve; // Expected variance
   double Nc2;  // num_gens choose 2
@@ -916,6 +919,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   #endif
   for(i = 0; i < num_chunks; i++)
   {
+    R_CheckUserInterrupt();
     // Loop through all samples
     for(j = 0; j < num_gens; j++)
     {
@@ -1041,7 +1045,10 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
       D2 += INTEGER(R_dists)[i + j*num_gens]*INTEGER(R_dists)[i + j*num_gens];
     }
   }
-
+  if (D2 < 0)
+  {
+    warning("\nAn integer overflow has occured and the resulting index will not be accurate.\nPlease consider using a smaller sample.\n");
+  }  
   // Calculate (num_gens choose 2), which will always be (n*n-n)/2 
   Nc2 = (num_gens*num_gens - num_gens)/2.0;
   // Calculate the observed variance using D and D2
@@ -1070,6 +1077,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   #endif
   for(i = 0; i < num_loci; i++)
   {
+    R_CheckUserInterrupt();
     for(j = i+1; j < num_loci; j++)  
     {
       if(i != j)
@@ -1292,6 +1300,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   #endif
   for(i = 0; i < num_chunks; i++)
   {
+    R_CheckUserInterrupt();
     // Loop through all samples
     for(j = 0; j < num_gens; j++)
     {
@@ -1469,6 +1478,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   #endif
   for(i = 0; i < num_loci; i++)
   {
+    R_CheckUserInterrupt();
     for(j = i+1; j < num_loci; j++)  
     {
       if(i != j)
@@ -1564,6 +1574,7 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
   // Loop through all samples
   for (i = 0; i < num_gens; i++)
   {
+    R_CheckUserInterrupt();
     // Get the index for the allele frequencies
     pop = INTEGER(pops)[i] - 1;
     // h depends on ploidy. 
