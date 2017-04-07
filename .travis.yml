@@ -8,6 +8,9 @@ cran: http://cran.at.r-project.org
 
 cache: packages
 
+r_packages:
+  - RClone
+
 r_github_packages:
   - jimhester/covr
 
