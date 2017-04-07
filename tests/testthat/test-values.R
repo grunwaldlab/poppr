@@ -66,6 +66,34 @@ test_that("Bruvo's distance works as expected.", {
   expect_equal(ADDLOSS, 0.401041518896818)
 })
 
+test_that("Bruvo's distance will trim extra zeroes.", {
+  testdf  <- data.frame(test = c("00/20/24/26/43", "00/00/20/23/24"))
+  testgid <- df2genind(testdf, ploidy = 5, sep = "/")
+  addloss <- as.vector(bruvo.dist(testgid, add = FALSE, loss = FALSE))
+  ADDloss <- as.vector(bruvo.dist(testgid, add = TRUE, loss = FALSE))
+  addLOSS <- as.vector(bruvo.dist(testgid, add = FALSE, loss = TRUE))
+  ADDLOSS <- as.vector(bruvo.dist(testgid, add = TRUE, loss = TRUE))
+  # Values from Bruvo et. al. (2004)
+  expect_equal(addloss, 0.46875000000000)
+  expect_equal(addLOSS, 0.34374987334013)
+  expect_equal(ADDloss, 0.458333164453506)
+  expect_equal(ADDLOSS, 0.401041518896818)
+})
+
+test_that("Bruvo's distance will go through the recusion", {
+  skip_on_cran()
+  testdf  <- data.frame(test = c("00/00/00/00/24", "00/20/24/26/43"))
+  testgid <- df2genind(testdf, ploidy = 5, sep = "/")
+  ADDloss <- as.vector(bruvo.dist(testgid, add = TRUE, loss = FALSE))
+  addloss <- as.vector(bruvo.dist(testgid, add = FALSE, loss = FALSE))
+  addLOSS <- as.vector(bruvo.dist(testgid, add = FALSE, loss = TRUE))
+  ADDLOSS <- as.vector(bruvo.dist(testgid, add = TRUE, loss = TRUE))
+  expect_equal(ADDloss, 0.671874523162842)
+  expect_equal(addLOSS, 0.351561918854713)
+  expect_equal(addloss, 0.75)
+  expect_equal(ADDLOSS, 0.511718221008778)
+})
+
 test_that("Repeat lengths can be in any order and length if named", {
   skip_on_cran()
   data("Pram")
