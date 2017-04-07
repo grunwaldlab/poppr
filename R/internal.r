@@ -2629,18 +2629,14 @@ treat_G <- function(G, N, dat, population, method){
     return(N)
   } else if (length(G) == 1){
     return(G)
-  } else if (all(names(G) %in% popNames(dat))){
+  } else if (!is.null(names(G)) && all(names(G) %in% popNames(dat))){
     if (method == "multiple"){
       G <- G[population]
     } else {
       G <- G[pop(dat)]
     }
-  } else if (length(G) == nPop(dat)){
-    if (method == "multiple"){
-      G <- G[popNames(dat) == population]
-    } else {
-      G <- rep(G, each = table(pop(dat)))
-    }
+  } else if (length(G) > 1){
+    stop("G must be a named vector of integers.")
   } else {
     stop("G must be NULL or an integer vector of length 1 or nPop(gid)", 
          call. = FALSE)

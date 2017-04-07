@@ -27,8 +27,9 @@ corrected.} For details, please see the documentation on
 \item{G}{an integer vector specifying the number of observed genets. If NULL,
 this will be the number of original multilocus genotypes for 
 \code{method = "single"} and the number of populations for 
-\code{method = "multiple"}. \code{G} can also be a named integer vector for
-each population if \code{by_pop = TRUE}.}
+\code{method = "multiple"}. \code{G} can also be a \strong{named} integer 
+vector for each population if \code{by_pop = TRUE}. Unnamed vectors with
+a lengths greater than 1 will throw an error.}
 
 \item{method}{which method of calculating psex should be used? Using 
 \code{method = "single"} (default) indicates that the calculation for psex 
@@ -61,12 +62,10 @@ Probability of encountering a genotype more than once by chance
 }
 \subsection{multiple encounters:}{
   When \code{method = "multiple"}, the method from Arnaud-Haond et al. (1997)
-  is used where the sum of the binomial density is taken. Here, :
+  is used where the sum of the binomial density is taken.
   
   \deqn{
-  
   p_{sex} = \sum_{i = n}^N {N \choose i} \left(p_{gen}\right)^i\left(1 - p_{gen}\right)^{N - i}
-  
   }{psex = dbinom(i, N, pgen)}
   
   where \emph{N} is the number of sampling units \emph{i} is the ith - 1 
@@ -77,7 +76,7 @@ Probability of encountering a genotype more than once by chance
   \preformatted{
   dbinom(0:4, 100, 0.0001)}
 }
-\subsection{using \code{by_pop = TRUE} and modifying \code{G}}{
+\subsection{using by_pop = TRUE and modifying G:}{
   It is possible to modify \code{G} for single or multiple encounters. With
   \code{method = "single"}, \code{G} takes place of the exponent, whereas 
   with \code{method = "multiple"}, \code{G} replaces \code{N} (see above). 
