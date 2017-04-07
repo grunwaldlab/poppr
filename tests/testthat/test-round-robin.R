@@ -236,7 +236,8 @@ test_that("psex is accurate", {
   pzos <- as.genclone(df2genind(zostera[, -c(1:3)], ncode = 3, pop = zostera[, 1],
                       strata = zostera[, 1, drop = FALSE]))
   extract_psex <- function(x){
-  as.numeric(x$psex)
+    as.numeric(x$psex)
+  }
   #
   # Testing basic equality, no population
   rzpsex <- RClone::psex(rzos, RR = TRUE) %>% 
@@ -260,6 +261,4 @@ test_that("psex is accurate", {
   expect_equal(rzpsex[!nas], pzpsex[!nas])
   expect_equal(rzpsex[!nas], pzpsex2[!nas])
   expect_equal(rzpsex[!nas], pzpsex3[!nas])
-}
-
 })
