@@ -460,7 +460,10 @@ NULL
 pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
   stopifnot(is.genind(gid))
   # Stop if the ploidy of the object is not diploid
-  stopifnot(all(ploidy(gid) %in% 1:2)) 
+  # stopifnot(all(ploidy(gid) %in% 1:2)) 
+  if (!all(ploidy(gid) < 3)){
+    stop("This function can only work on haploid or diploid data.", call. = FALSE)
+  }
   if (!is.null(pop)){
     gid    <- set_pop_from_strata_or_vector(gid, pop)
     by_pop <- TRUE
@@ -710,12 +713,8 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
     # 
     # See: https://www.wolframalpha.com/input/?i=binomial+density+where+x+is+1
     # G       <- if (is.null(G)) nmll(gid) else G
-    if (nPop(gid) == 0){
-      nmlls <- nmll(gid)
-    } else {
-      nmlls <- rowSums(mlg.matrix(gid) > 0)
-      nmlls <- nmlls[pop(gid)]
-    }
+    nmlls   <- rowSums(mlg.matrix(gid) > 0)
+    nmlls   <- nmlls[pop(gid)]
     G       <- treat_G(G, nmlls, gid, NULL, "single")
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)

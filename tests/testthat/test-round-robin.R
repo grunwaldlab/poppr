@@ -150,29 +150,22 @@ test_that("psex and pgen internals produce expected results", {
              Pgm2.1 = 0.128, Pgm2.2 = 0.385, Pgm2.3 = 0.487,
              X6Pgd2.1 = 0.526, X6Pgd2.2 = 0.051, X6Pgd2.3 = 0.423)
   freqs   <- afreq[colnames(tab(xgid))]
-  pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
+  mfreq   <- matrix(freqs, nrow = 1, dimnames = list(NULL, names(freqs)))
+  pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45, method = "single")
   pGen   <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = freqs)))
+  pGenm  <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = mfreq)))
   res    <- matrix(c(unique(pGen), unique(pNotGen)), ncol = 2)
-  pSex   <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45, method = "multiple")
-  n      <- c(54, 36, 10)
-  pSex   <- split(pSex, rep(n, n))
   expected_result <- structure(c(4.14726753733799e-05, 0.00192234266749449, 0.000558567714432373, 
                                  0.00186456862059092, 0.0829457730256321, 0.024829127718338), 
                                .Dim = c(3L,2L))
   
   # tests -------------------------------------------------------------------
+  # Testing that pgen can take both a matrix and vector of af
+  expect_equal(pGen, pGenm)
+  expect_error(pgen(xgid, by_pop = FALSE, freq = mfreq[, -1, drop = FALSE]), "frequency matrix")
+  expect_error(pgen(xgid, by_pop = FALSE, freq = mfreq[, -1, drop = TRUE]), "frequencies")
   # Testing single encounter
   expect_equivalent(res, expected_result)
-  # Testing multiple encounter (with custom N)
-  # for (i in seq(n)){
-  #   N        <- n[i]
-  #   singl    <- res[i, 2]
-  #   expected <- pSex[[as.character(N)]]
-  #   p_sex    <- setNames(dbinom(seq(N) - 1, 45, res[i, 1]), names(expected))
-  #   expect_equal(p_sex, expected, label = paste("all :", N))
-  #   expect_equal(p_sex[[2]], singl, label = paste("first :", N))
-  # }
-  
 })
 
 
@@ -225,6 +218,11 @@ test_that("pgen and psex work for haploids", {
   expect_is(psex(monpop, by_pop = FALSE), "numeric")
 })
 
+test_that("pgen can't work with polyploids", {
+  skip_on_cran()
+  data(Pinf)
+  expect_error(pgen(Pinf))
+})
 
 test_that("psex is accurate", {
   skip_on_cran()
