@@ -68,6 +68,7 @@ MISC
   The benefit is that long-running calculations are interrupted near instantly, 
   but at the cost of a few more milliseconds of computation time.
   (see https://github.com/grunwaldlab/poppr/issues/86)
+* Bruvo's distance now has complete tests for recursion as of commit 4e4fa40d16
 
 poppr 2.3.0
 ===========

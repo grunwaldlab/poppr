@@ -2579,10 +2579,10 @@ rrcc <- function(i, loclist, mlgs){
 #==============================================================================#
 #' round robin clone-correct allele frequency estimates by population
 #' 
-#' @pram i the index of the locus.
-#' @pram loclist a list of genind objects each one locus.
-#' @pram mlgs a matrix from rrmlg
-#' @pram pnames the population names.
+#' @param i the index of the locus.
+#' @param loclist a list of genind objects each one locus.
+#' @param mlgs a matrix from rrmlg
+#' @param pnames the population names.
 #'
 #' @note
 #' Public functions utilizing this function:
@@ -2608,6 +2608,40 @@ rrccbp <- function(i, loclist, mlgs, pnames){
   }
   
   return(res)
+}
+
+#' Treat the optional "G" argument for psex
+#'
+#' @param G either NULL or an integer vector that can be named or not
+#' @param N an integer or integer vector
+#' @param dat a data set
+#' @param population a population name
+#' @param method passed from psex
+#' 
+#' @note 
+#' Public functions: psex
+#' Private functions: none
+#'
+#' @return a value for G
+#' @noRd
+treat_G <- function(G, N, dat, population, method){
+  if (is.null(G)){
+    return(N)
+  } else if (length(G) == 1){
+    return(G)
+  } else if (!is.null(names(G)) && all(names(G) %in% popNames(dat))){
+    if (method == "multiple"){
+      G <- G[population]
+    } else {
+      G <- G[pop(dat)]
+    }
+  } else if (length(G) > 1){
+    stop("G must be a named vector of integers.")
+  } else {
+    stop("G must be NULL or an integer vector of length 1 or nPop(gid)", 
+         call. = FALSE)
+  }
+  G
 }
 
 #==============================================================================#
@@ -2801,6 +2835,40 @@ should_poppr_be_quiet <- function(quiet){
   }
   return(quiet)
 }
-
+#' Set the population from a formula or vector
+#'
+#' @param gid a genind/genclone/genlight/snpclone object
+#' @param pop a formula or factor specifying population
+#'
+#' @return the object with the population set in the pop slot
+#' @noRd
+set_pop_from_strata_or_vector <- function(gid, pop) {
+  if (is.language(pop)){ # incoming is a formula, e.g. ~Country/Year
+    setPop(gid) <- pop
+  } else {               # incoming is a vector
+       pop(gid) <- pop
+  }
+  gid
+}
 # poppr's theme for ggplot2 (mainly rotating x axis labels)
 myTheme <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
+#' Calculate Psex for a given genotype
+#'
+#' @param n_encounters integer the number of observations of an MLG
+#' @param p_genotype numeric the probability of the given MLG
+#' @param sample_ids list the names of the given MLG
+#' @param n_samples integer the number of samples observed
+#'
+#' @return a vector of probabilities
+#' @noRd
+#'
+#' @examples
+#' make_psex(10, 0.005, n_samples = 100)
+make_psex <- function(n_encounters, p_genotype, sample_ids = NULL, n_samples){
+  encounters <- seq(n_encounters) - 1
+  out        <- dbinom(encounters, n_samples, p_genotype)
+  names(out) <- sample_ids
+  return(out)
+}

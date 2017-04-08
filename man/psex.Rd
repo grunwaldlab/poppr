@@ -24,8 +24,12 @@ vector is not provided, zero-value allele frequencies will automatically be
 corrected.} For details, please see the documentation on
 \link[=rare_allele_correction]{correcting rare alleles}.}
 
-\item{G}{an integer specifying the number of observed genets. If NULL, this 
-will be the number of original multilocus genotypes.}
+\item{G}{an integer vector specifying the number of observed genets. If NULL,
+this will be the number of original multilocus genotypes for 
+\code{method = "single"} and the number of populations for 
+\code{method = "multiple"}. \code{G} can also be a \strong{named} integer 
+vector for each population if \code{by_pop = TRUE}. Unnamed vectors with
+a lengths greater than 1 will throw an error.}
 
 \item{method}{which method of calculating psex should be used? Using 
 \code{method = "single"} (default) indicates that the calculation for psex 
@@ -43,28 +47,66 @@ a vector of Psex for each sample.
 Probability of encountering a genotype more than once by chance
 }
 \details{
-Psex is the probability of encountering a given genotype more than 
-  once by chance. The basic equation is
+\subsection{single encounter:}{
+  Psex is the probability of encountering a given genotype more than 
+  once by chance. The basic equation from Parks and Werth (1993) is
   
   \deqn{p_{sex} = 1 - (1 - p_{gen})^{G})}{psex = 1 - (1 - pgen)^G}
   
-  where \emph{G} is the number of multilocus genotypes. See
-  \code{\link{pgen}} for its calculation. For a given value of alpha (e.g.
+  where \emph{G} is the number of multilocus genotypes and \emph{pgen} is the
+  probability of a given genotype (see
+  \code{\link{pgen}} for its calculation). For a given value of alpha (e.g.
   alpha = 0.05), genotypes with psex < alpha can be thought of as a single
   genet whereas genotypes with psex > alpha do not have strong evidence that
   members belong to the same genet (Parks and Werth, 1993).
-  
+}
+\subsection{multiple encounters:}{
   When \code{method = "multiple"}, the method from Arnaud-Haond et al. (1997)
-  is used where the sum of the binomial density is taken:
+  is used where the sum of the binomial density is taken.
   
-  \deqn{p_{sex} = \sum_{i = 1}^N {N \choose i} \left(p_{gen}\right)^i\left(1
-  - p_{gen}\right)^{N - i}}{psex = sum(dbinom(1:N, N, pgen))}
+  \deqn{
+  p_{sex} = \sum_{i = n}^N {N \choose i} \left(p_{gen}\right)^i\left(1 - p_{gen}\right)^{N - i}
+  }{psex = dbinom(i, N, pgen)}
   
-  where \emph{N} is the number of samples with the same genotype, \emph{i} is
-  the ith sample, and \emph{pgen} is the value of pgen for that genotype.
+  where \emph{N} is the number of sampling units \emph{i} is the ith - 1 
+  encounter of a given genotype, and \emph{pgen} is the value of pgen for 
+  that genotype. This procedure is performed for all samples in the data.
+  For example, if you have a genotype whose pgen value was 0.0001, with 5 
+  observations out of 100 samples, the value of psex is computed like so:
+  \preformatted{
+  dbinom(0:4, 100, 0.0001)}
+}
+\subsection{using by_pop = TRUE and modifying G:}{
+  It is possible to modify \code{G} for single or multiple encounters. With
+  \code{method = "single"}, \code{G} takes place of the exponent, whereas 
+  with \code{method = "multiple"}, \code{G} replaces \code{N} (see above). 
+  If you supply a named vector for \code{G} with the population names and
+  \code{by_pop = TRUE}, then the value of \code{G} will be different for each
+  population. 
   
-  The function will automatically calculate the round-robin allele
-  frequencies with \code{\link{rraf}} and \emph{G} with \code{\link{nmll}}.
+  For example, in the case of \code{method = "multiple"}, let's say you have
+  two populations that share a genotype between them. The size of population
+  A and B are 25 and 75, respectively, The values of pgen for that genotype
+  in population A and B are 0.005 and 0.0001, respectively, and the number of
+  samples with the genotype in popualtions A and B are 4 and 6, respectively.
+  In this case psex for this genotype would be calculated for each population
+  separately if we don't specify \code{G}:
+  \preformatted{
+  psexA = dbinom(0:3, 25, 0.005)
+  psexB = dbinom(0:5, 75, 0.0001)}
+  If we specify \code{G = 100}, then it changes to:
+  \preformatted{
+  psexA = dbinom(0:3, 100, 0.005)
+  psexB = dbinom(0:5, 100, 0.0001)}
+  We could also specify G to be the number of genotypes observed in the 
+  population (let's say A = 10, B = 20)
+  \preformatted{
+  psexA = dbinom(0:3, 10, 0.005)
+  psexB = dbinom(0:5, 20, 0.0001)}
+}
+  Unless \code{freq} is supplied, the function will automatically calculate
+  the round-robin allele frequencies with \code{\link{rraf}} and \emph{G}
+  with \code{\link{nmll}}.
 }
 \note{
 The values of Psex represent the value for each multilocus genotype. 
@@ -77,24 +119,42 @@ data(Pram)
 Pram_psex <- psex(Pram, by_pop = FALSE)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
+title("Probability of second encounter")
 \dontrun{
 
 # With multiple encounters
 Pram_psex <- psex(Pram, by_pop = FALSE, method = "multiple")
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
+title("Probability of multiple encounters")
 
 # This can be also done assuming populations structure
-Pram_psex <- psex(Pram, by_pop = TRUE)
+Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple")
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
+title("Probability of multiple encounters\\nwith pop structure")
 
 # The above, but correcting zero-value alleles by 1/(2*rrmlg) with no 
 # population structure assumed
-# See the documentation for rare_allele_correction for details.
-Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2)
+# Type ?rare_allele_correction for details.
+Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2, method = "multiple")
 plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
+title("Probability of multiple encounters\\nwith pop structure (1/(2*rrmlg))")
+
+# We can also set G to the total population size
+(G <- nInd(Pram))
+Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple", G = G)
+plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+abline(h = 0.05, lty = 2)
+title("Probability of multiple encounters\\nwith pop structure G = 729")
+
+# Or we can set G to the number of unique MLGs
+(G <- rowSums(mlg.table(Pram, plot = FALSE) > 0))
+Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple", G = G)
+plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+abline(h = 0.05, lty = 2)
+title("Probability of multiple encounters\\nwith pop structure G = nmll")
 
 ## An example of supplying previously calculated frequencies and G
 # From Parks and Werth, 1993, using the first three genotypes.
@@ -148,7 +208,7 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 }
 \seealso{
 \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}},
-\code{\link[=rare_allele_correction]{correcting rare alleles}}
+\code{\link{rare_allele_correction}}
 }
 \author{
 Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka

@@ -60,12 +60,14 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
 		int *loss_tracker);
+/*
+ * UNUSED FUNCTIONS
 void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo, 
 		int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
 		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
 		int *tracker);
 void print_distmat(double** dist, int* genos, int p);
-		
+*/		
 		
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -789,19 +791,23 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 }
 
 /*==============================================================================
-* Notes for fill_short_geno: This will act much in the same way as
-* genome_loss_calc, except it will fill the shorter genotype with all possible
-* combinations of that genotype before sending it through bruvo_dist with
-* one full genotype. 
-*
-* Things that need to be set before running this:
-* - replacement is an array of the non-missing alleles from the shorter 
-*   genotype.
-* - inds is the number of non-missing alleles.
-* - *res will be minn
-* - *tracker will count the number of iterations this goes through in order
-*   to get an average. 
-==============================================================================*/
+ * 
+ * This function is currently unused.
+ * 
+ * 
+ * Notes for fill_short_geno: This will act much in the same way as
+ * genome_loss_calc, except it will fill the shorter genotype with all possible
+ * combinations of that genotype before sending it through bruvo_dist with
+ * one full genotype. 
+ *
+ * Things that need to be set before running this:
+ * - replacement is an array of the non-missing alleles from the shorter 
+ *   genotype.
+ * - inds is the number of non-missing alleles.
+ * - *res will be minn
+ * - *tracker will count the number of iterations this goes through in order
+ *   to get an average. 
+==============================================================================
 void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo, 
 		int *loss, int *add, int zeroes, int *zero_ind, int curr_zero, 
 		int miss_ind, int *replacement, int inds, int curr_ind, double *res, 
@@ -837,7 +843,7 @@ void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo,
 	}
 	return;
 }
-
+*/
 
 
 /*
@@ -889,6 +895,9 @@ double mindist(int perms, int alleles, int *perm, double **dist)
 	return minn;
 }
 
+/* Helper function to print a distance matrix
+ * mainly used for debugging
+
 void print_distmat(double** dist, int* genos, int p)
 {
 	int i;
@@ -912,3 +921,4 @@ void print_distmat(double** dist, int* genos, int p)
 	return;
 }
 
+*/

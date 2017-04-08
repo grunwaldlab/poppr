@@ -637,11 +637,11 @@ p_{sex} = 1 - (1 - p_{gen})^G
 \end{equation}
 
 Where $G$ is the number of multilocus genotypes in the data. Finding a genotype
-$N$ times is derived from the binomial distribution \citep{parks1993study,
-arnaud2007standardizing}:
+$n$ times out of $N$ samples is derived from the binomial distribution 
+\citep{parks1993study, arnaud2007standardizing}:
 
 \begin{equation}
-p_{sex} = \sum_{i = 1}^N {N \choose i} \left(p_{gen}\right)^i\left(1 - p_{gen}\right)^{N - i}
+p_{sex} = \sum_{i = n}^N {N \choose i} \left(p_{gen}\right)^i\left(1 - p_{gen}\right)^{N - i}
 \end{equation}
 
 The \poppr{} function \texttt{psex()} can calculate both of these quantities. 

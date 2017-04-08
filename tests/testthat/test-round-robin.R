@@ -131,13 +131,16 @@ test_that("rraf calculates per population when supplied with a population factor
 
 test_that("psex and pgen internals produce expected results", {
   skip_on_cran()
+
+  # setup -------------------------------------------------------------------
+
   # From Parks and Werth, 1993
   x <- "
- Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
-54 12 12 12 23 22 11
-36 22 22 11 22 33 11
-10 23 22 11 33 13 13"
-  
+   Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
+  54 12 12 12 23 22 11
+  36 22 22 11 22 33 11
+  10 23 22 11 33 13 13"
+    
   xtab <- read.table(text = x, header = TRUE, row.names = 1)
   xgid <- df2genind(xtab[rep(rownames(xtab), as.integer(rownames(xtab))), ], ncode = 1)
   afreq <- c(Hk.1 = 0.167, Hk.2 = 0.795, Hk.3 = 0.038, 
@@ -147,16 +150,24 @@ test_that("psex and pgen internals produce expected results", {
              Pgm2.1 = 0.128, Pgm2.2 = 0.385, Pgm2.3 = 0.487,
              X6Pgd2.1 = 0.526, X6Pgd2.2 = 0.051, X6Pgd2.3 = 0.423)
   freqs   <- afreq[colnames(tab(xgid))]
-  pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45)
+  mfreq   <- matrix(freqs, nrow = 1, dimnames = list(NULL, names(freqs)))
+  pNotGen <- psex(xgid, by_pop = FALSE, freq = freqs, G = 45, method = "single")
   pGen   <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = freqs)))
-  res <- matrix(c(unique(pGen), unique(pNotGen)), ncol = 2)
-  
+  pGenm  <- exp(rowSums(pgen(xgid, by_pop = FALSE, freq = mfreq)))
+  res    <- matrix(c(unique(pGen), unique(pNotGen)), ncol = 2)
   expected_result <- structure(c(4.14726753733799e-05, 0.00192234266749449, 0.000558567714432373, 
                                  0.00186456862059092, 0.0829457730256321, 0.024829127718338), 
                                .Dim = c(3L,2L))
-  expect_equivalent(res, expected_result)
   
+  # tests -------------------------------------------------------------------
+  # Testing that pgen can take both a matrix and vector of af
+  expect_equal(pGen, pGenm)
+  expect_error(pgen(xgid, by_pop = FALSE, freq = mfreq[, -1, drop = FALSE]), "frequency matrix")
+  expect_error(pgen(xgid, by_pop = FALSE, freq = mfreq[, -1, drop = TRUE]), "frequencies")
+  # Testing single encounter
+  expect_equivalent(res, expected_result)
 })
+
 
 test_that("psex produces a vector", {
   skip_on_cran()
@@ -205,4 +216,46 @@ test_that("pgen and psex work for haploids", {
   skip_on_cran()
   data(monpop)
   expect_is(psex(monpop, by_pop = FALSE), "numeric")
+})
+
+test_that("pgen can't work with polyploids", {
+  skip_on_cran()
+  data(Pinf)
+  expect_error(pgen(Pinf))
+})
+
+test_that("psex is accurate", {
+  skip_on_cran()
+  skip_if_not_installed("RClone")
+  # Setup
+  # 
+  data("zostera", package = "RClone")
+  rzos <- RClone::convert_GC(zostera[, -c(1:3)], num = 3)
+  pzos <- as.genclone(df2genind(zostera[, -c(1:3)], ncode = 3, pop = zostera[, 1],
+                      strata = zostera[, 1, drop = FALSE]))
+  extract_psex <- function(x){
+    as.numeric(x$psex)
+  }
+  #
+  # Testing basic equality, no population
+  rzpsex <- RClone::psex(rzos, RR = TRUE) %>% 
+    extract_psex %>% 
+    setNames(indNames(pzos))
+  pzpsex <- poppr::psex(pzos, by_pop = FALSE, method = "multiple")
+  nas    <- is.na(rzpsex)
+  
+  expect_equal(rzpsex[!nas], pzpsex[!nas])
+  #
+  # Testing equality with population
+  rzpsex <- RClone::psex(rzos, RR = TRUE, vecpop = pop(pzos)) %>% 
+    lapply(extract_psex) %>%
+    unlist() %>%
+    setNames(indNames(pzos))
+  gtab    <- table(pop(pzos))
+  pzpsex  <- poppr::psex(pzos, by_pop = TRUE, method = "multiple")
+  pzpsex2 <- poppr::psex(pzos, by_pop = TRUE, G = gtab, method = "multiple")
+  expect_error(poppr::psex(pzos, by_pop = TRUE, G = as.vector(gtab), method = "multiple"))
+  nas <- is.na(rzpsex)
+  expect_equal(rzpsex[!nas], pzpsex[!nas])
+  expect_equal(rzpsex[!nas], pzpsex2[!nas])
 })
