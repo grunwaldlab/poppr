@@ -1,7 +1,7 @@
 # Poppr version 2 <img src="vignettes/small_logo.png" align="right"/>
 
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=fix-psex)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=fix-psex)](https://coveralls.io/r/grunwaldlab/poppr?branch=fix-psex)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
 [![CRAN version](http://www.r-pkg.org/badges/version/poppr)](https://cran.r-project.org/package=poppr)
 <!-- 
 [![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)

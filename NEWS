@@ -35,7 +35,11 @@ NOTABLE CHANGES
   change the shape of the curve if you have monomorphic loci. This change IS
   optional via the drop and dropna parameters, but it is not recommended to 
   change these parameters. 
-  
+* The calculation for `psex()` has changed to be more accurate when using
+  method = "multiple". It also gains the ability to use several values of G,
+  one for each population. Documentation for `psex()` has also been improved.
+  For details of the change, see https://github.com/grunwaldlab/poppr/issues/101
+
 BUG FIX
 -------
 
