@@ -1,37 +1,14 @@
-## Resubmission
-
-* Fixed CRAN URLs to use https. 
-* Current problems:
-
-> URL: https://developer.apple.com/xcode
->   From: inst/doc/poppr_manual.html
->         README.md
->   Status: Error
->   Message: libcurl error code 35
->   	Unknown SSL protocol error in connection to developer.apple.com:443
-> URL: https://doi.org/10.1093/bioinformatics/btn129
->   From: inst/doc/poppr_manual.html
->   Status: 400
->   Message: Bad Request
-> URL: https://doi.org/10.1093/bioinformatics/bts460
->   From: inst/doc/poppr_manual.html
->   Status: 400
->   Message: Bad Request
-
-These are valid URLs. I have no control over their behavior.
-
+## Submission
 ## Test environments
 
-* local OS X install, R 3.3.2
-* ubuntu 12.04 (on travis-ci), devel [2016-11-14 r71659] and R 3.3.1
-* R-hub windows, R 3.3.2
-* R-hub with valgrind, R 3.3.1
-* R-hub with ASAN/UBSAN, R devel [2016-09-18 r71304]
-* R-hub fedora, R devel [2016-10-30 r71610]
+* local OS X install, R 3.3.3
+* ubuntu 12.04 (on travis-ci), devel (2017-04-07 r72495) and R 3.3.3
+* winbuilder R version 3.4.0 beta (2017-04-07 r72496)
+* Rhub fedora-gcc-devel (2017-04-08 r72499)
 
 ## R CMD check results
 
-Windows gave threw a warning due to MiKTeX errors.
+All good on the above platforms.
 
 ## valgrind
 
