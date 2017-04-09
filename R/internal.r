@@ -1445,7 +1445,7 @@ infinite_vals_replacement <- function(D, warning){
 tree_generator <- function(tree, distance, quiet = TRUE, ...){
   TREEFUNK <- match.fun(tree)
   DISTFUNK <- match.fun(distance)
-  distargs <- formals(distance)
+  distargs <- as.list(formals(distance))
   otherargs <- list(...)
   #print(otherargs)
   matchargs <- names(distargs)[names(distargs) %in% names(otherargs)]
