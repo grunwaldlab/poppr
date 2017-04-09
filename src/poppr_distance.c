@@ -196,6 +196,107 @@ are based off of microsatellites, is to replace them with zero. The main
 distance algorithm in turn will return a distance of 100 for any individuals
 with missing data. In the wrapping R function, 100s will be converted to NAs
 and then the average over all loci will be taken. 
+ 
+Tests:
+ 
+All tests for Bruvo's distance are based off of the published values. The 
+following R code will test that Bruvo's distance is working properly:
+ 
+# Published data from Bruvo et al 2004 (with extra zeroes)
+tg <- structure(c(0L, 0L, 0L, 20L, 20L, 24L, 23L, 26L, 24L, 43L), .Dim = c(2L, 
+5L), .Dimnames = list(c("1", "2"), NULL))
+tg1 <- tg
+ 
+# Comparison function
+amat <- function(a1, a2) 1 - 2^(-abs(a1 - a2))
+
+# Calculate distance between two samples
+brvo <- function(allmat){
+  n     <- ncol(allmat)
+  rows  <- seq(n)
+  pairs <- expand.grid(allmat[1, ], allmat[2, ]) 
+  mat   <- matrix(apply(pairs, 1, function(x) amat(x[1], x[2])), n, n)
+  # Infinite model accounted for here
+  mat[allmat[1, ] == "0", ] <- 1
+  mat[, allmat[2, ] == "0"] <- 1
+  perms <- matrix(.Call("permuto", n, PACKAGE = "poppr") + 1, nrow = n) 
+  walks <- apply(perms, 2, function(i) mean(mat[matrix(c(rows, i), ncol = 2)]))
+  min(walks)
+}
+
+# Calculate distance between two samples with different models
+Rbruvo <- function(dat, add = TRUE, loss = TRUE){
+  dat <- t(apply(dat, 1, sort))
+  dat <- dat[, colSums(dat, na.rm = TRUE) > 0]
+  if (!add & !loss){
+    return(brvo(dat))
+  } 
+  nzeroes <- rowSums(dat == 0)
+  zeroes  <- which.max(nzeroes)
+  repls   <- seq(nzeroes[zeroes])
+  zlocat  <- dat[zeroes, ] == 0
+  mloss   <- 0
+  madd    <- 0
+  if (loss){
+    donor    <- which.min(nzeroes)
+    combs    <- lapply(repls, function(i) dat[donor, ]) 
+    combs    <- do.call(expand.grid, combs)
+    combs    <- unique(t(apply(combs, 1, sort)))
+    combs    <- if (nrow(combs) == 1) t(combs) else combs
+    losslist <- vector(mode = "list", length = nrow(combs))
+    for (i in seq(nrow(combs))){
+      losslist[[i]] <- dat
+      losslist[[i]][zeroes, repls] <- combs[i, ]
+    }
+    mloss <- sum(vapply(losslist, brvo, numeric(1)))/length(losslist)
+  }
+  if (add){
+    combs   <- lapply(repls, function(i) dat[zeroes, !zlocat]) 
+    combs   <- do.call(expand.grid, combs)
+    combs   <- unique(t(apply(combs, 1, sort)))
+    combs   <- if (nrow(combs) == 1) t(combs) else combs
+    addlist <- vector(mode = "list", length = nrow(combs))
+    for (i in seq(nrow(combs))){
+      addlist[[i]] <- dat
+      addlist[[i]][zeroes, zlocat] <- combs[i, ]
+    }
+    madd <- sum(vapply(addlist, brvo, numeric(1)))/length(addlist)
+  }
+  
+  (mloss + madd)/(sum(c(mloss, madd) > 0L))
+}
+
+# Function to run poppr's version of Bruvo's distance
+requireNamespace("poppr")
+poppr_bruvo <- function(dat, add = TRUE, loss = TRUE){
+  dat <- t(apply(dat, 1, sort))
+  dat <- dat[, colSums(dat, na.rm = TRUE) > 0]
+  ploid <- ncol(dat)
+  .Call("bruvo_distance",
+        dat,
+        .Call("permuto", ploid, PACKAGE = "poppr"),
+        ploid,
+        add,
+        loss,
+        PACKAGE = "poppr")
+}
+ 
+# Function to run all the models and return a vector
+run_models <- function(dat, FUN = "Rbruvo"){
+  models <- expand.grid(add = 0:1 == 1L, loss = 0:1L == 1L)
+  res    <- apply(models, 1, function(x) do.call(FUN, c(list(dat), x)))
+  names(res) <- c("infinite", "add", "loss", "combined")
+  res
+}
+
+# works for published values
+all.equal(run_models(tg, "poppr_bruvo"), run_models(tg, "Rbruvo"))
+
+# works with recursion
+tg1[1, ] <- c(0, 0, 0, 0, 24)
+all.equal(run_models(tg1, "poppr_bruvo"), run_models(tg1, "Rbruvo"))
+
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss)
 {
