@@ -126,7 +126,7 @@ Do not use missingno with this function.
 
 # Load the nancycats dataset and construct the repeat vector.
 data(nancycats)
-
+names(alleles(nancycats)) <- locNames(nancycats) # small bug in this data set
 # Assume the alleles are all dinucleotide repeats.
 ssr <- rep(2, nLoc(nancycats))
 test_replen(nancycats, ssr)         # Are the repeat lengths consistent?

@@ -357,24 +357,6 @@ test_that("samp.ia works",{
   expect_equivalent(nopos.res, pos.res)
 })
 
-test_that("fix_replen works as expected", {
-  data(nancycats)
-  nanrep  <- rep(2, 9)
-  nantest <- test_replen(nancycats, nanrep)
-  nanfix  <- fix_replen(nancycats, nanrep)
-  expect_equal(sum(nantest), 5)
-  expect_true(all(floor(nanfix)[!nantest] == 1))
-})
-
-test_that("fix_replen throws errors for weird replens", {
-  skip_on_cran()
-  data(partial_clone)
-  expect_warning(fix_replen(partial_clone, rep(10, 10)), paste(locNames(partial_clone), collapse = ", "))
-  expect_warning(fix_replen(partial_clone, rep(10, 10), fix_some = FALSE), "Original repeat lengths are being returned")
-  expect_warning(fix_replen(partial_clone, rep(2, 10)), "The repeat lengths for Locus_2, Locus_7, Locus_9 are not consistent.")
-  expect_warning(fix_replen(partial_clone, rep(2, 10)), "Repeat lengths with some modification are being returned: Locus_3")
-})
-
 test_that("poppr_has_parallel returns something logical", {
   expect_is(poppr_has_parallel(), "logical")
 })

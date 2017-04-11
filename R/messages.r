@@ -148,6 +148,39 @@ non_ssr_data_warning <- function(){
 	return(msg)
 }
 
+mismatched_repeat_length_warning <- function(replen, nloci){
+  paste0("length of repeats (", length(replen), ") does not equal",
+         " the number of loci (", nloci, ").")
+}
+
+trimmed_repeats_warning <- function(replen, loci){
+  keep <- names(replen) %in% loci
+  removed <- strwrap(paste(names(replen[!keep]), collapse = ", "))
+  removed <- paste(removed, sep = "\n")
+  paste0("There are more repeat lengths (", length(replen), ") than loci ",
+         "(", length(loci), "). The following repeat lengths will be removed:",
+         "\n ", removed)
+}
+
+
+unmatched_loci_warning <- function(replen, loci){
+  nr     <- length(replen)
+  nl     <- length(loci)
+  replen <- strwrap(paste(replen, collapse = ", "), 
+                    initial = "",
+                    prefix = "\t                  ")
+  replen <- paste(replen, collapse = "\n")
+  loci   <- strwrap(paste(loci, collapse = ", "), 
+                    initial = "",
+                    prefix = "\t                  ")
+  loci   <- paste(loci, collapse = "\n")
+  msg <- paste0("The following repeat lengths (", nr, ") do not match ",
+               "any of the loci (", nl, "):\n",
+               "\trepeat lengths... ", replen, "\n", 
+               "\tloci............. ", loci)
+  return(msg)
+}
+
 #==============================================================================#
 # Warning message for Neighbor-Joining trees.
 # Public functions utilizing this function:
