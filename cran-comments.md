@@ -1,4 +1,9 @@
-## Submission
+## Resubmission
+
+This is a resubmission because I previously submitted a day ago and subsequently
+found a silent user-facing bug that impacts users negatively. This update fixes
+that bug.
+
 ## Test environments
 
 * local OS X install, R 3.3.3
