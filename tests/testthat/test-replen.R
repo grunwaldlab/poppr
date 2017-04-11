@@ -34,6 +34,14 @@ test_that("test_replen and fix_replen will not work for short vectors", {
   expect_error(test_replen(nancycats, named_nanrep[1:7]), "length of repeats \\(7\\)")
 })
 
+test_that("fix_replen will work for shuffled vectors", {
+  data(Pram)
+  (Pram_replen <- setNames(c(3, 2, 4, 4, 4), locNames(Pram)))
+  shuff <- fix_replen(Pram, sample(Pram_replen))
+  orig  <- fix_replen(Pram, Pram_replen)
+  expect_equal(shuff, orig)
+})
+
 test_that("fix_replen throws errors for weird replens", {
   skip_on_cran()
   data(partial_clone)

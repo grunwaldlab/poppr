@@ -1,8 +1,9 @@
 ## Resubmission
 
-This is a resubmission because I previously submitted a day ago and subsequently
-found a silent user-facing bug that impacts users negatively. This update fixes
-that bug.
+This is a resubmission. 
+
+I previously submitted a day ago and subsequently found a silent user-facing bug
+that impacts users negatively. This update fixes that bug.
 
 ## Test environments
 
