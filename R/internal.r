@@ -996,14 +996,15 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
 # ## none
 #==============================================================================#
 match_replen_to_loci <- function(gid_loci, replen){
-  if (is.genind(gid_loci)){
-    gid_loci <- locNames(gid_loci)
-  }
+  # unnamed loci with the same length
   if (is.null(names(replen))){
     if (is.character(gid_loci)){
-      names(replen) <- gid_loci
+      names(replen) <- gid_loci # give them names
     }
     return(replen)
+  } else if (!all(gid_loci %in% names(replen))){ # names don't match up
+    unmatched_repeats <- names(replen[!names(replen) %in% gid_loci])
+    stop(unmatched_loci_warning(unmatched_repeats, gid_loci), call. = FALSE)
   } else {
     return(replen[gid_loci])
   }
@@ -2886,14 +2887,8 @@ cromulent_replen <- function(gid, replen){
     stop(msg, call. = FALSE)
   } else if (length(replen) > nLoc(gid)){
     msg <- trimmed_repeats_warning(replen, the_loci)
-    replen <- replen[names(replen) %in% the_loci]
     warning(msg, call. = FALSE, immediate. = TRUE)
   } 
   new_replen <- match_replen_to_loci(the_loci, replen)
-  new_replen <- new_replen[!is.na(new_replen)]
-  if (length(new_replen) != nLoc(gid)){
-    msg <- unmatched_loci_warning(names(replen), the_loci)
-    stop(msg, call. = FALSE)
-  }
   return(new_replen)
 }

@@ -22,7 +22,7 @@ test_that("test_replen and fix_replen work for larger length vectors", {
   names(bad_named_nanrep11)[1] <- "bob"
   expect_error(test_replen(nancycats, nanrep10), "length of repeats \\(10\\)")
   expect_error(fix_replen(nancycats, nanrep10), "length of repeats \\(10\\)")
-  expect_warning(expect_error(test_replen(nancycats, bad_named_nanrep11), "repeat lengths... fca23"), "bob")
+  expect_warning(expect_error(test_replen(nancycats, bad_named_nanrep11), "repeat lengths... bob, foo, bar"), "bob")
   expect_warning(nts <- test_replen(nancycats, named_nanrep11), "foo, bar")
   expect_warning(nfx <- fix_replen(nancycats, named_nanrep11), "foo, bar")
   expect_identical(nts, nantest)

@@ -108,6 +108,15 @@ test_that("Repeat lengths can be in any order and length if named", {
   expect_equivalent(pbruvo, pbruvo_long)
 })
 
+test_that("Bruvo's distance will throw an error if there are not enough named lengths", {
+  skip_on_cran()
+  data("Pram")
+  p10 <- Pram[sample(nInd(Pram), 10)]
+  # Repeat length as normal
+  names(other(p10)$REPLEN)[1] <- "WHAAA"
+  expect_error(bruvo.dist(p10, replen = other(p10)$REPLEN), "repeat lengths... WHAAA")
+})
+
 test_that("Bruvo's distance can be calculated per locus", {
   skip_on_cran()
   data("Pram")
