@@ -1000,6 +1000,9 @@ match_replen_to_loci <- function(gid_loci, replen){
     gid_loci <- locNames(gid_loci)
   }
   if (is.null(names(replen))){
+    if (is.character(gid_loci)){
+      names(replen) <- gid_loci
+    }
     return(replen)
   } else {
     return(replen[gid_loci])
@@ -2871,4 +2874,26 @@ make_psex <- function(n_encounters, p_genotype, sample_ids = NULL, n_samples){
   out        <- dbinom(encounters, n_samples, p_genotype)
   names(out) <- sample_ids
   return(out)
+}
+
+cromulent_replen <- function(gid, replen){
+  the_loci <- locNames(gid)
+  if (length(replen) != nLoc(gid) && is.null(names(replen))){
+    msg <- mismatched_repeat_length_warning(replen, nLoc(gid))
+    stop(msg, call. = FALSE)
+  } else if (length(replen) < nLoc(gid)){
+    msg <- mismatched_repeat_length_warning(replen, nLoc(gid))
+    stop(msg, call. = FALSE)
+  } else if (length(replen) > nLoc(gid)){
+    msg <- trimmed_repeats_warning(replen, the_loci)
+    replen <- replen[names(replen) %in% the_loci]
+    warning(msg, call. = FALSE, immediate. = TRUE)
+  } 
+  new_replen <- match_replen_to_loci(the_loci, replen)
+  new_replen <- new_replen[!is.na(new_replen)]
+  if (length(new_replen) != nLoc(gid)){
+    msg <- unmatched_loci_warning(names(replen), the_loci)
+    stop(msg, call. = FALSE)
+  }
+  return(new_replen)
 }

@@ -179,7 +179,7 @@
 #' 
 #' # Load the nancycats dataset and construct the repeat vector.
 #' data(nancycats)
-#' 
+#' names(alleles(nancycats)) <- locNames(nancycats) # small bug in this data set
 #' # Assume the alleles are all dinucleotide repeats.
 #' ssr <- rep(2, nLoc(nancycats))
 #' test_replen(nancycats, ssr)         # Are the repeat lengths consistent?
@@ -620,11 +620,13 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
 #'   \code{\link{bruvo.msn}} \code{\link{bruvo.boot}}
 #' @author Zhian N. Kamvar
 #' @examples
-#' data(nancycats)
-#' test_replen(nancycats, rep(2, 9))
+#' data(Pram)
+#' (Pram_replen <- setNames(c(3, 2, 4, 4, 4), locNames(Pram)))
+#' test_replen(Pram, Pram_replen)
 test_replen <- function(gid, replen){
-  alleles <- lapply(gid@all.names, as.numeric)
-  are_consistent <- vapply(1:nLoc(gid), consistent_replen, logical(1), 
+  replen         <- cromulent_replen(gid, replen)
+  alleles        <- lapply(alleles(gid), as.numeric)
+  are_consistent <- vapply(locNames(gid), consistent_replen, logical(1), 
                            alleles, replen)
   names(are_consistent) <- locNames(gid)
   return(are_consistent)
@@ -685,8 +687,9 @@ consistent_replen <- function(index, alleles, replen){
 #'   \code{\link{bruvo.msn}} \code{\link{bruvo.boot}}
 #' @examples
 #' 
-#' data(nancycats)
-#' fix_replen(nancycats, rep(2, 9))
+#' data(Pram)
+#' (Pram_replen <- setNames(c(3, 2, 4, 4, 4), locNames(Pram)))
+#' fix_replen(Pram, Pram_replen)
 #' # Let's start with an example of a tetranucleotide repeat motif and imagine
 #' # that there are twenty alleles all 1 step apart:
 #' (x <- 1:20L * 4L)
@@ -706,10 +709,7 @@ consistent_replen <- function(index, alleles, replen){
 #' (PxPcr <- round(PxPc))
 #' diff(PxPcr)
 fix_replen <- function(gid, replen, e = 1e-5, fix_some = TRUE){
-  if (length(replen) != nLoc(gid)) {
-    stop(paste0("length of repeats (", length(replen), ") does not equal",
-                " the number of loci (", nLoc(gid), ")."))
-  }
+  replen          <- cromulent_replen(gid, replen)
   consistent_reps <- test_replen(gid, replen)
   names(replen)   <- locNames(gid)
   ADD <- FALSE
