@@ -705,6 +705,10 @@ pair_matrix <- function(pop, numLoci, np)
 rerange <- function(x){
   minx <- min(x, na.rm = TRUE)
   maxx <- max(x, na.rm = TRUE)
+  if (!is.finite(minx) || !is.finite(maxx)){
+    warning("non-finite values found for distances, returning 0.5")
+    return(rep(0.5, length(x)))
+  }
   if (minx < 0)
     x <- x + abs(minx)
     maxx <- maxx + abs(minx)
