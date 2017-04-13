@@ -2,19 +2,36 @@
 
 This is a resubmission. 
 
-I previously submitted a day ago and subsequently found a silent user-facing bug
-that impacts users negatively. This update fixes that bug.
+This submission fixes two bugs:
+
+ - Parallel code that threw an error on Fedora systems was serialized
+   (https://github.com/grunwaldlab/poppr/issues/138)
+ - A significant and silent user-facing bug was fixed
+   (https://github.com/grunwaldlab/poppr/issues/136)
 
 ## Test environments
 
 * local OS X install, R 3.3.3
-* ubuntu 12.04 (on travis-ci), devel (2017-04-07 r72495) and R 3.3.3
-* winbuilder R version 3.4.0 beta (2017-04-07 r72496)
+* ubuntu 12.04 (on travis-ci), devel (2017-04-12 r72509) and R 3.3.3
+* winbuilder R version 3.4.0 beta (2017-04-12 r72509)
 * Rhub fedora-gcc-devel (2017-04-08 r72499)
 
 ## R CMD check results
 
-All good on the above platforms.
+On winbuilder:
+> 
+> * checking CRAN incoming feasibility ... NOTE
+> Maintainer: 'Zhian N. Kamvar <zkamvar@gmail.com>'
+> 
+> Days since last update: 3
+
+I have been in communication with Professor Ligges about this update.
+
+## Solaris SPARC
+
+There is currently an ERROR on poppr's results, but this originates in another
+package. I have submitted code to fix this: 
+https://github.com/thibautjombart/adegenet/pull/176
 
 ## valgrind
 
