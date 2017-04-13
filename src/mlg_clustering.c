@@ -44,10 +44,15 @@
 #include <string.h>
 #include <stdlib.h>
 
+// Thu Apr 13 08:42:12 2017 ------------------------------
+// This code produces bugs when run on Fedora with multiple threads. Because of
+// this, I am removing OMP functionality here and it will run serially. Details
+// appear here: https://github.com/grunwaldlab/poppr/issues/138
 // Include openMP if compiled with an openMP compatible compiler
-#ifdef _OPENMP
-#include <omp.h>
-#endif
+// #ifdef _OPENMP
+// #include <omp.h>
+// #endif
+
 
 SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SEXP requested_threads);
 void fill_distance_matrix(double** cluster_distance_martix, double*** private_distance_matrix, int* out_vector, int* cluster_size, SEXP dist, char algo, int num_individuals, int num_mlgs, int num_threads);
@@ -168,7 +173,13 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
   cluster_size = R_Calloc(num_mlgs, int);
   // Allocate memory for storing cluster assignments
   out_vector = R_Calloc(num_individuals, int);
-
+  
+  // Thu Apr 13 08:31:55 2017 ------------------------------
+  // I am commenting out the following code because of an issue where this
+  // code produces bugs on Fedora with 2 threads. Details of the failure
+  // appear here: https://github.com/grunwaldlab/poppr/issues/138
+  // 
+  /*
   #ifdef _OPENMP
   {
     // Set the number of threads to be used in each omp parallel region
@@ -187,7 +198,8 @@ SEXP neighbor_clustering(SEXP dist, SEXP mlg, SEXP threshold, SEXP algorithm, SE
     num_threads = 1;
   }
   #endif
-
+  */
+  num_threads = 1;
   // Initialize a 3D array so that each thread can work on its
   // own private distance matrix
   private_distance_matrix = R_Calloc(num_threads, double**);
@@ -387,6 +399,9 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
   double* dist_ji;
   int thread_id;
 
+  // Thu Apr 13 08:37:40 2017 ------------------------------
+  // Commenting this section out. See https://github.com/grunwaldlab/poppr/issues/138
+  /*
   #ifdef _OPENMP
   {
     // Set the number of threads to be used in each omp parallel region
@@ -398,11 +413,13 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
     num_threads = 1;
   }
   #endif
-
   #ifdef _OPENMP
   #pragma omp parallel private(dist_ij, dist_ji, thread_id) shared(out_vector,dist,algo,num_individuals,num_mlgs,cluster_size,cluster_distance_matrix,num_threads)
   #endif
+  */
+  num_threads = 1;
   {
+    /*
     #ifdef _OPENMP
     {
       thread_id = omp_get_thread_num();
@@ -412,6 +429,8 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
       thread_id = 0;
     }
     #endif
+    */
+    thread_id = 0;
     // Clear the distance matrices before filling them
     for(int i = 0; i < num_mlgs; i++)
     {
@@ -485,10 +504,14 @@ void fill_distance_matrix(double** cluster_distance_matrix, double*** private_di
     // Merge the private distance matrices back into the global distance matrix 
     // Since each thread has its own private matrix, all matrices need to be merged
     //  to get the final distance matrix.
+    // Thu Apr 13 08:39:24 2017 ------------------------------
+    // see https://github.com/grunwaldlab/poppr/issues/138
+    /*
     #ifdef _OPENMP
     #pragma omp barrier
     #pragma omp critical
     #endif
+    */
     for(int i = 0; i < num_mlgs; i++)
     {
       for(int j = 0; j < num_mlgs; j++)
