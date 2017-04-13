@@ -65,7 +65,8 @@
 #'   select a method here. Available methods are "sturges", "fd", or "scott" 
 #'   (default) as documented in \code{\link[graphics]{hist}}. If you don't want 
 #'   to plot the histogram, set \code{hist = NULL}.
-#' @param threads the number of threads to use. Passed on to \code{\link{mlg.filter}}.
+#' @param threads (unused) Previously the number of threads to be used. As of
+#'   poppr version 2.4.1, this is by default set to 1.
 #' @param ... extra parameters passed on to the distance function.
 #'   
 #' @return a list of results from mlg.filter from the three
@@ -96,7 +97,7 @@ filter_stats <- function(x, distance = bitwise.dist,
                          threshold = 1e6 + .Machine$double.eps^0.5, 
                          stats = "All", missing = "ignore", plot = FALSE, 
                          cols = NULL, nclone = NULL, hist = "Scott", 
-                         threads = 0L, ...){
+                         threads = 1L, ...){
   if (!inherits(distance, "dist")){
     DIST <- match.fun(distance)
     if (inherits(x, "genind")){

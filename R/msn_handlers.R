@@ -66,6 +66,7 @@ filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
                                distance = bruvo.dist, 
                                algorithm = clustering.algorithm,
                                stats="ALL", 
+                               threads = 1L,
                                replen = bruvo_args$replen,
                                add =  bruvo_args$add,
                                loss = bruvo_args$loss)    
@@ -73,6 +74,7 @@ filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
     filter.stats <- mlg.filter(gid, 
                                threshold, 
                                distance = indist, 
+                               threads = 1L,
                                algorithm = clustering.algorithm,
                                stats="ALL") 
   }

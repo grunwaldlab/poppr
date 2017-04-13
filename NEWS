@@ -7,6 +7,10 @@ BUG FIX
 * A corner case where repeat length vectors out of order would be erroneously
   subset with `test_replen()` and `fix_replen()` has been fixed. See
   https://github.com/grunwaldlab/poppr/issues/136 for details.
+* All functions that perform filtering will now run serially due to a bug on
+  Fedora machines with at least two threads. Details can be found at
+  https://github.com/grunwaldlab/poppr/issues/138.
+
 
 poppr 2.4.0
 ===========
