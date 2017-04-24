@@ -13,3 +13,4 @@
 ^tests/testthat/Rplots.pdf
 ^CONDUCT\.md$
 ^cran-comments\.md$
+^docs$
