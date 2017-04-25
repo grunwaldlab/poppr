@@ -1,8 +1,8 @@
 Package: poppr
 Type: Package
 Title: Genetic Analysis of Populations with Mixed Reproduction
-Version: 2.4.1.99-1
-Date: 2017-04-24
+Version: 2.4.1.99-2
+Date: 2017-04-25
 Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "zkamvar@gmail.com"),
     person(c("Javier", "F."), "Tabima", role = "aut",
