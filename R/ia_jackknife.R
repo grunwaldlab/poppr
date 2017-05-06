@@ -83,35 +83,42 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
   colnames(sample.data) <- c("Ia", "rbarD")
   return(data.frame(sample.data))
 }
-#' Index of association with reduced data
+#' Bootstrap the index of association
 #' 
-#' This function will perform the index of association on a reduced data set
-#' multiple times to create a distribution, showing the variation of values
-#' observed at a given sample size.
+#' This function will perform the index of association on a bootstrapped data
+#' set multiple times to create a distribution, showing the variation of the
+#' index due to repeat observations.
 #'
 #' @param gid a genind or genclone object
 #' @param method method of bootstrap. The default "partial" will include the all
 #'   unique genotypes and sample with replacement from the unique genotypes 
 #'   until the total number of individuals has been reached. The "full" method 
-#'   will randomly sample with replacement from the data as it is.
+#'   will randomly sample with replacement from the data as it is. The "psex"
+#'   method will sample from the full data set after first weighting the samples
+#'   via the probability of encountering the nth occurence of a particular 
+#'   multilocus genotype. See [psex()] for details.
 #' @param reps an integer specifying the number of replicates to perform.
 #' Defaults to 999.
-#' @param quiet a logical. If \code{FALSE}, a progress bar will be displayed. 
-#' If \code{TRUE}, the progress bar is suppressed
+#' @param quiet a logical. If `FALSE``, a progress bar will be displayed. 
+#' If `TRUE`, the progress bar is suppressed.
+#' @param ... options passed on to [psex()]
 #'
 #' @return a data frame with the index of association and standardized index of
 #' association in columns. Number of rows represents the number of reps.
 #' @export
+#' @md
 #' @seealso
-#'   \code{\link{ia}}, 
-#'   \code{\link{pair.ia}}
+#'   [ia()], 
+#'   [pair.ia()],
+#'   [psex()]
 #'
 #' @examples
 #' data(Pinf)
 #' boot.ia(Pinf, reps = 99)
-boot.ia <- function(gid, method = "partial", reps = 999, quiet = FALSE){
+boot.ia <- function(gid, method = "partial", reps = 999, quiet = FALSE, ...){
   
-  METHOD  <- match.arg(method, c("partial", "full"))
+  METHOD  <- match.arg(method, c("partial", "full", "psex"))
+  weights <- if (METHOD == "psex") psex(gid, ...) else NULL
   quiet   <- should_poppr_be_quiet(quiet)
   N       <- nInd(gid)
   numLoci <- nLoc(gid)
@@ -188,7 +195,7 @@ bias.ia <- function(theta_hat, theta_star){
 #'
 #' @examples
 #' # No examples here
-run.jack <- function(V, mat, N, n, np, replace = FALSE, method = "partial"){
+run.jack <- function(V, mat, N, n, np, replace = FALSE, method = "partial", weights = NULL){
 
   if (replace & method == "partial"){
     # For the partial boot method. In this case, the incoming data is clone
@@ -197,7 +204,7 @@ run.jack <- function(V, mat, N, n, np, replace = FALSE, method = "partial"){
     # are only resampling N - n individuals here.
     inds <- c(seq.int(n), sample(n, N - n, replace = TRUE))
   } else {
-    inds <- sample(N, n, replace = replace)
+    inds <- sample(N, n, replace = replace, prob = weights)
   }
   newmat  <- mat[inds, inds]
   newInds <- newmat[lower.tri(newmat)]

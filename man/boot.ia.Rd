@@ -2,38 +2,43 @@
 % Please edit documentation in R/ia_jackknife.R
 \name{boot.ia}
 \alias{boot.ia}
-\title{Index of association with reduced data}
+\title{Bootstrap the index of association}
 \usage{
-boot.ia(gid, method = "partial", reps = 999, quiet = FALSE)
+boot.ia(gid, method = "partial", reps = 999, quiet = FALSE, ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object}
 
 \item{method}{method of bootstrap. The default "partial" will include the all
-unique genotypes and sample with replacement from the unique genotypes 
-until the total number of individuals has been reached. The "full" method 
-will randomly sample with replacement from the data as it is.}
+unique genotypes and sample with replacement from the unique genotypes
+until the total number of individuals has been reached. The "full" method
+will randomly sample with replacement from the data as it is. The "psex"
+method will sample from the full data set after first weighting the samples
+via the probability of encountering the nth occurence of a particular
+multilocus genotype. See \code{\link[=psex]{psex()}} for details.}
 
 \item{reps}{an integer specifying the number of replicates to perform.
 Defaults to 999.}
 
-\item{quiet}{a logical. If \code{FALSE}, a progress bar will be displayed. 
-If \code{TRUE}, the progress bar is suppressed}
+\item{quiet}{a logical. If \code{FALSE``, a progress bar will be displayed. If}TRUE`, the progress bar is suppressed.}
+
+\item{...}{options passed on to \code{\link[=psex]{psex()}}}
 }
 \value{
 a data frame with the index of association and standardized index of
 association in columns. Number of rows represents the number of reps.
 }
 \description{
-This function will perform the index of association on a reduced data set
-multiple times to create a distribution, showing the variation of values
-observed at a given sample size.
+This function will perform the index of association on a bootstrapped data
+set multiple times to create a distribution, showing the variation of the
+index due to repeat observations.
 }
 \examples{
 data(Pinf)
 boot.ia(Pinf, reps = 99)
 }
 \seealso{
-\code{\link{ia}}, 
-  \code{\link{pair.ia}}
+\code{\link[=ia]{ia()}},
+\code{\link[=pair.ia]{pair.ia()}},
+\code{\link[=psex]{psex()}}
 }
