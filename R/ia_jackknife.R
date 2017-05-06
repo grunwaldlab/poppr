@@ -153,7 +153,7 @@ boot.ia <- function(gid, how = "partial", reps = 999, quiet = FALSE, ...){
   sample.data        <- matrix(numeric(reps*2), ncol = 2, nrow = reps)
   if(!quiet) progbar <- dplyr::progress_estimated(reps)
   for (i in seq(reps)){
-    sample.data[i, ] <- run.jack(V, mat, N, n, np, replace = TRUE, method = method)
+    sample.data[i, ] <- run.jack(V, mat, N, n, np, replace = TRUE, method = METHOD)
     if (!quiet) progbar$tick()$print()
   }
   if(!quiet){
