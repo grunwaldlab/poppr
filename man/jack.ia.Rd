@@ -4,19 +4,24 @@
 \alias{jack.ia}
 \title{Index of association with reduced data}
 \usage{
-jack.ia(gid, n = NULL, reps = 999, quiet = FALSE)
+jack.ia(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE, ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object}
 
 \item{n}{an integer specifying the number of samples to be drawn. Defaults to
-\code{NULL}, which then uses the number of multilocus genotypes.}
+`NULL`, which then uses the number of multilocus genotypes.}
 
-\item{reps}{an integer specifying the number of replicates to perform.
+\item{reps}{an integer specifying the number of replicates to perform. 
 Defaults to 999.}
 
-\item{quiet}{a logical. If \code{FALSE}, a progress bar will be displayed. 
-If \code{TRUE}, the progress bar is suppressed}
+\item{quiet}{a logical. If `FALSE`, a progress bar will be displayed. If
+`TRUE`, the progress bar is suppressed}
+
+\item{use_psex}{a logical. If `TRUE`, the samples will be weighted by the value 
+of psex. Defaults to `FALSE`.}
+
+\item{...}{arguments passed on to [psex()]}
 }
 \value{
 a data frame with the index of association and standardized index of
@@ -32,6 +37,7 @@ data(Pinf)
 jack.ia(Pinf, reps = 99)
 }
 \seealso{
-\code{\link{ia}}, 
-  \code{\link{pair.ia}}
+[ia()],
+  [pair.ia()],
+  [boot.ia()]
 }

@@ -26,25 +26,30 @@
 #'
 #' @param gid a genind or genclone object
 #' @param n an integer specifying the number of samples to be drawn. Defaults to
-#' \code{NULL}, which then uses the number of multilocus genotypes.
-#' @param reps an integer specifying the number of replicates to perform.
-#' Defaults to 999.
-#' @param quiet a logical. If \code{FALSE}, a progress bar will be displayed. 
-#' If \code{TRUE}, the progress bar is suppressed
+#'   `NULL`, which then uses the number of multilocus genotypes.
+#' @param reps an integer specifying the number of replicates to perform. 
+#'   Defaults to 999.
+#' @param quiet a logical. If `FALSE`, a progress bar will be displayed. If
+#'   `TRUE`, the progress bar is suppressed
+#' @param use_psex a logical. If `TRUE`, the samples will be weighted by the value 
+#'   of psex. Defaults to `FALSE`.
+#' @param ... arguments passed on to [psex()]
 #'
 #' @return a data frame with the index of association and standardized index of
 #' association in columns. Number of rows represents the number of reps.
 #' @export
 #' @seealso
-#'   \code{\link{ia}}, 
-#'   \code{\link{pair.ia}}
+#'   [ia()],
+#'   [pair.ia()],
+#'   [boot.ia()]
 #'
 #' @examples
 #' data(Pinf)
 #' jack.ia(Pinf, reps = 99)
-jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
+jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE, ...){
   
   quiet   <- should_poppr_be_quiet(quiet)
+  weights <- if (use_psex) psex(gid, ...) else NULL
   N       <- nInd(gid)
   numLoci <- nLoc(gid)
   if (is.null(n)){
@@ -73,7 +78,7 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
   sample.data        <- matrix(numeric(reps*2), ncol = 2, nrow = reps)
   if(!quiet) progbar <- dplyr::progress_estimated(reps)
   for (i in seq(reps)){
-    sample.data[i, ] <- run.jack(V, mat, N, n, np)
+    sample.data[i, ] <- run.jack(V, mat, N, n, np, replace = FALSE, weights = weights)
     if (!quiet) progbar$tick()$print()
   }
   if(!quiet){
@@ -90,21 +95,21 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
 #' index due to repeat observations.
 #'
 #' @param gid a genind or genclone object
-#' @param method method of bootstrap. The default "partial" will include the all
-#'   unique genotypes and sample with replacement from the unique genotypes 
-#'   until the total number of individuals has been reached. The "full" method 
-#'   will randomly sample with replacement from the data as it is. The "psex"
-#'   method will sample from the full data set after first weighting the samples
-#'   via the probability of encountering the nth occurence of a particular 
-#'   multilocus genotype. See [psex()] for details.
-#' @param reps an integer specifying the number of replicates to perform.
-#' Defaults to 999.
-#' @param quiet a logical. If `FALSE``, a progress bar will be displayed. 
-#' If `TRUE`, the progress bar is suppressed.
+#' @param how method of bootstrap. The default `how = "partial"` will include
+#'   the all unique genotypes and sample with replacement from the unique
+#'   genotypes until the total number of individuals has been reached. Using
+#'   `how = "full"` will randomly sample with replacement from the data as it
+#'   is. Using `how = "psex"` will sample from the full data set after first
+#'   weighting the samples via the probability of encountering the nth occurence
+#'   of a particular multilocus genotype. See [psex()] for details.
+#' @param reps an integer specifying the number of replicates to perform. 
+#'   Defaults to 999.
+#' @param quiet a logical. If `FALSE`, a progress bar will be displayed. If
+#'   `TRUE`, the progress bar is suppressed.
 #' @param ... options passed on to [psex()]
-#'
-#' @return a data frame with the index of association and standardized index of
-#' association in columns. Number of rows represents the number of reps.
+#'   
+#' @return a data frame with the index of association and standardized index of 
+#'   association in columns. Number of rows represents the number of reps.
 #' @export
 #' @md
 #' @seealso
