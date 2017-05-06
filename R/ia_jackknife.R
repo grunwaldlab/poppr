@@ -120,9 +120,9 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE, 
 #' @examples
 #' data(Pinf)
 #' boot.ia(Pinf, reps = 99)
-boot.ia <- function(gid, method = "partial", reps = 999, quiet = FALSE, ...){
+boot.ia <- function(gid, how = "partial", reps = 999, quiet = FALSE, ...){
   
-  METHOD  <- match.arg(method, c("partial", "full", "psex"))
+  METHOD  <- match.arg(how, c("partial", "full", "psex"))
   weights <- if (METHOD == "psex") psex(gid, ...) else NULL
   quiet   <- should_poppr_be_quiet(quiet)
   N       <- nInd(gid)

@@ -4,18 +4,10 @@
 \alias{boot.ia}
 \title{Bootstrap the index of association}
 \usage{
-boot.ia(gid, method = "partial", reps = 999, quiet = FALSE, ...)
+boot.ia(gid, how = "partial", reps = 999, quiet = FALSE, ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object}
-
-\item{reps}{an integer specifying the number of replicates to perform.
-Defaults to 999.}
-
-\item{quiet}{a logical. If \code{FALSE}, a progress bar will be displayed. If
-\code{TRUE}, the progress bar is suppressed.}
-
-\item{...}{options passed on to \code{\link[=psex]{psex()}}}
 
 \item{how}{method of bootstrap. The default \code{how = "partial"} will include
 the all unique genotypes and sample with replacement from the unique
@@ -24,6 +16,14 @@ genotypes until the total number of individuals has been reached. Using
 is. Using \code{how = "psex"} will sample from the full data set after first
 weighting the samples via the probability of encountering the nth occurence
 of a particular multilocus genotype. See \code{\link[=psex]{psex()}} for details.}
+
+\item{reps}{an integer specifying the number of replicates to perform.
+Defaults to 999.}
+
+\item{quiet}{a logical. If \code{FALSE}, a progress bar will be displayed. If
+\code{TRUE}, the progress bar is suppressed.}
+
+\item{...}{options passed on to \code{\link[=psex]{psex()}}}
 }
 \value{
 a data frame with the index of association and standardized index of
