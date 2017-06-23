@@ -800,6 +800,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double **dist,
 	//==========================================================================
 	for (i = curr_ind; i < inds; i++)
 	{
+	//Rprintf("%d ", replacement[curr_ind]);
 		if (curr_zero < zeroes - 1)
 		{
 			genome_add_calc(perms, alleles, perm, dist, zeroes, zero_ind, 
@@ -812,6 +813,7 @@ void genome_add_calc(int perms, int alleles, int *perm, double **dist,
 		}
 		else
 		{
+		//Rprintf("\n");
 			*genome_add_sum += mindist(perms, alleles, perm, dist);
 			*tracker += 1;
 			if (zeroes == 1 || i == inds - 1)
@@ -860,6 +862,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 {
 	// R_CheckUserInterrupt();
 	int i; 
+//int z;
 	int full_ind;
 	full_ind = 1 + (0 - miss_ind);
 	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
@@ -878,6 +881,16 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		}
 		else
 		{
+		  // TODO: calculate binomial coefficient here and multiply it to the value
+		  // 
+		  // Because of the recursion process, the alleles will not necessarily be
+		  // in order, BUT they will be grouped together (assuming that each allele
+		  // is distinct).
+		  // for (z = 0; z < zeroes; z++)
+		  // {
+		  //   Rprintf("%d ", genos[miss_ind*nalleles + zero_ind[z]]);
+		  // }
+		  // Rprintf("\n");
 			*genome_loss_sum += bruvo_dist(genos, &nalleles, perm_array, 
 				&woo, loss, add)*nalleles;
 			*loss_tracker += 1;
