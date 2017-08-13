@@ -1,3 +1,20 @@
+poppr 2.5.0
+===========
+
+ALGORITHMIC CHANGE
+------------------
+
+* Identified in https://github.com/grunwaldlab/poppr/issues/139, Bruvo's 
+  distance will now consider all possible combinations of ordered alleles in the
+  calculation under the genome addition and loss models for missing data. This
+  will affect those who have polyploid data that contain more than one missing 
+  allele at any genotype. To facilitate comparison, the global option,
+  old.bruvo.model, has been created for users to switch between the former model,
+  which considered unordered allele combinations and the current model, which 
+  considers orderd allele combinations. It must be repeated that this does not
+  affect haploid or diploid comparisons, those that use the infinite alleles
+  model, or those who do not have more than one missing allele at any genotype.
+
 poppr 2.4.1
 ===========
 
