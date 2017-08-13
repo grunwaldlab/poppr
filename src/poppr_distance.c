@@ -689,7 +689,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 			int* replacements;
 			int* replaced_alleles;
 			replacements = R_Calloc(Nobs, int);
-			replaced_alleles = R_Calloc(Nobs, int);
+			replaced_alleles = R_Calloc(zerocatch[miss_ind], int);
 			int short_counter = 0;
 			// fill the replacements array with the indices of the replacement
 			// distances.
@@ -697,7 +697,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 			{
 				if (genos[miss_ind*p + i] > 0)
 				{
-					replaced_alleles[short_counter] = genos[miss_ind*p + i];
+					// replaced_alleles[short_counter] = genos[miss_ind*p + i];
 					replacements[short_counter++] = i;
 				}
 			}	
