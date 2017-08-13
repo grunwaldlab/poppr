@@ -217,15 +217,15 @@ All tests for Bruvo's distance are based off of the published values. The
 following R code will test that Bruvo's distance is working properly:
  
 # Published data from Bruvo et al 2004 (with extra zeroes)
-tg <- structure(c(0L, 0L, 0L, 20L, 20L, 24L, 23L, 26L, 24L, 43L), .Dim = c(2L, 
-5L), .Dimnames = list(c("1", "2"), NULL))
+tg <- structure(c(0L, 0L, 0L, 20L, 20L, 24L, 23L, 26L, 24L, 43L), 
+                .Dim = c(2L, 5L), .Dimnames = list(c("1", "2"), NULL))
 tg1 <- tg
- 
+
 # Comparison function
 amat <- function(a1, a2) 1 - 2^(-abs(a1 - a2))
 
 # Calculate distance between two samples
-brvo <- function(allmat){
+brvo <- function(allmat, zeroind = -1){
   n     <- ncol(allmat)
   rows  <- seq(n)
   pairs <- expand.grid(allmat[1, ], allmat[2, ]) 
@@ -255,7 +255,7 @@ Rbruvo <- function(dat, add = TRUE, loss = TRUE){
     donor    <- which.min(nzeroes)
     combs    <- lapply(repls, function(i) dat[donor, ]) 
     combs    <- do.call(expand.grid, combs)
-    combs    <- unique(t(apply(combs, 1, sort)))
+    combs    <- t(apply(combs, 1, sort)) #unique(t(apply(combs, 1, sort)))
     combs    <- if (nrow(combs) == 1) t(combs) else combs
     losslist <- vector(mode = "list", length = nrow(combs))
     for (i in seq(nrow(combs))){
@@ -267,7 +267,7 @@ Rbruvo <- function(dat, add = TRUE, loss = TRUE){
   if (add){
     combs   <- lapply(repls, function(i) dat[zeroes, !zlocat]) 
     combs   <- do.call(expand.grid, combs)
-    combs   <- unique(t(apply(combs, 1, sort)))
+    combs   <- t(apply(combs, 1, sort)) #unique(t(apply(combs, 1, sort)))
     combs   <- if (nrow(combs) == 1) t(combs) else combs
     addlist <- vector(mode = "list", length = nrow(combs))
     for (i in seq(nrow(combs))){
@@ -294,7 +294,7 @@ poppr_bruvo <- function(dat, add = TRUE, loss = TRUE){
         loss,
         PACKAGE = "poppr")
 }
- 
+
 # Function to run all the models and return a vector
 run_models <- function(dat, FUN = "Rbruvo"){
   models <- expand.grid(add = 0:1 == 1L, loss = 0:1L == 1L)
