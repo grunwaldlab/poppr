@@ -73,7 +73,7 @@ int multinomial_coeff(int* ARR, int n, int* facts);
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
-		int *loss_tracker);
+		int* replacements, int* facts, int *loss_tracker);
 /*
  * UNUSED FUNCTIONS
 void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo, 
@@ -681,12 +681,13 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 		*	shifting the columns or rows of the distance matrix and 
 		*	recalculating the minimum distance. 
 		======================================================================*/
+
 		if (add_indicator == 1)
 		{
+			int Nobs; // Number of observed alleles in the shorter genotype
+			Nobs = p - zerocatch[miss_ind];	
 			int* replacements;
 			int* replaced_alleles;
-			int Nobs; // Number of observed alleles in the shorter genotype
-			Nobs = p - zerocatch[miss_ind];
 			replacements = R_Calloc(Nobs, int);
 			replaced_alleles = R_Calloc(Nobs, int);
 			int short_counter = 0;
@@ -721,12 +722,16 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 		if (loss_indicator == 1)
 		{
 			// Rprintf("LOSS!\n");
+			int* loss_replacement;
+			loss_replacement = R_Calloc(zerocatch[miss_ind], int);
 			for (i = 0; i < p; i++)
 			{
 				genome_loss_calc(genos, p, perm, w, &loss_indicator, 
 					&add_indicator, zero_ind[miss_ind], 0, zerocatch[miss_ind], 
-					miss_ind, i, &genome_loss_sum, &loss_tracker);
+					miss_ind, i, &genome_loss_sum, loss_replacement, facts, 
+					&loss_tracker);
 			}
+			R_Free(loss_replacement);
 		}
 		if (tracker == 0)
 		{
@@ -989,22 +994,27 @@ void genome_add_calc(int* genos,
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
-		int *loss_tracker)
+		int* replacements, int* facts, int *loss_tracker)
 {
 	// R_CheckUserInterrupt();
 	int i; 
-//int z;
+	int z;
 	int full_ind;
 	full_ind = 1 + (0 - miss_ind);
-	genos[miss_ind*nalleles + zero_ind[curr_zero]] = 
-		genos[full_ind*nalleles + curr_allele];
+	int to_replace = miss_ind*nalleles;
+	int donor      = full_ind*nalleles;
+	int mult;
+
+	genos[to_replace + zero_ind[curr_zero]] = genos[donor + curr_allele];
+	replacements[curr_zero]                 = genos[donor + curr_allele];
+
 	for (i = curr_allele; i < nalleles; i++)
 	{
 		if (curr_zero < zeroes - 1)
 		{
 			genome_loss_calc(genos, nalleles, perm_array, woo, loss, add, 
 				zero_ind, ++curr_zero, zeroes, miss_ind, i, genome_loss_sum, 
-				loss_tracker);
+				replacements, facts, loss_tracker);
 			if (curr_zero == zeroes - 1)
 			{
 				return;
@@ -1012,19 +1022,19 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		}
 		else
 		{
-		  // TODO: calculate binomial coefficient here and multiply it to the value
-		  // 
-		  // Because of the recursion process, the alleles will not necessarily be
-		  // in order, BUT they will be grouped together (assuming that each allele
-		  // is distinct).
-		  // for (z = 0; z < zeroes; z++)
-		  // {
-		  //   Rprintf("%d ", genos[miss_ind*nalleles + zero_ind[z]]);
-		  // }
-		  // Rprintf("\n");
+			// for (z = 0; z < zeroes; z++)
+			// {
+			// 	// Rprintf("%d ", genos[miss_ind*nalleles + zero_ind[z]]);
+			// 	Rprintf("%d ", replacements[z]);
+			// }
+			// Rprintf("\n");
+			
+			// TODO: Create control structure around this.
+			mult = multinomial_coeff(replacements, zeroes, facts);
+
 			*genome_loss_sum += bruvo_dist(genos, &nalleles, perm_array, 
-				&woo, loss, add)*nalleles;
-			*loss_tracker += 1;
+				&woo, loss, add)*nalleles*mult;
+			*loss_tracker += 1 * mult;
 			if (zeroes == 1 || i == nalleles - 1)
 			{
 				return;
