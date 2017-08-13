@@ -64,11 +64,12 @@ void genome_add_calc(int* genos,
 	int miss_ind,
 	int* replacement,
 	int* replaced_alleles,
+	int* facts,
 	int inds,
 	int curr_ind,
 	double* genome_add_sum,
 	int* tracker);
-int expand_binomial_internal(int* ARR, int n);
+int multinomial_coeff(int* ARR, int n, int* facts);
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
@@ -495,7 +496,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 	int loss_indicator = *loss; // 1 if the genome loss model should be used
 	int add_indicator = *add;   // 1 if the genome addition model should be used
 
-	int *genos;    // array to store the genotypes
+	int* genos;    // array to store the genotypes
 	genos = R_Calloc(2*p, int);
 
 	int zerocatch[2]; 	// 2 element array to store the number of missing 
@@ -515,7 +516,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 	// reconstruct the genotype table.
 	zerocatch[0] = 0;
 	zerocatch[1] = 0;
-	for(i=0; i < n; i++)
+	for(i = 0; i < n; i++)
 	{
 		for(j = 0; j < p; j++)
 		{
@@ -604,19 +605,21 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 		goto finalsteps;
 	}
 
-	double** dist; 	    // array to store the distance
-	dist = R_Calloc(p, double*);
-	for (i = 0; i < p; i++)
-	{
-		dist[i] = R_Calloc(p, double);
-	}
+	double** dist; // array to store the distance
+	int* facts;    // array to store factorials
+	int idx_plus;  // i + 1 index for factorial calculation
+	dist  = R_Calloc(p, double*);
+	facts = R_Calloc(p, int);
 	// Construct distance matrix of 1 - 2^{-|x|}.
 	// This is constructed column by column. 
 	// Genotype 1: COLUMNS
 	// Genotype 2: ROWS
-
 	for(i = 0; i < p; i++)
 	{
+		idx_plus = i + 1;
+		facts[i] = (idx_plus == 1) ? idx_plus : idx_plus * facts[i - 1];
+	
+		dist[i]  = R_Calloc(p, double);
 		for(j = 0; j < p; j++)
 		{
 			dist[i][j] = 1 - pow(2, -abs(genos[0*p + j] - genos[1*p + i]));
@@ -703,7 +706,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 			{
 				genome_add_calc(genos, w, p, perm, dist, zerocatch[miss_ind],
 					zero_ind[miss_ind], 0, miss_ind, replacements, 
-					replaced_alleles, Nobs, i, &genome_add_sum, &tracker);
+					replaced_alleles, facts, Nobs, i, &genome_add_sum, &tracker);
 				// Rprintf("current add sum = %.6f\n", genome_add_sum);
 			}
 			R_Free(replacements);
@@ -749,6 +752,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 		R_Free(dist[i]);
 	}
 	R_Free(dist);
+	R_Free(facts);
 finalsteps: 
 	R_Free(genos);
 	R_Free(zero_ind[0]);
@@ -757,18 +761,68 @@ finalsteps:
 	return minn;
 }
 
-int expand_binomial_internal(int* ARR, int n) {
+// Calculate the multinomial coefficient
+//
+// @param ARR an unordered integer array
+// @param n the length of that array
+// @param facts an array of factorials that is at least of length n. This will
+//        be of the form 1, 2, 6, 24, 20, ... and is equivalent to the following
+//        in R: exp(cumsum(log(1:n)))
+//
+// This will return the multinomial coefficient, which the number of ways an 
+// array can be permuted to create unique, ordered arrays. It takes the form of
+//
+// 	     n!
+// 	------------
+// 	k1!k2!...km!
+// 
+// Where n is the number of elements in the array and km is the number of 
+// indices of the mth category. An example of the multinomial coefficient in
+// action is the number of ways a triploid heterozygous genotype can be permuted:
+//
+// 	GENOTYPE: A B C
+//
+//	  3!     6
+//	------ = -
+//	1!1!1!   1
+//
+// Or a partial heterozygote:
+//
+//	GENOTYPE: A B B
+//
+//	  3!     6
+//	------ = -
+//	 1!2!    2
+//
+// In terms of this program, this is used in the genotype addition/loss models
+// where we want to sort through all possible combinations of the alleles at 
+// the ambiguous genotypes. Because the computation of the distance does not 
+// depend on the order, instead of recomputing this (which takes n^2) steps, we
+// simply multiply it by this coefficient.
+//
+int multinomial_coeff(int* ARR, int n, int* facts) {
+	// Deal with the simple cases (1 or 2 missing alleles) to avoid higher cost
+	// than simply repeating the measure.
+	if (n == 1)
+	{
+		return(1);
+	}
+	if (n == 2) // diploid expansion 1AA 2AB 1BB
+	{
+		if (ARR[0] == ARR[1])
+		{
+			return(1);
+		}
+		return(2);
+	}
 	int res;
 	int i;
 	int count = 1;
-	int* facts;
 	int* TEMP;
-	facts = R_Calloc(n, int);
 	TEMP  = R_Calloc(n, int);
-	for (i = 1; i <= n; i++)
+	for (i = 0; i < n; i++)
 	{
-		facts[i - 1] = (i == 1) ? i : facts[i - 2] * i;
-		TEMP[i - 1] = ARR[i - 1];
+		TEMP[i] = ARR[i];
 	}
 	R_qsort_int(TEMP, 1, n); // Note: this takes the arguments of what indices to sort, 1-indexed
 	int previous_value = TEMP[0];
@@ -791,7 +845,6 @@ int expand_binomial_internal(int* ARR, int n) {
 	res *= facts[count - 1];
 	// Rprintf("%d count: %d (%d)\n", TEMP[n - 1], count, res);
 	res = facts[n - 1]/res; // n!/a!b!c!
-	R_Free(facts);
 	R_Free(TEMP);
 	return(res);
 }
@@ -833,6 +886,7 @@ void genome_add_calc(int* genos,
 	int miss_ind,
 	int* replacement,
 	int* replaced_alleles,
+	int* facts,
 	int inds,
 	int curr_ind,
 	double* genome_add_sum,
@@ -875,7 +929,7 @@ void genome_add_calc(int* genos,
 		if (curr_zero < zeroes - 1)
 		{
 			genome_add_calc(genos, perms, alleles, perm, dist, zeroes, zero_ind, 
-				++curr_zero, miss_ind, replacement, replaced_alleles, inds, i, genome_add_sum, 
+				++curr_zero, miss_ind, replacement, replaced_alleles, facts, inds, i, genome_add_sum, 
 				tracker);
 			if (curr_zero == zeroes - 1)
 			{
@@ -889,11 +943,10 @@ void genome_add_calc(int* genos,
 			// 	Rprintf("%d ", replaced_alleles[z]);
 			// }
 			// TODO: create a control structure for this
-			mult = expand_binomial_internal(replaced_alleles, zeroes);
+			mult = multinomial_coeff(replaced_alleles, zeroes, facts);
 			// Rprintf("Multiplier: %d\n", mult);
-			// TODO: add mult to tracker and multiply genome_add_sum with mult.
-			*genome_add_sum += mindist(perms, alleles, perm, dist);
-			*tracker += 1;
+			*genome_add_sum += mindist(perms, alleles, perm, dist) * mult;
+			*tracker += 1 * mult;
 			if (zeroes == 1 || i == inds - 1)
 			{
 				return;
