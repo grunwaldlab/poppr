@@ -929,7 +929,7 @@ void genome_add_calc(int* genos,
 	}
 	// Here we are gathering the array of replaced alleles for the binomial
 	// expansion calculation. 
-	replaced_alleles[curr_zero] = genos[miss_ind*alleles + replacement[curr_ind]];
+	replaced_alleles[curr_zero] = curr_ind;
 	//==========================================================================
 	// Part 2: Iterate through the rest of the possible combinations.
 	//
@@ -1020,7 +1020,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 	int mult;
 
 	genos[to_replace + zero_ind[curr_zero]] = genos[donor + curr_allele];
-	replacements[curr_zero]                 = genos[donor + curr_allele];
+	replacements[curr_zero] = curr_allele; 
 
 	for (i = curr_allele; i < nalleles; i++)
 	{
@@ -1036,15 +1036,13 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		}
 		else
 		{
+			mult = (old_model) ? 1 : multinomial_coeff(replacements, zeroes, facts);
+
 			// for (z = 0; z < zeroes; z++)
 			// {
-			// 	// Rprintf("%d ", genos[miss_ind*nalleles + zero_ind[z]]);
 			// 	Rprintf("%d ", replacements[z]);
 			// }
-			// Rprintf("\n");
-			
-			// TODO: Create control structure around this.
-			mult = (old_model) ? 1 : multinomial_coeff(replacements, zeroes, facts);
+			// Rprintf("\t Multiplier: %d\n", mult);
 
 			*genome_loss_sum += bruvo_dist(genos, &nalleles, perm_array, 
 				&woo, loss, add, old_model)*nalleles*mult;
