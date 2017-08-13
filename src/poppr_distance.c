@@ -885,6 +885,8 @@ int multinomial_coeff(int* ARR, int n, int* facts) {
 *
 *	*genome_add_sum - pointer to the total number of the genome addition model.
 *	*tracker - pointer to counter for the number of calculations for addition. 
+*	old_model - a binary indicator of whether or not to calculate the old model
+*	            previously implemented. 
 ==============================================================================*/
 void genome_add_calc(int* genos,
 	int perms,
@@ -996,7 +998,12 @@ void genome_add_calc(int* genos,
 *	curr_allele - the current index for the replacement alleles of the full geno
 *
 *	*genome_loss_sum - pointer to the total number of the genome loss model.
+*	*replacements - a vector containing the replacement alleles for multinomial
+*	                coefficient calculation
+*	*facts - a vector containing the factorial calculations for the multinomial
 *	*loss_tracker - pointer to counter for the number of calculations for loss.
+*	old_model - a binary indicator of whether or not to calculate the old model
+*	            previously implemented. 
 ==============================================================================*/
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
