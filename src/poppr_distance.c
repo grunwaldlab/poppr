@@ -47,8 +47,8 @@ int perm_count;
 SEXP pairwise_covar(SEXP pair_vec);
 SEXP pairdiffs(SEXP freq_mat);
 SEXP permuto(SEXP perm);
-SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss);
-double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add);
+SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss, SEXP old_model);
+double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add, int old_model);
 void swap(int *x, int *y);  
 void permute(int *a, int i, int n, int *c);
 int fact(int x);
@@ -68,12 +68,13 @@ void genome_add_calc(int* genos,
 	int inds,
 	int curr_ind,
 	double* genome_add_sum,
-	int* tracker);
+	int* tracker,
+	int old_model);
 int multinomial_coeff(int* ARR, int n, int* facts);
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
-		int* replacements, int* facts, int *loss_tracker);
+		int* replacements, int* facts, int *loss_tracker, int old_model);
 /*
  * UNUSED FUNCTIONS
 void fill_short_geno(int *genos, int nalleles, int *perm_array, int *woo, 
@@ -225,7 +226,7 @@ tg1 <- tg
 amat <- function(a1, a2) 1 - 2^(-abs(a1 - a2))
 
 # Calculate distance between two samples
-brvo <- function(allmat, zeroind = -1){
+brvo <- function(allmat){
   n     <- ncol(allmat)
   rows  <- seq(n)
   pairs <- expand.grid(allmat[1, ], allmat[2, ]) 
@@ -239,7 +240,7 @@ brvo <- function(allmat, zeroind = -1){
 }
 
 # Calculate distance between two samples with different models
-Rbruvo <- function(dat, add = TRUE, loss = TRUE){
+Rbruvo <- function(dat, add = TRUE, loss = TRUE, old_model = FALSE){
   dat <- t(apply(dat, 1, sort))
   dat <- dat[, colSums(dat, na.rm = TRUE) > 0]
   if (!add & !loss){
@@ -255,7 +256,8 @@ Rbruvo <- function(dat, add = TRUE, loss = TRUE){
     donor    <- which.min(nzeroes)
     combs    <- lapply(repls, function(i) dat[donor, ]) 
     combs    <- do.call(expand.grid, combs)
-    combs    <- t(apply(combs, 1, sort)) #unique(t(apply(combs, 1, sort)))
+    combs    <- t(apply(combs, 1, sort))
+    combs    <- if (old_model) unique(combs) else combs
     combs    <- if (nrow(combs) == 1) t(combs) else combs
     losslist <- vector(mode = "list", length = nrow(combs))
     for (i in seq(nrow(combs))){
@@ -267,7 +269,8 @@ Rbruvo <- function(dat, add = TRUE, loss = TRUE){
   if (add){
     combs   <- lapply(repls, function(i) dat[zeroes, !zlocat]) 
     combs   <- do.call(expand.grid, combs)
-    combs   <- t(apply(combs, 1, sort)) #unique(t(apply(combs, 1, sort)))
+    combs   <- t(apply(combs, 1, sort))
+    combs   <- if (old_model) unique(combs) else combs
     combs   <- if (nrow(combs) == 1) t(combs) else combs
     addlist <- vector(mode = "list", length = nrow(combs))
     for (i in seq(nrow(combs))){
@@ -282,7 +285,7 @@ Rbruvo <- function(dat, add = TRUE, loss = TRUE){
 
 # Function to run poppr's version of Bruvo's distance
 requireNamespace("poppr")
-poppr_bruvo <- function(dat, add = TRUE, loss = TRUE){
+poppr_bruvo <- function(dat, add = TRUE, loss = TRUE, old_model = FALSE){
   dat <- t(apply(dat, 1, sort))
   dat <- dat[, colSums(dat, na.rm = TRUE) > 0]
   ploid <- ncol(dat)
@@ -292,13 +295,14 @@ poppr_bruvo <- function(dat, add = TRUE, loss = TRUE){
         ploid,
         add,
         loss,
+        old_model,
         PACKAGE = "poppr")
 }
 
 # Function to run all the models and return a vector
-run_models <- function(dat, FUN = "Rbruvo"){
+run_models <- function(dat, FUN = "Rbruvo", ...){
   models <- expand.grid(add = 0:1 == 1L, loss = 0:1L == 1L)
-  res    <- apply(models, 1, function(x) do.call(FUN, c(list(dat), x)))
+  res    <- apply(models, 1, function(x) do.call(FUN, c(list(dat), x, ...)))
   names(res) <- c("infinite", "add", "loss", "combined")
   res
 }
@@ -309,10 +313,12 @@ all.equal(run_models(tg, "poppr_bruvo"), run_models(tg, "Rbruvo"))
 # works with recursion
 tg1[1, ] <- c(0, 0, 0, 0, 24)
 all.equal(run_models(tg1, "poppr_bruvo"), run_models(tg1, "Rbruvo"))
+all.equal(run_models(tg1, "poppr_bruvo", old_model = TRUE), 
+          run_models(tg1, "Rbruvo", old_model = TRUE))
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss)
+SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss, SEXP old_model)
 {
 	int rows;   // number of rows
 	int cols;   // number of columns
@@ -368,7 +374,7 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add,
 					clm = (allele + locus)*rows;
 					pmat[allele + ploidy] = INTEGER(bruvo_mat)[j + clm];
 				}
-				REAL(Rval)[count++] = bruvo_dist(pmat, &ploidy, perm, &P, &loss, &add);
+				REAL(Rval)[count++] = bruvo_dist(pmat, &ploidy, perm, &P, &loss, &add, asInteger(old_model));
 			}
 		}
 	}
@@ -484,7 +490,7 @@ polysat_bruvo()
 poppr_bruvo()
 polysat_bruvo() == poppr_bruvo()
 ==============================================================================*/
-double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
+double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add, int old_model)
 {
 	// R_CheckUserInterrupt();
 	int i; 
@@ -598,7 +604,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 		}
 	
 		minn = bruvo_dist(new_geno, &reduction, perm_array, &w, 
-								&loss_indicator, &add_indicator);
+								&loss_indicator, &add_indicator, old_model);
 		R_Free(perm_array);
 		R_Free(new_geno);
 		R_Free(new_alleles);
@@ -707,7 +713,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 			{
 				genome_add_calc(genos, w, p, perm, dist, zerocatch[miss_ind],
 					zero_ind[miss_ind], 0, miss_ind, replacements, 
-					replaced_alleles, facts, Nobs, i, &genome_add_sum, &tracker);
+					replaced_alleles, facts, Nobs, i, &genome_add_sum, &tracker, old_model);
 				// Rprintf("current add sum = %.6f\n", genome_add_sum);
 			}
 			R_Free(replacements);
@@ -729,7 +735,7 @@ double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add)
 				genome_loss_calc(genos, p, perm, w, &loss_indicator, 
 					&add_indicator, zero_ind[miss_ind], 0, zerocatch[miss_ind], 
 					miss_ind, i, &genome_loss_sum, loss_replacement, facts, 
-					&loss_tracker);
+					&loss_tracker, old_model);
 			}
 			R_Free(loss_replacement);
 		}
@@ -895,7 +901,8 @@ void genome_add_calc(int* genos,
 	int inds,
 	int curr_ind,
 	double* genome_add_sum,
-	int* tracker)
+	int* tracker,
+	int old_model)
 {
 	// R_CheckUserInterrupt();
 	int i;
@@ -935,7 +942,7 @@ void genome_add_calc(int* genos,
 		{
 			genome_add_calc(genos, perms, alleles, perm, dist, zeroes, zero_ind, 
 				++curr_zero, miss_ind, replacement, replaced_alleles, facts, inds, i, genome_add_sum, 
-				tracker);
+				tracker, old_model);
 			if (curr_zero == zeroes - 1)
 			{
 				return;
@@ -948,7 +955,7 @@ void genome_add_calc(int* genos,
 			// 	Rprintf("%d ", replaced_alleles[z]);
 			// }
 			// TODO: create a control structure for this
-			mult = multinomial_coeff(replaced_alleles, zeroes, facts);
+			mult = (old_model) ? 1 : multinomial_coeff(replaced_alleles, zeroes, facts);
 			// Rprintf("Multiplier: %d\n", mult);
 			*genome_add_sum += mindist(perms, alleles, perm, dist) * mult;
 			*tracker += 1 * mult;
@@ -994,7 +1001,7 @@ void genome_add_calc(int* genos,
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
-		int* replacements, int* facts, int *loss_tracker)
+		int* replacements, int* facts, int *loss_tracker, int old_model)
 {
 	// R_CheckUserInterrupt();
 	int i; 
@@ -1014,7 +1021,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		{
 			genome_loss_calc(genos, nalleles, perm_array, woo, loss, add, 
 				zero_ind, ++curr_zero, zeroes, miss_ind, i, genome_loss_sum, 
-				replacements, facts, loss_tracker);
+				replacements, facts, loss_tracker, old_model);
 			if (curr_zero == zeroes - 1)
 			{
 				return;
@@ -1030,10 +1037,10 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 			// Rprintf("\n");
 			
 			// TODO: Create control structure around this.
-			mult = multinomial_coeff(replacements, zeroes, facts);
+			mult = (old_model) ? 1 : multinomial_coeff(replacements, zeroes, facts);
 
 			*genome_loss_sum += bruvo_dist(genos, &nalleles, perm_array, 
-				&woo, loss, add)*nalleles*mult;
+				&woo, loss, add, old_model)*nalleles*mult;
 			*loss_tracker += 1 * mult;
 			if (zeroes == 1 || i == nalleles - 1)
 			{
