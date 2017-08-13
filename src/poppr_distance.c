@@ -313,9 +313,13 @@ all.equal(run_models(tg, "poppr_bruvo"), run_models(tg, "Rbruvo"))
 # works with recursion
 tg1[1, ] <- c(0, 0, 0, 0, 24)
 all.equal(run_models(tg1, "poppr_bruvo"), run_models(tg1, "Rbruvo"))
-all.equal(run_models(tg1, "poppr_bruvo", old_model = TRUE), 
-          run_models(tg1, "Rbruvo", old_model = TRUE))
+all.equal(run_models(tg1, "poppr_bruvo", old_model = TRUE), run_models(tg1, "Rbruvo", old_model = TRUE))
 
+tg2 <- tg1
+tg2[1, -(1:3)] <- c(102, 104)/2
+tg2[2, -1] <- c(104,104,106,110)/2
+all.equal(run_models(tg1, "poppr_bruvo"), run_models(tg1, "Rbruvo"))
+all.equal(run_models(tg1, "poppr_bruvo", old_model = TRUE), run_models(tg1, "Rbruvo", old_model = TRUE))
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss, SEXP old_model)
@@ -466,29 +470,6 @@ int fact(int x)
 	woo: p * p!
 	loss: TRUE/FALSE: impute under genome loss model.
 	add: TRUE/FALSE: impute under genome addition model. 
-
-	Test code comparing current status to polysat's Bruvo2.distance:
-================================================================================
-poppr_bruvo <- function(){ 
-  return(c(.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 0),
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 0),
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 0, 1),
-.Call("single_bruvo", c(20,23,24,0,20,24,26,43), .Call("permuto", 4), 4, 1, 1)
-))
-}
-
-polysat_bruvo <- function(){
-  return(c(Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=FALSE),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=FALSE, add=TRUE),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=TRUE, add=FALSE),
-Bruvo2.distance(c(20,23,24), c(20,24,26,43), usatnt=1, loss=TRUE, add=TRUE)
-))
-}
-
-library(polysat)
-polysat_bruvo()
-poppr_bruvo()
-polysat_bruvo() == poppr_bruvo()
 ==============================================================================*/
 double bruvo_dist(int *in, int *nall, int *perm, int *woo, int *loss, int *add, int old_model)
 {
