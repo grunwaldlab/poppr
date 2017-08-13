@@ -68,6 +68,7 @@ void genome_add_calc(int* genos,
 	int curr_ind,
 	double* genome_add_sum,
 	int* tracker);
+int expand_binomial_internal(int* ARR, int n);
 void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo, 
 		int *loss, int *add, int *zero_ind, int curr_zero, int zeroes, 
 		int miss_ind, int curr_allele, double *genome_loss_sum, 
@@ -756,6 +757,44 @@ finalsteps:
 	return minn;
 }
 
+int expand_binomial_internal(int* ARR, int n) {
+	int res;
+	int i;
+	int count = 1;
+	int* facts;
+	int* TEMP;
+	facts = R_Calloc(n, int);
+	TEMP  = R_Calloc(n, int);
+	for (i = 1; i <= n; i++)
+	{
+		facts[i - 1] = (i == 1) ? i : facts[i - 2] * i;
+		TEMP[i - 1] = ARR[i - 1];
+	}
+	R_qsort_int(TEMP, 1, n); // Note: this takes the arguments of what indices to sort, 1-indexed
+	int previous_value = TEMP[0];
+	res = count;
+	for (i = 1; i < n; i++)
+	{
+		if (TEMP[i] != previous_value)
+		{
+			res *= facts[count - 1];
+			// Rprintf("%d count: %d (%d)\n", TEMP[i - 1], count, res);
+			count = 1;
+		}
+		else
+		{
+			count++;
+		}
+		previous_value = TEMP[i];
+
+	}
+	res *= facts[count - 1];
+	// Rprintf("%d count: %d (%d)\n", TEMP[n - 1], count, res);
+	res = facts[n - 1]/res; // n!/a!b!c!
+	R_Free(facts);
+	R_Free(TEMP);
+	return(res);
+}
 
 /*==============================================================================
 * 	GENOME ADDITION MODEL
@@ -802,6 +841,7 @@ void genome_add_calc(int* genos,
 	// R_CheckUserInterrupt();
 	int i;
 	int j;
+	int mult;
 	//==========================================================================
 	// Part 1: fill one row/column of the matrix.
 	//==========================================================================
@@ -819,7 +859,9 @@ void genome_add_calc(int* genos,
 			dist[j][zero_ind[curr_zero]] = dist[j][replacement[curr_ind]];	
 		}
 	}
-	replaced_alleles[curr_ind] = genos[miss_ind*alleles + curr_ind];
+	// Here we are gathering the array of replaced alleles for the binomial
+	// expansion calculation. 
+	replaced_alleles[curr_zero] = genos[miss_ind*alleles + replacement[curr_ind]];
 	//==========================================================================
 	// Part 2: Iterate through the rest of the possible combinations.
 	//
@@ -830,7 +872,6 @@ void genome_add_calc(int* genos,
 	//==========================================================================
 	for (i = curr_ind; i < inds; i++)
 	{
-	//Rprintf("%d ", replacement[curr_ind]);
 		if (curr_zero < zeroes - 1)
 		{
 			genome_add_calc(genos, perms, alleles, perm, dist, zeroes, zero_ind, 
@@ -843,7 +884,14 @@ void genome_add_calc(int* genos,
 		}
 		else
 		{
-		//Rprintf("\n");
+			// for (int z = 0; z < zeroes; z++)
+			// {
+			// 	Rprintf("%d ", replaced_alleles[z]);
+			// }
+			// TODO: create a control structure for this
+			mult = expand_binomial_internal(replaced_alleles, zeroes);
+			// Rprintf("Multiplier: %d\n", mult);
+			// TODO: add mult to tracker and multiply genome_add_sum with mult.
 			*genome_add_sum += mindist(perms, alleles, perm, dist);
 			*tracker += 1;
 			if (zeroes == 1 || i == inds - 1)
