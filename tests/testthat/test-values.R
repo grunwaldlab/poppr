@@ -107,6 +107,19 @@ test_that("Multinomial coefficient respects index, not value", {
   expect_equal(ADDLOSS, 0.34375)
 })
 
+test_that("The old version of Bruvo's distance can be switched on and off", {
+  skip_on_cran()
+  testdf  <- data.frame(test = c("00/00/00/51/52", "00/52/52/53/55"))
+  testgid <- df2genind(testdf, ploidy = 5, sep = "/")
+  options(old.bruvo.model = TRUE)
+  obm <- "old.bruvo.model"
+  addloss <- as.vector(bruvo.dist(testgid, add = FALSE, loss = FALSE))
+  expect_warning(ADDLOSS <- as.vector(bruvo.dist(testgid, add = TRUE, loss = TRUE)), obm)
+  options(old.bruvo.model = FALSE)
+  expect_equal(addloss, 0.625)
+  expect_equal(ADDLOSS, 0.3549479166666667)
+})
+
 test_that("Repeat lengths can be in any order and length if named", {
   skip_on_cran()
   data("Pram")
