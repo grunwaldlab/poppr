@@ -136,9 +136,16 @@ unmatched_pops_warning <- function(pops, sublist){
 # # none
 #==============================================================================#
 repeat_length_warning <- function(replen){
-	msg <- paste("\n\nRepeat length vector for loci is not equal to the number",
-							 "of loci represented.\nEstimating repeat lengths from data:\n",
-							 paste0("c(", paste(replen, collapse = ", "),")"), "\n\n")
+  msg <- paste("\n\nRepeat length vector for loci is not equal to the number",
+               "of loci represented.\nEstimating repeat lengths from data:\n",
+               paste0("c(", paste(replen, collapse = ", "),")"), "\n\n")
+  msg <- paste("\n\t--------------------------------------------------------------",
+               "\n\t                       !!! ALERT !!!",
+               "\n",
+               "\n\tThis warning will become an ERROR in future versions of poppr.",
+               "\n\tPlease define your repeat lengths to avoid this error.",
+               "\n\t--------------------------------------------------------------",
+               msg)
   return(msg)
 }
 

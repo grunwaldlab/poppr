@@ -15,6 +15,12 @@ ALGORITHMIC CHANGE
   affect haploid or diploid comparisons, those that use the infinite alleles
   model, or those who do not have more than one missing allele at any genotype.
 
+DEPRECATION
+-----------
+
+* The warning for a short repeat length vector for Bruvo's distance is 
+  deprecated and will become an error in the future. 
+
 poppr 2.4.1
 ===========
 
