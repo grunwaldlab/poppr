@@ -441,8 +441,17 @@ setMethod(
 #' @author Zhian N. Kamvar
 #' @examples
 #' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#' \dontrun{
+#' # Without parallel processing
+#' system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2)))
+#' 
+#' # With parallel processing... doesn't really save you much time.
+#' system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2, parallel = TRUE), 
+#'                              parallel = TRUE))
+#' }
+#' 
 #==============================================================================#
-as.snpclone <- function(x, ..., parallel = require('parallel'), n.cores = NULL, 
+as.snpclone <- function(x, ..., parallel = FALSE, n.cores = NULL, 
                         mlg, mlgclass = TRUE){
   standardGeneric("as.snpclone")
 }
@@ -454,7 +463,7 @@ setGeneric("as.snpclone")
 setMethod(
   f = "as.snpclone",
   signature(x = "genlight"),
-  definition = function(x, ..., parallel = require('parallel'), n.cores = NULL, 
+  definition = function(x, ..., parallel = FALSE, n.cores = NULL, 
                         mlg, mlgclass = TRUE){
     if (!missing(x) && is(x, "genlight")){
       if (missing(mlg)) mlg <- mlg.vector(x)
