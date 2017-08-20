@@ -937,7 +937,6 @@ void genome_add_calc(int* genos,
 			// {
 			// 	Rprintf("%d ", replaced_alleles[z]);
 			// }
-			// TODO: create a control structure for this
 			mult = (old_model) ? 1 : multinomial_coeff(replaced_alleles, zeroes, facts);
 			// Rprintf("Multiplier: %d\n", mult);
 			*genome_add_sum += mindist(perms, alleles, perm, dist) * mult;
@@ -993,7 +992,6 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 {
 	// R_CheckUserInterrupt();
 	int i; 
-	int z;
 	int full_ind;
 	full_ind = 1 + (0 - miss_ind);
 	int to_replace = miss_ind*nalleles;
@@ -1019,7 +1017,7 @@ void genome_loss_calc(int *genos, int nalleles, int *perm_array, int woo,
 		{
 			mult = (old_model) ? 1 : multinomial_coeff(replacements, zeroes, facts);
 
-			// for (z = 0; z < zeroes; z++)
+			// for (int z = 0; z < zeroes; z++)
 			// {
 			// 	Rprintf("%d ", replacements[z]);
 			// }
@@ -1170,3 +1168,4 @@ void print_distmat(double** dist, int* genos, int p)
 }
 
 */
+
