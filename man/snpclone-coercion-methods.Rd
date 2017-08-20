@@ -6,7 +6,7 @@
 \alias{as.snpclone,genlight-method}
 \title{Create a snpclone object from a genlight object.}
 \usage{
-as.snpclone(x, ..., parallel = require("parallel"), n.cores = NULL, mlg,
+as.snpclone(x, ..., parallel = FALSE, n.cores = NULL, mlg,
   mlgclass = TRUE)
 }
 \arguments{
@@ -32,6 +32,15 @@ Wrapper for snpclone initializer.
 }
 \examples{
 (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+\dontrun{
+# Without parallel processing
+system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2)))
+
+# With parallel processing... doesn't really save you much time.
+system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2, parallel = TRUE), 
+                             parallel = TRUE))
+}
+
 }
 \author{
 Zhian N. Kamvar

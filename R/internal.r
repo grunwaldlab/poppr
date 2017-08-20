@@ -947,8 +947,21 @@ fix_negative_branch <- function(tre){
 
 bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, 
                             loss = TRUE, by_locus = FALSE){
+  
+  
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
+  if (getOption("old.bruvo.model") && ploid > 2 && (add | loss)){
+    msg <- paste("The option old.bruvo.model has been set to TRUE, which does",
+                 "not represent every ordered combinations of alleles in the",
+                 "genome addition or loss models. This could result in",
+                 "potentially incorrect results.",
+                 "\n\n To use every ordered combination of alleles for",
+                 "estimating short genotypes, enter the following command in",
+                 "your R console:",
+                 "\n\n\toptions(old.bruvo.model = FALSE)\n")
+    warning(msg, call. = FALSE, immediate. = TRUE)
+  }
   replen <- bruvomat@replen
   x[is.na(x)] <- 0
 
@@ -960,7 +973,14 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
   perms <- .Call("permuto", ploid, PACKAGE = "poppr")
 
   # Calculating bruvo's distance over each locus. 
-  distmat <- .Call("bruvo_distance", x, perms, ploid, add, loss, PACKAGE = "poppr")
+  distmat <- .Call("bruvo_distance", 
+                   x,     # data matrix
+                   perms, # permutation vector (0-indexed)
+                   ploid, # maximum ploidy
+                   add,   # Genome addition model switch
+                   loss,  # Genome loss model switch
+                   getOption("old.bruvo.model"), # switch to use unordered genotypes
+                   PACKAGE = "poppr")
 
   # If there are missing values, the distance returns 100, which means that the
   # comparison is not made. These are changed to NA.

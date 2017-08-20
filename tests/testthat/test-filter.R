@@ -11,8 +11,7 @@ xd <- dist(grid_example)
 xdm <- as.matrix(xd)
 
 set.seed(999)
-gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE), 
-                  parallel = FALSE, n.cores = 1L)
+gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, n.cores = 1L, parallel = FALSE))
 
 
 test_that("multilocus genotype filtering algorithms work", {
