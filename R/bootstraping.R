@@ -207,7 +207,7 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
                   mcutoff = 0, quiet = FALSE, root = NULL, ...){
   if (!is.null(strata)){
     if (!is.genind(x)){
-      warning("The strata argument can only be used with genind objects.")
+      warning("Sorry, the strata argument can only be used with genind objects.")
     } else {
       x <- genind2genpop(x, pop = strata, quiet = TRUE, process.other = FALSE)
     }
@@ -235,7 +235,7 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
     if (length(distname) == 1 && distname %in% "diss.dist"){
       if (missing == "mean"){
         missing <- "asis"
-        warning("missing = 'mean' is incompatible with diss.dist(), setting missing to 'asis'", 
+        warning("Sorry, missing = 'mean' is incompatible with diss.dist(), setting missing to 'asis'.", 
                 call. = FALSE)
       }
       xboot <- new("bootgen", x, na = missing, freq = FALSE)
@@ -248,11 +248,11 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
                   "reynolds.dist", "rogers.dist", "provesti.dist")
     wrong_dist <- any(as.character(substitute(distance)) %in% my_dists)
     if (wrong_dist){
-      warning("distance from genlight objects can only be calculated by bitwise.dist.")
+      warning("Sorry, distance from genlight objects can only be calculated by bitwise.dist.")
       distance <- bitwise.dist
     }
   } else {
-    stop("x must be a genind, genpop, or genlight object.")
+    stop("Sorry, x must be a genind, genpop, or genlight object.")
   }
   treefunk <- tree_generator(tree, distance, ...)
   xtree    <- treefunk(xboot)
