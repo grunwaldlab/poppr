@@ -1727,7 +1727,8 @@ test_zeroes <- function(x){
 #'
 #' @importFrom dplyr %>% 
 #' @importFrom dplyr arrange_ group_by_ ungroup
-#' @importFrom dplyr `!!`
+#' @importFrom dplyr n
+#' @importFrom rlang "!!"
 mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
   names(dimnames(mlgt)) <- c("Population", "MLG")
   mlgt.df <- reshape2::melt(mlgt, value.name = "count")
@@ -1789,7 +1790,7 @@ mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
       dplyr::ungroup() %>%
       unique() %>%
       dplyr::filter(!!quote(count > 0)) %>%
-      dplyr::mutate(order = seq(dplyr::n())) %>%
+      dplyr::mutate(order = seq(n())) %>%
       dplyr::mutate(order = factor(!!quote(order), unique(!!quote(order))))
   }
 

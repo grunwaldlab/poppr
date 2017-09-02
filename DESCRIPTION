@@ -45,6 +45,7 @@ Imports:
     pegas,
     reshape2,
     dplyr (>= 0.4),
+    rlang,
     boot,
     shiny,
     magrittr
