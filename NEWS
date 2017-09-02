@@ -20,6 +20,12 @@ DEPRECATION
 
 * The warning for a short repeat length vector for Bruvo's distance is 
   deprecated and will become an error in the future. 
+  
+MISC
+----
+
+* The internal plotting function for mlg.table now uses tidy evaluation for
+  dplyr versions > 0.5.0. 
 
 poppr 2.4.1
 ===========
