@@ -27,6 +27,12 @@ MISC
 * The internal plotting function for mlg.table now uses tidy evaluation for
   dplyr versions > 0.5.0. 
 
+NEW IMPORTS
+-----------
+
+* Due to the migration to dplyr version 0.7.0, poppr now imports the "!!"
+  operator from the rlang package. 
+
 poppr 2.4.1
 ===========
 
