@@ -87,6 +87,14 @@ test_that("mlg.table will plot color plot without total", {
   expect_equal(p, sort(popNames(Pinf)))
 })
 
+test_that("mlg.table will utilize old versions of dplyr", {
+  skip_on_cran()
+  options(poppr.old.dplyr = TRUE)
+  expect_silent(x <- mlg.table(Pinf, background = TRUE))
+  expect_silent(x <- mlg.table(Pinf))
+  options(poppr.old.dplyr = FALSE)
+})
+
 
 context("genotype_curve plots")
 
@@ -175,7 +183,7 @@ test_that("ia produces histograms", {
 
 test_that("ia will still plot if the observed value is NA or NaN", {
   skip_on_cran()
-  res <- ia(Pram[pop = 9], sample = 99)
+  res <- ia(Pram[pop = 9], sample = 99, quiet = TRUE)
   expect_true(is.nan(res["rbarD"]))
   expect_true(is.na(res["p.rD"]))
 })
@@ -184,7 +192,7 @@ test_that("ia will still plot if the observed value is NA or NaN", {
 test_that("ia will know where to place the label depending on the mean", {
   skip_on_cran()
   set.seed(99)
-  res <- ia(Pram[pop = 7], sample = 99)
+  res <- ia(Pram[pop = 7], sample = 99, quiet = TRUE)
   p <- ggplot2::last_plot()
   prange <- range(p$data$value)
   ptext  <- p$layers[[4]]$data$x
