@@ -1731,7 +1731,7 @@ test_zeroes <- function(x){
 mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
   names(dimnames(mlgt)) <- c("Population", "MLG")
   mlgt.df <- reshape2::melt(mlgt, value.name = "count")
-  use_old_dplyr <- packageVersion("dplyr") <= package_version("0.5.0") | getOption("poppr.old.dplyr")
+  use_old_dplyr <- utils::packageVersion("dplyr") <= package_version("0.5.0") | getOption("poppr.old.dplyr")
   # Ensure that the population is a factor
   if (use_old_dplyr) {
     mlgt.df <- mlgt.df %>%
@@ -1789,7 +1789,7 @@ mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
       dplyr::ungroup() %>%
       unique() %>%
       dplyr::filter(!!quote(count > 0)) %>%
-      dplyr::mutate(order = seq(n())) %>%
+      dplyr::mutate(order = seq(dplyr::n())) %>%
       dplyr::mutate(order = factor(!!quote(order), unique(!!quote(order))))
   }
 
