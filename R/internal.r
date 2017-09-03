@@ -1731,7 +1731,7 @@ test_zeroes <- function(x){
 #' @importFrom rlang "!!"
 mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
   names(dimnames(mlgt)) <- c("Population", "MLG")
-  mlgt.df <- reshape2::melt(mlgt, value.name = "count")
+  mlgt.df <- as.data.frame.table(mlgt, responseName = "count", stringsAsFactors = FALSE)
   use_old_dplyr <- utils::packageVersion("dplyr") <= package_version("0.5.0") | getOption("poppr.old.dplyr")
   # Ensure that the population is a factor
   if (use_old_dplyr) {
