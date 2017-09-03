@@ -26,7 +26,7 @@ MISC
 
 * The internal plotting function for mlg.table now uses tidy evaluation for
   dplyr versions > 0.5.0. 
-* The package reshap2 was removed from imports and replaced with base functions.
+* The package reshape2 was removed from imports and replaced with base functions.
 
 NEW IMPORTS
 -----------
