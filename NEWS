@@ -8,31 +8,36 @@ ALGORITHMIC CHANGE
   distance will now consider all possible combinations of ordered alleles in the
   calculation under the genome addition and loss models for missing data. This
   will affect those who have polyploid data that contain more than one missing 
-  allele at any genotype. To facilitate comparison, the global option,
-  old.bruvo.model, has been created for users to switch between the former model,
-  which considered unordered allele combinations and the current model, which 
-  considers orderd allele combinations. It must be repeated that this does not
-  affect haploid or diploid comparisons, those that use the infinite alleles
-  model, or those who do not have more than one missing allele at any genotype.
+  allele at any genotype
+  
+  To facilitate comparison, the global option old.bruvo.model, has been created.
+  By default it is set to FALSE, indicating that poppr should use the ordered 
+  allele combinations. If the user wants to use the method considering unorderd 
+  allele combinations, they can set options(old.bruvo.model = TRUE)
+  
+  It must be repeated that this does not affect haploid or diploid comparisons, 
+  those that use the infinite alleles model, or those who do not have more than 
+  one missing allele at any genotype.
 
 DEPRECATION
 -----------
 
 * The warning for a short repeat length vector for Bruvo's distance is 
-  deprecated and will become an error in the future. 
+  deprecated and will become an error in the future
   
 MISC
 ----
 
 * The internal plotting function for mlg.table now uses tidy evaluation for
-  dplyr versions > 0.5.0. 
-* The package reshape2 was removed from imports and replaced with base functions.
+  dplyr versions > 0.5.0
+* The package reshape2 was removed from imports and replaced with base functions
+  (see https://github.com/grunwaldlab/poppr/issues/144 for details)
 
 NEW IMPORTS
 -----------
 
 * Due to the migration to dplyr version 0.7.0, poppr now imports the "!!"
-  operator from the rlang package.
+  operator from the rlang package
 
 poppr 2.4.1
 ===========

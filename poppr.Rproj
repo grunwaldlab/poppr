@@ -19,3 +19,5 @@ PackageBuildArgs: --resave-data --compact-vignettes=gs+qpdf
 PackageBuildBinaryArgs: --html --latex
 PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace
+
+QuitChildProcessesOnExit: Yes
