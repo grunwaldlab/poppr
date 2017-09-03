@@ -1066,9 +1066,11 @@ private_alleles <- function(gid, form = alleles ~ ., report = "table",
     if (report == "vector"){
       privates <- rownames(privates)
     } else if (report == "data.frame"){
-      marker <- ifelse(marker == "alleles", "allele", "locus")
-      privates <- melt(privates, varnames = c(level, marker), 
-                       value.name = "count")
+      marker   <- if (marker == "alleles") "allele" else "locus"
+      names(dimnames(privates)) <- c(level, marker)
+      privates <- as.data.frame.table(privates, 
+                                      responseName = "count",
+                                      stringsAsFactors = FALSE)
     }
     return(privates)
   } else {

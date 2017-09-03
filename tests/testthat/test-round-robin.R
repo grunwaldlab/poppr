@@ -103,6 +103,10 @@ test_that("rraf produces a data frame", {
   rrx_df <- rraf(x, res = "data.frame")
   expect_is(rrx_df, "data.frame")
   expect_equivalent(names(rrx_df), c("frequency", "locus", "allele"))
+  # The length of the data should be equql
+  expect_equal(nrow(rrx_df), sum(lengths(rrx_f)))
+  # The content should be equal
+  expect_equal(rrx_df$frequency, unlist(rrx_f, use.names = FALSE))
 })
 
 test_that("rraf calculates per population", {

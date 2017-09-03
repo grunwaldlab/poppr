@@ -236,10 +236,10 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
     out <- unlist(out, use.names = FALSE)
     names(out) <- colnames(tab(gid))
   } else if (res == "data.frame"){
-    outdf <- reshape2::melt(out)
+    outdf <- utils::stack(out)
     names(outdf)        <- c("frequency", "locus")
     levels(outdf$locus) <- locNames(gid)
-    outdf <- cbind(outdf, allele = unlist(lapply(out, names), use.names = FALSE))
+    outdf$allele        <- rownames(outdf)
     return(outdf)
   }
   return(out)

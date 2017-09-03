@@ -43,6 +43,33 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
+#' Internal function to plot the results from ia() and poppr()
+#'
+#' @param sample either an object of class "ialist" or a list of ialists
+#' @param pval a named vector specifying the p values to display
+#' @param pop The name of the population
+#' @param file The name of the source file
+#' @param N The number of samples in the population
+#' @param observed observed values of Ia and rbarD
+#' @param index The index to plot (defaults to "rbarD")
+#' @param labsize size of the in-plot label
+#' @param linesize size of the in-plot line
+#'
+#' @return a ggplot2 object
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' data(Pinf)
+#' x <- Pinf %>% seppop() %>% lapply(ia, sample = 99, valuereturn = TRUE, quiet = TRUE, plot = FALSE)
+#' x
+#' poppr:::poppr.plot(sample = x, file = "hey") # plots multiple populations
+#' # plot.ialist takes care of the single populations.
+#' for (i in x){
+#'   print(plot(i))
+#' }
+#' }
+#' 
 poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05), 
                        pop = NULL, file = NULL, N = NULL,
                        observed = c(Ia = 0, rbarD = 0), 
@@ -51,16 +78,27 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
                        linesize = rel(1)){
   INDEX_ARGS <- c("rbarD", "Ia")
   index      <- match.arg(index, INDEX_ARGS)
+  tidy_ialist <- function(ialist){
+    res <- stats::reshape(ialist$samples,
+                          direction = "long",
+                          varying = 1:2,
+                          times = c("Ia", "rbarD"),
+                          timevar = "variable",
+                          v.names = "value")[-3] %>%
+      dplyr::as_tibble()
+    res$variable <- as.factor(res$variable)
+    res
+  }
   if (!class(sample) %in% "ialist" & class(sample) %in% "list"){
-    suppressMessages(ggsamps <- reshape2::melt(lapply(sample, "[[", "samples")))
+    ggsamps <- dplyr::bind_rows(lapply(sample, tidy_ialist), .id = "population")
     ggvals <- vapply(sample, "[[", numeric(4), "index")
-    names(dimnames(ggvals)) <- c("index", "population")
-    suppressMessages(ggvals <- reshape2::melt(ggvals, as.is = TRUE))
+    ggvals <-  setNames(as.data.frame.table(ggvals, stringsAsFactors = FALSE), 
+                        c("index", "population", "value"))
     ggsamps <- ggsamps[ggsamps$variable == index, ]
     ggvals  <- ggvals[grep(ifelse(index == "Ia", "I", "D"), ggvals$index), ]
     ggindex <- ggvals[ggvals$index == index, ]
     ggpval  <- ggvals[ggvals$index == ifelse(index == "Ia", "p.Ia", "p.rD"), ]
-    names(ggsamps)[3] <- "population"
+    
     ggsamps$population <- factor(ggsamps$population, names(sample))
     srange  <- range(ggsamps$value, na.rm = TRUE)
     binw    <- diff(srange/30)
@@ -123,7 +161,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   }
   obslab  <- paste(labs[index], ":", obs, sep = "")
   plab    <- paste("p =", signif(pval[index], 3))
-  suppressMessages(ggdata  <- melt(sample))
+  ggdata  <- tidy_ialist(list(samples = sample))
   ggdata  <- ggdata[ggdata$variable == index, ] 
   thePlot <- ggplot(ggdata, aes_string(x = "value"))
   thePlot <- thePlot + 
@@ -509,11 +547,13 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
       return(NULL)
     }
     if (plot){
-      data_df      <- melt(data_table, value.name = valname)
+      data_df      <- as.data.frame.table(data_table, 
+                                          responseName = valname,
+                                          stringsAsFactors = FALSE)
       leg_title    <- valname
       data_df[1:2] <- data.frame(lapply(data_df[1:2], 
                                        function(x) factor(x, levels = unique(x))))
-      plotdf <- textdf <- data_df
+      plotdf <- data_df -> textdf 
       if (percent) {
         plotdf$Missing <- round(plotdf$Missing*100, 2)
         textdf$Missing <- paste(plotdf$Missing, "%")
@@ -566,7 +606,9 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
     
     dimnames(data_table) <- list(Samples = indNames(gen), Loci = locNames(gen))
     if (plot){
-      data_df <- melt(data_table, value.name = valname)
+      data_df      <- as.data.frame.table(data_table, 
+                                          responseName = valname,
+                                          stringsAsFactors = FALSE)
       data_df[1:2] <- data.frame(lapply(data_df[1:2], 
                                        function(x) factor(x, levels = unique(x))))
       vars <- aes_string(x = "Loci", y = "Samples", fill = valname)
@@ -591,7 +633,9 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
   } 
   if (df){
     if (!exists("data_df")){
-      data_df <- melt(data_table, value.name = valname)
+      data_df <- as.data.frame.table(data_table, 
+                                     responseName = valname,
+                                     stringsAsFactors = FALSE)
     }
     data_table <- data_df
   } else {
@@ -1209,22 +1253,29 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
                   report  = report, 
                   PACKAGE = "poppr")
   if (!quiet) cat("\n")
-  colnames(out) <- seq(nloci)
+  colnames(out)        <- seq(nloci)
+  rownames(out)        <- seq(sample)
+  names(dimnames(out)) <- c("sample", "NumLoci")
   # Visibly return the data if plot = FALSE
-  if (!plot){
+  if (!plot) {
     return(out)
   }
-  suppressWarnings(max_obs  <- nmll(gen, "original"))
-  threshdf <- data.frame(x = round(max_obs*thresh))
-  outmelt  <- melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
-  aesthetics <- aes_string(x = "NumLoci", y = "MLG")
+  suppressWarnings(max_obs <- nmll(gen, "original"))
+  threshdf                 <- data.frame(x = round(max_obs*thresh))
+
+  outmelt <- as.data.frame.table(out, 
+                                 responseName = "MLG",
+                                 stringsAsFactors = FALSE)
+  outmelt$sample  <- as.integer(outmelt$sample)
+  outmelt$NumLoci <- as.integer(outmelt$NumLoci)
+  aesthetics      <- aes_string(x = "NumLoci", y = "MLG")
   outplot <- ggplot(outmelt, aesthetics) + 
              geom_boxplot(aes_string(group = "factor(NumLoci)")) + 
              labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
                        y           = "Number of multilocus genotypes",
                        x           = "Number of loci sampled")) +
              scale_x_continuous(breaks = seq(nloci), expand = c(0, 0.125))
-  if (!is.null(thresh)){
+  if (!is.null(thresh)) {
     outbreaks <- sort(c(pretty(0:max_obs), threshdf$x))
     tjust     <- ifelse(thresh > 0.9, 1.5, -1)
     outplot   <- outplot + 
