@@ -43,7 +43,6 @@ Imports:
     methods,
     ade4,
     pegas,
-    reshape2,
     dplyr (>= 0.4),
     rlang,
     boot,
