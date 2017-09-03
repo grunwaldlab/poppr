@@ -643,7 +643,7 @@ diversity_ci <- function(tab, n = 1000, n.boot = 1L, ci = 95, total = TRUE,
   rareval <- NULL
   if (rarefy){
     rareval <- max(min(rowSums(tab)), n.rare)
-    msg <- paste("\nSamples for rarefaction:", rareval)
+    msg     <- paste("\nSamples for rarefaction:", rareval)
     message(msg)
   } else {
     if (center == TRUE){
@@ -662,21 +662,18 @@ diversity_ci <- function(tab, n = 1000, n.boot = 1L, ci = 95, total = TRUE,
   orig <- get_boot_stats(res)
   statnames <- colnames(orig)
   CI  <- get_all_ci(res, ci = ci, index_names = statnames, 
-                    center = ifelse(rarefy, FALSE, center),
-                    btype = ifelse(rarefy, "percent", "normal"),
-                    bci = ifelse(rarefy, FALSE, TRUE))
+                    center = if (rarefy) FALSE else center,
+                    btype =  if (rarefy) "percent" else "normal",
+                    bci =    if (rarefy) FALSE else TRUE)
   est <- get_boot_se(res, "mean")
   out <- list(obs = orig, est = est, CI = CI, boot = res)
-  if (plot){
-    if (rarefy){
-      boot_plot(res, orig, statnames, rownames(tab), NULL)
-    } else {
-      boot_plot(res, orig, statnames, rownames(tab), CI)      
-    }
+  if (plot) {
+    boot_plot(res = res, 
+              orig = orig,  
+              CI = if (rarefy) NULL else CI
+              )
   }
-  if (!raw){
-    out <- do.call("pretty_info", out)
-  }
+  out <- if (raw) out else do.call("pretty_info", out)
   return(out)
 }
 

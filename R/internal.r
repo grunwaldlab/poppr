@@ -2289,22 +2289,31 @@ evens <- function(x){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-boot_plot <- function(res, orig, statnames, popnames, CI){
+#' Plot the results of boot_ci
+#'
+#' @param res a list of "boot" class objects
+#' @param orig a table of the observed statistics
+#' @param CI 
+#'
+#' @return prints a ggplot2 object
+#' @noRd
+#' @keywords internal
+boot_plot <- function(res, orig, CI){
   statnames <- colnames(orig)
-  orig <- reshape2::melt(orig)
-  orig$Pop <- factor(orig$Pop)
-  if (!is.null(CI)){
-    cidf <- reshape2::melt(CI)
-    cidf <- reshape2::dcast(cidf, as.formula("Pop + Index ~ CI"))
+  popnames  <- rownames(orig)
+  orig <- as.data.frame.table(orig, responseName = "value")
+  if (!is.null(CI)) {
+    cidf <- as.data.frame.table(CI, responseName = "v", stringsAsFactors = FALSE) %>%
+      reshape(idvar = c("Pop", "Index"), timevar = "CI", direction = "wide")
+    names(cidf) <- gsub("^v\\.", "", names(cidf))
     orig <- merge(orig, cidf)
-    colnames(orig)[4:5] <- c("lb", "ub")    
+    colnames(orig)[4:5] <- c("lb", "ub")
   }
   samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
   dimnames(samp) <- list(NULL, 
                          Index = statnames,
                          Pop = popnames)
-  sampmelt <- reshape2::melt(samp)
-  sampmelt$Pop <- factor(sampmelt$Pop)
+  sampmelt <- as.data.frame.table(samp, responseName = "value")
   pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
     geom_boxplot() + 
     geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 
