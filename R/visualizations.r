@@ -547,11 +547,13 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
       return(NULL)
     }
     if (plot){
-      data_df      <- reshape2::melt(data_table, value.name = valname)
+      data_df      <- as.data.frame.table(data_table, 
+                                          responseName = valname,
+                                          stringsAsFactors = FALSE)
       leg_title    <- valname
       data_df[1:2] <- data.frame(lapply(data_df[1:2], 
                                        function(x) factor(x, levels = unique(x))))
-      plotdf <- textdf <- data_df
+      plotdf <- data_df -> textdf 
       if (percent) {
         plotdf$Missing <- round(plotdf$Missing*100, 2)
         textdf$Missing <- paste(plotdf$Missing, "%")
@@ -604,7 +606,9 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
     
     dimnames(data_table) <- list(Samples = indNames(gen), Loci = locNames(gen))
     if (plot){
-      data_df <- reshape2::melt(data_table, value.name = valname)
+      data_df      <- as.data.frame.table(data_table, 
+                                          responseName = valname,
+                                          stringsAsFactors = FALSE)
       data_df[1:2] <- data.frame(lapply(data_df[1:2], 
                                        function(x) factor(x, levels = unique(x))))
       vars <- aes_string(x = "Loci", y = "Samples", fill = valname)
@@ -629,7 +633,9 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
   } 
   if (df){
     if (!exists("data_df")){
-      data_df <- reshape2::melt(data_table, value.name = valname)
+      data_df <- as.data.frame.table(data_table, 
+                                     responseName = valname,
+                                     stringsAsFactors = FALSE)
     }
     data_table <- data_df
   } else {
@@ -1247,22 +1253,29 @@ genotype_curve <- function(gen, sample = 100, maxloci = 0L, quiet = FALSE,
                   report  = report, 
                   PACKAGE = "poppr")
   if (!quiet) cat("\n")
-  colnames(out) <- seq(nloci)
+  colnames(out)        <- seq(nloci)
+  rownames(out)        <- seq(sample)
+  names(dimnames(out)) <- c("sample", "NumLoci")
   # Visibly return the data if plot = FALSE
-  if (!plot){
+  if (!plot) {
     return(out)
   }
-  suppressWarnings(max_obs  <- nmll(gen, "original"))
-  threshdf <- data.frame(x = round(max_obs*thresh))
-  outmelt  <- reshape2::melt(out, value.name = "MLG", varnames = c("sample", "NumLoci"))
-  aesthetics <- aes_string(x = "NumLoci", y = "MLG")
+  suppressWarnings(max_obs <- nmll(gen, "original"))
+  threshdf                 <- data.frame(x = round(max_obs*thresh))
+
+  outmelt <- as.data.frame.table(out, 
+                                 responseName = "MLG",
+                                 stringsAsFactors = FALSE)
+  outmelt$sample  <- as.integer(outmelt$sample)
+  outmelt$NumLoci <- as.integer(outmelt$NumLoci)
+  aesthetics      <- aes_string(x = "NumLoci", y = "MLG")
   outplot <- ggplot(outmelt, aesthetics) + 
              geom_boxplot(aes_string(group = "factor(NumLoci)")) + 
              labs(list(title = paste("Genotype accumulation curve for", datacall[2]), 
                        y           = "Number of multilocus genotypes",
                        x           = "Number of loci sampled")) +
              scale_x_continuous(breaks = seq(nloci), expand = c(0, 0.125))
-  if (!is.null(thresh)){
+  if (!is.null(thresh)) {
     outbreaks <- sort(c(pretty(0:max_obs), threshdf$x))
     tjust     <- ifelse(thresh > 0.9, 1.5, -1)
     outplot   <- outplot + 
