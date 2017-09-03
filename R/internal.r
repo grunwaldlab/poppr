@@ -2303,7 +2303,7 @@ boot_plot <- function(res, orig, statnames, popnames, CI){
   dimnames(samp) <- list(NULL, 
                          Index = statnames,
                          Pop = popnames)
-  sampmelt <- melt(samp)
+  sampmelt <- reshape2::melt(samp)
   sampmelt$Pop <- factor(sampmelt$Pop)
   pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
     geom_boxplot() + 

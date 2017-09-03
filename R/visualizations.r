@@ -161,7 +161,6 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   }
   obslab  <- paste(labs[index], ":", obs, sep = "")
   plab    <- paste("p =", signif(pval[index], 3))
-  # suppressMessages(ggdata  <- melt(sample))
   ggdata  <- tidy_ialist(list(samples = sample))
   ggdata  <- ggdata[ggdata$variable == index, ] 
   thePlot <- ggplot(ggdata, aes_string(x = "value"))

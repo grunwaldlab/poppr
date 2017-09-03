@@ -329,7 +329,7 @@ jackbootcomp <- function(pop, sample = 999, quiet = FALSE, method = 1,
   half    <- round(inds*jack)
   altjack <- bootjack(popx, sample, half, jackbar)  
   datlist <- list(null = null$sample, bootstrap = altboot, `jack knife` = altjack)
-  dat           <- melt(datlist, measure.vars = c("Ia", "rbarD"))
+  dat           <- reshape2::melt(datlist, measure.vars = c("Ia", "rbarD"))
   names(dat)[3] <- "Distribution"
   message("Creating Plots")
   obs.df   <- data.frame(list(variable = names(null$samples), 

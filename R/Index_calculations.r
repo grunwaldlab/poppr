@@ -1067,7 +1067,7 @@ private_alleles <- function(gid, form = alleles ~ ., report = "table",
       privates <- rownames(privates)
     } else if (report == "data.frame"){
       marker <- ifelse(marker == "alleles", "allele", "locus")
-      privates <- melt(privates, varnames = c(level, marker), 
+      privates <- reshape2::melt(privates, varnames = c(level, marker), 
                        value.name = "count")
     }
     return(privates)
