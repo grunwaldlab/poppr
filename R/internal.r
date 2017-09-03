@@ -2304,7 +2304,7 @@ boot_plot <- function(res, orig, CI){
   orig <- as.data.frame.table(orig, responseName = "value")
   if (!is.null(CI)) {
     cidf <- as.data.frame.table(CI, responseName = "v", stringsAsFactors = FALSE) %>%
-      reshape(idvar = c("Pop", "Index"), timevar = "CI", direction = "wide")
+      stats::reshape(idvar = c("Pop", "Index"), timevar = "CI", direction = "wide")
     names(cidf) <- gsub("^v\\.", "", names(cidf))
     orig <- merge(orig, cidf)
     colnames(orig)[4:5] <- c("lb", "ub")

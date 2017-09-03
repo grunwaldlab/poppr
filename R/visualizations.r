@@ -79,12 +79,12 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
   INDEX_ARGS <- c("rbarD", "Ia")
   index      <- match.arg(index, INDEX_ARGS)
   tidy_ialist <- function(ialist){
-    res <- reshape(ialist$samples,
-                   direction = "long",
-                   varying = 1:2,
-                   times = c("Ia", "rbarD"),
-                   timevar = "variable",
-                   v.names = "value")[-3] %>%
+    res <- stats::reshape(ialist$samples,
+                          direction = "long",
+                          varying = 1:2,
+                          times = c("Ia", "rbarD"),
+                          timevar = "variable",
+                          v.names = "value")[-3] %>%
       dplyr::as_tibble()
     res$variable <- as.factor(res$variable)
     res
