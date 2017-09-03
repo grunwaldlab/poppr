@@ -39,9 +39,9 @@ packageVersion("poppr")
 
 You can check this against the versions reported at <https://r-project.org> and <https://cran.r-project.org/package=poppr>.
 
-#### Make sure your problem is reproducible
+#### Make sure your problem is reproducible and minimal
 
-A reproducible example (reprex) ensures that the maintainers will be able to address the issue in a timely manner. 
+A minimal reproducible example (reprex) ensures that the maintainers will be able to address the issue in a timely manner. 
 
 The easiest way of doing this is to use the [reprex package](https://cran.r-project.org/package=reprex), which has excellent documentation on how to create a reprex: <https://github.com/jennybc/reprex#what-is-a-reprex>.
 
@@ -50,9 +50,9 @@ Here's an example of how to do this for a poppr-specific example:
 ```r
 library("reprex")
 reprex({
-suppressPackageStartupMessages(library("poppr"))
-data(Pinf)
-Pinf.bd <- bruvo.dist(Pinf)
+  suppressPackageStartupMessages(library("poppr"))
+  data(Pinf)
+  Pinf.bd <- bruvo.dist(Pinf)
 })
 ```
 
@@ -83,10 +83,9 @@ Updating Documentation
 
 This is one of the best ways to contribute to *poppr*. If you see a spelling error or have a better way of phrasing an error message, vignette entry, or manual page, feel free to contribute!
 
-All functions are documented using [roxygen2](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html) comments above the functions themselves. If you want to edit documentation, please make the changes there and make sure you include the roxygen comment (`#'`) in front of your additions. An example of a documentation commit can be found here: d721c5b30ac9885319864853dc0d60717e6ccd17. 
+All functions are documented using [roxygen2](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html) comments above the functions themselves. If you want to edit documentation, please make the changes there and make sure you include the roxygen comment (`#'`) in front of your additions. An example of a documentation commit can be found here: <https://github.com/grunwaldlab/poppr/commit/d721c5b>. 
 
 #### If you are not experienced with git/github
-
 
 You can make changes directly on github by clicking the little pencil icon in the top right corner of the file when you view it on github. When you do that, github will create a copy of the *poppr* repository in your account so you can edit the file. When you are done editing the file, you may click on "Propose File Change" at the bottom of the page (You can also add a short commit message or leave the entries blank). From there, you will be taken the form to create a Pull Request, where you can reveiw your changes and click "Create Pull Request". Details can be found here: <https://help.github.com/articles/editing-files-in-another-user-s-repository/>
 
@@ -108,7 +107,7 @@ the tidyverse style guidelines <http://style.tidyverse.org/>.
 
 You can use the following checklist for your contributions:
 
- - [ ] I have [written tests](http://r-pkgs.had.co.nz/tests.html) to ensure my code works
+ - [ ] I have [written tests](http://r-pkgs.had.co.nz/tests.html) to ensure my code works (here's an [example of a code change with a test](https://github.com/grunwaldlab/poppr/commit/43be276))
  - [ ] I have followed the tidyverse style guidelines
  - [ ] I have documented my changes in the [NEWS](NEWS) file
  - [ ] I have added myself as a contributor to the [DESCRIPTION](DESCRIPTION) file
