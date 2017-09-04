@@ -137,7 +137,7 @@ Ind,Pop,RM127, ,RM22, ,RM22, ,RM127,
 test_that("missing samples do not shift strata", {
   skip_on_cran()
   expect_warning(ms <- read.genalex(textConnection(missing_single), sep = "\t"), "entirely non-type individual\\(s\\) deleted")
-  expect_equal(strata(ms)$Pop, pop(ms))
+  expect_equal(as.character(strata(ms)$Pop), as.character(pop(ms)))
   expect_equal(rownames(strata(ms)), indNames(ms))
 })
 
@@ -145,7 +145,7 @@ test_that("missing samples do not shift strata, even with duplicated names", {
   skip_on_cran()
   missing_single2 <- gsub("A004\t", "A011\t", missing_single)
   expect_warning(ms <- read.genalex(textConnection(missing_single2), sep = "\t"), "duplicate labels detected")
-  expect_equal(strata(ms)$Pop, pop(ms))
+  expect_equal(as.character(strata(ms)$Pop), as.character(pop(ms)))
   expect_equal(rownames(strata(ms)), indNames(ms))
 })
 
