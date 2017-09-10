@@ -24,6 +24,7 @@ DEPRECATION
 
 * The warning for a short repeat length vector for Bruvo's distance is 
   deprecated and will become an error in the future
+* jack.ia is deprecated in favor of resample.ia for clarity.
   
 BUG FIX
 -------

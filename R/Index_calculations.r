@@ -510,11 +510,17 @@ poppr.all <- function(filelist, ...){
 #==============================================================================#
 #' Index of Association
 #' 
-#' Calculate the Index of Association and Standardized Index of Association. 
-#' Obtain p-values from one-sided permutation tests. 
-#' 
-#' The function \code{ia} will calculate the index of association over all loci in the data set while
-#' \code{pair.ia} will calculate the index in a pairwise manner among all loci. 
+#' Calculate the Index of Association and Standardized Index of Association.
+#' \itemize{
+#'   \item \code{ia()} calculates the index of association over all loci in
+#'   the data set.
+#'   \item \code{pair.ia()} calculates the index of association in a pairwise
+#'   manner among all loci.
+#'   \item  \code{resample.ia()} calculates the index of association on a
+#'   reduced data set multiple times to create a distribution, showing the
+#'   variation of values observed at a given sample size (previously 
+#'   \code{jack.ia}).
+#' }
 #' 
 #' @param gid a \code{\link{genind}} or \code{\link{genclone}} object.
 #'   
@@ -579,6 +585,8 @@ poppr.all <- function(filelist, ...){
 #'   }
 #'   }
 #'   
+#' @note \code{jack.ia()} is deprecated as the name was misleading. Please use
+#'   \code{resample.ia()}
 #' @details The index of association was originally developed by A.H.D. Brown 
 #'   analyzing population structure of wild barley (Brown, 1980). It has been widely 
 #'   used as a tool to detect clonal reproduction within populations . 
@@ -674,7 +682,20 @@ poppr.all <- function(filelist, ...){
 #' res <- pair.ia(partial_clone)
 #' plot(res, low = "black", high = "green", index = "Ia")
 #' 
+#' # Resampling
+#' data(Pinf)
+#' resample.ia(Pinf, reps = 99)
+#' 
 #' \dontrun{
+#' 
+#' # Plot the results of resampling rbarD. 
+#' library("ggplot2")
+#' Pinf.resamp <- resample.ia(Pinf, reps = 999)
+#' ggplot(Pinf.resamp[2], aes(x = rbarD)) +
+#'   geom_histogram() +
+#'   geom_vline(xintercept = ia(Pinf)[2]) +
+#'   geom_vline(xintercept = ia(clonecorrect(Pinf))[2], linetype = 2) +
+#'   xlab(expression(bar(r)[d]))
 #' 
 #' # Get the indices back and plot the distributions.
 #' nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
