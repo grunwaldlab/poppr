@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data import and manipulation in poppr version 2.4.1 • poppr</title>
+<title>Data import and manipulation in poppr version 2.5.0 • poppr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -54,10 +54,10 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Data import and manipulation in poppr version 2.4.1</h1>
+      <h1>Data import and manipulation in poppr version 2.5.0</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2017-04-24</h4>
+            <h4 class="date">2017-09-11</h4>
           </div>
 
     
@@ -114,7 +114,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">citation</span>(<span class="dt">package =</span> <span class="st">"poppr"</span>)</code></pre></div>
 <pre><code>## 
 ## To cite poppr in publications or presentations, please specify
-## poppr version 2.4.1 and with the following citation:
+## poppr version 2.5.0 and with the following citation:
 ## 
 ##   Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package
 ##   for genetic analysis of populations with clonal, partially
@@ -163,7 +163,7 @@
 <p>To install from GitHub, you do not need to download the tarball since there is a package called <em>devtools</em> that will download and install the package for you directly from GitHub. After you have installed all dependencies (see above section), you should download <em>devtools</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)</code></pre></div>
 <p>Now you can execute the command <code>install_github()</code> with the user and repository name:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"grunwaldlab/poppr"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"grunwaldlab/poppr"</span>)</code></pre></div>
 </div>
 </div>
 <div id="intro:qstart" class="section level2">
@@ -185,7 +185,7 @@
 ##    &gt; overview: '?adegenet'
 ##    &gt; tutorials/doc/questions: 'adegenetWeb()' 
 ##    &gt; bug reports/feature requests: adegenetIssues()</code></pre>
-<pre><code>## This is poppr version 2.4.1. To get started, type package?poppr
+<pre><code>## This is poppr version 2.5.0. To get started, type package?poppr
 ## OMP parallel support: available</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getfile.html">getfile</a></span>()</code></pre></div>
 <p>A pop up window will appear like this<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
@@ -203,7 +203,7 @@ A popup window as it appears in OSX (Mountain Lion)
 ## [1] "/path/to/R/poppr/files"</code></pre>
 <p>Here we can see that <code>x</code> is a list with two entries: <code>$files</code> shows the files you selected and <code>$path</code> shows the path to those files.</p>
 <p>We will use <code>x$files</code> to access the file. The file is in the GenAlEx format, so we will import it using <code><a href="../reference/read.genalex.html">read.genalex()</a></code> and then analyze it with the function <code><a href="../reference/poppr.html">poppr()</a></code> to get a table of diversity indices per population.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myData  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.genalex.html">read.genalex</a></span>(x$files)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myData  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.genalex.html">read.genalex</a></span>(x<span class="op">$</span>files)
 myData</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">popdata &lt;-<span class="st"> </span><span class="kw"><a href="../reference/poppr.html">poppr</a></span>(myData)</code></pre></div>
 <p>The output of <code><a href="../reference/poppr.html">poppr()</a></code> was assigned to the variable <code>popdata</code>, so let“s look at the data.</p>
@@ -393,7 +393,7 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <pre><code>## Extracting the table ... Writing the table to ~/Desktop/rootrot.csv ... Done.</code></pre>
 <p>Here’s an example of exporting the nancycats data set into GenAlEx format with geographic information. If we look at the nancycats geographic information, we can see it“s coordinates for each population, but not each individual:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(nancycats)
-<span class="kw">other</span>(nancycats)$xy</code></pre></div>
+<span class="kw">other</span>(nancycats)<span class="op">$</span>xy</code></pre></div>
 <pre><code>##            x         y
 ## P01 263.3498 171.10939
 ## P02 183.5028 122.40790
@@ -417,8 +417,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <pre><code>## Extracting the table ... Writing the table to ~/Desktop/nancycats_pop_xy.csv ... Done.</code></pre>
 <p>If we wanted to assign a geographic coordinate to each individual, we can use this trick knowing that there are 17 populations in the data set:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nan2           &lt;-<span class="st"> </span>nancycats
-<span class="kw">other</span>(nan2)$xy &lt;-<span class="st"> </span><span class="kw">other</span>(nan2)$xy[<span class="kw">pop</span>(nan2), ]
-<span class="kw">tail</span>(<span class="kw">other</span>(nan2)$xy)</code></pre></div>
+<span class="kw">other</span>(nan2)<span class="op">$</span>xy &lt;-<span class="st"> </span><span class="kw">other</span>(nan2)<span class="op">$</span>xy[<span class="kw">pop</span>(nan2), ]
+<span class="kw">tail</span>(<span class="kw">other</span>(nan2)<span class="op">$</span>xy)</code></pre></div>
 <pre><code>##            x        y
 ## P17 345.3745 251.7939
 ## P17 345.3745 251.7939
@@ -501,7 +501,7 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">repeats &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">2</span>, <span class="kw">nLoc</span>(nancycats)) <span class="co">#nLoc = number of loci</span>
 repeats</code></pre></div>
 <pre><code>## [1] 2 2 2 2 2 2 2 2 2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">other</span>(nancycats)$repeat_lengths &lt;-<span class="st"> </span>repeats
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">other</span>(nancycats)<span class="op">$</span>repeat_lengths &lt;-<span class="st"> </span>repeats
 <span class="kw">other</span>(nancycats) <span class="co"># two items named xy and repeat_lengths</span></code></pre></div>
 <pre><code>## $xy
 ##            x         y
@@ -564,7 +564,7 @@ Aeut</code></pre></div>
 ##    @pop: population of each individual (group size range: 90-97)
 ##    @other: a list containing: population_hierarchy</code></pre>
 <p>We can see that there is a data frame in the <code>@other</code> slot called “population_hierarchy”. This is left over from <em>poppr</em> version 1.x behavior. Since the <code>genind</code> object now has a <code>@strata</code> slot, we can use it to set the stratification (previously called “hierarchy”).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw">other</span>(Aeut)$population_hierarchy[-<span class="dv">1</span>]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw">other</span>(Aeut)<span class="op">$</span>population_hierarchy[<span class="op">-</span><span class="dv">1</span>]
 Aeut</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
@@ -643,7 +643,7 @@ Pinf</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ptab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/info_table.html">info_table</a></span>(Pinf, <span class="dt">type =</span> <span class="st">"ploidy"</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="poppr_manual_files/figure-html/pinf_table-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>We look at the last six samples over two loci, Pi63 (3 alleles, triploid) and Pi70 (3 alleles, diploid) to examine how the data is represented.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinf[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf)[<span class="dv">9</span>:<span class="dv">10</span>]] %&gt;%<span class="st"> </span><span class="kw">tab</span>() %&gt;%<span class="st"> </span><span class="kw">tail</span>()</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinf[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tab</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tail</span>()</code></pre></div>
 <pre><code>##        Pi63.000 Pi63.148 Pi63.151 Pi63.157 Pi70.000 Pi70.189 Pi70.192 Pi70.195
 ## PiPE22        1        1        1        1        2        1        1        0
 ## PiPE23        1        1        1        1        2        1        1        0
@@ -653,7 +653,7 @@ Pinf</code></pre></div>
 ## PiPE27        1        1        1        1        2        1        1        0</code></pre>
 <p>Each column in this data represents a different allele at a particular locus. <code>Pi63.148</code> is the allele <code>148</code> at locus <code>Pi63</code>. Each row is an individual. The numbers represent the fraction of a given allele that makes up the individual genotype at a particular locus. What we can see here is that the number of columns is 8 when we expect only 6 (2 loci x 3 alleles). The first allele at each locus is <code>000</code>. Let’s take a look at the data in a human-readable format.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinfdf &lt;-<span class="st"> </span><span class="kw">genind2df</span>(Pinf, <span class="dt">sep =</span> <span class="st">"/"</span>)
-<span class="kw">tail</span>(Pinfdf[<span class="dv">10</span>:<span class="dv">11</span>])</code></pre></div>
+<span class="kw">tail</span>(Pinfdf[<span class="dv">10</span><span class="op">:</span><span class="dv">11</span>])</code></pre></div>
 <pre><code>##                   Pi63            Pi70
 ## PiPE22 000/148/151/157 000/000/189/192
 ## PiPE23 000/148/151/157 000/000/189/192
@@ -678,7 +678,7 @@ Pinf_rc <span class="co"># Notice that the new ploidy is accounted for.</span></
 ## 
 ##     2 strata - Continent, Country
 ##     2 populations defined - South America, North America</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span>:<span class="dv">10</span>]] %&gt;%<span class="st"> </span><span class="kw">tab</span>() %&gt;%<span class="st"> </span>tail</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tab</span>() <span class="op">%&gt;%</span><span class="st"> </span>tail</code></pre></div>
 <pre><code>##        Pi63.148 Pi63.151 Pi63.157 Pi70.189 Pi70.192 Pi70.195
 ## PiPE22        1        1        1        1        1        0
 ## PiPE23        1        1        1        1        1        0
@@ -688,7 +688,7 @@ Pinf_rc <span class="co"># Notice that the new ploidy is accounted for.</span></
 ## PiPE27        1        1        1        1        1        0</code></pre>
 <p>Below, we show the observed genotypes:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinfrcdf &lt;-<span class="st"> </span><span class="kw">genind2df</span>(Pinf_rc, <span class="dt">sep =</span> <span class="st">"/"</span>)
-<span class="kw">tail</span>(Pinfrcdf[<span class="dv">10</span>:<span class="dv">11</span>])</code></pre></div>
+<span class="kw">tail</span>(Pinfrcdf[<span class="dv">10</span><span class="op">:</span><span class="dv">11</span>])</code></pre></div>
 <pre><code>##               Pi63    Pi70
 ## PiPE22 148/151/157 189/192
 ## PiPE23 148/151/157 189/192
@@ -697,9 +697,9 @@ Pinf_rc <span class="co"># Notice that the new ploidy is accounted for.</span></
 ## PiPE26     157/157 192/195
 ## PiPE27 148/151/157 189/192</code></pre>
 <p>If you have imported your data as recoded polyploid data, you can use the argument “addzero” to fill out the ploidy:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span>:<span class="dv">10</span>]] %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/recode_polyploids.html">recode_polyploids</a></span>(<span class="dt">addzero =</span> <span class="ot">TRUE</span>) %&gt;%
-<span class="st">  </span><span class="kw">tab</span>() %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/recode_polyploids.html">recode_polyploids</a></span>(<span class="dt">addzero =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">tab</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">tail</span>()</code></pre></div>
 <pre><code>##        Pi63.0 Pi63.157 Pi63.148 Pi63.151 Pi70.0 Pi70.192 Pi70.189 Pi70.195
 ## PiPE22      0        1        1        1      1        1        1        0
@@ -766,7 +766,7 @@ Pinf_rc <span class="co"># Notice that the new ploidy is accounted for.</span></
 ##      P17       .     .     . 1.000     .     .     . 0.615     . 0.179
 ##      Total 0.084     .     . 0.089     .     .     . 0.038     . 0.023</code></pre>
 <p>We can see that locus fca8 has a lot of missing data. To demonstrate the function <code><a href="../reference/missingno.html">missingno()</a></code>, we will zoom into the first five individuals at the first locus.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tab</span>(nancycats)[<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">8</span>:<span class="dv">13</span>]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tab</span>(nancycats)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</code></pre></div>
 <pre><code>##      fca8.133 fca8.135 fca8.137 fca8.139 fca8.141 fca8.143
 ## N215       NA       NA       NA       NA       NA       NA
 ## N216       NA       NA       NA       NA       NA       NA
@@ -776,7 +776,7 @@ Pinf_rc <span class="co"># Notice that the new ploidy is accounted for.</span></
 <p>When looking at this data set, recall how a <code>genind</code> object is formatted. You have a matrix representing counts of alleles. For diploids, if you see 1, that means it is heterozygous at that allele, and a 2 means it“s homozygous. Here we see three heterozygotes and two individuals with missing data (indicated by NA). Let”s look at what happens when we exclude loci and genotypes with &gt;5% missing data).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nanloci &lt;-<span class="st">  </span><span class="kw"><a href="../reference/missingno.html">missingno</a></span>(nancycats, <span class="st">"loci"</span>)
 nangeno &lt;-<span class="st">  </span><span class="kw"><a href="../reference/missingno.html">missingno</a></span>(nancycats, <span class="st">"geno"</span>)
-<span class="kw">tab</span>(nanloci)[<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">8</span>:<span class="dv">13</span>]</code></pre></div>
+<span class="kw">tab</span>(nanloci)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</code></pre></div>
 <pre><code>##      fca23.144 fca23.146 fca23.148 fca23.150 fca43.133 fca43.135
 ## N215         0         1         0         0         0         0
 ## N216         0         2         0         0         0         0
@@ -790,7 +790,7 @@ Let’s look at the loci names and number of individuals.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">locNames</span>(nanloci) <span class="co"># Names of the loci</span></code></pre></div>
 <pre><code>## [1] "fca23" "fca43" "fca77" "fca78" "fca90" "fca96" "fca37"</code></pre>
 <p>You can see that the number of individuals stayed the same but the loci “fca8”, “fca45”, and “fca96” were removed. Let’s look at what happened when we removed individuals.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tab</span>(nangeno)[<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">8</span>:<span class="dv">13</span>]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tab</span>(nangeno)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</code></pre></div>
 <pre><code>##      fca8.133 fca8.135 fca8.137 fca8.139 fca8.141 fca8.143
 ## N217        0        1        0        0        0        1
 ## N218        1        1        0        0        0        0
@@ -823,7 +823,7 @@ Let’s look at the loci names and number of individuals.</p>
 <hr>
 <p>To demonstrate this tool, we’ll use the H3N2 virus data set provided in <em>adegenet</em>. It contains a data frame in the “other” slot called “x” that contains information about the year of epidemic, country, etc.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"H3N2"</span>, <span class="dt">package =</span> <span class="st">"adegenet"</span>)
-<span class="kw">strata</span>(H3N2) &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">other</span>(H3N2)$x)
+<span class="kw">strata</span>(H3N2) &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">other</span>(H3N2)<span class="op">$</span>x)
 H3N2</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
@@ -870,10 +870,10 @@ H3N2</code></pre></div>
 ## [26] "Sweden"         "Nepal"          "Saudi Arabia"   "Switzerland"    "Iran"          
 ## [31] "Mongolia"       "Spain"          "Slovenia"       "Croatia"        "Algeria"</code></pre>
 <p>Let“s make sure that the number of individuals in both data sets is equal to the number of individuals in our original data set:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">nInd</span>(v_na_minus) +<span class="st"> </span><span class="kw">nInd</span>(v_na)) ==<span class="st"> </span><span class="kw">nInd</span>(H3N2)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">nInd</span>(v_na_minus) <span class="op">+</span><span class="st"> </span><span class="kw">nInd</span>(v_na)) <span class="op">==</span><span class="st"> </span><span class="kw">nInd</span>(H3N2)</code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>Now we have data sets with and without North America. Let’s try something a bit more challenging. Let’s say that we want the first 10 populations in alphabetical order, but we know that we still don“t want any countries in North America. We can easily do this by using the <em>base</em> function <code>sort</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vsort &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">popNames</span>(H3N2))[<span class="dv">1</span>:<span class="dv">10</span>]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vsort &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">popNames</span>(H3N2))[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
 vsort</code></pre></div>
 <pre><code>##  [1] "Algeria"        "Austria"        "Bangladesh"     "Bulgaria"       "Canada"        
 ##  [6] "China"          "Croatia"        "Czech Republic" "Denmark"        "Egypt"</code></pre>
@@ -905,7 +905,7 @@ vsort</code></pre></div>
 <p>Let“s look at ways to clone-correct our data. We”ll look at our <em>A. euteichies</em> data that we used in an earlier section since that data set is known to include clonal populations <span class="citation">(N. J. Grünwald and Hoheisel 2006)</span>. Try playing around with the data and see what different combinations of the <code>strata</code>, and <code>keep</code> flags produce. Below, I will give three examples of clone corrections at the sample level with respect to field, at the field level, and finally, at the level of the entire data set.</p>
 <p>First, we will examine the original data set.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(Aeut)
-<span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">other</span>(Aeut)$population_hierarchy[-<span class="dv">1</span>])
+<span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">other</span>(Aeut)<span class="op">$</span>population_hierarchy[<span class="op">-</span><span class="dv">1</span>])
 Aeut</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
@@ -924,9 +924,9 @@ Aeut</code></pre></div>
 ##    @other: a list containing: population_hierarchy</code></pre>
 <p>When you read in data with <code><a href="../reference/read.genalex.html">read.genalex()</a></code>, the default is to represent it in a <code>genclone</code> object. Since the <code><a href="../reference/clonecorrect.html">clonecorrect()</a></code> function works on multilocus genotype definitions, It’s more efficient to convert it to a <code>genclone</code> object first. We will also rename the strata to “field” and “sample” to make the biological relevance of the data clearer.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aphan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-methods.html">as.genclone</a></span>(Aeut)
-<span class="kw">nameStrata</span>(Aeut) &lt;-<span class="st"> </span><span class="er">~</span>field/sample</code></pre></div>
+<span class="kw">nameStrata</span>(Aeut) &lt;-<span class="st"> </span><span class="er">~</span>field<span class="op">/</span>sample</code></pre></div>
 <p>Now we correct by sample with respect to field and keep the field as the population.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan,  <span class="dt">strata =</span> ~Pop/Subpop)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan,  <span class="dt">strata =</span> <span class="op">~</span>Pop<span class="op">/</span>Subpop)</code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -943,7 +943,7 @@ Aeut</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Your turn: Use the same stratification and use combine = TRUE and then</span>
 <span class="co"># keep = 1:2. Is there any difference?</span></code></pre></div>
 <p>Correcting by field. Notice how the number of MLG is much closer to our census.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan, <span class="dt">strata =</span> ~Pop)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan, <span class="dt">strata =</span> <span class="op">~</span>Pop)</code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -1474,7 +1474,7 @@ v.dup &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.h
 </ul>
 <hr>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">plot =</span> <span class="ot">TRUE</span>)
-v.tab[<span class="dv">1</span>:<span class="dv">10</span>, <span class="dv">1</span>:<span class="dv">10</span>] <span class="co"># Showing the first 10 columns and rows of the table.</span></code></pre></div>
+v.tab[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>] <span class="co"># Showing the first 10 columns and rows of the table.</span></code></pre></div>
 <pre><code>##             MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7 MLG.8 MLG.9 MLG.10
 ## Japan           0     0     0     0     0     0     1     2     1      0
 ## USA             0     2     4     1     1     0     0     0    13      0
@@ -1561,7 +1561,7 @@ UGNN &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.ht
 <p>We will take <code>UGNN</code> (MLGs crossing UK, Germany, Netherlands, and Norway) and compare its elements to the MLG vector (<code>v.vec</code>) to see where else they occur.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UGNN <span class="co"># Show what we are looking for</span></code></pre></div>
 <pre><code>## [1] 315 317 620</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UGNN_match &lt;-<span class="st"> </span>v.vec %in%<span class="st"> </span>UGNN
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UGNN_match &lt;-<span class="st"> </span>v.vec <span class="op">%in%</span><span class="st"> </span>UGNN
 <span class="kw">table</span>(UGNN_match) <span class="co"># How many individuals matched to those three MLGs?</span></code></pre></div>
 <pre><code>## UGNN_match
 ## FALSE  TRUE 
@@ -1616,26 +1616,26 @@ Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ml
 <p>We’ve captured our plot using <code>last_plot()</code> and now we can manipulate it. One common need is to change the title. We can easily do that with the function <code>ggtitle()</code>. Let“s say we wanted to label it”<em>Aphanomyces euteiches</em> multilocus genotype distribution“. We would use <code>ggtitle(Aphanomyces euteiches multilocus genotype distribution)</code>. Unfortunately, we need italics for a latin binomial. One way to acheive this is by using the <code>expression()</code> function and declaring which text needs to be italicized.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myTitle &lt;-<span class="st"> </span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">"Aphanomyces euteiches"</span>), 
                       <span class="st">" multilocus genotype distribution"</span>))
-(pt &lt;-<span class="st"> </span>p +
-<span class="st">   </span><span class="kw">ggtitle</span>(myTitle) +
+(pt &lt;-<span class="st"> </span>p <span class="op">+</span>
+<span class="st">   </span><span class="kw">ggtitle</span>(myTitle) <span class="op">+</span>
 <span class="st">   </span><span class="kw">xlab</span>(<span class="st">"Multilocus genotype"</span>)) <span class="co"># We can label the x axis, too</span></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_title-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Let“s say we wanted to remove the grey background. We could use the <code>theme()</code> function to do this, or we could use a theme already implemented in ggplot2 called <code>theme_bw()</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptt &lt;-<span class="st"> </span>pt +<span class="st"> </span><span class="kw">theme_bw</span>())</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptt &lt;-<span class="st"> </span>pt <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>())</code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_theme-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Uh-oh. The x axis labels are now horizontal when they should be vertical. Since it“s the overall distribution we’re interested in, we don’t really need them anyways. We can remove them with <code>axis.text.x</code> and <code>axis.ticks.x</code> (we’ll also remove the x axis gridlines because they’re ugly).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptta &lt;-<span class="st"> </span>ptt +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) +
-<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.ticks.x =</span> <span class="kw">element_blank</span>()) +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptta &lt;-<span class="st"> </span>ptt <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.ticks.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major.x =</span> <span class="kw">element_blank</span>()))</code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_theme_axis-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>And, if for some bizarre reason, you liked the color gradient in <em>poppr</em> version 1, you can get that back by adding the <em>fill</em> aesthetic:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptttaf &lt;-<span class="st"> </span>ptta +<span class="st"> </span><span class="kw">aes</span>(<span class="dt">fill =</span> count))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptttaf &lt;-<span class="st"> </span>ptta <span class="op">+</span><span class="st"> </span><span class="kw">aes</span>(<span class="dt">fill =</span> count))</code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_silly-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>This allows you to produce publication quality graphs directly in R. Please see Hadley Wickham“s <em>ggplot2</em> package for more details <span class="citation">(Wickham 2009)</span>. Note that if you don”t like using <em>ggplot2</em>, you can access the data in the ggplot2 object and plot the data yourself:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(p$data)</code></pre></div>
-<pre><code>## # A tibble: 6 × 4
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(p<span class="op">$</span>data)</code></pre></div>
+<pre><code>## # A tibble: 6 x 4
 ##   Population    MLG count  order
-##       &lt;fctr&gt; &lt;fctr&gt; &lt;int&gt; &lt;fctr&gt;
+##       &lt;fctr&gt;  &lt;chr&gt; &lt;int&gt; &lt;fctr&gt;
 ## 1     Athena MLG.20     9      1
 ## 2     Athena MLG.66     5      2
 ## 3     Athena MLG.14     3      3
@@ -1706,11 +1706,11 @@ Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ml
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(nancycats)
 
 <span class="kw">png</span>(<span class="st">"nancy_pair%02d.png"</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">height =</span> <span class="dv">14</span>, <span class="dt">units =</span> <span class="st">"in"</span>, <span class="dt">res =</span> <span class="dv">300</span>)
-poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seppop</span>(nancycats), pair.ia, <span class="dt">limits =</span> <span class="kw">c</span>(-<span class="fl">0.25</span>, <span class="dv">1</span>))
+poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seppop</span>(nancycats), pair.ia, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.25</span>, <span class="dv">1</span>))
 <span class="kw">dev.off</span>()</code></pre></div>
 <p>Since this data set is made up of 30 populations with more than 1 individual, this will save 30 files to your working directory named “nancy_pair_barchart01.png…nancy_pair_barchart30.png”. The way R knows how to number these files is because of the <code>%02d</code> part of the command. That“s telling R to use a number that is two digits long in place of that expression. All of these files will be 14x14” and will have a resolution of 300 dots per inch. If you wanted to do the same thing, but place them all in one file, you should use the pdf option.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pdf</span>(<span class="st">"nancy_pair.png"</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">height =</span> <span class="dv">14</span>, <span class="dt">compress =</span> <span class="ot">FALSE</span>)
-poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seppop</span>(nancycats), pair.ia, <span class="dt">limits =</span> <span class="kw">c</span>(-<span class="fl">0.25</span>, <span class="dv">1</span>))
+poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seppop</span>(nancycats), pair.ia, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.25</span>, <span class="dv">1</span>))
 <span class="kw">dev.off</span>()</code></pre></div>
 <p>Remember, it is important not to forget to type <code>dev.off()</code> when you are done making graphs. Note that I did not have to specify a resolution for this image since it is based off of vector graphics.</p>
 </div>

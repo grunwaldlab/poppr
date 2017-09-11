@@ -80,15 +80,27 @@
     </div>
 
     
-    <p>Calculate the Index of Association and Standardized Index of Association. 
-Obtain p-values from one-sided permutation tests.</p>
+    <p>Calculate the Index of Association and Standardized Index of Association.</p><ul>
+<li><p><code>ia()</code> calculates the index of association over all loci in
+  the data set.</p></li>
+<li><p><code>pair.ia()</code> calculates the index of association in a pairwise
+  manner among all loci.</p></li>
+<li><p><code>resample.ia()</code> calculates the index of association on a
+  reduced data set multiple times to create a distribution, showing the
+  variation of values observed at a given sample size (previously 
+  <code>jack.ia</code>).</p></li>
+</ul>
     
 
     <pre class="usage"><span class='fu'>ia</span>(<span class='no'>gid</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"ignore"</span>,
   <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>, <span class='kw'>valuereturn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>pair.ia</span>(<span class='no'>gid</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"red"</span>,
-  <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>)</pre>
+  <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>)
+
+<span class='fu'>resample.ia</span>(<span class='no'>gid</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>jack.ia</span>(<span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -158,6 +170,20 @@ TRUE</code></p></td>
 Defaults to <code>NULL</code>. If you want to use a custom range, supply two
 numbers between -1 and 1, (e.g. <code>limits = c(-0.15, 1)</code>)</p></td>
     </tr>
+    <tr>
+      <th>n</th>
+      <td><p>an integer specifying the number of samples to be drawn. Defaults to
+<code>NULL</code>, which then uses the number of multilocus genotypes.</p></td>
+    </tr>
+    <tr>
+      <th>reps</th>
+      <td><p>an integer specifying the number of replicates to perform.
+Defaults to 999.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>arguments to be passed on to resample.ia</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -195,12 +221,14 @@ numbers between -1 and 1, (e.g. <code>limits = c(-0.15, 1)</code>)</p></td>
 </ul>
   
 
+<h3>resample.ia()</h3>
+a data frame with the index of association and standardized index of
+association in columns. Number of rows represents the number of reps.
+
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function <code>ia</code> will calculate the index of association over all loci in the data set while
-<code>pair.ia</code> will calculate the index in a pairwise manner among all loci.</p>
-<p>The index of association was originally developed by A.H.D. Brown 
+    <p>The index of association was originally developed by A.H.D. Brown 
   analyzing population structure of wild barley (Brown, 1980). It has been widely 
   used as a tool to detect clonal reproduction within populations . 
   Populations whose members are undergoing sexual reproduction, whether it be
@@ -259,6 +287,11 @@ numbers between -1 and 1, (e.g. <code>limits = c(-0.15, 1)</code>)</p></td>
   \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}} 
   $$</p>
     
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p><code>jack.ia()</code> is deprecated as the name was misleading. Please use
+  <code>resample.ia()</code></p>
+    
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Paul-Michael Agapow and Austin Burt. Indices of multilocus 
@@ -283,7 +316,118 @@ numbers between -1 and 1, (e.g. <code>limits = c(-0.15, 1)</code>)</p></td>
 <span class='co'># Pairwise over all loci:</span>
 <span class='fu'>data</span>(<span class='no'>partial_clone</span>)
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>partial_clone</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   2%  |                                                                              |===                                                                   |   4%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   9%  |                                                                              |========                                                              |  11%  |                                                                              |=========                                                             |  13%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  18%  |                                                                              |==============                                                        |  20%  |                                                                              |================                                                      |  22%  |                                                                              |=================                                                     |  24%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  29%  |                                                                              |======================                                                |  31%  |                                                                              |=======================                                               |  33%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  38%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  42%  |                                                                              |===============================                                       |  44%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  49%  |                                                                              |====================================                                  |  51%  |                                                                              |=====================================                                 |  53%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  58%  |                                                                              |==========================================                            |  60%  |                                                                              |============================================                          |  62%  |                                                                              |=============================================                         |  64%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  69%  |                                                                              |==================================================                    |  71%  |                                                                              |===================================================                   |  73%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  78%  |                                                                              |========================================================              |  80%  |                                                                              |==========================================================            |  82%  |                                                                              |===========================================================           |  84%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  89%  |                                                                              |================================================================      |  91%  |                                                                              |=================================================================     |  93%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  98%  |                                                                              |======================================================================| 100%</div><img src='ia-5.png' alt='' width='540' height='400' /><div class='input'><span class='fu'>plot</span>(<span class='no'>res</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)</div><img src='ia-7.png' alt='' width='540' height='400' /><div class='input'>
+<span class='co'># Resampling</span>
+<span class='fu'>data</span>(<span class='no'>Pinf</span>)
+<span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |=============                                         | 24% ~0 s remaining     |===================                                   | 35% ~1 s remaining     |===========================================           | 81% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
+#&gt; 1  0.7540432 0.08637437
+#&gt; 2  0.7230964 0.07937610
+#&gt; 3  0.6621155 0.07235257
+#&gt; 4  0.6470759 0.07077117
+#&gt; 5  0.7692276 0.08419688
+#&gt; 6  0.7363872 0.08058121
+#&gt; 7  0.6518033 0.07153535
+#&gt; 8  0.6419717 0.07019230
+#&gt; 9  0.5539919 0.06078353
+#&gt; 10 0.6089765 0.06970642
+#&gt; 11 0.7336384 0.08069040
+#&gt; 12 0.5258643 0.05738924
+#&gt; 13 0.5850364 0.06395097
+#&gt; 14 0.5939415 0.06486458
+#&gt; 15 0.7158050 0.08179718
+#&gt; 16 0.5949997 0.06515951
+#&gt; 17 0.5233248 0.05710783
+#&gt; 18 0.6000663 0.06550120
+#&gt; 19 0.5456479 0.05946649
+#&gt; 20 0.5948450 0.06498867
+#&gt; 21 0.7153089 0.08235701
+#&gt; 22 0.5427356 0.06209942
+#&gt; 23 0.7713364 0.08473771
+#&gt; 24 0.5793171 0.06365828
+#&gt; 25 0.7908562 0.08634700
+#&gt; 26 0.5825423 0.06426749
+#&gt; 27 0.6604865 0.07227388
+#&gt; 28 0.8152550 0.09370012
+#&gt; 29 0.6606833 0.07248066
+#&gt; 30 0.7365006 0.08074172
+#&gt; 31 0.6029096 0.06589298
+#&gt; 32 0.7127953 0.07860745
+#&gt; 33 0.6918628 0.07590020
+#&gt; 34 0.6079353 0.06637168
+#&gt; 35 0.6437233 0.07044888
+#&gt; 36 0.7387087 0.08502380
+#&gt; 37 0.6147030 0.06718639
+#&gt; 38 0.6179642 0.07092068
+#&gt; 39 0.6678007 0.07322927
+#&gt; 40 0.6266669 0.06861165
+#&gt; 41 0.6944290 0.07950279
+#&gt; 42 0.6128523 0.07006421
+#&gt; 43 0.6481973 0.07117105
+#&gt; 44 0.5898487 0.06428920
+#&gt; 45 0.7235534 0.07948985
+#&gt; 46 0.7630591 0.08746586
+#&gt; 47 0.6918095 0.07963881
+#&gt; 48 0.6173768 0.06749355
+#&gt; 49 0.7458107 0.08592816
+#&gt; 50 0.6898711 0.07579100
+#&gt; 51 0.6408425 0.07045914
+#&gt; 52 0.5355963 0.05850171
+#&gt; 53 0.7337261 0.08414233
+#&gt; 54 0.6913770 0.07556987
+#&gt; 55 0.7814389 0.08940902
+#&gt; 56 0.6792803 0.07775430
+#&gt; 57 0.6793801 0.07446729
+#&gt; 58 0.8357361 0.09168928
+#&gt; 59 0.7834193 0.08981290
+#&gt; 60 0.5369947 0.05840308
+#&gt; 61 0.7534155 0.08252708
+#&gt; 62 0.6248819 0.06828621
+#&gt; 63 0.5538704 0.06330450
+#&gt; 64 0.7152898 0.07816883
+#&gt; 65 0.7439245 0.08566049
+#&gt; 66 0.6644704 0.07662048
+#&gt; 67 0.5868044 0.06412860
+#&gt; 68 0.6000647 0.06588671
+#&gt; 69 0.5769838 0.06336920
+#&gt; 70 0.5452567 0.05961356
+#&gt; 71 0.5516778 0.06045654
+#&gt; 72 0.7176119 0.07863844
+#&gt; 73 0.7608654 0.08361043
+#&gt; 74 0.5643405 0.06184623
+#&gt; 75 0.6216360 0.06809607
+#&gt; 76 0.7477243 0.08221581
+#&gt; 77 0.6328715 0.07248712
+#&gt; 78 0.6277221 0.06855519
+#&gt; 79 0.6492746 0.07111506
+#&gt; 80 0.7684489 0.08398223
+#&gt; 81 0.6833833 0.07824709
+#&gt; 82 0.8158999 0.08959147
+#&gt; 83 0.7165537 0.07843732
+#&gt; 84 0.6246437 0.06865943
+#&gt; 85 0.6774955 0.07435930
+#&gt; 86 0.6875366 0.07586500
+#&gt; 87 0.6571724 0.07171899
+#&gt; 88 0.6662879 0.07643771
+#&gt; 89 0.6614956 0.07559314
+#&gt; 90 0.6196150 0.06764145
+#&gt; 91 0.6639394 0.07341566
+#&gt; 92 0.6736617 0.07361308
+#&gt; 93 0.6707382 0.07338280
+#&gt; 94 0.6541389 0.07485602
+#&gt; 95 0.6125574 0.07005197
+#&gt; 96 0.7214759 0.08336206
+#&gt; 97 0.6282488 0.07192651
+#&gt; 98 0.7457011 0.08145137
+#&gt; 99 0.6944622 0.07629353</div><div class='input'>
 <span class='fu'>not_run</span>({
+
+  <span class='co'># Plot the results of resampling rbarD. </span>
+  <span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
+  <span class='no'>Pinf.resamp</span> <span class='kw'>&lt;-</span> <span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>)
+  <span class='fu'>ggplot</span>(<span class='no'>Pinf.resamp</span>[<span class='fl'>2</span>], <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>rbarD</span>)) +
+    <span class='fu'>geom_histogram</span>() +
+    <span class='fu'>geom_vline</span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fu'>ia</span>(<span class='no'>Pinf</span>)[<span class='fl'>2</span>]) +
+    <span class='fu'>geom_vline</span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fu'>ia</span>(<span class='fu'><a href='clonecorrect.html'>clonecorrect</a></span>(<span class='no'>Pinf</span>))[<span class='fl'>2</span>], <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>2</span>) +
+    <span class='fu'>xlab</span>(<span class='fu'>expression</span>(<span class='fu'>bar</span>(<span class='no'>r</span>)[<span class='no'>d</span>]))
 
   <span class='co'># Get the indices back and plot the distributions.</span>
   <span class='no'>nansamp</span> <span class='kw'>&lt;-</span> <span class='fu'>ia</span>(<span class='no'>nancycats</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>valuereturn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
@@ -336,6 +480,8 @@ numbers between -1 and 1, (e.g. <code>limits = c(-0.15, 1)</code>)</p></td>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#note">Note</a></li>
 
       <li><a href="#references">References</a></li>
 

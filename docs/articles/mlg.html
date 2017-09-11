@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analysis of Multilocus Genotypes and Lineages in poppr 2.4.1 • poppr</title>
+<title>Analysis of Multilocus Genotypes and Lineages in poppr 2.5.0 • poppr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -54,10 +54,10 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Analysis of Multilocus Genotypes and Lineages in poppr 2.4.1</h1>
+      <h1>Analysis of Multilocus Genotypes and Lineages in poppr 2.5.0</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2017-04-24</h4>
+            <h4 class="date">2017-09-11</h4>
           </div>
 
     
@@ -198,7 +198,7 @@ monpop</code></pre></div>
                          <span class="dv">9</span>, <span class="dv">4</span>), 
                        <span class="dt">ncol =</span> <span class="dv">2</span>,
                        <span class="dt">byrow =</span> <span class="ot">TRUE</span>)
-<span class="kw">rownames</span>(grid_example) &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span>:<span class="dv">5</span>]
+<span class="kw">rownames</span>(grid_example) &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]
 <span class="kw">colnames</span>(grid_example) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)
 grid_example</code></pre></div>
 <pre><code>##   x y
@@ -271,7 +271,7 @@ x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-
 <p>Even though we have reason to believe that the samples “new” and “mut” might actually have the genotype x.5 and y.1 (the MLG of sample C), the algorithm sees them as different. If we calculate the pairwise euclidean distances between samples, we see that “new”, “mut” and, “C” are very similar to each other:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"phangorn"</span>)
 <span class="kw">library</span>(<span class="st">"ape"</span>)
-raw_dist &lt;-<span class="st"> </span>function(x){
+raw_dist &lt;-<span class="st"> </span><span class="cf">function</span>(x){
   <span class="kw">dist</span>(<span class="kw">genind2df</span>(x, <span class="dt">usepop =</span> <span class="ot">FALSE</span>))
 }
 (xdis &lt;-<span class="st"> </span><span class="kw">raw_dist</span>(x))</code></pre></div>
@@ -308,7 +308,7 @@ raw_dist &lt;-<span class="st"> </span>function(x){
 ## 
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> xdis) &lt;-<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>.Machine$double.eps^<span class="fl">0.5</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> xdis) &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>.Machine<span class="op">$</span>double.eps<span class="op">^</span><span class="fl">0.5</span>
 x <span class="co"># Now we have 5 MLGs</span></code></pre></div>
 <pre><code>## 
 ## This is a genclone object
@@ -340,9 +340,9 @@ x <span class="co"># Now we have 5 MLGs</span></code></pre></div>
 ## $THRESHOLDS
 ## [1] 0</code></pre>
 <p>In our output, we can see that MLG 5 has collapsed into MLG 3. This occured as soon as our threshold passed 0. Take a look at what happens when we add a very small number to 1.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(e &lt;-<span class="st"> </span>.Machine$double.eps^<span class="fl">0.5</span>) <span class="co"># A very tiny number</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(e &lt;-<span class="st"> </span>.Machine<span class="op">$</span>double.eps<span class="op">^</span><span class="fl">0.5</span>) <span class="co"># A very tiny number</span></code></pre></div>
 <pre><code>## [1] 1.490116e-08</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> xdis, <span class="dt">threshold =</span> <span class="dv">1</span> +<span class="st"> </span>e, <span class="dt">stats =</span> <span class="kw">c</span>(<span class="st">"mlg"</span>, <span class="st">"thresholds"</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> xdis, <span class="dt">threshold =</span> <span class="dv">1</span> <span class="op">+</span><span class="st"> </span>e, <span class="dt">stats =</span> <span class="kw">c</span>(<span class="st">"mlg"</span>, <span class="st">"thresholds"</span>))</code></pre></div>
 <pre><code>## $MLGS
 ## [1] 7 6 4 1 2 4 4
 ## 
@@ -381,7 +381,7 @@ x <span class="co"># Now we have 5 MLGs</span></code></pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;"></p>
 <pre><code>##       MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7
 ## Total     1     1     1     1     1     1     1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> xdis) &lt;-<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>e
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> xdis) &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>e
 x</code></pre></div>
 <pre><code>## 
 ## This is a genclone object
@@ -448,10 +448,10 @@ x</code></pre></div>
 <p>DANGER! DANGER! While this is a convenient function, if you use a matrix or function that was created by you, you <strong>must not delete it or change its name</strong>. Only the name of the matrix/function is stored, so if you delete the matrix/function used to inform your filtering, you will get an error:</p>
 </blockquote>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(xdis) <span class="co"># NOOOOOO!</span>
-<span class="kw">try</span>(<span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x) &lt;-<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>e)</code></pre></div>
+<span class="kw">try</span>(<span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x) &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>e)</code></pre></div>
 <pre><code>##  Error: cannot evaluate distance function, it might be missing.</code></pre>
 <p>Basically, your object thinks that there should be a matrix called <strong>xdis</strong>, but it can’t find it anywhere. But don’t worry, we can restore it if we have the function available. We will use the <code>raw_dist()</code> function that we defined earlier.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> raw_dist) &lt;-<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>e
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> raw_dist) &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>e
 x</code></pre></div>
 <pre><code>## 
 ## This is a genclone object
@@ -567,7 +567,7 @@ pcmsn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bruvo
                    <span class="dt">vertex.label.cex =</span> <span class="fl">1.5</span>)</code></pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Let’s say that we realized that we have strong evidence for MLG “Q” being the same as MLG “M”. If we wanted to change those, we could simply change the factor levels:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mll.custom.html">mll.levels</a></span>(pc)[<span class="kw"><a href="../reference/mll.custom.html">mll.levels</a></span>(pc) ==<span class="st"> "Q"</span>] &lt;-<span class="st"> "M"</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mll.custom.html">mll.levels</a></span>(pc)[<span class="kw"><a href="../reference/mll.custom.html">mll.levels</a></span>(pc) <span class="op">==</span><span class="st"> "Q"</span>] &lt;-<span class="st"> "M"</span></code></pre></div>
 <p>And we can plot again</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">9001</span>)
 pcmsn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bruvo.msn.html">bruvo.msn</a></span>(pc, <span class="dt">replen =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nLoc</span>(pc)), <span class="dt">palette =</span> pcpal,
@@ -582,8 +582,8 @@ pcmsn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bruvo
 <a href="#diversity-analysis" class="anchor"></a>Diversity Analysis</h1>
 <p>In the <strong>Data Import and Manipulation</strong> vignette, the first command demonstrated was the <code><a href="../reference/poppr.html">poppr()</a></code>, command, which produced a table of diversity statistics, most of which were calculated on counts of multilocus genotypes. These statistics can be replicated by using the function <code><a href="../reference/diversity_stats.html">diversity_stats()</a></code>. This function calculates diversity statistics based off of a table of multilocus genotypes. Let’s analyze the diversity of the peach brown rot pathogen, <em>Monilinia fructicola</em>, structured by Symptom (Fruit Rot:FR and Blossom Blight:BB) and Year <span class="citation">(Everhart and Scherm 2015)</span>. Let’s first look at the distribution of multilocus genotypes:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(monpop)
-<span class="kw">splitStrata</span>(monpop) &lt;-<span class="st"> </span><span class="er">~</span>Tree/Year/Symptom
-montab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(monpop, <span class="dt">strata =</span> ~Symptom/Year)</code></pre></div>
+<span class="kw">splitStrata</span>(monpop) &lt;-<span class="st"> </span><span class="er">~</span>Tree<span class="op">/</span>Year<span class="op">/</span>Symptom
+montab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(monpop, <span class="dt">strata =</span> <span class="op">~</span>Symptom<span class="op">/</span>Year)</code></pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>We can see from these plots that the Fruit Rot (FR) have a lot more clones in the canopies than Blossom Blight (BB). This makes biological sense since Fruit Rot infections are clonally propagated, whereas Blossom Blight infections are from sexual propagules <span class="citation">(Everhart and Scherm 2015)</span>. Let’s look at the diversity metrics.</p>
 <div id="basic-statistics" class="section level2">
@@ -629,12 +629,12 @@ montab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.
 <h2 class="hasAnchor">
 <a href="#custom-statistics" class="anchor"></a>Custom Statistics</h2>
 <p>In all of the <code>diversity_*</code> functions, you can use your own custom diversity statistics. A common one we get requests for is the clonal fraction, <span class="math inline">\(\frac{MLG}{N}\)</span> or the number of multilocus genotypes over the number of samples. You can add it in by writing your own function. Keep in mind, that you should write it for both a matrix and a vector of counts if you want to be able to bootstrap it.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myCF &lt;-<span class="st"> </span>function(x){
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myCF &lt;-<span class="st"> </span><span class="cf">function</span>(x){
  x &lt;-<span class="st"> </span><span class="kw">drop</span>(<span class="kw">as.matrix</span>(x))
- if (<span class="kw">length</span>(<span class="kw">dim</span>(x)) &gt;<span class="st"> </span><span class="dv">1</span>){ <span class="co"># if it's a matrix</span>
-   res &lt;-<span class="st"> </span><span class="kw">rowSums</span>(x &gt;<span class="st"> </span><span class="dv">0</span>)/<span class="kw">rowSums</span>(x)
- } else {                 <span class="co"># if it's a vector</span>
-   res &lt;-<span class="st"> </span><span class="kw">sum</span>(x &gt;<span class="st"> </span><span class="dv">0</span>)/<span class="kw">sum</span>(x)
+ <span class="cf">if</span> (<span class="kw">length</span>(<span class="kw">dim</span>(x)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>){ <span class="co"># if it's a matrix</span>
+   res &lt;-<span class="st"> </span><span class="kw">rowSums</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)<span class="op">/</span><span class="kw">rowSums</span>(x)
+ } <span class="cf">else</span> {                 <span class="co"># if it's a vector</span>
+   res &lt;-<span class="st"> </span><span class="kw">sum</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)<span class="op">/</span><span class="kw">sum</span>(x)
  }
  <span class="kw">return</span>(res)
 }
@@ -659,11 +659,11 @@ reps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fix_re
                      <span class="dt">SEP =</span> <span class="dv">4</span>, <span class="dt">SEQ =</span> <span class="dv">2</span>, <span class="dt">SER =</span> <span class="dv">4</span>))
 
 <span class="co"># Adding a little bit, so the threshold is included.</span>
-e &lt;-<span class="st"> </span>.Machine$double.eps^<span class="fl">0.5</span>
+e &lt;-<span class="st"> </span>.Machine<span class="op">$</span>double.eps<span class="op">^</span><span class="fl">0.5</span>
 
 <span class="co"># Using the default farthest neighbor algorithm to collapse genotypes</span>
-<span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(monpop, <span class="dt">distance =</span> bruvo.dist, <span class="dt">replen =</span> reps) &lt;-<span class="st"> </span>(<span class="fl">0.5</span>/<span class="dv">13</span>) +<span class="st"> </span>e
-montabf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(monpop, <span class="dt">strata =</span> ~Symptom/Year)</code></pre></div>
+<span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(monpop, <span class="dt">distance =</span> bruvo.dist, <span class="dt">replen =</span> reps) &lt;-<span class="st"> </span>(<span class="fl">0.5</span><span class="op">/</span><span class="dv">13</span>) <span class="op">+</span><span class="st"> </span>e
+montabf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(monpop, <span class="dt">strata =</span> <span class="op">~</span>Symptom<span class="op">/</span>Year)</code></pre></div>
 <p><img src="mlg_files/figure-html/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(monstatf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diversity_stats.html">diversity_stats</a></span>(montabf, <span class="dt">CF =</span> myCF))</code></pre></div>
 <pre><code>##        Index
@@ -674,7 +674,7 @@ montabf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg
 ##   FR_10 3.861202 33.10974 0.9697974 0.6901987 0.2724014
 ##   BB_11 3.401197 30.00000 0.9666667 1.0000000 1.0000000
 ##   FR_11 2.754565  8.00766 0.8751196 0.4762511 0.3195876</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monstat2 -<span class="st"> </span>monstatf <span class="co"># Take the difference from the unfiltered</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monstat2 <span class="op">-</span><span class="st"> </span>monstatf <span class="co"># Take the difference from the unfiltered</span></code></pre></div>
 <pre><code>##        Index
 ## Pop             H         G      lambda         E.5         CF
 ##   BB_9  0.1381408 2.1100971 0.003417969 -0.03959575 0.09375000
@@ -721,22 +721,22 @@ montabf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg
 <pre><code>## [1] 214</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mll-method.html">mll</a></span>(monpop) &lt;-<span class="st"> "contracted"</span></code></pre></div>
 <p>To show how the order of the samples can affect the sampling, we will take the sum of all pairwise distances between clone-corrected samples (corrected without respect to populations):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monpop %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="dt">strata =</span> <span class="ot">NA</span>) %&gt;%<span class="st">  </span><span class="co"># 1. clone correct whole data set</span>
-<span class="st">  </span><span class="kw">dist</span>() %&gt;%<span class="st">                     </span><span class="co"># 2. calculate distance</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monpop <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="dt">strata =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># 1. clone correct whole data set</span>
+<span class="st">  </span><span class="kw">dist</span>() <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># 2. calculate distance</span>
 <span class="st">  </span><span class="kw">sum</span>()                          <span class="co"># 3. take the sum of the distance</span></code></pre></div>
 <pre><code>## [1] 90268.73</code></pre>
 <p>Now, what happens when we randomly sample individuals?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">999</span>)
-monpop[<span class="kw">sample</span>(<span class="kw">nInd</span>(monpop))] %&gt;%<span class="st"> </span><span class="co"># 1. shuffle samples</span>
-<span class="st">  </span><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="dt">strata =</span> <span class="ot">NA</span>) %&gt;%<span class="st">  </span><span class="co"># 2. clone correct whole data set</span>
-<span class="st">  </span><span class="kw">dist</span>() %&gt;%<span class="st">                     </span><span class="co"># 3. calculate distance</span>
+monpop[<span class="kw">sample</span>(<span class="kw">nInd</span>(monpop))] <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># 1. shuffle samples</span>
+<span class="st">  </span><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="dt">strata =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># 2. clone correct whole data set</span>
+<span class="st">  </span><span class="kw">dist</span>() <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># 3. calculate distance</span>
 <span class="st">  </span><span class="kw">sum</span>()                          <span class="co"># 4. take the sum of the distance</span></code></pre></div>
 <pre><code>## [1] 90359.52</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1000</span>)
-monpop[<span class="kw">sample</span>(<span class="kw">nInd</span>(monpop))] %&gt;%<span class="st"> </span><span class="co"># 1. shuffle samples</span>
-<span class="st">  </span><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="dt">strata =</span> <span class="ot">NA</span>) %&gt;%<span class="st">  </span><span class="co"># 2. clone correct whole data set</span>
-<span class="st">  </span><span class="kw">dist</span>() %&gt;%<span class="st">                     </span><span class="co"># 3. calculate distance</span>
+monpop[<span class="kw">sample</span>(<span class="kw">nInd</span>(monpop))] <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># 1. shuffle samples</span>
+<span class="st">  </span><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="dt">strata =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># 2. clone correct whole data set</span>
+<span class="st">  </span><span class="kw">dist</span>() <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># 3. calculate distance</span>
 <span class="st">  </span><span class="kw">sum</span>()                          <span class="co"># 4. take the sum of the distance</span></code></pre></div>
 <pre><code>## [1] 90324.07</code></pre>
 <p>Notice how we are getting different results based on the order of samples. This does not mean that the procedure doesn’t work, it just means that we must be careful when clone-correcting modified multilocus genotypes.</p>
