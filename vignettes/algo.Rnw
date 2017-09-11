@@ -429,9 +429,9 @@ with these differences in ploidy levels \citep{Bruvo:2004}:
   through a recent genome expansion, the missing alleles will be replace with
   all possible combinations of the observed alleles in the shorter genotype. For
   example, if there is a genotype of [69, 70, 0, 0] where 0 is a missing allele,
-  the possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], and [69,
-  70, 70, 70]. The resulting distances are then averaged over the number of
-  comparisons.
+  the possible combinations are: [69, 70, 69, 69], [69, 70, 69, 70], 
+  [69, 70, 70, 69], and [69, 70, 70, 70]. The resulting distances are then 
+  averaged over the number of comparisons.
   \item{Genome Loss Model -} This is similar to the genome addition model,
   except that it assumes that there was a recent genome reduction event and uses
   the observed values in the full genotype to fill the missing values in the
@@ -444,18 +444,14 @@ with these differences in ploidy levels \citep{Bruvo:2004}:
 As mentioned above, the infinite model is biased, but it is not nearly as
 computationally intensive as either of the other models. The reason for this is
 that both of the addition and loss models requires replacement of alleles and
-recalculation of Bruvo's distance. The number of replacements required is equal
-to the multiset coefficient: $\left({n \choose k}\right) == {(n-k+1) \choose k}$
+recalculation of Bruvo's distance. The number of replacements required is $n^k$
 where $n$ is the number of potential replacements and $k$ is the number of
-alleles to be replaced. So, for the example given above, The genome addition
-model would require $\left({2 \choose 2}\right) = 3$ calculations of Bruvo's
-distance, whereas the genome loss model would require $\left({4 \choose
-2}\right) = 10$ calculations.
+alleles to be replaced.
 
 To reduce the number of calculations and assumptions otherwise, Bruvo's distance
 will be calculated using the largest observed ploidy in pairwise comparisons. 
-This means that when
-comparing [69,70,71,0] and [59,60,0,0], they will be treated as triploids.
+This means that when comparing [69,70,71,0] and [59,60,0,0], they will be 
+treated as triploids.
 
 \subsubsection{Choosing a model}
 \label{appendix:algorithm:bruvomodel}

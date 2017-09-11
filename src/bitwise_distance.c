@@ -822,7 +822,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   double denom; // The denominator for the index of association function
 
   char** chunk_matrix;
-  int cur_distance;
+  // int cur_distance;
   unsigned char Sn;             // Used for temporary bitwise calculations
   unsigned char offset;
   unsigned char val; 

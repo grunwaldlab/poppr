@@ -53,7 +53,7 @@ Bruvo's distance between two alleles is calculated as
   distinct alleles at each locus, so you end up with genotypes that appear to
   have a lower ploidy level than the organism.
   
-  To help deal with these situations, Bruvo has suggested three methods for 
+  To help deal with these situations, Bruvo has suggested three methods for
   dealing with these differences in ploidy levels: \itemize{ \item
   \strong{Infinite Model} - The simplest way to deal with it is to count all
   missing alleles as infinitely large so that the distance between it and
@@ -64,27 +64,22 @@ Bruvo's distance between two alleles is calculated as
   replace with all possible combinations of the observed alleles in the
   shorter genotype}. For example, if there is a genotype of [69, 70, 0, 0]
   where 0 is a missing allele, the possible combinations are: [69, 70, 69,
-  69], [69, 70, 69, 70], and [69, 70, 70, 70]. The resulting distances are
-  then averaged over the number of comparisons. \item \strong{Genome Loss
-  Model} - This is similar to the genome addition model, except that it
-  assumes that there was a recent genome reduction event and uses \strong{the
-  observed values in the full genotype to fill the missing values in the
-  short genotype}. As with the Genome Addition Model, the resulting distances
-  are averaged over the number of comparisons. \item \strong{Combination
-  Model} - Combine and average the genome addition and loss models. } As
-  mentioned above, the infinite model is biased, but it is not nearly as
+  69], [69, 70, 69, 70], [69, 70, 70, 69], and [69, 70, 70, 70]. The
+  resulting distances are then averaged over the number of comparisons. \item
+  \strong{Genome Loss Model} - This is similar to the genome addition model,
+  except that it assumes that there was a recent genome reduction event and
+  uses \strong{the observed values in the full genotype to fill the missing
+  values in the short genotype}. As with the Genome Addition Model, the
+  resulting distances are averaged over the number of comparisons. \item
+  \strong{Combination Model} - Combine and average the genome addition and
+  loss models. } 
+  
+  As mentioned above, the infinite model is biased, but it is not nearly as
   computationally intensive as either of the other models. The reason for
   this is that both of the addition and loss models requires replacement of
   alleles and recalculation of Bruvo's distance. The number of replacements
-  required is equal to the multiset coefficient: \eqn{\left({n \choose
-  k}\right) == {(n+k-1) \choose k}}{choose(n+k-1, k)} where \emph{n} is the
-  number of potential replacements and \emph{k} is the number of alleles to
-  be replaced. So, for the example given above, The genome addition model
-  would require \eqn{\left({2 \choose 2}\right) = 3}{choose(2+2-1, 2) == 3}
-  calculations of Bruvo's distance, whereas the genome loss model would
-  require \eqn{\left({4 \choose 2}\right) = 10}{choose(4+2-1, 2) == 10}
-  calculations.
-  
+  required is equal to n^k where where \emph{n} is the number of potential
+  replacements and \emph{k} is the number of alleles to be replaced.
   To reduce the number of calculations and assumptions otherwise, Bruvo's 
   distance will be calculated using the largest observed ploidy in pairwise 
   comparisons. This means that when comparing [69,70,71,0] and [59,60,0,0], 
@@ -92,7 +87,25 @@ Bruvo's distance between two alleles is calculated as
   }
 }
 \note{
-Do not use missingno with this function. 
+Do not use missingno with this function.
+  \subsection{Missing alleles and Bruvo's distance in \pkg{poppr} versions < 2.5}{
+  In earlier versions of \pkg{poppr}, the authors had assumed that, because
+  the calculation of Bruvo's distance does not rely on orderd sets of
+  alleles, the imputation methods in the genome addition and genome loss
+  models would also assume unordered alleles for creating the hypothetical
+  genotypes. This means that the results from this imputation did not
+  consider all possible combinations of alleles, resulting in either an over-
+  or under- estimation of Bruvo's distance between two samples with two or
+  more missing alleles. This version of \pkg{poppr} considers all possible
+  combinations when calculating Bruvo's distance for incomplete genotype with
+  a negligable gain in computation time.
+  
+  If you want to see the effect of this change on your data, you can use the
+  global \pkg{poppr} option \code{old.bruvo.model}. Currently, this option is
+  \code{FALSE} and you can set it by using 
+  \code{options(old.bruvo.model = TRUE)}, but make sure to reset it to 
+  \code{FALSE} afterwards.
+  }
   \subsection{Repeat Lengths (replen)}{
   The \code{replen} argument is crucial for proper analysis of Bruvo's
   distance since the calculation relies on the knowledge of the number of

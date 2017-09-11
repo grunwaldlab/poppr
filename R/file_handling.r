@@ -299,13 +299,14 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     # column indicating the regions was not specified, so it needs to be created
     if (((clm %in% (loci.adj + 4)) & (geo == TRUE)) | (clm %in% (loci.adj + 2))){
       
-      pop.vec <- gena[, 2]
-      ind.vec <- gena[, 1]
-      xy      <- gena[, c((clm-1), clm)]
+      pop.vec     <- gena[, 2]
+      ind.vec     <- gena[, 1]
+      xy          <- gena[, c((clm - 1), clm)]
       region.inds <- ((npops + 5):length(num.info)) # Indices for the regions
       reg.inds    <- num.info[region.inds] # Number of individuals per region
       reg.names   <- all.info[[2]][region.inds] # Names of the regions
       reg.vec     <- rep(reg.names, reg.inds) # Paste into a single vector
+      names(reg.vec) <- ind.vec
       if (geo == TRUE){
         geoinds <- c((clm - 1), clm)
         xy      <- gena[, geoinds]
@@ -314,16 +315,14 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
         xy <- NULL
       }
       gena <- gena[, c(-1, -2), drop = FALSE]
-      
     } else {
-      
       pop.vec      <- ifelse(any(gena[, 1] == pop.info[1]), 1, 2)
       reg.vec      <- ifelse(pop.vec == 2, 1, 2)
       orig.ind.vec <- NULL
       reg.vec      <- gena[, reg.vec] # Regional Vector 
       pop.vec      <- gena[, pop.vec] # Population Vector
       if (geo == TRUE){
-        geoinds <- c((clm-1), clm)
+        geoinds <- c((clm - 1), clm)
         xy      <- gena[, geoinds]
         gena    <- gena[, -geoinds, drop = FALSE]
       } else {
@@ -337,22 +336,36 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     reg.vec <- NULL
     pop.vec <- gena[, 2]
     ind.vec <- gena[, 1]
-    xy      <- gena[, c((clm-1), clm)]
-    gena    <- gena[, -c(1, 2, (clm-1), clm), drop = FALSE]
+    xy      <- gena[, c((clm - 1), clm)]
+    gena    <- gena[, -c(1, 2, (clm - 1), clm), drop = FALSE]
   } else {
     # There are no Regions or geographic coordinates
     reg.vec <- NULL
     pop.vec <- gena[, 2]
     ind.vec <- gena[, 1]
-    xy <- NULL
-    gena <- gena[, -c(1, 2), drop = FALSE]
+    xy      <- NULL
+    gena    <- gena[, -c(1, 2), drop = FALSE]
   }
+  
+  `%null%` <- function(a, b) if (is.null(a)) NULL else b
+  
+  xy_trail_na <- xy %null% (rev(cumsum(rev(rowSums(!is.na(xy))))) > 0)
+  
+  if (any(xy_trail_na)){
+    xy         <- xy[xy_trail_na, , drop = FALSE]
+    xy_nomatch <- TRUE
+  } else {
+    xy_nomatch <- is.null(xy)
+  }
+  # We need to set the names of the population vector to the original names.
+  names(pop.vec) <- pop.vec %null% ind.vec
+  names(reg.vec) <- reg.vec %null% ind.vec
+  rownames(xy)   <- if (xy_nomatch) rownames(xy) else ind.vec
   
   #----------------------------------------------------------------------------#
   # The genotype matrix has been isolated at this point. Now this will
   # reconstruct the matrix in a way that adegenet likes it.
   #----------------------------------------------------------------------------#
-  
   clm      <- ncol(gena)
   gena.mat <- as.matrix(gena)
   # Checking for greater than haploid data.
@@ -426,44 +439,44 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
                        "   3. Create a new issue on https://github.com/grunwaldlab/poppr/issues")
     stop(weirdomsg)
   }
-  if (any(duplicated(ind.vec))){
-    # ensuring that all names are unique
-    indNames(res.gid) <- paste("ind", 1:length(ind.vec))
-    res.gid@other[["original_names"]] <- ind.vec
-  }
-  
   res.gid@call <- gencall
-  ind.vec <- indNames(res.gid)
-  names(pop.vec) <- ind.vec
+  # Checking for individual name duplications or removals -------------------
   
-  # Keep the name if it's a URL
+  same_names <- any(indNames(res.gid) %in% ind.vec)
+  if (same_names){ # no duplications, only removals
+    names(ind.vec) <- ind.vec
+    ind.vec        <- ind.vec[indNames(res.gid)]
+  } else {         # removals and/or duplciations
+    ind.vec <- ind.vec[as.integer(indNames(res.gid))]
+    other(res.gid)$original_names <- ind.vec
+  }
+  pop.vec <- pop.vec %null% pop.vec[ind.vec]
+  reg.vec <- reg.vec %null% reg.vec[ind.vec]
+  xy      <- if (xy_nomatch) xy else xy[ind.vec, , drop = FALSE]
+  ind.vec <- indNames(res.gid)
+  names(pop.vec) <- pop.vec %null% ind.vec
+  names(reg.vec) <- reg.vec %null% ind.vec
+  rownames(xy)   <- if (xy_nomatch) rownames(xy) else ind.vec
+  
+  # Keep the name if it's a URL ---------------------------------------------
+  
   if (length(grep("://", genalex)) < 1 & !"connection" %in% class(genalex)){
     res.gid@call[2] <- basename(genalex)
   }
   if (region){
-    names(reg.vec) <- ind.vec
-    strata(res.gid) <- data.frame(Pop = pop.vec[ind.vec], Region = reg.vec[ind.vec])
+    strata(res.gid) <- data.frame(Pop = pop.vec, Region = reg.vec)
   } else {
-    strata(res.gid) <- data.frame(Pop = pop.vec[ind.vec])
+    strata(res.gid) <- data.frame(Pop = pop.vec)
   }
   if (geo){
     if (!all(c("x", "y") %in% colnames(xy))){
       colnames(xy) <- c("x", "y")
     }
-    if (nrow(xy) == length(ind.vec)){
-      rownames(xy) <- ind.vec
-      res.gid@other[["xy"]] <- xy[ind.vec, ]
-    } else {
-      res.gid@other[["xy"]] <- xy
-    }
+    other(res.gid)$xy <- xy
+  }
+  res.gid <- if (genclone) as.genclone(res.gid) else res.gid
+  res.gid <- if (recode) recode_polyploids(res.gid, newploidy = TRUE) else res.gid
 
-  }
-  if (genclone){
-    res.gid <- as.genclone(res.gid)
-  }
-  if (recode){
-    res.gid <- recode_polyploids(res.gid, newploidy = TRUE)
-  }
   return(res.gid)
 }
 

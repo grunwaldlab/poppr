@@ -56,6 +56,9 @@
 <li>
   <a href="../articles/index.html">Articles</a>
 </li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -83,7 +86,7 @@
     <p>Wrapper for snpclone initializer.</p>
     
 
-    <pre class="usage"><span class='fu'>as.snpclone</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fu'>require</span>(<span class='st'>"parallel"</span>), <span class='kw'>n.cores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>mlg</span>,
+    <pre class="usage"><span class='fu'>as.snpclone</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>n.cores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>mlg</span>,
   <span class='kw'>mlgclass</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -134,7 +137,14 @@ represented as an <code><a href='MLG-class.html'>MLG</a></code> object.</p></td>
 #&gt; 
 #&gt;  || Optional content
 #&gt;    @other: a list containing: ancestral.pops 
-#&gt; </div></pre>
+#&gt; </div><div class='input'><span class='fu'>not_run</span>({
+  <span class='co'># Without parallel processing</span>
+  <span class='fu'>system.time</span>(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>as.snpclone</span>(<span class='fu'>glSim</span>(<span class='fl'>1000</span>, <span class='fl'>1e5</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>)))
+
+  <span class='co'># With parallel processing... doesn't really save you much time.</span>
+  <span class='fu'>system.time</span>(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>as.snpclone</span>(<span class='fu'>glSim</span>(<span class='fl'>1000</span>, <span class='fl'>1e5</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
+                               <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+})</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

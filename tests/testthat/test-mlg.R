@@ -392,22 +392,22 @@ test_that("multilocus genotype filtering functions correctly", {
   suppressWarnings({
     pdis <- diss.dist(missingno(partial_clone, "mean", quiet=TRUE))
     ndis <- diss.dist(missingno(nancycats, "mean", quiet=TRUE))
-  })
-
-  expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis), 
-               mlg.filter(Aeut, 0.3, missing="mean", distance=diss.dist))
-  expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis),  
-               mlg.filter(Aeut, 0.3, missing="mean", distance="diss.dist"))
-  suppressWarnings({
+  
+    expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis), 
+                 mlg.filter(Aeut, 0.3, missing="mean", distance=diss.dist))
+    expect_equal(mlg.filter(Aeut, 0.3, missing="mean", distance=adis),  
+                 mlg.filter(Aeut, 0.3, missing="mean", distance="diss.dist"))
+    
     expect_equal(mlg.filter(nancycats, 0.3, missing="mean", distance=ndis), 
                  mlg.filter(nancycats, 0.3, missing="mean", distance=diss.dist))
     expect_equal(mlg.filter(nancycats, 0.3, missing="mean", distance=ndis), 
                  mlg.filter(nancycats, 0.3, missing="mean", distance="diss.dist"))
+    
+    expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis), 
+                 mlg.filter(partial_clone, 0.3, missing="mean", distance=diss.dist))
+    expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis), 
+                 mlg.filter(partial_clone, 0.3, missing="mean", distance="diss.dist"))
   })
-  expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis), 
-               mlg.filter(partial_clone, 0.3, missing="mean", distance=diss.dist))
-  expect_equal(mlg.filter(partial_clone, 0.3, missing="mean", distance=pdis), 
-               mlg.filter(partial_clone, 0.3, missing="mean", distance="diss.dist"))
 })
 
 context("misc. mlg tests")

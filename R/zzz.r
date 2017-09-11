@@ -45,7 +45,9 @@
 .onAttach <- function(...) {
   op <- options()
   op.poppr <- list(
-    poppr.debug = FALSE # flag for verbosity
+    poppr.debug = FALSE, # flag for verbosity
+    old.bruvo.model = FALSE, # flag for using the old model of Bruvo's distance.
+    poppr.old.dplyr = FALSE
   )
   toset <- !(names(op.poppr) %in% names(op))
   if(any(toset)) options(op.poppr[toset])

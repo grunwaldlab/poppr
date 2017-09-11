@@ -947,8 +947,21 @@ fix_negative_branch <- function(tre){
 
 bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, 
                             loss = TRUE, by_locus = FALSE){
+  
+  
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
+  if (getOption("old.bruvo.model") && ploid > 2 && (add | loss)){
+    msg <- paste("The option old.bruvo.model has been set to TRUE, which does",
+                 "not represent every ordered combinations of alleles in the",
+                 "genome addition or loss models. This could result in",
+                 "potentially incorrect results.",
+                 "\n\n To use every ordered combination of alleles for",
+                 "estimating short genotypes, enter the following command in",
+                 "your R console:",
+                 "\n\n\toptions(old.bruvo.model = FALSE)\n")
+    warning(msg, call. = FALSE, immediate. = TRUE)
+  }
   replen <- bruvomat@replen
   x[is.na(x)] <- 0
 
@@ -960,7 +973,14 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
   perms <- .Call("permuto", ploid, PACKAGE = "poppr")
 
   # Calculating bruvo's distance over each locus. 
-  distmat <- .Call("bruvo_distance", x, perms, ploid, add, loss, PACKAGE = "poppr")
+  distmat <- .Call("bruvo_distance", 
+                   x,     # data matrix
+                   perms, # permutation vector (0-indexed)
+                   ploid, # maximum ploidy
+                   add,   # Genome addition model switch
+                   loss,  # Genome loss model switch
+                   getOption("old.bruvo.model"), # switch to use unordered genotypes
+                   PACKAGE = "poppr")
 
   # If there are missing values, the distance returns 100, which means that the
   # comparison is not made. These are changed to NA.
@@ -1687,33 +1707,7 @@ test_zeroes <- function(x){
   }
   return(FALSE)
 }
-#==============================================================================#
-# Internal plotting function for mlg.table
-#
-# Public functions utilizing this function:
-# ## none
-#
-# Private functions utilizing this function:
-# ## print_mlg_barplot
-# 
-# DEPRECATED
-#==============================================================================#
-# old_mlg_barplot <- function(mlgt){
-# 
-#   # create a data frame that ggplot2 can read.
-#   mlgt.df <- as.data.frame(list(MLG   = colnames(mlgt), 
-#                                 count = as.vector(mlgt)), 
-#                            stringsAsFactors = FALSE)
-# 
-#   # Organize the data frame by count in descending order.
-#   rearranged <- order(mlgt.df$count, decreasing = TRUE)
-#   mlgt.df <- mlgt.df[rearranged, , drop = FALSE]
-#   mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
-# 
-#   # plot it
-#   return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
-#          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
-# }
+
 #==============================================================================#
 # Internal plotting function for mlg.table
 #
@@ -1723,41 +1717,92 @@ test_zeroes <- function(x){
 # Private functions utilizing this function:
 # # print_mlg_barplot
 #==============================================================================#
-#' @importFrom dplyr %>% arrange_ group_by_ ungroup
+#' @param mlgt a table with populations in rows and MLGs in columns
+#'
+#' @param color logical. Should the output be colored by population?
+#' @param background logical. should the data be plotted against the background
+#'  data?
+#' @noRd
+#' @keywords internal
+#'
+#' @importFrom dplyr %>% 
+#' @importFrom dplyr arrange_ group_by_ ungroup
+#' @importFrom dplyr n
+#' @importFrom rlang "!!"
 mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
   names(dimnames(mlgt)) <- c("Population", "MLG")
-  mlgt.df <- reshape2::melt(mlgt, value.name = "count")
-  
+  mlgt.df <- as.data.frame.table(mlgt, responseName = "count", stringsAsFactors = FALSE)
+  use_old_dplyr <- utils::packageVersion("dplyr") <= package_version("0.5.0") | getOption("poppr.old.dplyr")
   # Ensure that the population is a factor
-  mlgt.df <- mlgt.df %>%
-    dplyr::mutate_(.dots = list(Population = ~factor(Population, unique(Population)))) %>%
-    dplyr::filter_("count > 0")
+  if (use_old_dplyr) {
+    mlgt.df <- mlgt.df %>%
+      dplyr::mutate_(.dots = list(Population = ~factor(Population, unique(Population)))) %>%
+      dplyr::filter_("count > 0")
+  } else {
+    qPop <- quote(Population)
+    mlgt.df <- mlgt.df %>%
+      dplyr::mutate(Population = factor(!!qPop, unique(!!qPop))) %>%
+      dplyr::filter(!!quote(count > 0))
+  }
     
-  
-  if (color | background){
+  if (color | background) {
     # summarize with the total counts, and merge with original data
-    mlgt.df <- mlgt.df %>% 
-      dplyr::group_by_("MLG") %>%
-      dplyr::summarize_(.dots = list(n = ~sum(count))) %>%
-      dplyr::full_join(mlgt.df, by = "MLG") %>%
-      dplyr::arrange_(~dplyr::desc(n)) %>%
-      dplyr::mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG))))
+    if (use_old_dplyr) {
+      mlgt.df <- mlgt.df %>% 
+        dplyr::group_by_("MLG") %>%
+        dplyr::summarize_(.dots = list(n = ~sum(count))) %>%
+        dplyr::full_join(mlgt.df, by = "MLG") %>%
+        dplyr::arrange_(~dplyr::desc(n)) %>%
+        dplyr::mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG))))
+    } else {
+      qMLG <- quote(MLG)
+      mlgt.df <- mlgt.df %>% 
+        dplyr::group_by(!!qMLG) %>%
+        dplyr::summarize(n = sum(!!quote(count))) %>%
+        dplyr::full_join(mlgt.df, by = "MLG") %>%
+        dplyr::arrange(dplyr::desc(!!quote(n))) %>%
+        dplyr::mutate(MLG = factor(!!qMLG, levels = unique(!!qMLG)))
+    }
+
     the_breaks <- pretty(mlgt.df$n)
   } else {
-    mlgt.df <- mlgt.df %>%
-      dplyr::group_by_("Population") %>%
-      dplyr::do_(~dplyr::arrange(., dplyr::desc(count)))
+    if (use_old_dplyr) {
+      mlgt.df <- mlgt.df %>%
+        dplyr::group_by_("Population") %>%
+        dplyr::do_(~dplyr::arrange(., dplyr::desc(count)))
+    } else {
+      mlgt.df <- mlgt.df %>%
+        dplyr::group_by(!!quote(Population)) %>%
+        dplyr::arrange(dplyr::desc(!!quote(count)), .by_group = TRUE)
+    }
+
     the_breaks <- pretty(mlgt.df$count)
   }
-  mlgt.df <- mlgt.df %>%
-    dplyr::ungroup() %>%
-    unique() %>%
-    dplyr::filter_("count > 0") %>%
-    dplyr::mutate_(.dots = list(order = ~seq(nrow(.)))) %>%
-    dplyr::mutate_(.dots = list(order = ~factor(order, unique(order))))
-  if (color | background){
+  if (use_old_dplyr) {
     mlgt.df <- mlgt.df %>%
-      dplyr::select_(~Population, ~MLG, ~count, ~order, ~n)
+      dplyr::ungroup() %>%
+      unique() %>%
+      dplyr::filter_("count > 0") %>%
+      dplyr::mutate_(.dots = list(order = ~seq(nrow(.)))) %>%
+      dplyr::mutate_(.dots = list(order = ~factor(order, unique(order))))
+  } else {
+    mlgt.df <- mlgt.df %>%
+      dplyr::ungroup() %>%
+      unique() %>%
+      dplyr::filter(!!quote(count > 0)) %>%
+      dplyr::mutate(order = seq(n())) %>%
+      dplyr::mutate(order = factor(!!quote(order), unique(!!quote(order))))
+  }
+
+  if (color | background) {
+    if (use_old_dplyr) {
+      mlgt.df <- mlgt.df %>%
+        dplyr::select_(~Population, ~MLG, ~count, ~order, ~n)
+    } else {
+      mlgt.df <- mlgt.df %>%
+        dplyr::select(!!quote(Population), !!quote(MLG), !!quote(count), !!quote(order), !!quote(n))
+    }
+
   }
   the_breaks <- the_breaks[the_breaks %% 1 == 0]
   # Conditionals for plotting
@@ -1786,52 +1831,6 @@ mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
   }
   return(the_plot)
 }
-
-#==============================================================================#
-# Internal plotting function for mlg.table
-#
-# Public functions utilizing this function:
-# ## none
-#
-# Private functions utilizing this function:
-# ## old_mlg_barplot
-# 
-# DEPRECATED
-#==============================================================================#
-# print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
-#   if(!quiet) cat("|", n,"\n")
-# 
-#   # Gather all nonzero values
-#   mlgt <- mlgtab[n, mlgtab[n, ] > 0, drop=FALSE]
-# 
-#   # controlling for the situation where the population size is 1.
-#   if (sum(mlgtab[n, ]) > 1){ 
-#     print(old_mlg_barplot(mlgt) +
-#             theme_classic() %+replace%
-#             theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) + 
-#             labs(title=paste("Population:", n, "\nN =", sum(mlgtab[n, ]),
-#                              "MLG =", length(mlgt))))
-#   }
-# }
-
-#==============================================================================#
-# Internal function for resampling loci for genotype accumulation curve.
-#
-# Public functions utilizing this function:
-# genotype_curve
-#
-# Private functions utilizing this function:
-# # none
-# 
-# DEPRECATED
-#==============================================================================#
-# get_sample_mlg <- function(size, samp, nloci, gen, progbar){
-#   if (!is.null(progbar)){
-#     setTxtProgressBar(progbar, size/(nloci-1))
-#   }
-#   out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
-#   return(out)
-# }
 
 #==============================================================================#
 # Internal function for creating title for index of association histogram.
@@ -2290,22 +2289,31 @@ evens <- function(x){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-boot_plot <- function(res, orig, statnames, popnames, CI){
+#' Plot the results of boot_ci
+#'
+#' @param res a list of "boot" class objects
+#' @param orig a table of the observed statistics
+#' @param CI 
+#'
+#' @return prints a ggplot2 object
+#' @noRd
+#' @keywords internal
+boot_plot <- function(res, orig, CI){
   statnames <- colnames(orig)
-  orig <- reshape2::melt(orig)
-  orig$Pop <- factor(orig$Pop)
-  if (!is.null(CI)){
-    cidf <- reshape2::melt(CI)
-    cidf <- reshape2::dcast(cidf, as.formula("Pop + Index ~ CI"))
+  popnames  <- rownames(orig)
+  orig <- as.data.frame.table(orig, responseName = "value")
+  if (!is.null(CI)) {
+    cidf <- as.data.frame.table(CI, responseName = "v", stringsAsFactors = FALSE) %>%
+      stats::reshape(idvar = c("Pop", "Index"), timevar = "CI", direction = "wide")
+    names(cidf) <- gsub("^v\\.", "", names(cidf))
     orig <- merge(orig, cidf)
-    colnames(orig)[4:5] <- c("lb", "ub")    
+    colnames(orig)[4:5] <- c("lb", "ub")
   }
   samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
   dimnames(samp) <- list(NULL, 
                          Index = statnames,
                          Pop = popnames)
-  sampmelt <- melt(samp)
-  sampmelt$Pop <- factor(sampmelt$Pop)
+  sampmelt <- as.data.frame.table(samp, responseName = "value")
   pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
     geom_boxplot() + 
     geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 

@@ -28,10 +28,11 @@ test_that("Amova returns published values", {
 test_that("pegas implemenation returns published values", {
   
   skip_on_cran()
+  suppressWarnings({
   pres    <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, method = "pegas")
   prescc  <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, clonecorrect = TRUE, 
                          method = "pegas")
-
+  })
   expect_equivalent(pres$varcomp, ressig[-4])
   expect_equivalent(pres$varcomp/sum(pres$varcomp), resper[-4]/100)
   expect_output(print(pres), "Variance components:")

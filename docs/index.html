@@ -34,6 +34,9 @@
 <li>
   <a href="articles/index.html">Articles</a>
 </li>
+<li>
+  <a href="news/index.html">News</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -90,7 +93,7 @@
 <li>and more!</li>
 </ul>
 <p>For full details, see the NEWS file or type in your R console:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">news</span>(Version &gt;=<span class="st"> "2.0.0"</span>, <span class="dt">package =</span> <span class="st">"poppr"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">news</span>(Version <span class="op">&gt;=</span><span class="st"> "2.0.0"</span>, <span class="dt">package =</span> <span class="st">"poppr"</span>)</code></pre></div>
 </div>
 </div>
 <div id="citation" class="section level2">
@@ -148,14 +151,14 @@
 <h4 class="hasAnchor">
 <a href="#stable-version" class="anchor"></a>Stable version</h4>
 <p>This release will contain bug fixes and new, documented, and stable features that will be included in future releases. Note: if you don’t have LaTeX installed, you should set <code>build_vignettes = FALSE</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)
 <span class="kw">library</span>(<span class="st">"poppr"</span>)</code></pre></div>
 </div>
 <div id="unstabledevelopment-versions" class="section level4">
 <h4 class="hasAnchor">
 <a href="#unstabledevelopment-versions" class="anchor"></a>Unstable/Development versions</h4>
 <p>All new features in testing will be released on different branches. These features will be in various stages of development and may or may not be documented. Install with caution. The below command would install features on the the branch called “devel”. Note that these branches might be out of date from the master branch.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr@devel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr@devel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)
 <span class="kw">library</span>(<span class="st">"poppr"</span>)</code></pre></div>
 </div>
 </div>
