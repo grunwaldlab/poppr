@@ -20,17 +20,17 @@
 #==============================================================================#
 #' @rdname ia
 #' @param n an integer specifying the number of samples to be drawn. Defaults to
-#'   `NULL`, which then uses the number of multilocus genotypes.
+#'   \code{NULL}, which then uses the number of multilocus genotypes.
 #' @param reps an integer specifying the number of replicates to perform. 
 #'   Defaults to 999.
-#' @param use_psex a logical. If `TRUE`, the samples will be weighted by the value 
-#'   of psex. Defaults to `FALSE`.
-#' @param ... arguments passed on to [psex()]
+#' @param use_psex a logical. If \code{TRUE}, the samples will be weighted by the value 
+#'   of psex. Defaults to \code{FALSE}.
+#' @param ... arguments passed on to \code{\link{psex}}
 #'
 #' @return \subsection{resample.ia()}{a data frame with the index of association and standardized index of
 #' association in columns. Number of rows represents the number of reps.}
 #' @export
-jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE, ...){
+resample.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE, ...){
   
   quiet   <- should_poppr_be_quiet(quiet)
   weights <- if (use_psex) psex(gid, ...) else NULL
@@ -94,6 +94,8 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE, 
 #'   
 #' @return a data frame with the index of association and standardized index of 
 #'   association in columns. Number of rows represents the number of reps.
+#' @note This function is experimental. Please do not use this unless you know
+#'   what you are doing.
 #' @export
 #' @md
 #' @seealso
@@ -154,14 +156,14 @@ bias.ia <- function(theta_hat, theta_star){
 }
 
 #' @rdname ia
-#' @param ... arguments to be passed on to resample.ia
+#' @inheritParams resample.ia
 #' @export
-jack.ia <- function(...){
+jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
   msg <- paste0("jack.ia() is deprecated and will be removed in future versions.\n",
                "Please use resample.ia() instead.\n",
                "I am returning the results of resample.ia()")
   .Deprecated("resample.ia", msg = msg, package = "poppr")
-  resample.ia(...)
+  resample.ia(gid, n = n, reps = reps, quiet = quiet)
 }
 
 #' Helper function to calculate the index of association on reduced data.

@@ -34,6 +34,10 @@ This function will perform the index of association on a bootstrapped data
 set multiple times to create a distribution, showing the variation of the
 index due to repeat observations.
 }
+\note{
+This function is experimental. Please do not use this unless you know
+what you are doing.
+}
 \examples{
 data(Pinf)
 boot.ia(Pinf, reps = 99)

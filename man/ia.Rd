@@ -13,9 +13,10 @@ ia(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 pair.ia(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
   limits = NULL, index = "rbarD")
 
-resample.ia(gid, n = NULL, reps = 999, quiet = FALSE)
+resample.ia(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE,
+  ...)
 
-jack.ia(...)
+jack.ia(gid, n = NULL, reps = 999, quiet = FALSE)
 }
 \arguments{
 \item{gid}{a \code{\link{genind}} or \code{\link{genclone}} object.}
@@ -62,10 +63,13 @@ numbers between -1 and 1, (e.g. \code{limits = c(-0.15, 1)})}
 \item{n}{an integer specifying the number of samples to be drawn. Defaults to
 \code{NULL}, which then uses the number of multilocus genotypes.}
 
-\item{reps}{an integer specifying the number of replicates to perform.
+\item{reps}{an integer specifying the number of replicates to perform. 
 Defaults to 999.}
 
-\item{...}{arguments to be passed on to resample.ia}
+\item{use_psex}{a logical. If \code{TRUE}, the samples will be weighted by the value 
+of psex. Defaults to \code{FALSE}.}
+
+\item{...}{arguments passed on to \code{\link{psex}}}
 }
 \value{
 \subsection{for \code{pair.ia}}{
