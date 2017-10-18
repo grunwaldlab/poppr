@@ -119,8 +119,10 @@ test_that("genotype_curve produces boxplots", {
 test_that("genotype_curve shows output if not quiet", {
 	skip_on_cran()
 	data("partial_clone", package = "poppr")
-
+	pd <- getOption("poppr.debug")
+	options(poppr.debug = TRUE)
 	expect_output(genotype_curve(partial_clone, sample = 100), "100%")
+	options(poppr.debug = pd)
 })
 
 test_that("genotype_curve can take less than m-1 loci", {

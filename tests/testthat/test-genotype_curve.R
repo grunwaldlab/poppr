@@ -31,8 +31,11 @@ test_that("dropna can be switched off", {
 
 test_that("genotype_curve's drop can be turned off", {
   skip_on_cran()
+  pd <- getOption("poppr.debug")
+  options(poppr.debug = TRUE)
   expect_output(x <- genotype_curve(dat[-nInd(dat)],  drop = FALSE, plot = FALSE), "/4 loci")
   expect_output(y <- genotype_curve(dat[-nInd(dat2)], drop = FALSE, plot = FALSE), "/4 loci")
+  options(poppr.debug = pd)
   expect_equal(ncol(x), 4L)
   expect_equal(ncol(y), 4L)
 })
