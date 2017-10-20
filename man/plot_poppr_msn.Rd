@@ -6,10 +6,10 @@
 \usage{
 plot_poppr_msn(x, poppr_msn, gscale = TRUE, gadj = 3,
   mlg.compute = "original", glim = c(0, 0.8), gweight = 1,
-  wscale = TRUE, nodebase = 1.15, nodelab = 2, inds = "ALL",
-  mlg = FALSE, quantiles = TRUE, cutoff = NULL, palette = NULL,
-  layfun = layout.auto, beforecut = FALSE, pop.leg = TRUE,
-  scale.leg = TRUE, ...)
+  wscale = TRUE, nodescale = 1, nodebase = NULL, nodelab = 2,
+  inds = "ALL", mlg = FALSE, quantiles = TRUE, cutoff = NULL,
+  palette = NULL, layfun = layout.auto, beforecut = FALSE,
+  pop.leg = TRUE, scale.leg = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
@@ -46,7 +46,9 @@ between more distantly related nodes.}
 scaled proportional to the inverse of the observed distance , with the 
 lines becoming thicker for more related nodes.}
 
-\item{nodebase}{a \code{numeric} indicating what base logarithm should be
+\item{nodescale}{a \code{numeric} indicating how to scale the node sizes (scales by area).}
+
+\item{nodebase}{\strong{deprecated} a \code{numeric} indicating what base logarithm should be
 used to scale the node sizes. Defaults to 1.15. See details.}
 
 \item{nodelab}{an \code{integer} specifying the smallest size of node to 

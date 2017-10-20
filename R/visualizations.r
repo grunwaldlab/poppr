@@ -729,8 +729,8 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' @inheritParams poppr.msn
 #'   
 #'   
-#'   
-#' @param nodebase a \code{numeric} indicating what base logarithm should be
+#' @param nodescale a \code{numeric} indicating how to scale the node sizes (scales by area).
+#' @param nodebase \strong{deprecated} a \code{numeric} indicating what base logarithm should be
 #'   used to scale the node sizes. Defaults to 1.15. See details.
 #'   
 #' @param nodelab an \code{integer} specifying the smallest size of node to 
@@ -940,14 +940,28 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' }
 #==============================================================================#
 #' @importFrom igraph layout.auto delete.edges
-plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3, 
+plot_poppr_msn <- function(x,
+                           poppr_msn,
+                           gscale = TRUE,
+                           gadj = 3,
                            mlg.compute = "original",
-                           glim = c(0, 0.8), gweight = 1, wscale = TRUE, 
-                           nodebase = 1.15, nodelab = 2, inds = "ALL", 
-                           mlg = FALSE, quantiles = TRUE, cutoff = NULL, 
-                           palette = NULL, layfun = layout.auto, 
-                           beforecut = FALSE, pop.leg = TRUE, scale.leg = TRUE, 
-                           ...){
+                           glim = c(0, 0.8),
+                           gweight = 1,
+                           wscale = TRUE,
+                           nodescale = 10,
+                           nodebase = NULL,
+                           nodelab = 2,
+                           inds = "ALL",
+                           mlg = FALSE,
+                           quantiles = TRUE,
+                           cutoff = NULL,
+                           palette = NULL,
+                           layfun = layout.auto,
+                           beforecut = FALSE,
+                           pop.leg = TRUE,
+                           scale.leg = TRUE,
+                           ...) {
+  
   if (!is(x, "genlight") && !is.genind(x)){
     stop(paste(substitute(x), "is not a genind or genclone object."))
   }
@@ -1041,19 +1055,30 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
   }
   if (any(is.na(labs))){
     sizelabs <- V(poppr_msn$graph)$size
-    sizelabs <- ifelse(sizelabs >= nodelab, sizelabs, NA)
+    sizelabs <- ifelse(sizelabs >= nodelab, sizelabs * sizelabs, NA)
     labs     <- ifelse(is.na(labs), sizelabs, labs)
   }
 
-  # Change the size of the vertices to a log scale.
-  if (nodebase == 1){
-    nodebase <- 1.15
-    nodewarn <- paste0("Cannot set nodebase = 1:\n",
-      "Log base 1 is undefined, reverting to nodebase = 1.15")
-    warning(nodewarn)
+  if (!is.null(nodebase)){
+    warnw    <- min(.9 * getOption("width"), 80)
+    nodewarn <- paste("\n",
+                      "The parameter nodebase has been deprecated.",
+                      "It is currently being kept for backwards compatibility,",
+                      "but will be removed in a future version of poppr.",
+                      "\n\nPlease use the new parameter nodescale instead.")
+    nodewarn <- strwrap(nodewarn, width = warnw)
+    warning(paste(nodewarn, collapse = "\n"))
+    # Change the size of the vertices to a log scale.
+    if (nodebase == 1) {
+      nodebase <- 1.15
+      nodewarn <- paste0("Cannot set nodebase = 1:\n",
+        "Log base 1 is undefined, reverting to nodebase = 1.15")
+      warning(nodewarn)
+    }
+    vsize <- log(V(poppr_msn$graph)$size * V(poppr_msn$graph)$size, base = nodebase) + 3
+  } else {
+    vsize <- sqrt(V(poppr_msn$graph)$size * V(poppr_msn$graph)$size * nodescale)
   }
-  vsize <- log(V(poppr_msn$graph)$size, base = nodebase) + 3
-  
   # Plotting parameters.
   def.par <- par(no.readonly = TRUE)
   # Return top level plot to defaults.
@@ -1085,20 +1110,34 @@ plot_poppr_msn <- function(x, poppr_msn, gscale = TRUE, gadj = 3,
       too_many_pops   <- as.integer(ceiling(nPop(x)/30))
       pops_correction <- ifelse(too_many_pops > 1, -1, 1)
       yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
-      graphics::plot(c(0, 2), c(0, 1), type = 'n', axes = F, xlab = '', ylab = '',
-           main = 'POPULATION')
+      graphics::plot(c(0, 2), 
+                     c(0, 1), 
+                     type = 'n', 
+                     axes = F, 
+                     xlab = '', 
+                     ylab = '',
+                     main = 'POPULATION')
     
-      graphics::legend("topleft", bty = "n", cex = 1.2^pops_correction,
-             legend = poppr_msn$populations, fill = poppr_msn$color, border = NULL,
-             ncol = too_many_pops, x.intersp = 0.45, y.intersp = yintersperse)
+      graphics::legend("topleft", 
+                       bty = "n", 
+                       cex = 1.2^pops_correction,
+                       legend = poppr_msn$populations, 
+                       fill = poppr_msn$color, 
+                       border = NULL,
+                       ncol = too_many_pops, 
+                       x.intersp = 0.45, 
+                       y.intersp = yintersperse)
     } else {
-      graphics::layout(matrix(c(1,2), nrow = 2), heights= c(4.5, 0.5))
+      graphics::layout(matrix(c(1,2), nrow = 2), heights = c(4.5, 0.5))
     }
     
     ## PLOT
     par(mar = c(0,0,0,0))
-    plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
-                layout = lay, ...)
+    plot.igraph(poppr_msn$graph, 
+                vertex.label = labs, 
+                vertex.size = vsize, 
+                layout = lay, 
+                ...)
     if (scale.leg){
       ## SCALE BAR
       if (quantiles){
