@@ -1,7 +1,18 @@
 poppr 2.5.0.99
 ===========
 
+NEW FUNCTIONS
+-------------
 
+* The new function `boot.ia()` is conceptually similar to `resample.ia()`,
+  except it resamples with replacement. This may be absorbed into `resample.ia()`
+  as an extra parameter of "replace".
+  
+NEW FEATURES
+------------
+
+* The function `resample.ia()` now can resample individuals weighted by their
+  Psex value. 
 
 poppr 2.5.0
 ===========
