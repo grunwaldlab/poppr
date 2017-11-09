@@ -1,8 +1,8 @@
 Package: poppr
 Type: Package
 Title: Genetic Analysis of Populations with Mixed Reproduction
-Version: 2.5.0.99-12
-Date: 2017-10-20
+Version: 2.5.0.99-15
+Date: 2017-11-09
 Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "zkamvar@gmail.com", comment = c(ORCID = "0000-0003-1458-7108")),
     person(c("Javier", "F."), "Tabima", role = "aut",
@@ -21,11 +21,12 @@ Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "grunwaln@science.oregonstate.edu", comment = c(ORCID = "0000-0003-1656-7602")))
 Maintainer: Zhian N. Kamvar <zkamvar@gmail.com>
 Encoding: UTF-8
-URL: http://github.com/grunwaldlab/poppr,
-    http://grunwaldlab.github.io/Population_Genetics_in_R/
+URL: https://github.com/grunwaldlab/poppr,
+    https://grunwaldlab.github.io/poppr,
+    https://grunwaldlab.github.io/Population_Genetics_in_R/
 Description: Population genetic analyses for hierarchical analysis of partially
     clonal populations built upon the architecture of the 'adegenet' package.
-MailingList: http://groups.google.com/group/poppr
+MailingList: https://groups.google.com/group/poppr
 BugReports: https://github.com/grunwaldlab/poppr/issues
 Depends:
     R (>= 2.15.1),
