@@ -13,6 +13,13 @@ NEW FEATURES
 
 * The function `resample.ia()` now can resample individuals weighted by their
   Psex value. 
+  
+BUG FIX
+-------
+
+* An issue where data with sample names containing apostrophes could not be
+  imported was fixed (Identified in 
+  https://github.com/grunwaldlab/poppr/issues/156).
 
 poppr 2.5.0
 ===========

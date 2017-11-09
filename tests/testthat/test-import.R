@@ -160,6 +160,24 @@ test_that("improperly-formatted data causes an error", {
   expect_error(read.genalex(f, sep = "\t"), fmsg)
 })
 
+test_that("sample names with apostrophes can be imported", {
+  skip_on_cran()
+  better_than_yar <- "1,5,1,5
+,,,7_09_BB,
+Ind,Pop,CHMFc4,CHMFc5
+phaser,7_09_BB,224,85
+rock,7_09_BB,224,97
+bat'leth,7_09_BB,224,97
+paper,7_09_BB,224,97
+scissors,7_09_BB,224,97"
+  
+  res <- poppr::read.genalex(textConnection(better_than_yar))
+  expect_is(res, "genclone")
+  expect_equal(nInd(res), 5L)
+  expect_equal(nLoc(res), 1L)
+  expect_equal(indNames(res), c("phaser", "rock", "bat'leth", "paper", "scissors"))
+})
+
 context("Data export tests")
 
 test_that("genclone objects can be saved and restored", {
