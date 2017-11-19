@@ -33,6 +33,88 @@ gend_bruvo       <- bruvo.dist(gend, replen = c(1, 1))
 gend_single      <- gend
 pop(gend_single) <- rep(1, 4)
 
+#' Identical population and color fields
+#'
+#' @param g1 graph 1
+#' @param g2 graph 2
+#'
+#' @noRd
+expect_identical_metadata <- function(g1, g2){
+  eval(bquote(expect_identical(.(g1[-1]), .(g2[-1]))))
+}
+
+#' Vertex counts
+#'
+#' @param g a graph
+#' @param n an integer equal to the number of vertices in the graph
+#'
+#' @noRd
+expect_vcount <- function(g, n){
+  eval(bquote(expect_equal(igraph::vcount(.(g$graph)), .(n))))
+}
+
+#' Edge counts
+#'
+#' @param g a graph
+#' @param n an integer equal to the number of edges in the graph
+#'
+#' @noRd
+expect_ecount <- function(g, n){
+  eval(bquote(expect_equal(igraph::ecount(.(g$graph)), .(n))))
+}
+
+#' Identical attributes
+#'
+#' @param g1 graph 1
+#' @param g2 graph 2
+#' @param a  a character specifying which attribute to test
+#'
+#' @noRd
+expect_identical_vertex_attr <- function(g1, g2, a){
+  eval(bquote(expect_identical(igraph::vertex_attr(.(g1)$graph, .(a)), 
+                               igraph::vertex_attr(.(g2)$graph, .(a))
+  )
+  ))
+}
+
+#' Identical attributes
+#'
+#' @param g1 graph 1
+#' @param g2 graph 2
+#' @param a  a character specifying which attribute to test
+#'
+#' @noRd
+expect_identical_edge_attr <- function(g1, g2, a){
+  eval(bquote(expect_identical(igraph::edge_attr(.(g1)$graph, .(a)), 
+                               igraph::edge_attr(.(g2)$graph, .(a))
+  )
+  ))
+}
+
+#' Attribute names
+#'
+#' @param g a graph
+#' @param a a character vector specifying all the named attributes
+#'
+#' @noRd
+expect_vertex_attr <- function(g, a){
+  eval(bquote(expect_equal(igraph::vertex_attr_names(.(g$graph)), .(a))))
+}
+
+#' Testing distance tables
+#'
+#' @param g a graph
+#' @param d a tabulaton of the distances between nodes. For example, a graph
+#'   with four nodes connected in a line would have 3:1, indicating that there
+#'   are three pairs that can be reached with one step, two with two steps, and
+#'   one pair needs three steps.
+#'
+#' @noRd
+expect_distance_table <- function(g, d){
+  eval(bquote(expect_equal(igraph::distance_table(.(g$graph))$res, .(d))))
+}
+
+
 context("Tied MSN edge tests")
 
 bruv_no_ties  <- bruvo.msn(gend, replen = c(1,1), showplot = FALSE)
@@ -48,86 +130,86 @@ nopienames    <- c("name", "size", "color", "label")
 
 test_that("bruvo.msn can properly account for tied edges", {
   # metadata are equal
-  expect_identical(bruv_no_ties[-1], bruv_ties[-1])
+  expect_identical_metadata(bruv_no_ties, bruv_ties)
   
   # There will be four tied edges, but only 3 untied.
-  expect_equal(igraph::ecount(bruv_no_ties$graph), 3L)
-  expect_equal(igraph::ecount(bruv_ties$graph), 4L)
+  expect_ecount(bruv_no_ties, 3L)
+  expect_ecount(bruv_ties, 4L)
   
   # vertex attributes come with pie
-  expect_equal(igraph::vertex_attr_names(bruv_no_ties$graph), pienames)
-  expect_equal(igraph::vertex_attr_names(bruv_ties$graph), pienames)
+  expect_vertex_attr(bruv_no_ties, pienames)
+  expect_vertex_attr(bruv_ties, pienames)
   
   # both graphs will have the same number of vertices
-  expect_equal(igraph::vcount(bruv_no_ties$graph), 4L)
-  expect_equal(igraph::vcount(bruv_ties$graph), 4L)
+  expect_vcount(bruv_no_ties, 4L)
+  expect_vcount(bruv_ties, 4L)
   
   # Adding a loop will shrink the distance between nodes 1 and 4
-  expect_equal(igraph::distance_table(bruv_no_ties$graph)$res, 3:1)
-  expect_equal(igraph::distance_table(bruv_ties$graph)$res, c(4, 2))
+  expect_distance_table(bruv_no_ties, 3:1)
+  expect_distance_table(bruv_ties, c(4, 2))
 })
 
 test_that("poppr.msn can properly account for tied edges", {
   # metadata are equal
-  expect_identical(pmsn_no_ties[-1], pmsn_ties[-1])
+  expect_identical_metadata(pmsn_no_ties, pmsn_ties)
   
   # There will be four tied edges, but only 3 untied.
-  expect_equal(igraph::ecount(pmsn_no_ties$graph), 3L)
-  expect_equal(igraph::ecount(pmsn_ties$graph), 4L)
+  expect_ecount(pmsn_no_ties, 3L)
+  expect_ecount(pmsn_ties, 4L)
   
   # vertex attributes come with pie
-  expect_equal(igraph::vertex_attr_names(pmsn_no_ties$graph), pienames)
-  expect_equal(igraph::vertex_attr_names(pmsn_ties$graph), pienames)
+  expect_vertex_attr(pmsn_no_ties, pienames)
+  expect_vertex_attr(pmsn_ties, pienames)
   
   # both graphs will have the same number of vertices
-  expect_equal(igraph::vcount(pmsn_no_ties$graph), 4L)
-  expect_equal(igraph::vcount(pmsn_ties$graph), 4L)
+  expect_vcount(pmsn_no_ties, 4L)
+  expect_vcount(pmsn_ties, 4L)
   
   # Adding a loop will shrink the distance between nodes 1 and 4
-  expect_equal(igraph::distance_table(pmsn_no_ties$graph)$res, 3:1)
-  expect_equal(igraph::distance_table(pmsn_ties$graph)$res, c(4, 2))
+  expect_distance_table(pmsn_no_ties, 3:1)
+  expect_distance_table(pmsn_ties, c(4, 2))
 })
 
 test_that("bruvo.msn can work with single populations", {
   # metadata are equal
-  expect_identical(sbruv_no_ties[-1], sbruv_ties[-1])
+  expect_identical_metadata(sbruv_no_ties, sbruv_ties)
   
   # There will be four tied edges, but only 3 untied.
-  expect_equal(igraph::ecount(sbruv_no_ties$graph), 3L)
-  expect_equal(igraph::ecount(sbruv_ties$graph), 4L)
+  expect_ecount(sbruv_no_ties, 3L)
+  expect_ecount(sbruv_ties, 4L)
   
   # both graphs will have the same number of vertices
-  expect_equal(igraph::vcount(sbruv_no_ties$graph), 4L)
-  expect_equal(igraph::vcount(sbruv_ties$graph), 4L)
+  expect_vcount(sbruv_no_ties, 4L)
+  expect_vcount(sbruv_ties, 4L)
   
   # vertex attributes don't come with pie :(
-  expect_equal(igraph::vertex_attr_names(sbruv_no_ties$graph), nopienames)
-  expect_equal(igraph::vertex_attr_names(sbruv_ties$graph), nopienames)
+  expect_vertex_attr(sbruv_no_ties, nopienames)
+  expect_vertex_attr(sbruv_ties, nopienames)
   
   # Adding a loop will shrink the distance between nodes 1 and 4
-  expect_equal(igraph::distance_table(sbruv_no_ties$graph)$res, 3:1)
-  expect_equal(igraph::distance_table(sbruv_ties$graph)$res, c(4, 2))
+  expect_distance_table(sbruv_no_ties, 3:1)
+  expect_distance_table(sbruv_ties, c(4, 2))
 })
 
 test_that("poppr.msn can work with single populations", {
   # metadata are equal
-  expect_identical(spmsn_no_ties[-1], spmsn_ties[-1])
+  expect_identical_metadata(spmsn_no_ties, spmsn_ties)
   
   # There will be four tied edges, but only 3 untied.
-  expect_equal(igraph::ecount(spmsn_no_ties$graph), 3L)
-  expect_equal(igraph::ecount(spmsn_ties$graph), 4L)
+  expect_ecount(spmsn_no_ties, 3L)
+  expect_ecount(spmsn_ties, 4L)
   
   # vertex attributes don't come with pie :(
-  expect_equal(igraph::vertex_attr_names(spmsn_no_ties$graph), nopienames)
-  expect_equal(igraph::vertex_attr_names(spmsn_ties$graph), nopienames)
+  expect_vertex_attr(spmsn_no_ties, nopienames)
+  expect_vertex_attr(spmsn_ties, nopienames)
   
   # both graphs will have the same number of vertices
-  expect_equal(igraph::vcount(spmsn_no_ties$graph), 4L)
-  expect_equal(igraph::vcount(spmsn_ties$graph), 4L)
+  expect_vcount(spmsn_no_ties, 4L)
+  expect_vcount(spmsn_ties, 4L)
   
   # Adding a loop will shrink the distance between nodes 1 and 4
-  expect_equal(igraph::distance_table(spmsn_no_ties$graph)$res, 3:1)
-  expect_equal(igraph::distance_table(spmsn_ties$graph)$res, c(4, 2))
+  expect_distance_table(spmsn_no_ties, 3:1)
+  expect_distance_table(spmsn_ties, c(4, 2))
 })
 
 
@@ -144,38 +226,38 @@ test_that("Minimum spanning networks also collapse MLGs", {
   mlg.filter(gend, dist = bruvo.dist, replen = c(1, 1)) <- 0.15
   mll(gend) <- "original"
   
-  expect_equal(igraph::vcount(gmsnt$graph), 2)
+  expect_vcount(gmsnt, 2)
 
   pgmsnt <- poppr.msn(gend, distmat = gend_bruvo, threshold = 0.15)
   mll(gend) <- "contracted"
   gmsnot  <- bruvo.msn(gend, replen = c(1, 1)) # no threshold supplied
   gmsnone <- bruvo.msn(gend, replen = c(1, 1), threshold = 0.3)
-  expect_equal(igraph::vcount(gmsnone$graph), 1)
+  expect_vcount(gmsnone, 1)
   gmsnall  <- bruvo.msn(gend, replen = c(1, 1), threshold = 0)
-  expect_equal(igraph::vcount(gmsnall$graph), 4)
+  expect_vcount(gmsnall, 4)
 
-  expect_identical(igraph::V(gmsnt$graph)$pie, igraph::V(pgmsnt$graph)$pie)
-  expect_identical(igraph::V(gmsnot$graph)$pie, igraph::V(pgmsnt$graph)$pie)
+  expect_identical_vertex_attr(gmsnt, pgmsnt, "pie")
+  expect_identical_vertex_attr(gmsnot, pgmsnt, "pie")
   
-  expect_identical(igraph::V(gmsnt$graph)$name, igraph::V(pgmsnt$graph)$name)
-  expect_identical(igraph::V(gmsnot$graph)$name, igraph::V(pgmsnt$graph)$name)
+  expect_identical_vertex_attr(gmsnt, pgmsnt, "name")
+  expect_identical_vertex_attr(gmsnot, pgmsnt, "name")
   
-  expect_identical(igraph::E(gmsnt$graph)$weight, igraph::E(pgmsnt$graph)$weight)
-  expect_identical(igraph::E(gmsnot$graph)$weight, igraph::E(pgmsnt$graph)$weight)
+  expect_identical_edge_attr(gmsnt, pgmsnt, "weight")
+  expect_identical_edge_attr(gmsnot, pgmsnt, "weight")
   
   mll(gend) <- "original"
   gmsn   <- bruvo.msn(gend, replen = c(1, 1), showplot = FALSE)
-  expect_equal(igraph::vcount(gmsn$graph), 4)
+  expect_vcount(gmsn, 4)
   pgmsn  <- poppr.msn(gend, distmat = gend_bruvo, showplot = FALSE)
 
-  expect_identical(igraph::V(gmsn$graph)$pie, igraph::V(pgmsn$graph)$pie)
-  expect_identical(igraph::V(gmsn$graph)$pie, igraph::V(gmsnall$graph)$pie)
+  expect_identical_vertex_attr(gmsn, pgmsn, "pie")
+  expect_identical_vertex_attr(gmsn, gmsnall, "pie")
   
-  expect_identical(igraph::V(gmsn$graph)$name, igraph::V(pgmsn$graph)$name)
-  expect_identical(igraph::V(gmsn$graph)$name, igraph::V(gmsnall$graph)$name)
+  expect_identical_vertex_attr(gmsn, pgmsn, "name")
+  expect_identical_vertex_attr(gmsn, gmsnall, "name")
   
-  expect_identical(igraph::E(gmsn$graph)$weight, igraph::E(pgmsn$graph)$weight)
-  expect_identical(igraph::E(gmsn$graph)$weight, igraph::E(gmsnall$graph)$weight)
+  expect_identical_edge_attr(gmsn, pgmsn, "weight")
+  expect_identical_edge_attr(gmsn, gmsnall, "weight")
   
 })
 
@@ -184,19 +266,19 @@ test_that("Minimum spanning networks can collapse MLGs with single populations",
   sgmsnt  <- bruvo.msn(gend_single, replen = c(1, 1), threshold = 0.15)
   psgmsnt <- poppr.msn(gend_single, distmat = gend_bruvo, threshold = 0.15)
 
-  expect_identical(igraph::V(sgmsnt$graph)$pie, igraph::V(psgmsnt$graph)$pie)
-  expect_identical(igraph::V(sgmsnt$graph)$name, igraph::V(psgmsnt$graph)$name)
-  expect_identical(igraph::E(sgmsnt$graph)$weight, igraph::E(psgmsnt$graph)$weight)
+  expect_identical_vertex_attr(sgmsnt, psgmsnt, "pie")
+  expect_identical_vertex_attr(sgmsnt, psgmsnt, "name")
+  expect_identical_edge_attr(sgmsnt, psgmsnt, "weight")
   
   sgmsn   <- bruvo.msn(gend_single, replen = c(1, 1), showplot = FALSE)
   psgmsn  <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE)
 
-  expect_identical(igraph::V(sgmsn$graph)$pie, igraph::V(psgmsn$graph)$pie)
-  expect_identical(igraph::V(sgmsn$graph)$name, igraph::V(psgmsn$graph)$name)
-  expect_identical(igraph::E(sgmsn$graph)$weight, igraph::E(psgmsn$graph)$weight)
+  expect_identical_vertex_attr(sgmsn, psgmsn, "pie")
+  expect_identical_vertex_attr(sgmsn, psgmsn, "name")
+  expect_identical_edge_attr(sgmsn, psgmsn, "weight")
 
-  expect_equal(igraph::vcount(sgmsnt$graph), 2)
-  expect_equal(igraph::vcount(sgmsn$graph), 4)
+  expect_vcount(sgmsnt, 2)
+  expect_vcount(sgmsn, 4)
 
   expect_output(plot_poppr_msn(gend, gmsnt, palette = "cm.colors"), NA)
   expect_output(plot_poppr_msn(gend_single, sgmsnt, palette = "cm.colors"), NA)
