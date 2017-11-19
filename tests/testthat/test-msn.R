@@ -1,4 +1,4 @@
-options(warn = -1)
+
 ucl <- function(x){
   unclass(x$graph)[-10]
 }
@@ -28,120 +28,106 @@ gend <- new("genind"
            , other = NULL
 )
 
-gend_gc    <- as.genclone(gend)
-gend_bruvo <- bruvo.dist(gend, replen = c(1, 1))
-
-set.seed(9005)
-
-gend_single <- gend
+gend_gc          <- as.genclone(gend)
+gend_bruvo       <- bruvo.dist(gend, replen = c(1, 1))
+gend_single      <- gend
 pop(gend_single) <- rep(1, 4)
-
-no_ties <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3), c(0,
-1, 2), c(1, 0, 2), c(0, 1, 2), c(0, 0, 0, 1, 3), c(0, 1, 2, 3,
-3), list(c(1, 0, 1), structure(list(), .Names = character(0)),
-    structure(list(name = c("1", "2", "3", "4"), size = c(1L,
-    1L, 1L, 1L), shape = c("pie", "pie", "pie", "pie"), pie = list(
-        structure(1L, .Names = "1"), structure(1L, .Names = "2"),
-        structure(1L, .Names = "3"), structure(1L, .Names = "4")),
-        pie.color = list(structure("#4C00FFFF", .Names = "1"), structure("#00E5FFFF", .Names = "2"), structure("#00FF4DFF", .Names = "3"),
-            structure("#FFFF00FF", .Names = "4")), label = c("MLG.3", "MLG.4", "MLG.2",
-        "MLG.1")), .Names = c("name", "size", "shape", "pie",
-    "pie.color", "label")), structure(list(weight = c(0.125,
-    0.125, 0.125), color = c("#434343", "#434343", "#434343"),
-        width = c(8, 8, 8)), .Names = c("weight", "color", "width"
-    )))), class = "igraph"), populations = structure(c("1", "2",
-"3", "4")), colors = structure(c("#4C00FFFF",
-"#00E5FFFF", "#00FF4DFF", "#FFFF00FF"), .Names = c("1","2","3","4"))), .Names = c("graph",
-"populations", "colors"))
-
-no_ties_single <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3), c(0,
-1, 2), c(1, 0, 2), c(0, 1, 2), c(0, 0, 0, 1, 3), c(0, 1, 2, 3,
-3), list(c(1, 0, 1), structure(list(), .Names = character(0)),
-    structure(list(name = c("1", "2", "3", "4"), size = c(1L,
-    1L, 1L, 1L), color = c("#4C00FFFF", "#4C00FFFF", "#4C00FFFF",
-    "#4C00FFFF"), label = c("MLG.3", "MLG.4", "MLG.2", "MLG.1"
-    )), .Names = c("name", "size", "color", "label")), structure(list(
-        weight = c(0.125, 0.125, 0.125), color = c("#434343",
-        "#434343", "#434343"), width = c(8, 8, 8)), .Names = c("weight",
-    "color", "width")))), class = "igraph"), populations = "1",
-    colors = "#4C00FFFF"), .Names = c("graph", "populations",
-"colors"))
-
-ties <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3, 1),
-    c(0, 1, 2, 0), c(3, 1, 0, 2), c(3, 0, 1, 2), c(0, 0, 1, 2,
-    4), c(0, 2, 3, 4, 4), list(c(1, 0, 1), structure(list(), .Names = character(0)),
-        structure(list(name = c("1", "2", "3", "4"), size = c(1L,
-        1L, 1L, 1L), shape = c("pie", "pie", "pie", "pie"), pie = list(
-            structure(1L, .Names = "1"), structure(1L, .Names = "2"),
-            structure(1L, .Names = "3"), structure(1L, .Names = "4")),
-            pie.color = list(structure("#4C00FFFF", .Names = "1"), structure("#00E5FFFF", .Names = "2"),
-                structure("#00FF4DFF", .Names = "3"), structure("#FFFF00FF", .Names = "4")),
-            label = c("MLG.3", "MLG.4", "MLG.2",
-            "MLG.1")), .Names = c("name", "size", "shape", "pie",
-        "pie.color", "label")), structure(list(weight = c(0.125,
-        0.125, 0.125, 0.125), color = c("#434343", "#434343",
-        "#434343", "#434343"), width = c(8, 8, 8, 8)), .Names = c("weight",
-        "color", "width")))), class = "igraph"), populations = structure(c("1",
-"2", "3", "4")), colors = structure(c("#4C00FFFF",
-"#00E5FFFF", "#00FF4DFF", "#FFFF00FF"), .Names = c("1","2","3","4"))), .Names = c("graph",
-"populations", "colors"))
-
-ties_single <- structure(list(graph = structure(list(4, FALSE, c(3, 2, 3, 1),
-    c(0, 1, 2, 0), c(3, 1, 0, 2), c(3, 0, 1, 2), c(0, 0, 1, 2,
-    4), c(0, 2, 3, 4, 4), list(c(1, 0, 1), structure(list(), .Names = character(0)),
-        structure(list(name = c("1", "2", "3", "4"), size = c(1L,
-        1L, 1L, 1L), color = c("#4C00FFFF", "#4C00FFFF", "#4C00FFFF",
-        "#4C00FFFF"), label = c("MLG.3", "MLG.4", "MLG.2", "MLG.1"
-        )), .Names = c("name", "size", "color", "label")), structure(list(
-            weight = c(0.125, 0.125, 0.125, 0.125), color = c("#434343",
-            "#434343", "#434343", "#434343"), width = c(8, 8,
-            8, 8)), .Names = c("weight", "color", "width")))), class = "igraph"),
-    populations = "1", colors = "#4C00FFFF"), .Names = c("graph",
-"populations", "colors"))
-
-if (packageVersion("igraph") >= package_version("1.0.0")){
-    no_ties$graph <- igraph::upgrade_graph(no_ties$graph)
-    no_ties_single$graph <- igraph::upgrade_graph(no_ties_single$graph)
-    ties$graph <- igraph::upgrade_graph(ties$graph)
-    ties_single$graph <- igraph::upgrade_graph(ties_single$graph)
-}
-
-options(warn = 0)
-
 
 context("Tied MSN edge tests")
 
-test_that("bruvo.msn can properly account for tied edges", {
+bruv_no_ties  <- bruvo.msn(gend, replen = c(1,1), showplot = FALSE)
+bruv_ties     <- bruvo.msn(gend, replen = c(1,1), showplot = FALSE, include.ties = TRUE)
+pmsn_no_ties  <- poppr.msn(gend, distmat = gend_bruvo, showplot = FALSE)
+pmsn_ties     <- poppr.msn(gend, distmat = gend_bruvo, showplot = FALSE, include.ties = TRUE)
+sbruv_no_ties <- bruvo.msn(gend_single, replen = c(1,1), showplot = FALSE)
+sbruv_ties    <- bruvo.msn(gend_single, replen = c(1,1), showplot = FALSE, include.ties = TRUE)
+spmsn_no_ties <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE)
+spmsn_ties    <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE, include.ties = TRUE)
+pienames      <- c("name", "size", "shape", "pie", "pie.color", "label")
+nopienames    <- c("name", "size", "color", "label")
 
-  # Test Bruvo.msn
-  set.seed(9005)
-  expect_equal(ucl(bruvo.msn(gend, replen=c(1,1))), ucl(no_ties))
-  set.seed(9005)
-  expect_equal(ucl(bruvo.msn(gend, replen=c(1,1), include.ties = TRUE)), ucl(ties))
+test_that("bruvo.msn can properly account for tied edges", {
+  # metadata are equal
+  expect_identical(bruv_no_ties[-1], bruv_ties[-1])
+  
+  # There will be four tied edges, but only 3 untied.
+  expect_equal(igraph::ecount(bruv_no_ties$graph), 3L)
+  expect_equal(igraph::ecount(bruv_ties$graph), 4L)
+  
+  # vertex attributes come with pie
+  expect_equal(igraph::vertex_attr_names(bruv_no_ties$graph), pienames)
+  expect_equal(igraph::vertex_attr_names(bruv_ties$graph), pienames)
+  
+  # both graphs will have the same number of vertices
+  expect_equal(igraph::vcount(bruv_no_ties$graph), 4L)
+  expect_equal(igraph::vcount(bruv_ties$graph), 4L)
+  
+  # Adding a loop will shrink the distance between nodes 1 and 4
+  expect_equal(igraph::distance_table(bruv_no_ties$graph)$res, 3:1)
+  expect_equal(igraph::distance_table(bruv_ties$graph)$res, c(4, 2))
 })
 
 test_that("poppr.msn can properly account for tied edges", {
-  # Test poppr.msn
-  set.seed(9005)
-  expect_equal(ucl(poppr.msn(gend, distmat=bruvo.dist(gend,replen=c(1,1)))), ucl(no_ties))
-  set.seed(9005)
-  expect_equal(ucl(poppr.msn(gend, distmat=bruvo.dist(gend,replen=c(1,1)), include.ties = TRUE)), ucl(ties))
+  # metadata are equal
+  expect_identical(pmsn_no_ties[-1], pmsn_ties[-1])
+  
+  # There will be four tied edges, but only 3 untied.
+  expect_equal(igraph::ecount(pmsn_no_ties$graph), 3L)
+  expect_equal(igraph::ecount(pmsn_ties$graph), 4L)
+  
+  # vertex attributes come with pie
+  expect_equal(igraph::vertex_attr_names(pmsn_no_ties$graph), pienames)
+  expect_equal(igraph::vertex_attr_names(pmsn_ties$graph), pienames)
+  
+  # both graphs will have the same number of vertices
+  expect_equal(igraph::vcount(pmsn_no_ties$graph), 4L)
+  expect_equal(igraph::vcount(pmsn_ties$graph), 4L)
+  
+  # Adding a loop will shrink the distance between nodes 1 and 4
+  expect_equal(igraph::distance_table(pmsn_no_ties$graph)$res, 3:1)
+  expect_equal(igraph::distance_table(pmsn_ties$graph)$res, c(4, 2))
 })
 
 test_that("bruvo.msn can work with single populations", {
-  # Test both for single populations sets
-  set.seed(9005)
-  expect_equal(ucl(bruvo.msn(gend_single, replen=c(1,1))), ucl(no_ties_single))
-  set.seed(9005)
-  expect_equal(ucl(bruvo.msn(gend_single, replen=c(1,1), include.ties = TRUE)), ucl(ties_single))
+  # metadata are equal
+  expect_identical(sbruv_no_ties[-1], sbruv_ties[-1])
+  
+  # There will be four tied edges, but only 3 untied.
+  expect_equal(igraph::ecount(sbruv_no_ties$graph), 3L)
+  expect_equal(igraph::ecount(sbruv_ties$graph), 4L)
+  
+  # both graphs will have the same number of vertices
+  expect_equal(igraph::vcount(sbruv_no_ties$graph), 4L)
+  expect_equal(igraph::vcount(sbruv_ties$graph), 4L)
+  
+  # vertex attributes don't come with pie :(
+  expect_equal(igraph::vertex_attr_names(sbruv_no_ties$graph), nopienames)
+  expect_equal(igraph::vertex_attr_names(sbruv_ties$graph), nopienames)
+  
+  # Adding a loop will shrink the distance between nodes 1 and 4
+  expect_equal(igraph::distance_table(sbruv_no_ties$graph)$res, 3:1)
+  expect_equal(igraph::distance_table(sbruv_ties$graph)$res, c(4, 2))
 })
 
 test_that("poppr.msn can work with single populations", {
-  gs.bruvo <- bruvo.dist(gend_single,replen=c(1,1))
-  set.seed(9005)
-  expect_equal(ucl(poppr.msn(gend_single, distmat = gs.bruvo)), ucl(no_ties_single))
-  set.seed(9005)
-  expect_equal(ucl(poppr.msn(gend_single, distmat = gs.bruvo, include.ties = TRUE)), ucl(ties_single))
+  # metadata are equal
+  expect_identical(spmsn_no_ties[-1], spmsn_ties[-1])
+  
+  # There will be four tied edges, but only 3 untied.
+  expect_equal(igraph::ecount(spmsn_no_ties$graph), 3L)
+  expect_equal(igraph::ecount(spmsn_ties$graph), 4L)
+  
+  # vertex attributes don't come with pie :(
+  expect_equal(igraph::vertex_attr_names(spmsn_no_ties$graph), nopienames)
+  expect_equal(igraph::vertex_attr_names(spmsn_ties$graph), nopienames)
+  
+  # both graphs will have the same number of vertices
+  expect_equal(igraph::vcount(spmsn_no_ties$graph), 4L)
+  expect_equal(igraph::vcount(spmsn_ties$graph), 4L)
+  
+  # Adding a loop will shrink the distance between nodes 1 and 4
+  expect_equal(igraph::distance_table(spmsn_no_ties$graph)$res, 3:1)
+  expect_equal(igraph::distance_table(spmsn_ties$graph)$res, c(4, 2))
 })
 
 

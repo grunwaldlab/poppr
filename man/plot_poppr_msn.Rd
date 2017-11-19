@@ -6,7 +6,7 @@
 \usage{
 plot_poppr_msn(x, poppr_msn, gscale = TRUE, gadj = 3,
   mlg.compute = "original", glim = c(0, 0.8), gweight = 1,
-  wscale = TRUE, nodescale = 1, nodebase = NULL, nodelab = 2,
+  wscale = TRUE, nodescale = 10, nodebase = NULL, nodelab = 2,
   inds = "ALL", mlg = FALSE, quantiles = TRUE, cutoff = NULL,
   palette = NULL, layfun = layout.auto, beforecut = FALSE,
   pop.leg = TRUE, scale.leg = TRUE, ...)
