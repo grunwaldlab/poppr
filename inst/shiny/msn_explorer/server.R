@@ -98,8 +98,10 @@ shinyServer(function(input, output, session) {
     if (input$genclone) {
       if (inherits(dat, "genlight")){
         dat <- as.snpclone(dat)
-      } else {
+      } else if(!inherits(dat, "genclone")) {
         dat <- as.genclone(dat)
+      } else {
+        # it already is a genclone object
       }
     }
     return(dat)
