@@ -114,9 +114,6 @@ expect_distance_table <- function(g, d){
   eval(bquote(expect_equal(igraph::distance_table(.(g$graph))$res, .(d))))
 }
 
-
-context("Tied MSN edge tests")
-
 bruv_no_ties  <- bruvo.msn(gend, replen = c(1,1), showplot = FALSE)
 bruv_ties     <- bruvo.msn(gend, replen = c(1,1), showplot = FALSE, include.ties = TRUE)
 pmsn_no_ties  <- poppr.msn(gend, distmat = gend_bruvo, showplot = FALSE)
@@ -127,6 +124,23 @@ spmsn_no_ties <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE)
 spmsn_ties    <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE, include.ties = TRUE)
 pienames      <- c("name", "size", "shape", "pie", "pie.color", "label")
 nopienames    <- c("name", "size", "color", "label")
+
+context("Input parameter tests")
+
+test_that("{poppr,bruvo}.msn needs a genind object to work", {
+  expect_error(poppr.msn(1:10), "must be a genind")
+  expect_error(bruvo.msn(1:10), "must be a genind")
+})
+
+
+test_that("distance matrix must be valid", {
+  expect_error(poppr.msn(gend, distmat = 1:10),
+               "The distance matrix is neither a dist object nor a matrix.")
+  expect_error(poppr.msn(gend, distmat = as.matrix(gend_bruvo)[-1, ]), 
+               "The size of the distance matrix does not match the size of the data.")
+})
+
+context("Tied MSN edge tests")
 
 test_that("bruvo.msn can properly account for tied edges", {
   # metadata are equal
@@ -212,6 +226,77 @@ test_that("poppr.msn can work with single populations", {
   expect_distance_table(spmsn_ties, c(4, 2))
 })
 
+context("plot_poppr_msn tests")
+
+test_that("plot_poppr_msn needs a genind object up front", {
+  skip_on_cran()
+  expect_error(plot_poppr_msn(pmsn_ties, gend), "pmsn_ties is not a genind")
+})
+
+test_that("plot_poppr_msn for some reason needs the silly listgraph", {
+  skip_on_cran()
+  expect_error(plot_poppr_msn(gend, pmsn_ties$graph), "graph not compatible")
+})
+
+
+test_that("the user can label specific nodes (UX)", {
+  skip_on_cran()
+  # Note: this test can really only test that this feature doesn't cause the 
+  # function to break
+  x <- plot_poppr_msn(gend, pmsn_ties, nodescale = 40, inds = 4)
+  expect_identical(ucl(x), ucl(pmsn_ties))
+  x <- plot_poppr_msn(gend, pmsn_ties, nodescale = 40, inds = "4")
+  expect_identical(ucl(x), ucl(pmsn_ties))
+})
+
+test_that("plot_poppr_msn can use layouts", {
+  skip_on_cran()
+  x <- plot_poppr_msn(gend, pmsn_ties, layfun = igraph::layout_as_tree)
+  expect_identical(ucl(x), ucl(pmsn_ties))
+})
+
+test_that("plot_poppr_msn will label MLGs (UX)", {
+  skip_on_cran()
+  x <- plot_poppr_msn(gend, pmsn_ties, mlg = TRUE)
+  expect_identical(ucl(x), ucl(pmsn_ties))
+})
+
+test_that("plot_poppr_msn will not take the quantiles for the legend (UX)", {
+  skip_on_cran()
+  x <- plot_poppr_msn(gend, pmsn_ties, quantiles = FALSE)
+  expect_identical(ucl(x), ucl(pmsn_ties))
+})
+
+test_that("plot_poppr_msn can plot without legends (UX)", {
+  skip_on_cran()
+  x <- plot_poppr_msn(gend, pmsn_ties, pop.leg = FALSE, scale.leg = FALSE)
+  expect_identical(ucl(x), ucl(pmsn_ties))
+  x <- plot_poppr_msn(gend, pmsn_ties, pop.leg = TRUE, scale.leg = FALSE)
+  expect_identical(ucl(x), ucl(pmsn_ties))
+  x <- plot_poppr_msn(gend, pmsn_ties, pop.leg = FALSE, scale.leg = TRUE)
+  expect_identical(ucl(x), ucl(pmsn_ties))
+})
+
+test_that("plot_poppr_msn throws a warning if the user tries nodebase", {
+  skip_on_cran()
+  expect_warning(plot_poppr_msn(gend, pmsn_ties, nodebase = 1.15), 
+                 "Please use.+nodescale")
+  expect_warning(plot_poppr_msn(gend, pmsn_ties, nodebase = 1), 
+                 "reverting to nodebase = 1.15")
+})
+
+test_that("edges can be deleted", {
+  skip_on_cran()
+  graph_to_trim <- pmsn_ties
+  graph_to_trim$graph <- igraph::set_edge_attr(pmsn_ties$graph, "weight", 4, 0.5)
+  x <- plot_poppr_msn(gend, graph_to_trim, cutoff = 0.25)
+  expect_ecount(graph_to_trim, 4L)
+  expect_ecount(x, 3L)
+  
+  # warning if the cutoff is too low
+  expect_warning(plot_poppr_msn(gend, pmsn_ties, cutoff = 0.01), 
+                 "Cutoff value \\(0.01\\) is below the minimum observed")
+})
 
 context("MSN and collapsed MLG tests")
 
