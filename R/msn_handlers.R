@@ -191,7 +191,7 @@ msn_constructor <-
         mst,
         edge.width = E(mst)$width,
         edge.color = E(mst)$color,
-        vertex.size = mlg.number * 3,
+        vertex.size = sqrt(mlg.number) * 5,
         vertex.shape = "pie",
         vertex.pie = mlg.cp,
         vertex.pie.color = mlg.color,
@@ -204,7 +204,7 @@ msn_constructor <-
         edge.width = E(mst)$width,
         edge.color = E(mst)$color,
         vertex.label = vlab,
-        vertex.size = mlg.number * 3,
+        vertex.size = sqrt(mlg.number) * 5,
         vertex.color = color,
         ...
       )
@@ -221,7 +221,7 @@ msn_constructor <-
     )
   }
   
-  V(mst)$size  <- mlg.number
+  V(mst)$size  <- sqrt(mlg.number)
   if (piece_of_pie){
     V(mst)$shape     <- "pie"
     V(mst)$pie       <- mlg.cp

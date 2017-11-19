@@ -115,11 +115,11 @@ shinyUI(fluidPage(
                     value = 3,
                     step = 1
         ),
-        numericInput("nodebase",
-                     "Node size scale (log(size, value))",
-                     "1.15", 
-                     min = 1.0001,
-                     step = 0.0001),
+        numericInput("nodescale",
+                     "Node scale",
+                     "10", 
+                     min = 1,
+                     step = 1),
         numericInput("seed", 
                      "Random Seed",
                      "69"
