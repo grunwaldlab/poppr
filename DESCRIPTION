@@ -40,7 +40,7 @@ Imports:
     ggplot2,
     phangorn,
     ape (>= 3.1-1),
-    igraph,
+    igraph (>= 1.0.0),
     methods,
     ade4,
     pegas,
