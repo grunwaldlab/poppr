@@ -191,7 +191,7 @@ msn_constructor <-
         mst,
         edge.width = E(mst)$width,
         edge.color = E(mst)$color,
-        vertex.size = sqrt(mlg.number),
+        vertex.size = sqrt(mlg.number) * 5,
         vertex.shape = "pie",
         vertex.pie = mlg.cp,
         vertex.pie.color = mlg.color,
@@ -204,7 +204,7 @@ msn_constructor <-
         edge.width = E(mst)$width,
         edge.color = E(mst)$color,
         vertex.label = vlab,
-        vertex.size = sqrt(mlg.number),
+        vertex.size = sqrt(mlg.number) * 5,
         vertex.color = color,
         ...
       )
