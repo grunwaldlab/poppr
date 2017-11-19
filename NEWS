@@ -13,6 +13,9 @@ NEW FEATURES
 
 * The function `resample.ia()` now can resample individuals weighted by their
   Psex value. 
+* The minimum spanning networks will now scale nodes by area instead of radius.
+  This gives a more accurate picture of the differences between MLGs. See
+  https://github.com/grunwaldlab/poppr/issues/154 for details.
   
 BUG FIX
 -------
@@ -20,6 +23,15 @@ BUG FIX
 * An issue where data with sample names containing apostrophes could not be
   imported was fixed (Identified in 
   https://github.com/grunwaldlab/poppr/issues/156).
+* a bug in `imsn()` where custom MLGs would result in an error was fixed. See
+  https://github.com/grunwaldlab/poppr/issues/155 for details.
+* a bug in `plot_poppr_msn()` where setting `scale.leg = FALSE` would result in a
+  very small MSN plot was fixed.
+  
+DEPENDENCIES
+------------
+
+* The minimum version of igraph has been set to 1.0.0.
 
 poppr 2.5.0
 ===========
