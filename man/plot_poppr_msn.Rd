@@ -112,30 +112,31 @@ The previous incarnation of msn plotting in poppr simply plotted the
   The source data must contain the same population structure as the graph. 
   Every other parameter has a default setting.
   
-  \subsection{Parameter details}{ \itemize{ \item \code{inds} By default, the
-  graph will label each node (circle) with all of the samples (individuals)
-  that are contained within that node. As each node represents a single
-  multilocus genotype (MLG) or individuals (n >= 1), this argument is
-  designed to allow you to selectively label the nodes based on query of
-  sample name or MLG number. If the option \code{mlg = TRUE}, the multilocus
-  genotype assignment will be used to label the node. If you do not want to
-  label the nodes by individual or multilocus genotype, simply set this to a
-  name that doesn't exist in your data. \item \code{nodebase} The nodes
-  (circles) on the graph represent different multilocus genotypes. The size
-  of the nodes represent the number of individuals. Since nodes can contain
-  any number of individuals, the size of the nodes are transformed on a log
-  base 1.15 scale. This allows the large nodes not to overwhelm the graph. If
-  your nodes are too big, you can use this to adjust the log base so that
-  your nodes are represented. \item \code{nodelab} If a node is not labeled
-  by individual, this will label the size of the nodes greater than or equal
-  to this value. If you don't want to label the size of the nodes, simply set
-  this to a very high number. \item \code{cutoff} This is useful for when you
-  want to investigate groups of multilocus genotypes separated by a specific
-  distance or if you have two distinct populations and you want to physically
-  separate them in your network. \item \code{beforecut} This is an indicator
-  useful if you want to maintain the same position of the nodes before and
-  after removing edges with the \code{cutoff} argument. This works best if
-  you set a seed before you run the function.}}
+  \subsection{Parameter details}{ \itemize{ 
+  \item \code{inds} By default, the graph will label each node (circle) with
+  all of the samples (individuals) that are contained within that node. As
+  each node represents a single multilocus genotype (MLG) or individuals (n
+  >= 1), this argument is designed to allow you to selectively label the
+  nodes based on query of sample name or MLG number. If the option \code{mlg
+  = TRUE}, the multilocus genotype assignment will be used to label the node.
+  If you do not want to label the nodes by individual or multilocus genotype,
+  simply set this to a name that doesn't exist in your data.
+  \item \code{nodescale} The nodes (circles) on the graph represent different
+  multilocus genotypes. The area of the nodes represent the number of
+  individuals. Setting nodescale will scale the area of the nodes.
+  \item \code{nodelab} If a node is not labeled by individual, this will
+  label the size of the nodes greater than or equal to this value. If you
+  don't want to label the size of the nodes, simply set this to a very high
+  number.
+  \item \code{cutoff} This is useful for when you want to investigate groups
+  of multilocus genotypes separated by a specific distance or if you have two
+  distinct populations and you want to physically separate them in your
+  network.
+  \item \code{beforecut} This is an indicator useful if you want to maintain
+  the same position of the nodes before and after removing edges with the
+  \code{cutoff} argument. This works best if you set a seed before you run
+  the function.
+  }}
   
   \subsection{mlg.compute}{
   Each node on the graph represents a different multilocus genotype. 

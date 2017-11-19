@@ -447,6 +447,10 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #'   graph produced can be plotted using igraph functions, or the entire object
 #'   can be plotted using the function \code{\link{plot_poppr_msn}}, which will
 #'   give the user a scale bar and the option to layout your data.
+#'   \subsection{node sizes}{
+#'   The area of the nodes are representative of the number of samples. Because
+#'   \pkg{igraph} scales nodes by radius, the node sizes in the graph are 
+#'   represented as the square root of the number of samples.}
 #'   \subsection{mlg.compute}{
 #'   Each node on the graph represents a different multilocus genotype. 
 #'   The edges on the graph represent genetic distances that connect the
@@ -490,8 +494,8 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 #' data(nancycats)
 #' 
 #' # View populations 8 and 9 with default colors. 
-#' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
-#' vertex.label.cex=0.7, vertex.label.dist=0.4)
+#' bruvo.msn(nancycats, replen = rep(2, 9), sublist=8:9, vertex.label="inds", 
+#'           vertex.label.cex=0.7, vertex.label.dist=0.4)
 #' \dontrun{
 #' # View heat colors.
 #' bruvo.msn(nancycats, replen=rep(2, 9), sublist=8:9, vertex.label="inds", 
