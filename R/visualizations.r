@@ -1100,7 +1100,7 @@ plot_poppr_msn <- function(x,
         layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
                widths = c(1, 4), heights= c(4.5, 0.5))        
       } else {
-        layout(matrix(c(1, 2), nrow = 2), widths = c(1, 4))
+        layout(matrix(c(1, 2), ncol = 2), widths = c(1, 4))
       }
 
       # mar = bottom left top right
