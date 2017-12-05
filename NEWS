@@ -33,6 +33,12 @@ DEPENDENCIES
 
 * The minimum version of igraph has been set to 1.0.0.
 
+MISC
+----
+
+* The MSN is now plotted last in `plot_poppr_msn()` so additional legends can
+  be added if necessary.
+
 poppr 2.5.0
 ===========
 
