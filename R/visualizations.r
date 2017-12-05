@@ -1105,8 +1105,11 @@ plot_poppr_msn <- function(x,
     # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
     if (pop.leg && !all(is.na(poppr_msn$populations))){
       if (scale.leg){
-        layout(matrix(c(1,2,1,3), ncol = 2, byrow = TRUE),
-               widths = c(1, 4), heights= c(4.5, 0.5))        
+        mat <- matrix(c(1,3,
+                        1,2), 
+                      ncol = 2, 
+                      byrow = TRUE)
+        layout(mat, widths = c(1, 4), heights = c(4.5, 0.5))        
       } else {
         layout(matrix(c(1, 2), ncol = 2), widths = c(1, 4))
       }
@@ -1136,16 +1139,8 @@ plot_poppr_msn <- function(x,
                        x.intersp = 0.45, 
                        y.intersp = yintersperse)
     } else {
-      graphics::layout(matrix(c(1,2), nrow = 2), heights = c(4.5, 0.5))
+      graphics::layout(matrix(c(2, 1), nrow = 2), heights = c(4.5, 0.5))
     }
-    
-    ## PLOT
-    par(mar = c(0,0,0,0))
-    plot.igraph(poppr_msn$graph, 
-                vertex.label = labs, 
-                vertex.size = vsize, 
-                layout = lay, 
-                ...)
     if (scale.leg){
       ## SCALE BAR
       if (quantiles){
@@ -1162,6 +1157,14 @@ plot_poppr_msn <- function(x,
       graphics::axis(3, at = c(0, 0.25, 0.5, 0.75, 1), labels = round(quantile(scales), 3))
       graphics::text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
     }
+    ## PLOT
+    par(mar = c(0,0,0,0))
+    plot.igraph(poppr_msn$graph, 
+                vertex.label = labs, 
+                vertex.size = vsize, 
+                layout = lay, 
+                ...)
+    
   }
   return(invisible(poppr_msn))
 }
