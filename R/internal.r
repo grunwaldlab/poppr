@@ -2904,3 +2904,105 @@ cromulent_replen <- function(gid, replen){
   new_replen <- match_replen_to_loci(the_loci, replen)
   return(new_replen)
 }
+
+
+#' calculate the distance between two circles
+#'
+#' @param c1 radius of circle 1
+#' @param c2 radius of circle 2
+#'
+#' @return the distance between two centers on one axis
+#' @noRd
+#' @details 
+#' https://stackoverflow.com/a/14830596/2752888
+cdist <- function(c1, c2){
+  a <- (c1 + c2) ^ 2
+  b <- (c1 - c2) ^ 2
+  sqrt(a - b)
+}
+
+# spread the circles out 
+#' Arrange circles adjacent to each other
+#'
+#' @param radii a vector indicating the radii of the circles to be arranged.
+#'
+#' @return a vector of positions on which to plot the centers of circles
+#' @noRd
+make_adjacent_circles <- function(radii){
+  res <- vapply(seq(radii), function(i) {
+    if (i == 1)
+      0.0
+    else
+      cdist(radii[i], radii[i - 1])
+  }, numeric(1))
+  cumsum(res)
+}
+
+#' Make labels for circles
+#' 
+#' This function takes in a range of numbers and figures out three circles that
+#' exist in these numbers to create a legend using the range and approximate 
+#' mean of the numbers
+#'
+#' @param mlg_number a vector of integers
+#'
+#' @return 1, 2, or 3 integers.
+#' @noRd
+#'
+#' @examples
+#' set.seed(40)
+#' make_circle_labs(sample(100, 50, replace = TRUE))
+make_circle_labs <- function(mlg_number){
+  labs   <- range(mlg_number)
+  if (diff(labs) > 1) {
+    m    <- mean(labs)
+    m    <- mlg_number[which.min(abs(mlg_number - m))]
+    labs <- c(labs[1], m, labs[2])
+  } else if (diff(labs) == 0) {
+    labs <- labs[1]
+  }
+  labs
+}
+
+#' Create a circle legend
+#'
+#' @param a the output of a "legend" call
+#' @param mlg_number a vector of integers
+#'
+#' @return a legend with circles
+#'
+#' @noRd
+make_circle_legend <- function(a, mlg_number, scale = 5){
+  # Create example circles for comparison
+  labs   <- make_circle_labs(mlg_number)
+  rads   <- (sqrt(labs) * scale)/200
+  
+  # Get the bottom of the pop legend
+  ybot   <- a$rect$top - a$rect$h
+  # Get the space between legend elements
+  yspace <- min(abs(diff(a$text$y)))
+  # Create positions of circles vertically
+  circly <- rep(ybot - (2.5 * yspace), length(rads))
+  
+  # shift the x position of the circles
+  circlx <- a$rect$left + a$rect$w/4
+  circlx <- make_adjacent_circles(rads) + circlx
+  
+  # Create the circle legend
+  text(x = a$rect$left + a$rect$w/2, 
+       y = ybot - (yspace), 
+       label = "Samples per Node",
+       cex = 0.75)
+  symbols(x = circlx, 
+          y = circly - rads, 
+          circles = rads, 
+          add = TRUE, 
+          inches = FALSE, 
+          asp = 1)
+  text(x = circlx, 
+       y = circly + (0.1 * yspace), 
+       adj = c(0.5, 0),
+       labels = labs, 
+       font = 2, 
+       cex = 0.75)
+}
