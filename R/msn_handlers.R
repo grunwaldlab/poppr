@@ -209,7 +209,7 @@ msn_constructor <-
         ...
       )
     }
-    graphics::legend(
+    a <- graphics::legend(
       -1.55,
       1,
       bty = "n",
@@ -219,6 +219,7 @@ msn_constructor <-
       fill = color,
       border = NULL
     )
+    make_circle_legend(a, mlg.number, scale = 5)
   }
   
   V(mst)$size  <- sqrt(mlg.number)

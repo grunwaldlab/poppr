@@ -711,7 +711,7 @@ info_table <- function(gen, type = c("missing", "ploidy"), percent = TRUE, plot 
 greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8), 
                       gadj = 3, gweight = 1, scalebar = FALSE){
   gadj <- ifelse(gweight == 1, gadj, -gadj)
-  adjustcurve(data, glim, correction=gadj, show = TRUE, scalebar = scalebar)
+  adjustcurve(data, glim, correction = gadj, show = TRUE, scalebar = scalebar)
 }
 
 
