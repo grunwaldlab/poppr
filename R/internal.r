@@ -3017,32 +3017,42 @@ make_circle_legend <- function(a, mlg_number, scale = 5){
   labs   <- make_circle_labs(mlg_number)
   rads   <- (sqrt(labs) * scale)/200
   
-  # Get the bottom of the pop legend
-  ybot   <- a$rect$top - a$rect$h
+  width    <- a$rect$w
+  height   <- a$rect$h
+  top      <- get_legend_side(a, "top")
+  left     <- get_legend_side(a, "left")
+  right    <- get_legend_side(a, "right")
+  bottom   <- get_legend_side(a, "bottom")
+  
   # Get the space between legend elements
   yspace <- min(abs(diff(a$text$y)))
-  # Create positions of circles vertically
-  circly <- rep(ybot - (2.5 * yspace), length(rads))
   
-  # shift the x position of the circles
-  circlx <- a$rect$left + a$rect$w/4
-  circlx <- make_adjacent_circles(rads) + circlx
+  # Create positions of circles horizontally
+  circlx <- rep(left + (width / 4), length(rads))
+  
+  # shift the y position of the circles
+  cpos   <- make_adjacent_circles(rads)
+  circly <- bottom - (max(cpos) + max(rads))
+  circly <- cpos + circly
   
   # Create the circle legend
-  text(x = a$rect$left + a$rect$w/2, 
-       y = ybot - (yspace), 
-       label = "Samples per Node",
-       cex = 0.75)
-  symbols(x = circlx, 
-          y = circly - rads, 
-          circles = rads, 
-          add = TRUE, 
-          inches = FALSE, 
-          asp = 1)
-  text(x = circlx, 
-       y = circly + (0.1 * yspace), 
-       adj = c(0.5, 0),
-       labels = labs, 
-       font = 2, 
-       cex = 0.75)
+  graphics::text(x     = left, 
+                 y     = bottom - yspace, 
+                 label = "Samples/Node",
+                 adj   = c(0, 0.5),
+                 cex   = 0.75,
+                 font  = 2)
+  
+  graphics::symbols(x       = circlx - rads, 
+                    y       = circly, 
+                    circles = rads, 
+                    add     = TRUE, 
+                    inches  = FALSE, 
+                    asp     = 1)
+  
+  graphics::text(x      = circlx + (0.1 * yspace), 
+                 y      = circly, 
+                 labels = labs, 
+                 adj    = c(0, 0.5),
+                 cex    = 0.75)
 }
