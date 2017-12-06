@@ -216,6 +216,7 @@ msn_constructor <-
       cex = 0.75,
       legend = pnames,
       title = "Populations",
+      title.adj = 0,
       fill = color,
       border = NULL
     )
