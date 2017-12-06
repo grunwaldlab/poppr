@@ -2964,6 +2964,46 @@ make_circle_labs <- function(mlg_number){
   labs
 }
 
+#' Get the correct side of the legend box
+#'
+#' @param a the result of a "legend" call
+#' @param side either "top", "bottom", "right", or "left"
+#'
+#' @return a vector of at max length 4
+#' @noRd
+#'
+#' @examples
+#' plot(seq(-1, 1), seq(-1, 1), asp = 1)
+#' tr <- legend("topright", fill = "blue", legend = "blue")
+#' tl <- legend("topleft", fill = "blue", legend = "blue")
+#' bl <- legend("bottomleft", fill = "blue", legend = "blue")
+#' br <- legend("bottomright", fill = "blue", legend = "blue")
+#' ce <- legend("center", fill = "blue", legend = "blue")
+#' points(x = get_legend_side(ce, 3:4), 
+#'        y = get_legend_side(ce, 1:2), 
+#'        col = c("red", "blue"))
+#' points(x = get_legend_side(tl, 3:4), 
+#'        y = get_legend_side(tl, 1:2), 
+#'        col = c("red", "blue"))
+#' points(x = get_legend_side(bl, 3:4), 
+#'        y = get_legend_side(bl, 1:2), 
+#'        col = c("red", "blue"))
+#' points(x = get_legend_side(br, 3:4), 
+#'        y = get_legend_side(br, 1:2), 
+#'        col = c("red", "blue"))
+#' points(x = get_legend_side(tr, 3:4), 
+#'        y = get_legend_side(tr, 1:2), 
+#'        col = c("red", "blue"))
+get_legend_side <- function(a, side = NULL) {
+  res <- c(
+    top    = a$rect$top,
+    bottom = a$rect$top  - a$rect$h,
+    right  = a$rect$left + a$rect$w,
+    left   = a$rect$left
+  )
+  return( if (is.null(side)) res else res[side] )
+}
+
 #' Create a circle legend
 #'
 #' @param a the output of a "legend" call
