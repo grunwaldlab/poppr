@@ -3019,6 +3019,7 @@ make_circle_legend <- function(a, mlg_number, scale = 5){
   
   width    <- a$rect$w
   height   <- a$rect$h
+  txt      <- a$text$x[1]
   top      <- get_legend_side(a, "top")
   left     <- get_legend_side(a, "left")
   right    <- get_legend_side(a, "right")
@@ -3026,13 +3027,17 @@ make_circle_legend <- function(a, mlg_number, scale = 5){
   
   # Get the space between legend elements
   yspace <- min(abs(diff(a$text$y)))
+  xspace <- 0.25 * yspace
   
   # Create positions of circles horizontally
-  circlx <- rep(left + (width / 4), length(rads))
+  diam <- max(rads) * 2
+  big_circles <- diam > abs(txt - left)/2
+  circlx <- if (big_circles) left + diam + xspace else txt
+  circlx <- rep(circlx, length(rads))
   
   # shift the y position of the circles
   cpos   <- make_adjacent_circles(rads)
-  circly <- bottom - (max(cpos) + max(rads))
+  circly <- bottom - ((2.5 * yspace) + max(cpos) + max(rads)/2)
   circly <- cpos + circly
   
   # Create the circle legend
@@ -3040,17 +3045,16 @@ make_circle_legend <- function(a, mlg_number, scale = 5){
                  y     = bottom - yspace, 
                  label = "Samples/Node",
                  adj   = c(0, 0.5),
-                 cex   = 0.75,
-                 font  = 2)
+                 cex   = 0.75)
   
-  graphics::symbols(x       = circlx - rads, 
+  graphics::symbols(x       = circlx - (rads + xspace), 
                     y       = circly, 
                     circles = rads, 
                     add     = TRUE, 
                     inches  = FALSE, 
                     asp     = 1)
   
-  graphics::text(x      = circlx + (0.1 * yspace), 
+  graphics::text(x      = circlx, 
                  y      = circly, 
                  labels = labs, 
                  adj    = c(0, 0.5),
