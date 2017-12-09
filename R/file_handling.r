@@ -235,8 +235,8 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   # Ensuring that all rows and columns have data
   data_rows <- apply(gena, 1, function(i) !all(is.na(i)))
   data_cols <- apply(gena, 2, function(i) !all(is.na(i)))
-  gcols <- colnames(gena)
-  dups  <- duplicated(gcols)
+  gcols     <- colnames(gena)
+  dups      <- duplicated(gcols)
   if (any(dups) && any(gcols[dups] != "")){
     locations <- which(dups)
     locations <- locations[gcols[dups] != ""]
@@ -249,7 +249,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     msg <- paste(msg, renamed_data)
     warning(msg, immediate. = TRUE)
   }
-  gena      <- gena[data_rows, data_cols]
+  gena  <- gena[data_rows, data_cols, drop = FALSE]
   if (nrow(gena) != ninds) {
     theData <- if (inherits(genalex, "character")) genalex else deparse(substitute(genalex))
     msg <- paste0("\n The number of rows in your data do not match the number ",
@@ -271,61 +271,68 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   # name of the first region does not match any of the populations.
   
   clm <- ncol(gena)
-
-  if (region == TRUE && !is.na(num.info[npops + 4]) && length(pop.info) == npops + num.info[npops + 4]){
-    # Info for the number of columns the loci can take on.
-    loci.adj <- c(nloci, nloci*ploidy)
-    
-    # First question, do you have two or four extra columns? Two extra would 
-    # indicate no geographic data. Four extra would indicate geographic data. 
-    # Both of these indicate that, while a regional specification exists, a 
-    # column indicating the regions was not specified, so it needs to be created
-    if (((clm %in% (loci.adj + 4)) & (geo == TRUE)) | (clm %in% (loci.adj + 2))){
-      
-      pop.vec     <- gena[, 2]
-      ind.vec     <- gena[, 1]
-      xy          <- gena[, c((clm - 1), clm)]
+  
+  # The case where 
+  region_columns <- num.info[npops + 4]
+  pop_and_region <- length(pop.info) == npops + region_columns
+  just_pop       <- length(pop.info) == npops
+  # Info for the number of columns the loci can take on.
+  loci.adj <- c(nloci, nloci * ploidy)
+  # First question, do you have two or four extra columns? Two extra would
+  # indicate no geographic data. Four extra would indicate geographic data. Both
+  # of these indicate that, while a regional specification exists, a column
+  # indicating the regions was not specified, so it needs to be created
+  geo_columns    <- clm %in% (loci.adj + 4) && geo == TRUE
+  no_geo_columns <- clm %in% (loci.adj + 2)
+  geoinds        <- c((clm - 1), clm)
+  if (region == TRUE && !is.na(region_columns) && pop_and_region) {
+    if (geo_columns || no_geo_columns) {
+      # The regions were not specified in the columns
+      pop.vec     <- gena[[2]]
+      ind.vec     <- gena[[1]]
+      xy          <- gena[, geoinds]
       region.inds <- ((npops + 5):length(num.info)) # Indices for the regions
       reg.inds    <- num.info[region.inds] # Number of individuals per region
       reg.names   <- all.info[[2]][region.inds] # Names of the regions
       reg.vec     <- rep(reg.names, reg.inds) # Paste into a single vector
       names(reg.vec) <- ind.vec
-      if (geo == TRUE){
-        geoinds <- c((clm - 1), clm)
-        xy      <- gena[, geoinds]
-        gena    <- gena[, -geoinds, drop = FALSE]
+      if (geo == TRUE) {
+        xy   <- gena[, geoinds]
+        gena <- gena[, -geoinds, drop = FALSE]
       } else {
-        xy <- NULL
+        xy   <- NULL
       }
       gena <- gena[, c(-1, -2), drop = FALSE]
     } else {
-      pop.vec      <- ifelse(any(gena[, 1] == pop.info[1]), 1, 2)
-      reg.vec      <- ifelse(pop.vec == 2, 1, 2)
+      # The regions are specified as a single column and the individual column
+      # has been shifted over.
+      pop.vec      <- if (any(gena[[1]] == pop.info[1])) 1 else 2
+      reg.vec      <- if (pop.vec == 2) 1 else 2
       orig.ind.vec <- NULL
-      reg.vec      <- gena[, reg.vec] # Regional Vector 
-      pop.vec      <- gena[, pop.vec] # Population Vector
-      if (geo == TRUE){
-        geoinds <- c((clm - 1), clm)
-        xy      <- gena[, geoinds]
-        gena    <- gena[, -geoinds, drop = FALSE]
+      reg.vec      <- gena[[reg.vec]] # Regional Vector 
+      pop.vec      <- gena[[pop.vec]] # Population Vector
+      if (geo == TRUE) {
+        xy   <- gena[, geoinds]
+        gena <- gena[, -geoinds, drop = FALSE]
+        clm  <- clm - 2
       } else {
-        xy <- NULL
+        xy   <- NULL
       }
-      ind.vec <- gena[, clm] # Individual Vector
+      ind.vec <- gena[[clm]] # Individual Vector
       gena    <- gena[, -c(1, 2, clm), drop = FALSE] # removing the non-genotypic columns
     }
-  } else if (geo == TRUE & length(pop.info) == npops){
+  } else if (geo == TRUE && just_pop) {
     # There are no Regions specified, but there are geographic coordinates
     reg.vec <- NULL
-    pop.vec <- gena[, 2]
-    ind.vec <- gena[, 1]
-    xy      <- gena[, c((clm - 1), clm)]
-    gena    <- gena[, -c(1, 2, (clm - 1), clm), drop = FALSE]
+    pop.vec <- gena[[2]]
+    ind.vec <- gena[[1]]
+    xy      <- gena[, geoinds]
+    gena    <- gena[, -c(1, 2, geoinds), drop = FALSE]
   } else {
     # There are no Regions or geographic coordinates
     reg.vec <- NULL
-    pop.vec <- gena[, 2]
-    ind.vec <- gena[, 1]
+    pop.vec <- gena[[2]]
+    ind.vec <- gena[[1]]
     xy      <- NULL
     gena    <- gena[, -c(1, 2), drop = FALSE]
   }
