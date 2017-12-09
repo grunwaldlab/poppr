@@ -3026,7 +3026,8 @@ make_circle_legend <- function(a, mlg_number, scale = 5){
   bottom   <- get_legend_side(a, "bottom")
   
   # Get the space between legend elements
-  yspace <- min(abs(diff(a$text$y)))
+  yspace <- diff(a$text$y)
+  yspace <- if (length(yspace) > 0L) min(abs(yspace)) else 0.05
   xspace <- 0.25 * yspace
   
   # Create positions of circles horizontally
