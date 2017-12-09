@@ -330,18 +330,19 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   } else {
     namelist$File <- basename(x$X)
   }
-  if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
+  if (toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
     dat           <- x$GENIND
     pop(dat)      <- rep("Total", nInd(dat))
     poplist       <- NULL
     poplist$Total <- dat
   } else {
     dat <- popsub(x$GENIND, sublist = sublist, blacklist = blacklist)
-    if (any(levels(pop(dat)) == "")){
+    if (any(levels(pop(dat)) == "")) {
       levels(pop(dat))[levels(pop(dat)) == ""] <- "?"
       warning("missing population factor replaced with '?'")
     }
-    poplist <- .pop.divide(dat)
+    pdrop   <- if (dat$type == "PA") FALSE else TRUE
+    poplist <- if (is.null(pop(dat))) NULL else seppop(dat, drop = pdrop)
   }
 
   # Creating the genotype matrix for vegan's diversity analysis.

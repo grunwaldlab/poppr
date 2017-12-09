@@ -115,25 +115,7 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
   filepath <- list(files=x, path=path)
   return(filepath)
 }
-#==============================================================================#
-# A way of dealing with the different types of data that adegenet can take in.
-# This will detect whether or not one should drop all the non-informative loci
-# from each separated population or not.
-#==============================================================================#
-.pop.divide <- function(x, drop=TRUE) {
-  divcall <- match.call()
-  if(!is.genind(x)){
-    stop(c(as.character(divcall[2])," is not a valid genind object"))
-  }
-  if (is.null(pop(x))){
-    pops <- NULL
-  } else if (x@type !="PA") {
-    pops <- seppop(x, drop = drop)
-  } else {
-    pops <- seppop(x)
-  }
-	return(pops)
-}
+
 #==============================================================================#
 #' Importing data from genalex formatted *.csv files.
 #' 
