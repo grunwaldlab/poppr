@@ -16,6 +16,8 @@ NEW FEATURES
 * The minimum spanning networks will now scale nodes by area instead of radius.
   This gives a more accurate picture of the differences between MLGs. See
   https://github.com/grunwaldlab/poppr/issues/154 for details.
+* A legend for samples/node is now added to all minimum spanning networks. See
+  https://github.com/grunwaldlab/poppr/issues/158 for details.
   
 BUG FIX
 -------
