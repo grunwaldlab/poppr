@@ -3008,6 +3008,12 @@ get_legend_side <- function(a, side = NULL) {
 #'
 #' @param a the output of a "legend" call
 #' @param mlg_number a vector of integers
+#' @param scale a number by which to multiply the node sizes
+#' @param cex character expansion for the text
+#' @param radmult multiplier for the radius (specifically for [plot_poppr_msn])
+#' @param xspace the defined xspacer (currently is wonky :/)
+#' @param font font for the title
+#' @param pos a numeric position for the title or NULL
 #'
 #' @return a legend with circles
 #'
