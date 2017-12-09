@@ -273,19 +273,40 @@ test_that("genalex data can be imported with a region column", {
   yrnums <- yr[1, 1:4]
   region <- c("", "", "Region", rep(c("one", "two"), 3))
   blank <- rep("", 9)
-  yr <- cbind(yr[, 2], region, yr[, -c(1:2)], blank, yr[, 1])
-  yr[1, ] <- c(yrnums, rep("", ncol(yr) - 4))
-  yr[1, 5:7] <- c("2", "3", "3")
-  yr[2, 6:7] <- c("one", "two")
-  
-  yrfile <- tempfile()
+  Xcoords <- rnorm(6)
+  X       <- c("", "", "x", Xcoords)
+  Ycoords <- rnorm(6)
+  Y       <- c("", "", "y", Ycoords)
+  yrg         <- yr
+  yr          <- cbind(yr[, 2], region, yr[, -c(1:2)], blank, yr[, 1])
+  yr[1, ]     <- c(yrnums, rep("", ncol(yr) - 4))
+  yr[1, 5:7]  <- c("2", "3", "3")
+  yr[2, 6:7]  <- c("one", "two")
+  yrg         <- cbind(yr, X, Y)
+  yrfile  <- tempfile()
+  yrgfile <- tempfile()
   write.table(yr, file = yrfile, quote = FALSE, sep = ",", row.names = FALSE,
               col.names = FALSE)
-  genind_region <- read.genalex(yrfile, region = TRUE)
+  write.table(yrg, file = yrgfile, quote = FALSE, sep = ",", row.names = FALSE,
+              col.names = FALSE)
+  
+  genind_region     <- read.genalex(yrfile, region = TRUE)
+  genind_region_geo <- read.genalex(yrgfile, region = TRUE, geo = TRUE)
+  
   expect_is(genind_region, "genclone")
+  expect_is(genind_region_geo, "genclone")
+  
   expect_equal(nameStrata(genind_region), c("Pop", "Region"))
+  expect_equal(nameStrata(genind_region_geo), c("Pop", "Region"))
+  
   setPop(genind_region) <- ~Region
+  setPop(genind_region_geo) <- ~Region
+  
   expect_equal(popNames(genind_region), c("one", "two"))
+  expect_equal(popNames(genind_region_geo), c("one", "two"))
+  
+  expect_equivalent(other(genind_region_geo)$xy, 
+                    data.frame(x = Xcoords, y = Ycoords))
 })
 
 
