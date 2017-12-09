@@ -4,6 +4,17 @@ context("MLG class tests")
 set.seed(5000)
 (x <- sample(10, 20, replace = TRUE))
 (m <- new("MLG", x))
+## translation function
+tr <- function(x) gettext(x, domain = "R")
+
+test_that("MLG class can be initiated with no arguments", {
+  expect_is(new("MLG"), "MLG")
+  expect_output(print(new("MLG")), tr("an empty MLG object"))
+})
+
+test_that("if the MLG supplied is already an MLG class, it will be returned", {
+  expect_equivalent(m, new("MLG", m))
+})
 
 test_that("visible accessor works", {
   skip_on_cran()
@@ -49,4 +60,8 @@ test_that("cutoff returns the correct cutoff", {
   tcut <- zcut
   tcut["contracted"] <- 0.2
   expect_identical(cutoff(m), tcut)
+})
+
+test_that("you need to have custom MLGs to set levels", {
+  expect_warning(levels(m) <- c("A", "B", "C"), tr("Cannot assign levels unless you have custom MLGs."))
 })
