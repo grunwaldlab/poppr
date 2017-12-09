@@ -341,7 +341,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   
   xy_trail_na <- xy %null% (rev(cumsum(rev(rowSums(!is.na(xy))))) > 0)
   
-  if (any(xy_trail_na)){
+  if (any(xy_trail_na)) {
     xy         <- xy[xy_trail_na, , drop = FALSE]
     xy_nomatch <- TRUE
   } else {

@@ -247,7 +247,15 @@ test_that("genalex data can be imported with region data to genind and genclone"
 	skip_on_cran()
 	rr1 <- system.file("files/rootrot.csv", package = "poppr")
 	rr2 <- system.file("files/rootrot2.csv", package = "poppr")
-
+	Xcoord <- rnorm(187)
+	Ycoord <- rnorm(187)
+	rrg <- read.csv(rr2, header = FALSE) 
+	blank <- rep("", nrow(rrg))
+	rrg <- cbind(rrg, blank, data.frame(X = c(NA, NA, "x", Xcoord), 
+	                                    Y = c(NA, NA, "y", Ycoord)))
+	rrfile <- tempfile()
+	write.table(rrg, file = rrfile, quote = FALSE, sep = ",", row.names = FALSE,
+	            col.names = FALSE, na = "")
 	root1gc <- read.genalex(rr1)
 	root1gd <- read.genalex(rr1, genclone = FALSE)
 	
@@ -256,14 +264,22 @@ test_that("genalex data can be imported with region data to genind and genclone"
 	
 	root2re <- read.genalex(rr2, region = TRUE)
 
+	root2reg <- read.genalex(rrfile, region = TRUE, geo = TRUE)
+	
 	expect_is(root1gc, "genclone")
 	expect_is(root1gd, "genind")
 
 	expect_is(root2gc, "genclone")
 	expect_is(root2gd, "genind")
+
+	expect_is(root2reg, "genclone")
+	
 	expect_equal(length(nameStrata(root2gc)), 1L)
 	expect_equal(length(nameStrata(root2re)), 2L)
 	expect_identical(nameStrata(root2re), c("Pop", "Region"))
+	expect_identical(nameStrata(root2reg), c("Pop", "Region"))
+	expect_equivalent(other(root2reg)$xy, 
+	                  data.frame(x = Xcoord, y = Ycoord))
 })
 
 test_that("genalex data can be imported with a region column", {
