@@ -3012,7 +3012,9 @@ get_legend_side <- function(a, side = NULL) {
 #' @return a legend with circles
 #'
 #' @noRd
-make_circle_legend <- function(a, mlg_number, scale = 5){
+make_circle_legend <- function(a, mlg_number, scale = 5, cex = 0.75, 
+                               radmult = 1, xspace = NULL, font = 1, 
+                               pos = NULL){
   # Create example circles for comparison
   labs   <- make_circle_labs(mlg_number)
   rads   <- (sqrt(labs) * scale)/200
@@ -3028,7 +3030,7 @@ make_circle_legend <- function(a, mlg_number, scale = 5){
   # Get the space between legend elements
   yspace <- diff(a$text$y)
   yspace <- if (length(yspace) > 0L) min(abs(yspace)) else 0.05
-  xspace <- 0.25 * yspace
+  xspace <- if (is.null(xspace)) 0.25 * yspace else 2 * xspace * yspace
   
   # Create positions of circles horizontally
   diam <- max(rads) * 2
@@ -3042,15 +3044,18 @@ make_circle_legend <- function(a, mlg_number, scale = 5){
   circly <- cpos + circly
   
   # Create the circle legend
-  graphics::text(x     = left, 
+  xpos <- if (is.null(pos)) left else pos
+  tadj <- if (is.null(pos)) c(0, 0.5) else c(0.5, 0.5)
+  graphics::text(x     = xpos, 
                  y     = bottom - yspace, 
                  label = "Samples/Node",
-                 adj   = c(0, 0.5),
-                 cex   = 0.75)
+                 adj   = tadj,
+                 font  = font,
+                 cex   = cex)
   
-  graphics::symbols(x       = circlx - (rads + xspace), 
+  graphics::symbols(x       = circlx - (rads * radmult + xspace), 
                     y       = circly, 
-                    circles = rads, 
+                    circles = rads * radmult, 
                     add     = TRUE, 
                     inches  = FALSE, 
                     asp     = 1)
@@ -3059,5 +3064,5 @@ make_circle_legend <- function(a, mlg_number, scale = 5){
                  y      = circly, 
                  labels = labs, 
                  adj    = c(0, 0.5),
-                 cex    = 0.75)
+                 cex    = cex)
 }

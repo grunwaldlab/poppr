@@ -1095,7 +1095,9 @@ plot_poppr_msn <- function(x,
     graphics::par(def.par)
   })
   
-  if (!pop.leg & !scale.leg){
+  pop.leg <- pop.leg && !all(is.na(poppr_msn$populations))
+  
+  if (!pop.leg && !scale.leg) {
     plot.igraph(poppr_msn$graph, vertex.label = labs, vertex.size = vsize, 
                 layout = lay, ...)
   } else {
@@ -1103,10 +1105,10 @@ plot_poppr_msn <- function(x,
     # Setting up the matrix for plotting. One Vertical panel of width 1 and height
     # 5 for the legend, one rectangular panel of width 4 and height 4.5 for the
     # graph, and one horizontal panel of width 4 and height 0.5 for the greyscale.
-    if (pop.leg && !all(is.na(poppr_msn$populations))){
-      if (scale.leg){
-        mat <- matrix(c(1,3,
-                        1,2), 
+    if (pop.leg) {
+      if (scale.leg) {
+        mat <- matrix(c(1,4,
+                        3,2), 
                       ncol = 2, 
                       byrow = TRUE)
         layout(mat, widths = c(1, 4), heights = c(4.5, 0.5))        
@@ -1121,15 +1123,15 @@ plot_poppr_msn <- function(x,
       too_many_pops   <- as.integer(ceiling(nPop(x)/30))
       pops_correction <- ifelse(too_many_pops > 1, -1, 1)
       yintersperse    <- ifelse(too_many_pops > 1, 0.51, 0.62)
-      graphics::plot(c(0, 2), 
-                     c(0, 1), 
+      graphics::plot(c(-1, 1), 
+                     c(-0.5, 0.5), 
                      type = 'n', 
-                     axes = F, 
+                     axes = FALSE, 
                      xlab = '', 
                      ylab = '',
                      main = 'POPULATION')
     
-      graphics::legend("topleft", 
+      a <- graphics::legend("topleft", 
                        bty = "n", 
                        cex = 1.2^pops_correction,
                        legend = poppr_msn$populations, 
@@ -1138,12 +1140,21 @@ plot_poppr_msn <- function(x,
                        ncol = too_many_pops, 
                        x.intersp = 0.45, 
                        y.intersp = yintersperse)
+      N <- V(poppr_msn$graph)$size * V(poppr_msn$graph)$size
+      make_circle_legend(a = a, 
+                         mlg_number = N, 
+                         scale = sqrt(nodescale), 
+                         cex = 1.2 ^ pops_correction,
+                         radmult = 4,
+                         xspace = 0.45,
+                         font = 2,
+                         pos = 0)
     } else {
       graphics::layout(matrix(c(2, 1), nrow = 2), heights = c(4.5, 0.5))
     }
-    if (scale.leg){
+    if (scale.leg) {
       ## SCALE BAR
-      if (quantiles){
+      if (quantiles) {
         scales <- sort(weights)
       } else {
         scales <- seq(wmin, wmax, l = 1000)
@@ -1158,6 +1169,7 @@ plot_poppr_msn <- function(x,
       graphics::text(0.5, 0, labels = "DISTANCE", font = 2, cex = 1.5, adj = c(0.5, 0))
     }
     ## PLOT
+    if (pop.leg && scale.leg) frame()
     par(mar = c(0,0,0,0))
     plot.igraph(poppr_msn$graph, 
                 vertex.label = labs, 
