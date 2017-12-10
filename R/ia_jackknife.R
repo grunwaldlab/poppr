@@ -40,7 +40,7 @@ resample.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FAL
     n <- suppressWarnings(nmll(gid))
   }
   if (n >= N){
-    stop("n must be less than the number of observations", call. = FALSE)
+    stop("n must be fewer than the number of observations", call. = FALSE)
   }
   if (n < 3){
     stop("n must be greater than 2 observations", call. = FALSE)
@@ -80,7 +80,7 @@ resample.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FAL
 #'
 #' @param gid a genind or genclone object
 #' @param how method of bootstrap. The default `how = "partial"` will include
-#'   the all unique genotypes and sample with replacement from the unique
+#'   all the unique genotypes and sample with replacement from the unique
 #'   genotypes until the total number of individuals has been reached. Using
 #'   `how = "full"` will randomly sample with replacement from the data as it
 #'   is. Using `how = "psex"` will sample from the full data set after first
@@ -113,16 +113,16 @@ boot.ia <- function(gid, how = "partial", reps = 999, quiet = FALSE, ...){
   quiet   <- should_poppr_be_quiet(quiet)
   N       <- nInd(gid)
   numLoci <- nLoc(gid)
-  if (METHOD == "partial"){
+  if (METHOD == "partial") {
     n   <- suppressWarnings(nmll(gid))
     gid <- clonecorrect(gid, NA)
   } else {
     n <- N
   }
-  if (n < 3){
+  if (n < 3) {
     stop("n must be greater than 2 observations", call. = FALSE)
   }
-  if (gid@type == "codom"){
+  if (gid@type == "codom") {
     gid <- seploc(gid)
   }
   
@@ -136,13 +136,14 @@ boot.ia <- function(gid, how = "partial", reps = 999, quiet = FALSE, ...){
   V   <- pair_matrix(gid, numLoci, np)
   np  <- choose(N, 2)
   
-  sample.data        <- matrix(numeric(reps*2), ncol = 2, nrow = reps)
-  if(!quiet) progbar <- dplyr::progress_estimated(reps)
-  for (i in seq(reps)){
-    sample.data[i, ] <- run.jack(V, mat, N, n, np, replace = TRUE, method = METHOD)
+  sample.data         <- matrix(numeric(reps*2), ncol = 2, nrow = reps)
+  if (!quiet) progbar <- dplyr::progress_estimated(reps)
+  for (i in seq(reps)) {
+    sample.data[i, ] <- run.jack(V, mat, N, n, np, replace = TRUE, 
+                                 method = METHOD, weights = weights)
     if (!quiet) progbar$tick()$print()
   }
-  if(!quiet){
+  if (!quiet) {
     cat("\n")
     progbar$stop()
   }
@@ -191,6 +192,7 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
 #' @param replace logical whether or not to sample with replacement. Defaults to
 #'   FALSE
 #' @param method passed from boot.ia
+#' @param weights a vector of weights given by [psex()]
 #'
 #' @return Estimates of the index of association
 #' @noRd
@@ -199,7 +201,7 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
 #' # No examples here
 run.jack <- function(V, mat, N, n, np, replace = FALSE, method = "partial", weights = NULL){
 
-  if (replace & method == "partial"){
+  if (replace & method == "partial") {
     # For the partial boot method. In this case, the incoming data is clone
     # censored, so N is the desired number of individuals and n is the observed
     # number of individuals. Since we want to keep the number of MLG steady, we
