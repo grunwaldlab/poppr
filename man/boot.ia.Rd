@@ -10,7 +10,7 @@ boot.ia(gid, how = "partial", reps = 999, quiet = FALSE, ...)
 \item{gid}{a genind or genclone object}
 
 \item{how}{method of bootstrap. The default \code{how = "partial"} will include
-the all unique genotypes and sample with replacement from the unique
+all the unique genotypes and sample with replacement from the unique
 genotypes until the total number of individuals has been reached. Using
 \code{how = "full"} will randomly sample with replacement from the data as it
 is. Using \code{how = "psex"} will sample from the full data set after first

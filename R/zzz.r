@@ -43,15 +43,6 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 .onAttach <- function(...) {
-  op <- options()
-  op.poppr <- list(
-    poppr.debug = FALSE, # flag for verbosity
-    old.bruvo.model = FALSE, # flag for using the old model of Bruvo's distance.
-    poppr.old.dplyr = FALSE
-  )
-  toset <- !(names(op.poppr) %in% names(op))
-  if(any(toset)) options(op.poppr[toset])
-  
   poppr_vers <- utils::packageVersion("poppr")
   if (length(unlist(poppr_vers)) > 3){
     appendix <- "\n\nThis version of poppr is under development.\nIf you find any bugs, please report them at https://github.com/grunwaldlab/poppr/issues"
@@ -72,6 +63,17 @@
   
   tip <- sample(tips, 1)
   packageStartupMessage(tip)
+}
+
+.onLoad <- function(...){
+  op <- options()
+  op.poppr <- list(
+    poppr.debug = FALSE,     # flag for verbosity
+    old.bruvo.model = FALSE, # flag for using the old model of Bruvo's distance.
+    poppr.old.dplyr = FALSE  # flag to for testing old version of dplyr
+  )
+  toset <- !(names(op.poppr) %in% names(op))
+  if(any(toset)) options(op.poppr[toset])
 }
 
 .onUnload <- function (libpath) {
