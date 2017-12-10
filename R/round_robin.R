@@ -597,6 +597,7 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #' 
 #' @export
 #' @examples
+#' data(Pram)
 #' 
 #' # With multiple encounters
 #' Pram_psex <- psex(Pram, by_pop = FALSE, method = "multiple")
@@ -606,7 +607,6 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #' \dontrun{
 #' 
 #' # For a single encounter (default)
-#' data(Pram)
 #' Pram_psex <- psex(Pram, by_pop = FALSE)
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)

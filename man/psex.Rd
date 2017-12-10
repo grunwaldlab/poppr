@@ -114,6 +114,7 @@ The values of Psex represent the value for each multilocus genotype.
   \code{by_pop} is automatically \code{TRUE}.
 }
 \examples{
+data(Pram)
 
 # With multiple encounters
 Pram_psex <- psex(Pram, by_pop = FALSE, method = "multiple")
@@ -123,7 +124,6 @@ title("Probability of multiple encounters")
 \dontrun{
 
 # For a single encounter (default)
-data(Pram)
 Pram_psex <- psex(Pram, by_pop = FALSE)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
