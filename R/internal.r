@@ -1574,7 +1574,7 @@ palette_parser <- function(inPAL, npop, pnames){
     } else if (npop == length(inPAL)){
       color <- stats::setNames(inPAL, pnames)
     } else if (npop < length(inPAL)){
-      warning("Number of populations less than number of colors supplied. Discarding extra colors.")
+      warning("Number of populations fewer than number of colors supplied. Discarding extra colors.")
       color <- stats::setNames(inPAL[1:npop], pnames)
     } else {
       warning("insufficient color palette supplied. Using topo.colors().")
