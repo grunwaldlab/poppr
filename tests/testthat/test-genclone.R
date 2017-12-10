@@ -32,7 +32,8 @@ test_that("A genclone object is a valid object", {
   pcno <- pc
   pcno@mlg <- 1:26
   expect_error(validObject(pcno), gettext("invalid class", domain = "R"))
-  expect_error(poppr:::valid.genclone(pcno), gettext("invalid class", domain = "R"))
+  expect_message(poppr:::valid.genclone(pcno), 
+                 gettext("Multilocus genotypes do not match the number of observations", domain = "R"))
 })
 
 test_that("Strata methods work for genclone objects.", {
