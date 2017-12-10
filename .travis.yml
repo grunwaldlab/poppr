@@ -4,7 +4,7 @@ r:
   - devel
 
 sudo: false
-cran: http://cran.at.r-project.org
+cran: https://cran.r-project.org
 
 cache: packages
 
