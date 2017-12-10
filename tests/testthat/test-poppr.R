@@ -99,6 +99,18 @@ test_that("poppr perform clone correction", {
   expect_true(all.equal(res_mv[, -c(4:5)], res_ps[2, -c(4:5)], check.attributes = FALSE))
 })
 
+test_that("poppr will correct missing values as mean for P/A markers", {
+  skip_on_cran()
+  a <- tab(Aeut)
+  a[117, 18] <- NA # this locus has a mean of 0.5, happily.
+  A <- df2genind(a, ind.names = indNames(Aeut), 
+                 pop = pop(Aeut), ploidy = 1, 
+                 type = "PA", sep = "/")
+  expect_warning(pm <- poppr(A, missing = "mean", quiet = TRUE, total = FALSE), "adegenet_2.0-0")
+  expect_lt(pm$rbarD[2], A.tab$rbarD[2]) # smaller ia value because of homogenization
+  expect_gt(pm$MLG[2], A.tab$MLG[2])     # more MLGs because of extra missing value
+})
+
 test_that("poppr skips over sample sizes less than three", {
   skip_on_cran()
   expect_warning(plt <- poppr(partial_clone[1:8], sample = 10, quiet = TRUE), "could not be plotted")
@@ -106,6 +118,12 @@ test_that("poppr skips over sample sizes less than three", {
   expect_equivalent(signif(plt$Ia, 3), c(rep(NA, 4), 0.167))
   expect_equivalent(signif(plt$rbarD, 3), c(rep(NA, 4), 0.0195))
   expect_output(print(plt, digits = 2), "0.69")
+  expect_true(is.na(ia(partial_clone[1:2])[2]))
+  # Presence/absence case
+  a <- Aeut
+  pop(a) <- c("A", "A", as.character(pop(Aeut))[-(1:2)])
+  expect_true(is.na(poppr(a, sublist = "A")$rbarD[1]))
+  expect_true(is.na(ia(a[1:2])[2]))
 })
 
 test_that("poppr can produce output from input file", {
