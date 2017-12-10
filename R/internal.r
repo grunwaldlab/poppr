@@ -1430,21 +1430,6 @@ number_missing_locus <- function(x, divisor){
 }
 
 #==============================================================================#
-# tabulate the amount of missing data per genotype. 
-#
-# Public functions utilizing this function:
-# none
-#
-# Private functions utilizing this function:
-# # percent_missing
-#==============================================================================#
-
-number_missing_geno <- function(x, divisor){
-  missing_result <- rowSums(1 - propTyped(x, by = "both"))
-  return(missing_result/divisor)
-}
-
-#==============================================================================#
 # Replace infinite values with the maximum finite value of a distance matrix.
 #
 # Public functions utilizing this function:
