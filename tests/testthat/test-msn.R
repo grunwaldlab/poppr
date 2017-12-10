@@ -31,7 +31,7 @@ gend <- new("genind"
 gend_gc          <- as.genclone(gend)
 gend_bruvo       <- bruvo.dist(gend, replen = c(1, 1))
 gend_single      <- gend
-pop(gend_single) <- rep(1, 4)
+pop(gend_single) <- rep("A", 4)
 
 #' Identical population and color fields
 #'
@@ -402,14 +402,14 @@ test_that("Filtered minimum spanning networks retain original names", {
   
   # normal ---------------------------------------------------
   set.seed(9001)
-  g1 <- poppr.msn(x, xdis, include.ties = TRUE, showplot = FALSE,
+  g1 <- poppr.msn(x, xdis, include.ties = TRUE, 
                   vertex.label.color = "firebrick", vertex.label.font = 2)
   all_names <- igraph::V(g1$graph)$name
   ## [1] "A"   "B"   "C"   "D"   "E"   "new" "mut"
   
   # filtered ---------------------------------------------------
   set.seed(9001)
-  g1.1 <- poppr.msn(x, xdis, threshold = 1, include.ties = TRUE, showplot = FALSE,
+  g1.1 <- poppr.msn(x, xdis, threshold = 1, include.ties = TRUE, 
                   vertex.label.color = "firebrick", vertex.label.font = 2)
   cc_names <- igraph::V(g1.1$graph)$name
   ## [1] "A"   "B"   "C"   "D"   "E"   "new"
@@ -427,6 +427,16 @@ pmsn <- poppr.msn(pc, bpc, showplot = FALSE)
 test_that("nodes are properly scaled", {
   expect_vertex_size_scale(bmsn, as.integer(table(mll(pc))))
   expect_vertex_size_scale(pmsn, as.integer(table(mll(pc))))
+})
+
+test_that("a warning is thrown if there are no populations to subset", {
+  skip_on_cran()
+  pc2 <- pc
+  pop(pc2) <- NULL
+  expect_warning(poppr.msn(pc2, dist(pc), showplot = FALSE, sublist = 1), 
+                 "Subsetting not taking place")
+  expect_warning(bruvo.msn(pc2, replen = rep(1, 10), showplot = FALSE, sublist = 1),
+                 "Subsetting not taking place")
 })
 
 test_that("Minimum spanning networks can subset populations", {
