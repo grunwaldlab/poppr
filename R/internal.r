@@ -159,15 +159,19 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
 # # .PA.pairwise.differences, .pairwise.differences
 #==============================================================================#
 
-round.poppr <- function(x){
-  if (x - as.integer(x) == 0.5 & as.integer(x)%%2 == 0)
-    x <- round(x) + 1
-  else if(-x + as.integer(x) == 0.5 & as.integer(x)%%2 == 0)  
-    x <- round(x) - 1
-  else
+round.poppr <- Vectorize(function(x){
+  ix <- as.integer(x)
+  is_even <- ix %% 2 == 0
+  if (is_even) {
+    if (x - ix == 0.5)
+      x <- round(x) + 1
+    else if (-x + ix == 0.5)  
+      x <- round(x) - 1  
+  } else {
     x <- round(x)
+  }
   return(x)
-}
+})
 #==============================================================================#
 # Subsetting the population and returning the indices.
 # 
