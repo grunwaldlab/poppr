@@ -83,6 +83,7 @@ test_that("poppr perform clone correction", {
   res_ps  <- poppr(Aeut, clonecorrect = TRUE, strata = ~Pop/Subpop, quiet = TRUE)
   res_ps2 <- poppr(Aeut, clonecorrect = TRUE, strata = ~Pop/Subpop, keep = 1:2, 
                    quiet = TRUE)
+  res_naf  <- poppr(afile, clonecorrect = TRUE, strata = ~Pop, quiet = TRUE)
   res_mv  <- poppr(Aeut, clonecorrect = TRUE, strata = ~Pop/Subpop, 
                    quiet = TRUE, sublist = "Mt. Vernon")
   expect_that(nrow(res_na), equals(nrow(Aeut_comparison)))
@@ -93,6 +94,7 @@ test_that("poppr perform clone correction", {
   expect_true(all(res_ps$N < Aeut_comparison$N))
   expect_true(all(res_p$N < res_ps$N))
   expect_true(all(res_na$N <= res_p$N))
+  expect_identical(res_ps2[-c(1, length(res_na))], res_naf[-c(1, length(res_naf))])
 
   expect_true(all.equal(res_mv[, -c(4:5)], res_ps[2, -c(4:5)], check.attributes = FALSE))
 })
