@@ -118,7 +118,7 @@ msn_constructor <-
     
   mlgs <- mll(gid)
   cmlg <- mll(cgid)
-  if (!is.numeric(mlgs)){
+  if (!is.numeric(mlgs)) {
     mlgs <- as.character(mlgs)
     cmlg <- as.character(cmlg)
   }
@@ -129,7 +129,9 @@ msn_constructor <-
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   npop   <- nPop(gid)
+  npop   <- if (npop == 0) 1 else npop
   pnames <- popNames(gid)
+  pnames <- if (is.null(pnames)) "pop" else pnames
   color  <- palette_parser(palette, npop, pnames)
   # This will determine the size of the nodes based on the number of
   # individuals in the MLG. Subsetting by the MLG vector of the clone
