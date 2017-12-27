@@ -3014,13 +3014,9 @@ make_circle_legend <- function(a, mlg_number, scale = 5, cex = 0.75,
   labs   <- make_circle_labs(mlg_number)
   rads   <- (sqrt(labs) * scale)/200
   
-  width    <- a$rect$w
-  height   <- a$rect$h
-  txt      <- a$text$x[1]
-  top      <- get_legend_side(a, "top")
-  left     <- get_legend_side(a, "left")
-  right    <- get_legend_side(a, "right")
-  bottom   <- get_legend_side(a, "bottom")
+  txt    <- a$text$x[1]
+  left   <- get_legend_side(a, "left")
+  bottom <- get_legend_side(a, "bottom")
   
   # Get the space between legend elements
   yspace <- diff(a$text$y)
