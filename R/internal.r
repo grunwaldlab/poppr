@@ -2995,7 +2995,7 @@ get_legend_side <- function(a, side = NULL) {
 
 #' Create a circle legend
 #'
-#' @param a the output of a "legend" call
+#' @param a the output of a "legend" call. Defaults to `NULL`.
 #' @param mlg_number a vector of integers
 #' @param scale a number by which to multiply the node sizes
 #' @param cex character expansion for the text
@@ -3003,23 +3003,47 @@ get_legend_side <- function(a, side = NULL) {
 #' @param xspace the defined xspacer (currently is wonky :/)
 #' @param font font for the title
 #' @param pos a numeric position for the title or NULL
+#' @param x the position for the leftmost part of the legend
+#' @param y the position of the topmost part of the legend
+#' @param txt The position of the text
+#' 
+#' @details
+#'   If a legend is provided in `a`, then the position of the circle legend will
+#'   be below it. If not, the arguments left, top, and txt will control the
+#'   position of the text within the box. 
 #'
 #' @return a legend with circles
 #'
 #' @noRd
-make_circle_legend <- function(a, mlg_number, scale = 5, cex = 0.75, 
-                               radmult = 1, xspace = NULL, font = 1, 
-                               pos = NULL){
+make_circle_legend <-
+  function(a = NULL,
+           mlg_number,
+           scale = 5,
+           cex = 0.75,
+           radmult = 1,
+           xspace = NULL,
+           font = 1,
+           pos = NULL,
+           x = -1.55,
+           y = 1,
+           txt = -1.3) {
+    
+  
   # Create example circles for comparison
   labs   <- make_circle_labs(mlg_number)
   rads   <- (sqrt(labs) * scale)/200
   
-  txt    <- a$text$x[1]
-  left   <- get_legend_side(a, "left")
-  bottom <- get_legend_side(a, "bottom")
+  if (!is.null(a)){
+    txt    <- a$text$x[1]    
+    left   <- get_legend_side(a, "left")   
+    bottom <- get_legend_side(a, "bottom")   
+  } else {
+    left   <- x
+    bottom <- y
+  }
   
   # Get the space between legend elements
-  yspace <- diff(a$text$y)
+  yspace <- if (!is.null(a)) diff(a$text$y) else 0.05
   yspace <- if (length(yspace) > 0L) min(abs(yspace)) else 0.05
   xspace <- if (is.null(xspace)) 0.25 * yspace else 2 * xspace * yspace
   
