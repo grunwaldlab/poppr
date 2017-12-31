@@ -30,7 +30,9 @@ BUG FIX
   https://github.com/grunwaldlab/poppr/issues/155 for details.
 * a bug in `plot_poppr_msn()` where setting `scale.leg = FALSE` would result in a
   very small MSN plot was fixed.
-  
+* `mlg()` now works properly for snpclone and genlight objects. See 
+  https://github.com/grunwaldlab/poppr/issues/155 for details.
+
 DEPENDENCIES
 ------------
 
