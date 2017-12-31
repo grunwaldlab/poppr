@@ -18,6 +18,7 @@ NEW FEATURES
   https://github.com/grunwaldlab/poppr/issues/154 for details.
 * A legend for samples/node is now added to all minimum spanning networks. See
   https://github.com/grunwaldlab/poppr/issues/158 for details.
+* The imsn() option for node size scale has been changed to a slider.
   
 BUG FIX
 -------
