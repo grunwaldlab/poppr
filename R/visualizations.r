@@ -773,6 +773,10 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' @param pop.leg if \code{TRUE}, a legend indicating the populations will
 #'   appear in the top right corner of the graph, but will not overlap. Setting
 #'   \code{pop.leg = FALSE} disables this legend. See details.
+#' 
+#' @param size.leg if \code{TRUE}, a legend displyaing the number of samples per
+#'   node will appear either below the population legend or in the top right
+#'   corner of the graph. Setting \code{size.leg = FALSE} disables this legend.
 #'   
 #' @param scale.leg if \code{TRUE}, a scale bar indicating the distance will
 #'   appear under the graph. Setting \code{scale.leg = FALSE} suppresses this
@@ -967,8 +971,8 @@ plot_poppr_msn <- function(x,
                            layfun = layout.auto,
                            beforecut = FALSE,
                            pop.leg = TRUE,
-                           scale.leg = TRUE,
                            size.leg = TRUE,
+                           scale.leg = TRUE,
                            ...) {
   
   if (!is(x, "genlight") && !is.genind(x)){

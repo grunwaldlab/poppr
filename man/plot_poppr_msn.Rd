@@ -9,7 +9,7 @@ plot_poppr_msn(x, poppr_msn, gscale = TRUE, gadj = 3,
   wscale = TRUE, nodescale = 10, nodebase = NULL, nodelab = 2,
   inds = "ALL", mlg = FALSE, quantiles = TRUE, cutoff = NULL,
   palette = NULL, layfun = layout.auto, beforecut = FALSE,
-  pop.leg = TRUE, scale.leg = TRUE, size.leg = TRUE, ...)
+  pop.leg = TRUE, size.leg = TRUE, scale.leg = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
@@ -84,6 +84,10 @@ the layout will be computed after any edges are removed.}
 \item{pop.leg}{if \code{TRUE}, a legend indicating the populations will
 appear in the top right corner of the graph, but will not overlap. Setting
 \code{pop.leg = FALSE} disables this legend. See details.}
+
+\item{size.leg}{if \code{TRUE}, a legend displyaing the number of samples per
+node will appear either below the population legend or in the top right
+corner of the graph. Setting \code{size.leg = FALSE} disables this legend.}
 
 \item{scale.leg}{if \code{TRUE}, a scale bar indicating the distance will
 appear under the graph. Setting \code{scale.leg = FALSE} suppresses this
