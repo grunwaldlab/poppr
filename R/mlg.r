@@ -210,7 +210,7 @@ mlg <- function(gid, quiet=FALSE){
   if (!inherits(gid, c("genlight", "genind"))) {
     stop(paste(substitute(gid), "is not a genind, or genlight object"))
   }
-  if (is.clone(gid) && length(gid@mlg) == nrow(gid@tab)) {
+  if (is.clone(gid) && length(gid@mlg) == nInd(gid)) {
     out <- length(unique(gid@mlg[]))
   } else {
     if (inherits(gid, "genlight"))
