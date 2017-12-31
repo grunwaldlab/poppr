@@ -207,21 +207,21 @@ NULL
 #==============================================================================#
 
 mlg <- function(gid, quiet=FALSE){
-  if (!is(gid, "genlight") & !is(gid, "genind")){
-    stop(paste(substitute(gid), "is not a genind or genlight object"))
+  if (!inherits(gid, c("genlight", "genind"))) {
+    stop(paste(substitute(gid), "is not a genind, or genlight object"))
   }
-  if (is.clone(gid) && length(gid@mlg) == nrow(gid@tab)){
+  if (is.clone(gid) && length(gid@mlg) == nrow(gid@tab)) {
     out <- length(unique(gid@mlg[]))
   } else {
-    if (is(gid, "genlight")) return(nInd(gid))
-    if(nrow(gid@tab) == 1){
+    if (inherits(gid, "genlight"))
+      return(nInd(gid))
+    if (nrow(tab(gid)) == 1) {
       out <- 1
+    } else {
+      out <- nrow(unique(tab(gid)[, 1:ncol(tab(gid))]))
     }
-    else {
-      out <- nrow(unique(gid@tab[, 1:ncol(gid@tab)]))
-    } 
-  } 
-  if(quiet!=TRUE){
+  }
+  if (quiet != TRUE) {
     cat("#############################\n")
     cat("# Number of Individuals: ", nInd(gid), "\n")
     cat("# Number of MLG: ", out, "\n")
