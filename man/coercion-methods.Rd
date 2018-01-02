@@ -43,17 +43,23 @@ Aeut.gc <- as.genclone(Aeut)
 Aeut.gc
 Aeut.gi <- genclone2genind(Aeut.gc)
 Aeut.gi
+
 data(nancycats)
 nan.bg  <- new("bootgen", nancycats[pop = 9])
 nan.bg
 nan.gid <- bootgen2genind(nan.bg)
 nan.gid
+
 }
 \seealso{
 \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
   \code{\link{read.genalex}}
   \code{\link{aboot}}
 }
+\author{
+Zhian N. Kamvar
+}
+
 \author{
 Zhian N. Kamvar
 }

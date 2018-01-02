@@ -89,9 +89,8 @@ ggplot(res_tidy, aes(x = window, y = rd, color = chromosome)) +
   xlab("window (100bp)") +
   theme(legend.position = "bottom")
 
-}
 
-}
+
 \seealso{
 \code{\link[adegenet]{genlight}},
    \code{\link{snpclone}},

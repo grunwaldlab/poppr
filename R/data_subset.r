@@ -227,6 +227,9 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 #' # Load the dataset microbov.
 #' data(microbov)
 #' 
+#' # List the population names.
+#' popNames(microbov)
+#' 
 #' # Analyze only the populations with exactly 50 individuals
 #' mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), blacklist=c(3,4,13,14))
 #'

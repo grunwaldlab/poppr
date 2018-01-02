@@ -41,6 +41,7 @@ When calculating multilocus genotypes for genclone objects, a rank
   \code{\link{mlg.filter}}). This means that genclone objects are sensitive
   to missing data, whereas snpclone objects are insensitive.
 }
+
 \section{Extends}{
  The \code{genclone} class extends class 
   \code{"\linkS4class{genind}"}, directly. \cr The \code{snpclone} class 
