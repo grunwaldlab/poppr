@@ -38,11 +38,10 @@ Aeut.gc
 Aeut.gi <- genclone2genind(Aeut.gc)
 Aeut.gi
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
   \code{\link{read.genalex}}
 }
-
+\author{
+Zhian N. Kamvar
+}

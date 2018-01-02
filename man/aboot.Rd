@@ -153,4 +153,3 @@ aboot(Aeut.pop, tree = myFastME, sample = 1000)
   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
 }
 \keyword{bootstrap}
-

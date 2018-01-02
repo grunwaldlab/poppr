@@ -54,9 +54,6 @@ x
 system.time(xd <- bitwise.dist(x))
 xd
 }
-\author{
-Zhian N. Kamvar, Jonah C. Brooks
-}
 \seealso{
 \code{\link{diss.dist}},
    \code{\link{snpclone}},
@@ -64,4 +61,6 @@ Zhian N. Kamvar, Jonah C. Brooks
    \code{\link{win.ia}}, 
    \code{\link{samp.ia}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah C. Brooks
+}

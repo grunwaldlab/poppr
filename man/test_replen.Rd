@@ -27,9 +27,6 @@ This function is modified from the version used in
 data(nancycats)
 test_replen(nancycats, rep(2, 9))
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
@@ -50,4 +47,6 @@ Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M.
 \code{\link{fix_replen}} \code{\link{bruvo.dist}}
   \code{\link{bruvo.msn}} \code{\link{bruvo.boot}}
 }
-
+\author{
+Zhian N. Kamvar
+}

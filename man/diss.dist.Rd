@@ -52,11 +52,10 @@ mean(diss.dist(popsub(Aeut, 2)))
 mean(diss.dist(Aeut))
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{prevosti.dist}},
    \code{\link{bitwise.dist}} (for SNP data)
 }
-
+\author{
+Zhian N. Kamvar
+}

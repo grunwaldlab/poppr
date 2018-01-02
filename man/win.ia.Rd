@@ -57,9 +57,6 @@ plot(res, type = "l")
 }
 
 }
-\author{
-Zhian N. Kamvar, Jonah C. Brooks
-}
 \seealso{
 \code{\link[adegenet]{genlight}},
    \code{\link{snpclone}},
@@ -67,4 +64,6 @@ Zhian N. Kamvar, Jonah C. Brooks
    \code{\link{ia}},
    \code{\link{bitwise.dist}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah C. Brooks
+}

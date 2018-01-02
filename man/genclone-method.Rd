@@ -2,10 +2,10 @@
 % Please edit documentation in R/methods.r
 \docType{methods}
 \name{initialize,genclone-method}
-\alias{[,genclone,ANY,ANY,ANY-method}
 \alias{initialize,genclone-method}
-\alias{print,genclone-method}
+\alias{[,genclone,ANY,ANY,ANY-method}
 \alias{show,genclone-method}
+\alias{print,genclone-method}
 \title{Methods used for the genclone object}
 \usage{
 \S4method{initialize}{genclone}(.Object, ..., mlg, mlgclass = TRUE)
@@ -62,4 +62,3 @@ Default methods for subsetting genclone objects.
 Zhian N. Kamvar
 }
 \keyword{internal}
-

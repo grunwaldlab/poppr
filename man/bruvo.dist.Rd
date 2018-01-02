@@ -145,9 +145,6 @@ sapply(popNames(nancycats), function(x)
 heatmap(as.matrix(bruvo.dist(popsub(nancycats, x), replen = ssr)), symm=TRUE))
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and 
   Hinrich Schulenburg. A simple method for the calculation of microsatellite 
@@ -158,4 +155,6 @@ Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
 \code{\link{fix_replen}}, \code{\link{test_replen}},
   \code{\link{bruvo.boot}}, \code{\link{bruvo.msn}}
 }
-
+\author{
+Zhian N. Kamvar
+}

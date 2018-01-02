@@ -174,9 +174,6 @@ diversity_ci(Pinf, 1000L, CF = CF, rarefy = TRUE, raw = FALSE)
 }
 
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Marcon, E., Herault, B., Baraloto, C. and Lang, G. (2012). The Decomposition 
 of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
@@ -187,4 +184,6 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
   \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}}
   \code{\link[boot]{boot.ci}}
 }
-
+\author{
+Zhian N. Kamvar
+}

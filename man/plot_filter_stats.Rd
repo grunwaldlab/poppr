@@ -30,9 +30,6 @@ Plot the results of filter_stats
 This function originally appeared in 
   \href{http://dx.doi.org/10.5281/zenodo.17424}{DOI: 10.5281/zenodo.17424}
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
 Material for Frontiers Plant Genetics and Genomics 'Novel R tools for
@@ -47,5 +44,7 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
 \seealso{
 \code{\link{filter_stats}}
 }
+\author{
+Zhian N. Kamvar
+}
 \keyword{internal}
-

@@ -87,11 +87,10 @@ nancy.mean <- missingno(nancycats, type = "mean")
 
 ## Replaced 617 missing values 
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link[adegenet]{tab}}, \code{\link{poppr}}, \code{\link{poppr.amova}},
  \code{\link{nei.dist}}, \code{\link{aboot}}
 }
-
+\author{
+Zhian N. Kamvar
+}

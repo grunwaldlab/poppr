@@ -54,10 +54,9 @@ mll(pc)
 mll(pc) <- "original"
 mll(pc)
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{mll}} \code{\link{mlg.table}}
 }
-
+\author{
+Zhian N. Kamvar
+}

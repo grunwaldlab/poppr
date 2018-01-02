@@ -59,4 +59,4 @@ Suggests:
     cowplot
 License: GPL-2 | GPL-3
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

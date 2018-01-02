@@ -83,4 +83,3 @@ p + geom_smooth() +
 \author{
 Zhian N. Kamvar
 }
-

@@ -4,14 +4,14 @@
 \name{mlg.filter}
 \alias{mlg.filter}
 \alias{mlg.filter,genclone-method}
+\alias{mlg.filter,snpclone-method}
 \alias{mlg.filter,genind-method}
 \alias{mlg.filter,genlight-method}
-\alias{mlg.filter,snpclone-method}
 \alias{mlg.filter<-}
 \alias{mlg.filter<-,genclone-method}
 \alias{mlg.filter<-,genind-method}
-\alias{mlg.filter<-,genlight-method}
 \alias{mlg.filter<-,snpclone-method}
+\alias{mlg.filter<-,genlight-method}
 \title{MLG definitions based on genetic distance}
 \usage{
 mlg.filter(pop, threshold = 0, missing = "asis", memory = FALSE,
@@ -220,4 +220,3 @@ gc # 82 mlgs
   \code{\link{diss.dist}}, 
   \code{\link{bruvo.dist}}
 }
-

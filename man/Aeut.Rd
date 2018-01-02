@@ -22,4 +22,3 @@ Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
   Oomycete \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141
   doi: \href{http://dx.doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
 }
-

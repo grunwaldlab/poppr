@@ -73,4 +73,3 @@ ggplot(Pinfpriv) + geom_tile(aes(x = population, y = allele, fill = count))
 \author{
 Zhian N. Kamvar
 }
-

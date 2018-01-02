@@ -2,8 +2,8 @@
 % Please edit documentation in R/aaaMLGclass.R
 \docType{class}
 \name{MLG-class}
-\alias{MLG}
 \alias{MLG-class}
+\alias{MLG}
 \title{MLG class}
 \description{
 A class to store multilocus genotypes in genclone objects. This is intended
@@ -28,6 +28,7 @@ mlgs.}
 \item{\code{cutoff}}{Two numbers specifying the cutoff value for expanding and 
 collapsing MLGs.}
 }}
+
 \examples{
 
 # These examples will simply show you what you can do with these
@@ -55,12 +56,11 @@ set.seed(5000)
  m[1:10, all = TRUE] # still class MLG
 
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\linkS4class{genclone}} \code{\linkS4class{snpclone}}
   \code{\link{mll}} For developers: \code{\link{visible}}
 }
+\author{
+Zhian N. Kamvar
+}
 \keyword{internal}
-

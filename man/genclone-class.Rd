@@ -2,10 +2,10 @@
 % Please edit documentation in R/classes.r
 \docType{class}
 \name{genclone-class}
-\alias{genclone}
 \alias{genclone-class}
-\alias{snpclone}
+\alias{genclone}
 \alias{snpclone-class}
+\alias{snpclone}
 \title{GENclone and SNPclone classes}
 \description{
 \strong{GENclone} is an S4 class that extends the 
@@ -33,11 +33,13 @@ The genclone and snpclone classes will allow for more optimized
 \item{\code{mlg}}{a vector representing multilocus genotypes for the data set OR an 
 object of class \code{\linkS4class{MLG}}.}
 }}
+
 \section{Extends}{
  The \code{genclone} class extends class 
   \code{"\linkS4class{genind}"}, directly. \cr The \code{snpclone} class 
   extends class \code{"\linkS4class{genlight}"}, directly.
 }
+
 \examples{
 \dontrun{
 
@@ -59,13 +61,12 @@ sc # 82 mlgs
 
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{as.genclone}} \code{\link{as.snpclone}} 
   \code{\linkS4class{genind}} \code{\linkS4class{genlight}} 
   \code{\link[adegenet]{strata}} \code{\link[adegenet]{setPop}} 
   \code{\link{MLG}} \code{\link{mll}} \code{\link{mlg.filter}}
 }
-
+\author{
+Zhian N. Kamvar
+}

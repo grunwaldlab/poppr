@@ -57,4 +57,3 @@ greycurve(glim=c(0.1,0.8), gweight=2)
 \author{
 Zhian N. Kamvar
 }
-

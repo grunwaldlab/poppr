@@ -183,9 +183,6 @@ vertex.label.dist=0.4, gscale=FALSE)
 bruvo.msn(nancycats, replen=rep(2, 9), vertex.label=NA)
 }
 }
-\author{
-Zhian N. Kamvar, Javier F. Tabima
-}
 \references{
 Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and 
   Hinrich Schulenburg. A simple method for the calculation of microsatellite 
@@ -197,4 +194,6 @@ Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
   \code{\link{plot_poppr_msn}}, \code{\link[igraph]{minimum.spanning.tree}} 
   \code{\link{bruvo.boot}}, \code{\link{greycurve}} \code{\link{poppr.msn}}
 }
-
+\author{
+Zhian N. Kamvar, Javier F. Tabima
+}

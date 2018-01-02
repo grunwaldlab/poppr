@@ -57,6 +57,7 @@ arguments (note, position is not specific): \preformatted{
 pgen(my_data, e = 0.001, log = FALSE) 
 psex(my_data, method = "multiple", e = 0.001)}
 }
+
 \examples{
 \dontrun{
 
@@ -102,9 +103,6 @@ rraf(Pram, by_pop = TRUE, e = 0.01)
 
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
 Standardizing methods to address clonality in population studies.
@@ -120,4 +118,6 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
   \code{\link{psex}}, 
   \code{\link{rrmlg}}
 }
-
+\author{
+Zhian N. Kamvar
+}

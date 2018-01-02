@@ -203,9 +203,6 @@ poppr(H3N2, total = FALSE, sublist=c("Austria", "China", "USA"),
 				clonecorrect = TRUE, strata = ~country/year)
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Paul-Michael Agapow and Austin Burt. Indices of multilocus 
   linkage disequilibrium. \emph{Molecular Ecology Notes}, 1(1-2):101-102, 
@@ -269,4 +266,6 @@ Paul-Michael Agapow and Austin Burt. Indices of multilocus
   \code{\link{diversity_stats}},
   \code{\link{diversity_ci}}
 }
-
+\author{
+Zhian N. Kamvar
+}

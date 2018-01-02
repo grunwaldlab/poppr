@@ -18,4 +18,3 @@ poppr_has_parallel()
 \author{
 Zhian N. Kamvar, Jonah C. Brooks
 }
-

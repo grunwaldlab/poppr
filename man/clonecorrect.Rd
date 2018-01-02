@@ -96,4 +96,3 @@ nInd(c.y.m) # 1190
 \author{
 Zhian N. Kamvar
 }
-

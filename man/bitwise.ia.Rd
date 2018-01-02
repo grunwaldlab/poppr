@@ -38,11 +38,10 @@ Index of association representing the samples in this genlight
 This function parses over a genlight object to calculate and return the index
 of association for those samples.
 }
-\author{
-Zhian N. Kamvar, Jonah C. Brooks
-}
 \seealso{
 \code{\link{win.ia}}, \code{\link{samp.ia}}
 }
+\author{
+Zhian N. Kamvar, Jonah C. Brooks
+}
 \keyword{internal}
-

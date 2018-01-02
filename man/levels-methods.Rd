@@ -25,4 +25,3 @@ internal use
 \code{\link{genclone}} \code{\link{snpclone}}
 }
 \keyword{internal}
-

@@ -67,9 +67,6 @@ diff(PxPcr) # we expect all 1s
 (PxPcr <- round(PxPc))
 diff(PxPcr)
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
@@ -90,4 +87,6 @@ Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M.
 \code{\link{test_replen}} \code{\link{bruvo.dist}}
   \code{\link{bruvo.msn}} \code{\link{bruvo.boot}}
 }
-
+\author{
+Zhian N. Kamvar
+}

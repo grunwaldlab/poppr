@@ -68,11 +68,10 @@ Beta <- function(x){
 diversity_stats(tab, B = Beta)
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{diversity_boot}} \code{\link{diversity_ci}}
   \code{\link{poppr}}
 }
-
+\author{
+Zhian N. Kamvar
+}

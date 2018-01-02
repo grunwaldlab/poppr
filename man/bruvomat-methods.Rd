@@ -2,9 +2,9 @@
 % Please edit documentation in R/methods.r
 \docType{methods}
 \name{initialize,bruvomat-method}
-\alias{[,bruvomat,ANY,ANY,ANY-method}
-\alias{dim,bruvomat-method}
 \alias{initialize,bruvomat-method}
+\alias{dim,bruvomat-method}
+\alias{[,bruvomat,ANY,ANY,ANY-method}
 \title{Methods used for the bruvomat object.}
 \usage{
 \S4method{initialize}{bruvomat}(.Object, gen, replen)
@@ -38,4 +38,3 @@ This is not designed for user interaction.
 Zhian N. Kamvar
 }
 \keyword{internal}
-

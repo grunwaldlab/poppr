@@ -56,9 +56,6 @@ data(Pinf)
 locus_table(Pinf, population = "North America")
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \references{
 Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
   R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. 
@@ -86,4 +83,6 @@ Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter
 \seealso{
 \code{\link[vegan]{diversity}}, \code{\link{poppr}}
 }
-
+\author{
+Zhian N. Kamvar
+}

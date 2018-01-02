@@ -2,10 +2,11 @@
 % Please edit documentation in R/mlg.r
 \name{mlg}
 \alias{mlg}
-\alias{mlg.crosspop}
-\alias{mlg.id}
+\alias{mlg}
 \alias{mlg.table}
 \alias{mlg.vector}
+\alias{mlg.crosspop}
+\alias{mlg.id}
 \title{Create counts, vectors, and matrices of multilocus genotypes.}
 \usage{
 mlg(gid, quiet = FALSE)
@@ -164,9 +165,6 @@ new.H <- H3N2[H.vec \%in\% inds, ]
 
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link[vegan]{diversity}} 
  \code{\link{diversity_stats}}
@@ -175,4 +173,6 @@ Zhian N. Kamvar
  \code{\link{mlg.filter}}
  \code{\link{mll.custom}}
 }
-
+\author{
+Zhian N. Kamvar
+}

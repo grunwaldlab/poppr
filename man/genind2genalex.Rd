@@ -58,11 +58,10 @@ data(nancycats)
 genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 }
 }
-\author{
-Zhian N. Kamvar
-}
 \seealso{
 \code{\link{clonecorrect}}, \code{\linkS4class{genclone}} or
   \code{\linkS4class{genind}}
 }
-
+\author{
+Zhian N. Kamvar
+}

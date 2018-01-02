@@ -101,9 +101,6 @@ bruvo.boot(popsub(nancycats, 9), replen = ssr, tree = myFastME)
 }
 
 }
-\author{
-Zhian N. Kamvar, Javier F. Tabima
-}
 \references{
 Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
 Hinrich Schulenburg. A simple method for the calculation of microsatellite
@@ -116,4 +113,6 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
   \code{\link{nodelabels}}, \code{\link{tab}}, 
   \code{\link{missingno}}.
 }
-
+\author{
+Zhian N. Kamvar, Javier F. Tabima
+}

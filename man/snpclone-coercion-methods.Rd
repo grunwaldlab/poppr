@@ -36,4 +36,3 @@ Wrapper for snpclone initializer.
 \author{
 Zhian N. Kamvar
 }
-

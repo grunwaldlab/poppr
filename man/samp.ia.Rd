@@ -73,9 +73,6 @@ position(x) <- sort(sample(1e4, 1e3))
 res <- samp.ia(x)
 hist(res, breaks = "fd")
 }
-\author{
-Zhian N. Kamvar, Jonah C. Brooks
-}
 \seealso{
 \code{\link[adegenet]{genlight}},
    \code{\link{snpclone}},
@@ -84,4 +81,6 @@ Zhian N. Kamvar, Jonah C. Brooks
    \code{\link{bitwise.dist}}
    \code{\link{bitwise.ia}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah C. Brooks
+}

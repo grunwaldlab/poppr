@@ -58,9 +58,6 @@ data(Pinf)
 pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
 filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE, threads = 1L)
 }
-\author{
-Zhian N. Kamvar, Jonah C. Brooks
-}
 \references{
 ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary 
   Material for Frontiers Plant Genetics and Genomics 'Novel R tools for 
@@ -77,4 +74,6 @@ ZN Kamvar, JC Brooks, and NJ Grünwald. 2015. Supplementary
 \code{\link{mlg.filter}} \code{\link{cutoff_predictor}} 
   \code{\link{bitwise.dist}} \code{\link{diss.dist}}
 }
-
+\author{
+Zhian N. Kamvar, Jonah C. Brooks
+}
