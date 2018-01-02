@@ -11,7 +11,7 @@ xd <- dist(grid_example)
 xdm <- as.matrix(xd)
 
 set.seed(999)
-gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE), parallel = FALSE)
+gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, n.cores = 1L, parallel = FALSE))
 
 
 test_that("multilocus genotype filtering algorithms work", {
@@ -169,9 +169,32 @@ assign("x20160810_mon20", monpop[1:20], envir = .GlobalEnv)
 assign("x20160810_let", matrix(letters[1:9], 3, 3), envir = .GlobalEnv)
 assign("x20160810_neifun", function(x) nei.dist(genind2genpop(x, quiet = TRUE)), envir = .GlobalEnv)
 
+
+test_that("internal filtering will throw an error for negative distances", {
+  skip_on_cran()
+  xdn <- xd
+  xdn[1] <- -3
+  expect_error(mlg.filter(x, distance = xdn, threshold = 4.51), "Distance matrix must not contain negative distances")
+  xdn[1] <- -0.3
+  expect_warning(.Call("neighbor_clustering", as.matrix(xdn), mll(x), 4.51, "f", 1L), "The data resulted in a negative or invalid distance or cluster id")
+})
+
+test_that("a warning is thrown if the user specifies more than one thread.", {
+  skip_on_cran()
+  expect_warning(mlg.filter(x, distance = xd, threshold = 4.51, threads = 2L))
+})
+
+test_that("Infinite distances will produce an error", {
+  skip_on_cran()
+  xdn <- xd
+  xdn[1] <- Inf
+  expect_error(mlg.filter(x, distance = xdn, threshold = 4.51), "Data set contains missing or invalid distances")
+})
+
+
 test_that("mlg.filter errors when distance matrix is not square", {
   skip_on_cran()
-  mat <- matrix(rnorm(nInd(monpop)*10), nInd(monpop), 10)
+  mat <- matrix(runif(nInd(monpop)*10), nInd(monpop), 10)
   msg <- "must be a square matrix"
   expect_error(mlg.filter(monpop, distance = mat) <- 0, msg)
 })
@@ -195,11 +218,6 @@ test_that("mlg.filter throws a warning when attempting to use 'mean' with diss.d
 test_that("mlg.filter throws an error if the threshold is not a number", {
   skip_on_cran()
   expect_error(mlg.filter(x) <- "A", "Threshold must be")
-})
-
-test_that("mlg.filter throws an error if the threads is not a number", {
-  skip_on_cran()
-  expect_error(mlg.filter(x, threads = "A") <- 1L, "Threads must be")
 })
 
 test_that("mlg.filter throws an error if the distance is not numeric", {

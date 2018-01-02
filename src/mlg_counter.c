@@ -37,12 +37,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <Rinternals.h>
+#include <R_ext/Utils.h>
 #include <R.h>
 
 int mlg_round_robin_cmpr (const void *a, const void *b);
 void SampleWithoutReplacement(int populationSize, int sampleSize, int* samples);
 SEXP mlg_round_robin(SEXP mat);
-SEXP genotype_curve(SEXP mat, SEXP iter, SEXP maxloci, SEXP report);
+SEXP genotype_curve_internal(SEXP mat, SEXP iter, SEXP maxloci, SEXP report);
 // global variable indicating the size of array to use for comparison in memcmp.
 int NLOCI = 0;
 
@@ -185,6 +186,7 @@ SEXP mlg_round_robin(SEXP mat)
   // locus in the genotype_matrix, effectively masking the j + 1 locus. 
   for (j = 0; j < cols; j++)
   {
+    R_CheckUserInterrupt();
     qsort(mask_matrix, rows, sizeof(struct mask), mlg_round_robin_cmpr);
 
     for (i = 0; i < rows; i++)
@@ -242,7 +244,7 @@ SEXP mlg_round_robin(SEXP mat)
 *   - A matrix with iter rows and m - 1 columns filled with counts of the number
 *       of multilocus genotypes for j loci. 
 */
-SEXP genotype_curve(SEXP mat, SEXP iter, SEXP maxloci, SEXP report)
+SEXP genotype_curve_internal(SEXP mat, SEXP iter, SEXP maxloci, SEXP report)
 {
   SEXP Rout;
   SEXP Rdim;
@@ -282,6 +284,7 @@ SEXP genotype_curve(SEXP mat, SEXP iter, SEXP maxloci, SEXP report)
   // Step 1: Loop over the number of loci
   while (nloci < nmax + 1)
   {
+    R_CheckUserInterrupt();
     // Initialize the global variable to be the number of loci we want to 
     // compare. 
     NLOCI = nloci*sizeof(int);

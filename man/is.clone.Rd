@@ -24,7 +24,8 @@ a \linkS4class{genclone} object will always be a valid
 be a valid \linkS4class{genlight} object.
 }
 \examples{
-(sc <- as.snpclone(glSim(100, 1e3, ploid=2)))
+(sc <- as.snpclone(glSim(100, 1e3, ploid=2, parallel = FALSE), 
+                   parallel = FALSE, n.cores = 1L))
 is.snpclone(sc)
 is.clone(sc)
 data(nancycats)

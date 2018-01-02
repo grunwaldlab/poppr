@@ -107,8 +107,8 @@ diss.dist <- function(x, percent=FALSE, mat=FALSE){
     dist_by_locus <- matrix(.Call("pairdiffs", x@tab))
     ploid <- 1
   } else if (is(x, "bootgen")){
-    dist_by_locus <- vapply(1:numLoci, function(i){
-      .Call("pairdiffs", get_gen_mat(x[, i]))/2
+    dist_by_locus <- vapply(seq(numLoci), function(i){
+      .Call("pairdiffs", tab(x[, i]))/2
     }, numeric(np))
   } else {  
     x <- seploc(x)

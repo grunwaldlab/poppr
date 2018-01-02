@@ -1,11 +1,18 @@
-context("plotting tests")
+# Setup -------------------------------------------------------------------
 
 data("nancycats", package = "adegenet")
 data("Pinf", package = "poppr")
+data("Pram", package = "poppr")
 nancy <- popsub(nancycats, c(1, 9))
 ggversion <- packageVersion("ggplot2")
 oldgg <- package_version("1.0.1")
 pcap <- function(x) print(capture.output(x))
+mll(Pram) <- "original"
+
+# info_table plots --------------------------------------------------------
+
+
+context("info_table plots")
 
 test_that("info_table plots work", {
 	skip_on_cran()
@@ -40,14 +47,60 @@ test_that("info_table plots ploidy for diploids", {
 	expect_equal(unique(np$data$Observed_Ploidy), c(NA, 2))
 })
 
+context("mlg.table plots")
+
+# mlg.table plots ---------------------------------------------------------
+
+
 test_that("mlg.table produces barplots", {
 	skip_on_cran()
-	expect_is(mlg.table(Pinf), "matrix")
-	pt <- ggplot2::last_plot()
+  pm <- mlg.table(Pinf)
+  pt <- ggplot2::last_plot()
+	expect_is(pm, "matrix")
+	expect_identical(pm, mlg.table(Pinf, color = TRUE))
+	ptc <- ggplot2::last_plot()
+	expect_identical(pm, mlg.table(Pinf, background = TRUE))
+	ptb <- ggplot2::last_plot()
 	expect_is(pt, "ggplot")
-	expect_equal(names(pt$data), c("Population", "MLG", "count", "fac"))
+	expect_is(ptc, "ggplot")
+	expect_is(ptb, "ggplot")
+	expect_equal(names(pt$data), c("Population", "MLG", "count", "order"))
+	expect_equal(names(ptc$data), c("Population", "MLG", "count", "order", "n"))
+	expect_equal(names(ptb$data), c("Population", "MLG", "count", "order", "n"))
+	
+	expect_identical(ptb$data, ptc$data)
+	expect_false(identical(ptb$data, pt$data))
+	
+	expect_identical(pt$mapping$x, ptb$mapping$x)
+	expect_false(identical(ptc$mapping$x, ptb$mapping$x))
+	
 	expect_output(print(pt$layers), "geom_bar")
 })
+
+test_that("mlg.table will plot color plot without total", {
+  skip_on_cran()
+  invisible(mlg.table(Pinf, total = TRUE, color = TRUE))
+  pttc <- ggplot2::last_plot()
+  p    <- unique(pttc$data$Population) %>% 
+    as.character() %>% 
+    sort()
+  expect_equal(p, sort(popNames(Pinf)))
+})
+
+test_that("mlg.table will utilize old versions of dplyr", {
+  skip_on_cran()
+  options(poppr.old.dplyr = TRUE)
+  expect_silent(x <- mlg.table(Pinf, background = TRUE))
+  expect_silent(x <- mlg.table(Pinf))
+  options(poppr.old.dplyr = FALSE)
+})
+
+
+context("genotype_curve plots")
+
+# genotype_curve plots ----------------------------------------------------
+
+
 
 test_that("genotype_curve produces boxplots", {
 	skip_on_cran()
@@ -66,8 +119,10 @@ test_that("genotype_curve produces boxplots", {
 test_that("genotype_curve shows output if not quiet", {
 	skip_on_cran()
 	data("partial_clone", package = "poppr")
-
+	pd <- getOption("poppr.debug")
+	options(poppr.debug = TRUE)
 	expect_output(genotype_curve(partial_clone, sample = 100), "100%")
+	options(poppr.debug = pd)
 })
 
 test_that("genotype_curve can take less than m-1 loci", {
@@ -86,6 +141,11 @@ test_that("genotype_curve will not plot if you tell it", {
   # Some output here
   expect_output(pcap(genotype_curve(nancycats, maxloci = 1, quiet = TRUE, plot = FALSE)))
 })
+
+context("ia plots")
+
+# ia plots ----------------------------------------------------------------
+
 
 test_that("ia produces histograms", {
 	skip_on_cran()
@@ -122,6 +182,27 @@ test_that("ia produces histograms", {
 	expect_output(print(poplot$layers[[3]]), "geom_vline")
 })
 
+
+test_that("ia will still plot if the observed value is NA or NaN", {
+  skip_on_cran()
+  res <- ia(Pram[pop = 9], sample = 99, quiet = TRUE)
+  expect_true(is.nan(res["rbarD"]))
+  expect_true(is.na(res["p.rD"]))
+})
+
+
+test_that("ia will know where to place the label depending on the mean", {
+  skip_on_cran()
+  set.seed(99)
+  res <- ia(Pram[pop = 7], sample = 99, quiet = TRUE)
+  p <- ggplot2::last_plot()
+  prange <- range(p$data$value)
+  ptext  <- p$layers[[4]]$data$x
+  expect_true(ptext %in% prange)
+  expect_false(identical(res[["rbarD"]], ptext))
+})
+
+
 test_that("pair.ia produces a heatmap", {
 	skip_on_cran()
 	nan.pair <- pair.ia(nancy, quiet = TRUE)
@@ -151,6 +232,11 @@ test_that("pair.ia produces a heatmap", {
 	expect_output(print(pplot$layers[[1]]), "stat_identity")
 	expect_output(print(pplot$layers[[1]]), "position_identity")
 })
+
+context("diversity_ci plots")
+
+# diversity_ci plots ------------------------------------------------------
+
 
 test_that("diversity_ci produces boxplots and correct output", {
 	skip_on_cran()
@@ -183,6 +269,10 @@ test_that("diversity_ci produces boxplots for rarefaction", {
 	expect_output(print(ciplot$layers[[1]]), "geom_boxplot")
 	expect_output(print(ciplot$layers[[2]]), "geom_point")
 })
+
+context("greycurve plots")
+
+# greycurve plots ---------------------------------------------------------
 
 
 test_that("greycurve produces plots", {

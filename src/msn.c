@@ -36,6 +36,7 @@
 
 #include <stdio.h>
 #include <Rinternals.h>
+#include <R_ext/Utils.h>
 #include <Rdefines.h>
 #include <R.h>
 #include <math.h>
@@ -92,6 +93,7 @@ SEXP msn_tied_edges(SEXP mst, SEXP bclone, SEXP epsi)
   num_vertices = INTEGER(getAttrib(bclone,R_DimSymbol))[1];
   for(int i = 0; i < num_vertices; i++)
   {
+    R_CheckUserInterrupt();
     // Find the shortest path out of this vertex
     mn = -1;
     for(int j = 0; j < num_vertices; j++)

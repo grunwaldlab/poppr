@@ -115,25 +115,7 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
   filepath <- list(files=x, path=path)
   return(filepath)
 }
-#==============================================================================#
-# A way of dealing with the different types of data that adegenet can take in.
-# This will detect whether or not one should drop all the non-informative loci
-# from each separated population or not.
-#==============================================================================#
-.pop.divide <- function(x, drop=TRUE) {
-  divcall <- match.call()
-  if(!is.genind(x)){
-    stop(c(as.character(divcall[2])," is not a valid genind object"))
-  }
-  if (is.null(pop(x))){
-    pops <- NULL
-  } else if (x@type !="PA") {
-    pops <- seppop(x, drop = drop)
-  } else {
-    pops <- seppop(x)
-  }
-	return(pops)
-}
+
 #==============================================================================#
 #' Importing data from genalex formatted *.csv files.
 #' 
@@ -240,7 +222,8 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   all.info <- strsplit(readLines(genalex, n = 2), sep)
   cskip    <- ifelse(inherits(genalex, "connection"), 0, 2)
   gena     <- utils::read.table(genalex, sep = sep, header = TRUE, skip = cskip, 
-                                stringsAsFactors = FALSE, check.names = FALSE)
+                                stringsAsFactors = FALSE, check.names = FALSE,
+                                quote = "\"")
   num.info <- as.numeric(all.info[[1]])
   pop.info <- all.info[[2]][-c(1:3)]
   num.info <- num.info[!is.na(num.info)]
@@ -252,8 +235,31 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   # Ensuring that all rows and columns have data
   data_rows <- apply(gena, 1, function(i) !all(is.na(i)))
   data_cols <- apply(gena, 2, function(i) !all(is.na(i)))
-  gena      <- gena[data_rows, data_cols]
-  
+  gcols     <- colnames(gena)
+  dups      <- duplicated(gcols)
+  if (any(dups) && any(gcols[dups] != "")){
+    locations <- which(dups)
+    locations <- locations[gcols[dups] != ""]
+    colnames(gena) <- make.unique(gcols, sep = "_")
+    the_loci  <- gcols[dups & gcols != ""]
+    renamed   <- colnames(gena)[dups & gcols != ""]
+    msg <- "\n I found duplicate column names in your data.\n They are being renamed:\n"
+    renamed_data <- paste0("col ", locations, ": ", 
+                           the_loci, " -> ", renamed, collapse = "\n ")
+    msg <- paste(msg, renamed_data)
+    warning(msg, immediate. = TRUE)
+  }
+  gena  <- gena[data_rows, data_cols, drop = FALSE]
+  if (nrow(gena) != ninds) {
+    theData <- if (inherits(genalex, "character")) genalex else deparse(substitute(genalex))
+    msg <- paste0("\n The number of rows in your data do not match the number ",
+                 "of individuals specified.",
+                 "\n\t", ninds,      " individuals specified",
+                 "\n\t", nrow(gena), " rows in data",
+                 "\n Please inspect ", theData, " to ensure it's a properly ",
+                 "formatted GenAlEx file.\n")
+    stop(msg)
+  }
   #----------------------------------------------------------------------------#
   # Checking for extra information such as Regions or XY coordinates
   #----------------------------------------------------------------------------#
@@ -265,93 +271,126 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   # name of the first region does not match any of the populations.
   
   clm <- ncol(gena)
-
-  if (region == TRUE && !is.na(num.info[npops + 4]) && length(pop.info) == npops + num.info[npops + 4]){
-    # Info for the number of columns the loci can take on.
-    loci.adj <- c(nloci, nloci*ploidy)
-    
-    # First question, do you have two or four extra columns? Two extra would 
-    # indicate no geographic data. Four extra would indicate geographic data. 
-    # Both of these indicate that, while a regional specification exists, a 
-    # column indicating the regions was not specified, so it needs to be created
-    if (((clm %in% (loci.adj + 4)) & (geo == TRUE)) | (clm %in% (loci.adj + 2))){
-      
-      pop.vec <- gena[, 2]
-      ind.vec <- gena[, 1]
-      xy      <- gena[, c((clm-1), clm)]
+  
+  # The case where 
+  region_columns <- num.info[npops + 4]
+  pop_and_region <- length(pop.info) == npops + region_columns
+  just_pop       <- length(pop.info) == npops
+  # Info for the number of columns the loci can take on.
+  loci.adj <- c(nloci, nloci * ploidy)
+  # First question, do you have two or four extra columns? Two extra would
+  # indicate no geographic data. Four extra would indicate geographic data. Both
+  # of these indicate that, while a regional specification exists, a column
+  # indicating the regions was not specified, so it needs to be created
+  geo_columns    <- clm %in% (loci.adj + 4) && geo == TRUE
+  no_geo_columns <- clm %in% (loci.adj + 2)
+  geoinds        <- c((clm - 1), clm)
+  if (region == TRUE && !is.na(region_columns) && pop_and_region) {
+    if (geo_columns || no_geo_columns) {
+      # The regions were not specified in the columns
+      pop.vec     <- gena[[2]]
+      ind.vec     <- gena[[1]]
+      xy          <- gena[, geoinds]
       region.inds <- ((npops + 5):length(num.info)) # Indices for the regions
       reg.inds    <- num.info[region.inds] # Number of individuals per region
       reg.names   <- all.info[[2]][region.inds] # Names of the regions
       reg.vec     <- rep(reg.names, reg.inds) # Paste into a single vector
-      if (geo == TRUE){
-        geoinds <- c((clm - 1), clm)
-        xy      <- gena[, geoinds]
-        gena    <- gena[, -geoinds, drop = FALSE]
+      names(reg.vec) <- ind.vec
+      if (geo == TRUE) {
+        xy   <- gena[, geoinds]
+        gena <- gena[, -geoinds, drop = FALSE]
       } else {
-        xy <- NULL
+        xy   <- NULL
       }
       gena <- gena[, c(-1, -2), drop = FALSE]
-      
     } else {
-      
-      pop.vec      <- ifelse(any(gena[, 1] == pop.info[1]), 1, 2)
-      reg.vec      <- ifelse(pop.vec == 2, 1, 2)
+      # The regions are specified as a single column and the individual column
+      # has been shifted over.
+      pop.vec      <- if (any(gena[[1]] == pop.info[1])) 1 else 2
+      reg.vec      <- if (pop.vec == 2) 1 else 2
       orig.ind.vec <- NULL
-      reg.vec      <- gena[, reg.vec] # Regional Vector 
-      pop.vec      <- gena[, pop.vec] # Population Vector
-      if (geo == TRUE){
-        geoinds <- c((clm-1), clm)
-        xy      <- gena[, geoinds]
-        gena    <- gena[, -geoinds, drop = FALSE]
+      reg.vec      <- gena[[reg.vec]] # Regional Vector 
+      pop.vec      <- gena[[pop.vec]] # Population Vector
+      if (geo == TRUE) {
+        xy   <- gena[, geoinds]
+        gena <- gena[, -geoinds, drop = FALSE]
+        clm  <- clm - 2
       } else {
-        xy <- NULL
+        xy   <- NULL
       }
-      ind.vec <- gena[, clm] # Individual Vector
+      ind.vec <- gena[[clm]] # Individual Vector
       gena    <- gena[, -c(1, 2, clm), drop = FALSE] # removing the non-genotypic columns
     }
-  } else if (geo == TRUE & length(pop.info) == npops){
+  } else if (geo == TRUE && just_pop) {
     # There are no Regions specified, but there are geographic coordinates
     reg.vec <- NULL
-    pop.vec <- gena[, 2]
-    ind.vec <- gena[, 1]
-    xy      <- gena[, c((clm-1), clm)]
-    gena    <- gena[, -c(1, 2, (clm-1), clm), drop = FALSE]
+    pop.vec <- gena[[2]]
+    ind.vec <- gena[[1]]
+    xy      <- gena[, geoinds]
+    gena    <- gena[, -c(1, 2, geoinds), drop = FALSE]
   } else {
     # There are no Regions or geographic coordinates
     reg.vec <- NULL
-    pop.vec <- gena[, 2]
-    ind.vec <- gena[, 1]
-    xy <- NULL
-    gena <- gena[, -c(1, 2), drop = FALSE]
+    pop.vec <- gena[[2]]
+    ind.vec <- gena[[1]]
+    xy      <- NULL
+    gena    <- gena[, -c(1, 2), drop = FALSE]
   }
+  
+  `%null%` <- function(a, b) if (is.null(a)) NULL else b
+  
+  xy_trail_na <- xy %null% (rev(cumsum(rev(rowSums(!is.na(xy))))) > 0)
+  
+  if (any(xy_trail_na)) {
+    xy         <- xy[xy_trail_na, , drop = FALSE]
+    xy_nomatch <- TRUE
+  } else {
+    xy_nomatch <- is.null(xy)
+  }
+  # We need to set the names of the population vector to the original names.
+  names(pop.vec) <- pop.vec %null% ind.vec
+  names(reg.vec) <- reg.vec %null% ind.vec
+  rownames(xy)   <- if (xy_nomatch) rownames(xy) else ind.vec
   
   #----------------------------------------------------------------------------#
   # The genotype matrix has been isolated at this point. Now this will
   # reconstruct the matrix in a way that adegenet likes it.
   #----------------------------------------------------------------------------#
-  
   clm      <- ncol(gena)
   gena.mat <- as.matrix(gena)
   # Checking for greater than haploid data.
   if (nloci == clm/ploidy & ploidy > 1){
     # Missing data in genalex is coded as "0" for non-presence/absence data.
-    # this converts it to "NA" for adegenet.
-    if (any(gena.mat == "0", na.rm = TRUE) & ploidy < 3){
-      gena[gena.mat == "0"] <- NA
-    } else if (any(is.na(gena.mat)) & ploidy > 2) {
-      gena[is.na(gena.mat)] <- "0"
-    }
+    # We will convert these data later, but this will take care of the 
+    # data that's considered missing here
+    gena[is.na(gena.mat)] <- "0"
+    
     type  <- 'codom'
-    loci  <- which((1:clm) %% ploidy == 1)
+    # The remainder of the position when divided by ploidy is 1, which means
+    # that this is the first column starting the locus
+    loci  <- which(seq(clm) %% ploidy == 1)
     gena2 <- gena[, loci, drop = FALSE]
 
-    # Collapsing all alleles into single loci.
-    lapply(loci, function(x) gena2[, ((x-1)/ploidy)+1] <<-
-             pop_combiner(gena, hier = x:(x+ploidy-1), sep = "/"))
+    # Collapsing all alleles over all loci into their respective loci.
+    for (pos in loci){
+      # Get the locus position in gena2. Example, in a triploid, the second
+      # locus would be at gena[, 4:6], so the second element in pos would be 4
+      # because position %% ploidy is 4 %% 3 == 1
+      # We get our position out by:
+      #  1. subtracting 1 to account for the modulo
+      #  2. divide by ploidy
+      #  3. add 1 to bring it up to R's 1-index
+      pos_out <- ((pos - 1)/ploidy) + 1
+      pos_in  <- pos:(pos + ploidy - 1) # allele positions in gena
+      # paste columns of locus together
+      donor   <- do.call("paste", c(gena[pos_in], list(sep = "/")))
+      gena2[, pos_out] <- donor
+    }
 
     # Treating missing data.
     gena2[gena2 == paste(rep("0", ploidy), collapse = "/")] <- NA_character_
-    gena2[gena2 == paste(rep("NA", ploidy), collapse = "/")] <- NA_character_
+    
+    # Importing
     res.gid <- df2genind(gena2, sep="/", ind.names = ind.vec, pop = pop.vec,
                          ploidy = ploidy, type = type)
   } else if (nloci == clm & all(gena.mat %in% as.integer(-1:1))) {
@@ -366,7 +405,7 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
                          ploidy = ploidy, type = type, ncode = 1)
   } else if (nloci == clm & !all(gena.mat %in% as.integer(-1:1))) {
     # Checking for haploid microsatellite data or SNP data
-    if(any(gena.mat == "0", na.rm = TRUE)){
+    if (any(gena.mat == "0", na.rm = TRUE)){
       gena[gena.mat == "0"] <- NA
     }
     type    <- 'codom'
@@ -382,47 +421,52 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
                        ifelse(region,  
                        "You set region = TRUE. Do you have regional data in the right place?\n\n",
                        "If you have regional data: did you set the flag?\n\n"),
-                       "Otherwise, the problem may lie within the data structure itself.")
+                       "Otherwise, the problem may lie within the data structure itself.\n",
+                       " - Inspect your data; if it looks fine then\n",
+                       " - search the poppr forum for the error message; if you still can't find a solution:\n",
+                       "   1. Make a minimum working example of your error (see http://stackoverflow.com/a/5963610)\n",
+                       "   2. Use the 'reprex' package to reproduce the error (see https://github.com/jennybc/reprex#readme)\n",
+                       "   3. Create a new issue on https://github.com/grunwaldlab/poppr/issues")
     stop(weirdomsg)
   }
-  if (any(duplicated(ind.vec))){
-    # ensuring that all names are unique
-    indNames(res.gid) <- paste("ind", 1:length(ind.vec))
-    res.gid@other[["original_names"]] <- ind.vec
-  }
-  
   res.gid@call <- gencall
-  ind.vec <- indNames(res.gid)
-  names(pop.vec) <- ind.vec
+  # Checking for individual name duplications or removals -------------------
   
-  # Keep the name if it's a URL
+  same_names <- any(indNames(res.gid) %in% ind.vec)
+  if (same_names){ # no duplications, only removals
+    names(ind.vec) <- ind.vec
+    ind.vec        <- ind.vec[indNames(res.gid)]
+  } else {         # removals and/or duplciations
+    ind.vec <- ind.vec[as.integer(indNames(res.gid))]
+    other(res.gid)$original_names <- ind.vec
+  }
+  pop.vec <- pop.vec %null% pop.vec[ind.vec]
+  reg.vec <- reg.vec %null% reg.vec[ind.vec]
+  xy      <- if (xy_nomatch) xy else xy[ind.vec, , drop = FALSE]
+  ind.vec <- indNames(res.gid)
+  names(pop.vec) <- pop.vec %null% ind.vec
+  names(reg.vec) <- reg.vec %null% ind.vec
+  rownames(xy)   <- if (xy_nomatch) rownames(xy) else ind.vec
+  
+  # Keep the name if it's a URL ---------------------------------------------
+  
   if (length(grep("://", genalex)) < 1 & !"connection" %in% class(genalex)){
     res.gid@call[2] <- basename(genalex)
   }
   if (region){
-    names(reg.vec) <- ind.vec
-    strata(res.gid) <- data.frame(Pop = pop.vec[ind.vec], Region = reg.vec[ind.vec])
+    strata(res.gid) <- data.frame(Pop = pop.vec, Region = reg.vec)
   } else {
-    strata(res.gid) <- data.frame(Pop = pop.vec[ind.vec])
+    strata(res.gid) <- data.frame(Pop = pop.vec)
   }
   if (geo){
     if (!all(c("x", "y") %in% colnames(xy))){
       colnames(xy) <- c("x", "y")
     }
-    if (nrow(xy) == length(ind.vec)){
-      rownames(xy) <- ind.vec
-      res.gid@other[["xy"]] <- xy[ind.vec, ]
-    } else {
-      res.gid@other[["xy"]] <- xy
-    }
+    other(res.gid)$xy <- xy
+  }
+  res.gid <- if (genclone) as.genclone(res.gid) else res.gid
+  res.gid <- if (recode) recode_polyploids(res.gid, newploidy = TRUE) else res.gid
 
-  }
-  if (genclone){
-    res.gid <- as.genclone(res.gid)
-  }
-  if (recode){
-    res.gid <- recode_polyploids(res.gid, newploidy = TRUE)
-  }
   return(res.gid)
 }
 

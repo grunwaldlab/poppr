@@ -1,15 +1,13 @@
-# Poppr version 2
+# Poppr version 2 <img src="vignettes/small_logo.png" align="right"/>
 
-In development:    
 [![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
 [![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
+[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](https://cran.r-project.org/package=poppr)
+<!-- 
+[![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
+-->
 
-On CRAN:    
-[![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
-[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
-[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](http://cran.r-project.org/package=poppr)
-
-Impact:    
+[![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
 [![Research software impact](http://depsy.org/api/package/cran/poppr/badge.svg)](http://depsy.org/package/r/poppr)
 
 ## What is *poppr*?
@@ -86,7 +84,7 @@ citation(package = "poppr")
 
 ### From CRAN
 
-[Binary versions for mac and windows are available for R &ge; 2.15.1 **here**](http://cran.r-project.org/package=poppr).
+[Binary versions for mac and windows are available for R &ge; 2.15.1 **here**](https://cran.r-project.org/package=poppr).
 
 To install, make sure R is at least version 2.15.1 (the authors recommend &ge;
 3.0), and in your console, type:
@@ -105,7 +103,7 @@ github below.
 To install this package from github, make sure you have the following:
 
 - [Xcode](https://developer.apple.com/xcode) (OSX)
-    OR [Rtools](http://cran.r-project.org/bin/windows/Rtools/) (Windows)
+    OR [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (Windows)
 - [devtools](https://github.com/hadley/devtools) (to install, use: `install.packages("devtools")`)
 
 For Linux users, make sure that the function `getOption("unzip")` returns

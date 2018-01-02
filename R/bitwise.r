@@ -45,7 +45,8 @@
 #' Calculate a dissimilarity distance matrix for SNP data.
 #' 
 #' This function performs the same task as \code{\link{diss.dist}}, calculating 
-#' the number of allelic differences between two samples.
+#' the fraction or number of different alleles between two genlight or snpclone
+#' objects.
 #' 
 #' @param x a \code{\link{genlight}}, \code{\link{genind}},
 #'   \code{\link{genclone}}, or \code{\link{snpclone}} object.
@@ -61,11 +62,12 @@
 #'   by missing data in a location should be counted as matching at that 
 #'   location. Default set to \code{TRUE}, which forces missing data to match 
 #'   with anything. \code{FALSE} forces missing data to not match with any other
-#'   information.
+#'   information, \strong{including other missing data}.
 #'   
-#' @param differences_only \code{logical}. Determines whether the matrix should 
-#'   count differences or distances. For instance, 0 to 2 would be a distance of
-#'   2 but a difference of 1.
+#' @param differences_only \code{logical}. When \code{differences_only = TRUE},
+#'   the output will reflect the number of different loci. The default setting,
+#'   \code{differences_only = FALSE}, reflects the number of different alleles.
+#'   Note: this has no effect on haploid organisms since 1 locus = 1 allele.
 #'   
 #' @param threads The maximum number of parallel threads to be used within this 
 #'   function. A value of 0 (default) will attempt to use as many threads as 
@@ -78,6 +80,9 @@
 #' @details The distance calculated here is quite simple and goes by many names,
 #'   depending on its application. The most familiar name might be the Hamming 
 #'   distance, or the number of differences between two strings.
+#'   
+#' @note If the user supplies a \code{genind} or \code{genclone} object,
+#'   \code{\link{prevosti.dist}} will be used for calculation.
 #'   
 #' @return A dist object containing pairwise distances between samples.
 #'   
@@ -93,8 +98,13 @@
 #' set.seed(999)
 #' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
 #' x
+#' # Assess fraction of different alleles (finer measure, usually the most sensible)
 #' system.time(xd <- bitwise.dist(x))
 #' xd
+#' 
+#' # Assess fraction of different loci (coarse measure)
+#' system.time(xdt <- bitwise.dist(x, differences_only = TRUE))
+#' xdt
 #==============================================================================#
 bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE, 
                          differences_only = FALSE, threads = 0){
@@ -285,6 +295,10 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #'   caution.
 #'   
 #' @param quiet if \code{FALSE}, a progress bar will be printed to the screen.
+#' 
+#' @param chromosome_buffer if \code{TRUE} (default), buffers will be placed 
+#'   between adjacent chromosomal positions to prevent windows from spanning two
+#'   chromosomes.
 #'   
 #' @return Index of association representing the samples in this genlight
 #'   object.
@@ -310,41 +324,111 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #' plot(res, type = "l")
 #' 
 #' \dontrun{
+#' 
 #' # unstructured snps
 #' set.seed(999)
 #' x <- glSim(n.ind = 10, n.snp.nonstruc = 1e3, ploidy = 2)
 #' position(x) <- sort(sample(1e4, 1e3))
 #' res <- win.ia(x, window = 300L) # Calculate for windows of size 300
 #' plot(res, type = "l")
+#' 
+#' # Accounting for chromosome coordinates
+#' set.seed(999)
+#' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+#' position(x) <- as.vector(vapply(1:10, function(x) sort(sample(1e3, 100)), integer(100)))
+#' chromosome(x) <- rep(1:10, each = 100)
+#' res <- win.ia(x, window = 100L)
+#' plot(res, type = "l")
+#' 
+#' # Converting chromosomal coordinates to tidy data
+#' library("dplyr")
+#' res_tidy <- res %>% 
+#'   data_frame(rd = ., chromosome = names(.)) %>% # create two column data frame
+#'   filter(chromosome != "") %>%                  # filter out null chromosomes
+#'   group_by(chromosome) %>%                      # group data by chromosome
+#'   mutate(window = row_number()) %>%             # windows by chromosome
+#'   ungroup(chromosome) %>%                       # ungroup and reorder
+#'   mutate(chromosome = factor(chromosome, unique(chromosome))) 
+#' res_tidy
+#' 
+#' # Plotting with ggplot2
+#' library("ggplot2")
+#' ggplot(res_tidy, aes(x = window, y = rd, color = chromosome)) +
+#'   geom_line() +
+#'   facet_wrap(~chromosome, nrow = 1) +
+#'   ylab(expression(bar(r)[d])) +
+#'   xlab("window (100bp)") +
+#'   theme(legend.position = "bottom")
+#'
 #' }
 #' 
 #==============================================================================#
-win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE){
+win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
+                   chromosome_buffer = TRUE){
   stopifnot(is(x, "genlight"))
-  if (!is.null(position(x))){
-    xpos <- position(x)
-  } else {
-    xpos <- seq(nLoc(x))
+  if (is.null(position(x))){
+    position(x) <- seq(nLoc(x))
   }
+  chromos <- !is.null(chromosome(x))
+  if (chromos){
+    CHROM <- chromosome(x)
+    x     <- adjust_position(x, chromosome_buffer, window)
+  } else {
+    if (any(duplicated(position(x)))){
+      msg <- paste("There are duplicate positions in the data without any",
+                   "chromosome structure. All positions must be unique.\n\n",
+                   "Please the function chromosome() to add chromosome",
+                   "coordinates or modify the positions.")
+      stop(msg, call. = FALSE)
+    }
+  }
+  xpos    <- position(x)
+  quiet   <- should_poppr_be_quiet(quiet)
   winmat  <- make_windows(maxp = max(xpos), minp = min(xpos), window = window)
   nwin    <- nrow(winmat)
   res_mat <- vector(mode = "numeric", length = nwin)
+  if (chromos) res_names <- vector(mode = "character", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(nwin)){
-    posns <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+    posns    <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+    last_pos <- posns[length(posns)]
     if (length(posns) < min.snps){
       res_mat[i] <- NA
     } else {
       res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
+    }
+    if (chromos && !is.na(last_pos) && length(last_pos) > 0){
+      res_names[i] <- CHROM[last_pos]
     }
     if (!quiet){
       setTxtProgressBar(progbar, i/nwin)
     }
   }
   if (!quiet) cat("\n")
+  if (chromos) names(res_mat) <- res_names
   return(res_mat)
 }
 
+
+adjust_position <- function(x, chromosome_buffer = TRUE, window){
+  xpos  <- position(x)
+  # Each chromosome has it's own position.
+  # In this case, get large round number for each chromosome break.
+  maxp <- 10^ceiling(log(max(xpos), 10))
+  # The buffer prevents the window from crossing into the next chromosome
+  buffer <- chromosome_buffer*window
+  if (length(unique(pmin(xpos))) < nLoc(x)){
+    lpos <- split(xpos, chromosome(x))
+    for (p in seq(lpos)){
+      # adding the large round number plus a buffer (if applicable). This will
+      # ensure that chromosomes don't overlap.
+      lpos[[p]] <- lpos[[p]] + (maxp*(p - 1)) + (buffer*(p - 1)) + 1
+    }
+    xpos <- unlist(lpos, use.names = FALSE)
+  }
+  position(x) <- xpos  
+  return(x)
+}
 #==============================================================================#
 #' Calculate random samples of the index of association for genlight objects.
 #' 
@@ -422,6 +506,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
 samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   stopifnot(is(x, "genlight"))
   nloc <- nLoc(x)
+  quiet <- should_poppr_be_quiet(quiet)
   res_mat <- vector(mode = "numeric", length = reps)
   if (!quiet) progbar <- txtProgressBar(style = 3)
   for (i in seq(reps)){

@@ -24,8 +24,14 @@ This function is modified from the version used in
   \url{http://dx.doi.org/10.5281/zenodo.13007}.
 }
 \examples{
+
 data(nancycats)
 test_replen(nancycats, rep(2, 9))
+
+data(Pram)
+(Pram_replen <- setNames(c(3, 2, 4, 4, 4), locNames(Pram)))
+test_replen(Pram, Pram_replen)
+
 }
 \references{
 Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 

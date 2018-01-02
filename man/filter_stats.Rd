@@ -7,7 +7,7 @@
 filter_stats(x, distance = bitwise.dist, threshold = 1e+06 +
   .Machine$double.eps^0.5, stats = "All", missing = "ignore",
   plot = FALSE, cols = NULL, nclone = NULL, hist = "Scott",
-  threads = 0L, ...)
+  threads = 1L, ...)
 }
 \arguments{
 \item{x}{a \code{\link{genind}}, \code{\link{genclone}},
@@ -37,7 +37,8 @@ select a method here. Available methods are "sturges", "fd", or "scott"
 (default) as documented in \code{\link[graphics]{hist}}. If you don't want 
 to plot the histogram, set \code{hist = NULL}.}
 
-\item{threads}{the number of threads to use. Passed on to \code{\link{mlg.filter}}.}
+\item{threads}{(unused) Previously the number of threads to be used. As of
+poppr version 2.4.1, this is by default set to 1.}
 
 \item{...}{extra parameters passed on to the distance function.}
 }

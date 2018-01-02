@@ -166,17 +166,18 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
                                                 length = iterations)
                                  )
                             )
-  if(!quiet) progbar <- txtProgressBar(style = 3)
-  for (c in 1:iterations){
+  if(!quiet) progbar <- dplyr::progress_estimated(iterations)
+  for (c in seq(iterations)){
     IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)   
     sample.data$Ia[c]    <- IarD[1]
     sample.data$rbarD[c] <- IarD[2]
-    if (!quiet){
-      setTxtProgressBar(progbar, c/iterations)
-    }
+    if (!quiet) progbar$tick()$print()
   }
 
-  if(!quiet) close(progbar)
+  if(!quiet){
+    cat("\n")
+    progbar$stop()
+  }
 	return(sample.data)
 }
 

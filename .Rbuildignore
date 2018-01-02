@@ -12,4 +12,8 @@
 ^vignettes/figure
 ^tests/testthat/Rplots.pdf
 ^CONDUCT\.md$
+^NEWS\.md$
 ^cran-comments\.md$
+^docs$
+^ISSUE_TEMPLATE\.md$
+^CONTRIBUTING.md$

@@ -310,9 +310,10 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   if (inherits(dat, c("genlight", "snpclone"))){
     msg <- "The poppr function will not work with genlight or snpclone objects"
     msg <- paste0(msg, "\nIf you want to calculate genotypic diversity, use ",
-                  "the function diversity_table().")
+                  "the function diversity_stats().")
     stop(msg)
   }
+  quiet <- should_poppr_be_quiet(quiet)
   x <- process_file(dat, missing = missing, cutoff = cutoff, 
                     clonecorrect = clonecorrect, strata = strata,
                     keep = keep, quiet = TRUE)  
@@ -329,18 +330,19 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   } else {
     namelist$File <- basename(x$X)
   }
-  if(toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
+  if (toupper(sublist[1]) == "TOTAL" & length(sublist) == 1){
     dat           <- x$GENIND
     pop(dat)      <- rep("Total", nInd(dat))
     poplist       <- NULL
     poplist$Total <- dat
   } else {
     dat <- popsub(x$GENIND, sublist = sublist, blacklist = blacklist)
-    if (any(levels(pop(dat)) == "")){
+    if (any(levels(pop(dat)) == "")) {
       levels(pop(dat))[levels(pop(dat)) == ""] <- "?"
       warning("missing population factor replaced with '?'")
     }
-    poplist <- .pop.divide(dat)
+    pdrop   <- if (dat$type == "PA") FALSE else TRUE
+    poplist <- if (is.null(pop(dat))) NULL else seppop(dat, drop = pdrop)
   }
 
   # Creating the genotype matrix for vegan's diversity analysis.
@@ -438,7 +440,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
                  namelist = list(File = namelist$File, population = "Total"),
                  hist = plot
                 )
-    
+    IaList <- if (sample > 0) IaList$index else IaList
     Iout <- as.data.frame(list(
       Pop = "Total",
       N = N.vec,
@@ -509,11 +511,17 @@ poppr.all <- function(filelist, ...){
 #==============================================================================#
 #' Index of Association
 #' 
-#' Calculate the Index of Association and Standardized Index of Association. 
-#' Obtain p-values from one-sided permutation tests. 
-#' 
-#' The function \code{ia} will calculate the index of association over all loci in the data set while
-#' \code{pair.ia} will calculate the index in a pairwise manner among all loci. 
+#' Calculate the Index of Association and Standardized Index of Association.
+#' \itemize{
+#'   \item \code{ia()} calculates the index of association over all loci in
+#'   the data set.
+#'   \item \code{pair.ia()} calculates the index of association in a pairwise
+#'   manner among all loci.
+#'   \item  \code{resample.ia()} calculates the index of association on a
+#'   reduced data set multiple times to create a distribution, showing the
+#'   variation of values observed at a given sample size (previously 
+#'   \code{jack.ia}).
+#' }
 #' 
 #' @param gid a \code{\link{genind}} or \code{\link{genclone}} object.
 #'   
@@ -578,6 +586,8 @@ poppr.all <- function(filelist, ...){
 #'   }
 #'   }
 #'   
+#' @note \code{jack.ia()} is deprecated as the name was misleading. Please use
+#'   \code{resample.ia()}
 #' @details The index of association was originally developed by A.H.D. Brown 
 #'   analyzing population structure of wild barley (Brown, 1980). It has been widely 
 #'   used as a tool to detect clonal reproduction within populations . 
@@ -673,7 +683,20 @@ poppr.all <- function(filelist, ...){
 #' res <- pair.ia(partial_clone)
 #' plot(res, low = "black", high = "green", index = "Ia")
 #' 
+#' # Resampling
+#' data(Pinf)
+#' resample.ia(Pinf, reps = 99)
+#' 
 #' \dontrun{
+#' 
+#' # Plot the results of resampling rbarD. 
+#' library("ggplot2")
+#' Pinf.resamp <- resample.ia(Pinf, reps = 999)
+#' ggplot(Pinf.resamp[2], aes(x = rbarD)) +
+#'   geom_histogram() +
+#'   geom_vline(xintercept = ia(Pinf)[2]) +
+#'   geom_vline(xintercept = ia(clonecorrect(Pinf))[2], linetype = 2) +
+#'   xlab(expression(bar(r)[d]))
 #' 
 #' # Get the indices back and plot the distributions.
 #' nansamp <- ia(nancycats, sample = 999, valuereturn = TRUE)
@@ -728,7 +751,7 @@ ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   popx    <- gid
   missing <- toupper(missing)
   type    <- gid@type
-  
+  quiet   <- should_poppr_be_quiet(quiet)
   if (type == "PA"){
     .Ia.Rd <- .PA.Ia.Rd
   } else {
@@ -801,6 +824,7 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
   lnames  <- locNames(gid)
   np      <- choose(N, 2)
   nploci  <- choose(numLoci, 2)
+  quiet   <- should_poppr_be_quiet(quiet)
   if (gid@type == "codom"){
     V <- pair_matrix(seploc(gid), numLoci, np)
   } else { # P/A case
@@ -1064,9 +1088,11 @@ private_alleles <- function(gid, form = alleles ~ ., report = "table",
     if (report == "vector"){
       privates <- rownames(privates)
     } else if (report == "data.frame"){
-      marker <- ifelse(marker == "alleles", "allele", "locus")
-      privates <- melt(privates, varnames = c(level, marker), 
-                       value.name = "count")
+      marker   <- if (marker == "alleles") "allele" else "locus"
+      names(dimnames(privates)) <- c(level, marker)
+      privates <- as.data.frame.table(privates, 
+                                      responseName = "count",
+                                      stringsAsFactors = FALSE)
     }
     return(privates)
   } else {

@@ -7,7 +7,8 @@
 \alias{show,snpclone-method}
 \title{Methods used for the snpclone object}
 \usage{
-\S4method{[}{snpclone,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{snpclone,ANY,ANY,ANY}(x, i, j, ..., mlg.reset = FALSE,
+  drop = FALSE)
 
 \S4method{initialize}{snpclone}(.Object, ..., mlg, mlgclass = TRUE)
 
@@ -21,6 +22,9 @@
 \item{j}{a vector of numerics corresponding to the loci desired.}
 
 \item{...}{passed on to the \code{\linkS4class{genlight}} object.}
+
+\item{mlg.reset}{logical. Defaults to \code{FALSE}. If \code{TRUE}, the mlg
+vector will be reset}
 
 \item{drop}{set to \code{FALSE}}
 

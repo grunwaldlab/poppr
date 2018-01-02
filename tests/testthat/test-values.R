@@ -66,6 +66,60 @@ test_that("Bruvo's distance works as expected.", {
   expect_equal(ADDLOSS, 0.401041518896818)
 })
 
+test_that("Bruvo's distance will trim extra zeroes.", {
+  testdf  <- data.frame(test = c("00/20/24/26/43", "00/00/20/23/24"))
+  testgid <- df2genind(testdf, ploidy = 5, sep = "/")
+  addloss <- as.vector(bruvo.dist(testgid, add = FALSE, loss = FALSE))
+  ADDloss <- as.vector(bruvo.dist(testgid, add = TRUE, loss = FALSE))
+  addLOSS <- as.vector(bruvo.dist(testgid, add = FALSE, loss = TRUE))
+  ADDLOSS <- as.vector(bruvo.dist(testgid, add = TRUE, loss = TRUE))
+  # Values from Bruvo et. al. (2004)
+  expect_equal(addloss, 0.46875000000000)
+  expect_equal(addLOSS, 0.34374987334013)
+  expect_equal(ADDloss, 0.458333164453506)
+  expect_equal(ADDLOSS, 0.401041518896818)
+})
+
+test_that("Bruvo's distance will go through the recusion", {
+  skip_on_cran()
+  testdf  <- data.frame(test = c("00/00/00/00/24", "00/20/24/26/43"))
+  testgid <- df2genind(testdf, ploidy = 5, sep = "/")
+  ADDloss <- as.vector(bruvo.dist(testgid, add = TRUE, loss = FALSE))
+  addloss <- as.vector(bruvo.dist(testgid, add = FALSE, loss = FALSE))
+  addLOSS <- as.vector(bruvo.dist(testgid, add = FALSE, loss = TRUE))
+  ADDLOSS <- as.vector(bruvo.dist(testgid, add = TRUE, loss = TRUE))
+  expect_equal(ADDloss, 0.671874523162842)
+  expect_equal(addLOSS, 0.293456600047648)
+  expect_equal(addloss, 0.75)
+  expect_equal(ADDLOSS, 0.482665561605245)
+})
+test_that("Multinomial coefficient respects index, not value", {
+  skip_on_cran()
+  testdf  <- data.frame(test = c("00/00/00/51/52", "00/52/52/53/55"))
+  testgid <- df2genind(testdf, ploidy = 5, sep = "/")
+  ADDloss <- as.vector(bruvo.dist(testgid, add = TRUE, loss = FALSE))
+  addloss <- as.vector(bruvo.dist(testgid, add = FALSE, loss = FALSE))
+  addLOSS <- as.vector(bruvo.dist(testgid, add = FALSE, loss = TRUE))
+  ADDLOSS <- as.vector(bruvo.dist(testgid, add = TRUE, loss = TRUE))
+  expect_equal(ADDloss, 0.4375)
+  expect_equal(addLOSS, 0.25)
+  expect_equal(addloss, 0.625)
+  expect_equal(ADDLOSS, 0.34375)
+})
+
+test_that("The old version of Bruvo's distance can be switched on and off", {
+  skip_on_cran()
+  testdf  <- data.frame(test = c("00/00/00/51/52", "00/52/52/53/55"))
+  testgid <- df2genind(testdf, ploidy = 5, sep = "/")
+  options(old.bruvo.model = TRUE)
+  obm <- "old.bruvo.model"
+  addloss <- as.vector(bruvo.dist(testgid, add = FALSE, loss = FALSE))
+  expect_warning(ADDLOSS <- as.vector(bruvo.dist(testgid, add = TRUE, loss = TRUE)), obm)
+  options(old.bruvo.model = FALSE)
+  expect_equal(addloss, 0.625)
+  expect_equal(ADDLOSS, 0.3549479166666667)
+})
+
 test_that("Repeat lengths can be in any order and length if named", {
   skip_on_cran()
   data("Pram")
@@ -78,6 +132,15 @@ test_that("Repeat lengths can be in any order and length if named", {
   pbruvo_long <- bruvo.dist(p10, replen = c(other(p10)$REPLEN, NOPE = 23))
   expect_equivalent(pbruvo, pbruvo_sampled)
   expect_equivalent(pbruvo, pbruvo_long)
+})
+
+test_that("Bruvo's distance will throw an error if there are not enough named lengths", {
+  skip_on_cran()
+  data("Pram")
+  p10 <- Pram[sample(nInd(Pram), 10)]
+  # Repeat length as normal
+  names(other(p10)$REPLEN)[1] <- "WHAAA"
+  expect_error(bruvo.dist(p10, replen = other(p10)$REPLEN), "repeat lengths... WHAAA")
 })
 
 test_that("Bruvo's distance can be calculated per locus", {
@@ -327,24 +390,6 @@ test_that("samp.ia works",{
   set.seed(900)
   nopos.res <- samp.ia(x, n.snp = 20, reps = 2, quiet = TRUE)
   expect_equivalent(nopos.res, pos.res)
-})
-
-test_that("fix_replen works as expected", {
-  data(nancycats)
-  nanrep  <- rep(2, 9)
-  nantest <- test_replen(nancycats, nanrep)
-  nanfix  <- fix_replen(nancycats, nanrep)
-  expect_equal(sum(nantest), 5)
-  expect_true(all(floor(nanfix)[!nantest] == 1))
-})
-
-test_that("fix_replen throws errors for weird replens", {
-  skip_on_cran()
-  data(partial_clone)
-  expect_warning(fix_replen(partial_clone, rep(10, 10)), paste(locNames(partial_clone), collapse = ", "))
-  expect_warning(fix_replen(partial_clone, rep(10, 10), fix_some = FALSE), "Original repeat lengths are being returned")
-  expect_warning(fix_replen(partial_clone, rep(2, 10)), "The repeat lengths for Locus_2, Locus_7, Locus_9 are not consistent.")
-  expect_warning(fix_replen(partial_clone, rep(2, 10)), "Repeat lengths with some modification are being returned: Locus_3")
 })
 
 test_that("poppr_has_parallel returns something logical", {

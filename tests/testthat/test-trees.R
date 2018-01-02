@@ -30,11 +30,13 @@ test_that("bruvo.boot rejects non-ssr data", {
 test_that("aboot can take in matrices", {
   skip_on_cran()
   Aeut.tab <- tab(Aeut.pop)
-  apop <- aboot(Aeut.pop, showtree = FALSE, quiet = TRUE)
-  amat <- aboot(Aeut.tab, showtree = FALSE, quiet = TRUE)
-  expect_equal(apop$tip.label, amat$tip.label)
-  dimnames(Aeut.tab) <- NULL
-  amat <- aboot(Aeut.tab, quiet = TRUE)
+  suppressWarnings({
+    apop <- aboot(Aeut.pop, showtree = FALSE, quiet = TRUE)
+    amat <- aboot(Aeut.tab, showtree = FALSE, quiet = TRUE)
+    expect_equal(apop$tip.label, amat$tip.label)
+    dimnames(Aeut.tab) <- NULL
+    amat <- aboot(Aeut.tab, quiet = TRUE)
+  })
   expect_equal(amat$tip.label, .genlab("", nrow(Aeut.tab)))
 })
 
@@ -56,6 +58,16 @@ test_that("aboot can utilize anonymous functions", {
 	expect_is(nantree, "phylo")
 })
 
+test_that("aboot can utilize bootgen2genind", {
+  skip_on_cran()
+  suppressWarnings(nantreebg <- aboot(nan9, dist = function(x) nei.dist(bootgen2genind(x)), sample = 20, quiet = TRUE))
+  suppressWarnings(nantree   <- aboot(nan9, dist = "nei.dist", sample = 20, quiet = TRUE))
+  expect_is(nantreebg, "phylo")
+  expect_is(nantree, "phylo")
+  expect_equivalent(nantreebg$edge.length, nantree$edge.length)
+})
+
+
 test_that("aboot can handle populations", {
   skip_on_cran()
 	set.seed(999)
@@ -71,8 +83,9 @@ test_that("aboot can handle populations", {
 test_that("aboot can convert genind to genpop", {
   skip_on_cran()
   set.seed(999)
-  Atree <- aboot(Aeut, strata = ~Pop/Subpop, sample = 20, quiet = TRUE)
-  
+  suppressWarnings({
+    Atree <- aboot(Aeut, strata = ~Pop/Subpop, sample = 20, quiet = TRUE)
+  })
   expect_equal(ape::Ntip(Atree), 18L)
 })
 

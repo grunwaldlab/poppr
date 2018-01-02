@@ -15,11 +15,11 @@
 \title{MLG definitions based on genetic distance}
 \usage{
 mlg.filter(pop, threshold = 0, missing = "asis", memory = FALSE,
-  algorithm = "farthest_neighbor", distance = "diss.dist", threads = 0,
+  algorithm = "farthest_neighbor", distance = "diss.dist", threads = 1L,
   stats = "MLGs", ...)
 
 mlg.filter(pop, missing = "asis", memory = FALSE,
-  algorithm = "farthest_neighbor", distance = "diss.dist", threads = 0,
+  algorithm = "farthest_neighbor", distance = "diss.dist", threads = 1L,
   ...) <- value
 }
 \arguments{
@@ -55,12 +55,9 @@ to pop. Defaults to \code{\link{diss.dist}} for genclone objects and
 containing distances between individuals (such as the output of 
 \code{\link{rogers.dist}}) is also accepted for this parameter.}
 
-\item{threads}{The maximum number of parallel threads to be used within this 
-function. A value of 0 (default) will attempt to use as many threads as 
-there are available cores/CPUs. In most cases this is ideal. A value of 1 
-will force the function to run serially, which may increase stability on 
-some systems. Other values may be specified, but should be used with 
-caution.}
+\item{threads}{(unused) Previously, this was the maximum number of parallel 
+threads to be used within this function. Default is 1 indicating that this
+function will run serially. Any other number will result in a warning.}
 
 \item{stats}{a character vector specifying which statistics should be
 returned (details below). Choices are "MLG", "THRESHOLDS", "DISTANCES",

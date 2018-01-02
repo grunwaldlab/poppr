@@ -46,8 +46,9 @@ This function is modified from the version used in
 }
 \examples{
 
-data(nancycats)
-fix_replen(nancycats, rep(2, 9))
+data(Pram)
+(Pram_replen <- setNames(c(3, 2, 4, 4, 4), locNames(Pram)))
+fix_replen(Pram, Pram_replen)
 # Let's start with an example of a tetranucleotide repeat motif and imagine
 # that there are twenty alleles all 1 step apart:
 (x <- 1:20L * 4L)

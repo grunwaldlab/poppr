@@ -43,6 +43,9 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
 setClassUnion("mlgORnumeric", c("MLG", "numeric"))
+# Warning message:
+# In .removePreviousCoerce(class1, class2, where, prevIs) :
+#   methods currently exist for coercing from “MLG” to “mlgORnumeric”; they will be replaced.
 #==============================================================================#
 #' GENclone and SNPclone classes
 #' 
@@ -67,6 +70,12 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #'   multilocus genotypes OR it can contain a special internal 
 #'   \code{\linkS4class{MLG}} class that allows for custom multilocus genotype 
 #'   definitions and filtering.
+#' 
+#' @note When calculating multilocus genotypes for genclone objects, a rank 
+#'   function is used, but calculation of multilocus genotypes for snpclone
+#'   objects is distance-based (via \code{\link{bitwise.dist}} and 
+#'   \code{\link{mlg.filter}}). This means that genclone objects are sensitive
+#'   to missing data, whereas snpclone objects are insensitive.
 #'   
 #' @name genclone-class
 #' @rdname genclone-class
@@ -93,7 +102,7 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #' #
 #' set.seed(999)
 #' (gl <- glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, parallel = FALSE))
-#' (sc <- as.snpclone(gl, parallel = FALSE))
+#' (sc <- as.snpclone(rbind(gl, gl, parallel = FALSE), parallel = FALSE))
 #' # 
 #' # Use mlg.filter to create a distance threshold to define multilocus genotypes.
 #' mlg.filter(sc, threads = 1L) <- 0.25

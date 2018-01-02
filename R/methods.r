@@ -43,11 +43,7 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
 
-################################################################################
-#------------------------------------------------------------------------------#
-# BOOTGEN METHODS
-#------------------------------------------------------------------------------#
-################################################################################
+# bootgen methods ---------------------------------------------------------
 
 #==============================================================================#
 #' Methods used for the bootgen object. 
@@ -77,7 +73,7 @@ setMethod(
     # Taking Names
     locnall         <- x@loc.n.all[j]
     allnames        <- x@all.names[j]
-    names(allnames) <- names(x@all.names)[1:length(j)]
+    names(allnames) <- names(x@all.names)[seq_along(allnames)]
     names(locnall)  <- names(allnames)
     alllist         <- slot(x, "alllist")[j]
     indices         <- unlist(alllist)
@@ -92,7 +88,7 @@ setMethod(
     slot(x, "loc.n.all") <- locnall
     slot(x, "all.names") <- allnames
     slot(x, "alllist")   <- .Call("expand_indices", cumsum(locnall), 
-                                  length(j), PACKAGE = "poppr")
+                                  length(alllist), PACKAGE = "poppr")
     slot(x, "names")     <- slot(x, "names")[i]
     return(x)
   }
@@ -157,7 +153,7 @@ setMethod(
     }
     num_alleles                <- slot(gen, "loc.n.all")
     num_loci                   <- length(num_alleles)
-    slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = freq)     
+    slot(.Object, "tab")       <- tab(gen, NA.method = na, freq = freq)
     slot(.Object, "loc.fac")   <- slot(gen, "loc.fac")
     slot(.Object, "loc.n.all") <- num_alleles  
     slot(.Object, "all.names") <- slot(gen, "all.names") 
@@ -176,11 +172,32 @@ setMethod(
     return(x@tab)
   })
 
-################################################################################
-#------------------------------------------------------------------------------#
-# BRUVOMAT METHODS
-#------------------------------------------------------------------------------#
-################################################################################
+#==============================================================================#
+#' @export
+#' @rdname coercion-methods
+#' @param bg a bootgen object
+#' @aliases bootgen2genind,bootgen-method
+#' @docType methods
+#==============================================================================#
+bootgen2genind <- function(bg){
+  standardGeneric("bootgen2genind")
+}
+
+#' @export
+setGeneric("bootgen2genind")
+
+setMethod(
+  f = "bootgen2genind",
+  signature = "bootgen",
+  definition = function(bg){
+    xtab <- tab(bg)
+    if (is.numeric(xtab)) xtab[] <- as.integer(xtab*bg@ploidy)
+    res <- new("genind", tab = xtab)
+    return(res)
+  })
+
+
+# bruvomat methods --------------------------------------------------------
 
 #==============================================================================#
 #' @rdname bruvomat-methods
@@ -248,24 +265,28 @@ setMethod(
     if (missing(j)) j <- TRUE
     x@replen    <- x@replen[j]
     x@ind.names <- x@ind.names[i]
-    cols        <- rep(1:ncol(x), each = x@ploidy)
-    replacement <- vapply(j, function(ind) which(cols == ind), 1:x@ploidy)
-    x@mat       <- x@mat[i, as.vector(replacement), drop = FALSE]
+    cols        <- rep(seq(ncol(x)), each = x@ploidy)
+    if (length(j) == 1 && is.logical(j)){
+      replacement <- j
+    } else if (is.logical(j)){
+      replacement <- rep(j, each = x@ploidy)
+    } else {
+      replacement <- vapply(j, function(ind) which(cols == ind), 1:x@ploidy)
+    }
+    x@mat <- x@mat[i, as.vector(replacement), drop = FALSE]
     return(x)
   }
 )
 
 
-################################################################################
-#------------------------------------------------------------------------------#
-# SNPCLONE METHODS
-#------------------------------------------------------------------------------#
-################################################################################
+# snpclone methods --------------------------------------------------------
+
 #==============================================================================#
 #' @export
 #' @rdname is.clone
 #' @examples
-#' (sc <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#' (sc <- as.snpclone(glSim(100, 1e3, ploid=2, parallel = FALSE), 
+#'                    parallel = FALSE, n.cores = 1L))
 #' is.snpclone(sc)
 #==============================================================================#
 is.snpclone <- function(x){
@@ -294,13 +315,15 @@ is.clone <- function(x){
 #' @param i vector of numerics indicating number of individuals desired
 #' @param j a vector of numerics corresponding to the loci desired.
 #' @param ... passed on to the \code{\linkS4class{genlight}} object.
+#' @param mlg.reset logical. Defaults to \code{FALSE}. If \code{TRUE}, the mlg
+#'   vector will be reset
 #' @param drop set to \code{FALSE} 
 #' @author Zhian N. Kamvar
 #==============================================================================#
 setMethod(
   f = "[",
   signature(x = "snpclone", i = "ANY", j = "ANY", drop = "ANY"),
-  definition = function(x, i, j, ..., drop = FALSE){
+  definition = function(x, i, j, ..., mlg.reset = FALSE, drop = FALSE){
     if (missing(i)) i <- TRUE
 
     # handle MLG indices
@@ -308,11 +331,25 @@ setMethod(
     # Tue Sep 27 12:08:37 2016 ------------------------------
     # Methods for subsetting genind object by sample name currently don't exist
     i          <- handle_mlg_index(i, x)
-    mlg        <- if (ismlgclass) x@mlg[i, all = TRUE] else x@mlg[i]
+    # mlg        <- if (ismlgclass) x@mlg[i, all = TRUE] else x@mlg[i]
     
     # Subset data; replace MLGs    
     x     <- callNextMethod(x = x, i = i, j = j, ..., drop = drop)
-    x@mlg <- mlg
+    if (!mlg.reset){
+      if (inherits(x@mlg, "MLG")){
+        x@mlg <- x@mlg[i, all = TRUE]
+      } else {
+        x@mlg <- x@mlg[i]
+      }
+    } else {
+      if (!inherits(x@mlg, "MLG")){
+        x@mlg <- mlg.vector(x, reset = TRUE)
+      } else {
+        x@mlg <- new("MLG", mlg.vector(x, reset = TRUE))
+      }
+    }
+    
+    # x@mlg <- mlg
     return(x)
   })
 
@@ -356,13 +393,14 @@ setMethod(
     y <- gsub("GENLIGHT", "SNPCLONE", y)
     y <- gsub("/", "|", y)
     genspot <- grepl("@gen", y)
+    ismlg <- inherits(object@mlg, "MLG")
     
-    the_type <- visible(object@mlg)
-    mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
+    mlgtype <- if (ismlg) paste0(visible(object@mlg), " ") else ""
+    # mlgtype  <- ifelse(ismlg, paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
 
     msg <- paste("   @mlg:", length(unique(object@mlg[])), mlgtype)
-    if (the_type == "contracted"){
+    if (mlgtype == "contracted multilocus genotypes"){
       thresh <- round(cutoff(object@mlg)["contracted"], 3)
       algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
       dist <- distname(object@mlg)
@@ -403,8 +441,17 @@ setMethod(
 #' @author Zhian N. Kamvar
 #' @examples
 #' (x <- as.snpclone(glSim(100, 1e3, ploid=2)))
+#' \dontrun{
+#' # Without parallel processing
+#' system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2)))
+#' 
+#' # With parallel processing... doesn't really save you much time.
+#' system.time(x <- as.snpclone(glSim(1000, 1e5, ploid=2, parallel = TRUE), 
+#'                              parallel = TRUE))
+#' }
+#' 
 #==============================================================================#
-as.snpclone <- function(x, ..., parallel = require('parallel'), n.cores = NULL, 
+as.snpclone <- function(x, ..., parallel = FALSE, n.cores = NULL, 
                         mlg, mlgclass = TRUE){
   standardGeneric("as.snpclone")
 }
@@ -416,7 +463,7 @@ setGeneric("as.snpclone")
 setMethod(
   f = "as.snpclone",
   signature(x = "genlight"),
-  definition = function(x, ..., parallel = require('parallel'), n.cores = NULL, 
+  definition = function(x, ..., parallel = FALSE, n.cores = NULL, 
                         mlg, mlgclass = TRUE){
     if (!missing(x) && is(x, "genlight")){
       if (missing(mlg)) mlg <- mlg.vector(x)
@@ -442,11 +489,9 @@ setMethod(
     }
     return(res)
   })
-################################################################################
-#------------------------------------------------------------------------------#
-# GENCLONE METHODS
-#------------------------------------------------------------------------------#
-################################################################################
+
+# genclone methods --------------------------------------------------------
+
 #==============================================================================#
 #' Check for validity of a genclone or snpclone object
 #' 
@@ -604,12 +649,12 @@ setMethod(
     if (strata == 0) popstrata <- "strata."
     popdef  <- ifelse(npop > 0, "defined -", "defined.")
     cat("Population information:\n\n")
-    cat("", ltab[4], strata, popstrata, stratanames, fill = TRUE)
+    cat("", ltab[4], strata, popstrata, paste(stratanames, collapse = ", "), fill = TRUE)
     if (!is.null(object@hierarchy)){
       cat("", ltab[5], "1", "hierarchy -", 
           paste(object@hierarchy, collapse = ""), fill = TRUE)
     }
-    cat("", ltab[6], npop, "populations", popdef, pops, fill = TRUE)
+    cat("", ltab[6], npop, "populations", popdef, paste(pops, collapse = ", "), fill = TRUE)
     
   })
 
@@ -713,6 +758,7 @@ setMethod(
 #'   
 #' @seealso \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
 #'   \code{\link{read.genalex}}
+#'   \code{\link{aboot}}
 #' @author Zhian N. Kamvar
 #' @examples
 #' data(Aeut)
@@ -721,6 +767,11 @@ setMethod(
 #' Aeut.gc
 #' Aeut.gi <- genclone2genind(Aeut.gc)
 #' Aeut.gi
+#' data(nancycats)
+#' nan.bg  <- new("bootgen", nancycats[pop = 9])
+#' nan.bg
+#' nan.gid <- bootgen2genind(nan.bg)
+#' nan.gid
 #==============================================================================#
 as.genclone <- function(x, ..., mlg, mlgclass = TRUE){
   standardGeneric("as.genclone")
@@ -791,6 +842,9 @@ setMethod(
     names(listx) <- locNames(x)
     return(listx)
   })
+
+
+# multilocus lineage methods ----------------------------------------------
 
 #==============================================================================#
 #' Access and manipulate multilocus lineages.
@@ -1193,12 +1247,9 @@ setMethod(
 #'   \code{\link{bitwise.dist}} for snpclone objects. A matrix or table
 #'   containing distances between individuals (such as the output of 
 #'   \code{\link{rogers.dist}}) is also accepted for this parameter.
-#' @param threads The maximum number of parallel threads to be used within this 
-#'   function. A value of 0 (default) will attempt to use as many threads as 
-#'   there are available cores/CPUs. In most cases this is ideal. A value of 1 
-#'   will force the function to run serially, which may increase stability on 
-#'   some systems. Other values may be specified, but should be used with 
-#'   caution.
+#' @param threads (unused) Previously, this was the maximum number of parallel 
+#'  threads to be used within this function. Default is 1 indicating that this
+#'  function will run serially. Any other number will result in a warning.
 #' @param stats a character vector specifying which statistics should be
 #'   returned (details below). Choices are "MLG", "THRESHOLDS", "DISTANCES",
 #'   "SIZES", or "ALL". If choosing "ALL" or more than one, a named list will be
@@ -1350,7 +1401,7 @@ setMethod(
 #==============================================================================#
 mlg.filter <- function(pop, threshold=0.0, missing="asis", memory=FALSE, 
                        algorithm="farthest_neighbor", 
-                       distance="diss.dist", threads=0, stats="MLGs", ...){
+                       distance="diss.dist", threads=1L, stats="MLGs", ...){
   standardGeneric("mlg.filter")
 }
 
@@ -1362,7 +1413,7 @@ setMethod(
   signature(pop = "genind"),
   definition = function(pop, threshold=0.0, missing="asis", memory=FALSE,
                         algorithm="farthest_neighbor", distance="diss.dist", 
-                        threads=0, stats="MLGs", ...){
+                        threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
                         threads, stats, the_call, ... ) 
@@ -1374,7 +1425,7 @@ setMethod(
   signature(pop = "genlight"),
   definition = function(pop, threshold=0.0, missing="asis", memory=FALSE,
                         algorithm="farthest_neighbor", distance="bitwise.dist", 
-                        threads=0, stats="MLGs", ...){
+                        threads=1, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
                         threads, stats, the_call, ...) 
@@ -1386,7 +1437,7 @@ setMethod(
   signature(pop = "genclone"),
   definition = function(pop, threshold=0.0, missing="asis", memory=FALSE,
                         algorithm="farthest_neighbor", distance="diss.dist", 
-                        threads=0, stats="MLGs", ...){
+                        threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
                         threads, stats, the_call, ...)   }
@@ -1397,7 +1448,7 @@ setMethod(
   signature(pop = "snpclone"),
   definition = function(pop, threshold=0.0, missing="asis", memory=FALSE,
                         algorithm="farthest_neighbor", distance="bitwise.dist", 
-                        threads=0, stats="MLGs", ...){
+                        threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
                         threads, stats, the_call, ...) 
@@ -1416,7 +1467,7 @@ setMethod(
 #==============================================================================#
 "mlg.filter<-" <- function(pop, missing = "asis", memory = FALSE, 
                            algorithm = "farthest_neighbor", distance = "diss.dist",
-                           threads = 0, ..., value){
+                           threads = 1L, ..., value){
   standardGeneric("mlg.filter<-")
 }
 
@@ -1429,7 +1480,7 @@ setMethod(
   signature(pop = "genind"),
   definition = function(pop, missing = "asis", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "diss.dist",
-                        threads = 0, ..., value){
+                        threads = 1L, ..., value){
     if (!is.genclone(pop)){
       the_warning <- paste("mlg.filter<- only has an effect on genclone",
                            "objects.\n", "If you want to utilize this",
@@ -1447,7 +1498,7 @@ setMethod(
   signature(pop = "genlight"),
   definition = function(pop, missing = "asis", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "bitwise.dist",
-                        threads = 0, ..., value){
+                        threads = 1L, ..., value){
     if (!is.snpclone(pop)){
       the_warning <- paste("mlg.filter<- only has an effect on snpclone",
                            "objects.\n", "If you want to utilize this",
@@ -1466,7 +1517,7 @@ setMethod(
   signature(pop = "genclone"),
   definition = function(pop, missing = "asis", memory = FALSE, 
                        algorithm = "farthest_neighbor", distance = "diss.dist",
-                       threads = 0, ..., value){
+                       threads = 1L, ..., value){
     pop       <- callNextMethod()
     the_call  <- match.call()
     callnames <- names(the_call)
@@ -1543,7 +1594,7 @@ setMethod(
   signature(pop = "snpclone"),
   definition = function(pop, missing = "mean", memory = FALSE, 
                         algorithm = "farthest_neighbor", distance = "bitwise.dist",
-                        threads = 0, ..., value){
+                        threads = 1L, ..., value){
     pop       <- callNextMethod()
     the_call  <- match.call()
     callnames <- names(the_call)

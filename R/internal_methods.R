@@ -220,9 +220,13 @@ mll.levels.internal <- function(x, set = TRUE, value){
 #==============================================================================#
 mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis", 
                                 memory = FALSE, algorithm = "farthest_neighbor", 
-                                distance = "diss.dist", threads = 0, 
+                                distance = "diss.dist", threads = 1L, 
                                 stats = "MLGs", the_call = match.call(), ...){
 
+  if (threads != 1L){
+    warning(paste("As of poppr version 2.4.1, mlg.filter can no longer run in",
+            "parallel. This function will run serially."), call. = FALSE)
+  }
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
   if (is.character(distance) || is.function(distance)) {
@@ -269,7 +273,7 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
   
   if (!is.clone(gid)) {
     if (is(gid, "genlight")){
-      gid <- as.snpclone(gid)
+      gid <- as.snpclone(gid, mlg = seq_len(nInd(gid)))
     } else {
       gid <- as.genclone(gid)
     }
@@ -296,6 +300,9 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
     stop("Distance matrix must be a square matrix of numeric or integer values.",
          call. = FALSE)
   }
+  if (any(dis < 0 - .Machine$double.eps^0.5)){
+    stop("Distance matrix must not contain negative distances.", call. = FALSE)
+  }
   if (nrow(dis) != ncol(dis)){
     stop("The distance matrix must be a square matrix", call. = FALSE)
   }
@@ -313,10 +320,6 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
     # Threshold must be something that can cast to numeric
   if (!is.numeric(threshold) && !is.integer(threshold)){
     stop("Threshold must be a numeric or integer value", .call = FALSE)
-  } 
-    # Threads must be something that can cast to integer
-  if (!is.numeric(threads) && !is.integer(threads) && threads >= 0){
-    stop("Threads must be a non-negative numeric or integer value", .call  = FALSE)
   } 
     # Stats must be logical
   STATARGS <- c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")

@@ -41,164 +41,6 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
-#' @importFrom graphics abline axis frame hist layout legend lines par plot.new
-#'   points polygon rasterImage text title
-#' @importFrom grDevices as.raster gray grey topo.colors
-#' @importFrom stats as.dist as.formula df dist median quantile rmultinom sd
-#'   setNames terms update var dbinom printCoefmat
-#' @importFrom utils combn head read.table setTxtProgressBar tail txtProgressBar
-#'   write.table capture.output
-NULL
-#==============================================================================#
-#' Oomycete root rot pathogen \emph{Aphanomyces euteiches} AFLP data
-#' 
-#' @name Aeut
-#' @docType data
-#' @usage data(Aeut)
-#' @description The Aeut dataset consists of 187 isolates of the Oomycete root 
-#'   rot pathogen, \emph{Aphanomyces euteiches} collected from two different 
-#'   fields in NW Oregon and W Washington, USA.
-#' @format a \code{\link{genind}} object with two populations containing a data
-#'   frame in the \code{other} slot called \code{population_hierarchy}. This
-#'   data frame gives indices of the populations and subpopulations for the data
-#'   set.
-#' @references Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
-#'   Diversity, Selfing, and Genetic Differentiation in Populations of the 
-#'   Oomycete \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141
-#'   doi: \href{http://dx.doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
-#==============================================================================#
-NULL
-#==============================================================================#
-#' Simulated data illustrating a Minimum Spanning Network based on Bruvo's
-#' Distance
-#' 
-#' @name partial_clone
-#' @rdname partial_clone
-#' @docType data
-#' @usage data(partial_clone)
-#' @description These data were simulated using SimuPOP version 1.0.8 with 
-#'   99.9\% clonal reproduction over 10,000 generations. Populations were
-#'   assigned post-hoc and are simply present for the purposes of demonstrating
-#'   a minimum spanning network with Bruvo's distance.
-#' @format a \code{\link{genind}} object with 50 individuals, 10 loci, and four 
-#'   populations.
-#' @references Bo Peng and Christopher Amos (2008) Forward-time simulations of 
-#'   nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11):
-#'   1408-1409.
-#==============================================================================#
-NULL
-#==============================================================================#
-#' @name old_partial_clone
-#' @rdname partial_clone
-#==============================================================================#
-NULL
-#==============================================================================#
-#' Phytophthora infestans data from Mexico and South America.
-#' 
-#' @name Pinf
-#' @rdname Pinf
-#' @docType data
-#' @usage data(Pinf)
-#' @description The Pinf data set contains 86 isolates genotyped over 11 
-#'   microsatellite loci collected from Mexico, Peru, Columbia, and Ecuador. 
-#'   This is a subset of the data used for the reference below.
-#' @format a \code{\linkS4class{genclone}} object with 2 hierarchical levels 
-#'   called "Continent" and "Country" that contain 2 and 4 populations, 
-#'   respectively.
-#' @references Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia 
-#'   Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha 
-#'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen 
-#'   \emph{Phytophthora infestans} originated in central Mexico rather than the 
-#'   Andes." Proceedings of the National Academy of Sciences 111:8791-8796. doi:
-#'   \href{http://dx.doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
-#==============================================================================#
-NULL
-#==============================================================================#
-#' @name old_Pinf
-#' @rdname Pinf
-#==============================================================================#
-NULL
-#==============================================================================#
-#' Phytophthora ramorum data from OR Forests and Nurseries (OR and CA)
-#' 
-#' @name Pram
-#' @rdname Pram
-#' @docType data
-#' @usage data(Pram)
-#' @description This is the data set from 
-#'   \url{http://dx.doi.org/10.5281/zenodo.13007}. It has been converted to the 
-#'   genclone object as of poppr version 2.0. It contains 729 samples of the 
-#'   Sudden Oak Death pathogen \emph{Phytophthora ramorum} genotyped over five 
-#'   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from
-#'   forests in Curry County, OR from 2001 to mid-2014 (labeled by watershed
-#'   region). The other 216 samples represents genotypes collected from
-#'   Nurseries in OR and CA from Goss et. al. (2009).
-#'   
-#' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
-#'   called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a 
-#'   named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy 
-#'   coordinates for the forest samples called \strong{"xy"}, and a palette to 
-#'   color the ~SOURCE/STATE stratification called \strong{"comparePal"}.
-#'   
-#' @references Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & 
-#'   Grünwald, N. J. (2015). Spatial and temporal analysis of populations of the
-#'   sudden oak death pathogen in Oregon forests. Phytopathology 105:982-989. 
-#'   doi:
-#'   \href{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
-#'   
-#'   
-#'   Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. Hansen, & 
-#'   Niklaus J. Grünwald. 2014. Sudden_Oak_Death_in_Oregon_Forests: Spatial and 
-#'   temporal population dynamics of the sudden oak death epidemic in Oregon 
-#'   Forests. ZENODO, doi:
-#'   \href{http://doi.org/10.5281/zenodo.13007}{10.5281/zenodo.13007}
-#'   
-#'   Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
-#'   J. 2009. Population genetic analysis infers migration pathways of 
-#'   \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
-#'   \href{http://dx.doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
-#'   
-#' @examples
-#' data(Pram)
-#' 
-#' # Repeat lengths (previously processed via fix_replen)
-#' other(Pram)$REPLEN
-#' 
-#' # Color palette for source by state. Useful for minimum spanning networks
-#' other(Pram)$comparePal
-#==============================================================================#
-NULL
-#==============================================================================#
-#' Peach brown rot pathogen \emph{Monilinia fructicola}
-#' 
-#' @name monpop
-#' @docType data
-#' @usage data(monpop)
-#' @description This is microsatellite data for a population of the haploid 
-#'   plant pathogen \emph{Monilinia fructicola} that causes disease within peach
-#'   tree canopies (Everhart & Scherm, 2014). Entire populations within trees
-#'   were sampled across 3 years (2009, 2010, and 2011) in a total of four
-#'   trees, where one tree was sampled in all three years, for a total of 6
-#'   within-tree populations. Within each year, samples in the spring were taken
-#'   from affected blossoms (termed "BB" for blossom blight) and in late summer
-#'   from affected fruits (termed "FR" for fruit rot). There are a total of 694 
-#'   isolates with 65 to 173 isolates within each canopy population that were 
-#'   characterized using a set of 13 microsatellite markers.
-#' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
-#'   coded into one population factor. These are named "Tree", "Year", and 
-#'   "Symptom"
-#' @references SE Everhart, H Scherm, (2015) Fine-scale genetic structure of 
-#'   \emph{Monilinia fructicola} during brown rot epidemics within individual
-#'   peach tree canopies. Phytopathology 105:542-549 doi:
-#'   \href{http://dx.doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
-#'   
-#' @examples
-#' data(monpop)
-#' splitStrata(monpop) <- ~Tree/Year/Symptom
-#' setPop(monpop) <- ~Symptom/Year
-#' monpop
-#==============================================================================#
-NULL
 #==============================================================================#
 # This function will attempt to convert external files of the following types:
 #
@@ -317,41 +159,19 @@ percent_missing <- function(pop, type="loci", cutoff=0.05){
 # # .PA.pairwise.differences, .pairwise.differences
 #==============================================================================#
 
-round.poppr <- function(x){
-  if (x - as.integer(x) == 0.5 & as.integer(x)%%2 == 0)
-    x <- round(x) + 1
-  else if(-x + as.integer(x) == 0.5 & as.integer(x)%%2 == 0)  
-    x <- round(x) - 1
-  else
-    x <- round(x)
-  return(x)
-}
-
-#==============================================================================#
-# This will be used to join heirarchical population vectors for the purposes of
-# maintaining hierarchy. 
-# Public functions utilizing this function:
-# ## read.genalex
-#
-# Internal functions utilizing this function:
-# ## none
-#==============================================================================#
-
-pop_combiner <- function(df, hier=c(1), sep="_"){
-  if (!is.list(df)){
-    warning("df must be a data frame or a list")
-    return(df)
+round.poppr <- Vectorize(function(x){
+  ix <- as.integer(x)
+  is_even <- ix %% 2 == 0
+  if (is_even) {
+    if (x - ix == 0.5)
+      x <- round(x) + 1
+    else if (-x + ix == 0.5)  
+      x <- round(x) - 1  
   } else {
-    if(length(hier)==1){
-      return(df[[hier]])
-    } else {
-      comb <- vector(length=length(df[[hier[1]]]))
-      comb <- df[[hier[1]]]
-      lapply(hier[-1], function(x) comb <<- paste(comb, df[[x]], sep=sep))
-      return(comb)
-    }
+    x <- round(x)
   }
-}
+  return(x)
+})
 #==============================================================================#
 # Subsetting the population and returning the indices.
 # 
@@ -889,6 +709,10 @@ pair_matrix <- function(pop, numLoci, np)
 rerange <- function(x){
   minx <- min(x, na.rm = TRUE)
   maxx <- max(x, na.rm = TRUE)
+  if (!is.finite(minx) || !is.finite(maxx)){
+    warning("non-finite values found for distances, returning 0.5")
+    return(rep(0.5, length(x)))
+  }
   if (minx < 0)
     x <- x + abs(minx)
     maxx <- maxx + abs(minx)
@@ -1127,8 +951,21 @@ fix_negative_branch <- function(tre){
 
 bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE, 
                             loss = TRUE, by_locus = FALSE){
+  
+  
   x      <- bruvomat@mat
   ploid  <- bruvomat@ploidy
+  if (getOption("old.bruvo.model") && ploid > 2 && (add | loss)){
+    msg <- paste("The option old.bruvo.model has been set to TRUE, which does",
+                 "not represent every ordered combinations of alleles in the",
+                 "genome addition or loss models. This could result in",
+                 "potentially incorrect results.",
+                 "\n\n To use every ordered combination of alleles for",
+                 "estimating short genotypes, enter the following command in",
+                 "your R console:",
+                 "\n\n\toptions(old.bruvo.model = FALSE)\n")
+    warning(msg, call. = FALSE, immediate. = TRUE)
+  }
   replen <- bruvomat@replen
   x[is.na(x)] <- 0
 
@@ -1140,7 +977,14 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
   perms <- .Call("permuto", ploid, PACKAGE = "poppr")
 
   # Calculating bruvo's distance over each locus. 
-  distmat <- .Call("bruvo_distance", x, perms, ploid, add, loss, PACKAGE = "poppr")
+  distmat <- .Call("bruvo_distance", 
+                   x,     # data matrix
+                   perms, # permutation vector (0-indexed)
+                   ploid, # maximum ploidy
+                   add,   # Genome addition model switch
+                   loss,  # Genome loss model switch
+                   getOption("old.bruvo.model"), # switch to use unordered genotypes
+                   PACKAGE = "poppr")
 
   # If there are missing values, the distance returns 100, which means that the
   # comparison is not made. These are changed to NA.
@@ -1180,11 +1024,15 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
 # ## none
 #==============================================================================#
 match_replen_to_loci <- function(gid_loci, replen){
-  if (is.genind(gid_loci)){
-    gid_loci <- locNames(gid_loci)
-  }
+  # unnamed loci with the same length
   if (is.null(names(replen))){
+    if (is.character(gid_loci)){
+      names(replen) <- gid_loci # give them names
+    }
     return(replen)
+  } else if (!all(gid_loci %in% names(replen))){ # names don't match up
+    unmatched_repeats <- names(replen[!names(replen) %in% gid_loci])
+    stop(unmatched_loci_warning(unmatched_repeats, gid_loci), call. = FALSE)
   } else {
     return(replen[gid_loci])
   }
@@ -1582,21 +1430,6 @@ number_missing_locus <- function(x, divisor){
 }
 
 #==============================================================================#
-# tabulate the amount of missing data per genotype. 
-#
-# Public functions utilizing this function:
-# none
-#
-# Private functions utilizing this function:
-# # percent_missing
-#==============================================================================#
-
-number_missing_geno <- function(x, divisor){
-  missing_result <- rowSums(1 - propTyped(x, by = "both"))
-  return(missing_result/divisor)
-}
-
-#==============================================================================#
 # Replace infinite values with the maximum finite value of a distance matrix.
 #
 # Public functions utilizing this function:
@@ -1629,7 +1462,7 @@ infinite_vals_replacement <- function(D, warning){
 tree_generator <- function(tree, distance, quiet = TRUE, ...){
   TREEFUNK <- match.fun(tree)
   DISTFUNK <- match.fun(distance)
-  distargs <- formals(distance)
+  distargs <- as.list(formals(distance))
   otherargs <- list(...)
   #print(otherargs)
   matchargs <- names(distargs)[names(distargs) %in% names(otherargs)]
@@ -1730,7 +1563,7 @@ palette_parser <- function(inPAL, npop, pnames){
     } else if (npop == length(inPAL)){
       color <- stats::setNames(inPAL, pnames)
     } else if (npop < length(inPAL)){
-      warning("Number of populations less than number of colors supplied. Discarding extra colors.")
+      warning("Number of populations fewer than number of colors supplied. Discarding extra colors.")
       color <- stats::setNames(inPAL[1:npop], pnames)
     } else {
       warning("insufficient color palette supplied. Using topo.colors().")
@@ -1863,33 +1696,7 @@ test_zeroes <- function(x){
   }
   return(FALSE)
 }
-#==============================================================================#
-# Internal plotting function for mlg.table
-#
-# Public functions utilizing this function:
-# ## none
-#
-# Private functions utilizing this function:
-# ## print_mlg_barplot
-# 
-# DEPRECATED
-#==============================================================================#
-# old_mlg_barplot <- function(mlgt){
-# 
-#   # create a data frame that ggplot2 can read.
-#   mlgt.df <- as.data.frame(list(MLG   = colnames(mlgt), 
-#                                 count = as.vector(mlgt)), 
-#                            stringsAsFactors = FALSE)
-# 
-#   # Organize the data frame by count in descending order.
-#   rearranged <- order(mlgt.df$count, decreasing = TRUE)
-#   mlgt.df <- mlgt.df[rearranged, , drop = FALSE]
-#   mlgt.df[["MLG"]] <- factor(mlgt.df[["MLG"]], unique(mlgt.df[["MLG"]]))
-# 
-#   # plot it
-#   return(ggplot(mlgt.df, aes_string(x = "MLG", y = "count")) + 
-#          geom_bar(aes_string(fill = "count"), position="identity", stat = "identity"))
-# }
+
 #==============================================================================#
 # Internal plotting function for mlg.table
 #
@@ -1899,81 +1706,120 @@ test_zeroes <- function(x){
 # Private functions utilizing this function:
 # # print_mlg_barplot
 #==============================================================================#
-#' @importFrom dplyr %>% arrange_ group_by_ ungroup distinct
-mlg_barplot <- function(mlgt, color_table = NULL){
+#' @param mlgt a table with populations in rows and MLGs in columns
+#'
+#' @param color logical. Should the output be colored by population?
+#' @param background logical. should the data be plotted against the background
+#'  data?
+#' @noRd
+#' @keywords internal
+#'
+#' @importFrom dplyr %>% 
+#' @importFrom dplyr arrange_ group_by_ ungroup
+#' @importFrom dplyr n
+#' @importFrom rlang "!!"
+mlg_barplot <- function(mlgt, color = FALSE, background = FALSE){
   names(dimnames(mlgt)) <- c("Population", "MLG")
-  mlgt.df <- reshape2::melt(mlgt, value.name = "count")
-  mlgt.df <- mlgt.df[mlgt.df$count > 0, ]
-  # create a data frame that ggplot2 can read.
-  
-  # Organize the data frame by count in descending order.
-  mlgt.df <- mlgt.df %>% dplyr::group_by_("Population") %>% 
-    dplyr::arrange_("count")
-  mlgt.df <- mlgt.df %>% dplyr::ungroup() %>% unique()
-  mlgt.df$fac <- nrow(mlgt.df):1
-  mlgt.df$fac <- factor(mlgt.df$fac, rev(mlgt.df$fac))
+  mlgt.df <- as.data.frame.table(mlgt, responseName = "count", stringsAsFactors = FALSE)
+  use_old_dplyr <- utils::packageVersion("dplyr") <= package_version("0.5.0") | getOption("poppr.old.dplyr")
+  # Ensure that the population is a factor
+  if (use_old_dplyr) {
+    mlgt.df <- mlgt.df %>%
+      dplyr::mutate_(.dots = list(Population = ~factor(Population, unique(Population)))) %>%
+      dplyr::filter_("count > 0")
+  } else {
+    qPop <- quote(Population)
+    mlgt.df <- mlgt.df %>%
+      dplyr::mutate(Population = factor(!!qPop, unique(!!qPop))) %>%
+      dplyr::filter(!!quote(count > 0))
+  }
+    
+  if (color | background) {
+    # summarize with the total counts, and merge with original data
+    if (use_old_dplyr) {
+      mlgt.df <- mlgt.df %>% 
+        dplyr::group_by_("MLG") %>%
+        dplyr::summarize_(.dots = list(n = ~sum(count))) %>%
+        dplyr::full_join(mlgt.df, by = "MLG") %>%
+        dplyr::arrange_(~dplyr::desc(n)) %>%
+        dplyr::mutate_(.dots = list(MLG = ~factor(MLG, levels = unique(MLG))))
+    } else {
+      qMLG <- quote(MLG)
+      mlgt.df <- mlgt.df %>% 
+        dplyr::group_by(!!qMLG) %>%
+        dplyr::summarize(n = sum(!!quote(count))) %>%
+        dplyr::full_join(mlgt.df, by = "MLG") %>%
+        dplyr::arrange(dplyr::desc(!!quote(n))) %>%
+        dplyr::mutate(MLG = factor(!!qMLG, levels = unique(!!qMLG)))
+    }
 
-  the_breaks <- pretty(mlgt.df$count)
+    the_breaks <- pretty(mlgt.df$n)
+  } else {
+    if (use_old_dplyr) {
+      mlgt.df <- mlgt.df %>%
+        dplyr::group_by_("Population") %>%
+        dplyr::do_(~dplyr::arrange(., dplyr::desc(count)))
+    } else {
+      mlgt.df <- mlgt.df %>%
+        dplyr::group_by(!!quote(Population)) %>%
+        dplyr::arrange(dplyr::desc(!!quote(count)), .by_group = TRUE)
+    }
+
+    the_breaks <- pretty(mlgt.df$count)
+  }
+  if (use_old_dplyr) {
+    mlgt.df <- mlgt.df %>%
+      dplyr::ungroup() %>%
+      unique() %>%
+      dplyr::filter_("count > 0") %>%
+      dplyr::mutate_(.dots = list(order = ~seq(nrow(.)))) %>%
+      dplyr::mutate_(.dots = list(order = ~factor(order, unique(order))))
+  } else {
+    mlgt.df <- mlgt.df %>%
+      dplyr::ungroup() %>%
+      unique() %>%
+      dplyr::filter(!!quote(count > 0)) %>%
+      dplyr::mutate(order = seq(n())) %>%
+      dplyr::mutate(order = factor(!!quote(order), unique(!!quote(order))))
+  }
+
+  if (color | background) {
+    if (use_old_dplyr) {
+      mlgt.df <- mlgt.df %>%
+        dplyr::select_(~Population, ~MLG, ~count, ~order, ~n)
+    } else {
+      mlgt.df <- mlgt.df %>%
+        dplyr::select(!!quote(Population), !!quote(MLG), !!quote(count), !!quote(order), !!quote(n))
+    }
+
+  }
   the_breaks <- the_breaks[the_breaks %% 1 == 0]
-  # plot it
-  the_plot <- ggplot(mlgt.df, aes_string(x = "fac", y = "count")) + 
-    geom_bar(stat = "identity", position = "identity") + 
-    scale_x_discrete(labels = mlgt.df$MLG, breaks = mlgt.df$fac) +
-    facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE) +
+  # Conditionals for plotting
+  x    <- if (color) "MLG" else "order"
+  baes <- if (color) aes_string(fill = "Population") else aes_string()
+  
+  
+  the_plot <- ggplot(mlgt.df, aes_string(x = x, y = "count")) 
+  if (background){
+    the_plot <- the_plot + 
+      geom_bar(aes_string(y = "n"), color = "grey25", alpha = 0, stat = "identity")
+  }
+  the_plot <- the_plot + 
+    geom_bar(baes, stat = "identity") + 
     theme(panel.grid.major.x = element_blank(), 
           panel.grid.minor.x = element_blank(),
           axis.text.x = element_text(size = 10, angle = 90, 
                                      hjust = 1, vjust = 1)) +
     xlab("MLG") + 
-    scale_y_continuous(expand = c(0, -.75))
+    scale_y_continuous(expand = c(0, 0), breaks = the_breaks)
+  if (!color || (color && background)){
+    xbreak <- if (color) mlgt.df$MLG else mlgt.df$order
+    the_plot <- the_plot +
+      scale_x_discrete(labels = mlgt.df$MLG, breaks = xbreak) +
+      facet_wrap(~Population, scales = "free_x", shrink = TRUE, drop = TRUE)
+  }
   return(the_plot)
 }
-
-#==============================================================================#
-# Internal plotting function for mlg.table
-#
-# Public functions utilizing this function:
-# ## none
-#
-# Private functions utilizing this function:
-# ## old_mlg_barplot
-# 
-# DEPRECATED
-#==============================================================================#
-# print_mlg_barplot <- function(n, mlgtab, quiet=quiet) {
-#   if(!quiet) cat("|", n,"\n")
-# 
-#   # Gather all nonzero values
-#   mlgt <- mlgtab[n, mlgtab[n, ] > 0, drop=FALSE]
-# 
-#   # controlling for the situation where the population size is 1.
-#   if (sum(mlgtab[n, ]) > 1){ 
-#     print(old_mlg_barplot(mlgt) +
-#             theme_classic() %+replace%
-#             theme(axis.text.x=element_text(size=10, angle=-45, hjust=0, vjust=1)) + 
-#             labs(title=paste("Population:", n, "\nN =", sum(mlgtab[n, ]),
-#                              "MLG =", length(mlgt))))
-#   }
-# }
-
-#==============================================================================#
-# Internal function for resampling loci for genotype accumulation curve.
-#
-# Public functions utilizing this function:
-# genotype_curve
-#
-# Private functions utilizing this function:
-# # none
-# 
-# DEPRECATED
-#==============================================================================#
-# get_sample_mlg <- function(size, samp, nloci, gen, progbar){
-#   if (!is.null(progbar)){
-#     setTxtProgressBar(progbar, size/(nloci-1))
-#   }
-#   out <- vapply(1:samp, function(x) nrow(unique(sample(gen, size))), integer(1))
-#   return(out)
-# }
 
 #==============================================================================#
 # Internal function for creating title for index of association histogram.
@@ -2432,22 +2278,31 @@ evens <- function(x){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-boot_plot <- function(res, orig, statnames, popnames, CI){
+#' Plot the results of boot_ci
+#'
+#' @param res a list of "boot" class objects
+#' @param orig a table of the observed statistics
+#' @param CI 
+#'
+#' @return prints a ggplot2 object
+#' @noRd
+#' @keywords internal
+boot_plot <- function(res, orig, CI){
   statnames <- colnames(orig)
-  orig <- reshape2::melt(orig)
-  orig$Pop <- factor(orig$Pop)
-  if (!is.null(CI)){
-    cidf <- reshape2::melt(CI)
-    cidf <- reshape2::dcast(cidf, as.formula("Pop + Index ~ CI"))
+  popnames  <- rownames(orig)
+  orig <- as.data.frame.table(orig, responseName = "value")
+  if (!is.null(CI)) {
+    cidf <- as.data.frame.table(CI, responseName = "v", stringsAsFactors = FALSE) %>%
+      stats::reshape(idvar = c("Pop", "Index"), timevar = "CI", direction = "wide")
+    names(cidf) <- gsub("^v\\.", "", names(cidf))
     orig <- merge(orig, cidf)
-    colnames(orig)[4:5] <- c("lb", "ub")    
+    colnames(orig)[4:5] <- c("lb", "ub")
   }
   samp <- vapply(res, "[[", FUN.VALUE = res[[1]]$t, "t")
   dimnames(samp) <- list(NULL, 
                          Index = statnames,
                          Pop = popnames)
-  sampmelt <- melt(samp)
-  sampmelt$Pop <- factor(sampmelt$Pop)
+  sampmelt <- as.data.frame.table(samp, responseName = "value")
   pl <- ggplot(sampmelt, aes_string(x = "Pop", y = "value", group = "Pop")) + 
     geom_boxplot() + 
     geom_point(aes_string(color = "Pop", x = "Pop", y = "value"), 
@@ -2727,19 +2582,20 @@ rrcc <- function(i, loclist, mlgs){
   return(res)
 }
 #==============================================================================#
-# round robin clone-correct allele frequency estimates by population
-# 
-# This will take in
-# - i the index of the locus.
-# - loclist a list of genind objects each one locus.
-# - mlgs a matrix from rrmlg
-# - pnames the population names.
-#
-# Public functions utilizing this function:
-# ## rraf
-#
-# Internal functions utilizing this function:
-# ## none
+#' round robin clone-correct allele frequency estimates by population
+#' 
+#' @param i the index of the locus.
+#' @param loclist a list of genind objects each one locus.
+#' @param mlgs a matrix from rrmlg
+#' @param pnames the population names.
+#'
+#' @note
+#' Public functions utilizing this function:
+#' ## rraf
+#'
+#' Internal functions utilizing this function:
+#' ## none
+#' @noRd
 #==============================================================================#
 rrccbp <- function(i, loclist, mlgs, pnames){
   
@@ -2750,13 +2606,47 @@ rrccbp <- function(i, loclist, mlgs, pnames){
   colnames(res) <- colnames(mat)
   pops <- pop(loclist[[i]])
   for (p in pnames){
-    psub <- pops %in% p
-    cc   <- which(!duplicated(mlgs[psub, i]))
+    psub <- which(pops %in% p)
+    cc   <- psub[!duplicated(mlgs[psub, i])]
     out  <- colMeans(mat[cc, , drop = FALSE], na.rm = TRUE)
     res[p, ] <- out
   }
   
   return(res)
+}
+
+#' Treat the optional "G" argument for psex
+#'
+#' @param G either NULL or an integer vector that can be named or not
+#' @param N an integer or integer vector
+#' @param dat a data set
+#' @param population a population name
+#' @param method passed from psex
+#' 
+#' @note 
+#' Public functions: psex
+#' Private functions: none
+#'
+#' @return a value for G
+#' @noRd
+treat_G <- function(G, N, dat, population, method){
+  if (is.null(G)){
+    return(N)
+  } else if (length(G) == 1){
+    return(G)
+  } else if (!is.null(names(G)) && all(names(G) %in% popNames(dat))){
+    if (method == "multiple"){
+      G <- G[population]
+    } else {
+      G <- G[pop(dat)]
+    }
+  } else if (length(G) > 1){
+    stop("G must be a named vector of integers.")
+  } else {
+    stop("G must be NULL or an integer vector of length 1 or nPop(gid)", 
+         call. = FALSE)
+  }
+  G
 }
 
 #==============================================================================#
@@ -2903,13 +2793,10 @@ handle_mlg_index <- function(i, gid){
   if (is.logical(i) || is.numeric(i)){
     return(i)
   }
-  if (is.factor(i)){
-    i <- as.character(i)
-  } else {
-    i <- match(i, indNames(gid))         # match to the index names
-    i <- i[!is.na(i)]                    # remove missing indices
-    i <- if (length(i) == 0) TRUE else i # ignore if no result
-  }
+  i <- if (is.factor(i)) as.character(i) else i
+  i <- match(i, indNames(gid))         # match to the index names
+  i <- i[!is.na(i)]                    # remove missing indices
+  i <- if (length(i) == 0) TRUE else i # ignore if no result
   return(i)
 }
 
@@ -2931,4 +2818,266 @@ handle_pops_index <- function(pops, gid){
     newi <- pop(gid) %in% pops
   } 
   return(newi)
+}
+
+#' Should poppr be quiet?
+#' 
+#' If it's not an interactive session or it's in a knitr document, messages in
+#' poppr should be suppressed UNLESS poppr.debug is set to TRUE
+#'
+#' @return TRUE or FALSE
+#' @noRd
+#'
+should_poppr_be_quiet <- function(quiet){
+  # Suppress the noise if it's not interactive or in knitr
+  # This is thanks to @jimhester
+  # https://github.com/hadley/dplyr/commit/c8beb59217620614b36cd82df0a7e89c556fb374
+  in_knitr    <- !is.null(getOption("knitr.in.progress"))
+  in_script   <- !interactive()
+  poppr_debug <- getOption("poppr.debug")
+  if ((in_script || in_knitr) && !poppr_debug){
+    quiet <- TRUE
+  }
+  return(quiet)
+}
+#' Set the population from a formula or vector
+#'
+#' @param gid a genind/genclone/genlight/snpclone object
+#' @param pop a formula or factor specifying population
+#'
+#' @return the object with the population set in the pop slot
+#' @noRd
+set_pop_from_strata_or_vector <- function(gid, pop) {
+  if (is.language(pop)){ # incoming is a formula, e.g. ~Country/Year
+    setPop(gid) <- pop
+  } else {               # incoming is a vector
+       pop(gid) <- pop
+  }
+  gid
+}
+# poppr's theme for ggplot2 (mainly rotating x axis labels)
+myTheme <- theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
+#' Calculate Psex for a given genotype
+#'
+#' @param n_encounters integer the number of observations of an MLG
+#' @param p_genotype numeric the probability of the given MLG
+#' @param sample_ids list the names of the given MLG
+#' @param n_samples integer the number of samples observed
+#'
+#' @return a vector of probabilities
+#' @noRd
+#'
+#' @examples
+#' make_psex(10, 0.005, n_samples = 100)
+make_psex <- function(n_encounters, p_genotype, sample_ids = NULL, n_samples){
+  encounters <- seq(n_encounters) - 1
+  out        <- dbinom(encounters, n_samples, p_genotype)
+  names(out) <- sample_ids
+  return(out)
+}
+
+cromulent_replen <- function(gid, replen){
+  the_loci <- locNames(gid)
+  if (length(replen) != nLoc(gid) && is.null(names(replen))){
+    msg <- mismatched_repeat_length_warning(replen, nLoc(gid))
+    stop(msg, call. = FALSE)
+  } else if (length(replen) < nLoc(gid)){
+    msg <- mismatched_repeat_length_warning(replen, nLoc(gid))
+    stop(msg, call. = FALSE)
+  } else if (length(replen) > nLoc(gid)){
+    msg <- trimmed_repeats_warning(replen, the_loci)
+    warning(msg, call. = FALSE, immediate. = TRUE)
+  } 
+  new_replen <- match_replen_to_loci(the_loci, replen)
+  return(new_replen)
+}
+
+
+#' calculate the distance between two circles
+#'
+#' @param c1 radius of circle 1
+#' @param c2 radius of circle 2
+#'
+#' @return the distance between two centers on one axis
+#' @noRd
+#' @details 
+#' https://stackoverflow.com/a/14830596/2752888
+cdist <- function(c1, c2){
+  a <- (c1 + c2) ^ 2
+  b <- (c1 - c2) ^ 2
+  sqrt(a - b)
+}
+
+# spread the circles out 
+#' Arrange circles adjacent to each other
+#'
+#' @param radii a vector indicating the radii of the circles to be arranged.
+#'
+#' @return a vector of positions on which to plot the centers of circles
+#' @noRd
+make_adjacent_circles <- function(radii){
+  res <- vapply(seq(radii), function(i) {
+    if (i == 1)
+      0.0
+    else
+      cdist(radii[i], radii[i - 1])
+  }, numeric(1))
+  cumsum(res)
+}
+
+#' Make labels for circles
+#' 
+#' This function takes in a range of numbers and figures out three circles that
+#' exist in these numbers to create a legend using the range and approximate 
+#' mean of the numbers
+#'
+#' @param mlg_number a vector of integers
+#'
+#' @return 1, 2, or 3 integers.
+#' @noRd
+#'
+#' @examples
+#' set.seed(40)
+#' make_circle_labs(sample(100, 50, replace = TRUE))
+make_circle_labs <- function(mlg_number){
+  labs   <- range(mlg_number)
+  if (diff(labs) > 1) {
+    m    <- mean(labs)
+    m    <- mlg_number[which.min(abs(mlg_number - m))]
+    labs <- c(labs[1], m, labs[2])
+  } else if (diff(labs) == 0) {
+    labs <- labs[1]
+  }
+  labs
+}
+
+#' Get the correct side of the legend box
+#'
+#' @param a the result of a "legend" call
+#' @param side either "top", "bottom", "right", or "left"
+#'
+#' @return a vector of at max length 4
+#' @noRd
+#'
+#' @examples
+#' plot(seq(-1, 1), seq(-1, 1), asp = 1)
+#' tr <- legend("topright", fill = "blue", legend = "blue")
+#' tl <- legend("topleft", fill = "blue", legend = "blue")
+#' bl <- legend("bottomleft", fill = "blue", legend = "blue")
+#' br <- legend("bottomright", fill = "blue", legend = "blue")
+#' ce <- legend("center", fill = "blue", legend = "blue")
+#' points(x = get_legend_side(ce, 3:4), 
+#'        y = get_legend_side(ce, 1:2), 
+#'        col = c("red", "blue"))
+#' points(x = get_legend_side(tl, 3:4), 
+#'        y = get_legend_side(tl, 1:2), 
+#'        col = c("red", "blue"))
+#' points(x = get_legend_side(bl, 3:4), 
+#'        y = get_legend_side(bl, 1:2), 
+#'        col = c("red", "blue"))
+#' points(x = get_legend_side(br, 3:4), 
+#'        y = get_legend_side(br, 1:2), 
+#'        col = c("red", "blue"))
+#' points(x = get_legend_side(tr, 3:4), 
+#'        y = get_legend_side(tr, 1:2), 
+#'        col = c("red", "blue"))
+get_legend_side <- function(a, side = NULL) {
+  res <- c(
+    top    = a$rect$top,
+    bottom = a$rect$top  - a$rect$h,
+    right  = a$rect$left + a$rect$w,
+    left   = a$rect$left
+  )
+  return( if (is.null(side)) res else res[side] )
+}
+
+#' Create a circle legend
+#'
+#' @param a the output of a "legend" call. Defaults to `NULL`.
+#' @param mlg_number a vector of integers
+#' @param scale a number by which to multiply the node sizes
+#' @param cex character expansion for the text
+#' @param radmult multiplier for the radius (specifically for [plot_poppr_msn])
+#' @param xspace the defined xspacer (currently is wonky :/)
+#' @param font font for the title
+#' @param pos a numeric position for the title or NULL
+#' @param x the position for the leftmost part of the legend
+#' @param y the position of the topmost part of the legend
+#' @param txt The position of the text
+#' 
+#' @details
+#'   If a legend is provided in `a`, then the position of the circle legend will
+#'   be below it. If not, the arguments left, top, and txt will control the
+#'   position of the text within the box. 
+#'
+#' @return a legend with circles
+#'
+#' @noRd
+make_circle_legend <-
+  function(a = NULL,
+           mlg_number,
+           scale = 5,
+           cex = 0.75,
+           radmult = 1,
+           xspace = NULL,
+           font = 1,
+           pos = NULL,
+           x = -1.55,
+           y = 1,
+           txt = -1.3) {
+    
+  
+  # Create example circles for comparison
+  labs   <- make_circle_labs(mlg_number)
+  rads   <- (sqrt(labs) * scale)/200
+  
+  if (!is.null(a)){
+    txt    <- a$text$x[1]    
+    left   <- get_legend_side(a, "left")   
+    bottom <- get_legend_side(a, "bottom")   
+  } else {
+    left   <- x
+    bottom <- y
+  }
+  
+  # Get the space between legend elements
+  yspace <- if (!is.null(a)) diff(a$text$y) else 0.05
+  yspace <- if (length(yspace) > 0L) min(abs(yspace)) else 0.05
+  xspace <- if (is.null(xspace)) 0.25 * yspace else 2 * xspace * yspace
+  
+  # Create positions of circles horizontally
+  diam <- max(rads) * 2
+  big_circles <- diam > abs(txt - left)/2
+  circlx <- if (big_circles) left + diam + xspace else txt
+  circlx <- rep(circlx, length(rads))
+  
+  # shift the y position of the circles
+  cpos   <- make_adjacent_circles(rads)
+  circly <- bottom - ((2.5 * yspace) + max(cpos) + max(rads)/2)
+  circly <- cpos + circly
+  
+  # Create the circle legend
+  xpos <- if (is.null(pos)) left else pos
+  tadj <- if (is.null(pos)) c(0, 0.5) else c(0.5, 0.5)
+  graphics::text(x     = xpos, 
+                 y     = bottom - yspace, 
+                 label = "Samples/Node",
+                 adj   = tadj,
+                 font  = font,
+                 cex   = cex)
+  
+  graphics::symbols(x       = circlx - (rads * radmult + xspace), 
+                    y       = circly, 
+                    circles = rads * radmult, 
+                    add     = TRUE, 
+                    inches  = FALSE, 
+                    asp     = 1)
+  
+  graphics::text(x      = circlx, 
+                 y      = circly, 
+                 labels = labs, 
+                 adj    = c(0, 0.5),
+                 cex    = cex)
 }

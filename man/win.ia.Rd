@@ -4,7 +4,8 @@
 \alias{win.ia}
 \title{Calculate windows of the index of association for genlight objects.}
 \usage{
-win.ia(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE)
+win.ia(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
+  chromosome_buffer = TRUE)
 }
 \arguments{
 \item{x}{a \code{\link{genlight}} or \code{\link{snpclone}} object.}
@@ -23,6 +24,10 @@ some systems. Other values may be specified, but should be used with
 caution.}
 
 \item{quiet}{if \code{FALSE}, a progress bar will be printed to the screen.}
+
+\item{chromosome_buffer}{if \code{TRUE} (default), buffers will be placed 
+between adjacent chromosomal positions to prevent windows from spanning two
+chromosomes.}
 }
 \value{
 Index of association representing the samples in this genlight
@@ -48,15 +53,44 @@ res <- win.ia(x, window = 300L) # Calculate for windows of size 300
 plot(res, type = "l")
 
 \dontrun{
+
 # unstructured snps
 set.seed(999)
 x <- glSim(n.ind = 10, n.snp.nonstruc = 1e3, ploidy = 2)
 position(x) <- sort(sample(1e4, 1e3))
 res <- win.ia(x, window = 300L) # Calculate for windows of size 300
 plot(res, type = "l")
-}
 
-}
+# Accounting for chromosome coordinates
+set.seed(999)
+x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
+position(x) <- as.vector(vapply(1:10, function(x) sort(sample(1e3, 100)), integer(100)))
+chromosome(x) <- rep(1:10, each = 100)
+res <- win.ia(x, window = 100L)
+plot(res, type = "l")
+
+# Converting chromosomal coordinates to tidy data
+library("dplyr")
+res_tidy <- res \%>\% 
+  data_frame(rd = ., chromosome = names(.)) \%>\% # create two column data frame
+  filter(chromosome != "") \%>\%                  # filter out null chromosomes
+  group_by(chromosome) \%>\%                      # group data by chromosome
+  mutate(window = row_number()) \%>\%             # windows by chromosome
+  ungroup(chromosome) \%>\%                       # ungroup and reorder
+  mutate(chromosome = factor(chromosome, unique(chromosome))) 
+res_tidy
+
+# Plotting with ggplot2
+library("ggplot2")
+ggplot(res_tidy, aes(x = window, y = rd, color = chromosome)) +
+  geom_line() +
+  facet_wrap(~chromosome, nrow = 1) +
+  ylab(expression(bar(r)[d])) +
+  xlab("window (100bp)") +
+  theme(legend.position = "bottom")
+
+
+
 \seealso{
 \code{\link[adegenet]{genlight}},
    \code{\link{snpclone}},

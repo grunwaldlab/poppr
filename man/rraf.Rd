@@ -117,8 +117,13 @@ population of bracken fern, \emph{Pteridium aquilinum} (Dennstaedtiaceae).
 \emph{American Journal of Botany}, 537-544.
 }
 \seealso{
-\code{\link{rrmlg}}, \code{\link{pgen}}, \code{\link{psex}}
+\code{\link{rrmlg}}, \code{\link{pgen}}, \code{\link{psex}},
+ \code{\link{rare_allele_correction}}
 }
+\author{
+Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
+}
+
 \author{
 Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 }

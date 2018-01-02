@@ -13,7 +13,7 @@ mlg(gid, quiet = FALSE)
 
 mlg.table(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
   mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE,
-  quiet = FALSE)
+  color = FALSE, background = FALSE, quiet = FALSE)
 
 mlg.vector(gid, reset = FALSE)
 
@@ -51,6 +51,12 @@ population.}
 \item{total}{\code{logical} If \code{TRUE}, a row containing the sum of all 
 represented MLGs is appended to the matrix produced by mlg.table.}
 
+\item{color}{an option to display a single barchart for mlg.table, colored by
+population (note, this becomes facetted if \code{background = TRUE}).}
+
+\item{background}{an option to display the the total number of MLGs across
+populations per facet in the background of the plot.}
+
 \item{reset}{logical. For genclone objects, the MLGs are defined by the input
 data, but they do not change if more or less information is added (i.e.
 loci are dropped). Setting \code{reset = TRUE} will recalculate MLGs.
@@ -86,6 +92,24 @@ a \code{list} containing vectors of population names for each MLG.
 \description{
 Create counts, vectors, and matrices of multilocus genotypes.
 }
+\details{
+Multilocus genotypes are the unique combination of alleles across
+  all loci. For details of how these are calculated see \code{vignette("mlg",
+  package = "poppr")}. In short, for genind and genclone objects, they are
+  calculated by using a rank function on strings of alleles, which is
+  sensitive to missing data. For genlight and snpclone objects, they are
+  calculated with distance methods via \code{\link{bitwise.dist}} and
+  \code{\link{mlg.filter}}, which means that these are insensitive to missing
+  data. Three different types of MLGs can be defined in \pkg{poppr}: \itemize{ 
+  \item{original - }{the default definition of multilocus genotypes as
+  detailed above} \item{contracted - }{these are multilocus genotypes
+  collapsed into multilocus lineages (\code{\link{mll}}) with genetic
+  distance via \code{\link{mlg.filter}}} \item{custom - }{user-defined
+  multilocus genotypes. These are useful for information such as mycelial
+  compatibility groups}}
+  \strong{All of the functions documented here will work on any of the MLG
+  types defined in \pkg{poppr}}
+}
 \note{
 The resulting matrix of \code{mlg.table} can be used for analysis with 
 the \code{\link{vegan}} package.
@@ -109,7 +133,7 @@ avec <- mlg.vector(Aeut)
 avec 
 
 # Get a table
-atab <- mlg.table(Aeut, plot = FALSE)
+atab <- mlg.table(Aeut, color = TRUE)
 atab
 
 # See where multilocus genotypes cross populations
@@ -120,6 +144,12 @@ aid <- mlg.id(Aeut)
 aid["59"] # individuals 159 and 57
 
 \dontrun{
+
+# For the mlg.table, you can also choose to display the number of MLGs across
+# populations in the background
+
+mlg.table(Aeut, background = TRUE)
+mlg.table(Aeut, background = TRUE, color = TRUE)
 
 # A simple example. 10 individuals, 5 genotypes.
 mat1 <- matrix(ncol=5, 25:1)
@@ -133,31 +163,31 @@ mlg.table(mat.gid)
 # Now for a more complicated example.
 # Data set of 1903 samples of the H3N2 flu virus genotyped at 125 SNP loci.
 data(H3N2)
-mlg(H3N2, quiet=FALSE)
+mlg(H3N2, quiet = FALSE)
 
 H.vec <- mlg.vector(H3N2)
 
 # Changing the population vector to indicate the years of each epidemic.
 pop(H3N2) <- other(H3N2)$x$country
-H.tab <- mlg.table(H3N2, plot=FALSE, total=TRUE)
+H.tab <- mlg.table(H3N2, plot = FALSE, total = TRUE)
 
 # Show which genotypes exist accross populations in the entire dataset.
-res <- mlg.crosspop(H3N2, quiet=FALSE)
+res <- mlg.crosspop(H3N2, quiet = FALSE)
 
 # Let's say we want to visualize the multilocus genotype distribution for the
 # USA and Russia
-mlg.table(H3N2, sublist=c("USA", "Russia"), bar=TRUE)
+mlg.table(H3N2, sublist = c("USA", "Russia"), bar=TRUE)
 
 # An exercise in subsetting the output of mlg.table and mlg.vector.
 # First, get the indices of each MLG duplicated across populations.
-inds <- mlg.crosspop(H3N2, quiet=FALSE, indexreturn=TRUE)
+inds <- mlg.crosspop(H3N2, quiet = FALSE, indexreturn = TRUE)
 
 # Since the columns of the table from mlg.table are equal to the number of
 # MLGs, we can subset with just the columns.
 H.sub <- H.tab[, inds]
 
 # We can also do the same by using the mlgsub flag.
-H.sub <- mlg.table(H3N2, mlgsub=inds)
+H.sub <- mlg.table(H3N2, mlgsub = inds)
 
 # We can subset the original data set using the output of mlg.vector to
 # analyze only the MLGs that are duplicated across populations. 

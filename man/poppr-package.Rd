@@ -77,6 +77,8 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \item \code{\link{read.genalex}} (x) - Reads GenAlEx formatted csv files to a genind object
 \item \code{\link{genind2genalex}} (m) - Converts genind objects to GenAlEx formatted csv files
 \item \code{\link{genclone2genind}} (m) - Removes the @mlg slot from genclone objects
+\item \code{\link{genclone2genind}} (m) - Removes the @mlg slot from genclone objects
+\item \code{\link{bootgen2genind}} (x) - see \code{\link{aboot}} for details)
 }
 }
 
@@ -143,6 +145,7 @@ This package relies on the \pkg{\link[adegenet]{adegenet}} package.
 \item \code{\link{poppr.amova}} (m) - Analysis of Molecular Variance (as implemented in ade4)
 \item \code{\link{ia}} (m) - Calculates the index of association
 \item \code{\link{pair.ia}} (m) - Calculates the index of association for all loci pairs.
+\item \code{\link{jack.ia}} (m) - Calculates the index of association over subsets of data.
 \item \code{\link{win.ia}} (s) - Index of association windows for genlight objects.
 \item \code{\link{samp.ia}} (s) - Index of association on random subsets of loci for genlight objects.
 \item \code{\link{poppr}} (m | x) - Returns a diversity table by population

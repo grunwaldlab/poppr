@@ -66,6 +66,7 @@ filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
                                distance = bruvo.dist, 
                                algorithm = clustering.algorithm,
                                stats="ALL", 
+                               threads = 1L,
                                replen = bruvo_args$replen,
                                add =  bruvo_args$add,
                                loss = bruvo_args$loss)    
@@ -73,6 +74,7 @@ filter_at_threshold <- function(gid, threshold, indist, clustering.algorithm,
     filter.stats <- mlg.filter(gid, 
                                threshold, 
                                distance = indist, 
+                               threads = 1L,
                                algorithm = clustering.algorithm,
                                stats="ALL") 
   }
@@ -116,7 +118,7 @@ msn_constructor <-
     
   mlgs <- mll(gid)
   cmlg <- mll(cgid)
-  if (!is.numeric(mlgs)){
+  if (!is.numeric(mlgs)) {
     mlgs <- as.character(mlgs)
     cmlg <- as.character(cmlg)
   }
@@ -127,7 +129,9 @@ msn_constructor <-
   # The pallete is determined by what the user types in the argument. It can be 
   # rainbow, topo.colors, heat.colors ...etc.
   npop   <- nPop(gid)
+  npop   <- if (npop == 0) 1 else npop
   pnames <- popNames(gid)
+  pnames <- if (is.null(pnames)) "pop" else pnames
   color  <- palette_parser(palette, npop, pnames)
   # This will determine the size of the nodes based on the number of
   # individuals in the MLG. Subsetting by the MLG vector of the clone
@@ -189,7 +193,7 @@ msn_constructor <-
         mst,
         edge.width = E(mst)$width,
         edge.color = E(mst)$color,
-        vertex.size = mlg.number * 3,
+        vertex.size = sqrt(mlg.number) * 5,
         vertex.shape = "pie",
         vertex.pie = mlg.cp,
         vertex.pie.color = mlg.color,
@@ -202,24 +206,26 @@ msn_constructor <-
         edge.width = E(mst)$width,
         edge.color = E(mst)$color,
         vertex.label = vlab,
-        vertex.size = mlg.number * 3,
+        vertex.size = sqrt(mlg.number) * 5,
         vertex.color = color,
         ...
       )
     }
-    graphics::legend(
+    a <- graphics::legend(
       -1.55,
       1,
       bty = "n",
       cex = 0.75,
       legend = pnames,
       title = "Populations",
+      title.adj = 0,
       fill = color,
       border = NULL
     )
+    make_circle_legend(a, mlg.number, scale = 5)
   }
   
-  V(mst)$size  <- mlg.number
+  V(mst)$size  <- sqrt(mlg.number)
   if (piece_of_pie){
     V(mst)$shape     <- "pie"
     V(mst)$pie       <- mlg.cp

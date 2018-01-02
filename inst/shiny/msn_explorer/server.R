@@ -98,8 +98,10 @@ shinyServer(function(input, output, session) {
     if (input$genclone) {
       if (inherits(dat, "genlight")){
         dat <- as.snpclone(dat)
-      } else {
+      } else if(!inherits(dat, "genclone")) {
         dat <- as.genclone(dat)
+      } else {
+        # it already is a genclone object
       }
     }
     return(dat)
@@ -329,8 +331,8 @@ shinyServer(function(input, output, session) {
     input$seed 
   })
 
-  nodebase <- reactive({
-    input$nodebase
+  nodescale <- reactive({
+    input$nodescale
   })
 
   #-------------------------------------
@@ -371,6 +373,10 @@ shinyServer(function(input, output, session) {
     input$pop.leg
   })
 
+  sizeLeg <- reactive({
+    input$size.leg
+  })
+  
   scaleLeg <- reactive({
     input$scale.leg
   })
@@ -454,11 +460,14 @@ shinyServer(function(input, output, session) {
            ",\n", padding, "inds = ", make_dput(inds()), 
            ",\n", padding, "mlg = ", input$mlgs,
            ",\n", padding, "gadj = ", input$greyslide,
-           ",\n", padding, "nodebase = ", input$nodebase,
+           ",\n", padding, "nodescale = ", input$nodescale,
            ",\n", padding, "palette = ", pal,
            ",\n", padding, "cutoff = ", ifelse(is.null(cutoff()), "NULL", cutoff()),
            ",\n", padding, "quantiles = FALSE",
            ",\n", padding, "beforecut = ", bcut(), 
+           ",\n", padding, "pop.leg = ", popLeg(), 
+           ",\n", padding, "size.leg = ", sizeLeg(),
+           ",\n", padding, "scale.leg = ", scaleLeg(),
            ",\n", padding, "layfun = ", layfun(), 
            ")")
   })
@@ -487,7 +496,7 @@ shinyServer(function(input, output, session) {
     input$pop.leg
     input$scale.leg
     input$beforecut
-    input$nodebase
+    input$nodescale
     input$inds
     input$mlgs
     input$`update-graph`
@@ -507,8 +516,9 @@ shinyServer(function(input, output, session) {
                      cutoff = cutoff(), 
                      quantiles = FALSE, 
                      beforecut = bcut(), 
-                     nodebase = nodebase(),
+                     nodescale = nodescale(),
                      pop.leg = popLeg(), 
+                     size.leg = sizeLeg(),
                      scale.leg = scaleLeg(),
                      layfun = eval(parse(text = layfun()))
                     )      
@@ -545,8 +555,9 @@ shinyServer(function(input, output, session) {
                        cutoff = cutoff(),
                        quantiles = FALSE, 
                        beforecut = bcut(),
-                       nodebase = nodebase(),
+                       nodescale = nodescale(),
                        pop.leg = popLeg(),
+                       size.leg = sizeLeg(),
                        scale.leg = scaleLeg(),
                        layfun = eval(parse(text = layfun()))
                       )
@@ -574,8 +585,9 @@ shinyServer(function(input, output, session) {
                        cutoff = cutoff(),
                        quantiles = FALSE, 
                        beforecut = bcut(),
-                       nodebase = nodebase(),
+                       nodescale = nodescale(),
                        pop.leg = popLeg(),
+                       size.leg = sizeLeg(),
                        scale.leg = scaleLeg(),
                        layfun = eval(parse(text = layfun()))
                       )

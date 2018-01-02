@@ -136,9 +136,16 @@ unmatched_pops_warning <- function(pops, sublist){
 # # none
 #==============================================================================#
 repeat_length_warning <- function(replen){
-	msg <- paste("\n\nRepeat length vector for loci is not equal to the number",
-							 "of loci represented.\nEstimating repeat lengths from data:\n",
-							 paste0("c(", paste(replen, collapse = ", "),")"), "\n\n")
+  msg <- paste("\n\nRepeat length vector for loci is not equal to the number",
+               "of loci represented.\nEstimating repeat lengths from data:\n",
+               paste0("c(", paste(replen, collapse = ", "),")"), "\n\n")
+  msg <- paste("\n\t--------------------------------------------------------------",
+               "\n\t                       !!! ALERT !!!",
+               "\n",
+               "\n\tThis warning will become an ERROR in future versions of poppr.",
+               "\n\tPlease define your repeat lengths to avoid this error.",
+               "\n\t--------------------------------------------------------------",
+               msg)
   return(msg)
 }
 
@@ -146,6 +153,39 @@ non_ssr_data_warning <- function(){
 	msg <- paste("\nThis dataset does not appear to be microsatellite data.",
 				       "Bruvo's Distance can only be applied for true microsatellites.")
 	return(msg)
+}
+
+mismatched_repeat_length_warning <- function(replen, nloci){
+  paste0("length of repeats (", length(replen), ") does not equal",
+         " the number of loci (", nloci, ").")
+}
+
+trimmed_repeats_warning <- function(replen, loci){
+  keep <- names(replen) %in% loci
+  removed <- strwrap(paste(names(replen[!keep]), collapse = ", "))
+  removed <- paste(removed, sep = "\n")
+  paste0("There are more repeat lengths (", length(replen), ") than loci ",
+         "(", length(loci), "). The following repeat lengths will be removed:",
+         "\n ", removed)
+}
+
+
+unmatched_loci_warning <- function(replen, loci){
+  nr     <- length(replen)
+  nl     <- length(loci)
+  replen <- strwrap(paste(replen, collapse = ", "), 
+                    initial = "",
+                    prefix = "\t                  ")
+  replen <- paste(replen, collapse = "\n")
+  loci   <- strwrap(paste(loci, collapse = ", "), 
+                    initial = "",
+                    prefix = "\t                  ")
+  loci   <- paste(loci, collapse = "\n")
+  msg <- paste0("The following repeat lengths (", nr, ") do not match ",
+               "any of the loci (", nl, "):\n",
+               "\trepeat lengths... ", replen, "\n", 
+               "\tloci............. ", loci)
+  return(msg)
 }
 
 #==============================================================================#

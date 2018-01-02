@@ -151,7 +151,8 @@ rrmlg <- function(gid){
 #' \emph{American Journal of Botany}, 537-544.
 #' 
 #' @export
-#' @seealso \code{\link{rrmlg}}, \code{\link{pgen}}, \code{\link{psex}}
+#' @seealso \code{\link{rrmlg}}, \code{\link{pgen}}, \code{\link{psex}},
+#'  \code{\link{rare_allele_correction}}
 #' @examples
 #' 
 #' data(Pram)
@@ -206,11 +207,7 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
   RES     <- c("list", "vector", "data.frame")
   res     <- match.arg(res, RES)
   if (!is.null(pop)){
-    if (!is.language(pop)){
-      pop(gid) <- pop
-    } else {
-      setPop(gid) <- pop
-    }
+    gid    <- set_pop_from_strata_or_vector(gid, pop)
     by_pop <- TRUE
   }
   gid     <- as.genclone(gid)
@@ -239,10 +236,10 @@ rraf <- function(gid, pop = NULL, res = "list", by_pop = FALSE,
     out <- unlist(out, use.names = FALSE)
     names(out) <- colnames(tab(gid))
   } else if (res == "data.frame"){
-    outdf <- reshape2::melt(out)
+    outdf <- utils::stack(out)
     names(outdf)        <- c("frequency", "locus")
     levels(outdf$locus) <- locNames(gid)
-    outdf <- cbind(outdf, allele = unlist(lapply(out, names), use.names = FALSE))
+    outdf$allele        <- rownames(outdf)
     return(outdf)
   }
   return(out)
@@ -410,7 +407,7 @@ NULL
 #'   
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 #' @seealso \code{\link{psex}}, \code{\link{rraf}}, \code{\link{rrmlg}}, 
-#' \code{\link[=rare_allele_correction]{correcting rare alleles}}
+#' \code{\link{rare_allele_correction}}
 #' @references
 #' 
 #' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007.
@@ -463,21 +460,22 @@ NULL
 pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
   stopifnot(is.genind(gid))
   # Stop if the ploidy of the object is not diploid
-  stopifnot(all(ploidy(gid) %in% 1:2)) 
+  # stopifnot(all(ploidy(gid) %in% 1:2)) 
+  if (!all(ploidy(gid) < 3)){
+    stop("This function can only work on haploid or diploid data.", call. = FALSE)
+  }
   if (!is.null(pop)){
-    if (!is.language(pop)){
-      pop(gid) <- pop
-    } else {
-      setPop(gid) <- pop
-    }
+    gid    <- set_pop_from_strata_or_vector(gid, pop)
     by_pop <- TRUE
   }
-  # Set single population if none exists OR if user explicitly said by_pop = FALSE
+  # Set single population if none exists OR if user explicitly said by_pop =
+  # FALSE This is done so that rraf is forced to return a matrix.
   if (is.null(pop(gid)) || !by_pop){
     pop(gid) <- rep(1, nInd(gid))
   }   
   pops <- pop(gid)
   if (is.null(freq)){
+    # The above lines guarantee that a matrix will return here.
     freqs <- rraf(gid, by_pop = TRUE, ...)
   } else if (is.matrix(freq)){
     if (nrow(freq) != nlevels(pops) || ncol(freq) != ncol(tab(gid))){
@@ -505,8 +503,12 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #' Probability of encountering a genotype more than once by chance
 #' 
 #' @inheritParams pgen
-#' @param G an integer specifying the number of observed genets. If NULL, this 
-#'   will be the number of original multilocus genotypes.
+#' @param G an integer vector specifying the number of observed genets. If NULL,
+#'   this will be the number of original multilocus genotypes for 
+#'   \code{method = "single"} and the number of populations for 
+#'   \code{method = "multiple"}. \code{G} can also be a \strong{named} integer 
+#'   vector for each population if \code{by_pop = TRUE}. Unnamed vectors with
+#'   a lengths greater than 1 will throw an error.
 #' @param method which method of calculating psex should be used? Using 
 #'   \code{method = "single"} (default) indicates that the calculation for psex 
 #'   should reflect the probability of encountering a second genotype. Using 
@@ -519,31 +521,70 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #'   
 #' @author Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 #'   
-#' @details Psex is the probability of encountering a given genotype more than 
-#'   once by chance. The basic equation is
+#' @details 
+#' \subsection{single encounter:}{
+#'   Psex is the probability of encountering a given genotype more than 
+#'   once by chance. The basic equation from Parks and Werth (1993) is
 #'   
 #'   \deqn{p_{sex} = 1 - (1 - p_{gen})^{G})}{psex = 1 - (1 - pgen)^G}
 #'   
-#'   where \emph{G} is the number of multilocus genotypes. See
-#'   \code{\link{pgen}} for its calculation. For a given value of alpha (e.g.
+#'   where \emph{G} is the number of multilocus genotypes and \emph{pgen} is the
+#'   probability of a given genotype (see
+#'   \code{\link{pgen}} for its calculation). For a given value of alpha (e.g.
 #'   alpha = 0.05), genotypes with psex < alpha can be thought of as a single
 #'   genet whereas genotypes with psex > alpha do not have strong evidence that
 #'   members belong to the same genet (Parks and Werth, 1993).
-#'   
+#' }
+#' \subsection{multiple encounters:}{
 #'   When \code{method = "multiple"}, the method from Arnaud-Haond et al. (1997)
-#'   is used where the sum of the binomial density is taken:
+#'   is used where the sum of the binomial density is taken.
 #'   
-#'   \deqn{p_{sex} = \sum_{i = 1}^N {N \choose i} \left(p_{gen}\right)^i\left(1
-#'   - p_{gen}\right)^{N - i}}{psex = sum(dbinom(1:N, N, pgen))}
+#'   \deqn{
+#'   p_{sex} = \sum_{i = n}^N {N \choose i} \left(p_{gen}\right)^i\left(1 - p_{gen}\right)^{N - i}
+#'   }{psex = dbinom(i, N, pgen)}
 #'   
-#'   where \emph{N} is the number of samples with the same genotype, \emph{i} is
-#'   the ith sample, and \emph{pgen} is the value of pgen for that genotype.
+#'   where \emph{N} is the number of sampling units \emph{i} is the ith - 1 
+#'   encounter of a given genotype, and \emph{pgen} is the value of pgen for 
+#'   that genotype. This procedure is performed for all samples in the data.
+#'   For example, if you have a genotype whose pgen value was 0.0001, with 5 
+#'   observations out of 100 samples, the value of psex is computed like so:
+#'   \preformatted{
+#'   dbinom(0:4, 100, 0.0001)}
+#' }
+#' \subsection{using by_pop = TRUE and modifying G:}{
+#'   It is possible to modify \code{G} for single or multiple encounters. With
+#'   \code{method = "single"}, \code{G} takes place of the exponent, whereas 
+#'   with \code{method = "multiple"}, \code{G} replaces \code{N} (see above). 
+#'   If you supply a named vector for \code{G} with the population names and
+#'   \code{by_pop = TRUE}, then the value of \code{G} will be different for each
+#'   population. 
 #'   
-#'   The function will automatically calculate the round-robin allele
-#'   frequencies with \code{\link{rraf}} and \emph{G} with \code{\link{nmll}}.
+#'   For example, in the case of \code{method = "multiple"}, let's say you have
+#'   two populations that share a genotype between them. The size of population
+#'   A and B are 25 and 75, respectively, The values of pgen for that genotype
+#'   in population A and B are 0.005 and 0.0001, respectively, and the number of
+#'   samples with the genotype in popualtions A and B are 4 and 6, respectively.
+#'   In this case psex for this genotype would be calculated for each population
+#'   separately if we don't specify \code{G}:
+#'   \preformatted{
+#'   psexA = dbinom(0:3, 25, 0.005)
+#'   psexB = dbinom(0:5, 75, 0.0001)}
+#'   If we specify \code{G = 100}, then it changes to:
+#'   \preformatted{
+#'   psexA = dbinom(0:3, 100, 0.005)
+#'   psexB = dbinom(0:5, 100, 0.0001)}
+#'   We could also specify G to be the number of genotypes observed in the 
+#'   population (let's say A = 10, B = 20)
+#'   \preformatted{
+#'   psexA = dbinom(0:3, 10, 0.005)
+#'   psexB = dbinom(0:5, 20, 0.0001)}
+#' }
+#'   Unless \code{freq} is supplied, the function will automatically calculate
+#'   the round-robin allele frequencies with \code{\link{rraf}} and \emph{G}
+#'   with \code{\link{nmll}}.
 #'   
 #' @seealso \code{\link{pgen}}, \code{\link{rraf}}, \code{\link{rrmlg}},
-#' \code{\link[=rare_allele_correction]{correcting rare alleles}}
+#' \code{\link{rare_allele_correction}}
 #' @references
 #' 
 #' Arnaud-Haond, S., Duarte, C. M., Alberto, F., & Serrão, E. A. 2007. 
@@ -556,29 +597,48 @@ pgen <- function(gid, pop = NULL, by_pop = TRUE, log = TRUE, freq = NULL, ...){
 #' 
 #' @export
 #' @examples
-#' 
 #' data(Pram)
-#' Pram_psex <- psex(Pram, by_pop = FALSE)
-#' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
-#' abline(h = 0.05, lty = 2)
-#' \dontrun{
 #' 
 #' # With multiple encounters
 #' Pram_psex <- psex(Pram, by_pop = FALSE, method = "multiple")
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
+#' title("Probability of multiple encounters")
+#' \dontrun{
 #' 
-#' # This can be also done assuming populations structure
-#' Pram_psex <- psex(Pram, by_pop = TRUE)
+#' # For a single encounter (default)
+#' Pram_psex <- psex(Pram, by_pop = FALSE)
 #' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
+#' title("Probability of second encounter")
+#' 
+#' # This can be also done assuming populations structure
+#' Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple")
+#' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+#' abline(h = 0.05, lty = 2)
+#' title("Probability of multiple encounters\nwith pop structure")
 #' 
 #' # The above, but correcting zero-value alleles by 1/(2*rrmlg) with no 
 #' # population structure assumed
-#' # See the documentation for rare_allele_correction for details.
-#' Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2)
+#' # Type ?rare_allele_correction for details.
+#' Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2, method = "multiple")
 #' plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 #' abline(h = 0.05, lty = 2)
+#' title("Probability of multiple encounters\nwith pop structure (1/(2*rrmlg))")
+#'
+#' # We can also set G to the total population size
+#' (G <- nInd(Pram))
+#' Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple", G = G)
+#' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+#' abline(h = 0.05, lty = 2)
+#' title("Probability of multiple encounters\nwith pop structure G = 729")
+#'
+#' # Or we can set G to the number of unique MLGs
+#' (G <- rowSums(mlg.table(Pram, plot = FALSE) > 0))
+#' Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple", G = G)
+#' plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
+#' abline(h = 0.05, lty = 2)
+#' title("Probability of multiple encounters\nwith pop structure G = nmll")
 #' 
 #' ## An example of supplying previously calculated frequencies and G
 #' # From Parks and Werth, 1993, using the first three genotypes.
@@ -625,13 +685,11 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
                  method = c("single", "multiple"), ...){
   stopifnot(is.genind(gid))
   if (!is.null(pop)){
-    if (!is.language(pop)){
-      pop(gid) <- pop
-    } else {
-      setPop(gid) <- pop
-    }
+    gid    <- set_pop_from_strata_or_vector(gid, pop)
     by_pop <- TRUE
   }
+  pop(gid) <- if (by_pop & !is.null(pop(gid))) pop(gid) else rep("A", nInd(gid))
+  
   if (!is.genclone(gid)){
     gid <- as.genclone(gid)
   }
@@ -643,27 +701,54 @@ psex <- function(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
 
   if (method == "single"){
     # Only calculate for single encounter (Parks and Werth, 1993)
-    G       <- ifelse(is.null(G), nmll(gid), G)
+    # Wed Mar 29 11:07:40 2017 ------------------------------
+    # This approximation may not be correct. Parks and Werth gave the situation
+    # for a single encounter as 
+    # 
+    # pSex = 1 - (1 - pGen)^G
+    # 
+    # But the problem is that this is not the reduction of the binomial 
+    # expression for a single trial. The reduction for a single trial is
+    # 
+    # pSex = (G * pGen) * ((1 - pGen)^(G - 1))
+    # 
+    # See: https://www.wolframalpha.com/input/?i=binomial+density+where+x+is+1
+    # G       <- if (is.null(G)) nmll(gid) else G
+    nmlls   <- rowSums(mlg.matrix(gid) > 0)
+    nmlls   <- nmlls[pop(gid)]
+    G       <- treat_G(G, nmlls, gid, NULL, "single")
     pNotGen <- (1 - xpgen)^G
     return(1 - pNotGen)
   } else {
     # Calculate for n encounters (Arnaud-Haond et al, 1997)
 
-    # Wed Sep  2 11:20:56 2015 ------------------------------
-    # First step: get a vector of number of samples per mlg. Since pgen might
-    # have been calculated using population-level frequencies, I'm not clone
-    # correcting here, which results in a lot of redundant computations. I will
-    # come up with a more clever way to handle this later.
-    mlls       <- mll(gid, "original")
-    mll_counts <- table(mlls)
-    mll_counts <- mll_counts[match(as.character(mlls), names(mll_counts))]
-    # Loop over each sample
-    pSex <- vapply(seq(nInd(gid)), function(i){
-      trials <- seq(mll_counts[i]) # number of samples in the MLG
-      pgeni  <- xpgen[i]           # pgen for that MLG
-      dens   <- stats::dbinom(trials, mll_counts[i], pgeni) # vector of probabilites
-      sum(dens, na.rm = TRUE) # return the sum probability.
-    }, numeric(1))
+    # Tue Mar 28 17:16:57 2017 ------------------------------
+    # The initial version of this was calculated as
+    # sum(dbinom(seq(n_samples_in_mlg), n_samples_in_mlg, pgen)) where each
+    # sample in the MLG had the same pgen value. The correct formuation is:
+    # 
+    # dbinom(seq(n_samples_in_mlg) - 1, n_samples, pgen)
+    pSex <- setNames(vector(mode = "numeric", length = nInd(gid)), indNames(gid))
+    
+    for (p in popNames(gid)){
+      pgid       <- gid[pop = p]
+      pxpgen     <- xpgen[pop(gid) == p]
+      mlls       <- mll(pgid, "original")
+      mll_counts <- table(mlls)
+      ipgen      <- which(!duplicated(mlls))
+      ipgen      <- ipgen[order(unique(mlls))]
+      upgen      <- pxpgen[ipgen]
+      sample_ids <- mlg.id(pgid)
+      N          <- treat_G(G, nInd(pgid), gid, p, "multiple")
+      pSexp      <- mapply(make_psex, 
+                           n_encounters = mll_counts, 
+                           p_genotype   = upgen, 
+                           sample_ids   = sample_ids, 
+                           n_samples    = N, 
+                           SIMPLIFY     = FALSE)
+      names(pSexp)         <- NULL
+      pSex[indNames(pgid)] <- unlist(pSexp)[indNames(pgid)]
+    }
     return(pSex)
   }
 }
