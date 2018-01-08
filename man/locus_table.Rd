@@ -8,7 +8,7 @@ locus_table(x, index = "simpson", lev = "allele", population = "ALL",
   information = TRUE)
 }
 \arguments{
-\item{x}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+\item{x}{a \linkS4class{genind} or \linkS4class{genclone}
 object.}
 
 \item{index}{Which diversity index to use. Choices are \itemize{ \item
@@ -20,29 +20,33 @@ Inverse Simpson's index aka the Stoddard and Tayor index.}}
 \code{"allele"} (Default) or \code{"genotype"}.}
 
 \item{population}{Select the populations to be analyzed. This is the
-parameter \code{sublist} passed on to the function \code{\link{popsub}}.
+parameter \code{sublist} passed on to the function \code{\link[=popsub]{popsub()}}.
 Defaults to \code{"ALL"}.}
 
 \item{information}{When \code{TRUE} (Default), this will print out a header
 of information to the R console.}
 }
 \value{
-a table with 4 columns indicating the Number of alleles/genotypes 
-  observed, Diversity index chosen, Nei's 1978 gene diversity (expected
-  heterozygosity), and Evenness.
+a table with 4 columns indicating the Number of alleles/genotypes
+observed, Diversity index chosen, Nei's 1978 gene diversity (expected
+heterozygosity), and Evenness.
 }
 \description{
 Create a table of summary statistics per locus.
 }
 \note{
 The calculation of \code{Hexp} is \eqn{(\frac{n}{n-1}) 1 - \sum_{i = 
-  1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele 
-  frequencies at a given locus and n is the number of observed alleles (Nei, 
-  1978) in each locus and then returning the average. Caution should be 
-  exercised in interpreting the results of Hexp with polyploid organisms with
-  ambiguous ploidy. The lack of allelic dosage information will cause rare 
-  alleles to be over-represented and artificially inflate the index. This is 
-  especially true with small sample sizes.
+  1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele
+frequencies at a given locus and n is the number of observed alleles (Nei,
+1978) in each locus and then returning the average. Caution should be
+exercised in interpreting the results of Hexp with polyploid organisms with
+ambiguous ploidy. The lack of allelic dosage information will cause rare
+alleles to be over-represented and artificially inflate the index. This is
+especially true with small sample sizes.
+
+If \code{lev = "genotype"}, then all statistics reflect \strong{genotypic} diversity
+within each locus. This includes the calculation for \code{Hexp}, which turns
+into the unbiased Simpson's index.
 }
 \examples{
 
@@ -57,31 +61,31 @@ locus_table(Pinf, population = "North America")
 }
 }
 \references{
-Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
-  R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. 
-  Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R 
-  package version 2.0-5.
+Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter
+R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H.
+Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R
+package version 2.0-5.
 
-  Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
-  E. Fry. Analysis of genotypic diversity data for populations of 
-  microorganisms. Phytopathology, 93(6):738-46, 2003
-  
-  J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
-  Computing. New York USA: John Wiley and Sons, 1988.
-  
-  E.C. Pielou. Ecological Diversity. Wiley, 1975.
-  
-  J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
-  prediction in samples. Genetics, 118(4):705-11, 1988.
-  
-  Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
-  from a small number of individuals. Genetics, 89(3):583-590, 1978.
+Niklaus J. Gr"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
+E. Fry. Analysis of genotypic diversity data for populations of
+microorganisms. Phytopathology, 93(6):738-46, 2003
 
-  Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
-  Technical Journal, 27:379-423,623-656, 1948
+J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
+Computing. New York USA: John Wiley and Sons, 1988.
+
+E.C. Pielou. Ecological Diversity. Wiley, 1975.
+
+J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
+prediction in samples. Genetics, 118(4):705-11, 1988.
+
+Masatoshi Nei. Estimation of average heterozygosity and genetic distance
+from a small number of individuals. Genetics, 89(3):583-590, 1978.
+
+Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
+Technical Journal, 27:379-423,623-656, 1948
 }
 \seealso{
-\code{\link[vegan]{diversity}}, \code{\link{poppr}}
+\code{\link[vegan:diversity]{vegan::diversity()}}, \code{\link[=poppr]{poppr()}}
 }
 \author{
 Zhian N. Kamvar

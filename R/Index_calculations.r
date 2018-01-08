@@ -857,31 +857,32 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 #==============================================================================#
 #' Create a table of summary statistics per locus. 
 #' 
-#' @param x a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#' @param x a [genind-class] or [genclone-class]
 #'   object.
 #' 
 #' @param index Which diversity index to use. Choices are \itemize{ \item
-#'   \code{"simpson"} (Default) to give Simpson's index \item \code{"shannon"}
-#'   to give the Shannon-Wiener index \item \code{"invsimpson"} to give the
+#'   `"simpson"` (Default) to give Simpson's index \item `"shannon"`
+#'   to give the Shannon-Wiener index \item `"invsimpson"` to give the
 #'   Inverse Simpson's index aka the Stoddard and Tayor index.}
 #'   
 #' @param lev At what level do you want to analyze diversity? Choices are
-#'   \code{"allele"} (Default) or \code{"genotype"}.
+#'   `"allele"` (Default) or `"genotype"`.
 #'   
 #' @param population Select the populations to be analyzed. This is the
-#'   parameter \code{sublist} passed on to the function \code{\link{popsub}}.
-#'   Defaults to \code{"ALL"}.
+#'   parameter `sublist` passed on to the function [popsub()].
+#'   Defaults to `"ALL"`.
 #'   
-#' @param information When \code{TRUE} (Default), this will print out a header
+#' @param information When `TRUE` (Default), this will print out a header
 #'   of information to the R console.
 #'   
 #' @return a table with 4 columns indicating the Number of alleles/genotypes 
 #'   observed, Diversity index chosen, Nei's 1978 gene diversity (expected
 #'   heterozygosity), and Evenness.
 #'   
-#' @seealso \code{\link[vegan]{diversity}}, \code{\link{poppr}}
+#' @seealso [vegan::diversity()], [poppr()]
+#' @md
 #'   
-#' @note The calculation of \code{Hexp} is \eqn{(\frac{n}{n-1}) 1 - \sum_{i = 
+#' @note The calculation of `Hexp` is \eqn{(\frac{n}{n-1}) 1 - \sum_{i = 
 #'   1}^k{p^{2}_{i}}}{(n/(n - 1))*(1 - sum(p^2))} where p is the allele 
 #'   frequencies at a given locus and n is the number of observed alleles (Nei, 
 #'   1978) in each locus and then returning the average. Caution should be 
@@ -889,6 +890,10 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
 #'   ambiguous ploidy. The lack of allelic dosage information will cause rare 
 #'   alleles to be over-represented and artificially inflate the index. This is 
 #'   especially true with small sample sizes.
+#'   
+#'   If `lev = "genotype"`, then all statistics reflect **genotypic** diversity
+#'   within each locus. This includes the calculation for `Hexp`, which turns
+#'   into the unbiased Simpson's index.
 #'   
 #' @author Zhian N. Kamvar
 #' 
@@ -965,41 +970,42 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #==============================================================================#
 #' Tabulate alleles the occur in only one population. 
 #' 
-#' @param gid a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+#' @param gid a [genind-class] or [genclone-class]
 #'   object.
 #'   
-#' @param form a \code{\link{formula}} giving the levels of markers and 
+#' @param form a [formula()] giving the levels of markers and 
 #'   hierarchy to analyze. See Details.
 #'   
-#' @param report one of \code{"table", "vector",} or \code{"data.frame"}. Tables
+#' @param report one of `"table", "vector",` or `"data.frame"`. Tables
 #'   (Default) and data frame will report counts along with populations or 
 #'   individuals. Vectors will simply report which populations or individuals 
 #'   contain private alleles. Tables are matrices with populations or 
 #'   individuals in rows and alleles in columns. Data frames are long form.
 #'   
-#' @param level one of \code{"population"} (Default) or \code{"individual"}.
+#' @param level one of `"population"` (Default) or `"individual"`.
 #'   
-#' @param count.alleles \code{logical}. If \code{TRUE} (Default), The report 
+#' @param count.alleles `logical`. If `TRUE` (Default), The report 
 #'   will return the observed number of alleles private to each population. If 
-#'   \code{FALSE}, each private allele will be counted once, regardless of 
+#'   `FALSE`, each private allele will be counted once, regardless of 
 #'   dosage.
 #' 
-#' @param drop \code{logical}. if \code{TRUE}, populations/individuals without 
-#'   private alleles will be dropped from the result. Defaults to \code{FALSE}.
+#' @param drop `logical`. if `TRUE`, populations/individuals without 
+#'   private alleles will be dropped from the result. Defaults to `FALSE`.
 #'   
 #' @return a matrix, data.frame, or vector defining the populations or
 #'   individuals containing private alleles. If vector is chosen, alleles are
 #'   not defined.
 #'
-#' @details the argument \code{form} allows for control over the strata at which
+#' @details the argument `form` allows for control over the strata at which
 #'   private alleles should be computed. It takes a form where the left hand
 #'   side of the formula can be either "allele", "locus", or "loci". The right
 #'   hand of the equation, by default is ".". If you change it, it must
-#'   correspond to strata located in the \code{\link[adegenet]{strata}} slot.
+#'   correspond to strata located in the [adegenet::strata()] slot.
 #'   Note, that the right hand side is disabled for genpop objects.
 #' 
 #' @export
 #' @author Zhian N. Kamvar
+#' @md
 #' @examples
 #' 
 #' data(Pinf) # Load P. infestans data.

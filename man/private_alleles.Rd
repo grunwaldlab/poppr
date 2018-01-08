@@ -8,43 +8,43 @@ private_alleles(gid, form = alleles ~ ., report = "table",
   level = "population", count.alleles = TRUE, drop = FALSE)
 }
 \arguments{
-\item{gid}{a \code{\linkS4class{genind}} or \code{\linkS4class{genclone}}
+\item{gid}{a \linkS4class{genind} or \linkS4class{genclone}
 object.}
 
-\item{form}{a \code{\link{formula}} giving the levels of markers and 
+\item{form}{a \code{\link[=formula]{formula()}} giving the levels of markers and
 hierarchy to analyze. See Details.}
 
 \item{report}{one of \code{"table", "vector",} or \code{"data.frame"}. Tables
-(Default) and data frame will report counts along with populations or 
-individuals. Vectors will simply report which populations or individuals 
-contain private alleles. Tables are matrices with populations or 
+(Default) and data frame will report counts along with populations or
+individuals. Vectors will simply report which populations or individuals
+contain private alleles. Tables are matrices with populations or
 individuals in rows and alleles in columns. Data frames are long form.}
 
 \item{level}{one of \code{"population"} (Default) or \code{"individual"}.}
 
-\item{count.alleles}{\code{logical}. If \code{TRUE} (Default), The report 
-will return the observed number of alleles private to each population. If 
-\code{FALSE}, each private allele will be counted once, regardless of 
+\item{count.alleles}{\code{logical}. If \code{TRUE} (Default), The report
+will return the observed number of alleles private to each population. If
+\code{FALSE}, each private allele will be counted once, regardless of
 dosage.}
 
-\item{drop}{\code{logical}. if \code{TRUE}, populations/individuals without 
+\item{drop}{\code{logical}. if \code{TRUE}, populations/individuals without
 private alleles will be dropped from the result. Defaults to \code{FALSE}.}
 }
 \value{
 a matrix, data.frame, or vector defining the populations or
-  individuals containing private alleles. If vector is chosen, alleles are
-  not defined.
+individuals containing private alleles. If vector is chosen, alleles are
+not defined.
 }
 \description{
 Tabulate alleles the occur in only one population.
 }
 \details{
 the argument \code{form} allows for control over the strata at which
-  private alleles should be computed. It takes a form where the left hand
-  side of the formula can be either "allele", "locus", or "loci". The right
-  hand of the equation, by default is ".". If you change it, it must
-  correspond to strata located in the \code{\link[adegenet]{strata}} slot.
-  Note, that the right hand side is disabled for genpop objects.
+private alleles should be computed. It takes a form where the left hand
+side of the formula can be either "allele", "locus", or "loci". The right
+hand of the equation, by default is ".". If you change it, it must
+correspond to strata located in the \code{\link[adegenet:strata]{adegenet::strata()}} slot.
+Note, that the right hand side is disabled for genpop objects.
 }
 \examples{
 
