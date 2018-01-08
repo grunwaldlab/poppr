@@ -5,8 +5,7 @@ NEW FUNCTIONS
 -------------
 
 * The new function `boot.ia()` is conceptually similar to `resample.ia()`,
-  except it resamples with replacement. This may be absorbed into `resample.ia()`
-  as an extra parameter of "replace".
+  except it resamples with replacement. 
   
 NEW FEATURES
 ------------
