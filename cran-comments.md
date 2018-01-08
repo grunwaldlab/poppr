@@ -1,12 +1,10 @@
-# Poppr version 2.5.0
-
-This version incorporates very important bugfixes for my users.
+# Poppr version 2.6.0
 
 ## Test environments
 
-* local OS X install, R 3.4.1
-* ubuntu 12.04 (on travis-ci), devel (2017-09-10 r73226) and R 3.4.1
-* winbuilder R-devel (2017-09-08 r73224)
+* local OS X install, R 3.4.3
+* ubuntu 12.04 (on travis-ci), devel (2018-01-03 r74038) and R 3.4.3
+* winbuilder R-devel (2018-01-07 r74096)
 
 ## R CMD check results
 
