@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -104,19 +123,20 @@ beginning of a sentence.</p>
   <code><a href='genclone-class.html'>genclone</a></code> and <code><a href='genclone-class.html'>snpclone</a></code>,
   respectively. These objects are designed for analysis of clonal organisms
   as they add the <strong>@mlg</strong> slot for keeping track of multilocus
-  genotypes and multilocus lineages.</p><h3>Documentation</h3>
+  genotypes and multilocus lineages.</p>  
+<p></p><h3>Documentation</h3>
  Documentation is available for any function by 
   typing <code>?function_name</code> in the R console. Detailed topic explanations
   live in the package vignettes:
     <table><tr><td>
     <strong>Vignette</strong>              </td>
-</tr><tr><td> <strong>command</strong></td>
+<td> <strong>command</strong></td>
 </tr><tr><td>
     Data import and manipulation   </td>
-</tr><tr><td> <code>NA</code></td>
+<td> <code><a href='https://cran.rstudio.com/web/packages/poppr/vignettes/poppr_manual.html'>vignette("poppr_manual", "poppr")</a></code></td>
 </tr><tr><td>
     Algorithms and Equations      </td>
-</tr><tr><td> <code>NA</code></td>
+<td> <code>vignette("algo", "poppr")</code></td>
 </tr></table>
     Essential functions for importing and manipulating data are detailed within
   the <em>Data import and manipulation</em> vignette, details on algorithms
@@ -124,12 +144,13 @@ beginning of a sentence.</p>
   vignette, and details for working with multilocus genotypes are in
   <em>Multilocus Genotype Analysis</em>. Examples of analyses are available in
   a primer written by Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E.
-  Everhart at <a href = 'http://grunwaldlab.github.io/Population_Genetics_in_R'>http://grunwaldlab.github.io/Population_Genetics_in_R</a>.<p></p><h3>Getting help</h3>
+  Everhart at <a href='http://grunwaldlab.github.io/Population_Genetics_in_R'>http://grunwaldlab.github.io/Population_Genetics_in_R</a>.
+    <p></p><h3>Getting help</h3>
  If you have a specific question or issue with 
   <span class="pkg">poppr</span>, feel free to contribute to the google group at 
-  <a href = 'https://groups.google.com/group/poppr'>https://groups.google.com/group/poppr</a>. If you find a bug and 
+  <a href='https://groups.google.com/group/poppr'>https://groups.google.com/group/poppr</a>. If you find a bug and 
   are a github user, you can submit bug reports at 
-  <a href = 'https://github.com/grunwaldlab/poppr/issues'>https://github.com/grunwaldlab/poppr/issues</a>. Otherwise, leave a
+  <a href='https://github.com/grunwaldlab/poppr/issues'>https://github.com/grunwaldlab/poppr/issues</a>. Otherwise, leave a
   message on the groups. Personal emails are highly discouraged as they do 
   not allow others to learn.
     
@@ -142,10 +163,10 @@ beginning of a sentence.</p>
 <li><p><code>function</code> (data type) - Description</p></li>
 </ul><p>Where &#8216;data type&#8217; refers to the type of data that can be used:</p><table><tr><td>
     <strong>m</strong> </td>
-</tr><tr><td> a genclone or genind object </td>
+<td> a genclone or genind object </td>
 </tr><tr><td>
     <strong>s</strong> </td>
-</tr><tr><td> a snpclone or genlight object </td>
+<td> a snpclone or genlight object </td>
 </tr></table>
     
     <h2 class="hasAnchor" id="data-import-export"><a class="anchor" href="#data-import-export"></a>Data import/export</h2>
@@ -202,9 +223,9 @@ beginning of a sentence.</p>
     
     <h3>Multilocus Genotypes</h3>
     <ul>
-<li><p><code><a href='mlg.html'>mlg</a></code> (m | s) - Calculates the number of multilocus genotypes</p></li>
+<li><p><code>mlg</code> (m | s) - Calculates the number of multilocus genotypes</p></li>
 <li><p><code><a href='mll-method.html'>mll</a></code> (m | s) - Displays the current multilocus lineages (genotypes) defined.</p></li>
-<li><p><code><a href='mll-method.html'>nmll</a></code> (m | s) - Same as <code><a href='mlg.html'>mlg</a></code>.</p></li>
+<li><p><code><a href='mll-method.html'>nmll</a></code> (m | s) - Same as <code>mlg</code>.</p></li>
 <li><p><code><a href='mlg.html'>mlg.crosspop</a></code> (m | s) - Finds all multilocus genotypes that cross populations</p></li>
 <li><p><code><a href='mlg.html'>mlg.table</a></code> (m | s) - Returns a table of populations by multilocus genotypes</p></li>
 <li><p><code><a href='mlg.html'>mlg.vector</a></code> (m | s) - Returns a vector of a numeric multilocus genotype assignment for each individual</p></li>
@@ -270,20 +291,20 @@ ramorum</em> (Kamvar et. al., 2015; Goss et. al., 2009)</p></li>
     <p>--------- Papers announcing poppr ---------</p>
 <p>Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
 analysis of populations with clonal, partially clonal, and/or sexual
-reproduction. PeerJ 2:e281 <a href = 'http://dx.doi.org/10.7717/peerj.281'>http://dx.doi.org/10.7717/peerj.281</a></p>
+reproduction. PeerJ 2:e281 <a href='http://dx.doi.org/10.7717/peerj.281'>http://dx.doi.org/10.7717/peerj.281</a></p>
 <p>Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
 6:208. doi: 10.3389/fgene.2015.00208 
-<a href = 'http://dx.doi.org/10.3389/fgene.2015.00208'>http://dx.doi.org/10.3389/fgene.2015.00208</a></p>
+<a href='http://dx.doi.org/10.3389/fgene.2015.00208'>http://dx.doi.org/10.3389/fgene.2015.00208</a></p>
 <p>--------- Papers referencing data sets ---------</p>
 <p>Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity, 
 Selfing, and Genetic Differentiation in Populations of the Oomycete 
 <em>Aphanomyces euteiches</em>. Phytopathology 96:1134-1141 doi: 
-<a href = 'http://dx.doi.org/10.1094/PHYTO-96-1134'>10.1094/PHYTO-96-1134</a></p>
+<a href='http://dx.doi.org/10.1094/PHYTO-96-1134'>10.1094/PHYTO-96-1134</a></p>
 <p>SE Everhart, H Scherm, (2015) Fine-scale genetic structure of <em>Monilinia
 fructicola</em> during brown rot epidemics within individual peach tree canopies.
 Phytopathology 105:542-549 doi: 
-<a href = 'http://dx.doi.org/10.1094/PHYTO-03-14-0088-R'>10.1094/PHYTO-03-14-0088-R</a></p>
+<a href='http://dx.doi.org/10.1094/PHYTO-03-14-0088-R'>10.1094/PHYTO-03-14-0088-R</a></p>
 <p>Bo Peng and Christopher Amos (2008) Forward-time simulations of nonrandom 
 mating populations using simuPOP. <em>bioinformatics</em>, 24 (11): 1408-1409.</p>
 <p>Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia Restrepo, William E.
@@ -291,15 +312,15 @@ Fry, Gregory A. Forbes, Valerie J. Fieland, Martha Cardenas, and Niklaus J.
 Grünwald. (2014) "The Irish potato famine pathogen <em>Phytophthora 
 infestans</em> originated in central Mexico rather than the Andes." Proceedings 
 of the National Academy of Sciences 111:8791-8796. doi: 
-<a href = 'http://dx.doi.org/10.1073/pnas.1401884111'>10.1073/pnas.1401884111</a></p>
+<a href='http://dx.doi.org/10.1073/pnas.1401884111'>10.1073/pnas.1401884111</a></p>
 <p>Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., &amp; Grünwald, N.
 J. (2015). Spatial and temporal analysis of populations of the sudden oak
 death pathogen in Oregon forests. Phytopathology 105:982-989. doi: 
-<a href = 'http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI'>10.1094/PHYTO-12-14-0350-FI</a></p>
+<a href='http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI'>10.1094/PHYTO-12-14-0350-FI</a></p>
     <p>Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N. 
 J. 2009. Population genetic analysis infers migration pathways of 
 <em>Phytophthora ramorum</em> in US nurseries. PLoS Pathog. 5:e1000583. doi: 
-<a href = 'http://dx.doi.org/10.1371/journal.ppat.1000583'>10.1371/journal.ppat.1000583</a></p>
+<a href='http://dx.doi.org/10.1371/journal.ppat.1000583'>10.1371/journal.ppat.1000583</a></p>
     
 
   </div>

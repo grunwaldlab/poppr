@@ -29,10 +29,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="articles/index.html">Articles</a>
+  <a href="reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="news/index.html">News</a>
@@ -40,7 +58,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -151,14 +169,14 @@
 <h4 class="hasAnchor">
 <a href="#stable-version" class="anchor"></a>Stable version</h4>
 <p>This release will contain bug fixes and new, documented, and stable features that will be included in future releases. Note: if you don’t have LaTeX installed, you should set <code>build_vignettes = FALSE</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)
 <span class="kw">library</span>(<span class="st">"poppr"</span>)</code></pre></div>
 </div>
 <div id="unstabledevelopment-versions" class="section level4">
 <h4 class="hasAnchor">
 <a href="#unstabledevelopment-versions" class="anchor"></a>Unstable/Development versions</h4>
 <p>All new features in testing will be released on different branches. These features will be in various stages of development and may or may not be documented. Install with caution. The below command would install features on the the branch called “devel”. Note that these branches might be out of date from the master branch.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr@devel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr@devel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)
 <span class="kw">library</span>(<span class="st">"poppr"</span>)</code></pre></div>
 </div>
 </div>
@@ -184,15 +202,15 @@
 <tbody>
 <tr class="odd">
 <td align="left">Algorightms and Equations</td>
-<td align="left"><code>vignette("algo", "poppr")</code></td>
+<td align="left"><code><a href="https://cran.rstudio.com/web/packages/poppr/vignettes/algo.pdf">vignette("algo", "poppr")</a></code></td>
 </tr>
 <tr class="even">
 <td align="left">Data import and manipulation</td>
-<td align="left"><code>vignette("poppr_manual", "poppr")</code></td>
+<td align="left"><code><a href="https://cran.rstudio.com/web/packages/poppr/vignettes/poppr_manual.html">vignette("poppr_manual", "poppr")</a></code></td>
 </tr>
 <tr class="odd">
 <td align="left">Multilocus Genotype Analysis</td>
-<td align="left"><code>vignette("mlg", "poppr")</code></td>
+<td align="left"><code><a href="https://cran.rstudio.com/web/packages/poppr/vignettes/mlg.html">vignette("mlg", "poppr")</a></code></td>
 </tr>
 </tbody>
 </table>
@@ -221,17 +239,23 @@
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cran.r-project.org/package=poppr">https://​cran.r-project.org/​package=poppr</a>
 </li>
-<li>Browse source code at <br><a href="http://github.com/grunwaldlab/poppr">http://​github.com/​grunwaldlab/​poppr</a>
+<li>Browse source code at <br><a href="https://github.com/grunwaldlab/poppr">https://​github.com/​grunwaldlab/​poppr</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/grunwaldlab/poppr/issues">https://​github.com/​grunwaldlab/​poppr/​issues</a>
 </li>
 </ul>
 <h2>License</h2>
 <p><a href="https://www.r-project.org/Licenses/GPL-2">GPL-2</a> | <a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></p>
+<h2>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html">Citing poppr</a></li>
+</ul>
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Zhian N. Kamvar <br><small class="roles"> Maintainer, author </small> </li>
-<li>Javier F. Tabima <br><small class="roles"> Author </small> </li>
+<li>Zhian N. Kamvar <br><small class="roles"> Maintainer, author </small> <br><small>(0000-0003-1458-7108)</small>
+</li>
+<li>Javier F. Tabima <br><small class="roles"> Author </small> <br><small>(0000-0002-3603-2691)</small>
+</li>
 <li>Jonah C. Brooks <br><small class="roles"> Author </small> </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>

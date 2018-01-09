@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -101,9 +120,10 @@
 <span class='fu'>pair.ia</span>(<span class='no'>gid</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"red"</span>,
   <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>)
 
-<span class='fu'>resample.ia</span>(<span class='no'>gid</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>resample.ia</span>(<span class='no'>gid</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>use_psex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>)
 
-<span class='fu'>jack.ia</span>(<span class='no'>...</span>)</pre>
+<span class='fu'>jack.ia</span>(<span class='no'>gid</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -180,12 +200,17 @@ numbers between -1 and 1, (e.g. <code>limits = c(-0.15, 1)</code>)</p></td>
     </tr>
     <tr>
       <th>reps</th>
-      <td><p>an integer specifying the number of replicates to perform.
+      <td><p>an integer specifying the number of replicates to perform. 
 Defaults to 999.</p></td>
     </tr>
     <tr>
+      <th>use_psex</th>
+      <td><p>a logical. If <code>TRUE</code>, the samples will be weighted by the value 
+of psex. Defaults to <code>FALSE</code>.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
-      <td><p>arguments to be passed on to resample.ia</p></td>
+      <td><p>arguments passed on to <code><a href='psex.html'>psex</a></code></p></td>
     </tr>
     </table>
     
@@ -254,39 +279,39 @@ association in columns. Number of rows represents the number of reps.
   of the genotype made up by that allele at that locus. Notice also that the 
   sum of the rows all equal one. Poppr uses this to calculate distances by 
   simply taking the sum of the absolute values of the differences between 
-  rows.
-    The calculation for the distance between two individuals at a single locus 
+  rows.</p>  
+<p>The calculation for the distance between two individuals at a single locus 
   with <em>a</em> allelic states and a ploidy of <em>k</em> is as follows (except
   for Presence/Absence data): $$ d = \displaystyle 
   \frac{k}{2}\sum_{i=1}^{a} \mid A_{i} - B_{i}\mid $$ 
   To find the total number of differences 
   between two individuals over all loci, you just take <em>d</em> over <em>m</em>
-  loci, a value we'll call <em>D</em>:
-    $$D = \displaystyle \sum_{i=1}^{m} d_i $$
-    These values are calculated over all possible combinations of individuals 
+  loci, a value we'll call <em>D</em>:</p>  
+<p>$$D = \displaystyle \sum_{i=1}^{m} d_i $$</p>  
+<p>These values are calculated over all possible combinations of individuals 
   in the data set, \({n \choose 2}\) after which you end up 
   with \({n \choose 2}\cdot{}m\) values of <em>d</em> and 
   \({n \choose 2}\) values of <em>D</em>. Calculating the 
   observed variances is fairly straightforward (modified from Agapow and 
-  Burt, 2001):
-    $$ V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - 
+  Burt, 2001):</p>  
+<p>$$ V_O = \frac{\displaystyle \sum_{i=1}^{n \choose 2} D_{i}^2 - 
   \frac{(\displaystyle\sum_{i=1}^{n \choose 2} D_{i})^2}{{n \choose 2}}}{{n 
-  \choose 2}}$$
-    Calculating the expected variance is the sum of each of the variances of 
+  \choose 2}}$$</p>  
+<p>Calculating the expected variance is the sum of each of the variances of 
   the individual loci. The calculation at a single locus, <em>j</em> is the 
   same as the previous equation, substituting values of <em>D</em> for 
-  <em>d</em>:
-    $$ var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - 
+  <em>d</em>:</p>  
+<p>$$ var_j = \frac{\displaystyle \sum_{i=1}^{n \choose 2} d_{i}^2 - 
   \frac{(\displaystyle\sum_{i=1}^{n \choose 2} d_i)^2}{{n \choose 2}}}{{n 
-  \choose 2}} $$
-    The expected variance is then the sum of all the variances over all 
-  <em>m</em> loci:
-    $$ V_E = \displaystyle \sum_{j=1}^{m} var_j $$
-    Agapow and Burt showed that \(I_A\) increases steadily with the
+  \choose 2}} $$</p>  
+<p>The expected variance is then the sum of all the variances over all 
+  <em>m</em> loci:</p>  
+<p>$$ V_E = \displaystyle \sum_{j=1}^{m} var_j $$</p>  
+<p>Agapow and Burt showed that \(I_A\) increases steadily with the
   number of loci, so they came up with an approximation that is widely used,
   \(\bar r_d\). For the derivation, see the manual for
-  <em>multilocus</em>.
-    $$ \bar r_d = \frac{V_O - V_E} {2\displaystyle 
+  <em>multilocus</em>.</p>  
+<p>$$ \bar r_d = \frac{V_O - V_E} {2\displaystyle 
   \sum_{j=1}^{m}\displaystyle \sum_{k \neq j}^{m}\sqrt{var_j\cdot{}var_k}} 
   $$</p>
     
@@ -299,10 +324,10 @@ association in columns. Number of rows represents the number of reps.
 
     <p>Paul-Michael Agapow and Austin Burt. Indices of multilocus 
   linkage disequilibrium. <em>Molecular Ecology Notes</em>, 1(1-2):101-102, 
-  2001
-    A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
-  populations of <em>Hordeum spontaneum</em>. <em>Genetics</em>, 96(2):523-536, 1980.
-    J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
+  2001</p>  
+<p>A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
+  populations of <em>Hordeum spontaneum</em>. <em>Genetics</em>, 96(2):523-536, 1980.</p>  
+<p>J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
   Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -318,162 +343,161 @@ association in columns. Number of rows represents the number of reps.
 #&gt; 0.17207262 0.02178965 </div><div class='input'>
 <span class='co'># Pairwise over all loci:</span>
 <span class='fu'>data</span>(<span class='no'>partial_clone</span>)
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>partial_clone</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   2%  |                                                                              |===                                                                   |   4%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   9%  |                                                                              |========                                                              |  11%  |                                                                              |=========                                                             |  13%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  18%  |                                                                              |==============                                                        |  20%  |                                                                              |================                                                      |  22%  |                                                                              |=================                                                     |  24%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  29%  |                                                                              |======================                                                |  31%  |                                                                              |=======================                                               |  33%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  38%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  42%  |                                                                              |===============================                                       |  44%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  49%  |                                                                              |====================================                                  |  51%  |                                                                              |=====================================                                 |  53%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  58%  |                                                                              |==========================================                            |  60%  |                                                                              |============================================                          |  62%  |                                                                              |=============================================                         |  64%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  69%  |                                                                              |==================================================                    |  71%  |                                                                              |===================================================                   |  73%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  78%  |                                                                              |========================================================              |  80%  |                                                                              |==========================================================            |  82%  |                                                                              |===========================================================           |  84%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  89%  |                                                                              |================================================================      |  91%  |                                                                              |=================================================================     |  93%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  98%  |                                                                              |======================================================================| 100%</div><img src='ia-5.png' alt='' width='540' height='400' /><div class='input'><span class='fu'>plot</span>(<span class='no'>res</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)</div><img src='ia-7.png' alt='' width='540' height='400' /><div class='input'>
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>partial_clone</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   2%  |                                                                              |===                                                                   |   4%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   9%  |                                                                              |========                                                              |  11%  |                                                                              |=========                                                             |  13%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  18%  |                                                                              |==============                                                        |  20%  |                                                                              |================                                                      |  22%  |                                                                              |=================                                                     |  24%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  29%  |                                                                              |======================                                                |  31%  |                                                                              |=======================                                               |  33%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  38%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  42%  |                                                                              |===============================                                       |  44%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  49%  |                                                                              |====================================                                  |  51%  |                                                                              |=====================================                                 |  53%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  58%  |                                                                              |==========================================                            |  60%  |                                                                              |============================================                          |  62%  |                                                                              |=============================================                         |  64%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  69%  |                                                                              |==================================================                    |  71%  |                                                                              |===================================================                   |  73%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  78%  |                                                                              |========================================================              |  80%  |                                                                              |==========================================================            |  82%  |                                                                              |===========================================================           |  84%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  89%  |                                                                              |================================================================      |  91%  |                                                                              |=================================================================     |  93%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  98%  |                                                                              |======================================================================| 100%</div><div class='img'><img src='ia-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>res</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)</div><div class='img'><img src='ia-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># Resampling</span>
 <span class='fu'>data</span>(<span class='no'>Pinf</span>)
-<span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |=                                                     |  2% ~20 s remaining    |============================                          | 53% ~0 s remaining     |======================================================|100% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
-#&gt; 1  0.7540432 0.08637437
-#&gt; 2  0.7230964 0.07937610
-#&gt; 3  0.6621155 0.07235257
-#&gt; 4  0.6470759 0.07077117
-#&gt; 5  0.7692276 0.08419688
-#&gt; 6  0.7363872 0.08058121
-#&gt; 7  0.6518033 0.07153535
-#&gt; 8  0.6419717 0.07019230
-#&gt; 9  0.5539919 0.06078353
-#&gt; 10 0.6089765 0.06970642
-#&gt; 11 0.7336384 0.08069040
-#&gt; 12 0.5258643 0.05738924
-#&gt; 13 0.5850364 0.06395097
-#&gt; 14 0.5939415 0.06486458
-#&gt; 15 0.7158050 0.08179718
-#&gt; 16 0.5949997 0.06515951
-#&gt; 17 0.5233248 0.05710783
-#&gt; 18 0.6000663 0.06550120
-#&gt; 19 0.5456479 0.05946649
-#&gt; 20 0.5948450 0.06498867
-#&gt; 21 0.7153089 0.08235701
-#&gt; 22 0.5427356 0.06209942
-#&gt; 23 0.7713364 0.08473771
-#&gt; 24 0.5793171 0.06365828
-#&gt; 25 0.7908562 0.08634700
-#&gt; 26 0.5825423 0.06426749
-#&gt; 27 0.6604865 0.07227388
-#&gt; 28 0.8152550 0.09370012
-#&gt; 29 0.6606833 0.07248066
-#&gt; 30 0.7365006 0.08074172
-#&gt; 31 0.6029096 0.06589298
-#&gt; 32 0.7127953 0.07860745
-#&gt; 33 0.6918628 0.07590020
-#&gt; 34 0.6079353 0.06637168
-#&gt; 35 0.6437233 0.07044888
-#&gt; 36 0.7387087 0.08502380
-#&gt; 37 0.6147030 0.06718639
-#&gt; 38 0.6179642 0.07092068
-#&gt; 39 0.6678007 0.07322927
-#&gt; 40 0.6266669 0.06861165
-#&gt; 41 0.6944290 0.07950279
-#&gt; 42 0.6128523 0.07006421
-#&gt; 43 0.6481973 0.07117105
-#&gt; 44 0.5898487 0.06428920
-#&gt; 45 0.7235534 0.07948985
-#&gt; 46 0.7630591 0.08746586
-#&gt; 47 0.6918095 0.07963881
-#&gt; 48 0.6173768 0.06749355
-#&gt; 49 0.7458107 0.08592816
-#&gt; 50 0.6898711 0.07579100
-#&gt; 51 0.6408425 0.07045914
-#&gt; 52 0.5355963 0.05850171
-#&gt; 53 0.7337261 0.08414233
-#&gt; 54 0.6913770 0.07556987
-#&gt; 55 0.7814389 0.08940902
-#&gt; 56 0.6792803 0.07775430
-#&gt; 57 0.6793801 0.07446729
-#&gt; 58 0.8357361 0.09168928
-#&gt; 59 0.7834193 0.08981290
-#&gt; 60 0.5369947 0.05840308
-#&gt; 61 0.7534155 0.08252708
-#&gt; 62 0.6248819 0.06828621
-#&gt; 63 0.5538704 0.06330450
-#&gt; 64 0.7152898 0.07816883
-#&gt; 65 0.7439245 0.08566049
-#&gt; 66 0.6644704 0.07662048
-#&gt; 67 0.5868044 0.06412860
-#&gt; 68 0.6000647 0.06588671
-#&gt; 69 0.5769838 0.06336920
-#&gt; 70 0.5452567 0.05961356
-#&gt; 71 0.5516778 0.06045654
-#&gt; 72 0.7176119 0.07863844
-#&gt; 73 0.7608654 0.08361043
-#&gt; 74 0.5643405 0.06184623
-#&gt; 75 0.6216360 0.06809607
-#&gt; 76 0.7477243 0.08221581
-#&gt; 77 0.6328715 0.07248712
-#&gt; 78 0.6277221 0.06855519
-#&gt; 79 0.6492746 0.07111506
-#&gt; 80 0.7684489 0.08398223
-#&gt; 81 0.6833833 0.07824709
-#&gt; 82 0.8158999 0.08959147
-#&gt; 83 0.7165537 0.07843732
-#&gt; 84 0.6246437 0.06865943
-#&gt; 85 0.6774955 0.07435930
-#&gt; 86 0.6875366 0.07586500
-#&gt; 87 0.6571724 0.07171899
-#&gt; 88 0.6662879 0.07643771
-#&gt; 89 0.6614956 0.07559314
-#&gt; 90 0.6196150 0.06764145
-#&gt; 91 0.6639394 0.07341566
-#&gt; 92 0.6736617 0.07361308
-#&gt; 93 0.6707382 0.07338280
-#&gt; 94 0.6541389 0.07485602
-#&gt; 95 0.6125574 0.07005197
-#&gt; 96 0.7214759 0.08336206
-#&gt; 97 0.6282488 0.07192651
-#&gt; 98 0.7457011 0.08145137
-#&gt; 99 0.6944622 0.07629353</div><div class='input'>
-<span class='fu'>not_run</span>({
+<span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |==========                                            | 19% ~2 s remaining     |================================                      | 60% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
+#&gt; 1  0.6191763 0.06783205
+#&gt; 2  0.6798527 0.07473909
+#&gt; 3  0.5200972 0.05695292
+#&gt; 4  0.6588597 0.07250131
+#&gt; 5  0.7430615 0.08547380
+#&gt; 6  0.7469574 0.08183050
+#&gt; 7  0.5893176 0.06484650
+#&gt; 8  0.6342295 0.06943046
+#&gt; 9  0.5485022 0.05978679
+#&gt; 10 0.7067277 0.07740107
+#&gt; 11 0.6008225 0.06596376
+#&gt; 12 0.7763036 0.08503198
+#&gt; 13 0.6881917 0.07500684
+#&gt; 14 0.6203861 0.06803892
+#&gt; 15 0.6706897 0.07694402
+#&gt; 16 0.6890659 0.07578157
+#&gt; 17 0.5714569 0.06552847
+#&gt; 18 0.5775937 0.06335759
+#&gt; 19 0.6423059 0.07353185
+#&gt; 20 0.5855756 0.06413205
+#&gt; 21 0.6133682 0.07031211
+#&gt; 22 0.7428948 0.08122683
+#&gt; 23 0.6448192 0.07009183
+#&gt; 24 0.6474519 0.07042325
+#&gt; 25 0.6567944 0.07200787
+#&gt; 26 0.7245559 0.07927463
+#&gt; 27 0.6634180 0.07296521
+#&gt; 28 0.5797488 0.06337678
+#&gt; 29 0.6028220 0.06894360
+#&gt; 30 0.6448687 0.07051304
+#&gt; 31 0.6524377 0.07480846
+#&gt; 32 0.6605666 0.07253601
+#&gt; 33 0.5691719 0.06205179
+#&gt; 34 0.6045268 0.06584334
+#&gt; 35 0.5449586 0.05991060
+#&gt; 36 0.7558177 0.08257193
+#&gt; 37 0.6877731 0.07558455
+#&gt; 38 0.6587122 0.07210660
+#&gt; 39 0.7081838 0.07759029
+#&gt; 40 0.6080458 0.06934371
+#&gt; 41 0.6306007 0.06889096
+#&gt; 42 0.6477690 0.07093559
+#&gt; 43 0.7147039 0.07871504
+#&gt; 44 0.5267044 0.05765349
+#&gt; 45 0.5827807 0.06689645
+#&gt; 46 0.6690034 0.07693600
+#&gt; 47 0.5762172 0.06583091
+#&gt; 48 0.6782155 0.07422834
+#&gt; 49 0.5724546 0.06252291
+#&gt; 50 0.6631061 0.07603088
+#&gt; 51 0.7027448 0.07676535
+#&gt; 52 0.5714951 0.06267137
+#&gt; 53 0.6182951 0.06767727
+#&gt; 54 0.7541824 0.08271434
+#&gt; 55 0.6692106 0.07303406
+#&gt; 56 0.6440898 0.07378652
+#&gt; 57 0.7632273 0.08720281
+#&gt; 58 0.7037321 0.07708733
+#&gt; 59 0.6734217 0.07339629
+#&gt; 60 0.4769708 0.05218405
+#&gt; 61 0.7130363 0.07829051
+#&gt; 62 0.6533996 0.07155527
+#&gt; 63 0.7528756 0.08247365
+#&gt; 64 0.7398661 0.08128594
+#&gt; 65 0.5337746 0.05839156
+#&gt; 66 0.7318275 0.08435590
+#&gt; 67 0.6378536 0.06975853
+#&gt; 68 0.5152563 0.05619445
+#&gt; 69 0.6855996 0.07489865
+#&gt; 70 0.6144603 0.06724151
+#&gt; 71 0.6075408 0.06666811
+#&gt; 72 0.7009888 0.07653164
+#&gt; 73 0.6642544 0.07624977
+#&gt; 74 0.7050176 0.08070325
+#&gt; 75 0.7223308 0.07897352
+#&gt; 76 0.7709325 0.08476260
+#&gt; 77 0.7678634 0.08410439
+#&gt; 78 0.6651612 0.07260217
+#&gt; 79 0.6601573 0.07559559
+#&gt; 80 0.5814106 0.06366412
+#&gt; 81 0.5895032 0.06493154
+#&gt; 82 0.6487119 0.07108374
+#&gt; 83 0.7636147 0.08379718
+#&gt; 84 0.5543307 0.06045890
+#&gt; 85 0.7034113 0.07703777
+#&gt; 86 0.6953674 0.07649806
+#&gt; 87 0.6172932 0.06729308
+#&gt; 88 0.6560532 0.07503502
+#&gt; 89 0.5922292 0.06466822
+#&gt; 90 0.5820482 0.06388663
+#&gt; 91 0.5821339 0.06398763
+#&gt; 92 0.6212877 0.06793360
+#&gt; 93 0.6516896 0.07139209
+#&gt; 94 0.6870980 0.07529427
+#&gt; 95 0.6020916 0.06896658
+#&gt; 96 0.7089043 0.07774984
+#&gt; 97 0.6392705 0.07308543
+#&gt; 98 0.6656730 0.07289827
+#&gt; 99 0.5124503 0.05625787</div><div class='input'>
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># Plot the results of resampling rbarD. </span>
+<span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
+<span class='no'>Pinf.resamp</span> <span class='kw'>&lt;-</span> <span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>Pinf.resamp</span>[<span class='fl'>2</span>], <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>rbarD</span>)) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_histogram'>geom_histogram</a></span>() +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_abline'>geom_vline</a></span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fu'>ia</span>(<span class='no'>Pinf</span>)[<span class='fl'>2</span>]) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_abline'>geom_vline</a></span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fu'>ia</span>(<span class='fu'><a href='clonecorrect.html'>clonecorrect</a></span>(<span class='no'>Pinf</span>))[<span class='fl'>2</span>], <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>2</span>) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>xlab</a></span>(<span class='fu'>expression</span>(<span class='fu'>bar</span>(<span class='no'>r</span>)[<span class='no'>d</span>]))
 
-  <span class='co'># Plot the results of resampling rbarD. </span>
-  <span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
-  <span class='no'>Pinf.resamp</span> <span class='kw'>&lt;-</span> <span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>)
-  <span class='fu'>ggplot</span>(<span class='no'>Pinf.resamp</span>[<span class='fl'>2</span>], <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>rbarD</span>)) +
-    <span class='fu'>geom_histogram</span>() +
-    <span class='fu'>geom_vline</span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fu'>ia</span>(<span class='no'>Pinf</span>)[<span class='fl'>2</span>]) +
-    <span class='fu'>geom_vline</span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fu'>ia</span>(<span class='fu'><a href='clonecorrect.html'>clonecorrect</a></span>(<span class='no'>Pinf</span>))[<span class='fl'>2</span>], <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>2</span>) +
-    <span class='fu'>xlab</span>(<span class='fu'>expression</span>(<span class='fu'>bar</span>(<span class='no'>r</span>)[<span class='no'>d</span>]))
+<span class='co'># Get the indices back and plot the distributions.</span>
+<span class='no'>nansamp</span> <span class='kw'>&lt;-</span> <span class='fu'>ia</span>(<span class='no'>nancycats</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>valuereturn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-  <span class='co'># Get the indices back and plot the distributions.</span>
-  <span class='no'>nansamp</span> <span class='kw'>&lt;-</span> <span class='fu'>ia</span>(<span class='no'>nancycats</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>valuereturn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>plot</span>(<span class='no'>nansamp</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)
+<span class='fu'>plot</span>(<span class='no'>nansamp</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>)
 
-  <span class='fu'>plot</span>(<span class='no'>nansamp</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)
-  <span class='fu'>plot</span>(<span class='no'>nansamp</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>)
+<span class='co'># You can also adjust the parameters for how large to display the text</span>
+<span class='co'># so that it's easier to export it for publication/presentations.</span>
+<span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
+<span class='fu'>plot</span>(<span class='no'>nansamp</span>, <span class='kw'>labsize</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>linesize</span> <span class='kw'>=</span> <span class='fl'>2</span>) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_bw</a></span>() +                                      <span class='co'># adding a theme</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/element'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/element'>rel</a></span>(<span class='fl'>5</span>))) +       <span class='co'># changing text size</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>plot.title</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/element'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/element'>rel</a></span>(<span class='fl'>4</span>))) + <span class='co'># changing title size</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>ggtitle</a></span>(<span class='st'>"Index of Association of nancycats"</span>)      <span class='co'># adding a new title</span>
 
-  <span class='co'># You can also adjust the parameters for how large to display the text</span>
-  <span class='co'># so that it's easier to export it for publication/presentations.</span>
-  <span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
-  <span class='fu'>plot</span>(<span class='no'>nansamp</span>, <span class='kw'>labsize</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>linesize</span> <span class='kw'>=</span> <span class='fl'>2</span>) +
-    <span class='fu'>theme_bw</span>() +                                      <span class='co'># adding a theme</span>
-    <span class='fu'>theme</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'>element_text</span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>rel</span>(<span class='fl'>5</span>))) +       <span class='co'># changing text size</span>
-    <span class='fu'>theme</span>(<span class='kw'>plot.title</span> <span class='kw'>=</span> <span class='fu'>element_text</span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>rel</span>(<span class='fl'>4</span>))) + <span class='co'># changing title size</span>
-    <span class='fu'>ggtitle</span>(<span class='st'>"Index of Association of nancycats"</span>)      <span class='co'># adding a new title</span>
+<span class='co'># Get the index for each population.</span>
+<span class='fu'>lapply</span>(<span class='fu'>seppop</span>(<span class='no'>nancycats</span>), <span class='no'>ia</span>)
+<span class='co'># With sampling</span>
+<span class='fu'>lapply</span>(<span class='fu'>seppop</span>(<span class='no'>nancycats</span>), <span class='no'>ia</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>)
 
-  <span class='co'># Get the index for each population.</span>
-  <span class='fu'>lapply</span>(<span class='fu'>seppop</span>(<span class='no'>nancycats</span>), <span class='no'>ia</span>)
-  <span class='co'># With sampling</span>
-  <span class='fu'>lapply</span>(<span class='fu'>seppop</span>(<span class='no'>nancycats</span>), <span class='no'>ia</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>)
+<span class='co'># Plot pairwise ia for all populations in a grid with cowplot</span>
+<span class='co'># Set up the library and data</span>
+<span class='fu'>library</span>(<span class='st'>"cowplot"</span>)
+<span class='fu'>data</span>(<span class='no'>monpop</span>)
+<span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
+<span class='fu'>setPop</span>(<span class='no'>monpop</span>)      <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>
 
-  <span class='co'># Plot pairwise ia for all populations in a grid with cowplot</span>
-  <span class='co'># Set up the library and data</span>
-  <span class='fu'>library</span>(<span class='st'>"cowplot"</span>)
-  <span class='fu'>data</span>(<span class='no'>monpop</span>)
-  <span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
-  <span class='fu'>setPop</span>(<span class='no'>monpop</span>)      <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>
+<span class='co'># Need to set up a list in which to store the plots.</span>
+<span class='no'>plotlist</span>        <span class='kw'>&lt;-</span> <span class='fu'>vector</span>(<span class='kw'>mode</span> <span class='kw'>=</span> <span class='st'>"list"</span>, <span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'>nPop</span>(<span class='no'>monpop</span>))
+<span class='fu'>names</span>(<span class='no'>plotlist</span>) <span class='kw'>&lt;-</span> <span class='fu'>popNames</span>(<span class='no'>monpop</span>)
 
-  <span class='co'># Need to set up a list in which to store the plots.</span>
-  <span class='no'>plotlist</span>        <span class='kw'>&lt;-</span> <span class='fu'>vector</span>(<span class='kw'>mode</span> <span class='kw'>=</span> <span class='st'>"list"</span>, <span class='kw'>length</span> <span class='kw'>=</span> <span class='fu'>nPop</span>(<span class='no'>monpop</span>))
-  <span class='fu'>names</span>(<span class='no'>plotlist</span>) <span class='kw'>&lt;-</span> <span class='fu'>popNames</span>(<span class='no'>monpop</span>)
+<span class='co'># Loop throgh the populations, calculate pairwise ia, plot, and then</span>
+<span class='co'># capture the plot in the list</span>
+<span class='kw'>for</span> (<span class='no'>i</span> <span class='kw'>in</span> <span class='fu'>popNames</span>(<span class='no'>monpop</span>)){
+  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>monpop</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='no'>i</span>], <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>0.15</span>, <span class='fl'>1</span>)) <span class='co'># subset, calculate, and plot</span>
+  <span class='no'>plotlist</span><span class='kw'>[[</span><span class='no'>i</span>]] <span class='kw'>&lt;-</span> <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/last_plot'>last_plot</a></span>() <span class='co'># save the last plot</span>
+}
 
-  <span class='co'># Loop throgh the populations, calculate pairwise ia, plot, and then</span>
-  <span class='co'># capture the plot in the list</span>
-  <span class='kw'>for</span> (<span class='no'>i</span> <span class='kw'>in</span> <span class='fu'>popNames</span>(<span class='no'>monpop</span>)){
-    <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>monpop</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='no'>i</span>], <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>0.15</span>, <span class='fl'>1</span>)) <span class='co'># subset, calculate, and plot</span>
-    <span class='no'>plotlist</span><span class='kw'>[[</span><span class='no'>i</span>]] <span class='kw'>&lt;-</span> <span class='kw'>ggplot2</span><span class='kw'>::</span><span class='fu'>last_plot</span>() <span class='co'># save the last plot</span>
-  }
+<span class='co'># Use the plot_grid function to plot.</span>
+<span class='fu'><a href='http://www.rdocumentation.org/packages/cowplot/topics/plot_grid'>plot_grid</a></span>(<span class='kw'>plotlist</span> <span class='kw'>=</span> <span class='no'>plotlist</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'>paste</span>(<span class='st'>"Tree"</span>, <span class='fu'>popNames</span>(<span class='no'>monpop</span>)))
 
-  <span class='co'># Use the plot_grid function to plot.</span>
-  <span class='fu'>plot_grid</span>(<span class='kw'>plotlist</span> <span class='kw'>=</span> <span class='no'>plotlist</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'>paste</span>(<span class='st'>"Tree"</span>, <span class='fu'>popNames</span>(<span class='no'>monpop</span>)))
-
-})</div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

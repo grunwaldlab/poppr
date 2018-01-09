@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -142,36 +161,26 @@ loci to allow conversion to genpop objects. Defaults to <code>FALSE</code>.</p><
 NA </td>
 <td> 20 </td>
 <td> 23 </td>
-</tr><tr><td> 24</td>
-<td>
-NA </td>
-<td> 20 </td>
+<td> 24</td>
 </tr></table><p>they should be coded as:</p><table><tr><td>
  0 </td>
 <td> 20 </td>
 <td> 23 </td>
-</tr><tr><td> 24</td>
-<td>
- 0 </td>
-<td> 20 </td>
+<td> 24</td>
 </tr></table><p>This zero is treated as an extra allele and is represented in the genind object as so:</p><table><tr><td>
 <strong>0</strong> </td>
 <td> <strong>20</strong> </td>
 <td> <strong>23</strong> </td>
 <td> <strong>24</strong> </td>
 <td> <strong>26</strong> </td>
-</tr><tr><td> <strong>43</strong></td>
-<td>
+<td> <strong>43</strong></td>
+</tr><tr><td>
 1 </td>
 <td> 1 </td>
 <td> 1 </td>
 <td> 1 </td>
-</tr><tr><td> 0 </td>
+<td> 0 </td>
 <td> 0</td>
-<td>
-<strong>0</strong> </td>
-<td> <strong>20</strong> </td>
-<td> <strong>23</strong> </td>
 </tr></table>
     <p>This function remedies this problem by removing the zero column.
   The above table would become:</p><table><tr><td>
@@ -179,16 +188,13 @@ NA </td>
 <td> <strong>23</strong> </td>
 <td> <strong>24</strong> </td>
 <td> <strong>26</strong> </td>
-</tr><tr><td> <strong>43</strong></td>
-<td>
+<td> <strong>43</strong></td>
+</tr><tr><td>
 1 </td>
 <td> 1 </td>
 <td> 1 </td>
-</tr><tr><td> 0 </td>
+<td> 0 </td>
 <td> 0</td>
-<td>
-<strong>20</strong> </td>
-<td> <strong>23</strong> </td>
 </tr></table>
     <p>With this, the user is able to calculate frequency based statistics on the
 data set.</p>
@@ -208,23 +214,23 @@ distance, it only made sense to attempt something beyond single use.</p>
 <span class='fu'>nAll</span>(<span class='no'>Pinf</span>)</div><div class='output co'>#&gt; Pi02  D13 Pi33 Pi04 Pi4B Pi16  G11 Pi56 Pi63 Pi70 Pi89 
 #&gt;   11   26    3    5    8    7   22    4    4    4   12 </div><div class='input'><span class='fu'>nAll</span>(<span class='no'>iPinf</span>)</div><div class='output co'>#&gt; Pi02  D13 Pi33 Pi04 Pi4B Pi16  G11 Pi56 Pi63 Pi70 Pi89 
 #&gt;   10   25    2    4    7    6   21    3    3    3   11 </div><div class='input'>
-<span class='fu'>not_run</span>({
-  <span class='fu'>library</span>(<span class='st'>"ape"</span>)
+</div><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='st'>"ape"</span>)
 
-  <span class='co'># Removing missing data. </span>
-  <span class='fu'>setPop</span>(<span class='no'>Pinf</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Country</span>
+<span class='co'># Removing missing data. </span>
+<span class='fu'>setPop</span>(<span class='no'>Pinf</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Country</span>
 
-  <span class='co'># Calculating Rogers' distance. </span>
-  <span class='no'>rog</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='genetic_distance.html'>rogers.dist</a></span>(<span class='fu'>genind2genpop</span>(<span class='no'>Pinf</span>))
-  <span class='no'>irog</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='genetic_distance.html'>rogers.dist</a></span>(<span class='fu'>recode_polyploids</span>(<span class='fu'>genind2genpop</span>(<span class='no'>Pinf</span>)))
+<span class='co'># Calculating Rogers' distance. </span>
+<span class='no'>rog</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='genetic_distance.html'>rogers.dist</a></span>(<span class='fu'>genind2genpop</span>(<span class='no'>Pinf</span>))
+<span class='no'>irog</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='genetic_distance.html'>rogers.dist</a></span>(<span class='fu'>recode_polyploids</span>(<span class='fu'>genind2genpop</span>(<span class='no'>Pinf</span>)))
 
-  <span class='co'># We will now plot neighbor joining trees. Note the decreased distance in the</span>
-  <span class='co'># original data.</span>
-  <span class='fu'>plot</span>(<span class='fu'>nj</span>(<span class='no'>rog</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"unrooted"</span>)
-  <span class='fu'>add.scale.bar</span>(<span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>length</span> <span class='kw'>=</span> <span class='fl'>0.02</span>)
-  <span class='fu'>plot</span>(<span class='fu'>nj</span>(<span class='no'>irog</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"unrooted"</span>)
-  <span class='fu'>add.scale.bar</span>(<span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>length</span> <span class='kw'>=</span> <span class='fl'>0.02</span>)
-})</div></pre>
+<span class='co'># We will now plot neighbor joining trees. Note the decreased distance in the</span>
+<span class='co'># original data.</span>
+<span class='fu'>plot</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ape/topics/nj'>nj</a></span>(<span class='no'>rog</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"unrooted"</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/ape/topics/add.scale.bar'>add.scale.bar</a></span>(<span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>length</span> <span class='kw'>=</span> <span class='fl'>0.02</span>)
+<span class='fu'>plot</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ape/topics/nj'>nj</a></span>(<span class='no'>irog</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"unrooted"</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/ape/topics/add.scale.bar'>add.scale.bar</a></span>(<span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>length</span> <span class='kw'>=</span> <span class='fl'>0.02</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

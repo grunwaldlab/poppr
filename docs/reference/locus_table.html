@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -94,7 +113,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code>genind</code> or <code><a href='genclone-class.html'>genclone</a></code>
+      <td><p>a genind or <a href='genclone-class.html'>genclone</a>
 object.</p></td>
     </tr>
     <tr>
@@ -115,7 +134,7 @@ Inverse Simpson's index aka the Stoddard and Tayor index.</p></li>
     <tr>
       <th>population</th>
       <td><p>Select the populations to be analyzed. This is the
-parameter <code>sublist</code> passed on to the function <code><a href='popsub.html'>popsub</a></code>.
+parameter <code>sublist</code> passed on to the function <code><a href='popsub.html'>popsub()</a></code>.
 Defaults to <code>"ALL"</code>.</p></td>
     </tr>
     <tr>
@@ -127,43 +146,46 @@ of information to the R console.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a table with 4 columns indicating the Number of alleles/genotypes 
-  observed, Diversity index chosen, Nei's 1978 gene diversity (expected
-  heterozygosity), and Evenness.</p>
+    <p>a table with 4 columns indicating the Number of alleles/genotypes
+observed, Diversity index chosen, Nei's 1978 gene diversity (expected
+heterozygosity), and Evenness.</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>The calculation of <code>Hexp</code> is \((\frac{n}{n-1}) 1 - \sum_{i = 
-  1}^k{p^{2}_{i}}\) where p is the allele 
-  frequencies at a given locus and n is the number of observed alleles (Nei, 
-  1978) in each locus and then returning the average. Caution should be 
-  exercised in interpreting the results of Hexp with polyploid organisms with
-  ambiguous ploidy. The lack of allelic dosage information will cause rare 
-  alleles to be over-represented and artificially inflate the index. This is 
-  especially true with small sample sizes.</p>
+  1}^k{p^{2}_{i}}\) where p is the allele
+frequencies at a given locus and n is the number of observed alleles (Nei,
+1978) in each locus and then returning the average. Caution should be
+exercised in interpreting the results of Hexp with polyploid organisms with
+ambiguous ploidy. The lack of allelic dosage information will cause rare
+alleles to be over-represented and artificially inflate the index. This is
+especially true with small sample sizes.</p>
+<p>If <code>lev = "genotype"</code>, then all statistics reflect <strong>genotypic</strong> diversity
+within each locus. This includes the calculation for <code>Hexp</code>, which turns
+into the unbiased Simpson's index.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
-  R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. 
-  Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R 
-  package version 2.0-5.</p>
-<p>Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
-  E. Fry. Analysis of genotypic diversity data for populations of 
-  microorganisms. Phytopathology, 93(6):738-46, 2003
-    J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
-  Computing. New York USA: John Wiley and Sons, 1988.
-    E.C. Pielou. Ecological Diversity. Wiley, 1975.
-    J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
-  prediction in samples. Genetics, 118(4):705-11, 1988.
-    Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
-  from a small number of individuals. Genetics, 89(3):583-590, 1978.</p>
+    <p>Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter
+R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H.
+Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R
+package version 2.0-5.</p>
+<p>Niklaus J. Gr"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
+E. Fry. Analysis of genotypic diversity data for populations of
+microorganisms. Phytopathology, 93(6):738-46, 2003</p>
+<p>J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
+Computing. New York USA: John Wiley and Sons, 1988.</p>
+<p>E.C. Pielou. Ecological Diversity. Wiley, 1975.</p>
+<p>J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and
+prediction in samples. Genetics, 118(4):705-11, 1988.</p>
+<p>Masatoshi Nei. Estimation of average heterozygosity and genetic distance
+from a small number of individuals. Genetics, 89(3):583-590, 1978.</p>
 <p>Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
-  Technical Journal, 27:379-423,623-656, 1948</p>
+Technical Journal, 27:379-423,623-656, 1948</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/vegan/topics/diversity'>diversity</a></code>, <code><a href='poppr.html'>poppr</a></code></p>
+    <p><code><a href='http://www.rdocumentation.org/packages/vegan/topics/diversity'>vegan::diversity()</a></code>, <code><a href='poppr.html'>poppr()</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -183,13 +205,13 @@ of information to the R console.</p></td>
 #&gt;   fca90   5.00 0.64 0.66     0.76
 #&gt;   fca96   5.00 0.63 0.65     0.76
 #&gt;   fca37   4.00 0.19 0.19     0.42
-#&gt;   mean    5.33 0.62 0.64     0.73</div><div class='input'><span class='fu'>not_run</span>({
-  <span class='co'># Analyze locus statistics for the North American population of P. infestans.</span>
-  <span class='co'># Note that due to the unknown dosage of alleles, many of these statistics</span>
-  <span class='co'># will be artificially inflated for polyploids.</span>
-  <span class='fu'>data</span>(<span class='no'>Pinf</span>)
-  <span class='fu'>locus_table</span>(<span class='no'>Pinf</span>, <span class='kw'>population</span> <span class='kw'>=</span> <span class='st'>"North America"</span>)
-})</div></pre>
+#&gt;   mean    5.33 0.62 0.64     0.73</div><span class='co'># NOT RUN {</span>
+<span class='co'># Analyze locus statistics for the North American population of P. infestans.</span>
+<span class='co'># Note that due to the unknown dosage of alleles, many of these statistics</span>
+<span class='co'># will be artificially inflated for polyploids.</span>
+<span class='fu'>data</span>(<span class='no'>Pinf</span>)
+<span class='fu'>locus_table</span>(<span class='no'>Pinf</span>, <span class='kw'>population</span> <span class='kw'>=</span> <span class='st'>"North America"</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

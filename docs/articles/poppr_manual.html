@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data import and manipulation in poppr version 2.5.0 • poppr</title>
+<title>Data import and manipulation in poppr version 2.6.0 • poppr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -29,10 +29,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -40,7 +58,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -57,10 +75,10 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Data import and manipulation in poppr version 2.5.0</h1>
+      <h1>Data import and manipulation in poppr version 2.6.0</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2017-09-11</h4>
+            <h4 class="date">2018-01-09</h4>
           </div>
 
     
@@ -117,7 +135,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">citation</span>(<span class="dt">package =</span> <span class="st">"poppr"</span>)</code></pre></div>
 <pre><code>## 
 ## To cite poppr in publications or presentations, please specify
-## poppr version 2.5.0 and with the following citation:
+## poppr version 2.6.0 and with the following citation:
 ## 
 ##   Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package
 ##   for genetic analysis of populations with clonal, partially
@@ -166,7 +184,7 @@
 <p>To install from GitHub, you do not need to download the tarball since there is a package called <em>devtools</em> that will download and install the package for you directly from GitHub. After you have installed all dependencies (see above section), you should download <em>devtools</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)</code></pre></div>
 <p>Now you can execute the command <code>install_github()</code> with the user and repository name:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"grunwaldlab/poppr"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"grunwaldlab/poppr"</span>)</code></pre></div>
 </div>
 </div>
 <div id="intro:qstart" class="section level2">
@@ -188,7 +206,7 @@
 ##    &gt; overview: '?adegenet'
 ##    &gt; tutorials/doc/questions: 'adegenetWeb()' 
 ##    &gt; bug reports/feature requests: adegenetIssues()</code></pre>
-<pre><code>## This is poppr version 2.5.0. To get started, type package?poppr
+<pre><code>## This is poppr version 2.6.0. To get started, type package?poppr
 ## OMP parallel support: available</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getfile.html">getfile</a></span>()</code></pre></div>
 <p>A pop up window will appear like this<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
@@ -1378,8 +1396,8 @@ naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/i
 ##    @pop: population of each individual (group size range: 1-646)
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
 ##    @other: a list containing: x  xy  epid</code></pre>
-<p>If we need to store the number of MLGs as a variable, we can simply run the <code><a href="../reference/mlg.html">mlg()</a></code> command.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg</a></span>(H3N2)</code></pre></div>
+<p>If we need to store the number of MLGs as a variable, we can simply run the <code>mlg()</code> command.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg &lt;-<span class="st"> </span><span class="kw">mlg</span>(H3N2)</code></pre></div>
 <pre><code>## #############################
 ## # Number of Individuals:  1903 
 ## # Number of MLG:  752 
@@ -1508,7 +1526,7 @@ An example of a bar-chart produced by <code>mlg.table</code>. Note that this dat
 ## // Observed heterozygosity: 0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"vegan"</span>)
 H.year &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">plot =</span> <span class="ot">FALSE</span>)
-<span class="kw">rarecurve</span>(H.year, <span class="dt">ylab=</span><span class="st">"Number of expected MLGs"</span>, <span class="dt">sample=</span><span class="kw">min</span>(<span class="kw">rowSums</span>(H.year)),
+<span class="kw"><a href="http://www.rdocumentation.org/packages/vegan/topics/rarefy">rarecurve</a></span>(H.year, <span class="dt">ylab=</span><span class="st">"Number of expected MLGs"</span>, <span class="dt">sample=</span><span class="kw">min</span>(<span class="kw">rowSums</span>(H.year)),
           <span class="dt">border =</span> <span class="ot">NA</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">font =</span> <span class="dv">2</span>, <span class="dt">cex =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">"blue"</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="poppr_manual_files/figure-html/mlgrareplot-1.png" alt="An example of a rarefaction curve produced using a MLG table." width="672"><p class="caption">
@@ -1609,42 +1627,42 @@ All populations that contain these MLGs
 <div id="manipulating-graphics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#manipulating-graphics" class="anchor"></a>Manipulating Graphics</h2>
-<p><em>Poppr</em> utilizes <em>ggplot2</em> to produce many of its graphs. One advantage it gives the user is the ability to manipulate these graphs. With base R graphs, the only manipulation that can be performed is by adding elements to the graph. It is a static image. The ggplot graphs are actually represented as objects in your R environment. We can use the function <code>last_plot()</code> from <em>ggplot2</em> to be able to grab the plot that was plotted last in our window. Let’s illustrate this using a MLG bar graph from the Aeut data set.</p>
+<p><em>Poppr</em> utilizes <em>ggplot2</em> to produce many of its graphs. One advantage it gives the user is the ability to manipulate these graphs. With base R graphs, the only manipulation that can be performed is by adding elements to the graph. It is a static image. The ggplot graphs are actually represented as objects in your R environment. We can use the function <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot()</a></code> from <em>ggplot2</em> to be able to grab the plot that was plotted last in our window. Let’s illustrate this using a MLG bar graph from the Aeut data set.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"poppr"</span>)
 <span class="kw">library</span>(<span class="st">"ggplot2"</span>)
 <span class="kw">data</span>(Aeut)
 Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(Aeut)</code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_Aeut-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">last_plot</span>()</code></pre></div>
-<p>We’ve captured our plot using <code>last_plot()</code> and now we can manipulate it. One common need is to change the title. We can easily do that with the function <code>ggtitle()</code>. Let“s say we wanted to label it”<em>Aphanomyces euteiches</em> multilocus genotype distribution“. We would use <code>ggtitle(Aphanomyces euteiches multilocus genotype distribution)</code>. Unfortunately, we need italics for a latin binomial. One way to acheive this is by using the <code>expression()</code> function and declaring which text needs to be italicized.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot</a></span>()</code></pre></div>
+<p>We’ve captured our plot using <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot()</a></code> and now we can manipulate it. One common need is to change the title. We can easily do that with the function <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle()</a></code>. Let“s say we wanted to label it”<em>Aphanomyces euteiches</em> multilocus genotype distribution“. We would use <code>ggtitle(Aphanomyces euteiches multilocus genotype distribution)</code>. Unfortunately, we need italics for a latin binomial. One way to acheive this is by using the <code>expression()</code> function and declaring which text needs to be italicized.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myTitle &lt;-<span class="st"> </span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">"Aphanomyces euteiches"</span>), 
                       <span class="st">" multilocus genotype distribution"</span>))
 (pt &lt;-<span class="st"> </span>p <span class="op">+</span>
-<span class="st">   </span><span class="kw">ggtitle</span>(myTitle) <span class="op">+</span>
-<span class="st">   </span><span class="kw">xlab</span>(<span class="st">"Multilocus genotype"</span>)) <span class="co"># We can label the x axis, too</span></code></pre></div>
+<span class="st">   </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(myTitle) <span class="op">+</span>
+<span class="st">   </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Multilocus genotype"</span>)) <span class="co"># We can label the x axis, too</span></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_title-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>Let“s say we wanted to remove the grey background. We could use the <code>theme()</code> function to do this, or we could use a theme already implemented in ggplot2 called <code>theme_bw()</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptt &lt;-<span class="st"> </span>pt <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>())</code></pre></div>
+<p>Let“s say we wanted to remove the grey background. We could use the <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme()</a></code> function to do this, or we could use a theme already implemented in ggplot2 called <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw()</a></code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptt &lt;-<span class="st"> </span>pt <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>())</code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_theme-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Uh-oh. The x axis labels are now horizontal when they should be vertical. Since it“s the overall distribution we’re interested in, we don’t really need them anyways. We can remove them with <code>axis.text.x</code> and <code>axis.ticks.x</code> (we’ll also remove the x axis gridlines because they’re ugly).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptta &lt;-<span class="st"> </span>ptt <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.ticks.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major.x =</span> <span class="kw">element_blank</span>()))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptta &lt;-<span class="st"> </span>ptt <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">axis.text.x =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">axis.ticks.x =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">panel.grid.major.x =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()))</code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_theme_axis-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>And, if for some bizarre reason, you liked the color gradient in <em>poppr</em> version 1, you can get that back by adding the <em>fill</em> aesthetic:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptttaf &lt;-<span class="st"> </span>ptta <span class="op">+</span><span class="st"> </span><span class="kw">aes</span>(<span class="dt">fill =</span> count))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(ptttaf &lt;-<span class="st"> </span>ptta <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">fill =</span> count))</code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_silly-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>This allows you to produce publication quality graphs directly in R. Please see Hadley Wickham“s <em>ggplot2</em> package for more details <span class="citation">(Wickham 2009)</span>. Note that if you don”t like using <em>ggplot2</em>, you can access the data in the ggplot2 object and plot the data yourself:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(p<span class="op">$</span>data)</code></pre></div>
 <pre><code>## # A tibble: 6 x 4
-##   Population    MLG count  order
-##       &lt;fctr&gt;  &lt;chr&gt; &lt;int&gt; &lt;fctr&gt;
-## 1     Athena MLG.20     9      1
-## 2     Athena MLG.66     5      2
-## 3     Athena MLG.14     3      3
-## 4     Athena MLG.35     3      4
-## 5     Athena MLG.13     2      5
-## 6     Athena MLG.16     2      6</code></pre>
+##   Population MLG    count order 
+##   &lt;fctr&gt;     &lt;chr&gt;  &lt;int&gt; &lt;fctr&gt;
+## 1 Athena     MLG.20     9 1     
+## 2 Athena     MLG.66     5 2     
+## 3 Athena     MLG.14     3 3     
+## 4 Athena     MLG.35     3 4     
+## 5 Athena     MLG.13     2 5     
+## 6 Athena     MLG.16     2 6</code></pre>
 </div>
 <div id="appendix:graphics" class="section level2">
 <h2 class="hasAnchor">
@@ -1698,7 +1716,7 @@ Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ml
 <p><em>ggplot2</em> is a fantastic package that <em>poppr</em> uses to produce graphs for the <code><a href="../reference/mlg.html">mlg.table()</a></code>, <code><a href="../reference/poppr.html">poppr()</a></code>, and <code><a href="../reference/ia.html">ia()</a></code> functions. Saving a plot with <em>ggplot2</em> is performed with one command after your plot has rendered:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(nancycats) <span class="co"># Load the data set.</span>
 <span class="kw"><a href="../reference/poppr.html">poppr</a></span>(nancycats, <span class="dt">sample =</span> <span class="dv">999</span>) <span class="co"># Produce a single plot.</span>
-<span class="kw">ggsave</span>(<span class="st">"nancycats.pdf"</span>)</code></pre></div>
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggsave">ggsave</a></span>(<span class="st">"nancycats.pdf"</span>)</code></pre></div>
 <p>Note that you can name the file anything, and <code>ggsave</code> will save it in that format for you. The details are in the documentation and you can access it by typing <code>help(ggsave)</code> in your R console. The important things to note are that you can set a <code>width</code>, <code>height</code>, and <code>unit</code>. The only downside to this function is that you can only save one plot at a time. If you want to be able to save multiple plots, read on to the next section.</p>
 </div>
 <div id="appendix:graphics:export" class="section level3">
@@ -1810,7 +1828,8 @@ poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span clas
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
-      <h2>Contents</h2>
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#abstract">Abstract</a></li>
       <li>
@@ -1836,12 +1855,12 @@ poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span clas
       </ul>
 </li>
       <li>
-<a href="#data.manip">Data Manipulation</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#data.manip:missing">Replace or remove missing data {Inside the golden days of missing data}</a></li>
-      <li><a href="#data.manip:divide">Extract populations {Divide (populations) and conquer (your analysis)}</a></li>
-      <li><a href="#data.manip:cc">Clone-censor data sets {Attack of the clone correction}</a></li>
-      <li><a href="#data.manip:shuffle">Permutations and bootstrap resampling {every day I’m shuffling (data sets)}</a></li>
-      <li><a href="#data.manip:informloci">Removing uninformative loci {Cut It Out!}</a></li>
+<a href="#data-manip">Data Manipulation</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#data-manip:missing">Replace or remove missing data {Inside the golden days of missing data}</a></li>
+      <li><a href="#data-manip:divide">Extract populations {Divide (populations) and conquer (your analysis)}</a></li>
+      <li><a href="#data-manip:cc">Clone-censor data sets {Attack of the clone correction}</a></li>
+      <li><a href="#data-manip:shuffle">Permutations and bootstrap resampling {every day I’m shuffling (data sets)}</a></li>
+      <li><a href="#data-manip:informloci">Removing uninformative loci {Cut It Out!}</a></li>
       </ul>
 </li>
       <li>

@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -131,9 +150,10 @@ instead.</p></td>
 
     <p>These methods provide a way to deal with systematic missing data and 
  to give a wrapper for <code>adegenet</code>'s <code> tab</code> function. 
- ALL OF THESE ARE TO BE USED WITH CAUTION.
-    Using this function with polyploid data (where missing data is coded as "0")
- may give spurious results.</p><h3>Treatment types</h3>
+ ALL OF THESE ARE TO BE USED WITH CAUTION.</p> 
+<p>Using this function with polyploid data (where missing data is coded as "0")
+ may give spurious results.</p> 
+<p></p><h3>Treatment types</h3>
     <ul>
 <li><p><code>"ignore"</code> - does not remove or replace missing data.</p></li>
 <li><p><code>"loci"</code> - removes all loci containing missing data in the entire
@@ -194,7 +214,8 @@ instead.</p></td>
 <span class='co'># adegenet package).</span>
 <span class='no'>nancy.mean</span> <span class='kw'>&lt;-</span> <span class='fu'>missingno</span>(<span class='no'>nancycats</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"mean"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'> Replaced 617 missing values.</span></div><div class='input'>
-<span class='co'>## Replaced 617 missing values </span></div></pre>
+## Replaced 617 missing values 
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

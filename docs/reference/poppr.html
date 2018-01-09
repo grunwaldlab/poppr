@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -225,12 +244,12 @@ describing the resulting table columns will be printed. Defaults to
   <dt>E.5</dt><dd><p>Evenness</p></dd> 
   <dt>Hexp</dt><dd><p>Nei's gene diversity (expected heterozygosity)</p></dd>
   <dt>Ia</dt><dd><p>A numeric vector giving the value of the Index of Association for
-  each population factor, (see <code>ia</code>).</p></dd>
+  each population factor, (see <code><a href='ia.html'>ia</a></code>).</p></dd>
   <dt>p.Ia</dt><dd><p>A numeric vector indicating the p-value for Ia from the number
   of reshufflings indicated in <code>sample</code>. Lowest value is 1/n where n is
   the number of observed values.</p></dd>
   <dt>rbarD</dt><dd><p>A numeric vector giving the value of the Standardized Index of
-  Association for each population factor, (see <code>ia</code>).</p></dd>
+  Association for each population factor, (see <code><a href='ia.html'>ia</a></code>).</p></dd>
   <dt>p.rD</dt><dd><p>A numeric vector indicating the p-value for rbarD from the
   number of reshuffles indicated in <code>sample</code>. Lowest value is 1/n where
   n is the number of observed values.</p></dd>
@@ -244,7 +263,7 @@ describing the resulting table columns will be printed. Defaults to
   index of association) are simply based on counts of multilocus genotypes 
   and do not take into account the actual allelic states.
   <strong>Descriptions of the statistics can be found in the Algorithms and
-  Equations vignette</strong>: <code>NA</code>.</p><h3>sampling</h3>
+  Equations vignette</strong>: <code>vignette("algo", package = "poppr")</code>.</p><h3>sampling</h3>
 The sampling procedure is explicitly for testing the
   index of association. None of the other diversity statistics (H, G, lambda,
   E.5) are tested with this sampling due to the differing data types. To
@@ -256,7 +275,7 @@ Rarefaction analysis is performed on the number of
   use <code><a href='diversity_ci.html'>diversity_ci</a></code> with the argument <code>rarefy = TRUE</code><p></p><h3>graphic</h3>
 This function outputs a <span class="pkg">ggplot2</span> graphic of
   histograms. These can be manipulated to be visualized in another manner by
-  retrieving the plot with the <code>last_plot</code> command from
+  retrieving the plot with the <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/last_plot'>last_plot</a></code> command from
   <span class="pkg">ggplot2</span>. A useful manipulation would be to arrange the graphs into a
   single column so that the values of the statistic line up:  <code>p &lt;-
   last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")</code>
@@ -282,40 +301,40 @@ This function outputs a <span class="pkg">ggplot2</span> graphic of
 
     <p>Paul-Michael Agapow and Austin Burt. Indices of multilocus 
   linkage disequilibrium. <em>Molecular Ecology Notes</em>, 1(1-2):101-102, 
-  2001
-    A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
+  2001</p>  
+<p>A.H.D. Brown, M.W. Feldman, and E. Nevo. Multilocus structure of natural 
   populations of <em>Hordeum spontaneum</em>. <em>Genetics</em>, 96(2):523-536,
-  1980.
-    Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
+  1980.</p>  
+<p>Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
   E. Fry. Analysis of genotypic diversity data for populations of 
-  microorganisms. Phytopathology, 93(6):738-46, 2003
-    Bernhard Haubold and Richard R. Hudson. Lian 3.0: detecting linkage 
-  disequilibrium in multilocus data. Bioinformatics, 16(9):847-849, 2000.
-    Kenneth L.Jr. Heck, Gerald van Belle, and Daniel Simberloff. Explicit 
+  microorganisms. Phytopathology, 93(6):738-46, 2003</p>  
+<p>Bernhard Haubold and Richard R. Hudson. Lian 3.0: detecting linkage 
+  disequilibrium in multilocus data. Bioinformatics, 16(9):847-849, 2000.</p>  
+<p>Kenneth L.Jr. Heck, Gerald van Belle, and Daniel Simberloff. Explicit 
   calculation of the rarefaction diversity measurement and the determination 
-  of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975
-    Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
-  from a small number of individuals. Genetics, 89(3):583-590, 1978.
-    S H Hurlbert. The nonconcept of species diversity: a critique and 
-  alternative parameters. Ecology, 52(4):577-586, 1971.
-    J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
-  Computing. New York USA: John Wiley and Sons, 1988.
-    Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949 
-  doi:10.1038/163688a0
-    Good, I. J. (1953). On the Population Frequency of Species and the 
-  Estimation of Population Parameters. <em>Biometrika</em> 40(3/4): 237-264.
-    Lande, R. (1996). Statistics and partitioning of species diversity, and 
-  similarity among multiple communities. <em>Oikos</em> 76: 5-13.
-    Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
+  of sufficient sample size. Ecology, 56(6):pp. 1459-1461, 1975</p>  
+<p>Masatoshi Nei. Estimation of average heterozygosity and genetic distance 
+  from a small number of individuals. Genetics, 89(3):583-590, 1978.</p>  
+<p>S H Hurlbert. The nonconcept of species diversity: a critique and 
+  alternative parameters. Ecology, 52(4):577-586, 1971.</p>  
+<p>J.A. Ludwig and J.F. Reynolds. Statistical Ecology. A Primer on Methods and
+  Computing. New York USA: John Wiley and Sons, 1988.</p>  
+<p>Simpson, E. H. Measurement of diversity. Nature 163: 688, 1949 
+  doi:10.1038/163688a0</p>  
+<p>Good, I. J. (1953). On the Population Frequency of Species and the 
+  Estimation of Population Parameters. <em>Biometrika</em> 40(3/4): 237-264.</p>  
+<p>Lande, R. (1996). Statistics and partitioning of species diversity, and 
+  similarity among multiple communities. <em>Oikos</em> 76: 5-13.</p>  
+<p>Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter 
   R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. 
   Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R 
-  package version 2.0-5.
-    E.C. Pielou. Ecological Diversity. Wiley, 1975.
-    Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
-  Technical Journal, 27:379-423,623-656, 1948
-    J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
-  Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.
-    J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and 
+  package version 2.0-5.</p>  
+<p>E.C. Pielou. Ecological Diversity. Wiley, 1975.</p>  
+<p>Claude Elwood Shannon. A mathematical theory of communication. Bell Systems
+  Technical Journal, 27:379-423,623-656, 1948</p>  
+<p>J M Smith, N H Smith, M O'Rourke, and B G Spratt. How clonal are bacteria? 
+  Proceedings of the National Academy of Sciences, 90(10):4384-4388, 1993.</p>  
+<p>J.A. Stoddart and J.F. Taylor. Genotypic diversity: estimation and 
   prediction in samples. Genetics, 118(4):705-11, 1988.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -324,7 +343,7 @@ This function outputs a <span class="pkg">ggplot2</span> graphic of
   <code><a href='poppr.all.html'>poppr.all</a></code>, 
   <code><a href='ia.html'>ia</a></code>, 
   <code><a href='missingno.html'>missingno</a></code>, 
-  <code><a href='mlg.html'>mlg</a></code>, 
+  <code>mlg</code>, 
   <code><a href='diversity_stats.html'>diversity_stats</a></code>,
   <code><a href='diversity_ci.html'>diversity_ci</a></code></p>
     
@@ -386,48 +405,48 @@ This function outputs a <span class="pkg">ggplot2</span> graphic of
 #&gt; 16 nancycats
 #&gt; 17 nancycats
 #&gt; 18 nancycats</div><div class='input'>
-<span class='fu'>not_run</span>({
-  <span class='co'># Sampling</span>
-  <span class='fu'>poppr</span>(<span class='no'>nancycats</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>total</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># Sampling</span>
+<span class='fu'>poppr</span>(<span class='no'>nancycats</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>total</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-  <span class='co'># Customizing the plot</span>
-  <span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
-  <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'>last_plot</span>()
-  <span class='no'>p</span> + <span class='fu'>facet_wrap</span>(~<span class='no'>population</span>, <span class='kw'>scales</span> <span class='kw'>=</span> <span class='st'>"free_y"</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='co'># Customizing the plot</span>
+<span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/last_plot'>last_plot</a></span>()
+<span class='no'>p</span> + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>population</span>, <span class='kw'>scales</span> <span class='kw'>=</span> <span class='st'>"free_y"</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
-  <span class='co'># Turning off diversity statistics (see get_stats)</span>
-  <span class='fu'>poppr</span>(<span class='no'>nancycats</span>, <span class='kw'>total</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>H</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>E5</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='co'># Turning off diversity statistics (see get_stats)</span>
+<span class='fu'>poppr</span>(<span class='no'>nancycats</span>, <span class='kw'>total</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>H</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>E5</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-  <span class='co'># The previous version of poppr contained a definition of Hexp, which</span>
-  <span class='co'># was calculated as (N/(N - 1))*lambda. It basically looks like an unbiased </span>
-  <span class='co'># Simpson's index. This statistic was originally included in poppr because it</span>
-  <span class='co'># was originally included in the program multilocus. It was finally figured</span>
-  <span class='co'># to be an unbiased Simpson's diversity metric (Lande, 1996; Good, 1953).</span>
+<span class='co'># The previous version of poppr contained a definition of Hexp, which</span>
+<span class='co'># was calculated as (N/(N - 1))*lambda. It basically looks like an unbiased </span>
+<span class='co'># Simpson's index. This statistic was originally included in poppr because it</span>
+<span class='co'># was originally included in the program multilocus. It was finally figured</span>
+<span class='co'># to be an unbiased Simpson's diversity metric (Lande, 1996; Good, 1953).</span>
 
-  <span class='fu'>data</span>(<span class='no'>Aeut</span>)
+<span class='fu'>data</span>(<span class='no'>Aeut</span>)
 
-  <span class='no'>uSimp</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-    <span class='no'>lambda</span> <span class='kw'>&lt;-</span> <span class='kw'>vegan</span><span class='kw'>::</span><span class='fu'>diversity</span>(<span class='no'>x</span>, <span class='st'>"simpson"</span>)
-    <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>drop</span>(<span class='fu'>as.matrix</span>(<span class='no'>x</span>))
-    <span class='kw'>if</span> (<span class='fu'>length</span>(<span class='fu'>dim</span>(<span class='no'>x</span>)) <span class='kw'>&gt;</span> <span class='fl'>1</span>){
-      <span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fu'>rowSums</span>(<span class='no'>x</span>)
-    } <span class='kw'>else</span> {
-      <span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fu'>sum</span>(<span class='no'>x</span>)
-    }
-    <span class='fu'>return</span>((<span class='no'>N</span>/(<span class='no'>N</span>-<span class='fl'>1</span>))*<span class='no'>lambda</span>)
+<span class='no'>uSimp</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
+  <span class='no'>lambda</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>vegan</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/vegan/topics/diversity'>diversity</a></span>(<span class='no'>x</span>, <span class='st'>"simpson"</span>)
+  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>drop</span>(<span class='fu'>as.matrix</span>(<span class='no'>x</span>))
+  <span class='kw'>if</span> (<span class='fu'>length</span>(<span class='fu'>dim</span>(<span class='no'>x</span>)) <span class='kw'>&gt;</span> <span class='fl'>1</span>){
+    <span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fu'>rowSums</span>(<span class='no'>x</span>)
+  } <span class='kw'>else</span> {
+    <span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fu'>sum</span>(<span class='no'>x</span>)
   }
-  <span class='fu'>poppr</span>(<span class='no'>Aeut</span>, <span class='kw'>uSimp</span> <span class='kw'>=</span> <span class='no'>uSimp</span>)
+  <span class='fu'>return</span>((<span class='no'>N</span>/(<span class='no'>N</span>-<span class='fl'>1</span>))*<span class='no'>lambda</span>)
+}
+<span class='fu'>poppr</span>(<span class='no'>Aeut</span>, <span class='kw'>uSimp</span> <span class='kw'>=</span> <span class='no'>uSimp</span>)
 
 
-  <span class='co'># Demonstration with viral data</span>
-  <span class='co'># Note: this is a larger data set that could take a couple of minutes to run</span>
-  <span class='co'># on slower computers. </span>
-  <span class='fu'>data</span>(<span class='no'>H3N2</span>)
-  <span class='fu'>strata</span>(<span class='no'>H3N2</span>) <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='fu'>other</span>(<span class='no'>H3N2</span>)$<span class='no'>x</span>)
-  <span class='fu'>setPop</span>(<span class='no'>H3N2</span>) <span class='kw'>&lt;-</span> ~<span class='no'>country</span>
-  <span class='fu'>poppr</span>(<span class='no'>H3N2</span>, <span class='kw'>total</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sublist</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"Austria"</span>, <span class='st'>"China"</span>, <span class='st'>"USA"</span>),
+<span class='co'># Demonstration with viral data</span>
+<span class='co'># Note: this is a larger data set that could take a couple of minutes to run</span>
+<span class='co'># on slower computers. </span>
+<span class='fu'>data</span>(<span class='no'>H3N2</span>)
+<span class='fu'>strata</span>(<span class='no'>H3N2</span>) <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='fu'>other</span>(<span class='no'>H3N2</span>)$<span class='no'>x</span>)
+<span class='fu'>setPop</span>(<span class='no'>H3N2</span>) <span class='kw'>&lt;-</span> ~<span class='no'>country</span>
+<span class='fu'>poppr</span>(<span class='no'>H3N2</span>, <span class='kw'>total</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>sublist</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"Austria"</span>, <span class='st'>"China"</span>, <span class='st'>"USA"</span>),
                                 <span class='kw'>clonecorrect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>strata</span> <span class='kw'>=</span> ~<span class='no'>country</span>/<span class='no'>year</span>)
-})</div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

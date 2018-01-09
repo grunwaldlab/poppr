@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -94,8 +113,8 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The genclone and snpclone classes will allow for more optimized 
-  methods of clone correction.
-    Previously for genind and genlight objects, 
+  methods of clone correction.</p>  
+<p>Previously for genind and genlight objects, 
   multilocus genotypes were not retained after a data set was subset by 
   population. The new <strong><code>mlg</code></strong> slot allows us to assign the 
   multilocus genotypes and retain that information no matter how we subset 
@@ -135,25 +154,24 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>not_run</span>({
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># genclone objects can be created from genind objects</span>
+<span class='co'>#</span>
+<span class='fu'>data</span>(<span class='no'>partial_clone</span>)
+<span class='no'>partial_clone</span>
+(<span class='no'>pc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>partial_clone</span>))
 
-  <span class='co'># genclone objects can be created from genind objects</span>
-  <span class='co'>#</span>
-  <span class='fu'>data</span>(<span class='no'>partial_clone</span>)
-  <span class='no'>partial_clone</span>
-  (<span class='no'>pc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>partial_clone</span>))
+<span class='co'># snpclone objects can be created from genlight objects</span>
+<span class='co'>#</span>
+<span class='fu'>set.seed</span>(<span class='fl'>999</span>)
+(<span class='no'>gl</span> <span class='kw'>&lt;-</span> <span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>1e3</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))
+(<span class='no'>sc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'>rbind</span>(<span class='no'>gl</span>, <span class='no'>gl</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))
+<span class='co'># </span>
+<span class='co'># Use mlg.filter to create a distance threshold to define multilocus genotypes.</span>
+<span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='no'>sc</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.25</span>
+<span class='no'>sc</span> <span class='co'># 82 mlgs</span>
 
-  <span class='co'># snpclone objects can be created from genlight objects</span>
-  <span class='co'>#</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>999</span>)
-  (<span class='no'>gl</span> <span class='kw'>&lt;-</span> <span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>1e3</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))
-  (<span class='no'>sc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'>rbind</span>(<span class='no'>gl</span>, <span class='no'>gl</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))
-  <span class='co'># </span>
-  <span class='co'># Use mlg.filter to create a distance threshold to define multilocus genotypes.</span>
-  <span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='no'>sc</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.25</span>
-  <span class='no'>sc</span> <span class='co'># 82 mlgs</span>
-
-})</div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

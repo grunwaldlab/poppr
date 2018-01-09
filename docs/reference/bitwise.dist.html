@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -177,7 +196,7 @@ caution.</p></td>
 #&gt;    @other: a list containing: ancestral.pops 
 #&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles (finer measure, usually the most sensible)</span>
 <span class='fu'>system.time</span>(<span class='no'>xd</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.005   0.005   0.012 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
+#&gt;   0.016   0.014   0.030 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
 #&gt; 2  0.2105                                                        
 #&gt; 3  0.2195 0.2180                                                 
 #&gt; 4  0.3950 0.3825 0.3855                                          
@@ -189,7 +208,7 @@ caution.</p></td>
 #&gt; 10 0.3980 0.3925 0.4005 0.2180 0.2035 0.2220 0.2185 0.2125 0.2140</div><div class='input'>
 <span class='co'># Assess fraction of different loci (coarse measure)</span>
 <span class='fu'>system.time</span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.000   0.000   0.001 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;        1     2     3     4     5     6     7     8     9
+#&gt;   0.054   0.002   0.056 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;        1     2     3     4     5     6     7     8     9
 #&gt; 2  0.375                                                
 #&gt; 3  0.394 0.385                                          
 #&gt; 4  0.564 0.546 0.547                                    

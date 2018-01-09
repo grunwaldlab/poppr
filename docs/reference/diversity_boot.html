@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -159,7 +178,8 @@ inverse Simpson's index).</p></td>
 <li><p>if <code>n.boot</code> is less than 2, bootstrapping is performed by 
     sampling N samples from a multinomial distribution weighted by the
     proportion of each MLG in the data.</p></li>
-</ul><p></p><h3>Downward Bias</h3>
+</ul>
+    <p></p><h3>Downward Bias</h3>
     When sampling with replacement, the diversity statistics here present a 
     downward bias partially due to the small number of samples in the data. 
     The result is that the mean of the bootstrapped samples will often be 
@@ -196,11 +216,11 @@ inverse Simpson's index).</p></td>
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;       original      bias    std. error
-#&gt; t1*  3.2679442 -0.38804962 0.106133408
-#&gt; t2* 23.2903226 -7.86903032 1.798596030
-#&gt; t3*  0.9570637 -0.02271468 0.007703289
-#&gt; t4*  0.8825297 -0.03006253 0.029065273
+#&gt;       original       bias    std. error
+#&gt; t1*  3.2679442 -0.418912332  0.09854175
+#&gt; t2* 23.2903226 -7.909992331  1.95720157
+#&gt; t3*  0.9570637 -0.022991690  0.00800187
+#&gt; t4*  0.8825297 -0.004968174  0.03471890
 #&gt; 
 #&gt; $`North America`
 #&gt; 
@@ -214,15 +234,15 @@ inverse Simpson's index).</p></td>
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original        bias    std. error
-#&gt; t1*  3.6870132  -0.526620822 0.053199706
-#&gt; t2* 34.9090909 -14.140516563 1.727063543
-#&gt; t3*  0.9713542  -0.019791667 0.003856095
-#&gt; t4*  0.8711297   0.002207739 0.037392011
-#&gt; </div><div class='input'><span class='fu'>not_run</span>({
-  <span class='co'># This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")</span>
-  <span class='fu'>system.time</span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))
-  <span class='fu'>system.time</span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>))
-})</div></pre>
+#&gt; t1*  3.6870132  -0.504280291 0.086351362
+#&gt; t2* 34.9090909 -13.834197765 2.554966760
+#&gt; t3*  0.9713542  -0.019618056 0.007536491
+#&gt; t4*  0.8711297  -0.008325791 0.053105355
+#&gt; </div><span class='co'># NOT RUN {</span>
+<span class='co'># This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")</span>
+<span class='fu'>system.time</span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))
+<span class='fu'>system.time</span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>))
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

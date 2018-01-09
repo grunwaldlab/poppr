@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -90,10 +109,10 @@ adjusting the palette and scale bar.</p>
 
     <pre class="usage"><span class='fu'>plot_poppr_msn</span>(<span class='no'>x</span>, <span class='no'>poppr_msn</span>, <span class='kw'>gscale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>mlg.compute</span> <span class='kw'>=</span> <span class='st'>"original"</span>, <span class='kw'>glim</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0.8</span>), <span class='kw'>gweight</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>wscale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>nodebase</span> <span class='kw'>=</span> <span class='fl'>1.15</span>, <span class='kw'>nodelab</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
-  <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>layfun</span> <span class='kw'>=</span> <span class='no'>layout.auto</span>, <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>pop.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>scale.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>wscale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>nodescale</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nodebase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>nodelab</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>, <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>layfun</span> <span class='kw'>=</span> <span class='no'>layout.auto</span>, <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>pop.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>size.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -149,8 +168,12 @@ scaled proportional to the inverse of the observed distance , with the
 lines becoming thicker for more related nodes.</p></td>
     </tr>
     <tr>
+      <th>nodescale</th>
+      <td><p>a <code>numeric</code> indicating how to scale the node sizes (scales by area).</p></td>
+    </tr>
+    <tr>
       <th>nodebase</th>
-      <td><p>a <code>numeric</code> indicating what base logarithm should be
+      <td><p><strong>deprecated</strong> a <code>numeric</code> indicating what base logarithm should be
 used to scale the node sizes. Defaults to 1.15. See details.</p></td>
     </tr>
     <tr>
@@ -206,6 +229,12 @@ appear in the top right corner of the graph, but will not overlap. Setting
 <code>pop.leg = FALSE</code> disables this legend. See details.</p></td>
     </tr>
     <tr>
+      <th>size.leg</th>
+      <td><p>if <code>TRUE</code>, a legend displyaing the number of samples per
+node will appear either below the population legend or in the top right
+corner of the graph. Setting <code>size.leg = FALSE</code> disables this legend.</p></td>
+    </tr>
+    <tr>
       <th>scale.leg</th>
       <td><p>if <code>TRUE</code>, a scale bar indicating the distance will
 appear under the graph. Setting <code>scale.leg = FALSE</code> suppresses this
@@ -229,40 +258,37 @@ bar. See details.</p></td>
   provide a scale bar and it did not provide the user a simple way of 
   manipulating the layout or labels. This function allows the user to 
   manipulate many facets of graph creation, making the creation of minimum 
-  spanning networks ever so slightly more user friendly.
-    This function must have both the source data and the output msn to work. 
+  spanning networks ever so slightly more user friendly.</p>  
+<p>This function must have both the source data and the output msn to work. 
   The source data must contain the same population structure as the graph. 
-  Every other parameter has a default setting.</p><h3>Parameter details</h3>
+  Every other parameter has a default setting.</p>  
+<p></p><h3>Parameter details</h3>
  <ul>
-<li><p><code>inds</code> By default, the
-  graph will label each node (circle) with all of the samples (individuals)
-  that are contained within that node. As each node represents a single
-  multilocus genotype (MLG) or individuals (n &gt;= 1), this argument is
-  designed to allow you to selectively label the nodes based on query of
-  sample name or MLG number. If the option <code>mlg = TRUE</code>, the multilocus
-  genotype assignment will be used to label the node. If you do not want to
-  label the nodes by individual or multilocus genotype, simply set this to a
-  name that doesn't exist in your data.</p></li>
-<li><p><code>nodebase</code> The nodes
-  (circles) on the graph represent different multilocus genotypes. The size
-  of the nodes represent the number of individuals. Since nodes can contain
-  any number of individuals, the size of the nodes are transformed on a log
-  base 1.15 scale. This allows the large nodes not to overwhelm the graph. If
-  your nodes are too big, you can use this to adjust the log base so that
-  your nodes are represented.</p></li>
-<li><p><code>nodelab</code> If a node is not labeled
-  by individual, this will label the size of the nodes greater than or equal
-  to this value. If you don't want to label the size of the nodes, simply set
-  this to a very high number.</p></li>
-<li><p><code>cutoff</code> This is useful for when you
-  want to investigate groups of multilocus genotypes separated by a specific
-  distance or if you have two distinct populations and you want to physically
-  separate them in your network.</p></li>
-<li><p><code>beforecut</code> This is an indicator
-  useful if you want to maintain the same position of the nodes before and
-  after removing edges with the <code>cutoff</code> argument. This works best if
-  you set a seed before you run the function.</p></li>
-</ul><p></p><h3>mlg.compute</h3>
+<li><p><code>inds</code> By default, the graph will label each node (circle) with
+  all of the samples (individuals) that are contained within that node. As
+  each node represents a single multilocus genotype (MLG) or individuals (n
+  &gt;= 1), this argument is designed to allow you to selectively label the
+  nodes based on query of sample name or MLG number. If the option <code>mlg
+  = TRUE</code>, the multilocus genotype assignment will be used to label the node.
+  If you do not want to label the nodes by individual or multilocus genotype,
+  simply set this to a name that doesn't exist in your data.</p></li>
+<li><p><code>nodescale</code> The nodes (circles) on the graph represent different
+  multilocus genotypes. The area of the nodes represent the number of
+  individuals. Setting nodescale will scale the area of the nodes.</p></li>
+<li><p><code>nodelab</code> If a node is not labeled by individual, this will
+  label the size of the nodes greater than or equal to this value. If you
+  don't want to label the size of the nodes, simply set this to a very high
+  number.</p></li>
+<li><p><code>cutoff</code> This is useful for when you want to investigate groups
+  of multilocus genotypes separated by a specific distance or if you have two
+  distinct populations and you want to physically separate them in your
+  network.</p></li>
+<li><p><code>beforecut</code> This is an indicator useful if you want to maintain
+  the same position of the nodes before and after removing edges with the
+  <code>cutoff</code> argument. This works best if you set a seed before you run
+  the function.</p></li>
+</ul>
+    <p></p><h3>mlg.compute</h3>
     Each node on the graph represents a different multilocus genotype. 
   The edges on the graph represent genetic distances that connect the
   multilocus genotypes. In genclone objects, it is possible to set the
@@ -272,7 +298,8 @@ bar. See details.</p></td>
   definitions, information is lost from the graph. To circumvent this, The
   clone correction will be done via the computed multilocus genotypes, either
   "original" or "contracted". This is specified in the <code>mlg.compute</code>
-  argument, above.<p></p><h3>legends</h3>
+  argument, above.
+    <p></p><h3>legends</h3>
  To avoid drawing the legend over the graph, legends 
   are separated by different plotting areas. This means that if legends are 
   included, you cannot plot multiple MSNs in a single plot. The scale bar (to
@@ -293,100 +320,107 @@ bar. See details.</p></td>
 <span class='no'>amsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='no'>Aeut</span>, <span class='no'>adist</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># Default</span>
-<span class='fu'>library</span>(<span class='st'>"igraph"</span>) <span class='co'># To get all the layouts.</span>
+<span class='fu'>library</span>(<span class='st'>"igraph"</span>) <span class='co'># To get all the layouts.</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘igraph’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:poppr’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    diversity</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    compare</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    decompose, spectrum</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    union</span></div><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>500</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>)</div><div class='img'><img src='plot_poppr_msn-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># Different layouts (from igraph) can be used by supplying the function name.</span>
 <span class='fu'>set.seed</span>(<span class='fl'>500</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>)</div><img src='plot_poppr_msn-2.png' alt='' width='540' height='400' /><div class='input'>
-<span class='fu'>not_run</span>({
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>layfun</span> <span class='kw'>=</span> <span class='no'>layout_with_kk</span>)
 
-  <span class='co'># Different layouts (from igraph) can be used by supplying the function name.</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>500</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>layfun</span> <span class='kw'>=</span> <span class='no'>layout_with_kk</span>)
+<span class='co'># Removing link between populations (cutoff = 0.2) and labelling no individuals</span>
+<span class='fu'>set.seed</span>(<span class='fl'>500</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)
 
-  <span class='co'># Removing link between populations (cutoff = 0.2) and labelling no individuals</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>500</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)
-
-  <span class='co'># Labelling individual #57 because it is an MLG that crosses populations</span>
-  <span class='co'># Showing clusters of MLGS with at most 5% variation</span>
-  <span class='co'># Notice that the Mt. Vernon population appears to be more clonal</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>50</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"057"</span>)
+<span class='co'># Labelling individual #57 because it is an MLG that crosses populations</span>
+<span class='co'># Showing clusters of MLGS with at most 5% variation</span>
+<span class='co'># Notice that the Mt. Vernon population appears to be more clonal</span>
+<span class='fu'>set.seed</span>(<span class='fl'>50</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"057"</span>)
 
 
-  <span class='fu'>data</span>(<span class='no'>partial_clone</span>)
-  <span class='no'>pcmsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>partial_clone</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fl'>10</span>))
+<span class='fu'>data</span>(<span class='no'>partial_clone</span>)
+<span class='no'>pcmsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>partial_clone</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fl'>10</span>))
 
-  <span class='co'># You can plot using a color palette or a vector of named colors</span>
-  <span class='co'># Here's a way to define the colors beforehand</span>
-  <span class='no'>pc_colors</span> <span class='kw'>&lt;-</span> <span class='fu'>nPop</span>(<span class='no'>partial_clone</span>) <span class='kw'>%&gt;%</span>
-    <span class='kw'>RColorBrewer</span><span class='kw'>::</span><span class='fu'>brewer.pal</span>(<span class='st'>"Set2"</span>) <span class='kw'>%&gt;%</span>
-    <span class='fu'>setNames</span>(<span class='fu'>popNames</span>(<span class='no'>partial_clone</span>))
+<span class='co'># You can plot using a color palette or a vector of named colors</span>
+<span class='co'># Here's a way to define the colors beforehand</span>
+<span class='no'>pc_colors</span> <span class='kw'>&lt;-</span> <span class='fu'>nPop</span>(<span class='no'>partial_clone</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>RColorBrewer</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RColorBrewer/topics/ColorBrewer'>brewer.pal</a></span>(<span class='st'>"Set2"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>setNames</span>(<span class='fu'>popNames</span>(<span class='no'>partial_clone</span>))
 
-  <span class='no'>pc_colors</span>
+<span class='no'>pc_colors</span>
 
-  <span class='co'># Labelling the samples contained in multilocus genotype 9</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>999</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='fl'>9</span>)
+<span class='co'># Labelling the samples contained in multilocus genotype 9</span>
+<span class='fu'>set.seed</span>(<span class='fl'>999</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='fl'>9</span>)
 
-  <span class='co'># Doing the same thing, but using one of the sample names as input.</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>999</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"sim 20"</span>)
+<span class='co'># Doing the same thing, but using one of the sample names as input.</span>
+<span class='fu'>set.seed</span>(<span class='fl'>999</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"sim 20"</span>)
 
-  <span class='co'># Note that this is case sensitive. Nothing is labeled. </span>
-  <span class='fu'>set.seed</span>(<span class='fl'>999</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"Sim 20"</span>)
+<span class='co'># Note that this is case sensitive. Nothing is labeled. </span>
+<span class='fu'>set.seed</span>(<span class='fl'>999</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>partial_clone</span>, <span class='no'>pcmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>pc_colors</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"Sim 20"</span>)
 
-  <span class='co'># Something pretty</span>
-  <span class='fu'>data</span>(<span class='no'>microbov</span>)
-  <span class='no'>mdist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='no'>microbov</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='no'>micmsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='no'>microbov</span>, <span class='no'>mdist</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='co'># Something pretty</span>
+<span class='fu'>data</span>(<span class='no'>microbov</span>)
+<span class='no'>mdist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='no'>microbov</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>micmsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='no'>microbov</span>, <span class='no'>mdist</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>microbov</span>, <span class='no'>micmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"terrain.colors"</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"n"</span>,
-    <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>microbov</span>, <span class='no'>micmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"terrain.colors"</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"n"</span>,
-    <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>microbov</span>, <span class='no'>micmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"terrain.colors"</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"n"</span>,
+  <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>microbov</span>, <span class='no'>micmsn</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"terrain.colors"</span>, <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"n"</span>,
+  <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-  <span class='co'>### Utilizing vectors for palettes</span>
+<span class='co'>### Utilizing vectors for palettes</span>
 
-  <span class='fu'>data</span>(<span class='no'>Pram</span>)
-  <span class='no'>Pram_sub</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>Pram</span>, <span class='kw'>blacklist</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Nursery_CA"</span>, <span class='st'>"Nursery_OR"</span>))
+<span class='fu'>data</span>(<span class='no'>Pram</span>)
+<span class='no'>Pram_sub</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>Pram</span>, <span class='kw'>blacklist</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Nursery_CA"</span>, <span class='st'>"Nursery_OR"</span>))
 
-  <span class='co'># Creating the network for the forest</span>
-  <span class='no'>min_span_net_sub</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>Pram_sub</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>REPLEN</span>,
-                                <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                                <span class='kw'>include.ties</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># Creating the network for the forest</span>
+<span class='no'>min_span_net_sub</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>Pram_sub</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>REPLEN</span>,
+                              <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+                              <span class='kw'>include.ties</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-  <span class='co'># Creating the network with nurseries</span>
-  <span class='no'>min_span_net</span>     <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>Pram</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>REPLEN</span>,
-                                <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                                <span class='kw'>include.ties</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># Creating the network with nurseries</span>
+<span class='no'>min_span_net</span>     <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.msn.html'>bruvo.msn</a></span>(<span class='no'>Pram</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>REPLEN</span>,
+                              <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+                              <span class='kw'>include.ties</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-  <span class='co'># Only forest genotypes</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>70</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>Pram</span>,
-                 <span class='no'>min_span_net_sub</span>,
-                 <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
-                 <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                 <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>9</span>,
-                 <span class='kw'>nodebase</span> <span class='kw'>=</span> <span class='fl'>1.75</span>,
-                 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>comparePal</span>,
-                 <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-                 <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                 <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># Only forest genotypes</span>
+<span class='fu'>set.seed</span>(<span class='fl'>70</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>Pram</span>,
+               <span class='no'>min_span_net_sub</span>,
+               <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
+               <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+               <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>9</span>,
+               <span class='kw'>nodescale</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+               <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>comparePal</span>,
+               <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+               <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+               <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-  <span class='co'># With Nurseries</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>70</span>)
-  <span class='fu'>plot_poppr_msn</span>(<span class='no'>Pram</span>,
-                 <span class='no'>min_span_net</span>,
-                 <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
-                 <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                 <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>9</span>,
-                 <span class='kw'>nodebase</span> <span class='kw'>=</span> <span class='fl'>1.75</span>,
-                 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>comparePal</span>,
-                 <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-                 <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                 <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-})</div></pre>
+<span class='co'># With Nurseries</span>
+<span class='fu'>set.seed</span>(<span class='fl'>70</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>Pram</span>,
+               <span class='no'>min_span_net</span>,
+               <span class='kw'>inds</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>,
+               <span class='kw'>mlg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+               <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>9</span>,
+               <span class='kw'>nodescale</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+               <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'>other</span>(<span class='no'>Pram</span>)$<span class='no'>comparePal</span>,
+               <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+               <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+               <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

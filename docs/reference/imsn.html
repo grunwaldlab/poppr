@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -146,45 +165,44 @@ PDF or PNG image.</p></li>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>not_run</span>({
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># Set up some data</span>
+<span class='fu'>library</span>(<span class='st'>"poppr"</span>)
+<span class='fu'>library</span>(<span class='st'>"magrittr"</span>)
+<span class='fu'>data</span>(<span class='no'>monpop</span>)
+<span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
+<span class='fu'>summary</span>(<span class='no'>monpop</span>)
+<span class='no'>monpop_ssr</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='kw'>CHMFc4</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>CHMFc5</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>CHMFc12</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+                <span class='kw'>SEA</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SED</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SEE</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SEG</span> <span class='kw'>=</span> <span class='fl'>6</span>,
+                <span class='kw'>SEI</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>SEL</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SEN</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SEP</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+                <span class='kw'>SEQ</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SER</span> <span class='kw'>=</span> <span class='fl'>4</span>)
+<span class='no'>t26</span> <span class='kw'>&lt;-</span> <span class='no'>monpop</span> <span class='kw'>%&gt;%</span> <span class='fu'>setPop</span>(~<span class='no'>Tree</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='st'>"26"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>setPop</span>(~<span class='no'>Year</span>/<span class='no'>Symptom</span>)
+<span class='no'>t26</span>
+<span class='fu'>imsn</span>() <span class='co'># select Bruvo's distance and enter "monpop_ssr" into the Repeat Length field.</span>
 
-  <span class='co'># Set up some data</span>
-  <span class='fu'>library</span>(<span class='st'>"poppr"</span>)
-  <span class='fu'>library</span>(<span class='st'>"magrittr"</span>)
-  <span class='fu'>data</span>(<span class='no'>monpop</span>)
-  <span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
-  <span class='fu'>summary</span>(<span class='no'>monpop</span>)
-  <span class='no'>monpop_ssr</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='kw'>CHMFc4</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>CHMFc5</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>CHMFc12</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-                  <span class='kw'>SEA</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SED</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SEE</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SEG</span> <span class='kw'>=</span> <span class='fl'>6</span>,
-                  <span class='kw'>SEI</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>SEL</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>SEN</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SEP</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-                  <span class='kw'>SEQ</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>SER</span> <span class='kw'>=</span> <span class='fl'>4</span>)
-  <span class='no'>t26</span> <span class='kw'>&lt;-</span> <span class='no'>monpop</span> <span class='kw'>%&gt;%</span> <span class='fu'>setPop</span>(~<span class='no'>Tree</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='st'>"26"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>setPop</span>(~<span class='no'>Year</span>/<span class='no'>Symptom</span>)
-  <span class='no'>t26</span>
-  <span class='fu'>imsn</span>() <span class='co'># select Bruvo's distance and enter "monpop_ssr" into the Repeat Length field.</span>
+<span class='co'># It is also possible to run this from github if you are connected to the internet.</span>
+<span class='co'># This allows you to access any bug fixes that may have been updated before a formal</span>
+<span class='co'># release on CRAN</span>
 
-  <span class='co'># It is also possible to run this from github if you are connected to the internet.</span>
-  <span class='co'># This allows you to access any bug fixes that may have been updated before a formal</span>
-  <span class='co'># release on CRAN</span>
+<span class='kw pkg'>shiny</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/shiny/topics/runUrl'>runGitHub</a></span>(<span class='st'>"grunwaldlab/poppr"</span>, <span class='kw'>subdir</span> <span class='kw'>=</span> <span class='st'>"inst/shiny/msn_explorer"</span>)
 
-  <span class='kw'>shiny</span><span class='kw'>::</span><span class='fu'>runGitHub</span>(<span class='st'>"grunwaldlab/poppr"</span>, <span class='kw'>subdir</span> <span class='kw'>=</span> <span class='st'>"inst/shiny/msn_explorer"</span>)
+<span class='co'># You can also use your own distance matrices, but there's a small catch.</span>
+<span class='co'># in order to do so, you must write a function that will subset the matrix</span>
+<span class='co'># to whatever populations are in your data. Here's an example with the above</span>
+<span class='co'># data set:</span>
 
-  <span class='co'># You can also use your own distance matrices, but there's a small catch.</span>
-  <span class='co'># in order to do so, you must write a function that will subset the matrix</span>
-  <span class='co'># to whatever populations are in your data. Here's an example with the above</span>
-  <span class='co'># data set:</span>
-
-  <span class='no'>mondist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.dist.html'>bruvo.dist</a></span>(<span class='no'>monpop</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>monpop_ssr</span>)
-  <span class='no'>myDist</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>, <span class='no'>d</span> <span class='kw'>=</span> <span class='no'>mondist</span>){
-   <span class='no'>dm</span> <span class='kw'>&lt;-</span> <span class='fu'>as.matrix</span>(<span class='no'>d</span>)          <span class='co'># Convert the dist object to a square matrix</span>
-   <span class='no'>xi</span> <span class='kw'>&lt;-</span> <span class='fu'>indNames</span>(<span class='no'>x</span>)           <span class='co'># Grab the sample names that exist</span>
-   <span class='fu'>return</span>(<span class='fu'>as.dist</span>(<span class='no'>dm</span>[<span class='no'>xi</span>, <span class='no'>xi</span>])) <span class='co'># return only the elements that have the names</span>
-                               <span class='co'># in the data set</span>
-  }
-  <span class='co'># After executing imsn, choose:</span>
-  <span class='co'># Distance: custom</span>
-  <span class='co'># myDist</span>
-  <span class='fu'>imsn</span>()
-})</div></pre>
+<span class='no'>mondist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bruvo.dist.html'>bruvo.dist</a></span>(<span class='no'>monpop</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>monpop_ssr</span>)
+<span class='no'>myDist</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>, <span class='no'>d</span> <span class='kw'>=</span> <span class='no'>mondist</span>){
+ <span class='no'>dm</span> <span class='kw'>&lt;-</span> <span class='fu'>as.matrix</span>(<span class='no'>d</span>)          <span class='co'># Convert the dist object to a square matrix</span>
+ <span class='no'>xi</span> <span class='kw'>&lt;-</span> <span class='fu'>indNames</span>(<span class='no'>x</span>)           <span class='co'># Grab the sample names that exist</span>
+ <span class='fu'>return</span>(<span class='fu'>as.dist</span>(<span class='no'>dm</span>[<span class='no'>xi</span>, <span class='no'>xi</span>])) <span class='co'># return only the elements that have the names</span>
+                             <span class='co'># in the data set</span>
+}
+<span class='co'># After executing imsn, choose:</span>
+<span class='co'># Distance: custom</span>
+<span class='co'># myDist</span>
+<span class='fu'>imsn</span>()
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

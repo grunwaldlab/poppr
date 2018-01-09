@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -130,11 +149,11 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; [3,]      75      75       51       67        9
 #&gt; [4,]      16      16       22       14        7
 #&gt; [5,]      27      27       43       25        7
-#&gt; [6,]      28      28       44       26        7</div><div class='input'><span class='fu'>not_run</span>({
-  <span class='co'># You can find out how many unique genotypes are found without each locus:</span>
+#&gt; [6,]      28      28       44       26        7</div><span class='co'># NOT RUN {</span>
+<span class='co'># You can find out how many unique genotypes are found without each locus:</span>
 
-  <span class='fu'>colSums</span>(!<span class='fu'>apply</span>(<span class='no'>pmlg_rr</span>, <span class='fl'>2</span>, <span class='no'>duplicated</span>))
-})</div></pre>
+<span class='fu'>colSums</span>(!<span class='fu'>apply</span>(<span class='no'>pmlg_rr</span>, <span class='fl'>2</span>, <span class='no'>duplicated</span>))
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

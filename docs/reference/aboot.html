@@ -24,7 +24,8 @@ to genind or genclone objects. — aboot • poppr</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -52,10 +53,28 @@ to genind or genclone objects. — aboot • poppr</title>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -64,7 +83,7 @@ to genind or genclone objects. — aboot • poppr</title>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -176,7 +195,8 @@ the tree is considered rooted if <code><a href='http://www.rdocumentation.org/pa
   the genind matrix are defined as alleles and are thus interrelated. This 
   function will specifically bootstrap loci so that results are biologically 
   relevant. With this function, the user can also define a custom distance to
-  be performed on the genind or genclone object.</p><h3>the strata argument</h3>
+  be performed on the genind or genclone object.</p>  
+<p></p><h3>the strata argument</h3>
     There is an argument called <code>strata</code>. This argument is useful for when
   you want to bootstrap by populations from a <code><a href='http://www.rdocumentation.org/packages/adegenet/topics/new.genind'>genind</a></code>
   object. When you specify strata, the genind object will be converted to
@@ -217,72 +237,72 @@ While calculation of Bruvo's distance
 <span class='fu'>set.seed</span>(<span class='fl'>9999</span>)
 <span class='co'># Generate a tree using nei's distance</span>
 <span class='no'>neinan</span> <span class='kw'>&lt;-</span> <span class='fu'>aboot</span>(<span class='no'>nan9</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>nei.dist</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; Running bootstraps:       100 / 100
-#&gt; Calculating bootstrap values... done.</div><img src='aboot-37.png' alt='' width='540' height='400' /><div class='input'>
+#&gt; Calculating bootstrap values... done.</div><div class='img'><img src='aboot-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='fu'>set.seed</span>(<span class='fl'>9999</span>)
 <span class='co'># Generate a tree using custom distance</span>
 <span class='no'>bindist</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dist</span>(<span class='fu'>tab</span>(<span class='no'>x</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"binary"</span>)
 <span class='no'>binnan</span> <span class='kw'>&lt;-</span> <span class='fu'>aboot</span>(<span class='no'>nan9</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>bindist</span>)</div><div class='output co'>#&gt; Running bootstraps:       100 / 100
-#&gt; Calculating bootstrap values... done.</div><img src='aboot-40.png' alt='' width='540' height='400' /><div class='input'>
-<span class='fu'>not_run</span>({
-  <span class='co'># Distances from other packages.</span>
-  <span class='co'>#</span>
-  <span class='co'># Sometimes, distance functions from other packages will have the constraint</span>
-  <span class='co'># that the incoming data MUST be genind. Internally, aboot uses the </span>
-  <span class='co'># bootgen class ( class?bootgen ) to shuffle loci, and will throw an error</span>
-  <span class='co'># The function bootgen2genind helps fix that. Here's an example of a function</span>
-  <span class='co'># that expects a genind class from above</span>
-  <span class='no'>bindist</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-    <span class='fu'>stopifnot</span>(<span class='fu'>is.genind</span>(<span class='no'>x</span>))
-    <span class='fu'>dist</span>(<span class='fu'>tab</span>(<span class='no'>x</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"binary"</span>)
-  }
-  <span class='co'>#</span>
-  <span class='co'># Fails:</span>
-  <span class='co'># aboot(nan9, dist = bindist)</span>
-  <span class='co'>## Error: is.genind(x) is not TRUE</span>
-  <span class='co'>#</span>
-  <span class='co'># Add bootgen2genind to get it working!</span>
-  <span class='co'># Works:</span>
-  <span class='fu'>aboot</span>(<span class='no'>nan9</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='coercion-methods.html'>bootgen2genind</a></span>(<span class='no'>x</span>) <span class='kw'>%&gt;%</span> <span class='no'>bindist</span>)
+#&gt; Calculating bootstrap values... done.</div><div class='img'><img src='aboot-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># Distances from other packages.</span>
+<span class='co'>#</span>
+<span class='co'># Sometimes, distance functions from other packages will have the constraint</span>
+<span class='co'># that the incoming data MUST be genind. Internally, aboot uses the </span>
+<span class='co'># bootgen class ( class?bootgen ) to shuffle loci, and will throw an error</span>
+<span class='co'># The function bootgen2genind helps fix that. Here's an example of a function</span>
+<span class='co'># that expects a genind class from above</span>
+<span class='no'>bindist</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
+  <span class='fu'>stopifnot</span>(<span class='fu'>is.genind</span>(<span class='no'>x</span>))
+  <span class='fu'>dist</span>(<span class='fu'>tab</span>(<span class='no'>x</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"binary"</span>)
+}
+<span class='co'>#</span>
+<span class='co'># Fails:</span>
+<span class='co'># aboot(nan9, dist = bindist)</span>
+<span class='co'>## Error: is.genind(x) is not TRUE</span>
+<span class='co'>#</span>
+<span class='co'># Add bootgen2genind to get it working!</span>
+<span class='co'># Works:</span>
+<span class='fu'>aboot</span>(<span class='no'>nan9</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='coercion-methods.html'>bootgen2genind</a></span>(<span class='no'>x</span>) <span class='kw'>%&gt;%</span> <span class='no'>bindist</span>)
 
-  <span class='co'># AFLP data</span>
-  <span class='fu'>data</span>(<span class='no'>Aeut</span>)
+<span class='co'># AFLP data</span>
+<span class='fu'>data</span>(<span class='no'>Aeut</span>)
 
-  <span class='co'># Nei's distance</span>
-  <span class='no'>anei</span> <span class='kw'>&lt;-</span> <span class='fu'>aboot</span>(<span class='no'>Aeut</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>nei.dist</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>50</span>)
+<span class='co'># Nei's distance</span>
+<span class='no'>anei</span> <span class='kw'>&lt;-</span> <span class='fu'>aboot</span>(<span class='no'>Aeut</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>nei.dist</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>50</span>)
 
-  <span class='co'># Rogers' distance</span>
-  <span class='no'>arog</span> <span class='kw'>&lt;-</span> <span class='fu'>aboot</span>(<span class='no'>Aeut</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>rogers.dist</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>50</span>)
+<span class='co'># Rogers' distance</span>
+<span class='no'>arog</span> <span class='kw'>&lt;-</span> <span class='fu'>aboot</span>(<span class='no'>Aeut</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>rogers.dist</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>50</span>)
 
-  <span class='co'># This can also be run on genpop objects</span>
-  <span class='fu'>strata</span>(<span class='no'>Aeut</span>) <span class='kw'>&lt;-</span> <span class='fu'>other</span>(<span class='no'>Aeut</span>)$<span class='no'>population_hierarchy</span>[-<span class='fl'>1</span>]
-  <span class='no'>Aeut.gc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>Aeut</span>)
-  <span class='fu'>setPop</span>(<span class='no'>Aeut.gc</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>
-  <span class='no'>Aeut.pop</span> <span class='kw'>&lt;-</span> <span class='fu'>genind2genpop</span>(<span class='no'>Aeut.gc</span>)
-  <span class='fu'>set.seed</span>(<span class='fl'>5000</span>)
-  <span class='fu'>aboot</span>(<span class='no'>Aeut.pop</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>) <span class='co'># compare to Grunwald et al. 2006</span>
+<span class='co'># This can also be run on genpop objects</span>
+<span class='fu'>strata</span>(<span class='no'>Aeut</span>) <span class='kw'>&lt;-</span> <span class='fu'>other</span>(<span class='no'>Aeut</span>)$<span class='no'>population_hierarchy</span>[-<span class='fl'>1</span>]
+<span class='no'>Aeut.gc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>Aeut</span>)
+<span class='fu'>setPop</span>(<span class='no'>Aeut.gc</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>
+<span class='no'>Aeut.pop</span> <span class='kw'>&lt;-</span> <span class='fu'>genind2genpop</span>(<span class='no'>Aeut.gc</span>)
+<span class='fu'>set.seed</span>(<span class='fl'>5000</span>)
+<span class='fu'>aboot</span>(<span class='no'>Aeut.pop</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>) <span class='co'># compare to Grunwald et al. 2006</span>
 
-  <span class='co'># You can also use the strata argument to convert to genpop inside the function.</span>
-  <span class='fu'>set.seed</span>(<span class='fl'>5000</span>)
-  <span class='fu'>aboot</span>(<span class='no'>Aeut.gc</span>, <span class='kw'>strata</span> <span class='kw'>=</span> ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
+<span class='co'># You can also use the strata argument to convert to genpop inside the function.</span>
+<span class='fu'>set.seed</span>(<span class='fl'>5000</span>)
+<span class='fu'>aboot</span>(<span class='no'>Aeut.gc</span>, <span class='kw'>strata</span> <span class='kw'>=</span> ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
 
-  <span class='co'># And genlight objects </span>
-  <span class='co'># From glSim:</span>
-  <span class='co'>## 1,000 non structured SNPs, 100 structured SNPs</span>
-  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>1e3</span>, <span class='kw'>n.snp.struc</span><span class='kw'>=</span><span class='fl'>100</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>)
-  <span class='fu'>aboot</span>(<span class='no'>x</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bitwise.dist</span>)
+<span class='co'># And genlight objects </span>
+<span class='co'># From glSim:</span>
+<span class='co'>## 1,000 non structured SNPs, 100 structured SNPs</span>
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>1e3</span>, <span class='kw'>n.snp.struc</span><span class='kw'>=</span><span class='fl'>100</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>)
+<span class='fu'>aboot</span>(<span class='no'>x</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bitwise.dist</span>)
 
-  <span class='co'># Utilizing other tree methods</span>
+<span class='co'># Utilizing other tree methods</span>
 
-  <span class='fu'>library</span>(<span class='st'>"ape"</span>)
+<span class='fu'>library</span>(<span class='st'>"ape"</span>)
 
-  <span class='fu'>aboot</span>(<span class='no'>Aeut.pop</span>, <span class='kw'>tree</span> <span class='kw'>=</span> <span class='no'>fastme.bal</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
+<span class='fu'>aboot</span>(<span class='no'>Aeut.pop</span>, <span class='kw'>tree</span> <span class='kw'>=</span> <span class='no'>fastme.bal</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
 
-  <span class='co'># Utilizing options in other tree methods</span>
+<span class='co'># Utilizing options in other tree methods</span>
 
-  <span class='no'>myFastME</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>fastme.bal</span>(<span class='no'>x</span>, <span class='kw'>nni</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>spr</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>tbr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'>aboot</span>(<span class='no'>Aeut.pop</span>, <span class='kw'>tree</span> <span class='kw'>=</span> <span class='no'>myFastME</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
+<span class='no'>myFastME</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='http://www.rdocumentation.org/packages/ape/topics/fastme'>fastme.bal</a></span>(<span class='no'>x</span>, <span class='kw'>nni</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>spr</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>tbr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>aboot</span>(<span class='no'>Aeut.pop</span>, <span class='kw'>tree</span> <span class='kw'>=</span> <span class='no'>myFastME</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
 
-})</div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

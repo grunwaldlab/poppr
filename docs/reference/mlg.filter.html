@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -260,86 +279,85 @@ it in memory to further utilize mlg.filter.</p>
 #&gt; 
 #&gt;     0 strata. 
 #&gt;     4 populations defined - 1, 2, 3, 4</div><div class='input'>
-<span class='fu'>not_run</span>({
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># The distance definition is persistant</span>
+<span class='fu'>mlg.filter</span>(<span class='no'>pc</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.1</span>
+<span class='no'>pc</span> <span class='co'># 24 mlgs</span>
 
-  <span class='co'># The distance definition is persistant</span>
-  <span class='fu'>mlg.filter</span>(<span class='no'>pc</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.1</span>
-  <span class='no'>pc</span> <span class='co'># 24 mlgs</span>
+<span class='co'># But you can still change the definition</span>
+<span class='fu'>mlg.filter</span>(<span class='no'>pc</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='st'>"diss.dist"</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.1</span>
+<span class='no'>pc</span>
 
-  <span class='co'># But you can still change the definition</span>
-  <span class='fu'>mlg.filter</span>(<span class='no'>pc</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='st'>"diss.dist"</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.1</span>
-  <span class='no'>pc</span>
-
-  <span class='co'># Choosing a threshold ----------------------------------------------------</span>
-
-
-  <span class='co'># Thresholds for collapsing multilocus genotypes should not be arbitrary. It</span>
-  <span class='co'># is important to consider what threshold is suitable. One method of choosing</span>
-  <span class='co'># a threshold is to find a gap in the distance distribution that represents</span>
-  <span class='co'># clonal groups. You can look at this by analyzing the distribution of all</span>
-  <span class='co'># possible thresholds with the function "cutoff_predictor".</span>
-
-  <span class='co'># For this example, we'll use Bruvo's distance to predict the cutoff for</span>
-  <span class='co'># P. infestans.</span>
-
-  <span class='fu'>data</span>(<span class='no'>Pinf</span>)
-  <span class='no'>Pinf</span>
-  <span class='co'># Repeat lengths are necessary for Bruvo's distance</span>
-  (<span class='no'>pinfreps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='no'>Pinf</span>, <span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>)))
-
-  <span class='co'># Now we can collect information of the thresholds. We can set threshold = 1</span>
-  <span class='co'># because we know that this will capture the maximum possible distance:</span>
-  (<span class='no'>thresholds</span> <span class='kw'>&lt;-</span> <span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"THRESHOLDS"</span>,
-                            <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>1</span>))
-  <span class='co'># We can use these thresholds to find an appropriate cutoff</span>
-  (<span class='no'>pcut</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cutoff_predictor.html'>cutoff_predictor</a></span>(<span class='no'>thresholds</span>))
-  <span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>) <span class='kw'>&lt;-</span> <span class='no'>pcut</span>
-  <span class='no'>Pinf</span>
-
-  <span class='co'># This can also be visualized with the "filter_stats" function.</span>
-
-  <span class='co'># Special case: threshold = 0 ---------------------------------------------</span>
+<span class='co'># Choosing a threshold ----------------------------------------------------</span>
 
 
-  <span class='co'># It's important to remember that a threshold of 0 is equal to the original</span>
-  <span class='co'># MLG definition. This example will show a data set that contains genotypes</span>
-  <span class='co'># with missing data that share all alleles with other genotypes except for </span>
-  <span class='co'># the missing one.</span>
+<span class='co'># Thresholds for collapsing multilocus genotypes should not be arbitrary. It</span>
+<span class='co'># is important to consider what threshold is suitable. One method of choosing</span>
+<span class='co'># a threshold is to find a gap in the distance distribution that represents</span>
+<span class='co'># clonal groups. You can look at this by analyzing the distribution of all</span>
+<span class='co'># possible thresholds with the function "cutoff_predictor".</span>
 
-  <span class='fu'>data</span>(<span class='no'>monpop</span>)
-  <span class='no'>monpop</span> <span class='co'># 264 mlg</span>
-  <span class='fu'>mlg.filter</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> <span class='fl'>0</span>
-  <span class='fu'><a href='mll-method.html'>nmll</a></span>(<span class='no'>monpop</span>) <span class='co'># 264 mlg</span>
+<span class='co'># For this example, we'll use Bruvo's distance to predict the cutoff for</span>
+<span class='co'># P. infestans.</span>
 
-  <span class='co'># In order to merge these genotypes with missing data, we should set the </span>
-  <span class='co'># threshold to be slightly higher than 0. We will use the smallest fraction </span>
-  <span class='co'># the computer can store.</span>
+<span class='fu'>data</span>(<span class='no'>Pinf</span>)
+<span class='no'>Pinf</span>
+<span class='co'># Repeat lengths are necessary for Bruvo's distance</span>
+(<span class='no'>pinfreps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='no'>Pinf</span>, <span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>)))
 
-  <span class='fu'>mlg.filter</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> <span class='no'>.Machine</span>$<span class='no'>double.eps</span> ^ <span class='fl'>0.5</span>
-  <span class='fu'><a href='mll-method.html'>nmll</a></span>(<span class='no'>monpop</span>) <span class='co'># 236 mlg</span>
+<span class='co'># Now we can collect information of the thresholds. We can set threshold = 1</span>
+<span class='co'># because we know that this will capture the maximum possible distance:</span>
+(<span class='no'>thresholds</span> <span class='kw'>&lt;-</span> <span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"THRESHOLDS"</span>,
+                          <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>1</span>))
+<span class='co'># We can use these thresholds to find an appropriate cutoff</span>
+(<span class='no'>pcut</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cutoff_predictor.html'>cutoff_predictor</a></span>(<span class='no'>thresholds</span>))
+<span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>) <span class='kw'>&lt;-</span> <span class='no'>pcut</span>
+<span class='no'>Pinf</span>
 
-  <span class='co'># Custom distance ---------------------------------------------------------</span>
+<span class='co'># This can also be visualized with the "filter_stats" function.</span>
 
-  <span class='co'># Custom genetic distances can be used either in functions from other</span>
-  <span class='co'># packages or user-defined functions</span>
-
-  <span class='fu'>data</span>(<span class='no'>Pinf</span>)
-  <span class='no'>Pinf</span>
-  <span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dist</span>(<span class='fu'>tab</span>(<span class='no'>x</span>))) <span class='kw'>&lt;-</span> <span class='fl'>3</span>
-  <span class='no'>Pinf</span>
-  <span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>) <span class='kw'>&lt;-</span> <span class='fl'>4</span>
-  <span class='no'>Pinf</span>
-
-  <span class='co'># genlight / snpclone objects ---------------------------------------------</span>
+<span class='co'># Special case: threshold = 0 ---------------------------------------------</span>
 
 
-  <span class='fu'>set.seed</span>(<span class='fl'>999</span>)
-  <span class='no'>gc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>1e3</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>))
-  <span class='no'>gc</span> <span class='co'># 100 mlgs</span>
-  <span class='fu'>mlg.filter</span>(<span class='no'>gc</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.25</span>
-  <span class='no'>gc</span> <span class='co'># 82 mlgs</span>
+<span class='co'># It's important to remember that a threshold of 0 is equal to the original</span>
+<span class='co'># MLG definition. This example will show a data set that contains genotypes</span>
+<span class='co'># with missing data that share all alleles with other genotypes except for </span>
+<span class='co'># the missing one.</span>
 
-})</div></pre>
+<span class='fu'>data</span>(<span class='no'>monpop</span>)
+<span class='no'>monpop</span> <span class='co'># 264 mlg</span>
+<span class='fu'>mlg.filter</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> <span class='fl'>0</span>
+<span class='fu'><a href='mll-method.html'>nmll</a></span>(<span class='no'>monpop</span>) <span class='co'># 264 mlg</span>
+
+<span class='co'># In order to merge these genotypes with missing data, we should set the </span>
+<span class='co'># threshold to be slightly higher than 0. We will use the smallest fraction </span>
+<span class='co'># the computer can store.</span>
+
+<span class='fu'>mlg.filter</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> <span class='no'>.Machine</span>$<span class='no'>double.eps</span> ^ <span class='fl'>0.5</span>
+<span class='fu'><a href='mll-method.html'>nmll</a></span>(<span class='no'>monpop</span>) <span class='co'># 236 mlg</span>
+
+<span class='co'># Custom distance ---------------------------------------------------------</span>
+
+<span class='co'># Custom genetic distances can be used either in functions from other</span>
+<span class='co'># packages or user-defined functions</span>
+
+<span class='fu'>data</span>(<span class='no'>Pinf</span>)
+<span class='no'>Pinf</span>
+<span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dist</span>(<span class='fu'>tab</span>(<span class='no'>x</span>))) <span class='kw'>&lt;-</span> <span class='fl'>3</span>
+<span class='no'>Pinf</span>
+<span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>) <span class='kw'>&lt;-</span> <span class='fl'>4</span>
+<span class='no'>Pinf</span>
+
+<span class='co'># genlight / snpclone objects ---------------------------------------------</span>
+
+
+<span class='fu'>set.seed</span>(<span class='fl'>999</span>)
+<span class='no'>gc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>1e3</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>))
+<span class='no'>gc</span> <span class='co'># 100 mlgs</span>
+<span class='fu'>mlg.filter</span>(<span class='no'>gc</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.25</span>
+<span class='no'>gc</span> <span class='co'># 82 mlgs</span>
+
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

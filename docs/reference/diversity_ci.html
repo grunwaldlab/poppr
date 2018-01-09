@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -235,7 +254,7 @@ three decimal places.
   one clear method for calculating confidence intervals. A suggestion for
   correction in Shannon's index is to center the CI around the observed
   statistic (Marcon, 2012), but there are theoretical limitations to this.
-  For details, see <a href = 'http://stats.stackexchange.com/q/156235/49413'>http://stats.stackexchange.com/q/156235/49413</a>.
+  For details, see <a href='http://stats.stackexchange.com/q/156235/49413'>http://stats.stackexchange.com/q/156235/49413</a>.
     <p></p><h3>User-defined functions</h3>
     While it is possible to use custom functions with this, there are three
   important things to remember when using these functions:
@@ -266,7 +285,7 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 <span class='fu'>data</span>(<span class='no'>Pinf</span>)
 <span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100L</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
-#&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><img src='diversity_ci-3.png' alt='' width='540' height='400' /><div class='output co'>#&gt; $obs
+#&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-1.png' alt='' width='700' height='432.632880098887' /></div><div class='output co'>#&gt; $obs
 #&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5
 #&gt;   South America 3.267944 23.29032 0.9570637 0.8825297
@@ -276,31 +295,31 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; $est
 #&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5
-#&gt;   South America 2.837700 14.74391 0.9308726 0.8474734
-#&gt;   North America 3.198844 21.28651 0.9522396 0.8574199
-#&gt;   Total         3.713835 35.27551 0.9713845 0.8532653
+#&gt;   South America 2.826104 14.67452 0.9293490 0.8479552
+#&gt;   North America 3.184451 20.97673 0.9514063 0.8557088
+#&gt;   Total         3.692688 34.18765 0.9704895 0.8445408
 #&gt; 
 #&gt; $CI
 #&gt; , , Pop = South America
 #&gt; 
 #&gt;         Index
 #&gt; CI              H        G    lambda       E.5
-#&gt;   2.5 %  3.065414 19.30155 0.9381021 0.7832261
-#&gt;   97.5 % 3.470475 27.27910 0.9760253 0.9818334
+#&gt;   2.5 %  3.005401 18.30500 0.9272652 0.7520904
+#&gt;   97.5 % 3.530488 28.27564 0.9868623 1.0129691
 #&gt; 
 #&gt; , , Pop = North America
 #&gt; 
 #&gt;         Index
 #&gt; CI              H        G    lambda       E.5
-#&gt;   2.5 %  3.509626 29.80681 0.9582646 0.7689085
-#&gt;   97.5 % 3.864401 40.01137 0.9844437 0.9733510
+#&gt;   2.5 %  3.485153 29.39502 0.9574922 0.7716359
+#&gt;   97.5 % 3.888874 40.42317 0.9852162 0.9706236
 #&gt; 
 #&gt; , , Pop = Total
 #&gt; 
 #&gt;         Index
 #&gt; CI              H        G    lambda       E.5
-#&gt;   2.5 %  4.051413 51.26737 0.9770317 0.8069727
-#&gt;   97.5 % 4.325016 64.29513 0.9883550 0.9426993
+#&gt;   2.5 %  4.046179 51.43267 0.9771989 0.8029547
+#&gt;   97.5 % 4.330250 64.12983 0.9881877 0.9467173
 #&gt; 
 #&gt; 
 #&gt; $boot
@@ -316,10 +335,10 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original      bias    std. error
-#&gt; t1*  3.2679442 -0.43024378 0.103333889
-#&gt; t2* 23.2903226 -8.54640938 2.035125745
-#&gt; t3*  0.9570637 -0.02619114 0.009674473
-#&gt; t4*  0.8825297 -0.03505636 0.050666061
+#&gt; t1*  3.2679442 -0.44184005  0.13395328
+#&gt; t2* 23.2903226 -8.61580360  2.54357638
+#&gt; t3*  0.9570637 -0.02771468  0.01520362
+#&gt; t4*  0.8825297 -0.03457450  0.06655192
 #&gt; 
 #&gt; $boot$`North America`
 #&gt; 
@@ -333,10 +352,10 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original       bias    std. error
-#&gt; t1*  3.6870132  -0.48816936 0.090505455
-#&gt; t2* 34.9090909 -13.62257951 2.603253289
-#&gt; t3*  0.9713542  -0.01911458 0.006678474
-#&gt; t4*  0.8711297  -0.01370980 0.052154638
+#&gt; t1*  3.6870132  -0.50256253 0.102991994
+#&gt; t2* 34.9090909 -13.93235692 2.813355380
+#&gt; t3*  0.9713542  -0.01994792 0.007072572
+#&gt; t4*  0.8711297  -0.01542093 0.050763087
 #&gt; 
 #&gt; $boot$Total
 #&gt; 
@@ -350,38 +369,39 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original       bias    std. error
-#&gt; t1*  4.1882146  -0.47437982 0.069798140
-#&gt; t2* 57.7812500 -22.50573507 3.323470445
-#&gt; t3*  0.9826933  -0.01130882 0.002888634
-#&gt; t4*  0.8748360  -0.02157072 0.034624788
+#&gt; t1*  4.1882146  -0.49552687 0.072468257
+#&gt; t2* 57.7812500 -23.59359716 3.239132381
+#&gt; t3*  0.9826933  -0.01220389 0.002803317
+#&gt; t4*  0.8748360  -0.03029519 0.036674827
 #&gt; 
-#&gt; </div><div class='input'><span class='fu'>not_run</span>({
-  <span class='co'># With pretty results</span>
-  <span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100L</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+#&gt; </div><span class='co'># NOT RUN {</span>
+<span class='co'># With pretty results</span>
+<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100L</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-  <span class='co'># This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")</span>
-  <span class='fu'>system.time</span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))
-  <span class='fu'>system.time</span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>))
+<span class='co'># This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")</span>
+<span class='fu'>system.time</span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))
+<span class='fu'>system.time</span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>))
 
-  <span class='co'># We often get many requests for a clonal fraction statistic. As this is </span>
-  <span class='co'># simply the number of observed MLGs over the number of samples, we </span>
-  <span class='co'># recommended that people calculate it themselves. With this function, you</span>
-  <span class='co'># can add it in:</span>
+<span class='co'># We often get many requests for a clonal fraction statistic. As this is </span>
+<span class='co'># simply the number of observed MLGs over the number of samples, we </span>
+<span class='co'># recommended that people calculate it themselves. With this function, you</span>
+<span class='co'># can add it in:</span>
 
-  <span class='no'>CF</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-   <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>drop</span>(<span class='fu'>as.matrix</span>(<span class='no'>x</span>))
-   <span class='kw'>if</span> (<span class='fu'>length</span>(<span class='fu'>dim</span>(<span class='no'>x</span>)) <span class='kw'>&gt;</span> <span class='fl'>1</span>){
-     <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>rowSums</span>(<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>)/<span class='fu'>rowSums</span>(<span class='no'>x</span>)
-   } <span class='kw'>else</span> {
-     <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>sum</span>(<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>)/<span class='fu'>sum</span>(<span class='no'>x</span>)
-   }
-   <span class='fu'>return</span>(<span class='no'>res</span>)
-  }
-  <span class='co'># Show pretty results</span>
+<span class='no'>CF</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
+ <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>drop</span>(<span class='fu'>as.matrix</span>(<span class='no'>x</span>))
+ <span class='kw'>if</span> (<span class='fu'>length</span>(<span class='fu'>dim</span>(<span class='no'>x</span>)) <span class='kw'>&gt;</span> <span class='fl'>1</span>){
+   <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>rowSums</span>(<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>)/<span class='fu'>rowSums</span>(<span class='no'>x</span>)
+ } <span class='kw'>else</span> {
+   <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>sum</span>(<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>)/<span class='fu'>sum</span>(<span class='no'>x</span>)
+ }
+ <span class='fu'>return</span>(<span class='no'>res</span>)
+}
+<span class='co'># Show pretty results</span>
 
-  <span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>1000L</span>, <span class='kw'>CF</span> <span class='kw'>=</span> <span class='no'>CF</span>, <span class='kw'>center</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-  <span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>1000L</span>, <span class='kw'>CF</span> <span class='kw'>=</span> <span class='no'>CF</span>, <span class='kw'>rarefy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-})</div></pre>
+<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>1000L</span>, <span class='kw'>CF</span> <span class='kw'>=</span> <span class='no'>CF</span>, <span class='kw'>center</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>1000L</span>, <span class='kw'>CF</span> <span class='kw'>=</span> <span class='no'>CF</span>, <span class='kw'>rarefy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

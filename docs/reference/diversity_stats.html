@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -147,31 +166,31 @@ genotype counts.</p></td>
 <span class='fu'>diversity_stats</span>(<span class='no'>tab</span>)</div><div class='output co'>#&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5
 #&gt;   South America 3.267944 23.29032 0.9570637 0.8825297
-#&gt;   North America 3.687013 34.90909 0.9713542 0.8711297</div><div class='input'><span class='fu'>not_run</span>({
-  <span class='co'># Example using the poweRlaw package to calculate the negative slope of the</span>
-  <span class='co'># Pareto distribution.</span>
+#&gt;   North America 3.687013 34.90909 0.9713542 0.8711297</div><span class='co'># NOT RUN {</span>
+<span class='co'># Example using the poweRlaw package to calculate the negative slope of the</span>
+<span class='co'># Pareto distribution.</span>
 
-  <span class='fu'>library</span>(<span class='st'>"poweRlaw"</span>)
-  <span class='no'>power_law_beta</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-    <span class='no'>xpow</span> <span class='kw'>&lt;-</span> <span class='fu'>displ</span>(<span class='no'>x</span>[<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>])                 <span class='co'># Generate the distribution</span>
-    <span class='no'>xpow</span>$<span class='fu'>setPars</span>(<span class='fu'>estimate_pars</span>(<span class='no'>xpow</span>))       <span class='co'># Estimate the parameters</span>
-    <span class='no'>xdat</span> <span class='kw'>&lt;-</span> <span class='fu'>plot</span>(<span class='no'>xpow</span>, <span class='kw'>draw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)        <span class='co'># Extract the data</span>
-    <span class='no'>xlm</span> <span class='kw'>&lt;-</span> <span class='fu'>lm</span>(<span class='fu'>log</span>(<span class='no'>y</span>) ~ <span class='fu'>log</span>(<span class='no'>x</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>xdat</span>) <span class='co'># Run log-log linear model for slope</span>
-    <span class='fu'>return</span>(-<span class='fu'>coef</span>(<span class='no'>xlm</span>)[<span class='fl'>2</span>])
+<span class='fu'>library</span>(<span class='st'>"poweRlaw"</span>)
+<span class='no'>power_law_beta</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
+  <span class='no'>xpow</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/poweRlaw/topics/displ'>displ</a></span>(<span class='no'>x</span>[<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>])                 <span class='co'># Generate the distribution</span>
+  <span class='no'>xpow</span>$<span class='fu'>setPars</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/poweRlaw/topics/estimate_pars'>estimate_pars</a></span>(<span class='no'>xpow</span>))       <span class='co'># Estimate the parameters</span>
+  <span class='no'>xdat</span> <span class='kw'>&lt;-</span> <span class='fu'>plot</span>(<span class='no'>xpow</span>, <span class='kw'>draw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)        <span class='co'># Extract the data</span>
+  <span class='no'>xlm</span> <span class='kw'>&lt;-</span> <span class='fu'>lm</span>(<span class='fu'>log</span>(<span class='no'>y</span>) ~ <span class='fu'>log</span>(<span class='no'>x</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>xdat</span>) <span class='co'># Run log-log linear model for slope</span>
+  <span class='fu'>return</span>(-<span class='fu'>coef</span>(<span class='no'>xlm</span>)[<span class='fl'>2</span>])
+}
+
+<span class='no'>Beta</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
+  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>drop</span>(<span class='fu'>as.matrix</span>(<span class='no'>x</span>))
+  <span class='kw'>if</span> (<span class='fu'>length</span>(<span class='fu'>dim</span>(<span class='no'>x</span>)) <span class='kw'>&gt;</span> <span class='fl'>1</span>){
+    <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>apply</span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='no'>power_law_beta</span>)
+  } <span class='kw'>else</span> {
+    <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>power_law_beta</span>(<span class='no'>x</span>)
   }
+  <span class='fu'>return</span>(<span class='no'>res</span>)
+}
 
-  <span class='no'>Beta</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-    <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>drop</span>(<span class='fu'>as.matrix</span>(<span class='no'>x</span>))
-    <span class='kw'>if</span> (<span class='fu'>length</span>(<span class='fu'>dim</span>(<span class='no'>x</span>)) <span class='kw'>&gt;</span> <span class='fl'>1</span>){
-      <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>apply</span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='no'>power_law_beta</span>)
-    } <span class='kw'>else</span> {
-      <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>power_law_beta</span>(<span class='no'>x</span>)
-    }
-    <span class='fu'>return</span>(<span class='no'>res</span>)
-  }
-
-  <span class='fu'>diversity_stats</span>(<span class='no'>tab</span>, <span class='kw'>B</span> <span class='kw'>=</span> <span class='no'>Beta</span>)
-})</div></pre>
+<span class='fu'>diversity_stats</span>(<span class='no'>tab</span>, <span class='kw'>B</span> <span class='kw'>=</span> <span class='no'>Beta</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

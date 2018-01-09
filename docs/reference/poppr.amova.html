@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -219,7 +238,8 @@ amova.</p></td>
 </ol><p>All of this data can be constructed from a <code>genind</code>
   object, but can be daunting for a novice R user. <em>This function
   automates the entire process</em>. Since there are many variables regarding
-  genetic data, some points need to be highlighted:</p><h3>On Hierarchies:</h3>
+  genetic data, some points need to be highlighted:</p>  
+<p></p><h3>On Hierarchies:</h3>
 The hierarchy is defined by different 
   population strata that separate your data hierarchically. These strata are
   defined in the <strong>strata</strong> slot of <code>genind</code> and
@@ -245,7 +265,8 @@ The hierarchy is defined by different
   being analyzed. Poppr automates this with three methods implemented in 
   ade4, <code>quasieuclid</code>, <code>lingoes</code>, and 
   <code>cailliez</code>. The correction of these distances should not 
-  adversely affect the outcome of the analysis.<p></p><h3>On Filtering:</h3>
+  adversely affect the outcome of the analysis.
+    <p></p><h3>On Filtering:</h3>
  Filtering multilocus genotypes is performed by
   <code><a href='mlg.filter.html'>mlg.filter</a></code>. This can necessarily only be done AMOVA tests 
   that do not account for within-individual variance. The distance matrix used
@@ -253,7 +274,8 @@ The hierarchy is defined by different
   the option <code>stats = "distance"</code>, which reports the distance between 
   multilocus genotype clusters. One useful way to utilize this feature is to
   correct for genotypes that have equivalent distance due to missing data. 
-  (See example below.)<p></p><h3>On Methods:</h3>
+  (See example below.)
+    <p></p><h3>On Methods:</h3>
  Both <span class="pkg">ade4</span> and <span class="pkg">pegas</span> have 
   implementations of AMOVA, both of which are appropriately called "amova". 
   The ade4 version is faster, but there have been questions raised as to the 
@@ -328,7 +350,7 @@ application to human mitochondrial DNA restriction data. <em>Genetics</em>,
 #&gt; Phi-samples-Pop   0.2803128
 #&gt; Phi-Pop-total     0.7000679
 #&gt; </div><div class='input'><span class='no'>amova.test</span> <span class='kw'>&lt;-</span> <span class='fu'>randtest</span>(<span class='no'>amova.result</span>) <span class='co'># Test for significance</span>
-<span class='fu'>plot</span>(<span class='no'>amova.test</span>)</div><img src='poppr.amova-8.png' alt='' width='540' height='400' /><div class='input'><span class='no'>amova.test</span></div><div class='output co'>#&gt; class: krandtest lightkrandtest 
+<span class='fu'>plot</span>(<span class='no'>amova.test</span>)</div><div class='img'><img src='poppr.amova-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='no'>amova.test</span></div><div class='output co'>#&gt; class: krandtest lightkrandtest 
 #&gt; Monte-Carlo tests
 #&gt; Call: randtest.amova(xtest = amova.result)
 #&gt; 
@@ -341,36 +363,35 @@ application to human mitochondrial DNA restriction data. <em>Genetics</em>,
 #&gt; 2 Variations between samples  1.328667  22.73597 greater   0.01
 #&gt; 3     Variations between Pop 11.063446  11.88906 greater   0.01
 #&gt; </div><div class='input'>
-<span class='fu'>not_run</span>({
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># You can get the same results with the pegas implementation</span>
+<span class='no'>amova.pegas</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='no'>agc</span>, ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pegas"</span>)
+<span class='no'>amova.pegas</span>
+<span class='no'>amova.pegas</span>$<span class='no'>varcomp</span>/<span class='fu'>sum</span>(<span class='no'>amova.pegas</span>$<span class='no'>varcomp</span>)
 
-  <span class='co'># You can get the same results with the pegas implementation</span>
-  <span class='no'>amova.pegas</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='no'>agc</span>, ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pegas"</span>)
-  <span class='no'>amova.pegas</span>
-  <span class='no'>amova.pegas</span>$<span class='no'>varcomp</span>/<span class='fu'>sum</span>(<span class='no'>amova.pegas</span>$<span class='no'>varcomp</span>)
-
-  <span class='co'># Clone correction is possible</span>
-  <span class='no'>amova.cc.result</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='no'>agc</span>, ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>, <span class='kw'>clonecorrect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='no'>amova.cc.result</span>
-  <span class='no'>amova.cc.test</span> <span class='kw'>&lt;-</span> <span class='fu'>randtest</span>(<span class='no'>amova.cc.result</span>)
-  <span class='fu'>plot</span>(<span class='no'>amova.cc.test</span>)
-  <span class='no'>amova.cc.test</span>
+<span class='co'># Clone correction is possible</span>
+<span class='no'>amova.cc.result</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='no'>agc</span>, ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>, <span class='kw'>clonecorrect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>amova.cc.result</span>
+<span class='no'>amova.cc.test</span> <span class='kw'>&lt;-</span> <span class='fu'>randtest</span>(<span class='no'>amova.cc.result</span>)
+<span class='fu'>plot</span>(<span class='no'>amova.cc.test</span>)
+<span class='no'>amova.cc.test</span>
 
 
-  <span class='co'># Example with filtering</span>
-  <span class='fu'>data</span>(<span class='no'>monpop</span>)
-  <span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
-  <span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>) <span class='co'># gets a warning of zero distances</span>
-  <span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>, <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0.1</span>) <span class='co'># no warning</span>
+<span class='co'># Example with filtering</span>
+<span class='fu'>data</span>(<span class='no'>monpop</span>)
+<span class='fu'>splitStrata</span>(<span class='no'>monpop</span>) <span class='kw'>&lt;-</span> ~<span class='no'>Tree</span>/<span class='no'>Year</span>/<span class='no'>Symptom</span>
+<span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>) <span class='co'># gets a warning of zero distances</span>
+<span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>, <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0.1</span>) <span class='co'># no warning</span>
 
-  <span class='co'># Correcting incorrect alternate hypotheses with &gt;2 heirarchical levels</span>
-  <span class='co'># </span>
-  <span class='no'>mon.amova</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>/<span class='no'>Tree</span>)
-  <span class='no'>mon.test</span>  <span class='kw'>&lt;-</span> <span class='fu'>randtest</span>(<span class='no'>mon.amova</span>)
-  <span class='no'>mon.test</span> <span class='co'># Note alter is less, greater, greater, less</span>
-  <span class='no'>alt</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"less"</span>, <span class='st'>"greater"</span>, <span class='st'>"greater"</span>, <span class='st'>"greater"</span>) <span class='co'># extend this to the number of levels</span>
-  <span class='fu'>with</span>(<span class='no'>mon.test</span>, <span class='fu'>as.krandtest</span>(<span class='no'>sim</span>, <span class='no'>obs</span>, <span class='kw'>alter</span> <span class='kw'>=</span> <span class='no'>alt</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='no'>call</span>, <span class='kw'>names</span> <span class='kw'>=</span> <span class='no'>names</span>))
+<span class='co'># Correcting incorrect alternate hypotheses with &gt;2 heirarchical levels</span>
+<span class='co'># </span>
+<span class='no'>mon.amova</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>/<span class='no'>Tree</span>)
+<span class='no'>mon.test</span>  <span class='kw'>&lt;-</span> <span class='fu'>randtest</span>(<span class='no'>mon.amova</span>)
+<span class='no'>mon.test</span> <span class='co'># Note alter is less, greater, greater, less</span>
+<span class='no'>alt</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"less"</span>, <span class='st'>"greater"</span>, <span class='st'>"greater"</span>, <span class='st'>"greater"</span>) <span class='co'># extend this to the number of levels</span>
+<span class='fu'>with</span>(<span class='no'>mon.test</span>, <span class='fu'>as.krandtest</span>(<span class='no'>sim</span>, <span class='no'>obs</span>, <span class='kw'>alter</span> <span class='kw'>=</span> <span class='no'>alt</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='no'>call</span>, <span class='kw'>names</span> <span class='kw'>=</span> <span class='no'>names</span>))
 
-})</div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

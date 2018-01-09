@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -221,85 +240,85 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='fu'>data</span>(<span class='no'>Pram</span>)
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>Pram</span>)
+
+<span class='co'># With multiple encounters</span>
+<span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>)
+<span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='input'><span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters"</span>)</div><div class='img'><img src='psex-1.png' alt='' width='700' height='432.632880098887' /></div><span class='co'># NOT RUN {</span>
+<span class='co'># For a single encounter (default)</span>
 <span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='input'><span class='fu'>title</span>(<span class='st'>"Probability of second encounter"</span>)</div><img src='psex-4.png' alt='' width='540' height='400' /><div class='input'><span class='fu'>not_run</span>({
+<span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
+<span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='fu'>title</span>(<span class='st'>"Probability of second encounter"</span>)
 
-  <span class='co'># With multiple encounters</span>
-  <span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>)
-  <span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-  <span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-  <span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters"</span>)
+<span class='co'># This can be also done assuming populations structure</span>
+<span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>)
+<span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
+<span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters\nwith pop structure"</span>)
 
-  <span class='co'># This can be also done assuming populations structure</span>
-  <span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>)
-  <span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-  <span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-  <span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters\nwith pop structure"</span>)
+<span class='co'># The above, but correcting zero-value alleles by 1/(2*rrmlg) with no </span>
+<span class='co'># population structure assumed</span>
+<span class='co'># Type ?rare_allele_correction for details.</span>
+<span class='no'>Pram_psex2</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>d</span> <span class='kw'>=</span> <span class='st'>"rrmlg"</span>, <span class='kw'>mul</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>)
+<span class='fu'>plot</span>(<span class='no'>Pram_psex2</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex2</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
+<span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters\nwith pop structure (1/(2*rrmlg))"</span>)
 
-  <span class='co'># The above, but correcting zero-value alleles by 1/(2*rrmlg) with no </span>
-  <span class='co'># population structure assumed</span>
-  <span class='co'># Type ?rare_allele_correction for details.</span>
-  <span class='no'>Pram_psex2</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>d</span> <span class='kw'>=</span> <span class='st'>"rrmlg"</span>, <span class='kw'>mul</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>)
-  <span class='fu'>plot</span>(<span class='no'>Pram_psex2</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex2</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-  <span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-  <span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters\nwith pop structure (1/(2*rrmlg))"</span>)
+<span class='co'># We can also set G to the total population size</span>
+(<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='fu'>nInd</span>(<span class='no'>Pram</span>))
+<span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='no'>G</span>)
+<span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
+<span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters\nwith pop structure G = 729"</span>)
 
-  <span class='co'># We can also set G to the total population size</span>
-  (<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='fu'>nInd</span>(<span class='no'>Pram</span>))
-  <span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='no'>G</span>)
-  <span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-  <span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-  <span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters\nwith pop structure G = 729"</span>)
+<span class='co'># Or we can set G to the number of unique MLGs</span>
+(<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='fu'>rowSums</span>(<span class='fu'><a href='mlg.html'>mlg.table</a></span>(<span class='no'>Pram</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='kw'>&gt;</span> <span class='fl'>0</span>))
+<span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='no'>G</span>)
+<span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
+<span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters\nwith pop structure G = nmll"</span>)
 
-  <span class='co'># Or we can set G to the number of unique MLGs</span>
-  (<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='fu'>rowSums</span>(<span class='fu'><a href='mlg.html'>mlg.table</a></span>(<span class='no'>Pram</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='kw'>&gt;</span> <span class='fl'>0</span>))
-  <span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='no'>G</span>)
-  <span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))
-  <span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-  <span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters\nwith pop structure G = nmll"</span>)
+<span class='co'>## An example of supplying previously calculated frequencies and G</span>
+<span class='co'># From Parks and Werth, 1993, using the first three genotypes.</span>
 
-  <span class='co'>## An example of supplying previously calculated frequencies and G</span>
-  <span class='co'># From Parks and Werth, 1993, using the first three genotypes.</span>
+<span class='co'># The row names indicate the number of samples found with that genotype</span>
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='st'>"
+ Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
+54 12 12 12 23 22 11
+36 22 22 11 22 33 11
+10 23 22 11 33 13 13"</span>
 
-  <span class='co'># The row names indicate the number of samples found with that genotype</span>
-  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='st'>"
-   Hk Lap Mdh2 Pgm1 Pgm2 X6Pgd2
-  54 12 12 12 23 22 11
-  36 22 22 11 22 33 11
-  10 23 22 11 33 13 13"</span>
+<span class='co'># Since we aren't representing the whole data set here, we are defining the</span>
+<span class='co'># allele frequencies before the analysis.</span>
+<span class='no'>afreq</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='kw'>Hk.1</span> <span class='kw'>=</span> <span class='fl'>0.167</span>, <span class='kw'>Hk.2</span> <span class='kw'>=</span> <span class='fl'>0.795</span>, <span class='kw'>Hk.3</span> <span class='kw'>=</span> <span class='fl'>0.038</span>,
+           <span class='kw'>Lap.1</span> <span class='kw'>=</span> <span class='fl'>0.190</span>, <span class='kw'>Lap.2</span> <span class='kw'>=</span> <span class='fl'>0.798</span>, <span class='kw'>Lap.3</span> <span class='kw'>=</span> <span class='fl'>0.012</span>,
+           <span class='kw'>Mdh2.0</span> <span class='kw'>=</span> <span class='fl'>0.011</span>, <span class='kw'>Mdh2.1</span> <span class='kw'>=</span> <span class='fl'>0.967</span>, <span class='kw'>Mdh2.2</span> <span class='kw'>=</span> <span class='fl'>0.022</span>,
+           <span class='kw'>Pgm1.2</span> <span class='kw'>=</span> <span class='fl'>0.279</span>, <span class='kw'>Pgm1.3</span> <span class='kw'>=</span> <span class='fl'>0.529</span>, <span class='kw'>Pgm1.4</span> <span class='kw'>=</span> <span class='fl'>0.162</span>, <span class='kw'>Pgm1.5</span> <span class='kw'>=</span> <span class='fl'>0.029</span>,
+           <span class='kw'>Pgm2.1</span> <span class='kw'>=</span> <span class='fl'>0.128</span>, <span class='kw'>Pgm2.2</span> <span class='kw'>=</span> <span class='fl'>0.385</span>, <span class='kw'>Pgm2.3</span> <span class='kw'>=</span> <span class='fl'>0.487</span>,
+           <span class='kw'>X6Pgd2.1</span> <span class='kw'>=</span> <span class='fl'>0.526</span>, <span class='kw'>X6Pgd2.2</span> <span class='kw'>=</span> <span class='fl'>0.051</span>, <span class='kw'>X6Pgd2.3</span> <span class='kw'>=</span> <span class='fl'>0.423</span>)
 
-  <span class='co'># Since we aren't representing the whole data set here, we are defining the</span>
-  <span class='co'># allele frequencies before the analysis.</span>
-  <span class='no'>afreq</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='kw'>Hk.1</span> <span class='kw'>=</span> <span class='fl'>0.167</span>, <span class='kw'>Hk.2</span> <span class='kw'>=</span> <span class='fl'>0.795</span>, <span class='kw'>Hk.3</span> <span class='kw'>=</span> <span class='fl'>0.038</span>,
-             <span class='kw'>Lap.1</span> <span class='kw'>=</span> <span class='fl'>0.190</span>, <span class='kw'>Lap.2</span> <span class='kw'>=</span> <span class='fl'>0.798</span>, <span class='kw'>Lap.3</span> <span class='kw'>=</span> <span class='fl'>0.012</span>,
-             <span class='kw'>Mdh2.0</span> <span class='kw'>=</span> <span class='fl'>0.011</span>, <span class='kw'>Mdh2.1</span> <span class='kw'>=</span> <span class='fl'>0.967</span>, <span class='kw'>Mdh2.2</span> <span class='kw'>=</span> <span class='fl'>0.022</span>,
-             <span class='kw'>Pgm1.2</span> <span class='kw'>=</span> <span class='fl'>0.279</span>, <span class='kw'>Pgm1.3</span> <span class='kw'>=</span> <span class='fl'>0.529</span>, <span class='kw'>Pgm1.4</span> <span class='kw'>=</span> <span class='fl'>0.162</span>, <span class='kw'>Pgm1.5</span> <span class='kw'>=</span> <span class='fl'>0.029</span>,
-             <span class='kw'>Pgm2.1</span> <span class='kw'>=</span> <span class='fl'>0.128</span>, <span class='kw'>Pgm2.2</span> <span class='kw'>=</span> <span class='fl'>0.385</span>, <span class='kw'>Pgm2.3</span> <span class='kw'>=</span> <span class='fl'>0.487</span>,
-             <span class='kw'>X6Pgd2.1</span> <span class='kw'>=</span> <span class='fl'>0.526</span>, <span class='kw'>X6Pgd2.2</span> <span class='kw'>=</span> <span class='fl'>0.051</span>, <span class='kw'>X6Pgd2.3</span> <span class='kw'>=</span> <span class='fl'>0.423</span>)
+<span class='no'>xtab</span> <span class='kw'>&lt;-</span> <span class='fu'>read.table</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>header</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
-  <span class='no'>xtab</span> <span class='kw'>&lt;-</span> <span class='fu'>read.table</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>header</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='co'># Here we are expanding the number of samples to their observed values.</span>
+<span class='co'># Since we have already defined the allele frequencies, this step is actually</span>
+<span class='co'># not necessary. </span>
+<span class='no'>all_samples</span> <span class='kw'>&lt;-</span> <span class='fu'>rep</span>(<span class='fu'>rownames</span>(<span class='no'>xtab</span>), <span class='fu'>as.integer</span>(<span class='fu'>rownames</span>(<span class='no'>xtab</span>)))
+<span class='no'>xgid</span>        <span class='kw'>&lt;-</span> <span class='fu'>df2genind</span>(<span class='no'>xtab</span>[<span class='no'>all_samples</span>, ], <span class='kw'>ncode</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
-  <span class='co'># Here we are expanding the number of samples to their observed values.</span>
-  <span class='co'># Since we have already defined the allele frequencies, this step is actually</span>
-  <span class='co'># not necessary. </span>
-  <span class='no'>all_samples</span> <span class='kw'>&lt;-</span> <span class='fu'>rep</span>(<span class='fu'>rownames</span>(<span class='no'>xtab</span>), <span class='fu'>as.integer</span>(<span class='fu'>rownames</span>(<span class='no'>xtab</span>)))
-  <span class='no'>xgid</span>        <span class='kw'>&lt;-</span> <span class='fu'>df2genind</span>(<span class='no'>xtab</span>[<span class='no'>all_samples</span>, ], <span class='kw'>ncode</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='no'>freqs</span> <span class='kw'>&lt;-</span> <span class='no'>afreq</span>[<span class='fu'>colnames</span>(<span class='fu'>tab</span>(<span class='no'>xgid</span>))] <span class='co'># only used alleles in the sample</span>
+<span class='no'>pSex</span>  <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>xgid</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='no'>freqs</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='fl'>45</span>)
 
-  <span class='no'>freqs</span> <span class='kw'>&lt;-</span> <span class='no'>afreq</span>[<span class='fu'>colnames</span>(<span class='fu'>tab</span>(<span class='no'>xgid</span>))] <span class='co'># only used alleles in the sample</span>
-  <span class='no'>pSex</span>  <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>xgid</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='no'>freqs</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='fl'>45</span>)
+<span class='co'># Note, pgen returns log values for each locus, here we take the sum across</span>
+<span class='co'># all loci and take the exponent to give us the value of pgen for each sample</span>
+<span class='no'>pGen</span> <span class='kw'>&lt;-</span> <span class='fu'>exp</span>(<span class='fu'>rowSums</span>(<span class='fu'><a href='pgen.html'>pgen</a></span>(<span class='no'>xgid</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='no'>freqs</span>)))
 
-  <span class='co'># Note, pgen returns log values for each locus, here we take the sum across</span>
-  <span class='co'># all loci and take the exponent to give us the value of pgen for each sample</span>
-  <span class='no'>pGen</span> <span class='kw'>&lt;-</span> <span class='fu'>exp</span>(<span class='fu'>rowSums</span>(<span class='fu'><a href='pgen.html'>pgen</a></span>(<span class='no'>xgid</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='no'>freqs</span>)))
-
-  <span class='no'>res</span>  <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fu'>unique</span>(<span class='no'>pGen</span>), <span class='fu'>unique</span>(<span class='no'>pSex</span>)), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-  <span class='fu'>colnames</span>(<span class='no'>res</span>) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"Pgen"</span>, <span class='st'>"Psex"</span>)
-  <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>cbind</span>(<span class='no'>xtab</span>, <span class='kw'>nRamet</span> <span class='kw'>=</span> <span class='fu'>rownames</span>(<span class='no'>xtab</span>), <span class='fu'>round</span>(<span class='no'>res</span>, <span class='fl'>5</span>))
-  <span class='fu'>rownames</span>(<span class='no'>res</span>) <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='fl'>3</span>
-  <span class='no'>res</span> <span class='co'># Compare to the first three rows of Table 2 in Parks &amp; Werth, 1993</span>
-})</div></pre>
+<span class='no'>res</span>  <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fu'>unique</span>(<span class='no'>pGen</span>), <span class='fu'>unique</span>(<span class='no'>pSex</span>)), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='fu'>colnames</span>(<span class='no'>res</span>) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"Pgen"</span>, <span class='st'>"Psex"</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>cbind</span>(<span class='no'>xtab</span>, <span class='kw'>nRamet</span> <span class='kw'>=</span> <span class='fu'>rownames</span>(<span class='no'>xtab</span>), <span class='fu'>round</span>(<span class='no'>res</span>, <span class='fl'>5</span>))
+<span class='fu'>rownames</span>(<span class='no'>res</span>) <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='fl'>3</span>
+<span class='no'>res</span> <span class='co'># Compare to the first three rows of Table 2 in Parks &amp; Werth, 1993</span>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

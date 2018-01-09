@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -134,19 +153,19 @@ displayed in red.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Normal grey curve with an adjustment of 3, an upper limit of 0.8, and</span>
 <span class='co'># weighted towards smaller values.</span>
-<span class='fu'>greycurve</span>()</div><img src='greycurve-2.png' alt='' width='540' height='400' /><div class='input'><span class='fu'>not_run</span>({
-  <span class='co'># 1:1 relationship grey curve.</span>
-  <span class='fu'>greycurve</span>(<span class='kw'>gadj</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>glim</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>0</span>)
+<span class='fu'>greycurve</span>()</div><div class='img'><img src='greycurve-1.png' alt='' width='700' height='432.632880098887' /></div><span class='co'># NOT RUN {</span>
+<span class='co'># 1:1 relationship grey curve.</span>
+<span class='fu'>greycurve</span>(<span class='kw'>gadj</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>glim</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>0</span>)
 
-  <span class='co'># Grey curve weighted towards larger values.</span>
-  <span class='fu'>greycurve</span>(<span class='kw'>gweight</span><span class='kw'>=</span><span class='fl'>2</span>)
+<span class='co'># Grey curve weighted towards larger values.</span>
+<span class='fu'>greycurve</span>(<span class='kw'>gweight</span><span class='kw'>=</span><span class='fl'>2</span>)
 
-  <span class='co'># Same as the first, but the limit is 1.</span>
-  <span class='fu'>greycurve</span>(<span class='kw'>glim</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>0</span>)
+<span class='co'># Same as the first, but the limit is 1.</span>
+<span class='fu'>greycurve</span>(<span class='kw'>glim</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>0</span>)
 
-  <span class='co'># Setting the lower limit to 0.1 and weighting towards larger values.</span>
-  <span class='fu'>greycurve</span>(<span class='kw'>glim</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>0.1</span>,<span class='fl'>0.8</span>), <span class='kw'>gweight</span><span class='kw'>=</span><span class='fl'>2</span>)
-})</div></pre>
+<span class='co'># Setting the lower limit to 0.1 and weighting towards larger values.</span>
+<span class='fu'>greycurve</span>(<span class='kw'>glim</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>0.1</span>,<span class='fl'>0.8</span>), <span class='kw'>gweight</span><span class='kw'>=</span><span class='fl'>2</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

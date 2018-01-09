@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -63,7 +82,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -146,14 +165,16 @@ the future. See details.</p></td>
  The resulting genind object
   will have a data frame in the <code>other</code> slot called 
   <code>population_hierarchy</code>. This will contain a column for your population
-  data and a column for your Regional data if you have set the flag.<p></p><h3>if <code>genclone = TRUE</code></h3>
+  data and a column for your Regional data if you have set the flag.
+    <p></p><h3>if <code>genclone = TRUE</code></h3>
  The resulting genclone object will 
   have a single strata defined in the strata slot. This will 
   be called "Pop" and will reflect the population factor defined in the 
   genalex input. If <code>region = TRUE</code>, a second column will be inserted 
   and labeled "Region". If you have more than two strata within 
   your data set, you should run the command <code>splitStrata</code> on 
-  your data set to define the unique stratifications. <p></p><h3>FOR POLYPLOID (&gt; 2n) DATA SETS</h3>
+  your data set to define the unique stratifications.
+    <p></p><h3>FOR POLYPLOID (&gt; 2n) DATA SETS</h3>
  The genind object has 
   an all-or-none approach to missing data. If a sample has missing data at a 
   particular locus, then the entire locus is considered missing. This works 
@@ -173,8 +194,8 @@ the future. See details.</p></td>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>This function cannot handle raw allele frequency data.
-    In the case that there are duplicated names within the file, this function 
+    <p>This function cannot handle raw allele frequency data.</p>  
+<p>In the case that there are duplicated names within the file, this function 
   will assume separate individuals and rename each one to a sequence of 
   integers from 1 to the number of individuals. A vector of the original 
   names will be saved in the <code>other</code> slot under <code>original_names</code>.</p>
@@ -187,18 +208,18 @@ the future. See details.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>not_run</span>({
-  <span class='no'>Aeut</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='fu'>system.file</span>(<span class='st'>"files/rootrot.csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"poppr"</span>))
+</div><span class='co'># NOT RUN {</span>
+<span class='no'>Aeut</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='fu'>system.file</span>(<span class='st'>"files/rootrot.csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"poppr"</span>))
 
-  <span class='no'>genalex2</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex2.csv"</span>, <span class='kw'>geo</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-  <span class='co'># A genalex file with geographic coordinate data.</span>
+<span class='no'>genalex2</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex2.csv"</span>, <span class='kw'>geo</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='co'># A genalex file with geographic coordinate data.</span>
 
-  <span class='no'>genalex3</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex3.csv"</span>, <span class='kw'>region</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-  <span class='co'># A genalex file with regional information.</span>
+<span class='no'>genalex3</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex3.csv"</span>, <span class='kw'>region</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='co'># A genalex file with regional information.</span>
 
-  <span class='no'>genalex4</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex4.csv"</span>, <span class='kw'>region</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>geo</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-  <span class='co'># A genalex file with both regional and geographic information.</span>
-})</div></pre>
+<span class='no'>genalex4</span> <span class='kw'>&lt;-</span> <span class='fu'>read.genalex</span>(<span class='st'>"genalex4.csv"</span>, <span class='kw'>region</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>geo</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='co'># A genalex file with both regional and geographic information.</span>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

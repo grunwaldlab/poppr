@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shuffle individuals in a <code>genclone</code> or
+<title>Shuffle individuals in a <code><a href='genclone-class.html'>genclone</a></code> or
 <code>genind</code> object independently over each locus. — shufflepop • poppr</title>
 
 <!-- jquery -->
@@ -24,7 +24,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -52,10 +53,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/mlg.html">Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`</a>
+    </li>
+    <li>
+      <a href="../articles/poppr_manual.html">Data import and manipulation in poppr version `r packageVersion('poppr')`</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -64,7 +83,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/grunwaldlab/poppr">
+  <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -80,7 +99,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Shuffle individuals in a <code>genclone</code> or
+    <h1>Shuffle individuals in a <code><a href='genclone-class.html'>genclone</a></code> or
 <code>genind</code> object independently over each locus.</h1>
     </div>
 
@@ -160,16 +179,16 @@ object</p></td>
 #&gt; // Number of alleles per group: 235
 #&gt; // Percentage of missing data: 0.87 %
 #&gt; // Observed heterozygosity: 0.76 0.64 0.7 0.74 0.77 0.64 0.54 0.78 0.62 0.8 0.8 0.94 0.76 0.72 0.86 0.8 0.52 0.8 0.82 0.68 0.82 0.43 0.83 0.8 0.74 0.58 0.76 0.58 0.84 0.46
-#&gt; // Expected heterozygosity: 0.71 0.61 0.74 0.73 0.75 0.64 0.58 0.6 0.66 0.76 0.81 0.83 0.75 0.78 0.82 0.76 0.59 0.78 0.83 0.63 0.82 0.42 0.8 0.8 0.73 0.61 0.74 0.65 0.83 0.44</div><div class='input'><span class='fu'>not_run</span>({
-  <span class='co'># Parametric Bootstrap: do not maintain allelic state or heterozygosity</span>
-  <span class='fu'>summary</span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>2</span>))
+#&gt; // Expected heterozygosity: 0.71 0.61 0.74 0.73 0.75 0.64 0.58 0.6 0.66 0.76 0.81 0.83 0.75 0.78 0.82 0.76 0.59 0.78 0.83 0.63 0.82 0.42 0.8 0.8 0.73 0.61 0.74 0.65 0.83 0.44</div><span class='co'># NOT RUN {</span>
+<span class='co'># Parametric Bootstrap: do not maintain allelic state or heterozygosity</span>
+<span class='fu'>summary</span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>2</span>))
 
-  <span class='co'># Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.</span>
-  <span class='fu'>summary</span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>3</span>))
+<span class='co'># Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.</span>
+<span class='fu'>summary</span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>3</span>))
 
-  <span class='co'># Multilocus Style: maintain allelic state and heterozygosity.</span>
-  <span class='fu'>summary</span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>4</span>))
-})</div></pre>
+<span class='co'># Multilocus Style: maintain allelic state and heterozygosity.</span>
+<span class='fu'>summary</span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>4</span>))
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
