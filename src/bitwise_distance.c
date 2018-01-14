@@ -549,8 +549,9 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
   only_differences = asLogical(differences_only);
 
   // Loop through every genotype
-  for(i = 0; i < (num_gens - 1); i++)
+  for(i = 0; i < num_gens - 1; i++)
   {
+    // Rprintf("-> Sample i:%d\n", i);
     R_CheckUserInterrupt();
     // Set R_chr1_1 to be genlight@gen[[i]]@snp[[1]],
     // aka a raw list representing the entire first set of chromosomes in this genotype
@@ -579,6 +580,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
     #endif
     for(j = i + 1; j < num_gens; j++)
     {
+      // Rprintf("-> Sample j:%d\n", j);
       cur_distance = 0;
       // These will be arrays of type RAW
       // Set R_chr2_1 to be genlight@gen[[j]]@snp[[1]],
@@ -648,6 +650,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
             // missing data, which, since we are processing this in 8 loci chunks, will be
             // next_missing_i modulo 8.
           mask = 1 << (next_missing_i%8);
+          // Rprintf("Missing I:\t%d\nIndex    :\t%d\nk        :\t%d\nmask     :\t%d\n---------\n", next_missing_i, next_missing_index_i, k, mask);
           if(missing_match)
           {
             // |= is a binary bitwise operator that performs bitwise OR and stores it in
@@ -671,7 +674,10 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
           }
           // Find the index of the next missing value in sample i.
           next_missing_index_i++;
-          next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+          if (next_missing_index_i < nap1_length){
+            next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+            // Rprintf("->next missing:\t %d\n", next_missing_i);
+          }
         }
         // Repeat for j
         while(next_missing_index_j < nap2_length && next_missing_j < (k+1)*8 && next_missing_j >= (k*8))
@@ -679,6 +685,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
           // Handle missing bit in both sets and both samples with a mask
           // See above for detailed comments on this process.
           mask = 1 << (next_missing_j%8);
+          // Rprintf("Missing J:\t%d\nIndex    :\t%d\nk        :\t%d\nmask     :\t%d\n---------\n", next_missing_j, next_missing_index_j, k, mask);
           if(missing_match)
           {
             tmp_sim_set |= mask; // Force the missing bit to match
@@ -688,7 +695,11 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
             tmp_sim_set &= ~mask; // Force the missing bit to not match
           }
           next_missing_index_j++;
-          next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
+          if (next_missing_index_j < nap2_length){
+            next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
+            // Rprintf("->next missing:\t %d\n", next_missing_j);
+          }
+
         }
 
         // Add the distance from this word into the total between these two genotypes
@@ -697,12 +708,14 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
           // If we only want to count sites with differing zygosity, we just need to
           // count the zeros in the similarity set and add that to the total distance.
           cur_distance += get_zeros(tmp_sim_set);
+          // Rprintf("-> Current Distance: %d\n", cur_distance);
         }
         else
         {
           // If we want the actual distance, we need a more complicated analysis of
           // the sets. See get_distance_custom for details.
           cur_distance += get_distance_custom(tmp_sim_set,&set_1,&set_2);
+          // Rprintf("-> Current Distance: %d\n", cur_distance);
         }
       }
       // Store the distance between these two genotypes in the distance matrix
@@ -723,7 +736,6 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
       INTEGER(R_out)[i + j*num_gens] = distance_matrix[i][j];
     }
   }
-
   for(i = 0; i < num_gens; i++)
   {
     R_Free(distance_matrix[i]);
