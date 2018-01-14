@@ -371,7 +371,9 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
 
           // Find the index of the next missing value in sample i.
           next_missing_index_i++;
-          next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+          if (next_missing_index_i < nap1_length){
+            next_missing_i = (int)INTEGER(R_nap1)[next_missing_index_i] - 1;
+          }
         }
 
         // Repeat for j
@@ -391,7 +393,9 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
           }
 
           next_missing_index_j++;
-          next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
+          if (next_missing_index_j < nap2_length){
+            next_missing_j = (int)INTEGER(R_nap2)[next_missing_index_j] - 1;
+          }
         }
 
         // Add the distance from these 8 loci into the total between these two
