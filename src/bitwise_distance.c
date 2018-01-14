@@ -549,7 +549,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
   only_differences = asLogical(differences_only);
 
   // Loop through every genotype
-  for(i = 0; i < num_gens; i++)
+  for(i = 0; i < (num_gens - 1); i++)
   {
     R_CheckUserInterrupt();
     // Set R_chr1_1 to be genlight@gen[[i]]@snp[[1]],
@@ -577,7 +577,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
               set_1,set_2,tmp_sim_set, k, mask, nap2_length) \
       shared(R_nap1, nap1_length, i, distance_matrix)
     #endif
-    for(j = 0; j < i; j++)
+    for(j = i + 1; j < num_gens; j++)
     {
       cur_distance = 0;
       // These will be arrays of type RAW
