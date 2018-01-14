@@ -1,12 +1,18 @@
-# Poppr version 2.6.0
+# Poppr version 2.6.1
+
+This version fixes a heap-buffer-overflow in clang-ASAN. Details of the fix are documented at https://github.com/grunwaldlab/poppr/issues/169
 
 ## Test environments
 
 * local OS X install, R 3.4.3
-* ubuntu 12.04 (on travis-ci), devel (2018-01-03 r74038) and R 3.4.3
+* ubuntu 12.04 (on travis-ci), devel (2018-01-13 r74115) and R 3.4.3
 * winbuilder R-devel (2018-01-07 r74096)
 
 ## R CMD check results
+
+## clang-ASAN
+
+The not currently on cran is fixed in this version.
 
 ## valgrind
 
