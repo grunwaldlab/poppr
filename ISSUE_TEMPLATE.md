@@ -1,15 +1,19 @@
-If you have found a bug or unexpected result: please briefly describe your problem and what output you expect. 
-If you have a request for a new feature, please describe in as much detail as possible how the new feature should work with example output. 
-**If you have a question, please don't use this form, but instead ask on the mailing list <https://groups.google.com/forum/#!forum/poppr>**.
+Please place an "x" in all the boxes that apply
+---------------------------------------------
 
-Please include a minimal reprex (aka reproducible example). The goal of a reprex is to make it as easy as possible for me to recreate your problem so that I can fix it. If you've never heard of a reprex before, start by reading <https://github.com/jennybc/reprex#what-is-a-reprex>, and follow the advice further down the page. Do NOT include session info unless it's explicitly asked for, or you've used `reprex::reprex(..., si = TRUE)` to hide it away.  
+ - [] I have the most recent version of poppr and R
+ - [] I have found a bug
+   - [] I have searched for solutions on this site and the [poppr forum](https://groups.google.com/group/poppr)
+   - [] I have a [reproducible example](http://reprex.tidyverse.org/articles/reprex-dos-and-donts.html)
+ - [] I want to request a new feature
 
-*Delete these instructions once you have read them.*
+--------
 
----
-
-Brief description of the problem
+Please include a brief description of the problem with a code example:
 
 ```r
 # insert reprex here
 ```
+
+---------
+
