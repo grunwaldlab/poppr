@@ -1,0 +1,134 @@
+navbar:
+  title: poppr
+  type: default
+  left:
+  - icon: fa-home fa-lg
+    href: index.html
+  - text: Reference
+    href: reference/index.html
+  - text: Articles
+    menu:
+    - text: Analysis of Multilocus Genotypes and Lineages in poppr `r packageVersion('poppr')`
+      href: articles/mlg.html
+    - text: Data import and manipulation in poppr version `r packageVersion('poppr')`
+      href: articles/poppr_manual.html
+  - text: News
+    href: news/index.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/grunwaldlab/poppr
+    
+reference:
+  - title: "Data import/export:"
+    contents:
+      - read.genalex # (x) - Reads GenAlEx formatted csv files to a genind object
+      - genind2genalex # (m) - Converts genind objects to GenAlEx formatted csv files
+      - genclone2genind # (m) - Removes the @@mlg slot from genclone objects
+      - genclone2genind # (m) - Removes the @@mlg slot from genclone objects
+      - bootgen2genind # (x) - see \code{\link{aboot}} for details)
+      - getfile # (x) - Provides a quick GUI to grab files for import
+  - title: "Data Structures:"
+    desc: >
+       Data structures "genclone" (based off of adegenet's genind) and 
+       "snpclone" (based off of adegenet's genlight for large SNP data sets).
+       Both of these data structures are defined by the presence of an extra
+       MLG slot.
+    contents:
+      - matches("genclone-class")
+  - title: "Data manipulation:"
+    desc: >
+       These functions will manipulate your data by either removing or shuffling
+       components.
+    contents:
+      - as.genclone # (m) - Converts genind objects to genclone objects
+      - as.snpclone
+      - missingno # (m) - Handles missing data
+      - clonecorrect # (m | s) - Clone-censors at a specified population hierarchy
+      - informloci # (m) - Detects and removes phylogenetically uninformative loci
+      - popsub # (m | s) - Subsets genind objects by population
+      - shufflepop # (m) - Shuffles genotypes at each locus using four different shuffling algorithms
+      - recode_polyploids # (m | x) - Recodes polyploid data sets with missing alleles imported as "0"
+      - fix_replen
+      - test_replen
+  - title: "Genetic distances:"
+    contents:
+      - bruvo.dist # (m) - Bruvo's distance (see also: \code{\link{fix_replen}})
+      - diss.dist # (m) - Absolute genetic distance (see prevosti.dist)
+      - bitwise.dist # (s) - Calculates fast pairwise distances for genlight objects. 
+      - nei.dist # (m | x) - Nei's 1978 genetic distance
+      - rogers.dist # (m | x) - Rogers' euclidean distance
+      - reynolds.dist # (m | x) - Reynolds' coancestry distance
+      - edwards.dist # (m | x) - Edwards' angular distance
+      - prevosti.dist # (m | x) - Prevosti's absolute genetic distance
+  - title: "Bootstrapping:"
+    desc: >
+       These bootstrapping functions perform bootstrap/resampling analyses on 
+       either loci or individuals. 
+    contents:
+      - aboot # (m | s | x) - Creates a bootstrapped dendrogram for any distance measure
+      - bruvo.boot # (m) - Produces dendrograms with bootstrap support based on Bruvo's distance
+      - diversity_boot # (x) - Generates boostrap distributions of diversity statistics for multilocus genotypes
+      - diversity_ci # (m | s | x) - Generates confidence intervals for multilocus genotype diversity.
+      - boot.ia
+      - resample.ia
+  - title: "Multilocus Genotype Analysis:"
+    desc: >
+       Identify, count, manipulate, and tabulate repeated genotypes in your data
+    contents:
+      - mlg # (m | s) - Calculates the number of multilocus genotypes
+      - mll # (m | s) - Displays the current multilocus lineages (genotypes) defined.
+      - nmll # (m | s) - Same as \code{\link{mlg}}.
+      - mlg.crosspop # (m | s) - Finds all multilocus genotypes that cross populations
+      - mlg.table # (m | s) - Returns a table of populations by multilocus genotypes
+      - mlg.vector # (m | s) - Returns a vector of a numeric multilocus genotype assignment for each individual
+      - mlg.id # (m | s) - Finds all individuals associated with a single multilocus genotype
+      - mlg.filter # (m | s) - Collapses MLGs by genetic distance
+      - filter_stats # (m | s) - Calculates mlg.filter for all algorithms and plots
+      - cutoff_predictor # (x) - Predicts cutoff threshold from mlg.filter. 
+      - mll.custom # (m | s) - Allows for the custom definition of multilocus lineages
+      - mll.levels # (m | s) - Allows the user to change levels of custom MLLs. 
+      - mll.reset # (m | s) - Reset multilocus lineages. 
+      - diversity_stats # (x) - Creates a table of diversity indices for multilocus genotypes. 
+  - title: "Index of Association Analysis"
+    desc: >
+       Analysis of multilocus linkage disequilibrium. 
+    contents: 
+       - ends_with("ia")
+#      - ia # (m) - Calculates the index of association
+#      - pair.ia # (m) - Calculates the index of association for all loci pairs.
+#      - resample.ia # (m) - Calculates the index of association over subsets of data.
+#      - boot.ia
+#      - win.ia # (s) - Index of association windows for genlight objects.
+#      - samp.ia # (s) - Index of association on random subsets of loci for genlight objects.
+  - title: "Population Genetic Analysis"
+    contents:
+      - poppr # (m | x) - Returns a diversity table by population
+      - poppr.all # (m | x) - Returns a diversity table by population for all compatible files specified
+      - poppr.amova # (m) - Analysis of Molecular Variance (as implemented in ade4)
+      - private_alleles # (m) - Tabulates the occurrences of alleles that only occur in one population.
+      - locus_table # (m) - Creates a table of summary statistics per locus.
+      - rrmlg # (m | x) - Round-robin multilocus genotype estimates.
+      - rraf # (m) - Round-robin allele frequency estimates.
+      - pgen # (m) - Probability of genotypes.
+      - psex # (m) - Probability of observing a genotype more than once.
+      - incomp # (m) - Check data for incomparable samples.
+  - title: "Visualization:"
+    desc: >
+       Functions that help you visualize your data 
+    contents:
+      - imsn # (m | s) - Interactive construction and visualization of minimum spanning networks
+      - plot_poppr_msn # (m | s | x) - Plots minimum spanning networks produced in poppr with scale bar and legend
+      - greycurve # (x) - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
+      - bruvo.msn # (m) - Produces minimum spanning networks based off Bruvo's distance colored by population
+      - poppr.msn # (m | s | x) - Produces a minimum spanning network for any pairwise distance matrix related to the data
+      - info_table # (m) - Creates a heatmap representing missing data or observed ploidy
+      - genotype_curve # (m | x) - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 
+  - title: "Datasets:"
+    desc: >
+       Fungal and Oomycete data sets that are included in the poppr package.
+    contents:
+      - Aeut
+      - monpop 
+      - partial_clone 
+      - Pinf
+      - Pram

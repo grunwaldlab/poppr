@@ -103,6 +103,17 @@
     </div>
 
     <div class="contents">
+    <div id="poppr-2-6-1" class="section level1">
+<h1 class="hasAnchor">
+<a href="#poppr-2-6-1" class="anchor"></a>poppr 2.6.1</h1>
+<div id="bug-fix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix" class="anchor"></a>BUG FIX</h2>
+<ul>
+<li>An out-of-bounds memory access error in <code><a href="../reference/bitwise.dist.html">bitwise.dist()</a></code> was fixed. See <a href="https://github.com/grunwaldlab/poppr/issues/169" class="uri">https://github.com/grunwaldlab/poppr/issues/169</a> for details.</li>
+</ul>
+</div>
+</div>
     <div id="poppr-2-6-0" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-2-6-0" class="anchor"></a>poppr 2.6.0</h1>
@@ -123,9 +134,9 @@
 <li>The imsn() option for node size scale has been changed to a slider.</li>
 </ul>
 </div>
-<div id="bug-fix" class="section level2">
+<div id="bug-fix-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-1" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>An issue where data with sample names containing apostrophes could not be imported was fixed (Identified in <a href="https://github.com/grunwaldlab/poppr/issues/156" class="uri">https://github.com/grunwaldlab/poppr/issues/156</a>).</li>
 <li>a bug in <code><a href="../reference/imsn.html">imsn()</a></code> where custom MLGs would result in an error was fixed. See <a href="https://github.com/grunwaldlab/poppr/issues/155" class="uri">https://github.com/grunwaldlab/poppr/issues/155</a> for details.</li>
@@ -169,9 +180,9 @@
 <li>jack.ia is deprecated in favor of resample.ia for clarity.</li>
 </ul>
 </div>
-<div id="bug-fix-1" class="section level2">
+<div id="bug-fix-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-1" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-2" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>A bug in read.genalex() where removed samples would have incorrect strata labels was fixed. Thanks to Hernán Dario Capador-Barreto for identifying it. See <a href="https://github.com/grunwaldlab/poppr/issues/147" class="uri">https://github.com/grunwaldlab/poppr/issues/147</a>.</li>
 </ul>
@@ -195,9 +206,9 @@
     <div id="poppr-2-4-1" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-2-4-1" class="anchor"></a>poppr 2.4.1</h1>
-<div id="bug-fix-2" class="section level2">
+<div id="bug-fix-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-2" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-3" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>A corner case where repeat length vectors out of order would be erroneously subset with <code><a href="../reference/test_replen.html">test_replen()</a></code> and <code><a href="../reference/fix_replen.html">fix_replen()</a></code> has been fixed. See <a href="https://github.com/grunwaldlab/poppr/issues/136" class="uri">https://github.com/grunwaldlab/poppr/issues/136</a> for details.</li>
 <li>All functions that perform filtering will now run serially due to a bug on Fedora machines with at least two threads. Details can be found at <a href="https://github.com/grunwaldlab/poppr/issues/138" class="uri">https://github.com/grunwaldlab/poppr/issues/138</a>.</li>
@@ -235,9 +246,9 @@
 </li>
 </ul>
 </div>
-<div id="bug-fix-3" class="section level2">
+<div id="bug-fix-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-3" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-4" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>The error given when a genlight object is passed to <code><a href="../reference/poppr.html">poppr()</a></code> now correctly identifies the substitute function as <code><a href="../reference/diversity_stats.html">diversity_stats()</a></code> and not diversity table (see <a href="https://github.com/grunwaldlab/poppr/issues/123" class="uri">https://github.com/grunwaldlab/poppr/issues/123</a>).</li>
 <li>GenAlEx files imported with duplicate loci will generate a warning telling the user that the duplicated loci have been renamed (usually to <locus name>_1) (see <a href="https://github.com/grunwaldlab/poppr/issues/122" class="uri">https://github.com/grunwaldlab/poppr/issues/122</a>).</locus>
@@ -292,9 +303,9 @@
 <li>Documentation for <code>poppr.amova</code> now contains a note about significance testing with the ade4 function <code>randtest.amova</code>.</li>
 </ul>
 </div>
-<div id="bug-fix-4" class="section level2">
+<div id="bug-fix-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-4" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-5" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>The subsetting methods will now properly handle mlgs when using sample names to subset genclone and snpclone objects. See <a href="https://github.com/grunwaldlab/poppr/issues/114" class="uri">https://github.com/grunwaldlab/poppr/issues/114</a> for details.</li>
 <li>A plotting bug for <code><a href="../reference/mlg.html">mlg.table()</a></code> was fixed so that the plots now show the maximum value.</li>
@@ -305,9 +316,9 @@
     <div id="poppr-2-2-1" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-2-2-1" class="anchor"></a>poppr 2.2.1</h1>
-<div id="bug-fix-5" class="section level2">
+<div id="bug-fix-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-5" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-6" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>A problem exporting haploid sequence data to genalex format was fixed (see <a href="https://github.com/grunwaldlab/poppr/issues/108" class="uri">https://github.com/grunwaldlab/poppr/issues/108</a>)</li>
 <li>Data without population structure no longer throws an error in <code><a href="../reference/imsn.html">imsn()</a></code>
@@ -358,9 +369,9 @@
 <code><a href="../reference/recode_polyploids.html">recode_polyploids()</a></code> can now take haplodiploid data.</li>
 </ul>
 </div>
-<div id="bug-fix-6" class="section level2">
+<div id="bug-fix-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-6" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-7" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>An issue that caused errors in the <code><a href="../reference/imsn.html">imsn()</a></code> code output was fixed (see <a href="https://github.com/grunwaldlab/poppr/issues/93" class="uri">https://github.com/grunwaldlab/poppr/issues/93</a>)</li>
 <li>Caught bug where the <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> assignment method was using <code><a href="../reference/genetic_distance.html">nei.dist()</a></code> instead of <code><a href="../reference/diss.dist.html">diss.dist()</a></code> when no distance was specified.</li>
@@ -414,9 +425,9 @@
 <code><a href="../reference/filter_stats.html">filter_stats()</a></code> now returns invisibly when plot = TRUE; see <a href="https://github.com/grunwaldlab/poppr/issues/87" class="uri">https://github.com/grunwaldlab/poppr/issues/87</a> for details.</li>
 </ul>
 </div>
-<div id="bug-fix-7" class="section level2">
+<div id="bug-fix-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-7" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-8" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>When supplied an object with no strata, <code><a href="../reference/clonecorrect.html">clonecorrect()</a></code> will default to <code>strata = NA</code>.</li>
 <li>
@@ -496,9 +507,9 @@
 <li>Documentation for <code>poppr.amova</code> no longer references the “hierarchy” slot.</li>
 </ul>
 </div>
-<div id="bug-fix-8" class="section level2">
+<div id="bug-fix-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-8" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-9" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Single locus data sets can now be read in with <code>read.genalex</code>. This was brought up in issue <a href="https://github.com/grunwaldlab/poppr/issues/58">#58</a> (Thanks to Nick Wong for spotting it).</li>
 <li>A bug in <code>informloci</code> where the MAF argument wasn’t being applied to P/A data has been fixed.</li>
@@ -511,9 +522,9 @@
     <div id="poppr-2-0-2" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-2-0-2" class="anchor"></a>poppr 2.0.2</h1>
-<div id="bug-fix-9" class="section level2">
+<div id="bug-fix-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-9" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-10" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Definition of Hexp was fixed. It originally was mis-calculated, inflating the metric. It is now correctly calculated and documented. More information at issue <a href="https://github.com/grunwaldlab/poppr/issues/47">#47</a>
 </li>
@@ -523,9 +534,9 @@
     <div id="poppr-2-0-1" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-2-0-1" class="anchor"></a>poppr 2.0.1</h1>
-<div id="bug-fix-10" class="section level2">
+<div id="bug-fix-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-10" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-11" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Memory leak with Bruvo’s distance was fixed by @JonahBrooks in 90facb4 (issue #40)</li>
 <li>Cutoff field now works for distances other than dissimilarity in <code>imsn</code> (issue #41)</li>
@@ -674,9 +685,9 @@
     <div id="poppr-1-1-5" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-1-1-5" class="anchor"></a>poppr 1.1.5</h1>
-<div id="bug-fix-11" class="section level2">
+<div id="bug-fix-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-11" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-12" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Fixed internal bug for <code>fix_negative_branch</code> when only one branch had a negative edge.</li>
 <li>Fixed bug in <code>diss.dist</code> where a single locus would return an error.</li>
@@ -688,9 +699,9 @@
     <div id="poppr-1-1-4" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-1-1-4" class="anchor"></a>poppr 1.1.4</h1>
-<div id="bug-fix-12" class="section level2">
+<div id="bug-fix-13" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-12" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-13" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Fixed an internal bug that fails only on Windows OS.</li>
 </ul>
@@ -709,9 +720,9 @@
 </li>
 </ul>
 </div>
-<div id="bug-fix-13" class="section level2">
+<div id="bug-fix-14" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-13" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-14" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Fixed issue where monomorphic loci would cause an error in <code>recode_polyploids</code>
 </li>
@@ -737,9 +748,9 @@
     <div id="poppr-1-1-2" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-1-1-2" class="anchor"></a>poppr 1.1.2</h1>
-<div id="bug-fix-14" class="section level2">
+<div id="bug-fix-15" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-14" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-15" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Fixed memory allocation bug (Further addresses issue #2).</li>
 <li>Memory allocated in C function bruvo_dist is now properly freed.</li>
@@ -749,9 +760,9 @@
     <div id="poppr-1-1-1" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-1-1-1" class="anchor"></a>poppr 1.1.1</h1>
-<div id="bug-fix-15" class="section level2">
+<div id="bug-fix-16" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-15" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-16" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Fixed bug where the loss and add options for Bruvo’s distance were switched.</li>
 <li>Fixed illegal memory access error by UBSAN. Made memory management of internal C functions more sane. (Addresses issue #2).</li>
@@ -887,9 +898,9 @@
     <div id="poppr-1-0-6" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-1-0-6" class="anchor"></a>poppr 1.0.6</h1>
-<div id="bug-fix-16" class="section level2">
+<div id="bug-fix-17" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-16" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-17" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Fixed bug for users who have downloaded ape version 3.1 or higher where bruvo.boot would throw an error.</li>
 </ul>
@@ -913,9 +924,9 @@
 </li>
 </ul>
 </div>
-<div id="bug-fix-17" class="section level2">
+<div id="bug-fix-18" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-17" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-18" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Bootstrapping algorithm for <code>bruvo.boot</code> function was not shuffling the repeat lengths for each locus resulting in potentially erroneous bootstrap support values. This has been fixed by implementing an internal S4 class that will allow direct bootstrapping of the data and repeat lengths together.</li>
 <li>An occasional error, “INTEGER() can only be applied to a ‘integer’, not a ‘NULL’” in <code>bruvo.boot</code> or <code>bruvo.dist</code> fixed.</li>
@@ -939,9 +950,9 @@
     <div id="poppr-1-0-4" class="section level1">
 <h1 class="hasAnchor">
 <a href="#poppr-1-0-4" class="anchor"></a>poppr 1.0.4</h1>
-<div id="bug-fix-18" class="section level2">
+<div id="bug-fix-19" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-18" class="anchor"></a>BUG FIX</h2>
+<a href="#bug-fix-19" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>A previous error where bootstrap values greater than 100 were reported from <code>bruvo.boot</code> on UPGMA trees has been fixed.</li>
 <li>Fixed correction of negative branch lengths using Kuhner and Felsenstein</li>
@@ -1238,6 +1249,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#poppr-2-6-1">2.6.1</a></li>
         <li><a href="#poppr-2-6-0">2.6.0</a></li>
         <li><a href="#poppr-2-5-0">2.5.0</a></li>
         <li><a href="#poppr-2-4-1">2.4.1</a></li>
