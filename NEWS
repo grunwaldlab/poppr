@@ -1,6 +1,10 @@
 poppr 2.6.1.99
-=============
+============
 
+NEW FEATURE
+------------
+
+* AMOVA will now calculate within-individual variance for polyploid data.
 
 poppr 2.6.1
 ===========
