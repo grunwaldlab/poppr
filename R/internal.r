@@ -1149,18 +1149,18 @@ check_Hs <- function(x){
 # Internal functions utilizing this function:
 # # separate_haplotypes
 #==============================================================================#
-get_haplotype <- function(index, locus, sep_location, geno_lengths, first = TRUE){
-  if (first){
-    res <- substr(locus[[index]], 
-                  start = 1, 
-                  stop = sep_location[, index] - 1)
-  } else {
-    res <- substr(locus[[index]], 
-                  start = sep_location[, index] + 1,
-                  stop = geno_lengths[, index])
-  }
-  return(res)
-}
+# get_haplotype <- function(index, locus, sep_location, geno_lengths, first = TRUE){
+#   if (first){
+#     res <- substr(locus[[index]], 
+#                   start = 1, 
+#                   stop = sep_location[, index] - 1)
+#   } else {
+#     res <- substr(locus[[index]], 
+#                   start = sep_location[, index] + 1,
+#                   stop = geno_lengths[, index])
+#   }
+#   return(res)
+# }
 
 #==============================================================================#
 # Arguments:
@@ -1178,20 +1178,20 @@ get_haplotype <- function(index, locus, sep_location, geno_lengths, first = TRUE
 # Internal functions utilizing this function:
 # # separate_haplotypes
 #==============================================================================#
-haplotype_detector <- function(x){
-  x.loc        <- genind2df(x, sep = "/", usepop = FALSE)
-  facstr       <- function(i) nchar(as.character(i))
-  sep_location <- lapply(x.loc, function(i) regexpr("/", i))
-  sep_location <- matrix(unlist(sep_location, use.names = FALSE), 
-                         nrow = nrow(x.loc))
-  dimnames(sep_location) <- dimnames(x.loc)
-  geno_lengths <- vapply(x.loc, facstr, integer(nrow(x.loc)))
-  dimnames(geno_lengths) <- dimnames(sep_location)
-  haplist <- list(loci_data = x.loc, 
-                  sep_location = sep_location, 
-                  geno_lengths = geno_lengths)
-  return(haplist)
-}
+# haplotype_detector <- function(x){
+#   x.loc        <- genind2df(x, sep = "/", usepop = FALSE)
+#   facstr       <- function(i) nchar(as.character(i))
+#   sep_location <- lapply(x.loc, function(i) regexpr("/", i))
+#   sep_location <- matrix(unlist(sep_location, use.names = FALSE), 
+#                          nrow = nrow(x.loc))
+#   dimnames(sep_location) <- dimnames(x.loc)
+#   geno_lengths <- vapply(x.loc, facstr, integer(nrow(x.loc)))
+#   dimnames(geno_lengths) <- dimnames(sep_location)
+#   haplist <- list(loci_data = x.loc, 
+#                   sep_location = sep_location, 
+#                   geno_lengths = geno_lengths)
+#   return(haplist)
+# }
 
 #==============================================================================#
 # Arguments:
@@ -1220,24 +1220,32 @@ haplotype_detector <- function(x){
 # # separate_haplotypes
 #==============================================================================#
 separate_haplotypes <- function(x){
-  haps      <- haplotype_detector(x)
-  the_loci  <- colnames(haps$sep_location)
-  ind_names <- rownames(haps$sep_location)
-  h1 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
-               haps$geno_lengths, first = TRUE)
-  h2 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
-               haps$geno_lengths, first = FALSE)
-  newnames <- paste(rep(ind_names, each = 2), 1:2, sep = ".")
-  outlength <- length(newnames)
-  outvec <- seq(outlength)
-  index1 <- outvec %% 2 == 1
-  index2 <- !index1
-  matdimnames <- list(newnames, the_loci)
-  hapmat <- matrix(NA_character_, nrow = outlength,
-                   ncol = length(the_loci), dimnames = matdimnames)
-  hapmat[index1, ] <- unlist(h1)
-  hapmat[index2, ] <- unlist(h2)
-  return(hapmat)
+  # haps      <- haplotype_detector(x)
+  # the_loci  <- colnames(haps$sep_location)
+  # ind_names <- rownames(haps$sep_location)
+  # h1 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
+  #              haps$geno_lengths, first = TRUE)
+  # h2 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
+  #              haps$geno_lengths, first = FALSE)
+  # newnames <- paste(rep(ind_names, each = 2), 1:2, sep = ".")
+  # outlength <- length(newnames)
+  # outvec <- seq(outlength)
+  # index1 <- outvec %% 2 == 1
+  # index2 <- !index1
+  # matdimnames <- list(newnames, the_loci)
+  # hapmat <- matrix(NA_character_, nrow = outlength,
+  #                  ncol = length(the_loci), dimnames = matdimnames)
+  # hapmat[index1, ] <- unlist(h1)
+  # hapmat[index2, ] <- unlist(h2)
+  # return(hapmat)
+  if (max(ploidy(x)) > 2){
+    x <- recode_polyploids(x, addzero = TRUE)
+  }
+  df <- genind2df(x, sep = "/", usepop = FALSE)
+  df <- apply(df, 1, strsplit, "/")
+  df <- lapply(df, lapply, function(i){ i[i == "0"] <- NA; i }) # replace zeroes as missing
+  df <- lapply(df, data.frame, stringsAsFactors = FALSE, check.names = FALSE)
+  dplyr::bind_rows(df)
 }
 
 
@@ -1262,8 +1270,14 @@ pool_haplotypes <- function(x){
   }
   addStrata(x)  <- data.frame(Individual = indNames(x))
   df            <- strata(x)
-  df            <- df[rep(1:nrow(df), each = ploidy), , drop = FALSE]
-  newx          <- df2genind(separate_haplotypes(x), ploidy = 1, strata = df)
+  df            <- df[rep(seq(nrow(df)), each = ploidy), , drop = FALSE]
+  newdf         <- separate_haplotypes(x)
+  if (ploidy > 2){
+    is_typed <- apply(newdf, 1, function(i) sum(is.na(i))) < nLoc(x)
+    newdf <- newdf[is_typed, , drop = FALSE]
+    df    <- df[is_typed, , drop = FALSE]
+  }
+  newx          <- df2genind(newdf, ploidy = 1, strata = df)
   setPop(newx)  <- ~Individual
   return(newx)
 }
