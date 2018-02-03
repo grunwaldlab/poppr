@@ -279,10 +279,6 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (clonecorrect){
     x <- clonecorrect(x, strata = hier, keep = 1:length(all.vars(hier)))
   }
-  if (within & all(ploidy(x) == 2) & check_Hs(x) & x@type != "PA"){
-    hier <- update(hier, ~./Individual)
-    x    <- pool_haplotypes(x)
-  }
   # Treat missing data. This is a part I do not particularly like. The distance
   # matrix must be euclidean, but the dissimilarity distance will not allow
   # missing data to contribute to the distance. 
@@ -292,6 +288,10 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   # remove loci at cutoff
   # remove individuals at cutoff
   x       <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
+  if (within & all(ploidy(x) > 1) & check_Hs(x) & x@type != "PA"){
+    hier <- update(hier, ~./Individual)
+    x    <- pool_haplotypes(x)
+  }
   hierdf  <- strata(x, formula = hier)
   if (method == "ade4") xstruct <- make_ade_df(hier, hierdf)
   if (is.null(dist)){
