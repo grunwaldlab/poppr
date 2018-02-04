@@ -82,14 +82,15 @@ test_that("AMOVA can work on clone correction from mlg.filter and do filtering",
   data("monpop", package = "poppr")
   splitStrata(monpop) <- ~Tree/Year/Symptom
   expect_warning(poppr.amova(monpop, ~Symptom/Year), "Zero")
-  mondist <- diss.dist(monpop)
-  monfilt <- mlg.filter(monpop, distance = mondist, threshold = 1.1, 
+  mondist <- dist(monpop)
+  THRESHOLD <- 1.75
+  monfilt <- mlg.filter(monpop, distance = mondist, threshold = THRESHOLD, 
                         stats = "DIST")
-  mlg.filter(monpop, distance = mondist) <- 1.1 
+  mlg.filter(monpop, distance = mondist) <- THRESHOLD
   monfiltdist <- as.dist(monfilt)
-  monres <- poppr.amova(monpop, ~Symptom/Year, dist = monfiltdist)
+  monres <- poppr.amova(monpop, ~Symptom/Year, dist = monfiltdist, squared = FALSE)
   msg <- "Original.+?264"
-  expect_message(res <- poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = 1.1), msg)
+  expect_message(res <- poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = THRESHOLD), msg)
   expect_equivalent(monres$componentsofcovariance, res$componentsofcovariance)
 })
 
