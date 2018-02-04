@@ -1,7 +1,22 @@
 poppr 2.6.1.99
 ============
 
-NEW FEATURE
+ALGORITHMIC CHANGE
+------------
+
+* AMOVA will now default to using euclidean distance. This affects all 
+  calculations made with `within = FALSE` or `filter = TRUE` without a 
+  user-supplied distance. This will not have affect those with haploid or 
+  diploid data using `within = TRUE`. The dissimilarity distance is equivalent 
+  to a squared euclidean distance for haploid genotypes, but not for any higher 
+  ploidy. Those using `filter = TRUE` without specifying a distance should use
+  a euclidean threshold. This should not be an issue for those who simply want
+  to group isolates with missing data, however as a zero distance is the same
+  for euclidean and dissimilarity. Thanks goes to Patrick Meirmans for alerting
+  me to this error.
+
+
+NEW FEATURES
 ------------
 
 * AMOVA will now calculate within-individual variance for polyploid data.
