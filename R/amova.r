@@ -240,10 +240,16 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
                         method = c("ade4", "pegas"), nperm = 0){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   if (is.null(hier)) stop("A population hierarchy must be specified")
-  methods <- c("ade4", "pegas")
-  method <- match.arg(method, methods)
+  methods   <- c("ade4", "pegas")
+  method    <- match.arg(method, methods)
   setPop(x) <- hier
-  if (filter && (!within | all(ploidy(x) == 1) | !check_Hs(x) | x@type == "PA")){
+  # Sanity Checks
+  haploid      <- all(ploidy(x) == 1)
+  heterozygous <- check_Hs(x)
+  codominant   <- x@type != "PA"
+
+  # Filtering genotypes -----------------------------------------------------
+  if (filter && (haploid | !within | !heterozygous | !codominant)) {
     
     if (!is.genclone(x)){
       x <- as.genclone(x)
@@ -251,33 +257,27 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     if (!is(x@mlg, "MLG")){
       x@mlg <- new("MLG", x@mlg)
     }
-    if (!quiet){
+    if (!quiet) {
       message("Filtering ...")
       message("Original multilocus genotypes ... ", nmll(x, "original"))
     }
-    if (is.null(dist)){
-      nulldist <- TRUE
-      dist <- diss.dist(x, percent = FALSE)
-    } else {
-      nulldist <- FALSE
+    if (is.null(dist)) {
+      dist    <- dist(x)
+      squared <- FALSE
     }
     filt_stats <- mlg.filter(x, threshold = threshold, algorithm = algorithm,
                              distance = dist, stats = "ALL")
-    if (nulldist){
-      filt_stats$DISTANCE <- sqrt(filt_stats$DISTANCE)
-      squared <- FALSE
-    }
     dist <- as.dist(filt_stats$DISTANCE)
     # Forcing this. Probably should make an explicit method for this.
     x@mlg@mlg["contracted"]     <- filt_stats$MLGS
-    distname(x@mlg)             <- "diss.dist"
+    distname(x@mlg)             <- "dist"
     distalgo(x@mlg)             <- algorithm
     cutoff(x@mlg)["contracted"] <- threshold
-    mll(x) <- "contracted"
+    mll(x)                      <- "contracted"
     if (!quiet) message("Contracted multilocus genotypes ... ", nmll(x))
   }
-  if (clonecorrect){
-    x <- clonecorrect(x, strata = hier, keep = 1:length(all.vars(hier)))
+  if (clonecorrect) {
+    x <- clonecorrect(x, strata = hier, keep = seq(all.vars(hier)))
   }
   # Treat missing data. This is a part I do not particularly like. The distance
   # matrix must be euclidean, but the dissimilarity distance will not allow
@@ -287,30 +287,32 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   # missing to mean of the columns: indiscreet distances.
   # remove loci at cutoff
   # remove individuals at cutoff
-  x       <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
-  if (within & all(ploidy(x) > 1) & check_Hs(x) & x@type != "PA"){
+  x <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
+
+  # Splitting haplotypes ----------------------------------------------------
+  # 
+  if (within & heterozygous & codominant & !haploid) {
     hier <- update(hier, ~./Individual)
     x    <- pool_haplotypes(x)
   }
-  hierdf  <- strata(x, formula = hier)
+  
+  hierdf <- strata(x, formula = hier)
   if (method == "ade4") xstruct <- make_ade_df(hier, hierdf)
-  if (is.null(dist)){
-    if (method == "ade4"){
-      xdist <- sqrt(diss.dist(clonecorrect(x, strata = NA), percent = FALSE))
+  if (is.null(dist)) {
+    squared <- FALSE
+    if (method == "ade4") {
+      xdist <- dist(clonecorrect(x, strata = NA))
     } else {
-      xdist <- sqrt(diss.dist(x, percent = FALSE))
+      xdist <- dist(x)
     }
   } else {
     datalength <- choose(nInd(x), 2)
     mlgs       <- mlg(x, quiet = TRUE)
     mlglength  <- choose(mlgs, 2)
-    if (length(dist) > mlglength & length(dist) == datalength){
-      corrected <- TRUE
-      if (method == "ade4"){
-        corrected <- .clonecorrector(x)
-      }
+    if (length(dist) > mlglength & length(dist) == datalength) {
+      corrected <- if (method == "ade4") .clonecorrector(x) else TRUE
       xdist     <- as.dist(as.matrix(dist)[corrected, corrected])
-    } else if(length(dist) == mlglength){
+    } else if (length(dist) == mlglength) {
       xdist <- dist
     } else {
       distobs <- ceiling(sqrt(length(dist)*2))
@@ -321,11 +323,11 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       ifelse(within == TRUE, "\n\n\tTry setting within = FALSE.", "\n"))
       stop(msg)
     }
-    if (squared){
+    if (squared) {
       xdist <- sqrt(xdist)
     }
   }
-  if (!is.euclid(xdist)){
+  if (!is.euclid(xdist)) {
     CORRECTIONS <- c("cailliez", "quasieuclid", "lingoes")
     try(correct <- match.arg(correction, CORRECTIONS), silent = TRUE)
     if (!exists("correct")){
@@ -334,7 +336,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       correct_fun <- match.fun(correct)
       if (correct == CORRECTIONS[2]){
         message("Distance matrix is non-euclidean.")
-        message(c("Utilizing quasieuclid correction method.",
+        message(c("Using quasieuclid correction method.",
                   " See ?quasieuclid for details."))
         xdist <- correct_fun(xdist)        
       } else {
@@ -342,7 +344,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       }
     }
   }
-  if (method == "ade4"){
+  if (method == "ade4") {
     allmlgs <- unique(mlg.vector(x))
     xtab    <- t(mlg.table(x, plot = FALSE, quiet = TRUE, mlgsub = allmlgs))
     xtab    <- as.data.frame(xtab)
