@@ -96,7 +96,7 @@ struct locus
 
 
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
-SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
+SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP differences_only, SEXP requested_threads);
 SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop);
@@ -108,7 +108,7 @@ char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
 int get_zeros(char sim_set);
 int get_difference(struct zygosity *z1, struct zygosity *z2);
 int get_distance(struct zygosity *z1, struct zygosity *z2);
-int get_distance_custom(char sim_set, struct zygosity *z1, struct zygosity *z2);
+int get_distance_custom(char sim_set, struct zygosity *z1, struct zygosity *z2, int euclid);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Calculates the pairwise differences between samples in a genlight object. The
@@ -442,13 +442,14 @@ and 2 for the distance between differing homozygotes).
 
 Input: A genlight object containing samples of diploids.
        A boolean representing whether missing data should match (TRUE) or not.
+       A boolean indicating if euclidian distance should be calculated (TRUE) or not.
        A boolean representing whether distance (FALSE) or differences (TRUE)
           should be returned.
        An integer representing the number of threads that should be used.
 Output: A distance matrix representing the distance between each sample in the
           genlight object.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
+SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP differences_only, SEXP requested_threads)
 {
   // This function calculates the raw genetic distance between samples in
   // a genlight object. The general flow of this function is as follows:
@@ -488,6 +489,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
   int next_missing_i;
   int next_missing_j;
   int missing_match;
+  int is_euclid;
   int only_differences;
   int num_threads;
   char mask;
@@ -551,6 +553,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
   chr_length = 0;
   missing_match = asLogical(missing);
   only_differences = asLogical(differences_only);
+  is_euclid = asLogical(euclid);
 
   // Loop through every genotype
   for(i = 0; i < num_gens - 1; i++)
@@ -718,7 +721,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP differences_only
         {
           // If we want the actual distance, we need a more complicated analysis of
           // the sets. See get_distance_custom for details.
-          cur_distance += get_distance_custom(tmp_sim_set,&set_1,&set_2);
+          cur_distance += get_distance_custom(tmp_sim_set, &set_1, &set_2, is_euclid);
           // Rprintf("-> Current Distance: %d\n", cur_distance);
         }
       }
@@ -1127,6 +1130,7 @@ Input: A genlight object containing samples of diploids.
        A boolean representing whether or not missing values should match.
        A boolean representing whether distances or differences should be counted.
        An integer representing the number of threads to be used.
+       A kludge to allow bitwise_distance_diploid to work
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
@@ -1304,6 +1308,13 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   chr_length = 0;
   missing_match = asLogical(missing);
   only_differences = asLogical(differences_only);
+  
+  
+  // Get the distance matrix from bitwise_distance
+  PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
+  SEXP euclid;
+  PROTECT(euclid = 0);
+  R_dists = bitwise_distance_diploid(genlight, missing, euclid, differences_only, requested_threads);
 
   // Loop through all SNP chunks
   #ifdef _OPENMP
@@ -1446,9 +1457,6 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
     }
   }
 
-  // Get the distance matrix from bitwise_distance
-  PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
-  R_dists = bitwise_distance_diploid(genlight, missing, differences_only, requested_threads);
 
   // Calculate the sum and squared sum of distances between samples
   D = 0;
@@ -1516,7 +1524,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   R_Free(vars);
   R_Free(M);
   R_Free(M2);
-  UNPROTECT(6);
+  UNPROTECT(7);
   return R_out;
 
 }
@@ -2127,19 +2135,25 @@ Input: A char representing the similarity set between two zygosity structs
 Output: The total distance between two samples, such that DD/rr are a distance
         of 2, and Dr/rr are a distance of 1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-int get_distance_custom(char sim_set, struct zygosity *z1, struct zygosity *z2)
+int get_distance_custom(char sim_set, struct zygosity *z1, struct zygosity *z2, int euclid)
 {
   int dist = 0;
+  int multiplier;
   char Hor;
   char S;
   char ch_dist;
 
   S = sim_set;
   Hor = z1->ch | z2->ch;
+  // The diploids are calculated in two phases. The first phase simply asks for
+  // the differences. The second asks if there are differences on both strands.
+  // To get euclidian values, we can multiply this by 3 so that the result is 4,
+  // which is 2^2. We will take the square root in R. 
+  multiplier = (euclid) ? 3 : 1;
 
   ch_dist = Hor | S;  // Force ones everywhere they are the same
   dist = get_zeros(S);  // Add one distance for every non-shared zygosity
-  dist += get_zeros(ch_dist); // Add another one for every difference that has no heterozygotes
+  dist += get_zeros(ch_dist) * multiplier; // Add another one for every difference that has no heterozygotes
 
   return dist;
 }

@@ -64,6 +64,16 @@
 #'   with anything. \code{FALSE} forces missing data to not match with any other
 #'   information, \strong{including other missing data}.
 #'   
+#' @param scale_missing A logical. If \code{TRUE}, comparisons with missing
+#'   data is scaled up proportionally to the number of columns used by
+#'   multiplying the value by \code{m / (m - x)} where m is the number of
+#'   loci and x is the number of missing sites. This option matches the behavior
+#'   of base R's \code{\link[package=base]{dist}} function. 
+#'   Defaults to \code{FALSE}.
+#'   
+#' @param euclidean \code{logical}. if \code{TRUE}, the Euclidean distance will
+#'   be calculated.
+#'   
 #' @param differences_only \code{logical}. When \code{differences_only = TRUE},
 #'   the output will reflect the number of different loci. The default setting,
 #'   \code{differences_only = FALSE}, reflects the number of different alleles.
@@ -107,6 +117,7 @@
 #' xdt
 #==============================================================================#
 bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE, 
+                         scale_missing = FALSE, euclidean = FALSE, 
                          differences_only = FALSE, threads = 0){
   stopifnot(inherits(x, c("genlight", "genclone", "genind", "snpclone")))
   # Stop if the ploidy of the genlight object is not consistent
@@ -153,14 +164,20 @@ bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
   }
   else
   {
-    pairwise_dist <- .Call("bitwise_distance_diploid", x, missing_match, differences_only, threads)
+    pairwise_dist <- .Call("bitwise_distance_diploid", x, missing_match, euclidean, differences_only, threads)
   }
   dist.mat <- pairwise_dist
   dim(dist.mat) <- c(inds,inds)
   colnames(dist.mat) <- ind.names
   rownames(dist.mat) <- ind.names
-  if (percent){
-    if(differences_only)
+  nas <- NA.posi(x)
+  if (scale_missing && sum(lengths(nas)) > 0) {
+    dist.mat <- dist.mat * missing_correction(nas, nLoc(x), mat = TRUE)
+  }
+  if (euclidean){
+    dist.mat <- sqrt(dist.mat)
+  } else if (percent) {
+    if (differences_only)
     {
       dist.mat <- dist.mat/(numPairs)
     }
@@ -169,7 +186,7 @@ bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
       dist.mat <- dist.mat/(numPairs*ploid)
     }
   }
-  if (mat == FALSE){
+  if (mat == FALSE) {
     dist.mat <- as.dist(dist.mat)
   }
   return(dist.mat)
@@ -197,7 +214,32 @@ poppr_has_parallel <- function(){
 
 }
 
-
+#' Calculate correction for genetic distances
+#'
+#' @param nas a list of missing positions per sample
+#' @param nloc the number of loci
+#' @param mat a logical specifying whether or not a matrix should be returned
+#'   (default: TRUE)
+#'
+#' @return an n x n matrix or a choose(n, 2) length vector of values that scale
+#'   from 1 to the number of loci.
+#' @noRd
+missing_correction <- function(nas, nloc, mat = TRUE){
+  n          <- length(nas)
+  correction <- matrix(0, nrow = n, ncol = n)
+  for (i in seq(n - 1)) {
+    for (j in seq(from = i + 1, to = n)) {
+      res <- length(unique(unlist(nas[c(i, j)], use.names = FALSE)))
+      correction[j, i] <- res -> correction[i, j]
+    }
+  }
+  res <- nloc/(nloc - correction)
+  if (mat) {
+    return(res)
+  } else {
+    return(res[lower.tri(res)])
+  }
+}
 
 #==============================================================================#
 #' Calculate the index of association between samples in a genlight object.
