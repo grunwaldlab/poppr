@@ -1618,6 +1618,7 @@ test_microsat <- function(x){
 # # get_local_ploidy
 #==============================================================================#
 test_zeroes <- function(x){
+  if (x@type == "PA") return(FALSE)
   if (test_microsat(x)){
     
     allnames  <- as.numeric(unlist(alleles(x), use.names = FALSE))
