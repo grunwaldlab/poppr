@@ -229,3 +229,19 @@ test_that("AMOVA can accurately calculate rho", {
   # Variance percentages are equal
   expect_equal(polyno$componentsofcovariance[3:1, "%", drop = TRUE], polyPerc)
 })
+
+pg <- polygid
+pg@tab[] <- as.integer(tab(pg) > 0)
+
+test_that("AMOVA will not calculate within-individual variance for mixed ploids", {
+  wrn      <- "ambiguous allele dosage"
+  rho      <- c(0.688374795330904, 0.445443116797669, 0.438064490572017)
+  expect_warning(res <- poppr.amova(pg, ~group/population, within = TRUE), wrn)
+  expect_lt(sum(abs(res$statphi$Phi - rho)), 0.2)
+})
+
+test_that("AMOVA will give an extra warning for polyploids with zeroes", {
+  skip_on_cran()
+  wrn <- "zeroes encoded"
+  expect_warning(res <- poppr.amova(recode_polyploids(pg, addzero = TRUE), ~group/population, within = TRUE), wrn)
+})
