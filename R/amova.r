@@ -291,9 +291,17 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
 
   # Splitting haplotypes ----------------------------------------------------
   # 
-  if (within & heterozygous & codominant & !haploid) {
+  full_ploidy <- codominant && sum(tabulate(get_local_ploidy(x)) > 0) == 1
+  if (within && heterozygous && codominant && !haploid && full_ploidy) {
     hier <- update(hier, ~./Individual)
     x    <- pool_haplotypes(x)
+  } else if (within && codominant && !full_ploidy && is.null(dist)) {
+    warning(paste("Data with mixed ploidy or ambiguous allele dosage cannot have",
+            "within-individual variance calculated until the dosage is correctly",
+            "estimated.\n\n",
+            if (test_zeroes(x)) "If you have zeroes encoded in your data, you may wish to remove them.\n",
+            "To remove this warning, use within = FALSE")
+            )
   }
   
   hierdf <- strata(x, formula = hier)
