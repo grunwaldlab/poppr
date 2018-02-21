@@ -297,8 +297,13 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
   # Ensure that every SNPbin object has data for all chromosomes
   if (ploid == 2){
     x  <- fix_uneven_diploid(x)
-    IA <- .Call("association_index_diploid", x, missing_match, differences_only, 
-                threads, PACKAGE = "poppr")
+    IA <- .Call("association_index_diploid", 
+                genlight = x, 
+                missing_match = missing_match, 
+                differences_only = differences_only, 
+                requested_threads = threads, 
+                euclid = FALSE, 
+                PACKAGE = "poppr")
   }
   else if(ploid == 1)
   {
