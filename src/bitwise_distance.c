@@ -98,7 +98,7 @@ struct locus
 SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
 SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP differences_only, SEXP requested_threads);
 SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threads);
-SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads);
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP euclid);
 SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop);
 // SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window);
 // void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight);
@@ -1133,7 +1133,7 @@ Input: A genlight object containing samples of diploids.
        A kludge to allow bitwise_distance_diploid to work
 Output: The index of association for this genlight object over the specified loci
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads)
+SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_only, SEXP requested_threads, SEXP euclid)
 {
   // This function calculates the index of association for samples in
   // a genlight object. The general flow of this function is as follows:
@@ -1312,8 +1312,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   
   // Get the distance matrix from bitwise_distance
   PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
-  SEXP euclid;
-  PROTECT(euclid = 0);
+  // PROTECT(euclid = 0);
   R_dists = bitwise_distance_diploid(genlight, missing, euclid, differences_only, requested_threads);
 
   // Loop through all SNP chunks
