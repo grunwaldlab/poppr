@@ -1158,49 +1158,14 @@ check_Hs <- function(x){
 #==============================================================================#
 separate_haplotypes <- function(x){
   if (max(ploidy(x)) > 2){
-    x <- recode_polyploids(x, addzero = TRUE)
+    x <- suppressWarnings(recode_polyploids(x, addzero = TRUE))
   }
   df <- genind2df(x, sep = "/", usepop = FALSE)
   df <- apply(df, 1, strsplit, "/")
-  df <- lapply(df, lapply, function(i){ i[i == "0"] <- NA; i }) # replace zeroes as missing
+  df <- lapply(df, lapply, function(i){ i[grepl("^[0]+$", i)] <- NA; i }) # replace zeroes as missing
   df <- lapply(df, data.frame, stringsAsFactors = FALSE, check.names = FALSE)
   dplyr::bind_rows(df)
 }
-
-
-
-#==============================================================================#
-# Haplotype pooling. 
-# The following functions are necessary to account for within sample variation. 
-# They will separate the haplotypes of a genind object and repool them so that
-# there are n*k individuals in the new data set where n is the number of
-# individuals and k is the ploidy. 
-# Public functions utilizing this function:
-# # poppr.amova
-#
-# Internal functions utilizing this function:
-# # none
-#==============================================================================#
-## Main Function. Lengthens the population hierarchy as well.
-pool_haplotypes <- function(x){
-  ploidy <- max(ploidy(x))
-  if (is.null(strata(x))){
-    strata(x) <- data.frame(pop = pop(x))
-  }
-  addStrata(x)  <- data.frame(Individual = indNames(x))
-  df            <- strata(x)
-  df            <- df[rep(seq(nrow(df)), each = ploidy), , drop = FALSE]
-  newdf         <- separate_haplotypes(x)
-  if (ploidy > 2){
-    is_typed <- apply(newdf, 1, function(i) sum(is.na(i))) < nLoc(x)
-    newdf <- newdf[is_typed, , drop = FALSE]
-    df    <- df[is_typed, , drop = FALSE]
-  }
-  newx          <- df2genind(newdf, ploidy = 1, strata = df)
-  setPop(newx)  <- ~Individual
-  return(newx)
-}
-
 #==============================================================================#
 # The function locus_table_pegas is the internal workhorse. It will process a
 # summary.loci object into a nice table utilizing the various diversity indices

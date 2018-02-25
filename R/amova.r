@@ -187,7 +187,8 @@
 #' 
 #' @seealso \code{\link[ade4]{amova}} (ade4) \code{\link[pegas]{amova}} (pegas) 
 #'   \code{\link{clonecorrect}} \code{\link{diss.dist}} \code{\link{missingno}} 
-#'   \code{\link[ade4]{is.euclid}} \code{\link{strata}}
+#'   \code{\link[ade4]{is.euclid}} \code{\link{strata}} 
+#'   \code{\link{make_haplotypes}}
 #' @export
 #' @examples
 #' data(Aeut)
@@ -294,7 +295,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   full_ploidy <- codominant && sum(tabulate(get_local_ploidy(x)) > 0) == 1
   if (within && heterozygous && codominant && !haploid && full_ploidy) {
     hier <- update(hier, ~./Individual)
-    x    <- pool_haplotypes(x)
+    x    <- make_haplotypes(x)
   } else if (within && codominant && !full_ploidy && is.null(dist)) {
     warning(paste("Data with mixed ploidy or ambiguous allele dosage cannot have",
             "within-individual variance calculated until the dosage is correctly",

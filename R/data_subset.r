@@ -783,4 +783,81 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
 }
 
 
-
+#' Split samples from a genind object into pseudo-haplotypes
+#'
+#'
+#' @param gid   a [genind][adegenet::genind] object.
+#'
+#' @return a haploid genind object with an extra [strata][adegenet::strata]
+#'   column called "Individual".
+#' @export
+#' @md
+#' 
+#' @note The [other slot][adegenet::other] will not be copied over to the new
+#'   genind object.
+#'
+#' @seealso [poppr.amova] [pegas::amova]
+#' 
+#' @details
+#' Certain analyses, such as [amova][poppr.amova] work best if within-sample
+#' variance (error) can be estimated. Practically, this is performed by
+#' splitting the genotypes across all loci to create multiple haplotypes. This
+#' way, the within-sample distance can be calculated and incorporated into the
+#' model. Please note that the haplotypes generated are based on the order of
+#' the unphased alleles in the genind object and do not represent true
+#' haplotypes. 
+#' 
+#' Haploid data will be returned un-touched.
+#'
+#' @examples
+#' # Diploid data is doubled -------------------------------------------------
+#' 
+#' data(nancycats)
+#' nan9 <- nancycats[pop = 9]
+#' nan9hap <- make_haplotypes(nan9) 
+#' nan9              # 9 individuals from population 9
+#' nan9hap           # 18 haplotypes
+#' strata(nan9hap)   # strata gains a new column: Individual
+#' indNames(nan9hap) # individuals are renamed sequentially
+#' 
+#' 
+#' # Mix ploidy data can be split, but should be treated with caution --------
+#' # 
+#' # For example, the Pinf data set contains 86 tetraploid individuals, 
+#' # but there appear to only be diploids and triploid genotypes. When 
+#' # we convert to haplotypes, those with all missing data are dropped.
+#' data(Pinf)
+#' Pinf
+#' pmiss <- info_table(Pinf, type = "ploidy", plot = TRUE)
+#' 
+#' # No samples appear to be triploid across all loci. This will cause
+#' # several haplotypes to have a lot of missing data.
+#' p_haps <- make_haplotypes(Pinf)
+#' p_haps
+#' head(genind2df(p_haps), n = 20)
+make_haplotypes <- function(gid) {
+  if (!is.genind(gid)) {
+    stop("make_haplotypes() can only take genind objects.")
+  }
+  ploidy <- max(ploidy(gid))
+  if (ploidy == 1){
+    warning("This procedure does not work on haploid data. Returning data.")
+    return(gid)
+  }
+  if (is.null(strata(gid))) {
+    warning("No strata found... creating one from the population.")
+    strata(gid) <- data.frame(pop = pop(gid))
+  }
+  addStrata(gid) <- data.frame(Individual = indNames(gid))
+  df             <- strata(gid)
+  df             <- df[rep(seq(nrow(df)), each = ploidy), , drop = FALSE]
+  newdf          <- separate_haplotypes(gid)
+  if (ploidy > 2) {
+    is_typed <- apply(newdf, 1, function(i) sum(is.na(i))) < nLoc(gid)
+    newdf    <- newdf[is_typed, , drop = FALSE]
+    df       <- df[is_typed, , drop = FALSE]
+  }
+  newgid         <- df2genind(newdf, ploidy = 1, strata = df)
+  setPop(newgid) <- ~Individual
+  return(newgid)
+}
