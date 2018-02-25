@@ -213,6 +213,7 @@ application to human mitochondrial DNA restriction data. \emph{Genetics},
 \seealso{
 \code{\link[ade4]{amova}} (ade4) \code{\link[pegas]{amova}} (pegas) 
   \code{\link{clonecorrect}} \code{\link{diss.dist}} \code{\link{missingno}} 
-  \code{\link[ade4]{is.euclid}} \code{\link{strata}}
+  \code{\link[ade4]{is.euclid}} \code{\link{strata}} 
+  \code{\link{make_haplotypes}}
 }
 \keyword{amova}

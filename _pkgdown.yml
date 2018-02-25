@@ -48,6 +48,7 @@ reference:
       - popsub # (m | s) - Subsets genind objects by population
       - shufflepop # (m) - Shuffles genotypes at each locus using four different shuffling algorithms
       - recode_polyploids # (m | x) - Recodes polyploid data sets with missing alleles imported as "0"
+      - make_haplotypes
       - fix_replen
       - test_replen
   - title: "Genetic distances:"
