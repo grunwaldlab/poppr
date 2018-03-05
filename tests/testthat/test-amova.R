@@ -186,6 +186,7 @@ test_that("AMOVA can work on clone correction from mlg.filter and do filtering",
   monfiltdist <- as.dist(monfilt)
   monres <- poppr.amova(monpop, ~Symptom/Year, dist = monfiltdist, squared = FALSE)
   msg <- "Original.+?264"
+  monpop@mlg <- mll(monpop, "original")
   expect_message(res <- poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = THRESHOLD), msg)
   expect_equivalent(monres$componentsofcovariance, res$componentsofcovariance)
 })
