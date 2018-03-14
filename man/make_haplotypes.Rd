@@ -59,5 +59,5 @@ p_haps
 head(genind2df(p_haps), n = 20)
 }
 \seealso{
-\link{poppr.amova} \link[pegas:amova]{pegas::amova}
+\code{\link[=poppr.amova]{poppr.amova()}} \code{\link[pegas:amova]{pegas::amova()}} \code{\link[=as.genambig]{as.genambig()}}
 }
