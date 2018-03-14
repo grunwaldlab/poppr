@@ -796,7 +796,7 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
 #' @note The [other slot][adegenet::other] will not be copied over to the new
 #'   genind object.
 #'
-#' @seealso [poppr.amova] [pegas::amova]
+#' @seealso [poppr.amova()] [pegas::amova()] [as.genambig()]
 #' 
 #' @details
 #' Certain analyses, such as [amova][poppr.amova] work best if within-sample

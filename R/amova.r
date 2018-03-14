@@ -62,9 +62,14 @@
 #'   within individuals are calculated as well. If this is set to `FALSE`, The
 #'   lowest level of the hierarchy will be the sample level. See Details below.
 #'
+#' @param freq `logical`. If `within = FALSE`, the parameter rho is calculated
+#'   (Ronfort et al. 1998; Meirmans and Liu 2018). By setting `freq = TRUE`,
+#'   allele counts will be converted to frequencies before the distance is
+#'   calculated. Defaults to `FALSE`.
+#'
 #' @param dist an optional distance matrix calculated on your data. If this is
 #'   set to `NULL` (default), the raw pairwise distances will be calculated via
-#'   [diss.dist()].
+#'   [dist()].
 #'
 #' @param squared if a distance matrix is supplied, this indicates whether or
 #'   not it represents squared distances.
@@ -102,8 +107,8 @@
 #'   
 #' @inheritParams mlg.filter
 #'   
-#' @return a list of class `amova` from the ade4 package. See 
-#'   [ade4::amova()] for details.
+#' @return a list of class `amova` from the ade4 or pegas package. See 
+#'   [ade4::amova()] or [pegas::amova()] for details.
 #' 
 #' @details The poppr implementation of AMOVA is a very detailed wrapper for the
 #'   ade4 implementation. The output is an [ade4::amova()] class list that
@@ -114,28 +119,29 @@
 #'   1. a distance matrix on all unique genotypes (haplotypes)
 #'   2. a data frame defining the hierarchy of the distance matrix 
 #'   3. a genotype (haplotype) frequency table.
-#'    
-#'   All of this data can be constructed from a [genind][genind-class] object, but can
-#'   be daunting for a novice R user. *This function automates the entire
-#'   process*. Since there are many variables regarding genetic data, some
-#'   points need to be highlighted:
+#'
+#'   All of this data can be constructed from a [genind][genind-class] object,
+#'   but can be daunting for a novice R user. *This function automates the
+#'   entire process*. Since there are many variables regarding genetic data,
+#'   some points need to be highlighted:
 #'   
 #'   \subsection{On Hierarchies:}{The hierarchy is defined by different
 #'   population strata that separate your data hierarchically. These strata are
-#'   defined in the \strong{strata} slot of [genind][genind-class] and [genclone][genclone-class]}
-#'   objects. They are useful for defining the population factor for your data.
-#'   See the function [strata()] for details on how to properly define these
-#'   strata.
+#'   defined in the \strong{strata} slot of [genind][genind-class] and
+#'   [genclone][genclone-class]} objects. They are useful for defining the
+#'   population factor for your data. See the function [strata()] for details on
+#'   how to properly define these strata.}
 #'
 #'   \subsection{On Within Individual Variance:}{ Heterozygosities within
 #'   genotypes are sources of variation from within individuals and can be
 #'   quantified in AMOVA. When `within = TRUE`, poppr will split genotypes into
-#'   haplotypes with the function [make_haplotypes()] and use those to calculate within-individual variance. No
-#'   estimation of phase is made. This acts much like the default settings for
-#'   AMOVA in the Arlequin software package. Within individual variance will not
-#'   be calculated for haploid individuals or dominant markers as the haplotypes
-#'   cannot be split further. Setting `within = FALSE` uses the euclidean 
-#'   distance of the allele frequencies within each individual}
+#'   haplotypes with the function [make_haplotypes()] and use those to calculate
+#'   within-individual variance. No estimation of phase is made. This acts much
+#'   like the default settings for AMOVA in the Arlequin software package.
+#'   Within individual variance will not be calculated for haploid individuals
+#'   or dominant markers as the haplotypes cannot be split further. Setting
+#'   `within = FALSE` uses the euclidean distance of the allele frequencies
+#'   within each individual}
 #'
 #'   \subsection{On Euclidean Distances:}{ With the ade4 implementation of AMOVA
 #'   (utilized by poppr), distances must be Euclidean (due to the nature of the
@@ -146,13 +152,13 @@
 #'   affect the outcome of the analysis.}
 #'   
 #'   \subsection{On Filtering:}{ Filtering multilocus genotypes is performed by
-#'   [mlg.filter()]. This can necessarily only be done AMOVA tests 
-#'   that do not account for within-individual variance. The distance matrix used
-#'   to calculate the amova is derived from using [mlg.filter()] with
-#'   the option `stats = "distance"`, which reports the distance between 
-#'   multilocus genotype clusters. One useful way to utilize this feature is to
-#'   correct for genotypes that have equivalent distance due to missing data. 
-#'   (See example below.)}
+#'   [mlg.filter()]. This can necessarily only be done AMOVA tests that do not
+#'   account for within-individual variance. The distance matrix used to
+#'   calculate the amova is derived from using [mlg.filter()] with the option
+#'   `stats = "distance"`, which reports the distance between multilocus
+#'   genotype clusters. One useful way to utilize this feature is to correct for
+#'   genotypes that have equivalent distance due to missing data. (See example
+#'   below.)}
 #'   
 #'   \subsection{On Methods:}{ Both \pkg{ade4} and \pkg{pegas} have
 #'   implementations of AMOVA, both of which are appropriately called "amova".
@@ -168,14 +174,24 @@
 #'   
 #'   \subsection{On Polyploids:}{ As of \pkg{poppr} version 2.7.0, this
 #'   function is able to calculate phi statistics for within-individual variance
-#'   for polyploid data with **full dosage information**. 
-#'   }
+#'   for polyploid data with **full dosage information**. When a data set does
+#'   not contain full dosage information for all samples, then the resulting 
+#'   pseudo-haplotypes will contain missing data, which would result in an 
+#'   incorrect estimate of variance. 
 #'   
-#' @note The ade4 function [ade4::randtest.amova()] contains a slight bug as of
-#'   version 1.7.4 which causes the wrong alternative hypothesis to be applied
-#'   on every 4th heirarchical level. Luckily, there is a way to fix it by
-#'   re-converting the results with the function [ade4::as.krandtest()]. See
-#'   examples for details.
+#'   Instead, the AMOVA will be performed on the distance matrix derived from
+#'   allele counts or allele frequencies, depending on the `freq` option. This
+#'   has been shown to be robust to estimates with mixed ploidy (Ronfort et al.
+#'   1998; Meirmans and Liu 2018). If you wish to brute-force your way to 
+#'   estimating AMOVA using missing values, you can split your haplotypes with
+#'   the [make_haplotypes()] function.
+#'   
+#'   One strategy for addressing ambiguous dosage in your polyploid data set 
+#'   would be to convert your data to \pkg{polysat}'s `genambig` class with the
+#'   [as.genambig()], estimate allele frequencies with [polysat::daSilvaFreq()],
+#'   and use these frequencies to randomly sample alleles to fill in the 
+#'   ambiguous alleles. 
+#'   }
 #'   
 #' @keywords amova
 #' @aliases amova
@@ -186,15 +202,16 @@
 #' application to human mitochondrial DNA restriction data. *Genetics*,
 #' **131**, 479-491.
 #' 
+#' Ronfort, J., Jenczewski, E., Bataillon, T., and Rousset, F. (1998). Analysis
+#' of population structure in autotetraploid species. *Genetics*, **150**,
+#' 921–930.
+#'
 #' Meirmans, P., Liu, S. (2018) Analysis of Molecular Variance (AMOVA) for
 #' Autopolyploids *Submitted*.
 #' 
-#' Ronfort, J., Jenczewski, E., Bataillon, T., and Rousset, F. (1998). Analysis
-#' of population structure in autotetraploid species. *Genetics* **150**,
-#' 921–930.
-#' 
 #' @seealso [ade4::amova()], [pegas::amova()], [clonecorrect()], [diss.dist()],
-#'  [missingno()], [ade4::is.euclid()], [strata()], [make_haplotypes()]
+#'  [missingno()], [ade4::is.euclid()], [strata()], [make_haplotypes()], 
+#'  [as.genambig()]
 #' @export
 #' @md
 #' @examples
@@ -229,22 +246,15 @@
 #' poppr.amova(monpop, ~Symptom/Year) # gets a warning of zero distances
 #' poppr.amova(monpop, ~Symptom/Year, filter = TRUE, threshold = 0.1) # no warning
 #' 
-#' # Correcting incorrect alternate hypotheses with >2 heirarchical levels
-#' # 
-#' mon.amova <- poppr.amova(monpop, ~Symptom/Year/Tree)
-#' mon.test  <- randtest(mon.amova)
-#' mon.test # Note alter is less, greater, greater, less
-#' alt <- c("less", "greater", "greater", "greater") # extend this to the number of levels
-#' with(mon.test, as.krandtest(sim, obs, alter = alt, call = call, names = names))
 #' 
 #' }
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE, 
-                        dist = NULL, squared = TRUE, correction = "quasieuclid", 
-                        sep = "_", filter = FALSE, threshold = 0, 
-                        algorithm = "farthest_neighbor", missing = "loci", 
-                        cutoff = 0.05, quiet = FALSE, 
+                        dist = NULL, squared = TRUE, freq = FALSE, 
+                        correction = "quasieuclid", sep = "_", filter = FALSE, 
+                        threshold = 0, algorithm = "farthest_neighbor", 
+                        missing = "loci", cutoff = 0.05, quiet = FALSE, 
                         method = c("ade4", "pegas"), nperm = 0){
   if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
   if (is.null(hier)) stop("A population hierarchy must be specified")
@@ -270,7 +280,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       message("Original multilocus genotypes ... ", nmll(x, "original"))
     }
     if (is.null(dist)) {
-      dist    <- dist(x)
+      dist    <- dist(tab(x, freq = freq))
       squared <- FALSE
     }
     filt_stats <- mlg.filter(x, threshold = threshold, algorithm = algorithm,
@@ -319,9 +329,9 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (is.null(dist)) {
     squared <- FALSE
     if (method == "ade4") {
-      xdist <- dist(clonecorrect(x, strata = NA))
+      xdist <- dist(tab(clonecorrect(x, strata = NA), freq = freq))
     } else {
-      xdist <- dist(x)
+      xdist <- dist(tab(x, freq = freq))
     }
   } else {
     datalength <- choose(nInd(x), 2)
