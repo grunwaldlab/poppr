@@ -746,6 +746,9 @@ setMethod(
 #' genclone2genind will remove the mlg slot from the genclone object, creating a 
 #' genind object.
 #' 
+#' as.genambig will convert a genind or genclone object to a polysat genambig 
+#' class.
+#' 
 #' @export
 #' @rdname coercion-methods
 #' @aliases as.genclone,genind-method
@@ -763,15 +766,32 @@ setMethod(
 #' @examples
 #' data(Aeut)
 #' Aeut
+#' 
+#' # Conversion to genclone --------------------------------------------------
 #' Aeut.gc <- as.genclone(Aeut)
 #' Aeut.gc
+#' 
+#' # Conversion to genind ----------------------------------------------------
 #' Aeut.gi <- genclone2genind(Aeut.gc)
 #' Aeut.gi
+#' 
+#' # Conversion to polysat's "genambig" class --------------------------------
+#' if (require("polysat")) {
+#'   data(Pinf)
+#'   Pinf.gb <- as.genambig(Pinf)
+#'   summary(Pinf.gb)
+#' }
+#' 
 #' data(nancycats)
+#'
+#' # Conversion to bootgen for random sampling of loci -----------------------
 #' nan.bg  <- new("bootgen", nancycats[pop = 9])
 #' nan.bg
+#' 
+#' # Conversion back to genind -----------------------------------------------
 #' nan.gid <- bootgen2genind(nan.bg)
 #' nan.gid
+#' 
 #==============================================================================#
 as.genclone <- function(x, ..., mlg, mlgclass = TRUE){
   standardGeneric("as.genclone")
@@ -819,6 +839,42 @@ setMethod(
     class(x) <- "genind"
     x@call <- match.call()
     return(x)
+  }
+)
+
+#' @export
+#' @rdname coercion-methods
+#' @aliases as.genambig,genind-method
+#' @docType methods
+as.genambig <- function(x){
+  standardGeneric("as.genambig")
+}
+
+#' @export
+setMethod(
+  f = "as.genambig",
+  signature(x = "genind"),
+  definition = function(x){
+    if (!requireNamespace("polysat", quietly = TRUE)) {
+      stop("please run install.packages('polysat') to use this function.")
+    }
+    suppressWarnings({
+      gen <- recode_polyploids(x, newploidy = max(x@ploidy, na.rm = TRUE))
+    })
+    gendf <- genind2df(gen, sep = "/", usepop = FALSE)
+    gendf <- lapply(gendf, strsplit, "/")
+    gendf <- lapply(gendf, lapply, as.numeric)
+    ambig <- new("genambig", samples = indNames(gen), loci = locNames(gen))
+    for (i in names(gendf)) {
+      res <- lapply(gendf[[i]], function(x) ifelse(is.na(x), polysat::Missing(ambig), x))
+      polysat::Genotypes(ambig, loci = i) <- res
+    }
+    polysat::Ploidies(ambig) <- info_table(x, type = "ploidy")
+    if (!is.null(pop(x))) {
+      polysat::PopInfo(ambig)  <- as.integer(pop(x))
+      polysat::PopNames(ambig) <- popNames(x)
+    }
+    return(ambig)
   }
 )
 

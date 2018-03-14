@@ -8,6 +8,9 @@ NEW FUNCTION
   AMOVA-like analyses. This was a previously internal function, but has been 
   promoted to a user-facing function in this version. 
 
+* `as.genambig()` will convert genind/genclone objects to Polysat's "genambig"
+  class. Note that polysat must be installed for this to work. 
+
 ALGORITHMIC CHANGE
 ------------
 

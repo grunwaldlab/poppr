@@ -8,6 +8,8 @@
 \alias{as.genclone,genind-method}
 \alias{genclone2genind}
 \alias{genclone2genind,genclone-method}
+\alias{as.genambig}
+\alias{as.genambig,genind-method}
 \title{Switch between genind and genclone objects.}
 \usage{
 bootgen2genind(bg)
@@ -15,6 +17,8 @@ bootgen2genind(bg)
 as.genclone(x, ..., mlg, mlgclass = TRUE)
 
 genclone2genind(x)
+
+as.genambig(x)
 }
 \arguments{
 \item{bg}{a bootgen object}
@@ -35,19 +39,39 @@ that can be passed to the genind initializer.
 \details{
 genclone2genind will remove the mlg slot from the genclone object, creating a 
 genind object.
+
+as.genambig will convert a genind or genclone object to a polysat genambig 
+class.
 }
 \examples{
 data(Aeut)
 Aeut
+
+# Conversion to genclone --------------------------------------------------
 Aeut.gc <- as.genclone(Aeut)
 Aeut.gc
+
+# Conversion to genind ----------------------------------------------------
 Aeut.gi <- genclone2genind(Aeut.gc)
 Aeut.gi
+
+# Conversion to polysat's "genambig" class --------------------------------
+if (require("polysat")) {
+  data(Pinf)
+  Pinf.gb <- as.genambig(Pinf)
+  summary(Pinf.gb)
+}
+
 data(nancycats)
+
+# Conversion to bootgen for random sampling of loci -----------------------
 nan.bg  <- new("bootgen", nancycats[pop = 9])
 nan.bg
+
+# Conversion back to genind -----------------------------------------------
 nan.gid <- bootgen2genind(nan.bg)
 nan.gid
+
 }
 \seealso{
 \code{\link{splitStrata}}, \code{\linkS4class{genclone}},
