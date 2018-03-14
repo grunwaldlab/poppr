@@ -71,25 +71,14 @@ plot.ialist <- function(x, y = NULL, ..., index = "rbarD", labsize = rel(3),
 #' @export
 print.amova <- function(x, full = FALSE, ...) 
 {
+  pramova <- function(pkg, x){
+    PRINT <- get("print.amova", asNamespace("pegas"), inherits = FALSE)
+    PRINT(x)
+  }
   if (all(names(x) %in% c("tab", "varcoef", "varcomp", "call"))){
-    # Pulled from pegas
-    cat("\n\tAnalysis of Molecular Variance\n\nCall: ")
-    print(x$call)
-    cat("\n")
-    print(x$tab)
-    cat("\nVariance components:\n")
-    if (is.data.frame(x$varcomp)) {
-        x$varcomp["Error", "P.value"] <- NA
-        stats::printCoefmat(x$varcomp, na.print = "")
-    }
-    else print(x$varcomp)
-    cat("\nVariance coefficients:\n")
-    print(x$varcoef)
-    cat("\n")
-  } else if (full == TRUE) {
-    print(unclass(x))
+    pramova("pegas", x)
   } else {
-    print(x[-((length(x) - 2):length(x))])
+    pramova("ade4", x)
   }
 }
 
