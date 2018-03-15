@@ -42,6 +42,7 @@ reference:
     contents:
       - as.genclone # (m) - Converts genind objects to genclone objects
       - as.snpclone
+      - as.genambig
       - missingno # (m) - Handles missing data
       - clonecorrect # (m | s) - Clone-censors at a specified population hierarchy
       - informloci # (m) - Detects and removes phylogenetically uninformative loci
