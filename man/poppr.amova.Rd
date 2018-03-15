@@ -6,7 +6,7 @@
 \title{Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.}
 \usage{
 poppr.amova(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
-  dist = NULL, squared = TRUE, freq = FALSE, correction = "quasieuclid",
+  dist = NULL, squared = TRUE, freq = TRUE, correction = "quasieuclid",
   sep = "_", filter = FALSE, threshold = 0,
   algorithm = "farthest_neighbor", missing = "loci", cutoff = 0.05,
   quiet = FALSE, method = c("ade4", "pegas"), nperm = 0)
@@ -34,8 +34,10 @@ not it represents squared distances.}
 
 \item{freq}{\code{logical}. If \code{within = FALSE}, the parameter rho is calculated
 (Ronfort et al. 1998; Meirmans and Liu 2018). By setting \code{freq = TRUE},
-allele counts will be converted to frequencies before the distance is
-calculated. Defaults to \code{FALSE}.}
+(default) allele counts will be converted to frequencies before the
+distance is calculated, otherwise, the distance will be calculated on
+allele counts, which can bias results in mixed-ploidy data sets. Note that
+this option has no effect for haploid or presence/absence data sets.}
 
 \item{correction}{a \code{character} defining the correction method for
 non-euclidean distances. Options are \code{\link[ade4:quasieuclid]{ade4::quasieuclid()}} (Default),

@@ -64,8 +64,10 @@
 #'
 #' @param freq `logical`. If `within = FALSE`, the parameter rho is calculated
 #'   (Ronfort et al. 1998; Meirmans and Liu 2018). By setting `freq = TRUE`,
-#'   allele counts will be converted to frequencies before the distance is
-#'   calculated. Defaults to `FALSE`.
+#'   (default) allele counts will be converted to frequencies before the
+#'   distance is calculated, otherwise, the distance will be calculated on
+#'   allele counts, which can bias results in mixed-ploidy data sets. Note that
+#'   this option has no effect for haploid or presence/absence data sets.
 #'
 #' @param dist an optional distance matrix calculated on your data. If this is
 #'   set to `NULL` (default), the raw pairwise distances will be calculated via
@@ -251,7 +253,7 @@
 #==============================================================================#
 #' @importFrom ade4 amova is.euclid cailliez quasieuclid lingoes
 poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE, 
-                        dist = NULL, squared = TRUE, freq = FALSE, 
+                        dist = NULL, squared = TRUE, freq = TRUE, 
                         correction = "quasieuclid", sep = "_", filter = FALSE, 
                         threshold = 0, algorithm = "farthest_neighbor", 
                         missing = "loci", cutoff = 0.05, quiet = FALSE, 
@@ -265,6 +267,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   haploid      <- all(ploidy(x) == 1)
   heterozygous <- check_Hs(x)
   codominant   <- x@type != "PA"
+  freq         <- freq & codominant & !haploid # freq does not need to be in place for haploid data
 
   # Filtering genotypes -----------------------------------------------------
   if (filter && (haploid | !within | !heterozygous | !codominant)) {
