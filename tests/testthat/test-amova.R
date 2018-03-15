@@ -1,5 +1,5 @@
 context("Amova tests")
-
+{
 data("Aeut", package = "poppr")
 strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
 
@@ -105,6 +105,7 @@ polygid <- df2genind(
   )
 strata(polygid) <- meirmans_polyploid["pop"]
 splitStrata(polygid) <- ~group/population/sample/genome
+}
 
 context("Published AMOVA results")
 
@@ -116,6 +117,7 @@ test_that("Amova returns published values", {
 
 	expect_equivalent(rescc$componentsofcovariance[, 2], resccper)
 	expect_equivalent(rescc$componentsofcovariance[, 1], resccsig)
+	expect_output(print(res), "ade4::amova")
 
 })
 
@@ -224,6 +226,17 @@ test_that("AMOVA can accurately calculate rho", {
   rho      <- c(0.688374795330904, 0.445443116797669, 0.438064490572017)
   polyPerc <- c(31.1625204669096, 25.0310304758887, 43.8064490572017)
   polyno   <- poppr.amova(polygid, ~group/population, within = FALSE)
+  
+  # Phi statistics are equal
+  expect_equal(polyno$statphi$Phi, rho)
+  # Variance percentages are equal
+  expect_equal(polyno$componentsofcovariance[3:1, "%", drop = TRUE], polyPerc)
+})
+
+test_that("Rho works with frequencies and counts for full data", {
+  rho      <- c(0.688374795330904, 0.445443116797669, 0.438064490572017)
+  polyPerc <- c(31.1625204669096, 25.0310304758887, 43.8064490572017)
+  polyno   <- poppr.amova(polygid, ~group/population, within = FALSE, freq = FALSE)
   
   # Phi statistics are equal
   expect_equal(polyno$statphi$Phi, rho)
