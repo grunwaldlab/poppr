@@ -71,15 +71,13 @@ plot.ialist <- function(x, y = NULL, ..., index = "rbarD", labsize = rel(3),
 #' @export
 print.amova <- function(x, full = FALSE, ...) 
 {
-  pramova <- function(pkg, x){
-    PRINT <- get("print.amova", asNamespace("pegas"), inherits = FALSE)
-    PRINT(x)
-  }
   if (all(names(x) %in% c("tab", "varcoef", "varcomp", "call"))){
-    pramova("pegas", x)
+    PKG <- asNamespace("pegas")
   } else {
-    pramova("ade4", x)
+    PKG <- asNamespace("ade4")
   }
+  PRINT <- get("print.amova", PKG, inherits = FALSE)
+  PRINT(x)
 }
 
 #' @method print popprtable
