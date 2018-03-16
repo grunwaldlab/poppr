@@ -36,6 +36,7 @@ MISC
 
 * printing of AMOVA will now better handle any changes in methods from pegas or
   ade4. 
+* The polysat package is now imported
 
 poppr 2.6.1
 ===========

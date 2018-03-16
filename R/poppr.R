@@ -419,5 +419,6 @@ NULL
 #' @importFrom utils combn head read.table setTxtProgressBar tail txtProgressBar
 #'   write.table capture.output
 #' @importFrom dplyr progress_estimated
+#' @importFrom polysat Genotypes Ploidies PopInfo Missing PopNames
 #' @useDynLib poppr, .registration = TRUE
 NULL
