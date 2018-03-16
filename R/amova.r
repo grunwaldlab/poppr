@@ -130,7 +130,7 @@
 #'   \subsection{On Hierarchies:}{The hierarchy is defined by different
 #'   population strata that separate your data hierarchically. These strata are
 #'   defined in the \strong{strata} slot of [genind][genind-class] and
-#'   [genclone][genclone-class]} objects. They are useful for defining the
+#'   [genclone][genclone-class] objects. They are useful for defining the
 #'   population factor for your data. See the function [strata()] for details on
 #'   how to properly define these strata.}
 #'

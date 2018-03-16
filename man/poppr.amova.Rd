@@ -95,6 +95,91 @@ gives user the choice of utilizing either the \pkg{ade4} or the \pkg{pegas}
 implementation of AMOVA. See \code{\link[ade4:amova]{ade4::amova()}} (ade4) and \code{\link[pegas:amova]{pegas::amova()}}
 (pegas) for details on the specific implementation.
 }
+\details{
+The poppr implementation of AMOVA is a very detailed wrapper for the
+ade4 implementation. The output is an \code{\link[ade4:amova]{ade4::amova()}} class list that
+contains the results in the first four elements. The inputs are contained
+in the last three elements. The inputs required for the ade4 implementation
+are:
+\enumerate{
+\item a distance matrix on all unique genotypes (haplotypes)
+\item a data frame defining the hierarchy of the distance matrix
+\item a genotype (haplotype) frequency table.
+}
+
+All of this data can be constructed from a \link[=genind-class]{genind} object,
+but can be daunting for a novice R user. \emph{This function automates the
+entire process}. Since there are many variables regarding genetic data,
+some points need to be highlighted:
+
+\subsection{On Hierarchies:}{The hierarchy is defined by different
+population strata that separate your data hierarchically. These strata are
+defined in the \strong{strata} slot of \link[=genind-class]{genind} and
+\link[=genclone-class]{genclone} objects. They are useful for defining the
+population factor for your data. See the function \code{\link[=strata]{strata()}} for details on
+how to properly define these strata.}
+
+\subsection{On Within Individual Variance:}{ Heterozygosities within
+genotypes are sources of variation from within individuals and can be
+quantified in AMOVA. When \code{within = TRUE}, poppr will split genotypes into
+haplotypes with the function \code{\link[=make_haplotypes]{make_haplotypes()}} and use those to calculate
+within-individual variance. No estimation of phase is made. This acts much
+like the default settings for AMOVA in the Arlequin software package.
+Within individual variance will not be calculated for haploid individuals
+or dominant markers as the haplotypes cannot be split further. Setting
+\code{within = FALSE} uses the euclidean distance of the allele frequencies
+within each individual}
+
+\subsection{On Euclidean Distances:}{ With the ade4 implementation of AMOVA
+(utilized by poppr), distances must be Euclidean (due to the nature of the
+calculations). Unfortunately, many genetic distance measures are not always
+euclidean and must be corrected for before being analyzed. Poppr automates
+this with three methods implemented in ade4, \code{\link[=quasieuclid]{quasieuclid()}}, \code{\link[=lingoes]{lingoes()}},
+and \code{\link[=cailliez]{cailliez()}}. The correction of these distances should not adversely
+affect the outcome of the analysis.}
+
+\subsection{On Filtering:}{ Filtering multilocus genotypes is performed by
+\code{\link[=mlg.filter]{mlg.filter()}}. This can necessarily only be done AMOVA tests that do not
+account for within-individual variance. The distance matrix used to
+calculate the amova is derived from using \code{\link[=mlg.filter]{mlg.filter()}} with the option
+\code{stats = "distance"}, which reports the distance between multilocus
+genotype clusters. One useful way to utilize this feature is to correct for
+genotypes that have equivalent distance due to missing data. (See example
+below.)}
+
+\subsection{On Methods:}{ Both \pkg{ade4} and \pkg{pegas} have
+implementations of AMOVA, both of which are appropriately called "amova".
+The ade4 version is faster, but there have been questions raised as to the
+validity of the code utilized. The pegas version is slower, but careful
+measures have been implemented as to the accuracy of the method. It must be
+noted that there appears to be a bug regarding permuting analyses where
+within individual variance is accounted for (\code{within = TRUE}) in the pegas
+implementation. If you want to perform permutation analyses on the pegas
+implementation, you must set \code{within = FALSE}. In addition, while clone
+correction is implemented for both methods, filtering is only implemented
+for the ade4 version.}
+
+\subsection{On Polyploids:}{ As of \pkg{poppr} version 2.7.0, this
+function is able to calculate phi statistics for within-individual variance
+for polyploid data with \strong{full dosage information}. When a data set does
+not contain full dosage information for all samples, then the resulting
+pseudo-haplotypes will contain missing data, which would result in an
+incorrect estimate of variance.
+
+Instead, the AMOVA will be performed on the distance matrix derived from
+allele counts or allele frequencies, depending on the \code{freq} option. This
+has been shown to be robust to estimates with mixed ploidy (Ronfort et al.
+1998; Meirmans and Liu 2018). If you wish to brute-force your way to
+estimating AMOVA using missing values, you can split your haplotypes with
+the \code{\link[=make_haplotypes]{make_haplotypes()}} function.
+
+One strategy for addressing ambiguous dosage in your polyploid data set
+would be to convert your data to \pkg{polysat}'s \code{genambig} class with the
+\code{\link[=as.genambig]{as.genambig()}}, estimate allele frequencies with \code{\link[polysat:daSilvaFreq]{polysat::daSilvaFreq()}},
+and use these frequencies to randomly sample alleles to fill in the
+ambiguous alleles.
+}
+}
 \examples{
 data(Aeut)
 strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
