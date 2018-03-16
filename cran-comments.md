@@ -1,6 +1,6 @@
-# Poppr version 2.7.0
+# Poppr version 2.7.1
 
-This version exposes two new functions to users and fixes a bug.
+This version corrects a major documentation error and moves polysat to imports
 
 ## Test environments
 
