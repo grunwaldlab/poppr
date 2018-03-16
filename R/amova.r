@@ -190,7 +190,7 @@
 #'   
 #'   One strategy for addressing ambiguous dosage in your polyploid data set 
 #'   would be to convert your data to \pkg{polysat}'s `genambig` class with the
-#'   [as.genambig()], estimate allele frequencies with [polysat::daSilvaFreq()],
+#'   [as.genambig()], estimate allele frequencies with [polysat::deSilvaFreq()],
 #'   and use these frequencies to randomly sample alleles to fill in the 
 #'   ambiguous alleles. 
 #'   }

@@ -175,7 +175,7 @@ the \code{\link[=make_haplotypes]{make_haplotypes()}} function.
 
 One strategy for addressing ambiguous dosage in your polyploid data set
 would be to convert your data to \pkg{polysat}'s \code{genambig} class with the
-\code{\link[=as.genambig]{as.genambig()}}, estimate allele frequencies with \code{\link[polysat:daSilvaFreq]{polysat::daSilvaFreq()}},
+\code{\link[=as.genambig]{as.genambig()}}, estimate allele frequencies with \code{\link[polysat:deSilvaFreq]{polysat::deSilvaFreq()}},
 and use these frequencies to randomly sample alleles to fill in the
 ambiguous alleles.
 }
