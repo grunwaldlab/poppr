@@ -8,8 +8,11 @@
 <title>Data import and manipulation in poppr version 2.7.1 • poppr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Data import and manipulation in poppr version 2.7.1">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -79,7 +82,10 @@
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
             <h4 class="date">2018-03-16</h4>
-          </div>
+      
+      <small>Source: <a href="https:/github.com/grunwaldlab/poppr/blob/master/vignettes/poppr_manual.Rmd"><code>vignettes/poppr_manual.Rmd</code></a></small>
+
+    </div>
 
     
     
@@ -90,7 +96,7 @@
 <a href="#abstract" class="anchor"></a>Abstract</h1>
 <p><em>Poppr</em> provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. <em>Poppr</em>’s main advantage is the ease of use and integration with other packages such as <em>adegenet</em> and <em>vegan</em>, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo’s distance, and the index of association. New features in version 2.0 include generation of minimum spanning networks with reticulation, calculation of the index of association for genomic data, and filtering multilocus genotypes based on genetic distance.</p>
 <p><br><br></p>
-<p><img src="jalapeno_logo.png" width="300"></p>
+<p><img src="/Users/zhian/Documents/poppr/vignettes/jalapeno_logo.png" width="300"></p>
 <br><br>
 </div>
 <div id="intro" class="section level1">
@@ -211,7 +217,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getfile.html">getfile</a></span>()</code></pre></div>
 <p>A pop up window will appear like this<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
 <div class="figure" style="text-align: center">
-<img src="getfile.png" alt="A popup window as it appears in OSX (Mountain Lion)" width="500px"><p class="caption">
+<img src="/Users/zhian/Documents/poppr/vignettes/getfile.png" alt="A popup window as it appears in OSX (Mountain Lion)" width="500px"><p class="caption">
 A popup window as it appears in OSX (Mountain Lion)
 </p>
 </div>
@@ -300,7 +306,7 @@ microbov
 <span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(microbov, <span class="dt">file =</span> <span class="st">"~/Desktop/microbov.csv"</span>)</code></pre></div>
 <pre><code>## Extracting the table ... Writing the table to ~/Desktop/microbov.csv ... Done.</code></pre>
 <div class="figure" style="text-align: center">
-<img src="unmod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. The first column contains the individual names, the second column contains the population names, and each subsequent column represents microsatellite genetic data. Highlighted in red is a list of populations and their relative sizes." width="700px"><p class="caption">
+<img src="/Users/zhian/Documents/poppr/vignettes/unmod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. The first column contains the individual names, the second column contains the population names, and each subsequent column represents microsatellite genetic data. Highlighted in red is a list of populations and their relative sizes." width="700px"><p class="caption">
 The first 15 individuals and 4 loci of the microbov data set. The first column contains the individual names, the second column contains the population names, and each subsequent column represents microsatellite genetic data. Highlighted in red is a list of populations and their relative sizes.
 </p>
 </div>
@@ -344,7 +350,7 @@ The first 15 individuals and 4 loci of the microbov data set. The first column c
 </table>
 <p>Highlighted in red in figure above are definitions of the number of populations and their respective sizes. As this is redundant information, we can remove it. Below is an example of a valid data set that can be imported into <em>poppr</em>.</p>
 <div class="figure" style="text-align: center">
-<img src="mod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. This is the same figure as above, however the populations and counts have been removed from the header row and the third number in the header has been replaced by 1" width="700px"><p class="caption">
+<img src="/Users/zhian/Documents/poppr/vignettes/mod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. This is the same figure as above, however the populations and counts have been removed from the header row and the third number in the header has been replaced by 1" width="700px"><p class="caption">
 The first 15 individuals and 4 loci of the microbov data set. This is the same figure as above, however the populations and counts have been removed from the header row and the third number in the header has been replaced by 1
 </p>
 </div>
@@ -1890,7 +1896,7 @@ poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span clas
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

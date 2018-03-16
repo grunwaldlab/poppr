@@ -18,13 +18,26 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Recode polyploid microsatellite data for use in frequency based statistics. — recode_polyploids" />
+
+<meta property="og:description" content="As the genind object requires ploidy to be consistent across loci, a 
+workaround to importing polyploid data was to code missing alleles as "0" 
+(for microsatellite data sets). The advantage of this is that users would be 
+able to calculate Bruvo's distance, the index of association, and genotypic 
+diversity statistics. The tradeoff was the fact that this broke all other 
+analyses as they relied on allele frequencies and the missing alleles are 
+treated as extra alleles. This function removes those alleles and returns a 
+genclone or genind object where 
+allele frequencies are coded based on the number of alleles observed at a 
+single locus per individual. See the examples for more details." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,6 +112,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Recode polyploid microsatellite data for use in frequency based statistics.</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/data_subset.r'><code>R/data_subset.r</code></a></small>
     </div>
 
     
@@ -157,7 +171,8 @@ loci to allow conversion to genpop objects. Defaults to <code>FALSE</code>.</p><
   <span class="pkg">poppr</span>, we must code all loci to have the same number of allelic 
   states as the ploidy or largest observed heterozygote (if ploidy is 
   unknown). The way to do this is to insert zeroes to pad the alleles. So, to
-  import two genotypes of:</p><table><tr><td>
+  import two genotypes of:</p>
+<table><tr><td>
 NA </td>
 <td> 20 </td>
 <td> 23 </td>
@@ -183,7 +198,8 @@ NA </td>
 <td> 0</td>
 </tr></table>
     <p>This function remedies this problem by removing the zero column.
-  The above table would become:</p><table><tr><td>
+  The above table would become:</p>
+<table><tr><td>
 <strong>20</strong> </td>
 <td> <strong>23</strong> </td>
 <td> <strong>24</strong> </td>
@@ -259,7 +275,7 @@ Zhian N. Kamvar
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -267,3 +283,4 @@ Zhian N. Kamvar
 
   </body>
 </html>
+
