@@ -18,3 +18,4 @@
 ^ISSUE_TEMPLATE\.md$
 ^CONTRIBUTING.md$
 ^_pkgdown\.yml$
+^appveyor\.yml$
