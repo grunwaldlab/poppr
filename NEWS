@@ -1,3 +1,12 @@
+poppr 2.7.1
+============
+
+MISC
+----
+
+* Missing documentation for `poppr.amova()` has been added.
+* Polysat is now listed in imports.
+
 poppr 2.7.0
 ============
 
@@ -36,7 +45,6 @@ MISC
 
 * printing of AMOVA will now better handle any changes in methods from pegas or
   ade4. 
-* The polysat package is now imported
 
 poppr 2.6.1
 ===========
