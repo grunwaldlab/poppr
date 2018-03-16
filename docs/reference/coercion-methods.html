@@ -110,7 +110,9 @@ that can be passed to the genind initializer.</p>
 
 <span class='fu'>as.genclone</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>mlg</span>, <span class='kw'>mlgclass</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>genclone2genind</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>genclone2genind</span>(<span class='no'>x</span>)
+
+<span class='fu'>as.genambig</span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -142,6 +144,8 @@ object</p></td>
 
     <p>genclone2genind will remove the mlg slot from the genclone object, creating a 
 genind object.</p>
+<p>as.genambig will convert a genind or genclone object to a polysat genambig 
+class.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -166,7 +170,9 @@ genind object.</p>
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 90-97)
 #&gt;    @other: a list containing: population_hierarchy 
-#&gt; </div><div class='input'><span class='no'>Aeut.gc</span> <span class='kw'>&lt;-</span> <span class='fu'>as.genclone</span>(<span class='no'>Aeut</span>)
+#&gt; </div><div class='input'>
+<span class='co'># Conversion to genclone --------------------------------------------------</span>
+<span class='no'>Aeut.gc</span> <span class='kw'>&lt;-</span> <span class='fu'>as.genclone</span>(<span class='no'>Aeut</span>)
 <span class='no'>Aeut.gc</span></div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
@@ -179,7 +185,9 @@ genind object.</p>
 #&gt; Population information:
 #&gt; 
 #&gt;      0 strata. 
-#&gt;      2 populations defined - Athena, Mt. Vernon</div><div class='input'><span class='no'>Aeut.gi</span> <span class='kw'>&lt;-</span> <span class='fu'>genclone2genind</span>(<span class='no'>Aeut.gc</span>)
+#&gt;      2 populations defined - Athena, Mt. Vernon</div><div class='input'>
+<span class='co'># Conversion to genind ----------------------------------------------------</span>
+<span class='no'>Aeut.gi</span> <span class='kw'>&lt;-</span> <span class='fu'>genclone2genind</span>(<span class='no'>Aeut.gc</span>)
 <span class='no'>Aeut.gi</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 187 individuals; 56 loci; 56 alleles; size: 65.8 Kb
@@ -194,7 +202,22 @@ genind object.</p>
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 90-97)
 #&gt;    @other: a list containing: population_hierarchy 
-#&gt; </div><div class='input'><span class='fu'>data</span>(<span class='no'>nancycats</span>)
+#&gt; </div><div class='input'>
+<span class='co'># Conversion to polysat's "genambig" class --------------------------------</span>
+<span class='kw'>if</span> (<span class='fu'>require</span>(<span class='st'>"polysat"</span>)) {
+  <span class='fu'>data</span>(<span class='no'>Pinf</span>)
+  <span class='no'>Pinf.gb</span> <span class='kw'>&lt;-</span> <span class='fu'>as.genambig</span>(<span class='no'>Pinf</span>)
+  <span class='fu'>summary</span>(<span class='no'>Pinf.gb</span>)
+}</div><div class='output co'>#&gt; <span class='message'>Loading required package: polysat</span></div><div class='output co'>#&gt; Dataset with allele copy number ambiguity.
+#&gt; Insert dataset description here.
+#&gt; Number of missing genotypes: 10
+#&gt; 86 samples, 11 loci.
+#&gt; 2 populations.
+#&gt; Ploidies: 2 3 NA
+#&gt; Length(s) of microsatellite repeats: NA</div><div class='input'>
+<span class='fu'>data</span>(<span class='no'>nancycats</span>)
+
+<span class='co'># Conversion to bootgen for random sampling of loci -----------------------</span>
 <span class='no'>nan.bg</span>  <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"bootgen"</span>, <span class='no'>nancycats</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='fl'>9</span>])
 <span class='no'>nan.bg</span></div><div class='output co'>#&gt; An object of class "bootgen"
 #&gt; Slot "type":
@@ -449,7 +472,9 @@ genind object.</p>
 #&gt; 
 #&gt; Slot "call":
 #&gt; NULL
-#&gt; </div><div class='input'><span class='no'>nan.gid</span> <span class='kw'>&lt;-</span> <span class='fu'>bootgen2genind</span>(<span class='no'>nan.bg</span>)
+#&gt; </div><div class='input'>
+<span class='co'># Conversion back to genind -----------------------------------------------</span>
+<span class='no'>nan.gid</span> <span class='kw'>&lt;-</span> <span class='fu'>bootgen2genind</span>(<span class='no'>nan.bg</span>)
 <span class='no'>nan.gid</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 9 individuals; 9 loci; 108 alleles; size: 23.5 Kb
@@ -464,7 +489,8 @@ genind object.</p>
 #&gt;    @call: .local(.Object = .Object, tab = ..1)
 #&gt; 
 #&gt;  // Optional content
-#&gt;    - empty -</div></pre>
+#&gt;    - empty -</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

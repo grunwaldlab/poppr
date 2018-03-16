@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data import and manipulation in poppr version 2.6.1 • poppr</title>
+<title>Data import and manipulation in poppr version 2.7.1 • poppr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -75,10 +75,10 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Data import and manipulation in poppr version 2.6.1</h1>
+      <h1>Data import and manipulation in poppr version 2.7.1</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2018-01-15</h4>
+            <h4 class="date">2018-03-16</h4>
           </div>
 
     
@@ -135,7 +135,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">citation</span>(<span class="dt">package =</span> <span class="st">"poppr"</span>)</code></pre></div>
 <pre><code>## 
 ## To cite poppr in publications or presentations, please specify
-## poppr version 2.6.1 and with the following citation:
+## poppr version 2.7.1 and with the following citation:
 ## 
 ##   Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package
 ##   for genetic analysis of populations with clonal, partially
@@ -201,12 +201,12 @@
 <pre><code>## Loading required package: adegenet</code></pre>
 <pre><code>## Loading required package: ade4</code></pre>
 <pre><code>## 
-##    /// adegenet 2.1.0 is loaded ////////////
+##    /// adegenet 2.1.1 is loaded ////////////
 ## 
 ##    &gt; overview: '?adegenet'
 ##    &gt; tutorials/doc/questions: 'adegenetWeb()' 
 ##    &gt; bug reports/feature requests: adegenetIssues()</code></pre>
-<pre><code>## This is poppr version 2.6.1. To get started, type package?poppr
+<pre><code>## This is poppr version 2.7.1. To get started, type package?poppr
 ## OMP parallel support: available</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getfile.html">getfile</a></span>()</code></pre></div>
 <p>A pop up window will appear like this<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
@@ -1655,13 +1655,13 @@ Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ml
 <p>This allows you to produce publication quality graphs directly in R. Please see Hadley Wickham“s <em>ggplot2</em> package for more details <span class="citation">(Wickham 2009)</span>. Note that if you don”t like using <em>ggplot2</em>, you can access the data in the ggplot2 object and plot the data yourself:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(p<span class="op">$</span>data)</code></pre></div>
 <pre><code>## # A tibble: 6 x 4
-##   Population MLG    count order 
-##   &lt;fctr&gt;     &lt;chr&gt;  &lt;int&gt; &lt;fctr&gt;
-## 1 Athena     MLG.20     9 1     
-## 2 Athena     MLG.66     5 2     
-## 3 Athena     MLG.14     3 3     
-## 4 Athena     MLG.35     3 4     
-## 5 Athena     MLG.13     2 5     
+##   Population MLG    count order
+##   &lt;fct&gt;      &lt;chr&gt;  &lt;int&gt; &lt;fct&gt;
+## 1 Athena     MLG.20     9 1    
+## 2 Athena     MLG.66     5 2    
+## 3 Athena     MLG.14     3 3    
+## 4 Athena     MLG.35     3 4    
+## 5 Athena     MLG.13     2 5    
 ## 6 Athena     MLG.16     2 6</code></pre>
 </div>
 <div id="appendix:graphics" class="section level2">

@@ -288,7 +288,7 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='no'>A.dist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='diss.dist.html'>diss.dist</a></span>(<span class='no'>Aeut</span>)
 
 <span class='co'># Graph it.</span>
-<span class='no'>A.msn</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='no'>Aeut</span>, <span class='no'>A.dist</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>vertex.label</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</div><div class='img'><img src='poppr.msn-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='no'>A.msn</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.msn</span>(<span class='no'>Aeut</span>, <span class='no'>A.dist</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>vertex.label</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</div><div class='img'><img src='poppr.msn-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># Find the sizes of the nodes (number of individuals per MLL):</span>
 <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/vertex_attr'>vertex_attr</a></span>(<span class='no'>A.msn</span>$<span class='no'>graph</span>, <span class='st'>"size"</span>)^<span class='fl'>2</span></div><div class='output co'>#&gt;   [1]  2  1  2  2  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  9  1  1  5  1  1
 #&gt;  [26]  2  1  1  1  1  2  3  1  1  2  1  1  1  2  1  1  1  1  1  1  2  1  2  1  1
