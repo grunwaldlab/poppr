@@ -1,8 +1,8 @@
 poppr 2.7.0
 ============
 
-NEW FUNCTION
-------------
+NEW FUNCTIONS
+-------------
 
 * `make_haplotypes()` will split your data into pseudo-haplotypes for use in
   AMOVA-like analyses. This was a previously internal function, but has been 
