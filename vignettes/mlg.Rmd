@@ -25,7 +25,8 @@ bib <- read.bibtex("the_bibliography.bib")
 ```
 
 ----
-<center>
+
+
 # Abstract
 
 A multilocus genotype is a unique combination of alleles across two or more
@@ -34,9 +35,11 @@ multilocus genotypes are invaluable for identifying the mode and spread of an
 organism. This document will describe in detail how you can define multilocus
 genotypes/lineages and how you can use them for your analyses of both genclone
 and snpclone objects.
+
 <br>
 <br>
 
+<center>
 <img src="jalapeno_logo.png" width="300">
 </center>
 
