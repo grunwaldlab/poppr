@@ -94,7 +94,8 @@
 <div id="abstract" class="section level1">
 <h1 class="hasAnchor">
 <a href="#abstract" class="anchor"></a>Abstract</h1>
-<p>A multilocus genotype is a unique combination of alleles across two or more loci. For organisms such as plant pathogens that often reproduce clonally, multilocus genotypes are invaluable for identifying the mode and spread of an organism. This document will describe in detail how you can define multilocus genotypes/lineages and how you can use them for your analyses of both genclone and snpclone objects. <br><br></p>
+<p>A multilocus genotype is a unique combination of alleles across two or more loci. For organisms such as plant pathogens that often reproduce clonally, multilocus genotypes are invaluable for identifying the mode and spread of an organism. This document will describe in detail how you can define multilocus genotypes/lineages and how you can use them for your analyses of both genclone and snpclone objects.</p>
+<p><br><br></p>
 <center>
 <img src="/Users/zhian/Documents/poppr/vignettes/jalapeno_logo.png" width="300">
 </center>
@@ -224,7 +225,7 @@ monpop</code></pre></div>
                          <span class="dv">1</span>, <span class="dv">1</span>,
                          <span class="dv">5</span>, <span class="dv">1</span>,
                          <span class="dv">9</span>, <span class="dv">1</span>,
-                         <span class="dv">9</span>, <span class="dv">4</span>), 
+                         <span class="dv">9</span>, <span class="dv">4</span>),
                        <span class="dt">ncol =</span> <span class="dv">2</span>,
                        <span class="dt">byrow =</span> <span class="ot">TRUE</span>)
 <span class="kw">rownames</span>(grid_example) &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]
@@ -256,7 +257,7 @@ x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-
 </blockquote>
 <p>Now let’s say we included another sample with partial missing data. Let’s say it was typed as allele “5” at the <strong>x</strong> locus, but missing the allele at the <strong>y</strong> locus.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-methods.html">as.genclone</a></span>(<span class="kw">df2genind</span>(<span class="kw">rbind</span>(grid_example, <span class="dt">new =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="ot">NA</span>)), <span class="dt">ploidy =</span> <span class="dv">1</span>))
-<span class="kw">tab</span>(x)  <span class="co"># Note the missing data at locus 2. </span></code></pre></div>
+<span class="kw">tab</span>(x)  <span class="co"># Note the missing data at locus 2.</span></code></pre></div>
 <pre><code>##     x.1 x.5 x.9 y.4 y.1
 ## A     1   0   0   1   0
 ## B     1   0   0   0   1
@@ -270,8 +271,8 @@ x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-
 <pre><code>## [1] 6 5 3 1 2 4</code></pre>
 <p>Now we see that we have 6 multilocus genotypes even though one of them contains missing data.</p>
 <p>Let’s also imagine that we included yet another sample that had a low-frequency allele at locus <strong>y</strong>, “2”, but had the allele “5” at locus <strong>x</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grid_new &lt;-<span class="st"> </span><span class="kw">rbind</span>(grid_example, 
-                  <span class="dt">new =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="ot">NA</span>), 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grid_new &lt;-<span class="st"> </span><span class="kw">rbind</span>(grid_example,
+                  <span class="dt">new =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="ot">NA</span>),
                   <span class="dt">mut =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>)
                   )
 x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-methods.html">as.genclone</a></span>(<span class="kw">df2genind</span>(grid_new, <span class="dt">ploidy =</span> <span class="dv">1</span>))
@@ -681,10 +682,10 @@ montab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.
 <p>One mutational step for a single allele in Bruvo’s distance is equivalent to 0.5, so a single mutational step for a haploid organism with 13 loci is 0.5/13.</p>
 </blockquote>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Repeat lengths are necessary</span>
-reps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fix_replen.html">fix_replen</a></span>(monpop, 
-                   <span class="kw">c</span>(<span class="dt">CHMFc4 =</span> <span class="dv">7</span>, <span class="dt">CHMFc5 =</span> <span class="dv">2</span>, <span class="dt">CHMFc12 =</span> <span class="dv">4</span>, 
+reps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fix_replen.html">fix_replen</a></span>(monpop,
+                   <span class="kw">c</span>(<span class="dt">CHMFc4 =</span> <span class="dv">7</span>, <span class="dt">CHMFc5 =</span> <span class="dv">2</span>, <span class="dt">CHMFc12 =</span> <span class="dv">4</span>,
                      <span class="dt">SEA =</span> <span class="dv">4</span>, <span class="dt">SED =</span> <span class="dv">4</span>, <span class="dt">SEE =</span> <span class="dv">2</span>, <span class="dt">SEG =</span> <span class="dv">6</span>,
-                     <span class="dt">SEI =</span> <span class="dv">3</span>, <span class="dt">SEL =</span> <span class="dv">4</span>, <span class="dt">SEN =</span> <span class="dv">2</span>, 
+                     <span class="dt">SEI =</span> <span class="dv">3</span>, <span class="dt">SEL =</span> <span class="dv">4</span>, <span class="dt">SEN =</span> <span class="dv">2</span>,
                      <span class="dt">SEP =</span> <span class="dv">4</span>, <span class="dt">SEQ =</span> <span class="dv">2</span>, <span class="dt">SER =</span> <span class="dv">4</span>))
 
 <span class="co"># Adding a little bit, so the threshold is included.</span>
@@ -750,7 +751,7 @@ montabf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg
 <pre><code>## [1] 214</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mll-method.html">mll</a></span>(monpop) &lt;-<span class="st"> "contracted"</span></code></pre></div>
 <p>To show how the order of the samples can affect the sampling, we will take the sum of all pairwise distances between clone-corrected samples (corrected without respect to populations):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monpop <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monpop <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(<span class="dt">strata =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># 1. clone correct whole data set</span>
 <span class="st">  </span><span class="kw">dist</span>() <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># 2. calculate distance</span>
 <span class="st">  </span><span class="kw">sum</span>()                          <span class="co"># 3. take the sum of the distance</span></code></pre></div>
