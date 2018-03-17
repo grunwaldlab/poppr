@@ -25,7 +25,7 @@ bib <- read.bibtex("the_bibliography.bib")
 ```
 
 ----
-<center>
+
 # Abstract
 
 A multilocus genotype is a unique combination of alleles across two or more
@@ -37,6 +37,7 @@ and snpclone objects.
 <br>
 <br>
 
+<center>
 <img src="jalapeno_logo.png" width="300">
 </center>
 

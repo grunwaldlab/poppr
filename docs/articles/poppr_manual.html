@@ -81,7 +81,7 @@
       <h1>Data import and manipulation in poppr version 2.7.1</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2018-03-16</h4>
+            <h4 class="date">2018-03-17</h4>
       
       <small>Source: <a href="https:/github.com/grunwaldlab/poppr/blob/master/vignettes/poppr_manual.Rmd"><code>vignettes/poppr_manual.Rmd</code></a></small>
 
@@ -90,14 +90,15 @@
     
     
 <div class="contents">
-<center>
 <div id="abstract" class="section level1">
 <h1 class="hasAnchor">
 <a href="#abstract" class="anchor"></a>Abstract</h1>
 <p><em>Poppr</em> provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. <em>Poppr</em>’s main advantage is the ease of use and integration with other packages such as <em>adegenet</em> and <em>vegan</em>, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo’s distance, and the index of association. New features in version 2.0 include generation of minimum spanning networks with reticulation, calculation of the index of association for genomic data, and filtering multilocus genotypes based on genetic distance.</p>
 <p><br><br></p>
-<p><img src="/Users/zhian/Documents/poppr/vignettes/jalapeno_logo.png" width="300"></p>
-<br><br>
+<center>
+<img src="/Users/zhian/Documents/poppr/vignettes/jalapeno_logo.png" width="300">
+</center>
+<p><br><br></p>
 </div>
 <div id="intro" class="section level1">
 <h1 class="hasAnchor">
@@ -1402,8 +1403,8 @@ naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/i
 ##    @pop: population of each individual (group size range: 1-646)
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
 ##    @other: a list containing: x  xy  epid</code></pre>
-<p>If we need to store the number of MLGs as a variable, we can simply run the <code>mlg()</code> command.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg &lt;-<span class="st"> </span><span class="kw">mlg</span>(H3N2)</code></pre></div>
+<p>If we need to store the number of MLGs as a variable, we can simply run the <code><a href="http://www.rdocumentation.org/packages/poppr/topics/mlg">mlg()</a></code> command.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/poppr/topics/mlg">mlg</a></span>(H3N2)</code></pre></div>
 <pre><code>## #############################
 ## # Number of Individuals:  1903 
 ## # Number of MLG:  752 
@@ -1828,7 +1829,6 @@ poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span clas
 <li id="fn2"><p>*.CSV files are comma separated files that are easily machine readable.<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
-</center>
 </div>
   </div>
 
