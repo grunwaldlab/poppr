@@ -34,7 +34,7 @@
 <li>
   <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
-
+     
   </a>
 </li>
 <li>
@@ -43,7 +43,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -63,7 +63,7 @@
 <li>
   <a href="https://github.com/grunwaldlab/poppr">
     <span class="fa fa-github fa-lg"></span>
-
+     
   </a>
 </li>
       </ul>
@@ -74,21 +74,21 @@
 </div>
 <!--/.navbar -->
 
-
+      
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
       <h1>Data import and manipulation in poppr version 2.7.1</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
-
-            <h4 class="date">2018-03-17</h4>
-
+            
+            <h4 class="date">2018-03-18</h4>
+      
       <small>Source: <a href="https:/github.com/grunwaldlab/poppr/blob/master/vignettes/poppr_manual.Rmd"><code>vignettes/poppr_manual.Rmd</code></a></small>
 
     </div>
 
-
-
+    
+    
 <div class="contents">
 <div id="abstract" class="section level1">
 <h1 class="hasAnchor">
@@ -96,7 +96,7 @@
 <p><em>Poppr</em> provides open-source, cross-platform tools for quick analysis of population genetic data enabling focus on data analysis and interpretation. While there are a plethora of packages for population genetic analysis, few are able to offer quick and easy analysis of populations with mixed reproductive modes. <em>Poppr</em>’s main advantage is the ease of use and integration with other packages such as <em>adegenet</em> and <em>vegan</em>, including support for novel methods such as clone correction, multilocus genotype analysis, calculation of Bruvo’s distance, and the index of association. New features in version 2.0 include generation of minimum spanning networks with reticulation, calculation of the index of association for genomic data, and filtering multilocus genotypes based on genetic distance.</p>
 <p><br><br></p>
 <center>
-<img src="/Users/zhian/Documents/poppr/vignettes/jalapeno_logo.png" width="300">
+<img src="jalapeno_logo.png" width="300">
 </center>
 <p><br><br></p>
 </div>
@@ -140,19 +140,19 @@
 <a href="#citation" class="anchor"></a>Citation</h2>
 <p>To cite <em>poppr</em>, please type in your R console:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">citation</span>(<span class="dt">package =</span> <span class="st">"poppr"</span>)</code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## To cite poppr in publications or presentations, please specify
 ## poppr version 2.7.1 and with the following citation:
-##
+## 
 ##   Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package
 ##   for genetic analysis of populations with clonal, partially
 ##   clonal, and/or sexual reproduction. PeerJ 2:e281. doi:
 ##   10.7717/peerj.281
-##
+## 
 ##   Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for
 ##   analysis of genome-wide population genetic data with emphasis on
 ##   clonality. Front. Genet. 6:208. doi: 10.3389/fgene.2015.00208
-##
+## 
 ## To see these entries in BibTeX format, use 'print(&lt;citation&gt;,
 ## bibtex=TRUE)', 'toBibtex(.)', or set
 ## 'options(citation.bibtex.max=999)'.</code></pre>
@@ -207,18 +207,18 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"poppr"</span>)</code></pre></div>
 <pre><code>## Loading required package: adegenet</code></pre>
 <pre><code>## Loading required package: ade4</code></pre>
-<pre><code>##
+<pre><code>## 
 ##    /// adegenet 2.1.1 is loaded ////////////
-##
+## 
 ##    &gt; overview: '?adegenet'
-##    &gt; tutorials/doc/questions: 'adegenetWeb()'
+##    &gt; tutorials/doc/questions: 'adegenetWeb()' 
 ##    &gt; bug reports/feature requests: adegenetIssues()</code></pre>
 <pre><code>## This is poppr version 2.7.1. To get started, type package?poppr
 ## OMP parallel support: available</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getfile.html">getfile</a></span>()</code></pre></div>
 <p>A pop up window will appear like this<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
 <div class="figure" style="text-align: center">
-<img src="/Users/zhian/Documents/forks/poppr/vignettes/getfile.png" alt="A popup window as it appears in OSX (Mountain Lion)" width="500px"><p class="caption">
+<img src="getfile.png" alt="A popup window as it appears in OSX (Mountain Lion)" width="500px"><p class="caption">
 A popup window as it appears in OSX (Mountain Lion)
 </p>
 </div>
@@ -226,7 +226,7 @@ A popup window as it appears in OSX (Mountain Lion)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x</code></pre></div>
 <pre><code>## $files
 ## [1] "/path/to/R/poppr/files/rootrot.csv"
-##
+## 
 ## $path
 ## [1] "/path/to/R/poppr/files"</code></pre>
 <p>Here we can see that <code>x</code> is a list with two entries: <code>$files</code> shows the files you selected and <code>$path</code> shows the path to those files.</p>
@@ -307,7 +307,7 @@ microbov
 <span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(microbov, <span class="dt">file =</span> <span class="st">"~/Desktop/microbov.csv"</span>)</code></pre></div>
 <pre><code>## Extracting the table ... Writing the table to ~/Desktop/microbov.csv ... Done.</code></pre>
 <div class="figure" style="text-align: center">
-<img src="/Users/zhian/Documents/forks/poppr/vignettes/unmod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. The first column contains the individual names, the second column contains the population names, and each subsequent column represents microsatellite genetic data. Highlighted in red is a list of populations and their relative sizes." width="700px"><p class="caption">
+<img src="unmod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. The first column contains the individual names, the second column contains the population names, and each subsequent column represents microsatellite genetic data. Highlighted in red is a list of populations and their relative sizes." width="700px"><p class="caption">
 The first 15 individuals and 4 loci of the microbov data set. The first column contains the individual names, the second column contains the population names, and each subsequent column represents microsatellite genetic data. Highlighted in red is a list of populations and their relative sizes.
 </p>
 </div>
@@ -351,13 +351,13 @@ The first 15 individuals and 4 loci of the microbov data set. The first column c
 </table>
 <p>Highlighted in red in figure above are definitions of the number of populations and their respective sizes. As this is redundant information, we can remove it. Below is an example of a valid data set that can be imported into <em>poppr</em>.</p>
 <div class="figure" style="text-align: center">
-<img src="/Users/zhian/Documents/forks/poppr/vignettes/mod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. This is the same figure as above, however the populations and counts have been removed from the header row and the third number in the header has been replaced by 1" width="700px"><p class="caption">
+<img src="mod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. This is the same figure as above, however the populations and counts have been removed from the header row and the third number in the header has been replaced by 1" width="700px"><p class="caption">
 The first 15 individuals and 4 loci of the microbov data set. This is the same figure as above, however the populations and counts have been removed from the header row and the third number in the header has been replaced by 1
 </p>
 </div>
 <p>All GenAlEx formatted data can be imported with the command <code><a href="../reference/read.genalex.html">read.genalex()</a></code>, detailed below:</p>
 <hr>
-<pre><code><a href="../reference/read.genalex.html">read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
+<pre><code><a href="../reference/read.genalex.html">read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE, 
     genclone = TRUE, sep = ",", recode = FALSE)</a></code></pre>
 <ul>
 <li><p><code>genalex -</code> a *.CSV file exported from GenAlEx on your disk (For example: <code>my_genalex_file.csv</code>).</p></li>
@@ -377,19 +377,19 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rootrot &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.genalex.html">read.genalex</a></span>(<span class="kw">system.file</span>(<span class="st">"files/rootrot.csv"</span>, <span class="dt">package=</span><span class="st">"poppr"</span>))</code></pre></div>
 <p>Executing rootrot shows that this file is now in <code>genclone</code> format and can be used with any function in <em>poppr</em> and <em>adegenet</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rootrot</code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## This is a genclone object
 ## -------------------------
 ## Genotype information:
-##
-##    119 original multilocus genotypes
+## 
+##    119 original multilocus genotypes 
 ##    187 diploid individuals
 ##     56 dominant loci
-##
+## 
 ## Population information:
-##
+## 
 ##      1 stratum - Pop
-##     18 populations defined -
+##     18 populations defined - 
 ## Athena_1, Athena_2, Athena_3, ..., Mt. Vernon_6, Mt. Vernon_7, Mt. Vernon_8</code></pre>
 </div>
 <div id="intro:import:other" class="section level3">
@@ -402,8 +402,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <a href="#intro:import:genind2genalex" class="anchor"></a>Function: genind2genalex (exporting data)</h3>
 <p>Of course, being able to export data is just as useful as being able to import it, so we have this handy little function that will write a GenAlEx formatted file to wherever you desire.<br><strong>WARNING: This will overwrite any file that exists with the same name.</strong></p>
 <hr>
-<pre><code><a href="../reference/genind2genalex.html">genind2genalex(gid, filename = "genalex.csv", quiet = FALSE,
-    pop = NULL, allstrata = TRUE, geo = FALSE, geodf = "xy",
+<pre><code><a href="../reference/genind2genalex.html">genind2genalex(gid, filename = "genalex.csv", quiet = FALSE, 
+    pop = NULL, allstrata = TRUE, geo = FALSE, geodf = "xy", 
     sep = ",", sequence = FALSE)</a></code></pre>
 <ul>
 <li><p><code>pop -</code> a <code>genind</code> object.</p></li>
@@ -550,7 +550,7 @@ repeats</code></pre></div>
 ## P15 531.2003 115.13903
 ## P16 407.8003  99.87438
 ## P17 345.3745 251.79393
-##
+## 
 ## $repeat_lengths
 ## [1] 2 2 2 2 2 2 2 2 2</code></pre>
 </div>
@@ -578,16 +578,16 @@ repeats</code></pre></div>
 <span class="kw">data</span>(Aeut)
 Aeut</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
-##
+## 
 ##  // 187 individuals; 56 loci; 56 alleles; size: 66.5 Kb
-##
+## 
 ##  // Basic content
 ##    @tab:  187 x 56 matrix of allele counts
 ##    @loc.n.all: number of alleles per locus (range: 56-56)
 ##    @ploidy: ploidy of each individual  (range: 2-2)
 ##    @type:  PA
 ##    @call: old2new_genind(object = x, donor = new(class(x)))
-##
+## 
 ##  // Optional content
 ##    @pop: population of each individual (group size range: 90-97)
 ##    @other: a list containing: population_hierarchy</code></pre>
@@ -595,16 +595,16 @@ Aeut</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw">other</span>(Aeut)<span class="op">$</span>population_hierarchy[<span class="op">-</span><span class="dv">1</span>]
 Aeut</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
-##
+## 
 ##  // 187 individuals; 56 loci; 56 alleles; size: 70.1 Kb
-##
+## 
 ##  // Basic content
 ##    @tab:  187 x 56 matrix of allele counts
 ##    @loc.n.all: number of alleles per locus (range: 56-56)
 ##    @ploidy: ploidy of each individual  (range: 2-2)
 ##    @type:  PA
 ##    @call: old2new_genind(object = x, donor = new(class(x)))
-##
+## 
 ##  // Optional content
 ##    @pop: population of each individual (group size range: 90-97)
 ##    @strata: a data frame with 2 columns ( Pop, Subpop )
@@ -612,32 +612,32 @@ Aeut</code></pre></div>
 <p>Now we can convert this to a <code>genclone</code> object, which will store information about our multilocus genotypes for us.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-methods.html">as.genclone</a></span>(Aeut)
 agc</code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## This is a genclone object
 ## -------------------------
 ## Genotype information:
-##
-##    119 original multilocus genotypes
+## 
+##    119 original multilocus genotypes 
 ##    187 diploid individuals
 ##     56 dominant loci
-##
+## 
 ## Population information:
-##
+## 
 ##      2 strata - Pop, Subpop
 ##      2 populations defined - Athena, Mt. Vernon</code></pre>
 <p>If we wanted to, we could also convert it back to a <code>genind</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/coercion-methods.html">genclone2genind</a></span>(agc)</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
-##
+## 
 ##  // 187 individuals; 56 loci; 56 alleles; size: 79.6 Kb
-##
+## 
 ##  // Basic content
 ##    @tab:  187 x 56 matrix of allele counts
 ##    @loc.n.all: number of alleles per locus (range: 56-56)
 ##    @ploidy: ploidy of each individual  (range: 2-2)
 ##    @type:  PA
 ##    @call: genclone2genind(x = agc)
-##
+## 
 ##  // Optional content
 ##    @pop: population of each individual (group size range: 90-97)
 ##    @strata: a data frame with 2 columns ( Pop, Subpop )
@@ -655,17 +655,17 @@ agc</code></pre></div>
 <p>A solution to this problem is to code missing alleles as “0”. An example of this is found within the <code>Pinf</code> data set in <em>poppr</em> <span class="citation">(Erica M. Goss et al. 2014)</span>. First, we will look at where we have polyploid allele calls.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(Pinf)
 Pinf</code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## This is a genclone object
 ## -------------------------
 ## Genotype information:
-##
-##    72 multilocus genotypes
+## 
+##    72 multilocus genotypes 
 ##    86 tetraploid individuals
 ##    11 codominant loci
-##
+## 
 ## Population information:
-##
+## 
 ##     2 strata - Continent, Country
 ##     2 populations defined - South America, North America</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ptab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/info_table.html">info_table</a></span>(Pinf, <span class="dt">type =</span> <span class="st">"ploidy"</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -693,17 +693,17 @@ Pinf</code></pre></div>
 <p>This method allows Bruvo’s Distance <span class="citation">(Bruvo et al. 2004)</span> and the Index of Association <span class="citation">(Brown, Feldman, and Nevo 1980; J. M. Smith et al. 1993; Agapow and Burt 2001)</span> to work with polyploids as they specifically recognize the zeroes as being missing data. A side effect, unfortunately is that the extra zeroes appear as extra alleles. As this affects all frequency-based statistics (except for the ones noted above), the user should reformat their data set with the function <code>recode_polyploids</code>, which will remove the zeroes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinf_rc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/recode_polyploids.html">recode_polyploids</a></span>(Pinf, <span class="dt">newploidy =</span> <span class="ot">TRUE</span>)
 Pinf_rc <span class="co"># Notice that the new ploidy is accounted for.</span></code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## This is a genclone object
 ## -------------------------
 ## Genotype information:
-##
-##    72 multilocus genotypes
+## 
+##    72 multilocus genotypes 
 ##    86 diploid (55) and triploid (31) individuals
 ##    11 codominant loci
-##
+## 
 ## Population information:
-##
+## 
 ##     2 strata - Continent, Country
 ##     2 populations defined - South America, North America</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tab</span>() <span class="op">%&gt;%</span><span class="st"> </span>tail</code></pre></div>
@@ -854,9 +854,9 @@ Let’s look at the loci names and number of individuals.</p>
 <span class="kw">strata</span>(H3N2) &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">other</span>(H3N2)<span class="op">$</span>x)
 H3N2</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
-##
+## 
 ##  // 1,903 individuals; 125 loci; 334 alleles; size: 3.9 Mb
-##
+## 
 ##  // Basic content
 ##    @tab:  1903 x 334 matrix of allele counts
 ##    @loc.n.all: number of alleles per locus (range: 2-4)
@@ -865,37 +865,37 @@ H3N2</code></pre></div>
 ##    @ploidy: ploidy of each individual  (range: 1-1)
 ##    @type:  codom
 ##    @call: .local(x = x, i = i, j = j, drop = drop)
-##
+## 
 ##  // Optional content
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
 ##    @other: a list containing: x  xy  epid</code></pre>
 <p>We will demonstrate the <code>popsub</code> functionality by setting the population factor to “country”. Note, in this section, I am naming the variables staring with “v” indicating “virus”.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>country
 <span class="kw">popNames</span>(H3N2) <span class="co"># Only two countries from North America.</span></code></pre></div>
-<pre><code>##  [1] "Japan"          "USA"            "Finland"        "China"          "South Korea"
-##  [6] "Norway"         "Taiwan"         "France"         "Latvia"         "Netherlands"
-## [11] "Bulgaria"       "Turkey"         "United Kingdom" "Denmark"        "Austria"
-## [16] "Canada"         "Italy"          "Russia"         "Bangladesh"     "Egypt"
-## [21] "Germany"        "Romania"        "Ukraine"        "Czech Republic" "Greece"
-## [26] "Iceland"        "Ireland"        "Sweden"         "Nepal"          "Saudi Arabia"
-## [31] "Switzerland"    "Iran"           "Mongolia"       "Spain"          "Slovenia"
+<pre><code>##  [1] "Japan"          "USA"            "Finland"        "China"          "South Korea"   
+##  [6] "Norway"         "Taiwan"         "France"         "Latvia"         "Netherlands"   
+## [11] "Bulgaria"       "Turkey"         "United Kingdom" "Denmark"        "Austria"       
+## [16] "Canada"         "Italy"          "Russia"         "Bangladesh"     "Egypt"         
+## [21] "Germany"        "Romania"        "Ukraine"        "Czech Republic" "Greece"        
+## [26] "Iceland"        "Ireland"        "Sweden"         "Nepal"          "Saudi Arabia"  
+## [31] "Switzerland"    "Iran"           "Mongolia"       "Spain"          "Slovenia"      
 ## [36] "Croatia"        "Algeria"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_na &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">sublist =</span> <span class="kw">c</span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))
 <span class="kw">popNames</span>(v_na)</code></pre></div>
 <pre><code>## [1] "USA"    "Canada"</code></pre>
 <p>If we want to see the population size, we can use the <em>adegenet</em> function <code>nInd()</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(<span class="dt">NorthAmerica =</span> <span class="kw">nInd</span>(v_na), <span class="dt">Total =</span> <span class="kw">nInd</span>(H3N2))</code></pre></div>
-<pre><code>## NorthAmerica        Total
+<pre><code>## NorthAmerica        Total 
 ##          665         1903</code></pre>
 <p>You can see that the population factors are correct and that the size of the data set is considerably smaller. Let’s see the data set without the North American countries.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_na_minus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">blacklist =</span> <span class="kw">c</span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))
 <span class="kw">popNames</span>(v_na_minus)</code></pre></div>
-<pre><code>##  [1] "Japan"          "Finland"        "China"          "South Korea"    "Norway"
-##  [6] "Taiwan"         "France"         "Latvia"         "Netherlands"    "Bulgaria"
-## [11] "Turkey"         "United Kingdom" "Denmark"        "Austria"        "Italy"
-## [16] "Russia"         "Bangladesh"     "Egypt"          "Germany"        "Romania"
-## [21] "Ukraine"        "Czech Republic" "Greece"         "Iceland"        "Ireland"
-## [26] "Sweden"         "Nepal"          "Saudi Arabia"   "Switzerland"    "Iran"
+<pre><code>##  [1] "Japan"          "Finland"        "China"          "South Korea"    "Norway"        
+##  [6] "Taiwan"         "France"         "Latvia"         "Netherlands"    "Bulgaria"      
+## [11] "Turkey"         "United Kingdom" "Denmark"        "Austria"        "Italy"         
+## [16] "Russia"         "Bangladesh"     "Egypt"          "Germany"        "Romania"       
+## [21] "Ukraine"        "Czech Republic" "Greece"         "Iceland"        "Ireland"       
+## [26] "Sweden"         "Nepal"          "Saudi Arabia"   "Switzerland"    "Iran"          
 ## [31] "Mongolia"       "Spain"          "Slovenia"       "Croatia"        "Algeria"</code></pre>
 <p>Let“s make sure that the number of individuals in both data sets is equal to the number of individuals in our original data set:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">nInd</span>(v_na_minus) <span class="op">+</span><span class="st"> </span><span class="kw">nInd</span>(v_na)) <span class="op">==</span><span class="st"> </span><span class="kw">nInd</span>(H3N2)</code></pre></div>
@@ -903,11 +903,11 @@ H3N2</code></pre></div>
 <p>Now we have data sets with and without North America. Let’s try something a bit more challenging. Let’s say that we want the first 10 populations in alphabetical order, but we know that we still don“t want any countries in North America. We can easily do this by using the <em>base</em> function <code>sort</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vsort &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">popNames</span>(H3N2))[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
 vsort</code></pre></div>
-<pre><code>##  [1] "Algeria"        "Austria"        "Bangladesh"     "Bulgaria"       "Canada"
+<pre><code>##  [1] "Algeria"        "Austria"        "Bangladesh"     "Bulgaria"       "Canada"        
 ##  [6] "China"          "Croatia"        "Czech Republic" "Denmark"        "Egypt"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">valph &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">sublist =</span> vsort, <span class="dt">blacklist =</span> <span class="kw">c</span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))
 <span class="kw">popNames</span>(valph)</code></pre></div>
-<pre><code>## [1] "China"          "Bulgaria"       "Denmark"        "Austria"        "Bangladesh"
+<pre><code>## [1] "China"          "Bulgaria"       "Denmark"        "Austria"        "Bangladesh"    
 ## [6] "Egypt"          "Czech Republic" "Croatia"        "Algeria"</code></pre>
 <p>And that, is how you subset your data with <em>poppr</em>!</p>
 </div>
@@ -936,16 +936,16 @@ vsort</code></pre></div>
 <span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">other</span>(Aeut)<span class="op">$</span>population_hierarchy[<span class="op">-</span><span class="dv">1</span>])
 Aeut</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
-##
+## 
 ##  // 187 individuals; 56 loci; 56 alleles; size: 70.1 Kb
-##
+## 
 ##  // Basic content
 ##    @tab:  187 x 56 matrix of allele counts
 ##    @loc.n.all: number of alleles per locus (range: 56-56)
 ##    @ploidy: ploidy of each individual  (range: 2-2)
 ##    @type:  PA
 ##    @call: old2new_genind(object = x, donor = new(class(x)))
-##
+## 
 ##  // Optional content
 ##    @pop: population of each individual (group size range: 90-97)
 ##    @strata: a data frame with 2 columns ( Pop, Subpop )
@@ -955,49 +955,49 @@ Aeut</code></pre></div>
 <span class="kw">nameStrata</span>(Aeut) &lt;-<span class="st"> </span><span class="er">~</span>field<span class="op">/</span>sample</code></pre></div>
 <p>Now we correct by sample with respect to field and keep the field as the population.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan,  <span class="dt">strata =</span> <span class="op">~</span>Pop<span class="op">/</span>Subpop)</code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## This is a genclone object
 ## -------------------------
 ## Genotype information:
-##
-##    119 original multilocus genotypes
+## 
+##    119 original multilocus genotypes 
 ##    141 diploid individuals
 ##     56 dominant loci
-##
+## 
 ## Population information:
-##
+## 
 ##      2 strata - Pop, Subpop
 ##      2 populations defined - Athena, Mt. Vernon</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Your turn: Use the same stratification and use combine = TRUE and then</span>
 <span class="co"># keep = 1:2. Is there any difference?</span></code></pre></div>
 <p>Correcting by field. Notice how the number of MLG is much closer to our census.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan, <span class="dt">strata =</span> <span class="op">~</span>Pop)</code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## This is a genclone object
 ## -------------------------
 ## Genotype information:
-##
-##    119 original multilocus genotypes
+## 
+##    119 original multilocus genotypes 
 ##    120 diploid individuals
 ##     56 dominant loci
-##
+## 
 ## Population information:
-##
+## 
 ##      2 strata - Pop, Subpop
 ##      2 populations defined - Athena, Mt. Vernon</code></pre>
 <p>Correcting over whole data set. Our MLG is equal to our census.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan, <span class="dt">strata =</span> <span class="ot">NA</span>)</code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## This is a genclone object
 ## -------------------------
 ## Genotype information:
-##
-##    119 original multilocus genotypes
+## 
+##    119 original multilocus genotypes 
 ##    119 diploid individuals
 ##     56 dominant loci
-##
+## 
 ## Population information:
-##
+## 
 ##      2 strata - Pop, Subpop
 ##      2 populations defined - Athena, Mt. Vernon</code></pre>
 </div>
@@ -1357,13 +1357,13 @@ bd.test &lt;-<span class="st"> </span><span class="kw">replicate</span>(<span cl
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H.five &lt;-<span class="st"> </span><span class="kw"><a href="../reference/informloci.html">informloci</a></span>(H3N2, <span class="dt">cutoff =</span> <span class="fl">0.05</span>)</code></pre></div>
 <pre><code>## cutoff value: 5 % ( 95 samples ).
 ## MAF         : 0.01
-##
-##  Found 49 uninformative loci
-##  ============================
+## 
+##  Found 49 uninformative loci 
+##  ============================ 
 ##  47 loci found with a cutoff of 95 samples :
 ##  157, 177, 233, 243, 262, 267, 280, 303, 313, 327, 357, 382, 384, 399, 412, 418,
 ## 424, 425, 429, 433, 451, 470, 529, 546, 555, 557, 564, 576, 592, 595, 597, 602,
-## 612, 627, 642, 647, 648, 654, 658, 663, 667, 681, 717, 806, 824, 837, 882
+## 612, 627, 642, 647, 648, 654, 658, 663, 667, 681, 717, 806, 824, 837, 882 
 ##  5 loci found with MAF &lt; 0.01 :
 ##  42, 313, 433, 597, 915</code></pre>
 <p>Now what happens when you have all informative loci. We“ll use the nancycats data set, which has microsatellite loci. It is important to note that this is searching for loci with a specified genotype frequency as fixed heterozygous sites are also uninformative:</p>
@@ -1371,7 +1371,7 @@ bd.test &lt;-<span class="st"> </span><span class="kw">replicate</span>(<span cl
 naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/informloci.html">informloci</a></span>(nancycats, <span class="dt">cutoff =</span> <span class="fl">0.05</span>)</code></pre></div>
 <pre><code>## cutoff value: 5 % ( 12 samples ).</code></pre>
 <pre><code>## MAF         : 0.01</code></pre>
-<pre><code>##
+<pre><code>## 
 ## All sites polymorphic</code></pre>
 </div>
 </div>
@@ -1387,9 +1387,9 @@ naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/i
 <p>Counting the number of MLGs in a population is the first step for these analyses as they allow us to see how many clones exist. With the <code>genclone</code> object, This information is already displayed when we view the object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
-##
+## 
 ##  // 1,903 individuals; 125 loci; 334 alleles; size: 3.9 Mb
-##
+## 
 ##  // Basic content
 ##    @tab:  1903 x 334 matrix of allele counts
 ##    @loc.n.all: number of alleles per locus (range: 2-4)
@@ -1398,16 +1398,16 @@ naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/i
 ##    @ploidy: ploidy of each individual  (range: 1-1)
 ##    @type:  codom
 ##    @call: .local(x = x, i = i, j = j, drop = drop)
-##
+## 
 ##  // Optional content
 ##    @pop: population of each individual (group size range: 1-646)
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
 ##    @other: a list containing: x  xy  epid</code></pre>
-<p>If we need to store the number of MLGs as a variable, we can simply run the <code><a href="http://www.rdocumentation.org/packages/poppr/topics/mlg">mlg()</a></code> command.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/poppr/topics/mlg">mlg</a></span>(H3N2)</code></pre></div>
+<p>If we need to store the number of MLGs as a variable, we can simply run the <code>mlg()</code> command.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg &lt;-<span class="st"> </span><span class="kw">mlg</span>(H3N2)</code></pre></div>
 <pre><code>## #############################
-## # Number of Individuals:  1903
-## # Number of MLG:  752
+## # Number of Individuals:  1903 
+## # Number of MLG:  752 
 ## #############################</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg</code></pre></div>
 <pre><code>## [1] 752</code></pre>
@@ -1422,7 +1422,7 @@ naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/i
 <a href="#mlg:cross:mlg-crosspop" class="anchor"></a>Function: mlg.crosspop</h3>
 <p>Analyze the MLGs that cross populations within your data set. This has three output modes. The default one gives a list of MLGs, and for each MLG, it gives a named numeric vector indicating the abundance of that MLG in each population. Alternate outputs are described with <code>indexreturn</code> and <code>df</code>.</p>
 <hr>
-<pre><code><a href="../reference/mlg.html">mlg.crosspop(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
+<pre><code><a href="../reference/mlg.html">mlg.crosspop(gid, strata = NULL, sublist = "ALL", blacklist = NULL, 
     mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)</a></code></pre>
 <ul>
 <li><p><code>pop -</code> a <code>genind</code> object.</p></li>
@@ -1438,44 +1438,44 @@ naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/i
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>country
 v.dup &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.crosspop</a></span>(H3N2, <span class="dt">quiet=</span><span class="ot">TRUE</span>)</code></pre></div>
 <p>Here is a snippet of what the output looks like when <code>quiet</code> is <code>FALSE</code>. It will print out the MLG name, the total number of individuals that make up that MLG, and the populations where that MLG can be found.</p>
-<pre><code>## MLG.3: (12 inds) USA Denmark
-## MLG.9: (16 inds) Japan USA Finland Denmark
-## MLG.31: (9 inds) Japan Canada
-## MLG.75: (23 inds) Japan USA Finland Norway Denmark Austria Russia Ireland
-## MLG.80: (2 inds) USA Denmark
-## MLG.86: (7 inds) Denmark Austria
-## MLG.95: (2 inds) USA Bangladesh
-## MLG.97: (8 inds) USA Austria Bangladesh Romania
-## MLG.104: (3 inds) USA France
+<pre><code>## MLG.3: (12 inds) USA Denmark 
+## MLG.9: (16 inds) Japan USA Finland Denmark 
+## MLG.31: (9 inds) Japan Canada 
+## MLG.75: (23 inds) Japan USA Finland Norway Denmark Austria Russia Ireland 
+## MLG.80: (2 inds) USA Denmark 
+## MLG.86: (7 inds) Denmark Austria 
+## MLG.95: (2 inds) USA Bangladesh 
+## MLG.97: (8 inds) USA Austria Bangladesh Romania 
+## MLG.104: (3 inds) USA France 
 ## MLG.110: (16 inds) Japan USA China</code></pre>
 <p>The output of this function is a list of MLGs, each containing a vector indicating the number of copies in each population. We“ll count the number of populations each MLG crosses using the function <code>sapply</code> to loop over the data with the function <code>length</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(v.dup)</code></pre></div>
 <pre><code>## $MLG.3
-##     USA Denmark
-##       4       8
-##
+##     USA Denmark 
+##       4       8 
+## 
 ## $MLG.9
-##   Japan     USA Finland Denmark
-##       1      13       1       1
-##
+##   Japan     USA Finland Denmark 
+##       1      13       1       1 
+## 
 ## $MLG.31
-##  Japan Canada
-##      2      7
-##
+##  Japan Canada 
+##      2      7 
+## 
 ## $MLG.75
-##   Japan     USA Finland  Norway Denmark Austria  Russia Ireland
-##       2       8       2       1       6       2       1       1
-##
+##   Japan     USA Finland  Norway Denmark Austria  Russia Ireland 
+##       2       8       2       1       6       2       1       1 
+## 
 ## $MLG.80
-##     USA Denmark
-##       1       1
-##
+##     USA Denmark 
+##       1       1 
+## 
 ## $MLG.86
-## Denmark Austria
+## Denmark Austria 
 ##       3       4</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v.num &lt;-<span class="st"> </span><span class="kw">sapply</span>(v.dup, length) <span class="co"># count the number of populations each MLG crosses.</span>
 <span class="kw">head</span>(v.num)</code></pre></div>
-<pre><code>##  MLG.3  MLG.9 MLG.31 MLG.75 MLG.80 MLG.86
+<pre><code>##  MLG.3  MLG.9 MLG.31 MLG.75 MLG.80 MLG.86 
 ##      2      4      2      8      2      2</code></pre>
 </div>
 </div>
@@ -1488,8 +1488,8 @@ v.dup &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.h
 <a href="#mlg:table:mlg-table" class="anchor"></a>Function: mlg.table</h3>
 <p>This function will produce a matrix containing counts of MLGs (columns) per population (rows). If there are not populations defined in your data set, a vector will be produced instead.</p>
 <hr>
-<pre><code><a href="../reference/mlg.html">mlg.table(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
-    mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE, color = FALSE,
+<pre><code><a href="../reference/mlg.html">mlg.table(gid, strata = NULL, sublist = "ALL", blacklist = NULL, 
+    mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE, color = FALSE, 
     background = FALSE, quiet = FALSE)</a></code></pre>
 <ul>
 <li><p><code>pop -</code> a <code>genind</code> object.</p></li>
@@ -1524,7 +1524,7 @@ An example of a bar-chart produced by <code>mlg.table</code>. Note that this dat
 <p>For the sake of this example, instead of drawing a curve for each of the 37 countries represented in this sample, let“s set the hierarchical level to year.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>year
 <span class="kw">summary</span>(H3N2) <span class="co"># Check the data to make sure it's correct.</span></code></pre></div>
-<pre><code>##
+<pre><code>## 
 ## // Number of individuals: 1903
 ## // Group sizes: 158 415 399 469 462
 ## // Number of alleles per locus: 3 3 4 2 4 2 3 2 4 3 4 2 4 3 2 2 3 3 2 2 3 3 3 2 2 2 2 2 2 2 2 2 2 4 4 3 3 3 4 2 2 2 4 3 2 3 4 2 3 2 3 2 2 2 4 2 2 2 2 2 2 2 4 4 4 3 3 2 3 4 3 2 3 3 3 3 2 3 2 4 2 3 2 2 3 3 3 3 2 2 2 2 3 2 3 2 3 2 3 2 3 3 2 2 2 3 2 2 2 3 3 3 2 2 3 3 3 3 4 2 3 3 4 3 2
@@ -1570,9 +1570,9 @@ UGNN &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.ht
 <pre><code>## [1] 752</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2 <span class="co"># equal to the first number in this output.</span></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
-##
+## 
 ##  // 1,903 individuals; 125 loci; 334 alleles; size: 3.9 Mb
-##
+## 
 ##  // Basic content
 ##    @tab:  1903 x 334 matrix of allele counts
 ##    @loc.n.all: number of alleles per locus (range: 2-4)
@@ -1581,7 +1581,7 @@ UGNN &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.ht
 ##    @ploidy: ploidy of each individual  (range: 1-1)
 ##    @type:  codom
 ##    @call: .local(x = x, i = i, j = j, drop = drop)
-##
+## 
 ##  // Optional content
 ##    @pop: population of each individual (group size range: 1-646)
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
@@ -1592,31 +1592,31 @@ UGNN &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.ht
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">UGNN_match &lt;-<span class="st"> </span>v.vec <span class="op">%in%</span><span class="st"> </span>UGNN
 <span class="kw">table</span>(UGNN_match) <span class="co"># How many individuals matched to those three MLGs?</span></code></pre></div>
 <pre><code>## UGNN_match
-## FALSE  TRUE
+## FALSE  TRUE 
 ##  1881    22</code></pre>
 <p>22 individuals matched to those three MLGs. We can use this vector to show us the 22 individuals.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">indNames</span>(H3N2)[UGNN_match]</code></pre></div>
-<pre><code>##       0329       0330       0331       0332       0341       0342       0345       0556
-## "CY026119" "CY026120" "CY026121" "CY026122" "CY026131" "CY026132" "CY026135" "EU502462"
-##       0557       0558       0870       0974       1112       1113       1114       1122
-## "EU502463" "EU502464" "EU501513" "AB243868" "DQ883618" "DQ883619" "DQ883620" "DQ883628"
-##       1193       1209       1210       1281       1288       1426
+<pre><code>##       0329       0330       0331       0332       0341       0342       0345       0556 
+## "CY026119" "CY026120" "CY026121" "CY026122" "CY026131" "CY026132" "CY026135" "EU502462" 
+##       0557       0558       0870       0974       1112       1113       1114       1122 
+## "EU502463" "EU502464" "EU501513" "AB243868" "DQ883618" "DQ883619" "DQ883620" "DQ883628" 
+##       1193       1209       1210       1281       1288       1426 
 ## "EU501609" "EU501642" "EU501643" "EU501735" "EU501742" "EU502513"</code></pre>
 <p>Note that there is an alternative way to list individuals matching specific MLGs using the function <code>mlg.id</code>. This function will return a list where each element represents a unique MLG. You can use this data to find out which individuals correspond to specific MLGs. Each element in the list is named with the MLG, but the index does not necessarily match up, so it is important to convert your query MLGs to strings:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2.id &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.id</a></span>(H3N2)
 H3N2.id[<span class="kw">as.character</span>(UGNN)]</code></pre></div>
 <pre><code>## $`315`
-##       0974       1112       1122       1209       1210       1281       1288
-## "AB243868" "DQ883618" "DQ883628" "EU501642" "EU501643" "EU501735" "EU501742"
-##
+##       0974       1112       1122       1209       1210       1281       1288 
+## "AB243868" "DQ883618" "DQ883628" "EU501642" "EU501643" "EU501735" "EU501742" 
+## 
 ## $`317`
-##       0870       1113       1114       1193       1426
-## "EU501513" "DQ883619" "DQ883620" "EU501609" "EU502513"
-##
+##       0870       1113       1114       1193       1426 
+## "EU501513" "DQ883619" "DQ883620" "EU501609" "EU502513" 
+## 
 ## $`620`
-##       0329       0330       0331       0332       0341       0342       0345       0556
-## "CY026119" "CY026120" "CY026121" "CY026122" "CY026131" "CY026132" "CY026135" "EU502462"
-##       0557       0558
+##       0329       0330       0331       0332       0341       0342       0345       0556 
+## "CY026119" "CY026120" "CY026121" "CY026122" "CY026131" "CY026132" "CY026135" "EU502462" 
+##       0557       0558 
 ## "EU502463" "EU502464"</code></pre>
 <p>We can also use the vector of MLGs to subset <code><a href="../reference/mlg.html">mlg.table()</a></code> with the <code>mlgsub</code> flag.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">mlgsub =</span> UGNN)</code></pre></div>
@@ -1642,7 +1642,7 @@ Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ml
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_Aeut-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot</a></span>()</code></pre></div>
 <p>We’ve captured our plot using <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot()</a></code> and now we can manipulate it. One common need is to change the title. We can easily do that with the function <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle()</a></code>. Let“s say we wanted to label it”<em>Aphanomyces euteiches</em> multilocus genotype distribution“. We would use <code>ggtitle(Aphanomyces euteiches multilocus genotype distribution)</code>. Unfortunately, we need italics for a latin binomial. One way to acheive this is by using the <code>expression()</code> function and declaring which text needs to be italicized.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myTitle &lt;-<span class="st"> </span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">"Aphanomyces euteiches"</span>),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myTitle &lt;-<span class="st"> </span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">"Aphanomyces euteiches"</span>), 
                       <span class="st">" multilocus genotype distribution"</span>))
 (pt &lt;-<span class="st"> </span>p <span class="op">+</span>
 <span class="st">   </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(myTitle) <span class="op">+</span>
@@ -1664,11 +1664,11 @@ Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ml
 <pre><code>## # A tibble: 6 x 4
 ##   Population MLG    count order
 ##   &lt;fct&gt;      &lt;chr&gt;  &lt;int&gt; &lt;fct&gt;
-## 1 Athena     MLG.20     9 1
-## 2 Athena     MLG.66     5 2
-## 3 Athena     MLG.14     3 3
-## 4 Athena     MLG.35     3 4
-## 5 Athena     MLG.13     2 5
+## 1 Athena     MLG.20     9 1    
+## 2 Athena     MLG.66     5 2    
+## 3 Athena     MLG.14     3 3    
+## 4 Athena     MLG.35     3 4    
+## 5 Athena     MLG.13     2 5    
 ## 6 Athena     MLG.16     2 6</code></pre>
 </div>
 <div id="appendix:graphics" class="section level2">
