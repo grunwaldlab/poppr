@@ -19,13 +19,19 @@ distance. — bruvo.msn • poppr</title>
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Create minimum spanning network of selected populations using Bruvo's 
+distance. — bruvo.msn" />
+
+<meta property="og:description" content="Create minimum spanning network of selected populations using Bruvo's 
+distance." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -101,6 +107,7 @@ distance. — bruvo.msn • poppr</title>
     <div class="page-header">
     <h1>Create minimum spanning network of selected populations using Bruvo's 
 distance.</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/bruvo.r'><code>R/bruvo.r</code></a></small>
     </div>
 
     
@@ -312,10 +319,10 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='co'># View populations 8 and 9 with default colors. </span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
           <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>, <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>)</div><div class='img'><img src='bruvo.msn-1.png' alt='' width='700' height='432.632880098887' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 9d04bb2 UNW- 19 18 -- 
+#&gt; IGRAPH 685fa29 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from 9d04bb2 (vertex names):
+#&gt; + edges from 685fa29 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -391,7 +398,7 @@ Zhian N. Kamvar, Javier F. Tabima
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -399,3 +406,4 @@ Zhian N. Kamvar, Javier F. Tabima
 
   </body>
 </html>
+

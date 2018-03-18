@@ -44,7 +44,6 @@ print_command <- function(funk){
 ```
 
 
-<center>
 
 Abstract
 ========
@@ -64,11 +63,12 @@ on genetic distance.
 <br>
 <br>
 
+<center>
 <img src="jalapeno_logo.png" width="300">
+</center>
 
 <br>
 <br>
-</center>
 
 Introduction {#intro}
 ============

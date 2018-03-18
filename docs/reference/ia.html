@@ -18,13 +18,26 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Index of Association — ia" />
+
+<meta property="og:description" content="Calculate the Index of Association and Standardized Index of Association.
+ia() calculates the index of association over all loci in
+  the data set.
+pair.ia() calculates the index of association in a pairwise
+  manner among all loci.
+resample.ia() calculates the index of association on a
+  reduced data set multiple times to create a distribution, showing the
+  variation of values observed at a given sample size (previously 
+  jack.ia).
+" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,6 +112,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Index of Association</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/Index_calculations.r'><code>R/Index_calculations.r</code></a>, <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/ia_jackknife.R'><code>R/ia_jackknife.R</code></a></small>
     </div>
 
     
@@ -145,11 +159,9 @@ see <code><a href='shufflepop.html'>shufflepop</a></code> for details.</p></td>
     <tr>
       <th>quiet</th>
       <td><p>Should the function print anything to the screen while it is 
-performing calculations?
-
-<code>TRUE</code> prints nothing.
-
-<code>FALSE</code> (default) will print the population name and progress bar.</p></td>
+performing calculations?</p>
+<p><code>TRUE</code> prints nothing.</p>
+<p><code>FALSE</code> (default) will print the population name and progress bar.</p></td>
     </tr>
     <tr>
       <th>missing</th>
@@ -346,7 +358,7 @@ association in columns. Number of rows represents the number of reps.
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>partial_clone</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   2%  |                                                                              |===                                                                   |   4%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   9%  |                                                                              |========                                                              |  11%  |                                                                              |=========                                                             |  13%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  18%  |                                                                              |==============                                                        |  20%  |                                                                              |================                                                      |  22%  |                                                                              |=================                                                     |  24%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  29%  |                                                                              |======================                                                |  31%  |                                                                              |=======================                                               |  33%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  38%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  42%  |                                                                              |===============================                                       |  44%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  49%  |                                                                              |====================================                                  |  51%  |                                                                              |=====================================                                 |  53%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  58%  |                                                                              |==========================================                            |  60%  |                                                                              |============================================                          |  62%  |                                                                              |=============================================                         |  64%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  69%  |                                                                              |==================================================                    |  71%  |                                                                              |===================================================                   |  73%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  78%  |                                                                              |========================================================              |  80%  |                                                                              |==========================================================            |  82%  |                                                                              |===========================================================           |  84%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  89%  |                                                                              |================================================================      |  91%  |                                                                              |=================================================================     |  93%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  98%  |                                                                              |======================================================================| 100%</div><div class='img'><img src='ia-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>res</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)</div><div class='img'><img src='ia-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># Resampling</span>
 <span class='fu'>data</span>(<span class='no'>Pinf</span>)
-<span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |================                                      | 31% ~0 s remaining     |===============================                       | 59% ~0 s remaining     |===================================================   | 95% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
+<span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |==============================                        | 56% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
 #&gt; 1  0.6191763 0.06783205
 #&gt; 2  0.6798527 0.07473909
 #&gt; 3  0.5200972 0.05695292
@@ -530,7 +542,7 @@ Zhian N. Kamvar
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -538,3 +550,4 @@ Zhian N. Kamvar
 
   </body>
 </html>
+

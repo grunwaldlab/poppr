@@ -18,13 +18,20 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects. — poppr.amova" />
+
+<meta property="og:description" content="This function simplifies the process necessary for performing AMOVA in R. It
+gives user the choice of utilizing either the ade4 or the pegas
+implementation of AMOVA. See ade4::amova() (ade4) and pegas::amova()
+(pegas) for details on the specific implementation." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,6 +106,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/amova.r'><code>R/amova.r</code></a></small>
     </div>
 
     
@@ -244,7 +252,8 @@ are:</p><ol>
     <p>All of this data can be constructed from a genind object,
 but can be daunting for a novice R user. <em>This function automates the
 entire process</em>. Since there are many variables regarding genetic data,
-some points need to be highlighted:</p><h3>On Hierarchies:</h3>
+some points need to be highlighted:</p>
+<h3>On Hierarchies:</h3>
 The hierarchy is defined by different
 population strata that separate your data hierarchically. These strata are
 defined in the <strong>strata</strong> slot of genind and
@@ -430,7 +439,7 @@ Autopolyploids <em>Submitted</em>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -438,3 +447,4 @@ Autopolyploids <em>Submitted</em>.</p>
 
   </body>
 </html>
+

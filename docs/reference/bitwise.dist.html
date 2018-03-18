@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Calculate a dissimilarity distance matrix for SNP data. — bitwise.dist" />
+
+<meta property="og:description" content="This function performs the same task as diss.dist, calculating 
+the fraction or number of different alleles between two genlight or snpclone
+objects." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,6 +105,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate a dissimilarity distance matrix for SNP data.</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
     </div>
 
     
@@ -196,7 +203,7 @@ caution.</p></td>
 #&gt;    @other: a list containing: ancestral.pops 
 #&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles (finer measure, usually the most sensible)</span>
 <span class='fu'>system.time</span>(<span class='no'>xd</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.003   0.001   0.002 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
+#&gt;   0.004   0.001   0.031 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
 #&gt; 2  0.2105                                                        
 #&gt; 3  0.2195 0.2180                                                 
 #&gt; 4  0.3950 0.3825 0.3855                                          
@@ -208,7 +215,7 @@ caution.</p></td>
 #&gt; 10 0.3980 0.3925 0.4005 0.2180 0.2035 0.2220 0.2185 0.2125 0.2140</div><div class='input'>
 <span class='co'># Assess fraction of different loci (coarse measure)</span>
 <span class='fu'>system.time</span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.067   0.001   0.086 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;        1     2     3     4     5     6     7     8     9
+#&gt;   0.044   0.001   0.044 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;        1     2     3     4     5     6     7     8     9
 #&gt; 2  0.375                                                
 #&gt; 3  0.394 0.385                                          
 #&gt; 4  0.564 0.546 0.547                                    
@@ -248,7 +255,7 @@ Zhian N. Kamvar, Jonah C. Brooks
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -256,3 +263,4 @@ Zhian N. Kamvar, Jonah C. Brooks
 
   </body>
 </html>
+
