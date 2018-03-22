@@ -5,7 +5,8 @@
 \title{Calculate a dissimilarity distance matrix for SNP data.}
 \usage{
 bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
-  scale_missing = FALSE, differences_only = FALSE, threads = 0)
+  scale_missing = FALSE, euclidean = FALSE, differences_only = FALSE,
+  threads = 0)
 }
 \arguments{
 \item{x}{a \code{\link{genlight}}, \code{\link{genind}},
@@ -30,6 +31,9 @@ multiplying the value by \code{m / (m - x)} where m is the number of
 loci and x is the number of missing sites. This option matches the behavior
 of base R's \code{\link[package=base]{dist}} function. 
 Defaults to \code{FALSE}.}
+
+\item{euclidean}{\code{logical}. if \code{TRUE}, the Euclidean distance will
+be calculated.}
 
 \item{differences_only}{\code{logical}. When \code{differences_only = TRUE},
 the output will reflect the number of different loci. The default setting,

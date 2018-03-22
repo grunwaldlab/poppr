@@ -302,7 +302,6 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
                 missing_match = missing_match, 
                 differences_only = differences_only, 
                 requested_threads = threads, 
-                euclid = FALSE, 
                 PACKAGE = "poppr")
   }
   else if(ploid == 1)
