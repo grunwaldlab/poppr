@@ -1131,69 +1131,6 @@ check_Hs <- function(x){
 }
 
 #==============================================================================#
-## Obtains specific haplotypes from a genind object.
-#  
-# Arguments:
-#    index - name or index of locus
-#    locus - a data frame of genotypes
-#    sep_location - a matrix with the location of each separator
-#    geno_lengths - a matrix with the char lengths of each genotype
-#    first - when TRUE, the first haplotype is extracted, when FALSE, the second
-#
-# Returns:
-#   a character vector with a single locus haplotype for each sample. 
-#   
-# Public functions utilizing this function:
-# # none
-#
-# Internal functions utilizing this function:
-# # separate_haplotypes
-#==============================================================================#
-get_haplotype <- function(index, locus, sep_location, geno_lengths, first = TRUE){
-  if (first){
-    res <- substr(locus[[index]], 
-                  start = 1, 
-                  stop = sep_location[, index] - 1)
-  } else {
-    res <- substr(locus[[index]], 
-                  start = sep_location[, index] + 1,
-                  stop = geno_lengths[, index])
-  }
-  return(res)
-}
-
-#==============================================================================#
-# Arguments:
-#   x a diploid genind object. 
-# 
-# Returns:
-#   list:
-#     loci_data    - a data frame of genotypes
-#     sep_location - a matrix with the location of each separator
-#     geno_lengths - a matrix with the char lengths of each genotype
-#
-# External functions utilizing this function:
-# # none
-#
-# Internal functions utilizing this function:
-# # separate_haplotypes
-#==============================================================================#
-haplotype_detector <- function(x){
-  x.loc        <- genind2df(x, sep = "/", usepop = FALSE)
-  facstr       <- function(i) nchar(as.character(i))
-  sep_location <- lapply(x.loc, function(i) regexpr("/", i))
-  sep_location <- matrix(unlist(sep_location, use.names = FALSE), 
-                         nrow = nrow(x.loc))
-  dimnames(sep_location) <- dimnames(x.loc)
-  geno_lengths <- vapply(x.loc, facstr, integer(nrow(x.loc)))
-  dimnames(geno_lengths) <- dimnames(sep_location)
-  haplist <- list(loci_data = x.loc, 
-                  sep_location = sep_location, 
-                  geno_lengths = geno_lengths)
-  return(haplist)
-}
-
-#==============================================================================#
 # Arguments:
 #   x a diploid genind object. 
 # 
@@ -1220,54 +1157,15 @@ haplotype_detector <- function(x){
 # # separate_haplotypes
 #==============================================================================#
 separate_haplotypes <- function(x){
-  haps      <- haplotype_detector(x)
-  the_loci  <- colnames(haps$sep_location)
-  ind_names <- rownames(haps$sep_location)
-  h1 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
-               haps$geno_lengths, first = TRUE)
-  h2 <- lapply(the_loci, get_haplotype, haps$loci_data, haps$sep_location, 
-               haps$geno_lengths, first = FALSE)
-  newnames <- paste(rep(ind_names, each = 2), 1:2, sep = ".")
-  outlength <- length(newnames)
-  outvec <- seq(outlength)
-  index1 <- outvec %% 2 == 1
-  index2 <- !index1
-  matdimnames <- list(newnames, the_loci)
-  hapmat <- matrix(NA_character_, nrow = outlength,
-                   ncol = length(the_loci), dimnames = matdimnames)
-  hapmat[index1, ] <- unlist(h1)
-  hapmat[index2, ] <- unlist(h2)
-  return(hapmat)
-}
-
-
-
-#==============================================================================#
-# Haplotype pooling. 
-# The following functions are necessary to account for within sample variation. 
-# They will separate the haplotypes of a genind object and repool them so that
-# there are n*k individuals in the new data set where n is the number of
-# individuals and k is the ploidy. 
-# Public functions utilizing this function:
-# # poppr.amova
-#
-# Internal functions utilizing this function:
-# # none
-#==============================================================================#
-## Main Function. Lengthens the population hierarchy as well.
-pool_haplotypes <- function(x){
-  ploidy <- max(ploidy(x))
-  if (is.null(strata(x))){
-    strata(x) <- data.frame(pop = pop(x))
+  if (max(ploidy(x)) > 2){
+    x <- suppressWarnings(recode_polyploids(x, addzero = TRUE))
   }
-  addStrata(x)  <- data.frame(Individual = indNames(x))
-  df            <- strata(x)
-  df            <- df[rep(1:nrow(df), each = ploidy), , drop = FALSE]
-  newx          <- df2genind(separate_haplotypes(x), ploidy = 1, strata = df)
-  setPop(newx)  <- ~Individual
-  return(newx)
+  df <- genind2df(x, sep = "/", usepop = FALSE)
+  df <- apply(df, 1, strsplit, "/")
+  df <- lapply(df, lapply, function(i){ i[grepl("^[0]+$", i)] <- NA; i }) # replace zeroes as missing
+  df <- lapply(df, data.frame, stringsAsFactors = FALSE, check.names = FALSE)
+  dplyr::bind_rows(df)
 }
-
 #==============================================================================#
 # The function locus_table_pegas is the internal workhorse. It will process a
 # summary.loci object into a nice table utilizing the various diversity indices
@@ -1685,6 +1583,7 @@ test_microsat <- function(x){
 # # get_local_ploidy
 #==============================================================================#
 test_zeroes <- function(x){
+  if (x@type == "PA") return(FALSE)
   if (test_microsat(x)){
     
     allnames  <- as.numeric(unlist(alleles(x), use.names = FALSE))

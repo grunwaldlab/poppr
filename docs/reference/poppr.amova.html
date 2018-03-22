@@ -18,13 +18,20 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects. — poppr.amova" />
+
+<meta property="og:description" content="This function simplifies the process necessary for performing AMOVA in R. It
+gives user the choice of utilizing either the ade4 or the pegas
+implementation of AMOVA. See ade4::amova() (ade4) and pegas::amova()
+(pegas) for details on the specific implementation." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,53 +106,51 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/amova.r'><code>R/amova.r</code></a></small>
     </div>
 
     
     <p>This function simplifies the process necessary for performing AMOVA in R. It
 gives user the choice of utilizing either the <span class="pkg">ade4</span> or the <span class="pkg">pegas</span>
-implementation of AMOVA. See <code><a href='http://www.rdocumentation.org/packages/ade4/topics/amova'>amova</a></code> (ade4) and
-<code><a href='http://www.rdocumentation.org/packages/pegas/topics/amova'>amova</a></code> (pegas) for details on the specific
-implementation.</p>
+implementation of AMOVA. See <code><a href='http://www.rdocumentation.org/packages/ade4/topics/amova'>ade4::amova()</a></code> (ade4) and <code><a href='http://www.rdocumentation.org/packages/pegas/topics/amova'>pegas::amova()</a></code>
+(pegas) for details on the specific implementation.</p>
     
 
     <pre class="usage"><span class='fu'>poppr.amova</span>(<span class='no'>x</span>, <span class='kw'>hier</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>clonecorrect</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>within</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>squared</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>correction</span> <span class='kw'>=</span> <span class='st'>"quasieuclid"</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>,
-  <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>algorithm</span> <span class='kw'>=</span> <span class='st'>"farthest_neighbor"</span>,
-  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"loci"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ade4"</span>,
-  <span class='st'>"pegas"</span>), <span class='kw'>nperm</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
+  <span class='kw'>dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>squared</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>correction</span> <span class='kw'>=</span> <span class='st'>"quasieuclid"</span>,
+  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>, <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>algorithm</span> <span class='kw'>=</span> <span class='st'>"farthest_neighbor"</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"loci"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ade4"</span>, <span class='st'>"pegas"</span>), <span class='kw'>nperm</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code>genind</code> or <code><a href='genclone-class.html'>genclone</a></code>
-object</p></td>
+      <td><p>a genind or <a href='genclone-class.html'>genclone</a> object</p></td>
     </tr>
     <tr>
       <th>hier</th>
-      <td><p>a hierarchical <code>formula</code> that defines your population
-hierarchy. (e.g.: ~Population/Subpopulation). <strong>See Details below.</strong></p></td>
+      <td><p>a hierarchical formula that defines your population
+hierarchy. (e.g.: <code>~Population/Subpopulation</code>). <strong>See Details below</strong>.</p></td>
     </tr>
     <tr>
       <th>clonecorrect</th>
-      <td><p><code>logical</code> if <code>TRUE</code>, the data set will be clone
-corrected with respect to the lowest level of the hierarchy. The default is
-set to <code>FALSE</code>. See <code><a href='clonecorrect.html'>clonecorrect</a></code> for details.</p></td>
+      <td><p><code>logical</code> if <code>TRUE</code>, the data set will be clone corrected
+with respect to the lowest level of the hierarchy. The default is set to
+<code>FALSE</code>. See <code><a href='clonecorrect.html'>clonecorrect()</a></code> for details.</p></td>
     </tr>
     <tr>
       <th>within</th>
-      <td><p><code>logical</code>. When this is set to <code>TRUE</code> (Default), 
-variance within individuals are calculated as well. If this is set to
-<code>FALSE</code>, The lowest level of the hierarchy will be the sample level.
-See Details below.</p></td>
+      <td><p><code>logical</code>. When this is set to <code>TRUE</code> (Default), variance
+within individuals are calculated as well. If this is set to <code>FALSE</code>, The
+lowest level of the hierarchy will be the sample level. See Details below.</p></td>
     </tr>
     <tr>
       <th>dist</th>
       <td><p>an optional distance matrix calculated on your data. If this is
-set to <code>NULL</code> (default), the raw pairwise distances will be calculated
-via <code><a href='diss.dist.html'>diss.dist</a></code>.</p></td>
+set to <code>NULL</code> (default), the raw pairwise distances will be calculated via
+<code>dist()</code>.</p></td>
     </tr>
     <tr>
       <th>squared</th>
@@ -153,24 +158,33 @@ via <code><a href='diss.dist.html'>diss.dist</a></code>.</p></td>
 not it represents squared distances.</p></td>
     </tr>
     <tr>
+      <th>freq</th>
+      <td><p><code>logical</code>. If <code>within = FALSE</code>, the parameter rho is calculated
+(Ronfort et al. 1998; Meirmans and Liu 2018). By setting <code>freq = TRUE</code>,
+(default) allele counts will be converted to frequencies before the
+distance is calculated, otherwise, the distance will be calculated on
+allele counts, which can bias results in mixed-ploidy data sets. Note that
+this option has no effect for haploid or presence/absence data sets.</p></td>
+    </tr>
+    <tr>
       <th>correction</th>
-      <td><p>a <code>character</code> defining the correction method for 
-non-euclidean distances. Options are <code><a href='http://www.rdocumentation.org/packages/ade4/topics/quasieuclid'>quasieuclid</a></code>
-(Default), <code><a href='http://www.rdocumentation.org/packages/ade4/topics/lingoes'>lingoes</a></code>, and <code><a href='http://www.rdocumentation.org/packages/ade4/topics/cailliez'>cailliez</a></code>.
-See Details below.</p></td>
+      <td><p>a <code>character</code> defining the correction method for
+non-euclidean distances. Options are <code><a href='http://www.rdocumentation.org/packages/ade4/topics/quasieuclid'>ade4::quasieuclid()</a></code> (Default),
+<code><a href='http://www.rdocumentation.org/packages/ade4/topics/lingoes'>ade4::lingoes()</a></code>, and <code><a href='http://www.rdocumentation.org/packages/ade4/topics/cailliez'>ade4::cailliez()</a></code>. See Details below.</p></td>
     </tr>
     <tr>
       <th>sep</th>
-      <td><p>Deprecated. As of poppr version 2, this argument serves no purpose.</p></td>
+      <td><p>Deprecated. As of poppr version 2, this argument serves no
+purpose.</p></td>
     </tr>
     <tr>
       <th>filter</th>
-      <td><p><code>logical</code> When set to <code>TRUE</code>, mlg.filter will be run 
-to determine genotypes from the distance matrix. It defaults to 
-<code>FALSE</code>. You can set the parameters with <code>algorithm</code> and
-<code>threshold</code> arguments. Note that this will not be performed when 
-<code>within = TRUE</code>. Note that the threshold should be the number of
-allowable substitutions if you don't supply a distance matrix.</p></td>
+      <td><p><code>logical</code> When set to <code>TRUE</code>, mlg.filter will be run to
+determine genotypes from the distance matrix. It defaults to <code>FALSE</code>. You
+can set the parameters with <code>algorithm</code> and <code>threshold</code> arguments. Note
+that this will not be performed when <code>within = TRUE</code>. Note that the
+threshold should be the number of allowable substitutions if you don't
+supply a distance matrix.</p></td>
     </tr>
     <tr>
       <th>threshold</th>
@@ -193,23 +207,22 @@ the original (naive) MLG definition.</p></td>
     <tr>
       <th>missing</th>
       <td><p>specify method of correcting for missing data utilizing
-options given in the function <code><a href='missingno.html'>missingno</a></code>. Default is
-<code>"loci"</code>.</p></td>
+options given in the function <code><a href='missingno.html'>missingno()</a></code>. Default is <code>"loci"</code>.</p></td>
     </tr>
     <tr>
       <th>cutoff</th>
       <td><p>specify the level at which missing data should be
-removed/modified. See <code><a href='missingno.html'>missingno</a></code> for details.</p></td>
+removed/modified. See <code><a href='missingno.html'>missingno()</a></code> for details.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
       <td><p><code>logical</code> If <code>FALSE</code> (Default), messages regarding any
-corrections will be printed to the screen. If <code>TRUE</code>, no messages will
-be printed.</p></td>
+corrections will be printed to the screen. If <code>TRUE</code>, no messages will be
+printed.</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>Which method for calculating AMOVA should be used? Choices 
+      <td><p>Which method for calculating AMOVA should be used? Choices
 refer to package implementations: "ade4" (default) or "pegas". See details
 for differences.</p></td>
     </tr>
@@ -222,79 +235,89 @@ amova.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list of class <code>amova</code> from the ade4 package. See 
-  <code><a href='http://www.rdocumentation.org/packages/ade4/topics/amova'>amova</a></code> for details.</p>
+    <p>a list of class <code>amova</code> from the ade4 or pegas package. See
+<code><a href='http://www.rdocumentation.org/packages/ade4/topics/amova'>ade4::amova()</a></code> or <code><a href='http://www.rdocumentation.org/packages/pegas/topics/amova'>pegas::amova()</a></code> for details.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The poppr implementation of AMOVA is a very detailed wrapper for the
-  ade4 implementation. The output is an <code><a href='http://www.rdocumentation.org/packages/ade4/topics/amova'>amova</a></code> class list 
-  that contains the results in the first four elements. The inputs are
-  contained in the last three elements. The inputs required for the ade4
-  implementation are:</p><ol>
+ade4 implementation. The output is an <code><a href='http://www.rdocumentation.org/packages/ade4/topics/amova'>ade4::amova()</a></code> class list that
+contains the results in the first four elements. The inputs are contained
+in the last three elements. The inputs required for the ade4 implementation
+are:</p><ol>
 <li><p>a distance matrix on all unique genotypes (haplotypes)</p></li>
 <li><p>a data frame defining the hierarchy of the distance matrix</p></li>
 <li><p>a genotype (haplotype) frequency table.</p></li>
-</ol><p>All of this data can be constructed from a <code>genind</code>
-  object, but can be daunting for a novice R user. <em>This function
-  automates the entire process</em>. Since there are many variables regarding
-  genetic data, some points need to be highlighted:</p>  
-<p></p><h3>On Hierarchies:</h3>
-The hierarchy is defined by different 
-  population strata that separate your data hierarchically. These strata are
-  defined in the <strong>strata</strong> slot of <code>genind</code> and
-  <code><a href='genclone-class.html'>genclone</a></code><p>objects. They are useful for defining the
-  population factor for your data. See the function <code>strata</code> for
-  details on how to properly define these strata.</p>
-<p></p><h3>On Within Individual Variance:</h3>
+</ol>
+    <p>All of this data can be constructed from a genind object,
+but can be daunting for a novice R user. <em>This function automates the
+entire process</em>. Since there are many variables regarding genetic data,
+some points need to be highlighted:</p>
+<h3>On Hierarchies:</h3>
+The hierarchy is defined by different
+population strata that separate your data hierarchically. These strata are
+defined in the <strong>strata</strong> slot of genind and
+<a href='genclone-class.html'>genclone</a> objects. They are useful for defining the
+population factor for your data. See the function <code>strata()</code> for details on
+how to properly define these strata.
+    <h3>On Within Individual Variance:</h3>
  Heterozygosities within
-  diploid genotypes are sources of variation from within individuals and can
-  be quantified in AMOVA. When <code>within = TRUE</code>, poppr will split diploid
-  genotypes into haplotypes and use those to calculate within-individual 
-  variance. No estimation of phase is made. This acts much like the default 
-  settings for AMOVA in the Arlequin software package. Within individual 
-  variance will not be calculated for haploid individuals or dominant 
-  markers.
-    <p></p><h3>On Euclidean Distances:</h3>
- AMOVA, as defined by
-  Excoffier et al., utilizes an absolute genetic distance measured in the
-  number of differences between two samples across all loci. With the ade4
-  implementation of AMOVA (utilized by poppr), distances must be Euclidean
-  (due to the nature of the calculations). Unfortunately, many genetic
-  distance measures are not always euclidean and must be corrected for before
-  being analyzed. Poppr automates this with three methods implemented in 
-  ade4, <code>quasieuclid</code>, <code>lingoes</code>, and 
-  <code>cailliez</code>. The correction of these distances should not 
-  adversely affect the outcome of the analysis.
-    <p></p><h3>On Filtering:</h3>
+genotypes are sources of variation from within individuals and can be
+quantified in AMOVA. When <code>within = TRUE</code>, poppr will split genotypes into
+haplotypes with the function <code><a href='make_haplotypes.html'>make_haplotypes()</a></code> and use those to calculate
+within-individual variance. No estimation of phase is made. This acts much
+like the default settings for AMOVA in the Arlequin software package.
+Within individual variance will not be calculated for haploid individuals
+or dominant markers as the haplotypes cannot be split further. Setting
+<code>within = FALSE</code> uses the euclidean distance of the allele frequencies
+within each individual
+    <h3>On Euclidean Distances:</h3>
+ With the ade4 implementation of AMOVA
+(utilized by poppr), distances must be Euclidean (due to the nature of the
+calculations). Unfortunately, many genetic distance measures are not always
+euclidean and must be corrected for before being analyzed. Poppr automates
+this with three methods implemented in ade4, <code>quasieuclid()</code>, <code>lingoes()</code>,
+and <code>cailliez()</code>. The correction of these distances should not adversely
+affect the outcome of the analysis.
+    <h3>On Filtering:</h3>
  Filtering multilocus genotypes is performed by
-  <code><a href='mlg.filter.html'>mlg.filter</a></code>. This can necessarily only be done AMOVA tests 
-  that do not account for within-individual variance. The distance matrix used
-  to calculate the amova is derived from using <code><a href='mlg.filter.html'>mlg.filter</a></code> with
-  the option <code>stats = "distance"</code>, which reports the distance between 
-  multilocus genotype clusters. One useful way to utilize this feature is to
-  correct for genotypes that have equivalent distance due to missing data. 
-  (See example below.)
-    <p></p><h3>On Methods:</h3>
- Both <span class="pkg">ade4</span> and <span class="pkg">pegas</span> have 
-  implementations of AMOVA, both of which are appropriately called "amova". 
-  The ade4 version is faster, but there have been questions raised as to the 
-  validity of the code utilized. The pegas version is slower, but careful 
-  measures have been implemented as to the accuracy of the method. It must be
-  noted that there appears to be a bug regarding permuting analyses where 
-  within individual variance is accounted for (<code>within = TRUE</code>) in the 
-  pegas implementation. If you want to perform permutation analyses on the 
-  pegas implementation, you must set <code>within = FALSE</code>. In addition,
-  while clone correction is implemented for both methods, filtering is only
-  implemented for the ade4 version.
-    
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>The ade4 function <code><a href='http://www.rdocumentation.org/packages/ade4/topics/randtest.amova'>randtest.amova</a></code> contains a slight 
-  bug as of version 1.7.4 which causes the wrong alternative hypothesis to be
-  applied on every 4th heirarchical level. Luckily, there is a way to fix it
-  by re-converting the results with the function
-  <code><a href='http://www.rdocumentation.org/packages/ade4/topics/krandtest'>as.krandtest</a></code>. See examples for details.</p>
+<code><a href='mlg.filter.html'>mlg.filter()</a></code>. This can necessarily only be done AMOVA tests that do not
+account for within-individual variance. The distance matrix used to
+calculate the amova is derived from using <code><a href='mlg.filter.html'>mlg.filter()</a></code> with the option
+<code>stats = "distance"</code>, which reports the distance between multilocus
+genotype clusters. One useful way to utilize this feature is to correct for
+genotypes that have equivalent distance due to missing data. (See example
+below.)
+    <h3>On Methods:</h3>
+ Both <span class="pkg">ade4</span> and <span class="pkg">pegas</span> have
+implementations of AMOVA, both of which are appropriately called "amova".
+The ade4 version is faster, but there have been questions raised as to the
+validity of the code utilized. The pegas version is slower, but careful
+measures have been implemented as to the accuracy of the method. It must be
+noted that there appears to be a bug regarding permuting analyses where
+within individual variance is accounted for (<code>within = TRUE</code>) in the pegas
+implementation. If you want to perform permutation analyses on the pegas
+implementation, you must set <code>within = FALSE</code>. In addition, while clone
+correction is implemented for both methods, filtering is only implemented
+for the ade4 version.
+    <h3>On Polyploids:</h3>
+ As of <span class="pkg">poppr</span> version 2.7.0, this
+function is able to calculate phi statistics for within-individual variance
+for polyploid data with <strong>full dosage information</strong>. When a data set does
+not contain full dosage information for all samples, then the resulting
+pseudo-haplotypes will contain missing data, which would result in an
+incorrect estimate of variance.
+    Instead, the AMOVA will be performed on the distance matrix derived from
+allele counts or allele frequencies, depending on the <code>freq</code> option. This
+has been shown to be robust to estimates with mixed ploidy (Ronfort et al.
+1998; Meirmans and Liu 2018). If you wish to brute-force your way to
+estimating AMOVA using missing values, you can split your haplotypes with
+the <code><a href='make_haplotypes.html'>make_haplotypes()</a></code> function.
+    One strategy for addressing ambiguous dosage in your polyploid data set
+would be to convert your data to <span class="pkg">polysat</span>'s <code>genambig</code> class with the
+<code><a href='coercion-methods.html'>as.genambig()</a></code>, estimate allele frequencies with <code><a href='http://www.rdocumentation.org/packages/polysat/topics/deSilvaFreq'>polysat::deSilvaFreq()</a></code>,
+and use these frequencies to randomly sample alleles to fill in the
+ambiguous alleles.
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -302,12 +325,17 @@ The hierarchy is defined by different
 molecular variance inferred from metric distances among DNA haplotypes:
 application to human mitochondrial DNA restriction data. <em>Genetics</em>,
 <strong>131</strong>, 479-491.</p>
+<p>Ronfort, J., Jenczewski, E., Bataillon, T., and Rousset, F. (1998). Analysis
+of population structure in autotetraploid species. <em>Genetics</em>, <strong>150</strong>,
+921–930.</p>
+<p>Meirmans, P., Liu, S. (2018) Analysis of Molecular Variance (AMOVA) for
+Autopolyploids <em>Submitted</em>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/ade4/topics/amova'>amova</a></code> (ade4) <code><a href='http://www.rdocumentation.org/packages/pegas/topics/amova'>amova</a></code> (pegas) 
-  <code><a href='clonecorrect.html'>clonecorrect</a></code> <code><a href='diss.dist.html'>diss.dist</a></code> <code><a href='missingno.html'>missingno</a></code> 
-  <code><a href='http://www.rdocumentation.org/packages/ade4/topics/is.euclid'>is.euclid</a></code> <code>strata</code></p>
+    <p><code><a href='http://www.rdocumentation.org/packages/ade4/topics/amova'>ade4::amova()</a></code>, <code><a href='http://www.rdocumentation.org/packages/pegas/topics/amova'>pegas::amova()</a></code>, <code><a href='clonecorrect.html'>clonecorrect()</a></code>, <code><a href='diss.dist.html'>diss.dist()</a></code>,
+<code><a href='missingno.html'>missingno()</a></code>, <code><a href='http://www.rdocumentation.org/packages/ade4/topics/is.euclid'>ade4::is.euclid()</a></code>, <code>strata()</code>, <code><a href='make_haplotypes.html'>make_haplotypes()</a></code>,
+<code><a href='coercion-methods.html'>as.genambig()</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -350,7 +378,7 @@ application to human mitochondrial DNA restriction data. <em>Genetics</em>,
 #&gt; Phi-samples-Pop   0.2803128
 #&gt; Phi-Pop-total     0.7000679
 #&gt; </div><div class='input'><span class='no'>amova.test</span> <span class='kw'>&lt;-</span> <span class='fu'>randtest</span>(<span class='no'>amova.result</span>) <span class='co'># Test for significance</span>
-<span class='fu'>plot</span>(<span class='no'>amova.test</span>)</div><div class='img'><img src='poppr.amova-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='no'>amova.test</span></div><div class='output co'>#&gt; class: krandtest lightkrandtest 
+<span class='fu'>plot</span>(<span class='no'>amova.test</span>)</div><div class='img'><img src='poppr.amova-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='no'>amova.test</span></div><div class='output co'>#&gt; class: krandtest lightkrandtest 
 #&gt; Monte-Carlo tests
 #&gt; Call: randtest.amova(xtest = amova.result)
 #&gt; 
@@ -383,13 +411,6 @@ application to human mitochondrial DNA restriction data. <em>Genetics</em>,
 <span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>) <span class='co'># gets a warning of zero distances</span>
 <span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>, <span class='kw'>filter</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0.1</span>) <span class='co'># no warning</span>
 
-<span class='co'># Correcting incorrect alternate hypotheses with &gt;2 heirarchical levels</span>
-<span class='co'># </span>
-<span class='no'>mon.amova</span> <span class='kw'>&lt;-</span> <span class='fu'>poppr.amova</span>(<span class='no'>monpop</span>, ~<span class='no'>Symptom</span>/<span class='no'>Year</span>/<span class='no'>Tree</span>)
-<span class='no'>mon.test</span>  <span class='kw'>&lt;-</span> <span class='fu'>randtest</span>(<span class='no'>mon.amova</span>)
-<span class='no'>mon.test</span> <span class='co'># Note alter is less, greater, greater, less</span>
-<span class='no'>alt</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"less"</span>, <span class='st'>"greater"</span>, <span class='st'>"greater"</span>, <span class='st'>"greater"</span>) <span class='co'># extend this to the number of levels</span>
-<span class='fu'>with</span>(<span class='no'>mon.test</span>, <span class='fu'>as.krandtest</span>(<span class='no'>sim</span>, <span class='no'>obs</span>, <span class='kw'>alter</span> <span class='kw'>=</span> <span class='no'>alt</span>, <span class='kw'>call</span> <span class='kw'>=</span> <span class='no'>call</span>, <span class='kw'>names</span> <span class='kw'>=</span> <span class='no'>names</span>))
 
 <span class='co'># }</span></pre>
   </div>
@@ -401,8 +422,6 @@ application to human mitochondrial DNA restriction data. <em>Genetics</em>,
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
-
-      <li><a href="#note">Note</a></li>
 
       <li><a href="#references">References</a></li>
 
@@ -420,7 +439,7 @@ application to human mitochondrial DNA restriction data. <em>Genetics</em>,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -428,3 +447,4 @@ application to human mitochondrial DNA restriction data. <em>Genetics</em>,
 
   </body>
 </html>
+

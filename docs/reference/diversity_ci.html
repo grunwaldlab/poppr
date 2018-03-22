@@ -18,13 +18,20 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Perform bootstrap statistics, calculate, and plot confidence intervals. — diversity_ci" />
+
+<meta property="og:description" content="This function is for calculating bootstrap statistics and their confidence 
+intervals. It is important to note that the calculation of confidence 
+intervals is not perfect (See Details). Please be cautious when interpreting 
+the results." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,6 +106,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform bootstrap statistics, calculate, and plot confidence intervals.</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/bootstraping.R'><code>R/bootstraping.R</code></a></small>
     </div>
 
     
@@ -285,7 +293,7 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 <span class='fu'>data</span>(<span class='no'>Pinf</span>)
 <span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100L</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
-#&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-3.png' alt='' width='700' height='432.632880098887' /></div><div class='output co'>#&gt; $obs
+#&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-1.png' alt='' width='700' height='432.632880098887' /></div><div class='output co'>#&gt; $obs
 #&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5
 #&gt;   South America 3.267944 23.29032 0.9570637 0.8825297
@@ -434,7 +442,7 @@ Zhian N. Kamvar
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -442,3 +450,4 @@ Zhian N. Kamvar
 
   </body>
 </html>
+

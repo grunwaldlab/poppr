@@ -29,6 +29,13 @@ test_that("recode_polyploids will go there and back again", {
 })
 
 
+test_that("as.genambig will convert correctly", {
+  skip_on_cran()
+  testthat::skip_if_not_installed("polysat")
+  data(Pinf, package = "poppr")
+  expect_is(ps <- as.genambig(Pinf), "genambig")
+})
+
 test_that("haplodiploids will work", {
   skip_on_cran()
   df <- matrix(c("0/2", "2/1", "3/0", 

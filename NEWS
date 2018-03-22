@@ -1,6 +1,50 @@
-poppr 2.6.1.99
-=============
+poppr 2.7.1
+============
 
+MISC
+----
+
+* Missing documentation for `poppr.amova()` has been added.
+* Polysat is now listed in imports.
+
+poppr 2.7.0
+============
+
+NEW FUNCTIONS
+-------------
+
+* `make_haplotypes()` will split your data into pseudo-haplotypes for use in
+  AMOVA-like analyses. This was a previously internal function, but has been 
+  promoted to a user-facing function in this version. 
+
+* `as.genambig()` will convert genind/genclone objects to Polysat's "genambig"
+  class. Note that polysat must be installed for this to work. 
+
+ALGORITHMIC CHANGE
+------------
+
+* AMOVA will now default to using euclidean distance. This affects all 
+  calculations made with `within = FALSE` or `filter = TRUE` without a 
+  user-supplied distance. This will not have affect those with haploid or 
+  diploid data using `within = TRUE`. The dissimilarity distance is equivalent 
+  to a squared euclidean distance for haploid genotypes, but not for any higher 
+  ploidy. Those using `filter = TRUE` without specifying a distance should use
+  a euclidean threshold. This should not be an issue for those who simply want
+  to group isolates with missing data, however as a zero distance is the same
+  for euclidean and dissimilarity. Thanks goes to Patrick Meirmans for alerting
+  me to this error.
+
+
+NEW FEATURES
+------------
+
+* AMOVA will now calculate within-individual variance for polyploid data.
+
+MISC
+----
+
+* printing of AMOVA will now better handle any changes in methods from pegas or
+  ade4. 
 
 poppr 2.6.1
 ===========

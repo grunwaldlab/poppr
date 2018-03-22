@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>All news • poppr</title>
+<title>Changelog • poppr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,14 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Changelog" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,13 +100,62 @@
 
   <div class="col-md-9">
     <div class="page-header">
-      <h1>Change log <small>All releases</small></h1>
+      <h1>Change log <small></small></h1>
+      <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
     <div class="contents">
+    <div id="poppr-2-7-1" class="section level1">
+<h1 class="page-header">
+<a href="#poppr-2-7-1" class="anchor"></a>poppr 2.7.1<small> 2018-03-16 </small>
+</h1>
+<div id="misc" class="section level2">
+<h2 class="hasAnchor">
+<a href="#misc" class="anchor"></a>MISC</h2>
+<ul>
+<li>Missing documentation for <code><a href="../reference/poppr.amova.html">poppr.amova()</a></code> has been added.</li>
+<li>Polysat is now listed in imports.</li>
+</ul>
+</div>
+</div>
+    <div id="poppr-2-7-0" class="section level1">
+<h1 class="page-header">
+<a href="#poppr-2-7-0" class="anchor"></a>poppr 2.7.0<small> 2018-03-16 </small>
+</h1>
+<div id="new-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functions" class="anchor"></a>NEW FUNCTIONS</h2>
+<ul>
+<li><p><code><a href="../reference/make_haplotypes.html">make_haplotypes()</a></code> will split your data into pseudo-haplotypes for use in AMOVA-like analyses. This was a previously internal function, but has been promoted to a user-facing function in this version.</p></li>
+<li><p><code><a href="../reference/coercion-methods.html">as.genambig()</a></code> will convert genind/genclone objects to Polysat’s “genambig” class. Note that polysat must be installed for this to work.</p></li>
+</ul>
+</div>
+<div id="algorithmic-change" class="section level2">
+<h2 class="hasAnchor">
+<a href="#algorithmic-change" class="anchor"></a>ALGORITHMIC CHANGE</h2>
+<ul>
+<li>AMOVA will now default to using euclidean distance. This affects all calculations made with <code>within = FALSE</code> or <code>filter = TRUE</code> without a user-supplied distance. This will not have affect those with haploid or diploid data using <code>within = TRUE</code>. The dissimilarity distance is equivalent to a squared euclidean distance for haploid genotypes, but not for any higher ploidy. Those using <code>filter = TRUE</code> without specifying a distance should use a euclidean threshold. This should not be an issue for those who simply want to group isolates with missing data, however as a zero distance is the same for euclidean and dissimilarity. Thanks goes to Patrick Meirmans for alerting me to this error.</li>
+</ul>
+</div>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>NEW FEATURES</h2>
+<ul>
+<li>AMOVA will now calculate within-individual variance for polyploid data.</li>
+</ul>
+</div>
+<div id="misc-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#misc-1" class="anchor"></a>MISC</h2>
+<ul>
+<li>printing of AMOVA will now better handle any changes in methods from pegas or ade4.</li>
+</ul>
+</div>
+</div>
     <div id="poppr-2-6-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-6-1" class="anchor"></a>poppr 2.6.1</h1>
+<h1 class="page-header">
+<a href="#poppr-2-6-1" class="anchor"></a>poppr 2.6.1<small> 2018-01-15 </small>
+</h1>
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix" class="anchor"></a>BUG FIX</h2>
@@ -115,18 +165,19 @@
 </div>
 </div>
     <div id="poppr-2-6-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-6-0" class="anchor"></a>poppr 2.6.0</h1>
-<div id="new-functions" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-2-6-0" class="anchor"></a>poppr 2.6.0<small> 2018-01-08 </small>
+</h1>
+<div id="new-functions-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-1" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>The new function <code><a href="../reference/boot.ia.html">boot.ia()</a></code> is conceptually similar to <code><a href="../reference/ia.html">resample.ia()</a></code>, except it resamples with replacement.</li>
 </ul>
 </div>
-<div id="new-features" class="section level2">
+<div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-1" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>The function <code><a href="../reference/ia.html">resample.ia()</a></code> now can resample individuals weighted by their Psex value.</li>
 <li>The minimum spanning networks will now scale nodes by area instead of radius. This gives a more accurate picture of the differences between MLGs. See <a href="https://github.com/grunwaldlab/poppr/issues/154" class="uri">https://github.com/grunwaldlab/poppr/issues/154</a> for details.</li>
@@ -152,20 +203,21 @@
 <li>The minimum version of igraph has been set to 1.0.0.</li>
 </ul>
 </div>
-<div id="misc" class="section level2">
+<div id="misc-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc" class="anchor"></a>MISC</h2>
+<a href="#misc-2" class="anchor"></a>MISC</h2>
 <ul>
 <li>The MSN is now plotted last in <code><a href="../reference/plot_poppr_msn.html">plot_poppr_msn()</a></code> so additional legends can be added if necessary.</li>
 </ul>
 </div>
 </div>
     <div id="poppr-2-5-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-5-0" class="anchor"></a>poppr 2.5.0</h1>
-<div id="algorithmic-change" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-2-5-0" class="anchor"></a>poppr 2.5.0<small> 2017-09-11 </small>
+</h1>
+<div id="algorithmic-change-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#algorithmic-change" class="anchor"></a>ALGORITHMIC CHANGE</h2>
+<a href="#algorithmic-change-1" class="anchor"></a>ALGORITHMIC CHANGE</h2>
 <ul>
 <li>Identified in <a href="https://github.com/grunwaldlab/poppr/issues/139" class="uri">https://github.com/grunwaldlab/poppr/issues/139</a>, Bruvo’s distance will now consider all possible combinations of ordered alleles in the calculation under the genome addition and loss models for missing data. This will affect those who have polyploid data that contain more than one missing allele at any genotype</li>
 </ul>
@@ -187,9 +239,9 @@
 <li>A bug in read.genalex() where removed samples would have incorrect strata labels was fixed. Thanks to Hernán Dario Capador-Barreto for identifying it. See <a href="https://github.com/grunwaldlab/poppr/issues/147" class="uri">https://github.com/grunwaldlab/poppr/issues/147</a>.</li>
 </ul>
 </div>
-<div id="misc-1" class="section level2">
+<div id="misc-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-1" class="anchor"></a>MISC</h2>
+<a href="#misc-3" class="anchor"></a>MISC</h2>
 <ul>
 <li>The internal plotting function for mlg.table now uses tidy evaluation for dplyr versions &gt; 0.5.0</li>
 <li>The package reshape2 was removed from imports and replaced with base functions (see <a href="https://github.com/grunwaldlab/poppr/issues/144" class="uri">https://github.com/grunwaldlab/poppr/issues/144</a> for details)</li>
@@ -204,8 +256,9 @@
 </div>
 </div>
     <div id="poppr-2-4-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-4-1" class="anchor"></a>poppr 2.4.1</h1>
+<h1 class="page-header">
+<a href="#poppr-2-4-1" class="anchor"></a>poppr 2.4.1<small> 2017-04-14 </small>
+</h1>
 <div id="bug-fix-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-3" class="anchor"></a>BUG FIX</h2>
@@ -216,19 +269,20 @@
 </div>
 </div>
     <div id="poppr-2-4-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-4-0" class="anchor"></a>poppr 2.4.0</h1>
-<div id="new-functions-1" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-2-4-0" class="anchor"></a>poppr 2.4.0<small> 2017-04-10 </small>
+</h1>
+<div id="new-functions-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-1" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-2" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>
 <code><a href="../reference/ia.html">jack.ia()</a></code> will randomly jackknife your sample to a specified n (default is the number of MLG), and calculate the index of association over multiple iterations, giving a distribution of possible values at a given sample size.</li>
 </ul>
 </div>
-<div id="new-features-1" class="section level2">
+<div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-2" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>The function <code><a href="../reference/mlg.html">mlg.table()</a></code> gains new parameters, “color” and “background”. The “color” parameter will create a single barplot with colors representing populations while the “background” parameter will create a background plot showing the abundance of MLGs across populations within the facets.</li>
 <li>The function <code><a href="../reference/win.ia.html">win.ia()</a></code> will now take into consideration chromosomal coordinates when constructing windows. It has additionally acquired a new parameter <code>chromosome_buffer</code>, which allows the user to specify whether or not the window should be limited to within chromosomes.</li>
@@ -262,9 +316,9 @@
 <li>PROTECT statements were placed around allocation statements. For details, see <a href="https://github.com/grunwaldlab/poppr/issues/133" class="uri">https://github.com/grunwaldlab/poppr/issues/133</a>.</li>
 </ul>
 </div>
-<div id="misc-2" class="section level2">
+<div id="misc-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-2" class="anchor"></a>MISC</h2>
+<a href="#misc-4" class="anchor"></a>MISC</h2>
 <ul>
 <li>The documentation for <code><a href="../reference/bitwise.dist.html">bitwise.dist()</a></code> clarifies the role of the <code>differences_only</code> flag (see <a href="https://github.com/grunwaldlab/poppr/issues/119" class="uri">https://github.com/grunwaldlab/poppr/issues/119</a>).</li>
 <li>Interruptions in C code is now handled gracefully via <code>R_CheckUserInterrupt()</code>. The benefit is that long-running calculations are interrupted near instantly, but at the cost of a few more milliseconds of computation time. (see <a href="https://github.com/grunwaldlab/poppr/issues/86" class="uri">https://github.com/grunwaldlab/poppr/issues/86</a>)</li>
@@ -273,32 +327,33 @@
 </div>
 </div>
     <div id="poppr-2-3-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-3-0" class="anchor"></a>poppr 2.3.0</h1>
-<div id="new-functions-2" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-2-3-0" class="anchor"></a>poppr 2.3.0<small> 2016-11-23 </small>
+</h1>
+<div id="new-functions-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-2" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-3" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>The function <code><a href="../reference/coercion-methods.html">bootgen2genind()</a></code> will help users take advantage of bootstrapping distance functions from other packages that require genind objects. For details, see <a href="https://github.com/grunwaldlab/poppr/issues/112" class="uri">https://github.com/grunwaldlab/poppr/issues/112</a> and <a href="https://github.com/grunwaldlab/poppr/issues/111" class="uri">https://github.com/grunwaldlab/poppr/issues/111</a>
 </li>
 </ul>
 </div>
-<div id="new-features-2" class="section level2">
+<div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-3" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>There is now a <code>plot</code> parameter for the genotype curve to enable or suppress plotting.</li>
 <li>Progress bars are now automatically suppressed when running non-interactively. to turn them on when running non-interactively, use <code>options(poppr.debug = TRUE)</code>.</li>
 <li>The progress bar for <code><a href="../reference/ia.html">ia()</a></code> and <code><a href="../reference/poppr.html">poppr()</a></code> will now show estimated time. This is from dplyr’s <code>progress_estimated()</code>.</li>
 </ul>
 </div>
-<div id="misc-3" class="section level2">
+<div id="misc-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-3" class="anchor"></a>MISC</h2>
+<a href="#misc-5" class="anchor"></a>MISC</h2>
 <ul>
 <li>The <code>hist</code> argument in the <code><a href="../reference/ia.html">ia()</a></code> is deprecated in favor of <code>plot</code>.</li>
 <li>The x axis for the <code><a href="../reference/genotype_curve.html">genotype_curve()</a></code> plot is now numeric, allowing you to fit a smoothing function over the points without having to use the hack <code>geom_smooth(aes(group = 1))</code>. This is thanks to Kara Woo for pointing this out on twitter (<a href="https://twitter.com/kara_woo/status/783336540407685120" class="uri">https://twitter.com/kara_woo/status/783336540407685120</a>).</li>
-<li>The “show” method for genclone objects now delimits populations and strata by a comma, avoiding confusion with multi-word population names. Thanks to @knausb for the fix in <a href="https://github.com/grunwaldlab/poppr/pull/116" class="uri">https://github.com/grunwaldlab/poppr/pull/116</a>.<br>
+<li>The “show” method for genclone objects now delimits populations and strata by a comma, avoiding confusion with multi-word population names. Thanks to <a href='http://github.com/knausb'>@knausb</a> for the fix in <a href="https://github.com/grunwaldlab/poppr/pull/116" class="uri">https://github.com/grunwaldlab/poppr/pull/116</a>.<br>
 </li>
 <li>Documentation for <code>poppr.amova</code> now contains a note about significance testing with the ade4 function <code>randtest.amova</code>.</li>
 </ul>
@@ -314,8 +369,9 @@
 </div>
 </div>
     <div id="poppr-2-2-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-2-1" class="anchor"></a>poppr 2.2.1</h1>
+<h1 class="page-header">
+<a href="#poppr-2-2-1" class="anchor"></a>poppr 2.2.1<small> 2016-08-29 </small>
+</h1>
 <div id="bug-fix-6" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-6" class="anchor"></a>BUG FIX</h2>
@@ -325,18 +381,18 @@
 </li>
 </ul>
 </div>
-<div id="new-features-3" class="section level2">
+<div id="new-features-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-3" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-4" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>You can now specify layout parameters in <code><a href="../reference/imsn.html">imsn()</a></code>
 </li>
 <li>The *.msn functions will now take into account whether or not your data is set to collapsed MLGs. (see <a href="https://github.com/grunwaldlab/poppr/issues/107" class="uri">https://github.com/grunwaldlab/poppr/issues/107</a>)</li>
 </ul>
 </div>
-<div id="misc-4" class="section level2">
+<div id="misc-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-4" class="anchor"></a>MISC</h2>
+<a href="#misc-6" class="anchor"></a>MISC</h2>
 <ul>
 <li>Errors from mlg.filter now make more sense. (see <a href="https://github.com/grunwaldlab/poppr/issues/109" class="uri">https://github.com/grunwaldlab/poppr/issues/109</a>)</li>
 <li>The vignette poppr_manual has been converted to HTML format. (see <a href="https://github.com/grunwaldlab/poppr/issues/113" class="uri">https://github.com/grunwaldlab/poppr/issues/113</a>)</li>
@@ -344,19 +400,20 @@
 </div>
 </div>
     <div id="poppr-2-2-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-2-0" class="anchor"></a>poppr 2.2.0</h1>
-<div id="new-functions-3" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-2-2-0" class="anchor"></a>poppr 2.2.0<small> 2016-06-13 </small>
+</h1>
+<div id="new-functions-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-3" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-4" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>
 <code><a href="../reference/incomp.html">incomp()</a></code> will check your data to see if there are any incomparable samples.</li>
 </ul>
 </div>
-<div id="new-features-4" class="section level2">
+<div id="new-features-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-4" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-5" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Threshold argument added to <code><a href="../reference/filter_stats.html">filter_stats()</a></code> (see <a href="https://github.com/grunwaldlab/poppr/issues/94" class="uri">https://github.com/grunwaldlab/poppr/issues/94</a>)</li>
 <li>The pipe operator (<code>%&gt;%</code>) is now exported from magrittr to make chaining commands easier.</li>
@@ -375,15 +432,15 @@
 <ul>
 <li>An issue that caused errors in the <code><a href="../reference/imsn.html">imsn()</a></code> code output was fixed (see <a href="https://github.com/grunwaldlab/poppr/issues/93" class="uri">https://github.com/grunwaldlab/poppr/issues/93</a>)</li>
 <li>Caught bug where the <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> assignment method was using <code><a href="../reference/genetic_distance.html">nei.dist()</a></code> instead of <code><a href="../reference/diss.dist.html">diss.dist()</a></code> when no distance was specified.</li>
-<li>A bug that resulted in significantly negative values from <code><a href="../reference/bitwise.ia.html">bitwise.ia()</a></code> with large sample sizes was fixed. Spotted by @knausb (see <a href="https://github.com/grunwaldlab/poppr/issues/100" class="uri">https://github.com/grunwaldlab/poppr/issues/100</a>)</li>
+<li>A bug that resulted in significantly negative values from <code><a href="../reference/bitwise.ia.html">bitwise.ia()</a></code> with large sample sizes was fixed. Spotted by <a href='http://github.com/knausb'>@knausb</a> (see <a href="https://github.com/grunwaldlab/poppr/issues/100" class="uri">https://github.com/grunwaldlab/poppr/issues/100</a>)</li>
 <li>Fixed issue where <code><a href="../reference/plot_filter_stats.html">plot_filter_stats()</a></code> wasn’t displaying the full range of MLGs</li>
 <li>Color vectors are now correctly parsed when passed to msn functions (see <a href="https://github.com/grunwaldlab/poppr/issues/55" class="uri">https://github.com/grunwaldlab/poppr/issues/55</a>) for details. Long color vectors are now accepted, albiet with warning.</li>
 <li>An issue where <code><a href="../reference/mll.reset-method.html">mll.reset()</a></code> did not reset non-MLG class objects in the mlg slot was fixed.</li>
 </ul>
 </div>
-<div id="misc-5" class="section level2">
+<div id="misc-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-5" class="anchor"></a>MISC</h2>
+<a href="#misc-7" class="anchor"></a>MISC</h2>
 <ul>
 <li>Documentation for <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> was clarified and updated with more examples.</li>
 <li>The vignette “Migration from poppr version 1” has been removed.</li>
@@ -392,11 +449,12 @@
 </div>
 </div>
     <div id="poppr-2-1-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-1-1" class="anchor"></a>poppr 2.1.1</h1>
-<div id="new-features-5" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-2-1-1" class="anchor"></a>poppr 2.1.1<small> 2016-03-15 </small>
+</h1>
+<div id="new-features-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-5" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-6" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code><a href="../reference/imsn.html">imsn()</a></code> now has collapsible side panels</li>
@@ -406,9 +464,9 @@
 <code><a href="../reference/rraf.html">rraf()</a></code> now gives options for minor allele correction encompassed in the internal function <code><a href="../reference/rare_allele_correction.html">rare_allele_correction()</a></code>. This extends also to <code><a href="../reference/pgen.html">pgen()</a></code> and <code><a href="../reference/psex.html">psex()</a></code>, which must correct minor allele frequencies by default. See <a href="https://github.com/grunwaldlab/poppr/issues/81" class="uri">https://github.com/grunwaldlab/poppr/issues/81</a> for details.</li>
 </ul>
 </div>
-<div id="misc-6" class="section level2">
+<div id="misc-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-6" class="anchor"></a>MISC</h2>
+<a href="#misc-8" class="anchor"></a>MISC</h2>
 <ul>
 <li>
 <code><a href="../reference/mlg.filter.html">mlg.filter()</a></code> now defaults to using <code><a href="../reference/diss.dist.html">diss.dist()</a></code>
@@ -438,8 +496,9 @@
 </div>
 </div>
     <div id="poppr-2-1-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-1-0" class="anchor"></a>poppr 2.1.0</h1>
+<h1 class="page-header">
+<a href="#poppr-2-1-0" class="anchor"></a>poppr 2.1.0<small> 2015-12-01 </small>
+</h1>
 <div id="improvements" class="section level2">
 <h2 class="hasAnchor">
 <a href="#improvements" class="anchor"></a>IMPROVEMENTS</h2>
@@ -449,15 +508,15 @@
 <li>The internal code for the <code>genotype_curve</code> has been implemented in C for a 10x increase in speed.</li>
 </ul>
 </div>
-<div id="new-features-6" class="section level2">
+<div id="new-features-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-6" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-7" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
-<code>poppr.msn</code>, <code>bruvo.msn</code>, and <code>plot_poppr_msn</code> gain the ability to take character vectors for color palettes. See issue #55 (<a href="https://github.com/grunwaldlab/poppr/issues/55" class="uri">https://github.com/grunwaldlab/poppr/issues/55</a>) for details.</li>
+<code>poppr.msn</code>, <code>bruvo.msn</code>, and <code>plot_poppr_msn</code> gain the ability to take character vectors for color palettes. See issue <a href='https://github.com/grunwaldlab/poppr/issues/55'>#55</a> (<a href="https://github.com/grunwaldlab/poppr/issues/55" class="uri">https://github.com/grunwaldlab/poppr/issues/55</a>) for details.</li>
 <li>
 <code>plot_poppr_msn</code> returns the modified graph.</li>
-<li>All functions related to Bruvo’s distance can now take a named vector of repeat lengths in any order. See issue #61 (<a href="https://github.com/grunwaldlab/poppr/issues/61" class="uri">https://github.com/grunwaldlab/poppr/issues/61</a>) for details.</li>
+<li>All functions related to Bruvo’s distance can now take a named vector of repeat lengths in any order. See issue <a href='https://github.com/grunwaldlab/poppr/issues/61'>#61</a> (<a href="https://github.com/grunwaldlab/poppr/issues/61" class="uri">https://github.com/grunwaldlab/poppr/issues/61</a>) for details.</li>
 <li>
 <code>aboot</code> gains the argument strata so that you can automatically convert genind to genpop.</li>
 <li>
@@ -466,7 +525,7 @@
 <li>
 <code>filter_stats</code> can now optionally plot a histogram in the background.</li>
 <li>
-<code>bruvo.dist</code> can now optionally return distance matrices by locus. This is addresed in issue #60 (<a href="https://github.com/grunwaldlab/poppr/issues/60" class="uri">https://github.com/grunwaldlab/poppr/issues/60</a>)</li>
+<code>bruvo.dist</code> can now optionally return distance matrices by locus. This is addresed in issue <a href='https://github.com/grunwaldlab/poppr/issues/60'>#60</a> (<a href="https://github.com/grunwaldlab/poppr/issues/60" class="uri">https://github.com/grunwaldlab/poppr/issues/60</a>)</li>
 <li>
 <code>aboot</code> can now handle matrices as previously specified in the documentation.</li>
 <li>
@@ -475,9 +534,9 @@
 <code>poppr.amova</code> can now perform amova using the pegas implementation.</li>
 </ul>
 </div>
-<div id="new-functions-4" class="section level2">
+<div id="new-functions-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-4" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-5" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>
 <code>rrmlg</code> will calculate round-robin multilocus genotypes for each locus.</li>
@@ -496,9 +555,9 @@
 <li>because we’re through being cool.</li>
 </ul>
 </div>
-<div id="misc-7" class="section level2">
+<div id="misc-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-7" class="anchor"></a>MISC</h2>
+<a href="#misc-9" class="anchor"></a>MISC</h2>
 <ul>
 <li>Documentation for genclone and snpclone classes are more coherent.</li>
 <li>Accessors added for internal MLG objects (for developers).</li>
@@ -511,52 +570,55 @@
 <h2 class="hasAnchor">
 <a href="#bug-fix-9" class="anchor"></a>BUG FIX</h2>
 <ul>
-<li>Single locus data sets can now be read in with <code>read.genalex</code>. This was brought up in issue <a href="https://github.com/grunwaldlab/poppr/issues/58">#58</a> (Thanks to Nick Wong for spotting it).</li>
+<li>Single locus data sets can now be read in with <code>read.genalex</code>. This was brought up in issue <a href="https://github.com/grunwaldlab/poppr/issues/58"><a href='https://github.com/grunwaldlab/poppr/issues/58'>#58</a></a> (Thanks to Nick Wong for spotting it).</li>
 <li>A bug in <code>informloci</code> where the MAF argument wasn’t being applied to P/A data has been fixed.</li>
 <li>Printing of genclone objects with mixed ploidies previously reported erroneously due to a sorting error. This has been fixed.</li>
 <li>Edge case where a missing cell in the genalex matrix was interpreted as a literal “NA” was fixed.</li>
-<li>msn functions now return nodes that are correctly named. See Issue #66 (<a href="https://github.com/grunwaldlab/poppr/issues/66" class="uri">https://github.com/grunwaldlab/poppr/issues/66</a>) for details.</li>
+<li>msn functions now return nodes that are correctly named. See Issue <a href='https://github.com/grunwaldlab/poppr/issues/66'>#66</a> (<a href="https://github.com/grunwaldlab/poppr/issues/66" class="uri">https://github.com/grunwaldlab/poppr/issues/66</a>) for details.</li>
 </ul>
 </div>
 </div>
     <div id="poppr-2-0-2" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-0-2" class="anchor"></a>poppr 2.0.2</h1>
+<h1 class="page-header">
+<a href="#poppr-2-0-2" class="anchor"></a>poppr 2.0.2<small> 2015-07-18 </small>
+</h1>
 <div id="bug-fix-10" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-10" class="anchor"></a>BUG FIX</h2>
 <ul>
-<li>Definition of Hexp was fixed. It originally was mis-calculated, inflating the metric. It is now correctly calculated and documented. More information at issue <a href="https://github.com/grunwaldlab/poppr/issues/47">#47</a>
+<li>Definition of Hexp was fixed. It originally was mis-calculated, inflating the metric. It is now correctly calculated and documented. More information at issue <a href="https://github.com/grunwaldlab/poppr/issues/47"><a href='https://github.com/grunwaldlab/poppr/issues/47'>#47</a></a>
 </li>
 </ul>
 </div>
 </div>
     <div id="poppr-2-0-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-0-1" class="anchor"></a>poppr 2.0.1</h1>
+<h1 class="page-header">
+<a href="#poppr-2-0-1" class="anchor"></a>poppr 2.0.1<small> 2015-07-14 </small>
+</h1>
 <div id="bug-fix-11" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-11" class="anchor"></a>BUG FIX</h2>
 <ul>
-<li>Memory leak with Bruvo’s distance was fixed by @JonahBrooks in 90facb4 (issue #40)</li>
-<li>Cutoff field now works for distances other than dissimilarity in <code>imsn</code> (issue #41)</li>
+<li>Memory leak with Bruvo’s distance was fixed by <a href='http://github.com/JonahBrooks'>@JonahBrooks</a> in 90facb4 (issue <a href='https://github.com/grunwaldlab/poppr/issues/40'>#40</a>)</li>
+<li>Cutoff field now works for distances other than dissimilarity in <code>imsn</code> (issue <a href='https://github.com/grunwaldlab/poppr/issues/41'>#41</a>)</li>
 <li>Switching between data sets no longer shows an error in <code>imsn</code>
 </li>
 <li>
-<code>read.genealex</code> can now correctly import missing data for diploids (issue #42)</li>
+<code>read.genealex</code> can now correctly import missing data for diploids (issue <a href='https://github.com/grunwaldlab/poppr/issues/42'>#42</a>)</li>
 </ul>
 </div>
-<div id="new-features-7" class="section level2">
+<div id="new-features-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-7" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-8" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Startup message now tells you if poppr was compiled with OMP support.</li>
 </ul>
 </div>
 </div>
     <div id="poppr-2-0-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-2-0-0" class="anchor"></a>poppr 2.0.0</h1>
+<h1 class="page-header">
+<a href="#poppr-2-0-0" class="anchor"></a>poppr 2.0.0<small> 2015-07-08 </small>
+</h1>
 <div id="compatibility-update" class="section level2">
 <h2 class="hasAnchor">
 <a href="#compatibility-update" class="anchor"></a>COMPATIBILITY UPDATE</h2>
@@ -593,14 +655,14 @@
 <li>refreshing!</li>
 </ul>
 </div>
-<div id="new-features-8" class="section level2">
+<div id="new-features-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-8" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-9" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (<code>index = "rbarD"</code>, default) or the classic index of association (<code>index =   "Ia"</code>). If the user uses the function <code>ia</code> with the argument <code>valuereturn =   TRUE</code>, then the resulting object can be plotted with the plot function.</li>
 <li>The function <code>poppr</code> will now plot all populations in a single faceted plot instead of one plot per population.</li>
 <li>
-<code>aboot</code> and <code>bruvo.boot</code> will now be able to utilize any function to generate trees (suggested in issue #18).</li>
+<code>aboot</code> and <code>bruvo.boot</code> will now be able to utilize any function to generate trees (suggested in issue <a href='https://github.com/grunwaldlab/poppr/issues/18'>#18</a>).</li>
 <li>The mlg slot in the genclone object can now optionally hold an MLG class object. This object will contain different definitions of multilocus genotypes, allowing the user to switch between observed, custom, and mlgs defined given a genetic distance threshold.</li>
 <li>minimum spanning network functions gain the ability to include reticulations using the option <code>include.ties</code>
 </li>
@@ -624,9 +686,9 @@
 <code>genind2genalex</code> gains the ability to selectively write different strata.</li>
 </ul>
 </div>
-<div id="new-functions-5" class="section level2">
+<div id="new-functions-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-5" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-6" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>
 <code>mlg.filter</code> will contract multilocus genotypes given a genetic distance and threshold using one of three algorithms. It can report statistics such as the multilocus genotypes returned, the number of samples within each multilocus genotype, the thresholds at which multilocus genotypes were collapsed, and the genetic distance matrix that represents the new multilocus genotypes.</li>
@@ -683,8 +745,9 @@
 </div>
 </div>
     <div id="poppr-1-1-5" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-1-5" class="anchor"></a>poppr 1.1.5</h1>
+<h1 class="page-header">
+<a href="#poppr-1-1-5" class="anchor"></a>poppr 1.1.5<small> 2015-05-13 </small>
+</h1>
 <div id="bug-fix-12" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-12" class="anchor"></a>BUG FIX</h2>
@@ -692,13 +755,14 @@
 <li>Fixed internal bug for <code>fix_negative_branch</code> when only one branch had a negative edge.</li>
 <li>Fixed bug in <code>diss.dist</code> where a single locus would return an error.</li>
 <li>Fixed bug in <code>poppr.amova</code> where a single locus would return an error due to <code>repool_haplotypes</code>.</li>
-<li>Fixed bug from the future! mlg.table will now return a matrix all the time (Fix #25).</li>
+<li>Fixed bug from the future! mlg.table will now return a matrix all the time (Fix <a href='https://github.com/grunwaldlab/poppr/issues/25'>#25</a>).</li>
 </ul>
 </div>
 </div>
     <div id="poppr-1-1-4" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-1-4" class="anchor"></a>poppr 1.1.4</h1>
+<h1 class="page-header">
+<a href="#poppr-1-1-4" class="anchor"></a>poppr 1.1.4<small> 2015-02-06 </small>
+</h1>
 <div id="bug-fix-13" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-13" class="anchor"></a>BUG FIX</h2>
@@ -708,14 +772,15 @@
 </div>
 </div>
     <div id="poppr-1-1-3" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-1-3" class="anchor"></a>poppr 1.1.3</h1>
-<div id="new-features-9" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-1-1-3" class="anchor"></a>poppr 1.1.3<small> 2015-02-03 </small>
+</h1>
+<div id="new-features-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-9" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-10" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>new arguments to <code>plot_poppr_msn</code> to allow for easier manipulation of node sizes and of labeling</li>
-<li>read.genalex can now take read text connections as input. Addresses issue #8</li>
+<li>read.genalex can now take read text connections as input. Addresses issue <a href='https://github.com/grunwaldlab/poppr/issues/8'>#8</a></li>
 <li>users can now specify cutoff for missing values in <code>aboot</code>
 </li>
 </ul>
@@ -726,18 +791,18 @@
 <ul>
 <li>Fixed issue where monomorphic loci would cause an error in <code>recode_polyploids</code>
 </li>
-<li>Fixed logical error that would cause The infinite alleles model of Bruvo’s distance to inflate the distance. (Found by Michael Metzger. Addresses issue #5).</li>
-<li>AMOVA can now take subset genclone objects (Addresses issue #7).</li>
-<li>in <code>mlg.table</code>, the mlgsub argument will now subset by name instead of index (fixed in #7).</li>
-<li>Fixed issue for neighbor-joining trees where the internal function to fix negative branch lengths was accidentally shuffling the corrected branches. Addresses issue #11.</li>
+<li>Fixed logical error that would cause The infinite alleles model of Bruvo’s distance to inflate the distance. (Found by Michael Metzger. Addresses issue <a href='https://github.com/grunwaldlab/poppr/issues/5'>#5</a>).</li>
+<li>AMOVA can now take subset genclone objects (Addresses issue <a href='https://github.com/grunwaldlab/poppr/issues/7'>#7</a>).</li>
+<li>in <code>mlg.table</code>, the mlgsub argument will now subset by name instead of index (fixed in <a href='https://github.com/grunwaldlab/poppr/issues/7'>#7</a>).</li>
+<li>Fixed issue for neighbor-joining trees where the internal function to fix negative branch lengths was accidentally shuffling the corrected branches. Addresses issue <a href='https://github.com/grunwaldlab/poppr/issues/11'>#11</a>.</li>
 <li>
 <code>diss.dist</code> can now be used with <code>aboot</code>
 </li>
 </ul>
 </div>
-<div id="misc-8" class="section level2">
+<div id="misc-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-8" class="anchor"></a>MISC</h2>
+<a href="#misc-10" class="anchor"></a>MISC</h2>
 <ul>
 <li>
 <code>info_table</code> will print a discrete scale as opposed to colorbar when type = “ploidy”</li>
@@ -746,36 +811,39 @@
 </div>
 </div>
     <div id="poppr-1-1-2" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-1-2" class="anchor"></a>poppr 1.1.2</h1>
+<h1 class="page-header">
+<a href="#poppr-1-1-2" class="anchor"></a>poppr 1.1.2<small> 2014-07-29 </small>
+</h1>
 <div id="bug-fix-15" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-15" class="anchor"></a>BUG FIX</h2>
 <ul>
-<li>Fixed memory allocation bug (Further addresses issue #2).</li>
+<li>Fixed memory allocation bug (Further addresses issue <a href='https://github.com/grunwaldlab/poppr/issues/2'>#2</a>).</li>
 <li>Memory allocated in C function bruvo_dist is now properly freed.</li>
 </ul>
 </div>
 </div>
     <div id="poppr-1-1-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-1-1" class="anchor"></a>poppr 1.1.1</h1>
+<h1 class="page-header">
+<a href="#poppr-1-1-1" class="anchor"></a>poppr 1.1.1<small> 2014-07-27 </small>
+</h1>
 <div id="bug-fix-16" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-16" class="anchor"></a>BUG FIX</h2>
 <ul>
 <li>Fixed bug where the loss and add options for Bruvo’s distance were switched.</li>
-<li>Fixed illegal memory access error by UBSAN. Made memory management of internal C functions more sane. (Addresses issue #2).</li>
-<li>Fixed directional quotes and em-dashes produced by Mavericks (Addresses issue #3).</li>
+<li>Fixed illegal memory access error by UBSAN. Made memory management of internal C functions more sane. (Addresses issue <a href='https://github.com/grunwaldlab/poppr/issues/2'>#2</a>).</li>
+<li>Fixed directional quotes and em-dashes produced by Mavericks (Addresses issue <a href='https://github.com/grunwaldlab/poppr/issues/3'>#3</a>).</li>
 </ul>
 </div>
 </div>
     <div id="poppr-1-1-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-1-0" class="anchor"></a>poppr 1.1.0</h1>
-<div id="new-features-10" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-1-1-0" class="anchor"></a>poppr 1.1.0<small> 2014-07-24 </small>
+</h1>
+<div id="new-features-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-10" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-11" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Polyploids with ambiguous genotypes are now supported in poppr. See documentation for <code>recode_polyploids</code> for details.</li>
 <li>Calculations of Bruvo’s distance now features correction for partial missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004.</li>
@@ -800,9 +868,9 @@
 <li>The <code>genclone</code> object is a new extension of the <code>genind</code> object from adegenet. This object contains slots containing population hierarchies and multilocus genotype definitions and will work with all analyses in adegenet and poppr.</li>
 </ul>
 </div>
-<div id="new-functions-6" class="section level2">
+<div id="new-functions-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-6" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-7" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>[get,set,name,split,add]hierarchy - functions that will manipulate the hierarchy slot in a <code>genclone</code> object utilizing hierarchical formulae as arguments for simplification.</li>
 <li>
@@ -867,9 +935,9 @@
 <li>The function <code>poppr</code> will no longer return rounded results, but rather is printed with three significant digits.</li>
 </ul>
 </div>
-<div id="misc-9" class="section level2">
+<div id="misc-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-9" class="anchor"></a>MISC</h2>
+<a href="#misc-11" class="anchor"></a>MISC</h2>
 <ul>
 <li>Added unit tests.</li>
 <li>The poppr user manual has been shortened to only include instructions on data manipulation.</li>
@@ -878,8 +946,9 @@
 </div>
 </div>
     <div id="poppr-1-0-7" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-0-7" class="anchor"></a>poppr 1.0.7</h1>
+<h1 class="page-header">
+<a href="#poppr-1-0-7" class="anchor"></a>poppr 1.0.7<small> Unreleased </small>
+</h1>
 <div id="update" class="section level2">
 <h2 class="hasAnchor">
 <a href="#update" class="anchor"></a>UPDATE</h2>
@@ -896,8 +965,9 @@
 </div>
 </div>
     <div id="poppr-1-0-6" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-0-6" class="anchor"></a>poppr 1.0.6</h1>
+<h1 class="page-header">
+<a href="#poppr-1-0-6" class="anchor"></a>poppr 1.0.6<small> 2014-03-05 </small>
+</h1>
 <div id="bug-fix-17" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-17" class="anchor"></a>BUG FIX</h2>
@@ -905,17 +975,18 @@
 <li>Fixed bug for users who have downloaded ape version 3.1 or higher where bruvo.boot would throw an error.</li>
 </ul>
 </div>
-<div id="misc-10" class="section level2">
+<div id="misc-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-10" class="anchor"></a>MISC</h2>
+<a href="#misc-12" class="anchor"></a>MISC</h2>
 <ul>
 <li>Updated citation information.</li>
 </ul>
 </div>
 </div>
     <div id="poppr-1-0-5" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-0-5" class="anchor"></a>poppr 1.0.5</h1>
+<h1 class="page-header">
+<a href="#poppr-1-0-5" class="anchor"></a>poppr 1.0.5<small> 2013-12-13 </small>
+</h1>
 <div id="notable-change" class="section level2">
 <h2 class="hasAnchor">
 <a href="#notable-change" class="anchor"></a>NOTABLE CHANGE</h2>
@@ -939,17 +1010,18 @@
 <li>Changes to <code>bruvo.boot</code> allow for ever so slightly faster bootstrapping.</li>
 </ul>
 </div>
-<div id="misc-11" class="section level2">
+<div id="misc-13" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-11" class="anchor"></a>MISC</h2>
+<a href="#misc-13" class="anchor"></a>MISC</h2>
 <ul>
 <li>Permutations for I_A and \bar{r}_d are now visualized as a progress bar as opposed to dots.</li>
 </ul>
 </div>
 </div>
     <div id="poppr-1-0-4" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-0-4" class="anchor"></a>poppr 1.0.4</h1>
+<h1 class="page-header">
+<a href="#poppr-1-0-4" class="anchor"></a>poppr 1.0.4<small> 2013-12-04 </small>
+</h1>
 <div id="bug-fix-19" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix-19" class="anchor"></a>BUG FIX</h2>
@@ -959,17 +1031,18 @@
 </ul>
 <p>(1994) normalization for NJ trees.</p>
 </div>
-<div id="misc-12" class="section level2">
+<div id="misc-14" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-12" class="anchor"></a>MISC</h2>
+<a href="#misc-14" class="anchor"></a>MISC</h2>
 <ul>
 <li>github repository for poppr has changed from github.com/poppr/poppr to github.com/grunwaldlab/poppr</li>
 </ul>
 </div>
 </div>
     <div id="poppr-1-0-3" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-0-3" class="anchor"></a>poppr 1.0.3</h1>
+<h1 class="page-header">
+<a href="#poppr-1-0-3" class="anchor"></a>poppr 1.0.3<small> 2013-08-21 </small>
+</h1>
 <div id="improvements-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#improvements-3" class="anchor"></a>IMPROVEMENTS</h2>
@@ -978,9 +1051,9 @@
 <li>Utilized rmultinom function to increase speed of bootstrap sampling methods for shufflepop and ia.</li>
 </ul>
 </div>
-<div id="new-features-11" class="section level2">
+<div id="new-features-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-11" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-12" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Function <code>informloci</code> will remove phylogenetically uninformative loci.</li>
 </ul>
@@ -1003,8 +1076,9 @@
 </div>
 </div>
     <div id="poppr-1-0-2" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-0-2" class="anchor"></a>poppr 1.0.2</h1>
+<h1 class="page-header">
+<a href="#poppr-1-0-2" class="anchor"></a>poppr 1.0.2<small> Unreleased </small>
+</h1>
 <div id="bug-fixes-2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes-2" class="anchor"></a>BUG FIXES</h2>
@@ -1020,17 +1094,18 @@
 <li>Expanded installation section to include installation instructions from github.</li>
 </ul>
 </div>
-<div id="misc-13" class="section level2">
+<div id="misc-15" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-13" class="anchor"></a>MISC</h2>
+<a href="#misc-15" class="anchor"></a>MISC</h2>
 <ul>
 <li>internal permutation algorithm no longer lists permutations in reverse order</li>
 </ul>
 </div>
 </div>
     <div id="poppr-1-0-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-0-1" class="anchor"></a>poppr 1.0.1</h1>
+<h1 class="page-header">
+<a href="#poppr-1-0-1" class="anchor"></a>poppr 1.0.1<small> 2013-07-03 </small>
+</h1>
 <div id="improvements-4" class="section level2">
 <h2 class="hasAnchor">
 <a href="#improvements-4" class="anchor"></a>IMPROVEMENTS</h2>
@@ -1047,20 +1122,21 @@
 <li>Input values that are not multiples of the specified repeat length for Bruvo’s distance are now rounded (as opposed to being forced as integers).</li>
 </ul>
 </div>
-<div id="misc-14" class="section level2">
+<div id="misc-16" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-14" class="anchor"></a>MISC</h2>
+<a href="#misc-16" class="anchor"></a>MISC</h2>
 <ul>
 <li>Vignette updated for aesthetics and to reflect algorithmic changes.</li>
 </ul>
 </div>
 </div>
     <div id="poppr-1-0-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-1-0-0" class="anchor"></a>poppr 1.0.0</h1>
-<div id="misc-15" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-1-0-0" class="anchor"></a>poppr 1.0.0<small> 2013-04-26 </small>
+</h1>
+<div id="misc-17" class="section level2">
 <h2 class="hasAnchor">
-<a href="#misc-15" class="anchor"></a>MISC</h2>
+<a href="#misc-17" class="anchor"></a>MISC</h2>
 <ul>
 <li>Poppr has been confirmed to work on Linux, Mac, and Windows systems with R 3.0.0.</li>
 <li>Vignette <code>poppr_manual</code> now has cross-references to different sections.</li>
@@ -1076,11 +1152,12 @@
 </div>
 </div>
     <div id="poppr-0-4-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-0-4-1" class="anchor"></a>poppr 0.4.1</h1>
-<div id="new-features-12" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-0-4-1" class="anchor"></a>poppr 0.4.1<small> Unreleased </small>
+</h1>
+<div id="new-features-13" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-12" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-13" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code>getfile</code> has a new argument, “combine”, which will automatically add the path to the list of files, so they can be read without switching working directory.</li>
@@ -1098,8 +1175,9 @@
 </div>
 </div>
     <div id="poppr-0-4" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-0-4" class="anchor"></a>poppr 0.4</h1>
+<h1 class="page-header">
+<a href="#poppr-0-4" class="anchor"></a>poppr 0.4<small> Unreleased </small>
+</h1>
 <div id="bug-fixes-6" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes-6" class="anchor"></a>BUG FIXES</h2>
@@ -1111,9 +1189,9 @@
 <code>read.genalex</code> can now correctly recognize regional formatting without an extra column.</li>
 </ul>
 </div>
-<div id="new-features-13" class="section level2">
+<div id="new-features-14" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-13" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-14" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code>read.genalex</code> will now be able to take in a file that is formatted with both regional and geographic data.</li>
@@ -1142,8 +1220,9 @@
 </div>
 </div>
     <div id="poppr-0-3-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-0-3-1" class="anchor"></a>poppr 0.3.1</h1>
+<h1 class="page-header">
+<a href="#poppr-0-3-1" class="anchor"></a>poppr 0.3.1<small> Unreleased </small>
+</h1>
 <div id="bug-fixes-7" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes-7" class="anchor"></a>BUG FIXES</h2>
@@ -1154,19 +1233,20 @@
 </div>
 </div>
     <div id="poppr-0-3" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-0-3" class="anchor"></a>poppr 0.3</h1>
-<div id="new-functions-7" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-0-3" class="anchor"></a>poppr 0.3<small> Unreleased </small>
+</h1>
+<div id="new-functions-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-7" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-8" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>
 <code>poppr.msn</code> will draw a minimum spanning network for any distance matrix derived from your data set.</li>
 </ul>
 </div>
-<div id="new-features-14" class="section level2">
+<div id="new-features-15" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-14" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-15" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>vignette now has sections describing <code>poppr.msn</code>, <code>diss.dist</code>, <code>greycurve</code>, and a section discussing how to export graphics.</li>
 </ul>
@@ -1182,22 +1262,24 @@
 </div>
 </div>
     <div id="poppr-0-2-2" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-0-2-2" class="anchor"></a>poppr 0.2.2</h1>
-<div id="new-features-15" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-0-2-2" class="anchor"></a>poppr 0.2.2<small> Unreleased </small>
+</h1>
+<div id="new-features-16" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-15" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-16" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>index of association distributions will now feature a rug plot at the bottom as a better way to visualize the distribution of the index of association from the shuffled data sets.</li>
 </ul>
 </div>
 </div>
     <div id="poppr-0-2-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-0-2-1" class="anchor"></a>poppr 0.2.1</h1>
-<div id="new-functions-8" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-0-2-1" class="anchor"></a>poppr 0.2.1<small> Unreleased </small>
+</h1>
+<div id="new-functions-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-8" class="anchor"></a>NEW FUNCTIONS</h2>
+<a href="#new-functions-9" class="anchor"></a>NEW FUNCTIONS</h2>
 <ul>
 <li>
 <code>diss.dist</code> will produce a distance matrix based on discreet distances.</li>
@@ -1205,9 +1287,9 @@
 <code>greycurve</code> will produce a grey scale adjusted to user-supplied parameters. This will be useful for future minimum spanning network functions.</li>
 </ul>
 </div>
-<div id="new-features-16" class="section level2">
+<div id="new-features-17" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-16" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-17" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code>bruvo.msn</code> can now adjust the edge grey level to be weighted toward either closely or distantly weighted individuals.</li>
@@ -1225,19 +1307,21 @@
 </div>
 </div>
     <div id="poppr-0-2" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-0-2" class="anchor"></a>poppr 0.2</h1>
-<div id="new-features-17" class="section level2">
+<h1 class="page-header">
+<a href="#poppr-0-2" class="anchor"></a>poppr 0.2<small> Unreleased </small>
+</h1>
+<div id="new-features-18" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-17" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-18" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Added NEWS file and will now be incrementing version number (3/15/2013)</li>
 </ul>
 </div>
 </div>
     <div id="poppr-0-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#poppr-0-1" class="anchor"></a>poppr 0.1</h1>
+<h1 class="page-header">
+<a href="#poppr-0-1" class="anchor"></a>poppr 0.1<small> Unreleased </small>
+</h1>
 <ul>
 <li>First development version of poppr (2012 - 3/2013)</li>
 </ul>
@@ -1249,6 +1333,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#poppr-2-7-1">2.7.1</a></li>
+        <li><a href="#poppr-2-7-0">2.7.0</a></li>
         <li><a href="#poppr-2-6-1">2.6.1</a></li>
         <li><a href="#poppr-2-6-0">2.6.0</a></li>
         <li><a href="#poppr-2-5-0">2.5.0</a></li>
@@ -1296,7 +1382,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -1304,3 +1390,4 @@
 
   </body>
 </html>
+

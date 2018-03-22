@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Plot minimum spanning networks produced in poppr. — plot_poppr_msn" />
+
+<meta property="og:description" content="This function allows you to take the output of poppr.msn and bruvo.msn and 
+customize the plot by labeling groups of individuals, size of nodes, and 
+adjusting the palette and scale bar." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,6 +105,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot minimum spanning networks produced in poppr.</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/visualizations.r'><code>R/visualizations.r</code></a></small>
     </div>
 
     
@@ -320,9 +327,17 @@ bar. See details.</p></td>
 <span class='no'>amsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='no'>Aeut</span>, <span class='no'>adist</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># Default</span>
-<span class='fu'>library</span>(<span class='st'>"igraph"</span>) <span class='co'># To get all the layouts.</span>
-<span class='fu'>set.seed</span>(<span class='fl'>500</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>)</div><div class='img'><img src='plot_poppr_msn-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>library</span>(<span class='st'>"igraph"</span>) <span class='co'># To get all the layouts.</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘igraph’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:poppr’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    diversity</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    compare</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    decompose, spectrum</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    union</span></div><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>500</span>)
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>)</div><div class='img'><img src='plot_poppr_msn-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div><span class='co'># NOT RUN {</span>
 <span class='co'># Different layouts (from igraph) can be used by supplying the function name.</span>
 <span class='fu'>set.seed</span>(<span class='fl'>500</span>)
@@ -441,7 +456,7 @@ Zhian N. Kamvar
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -449,3 +464,4 @@ Zhian N. Kamvar
 
   </body>
 </html>
+

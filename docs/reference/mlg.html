@@ -18,13 +18,17 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Create counts, vectors, and matrices of multilocus genotypes. — mlg" />
+
+<meta property="og:description" content="Create counts, vectors, and matrices of multilocus genotypes." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -99,6 +103,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create counts, vectors, and matrices of multilocus genotypes.</h1>
+    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/mlg.r'><code>R/mlg.r</code></a></small>
     </div>
 
     
@@ -230,7 +235,7 @@ individual names per MLG.
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Multilocus genotypes are the unique combination of alleles across
-  all loci. For details of how these are calculated see <code><a href='https://cran.rstudio.com/web/packages/poppr/vignettes/mlg.html'>vignette("mlg",
+  all loci. For details of how these are calculated see <code><a href='../articles/mlg.html'>vignette("mlg",
   package = "poppr")</a></code>. In short, for genind and genclone objects, they are
   calculated by using a rank function on strings of alleles, which is
   sensitive to missing data. For genlight and snpclone objects, they are
@@ -291,7 +296,7 @@ the <code>vegan</code> package.</p>
 #&gt; [163]  90  80  99  88  80  77  78  77  87  80  91 101  79 102  78 103 103  95
 #&gt; [181]  97  81  80  97  97  97 101</div><div class='input'>
 <span class='co'># Get a table</span>
-<span class='no'>atab</span> <span class='kw'>&lt;-</span> <span class='fu'>mlg.table</span>(<span class='no'>Aeut</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='mlg-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='no'>atab</span></div><div class='output co'>#&gt;            MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7 MLG.8 MLG.9 MLG.10 MLG.11
+<span class='no'>atab</span> <span class='kw'>&lt;-</span> <span class='fu'>mlg.table</span>(<span class='no'>Aeut</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='mlg-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='no'>atab</span></div><div class='output co'>#&gt;            MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7 MLG.8 MLG.9 MLG.10 MLG.11
 #&gt; Athena         1     0     0     0     0     0     1     1     1      1      1
 #&gt; Mt. Vernon     0     2     1     1     1     1     0     0     0      0      0
 #&gt;            MLG.12 MLG.13 MLG.14 MLG.15 MLG.16 MLG.17 MLG.18 MLG.19 MLG.20
@@ -420,7 +425,7 @@ Zhian N. Kamvar
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -428,3 +433,4 @@ Zhian N. Kamvar
 
   </body>
 </html>
+
