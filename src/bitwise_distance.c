@@ -172,10 +172,10 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
   // genlight object. ie, R_gen_symbol is being set up as an equivalent to the
   // @gen accessor for genlights.
 
-  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named
+  R_gen_symbol = PROTECT(install("gen")); // Used for accessing the named
                                           // elements of the genlight object
-  PROTECT(R_chr_symbol = install("snp"));
-  PROTECT(R_nap_symbol = install("NA.posi"));
+  R_chr_symbol = PROTECT(install("snp"));
+  R_nap_symbol = PROTECT(install("NA.posi"));
 
   // This will be a LIST of type LIST:RAW
   // Set R_gen to genlight@gen, a vector of genotypes in the genlight object
@@ -188,7 +188,7 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
 
   // Set up and initialize the matrix for storing total distance between each
   // pair of genotypes
-  PROTECT(R_out = allocVector(INTSXP, num_gens*num_gens));
+  R_out = PROTECT(allocVector(INTSXP, num_gens*num_gens));
   distance_matrix = R_Calloc(num_gens,int*);
   for(i = 0; i < num_gens; i++)
   {
@@ -223,7 +223,7 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
-  PROTECT(missing_match = asLogical(missing));
+  missing_match = PROTECT(asLogical(missing));
 
   // Loop through every genotype
   for(i = 0; i < num_gens; i++)
@@ -505,9 +505,9 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP dif
 
   // These variables and function calls are used to access elements of the genlight object.
   // ie, R_gen_symbol is being set up as an equivalent to the @gen accessor for genlights.
-  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
-  PROTECT(R_chr_symbol = install("snp"));
-  PROTECT(R_nap_symbol = install("NA.posi"));
+  R_gen_symbol = PROTECT(install("gen")); // Used for accessing the named elements of the genlight object
+  R_chr_symbol = PROTECT(install("snp"));
+  R_nap_symbol = PROTECT(install("NA.posi"));
 
   // This will be a LIST of type LIST:RAW
   // Set R_gen to genlight@gen, a vector of genotypes in the genlight object stored as SNPbin objects.
@@ -516,7 +516,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP dif
   num_gens = XLENGTH(R_gen);
 
   // Set up and initialize the matrix for storing total distance between each pair of genotypes
-  PROTECT(R_out = allocVector(INTSXP, num_gens*num_gens));
+  R_out = PROTECT(allocVector(INTSXP, num_gens*num_gens));
   distance_matrix = R_Calloc(num_gens,int*);
   for(i = 0; i < num_gens; i++)
   {
@@ -848,10 +848,10 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
 
   // These variables and function calls are used to access elements of the genlight object.
   // ie, R_gen_symbol is being set up as an equivalent to the @gen accessor for genlights.
-  PROTECT(R_gen_symbol = install("gen"));
-  PROTECT(R_chr_symbol = install("snp"));
-  PROTECT(R_nap_symbol = install("NA.posi"));
-  PROTECT(R_nloc_symbol = install("n.loc"));
+  R_gen_symbol = PROTECT(install("gen"));
+  R_chr_symbol = PROTECT(install("snp"));
+  R_nap_symbol = PROTECT(install("NA.posi"));
+  R_nloc_symbol = PROTECT(install("n.loc"));
 
   // This will be a LIST of type LIST:RAW
   // Set R_gen to genlight@gen, a vector of genotypes in the genlight object stored as SNPbin objects.
@@ -871,7 +871,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   num_loci = INTEGER(R_nloc)[0];
 
   // Prepare and allocate the output matrix
-  PROTECT(R_out = allocVector(REALSXP, 1));
+  R_out = PROTECT(allocVector(REALSXP, 1));
   // Prepare and allocate a matrix to store the SNPbin data from all samples
   // so that we don't need to fetch them over and over.
   chunk_matrix = R_Calloc(num_gens,char*);
@@ -924,7 +924,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
-  PROTECT(missing_match = asLogical(missing));
+  missing_match = PROTECT(asLogical(missing));
 
   // Loop through all SNP chunks
   #ifdef _OPENMP
@@ -1224,10 +1224,10 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
 
   // These variables and function calls are used to access elements of the genlight object.
   // ie, R_gen_symbol is being set up as an equivalent to the @gen accessor for genlights.
-  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
-  PROTECT(R_chr_symbol = install("snp"));
-  PROTECT(R_nap_symbol = install("NA.posi"));
-  PROTECT(R_nloc_symbol = install("n.loc"));
+  R_gen_symbol = PROTECT(install("gen")); // Used for accessing the named elements of the genlight object
+  R_chr_symbol = PROTECT(install("snp"));
+  R_nap_symbol = PROTECT(install("NA.posi"));
+  R_nloc_symbol = PROTECT(install("n.loc"));
 
   // This will be a LIST of type LIST:RAW
   // Set R_gen to genlight@gen, a vector of genotypes in the genlight object stored as SNPbin objects.
@@ -1247,7 +1247,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   num_loci = INTEGER(R_nloc)[0];
 
   // Prepare and allocate the output matrix
-  PROTECT(R_out = allocVector(REALSXP, 1));
+  R_out = PROTECT(allocVector(REALSXP, 1));
   // Prepare and allocate a matrix to store the SNPbin data from all samples
   // so that we don't need to fetch them over and over.
   chunk_matrix = R_Calloc(num_gens*2,char*);
@@ -1549,9 +1549,9 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
                         // *ploidy
 
   // Syntax for accessing the named elements of the genind object
-  PROTECT(R_tab_symbol = install("tab"));
-  PROTECT(R_loc_symbol = install("loc.n.all"));
-  PROTECT(R_ploidy_symbol = install("ploidy"));
+  R_tab_symbol = PROTECT(install("tab"));
+  R_loc_symbol = PROTECT(install("loc.n.all"));
+  R_ploidy_symbol = PROTECT(install("ploidy"));
 
   // Data in and data out ------------------------------
   int* ploidy;            // Ploidy per sample
@@ -1585,7 +1585,7 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop)
   num_loci = XLENGTH(R_nall);
   alleles_per_locus = INTEGER(R_nall);
   num_pops = INTEGER(npop)[0];
-  PROTECT(R_out = allocMatrix(REALSXP, num_gens, num_loci));
+  R_out = PROTECT(allocMatrix(REALSXP, num_gens, num_loci));
   pgens = REAL(R_out);
 
   // Tue Sep  1 11:19:55 2015 ------------------------------
@@ -1671,9 +1671,9 @@ SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window)
   SEXP R_gen_symbol;
   SEXP R_loc_symbol;
   SEXP R_pop_symbol;
-  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
-  PROTECT(R_loc_symbol = install("n.loc"));
-  PROTECT(R_pop_symbol = install("pop"));
+  R_gen_symbol = PROTECT(install("gen")); // Used for accessing the named elements of the genlight object
+  R_loc_symbol = PROTECT(install("n.loc"));
+  R_pop_symbol = PROTECT(install("pop"));
   struct locus* loci;
   double *pgens;
   int num_gens;
@@ -1690,7 +1690,7 @@ SEXP get_pgen_matrix_genlight(SEXP genlight, SEXP window)
   num_sets = ceil((double)num_loci/(double)interval); // Number of sets of loci for which pgen values should be computed
   size = num_gens*num_sets;
   pgens = R_Calloc(size, double);
-  PROTECT(R_out = allocVector(REALSXP,size));
+  R_out = PROTECT(allocVector(REALSXP,size));
 
   // Find the number of populations by taking the max over all genotypes
   num_pops = 0;
@@ -1763,11 +1763,11 @@ void fill_Pgen(double *pgen, struct locus *loci, int interval, SEXP genlight)
   int next_missing_index;
   int next_missing;
 
-  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
-  PROTECT(R_loc_symbol = install("n.loc"));
-  PROTECT(R_chr_symbol = install("snp"));
-  PROTECT(R_nap_symbol = install("NA.posi"));
-  PROTECT(R_pop_symbol = install("pop"));
+  R_gen_symbol = PROTECT(install("gen")); // Used for accessing the named elements of the genlight object
+  R_loc_symbol = PROTECT(install("n.loc"));
+  R_chr_symbol = PROTECT(install("snp"));
+  R_nap_symbol = PROTECT(install("NA.posi"));
+  R_pop_symbol = PROTECT(install("pop"));
 
   R_gen = getAttrib(genlight, R_gen_symbol);
   num_gens = XLENGTH(R_gen);
@@ -1925,11 +1925,11 @@ void fill_loci(struct locus *loc, SEXP genlight)
   int byte;
   int pop;
 
-  PROTECT(R_gen_symbol = install("gen")); // Used for accessing the named elements of the genlight object
-  PROTECT(R_loc_symbol = install("n.loc"));
-  PROTECT(R_chr_symbol = install("snp"));
-  PROTECT(R_nap_symbol = install("NA.posi"));
-  PROTECT(R_pop_symbol = install("pop"));
+  R_gen_symbol = PROTECT(install("gen")); // Used for accessing the named elements of the genlight object
+  R_loc_symbol = PROTECT(install("n.loc"));
+  R_chr_symbol = PROTECT(install("snp"));
+  R_nap_symbol = PROTECT(install("NA.posi"));
+  R_pop_symbol = PROTECT(install("pop"));
 
   // This will be a LIST of type LIST:RAW
   R_gen = getAttrib(genlight, R_gen_symbol);
