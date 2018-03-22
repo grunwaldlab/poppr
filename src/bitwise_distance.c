@@ -489,7 +489,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP dif
   int next_missing_i;
   int next_missing_j;
   int missing_match;
-  int is_euclid;
+  // int is_euclid;
   int only_differences;
   int num_threads;
   char mask;
@@ -551,9 +551,8 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP dif
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
-  PROTECT(missing_match = asLogical(missing));
-  PROTECT(only_differences = asLogical(differences_only));
-  PROTECT(is_euclid = asLogical(euclid));
+  missing_match = PROTECT(asLogical(missing));
+  only_differences = PROTECT(asLogical(differences_only));
 
   // Loop through every genotype
   for(i = 0; i < num_gens - 1; i++)
@@ -721,7 +720,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP dif
         {
           // If we want the actual distance, we need a more complicated analysis of
           // the sets. See get_distance_custom for details.
-          cur_distance += get_distance_custom(tmp_sim_set, &set_1, &set_2, is_euclid);
+          cur_distance += get_distance_custom(tmp_sim_set, &set_1, &set_2, (int)INTEGER(euclid)[0]);
           // Rprintf("-> Current Distance: %d\n", cur_distance);
         }
       }
@@ -748,7 +747,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP dif
     R_Free(distance_matrix[i]);
   }
   R_Free(distance_matrix);
-  UNPROTECT(7);
+  UNPROTECT(6);
   return R_out;
 }
 
@@ -1047,8 +1046,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   }
 
   // Get the distance matrix from bitwise_distance
-  PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
-  R_dists = bitwise_distance_haploid(genlight, missing, requested_threads);
+  R_dists = PROTECT(bitwise_distance_haploid(genlight, missing, requested_threads));
 
   // Calculate the sum and squared sum of distances between samples
   D = 0;
@@ -1307,14 +1305,13 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
-  PROTECT(missing_match = asLogical(missing));
-  PROTECT(only_differences = asLogical(differences_only));
+  missing_match = PROTECT(asLogical(missing));
+  only_differences = PROTECT(asLogical(differences_only));
   
   
   // Get the distance matrix from bitwise_distance
-  PROTECT(R_dists = allocVector(INTSXP, num_gens*num_gens));
-  PROTECT(euclid = ScalarLogical(0));
-  R_dists = bitwise_distance_diploid(genlight, missing, euclid, differences_only, requested_threads);
+  euclid = PROTECT(ScalarInteger(0));
+  R_dists = PROTECT(bitwise_distance_diploid(genlight, missing, euclid, differences_only, requested_threads));
 
   // Loop through all SNP chunks
   #ifdef _OPENMP
