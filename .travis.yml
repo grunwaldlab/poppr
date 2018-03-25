@@ -5,6 +5,7 @@ r:
 
 sudo: false
 cran: https://cran.r-project.org
+warnings_are_errors: false
 
 cache: packages
 
@@ -25,7 +26,6 @@ notifications:
     on_success: change
     on_failure: always
 
-warings_are_errors: false
 
 env:
   global:
