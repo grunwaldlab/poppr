@@ -1305,12 +1305,12 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
-  missing_match = PROTECT(asLogical(missing));
-  only_differences = PROTECT(asLogical(differences_only));
+  missing_match = asLogical(missing);
+  only_differences = asLogical(differences_only);
   
   
   // Get the distance matrix from bitwise_distance
-  euclid = PROTECT(ScalarInteger(0));
+  euclid = PROTECT(ScalarLogical(0));
   R_dists = PROTECT(bitwise_distance_diploid(genlight, missing, euclid, differences_only, requested_threads));
 
   // Loop through all SNP chunks
@@ -1521,7 +1521,7 @@ SEXP association_index_diploid(SEXP genlight, SEXP missing, SEXP differences_onl
   R_Free(vars);
   R_Free(M);
   R_Free(M2);
-  UNPROTECT(9);
+  UNPROTECT(7);
   return R_out;
 
 }
