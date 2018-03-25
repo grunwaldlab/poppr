@@ -37,6 +37,8 @@ that adegenet can take (fstat, structure, genetix, and genpop) as well as
 genalex files exported into a csv format (see read.genalex for 
 details)." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -59,8 +61,12 @@ details)." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -111,7 +117,7 @@ details)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Produce a basic summary table for population genetic analyses.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/Index_calculations.r'><code>R/Index_calculations.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/Index_calculations.r'><code>R/Index_calculations.r</code></a></small>
     </div>
 
     
@@ -131,7 +137,7 @@ details).</p>
   <span class='kw'>clonecorrect</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>strata</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>keep</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>, <span class='kw'>minsamp</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -290,8 +296,8 @@ This function outputs a <span class="pkg">ggplot2</span> graphic of
   histograms. These can be manipulated to be visualized in another manner by
   retrieving the plot with the <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/last_plot'>last_plot</a></code> command from
   <span class="pkg">ggplot2</span>. A useful manipulation would be to arrange the graphs into a
-  single column so that the values of the statistic line up:  <code>p &lt;-
-  last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")</code>
+  single column so that the values of the statistic line up: <br /> <code>p &lt;-
+  last_plot(); p + facet_wrap(~population, ncol = 1, scales = "free_y")</code><br />
   The name for the groupings is "population" and the name for the x axis is
   "value".
     

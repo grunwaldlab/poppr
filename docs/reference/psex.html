@@ -29,6 +29,8 @@
 
 <meta property="og:description" content="Probability of encountering a genotype more than once by chance" />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,8 +53,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -103,7 +109,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Probability of encountering a genotype more than once by chance</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/round_robin.R'><code>R/round_robin.R</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/round_robin.R'><code>R/round_robin.R</code></a></small>
     </div>
 
     
@@ -113,7 +119,7 @@
     <pre class="usage"><span class='fu'>psex</span>(<span class='no'>gid</span>, <span class='kw'>pop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>freq</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"single"</span>, <span class='st'>"multiple"</span>), <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -249,7 +255,7 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 
 <span class='co'># With multiple encounters</span>
 <span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>)
-<span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='input'><span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters"</span>)</div><div class='img'><img src='psex-1.png' alt='' width='700' height='432.632880098887' /></div><span class='co'># NOT RUN {</span>
+<span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='input'><span class='fu'>title</span>(<span class='st'>"Probability of multiple encounters"</span>)</div><div class='img'><img src='psex-1.png' alt='' width='700' height='433' /></div><span class='co'># NOT RUN {</span>
 <span class='co'># For a single encounter (default)</span>
 <span class='no'>Pram_psex</span> <span class='kw'>&lt;-</span> <span class='fu'>psex</span>(<span class='no'>Pram</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='fu'>plot</span>(<span class='no'>Pram_psex</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>Pram_psex</span> <span class='kw'>&gt;</span> <span class='fl'>0.05</span>, <span class='st'>"red"</span>, <span class='st'>"blue"</span>))

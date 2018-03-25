@@ -31,6 +31,8 @@
 the fraction or number of different alleles between two genlight or snpclone
 objects." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -53,8 +55,12 @@ objects." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -105,7 +111,7 @@ objects." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate a dissimilarity distance matrix for SNP data.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
     </div>
 
     
@@ -117,7 +123,7 @@ objects.</p>
     <pre class="usage"><span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>mat</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>missing_match</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -203,7 +209,7 @@ caution.</p></td>
 #&gt;    @other: a list containing: ancestral.pops 
 #&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles (finer measure, usually the most sensible)</span>
 <span class='fu'>system.time</span>(<span class='no'>xd</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.004   0.001   0.031 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
+#&gt;   0.003   0.001   0.049 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
 #&gt; 2  0.2105                                                        
 #&gt; 3  0.2195 0.2180                                                 
 #&gt; 4  0.3950 0.3825 0.3855                                          
@@ -215,7 +221,7 @@ caution.</p></td>
 #&gt; 10 0.3980 0.3925 0.4005 0.2180 0.2035 0.2220 0.2185 0.2125 0.2140</div><div class='input'>
 <span class='co'># Assess fraction of different loci (coarse measure)</span>
 <span class='fu'>system.time</span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.044   0.001   0.044 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;        1     2     3     4     5     6     7     8     9
+#&gt;   0.044   0.001   0.043 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;        1     2     3     4     5     6     7     8     9
 #&gt; 2  0.375                                                
 #&gt; 3  0.394 0.385                                          
 #&gt; 4  0.564 0.546 0.547                                    

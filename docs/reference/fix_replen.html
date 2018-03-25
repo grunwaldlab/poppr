@@ -29,6 +29,8 @@
 
 <meta property="og:description" content="Attempts to fix inconsistent repeat lengths found by test_replen" />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,8 +53,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -103,7 +109,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Find and fix inconsistent repeat lengths</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/bruvo.r'><code>R/bruvo.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bruvo.r'><code>R/bruvo.r</code></a></small>
     </div>
 
     
@@ -112,7 +118,7 @@
 
     <pre class="usage"><span class='fu'>fix_replen</span>(<span class='no'>gid</span>, <span class='no'>replen</span>, <span class='kw'>e</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>, <span class='kw'>fix_some</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -143,7 +149,7 @@ fixed will. If <code>FALSE</code>, the original repeat lengths will not be fixed
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function is modified from the version used in 
-  <a href='http://dx.doi.org/10.5281/zenodo.13007'>http://dx.doi.org/10.5281/zenodo.13007</a>. Before being fed into the
+  <a href='http://dx.doi.org/10.5281/zenodo.13007'>http://dx.doi.org/10.5281/zenodo.13007</a>.<br /> Before being fed into the
   algorithm to calculate Bruvo's distance, the amplicon length is divided by
   the repeat unit length. Because of the amplified primer sequence attached
   to sequence repeat, this division does not always result in an integer and

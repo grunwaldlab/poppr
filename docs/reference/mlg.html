@@ -29,6 +29,8 @@
 
 <meta property="og:description" content="Create counts, vectors, and matrices of multilocus genotypes." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,8 +53,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -103,7 +109,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create counts, vectors, and matrices of multilocus genotypes.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/mlg.r'><code>R/mlg.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/mlg.r'><code>R/mlg.r</code></a></small>
     </div>
 
     
@@ -123,7 +129,7 @@
 
 <span class='fu'>mlg.id</span>(<span class='no'>gid</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -296,7 +302,7 @@ the <code>vegan</code> package.</p>
 #&gt; [163]  90  80  99  88  80  77  78  77  87  80  91 101  79 102  78 103 103  95
 #&gt; [181]  97  81  80  97  97  97 101</div><div class='input'>
 <span class='co'># Get a table</span>
-<span class='no'>atab</span> <span class='kw'>&lt;-</span> <span class='fu'>mlg.table</span>(<span class='no'>Aeut</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='mlg-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='no'>atab</span></div><div class='output co'>#&gt;            MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7 MLG.8 MLG.9 MLG.10 MLG.11
+<span class='no'>atab</span> <span class='kw'>&lt;-</span> <span class='fu'>mlg.table</span>(<span class='no'>Aeut</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='mlg-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>atab</span></div><div class='output co'>#&gt;            MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7 MLG.8 MLG.9 MLG.10 MLG.11
 #&gt; Athena         1     0     0     0     0     0     1     1     1      1      1
 #&gt; Mt. Vernon     0     2     1     1     1     1     0     0     0      0      0
 #&gt;            MLG.12 MLG.13 MLG.14 MLG.15 MLG.16 MLG.17 MLG.18 MLG.19 MLG.20

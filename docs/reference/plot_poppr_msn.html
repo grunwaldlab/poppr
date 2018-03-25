@@ -31,6 +31,8 @@
 customize the plot by labeling groups of individuals, size of nodes, and 
 adjusting the palette and scale bar." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -53,8 +55,12 @@ adjusting the palette and scale bar." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -105,7 +111,7 @@ adjusting the palette and scale bar." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot minimum spanning networks produced in poppr.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/visualizations.r'><code>R/visualizations.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/visualizations.r'><code>R/visualizations.r</code></a></small>
     </div>
 
     
@@ -121,7 +127,7 @@ adjusting the palette and scale bar.</p>
   <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>layfun</span> <span class='kw'>=</span> <span class='no'>layout.auto</span>, <span class='kw'>beforecut</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>pop.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>size.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale.leg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -337,7 +343,7 @@ bar. See details.</p></td>
 #&gt; <span class='message'>    decompose, spectrum</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    union</span></div><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>500</span>)
-<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>)</div><div class='img'><img src='plot_poppr_msn-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>)</div><div class='img'><img src='plot_poppr_msn-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div><span class='co'># NOT RUN {</span>
 <span class='co'># Different layouts (from igraph) can be used by supplying the function name.</span>
 <span class='fu'>set.seed</span>(<span class='fl'>500</span>)

@@ -32,6 +32,8 @@ to genind or genclone objects. — aboot" />
 <meta property="og:description" content="Calculate a dendrogram with bootstrap support using any distance applicable 
 to genind or genclone objects." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -54,8 +56,12 @@ to genind or genclone objects." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -107,7 +113,7 @@ to genind or genclone objects." />
     <div class="page-header">
     <h1>Calculate a dendrogram with bootstrap support using any distance applicable 
 to genind or genclone objects.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/bootstraping.R'><code>R/bootstraping.R</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bootstraping.R'><code>R/bootstraping.R</code></a></small>
     </div>
 
     
@@ -119,7 +125,7 @@ to genind or genclone objects.</p>
   <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>showtree</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"mean"</span>,
   <span class='kw'>mcutoff</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>root</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -244,12 +250,12 @@ While calculation of Bruvo's distance
 <span class='fu'>set.seed</span>(<span class='fl'>9999</span>)
 <span class='co'># Generate a tree using nei's distance</span>
 <span class='no'>neinan</span> <span class='kw'>&lt;-</span> <span class='fu'>aboot</span>(<span class='no'>nan9</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>nei.dist</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Infinite values detected.</span></div><div class='output co'>#&gt; Running bootstraps:       100 / 100
-#&gt; Calculating bootstrap values... done.</div><div class='img'><img src='aboot-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt; Calculating bootstrap values... done.</div><div class='img'><img src='aboot-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='fu'>set.seed</span>(<span class='fl'>9999</span>)
 <span class='co'># Generate a tree using custom distance</span>
 <span class='no'>bindist</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dist</span>(<span class='fu'>tab</span>(<span class='no'>x</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"binary"</span>)
 <span class='no'>binnan</span> <span class='kw'>&lt;-</span> <span class='fu'>aboot</span>(<span class='no'>nan9</span>, <span class='kw'>dist</span> <span class='kw'>=</span> <span class='no'>bindist</span>)</div><div class='output co'>#&gt; Running bootstraps:       100 / 100
-#&gt; Calculating bootstrap values... done.</div><div class='img'><img src='aboot-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt; Calculating bootstrap values... done.</div><div class='img'><img src='aboot-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div><span class='co'># NOT RUN {</span>
 <span class='co'># Distances from other packages.</span>
 <span class='co'>#</span>

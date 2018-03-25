@@ -33,6 +33,8 @@ The user has the ability to define what uninformative means by setting a
 cutoff value for either percentage of differentiating genotypes or minor 
 allele frequency." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -55,8 +57,12 @@ allele frequency." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -107,7 +113,7 @@ allele frequency." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Remove all non-phylogentically informative loci</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/data_subset.r'><code>R/data_subset.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/data_subset.r'><code>R/data_subset.r</code></a></small>
     </div>
 
     
@@ -120,7 +126,7 @@ allele frequency.</p>
 
     <pre class="usage"><span class='fu'>informloci</span>(<span class='no'>pop</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>2</span>/<span class='fu'>nInd</span>(<span class='no'>pop</span>), <span class='kw'>MAF</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>

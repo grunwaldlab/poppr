@@ -32,6 +32,8 @@ file.choose, file.path, and list.files.
 If the user is working in a GUI environment, a window will pop up, allowing 
 the user to choose a specified file regardless of path." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -54,8 +56,12 @@ the user to choose a specified file regardless of path." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,7 +112,7 @@ the user to choose a specified file regardless of path." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get a file name and path and store them in a list.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/file_handling.r'><code>R/file_handling.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/file_handling.r'><code>R/file_handling.r</code></a></small>
     </div>
 
     
@@ -118,7 +124,7 @@ the user to choose a specified file regardless of path.</p>
 
     <pre class="usage"><span class='fu'>getfile</span>(<span class='kw'>multi</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>combine</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>

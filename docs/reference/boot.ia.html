@@ -31,6 +31,8 @@
 set multiple times to create a distribution, showing the variation of the
 index due to repeat observations." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -53,8 +55,12 @@ index due to repeat observations." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -105,7 +111,7 @@ index due to repeat observations." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Bootstrap the index of association</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/ia_jackknife.R'><code>R/ia_jackknife.R</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/ia_jackknife.R'><code>R/ia_jackknife.R</code></a></small>
     </div>
 
     
@@ -116,7 +122,7 @@ index due to repeat observations.</p>
 
     <pre class="usage"><span class='fu'>boot.ia</span>(<span class='no'>gid</span>, <span class='kw'>how</span> <span class='kw'>=</span> <span class='st'>"partial"</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -168,7 +174,7 @@ what you are doing.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>Pinf</span>)
-<span class='fu'>boot.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |======                                                | 11% ~0 s remaining     |===========================                           | 52% ~0 s remaining     |======================================================|100% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
+<span class='fu'>boot.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |=====                                                 | 10% ~0 s remaining     |==========================                            | 48% ~0 s remaining     |=================================================     | 91% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
 #&gt; 1  0.6430049 0.07032330
 #&gt; 2  0.5705043 0.06235351
 #&gt; 3  0.5774512 0.06340112

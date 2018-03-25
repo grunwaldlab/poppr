@@ -32,6 +32,8 @@ intervals. It is important to note that the calculation of confidence
 intervals is not perfect (See Details). Please be cautious when interpreting 
 the results." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -54,8 +56,12 @@ the results." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,7 +112,7 @@ the results." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform bootstrap statistics, calculate, and plot confidence intervals.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/bootstraping.R'><code>R/bootstraping.R</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bootstraping.R'><code>R/bootstraping.R</code></a></small>
     </div>
 
     
@@ -120,7 +126,7 @@ the results.</p>
   <span class='kw'>rarefy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>n.rare</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>center</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -272,7 +278,7 @@ three decimal places.
 <li><p>The function name cannot match or partially match any arguments 
     from <code><a href='http://www.rdocumentation.org/packages/boot/topics/boot'>boot</a></code></p></li>
 </ol> 
-  Anonymous functions are okay (e.g. <code>function(x)
+  Anonymous functions are okay <br />(e.g. <code>function(x)
   vegan::rarefy(t(as.matrix(x)), 10)</code>).
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
@@ -293,7 +299,7 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 <span class='fu'>data</span>(<span class='no'>Pinf</span>)
 <span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100L</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
-#&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-1.png' alt='' width='700' height='432.632880098887' /></div><div class='output co'>#&gt; $obs
+#&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $obs
 #&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5
 #&gt;   South America 3.267944 23.29032 0.9570637 0.8825297

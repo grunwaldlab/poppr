@@ -32,6 +32,8 @@ cluster, this will search the top fraction of threshold differences to find
 the largest difference. The average between the thresholds spanning that 
 difference is the cutoff threshold defining the clonal lineage threshold." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -54,8 +56,12 @@ difference is the cutoff threshold defining the clonal lineage threshold." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,7 +112,7 @@ difference is the cutoff threshold defining the clonal lineage threshold." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Predict cutoff thresholds for use with mlg.filter</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/filter_stats.R'><code>R/filter_stats.R</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/filter_stats.R'><code>R/filter_stats.R</code></a></small>
     </div>
 
     
@@ -118,7 +124,7 @@ difference is the cutoff threshold defining the clonal lineage threshold.</p>
 
     <pre class="usage"><span class='fu'>cutoff_predictor</span>(<span class='no'>thresholds</span>, <span class='kw'>fraction</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>

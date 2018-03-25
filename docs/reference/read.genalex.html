@@ -32,6 +32,8 @@ a comma separated format and will parse most types of genalex data. The
 output is a genclone or genind 
 object." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -54,8 +56,12 @@ object." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,7 +112,7 @@ object." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Importing data from genalex formatted *.csv files.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/file_handling.r'><code>R/file_handling.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/file_handling.r'><code>R/file_handling.r</code></a></small>
     </div>
 
     
@@ -119,7 +125,7 @@ object.</p>
     <pre class="usage"><span class='fu'>read.genalex</span>(<span class='no'>genalex</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>geo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>genclone</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>","</span>, <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>

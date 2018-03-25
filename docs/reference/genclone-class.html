@@ -33,6 +33,8 @@
   all of the same attributes as their parent classes, but they will contain
   one extra slot to store extra information about multilocus genotypes." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -55,8 +57,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -107,13 +113,13 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>GENclone and SNPclone classes</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/classes.r'><code>R/classes.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/classes.r'><code>R/classes.r</code></a></small>
     </div>
 
     
     <p><strong>GENclone</strong> is an S4 class that extends the 
-  <code>genind</code> object. <strong>SNPclone</strong> is an S4 class
-  that extends the <code>genlight</code> object. They will have
+  <code>genind</code> object.<br /> <strong>SNPclone</strong> is an S4 class
+  that extends the <code>genlight</code> object.<br /><br /> They will have
   all of the same attributes as their parent classes, but they will contain
   one extra slot to store extra information about multilocus genotypes.</p>
     
@@ -151,7 +157,7 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
     <h2 class="hasAnchor" id="extends"><a class="anchor" href="#extends"></a>Extends</h2>
 
     <p>The <code>genclone</code> class extends class 
-  <code>"genind"</code>, directly.  The <code>snpclone</code> class 
+  <code>"genind"</code>, directly. <br /> The <code>snpclone</code> class 
   extends class <code>"genlight"</code>, directly.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>

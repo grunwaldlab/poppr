@@ -29,6 +29,8 @@
 
 <meta property="og:description" content="Create a tree using Bruvo's Distance with non-parametric bootstrapping." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,8 +53,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">poppr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">poppr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -103,7 +109,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a tree using Bruvo's Distance with non-parametric bootstrapping.</h1>
-    <small>Source: <a href='https:/github.com/grunwaldlab/poppr/blob/master/R/bruvo.r'><code>R/bruvo.r</code></a></small>
+    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bruvo.r'><code>R/bruvo.r</code></a></small>
     </div>
 
     
@@ -114,7 +120,7 @@
   <span class='kw'>tree</span> <span class='kw'>=</span> <span class='st'>"upgma"</span>, <span class='kw'>showtree</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>root</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -230,7 +236,7 @@ genotype distances irrespective of ploidy level. Molecular Ecology,
 #&gt; (note: calculation of node labels can take a while even after the progress bar is full)
 #&gt; 
 #&gt; Running bootstraps:       100 / 100
-#&gt; Calculating bootstrap values... done.</div><div class='img'><img src='bruvo.boot-1.png' alt='' width='700' height='432.632880098887' /></div><div class='output co'>#&gt; 
+#&gt; Calculating bootstrap values... done.</div><div class='img'><img src='bruvo.boot-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; 
 #&gt; Phylogenetic tree with 10 tips and 9 internal nodes.
 #&gt; 
 #&gt; Tip labels:
