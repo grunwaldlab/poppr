@@ -25,6 +25,8 @@ notifications:
     on_success: change
     on_failure: always
 
+warings_are_errors: false
+
 env:
   global:
     - NOT_CRAN: true
