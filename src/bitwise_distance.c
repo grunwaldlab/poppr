@@ -223,7 +223,7 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
-  missing_match = PROTECT(asLogical(missing));
+  missing_match = asLogical(missing);
 
   // Loop through every genotype
   for(i = 0; i < num_gens; i++)
@@ -429,7 +429,7 @@ SEXP bitwise_distance_haploid(SEXP genlight, SEXP missing, SEXP requested_thread
     R_Free(distance_matrix[i]);
   }
   R_Free(distance_matrix);
-  UNPROTECT(5);
+  UNPROTECT(4);
   return R_out;
 }
 
@@ -551,8 +551,8 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP dif
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
-  missing_match = PROTECT(asLogical(missing));
-  only_differences = PROTECT(asLogical(differences_only));
+  missing_match = asLogical(missing);
+  only_differences = asLogical(differences_only);
 
   // Loop through every genotype
   for(i = 0; i < num_gens - 1; i++)
@@ -747,7 +747,7 @@ SEXP bitwise_distance_diploid(SEXP genlight, SEXP missing, SEXP euclid, SEXP dif
     R_Free(distance_matrix[i]);
   }
   R_Free(distance_matrix);
-  UNPROTECT(6);
+  UNPROTECT(4);
   return R_out;
 }
 
@@ -924,7 +924,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   nap1_length = 0;
   nap2_length = 0;
   chr_length = 0;
-  missing_match = PROTECT(asLogical(missing));
+  missing_match = asLogical(missing);
 
   // Loop through all SNP chunks
   #ifdef _OPENMP
@@ -1116,7 +1116,7 @@ SEXP association_index_haploid(SEXP genlight, SEXP missing, SEXP requested_threa
   R_Free(vars);
   R_Free(M);
   R_Free(M2);
-  UNPROTECT(7);
+  UNPROTECT(6);
   return R_out;
 
 }
