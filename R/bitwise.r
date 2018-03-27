@@ -68,7 +68,7 @@
 #'   data is scaled up proportionally to the number of columns used by
 #'   multiplying the value by \code{m / (m - x)} where m is the number of
 #'   loci and x is the number of missing sites. This option matches the behavior
-#'   of base R's \code{\link[package=base]{dist}} function. 
+#'   of base R's \code{\link{dist}} function. 
 #'   Defaults to \code{FALSE}.
 #'   
 #' @param euclidean \code{logical}. if \code{TRUE}, the Euclidean distance will
