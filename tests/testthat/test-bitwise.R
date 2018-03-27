@@ -1,23 +1,29 @@
-context("Bitwise distance and pgen calculations")
+context("Bitwise distance calculations")
 set.seed(991)
 dat <- sample(c(0, 1, NA), 50, replace = TRUE, prob = c(0.49, 0.5, 0.01))
 mat <- matrix(dat, nrow = 5, ncol = 10)
+mat2 <- mat
+mat2[-1, ] <- mat2[-1, ] * 2
 
 test_that("bitwise.dist works for haploids", {
   mat.gl <- new("genlight", mat, parallel = FALSE)
   expected <- rowSums(apply(mat, 2, dist), na.rm = TRUE)/10
-  expect_equivalent(as.vector(bitwise.dist(mat.gl)), expected)
+  expect_equivalent(as.vector(bitwise.dist(mat.gl, threads = 1L)), expected)
   expect_true(all(ploidy(mat.gl) == 1))
 })
 
 test_that("bitwise.dist works for diploids with only one type of homozygote", {
-  mat2 <- mat
-  mat2[-1, ] <- mat2[-1, ] * 2
   mat2.gl <- new("genlight", mat2, parallel = FALSE)
-  expect_error(bitwise.dist(mat2.gl), "ploidy")
+  expect_error(bitwise.dist(mat2.gl, threads = 1L), "ploidy")
   ploidy(mat2.gl) <- rep(2, 5)
   expected <- rowSums(apply(mat2, 2, dist), na.rm = TRUE)/20
-  expect_equivalent(as.vector(bitwise.dist(mat2.gl)), expected)
+  expect_equivalent(as.vector(bitwise.dist(mat2.gl, threads = 1L)), expected)
+})
+
+test_that("bitwise.dist can do euclidean", {
+  mat2.gl <- new("genlight", mat2, parallel = FALSE)
+  ploidy(mat2.gl) <- rep(2, 5)
+  expect_equivalent(bitwise.dist(mat2.gl, scale_missing = TRUE, euclid = TRUE, threads = 1L), dist(mat2.gl))
 })
 
 
