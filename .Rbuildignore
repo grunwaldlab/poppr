@@ -11,7 +11,7 @@
 ^\.travis\.yml$
 ^vignettes/figure
 ^tests/testthat/Rplots.pdf
-^CONDUCT\.md$
+^CODE_OF_CONDUCT\.md$
 ^NEWS\.md$
 ^cran-comments\.md$
 ^docs$
