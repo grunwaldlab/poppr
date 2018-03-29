@@ -8,6 +8,7 @@
 */
 
 /* .Call calls */
+extern SEXP adjust_missing(SEXP, SEXP);
 extern SEXP association_index_diploid(SEXP, SEXP, SEXP, SEXP);
 extern SEXP association_index_haploid(SEXP, SEXP, SEXP);
 extern SEXP bitwise_distance_diploid(SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -26,6 +27,7 @@ extern SEXP permute_shuff(SEXP, SEXP, SEXP);
 extern SEXP permuto(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
+    {"adjust_missing",            (DL_FUNC) &adjust_missing,            2},
     {"association_index_diploid", (DL_FUNC) &association_index_diploid, 4},
     {"association_index_haploid", (DL_FUNC) &association_index_haploid, 3},
     {"bitwise_distance_diploid",  (DL_FUNC) &bitwise_distance_diploid,  5},
