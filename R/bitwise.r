@@ -117,7 +117,7 @@
 #' xdt
 #==============================================================================#
 bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE, 
-                         scale_missing = FALSE, euclidean = FALSE, 
+                         scale_missing = FALSE, euclidean = FALSE,
                          differences_only = FALSE, threads = 0){
   stopifnot(inherits(x, c("genlight", "genclone", "genind", "snpclone")))
   # Stop if the ploidy of the genlight object is not consistent
@@ -172,9 +172,10 @@ bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
   rownames(dist.mat) <- ind.names
   nas <- NA.posi(x)
   if (scale_missing && sum(lengths(nas)) > 0) {
-    dist.mat <- dist.mat * missing_correction(nas, nLoc(x), mat = TRUE)
+    adj      <- missing_correction(nas, nLoc(x))
+    dist.mat <- dist.mat * adj
   }
-  if (euclidean){
+  if (euclidean) {
     dist.mat <- sqrt(dist.mat)
   } else if (percent) {
     if (differences_only)
@@ -206,7 +207,7 @@ poppr_has_parallel <- function(){
 
   supported <- .Call("omp_test", PACKAGE = "poppr")
 
-  if(supported == 0) {
+  if (supported == 0) {
     return(FALSE)
   } else {
     return(TRUE)
@@ -225,15 +226,7 @@ poppr_has_parallel <- function(){
 #'   from 1 to the number of loci.
 #' @noRd
 missing_correction <- function(nas, nloc, mat = TRUE){
-  n          <- length(nas)
-  correction <- matrix(0, nrow = n, ncol = n)
-  for (i in seq(n - 1)) {
-    for (j in seq(from = i + 1, to = n)) {
-      res <- length(unique(unlist(nas[c(i, j)], use.names = FALSE)))
-      correction[j, i] <- res -> correction[i, j]
-    }
-  }
-  res <- nloc/(nloc - correction)
+  res <- .Call("adjust_missing", nas, nLoc(x), PACKAGE = "poppr")
   if (mat) {
     return(res)
   } else {
