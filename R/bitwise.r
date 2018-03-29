@@ -226,7 +226,7 @@ poppr_has_parallel <- function(){
 #'   from 1 to the number of loci.
 #' @noRd
 missing_correction <- function(nas, nloc, mat = TRUE){
-  res <- .Call("adjust_missing", nas, nLoc(x), PACKAGE = "poppr")
+  res <- .Call("adjust_missing", nas, nloc, PACKAGE = "poppr")
   if (mat) {
     return(res)
   } else {
