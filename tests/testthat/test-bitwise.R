@@ -26,6 +26,14 @@ test_that("bitwise.dist can do euclidean", {
   expect_equivalent(bitwise.dist(mat2.gl, scale_missing = TRUE, euclid = TRUE, threads = 1L), dist(mat2.gl))
 })
 
+test_that("bitwise.dist can do euclidean with lots of missing data", {
+  skip_on_cran()
+  set.seed(999)
+  mat2[sample(length(mat2), 10)] <- NA
+  mat2.gl <- new("genlight", mat2, parallel = FALSE)
+  ploidy(mat2.gl) <- rep(2, 5)
+  expect_equivalent(bitwise.dist(mat2.gl, scale_missing = TRUE, euclid = TRUE, threads = 1L), dist(mat2.gl))
+})
 
 test_that("bitwise.dist can actually handle genind objects", {
   skip_on_cran()
