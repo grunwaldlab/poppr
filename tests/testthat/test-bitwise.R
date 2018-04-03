@@ -53,23 +53,65 @@ test_that("bitwise.dist produces reasonable results", {
               c(2,NA,NA,NA,NA,NA,NA,NA,NA,NA))
   z <- new("genlight",dat, parallel = FALSE)
   
-  missing_match_dif <- bitwise.dist(z, missing_match=TRUE, mat=TRUE, differences_only=TRUE)
+  missing_match_dif <- bitwise.dist(z, missing_match = TRUE, mat = TRUE, differences_only = TRUE)
   dim(missing_match_dif) <- NULL
-  expected_match_dif <- c(0.0, 1.0, 0.1, 0.0, 0.0, 1.0, 0.0, 0.9, 1.0, 0.1, 0.1, 0.9, 0.0, 0.1, 0.0, 0.0, 1.0, 0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0)
-  missing_nomatch_dif <- bitwise.dist(z,missing_match=FALSE,mat=TRUE, differences_only=TRUE)
+  expected_match_dif <- c(0.0, 1.0, 0.1, 0.0, 0.0, 
+                          1.0, 0.0, 0.9, 1.0, 0.1, 
+                          0.1, 0.9, 0.0, 0.1, 0.0, 
+                          0.0, 1.0, 0.1, 0.0, 0.0, 
+                          0.0, 0.1, 0.0, 0.0, 0.0)
+  
+  missing_nomatch_dif <- bitwise.dist(z, missing_match = FALSE, mat = TRUE, differences_only = TRUE)
   dim(missing_nomatch_dif) <- NULL
-  expected_nomatch_dif <- c(0.0, 1.0, 0.1, 0.0, 0.9, 1.0, 0.0, 0.9, 1.0, 1.0, 0.1, 0.9, 0.0, 0.1, 0.9, 0.0, 1.0, 0.1, 0.0, 0.9, 0.9, 1.0, 0.9, 0.9, 0.0)
+  expected_nomatch_dif <- c(0.0, 1.0, 0.1, 0.0, 0.9, 
+                            1.0, 0.0, 0.9, 1.0, 1.0, 
+                            0.1, 0.9, 0.0, 0.1, 0.9, 
+                            0.0, 1.0, 0.1, 0.0, 0.9, 
+                            0.9, 1.0, 0.9, 0.9, 0.0)
   
   expect_equivalent(missing_match_dif, expected_match_dif)
   expect_equivalent(missing_nomatch_dif, expected_nomatch_dif)
   
-  missing_match_dist <- bitwise.dist(z,missing_match=TRUE,mat=TRUE,differences_only=FALSE)
+  missing_match_dist <- bitwise.dist(z, missing_match = TRUE, mat = TRUE, differences_only = FALSE)
   dim(missing_match_dist) <- NULL
-  expected_match_dist <- c(0.0, 17.0/20.0, 2.0/20.0, 0.0, 0.0, 17.0/20.0, 0.0, 15.0/20.0, 17.0/20.0, 1.0/20.0, 2.0/20.0, 15.0/20.0, 0.0, 2.0/20.0, 0.0, 0.0, 17.0/20.0, 2.0/20.0, 0.0, 0.0, 0.0, 1.0/20.0, 0.0, 0.0, 0.0)
-  #missing_nomatch <- bitwise.dist(z,missing_match=FALSE,mat=TRUE,differences_only=FALSE)
-  #dim(missing_nomatch) <- NULL
-  #expected_nomatch <- c(0.0, 1.0, 0.1, 0.0, 0.9, 1.0, 0.0, 0.9, 1.0, 1.0, 0.1, 0.9, 0.0, 0.1, 0.9, 0.0, 1.0, 0.1, 0.0, 0.9, 0.9, 1.0, 0.9, 0.9, 0.0)
+  expected_match_dist <- c(0.0, 17.0/20.0, 2.0/20.0, 0.0, 0.0, 
+                           17.0/20.0, 0.0, 15.0/20.0, 17.0/20.0, 1.0/20.0, 
+                           2.0/20.0, 15.0/20.0, 0.0, 2.0/20.0, 0.0, 
+                           0.0, 17.0/20.0, 2.0/20.0, 0.0, 0.0, 
+                           0.0, 1.0/20.0, 0.0, 0.0, 0.0)
   
   expect_equivalent(missing_match_dist, expected_match_dist)
-  #expect_equivalent(missing_nomatch, expected_nomatch)
  })
+
+context("bitwise.ia cromulence")
+
+test_that("bitwise.ia can use both missing-match and missing-nomatch ", {
+  skip_on_cran()
+  dat <- list(c(2,2,2,2,2,2,2,2,2,0),
+              c(1,1,1,0,0,0,0,0,0,2),
+              c(2,2,2,2,2,2,2,2,2,2),
+              c(2,2,2,2,2,2,2,2,2,0),
+              c(2,NA,NA,NA,NA,NA,NA,NA,NA,NA))
+  z <- new("genlight",dat, parallel = FALSE)
+  tz <- tab(z, NA.method = "asis")
+  tz[tz == 2] <- "A/A"
+  tz[tz == "1"] <- "A/B"
+  tz[tz == "0"] <- "B/B"
+  tzg <- df2genind(tz, sep = "/")
+  
+  # Missing-match is the default and matches that of the non-bitwise version
+  expect_equal(bitwise.ia(z, missing_match = TRUE), ia(tzg)[[2]])
+  
+  ianm <- function(i, z){
+    as.vector(bitwise.dist(z[, i], percent = FALSE, missing_match = FALSE))
+  }
+  np  <- choose(5, 2)
+  bdl <- vapply(seq(10), ianm, integer(np), z)
+  dlist <- list(
+             d.vector = colSums(bdl),
+             d2.vector = colSums(bdl * bdl),
+             D.vector = rowSums(bdl)
+           )
+  res <- poppr:::ia_from_d_and_D(dlist, np)
+  expect_equal(res[[2]], bitwise.ia(z, missing_match = FALSE))
+})
