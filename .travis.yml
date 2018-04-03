@@ -5,7 +5,7 @@ r:
 
 sudo: false
 cran: https://cran.r-project.org
-warnings_are_errors: false
+warnings_are_errors: true
 
 cache: packages
 
