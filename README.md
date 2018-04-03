@@ -1,8 +1,8 @@
 # Poppr version 2 <img src="vignettes/small_logo.png" align="right"/>
 
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=euclidean-bitwise)](https://travis-ci.org/grunwaldlab/poppr)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/grunwaldlab/poppr?branch=euclidean-bitwise)](https://ci.appveyor.com/project/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=euclidean-bitwise)](https://coveralls.io/r/grunwaldlab/poppr?branch=euclidean-bitwise)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/zkamvar/poppr?branch=master)](https://ci.appveyor.com/project/zkamvar/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
 [![CRAN version](http://www.r-pkg.org/badges/version/poppr)](https://cran.r-project.org/package=poppr)
 <!-- 
 [![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
