@@ -1,3 +1,15 @@
+poppr 2.8.0
+===========
+
+NEW FEATURES
+------------
+
+* `bitwise.dist()` now has two new options: `euclidean` and `scale_missing`.
+  When both of these are set to `TRUE`, the distance measured will be Euclidean
+  scaled for the amount of missing data in each comparison. This matches the 
+  output of base R's `dist()` function at a fraction of time and memory. 
+  See https://github.com/grunwaldlab/poppr/pull/176 for details.
+
 poppr 2.7.1
 ============
 
