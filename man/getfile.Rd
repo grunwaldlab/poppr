@@ -9,9 +9,9 @@ getfile(multi = FALSE, pattern = NULL, combine = TRUE)
 \arguments{
 \item{multi}{this is an indicator to allow the user to store the names of
 multiple files found in the directory. This is useful in conjunction with
-\code{\link{poppr.all}}.}
+\code{\link[=poppr.all]{poppr.all()}}.}
 
-\item{pattern}{a \code{\link{regex}} pattern for use while 
+\item{pattern}{a \code{\link[=regex]{regex()}} pattern for use while
 \code{multi == TRUE}. This will grab all files matching this pattern.}
 
 \item{combine}{\code{logical}. When this is set to \code{TRUE} (default), the
@@ -26,8 +26,8 @@ name or names.}
 }
 \description{
 getfile is a convenience function that serves as a wrapper for the functions
-\code{\link{file.choose}, \link{file.path},} and \code{\link{list.files}}. 
-If the user is working in a GUI environment, a window will pop up, allowing 
+\code{\link[=file.choose]{file.choose()}}, \code{\link[=file.path]{file.path()}}, and \code{\link[=list.files]{list.files()}}.
+If the user is working in a GUI environment, a window will pop up, allowing
 the user to choose a specified file regardless of path.
 }
 \examples{

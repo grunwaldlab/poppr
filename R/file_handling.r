@@ -47,26 +47,27 @@
 #' Get a file name and path and store them in a list.
 #'
 #' getfile is a convenience function that serves as a wrapper for the functions
-#' \code{\link{file.choose}, \link{file.path},} and \code{\link{list.files}}. 
+#' [file.choose()], [file.path()], and [list.files()]. 
 #' If the user is working in a GUI environment, a window will pop up, allowing 
 #' the user to choose a specified file regardless of path.
 #'
 #' @param multi this is an indicator to allow the user to store the names of
 #' multiple files found in the directory. This is useful in conjunction with
-#' \code{\link{poppr.all}}. 
+#' [poppr.all()]. 
 #'
-#' @param pattern a \code{\link{regex}} pattern for use while 
-#' \code{multi == TRUE}. This will grab all files matching this pattern. 
+#' @param pattern a [regex()] pattern for use while 
+#' `multi == TRUE`. This will grab all files matching this pattern. 
 #' 
-#' @param combine \code{logical}. When this is set to \code{TRUE} (default), the
-#' \code{$files} vector will have the path appended to them. When it is set to
-#' \code{FALSE}, it will have the basename. 
+#' @param combine `logical`. When this is set to `TRUE` (default), the
+#' `$files` vector will have the path appended to them. When it is set to
+#' `FALSE`, it will have the basename. 
 #'
 #' @return \item{path}{a character string of the absolute path to the
 #' chosen file or files}
 #' \item{files}{a character vector containing the chosen file
 #' name or names.}
 #' @author Zhian N. Kamvar
+#' @md
 #'
 #' @examples
 #' \dontrun{
@@ -117,60 +118,52 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 }
 
 #==============================================================================#
-#' Importing data from genalex formatted *.csv files.
+#' Importing data from genalex formatted \*.csv files.
 #' 
 #' read.genalex will read in a genalex-formatted file that has been exported in 
 #' a comma separated format and will parse most types of genalex data. The 
-#' output is a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
-#' object.
+#' output is a [genclone-class][genclone] or [genind-class][genind] object.
 #' 
-#' @param genalex a *.csv file exported from genalex
+#' @param genalex a \*.csv file exported from genalex
 #'   
-#' @param ploidy indicate the ploidy of the dataset
+#' @param ploidy an integer to indicate the ploidy of the dataset
 #'   
 #' @param geo indicates the presence of geographic data in the file. This data 
-#'   will be included in a data frame labeled \code{xy} in the
-#'   \code{\link{other}} slot.
+#'   will be included in a data frame labeled `xy` in the
+#'   [other()] slot.
 #'   
 #' @param region indicates the presence of regional data in the file.
 #'   
-#' @param genclone when \code{TRUE} (default), the output will be a
-#'   \code{\linkS4class{genclone}} object. When \code{FALSE}, the output will be
-#'   a \code{\linkS4class{genind}} object
+#' @param genclone when `TRUE` (default), the output will be a [genclone-class]
+#'   object. When `FALSE`, the output will be a [genind-class] object
 #'   
 #' @param sep A character specifying the column separator of the data. Defaults 
 #'   to ",".
 #'   
-#' @param recode \strong{For polyploid data}: Do you want to recode your data to
-#'   have varying ploidy? Default is \code{FALSE}, and the data will be returned
-#'   with even ploidy where missing alleles are coded as "0". When \code{TRUE},
-#'   the data is run through the function \code{\link{recode_polyploids}} before
+#' @param recode **For polyploid data**: Do you want to recode your data to
+#'   have varying ploidy? Default is `FALSE`, and the data will be returned
+#'   with even ploidy where missing alleles are coded as "0". When `TRUE`,
+#'   the data is run through the function [recode_polyploids()] before
 #'   being returned. Note that this will prevent conversion to genpop objects in
 #'   the future. See details.
 #'   
-#' @return A \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 
-#'   object.
+#' @return A [genclone-class] or [genind-class] bject.
 #'   
 #' @note This function cannot handle raw allele frequency data.
 #'   
 #'   In the case that there are duplicated names within the file, this function 
 #'   will assume separate individuals and rename each one to a sequence of 
 #'   integers from 1 to the number of individuals. A vector of the original 
-#'   names will be saved in the \code{other} slot under \code{original_names}.
+#'   names will be saved in the `other` slot under `original_names`.
 #'   
 #'   
-#' @details \subsection{if \code{genclone = FALSE}}{ The resulting genind object
-#'   will have a data frame in the \code{other} slot called 
-#'   \code{population_hierarchy}. This will contain a column for your population
-#'   data and a column for your Regional data if you have set the flag.}
-#'   
-#'   \subsection{if \code{genclone = TRUE}}{ The resulting genclone object will 
-#'   have a single strata defined in the strata slot. This will 
-#'   be called "Pop" and will reflect the population factor defined in the 
-#'   genalex input. If \code{region = TRUE}, a second column will be inserted 
-#'   and labeled "Region". If you have more than two strata within 
-#'   your data set, you should run the command \code{\link{splitStrata}} on 
-#'   your data set to define the unique stratifications. }
+#' @details The resulting [genclone-class][genclone] or [genind-class][genind]
+#'   object will have a single strata defined in the strata slot. This will be
+#'   called "Pop" and will reflect the population factor defined in the genalex
+#'   input. If `region = TRUE`, a second column will be inserted and labeled
+#'   "Region". If you have more than two strata within your data set, you should
+#'   run the command [adegenet::splitStrata()] on your data set to define the
+#'   unique stratifications. 
 #'   
 #'   \subsection{FOR POLYPLOID (> 2n) DATA SETS}{ The genind object has 
 #'   an all-or-none approach to missing data. If a sample has missing data at a 
@@ -189,14 +182,14 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #'   this manner.
 #'   
 #'   * To restore functionality of analyses relying on allele frequencies, use
-#'   the \code{\link{recode_polyploids}} function.}
+#'   the [recode_polyploids()] function.}
 #'   
 #'   
-#' @seealso \code{\link{clonecorrect}}, \code{\linkS4class{genclone}}, 
-#'   \code{\linkS4class{genind}}, \code{\link{recode_polyploids}}
+#' @seealso [clonecorrect()], [genclone-class], [genind-class], [recode_polyploids()]
 #'   
 #' @export
 #' @author Zhian N. Kamvar
+#' @md
 #' @examples
 #' 
 #' \dontrun{
