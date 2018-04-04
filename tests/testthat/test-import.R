@@ -180,6 +180,21 @@ scissors,7_09_BB,224,97"
 
 context("Data export tests")
 
+test_that("not specifying a file for genind2genalex will generate a tempfile", {
+  skip_on_cran()
+  expect_warning(f <- genind2genalex(monpop, quiet = TRUE), "temporary file")
+  expect_match(f, "^/.+?file.+\\.csv$")
+  expect_is(read.genalex(f), "genclone")
+})
+
+test_that("genind2genalex will prevent a file from being overwritten", {
+  skip_on_cran()
+  f <- tempfile()
+  writeLines("hey!\n", f)
+  expect_error(genind2genalex(monpop, filename = f, quiet = TRUE), "exists and will not be overwritten")
+  expect_match(readLines(f)[1], "hey")
+})
+
 test_that("genclone objects can be saved and restored", {
 	mp <- file()
 	genind2genalex(monpop, filename = mp, quiet = TRUE)
@@ -187,6 +202,14 @@ test_that("genclone objects can be saved and restored", {
 	close(mp)
 	
 	expect_equal(gen@tab, monpop@tab)
+})
+
+test_that("genalex will give a warning if user asks for geo data when there is none", {
+  skip_on_cran()
+  mp <- file()
+  expect_warning(genind2genalex(monpop, filename = mp, quiet = TRUE, geo = TRUE), 
+                 "monpop@other")
+  close(mp)
 })
 
 test_that("polyploids can be saved", {
@@ -216,12 +239,12 @@ test_that("sequence data is handled correctly", {
   skip_on_cran()
   tmp <- tempfile()
   htab <- tab(H3N2[1:10, loc = 1:10, drop = TRUE])
-  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, quiet = TRUE)
+  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, quiet = TRUE, overwrite = TRUE)
   h3n2 <- read.genalex(tmp)
   # The alleles are imported in a different order, so I have to resort with the
   # column names.
   expect_equivalent(htab, tab(h3n2)[, colnames(htab)])
-  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, sequence = TRUE, quiet = TRUE)
+  genind2genalex(H3N2[1:10, loc = 1:10], filename = tmp, sequence = TRUE, quiet = TRUE, overwrite = TRUE)
   h3n2numbers <- read.genalex(tmp)
   # The sequence option converts letters to numbers. If the last test worked,
   # then this test should work, too.

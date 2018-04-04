@@ -471,75 +471,99 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 }
 
 #==============================================================================#
-#' Exporting data from genind objects to genalex formatted *.csv files.
+#' Export data from genind objects to genalex formatted \*.csv files.
 #' 
-#' genind2genalex will export a genclone or genind object to a *.csv file
+#' genind2genalex will export a genclone or genind object to a \*.csv file
 #' formatted for use in genalex.
 #' 
-#' @param gid a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+#' @param gid a [genclone-class] or [genind-class]
 #'   object.
 #'   
 #' @param filename a string indicating the name and/or path of the file you wish
-#'   to create.
+#'   to create. If this is left unchanged, the results will be saved in a
+#'   temporary file and a warning will be displayed for six seconds before the
+#'   file is written. This process should give you time to cancel the process
+#'   and choose a file path. Otherwise, the name of the file is returned, so you
+#'   can copy that to a file of your choice with [file.copy()]
 #'   
-#' @param quiet \code{logical} If \code{FALSE} a message will be printed to the 
+#' @param overwrite `logical` if `FALSE` (default) and `filename` exists, then
+#'   the file will not be overwritten. Set this option to `TRUE` to overwrite
+#'   the file.
+#' 
+#' @param quiet `logical` If `FALSE` a message will be printed to the 
 #'   screen.
 #'   
 #' @param pop a character vector OR formula specifying the population factor. 
 #'   This can be used to specify a specific subset of strata or custom 
-#'   population factor for the output. Note that the \code{allstrata} command 
+#'   population factor for the output. Note that the `allstrata` command 
 #'   has precedence over this unless the value of this is a new population
 #'   factor.
 #'   
-#' @param allstrata if this is \code{TRUE}, the strata will be combined into a
+#' @param allstrata if this is `TRUE`, the strata will be combined into a
 #'   single population factor in the genalex file.
 #' 
-#' @param geo \code{logical} Default is \code{FALSE}. If it is set to 
-#'   \code{TRUE}, the resulting file will have two columns for geographic data.
+#' @param geo `logical` Default is `FALSE`. If it is set to 
+#'   `TRUE`, the resulting file will have two columns for geographic data.
 #'   
-#' @param geodf \code{character} Since the \code{other} slot in the adegenet 
+#' @param geodf `character` Since the `other` slot in the adegenet 
 #'   object can contain many different items, you must specify the name of the 
-#'   data frame in the \code{other} slot containing your geographic coordinates.
+#'   data frame in the `other` slot containing your geographic coordinates.
 #'   It defaults to "xy".
 #'   
 #' @param sep a character specifying what character to use to separate columns. 
 #'   Defaults to ",".
 #'   
-#' @param sequence when \code{TRUE}, sequence data will be converted to integers
+#' @param sequence when `TRUE`, sequence data will be converted to integers
 #'   as per the GenAlEx specifications.
 #'   
 #' @note If you enter a file name that exists, that file will be overwritten. If
 #'   your data set lacks a population structure, it will be coded in the new 
 #'   file as a single population labeled "Pop". Likewise, if you don't have any
 #'   labels for your individuals, they will be labeled as "ind1" through 
-#'   "ind\emph{N}", with \emph{N} being the size of your population.
+#'   "ind*N*", with *N* being the size of your population.
 #'   
-#' @seealso \code{\link{clonecorrect}}, \code{\linkS4class{genclone}} or
-#'   \code{\linkS4class{genind}}
+#' @return The the file path or connection where the data were written.
+#' 
+#' @seealso [read.genalex()], [clonecorrect()], [genclone-class], [genind-class]
 #'   
 #' @export
 #' @author Zhian N. Kamvar
+#' @md
 #' @examples
 #' \dontrun{
 #' data(nancycats)
 #' genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 #' }
-#==============================================================================#
-genind2genalex <- function(gid, filename = "genalex.csv", quiet = FALSE, pop = NULL, 
-                           allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ",",
-                           sequence = FALSE){
+genind2genalex <- function(gid, filename = "", overwrite = FALSE, quiet = FALSE, 
+                           pop = NULL, allstrata = TRUE, geo = FALSE, 
+                           geodf = "xy", sep = ",", sequence = FALSE){
   if (!is.genind(gid)) stop("A genind object is needed.")
   if (nchar(sep) != 1) stop("sep must be one byte/character (eg. \",\")")
+  if (!inherits(filename, "connection") && filename == "") {
+    filename <- tempfile(fileext = ".csv")
+    msg <- paste("\nNo file name was supplied.", 
+          "\nWriting to temporary file: ", filename, "\n")
+    warning(msg, immediate. = TRUE)
+    for (i in 1:3) {
+      message(paste("Starting in ...", 3 - i + 1, " "), appendLF = FALSE)
+      Sys.sleep(i)
+      message("\r", appendLF = FALSE)
+    }
+  } else if (!inherits(filename, "connection") && file.exists(filename) && !overwrite) {
+    msg <- paste("The file ", substitute(filename), "exists and will not be overwritten.",
+                 "\nUse `overwrite = TRUE` if you want to replace this file.")
+    stop(msg)
+  }
   
-  if (allstrata && !is.null(strata(gid))){
-    if (is.null(pop) && length(pop) != nInd(gid)){
+  if (allstrata && !is.null(strata(gid))) {
+    if (is.null(pop) && length(pop) != nInd(gid)) {
       allform <- paste0("~", paste(nameStrata(gid), collapse = "/"))
       allform <- stats::as.formula(allform)
       setPop(gid) <- allform
     } else {
       pop(gid) <- pop
     }
-  } else if (!is.null(pop)){
+  } else if (!is.null(pop)) {
     if ("formula" %in% class(pop)){
       setPop(gid) <- pop
     } else if (is.character(pop) && length(pop) == nInd(gid)){
@@ -644,4 +668,5 @@ genind2genalex <- function(gid, filename = "genalex.csv", quiet = FALSE, pop = N
   write.table(df, file = filename, quote = TRUE, na = replacement, append = TRUE, 
               row.names = FALSE, col.names = FALSE, sep = sep)
   if(!quiet) cat("Done.\n")
+  invisible(return(filename))
 }

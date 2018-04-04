@@ -2,44 +2,55 @@
 % Please edit documentation in R/file_handling.r
 \name{genind2genalex}
 \alias{genind2genalex}
-\title{Exporting data from genind objects to genalex formatted *.csv files.}
+\title{Export data from genind objects to genalex formatted *.csv files.}
 \usage{
-genind2genalex(gid, filename = "genalex.csv", quiet = FALSE, pop = NULL,
-  allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ",",
+genind2genalex(gid, filename = "", overwrite = FALSE, quiet = FALSE,
+  pop = NULL, allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ",",
   sequence = FALSE)
 }
 \arguments{
-\item{gid}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}}
+\item{gid}{a \linkS4class{genclone} or \linkS4class{genind}
 object.}
 
 \item{filename}{a string indicating the name and/or path of the file you wish
-to create.}
+to create. If this is left unchanged, the results will be saved in a
+temporary file and a warning will be displayed for six seconds before the
+file is written. This process should give you time to cancel the process
+and choose a file path. Otherwise, the name of the file is returned, so you
+can copy that to a file of your choice with \code{\link[=file.copy]{file.copy()}}}
 
-\item{quiet}{\code{logical} If \code{FALSE} a message will be printed to the 
+\item{overwrite}{\code{logical} if \code{FALSE} (default) and \code{filename} exists, then
+the file will not be overwritten. Set this option to \code{TRUE} to overwrite
+the file.}
+
+\item{quiet}{\code{logical} If \code{FALSE} a message will be printed to the
 screen.}
 
-\item{pop}{a character vector OR formula specifying the population factor. 
-This can be used to specify a specific subset of strata or custom 
-population factor for the output. Note that the \code{allstrata} command 
+\item{pop}{a character vector OR formula specifying the population factor.
+This can be used to specify a specific subset of strata or custom
+population factor for the output. Note that the \code{allstrata} command
 has precedence over this unless the value of this is a new population
 factor.}
 
 \item{allstrata}{if this is \code{TRUE}, the strata will be combined into a
 single population factor in the genalex file.}
 
-\item{geo}{\code{logical} Default is \code{FALSE}. If it is set to 
+\item{geo}{\code{logical} Default is \code{FALSE}. If it is set to
 \code{TRUE}, the resulting file will have two columns for geographic data.}
 
-\item{geodf}{\code{character} Since the \code{other} slot in the adegenet 
-object can contain many different items, you must specify the name of the 
+\item{geodf}{\code{character} Since the \code{other} slot in the adegenet
+object can contain many different items, you must specify the name of the
 data frame in the \code{other} slot containing your geographic coordinates.
 It defaults to "xy".}
 
-\item{sep}{a character specifying what character to use to separate columns. 
+\item{sep}{a character specifying what character to use to separate columns.
 Defaults to ",".}
 
 \item{sequence}{when \code{TRUE}, sequence data will be converted to integers
 as per the GenAlEx specifications.}
+}
+\value{
+The the file path or connection where the data were written.
 }
 \description{
 genind2genalex will export a genclone or genind object to a *.csv file
@@ -47,10 +58,10 @@ formatted for use in genalex.
 }
 \note{
 If you enter a file name that exists, that file will be overwritten. If
-  your data set lacks a population structure, it will be coded in the new 
-  file as a single population labeled "Pop". Likewise, if you don't have any
-  labels for your individuals, they will be labeled as "ind1" through 
-  "ind\emph{N}", with \emph{N} being the size of your population.
+your data set lacks a population structure, it will be coded in the new
+file as a single population labeled "Pop". Likewise, if you don't have any
+labels for your individuals, they will be labeled as "ind1" through
+"ind\emph{N}", with \emph{N} being the size of your population.
 }
 \examples{
 \dontrun{
@@ -59,8 +70,7 @@ genind2genalex(nancycats, "~/Documents/nancycats.csv", geo=TRUE)
 }
 }
 \seealso{
-\code{\link{clonecorrect}}, \code{\linkS4class{genclone}} or
-  \code{\linkS4class{genind}}
+\code{\link[=read.genalex]{read.genalex()}}, \code{\link[=clonecorrect]{clonecorrect()}}, \linkS4class{genclone}, \linkS4class{genind}
 }
 \author{
 Zhian N. Kamvar
