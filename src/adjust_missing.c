@@ -34,7 +34,17 @@
 
 int count_unique(SEXP arr1, SEXP arr2);
 SEXP adjust_missing(SEXP nas, SEXP nloc);
-
+/*
+ * Count all unique elements for the union of two arrays
+ * 
+ * Parameters:
+ *  arr1 an integer array of any length
+ *  arr2 an integer array of any length
+ *
+ * Return:
+ *  an integer that is between the length of the smallest array and the length
+ *  of the largest array. 
+ */
 int count_unique(SEXP arr1, SEXP arr2)
 {
   int i = 0;
@@ -61,7 +71,20 @@ int count_unique(SEXP arr1, SEXP arr2)
   }
   return len1 + len2 - duplicates;
 }
-
+/*
+ * Calculate adjustment for missing data in pairwise comparisons. This will
+ * return a square matrix that is used to multiply the raw differences of a
+ * distance matrix in order to scale the differences by the number of observed
+ * loci. 
+ * 
+ * Parameters:
+ *  nas a list where each element represents a sample containing an integer 
+ *      vector representing positions of missing data for that individual
+ *  nloc an integer specifying the number of loci observed in the entire set
+ * 
+ * Return:
+ *  a square matrix
+ */
 SEXP adjust_missing(SEXP nas, SEXP nloc)
 {
   int i;
