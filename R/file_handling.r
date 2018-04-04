@@ -181,11 +181,12 @@ getfile <- function(multi=FALSE, pattern=NULL, combine=TRUE){
 #'   association in such a way as to be able to handle polyploids presented in 
 #'   this manner.
 #'   
-#'   * To restore functionality of analyses relying on allele frequencies, use
+#'   \* To restore functionality of analyses relying on allele frequencies, use
 #'   the [recode_polyploids()] function.}
 #'   
 #'   
-#' @seealso [clonecorrect()], [genclone-class], [genind-class], [recode_polyploids()]
+#' @seealso [genind2genalex()], [clonecorrect()], [genclone-class],
+#'   [genind-class], [recode_polyploids()]
 #'   
 #' @export
 #' @author Zhian N. Kamvar
@@ -509,10 +510,9 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 #' @param sequence when `TRUE`, sequence data will be converted to integers
 #'   as per the GenAlEx specifications.
 #'   
-#' @note If you enter a file name that exists, that file will be overwritten. If
-#'   your data set lacks a population structure, it will be coded in the new 
-#'   file as a single population labeled "Pop". Likewise, if you don't have any
-#'   labels for your individuals, they will be labeled as "ind1" through 
+#' @note  If your data set lacks a population structure, it will be coded in the
+#'   new file as a single population labeled "Pop". Likewise, if you don't have
+#'   any labels for your individuals, they will be labeled as "ind1" through
 #'   "ind*N*", with *N* being the size of your population.
 #'   
 #' @return The the file path or connection where the data were written.

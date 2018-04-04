@@ -57,10 +57,9 @@ genind2genalex will export a genclone or genind object to a *.csv file
 formatted for use in genalex.
 }
 \note{
-If you enter a file name that exists, that file will be overwritten. If
-your data set lacks a population structure, it will be coded in the new
-file as a single population labeled "Pop". Likewise, if you don't have any
-labels for your individuals, they will be labeled as "ind1" through
+If your data set lacks a population structure, it will be coded in the
+new file as a single population labeled "Pop". Likewise, if you don't have
+any labels for your individuals, they will be labeled as "ind1" through
 "ind\emph{N}", with \emph{N} being the size of your population.
 }
 \examples{

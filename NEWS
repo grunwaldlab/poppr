@@ -9,6 +9,13 @@ NEW FEATURES
   scaled for the amount of missing data in each comparison. This matches the 
   output of base R's `dist()` function at a fraction of time and memory. 
   See https://github.com/grunwaldlab/poppr/pull/176 for details.
+  
+* `genind2genalex()` will no longer write to "genalex.csv" by default. Instead,
+  it will warn the user and write to a temporary file. 
+  See https://github.com/grunwaldlab/poppr/issues/175 for details.
+
+* `genind2genalex()` now has an `overwrite` parameter set to `FALSE` to prevent
+  accidental overwriting of files. 
 
 poppr 2.7.1
 ============

@@ -63,10 +63,9 @@ properly with these data sets as multilocus genotype analysis is agnostic
 of ploidy and we have written both Bruvo's distance and the index of
 association in such a way as to be able to handle polyploids presented in
 this manner.
-\itemize{
-\item To restore functionality of analyses relying on allele frequencies, use
+
+* To restore functionality of analyses relying on allele frequencies, use
 the \code{\link[=recode_polyploids]{recode_polyploids()}} function.}
-}
 }
 \note{
 This function cannot handle raw allele frequency data.
@@ -92,7 +91,8 @@ genalex4 <- read.genalex("genalex4.csv", region=TRUE, geo=TRUE)
 }
 }
 \seealso{
-\code{\link[=clonecorrect]{clonecorrect()}}, \linkS4class{genclone}, \linkS4class{genind}, \code{\link[=recode_polyploids]{recode_polyploids()}}
+\code{\link[=genind2genalex]{genind2genalex()}}, \code{\link[=clonecorrect]{clonecorrect()}}, \linkS4class{genclone},
+\linkS4class{genind}, \code{\link[=recode_polyploids]{recode_polyploids()}}
 }
 \author{
 Zhian N. Kamvar
