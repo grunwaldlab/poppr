@@ -411,6 +411,10 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
   chromos <- !is.null(chromosome(x))
   if (chromos){
     CHROM <- chromosome(x)
+    # TODO: modify adjust_position/reposition to only handle cases when the
+    #       sequence of positions is not continuously increasing (such as the
+    #       situation when the positions are relative to the chromosomes). 
+    #       No adjustment needed. 
     x     <- adjust_position(x, chromosome_buffer, window)
   } else {
     if (any(duplicated(position(x)))){
@@ -443,10 +447,10 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
     } else {
       res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
     }
-    if (chromos && !is.na(last_pos) && length(last_pos) > 0){
+    if (chromos && !is.na(last_pos) && length(last_pos) > 0) {
       res_names[i] <- CHROM[last_pos]
     }
-    if (!quiet){
+    if (!quiet) {
       setTxtProgressBar(progbar, i/nwin)
     }
   }
