@@ -440,6 +440,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
     #  - [x] find how many chromosomes are in the window
     #  - [x] create a while loop over the chromosomes
     #  - [x] filter x by posns & chrom
+    #  - [ ] write test to confirm this is correct.
     posns  <- xpos %in% the_window
     if (chromos) {
       chroms <- unique(CHROM[posns])
@@ -511,6 +512,12 @@ adjust_position <- function(x, chromosome_buffer = TRUE, window){
 #'
 #' @examples
 reposition <- function(xpos, xchrom, nloc, chromosome_buffer = TRUE, window){
+  # TODO:
+  #  - [ ] record first and last positions of chromosomes
+  #  - [ ] record number of SNPs left in the window for the last SNP of a
+  #        given chromosome
+  #  - [ ] record number of windows needed before the first position of the 
+  #        next chromosome
   is_increasing <- if (any(diff(xpos) < 0L)) FALSE else TRUE
   lpos   <- split(xpos, xchrom)
   shifts <- cumsum(vapply(lpos, max, integer(1)))
