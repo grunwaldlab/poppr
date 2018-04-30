@@ -468,6 +468,29 @@ adjust_position <- function(x, chromosome_buffer = TRUE, window){
   position(x) <- xpos  
   return(x)
 }
+
+#' Title
+#'
+#' @param xpos original position of SNPs along chromosomes
+#' @param xchrom factor indicating chromosomal regions
+#' @param nloc number of loci
+#' @param chromosome_buffer an indicator of whether or not to insert a 1.5x window between chromosomes to avoid chromosomes being double counted.
+#' @param window The size of the window
+#'
+#' @return a vector of adjusted integer positions.
+#' @noRd
+#'
+#' @examples
+reposition <- function(xpos, xchrom, nloc, chromosome_buffer = TRUE, window){
+  is_increasing <- if (any(diff(xpos) < 0L)) FALSE else TRUE
+  lpos   <- split(xpos, xchrom)
+  shifts <- cumsum(vapply(lpos, max, integer(1)))
+  if (chromosome_buffer) {
+    shifts <- shifts + cumsum(rep(window, length(shifts)))
+  }
+  shifts <- rep(c(0L, shifts[-length(shifts)]), lengths(lpos))
+  unname(xpos + shifts)
+}
 #==============================================================================#
 #' Calculate random samples of the index of association for genlight objects.
 #' 
