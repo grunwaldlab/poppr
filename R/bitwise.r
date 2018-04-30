@@ -437,24 +437,38 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
     the_window <- winmat[i, 1]:winmat[i, 2]
     # TODO: 
     #  - [x] find the positions in the window (using a logical vector)
-    #  - [ ] find how many chromosomes are in the window
+    #  - [x] find how many chromosomes are in the window
     #  - [x] create a while loop over the chromosomes
-    #  - [ ] filter x by posns & chrom
-    chromosomes_left <- 1L
+    #  - [x] filter x by posns & chrom
+    posns  <- xpos %in% the_window
+    if (chromos) {
+      chroms <- unique(CHROM[posns])
+      nchrom <- length(chroms) -> chromosomes_left
+    } else {
+      chromosomes_left <- 1L
+    }
     while (chromosomes_left > 0L) {
-      posns    <- which(xpos %in% the_window)
-      last_pos <- posns[length(posns)]
-      if (length(posns) < min.snps) {
-        res_mat[i] <- NA
+      # If there is chromosome structure, then add the current chromosome as an
+      # additional constraint to the snps analyzed
+      j <- if (chromos) posns & CHROM == chroms[nchrom - chromosomes_left + 1L] else posns
+      
+      # Check to make sure the SNP threshold is met. If not, set to NA
+      if (length(j) < min.snps) {
+        res_mat[i] <- NA_real_
       } else {
-        res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
+        res_mat[i] <- bitwise.ia(x[, j], threads = threads)
       }
+      
+      last_pos <- which(j)[sum(j)]
+      # If there is chromosome structure and the last SNP was not missing, 
+      # then name the vector. 
       if (chromos && !is.na(last_pos) && length(last_pos) > 0) {
         res_names[i] <- CHROM[last_pos]
       }
       if (!quiet) {
         setTxtProgressBar(progbar, i/nwin)
       }
+      # Decrement the number of chromosomes left to ensure the while loop can exit.
       chromosomes_left <- chromosomes_left - 1L
     }
   }
