@@ -438,20 +438,24 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
     # TODO: 
     #  - [x] find the positions in the window (using a logical vector)
     #  - [ ] find how many chromosomes are in the window
-    #  - [ ] create a while loop over the chromosomes
+    #  - [x] create a while loop over the chromosomes
     #  - [ ] filter x by posns & chrom
-    posns    <- which(xpos %in% the_window)
-    last_pos <- posns[length(posns)]
-    if (length(posns) < min.snps) {
-      res_mat[i] <- NA
-    } else {
-      res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
-    }
-    if (chromos && !is.na(last_pos) && length(last_pos) > 0) {
-      res_names[i] <- CHROM[last_pos]
-    }
-    if (!quiet) {
-      setTxtProgressBar(progbar, i/nwin)
+    chromosomes_left <- 1L
+    while (chromosomes_left > 0L) {
+      posns    <- which(xpos %in% the_window)
+      last_pos <- posns[length(posns)]
+      if (length(posns) < min.snps) {
+        res_mat[i] <- NA
+      } else {
+        res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
+      }
+      if (chromos && !is.na(last_pos) && length(last_pos) > 0) {
+        res_names[i] <- CHROM[last_pos]
+      }
+      if (!quiet) {
+        setTxtProgressBar(progbar, i/nwin)
+      }
+      chromosomes_left <- chromosomes_left - 1L
     }
   }
   if (!quiet) cat("\n")
