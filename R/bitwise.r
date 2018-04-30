@@ -428,10 +428,17 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
   res_mat <- vector(mode = "numeric", length = nwin)
   if (chromos) res_names <- vector(mode = "character", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  for (i in seq(nwin)){
-    posns    <- which(xpos %in% winmat[i, 1]:winmat[i, 2])
+  for (i in seq(nwin)) {
+    # Define the window
+    the_window <- winmat[i, 1]:winmat[i, 2]
+    # TODO: 
+    #  - [x] find the positions in the window (using a logical vector)
+    #  - [ ] find how many chromosomes are in the window
+    #  - [ ] create a while loop over the chromosomes
+    #  - [ ] filter x by posns & chrom
+    posns    <- which(xpos %in% the_window)
     last_pos <- posns[length(posns)]
-    if (length(posns) < min.snps){
+    if (length(posns) < min.snps) {
       res_mat[i] <- NA
     } else {
       res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
