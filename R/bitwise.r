@@ -503,7 +503,6 @@ adjust_position <- function(x, chromosome_buffer = TRUE, window){
 #'
 #' @param xpos original position of SNPs along chromosomes
 #' @param xchrom factor indicating chromosomal regions
-#' @param nloc number of loci
 #' @param chromosome_buffer an indicator of whether or not to insert a 1.5x window between chromosomes to avoid chromosomes being double counted.
 #' @param window The size of the window
 #'
@@ -511,20 +510,25 @@ adjust_position <- function(x, chromosome_buffer = TRUE, window){
 #' @noRd
 #'
 #' @examples
-reposition <- function(xpos, xchrom, nloc, chromosome_buffer = TRUE, window){
+reposition <- function(xpos, xchrom, chromosome_buffer = TRUE, window){
   # TODO:
-  #  - [ ] record first and last positions of chromosomes
-  #  - [ ] record number of SNPs left in the window for the last SNP of a
+  #  - [x] record first and last positions of chromosomes
+  #  - [x] record number of SNPs left in the window for the last SNP of a
   #        given chromosome
-  #  - [ ] record number of windows needed before the first position of the 
+  #  - [x] record number of windows needed before the first position of the 
   #        next chromosome
-  is_increasing <- if (any(diff(xpos) < 0L)) FALSE else TRUE
-  lpos   <- split(xpos, xchrom)
-  shifts <- cumsum(vapply(lpos, max, integer(1)))
-  if (chromosome_buffer) {
-    shifts <- shifts + cumsum(rep(window, length(shifts)))
-  }
-  shifts <- rep(c(0L, shifts[-length(shifts)]), lengths(lpos))
+  # Test if the positions are all increasing along the sequence.
+  is_increasing <- all(diff(xpos) > 0L)
+  # If all positions are increasing and the user does not request a chromosome
+  # buffer, then return the original positions.
+  if (is_increasing & !chromosome_buffer) return(xpos)
+  
+  lpos       <- split(xpos, xchrom)
+  ends       <- vapply(lpos, max, integer(1), na.rm = TRUE)
+  # add a window width plus the remainder of the window to the ends.
+  chromshift <- if (chromosome_buffer) window - (ends %% window) else 0L
+  shifts     <- cumsum(ends + chromshift)
+  shifts     <- rep(c(0L, shifts[-length(shifts)]), lengths(lpos))
   unname(xpos + shifts)
 }
 #==============================================================================#
