@@ -817,15 +817,37 @@ ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 #'   numbers between -1 and 1, (e.g. \code{limits = c(-0.15, 1)})
 #' @export
 #==============================================================================#
-pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
-                    limits = NULL, index = "rbarD"){
+pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue", 
+                    high = "red", limits = NULL, index = "rbarD", ...){
   N       <- nInd(gid)
   numLoci <- nLoc(gid)
   lnames  <- locNames(gid)
   np      <- choose(N, 2)
   nploci  <- choose(numLoci, 2)
+  shuffle <- sample > 0L
   quiet   <- should_poppr_be_quiet(quiet)
-  if (gid@type == "codom"){
+  QUIET   <- if (shuffle) TRUE else quiet
+  res     <- pair_ia_internal(gid, N, numLoci, lnames, np, nploci, QUIET, sample)
+  if (shuffle) {
+    counts <- matrix(0L, nrow = nrow(res), ncol = ncol(res))
+    for (i in seq_len(sample)) {
+      counts <- counts + pair_ia_internal(shufflepop(gid, ...), N, numLoci, lnames, np, nploci, quiet, sample) >= res
+    }
+    p <- (counts + 1)/(sample + 1)
+    res <- cbind(Ia = res[, 1], 
+                 p.Ia = p[, 1], 
+                 rbarD = res[, 2], 
+                 p.rD = p[, 2])
+  }
+  class(res) <- c("pairia", "matrix")
+  if (plot) {
+    plot(res, index = index, low = low, high = high, limits = limits)
+  }
+  res
+}
+
+pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, quiet, sample) {
+  if (gid@type == "codom") {
     V <- pair_matrix(seploc(gid), numLoci, np)
   } else { # P/A case
     V <- apply(tab(gid), 2, function(x) as.vector(dist(x)))
@@ -843,17 +865,11 @@ pair.ia <- function(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
   if (!quiet) prog <- txtProgressBar(style = 3)
   pair_ia_vector   <- apply(loci_pairs, 2, ia_pair_loc, V, np, prog, nploci)
   if (!quiet) cat("\n")
-  
   colnames(pair_ia_vector) <- apply(loci_pairs[-3, ], 2, paste, collapse = ":")
   rownames(pair_ia_vector) <- c("Ia", "rbarD")
   pair_ia_vector           <- t(pair_ia_vector)
-  class(pair_ia_vector)    <- c("pairia", "matrix")
-  if (plot){
-    plot(pair_ia_vector, index = index, low = low, high = high, limits = limits)
-  }
-  return(pair_ia_vector)
+  pair_ia_vector
 }
-
 #==============================================================================#
 #' Create a table of summary statistics per locus. 
 #' 
