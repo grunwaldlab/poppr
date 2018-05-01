@@ -318,41 +318,37 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #' function will scan windows across the loci positions and calculate the index
 #' of association.
 #' 
-#' @param x a \code{\link{genlight}} or \code{\link{snpclone}} object.
+#' @param x a [genlight][genlight-class] or [snpclone][snpclone-class] object.
 #'   
 #' @param window an integer specifying the size of the window.
 #'   
 #' @param min.snps an integer specifying the minimum number of snps allowed per 
 #'   window. If a window does not meet this criteria, the value will return as
-#'   NA.
+#'   `NA`.
 #'   
 #' @param threads The maximum number of parallel threads to be used within this 
-#'   function. A value of 0 (default) will attempt to use as many threads as
-#'   there are available cores/CPUs. In most cases this is ideal. A value of 1
-#'   will force the function to run serially, which may increase stability on
-#'   some systems. Other values may be specified, but should be used with
-#'   caution.
+#'   function. Defaults to 1 thread, in which the function will run serially. A
+#'   value of 0 will attempt to use as many threads as there are available
+#'   cores/CPUs. In most cases this is ideal for speed. Note: this option is 
+#'   passed to [bitwise.ia()] and does not parallelize the windowization process.
 #'   
-#' @param quiet if \code{FALSE}, a progress bar will be printed to the screen.
+#' @param quiet if `FALSE` (default), a progress bar will be printed to the screen.
 #' 
-#' @param chromosome_buffer if \code{TRUE} (default), buffers will be placed 
+#' @param chromosome_buffer *DEPRECATED* if `TRUE` (default), buffers will be placed 
 #'   between adjacent chromosomal positions to prevent windows from spanning two
 #'   chromosomes.
 #'   
-#' @return Index of association representing the samples in this genlight
-#'   object.
+#' @return A value of the standardized index of association for all windows in
+#'   each chromosome. 
 #'   
 #' @note this will calculate the standardized index of association from Agapow
-#' 2001. See \code{\link{ia}} for details.
+#' and Burt, 2001. See [ia()] for details.
 #' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks
-#'   
+#' 
+#' @md
 #' @export
-#' @seealso \code{\link[adegenet]{genlight}},
-#'    \code{\link{snpclone}},
-#'    \code{\link{samp.ia}},
-#'    \code{\link{ia}},
-#'    \code{\link{bitwise.dist}}
+#' @seealso [genlight][genlight-class], [snpclone][snpclone-class], [ia()], [samp.ia()], [bitwise.dist()]
 #' @examples
 #' 
 #' # with structured snps assuming 1e4 positions
@@ -383,7 +379,6 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #' library("dplyr")
 #' res_tidy <- res %>% 
 #'   data_frame(rd = ., chromosome = names(.)) %>% # create two column data frame
-#'   filter(chromosome != "") %>%                  # filter out null chromosomes
 #'   group_by(chromosome) %>%                      # group data by chromosome
 #'   mutate(window = row_number()) %>%             # windows by chromosome
 #'   ungroup(chromosome) %>%                       # ungroup and reorder
@@ -408,15 +403,15 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
   if (is.null(position(x))) {
     position(x) <- seq(nLoc(x))
   }
+  if (!chromosome_buffer) {
+    msg <- paste("The argument `chromosome_buffer` has been deprecated as of",
+                 "poppr version 1.8.0. All chromosomes are treated separately",
+                 "by default.")
+    warning(msg, immediate. = TRUE)
+  }
   chromos <- !is.null(chromosome(x))
   xpos    <- position(x)
   quiet   <- should_poppr_be_quiet(quiet)
-  # TODO: 
-  #  - [x] forget about reposition
-  #  - [x] construct matrix of windows based on the maximum size of position
-  #  - [x] count number of windows per chromosome; use that to construct out vector
-  #  - [x] nest for loop (windows) within while loop (chromosomes)
-  #  - [ ] write test to confirm this is correct.
   winmat  <- make_windows(maxp = max(xpos), minp = 1L, window = window)
   if (chromos) {
     # Converting to character is necessary to avoid empty chromosomes.
@@ -449,10 +444,11 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
     for (i in seq(current_windows)) {
       # Define the window
       the_window <- winmat[i, 1]:winmat[i, 2]
+      the_chrom  <- if (chromos) chrom_names[chrom_counter] else TRUE
       posns      <- xpos %in% the_window
       # If there is chromosome structure, then add the current chromosome as an
       # additional constraint to the snps analyzed
-      j <- if (chromos) posns & CHROM == chrom_names[chrom_counter] else posns
+      j <- if (chromos) posns & CHROM == the_chrom else posns
       
       # Check to make sure the SNP threshold is met. If not, set to NA
       if (sum(j) < min.snps) {
@@ -460,12 +456,8 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
       } else {
         res_mat[res_counter] <- bitwise.ia(x[, j], threads = threads)
       }
-      
-      last_pos <- which(j)[sum(j)]
-      # If there is chromosome structure and the last SNP was not missing, 
-      # then name the vector. 
-      if (chromos) {# && !is.na(last_pos) && length(last_pos) > 0) {
-        res_names[res_counter] <- CHROM[last_pos]
+      if (chromos) {
+        res_names[res_counter] <- the_chrom
       }
       if (!quiet) {
         setTxtProgressBar(progbar, res_counter/nwin)
