@@ -334,6 +334,10 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #'   
 #' @param quiet if `FALSE` (default), a progress bar will be printed to the screen.
 #' 
+#' @param name_window if `TRUE` (default), the result vector will be named with
+#'   the terminal position of the window. In the case where several chromosomes
+#'   are represented, the position will be appended using a period/full stop.
+#' 
 #' @param chromosome_buffer *DEPRECATED* if `TRUE` (default), buffers will be placed 
 #'   between adjacent chromosomal positions to prevent windows from spanning two
 #'   chromosomes.
@@ -377,28 +381,30 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 #' 
 #' # Converting chromosomal coordinates to tidy data
 #' library("dplyr")
+#' library("tidyr")
 #' res_tidy <- res %>% 
 #'   data_frame(rd = ., chromosome = names(.)) %>% # create two column data frame
-#'   group_by(chromosome) %>%                      # group data by chromosome
-#'   mutate(window = row_number()) %>%             # windows by chromosome
-#'   ungroup(chromosome) %>%                       # ungroup and reorder
-#'   mutate(chromosome = factor(chromosome, unique(chromosome))) 
+#'   separate(chromosome, into = c("chromosome", "position")) %>% # get the position info
+#'   mutate(position = as.integer(position)) %>% # force position as integers
+#'   mutate(chromosome = factor(chromosome, unique(chromosome))) # force order chromosomes
 #' res_tidy
 #' 
 #' # Plotting with ggplot2
 #' library("ggplot2")
-#' ggplot(res_tidy, aes(x = window, y = rd, color = chromosome)) +
+#' ggplot(res_tidy, aes(x = position, y = rd, color = chromosome)) +
 #'   geom_line() +
 #'   facet_wrap(~chromosome, nrow = 1) +
 #'   ylab(expression(bar(r)[d])) +
-#'   xlab("window (100bp)") +
-#'   theme(legend.position = "bottom")
+#'   xlab("terminal position of sliding window") +
+#'   labs(caption = "window size: 100bp") + 
+#'   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+#'   theme(legend.position = "top")
 #'
 #' }
 #' 
 #==============================================================================#
 win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
-                   chromosome_buffer = TRUE){
+                   name_window = TRUE, chromosome_buffer = TRUE){
   stopifnot(is(x, "genlight"))
   if (is.null(position(x))) {
     position(x) <- seq(nLoc(x))
@@ -436,7 +442,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
   }
   res_mat <- vector(mode = "numeric", length = nwin)
   res_counter <- 1L
-  if (chromos) res_names <- vector(mode = "character", length = nwin)
+  if (name_window || chromos) res_names <- vector(mode = "character", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
   while (chromosomes_left > 0L) {
     chrom_counter   <- if (chromos) nchrom - chromosomes_left + 1L else 1L
@@ -456,8 +462,9 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
       } else {
         res_mat[res_counter] <- bitwise.ia(x[, j], threads = threads)
       }
-      if (chromos) {
-        res_names[res_counter] <- the_chrom
+      if (name_window || chromos) {
+        the_name <- if (chromos) paste(the_chrom, winmat[i, 2], sep = ".") else as.character(winmat[i, 2])
+        res_names[res_counter] <- the_name
       }
       if (!quiet) {
         setTxtProgressBar(progbar, res_counter/nwin)
@@ -468,7 +475,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
     chromosomes_left <- chromosomes_left - 1L
   }
   if (!quiet) cat("\n")
-  if (chromos) names(res_mat) <- res_names
+  if (name_window || chromos) names(res_mat) <- res_names
   return(res_mat)
 }
 

@@ -6,7 +6,8 @@ BUG FIX
 
 * `win.ia()` now has more consistent behavior with chromosome structure and will
   no longer result in an integer overflow 
-  (see https://github.com/grunwaldlab/poppr/issues/179).
+  (see https://github.com/grunwaldlab/poppr/issues/179). Thanks to @MarisaMiller
+  for the detailed bug report.
 
 ALGORITHMIC CHANGE
 ------------------
@@ -42,6 +43,10 @@ NEW FEATURES
 
 * `genind2genalex()` now has an `overwrite` parameter set to `FALSE` to prevent
   accidental overwriting of files. 
+
+* `win.ia()` has a new argument `name_window`, which will give each element in 
+  the result the designation of the terminal position of that window. Thanks to
+  @MarisaMiller for the suggestion!
 
 poppr 2.7.1
 ============
