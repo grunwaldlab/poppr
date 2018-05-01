@@ -478,28 +478,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
   return(res_mat)
 }
 
-
-adjust_position <- function(x, chromosome_buffer = TRUE, window){
-  xpos  <- position(x)
-  # Each chromosome has it's own position.
-  # In this case, get large round number for each chromosome break.
-  maxp <- 10^ceiling(log(max(xpos), 10))
-  # The buffer prevents the window from crossing into the next chromosome
-  buffer <- chromosome_buffer*window
-  if (length(unique(pmin(xpos))) < nLoc(x)){
-    lpos <- split(xpos, chromosome(x))
-    for (p in seq(lpos)){
-      # adding the large round number plus a buffer (if applicable). This will
-      # ensure that chromosomes don't overlap.
-      lpos[[p]] <- lpos[[p]] + (maxp*(p - 1)) + (buffer*(p - 1)) + 1
-    }
-    xpos <- unlist(lpos, use.names = FALSE)
-  }
-  position(x) <- xpos  
-  return(x)
-}
-
-#' Title
+#' reposition a vector of SNP positions along chromosomes.
 #'
 #' @param xpos original position of SNPs along chromosomes
 #' @param xchrom factor indicating chromosomal regions
