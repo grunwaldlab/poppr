@@ -405,22 +405,29 @@ bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0)
 win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
                    chromosome_buffer = TRUE){
   stopifnot(is(x, "genlight"))
-  if (is.null(position(x))){
+  if (is.null(position(x))) {
     position(x) <- seq(nLoc(x))
   }
   chromos <- !is.null(chromosome(x))
   xpos    <- position(x)
+  quiet   <- should_poppr_be_quiet(quiet)
+  # TODO: 
+  #  - [x] forget about reposition
+  #  - [x] construct matrix of windows based on the maximum size of position
+  #  - [x] count number of windows per chromosome; use that to construct out vector
+  #  - [x] nest for loop (windows) within while loop (chromosomes)
+  #  - [ ] write test to confirm this is correct.
+  winmat  <- make_windows(maxp = max(xpos), minp = 1L, window = window)
   if (chromos) {
-    # Converting to character is necessary to avoid empty chromosomes. Why?
+    # Converting to character is necessary to avoid empty chromosomes.
     # See: https://twitter.com/ZKamvar/status/991114778415325184
-    CHROM  <- as.character(chromosome(x))
-    # Ordering the data by chromosome since they may not be ordered in the
-    # first place. 
-    ochrom <- order(CHROM)
-    x      <- x[, ochrom]
-    xpos   <- xpos[ochrom]
-    CHROM  <- CHROM[ochrom]
-    xpos  <- reposition(xpos, CHROM, chromosome_buffer, window)
+    CHROM         <- as.character(chromosome(x))
+    chrom_names   <- unique(CHROM)
+    pos_per_chrom <- split(xpos, CHROM)[chrom_names]
+    win_per_chrom <- ceiling(vapply(pos_per_chrom, max, integer(1))/window)
+    names(win_per_chrom) <- chrom_names
+    nwin                 <- sum(win_per_chrom)
+    nchrom <- length(win_per_chrom) -> chromosomes_left
   } else {
     if (any(duplicated(position(x)))) {
       msg <- paste("There are duplicate positions in the data without any",
@@ -429,87 +436,50 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
                    "coordinates or modify the positions.")
       stop(msg, call. = FALSE)
     }
+    nwin             <- nrow(winmat)
+    chromosomes_left <- 1L
   }
-  quiet   <- should_poppr_be_quiet(quiet)
-  winmat  <- make_windows(maxp = max(xpos), minp = min(xpos), window = window)
-  nwin    <- nrow(winmat)
   res_mat <- vector(mode = "numeric", length = nwin)
+  res_counter <- 1L
   if (chromos) res_names <- vector(mode = "character", length = nwin)
   if (!quiet) progbar <- txtProgressBar(style = 3)
-  for (i in seq(nwin)) {
-    # Define the window
-    the_window <- winmat[i, 1]:winmat[i, 2]
-    # TODO: 
-    #  - [ ] write test to confirm this is correct.
-    posns  <- xpos %in% the_window
-    if (chromos) {
-      chroms <- unique(CHROM[posns])
-      nchrom <- length(chroms) -> chromosomes_left
-    } else {
-      chromosomes_left <- 1L
-    }
-    while (chromosomes_left > 0L) {
+  while (chromosomes_left > 0L) {
+    chrom_counter   <- if (chromos) nchrom - chromosomes_left + 1L else 1L
+    current_windows <- if (chromos) win_per_chrom[chrom_counter] else nwin 
+    for (i in seq(current_windows)) {
+      # Define the window
+      the_window <- winmat[i, 1]:winmat[i, 2]
+      posns      <- xpos %in% the_window
       # If there is chromosome structure, then add the current chromosome as an
       # additional constraint to the snps analyzed
-      j <- if (chromos) posns & CHROM == chroms[nchrom - chromosomes_left + 1L] else posns
+      j <- if (chromos) posns & CHROM == chrom_names[chrom_counter] else posns
       
       # Check to make sure the SNP threshold is met. If not, set to NA
-      if (length(j) < min.snps) {
-        res_mat[i] <- NA_real_
+      if (sum(j) < min.snps) {
+        res_mat[res_counter] <- NA_real_
       } else {
-        res_mat[i] <- bitwise.ia(x[, j], threads = threads)
+        res_mat[res_counter] <- bitwise.ia(x[, j], threads = threads)
       }
       
       last_pos <- which(j)[sum(j)]
       # If there is chromosome structure and the last SNP was not missing, 
       # then name the vector. 
-      if (chromos && !is.na(last_pos) && length(last_pos) > 0) {
-        res_names[i] <- CHROM[last_pos]
+      if (chromos) {# && !is.na(last_pos) && length(last_pos) > 0) {
+        res_names[res_counter] <- CHROM[last_pos]
       }
       if (!quiet) {
-        setTxtProgressBar(progbar, i/nwin)
+        setTxtProgressBar(progbar, res_counter/nwin)
       }
-      # Decrement the number of chromosomes left to ensure the while loop can exit.
-      chromosomes_left <- chromosomes_left - 1L
+      res_counter <- res_counter + 1L
     }
+    # Decrement the number of chromosomes left to ensure the while loop can exit.
+    chromosomes_left <- chromosomes_left - 1L
   }
   if (!quiet) cat("\n")
   if (chromos) names(res_mat) <- res_names
   return(res_mat)
 }
 
-#' reposition a vector of SNP positions along chromosomes.
-#'
-#' @param xpos original position of SNPs along chromosomes
-#' @param xchrom factor indicating chromosomal regions
-#' @param chromosome_buffer an indicator of whether or not to insert a 1.5x window between chromosomes to avoid chromosomes being double counted.
-#' @param window The size of the window
-#'
-#' @return a vector of adjusted integer positions.
-#' @noRd
-#'
-#' @examples
-reposition <- function(xpos, xchrom, chromosome_buffer = TRUE, window){
-  # TODO: 
-  #  - [ ] create test to ensure this works
-  # Test if the positions are all increasing along the sequence.
-  is_increasing <- all(diff(xpos) > 0L)
-  # If all positions are increasing and the user does not request a chromosome
-  # buffer, then return the original positions.
-  if (is_increasing & !chromosome_buffer) return(xpos)
-  #
-  # Split the positions by chromosome and find the maximum position in each
-  lpos       <- split(xpos, xchrom)
-  ends       <- vapply(lpos, max, integer(1), na.rm = TRUE)
-  # add the remainder of the window to the ends.
-  chromshift <- if (chromosome_buffer) window - (ends %% window) else 0L
-  shifts     <- cumsum(ends + chromshift)
-  # repeat the shifts along the length of each chromosome so we can
-  # use vectorized addition. Because we don't need to shift the first
-  # chromosome, we use zero for the first one and ignore the last one.
-  shifts     <- rep(c(0L, shifts[-length(shifts)]), lengths(lpos))
-  unname(xpos + shifts)
-}
 #==============================================================================#
 #' Calculate random samples of the index of association for genlight objects.
 #' 
