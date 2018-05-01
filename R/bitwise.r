@@ -511,23 +511,23 @@ adjust_position <- function(x, chromosome_buffer = TRUE, window){
 #'
 #' @examples
 reposition <- function(xpos, xchrom, chromosome_buffer = TRUE, window){
-  # TODO:
-  #  - [x] record first and last positions of chromosomes
-  #  - [x] record number of SNPs left in the window for the last SNP of a
-  #        given chromosome
-  #  - [x] record number of windows needed before the first position of the 
-  #        next chromosome
+  # TODO: 
+  #  - [ ] create test to ensure this works
   # Test if the positions are all increasing along the sequence.
   is_increasing <- all(diff(xpos) > 0L)
   # If all positions are increasing and the user does not request a chromosome
   # buffer, then return the original positions.
   if (is_increasing & !chromosome_buffer) return(xpos)
-  
+  #
+  # Split the positions by chromosome and find the maximum position in each
   lpos       <- split(xpos, xchrom)
   ends       <- vapply(lpos, max, integer(1), na.rm = TRUE)
-  # add a window width plus the remainder of the window to the ends.
+  # add the remainder of the window to the ends.
   chromshift <- if (chromosome_buffer) window - (ends %% window) else 0L
   shifts     <- cumsum(ends + chromshift)
+  # repeat the shifts along the length of each chromosome so we can
+  # use vectorized addition. Because we don't need to shift the first
+  # chromosome, we use zero for the first one and ignore the last one.
   shifts     <- rep(c(0L, shifts[-length(shifts)]), lengths(lpos))
   unname(xpos + shifts)
 }
