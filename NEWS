@@ -1,6 +1,32 @@
 poppr 2.8.0
 ===========
 
+BUG FIX
+-------
+
+* `win.ia()` now has more consistent behavior with chromosome structure and will
+  no longer result in an integer overflow 
+  (see https://github.com/grunwaldlab/poppr/issues/179).
+
+ALGORITHMIC CHANGE
+------------------
+
+* `win.ia()` may result in slightly different results because of two changes:
+  1. The windows will now always start at position one on any given chromosome.
+  This will result in some windows at the beginning of chromosomes having a 
+  value of `NA` if the first variant starts beyond the first window. 
+  2. Windows are now calculated for each chromosome independently. The previous
+  version first concatenated chromosomes with at least a window-sized gap 
+  between the chromosomes, but failed to ensure that the window always started
+  at the beginning of the chromosome. This version fixes that issue. 
+  (see https://github.com/grunwaldlab/poppr/issues/179).
+  
+DEPRECATION
+-----------
+
+* The `chromosome_buffer` argument for `win.ia()` has been permanently set to
+  `TRUE` and deprecated as it is no longer used. 
+
 NEW FEATURES
 ------------
 

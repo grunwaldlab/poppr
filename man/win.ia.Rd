@@ -8,40 +8,39 @@ win.ia(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
   chromosome_buffer = TRUE)
 }
 \arguments{
-\item{x}{a \code{\link{genlight}} or \code{\link{snpclone}} object.}
+\item{x}{a \link[=genlight-class]{genlight} or \link[=snpclone-class]{snpclone} object.}
 
 \item{window}{an integer specifying the size of the window.}
 
-\item{min.snps}{an integer specifying the minimum number of snps allowed per 
+\item{min.snps}{an integer specifying the minimum number of snps allowed per
 window. If a window does not meet this criteria, the value will return as
-NA.}
+\code{NA}.}
 
-\item{threads}{The maximum number of parallel threads to be used within this 
-function. A value of 0 (default) will attempt to use as many threads as
-there are available cores/CPUs. In most cases this is ideal. A value of 1
-will force the function to run serially, which may increase stability on
-some systems. Other values may be specified, but should be used with
-caution.}
+\item{threads}{The maximum number of parallel threads to be used within this
+function. Defaults to 1 thread, in which the function will run serially. A
+value of 0 will attempt to use as many threads as there are available
+cores/CPUs. In most cases this is ideal for speed. Note: this option is
+passed to \code{\link[=bitwise.ia]{bitwise.ia()}} and does not parallelize the windowization process.}
 
-\item{quiet}{if \code{FALSE}, a progress bar will be printed to the screen.}
+\item{quiet}{if \code{FALSE} (default), a progress bar will be printed to the screen.}
 
-\item{chromosome_buffer}{if \code{TRUE} (default), buffers will be placed 
+\item{chromosome_buffer}{\emph{DEPRECATED} if \code{TRUE} (default), buffers will be placed
 between adjacent chromosomal positions to prevent windows from spanning two
 chromosomes.}
 }
 \value{
-Index of association representing the samples in this genlight
-  object.
+A value of the standardized index of association for all windows in
+each chromosome.
 }
 \description{
-Genlight objects can contain millions of loci. Since it does not make much 
+Genlight objects can contain millions of loci. Since it does not make much
 sense to calculate the index of association over that many loci, this
 function will scan windows across the loci positions and calculate the index
 of association.
 }
 \note{
 this will calculate the standardized index of association from Agapow
-2001. See \code{\link{ia}} for details.
+and Burt, 2001. See \code{\link[=ia]{ia()}} for details.
 }
 \examples{
 
@@ -73,7 +72,6 @@ plot(res, type = "l")
 library("dplyr")
 res_tidy <- res \%>\% 
   data_frame(rd = ., chromosome = names(.)) \%>\% # create two column data frame
-  filter(chromosome != "") \%>\%                  # filter out null chromosomes
   group_by(chromosome) \%>\%                      # group data by chromosome
   mutate(window = row_number()) \%>\%             # windows by chromosome
   ungroup(chromosome) \%>\%                       # ungroup and reorder
@@ -93,11 +91,7 @@ ggplot(res_tidy, aes(x = window, y = rd, color = chromosome)) +
 
 }
 \seealso{
-\code{\link[adegenet]{genlight}},
-   \code{\link{snpclone}},
-   \code{\link{samp.ia}},
-   \code{\link{ia}},
-   \code{\link{bitwise.dist}}
+\link[=genlight-class]{genlight}, \link[=snpclone-class]{snpclone}, \code{\link[=ia]{ia()}}, \code{\link[=samp.ia]{samp.ia()}}, \code{\link[=bitwise.dist]{bitwise.dist()}}
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks
