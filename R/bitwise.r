@@ -409,15 +409,20 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
     position(x) <- seq(nLoc(x))
   }
   chromos <- !is.null(chromosome(x))
-  if (chromos){
-    CHROM <- chromosome(x)
-    # TODO: modify adjust_position/reposition to only handle cases when the
-    #       sequence of positions is not continuously increasing (such as the
-    #       situation when the positions are relative to the chromosomes). 
-    #       No adjustment needed. 
-    x     <- adjust_position(x, chromosome_buffer, window)
+  xpos    <- position(x)
+  if (chromos) {
+    # Converting to character is necessary to avoid empty chromosomes. Why?
+    # See: https://twitter.com/ZKamvar/status/991114778415325184
+    CHROM  <- as.character(chromosome(x))
+    # Ordering the data by chromosome since they may not be ordered in the
+    # first place. 
+    ochrom <- order(CHROM)
+    x      <- x[, ochrom]
+    xpos   <- xpos[ochrom]
+    CHROM  <- CHROM[ochrom]
+    xpos  <- reposition(xpos, CHROM, chromosome_buffer, window)
   } else {
-    if (any(duplicated(position(x)))){
+    if (any(duplicated(position(x)))) {
       msg <- paste("There are duplicate positions in the data without any",
                    "chromosome structure. All positions must be unique.\n\n",
                    "Please the function chromosome() to add chromosome",
@@ -425,7 +430,6 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
       stop(msg, call. = FALSE)
     }
   }
-  xpos    <- position(x)
   quiet   <- should_poppr_be_quiet(quiet)
   winmat  <- make_windows(maxp = max(xpos), minp = min(xpos), window = window)
   nwin    <- nrow(winmat)
@@ -436,10 +440,6 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
     # Define the window
     the_window <- winmat[i, 1]:winmat[i, 2]
     # TODO: 
-    #  - [x] find the positions in the window (using a logical vector)
-    #  - [x] find how many chromosomes are in the window
-    #  - [x] create a while loop over the chromosomes
-    #  - [x] filter x by posns & chrom
     #  - [ ] write test to confirm this is correct.
     posns  <- xpos %in% the_window
     if (chromos) {
