@@ -835,15 +835,18 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   QUIET   <- if (shuffle) TRUE else quiet
   res     <- pair_ia_internal(gid, N, numLoci, lnames, np, nploci, QUIET, sample)
   if (shuffle) {
-    counts <- matrix(0L, nrow = nrow(res), ncol = ncol(res))
+    # Initialize with 1 to account for the observed data.
+    counts <- matrix(1L, nrow = nrow(res), ncol = ncol(res))
     if (!quiet) prog <- dplyr::progress_estimated(sample)
     for (i in seq_len(sample)) {
-      counts <- counts + pair_ia_internal(shufflepop(gid, method = method), N, numLoci, lnames, np, nploci, QUIET, sample) >= res
+      tmp    <- shufflepop(gid, method = method)
+      tmpres <- pair_ia_internal(tmp, N, numLoci, lnames, np, nploci, QUIET, sample)
+      counts <- counts + as.integer(tmpres >= res)
       if (!quiet) print(prog$tick())
     }
     if (!quiet) print(prog$stop())
     if (!quiet) cat("\n")
-    p   <- (counts + 1)/(sample + 1)
+    p   <- counts/(sample + 1)
     res <- cbind(Ia = res[, 1], 
                  p.Ia = p[, 1], 
                  rbarD = res[, 2], 
