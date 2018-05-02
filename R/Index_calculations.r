@@ -818,7 +818,7 @@ ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 #' @export
 #==============================================================================#
 pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue", 
-                    high = "red", limits = NULL, index = "rbarD", ...){
+                    high = "red", limits = NULL, index = "rbarD", method = 1L){
   N       <- nInd(gid)
   numLoci <- nLoc(gid)
   lnames  <- locNames(gid)
@@ -831,9 +831,9 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   if (shuffle) {
     counts <- matrix(0L, nrow = nrow(res), ncol = ncol(res))
     for (i in seq_len(sample)) {
-      counts <- counts + pair_ia_internal(shufflepop(gid, ...), N, numLoci, lnames, np, nploci, quiet, sample) >= res
+      counts <- counts + pair_ia_internal(shufflepop(gid, method = method), N, numLoci, lnames, np, nploci, quiet, sample) >= res
     }
-    p <- (counts + 1)/(sample + 1)
+    p   <- (counts + 1)/(sample + 1)
     res <- cbind(Ia = res[, 1], 
                  p.Ia = p[, 1], 
                  rbarD = res[, 2], 
