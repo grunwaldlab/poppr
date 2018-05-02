@@ -60,6 +60,18 @@ test_that("filter_stats works for genind", {
   expect_equivalent(cpnear, 3.5)
 })
 
+test_that("filter_stats still plots if thresholds is selected", {
+  skip_on_cran()
+  tmp <- tempfile(pattern = "hay", fileext = ".pdf")
+  expect_true(is.na(file.size(tmp)))
+  pdf(tmp)
+  filter_stats(x, distance = xd, threshold = 100L, plot = TRUE, nclone = 2, stats = "threshold")
+  dev.off()
+  expect_true(file.exists(tmp))
+  expect_true(file.size(tmp) > 0)
+  file.remove(tmp)
+})
+
 test_that("filter_stats works for snpclone", {
 	skip_on_cran()
 	res <- filter_stats(gc, distance = bitwise.dist, threshold = 100L, plot = TRUE)
