@@ -224,7 +224,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALS
   if (length(replen) < nLoc(pop)){
     replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
-    if (interactive()) sleep(2L)
+    if (interactive()) Sys.sleep(2L)
   }
   bruvomat  <- new('bruvomat', pop, replen)
   funk_call <- match.call()
@@ -364,7 +364,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
   if (length(replen) < length(locNames(pop))) {
     replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
     warning(repeat_length_warning(replen), immediate. = TRUE)
-    if (interactive()) sleep(2L)
+    if (interactive()) Sys.sleep(2L)
   }
   bootgen <- new('bruvomat', pop, replen)
   # Steps: Create initial tree and then use boot.phylo to perform bootstrap
