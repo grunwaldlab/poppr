@@ -171,12 +171,12 @@ shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
     IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)   
     sample.data$Ia[c]    <- IarD[1]
     sample.data$rbarD[c] <- IarD[2]
-    if (!quiet) progbar$tick()$print()
+    if (!quiet) print(progbar$tick())
   }
 
   if(!quiet){
+    print(progbar$stop())
     cat("\n")
-    progbar$stop()
   }
 	return(sample.data)
 }
