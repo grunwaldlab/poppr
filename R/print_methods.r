@@ -112,17 +112,25 @@ print.pairia <- function(x, ...){
 #' @export
 plot.pairia <- function(x, ..., index = "rbarD", low = "blue", high = "red",
                         limits = c(-0.2, 1)){
-  df.index <- x[, index]
+  isrd     <- index == "rbarD"
+  df.index <- x[, index, drop = TRUE]
   theLoci  <- strsplit(rownames(x), ":")
   lnames   <- unique(unlist(theLoci))
-  theTitle <- ifelse(index == "rbarD", 
-                     expression(paste(bar(r)[d])), 
-                     expression(paste(I[A])))
+  theTitle <- if (isrd) expression(paste(bar(r)[d])) else expression(paste(I[A]))
   L1 <- factor(vapply(theLoci, "[[", character(1), 1), lnames)
   L2 <- factor(vapply(theLoci, "[[", character(1), 2), rev(lnames))
   df <- data.frame(value = df.index, L1 = L1, L2 = L2)
-  basic_plot <- ggplot(df, aes_string(x = "L1", y = "L2", fill = "value")) +
-    geom_tile()
+  if (ncol(x) == 4) {
+    pval <- if (isrd) x[, "p.rD", drop = TRUE] else x[, "p.Ia", drop = TRUE]
+    dfp  <- data.frame(pvalue = pval)
+    df   <- cbind(df, dfp)
+    basic_plot <- ggplot(df, aes_string(x = "L1", y = "L2", fill = "value", label = "pvalue")) +
+      geom_tile() +
+      geom_text()
+  } else {
+    basic_plot <- ggplot(df, aes_string(x = "L1", y = "L2", fill = "value")) +
+      geom_tile()
+  }
   basic_plot <- basic_plot + 
     scale_fill_gradient(low = low, high = high, limits = limits) +
     scale_x_discrete(expand = c(0, -1)) +

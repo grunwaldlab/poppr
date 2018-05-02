@@ -830,9 +830,13 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   res     <- pair_ia_internal(gid, N, numLoci, lnames, np, nploci, QUIET, sample)
   if (shuffle) {
     counts <- matrix(0L, nrow = nrow(res), ncol = ncol(res))
+    if (!quiet) prog <- dplyr::progress_estimated(sample)
     for (i in seq_len(sample)) {
-      counts <- counts + pair_ia_internal(shufflepop(gid, method = method), N, numLoci, lnames, np, nploci, quiet, sample) >= res
+      counts <- counts + pair_ia_internal(shufflepop(gid, method = method), N, numLoci, lnames, np, nploci, QUIET, sample) >= res
+      if (!quiet) print(prog$tick())
     }
+    if (!quiet) print(prog$stop())
+    if (!quiet) cat("\n")
     p   <- (counts + 1)/(sample + 1)
     res <- cbind(Ia = res[, 1], 
                  p.Ia = p[, 1], 
@@ -841,7 +845,8 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   }
   class(res) <- c("pairia", "matrix")
   if (plot) {
-    plot(res, index = index, low = low, high = high, limits = limits)
+    tryCatch(plot(res, index = index, low = low, high = high, limits = limits),
+             error = function(e) e)
   }
   res
 }
@@ -852,7 +857,7 @@ pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, quiet, sample)
   } else { # P/A case
     V <- apply(tab(gid), 2, function(x) as.vector(dist(x)))
     # checking for missing data and imputing the comparison to zero.
-    if (any(is.na(V))){
+    if (any(is.na(V))) {
       V[which(is.na(V))] <- 0
     }
   }
