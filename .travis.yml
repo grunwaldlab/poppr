@@ -19,7 +19,7 @@ before_install:
   - Rscript -e 'update.packages(ask = FALSE)'
 
 after_success:
-  - Rscript -e 'library(covr);coveralls(line_exclusions = list("R/global_memory.r", "R/zzz.r" = 1:118, "R/imsn.R"))'#, function_exclusions = "getfile")'
+  - Rscript -e 'library(covr);coveralls(line_exclusions = list("R/global_memory.r", "R/zzz.r" = 1:118, "R/imsn.R"))'
 
 notifications:
   email:
