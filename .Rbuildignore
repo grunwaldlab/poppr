@@ -19,3 +19,5 @@
 ^CONTRIBUTING.md$
 ^_pkgdown\.yml$
 ^appveyor\.yml$
+^runtime.txt$
+^install.R$
