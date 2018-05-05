@@ -386,89 +386,59 @@ the biology of your organism.
 
 To help visualize this, there is the function `filter_stats()`, which will plot
 the output of the filtering algorithm. For simplicity, we will use the `Pinf`
-data set.
+data set representing *Phytophthora infestans* samples from Mexico and South America `r citep(bib["goss2009population"])`.
 
-```{r}
+```{r plot_replen}
 data(Pinf)
 Pinf
-```
-```{r, eval = FALSE}
 pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
 pinf_filtered <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE)
 ```
-```{r, echo = FALSE}
-pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
-pinf_dist <- bruvo.dist(Pinf, replen = pinfreps)
-pinf_filtered <- structure(list(farthest = structure(list(THRESHOLDS = c(0.0126262626262626,
-0.0218986742424242, 0.0227272727272727, 0.0227272727272727, 0.0353535353535354,
-0.0416666666666667, 0.0426136363636364, 0.0454545440998944, 0.0469933712121212,
-0.0475852031900425, 0.0568181818181818, 0.0568181818181818, 0.0583570075757576,
-0.0645123106060606, 0.0653409090909091, 0.0681818181818182, 0.0787168560606061,
-0.0795454545454545, 0.0877274792603772, 0.0887784090909091, 0.09375,
-0.0946969696969697, 0.0972222218459303, 0.101444128787879, 0.125,
-0.130997474747475, 0.1359375, 0.13740234375, 0.144886363636364,
-0.149999997019768, 0.156565656565657, 0.166883656472871, 0.18115234375,
-0.193170719526031, 0.210227261890065, 0.215909090909091, 0.21874982660467,
-0.22561553030303, 0.23115234375, 0.232954502105713, 0.234374994039536,
-0.23532196969697, 0.24147722937844, 0.258500315926292, 0.272017021070827,
-0.274999999592546, 0.283380660143766, 0.29208984375, 0.299999999999997,
-0.300423362038352, 0.303269896844421, 0.305499606455366, 0.306322496341461,
-0.3132568359375, 0.336390339246273, 0.337091619318182, 0.340897971256213,
-0.351708152074769, 0.356196582317352, 0.360792333090847, 0.36487923968922,
-0.396464635627438, 0.402803457144535, 0.403320301662627, 0.423251064663584,
-0.437319652600722, 0.454361644319513, 0.470472120576435, 0.508276028103299,
-0.514966882581328, 0.574741401973021)), .Names = "THRESHOLDS"),
-    average = structure(list(THRESHOLDS = c(0.0126262626262626,
-    0.0218986742424242, 0.0227272727272727, 0.0227272727272727,
-    0.0258838383838384, 0.0416666666666667, 0.0426136363636364,
-    0.0454545440998944, 0.0455137310606061, 0.0466678503787879,
-    0.0475852031900425, 0.0511659564393939, 0.0545526883417508,
-    0.0568181818181818, 0.0568181818181818, 0.0653409090909091,
-    0.0681818181818182, 0.0746970385413379, 0.0776515151515152,
-    0.0795454545454545, 0.0838660037878788, 0.0866477272727273,
-    0.0915404036641121, 0.09375, 0.0990451334702848, 0.117836346931329,
-    0.125, 0.1359375, 0.13740234375, 0.144886363636364, 0.149999997019768,
-    0.166883656472871, 0.169220816635022, 0.18115234375, 0.182812413302335,
-    0.189831002331002, 0.193170719526031, 0.206485256010836,
-    0.210227261890065, 0.210983060586332, 0.215909090909091,
-    0.222481511544012, 0.226043217397815, 0.231752027784559,
-    0.232947945592142, 0.234374967488376, 0.239980004751746,
-    0.256210318427872, 0.256249999592546, 0.256803937821849,
-    0.265303876476758, 0.270312499999997, 0.274878910364527,
-    0.284377216447246, 0.287522453250307, 0.288763944769339,
-    0.289024162970308, 0.289442437948814, 0.303269896844421,
-    0.30955901687567, 0.320306661564573, 0.32450982493207, 0.324653779309478,
-    0.326784648203577, 0.337955069560145, 0.343659817474595,
-    0.353714804095389, 0.358177516571547, 0.360592245250208,
-    0.387454092730527, 0.412903107125552)), .Names = "THRESHOLDS"),
-    nearest = structure(list(THRESHOLDS = c(0.0126262626262626,
-    0.0218986742424242, 0.0227272727272727, 0.0227272727272727,
-    0.0227272727272727, 0.0340909090909091, 0.0397727272727273,
-    0.0416666666666667, 0.0426136363636364, 0.0440340909090909,
-    0.0440340909090909, 0.0454545440998944, 0.0475852031900425,
-    0.0568181818181818, 0.0568181818181818, 0.0568181818181818,
-    0.0653409090909091, 0.0681818181818182, 0.0681818181818182,
-    0.0681818181818182, 0.071969696969697, 0.0795454545454545,
-    0.0823863636363636, 0.0858585854822939, 0.0883838383838384,
-    0.09375, 0.1248046875, 0.125, 0.134706415311255, 0.1359375,
-    0.13740234375, 0.144886363636364, 0.146875, 0.149999997019768,
-    0.151909718910853, 0.15625, 0.15625, 0.159326171875, 0.161024305141634,
-    0.166883656472871, 0.168797348484848, 0.172743055555556,
-    0.173295454545455, 0.177680120286014, 0.18115234375, 0.181818168271672,
-    0.181818180463531, 0.1841796875, 0.184374998509884, 0.186618041992188,
-    0.190625, 0.193170719526031, 0.193749997019768, 0.20625,
-    0.210227261890065, 0.21240234375, 0.21484375, 0.215277776949935,
-    0.215902837837348, 0.218747171488675, 0.223487314551768,
-    0.224902342259884, 0.224902342632413, 0.240624999999997,
-    0.241050253876231, 0.241137550292405, 0.246679684519768,
-    0.249129393034511, 0.259232954545455, 0.278124998509884,
-    0.287377917766571)), .Names = "THRESHOLDS")), .Names = c("farthest",
-"average", "nearest"))
 
-plot_filter_stats(Pinf, pinf_filtered, pinf_dist, breaks = "Scott")
+We can see that the different algorithms behave similarly for small thresholds,
+but begin to differ over larger thresholds.
+
+This function is useful for finding all thresholds at which MLLs are collapsed,
+which can help with choosing a threshold that collapses putative clones in our
+sample into lineages. 
+
+### Choosing a threshold
+
+After you have chosen a genetic distance and a filtering algorithm, you must
+then decide on the threshold to represent the **minimum genetic distance at
+which two individuals would be considered from different clonal lineages**.
+
+One method described in the literature of choosing a threshold is to look for an
+initial, small peak in the histogram of pairwise genetic distances and set the
+threshold to be between that peak and the larger peak `r citep(bib[c("arnaud2007standardizing", "bailleul2016rclone")])`. 
+This initial peak likely represents clones differentiated by a small set of
+random mutations. You can see this in the figure above at a threshold of ~0.11
+for the "farthest neighbor" algorithm.
+
+However, if this peak is not obvious, then another method is to look for the largest gap between all putative thresholds. For this, you can use the `cutoff_predictor()` function with the output of `filter_stats()`. It should be noted, however, that this method is not a perfect solution. If we take the results from above, we can find the threshold for each algorithm:
+
+```{r cutof_predictor}
+print(farthest_thresh <- cutoff_predictor(pinf_filtered$farthest$THRESHOLDS))
+print(average_thresh  <- cutoff_predictor(pinf_filtered$average$THRESHOLDS))
+print(nearest_thresh  <- cutoff_predictor(pinf_filtered$nearest$THRESHOLDS))
 ```
 
-We can see that the different algorithms behave quite differently.
+Now we can define multilocus lineages for *P. infestans* with the following criteria:
+
+ - Genetic Distance: Bruvo's Distance
+ - Filtering Algorithm: Farthest neighbor
+ - Threshold: `r signif(farthest_thresh, 3)`
+
+```{r pinf_thresh}
+mlg.filter(Pinf, distance = bruvo.dist, replen = pinfreps, algorithm = "f") <- farthest_thresh
+Pinf
+```
+
+> Note: Please take care to critically evaluate the results and make sure it
+> applies to your data. This function WILL give you an answer whether or not one
+> truely exists. Additionally, For diploid organisms, another method of choosing a
+> threshold is available in the **RClone** package that involves simulating
+> outcrossing and inbreeding events `r citep(bib["bailleul2016rclone"])`.
 
 ## Custom ("custom")
 
