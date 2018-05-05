@@ -107,6 +107,7 @@ filter_stats <- function(x, distance = bitwise.dist,
   } else {
     distmat <- distance
   }
+  stats <- match.arg(toupper(stats), c("ALL", "MLG", "THRESHOLDS", "DISTANCES", "SIZES"))
   f <- mlg.filter(x, threshold, missing, algorithm = "f", distance = distmat, 
                   stats = stats, threads = threads, ...)
   a <- mlg.filter(x, threshold, missing, algorithm = "a", distance = distmat, 
@@ -114,8 +115,8 @@ filter_stats <- function(x, distance = bitwise.dist,
   n <- mlg.filter(x, threshold, missing, algorithm = "n", distance = distmat, 
                   stats = stats, threads = threads, ...)
   fanlist <- list(farthest = f, average = a, nearest = n)
-  if (stats == "All"){
-    if (plot){
+  if (stats %in% c("ALL", "THRESHOLDS")){
+    if (plot) {
       plot_filter_stats(x, fanlist, distmat, cols, nclone, hist)
       return(invisible(fanlist))
     }
@@ -213,9 +214,9 @@ plot_filter_stats <- function(x, fstats, distmat, cols = NULL, nclone = NULL, br
   plot(x = c(upper, 0), y = ylims, type = "n",
        ylab = "Number of Multilocus Lineages",
        xlab = "Genetic Distance Cutoff")
-  a <- fstats$average$THRESHOLDS
-  n <- fstats$nearest$THRESHOLDS
-  f <- fstats$farthest$THRESHOLDS
+  a <- if (inherits(fstats[[1]], "list")) fstats$average$THRESHOLDS else fstats$average
+  n <- if (inherits(fstats[[2]], "list")) fstats$nearest$THRESHOLDS else fstats$nearest
+  f <- if (inherits(fstats[[3]], "list")) fstats$farthest$THRESHOLDS else fstats$farthest
   plotcols <- c("#E41A1C", "#377EB8", "#4DAF4A") # RColorBrewer::brewer.pal(3, "Set1")
   names(plotcols) <- c("f", "a", "n")
   points(x = rev(a), y = 1:length(a), col = plotcols["a"])
