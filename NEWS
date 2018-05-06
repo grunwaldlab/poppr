@@ -8,6 +8,7 @@ BUG FIX
   no longer result in an integer overflow 
   (see https://github.com/grunwaldlab/poppr/issues/179). Thanks to @MarisaMiller
   for the detailed bug report.
+* `plot_filter_stats()` will plot stats if supplied a list of thresholds.
 
 ALGORITHMIC CHANGE
 ------------------
@@ -47,6 +48,11 @@ NEW FEATURES
 * `win.ia()` has a new argument `name_window`, which will give each element in 
   the result the designation of the terminal position of that window. Thanks to
   @MarisaMiller for the suggestion!
+
+DOCUMENTATION
+-------------
+
+* `cutoff_predictor()` was added to the MLG vignette
 
 poppr 2.7.1
 ============
