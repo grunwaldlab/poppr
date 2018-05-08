@@ -899,6 +899,89 @@ setMethod(
     return(listx)
   })
 
+#' Split samples from a genind object into pseudo-haplotypes
+#'
+#'
+#' @param gid   a [genind][adegenet::genind] object.
+#'
+#' @return a haploid genind object with an extra [strata][adegenet::strata]
+#'   column called "Individual".
+#' @export
+#' @md
+#' 
+#' @note The [other slot][adegenet::other] will not be copied over to the new
+#'   genind object.
+#'
+#' @seealso [poppr.amova()] [pegas::amova()] [as.genambig()]
+#' 
+#' @details
+#' Certain analyses, such as [amova][poppr.amova] work best if within-sample
+#' variance (error) can be estimated. Practically, this is performed by
+#' splitting the genotypes across all loci to create multiple haplotypes. This
+#' way, the within-sample distance can be calculated and incorporated into the
+#' model. Please note that the haplotypes generated are based on the order of
+#' the unphased alleles in the genind object and do not represent true
+#' haplotypes. 
+#' 
+#' Haploid data will be returned un-touched.
+#'
+#' @rdname make_haplotypes-method
+#' @docType methods
+#' @aliases make_haplotypes,genclone-method 
+#'   make_haplotypes,snpclone-method 
+#'   make_haplotypes,genind-method
+#'   make_haplotypes,genlight-method
+#' @examples
+#' # Diploid data is doubled -------------------------------------------------
+#' 
+#' data(nancycats)
+#' nan9 <- nancycats[pop = 9]
+#' nan9hap <- make_haplotypes(nan9) 
+#' nan9              # 9 individuals from population 9
+#' nan9hap           # 18 haplotypes
+#' strata(nan9hap)   # strata gains a new column: Individual
+#' indNames(nan9hap) # individuals are renamed sequentially
+#' 
+#' 
+#' # Mix ploidy data can be split, but should be treated with caution --------
+#' # 
+#' # For example, the Pinf data set contains 86 tetraploid individuals, 
+#' # but there appear to only be diploids and triploid genotypes. When 
+#' # we convert to haplotypes, those with all missing data are dropped.
+#' data(Pinf)
+#' Pinf
+#' pmiss <- info_table(Pinf, type = "ploidy", plot = TRUE)
+#' 
+#' # No samples appear to be triploid across all loci. This will cause
+#' # several haplotypes to have a lot of missing data.
+#' p_haps <- make_haplotypes(Pinf)
+#' p_haps
+#' head(genind2df(p_haps), n = 20)
+make_haplotypes <- function(gid) standardGeneric("make_haplotypes")
+
+#' @export
+setGeneric("make_haplotypes")
+
+setMethod(
+  f = "make_haplotypes", 
+  signature(gid = "ANY"), 
+  definition = function(gid) {
+    stop("This function can only take genind or genlight objects")
+})
+
+setMethod(
+  f = "make_haplotypes", 
+  signature(gid = "genind"), 
+  definition = function(gid) {
+    make_haplotypes_genind(gid)
+})
+
+setMethod(
+  f = "make_haplotypes", 
+  signature(gid = "genlight"), 
+  definition = function(gid) {
+    make_haplotypes_genlight(gid)
+})
 
 # multilocus lineage methods ----------------------------------------------
 
