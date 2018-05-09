@@ -827,7 +827,7 @@ make_haplotypes_genlight <- function(gid) {
   addStrata(gid) <- data.frame(Individual = indNames(gid))
   df             <- strata(gid)
   df             <- df[rep(seq(nrow(df)), each = ploidy), , drop = FALSE]
-  newgid         <- lapply(gid@gen, function(x) lapply(seq(ploidy(x)), split_gen, x))
+  newgid         <- lapply(gid@gen, function(x, p) lapply(seq(p), split_gen, x), ploidy)
   newgid         <- new("genlight", unlist(newgid, recursive = FALSE, use.names = FALSE))
   ploidy(newgid) <- 1L
   alleles(newgid) <- alleles(gid)
@@ -837,7 +837,8 @@ make_haplotypes_genlight <- function(gid) {
 }
 
 split_gen <- function(i, gen) {
-  gen@snp <- gen@snp[i]
+  no_snps <- is.null(gen@snp[i][[1L]])
+  gen@snp <- if (no_snps) list(as.raw(rep(0L, length(gen@snp[[1L]])))) else gen@snp[i]
   ploidy(gen) <- 1L
   gen
 }
