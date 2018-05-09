@@ -324,6 +324,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (within && heterozygous && codominant && !haploid && full_ploidy) {
     hier <- update(hier, ~./Individual)
     x    <- make_haplotypes(x)
+    x    <- if (is_genind) as.genclone(x) else as.snpclone(x)
   } else if (within && codominant && !full_ploidy && is.null(dist)) {
     warning(paste("Data with mixed ploidy or ambiguous allele dosage cannot have",
             "within-individual variance calculated until the dosage is correctly",

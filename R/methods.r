@@ -979,23 +979,9 @@ setMethod(
 
 setMethod(
   f = "make_haplotypes", 
-  signature(gid = "genclone"), 
-  definition = function(gid) {
-    as.genclone(make_haplotypes_genind(gid))
-})
-
-setMethod(
-  f = "make_haplotypes", 
   signature(gid = "genlight"), 
   definition = function(gid) {
     make_haplotypes_genlight(gid)
-})
-
-setMethod(
-  f = "make_haplotypes", 
-  signature(gid = "snpclone"), 
-  definition = function(gid) {
-    as.snpclone(make_haplotypes_genlight(gid))
 })
 
 # multilocus lineage methods ----------------------------------------------
