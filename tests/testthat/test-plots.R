@@ -233,6 +233,21 @@ test_that("pair.ia produces a heatmap", {
 	expect_output(print(pplot$layers[[1]]), "position_identity")
 })
 
+test_that("pair.ia can plot p-values", {
+  skip_on_cran()
+  p1 <- ggplot2::last_plot()
+  tmp <- matrix(round(runif(45*4), 3), nrow = 45, ncol = 4)
+  rownames(tmp) <- apply(combn(letters[1:10], 2), 2, paste, collapse = ":")
+  colnames(tmp) <- c("Ia", "p.Ia", "rbarD", "p.rD")
+  class(tmp) <- c("pairia", "matrix")
+  plot(tmp)
+  p2 <- ggplot2::last_plot()
+  expect_is(p1, "ggplot")
+  expect_is(p2, "ggplot")
+  # The previous plot is not the same as the current plot
+  expect_failure(expect_identical(p1, p2))
+})
+
 context("diversity_ci plots")
 
 # diversity_ci plots ------------------------------------------------------

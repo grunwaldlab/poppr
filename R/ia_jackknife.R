@@ -63,11 +63,11 @@ resample.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FAL
   if(!quiet) progbar <- dplyr::progress_estimated(reps)
   for (i in seq(reps)){
     sample.data[i, ] <- run.jack(V, mat, N, n, np, replace = FALSE, weights = weights)
-    if (!quiet) progbar$tick()$print()
+    if (!quiet) print(progbar$tick())
   }
   if(!quiet){
+    print(progbar$stop())
     cat("\n")
-    progbar$stop()
   }
   colnames(sample.data) <- c("Ia", "rbarD")
   return(data.frame(sample.data))

@@ -10,8 +10,8 @@
 ia(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   plot = TRUE, hist = TRUE, index = "rbarD", valuereturn = FALSE)
 
-pair.ia(gid, quiet = FALSE, plot = TRUE, low = "blue", high = "red",
-  limits = NULL, index = "rbarD")
+pair.ia(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
+  high = "red", limits = NULL, index = "rbarD", method = 1L)
 
 resample.ia(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE,
   ...)
@@ -37,8 +37,10 @@ performing calculations?
 \item{missing}{a character string. see \code{\link{missingno}} for details.}
 
 \item{plot}{When \code{TRUE} (default), a heatmap of the values per locus
-pair will be plotted (for pair.ia). For `ia()`, if \code{sampling > 0}, a
-histogram will be produced for each population.}
+pair will be plotted (for \code{pair.ia()}). When \code{sampling > 0}, 
+different things happen with \code{ia()} and \code{pair.ia()}. For 
+\code{ia()}, a histogram for the data set is plotted. For \code{pair.ia()},
+p-values are added as text on the heatmap.}
 
 \item{hist}{\code{logical} Deprecated. Use plot.}
 
@@ -207,6 +209,10 @@ data(Pinf)
 resample.ia(Pinf, reps = 99)
 
 \dontrun{
+
+# Pairwise IA with p-values (this will take about a minute)
+res <- pair.ia(partial_clone, sample = 999)
+head(res)
 
 # Plot the results of resampling rbarD. 
 library("ggplot2")

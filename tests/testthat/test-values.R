@@ -288,6 +288,12 @@ test_that("ia and pair.ia return same values", {
   expect_equivalent(pc_pair[pair_posi], pc_ia)
 })
 
+test_that("pair.ia can do sampling", {
+  skip_on_cran()
+  pair_res <- pair.ia(partial_clone[1:10], sample = 1L, quiet = TRUE, plot = FALSE)
+  expect_equal(dim(pair_res), c(45, 4))
+  expect_equal(sort(unique(pair_res[, "p.rD"])), c(0.5, 1))
+})
 
 test_that("bitwise.ia can handle large samples", {
   skip_on_cran()
