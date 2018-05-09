@@ -7,12 +7,13 @@
 \alias{make_haplotypes,snpclone-method}
 \alias{make_haplotypes,genind-method}
 \alias{make_haplotypes,genlight-method}
+\alias{make_haplotypes,ANY-method}
 \title{Split samples from a genind object into pseudo-haplotypes}
 \usage{
 make_haplotypes(gid)
 }
 \arguments{
-\item{gid}{a \link[adegenet:genind]{genind} object.}
+\item{gid}{a \link[adegenet:genind]{genind} or \link[adegenet:genlight]{genlight} object.}
 }
 \value{
 a haploid genind object with an extra \link[adegenet:strata]{strata}

@@ -902,7 +902,7 @@ setMethod(
 #' Split samples from a genind object into pseudo-haplotypes
 #'
 #'
-#' @param gid   a [genind][adegenet::genind] object.
+#' @param gid a [genind][adegenet::genind] or [genlight][adegenet::genlight] object.
 #'
 #' @return a haploid genind object with an extra [strata][adegenet::strata]
 #'   column called "Individual".
@@ -931,6 +931,7 @@ setMethod(
 #'   make_haplotypes,snpclone-method 
 #'   make_haplotypes,genind-method
 #'   make_haplotypes,genlight-method
+#'   make_haplotypes,ANY-method
 #' @examples
 #' # Diploid data is doubled -------------------------------------------------
 #' 
