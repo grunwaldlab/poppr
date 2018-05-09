@@ -258,24 +258,24 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
                         threshold = 0, algorithm = "farthest_neighbor", 
                         missing = "loci", cutoff = 0.05, quiet = FALSE, 
                         method = c("ade4", "pegas"), nperm = 0){
-  if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
+  if (!inherits(x, c("genind", "genlight"))) stop(paste(substitute(x), "must be a genind object."))
   if (is.null(hier)) stop("A population hierarchy must be specified")
   methods   <- c("ade4", "pegas")
   method    <- match.arg(method, methods)
   setPop(x) <- hier
+  is_genind <- is.genind(x)
   # Sanity Checks
   haploid      <- all(ploidy(x) == 1)
-  heterozygous <- check_Hs(x)
-  codominant   <- x@type != "PA"
+  heterozygous <- if (is_genind) check_Hs(x) else TRUE
+  codominant   <- if (is_genind) x@type != "PA" else TRUE
   freq         <- freq & codominant & !haploid # freq does not need to be in place for haploid data
-
+  if (!is.clone(x)) {
+    x <- if (is_genind) as.genclone(x) else as.snpclone(x)
+  }
   # Filtering genotypes -----------------------------------------------------
   if (filter && (haploid | !within | !heterozygous | !codominant)) {
     
-    if (!is.genclone(x)){
-      x <- as.genclone(x)
-    }
-    if (!is(x@mlg, "MLG")){
+    if (!is(x@mlg, "MLG")) {
       x@mlg <- new("MLG", x@mlg)
     }
     if (!quiet) {
@@ -283,7 +283,11 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       message("Original multilocus genotypes ... ", nmll(x, "original"))
     }
     if (is.null(dist)) {
-      dist    <- dist(tab(x, freq = freq))
+      if (is_genind) {
+        dist <- dist(tab(x, freq = freq)) 
+      } else {
+        dist <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE)
+      }
       squared <- FALSE
     }
     filt_stats <- mlg.filter(x, threshold = threshold, algorithm = algorithm,
@@ -308,11 +312,15 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   # missing to mean of the columns: indiscreet distances.
   # remove loci at cutoff
   # remove individuals at cutoff
-  x <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
+  if (is_genind) {
+    x <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
+  } else {
+    if (!quiet) message("Missing data are not filtered from genlight data")
+  }
 
   # Splitting haplotypes ----------------------------------------------------
-  # 
-  full_ploidy <- codominant && sum(tabulate(get_local_ploidy(x)) > 0) == 1
+  #
+  full_ploidy <- if (is_genind) codominant && sum(tabulate(get_local_ploidy(x)) > 0) == 1 else TRUE
   if (within && heterozygous && codominant && !haploid && full_ploidy) {
     hier <- update(hier, ~./Individual)
     x    <- make_haplotypes(x)
@@ -332,9 +340,17 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (is.null(dist)) {
     squared <- FALSE
     if (method == "ade4") {
-      xdist <- dist(tab(clonecorrect(x, strata = NA), freq = freq))
+      if (is_genind) {
+        xdist <- dist(tab(clonecorrect(x, strata = NA), freq = freq)) 
+      } else {
+        xdist <- bitwise.dist(clonecorrect(x, strata = NA), euclidean = TRUE, scale_missing = TRUE)
+      }
     } else {
-      xdist <- dist(tab(x, freq = freq))
+      if (is_genind) {
+        xdist <- dist(tab(x, freq = freq)) 
+      } else {
+        xdist <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE)
+      }
     }
   } else {
     datalength <- choose(nInd(x), 2)
