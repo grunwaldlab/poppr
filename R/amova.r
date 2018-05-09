@@ -315,7 +315,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (is_genind) {
     x <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
   } else {
-    if (!quiet) message("Missing data are not filtered from genlight data")
+    warning("Missing data are not filtered from genlight data.")
   }
 
   # Splitting haplotypes ----------------------------------------------------

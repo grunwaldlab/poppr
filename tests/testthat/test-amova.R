@@ -1,4 +1,3 @@
-context("Amova tests")
 {
 data("Aeut", package = "poppr")
 strata(Aeut) <- other(Aeut)$population_hierarchy[-1]
@@ -258,4 +257,16 @@ test_that("AMOVA will give an extra warning for polyploids with zeroes", {
   skip_on_cran()
   wrn <- "zeroes encoded"
   expect_warning(res <- poppr.amova(recode_polyploids(pg, addzero = TRUE), ~group/population, within = TRUE), wrn)
+})
+
+context("Amova with genlight objects")
+
+set.seed(99)
+glite <- glSim(20, 10, 10, pop.freq = c(0.5, 0.5), ploidy = 2, parallel = FALSE)
+strata(glite) <- as.data.frame(other(glite))
+
+test_that("AMOVA can be run on genlight objects", {
+  skip_on_cran()
+  expect_warning(res <- poppr.amova(glite, ~ancestral.pops), "Missing")
+  expect_is(res, "amova")
 })
