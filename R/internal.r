@@ -2666,8 +2666,8 @@ ia_from_d_and_D <- function(V, np){
 #' @noRd
 #'
 fix_uneven_diploid <- function(x){
-  snplens <- x$gen %>% lapply(slot, "snp") %>% vapply(length, integer(1))
-  if (any(snplens == 1)){
+  snplens <- lengths(lapply(x$gen, slot, "snp"))
+  if (any(snplens == 1)) {
     replacement <- as.raw(rep(0, length(x$gen[[1]]$snp[[1]])))
     for (i in which(snplens == 1)){
       x$gen[[i]]$snp[[2]] <- replacement
