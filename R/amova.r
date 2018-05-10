@@ -49,7 +49,7 @@
 #' implementation of AMOVA. See [ade4::amova()] (ade4) and [pegas::amova()]
 #' (pegas) for details on the specific implementation.
 #' 
-#' @param x a [genind][genind-class] or [genclone][genclone-class] object
+#' @param x a [genind][genind-class], [genclone][genclone-class], [genlight][genlight-class], or [snpclone][snpclone-class] object
 #'
 #' @param hier a hierarchical [formula][formula()] that defines your population
 #'   hierarchy. (e.g.: `~Population/Subpopulation`). **See Details below**.
@@ -91,10 +91,12 @@
 #'   supply a distance matrix.
 #'
 #' @param missing specify method of correcting for missing data utilizing
-#'   options given in the function [missingno()]. Default is `"loci"`.
+#'   options given in the function [missingno()]. Default is `"loci"`. This only
+#'   applies to genind or genclone objects. 
 #'
 #' @param cutoff specify the level at which missing data should be
-#'   removed/modified. See [missingno()] for details.
+#'   removed/modified. See [missingno()] for details. This only applies to
+#'   genind or genclone objects.
 #'
 #' @param quiet `logical` If `FALSE` (Default), messages regarding any
 #'   corrections will be printed to the screen. If `TRUE`, no messages will be
@@ -122,15 +124,16 @@
 #'   2. a data frame defining the hierarchy of the distance matrix 
 #'   3. a genotype (haplotype) frequency table.
 #'
-#'   All of this data can be constructed from a [genind][genind-class] object,
-#'   but can be daunting for a novice R user. *This function automates the
-#'   entire process*. Since there are many variables regarding genetic data,
-#'   some points need to be highlighted:
+#'   All of this data can be constructed from a [genind][genind-class] or
+#'   [genlight][genlight-class] object, but can be daunting for a novice R user.
+#'   *This function automates the entire process*. Since there are many
+#'   variables regarding genetic data, some points need to be highlighted:
 #'   
 #'   \subsection{On Hierarchies:}{The hierarchy is defined by different
 #'   population strata that separate your data hierarchically. These strata are
-#'   defined in the \strong{strata} slot of [genind][genind-class] and
-#'   [genclone][genclone-class] objects. They are useful for defining the
+#'   defined in the \strong{strata} slot of [genind][genind-class],
+#'   [genlight][genlight-class], [genclone][genclone-class], and
+#'   [snpclone][snpclone-class] objects. They are useful for defining the
 #'   population factor for your data. See the function [strata()] for details on
 #'   how to properly define these strata.}
 #'
@@ -143,15 +146,16 @@
 #'   Within individual variance will not be calculated for haploid individuals
 #'   or dominant markers as the haplotypes cannot be split further. Setting
 #'   `within = FALSE` uses the euclidean distance of the allele frequencies
-#'   within each individual}
+#'   within each individual. **Note:** `within = TRUE` is incompatible with
+#'   `filter = TRUE`. In this case, `within` will be set to `FALSE`}
 #'
-#'   \subsection{On Euclidean Distances:}{ With the ade4 implementation of AMOVA
-#'   (utilized by poppr), distances must be Euclidean (due to the nature of the
-#'   calculations). Unfortunately, many genetic distance measures are not always
-#'   euclidean and must be corrected for before being analyzed. Poppr automates
-#'   this with three methods implemented in ade4, [quasieuclid()], [lingoes()],
-#'   and [cailliez()]. The correction of these distances should not adversely
-#'   affect the outcome of the analysis.}
+#'   \subsection{On Euclidean Distances:}{ With the \pkg{ade4} implementation of
+#'   AMOVA (utilized by \pkg{poppr}), distances must be Euclidean (due to the
+#'   nature of the calculations). Unfortunately, many genetic distance measures
+#'   are not always euclidean and must be corrected for before being analyzed.
+#'   Poppr automates this with three methods implemented in \pkg{ade4},
+#'   [quasieuclid()], [lingoes()], and [cailliez()]. The correction of these
+#'   distances should not adversely affect the outcome of the analysis.}
 #'   
 #'   \subsection{On Filtering:}{ Filtering multilocus genotypes is performed by
 #'   [mlg.filter()]. This can necessarily only be done AMOVA tests that do not
@@ -258,32 +262,43 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
                         threshold = 0, algorithm = "farthest_neighbor", 
                         missing = "loci", cutoff = 0.05, quiet = FALSE, 
                         method = c("ade4", "pegas"), nperm = 0){
-  if (!is.genind(x)) stop(paste(substitute(x), "must be a genind object."))
+  if (!inherits(x, c("genind", "genlight"))) stop(paste(substitute(x), "must be a genind object."))
   if (is.null(hier)) stop("A population hierarchy must be specified")
   methods   <- c("ade4", "pegas")
   method    <- match.arg(method, methods)
   setPop(x) <- hier
+  is_genind <- is.genind(x)
   # Sanity Checks
   haploid      <- all(ploidy(x) == 1)
-  heterozygous <- check_Hs(x)
-  codominant   <- x@type != "PA"
+  heterozygous <- if (is_genind) check_Hs(x) else TRUE
+  codominant   <- if (is_genind) x@type != "PA" else TRUE
   freq         <- freq & codominant & !haploid # freq does not need to be in place for haploid data
-
+  if (!is.clone(x)) {
+    x <- if (is_genind) as.genclone(x) else as.snpclone(x)
+  }
+  if (filter && within && !haploid) {
+    msg <- paste("`filter = TRUE` overrides `within = TRUE`.\n",
+                 "The calculations will run with the option `within = FALSE`.\n",
+                 "To remove this warning, set either `filter` or `within` to `FALSE`.")
+    warning(msg)
+    within <- FALSE
+  }
   # Filtering genotypes -----------------------------------------------------
   if (filter && (haploid | !within | !heterozygous | !codominant)) {
     
-    if (!is.genclone(x)){
-      x <- as.genclone(x)
-    }
-    if (!is(x@mlg, "MLG")){
+    if (!is(x@mlg, "MLG")) {
       x@mlg <- new("MLG", x@mlg)
     }
     if (!quiet) {
       message("Filtering ...")
-      message("Original multilocus genotypes ... ", nmll(x, "original"))
+      message("Original multilocus genotypes   ... ", nmll(x, "original"))
     }
     if (is.null(dist)) {
-      dist    <- dist(tab(x, freq = freq))
+      if (is_genind) {
+        dist <- dist(tab(x, freq = freq)) 
+      } else {
+        dist <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE)
+      }
       squared <- FALSE
     }
     filt_stats <- mlg.filter(x, threshold = threshold, algorithm = algorithm,
@@ -308,14 +323,19 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   # missing to mean of the columns: indiscreet distances.
   # remove loci at cutoff
   # remove individuals at cutoff
-  x <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
+  if (is_genind) {
+    x <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
+  } else {
+    if (!all(lengths(NA.posi(x)) == 0L)) warning("Missing data are not filtered from genlight data.")
+  }
 
   # Splitting haplotypes ----------------------------------------------------
-  # 
-  full_ploidy <- codominant && sum(tabulate(get_local_ploidy(x)) > 0) == 1
+  #
+  full_ploidy <- if (is_genind) codominant && sum(tabulate(get_local_ploidy(x)) > 0) == 1 else TRUE
   if (within && heterozygous && codominant && !haploid && full_ploidy) {
     hier <- update(hier, ~./Individual)
     x    <- make_haplotypes(x)
+    x    <- if (is_genind) as.genclone(x) else as.snpclone(x)
   } else if (within && codominant && !full_ploidy && is.null(dist)) {
     warning(paste("Data with mixed ploidy or ambiguous allele dosage cannot have",
             "within-individual variance calculated until the dosage is correctly",
@@ -332,9 +352,17 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (is.null(dist)) {
     squared <- FALSE
     if (method == "ade4") {
-      xdist <- dist(tab(clonecorrect(x, strata = NA), freq = freq))
+      if (is_genind) {
+        xdist <- dist(tab(clonecorrect(x, strata = NA), freq = freq)) 
+      } else {
+        xdist <- bitwise.dist(clonecorrect(x, strata = NA), euclidean = TRUE, scale_missing = TRUE)
+      }
     } else {
-      xdist <- dist(tab(x, freq = freq))
+      if (is_genind) {
+        xdist <- dist(tab(x, freq = freq)) 
+      } else {
+        xdist <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE)
+      }
     }
   } else {
     datalength <- choose(nInd(x), 2)
