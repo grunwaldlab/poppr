@@ -272,6 +272,13 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (!is.clone(x)) {
     x <- if (is_genind) as.genclone(x) else as.snpclone(x)
   }
+  if (filter && within && !haploid) {
+    msg <- paste("`filter = TRUE` overrides `within = TRUE`.\n",
+                 "The calculations will run with the option `within = FALSE`.\n",
+                 "To remove this warning, set either `filter` or `within` to `FALSE`.")
+    warning(msg)
+    within <- FALSE
+  }
   # Filtering genotypes -----------------------------------------------------
   if (filter && (haploid | !within | !heterozygous | !codominant)) {
     
@@ -280,7 +287,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
     }
     if (!quiet) {
       message("Filtering ...")
-      message("Original multilocus genotypes ... ", nmll(x, "original"))
+      message("Original multilocus genotypes   ... ", nmll(x, "original"))
     }
     if (is.null(dist)) {
       if (is_genind) {
@@ -315,7 +322,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   if (is_genind) {
     x <- missingno(x, type = missing, cutoff = cutoff, quiet = quiet)
   } else {
-    warning("Missing data are not filtered from genlight data.")
+    if (!all(lengths(NA.posi(x)) == 0L)) warning("Missing data are not filtered from genlight data.")
   }
 
   # Splitting haplotypes ----------------------------------------------------

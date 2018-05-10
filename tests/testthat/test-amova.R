@@ -267,6 +267,22 @@ strata(glite) <- as.data.frame(other(glite))
 
 test_that("AMOVA can be run on genlight objects", {
   skip_on_cran()
-  expect_warning(res <- poppr.amova(glite, ~ancestral.pops), "Missing")
+  res <- poppr.amova(glite, ~ancestral.pops)
   expect_is(res, "amova")
+})
+
+test_that("AMOVA can work on filtered data", {
+  skip_on_cran()
+  noW <- poppr.amova(glite, ~ancestral.pops, within = FALSE)
+  expect_warning(fil <- poppr.amova(glite, ~ancestral.pops, 
+                                    filter = TRUE, 
+                                    threshold = 0L, 
+                                    quiet = TRUE), "within = FALSE")
+  expect_message(fil2 <- poppr.amova(glite, ~ancestral.pops,
+                                     filter = TRUE,
+                                     within = FALSE,
+                                     threshold = 2.25),
+                 "Contracted multilocus genotypes ... 18")
+  expect_identical(noW, fil)
+  expect_failure(expect_identical(fil, fil2))
 })
