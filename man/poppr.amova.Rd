@@ -12,7 +12,7 @@ poppr.amova(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   quiet = FALSE, method = c("ade4", "pegas"), nperm = 0)
 }
 \arguments{
-\item{x}{a \link[=genind-class]{genind} or \link[=genclone-class]{genclone} object}
+\item{x}{a \link[=genind-class]{genind}, \link[=genclone-class]{genclone}, \link[=genlight-class]{genlight}, or \link[=snpclone-class]{snpclone} object}
 
 \item{hier}{a hierarchical \link[=formula]{formula} that defines your population
 hierarchy. (e.g.: \code{~Population/Subpopulation}). \strong{See Details below}.}
@@ -69,10 +69,12 @@ the original (naive) MLG definition.}
 }}
 
 \item{missing}{specify method of correcting for missing data utilizing
-options given in the function \code{\link[=missingno]{missingno()}}. Default is \code{"loci"}.}
+options given in the function \code{\link[=missingno]{missingno()}}. Default is \code{"loci"}. This only
+applies to genind or genclone objects.}
 
 \item{cutoff}{specify the level at which missing data should be
-removed/modified. See \code{\link[=missingno]{missingno()}} for details.}
+removed/modified. See \code{\link[=missingno]{missingno()}} for details. This only applies to
+genind or genclone objects.}
 
 \item{quiet}{\code{logical} If \code{FALSE} (Default), messages regarding any
 corrections will be printed to the screen. If \code{TRUE}, no messages will be
@@ -107,15 +109,16 @@ are:
 \item a genotype (haplotype) frequency table.
 }
 
-All of this data can be constructed from a \link[=genind-class]{genind} object,
-but can be daunting for a novice R user. \emph{This function automates the
-entire process}. Since there are many variables regarding genetic data,
-some points need to be highlighted:
+All of this data can be constructed from a \link[=genind-class]{genind} or
+\link[=genlight-class]{genlight} object, but can be daunting for a novice R user.
+\emph{This function automates the entire process}. Since there are many
+variables regarding genetic data, some points need to be highlighted:
 
 \subsection{On Hierarchies:}{The hierarchy is defined by different
 population strata that separate your data hierarchically. These strata are
-defined in the \strong{strata} slot of \link[=genind-class]{genind} and
-\link[=genclone-class]{genclone} objects. They are useful for defining the
+defined in the \strong{strata} slot of \link[=genind-class]{genind},
+\link[=genlight-class]{genlight}, \link[=genclone-class]{genclone}, and
+\link[=snpclone-class]{snpclone} objects. They are useful for defining the
 population factor for your data. See the function \code{\link[=strata]{strata()}} for details on
 how to properly define these strata.}
 
@@ -128,15 +131,16 @@ like the default settings for AMOVA in the Arlequin software package.
 Within individual variance will not be calculated for haploid individuals
 or dominant markers as the haplotypes cannot be split further. Setting
 \code{within = FALSE} uses the euclidean distance of the allele frequencies
-within each individual}
+within each individual. \strong{Note:} \code{within = TRUE} is incompatible with
+\code{filter = TRUE}. In this case, \code{within} will be set to \code{FALSE}}
 
-\subsection{On Euclidean Distances:}{ With the ade4 implementation of AMOVA
-(utilized by poppr), distances must be Euclidean (due to the nature of the
-calculations). Unfortunately, many genetic distance measures are not always
-euclidean and must be corrected for before being analyzed. Poppr automates
-this with three methods implemented in ade4, \code{\link[=quasieuclid]{quasieuclid()}}, \code{\link[=lingoes]{lingoes()}},
-and \code{\link[=cailliez]{cailliez()}}. The correction of these distances should not adversely
-affect the outcome of the analysis.}
+\subsection{On Euclidean Distances:}{ With the \pkg{ade4} implementation of
+AMOVA (utilized by \pkg{poppr}), distances must be Euclidean (due to the
+nature of the calculations). Unfortunately, many genetic distance measures
+are not always euclidean and must be corrected for before being analyzed.
+Poppr automates this with three methods implemented in \pkg{ade4},
+\code{\link[=quasieuclid]{quasieuclid()}}, \code{\link[=lingoes]{lingoes()}}, and \code{\link[=cailliez]{cailliez()}}. The correction of these
+distances should not adversely affect the outcome of the analysis.}
 
 \subsection{On Filtering:}{ Filtering multilocus genotypes is performed by
 \code{\link[=mlg.filter]{mlg.filter()}}. This can necessarily only be done AMOVA tests that do not

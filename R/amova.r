@@ -49,7 +49,7 @@
 #' implementation of AMOVA. See [ade4::amova()] (ade4) and [pegas::amova()]
 #' (pegas) for details on the specific implementation.
 #' 
-#' @param x a [genind][genind-class] or [genclone][genclone-class] object
+#' @param x a [genind][genind-class], [genclone][genclone-class], [genlight][genlight-class], or [snpclone][snpclone-class] object
 #'
 #' @param hier a hierarchical [formula][formula()] that defines your population
 #'   hierarchy. (e.g.: `~Population/Subpopulation`). **See Details below**.
@@ -91,10 +91,12 @@
 #'   supply a distance matrix.
 #'
 #' @param missing specify method of correcting for missing data utilizing
-#'   options given in the function [missingno()]. Default is `"loci"`.
+#'   options given in the function [missingno()]. Default is `"loci"`. This only
+#'   applies to genind or genclone objects. 
 #'
 #' @param cutoff specify the level at which missing data should be
-#'   removed/modified. See [missingno()] for details.
+#'   removed/modified. See [missingno()] for details. This only applies to
+#'   genind or genclone objects.
 #'
 #' @param quiet `logical` If `FALSE` (Default), messages regarding any
 #'   corrections will be printed to the screen. If `TRUE`, no messages will be
@@ -122,15 +124,16 @@
 #'   2. a data frame defining the hierarchy of the distance matrix 
 #'   3. a genotype (haplotype) frequency table.
 #'
-#'   All of this data can be constructed from a [genind][genind-class] object,
-#'   but can be daunting for a novice R user. *This function automates the
-#'   entire process*. Since there are many variables regarding genetic data,
-#'   some points need to be highlighted:
+#'   All of this data can be constructed from a [genind][genind-class] or
+#'   [genlight][genlight-class] object, but can be daunting for a novice R user.
+#'   *This function automates the entire process*. Since there are many
+#'   variables regarding genetic data, some points need to be highlighted:
 #'   
 #'   \subsection{On Hierarchies:}{The hierarchy is defined by different
 #'   population strata that separate your data hierarchically. These strata are
-#'   defined in the \strong{strata} slot of [genind][genind-class] and
-#'   [genclone][genclone-class] objects. They are useful for defining the
+#'   defined in the \strong{strata} slot of [genind][genind-class],
+#'   [genlight][genlight-class], [genclone][genclone-class], and
+#'   [snpclone][snpclone-class] objects. They are useful for defining the
 #'   population factor for your data. See the function [strata()] for details on
 #'   how to properly define these strata.}
 #'
@@ -143,15 +146,16 @@
 #'   Within individual variance will not be calculated for haploid individuals
 #'   or dominant markers as the haplotypes cannot be split further. Setting
 #'   `within = FALSE` uses the euclidean distance of the allele frequencies
-#'   within each individual}
+#'   within each individual. **Note:** `within = TRUE` is incompatible with
+#'   `filter = TRUE`. In this case, `within` will be set to `FALSE`}
 #'
-#'   \subsection{On Euclidean Distances:}{ With the ade4 implementation of AMOVA
-#'   (utilized by poppr), distances must be Euclidean (due to the nature of the
-#'   calculations). Unfortunately, many genetic distance measures are not always
-#'   euclidean and must be corrected for before being analyzed. Poppr automates
-#'   this with three methods implemented in ade4, [quasieuclid()], [lingoes()],
-#'   and [cailliez()]. The correction of these distances should not adversely
-#'   affect the outcome of the analysis.}
+#'   \subsection{On Euclidean Distances:}{ With the \pkg{ade4} implementation of
+#'   AMOVA (utilized by \pkg{poppr}), distances must be Euclidean (due to the
+#'   nature of the calculations). Unfortunately, many genetic distance measures
+#'   are not always euclidean and must be corrected for before being analyzed.
+#'   Poppr automates this with three methods implemented in \pkg{ade4},
+#'   [quasieuclid()], [lingoes()], and [cailliez()]. The correction of these
+#'   distances should not adversely affect the outcome of the analysis.}
 #'   
 #'   \subsection{On Filtering:}{ Filtering multilocus genotypes is performed by
 #'   [mlg.filter()]. This can necessarily only be done AMOVA tests that do not
