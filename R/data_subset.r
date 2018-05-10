@@ -742,9 +742,9 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
     warning("Input is not a polyploid data set, returning original.")
     return(poly)
   }
-  if (addzero && is.genind(poly)){
+  if (addzero && is.genind(poly)) {
     
-    if (test_zeroes(poly)){
+    if (test_zeroes(poly)) {
       warning("addzero = TRUE, but data already has zeroes. Returning original.")
       return(poly)
     }
@@ -755,7 +755,7 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
                           pop = pop(poly), strata = strata(poly), 
                           hierarchy = poly@hierarchy)
     other(res) <- other(poly)
-    if (is.genclone(poly)){
+    if (is.genclone(poly)) {
       res <- as.genclone(res, mlg = poly@mlg)
     }
     return(res)
@@ -785,9 +785,6 @@ recode_polyploids <- function(poly, newploidy = FALSE, addzero = FALSE){
 
 
 make_haplotypes_genind <- function(gid) {
-  if (!is.genind(gid)) {
-    stop("make_haplotypes() can only take genind objects.")
-  }
   ploidy <- max(ploidy(gid))
   if (ploidy == 1) {
     warning("This procedure does not work on haploid data. Returning data.")
