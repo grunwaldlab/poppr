@@ -5,7 +5,7 @@ BUG FIX
 -------
 
 * `win.ia()` now has more consistent behavior with chromosome structure and will
-  no longer result in an integer overflow 
+  no longer result in an integer overflow. 
   (see https://github.com/grunwaldlab/poppr/issues/179). Thanks to @MarisaMiller
   for the detailed bug report.
 * `plot_filter_stats()` will plot stats if supplied a list of thresholds.
@@ -32,11 +32,16 @@ DEPRECATION
 NEW FEATURES
 ------------
 
+* `poppr.amova()` will now handle genlight/snpclone objects.
+   See https://github.com/grunwaldlab/poppr/pull/185 for details.
+
 * `bitwise.dist()` now has two new options: `euclidean` and `scale_missing`.
   When both of these are set to `TRUE`, the distance measured will be Euclidean
   scaled for the amount of missing data in each comparison. This matches the 
   output of base R's `dist()` function at a fraction of time and memory. 
   See https://github.com/grunwaldlab/poppr/pull/176 for details.
+
+* `make_haplotypes()` is now a generic defined for both genind and genlight.
   
 * `genind2genalex()` will no longer write to "genalex.csv" by default. Instead,
   it will warn the user and write to a temporary file. 
