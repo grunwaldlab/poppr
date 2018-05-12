@@ -156,18 +156,23 @@ test_that("AMOVA handles subsetted genclone objects", {
 
 test_that("AMOVA can take a distance matrix as input", {
   skip_on_cran()
-  adist   <- diss.dist(clonecorrect(Aeut, strata = NA), percent = FALSE)
+  adist       <- diss.dist(clonecorrect(Aeut, strata = NA), percent = FALSE)
   root_adist  <- sqrt(adist)
+  full_dist   <- dist(Aeut)
   
   # UNSQUARED
   usqres <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, dist = root_adist, 
-                         squared = FALSE)
+                        squared = FALSE)
   # SQUARED
   sqres <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, dist = adist, 
-                        squared = TRUE)
+                       squared = TRUE)
   
-  expect_equivalent(usqres$componentsofcovariance, res$componentsofcovariance)
-  expect_equivalent(usqres$componentsofcovariance, sqres$componentsofcovariance)
+  # FULL provided distance will be trimmed
+  fres <- poppr.amova(Aeut, ~Pop/Subpop, quiet = TRUE, dist = full_dist, 
+                       squared = FALSE)
+  expect_equivalent(usqres, res)
+  expect_equivalent(usqres, sqres)
+  expect_equivalent(sqres, fres)
   err <- c("Uncorrected.+?97.+?Clone.+?70.+?provided.+?119")
   expect_error(poppr.amova(Athena, ~Subpop, quiet = TRUE, dist = adist), err)
 })
@@ -259,16 +264,24 @@ test_that("AMOVA will give an extra warning for polyploids with zeroes", {
   expect_warning(res <- poppr.amova(recode_polyploids(pg, addzero = TRUE), ~group/population, within = TRUE), wrn)
 })
 
-context("Amova with genlight objects")
+context("AMOVA on genlight objects")
 
 set.seed(99)
-glite <- glSim(20, 10, 10, pop.freq = c(0.5, 0.5), ploidy = 2, parallel = FALSE)
+glite <- glSim(20, 10, 10, pop.freq = c(0.5, 0.5), ploidy = 2, parallel = FALSE, n.cores = 1L)
 strata(glite) <- as.data.frame(other(glite))
 
 test_that("AMOVA can be run on genlight objects", {
   skip_on_cran()
-  res <- poppr.amova(glite, ~ancestral.pops)
-  expect_is(res, "amova")
+  # Both ade4 and pegas will run
+  suppressWarnings({
+    resa <- poppr.amova(glite, ~ancestral.pops, method = "ade4")
+    resp <- poppr.amova(glite, ~ancestral.pops, method = "pegas")
+  })
+  # Both are (irritatingly) amova class
+  expect_is(resa, "amova")
+  expect_is(resp, "amova")
+  # Both will have the same Mean Squared Error
+  expect_equal(resp$tab$MSD, resa$results$`Mean Sq`)
 })
 
 test_that("AMOVA can work on filtered data", {
