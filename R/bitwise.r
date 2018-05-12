@@ -42,18 +42,17 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-#' Calculate dissimilarity or Euclidean distance SNP data.
+#' Calculate dissimilarity or Euclidean distance for genlight objects
 #' 
-#' This function performs the same task as [diss.dist()], calculating 
-#' the fraction or number of different alleles between two genlight or snpclone
-#' objects.
+#' This function calculates both dissimilarity and Euclidean distances for 
+#' [genlight][genlight-class] or [snpclone][snpclone-class] objects. 
 #' 
-#' @param x a [genlight][genlight-class], [genind][genind-class],
-#'   [genclone][genclone-class], or [snpclone][snpclone-class] object.
+#' @param x a [genlight][genlight-class] or [snpclone][snpclone-class] object.
 #'   
 #' @param percent `logical`. Should the distance be represented from 0 to 
 #'   1? Default set to `TRUE`. `FALSE` will return the distance 
 #'   represented as integers from 1 to n where n is the number of loci.
+#'   This option has no effect if `euclidean = TRUE`
 #'   
 #' @param mat `logical`. Return a matrix object. Default set to 
 #'   `FALSE`, returning a dist object. `TRUE` returns a matrix object.
@@ -62,7 +61,7 @@
 #'   by missing data in a location should be counted as matching at that 
 #'   location. Default set to `TRUE`, which forces missing data to match 
 #'   with anything. `FALSE` forces missing data to not match with any other
-#'   information, \strong{including other missing data}.
+#'   information, **including other missing data**.
 #'   
 #' @param scale_missing A logical. If `TRUE`, comparisons with missing
 #'   data is scaled up proportionally to the number of columns used by
@@ -78,6 +77,7 @@
 #'   the output will reflect the number of different loci. The default setting,
 #'   `differences_only = FALSE`, reflects the number of different alleles.
 #'   Note: this has no effect on haploid organisms since 1 locus = 1 allele.
+#'   This option is NOT recommended. 
 #'   
 #' @param threads The maximum number of parallel threads to be used within this 
 #'   function. A value of 0 (default) will attempt to use as many threads as 
@@ -87,12 +87,26 @@
 #'   caution.
 #'   
 #'   
-#' @details The distance calculated here is quite simple and goes by many names,
-#'   depending on its application. The most familiar name might be the Hamming 
-#'   distance, or the number of differences between two strings.
+#' @details The default distance calculated here is quite simple and goes by
+#'   many names depending on its application. The most familiar name might be
+#'   the Hamming distance, or the number of differences between two strings.
 #'   
-#' @note If the user supplies a `genind` or `genclone` object,
-#'   [prevosti.dist()] will be used for calculation.
+#'   As of poppr version 2.8.0, this function now also calculates Euclidean
+#'   distance and is considerably faster and more memory-efficient than the 
+#'   standard `dist()` function. 
+#'   
+#' @note This function is optimized for [genlight][genlight-class] and
+#'   [snpclone][snpclone-class] objects. This does not mean that it is a
+#'   catch-all optimization for SNP data. Three assumptions must be met for this
+#'   function to work:
+#'   
+#'   1. SNPs are bi-allelic 
+#'   2. Samples are haploid or diploid
+#'   3. All samples have the same ploidy
+#'   
+#'   If the user supplies a [genind][genind-class] or
+#'   [genclone][genclone-class] object, [prevosti.dist()] will be used for
+#'   calculation.
 #'   
 #' @return A dist object containing pairwise distances between samples.
 #'   
@@ -100,26 +114,46 @@
 #' 
 #' @export
 #' @md
-#' @seealso [diss.dist()],
-#'    [snpclone][snpclone-class],
-#'    [genlight][genlight-class],
-#'    [win.ia()], 
-#'    [samp.ia()]
+#' @seealso [diss.dist()], [snpclone][snpclone-class],
+#'   [genlight][genlight-class], [win.ia()],  [samp.ia()]
 #' @examples
 #' set.seed(999)
 #' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
 #' x
-#' # Assess fraction of different alleles (finer measure, usually the most sensible)
-#' system.time(xd <- bitwise.dist(x))
+#' # Assess fraction of different alleles
+#' system.time(xd <- bitwise.dist(x, threads = 1L))
 #' xd
 #' 
-#' # Assess fraction of different loci (coarse measure)
-#' system.time(xdt <- bitwise.dist(x, differences_only = TRUE))
+#' # Calculate Euclidean distance
+#' system.time(xdt <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE, threads = 1L))
 #' xdt
+#' 
+#' \dontrun{
+#' 
+#' # This function is more efficient in both memory and speed than [dist()] for
+#' # calculating Euclidean distance on genlight objects. For example, we can
+#' # observe a clear speed increase when we attempt a calculation on 100k SNPs
+#' # with 10% missing data:
+#' 
+#' set.seed(999)
+#' mat <- matrix(sample(c(0:2, NA), 
+#'                      100000 * 50, 
+#'                      replace = TRUE, 
+#'                      prob = c(0.3, 0.3, 0.3, 0.1)),
+#'               nrow = 50)
+#' glite <- new("genlight", mat, ploidy = 2)
+#' 
+#' # Default Euclidean distance 
+#' system.time(dist(glite))
+#' 
+#' # Bitwise dist
+#' system.time(bitwise.dist(glite, euclidean = TRUE, scale_missing = TRUE))
+#' 
+#' }
 #==============================================================================#
 bitwise.dist <- function(x, percent = TRUE, mat = FALSE, missing_match = TRUE, 
                          scale_missing = FALSE, euclidean = FALSE,
-                         differences_only = FALSE, threads = 0){
+                         differences_only = FALSE, threads = 0L){
   stopifnot(inherits(x, c("genlight", "genclone", "genind", "snpclone")))
   # Stop if the ploidy of the genlight object is not consistent
   stopifnot(min(ploidy(x)) == max(ploidy(x))) 
