@@ -8,8 +8,8 @@
 poppr.amova(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   dist = NULL, squared = TRUE, freq = TRUE, correction = "quasieuclid",
   sep = "_", filter = FALSE, threshold = 0,
-  algorithm = "farthest_neighbor", missing = "loci", cutoff = 0.05,
-  quiet = FALSE, method = c("ade4", "pegas"), nperm = 0)
+  algorithm = "farthest_neighbor", threads = 1L, missing = "loci",
+  cutoff = 0.05, quiet = FALSE, method = c("ade4", "pegas"), nperm = 0)
 }
 \arguments{
 \item{x}{a \link[=genind-class]{genind}, \link[=genclone-class]{genclone}, \link[=genlight-class]{genlight}, or \link[=snpclone-class]{snpclone} object}
@@ -67,6 +67,10 @@ the original (naive) MLG definition.}
   \item{"average_neighbor"}{ merges clusters based on the average distance
   between every pair of points between clusters.}
 }}
+
+\item{threads}{\code{integer} When using filtering or genlight objects, this
+parameter specifies the number of parallel processes passed to
+\code{\link[=mlg.filter]{mlg.filter()}} and/or \code{\link[=bitwise.dist]{bitwise.dist()}}.}
 
 \item{missing}{specify method of correcting for missing data utilizing
 options given in the function \code{\link[=missingno]{missingno()}}. Default is \code{"loci"}. This only

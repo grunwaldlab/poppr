@@ -90,6 +90,10 @@
 #'   threshold should be the number of allowable substitutions if you don't
 #'   supply a distance matrix.
 #'
+#' @param threads `integer` When using filtering or genlight objects, this 
+#'   parameter specifies the number of parallel processes passed to 
+#'   [mlg.filter()] and/or [bitwise.dist()]. 
+#'
 #' @param missing specify method of correcting for missing data utilizing
 #'   options given in the function [missingno()]. Default is `"loci"`. This only
 #'   applies to genind or genclone objects. 
@@ -260,8 +264,8 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
                         dist = NULL, squared = TRUE, freq = TRUE, 
                         correction = "quasieuclid", sep = "_", filter = FALSE, 
                         threshold = 0, algorithm = "farthest_neighbor", 
-                        missing = "loci", cutoff = 0.05, quiet = FALSE, 
-                        method = c("ade4", "pegas"), nperm = 0){
+                        threads = 1L, missing = "loci", cutoff = 0.05, 
+                        quiet = FALSE,  method = c("ade4", "pegas"), nperm = 0){
   if (!inherits(x, c("genind", "genlight"))) stop(paste(substitute(x), "must be a genind object."))
   if (is.null(hier)) stop("A population hierarchy must be specified")
   methods   <- c("ade4", "pegas")
@@ -270,6 +274,7 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   is_genind <- is.genind(x)
   # Sanity Checks
   haploid      <- all(ploidy(x) == 1)
+  within       <- if (haploid) FALSE else within
   heterozygous <- if (is_genind) check_Hs(x) else TRUE
   codominant   <- if (is_genind) x@type != "PA" else TRUE
   freq         <- freq & codominant & !haploid # freq does not need to be in place for haploid data
@@ -297,12 +302,12 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       if (is_genind) {
         dist <- dist(tab(x, freq = freq)) 
       } else {
-        dist <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE)
+        dist <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE, threads = threads)
       }
       squared <- FALSE
     }
     filt_stats <- mlg.filter(x, threshold = threshold, algorithm = algorithm,
-                             distance = dist, stats = "ALL")
+                             distance = dist, stats = "ALL", threads = threads)
     dist <- as.dist(filt_stats$DISTANCE)
     # Forcing this. Probably should make an explicit method for this.
     x@mlg@mlg["contracted"]     <- filt_stats$MLGS
@@ -355,13 +360,14 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
       if (is_genind) {
         xdist <- dist(tab(clonecorrect(x, strata = NA), freq = freq)) 
       } else {
-        xdist <- bitwise.dist(clonecorrect(x, strata = NA), euclidean = TRUE, scale_missing = TRUE)
+        xdist <- bitwise.dist(clonecorrect(x, strata = NA), 
+                              euclidean = TRUE, scale_missing = TRUE, threads = threads)
       }
     } else {
       if (is_genind) {
         xdist <- dist(tab(x, freq = freq)) 
       } else {
-        xdist <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE)
+        xdist <- bitwise.dist(x, euclidean = TRUE, scale_missing = TRUE, threads = threads)
       }
     }
   } else {
