@@ -102,7 +102,10 @@ test_that("mlg.filter can remember things", {
   original_vals <- "(0).+?(diss.dist).+?(farthest).+?"
   gc_original_vals <- "(0).+?(bitwise.dist).+?(farthest).+?"
   expect_output(show(x), original_vals)
+  expect_output(print(x), original_vals)
   expect_output(show(gc), gc_original_vals)
+  expect_output(print(gc), gc_original_vals)
+  
   
   # supplied distance matrices work
   assign("x20150702210257_distance", xd, envir = .GlobalEnv)

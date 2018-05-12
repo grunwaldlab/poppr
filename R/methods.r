@@ -588,6 +588,22 @@ setMethod(
     return(x)
   }
 )
+
+#' create a string of ploidy counts
+#'
+#' @param x a gen object 
+#' @param ploid a string of ploidy prefixes. 
+#'
+#' @return a string containing ploidy levels with counts for all samples
+#' @noRd
+#'
+#' @examples
+multiploid_string <- function(x, ploid) {
+  ploid  <- paste(ploid, paste0("(", table(x@ploidy), ")"))
+  ploid1 <- paste0(ploid[-length(ploid)], collapse = ", ")
+  sep    <- ifelse(length(ploid) > 2, ", ", " ")
+  ploid  <- paste0(ploid1, sep, "and ", ploid[length(ploid)])
+}
 #==============================================================================#
 #' @rdname genclone-method
 #' @param object a genclone object
@@ -599,30 +615,25 @@ setMethod(
     ploid  <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
     ploid  <- paste0(unique(ploid[sort(object@ploidy)]), "ploid")
-    if (length(ploid) > 1){
-      ploid  <- paste(ploid, paste0("(", table(object@ploidy), ")"))
-      ploid1 <- paste0(ploid[-length(ploid)], collapse = ", ")
-      sep    <- ifelse(length(ploid) > 2, ", ", " ")
-      ploid  <- paste0(ploid1, sep, "and ", ploid[length(ploid)])
-    }
-    nind    <- nInd(object)
-    type    <- ifelse(object@type == "PA", "dominant", "codominant")
-    nmlg    <- length(unique(object@mlg))
-    nloc    <- nLoc(object)
-    npop    <- ifelse(is.null(object@pop), 0, nPop(object))
-    strata  <- length(object@strata)
-    chars   <- nchar(c(nmlg, nind, nloc, strata, 1, npop))
-    ltab    <- max(chars) - chars
-    ltab    <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
-    pops    <- popNames(object)
-    poplen  <- length(pops)
+    ploid  <-  if (length(ploid) > 1) multiploid_string(object, ploid) else ploid 
+    nind   <- nInd(object)
+    type   <- ifelse(object@type == "PA", "dominant", "codominant")
+    nmlg   <- length(unique(object@mlg))
+    nloc   <- nLoc(object)
+    npop   <- ifelse(is.null(object@pop), 0, nPop(object))
+    strata <- length(object@strata)
+    chars  <- nchar(c(nmlg, nind, nloc, strata, 1, npop))
+    ltab   <- max(chars) - chars
+    ltab   <- vapply(ltab, function(x) substr("       ", 1, x+1), character(1))
+    pops   <- popNames(object)
+    poplen <- length(pops)
     the_type <- ifelse(is(object@mlg, "MLG"), visible(object@mlg), "nope")
     mlgtype  <- ifelse(is(object@mlg, "MLG"), paste0(the_type, " "), "")
     mlgtype  <- paste0(mlgtype, "multilocus genotypes")
     if (the_type == "contracted"){
       thresh <- round(cutoff(object@mlg)["contracted"], 3)
-      dist <- distname(object@mlg)
-      algo <- strsplit(distalgo(object@mlg), "_")[[1]][1]
+      dist   <- distname(object@mlg)
+      algo   <- strsplit(distalgo(object@mlg), "_")[[1]][1]
       if (!is.character(dist)){
         dist <- paste(utils::capture.output(dist), collapse = "")
       }
@@ -674,13 +685,8 @@ setMethod(
     nmlg  <- length(unique(x@mlg))
     ploid  <- c("ha", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa",
       "nona", "deca", "hendeca", "dodeca")
-    ploid  <- paste0(unique(ploid[sort(x@ploidy)]), "ploid")
-    if (length(ploid) > 1){
-      ploid  <- paste(ploid, paste0("(", table(x@ploidy), ")"))
-      ploid1 <- paste0(ploid[-length(ploid)], collapse = ", ")
-      sep    <- ifelse(length(ploid) > 2, ", ", " ")
-      ploid  <- paste0(ploid1, sep, "and ", ploid[length(ploid)])
-    }
+    ploid   <- paste0(unique(ploid[sort(x@ploidy)]), "ploid")
+    ploid   <- if (length(ploid) > 1) multiploid_string(x, ploid) else ploid
     nind    <- nInd(x)     
     type    <- ifelse(x@type == "PA", "dominant", "codominant")
     nloc    <- nLoc(x)

@@ -19,7 +19,9 @@ test_that("recode_polyploids will go there and back again", {
 	data(Pinf, package = "poppr")
 	expect_warning(pr <- recode_polyploids(Pinf, addzero = TRUE), "addzero = TRUE")
 	pr <- recode_polyploids(Pinf, newploidy = TRUE)
-	expect_output(show(pr), "86 diploid \\(55\\) and triploid \\(31\\) individuals")
+	expect_output(show(pr),  "86 diploid \\(55\\) and triploid \\(31\\) individuals")
+	# Printing is so weird...
+	expect_output(print(pr), "diploid \\(55\\)")
 	expect_that(length(unique(ploidy(pr))), equals(2))
 	zpr <- recode_polyploids(pr, addzero = TRUE)
 	expect_that(length(unique(ploidy(zpr))), equals(1))
