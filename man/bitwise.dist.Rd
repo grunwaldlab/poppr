@@ -2,26 +2,26 @@
 % Please edit documentation in R/bitwise.r
 \name{bitwise.dist}
 \alias{bitwise.dist}
-\title{Calculate a dissimilarity distance matrix for SNP data.}
+\title{Calculate dissimilarity or Euclidean distance SNP data.}
 \usage{
 bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
   scale_missing = FALSE, euclidean = FALSE, differences_only = FALSE,
   threads = 0)
 }
 \arguments{
-\item{x}{a \code{\link{genlight}}, \code{\link{genind}},
-\code{\link{genclone}}, or \code{\link{snpclone}} object.}
+\item{x}{a \link[=genlight-class]{genlight}, \link[=genind-class]{genind},
+\link[=genclone-class]{genclone}, or \link[=snpclone-class]{snpclone} object.}
 
-\item{percent}{\code{logical}. Should the distance be represented from 0 to 
-1? Default set to \code{TRUE}. \code{FALSE} will return the distance 
+\item{percent}{\code{logical}. Should the distance be represented from 0 to
+1? Default set to \code{TRUE}. \code{FALSE} will return the distance
 represented as integers from 1 to n where n is the number of loci.}
 
-\item{mat}{\code{logical}. Return a matrix object. Default set to 
+\item{mat}{\code{logical}. Return a matrix object. Default set to
 \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object.}
 
 \item{missing_match}{\code{logical}. Determines whether two samples differing
-by missing data in a location should be counted as matching at that 
-location. Default set to \code{TRUE}, which forces missing data to match 
+by missing data in a location should be counted as matching at that
+location. Default set to \code{TRUE}, which forces missing data to match
 with anything. \code{FALSE} forces missing data to not match with any other
 information, \strong{including other missing data}.}
 
@@ -29,7 +29,7 @@ information, \strong{including other missing data}.}
 data is scaled up proportionally to the number of columns used by
 multiplying the value by \code{m / (m - x)} where m is the number of
 loci and x is the number of missing sites. This option matches the behavior
-of base R's \code{\link{dist}} function. 
+of base R's \code{\link[=dist]{dist()}} function.
 Defaults to \code{FALSE}.}
 
 \item{euclidean}{\code{logical}. if \code{TRUE}, the Euclidean distance will
@@ -40,29 +40,29 @@ the output will reflect the number of different loci. The default setting,
 \code{differences_only = FALSE}, reflects the number of different alleles.
 Note: this has no effect on haploid organisms since 1 locus = 1 allele.}
 
-\item{threads}{The maximum number of parallel threads to be used within this 
-function. A value of 0 (default) will attempt to use as many threads as 
-there are available cores/CPUs. In most cases this is ideal. A value of 1 
-will force the function to run serially, which may increase stability on 
-some systems. Other values may be specified, but should be used with 
+\item{threads}{The maximum number of parallel threads to be used within this
+function. A value of 0 (default) will attempt to use as many threads as
+there are available cores/CPUs. In most cases this is ideal. A value of 1
+will force the function to run serially, which may increase stability on
+some systems. Other values may be specified, but should be used with
 caution.}
 }
 \value{
 A dist object containing pairwise distances between samples.
 }
 \description{
-This function performs the same task as \code{\link{diss.dist}}, calculating 
+This function performs the same task as \code{\link[=diss.dist]{diss.dist()}}, calculating
 the fraction or number of different alleles between two genlight or snpclone
 objects.
 }
 \details{
 The distance calculated here is quite simple and goes by many names,
-  depending on its application. The most familiar name might be the Hamming 
-  distance, or the number of differences between two strings.
+depending on its application. The most familiar name might be the Hamming
+distance, or the number of differences between two strings.
 }
 \note{
 If the user supplies a \code{genind} or \code{genclone} object,
-  \code{\link{prevosti.dist}} will be used for calculation.
+\code{\link[=prevosti.dist]{prevosti.dist()}} will be used for calculation.
 }
 \examples{
 set.seed(999)
@@ -77,11 +77,11 @@ system.time(xdt <- bitwise.dist(x, differences_only = TRUE))
 xdt
 }
 \seealso{
-\code{\link{diss.dist}},
-   \code{\link{snpclone}},
-   \code{\link[adegenet]{genlight}},
-   \code{\link{win.ia}}, 
-   \code{\link{samp.ia}}
+\code{\link[=diss.dist]{diss.dist()}},
+\link[=snpclone-class]{snpclone},
+\link[=genlight-class]{genlight},
+\code{\link[=win.ia]{win.ia()}},
+\code{\link[=samp.ia]{samp.ia()}}
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks

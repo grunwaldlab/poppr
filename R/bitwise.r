@@ -42,41 +42,41 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-#' Calculate a dissimilarity distance matrix for SNP data.
+#' Calculate dissimilarity or Euclidean distance SNP data.
 #' 
-#' This function performs the same task as \code{\link{diss.dist}}, calculating 
+#' This function performs the same task as [diss.dist()], calculating 
 #' the fraction or number of different alleles between two genlight or snpclone
 #' objects.
 #' 
-#' @param x a \code{\link{genlight}}, \code{\link{genind}},
-#'   \code{\link{genclone}}, or \code{\link{snpclone}} object.
+#' @param x a [genlight][genlight-class], [genind][genind-class],
+#'   [genclone][genclone-class], or [snpclone][snpclone-class] object.
 #'   
-#' @param percent \code{logical}. Should the distance be represented from 0 to 
-#'   1? Default set to \code{TRUE}. \code{FALSE} will return the distance 
+#' @param percent `logical`. Should the distance be represented from 0 to 
+#'   1? Default set to `TRUE`. `FALSE` will return the distance 
 #'   represented as integers from 1 to n where n is the number of loci.
 #'   
-#' @param mat \code{logical}. Return a matrix object. Default set to 
-#'   \code{FALSE}, returning a dist object. \code{TRUE} returns a matrix object.
+#' @param mat `logical`. Return a matrix object. Default set to 
+#'   `FALSE`, returning a dist object. `TRUE` returns a matrix object.
 #'   
-#' @param missing_match \code{logical}. Determines whether two samples differing
+#' @param missing_match `logical`. Determines whether two samples differing
 #'   by missing data in a location should be counted as matching at that 
-#'   location. Default set to \code{TRUE}, which forces missing data to match 
-#'   with anything. \code{FALSE} forces missing data to not match with any other
+#'   location. Default set to `TRUE`, which forces missing data to match 
+#'   with anything. `FALSE` forces missing data to not match with any other
 #'   information, \strong{including other missing data}.
 #'   
-#' @param scale_missing A logical. If \code{TRUE}, comparisons with missing
+#' @param scale_missing A logical. If `TRUE`, comparisons with missing
 #'   data is scaled up proportionally to the number of columns used by
-#'   multiplying the value by \code{m / (m - x)} where m is the number of
+#'   multiplying the value by `m / (m - x)` where m is the number of
 #'   loci and x is the number of missing sites. This option matches the behavior
-#'   of base R's \code{\link{dist}} function. 
-#'   Defaults to \code{FALSE}.
+#'   of base R's [dist()] function. 
+#'   Defaults to `FALSE`.
 #'   
-#' @param euclidean \code{logical}. if \code{TRUE}, the Euclidean distance will
+#' @param euclidean `logical`. if `TRUE`, the Euclidean distance will
 #'   be calculated.
 #'   
-#' @param differences_only \code{logical}. When \code{differences_only = TRUE},
+#' @param differences_only `logical`. When `differences_only = TRUE`,
 #'   the output will reflect the number of different loci. The default setting,
-#'   \code{differences_only = FALSE}, reflects the number of different alleles.
+#'   `differences_only = FALSE`, reflects the number of different alleles.
 #'   Note: this has no effect on haploid organisms since 1 locus = 1 allele.
 #'   
 #' @param threads The maximum number of parallel threads to be used within this 
@@ -91,19 +91,20 @@
 #'   depending on its application. The most familiar name might be the Hamming 
 #'   distance, or the number of differences between two strings.
 #'   
-#' @note If the user supplies a \code{genind} or \code{genclone} object,
-#'   \code{\link{prevosti.dist}} will be used for calculation.
+#' @note If the user supplies a `genind` or `genclone` object,
+#'   [prevosti.dist()] will be used for calculation.
 #'   
 #' @return A dist object containing pairwise distances between samples.
 #'   
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #' 
 #' @export
-#' @seealso \code{\link{diss.dist}},
-#'    \code{\link{snpclone}},
-#'    \code{\link[adegenet]{genlight}},
-#'    \code{\link{win.ia}}, 
-#'    \code{\link{samp.ia}}
+#' @md
+#' @seealso [diss.dist()],
+#'    [snpclone][snpclone-class],
+#'    [genlight][genlight-class],
+#'    [win.ia()], 
+#'    [samp.ia()]
 #' @examples
 #' set.seed(999)
 #' x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
@@ -240,7 +241,7 @@ missing_correction <- function(nas, nloc, mat = TRUE){
 #' This function parses over a genlight object to calculate and return the index
 #' of association for those samples.
 #' 
-#' @param x a \code{\link{genlight}} or \code{\link{snpclone}} object.
+#' @param x a [genlight][genlight-class] or [snpclone][snpclone-class] object.
 #'   
 #' @param missing_match a boolean determining whether missing data should be 
 #'   considered a match. If TRUE (default) missing data at a locus will match 
@@ -268,7 +269,8 @@ missing_correction <- function(nas, nloc, mat = TRUE){
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #'   
 #' @export
-#' @seealso \code{\link{win.ia}}, \code{\link{samp.ia}}
+#' @md
+#' @seealso [win.ia()], [samp.ia()]
 #' @keywords internal
 #==============================================================================#
 bitwise.ia <- function(x, missing_match=TRUE, differences_only=FALSE, threads=0){
@@ -486,7 +488,7 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
 #' sense to calculate the index of association over that many loci, this
 #' function will randomly sample sites to calculate the index of association.
 #' 
-#' @param x a \code{\link{genlight}} or \code{\link{snpclone}} object.
+#' @param x a [genlight][genlight-class] or [snpclone][snpclone-class] object.
 #'   
 #' @param n.snp the number of snps to be used to calculate standardized index
 #' of association.
@@ -500,19 +502,19 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
 #'   some systems. Other values may be specified, but should be used with
 #'   caution.
 #' 
-#' @param quiet if \code{FALSE}, a progress bar will be printed to the screen.
+#' @param quiet if `FALSE`, a progress bar will be printed to the screen.
 #'
 #' @details The index of association is a summary of linkage disequilibrium 
 #'   among many loci. More information on the index of association can be found 
-#'   associated with the funciton \code{\link{ia}}. A value near or at zero
+#'   associated with the funciton [ia()]. A value near or at zero
 #'   indicator of linkage equilibrium, whereas values significantly greater than
 #'   zero indicate linkage disequilibrium. However, if the observed variance in 
 #'   distance among individuals is less than the expected, mildly negative 
 #'   values may be observed (as the range of this index is negative one to one).
-#'   This function will call the function \code{\link{bitwise.ia}} for
-#'   \code{reps} times to calculate the index of association over \code{n.snp}
+#'   This function will call the function [bitwise.ia()] for
+#'   `reps` times to calculate the index of association over `n.snp`
 #'   loci. The standardized index of association ('rbarD') will be calculated
-#'   \code{reps} times. These esitmates of linkage disequilibrium from random
+#'   `reps` times. These esitmates of linkage disequilibrium from random
 #'   genomic fractions can then be summarized (e.g., using a histogram) as an
 #'   estimate of genome-wide linkage disequilibrium.
 #'   
@@ -523,19 +525,19 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
 #' 
 #'   
 #' @note this will calculate the standardized index of association from Agapow
-#' 2001. See \code{\link{ia}} for details.
+#' 2001. See [ia()] for details.
 #' 
 #' @return Index of association representing the samples in this genlight
 #'   object.
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #'   
 #' @export
-#' @seealso \code{\link[adegenet]{genlight}},
-#'    \code{\link{snpclone}},
-#'    \code{\link{win.ia}},
-#'    \code{\link{ia}},
-#'    \code{\link{bitwise.dist}}
-#'    \code{\link{bitwise.ia}}
+#' @seealso [genlight][genlight-class],
+#'    [snpclone][snpclone-class],
+#'    [win.ia()],
+#'    [ia()],
+#'    [bitwise.dist()]
+#'    [bitwise.ia()]
 #' @examples
 #' # with structured snps assuming 1e4 positions
 #' set.seed(999)

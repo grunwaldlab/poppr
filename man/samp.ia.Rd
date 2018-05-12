@@ -7,7 +7,7 @@
 samp.ia(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE)
 }
 \arguments{
-\item{x}{a \code{\link{genlight}} or \code{\link{snpclone}} object.}
+\item{x}{a [genlight][genlight-class] or [snpclone][snpclone-class] object.}
 
 \item{n.snp}{the number of snps to be used to calculate standardized index
 of association.}
@@ -21,7 +21,7 @@ will force the function to run serially, which may increase stability on
 some systems. Other values may be specified, but should be used with
 caution.}
 
-\item{quiet}{if \code{FALSE}, a progress bar will be printed to the screen.}
+\item{quiet}{if `FALSE`, a progress bar will be printed to the screen.}
 }
 \value{
 Index of association representing the samples in this genlight
@@ -35,15 +35,15 @@ function will randomly sample sites to calculate the index of association.
 \details{
 The index of association is a summary of linkage disequilibrium 
   among many loci. More information on the index of association can be found 
-  associated with the funciton \code{\link{ia}}. A value near or at zero
+  associated with the funciton [ia()]. A value near or at zero
   indicator of linkage equilibrium, whereas values significantly greater than
   zero indicate linkage disequilibrium. However, if the observed variance in 
   distance among individuals is less than the expected, mildly negative 
   values may be observed (as the range of this index is negative one to one).
-  This function will call the function \code{\link{bitwise.ia}} for
-  \code{reps} times to calculate the index of association over \code{n.snp}
+  This function will call the function [bitwise.ia()] for
+  `reps` times to calculate the index of association over `n.snp`
   loci. The standardized index of association ('rbarD') will be calculated
-  \code{reps} times. These esitmates of linkage disequilibrium from random
+  `reps` times. These esitmates of linkage disequilibrium from random
   genomic fractions can then be summarized (e.g., using a histogram) as an
   estimate of genome-wide linkage disequilibrium.
   
@@ -54,7 +54,7 @@ diploid.
 }
 \note{
 this will calculate the standardized index of association from Agapow
-2001. See \code{\link{ia}} for details.
+2001. See [ia()] for details.
 }
 \examples{
 # with structured snps assuming 1e4 positions
@@ -74,12 +74,12 @@ res <- samp.ia(x)
 hist(res, breaks = "fd")
 }
 \seealso{
-\code{\link[adegenet]{genlight}},
-   \code{\link{snpclone}},
-   \code{\link{win.ia}},
-   \code{\link{ia}},
-   \code{\link{bitwise.dist}}
-   \code{\link{bitwise.ia}}
+[genlight][genlight-class],
+   [snpclone][snpclone-class],
+   [win.ia()],
+   [ia()],
+   [bitwise.dist()]
+   [bitwise.ia()]
 }
 \author{
 Zhian N. Kamvar, Jonah C. Brooks
