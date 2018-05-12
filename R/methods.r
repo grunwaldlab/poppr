@@ -855,9 +855,6 @@ setMethod(
   f = "as.genambig",
   signature(x = "genind"),
   definition = function(x){
-    if (!requireNamespace("polysat", quietly = TRUE)) {
-      stop("please run install.packages('polysat') to use this function.")
-    }
     suppressWarnings({
       gen <- recode_polyploids(x, newploidy = max(x@ploidy, na.rm = TRUE))
     })
@@ -1135,6 +1132,7 @@ setMethod(
     value <- match.arg(value, TYPES)
     if (!"MLG" %in% class(x@mlg)){
       x@mlg <- new("MLG", x@mlg)
+      distname(x@mlg) <- "bitwise.dist"
     }
     visible(x@mlg) <- value
     return(x)

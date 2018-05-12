@@ -19,6 +19,19 @@ test_that("subsetting a snpclone object retains the MLG definitions", {
   expect_equal(mll(sc[idi]), mll(sc[idl]))
 })
 
+test_that("snpclone can be subset with and without MLG-class MLGs", {
+  skip_on_cran()
+  scm <- sc
+  scm@mlg <- sc@mlg[]
+  # normal subsetting is no problem
+  expect_identical(sc[1:10]@mlg[], scm[1:10]@mlg[])
+  # subsetting with reset is also good
+  expect_identical(sc[1:10, mlg.reset = TRUE]@mlg[], scm[1:10, mlg.reset = TRUE]@mlg[])
+  # re-setting the MLG class also works exactly the same way. 
+  mll(scm) <- "original"
+  expect_identical(sc@mlg, scm@mlg)
+})
+
 test_that("mlg.vector returns the same value for genlight and snpclone", {
   skip_on_cran()
   expect_equal(mlg.vector(gl), mlg.vector(sc))
