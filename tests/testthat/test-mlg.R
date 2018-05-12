@@ -195,9 +195,11 @@ test_that("mlg.crosspop works with custom mlgs", {
   skip_on_cran()
   pc <- as.genclone(partial_clone)
   mll.custom(pc) <- LETTERS[mll(pc)]
-  rosebud <- mlg.crosspop(pc, mlgsub = c("R", "O", "S", "E", "B", "U", "D"), quiet = TRUE)
+  ROSEBUD <- c("R", "O", "S", "E", "B", "U", "D")
+  rosebud <- mlg.crosspop(pc, mlgsub = ROSEBUD, quiet = TRUE)
   expect_is(rosebud, "list")
   expect_equal(length(rosebud), nchar("rosebud"))
+  expect_equal(mlg.crosspop(pc, mlgsub = ROSEBUD, indexreturn = TRUE), ROSEBUD)
 })
 
 test_that("mlg.crosspop will throw an error when no populations are present", {
