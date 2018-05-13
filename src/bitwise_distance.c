@@ -106,8 +106,8 @@ SEXP get_pgen_matrix_genind(SEXP genind, SEXP freqs, SEXP pops, SEXP npop);
 void fill_zygosity(struct zygosity *ind);
 char get_similarity_set(struct zygosity *ind1, struct zygosity *ind2);
 int get_zeros(char sim_set);
-int get_difference(struct zygosity *z1, struct zygosity *z2);
-int get_distance(struct zygosity *z1, struct zygosity *z2);
+// int get_difference(struct zygosity *z1, struct zygosity *z2);
+// int get_distance(struct zygosity *z1, struct zygosity *z2);
 int get_distance_custom(char sim_set, struct zygosity *z1, struct zygosity *z2, int euclid);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2082,15 +2082,19 @@ Output: The number of locations in the given section that have differing zygosit
         between the two samples.
         cx, ca, and cn will be filled in both structs as a byproduct of this function.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-int get_difference(struct zygosity *z1, struct zygosity *z2)
-{
-  int dif = 0;
-  fill_zygosity(z1);
-  fill_zygosity(z2);
-  dif = get_zeros(get_similarity_set(z1,z2));
-
-  return dif;
-}
+/*
+ * 2018-05-13 Officially removed due to disuse
+ * 
+ * int get_difference(struct zygosity *z1, struct zygosity *z2)
+ * {
+ *   int dif = 0;
+ *   fill_zygosity(z1);
+ *   fill_zygosity(z2);
+ *   dif = get_zeros(get_similarity_set(z1,z2));
+ * 
+ *   return dif;
+ * }
+ */
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2103,24 +2107,28 @@ Output: The total distance between two samples, such that DD/rr are a distance
         of 2, and Dr/rr are a distance of 1
         cx, ca, and cn will be filled in both structs as a byproduct of this function.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-int get_distance(struct zygosity *z1, struct zygosity *z2)
-{
-  int dist = 0;
-  char Hor;
-  char S;
-  char ch_dist;
-  fill_zygosity(z1);
-  fill_zygosity(z2);
-
-  S = get_similarity_set(z1,z2);
-  Hor = z1->ch | z2->ch;
-
-  ch_dist = Hor | S;  // Force ones everywhere they are the same
-  dist = get_zeros(S);  // Add one distance for every non-shared zygosity
-  dist += get_zeros(ch_dist); // Add another one for every difference that has no heterozygotes
-
-  return dist;
-}
+/*
+ * 2018-05-13 Officially removed due to disuse
+ * 
+ * int get_distance(struct zygosity *z1, struct zygosity *z2)
+ * {
+ *   int dist = 0;
+ *   char Hor;
+ *   char S;
+ *   char ch_dist;
+ *   fill_zygosity(z1);
+ *   fill_zygosity(z2);
+ * 
+ *   S = get_similarity_set(z1,z2);
+ *   Hor = z1->ch | z2->ch;
+ * 
+ *   ch_dist = Hor | S;  // Force ones everywhere they are the same
+ *   dist = get_zeros(S);  // Add one distance for every non-shared zygosity
+ *   dist += get_zeros(ch_dist); // Add another one for every difference that has no heterozygotes
+ * 
+ *   return dist;
+ * }
+ */
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
