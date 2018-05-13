@@ -216,12 +216,11 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
     if (is.null(rownames(x))) rownames(x) <- .genlab("", nrow(x))
     if (is.null(colnames(x))) colnames(x) <- .genlab("L", ncol(x))
     xboot <- x
-  } else if (!is(x, "genlight") && x@type == "PA"){
+  } else if (!is(x, "genlight") && x@type == "PA") {
     xboot           <- x@tab
     colnames(xboot) <- locNames(x)
     rownames(xboot) <- if (is.genpop(x)) popNames(x) else indNames(x)
-    }
-  } else if (is(x, "gen")){
+  } else if (is(x, "gen")) {
     if (is.genind(x)) {
       if (missing %in% c("loci", "geno", "ignore")){
         x <- missingno(x, missing, quiet = quiet, cutoff = mcutoff)
