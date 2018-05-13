@@ -101,15 +101,12 @@ shufflepop <- function(pop, method=1){
   METHODS = c("permute alleles", "parametric bootstrap",
               "non-parametric bootstrap", "multilocus")
   if (all((1:4)!=method)) {
-    cat("1 = Permute Alleles (maintain allelic structure)\n")
-    cat("2 = Parametric Bootstrap (simulate new population based on allelic frequency)\n")
-    cat("3 = Non-Parametric Bootstrap (simulate new population)\n")
-    cat("4 = Multilocus style (maintain heterozygosity and allelic structure)\n")
-    cat("Select an integer (1, 2, 3, or 4): ")
-    method <- as.integer(readLines(n = 1))
-  }
-  if (all((1:4)!=method)){
-    stop ("Non convenient method number")
+    msg <- paste("Method", method, "is not defined. Please choose a defined method:\n\n",
+                 "1 = Permute Alleles (maintain allelic structure)\n",
+                 "2 = Parametric Bootstrap (simulate new population based on allelic frequency)\n",
+                 "3 = Non-Parametric Bootstrap (simulate new population)\n",
+                 "4 = Multilocus style (maintain heterozygosity and allelic structure)\n")
+    stop(msg)
   }
   if(pop@type == "PA"){
     if(method == 1 | method == 4){
@@ -137,14 +134,6 @@ shufflepop <- function(pop, method=1){
   return(pop)
 }
 
-#==============================================================================#
-# Shuffling function that never panned out. The idea was to provide a way to 
-# utilize these bootstrap methods for any statistic. 
-#==============================================================================#
-shufflefunk <- function(pop, FUN, sample=1, method=1, ...){
-  FUN <- match.fun(FUN)
-  lapply(1:sample, function(x) FUN(shufflepop(pop, method=method), ...))
-}
 #==============================================================================#
 # .sampling will reshuffle the alleles per individual, per locus via the 
 # .single.sampler function, which is described below. It will then calculate the

@@ -44,6 +44,7 @@ test_that("shuffling methods work for PA data", {
 	expect_is(shufflepop(Aeut, method = 2), "genind")
 	expect_is(shufflepop(Aeut, method = 3), "genind")
 	expect_is(shufflepop(Aeut, method = 4), "genind")
+	expect_error(shufflepop(Aeut, method = 5), "Method 5 is not defined")
 
 	A10 <- Aeut[sample(nInd(Aeut), 10)]
 	expect_is(poppr(A10, sample = 9, method = 1, quiet = TRUE, hist = FALSE, sublist = "Total"), "popprtable")
