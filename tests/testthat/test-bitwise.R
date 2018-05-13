@@ -43,7 +43,7 @@ test_that("bitwise.dist can actually handle genind objects", {
 })
 
 
-test_that("bitwise.dist produces reasonable results", {
+test_that("bitwise.dist produces reasonable results for diploids", {
 
   skip_on_cran()
   dat <- list(c(2,2,2,2,2,2,2,2,2,0),
@@ -53,35 +53,75 @@ test_that("bitwise.dist produces reasonable results", {
               c(2,NA,NA,NA,NA,NA,NA,NA,NA,NA))
   z <- new("genlight",dat, parallel = FALSE)
   
-  missing_match_dif <- bitwise.dist(z, missing_match = TRUE, mat = TRUE, differences_only = TRUE)
-  dim(missing_match_dif) <- NULL
+  # Sun May 13 12:37:19 2018 ------------------------------
+  # Jonah originally set this up so it was simple to test, but did not account
+  # for the fact that we needed to test when the missing data were in both the
+  # i and the j positions. In this case, the missing are only in the j position.
+  # Luckily, we can easily test this by inverting the data and results. In order
+  # to distinguish between the two forms, I'll append i and j.
+  missing_match_dif_i <- bitwise.dist(z[5:1, ], missing_match = TRUE, mat = TRUE, differences_only = TRUE)
+  missing_match_dif_j <- bitwise.dist(z, missing_match = TRUE, mat = TRUE, differences_only = TRUE)
+  
   expected_match_dif <- c(0.0, 1.0, 0.1, 0.0, 0.0, 
                           1.0, 0.0, 0.9, 1.0, 0.1, 
                           0.1, 0.9, 0.0, 0.1, 0.0, 
                           0.0, 1.0, 0.1, 0.0, 0.0, 
                           0.0, 0.1, 0.0, 0.0, 0.0)
+  dim(expected_match_dif) <- c(5L, 5L)
   
-  missing_nomatch_dif <- bitwise.dist(z, missing_match = FALSE, mat = TRUE, differences_only = TRUE)
-  dim(missing_nomatch_dif) <- NULL
+  missing_nomatch_dif_i <- bitwise.dist(z[5:1, ], missing_match = FALSE, mat = TRUE, differences_only = TRUE)
+  missing_nomatch_dif_j <- bitwise.dist(z, missing_match = FALSE, mat = TRUE, differences_only = TRUE)
+  
   expected_nomatch_dif <- c(0.0, 1.0, 0.1, 0.0, 0.9, 
                             1.0, 0.0, 0.9, 1.0, 1.0, 
                             0.1, 0.9, 0.0, 0.1, 0.9, 
                             0.0, 1.0, 0.1, 0.0, 0.9, 
                             0.9, 1.0, 0.9, 0.9, 0.0)
+  dim(expected_nomatch_dif) <- c(5L, 5L)
   
-  expect_equivalent(missing_match_dif, expected_match_dif)
-  expect_equivalent(missing_nomatch_dif, expected_nomatch_dif)
+  expect_equivalent(missing_match_dif_i,   expected_match_dif[5:1, 5:1])
+  expect_equivalent(missing_nomatch_dif_i, expected_nomatch_dif[5:1, 5:1])
   
-  missing_match_dist <- bitwise.dist(z, missing_match = TRUE, mat = TRUE, differences_only = FALSE)
-  dim(missing_match_dist) <- NULL
+  expect_equivalent(missing_match_dif_j,   expected_match_dif)
+  expect_equivalent(missing_nomatch_dif_j, expected_nomatch_dif)
+  
+  missing_match_dist_i <- bitwise.dist(z[5:1, ], missing_match = TRUE, mat = TRUE, differences_only = FALSE)
+  missing_match_dist_j <- bitwise.dist(z, missing_match = TRUE, mat = TRUE, differences_only = FALSE)
   expected_match_dist <- c(0.0, 17.0/20.0, 2.0/20.0, 0.0, 0.0, 
                            17.0/20.0, 0.0, 15.0/20.0, 17.0/20.0, 1.0/20.0, 
                            2.0/20.0, 15.0/20.0, 0.0, 2.0/20.0, 0.0, 
                            0.0, 17.0/20.0, 2.0/20.0, 0.0, 0.0, 
                            0.0, 1.0/20.0, 0.0, 0.0, 0.0)
+  dim(expected_match_dist) <- c(5L, 5L)
+  expect_equivalent(missing_match_dist_i, expected_match_dist[5:1, 5:1])
+  expect_equivalent(missing_match_dist_j, expected_match_dist)
+})
+
+test_that("bitwise.ia produce reasonable results for haploids", {
+  skip_on_cran()
+  dat <- list(c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+              c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+              c(1, 1, NA, NA, NA, NA, NA, NA, NA, NA))
+  z   <- new("genlight",dat, parallel = FALSE)
+  expected_dist      <- c(0, 1, 0, 1, 0, 0.2, 0, 0.2, 0)
+  dim(expected_dist) <- c(3L, 3L)
   
-  expect_equivalent(missing_match_dist, expected_match_dist)
- })
+  missing_match_dif_i <- bitwise.dist(z[3:1, ], missing_match = TRUE, mat = TRUE, differences_only = TRUE)
+  missing_match_dif_j <- bitwise.dist(z, missing_match = TRUE, mat = TRUE, differences_only = TRUE)
+  
+  expect_equivalent(missing_match_dif_i, expected_dist[3:1, 3:1])
+  expect_equivalent(missing_match_dif_j, expected_dist)
+  
+  expected_nomatch_dist <- c(0, 1, .8, 1, 0, 1, .8, 1, 0)
+  dim(expected_nomatch_dist) <- c(3L, 3L)
+
+  missing_nomatch_dif_i <- bitwise.dist(z[3:1, ], missing_match = FALSE, mat = TRUE, differences_only = TRUE)
+  missing_nomatch_dif_j <- bitwise.dist(z, missing_match = FALSE, mat = TRUE, differences_only = TRUE)
+  
+  expect_equivalent(missing_nomatch_dif_i, expected_nomatch_dist[3:1, 3:1])
+  expect_equivalent(missing_nomatch_dif_j, expected_nomatch_dist)
+  
+})
 
 context("bitwise.ia cromulence")
 
@@ -101,6 +141,7 @@ test_that("bitwise.ia can use both missing-match and missing-nomatch ", {
   
   # Missing-match is the default and matches that of the non-bitwise version
   expect_equal(bitwise.ia(z, missing_match = TRUE), ia(tzg)[[2]])
+  expect_equal(bitwise.ia(z[5:1, ], missing_match = TRUE), ia(tzg)[[2]])
   
   ianm <- function(i, z){
     as.vector(bitwise.dist(z[, i], percent = FALSE, missing_match = FALSE))
