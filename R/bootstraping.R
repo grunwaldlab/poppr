@@ -219,13 +219,10 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
   } else if (!is(x, "genlight") && x@type == "PA"){
     xboot           <- x@tab
     colnames(xboot) <- locNames(x)
-    if (is.genpop(x)){
-      rownames(xboot) <- popNames(x)
-    } else {
-      rownames(xboot) <- indNames(x)
+    rownames(xboot) <- if (is.genpop(x)) popNames(x) else indNames(x)
     }
   } else if (is(x, "gen")){
-    if (is.genind(x)){
+    if (is.genind(x)) {
       if (missing %in% c("loci", "geno", "ignore")){
         x <- missingno(x, missing, quiet = quiet, cutoff = mcutoff)
         missing <- "asis"  
@@ -261,7 +258,7 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
     warning(negative_branch_warning())
   }
   treechar <- paste(substitute(tree), collapse = "")
-  if (is.null(root)){
+  if (is.null(root)) {
     root <- ape::is.ultrametric(xtree)
   }
   nodelabs <- boot.phylo(xtree, xboot, treefunk, B = sample, rooted = root, 
@@ -271,14 +268,14 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
   if (!is.genpop(x)){
     if (is.matrix(x)){
       xtree$tip.label <- rownames(x)
-    } else if (!is.null(indNames(x))){
+    } else if (!is.null(indNames(x))) {
       xtree$tip.label <- indNames(x)
     }
   } else {
     xtree$tip.label <- popNames(x)
   }
   xtree$node.label <- nodelabs
-  if (showtree){
+  if (showtree) {
     poppr.plot.phylo(xtree, treechar, root)
   }
   return(xtree)
