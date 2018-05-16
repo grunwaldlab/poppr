@@ -2,7 +2,6 @@
 % Please edit documentation in R/mlg.r
 \name{mlg}
 \alias{mlg}
-\alias{mlg}
 \alias{mlg.table}
 \alias{mlg.vector}
 \alias{mlg.crosspop}

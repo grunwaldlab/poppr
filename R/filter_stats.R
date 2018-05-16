@@ -89,9 +89,23 @@
 #'   
 #' @author Zhian N. Kamvar, Jonah C. Brooks
 #' @examples
+#' 
+#' # Basic usage example: Bruvo's Distance --------------------------------
 #' data(Pinf)
 #' pinfreps <- fix_replen(Pinf, c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2))
-#' filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE, threads = 1L)
+#' bres <- filter_stats(Pinf, distance = bruvo.dist, replen = pinfreps, plot = TRUE, threads = 1L)
+#' print(bres) # shows all of the statistics
+#' 
+#' # Use these results with cutoff_filter()
+#' print(thresh <- cutoff_predictor(bres$farthest$THRESHOLDS))
+#' mlg.filter(Pinf, distance = bruvo.dist, replen = pinfreps) <- thresh
+#' Pinf 
+#' 
+#' # Different distances will give different results -----------------------
+#' nres <- filter_stats(Pinf, distance = nei.dist, plot = TRUE, threads = 1L, missing = "mean")
+#' print(thresh <- cutoff_predictor(nres$farthest$THRESHOLDS))
+#' mlg.filter(Pinf, distance = nei.dist, missing = "mean") <- thresh
+#' Pinf 
 #==============================================================================#
 filter_stats <- function(x, distance = bitwise.dist,
                          threshold = 1e6 + .Machine$double.eps^0.5, 

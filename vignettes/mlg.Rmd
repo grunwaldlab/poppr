@@ -301,11 +301,11 @@ Notice how the information you see has changed. You can see that it's printed
 out that you have 5 **contracted** multilocus genotypes, but you have some
 cryptic code underneath:
 
-| symbol | meaning |
-|:----:|:----|
-| **[t]** | threshold |
+| symbol  | meaning                              |
+|:-------:|:-------------------------------------|
+| **[t]** | threshold                            |
 | **[d]** | distance (can be matrix or function) |
-| **[a]** | algorithm (see the next section) |
+| **[a]** | algorithm (see the next section)     |
 
 Genclone and snpclone objects will always remember what parameters were used for
 filtering multilocus genotypes, but the only catch is that, if you use your own
@@ -415,7 +415,7 @@ This initial peak likely represents clones differentiated by a small set of
 random mutations. You can see this in the figure above at a threshold of ~0.11
 for the "farthest neighbor" algorithm.
 
-However, if this peak is not obvious, then another method is to look for the largest gap between all putative thresholds. For this, you can use the `cutoff_predictor()` function with the output of `filter_stats()`. It should be noted, however, that this method is not a perfect solution. If we take the results from above, we can find the threshold for each algorithm:
+However, if this peak is not obvious, then another method is to look for the largest gap between all putative thresholds. For this, you can use the `cutoff_predictor()` function with the output of `filter_stats()`. It should be noted that this method is not a perfect solution. If we take the results from above, we can find the threshold for each algorithm:
 
 ```{r cutof_predictor}
 print(farthest_thresh <- cutoff_predictor(pinf_filtered$farthest$THRESHOLDS))
@@ -425,9 +425,11 @@ print(nearest_thresh  <- cutoff_predictor(pinf_filtered$nearest$THRESHOLDS))
 
 Now we can define multilocus lineages for *P. infestans* with the following criteria:
 
- - Genetic Distance: Bruvo's Distance
- - Filtering Algorithm: Farthest neighbor
- - Threshold: `r signif(farthest_thresh, 3)`
+|   |   |   |
+|:-------:|:----------|:----------|
+| **[t]** | threshold | `r signif(farthest_thresh, 3)` |
+| **[d]** | distance  | Bruvo's Distance |
+| **[a]** | algorithm | Farthest neighbor |
 
 ```{r pinf_thresh}
 mlg.filter(Pinf, distance = bruvo.dist, replen = pinfreps, algorithm = "f") <- farthest_thresh
