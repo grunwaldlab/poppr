@@ -59,6 +59,12 @@ DOCUMENTATION
 
 * `cutoff_predictor()` was added to the MLG vignette
 
+MISC
+----
+
+* The RClone package has been added to suggests
+  (see https://github.com/grunwaldlab/poppr/issues/187)
+
 poppr 2.7.1
 ============
 

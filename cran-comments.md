@@ -4,9 +4,9 @@ This version corrects a major documentation error and moves polysat to imports
 
 ## Test environments
 
-* local macOS install, R 3.4.4
-* ubuntu 12.04 (on travis-ci), devel (2018-03-15 r74411) and R 3.4.3
-* appveyor R 3.4.4 RC (2018-03-12 r74405) 
+* local macOS install, R 3.5.0
+* ubuntu 12.04 (on travis-ci), devel (2018-03-15 r74411) and R 3.5.0
+* winbuilder devel (2018-03-12 r74405) 
 
 ## R CMD check results
 
