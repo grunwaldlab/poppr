@@ -112,7 +112,7 @@
 #' \item \code{\link{read.genalex}} (x) - Reads GenAlEx formatted csv files to a genind object
 #' \item \code{\link{genind2genalex}} (m) - Converts genind objects to GenAlEx formatted csv files
 #' \item \code{\link{genclone2genind}} (m) - Removes the @@mlg slot from genclone objects
-#' \item \code{\link{genclone2genind}} (m) - Removes the @@mlg slot from genclone objects
+#' \item \code{\link{as.genambig}} (m) - Converts genind data to \pkg{polysat}'s \code{\linkS4class{genambig}} data structure.
 #' \item \code{\link{bootgen2genind}} (x) - see \code{\link{aboot}} for details)
 #' }
 #' @section Data manipulation:
@@ -124,11 +124,12 @@
 #' \item \code{\link{popsub}} (m | s) - Subsets genind objects by population
 #' \item \code{\link{shufflepop}} (m) - Shuffles genotypes at each locus using four different shuffling algorithms
 #' \item \code{\link{recode_polyploids}} (m | x) - Recodes polyploid data sets with missing alleles imported as "0"
+#' \item \code{\link{make_haplotypes}} (m | s) - Splits data into pseudo-haplotypes. This is mainly used in AMOVA.
 #' }
 #' @section Genetic distances:
 #' \itemize{
 #' \item \code{\link{bruvo.dist}} (m) - Bruvo's distance (see also: \code{\link{fix_replen}})
-#' \item \code{\link{diss.dist}} (m) - Absolute genetic distance (see prevosti.dist)
+#' \item \code{\link{diss.dist}} (m) - Absolute genetic distance (see \code{\link{prevosti.dist}})
 #' \item \code{\link{nei.dist}} (m | x) - Nei's 1978 genetic distance
 #' \item \code{\link{rogers.dist}} (m | x) - Rogers' euclidean distance
 #' \item \code{\link{reynolds.dist}} (m | x) - Reynolds' coancestry distance
@@ -165,7 +166,7 @@
 #' \subsection{Other}{
 #' \itemize{
 #' 
-#' \item \code{\link{poppr.amova}} (m) - Analysis of Molecular Variance (as implemented in ade4)
+#' \item \code{\link{poppr.amova}} (m | s) - Analysis of Molecular Variance (as implemented in ade4)
 #' \item \code{\link{ia}} (m) - Calculates the index of association
 #' \item \code{\link{pair.ia}} (m) - Calculates the index of association for all loci pairs.
 #' \item \code{\link{jack.ia}} (m) - Calculates the index of association over subsets of data.
