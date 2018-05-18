@@ -1,18 +1,9 @@
 # Poppr version 2 <img src="vignettes/small_logo.png" align="right"/>
 
-Development Status:
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
-
-CRAN Status:
-[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](https://cran.r-project.org/package=poppr)
-[![CRAN check status](https://cranchecks.info/badges/worst/poppr)](https://cran.r-project.org/web/checks/check_results_poppr.html)
-<!-- 
-[![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
--->
-Usage:
-[![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
-[![Research software impact](http://depsy.org/api/package/cran/poppr/badge.svg)](http://depsy.org/package/r/poppr)
+| In Development | CRAN Status | Usage |
+|----|----|----|
+| [![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr) | [![CRAN version](http://www.r-pkg.org/badges/version/poppr)](https://cran.r-project.org/package=poppr) | [![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr) | 
+| [![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master) | [![CRAN check status](https://cranchecks.info/badges/worst/poppr)](https://cran.r-project.org/web/checks/check_results_poppr.html) | [![Research software impact](http://depsy.org/api/package/cran/poppr/badge.svg)](http://depsy.org/package/r/poppr) |
 
 ## What is *poppr*?
 
