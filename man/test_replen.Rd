@@ -21,7 +21,7 @@ able to be represented as discrete units after division and rounding.
 }
 \details{
 This function is modified from the version used in 
-  \url{http://dx.doi.org/10.5281/zenodo.13007}.
+  \url{https://doi.org/10.5281/zenodo.13007}.
 }
 \examples{
 data(Pram)
@@ -32,12 +32,12 @@ test_replen(Pram, Pram_replen)
 Zhian N. Kamvar, Meg M. Larsen, Alan M. Kanaskie, Everett M. 
   Hansen, & Niklaus J. Grünwald. Sudden_Oak_Death_in_Oregon_Forests: Spatial
   and temporal population dynamics of the sudden oak death epidemic in Oregon
-  Forests. ZENODO, http://doi.org/10.5281/zenodo.13007, 2014.
+  Forests. ZENODO, https://doi.org/10.5281/zenodo.13007, 2014.
   
   Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald,
   N. J. (2015). Spatial and temporal analysis of populations of the sudden
   oak death pathogen in Oregon forests. Phytopathology 105:982-989.
-  doi: \href{http://dx.doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
+  doi: \href{https://doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
   
   Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and Hinrich 
   Schulenburg. A simple method for the calculation of microsatellite genotype

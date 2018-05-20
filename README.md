@@ -57,7 +57,7 @@ If you use *poppr* at all, please specify the version and cite:
 > Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
 > analysis of populations with clonal, partially clonal, and/or sexual
 > reproduction. PeerJ 2:e281
-> [http://dx.doi.org/10.7717/peerj.281](http://dx.doi.org/10.7717/peerj.281)
+> [https://doi.org/10.7717/peerj.281](https://doi.org/10.7717/peerj.281)
 
 If you use *poppr* in a presentation please mention it as the *poppr* R package,
 specify the version, and use our logo: 

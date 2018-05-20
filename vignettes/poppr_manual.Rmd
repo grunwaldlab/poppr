@@ -168,7 +168,7 @@ citation(package = "poppr")
 The formal publication for the first version of *poppr* was
 published in the journal **PeerJ**: <http://peerj.com/articles/281/>
 [@kamvar2014poppr]. The new features in version 2.0 were published in
-**Frontiers** <http://dx.doi.org/10.3389/fgene.2015.00208>
+**Frontiers** <https://doi.org/10.3389/fgene.2015.00208>
 [@kamvar2015novel].
 
 Installation and Quick Start
@@ -784,7 +784,7 @@ Let"s show an example of a `genclone` object. First, we will take an existing
 the function [read.genalex()](#intro:import:read.genalex)to import as `genclone`
 or `genind` objects). We will use the `Aeut` data set because it is a clonal
 data set that has a simple population strata [@Grunwald:2006]. The data set is
-here: <http://dx.doi.org/10.6084/m9.figshare.877104> and it is AFLP data of the
+here: <https://doi.org/10.6084/m9.figshare.877104> and it is AFLP data of the
 root rot pathogen *Aphanomyces euteiches* collected from two different fields in
 NW Oregon and W Washington, USA. These fields were divided up into subplots from
 which samples were collected. The fields represent the population and the
