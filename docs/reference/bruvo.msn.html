@@ -26,6 +26,9 @@ distance. — bruvo.msn • poppr</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Create minimum spanning network of selected populations using Bruvo's 
 distance. — bruvo.msn" />
 
@@ -58,7 +61,7 @@ distance." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +104,7 @@ distance." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,18 +112,21 @@ distance." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create minimum spanning network of selected populations using Bruvo's 
 distance.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bruvo.r'><code>R/bruvo.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bruvo.r'><code>R/bruvo.r</code></a></small>
+    <div class="hidden name"><code>bruvo.msn.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Create minimum spanning network of selected populations using Bruvo's 
 distance.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>bruvo.msn</span>(<span class='no'>gid</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>mlg.compute</span> <span class='kw'>=</span> <span class='st'>"original"</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='no'>topo.colors</span>, <span class='kw'>sublist</span> <span class='kw'>=</span> <span class='st'>"All"</span>,
@@ -312,9 +319,9 @@ override the algorithm in the data set. See Details.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='bruvo.dist.html'>bruvo.dist</a></code>, <code>nancycats</code>, 
+    <div class='dont-index'><p><code><a href='bruvo.dist.html'>bruvo.dist</a></code>, <code>nancycats</code>, 
   <code><a href='plot_poppr_msn.html'>plot_poppr_msn</a></code>, <code><a href='http://www.rdocumentation.org/packages/igraph/topics/mst'>minimum.spanning.tree</a></code> 
-  <code><a href='bruvo.boot.html'>bruvo.boot</a></code>, <code><a href='greycurve.html'>greycurve</a></code> <code><a href='poppr.msn.html'>poppr.msn</a></code></p>
+  <code><a href='bruvo.boot.html'>bruvo.boot</a></code>, <code><a href='greycurve.html'>greycurve</a></code> <code><a href='poppr.msn.html'>poppr.msn</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -325,10 +332,10 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='co'># View populations 8 and 9 with default colors. </span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
           <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>, <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>)</div><div class='img'><img src='bruvo.msn-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 96c5115 UNW- 19 18 -- 
+#&gt; IGRAPH 35bfa5f UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from 96c5115 (vertex names):
+#&gt; + edges from 35bfa5f (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -409,6 +416,8 @@ Zhian N. Kamvar, Javier F. Tabima
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

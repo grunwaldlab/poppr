@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Recode polyploid microsatellite data for use in frequency based statistics. — recode_polyploids" />
 
 <meta property="og:description" content="As the genind object requires ploidy to be consistent across loci, a 
@@ -64,7 +67,7 @@ single locus per individual. See the examples for more details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -107,6 +110,7 @@ single locus per individual. See the examples for more details." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -114,13 +118,15 @@ single locus per individual. See the examples for more details." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Recode polyploid microsatellite data for use in frequency based statistics.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/data_subset.r'><code>R/data_subset.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/data_subset.r'><code>R/data_subset.r</code></a></small>
+    <div class="hidden name"><code>recode_polyploids.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>As the genind object requires ploidy to be consistent across loci, a 
 workaround to importing polyploid data was to code missing alleles as "0" 
@@ -133,6 +139,7 @@ treated as extra alleles. This function removes those alleles and returns a
 allele frequencies are coded based on the number of alleles observed at a 
 single locus per individual. See the examples for more details.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>recode_polyploids</span>(<span class='no'>poly</span>, <span class='kw'>newploidy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>addzero</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
@@ -178,46 +185,22 @@ loci to allow conversion to genpop objects. Defaults to <code>FALSE</code>.</p><
   states as the ploidy or largest observed heterozygote (if ploidy is 
   unknown). The way to do this is to insert zeroes to pad the alleles. So, to
   import two genotypes of:</p>
-<table><tr><td>
-NA </td>
-<td> 20 </td>
-<td> 23 </td>
-<td> 24</td>
-</tr></table><p>they should be coded as:</p><table><tr><td>
- 0 </td>
-<td> 20 </td>
-<td> 23 </td>
-<td> 24</td>
-</tr></table><p>This zero is treated as an extra allele and is represented in the genind object as so:</p><table><tr><td>
-<strong>0</strong> </td>
-<td> <strong>20</strong> </td>
-<td> <strong>23</strong> </td>
-<td> <strong>24</strong> </td>
-<td> <strong>26</strong> </td>
-<td> <strong>43</strong></td>
-</tr><tr><td><br />
-1 </td>
-<td> 1 </td>
-<td> 1 </td>
-<td> 1 </td>
-<td> 0 </td>
-<td> 0</td>
-</tr></table>
+<table class='table'>
+<tr><td>NA</td><td>20</td><td>23</td><td>24</td></tr>
+</table>
+<p>they should be coded as:</p><table class='table'>
+<tr><td>0</td><td>20</td><td>23</td><td>24</td></tr>
+</table>
+<p>This zero is treated as an extra allele and is represented in the genind object as so:</p><table class='table'>
+<tr><td><strong>0</strong></td><td><strong>20</strong></td><td><strong>23</strong></td><td><strong>24</strong></td><td><strong>26</strong></td><td><strong>43</strong></td></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+</table>
     <p>This function remedies this problem by removing the zero column.
   The above table would become:</p>
-<table><tr><td>
-<strong>20</strong> </td>
-<td> <strong>23</strong> </td>
-<td> <strong>24</strong> </td>
-<td> <strong>26</strong> </td>
-<td> <strong>43</strong></td>
-</tr><tr><td><br />
-1 </td>
-<td> 1 </td>
-<td> 1 </td>
-<td> 0 </td>
-<td> 0</td>
-</tr></table>
+<table class='table'>
+<tr><td><strong>20</strong></td><td><strong>23</strong></td><td><strong>24</strong></td><td><strong>26</strong></td><td><strong>43</strong></td></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+</table>
     <p>With this, the user is able to calculate frequency based statistics on the
 data set.</p>
     
@@ -286,6 +269,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

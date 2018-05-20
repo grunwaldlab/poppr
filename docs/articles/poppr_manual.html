@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data import and manipulation in poppr version 2.7.1 • poppr</title>
+<title>Data import and manipulation in poppr version 2.7.1.99.85 • poppr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Data import and manipulation in poppr version 2.7.1">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Data import and manipulation in poppr version 2.7.1.99.85">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -80,20 +80,20 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Data import and manipulation in poppr version 2.7.1</h1>
+      <h1>Data import and manipulation in poppr version 2.7.1.99.85</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2018-03-25</h4>
+            <h4 class="date">2018-05-19</h4>
       
-      <small>Source: <a href="https://github.com/grunwaldlab/poppr/blob/master/vignettes/poppr_manual.Rmd"><code>vignettes/poppr_manual.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/grunwaldlab/poppr/blob/master/vignettes/poppr_manual.Rmd"><code>vignettes/poppr_manual.Rmd</code></a></small>
+      <div class="hidden name"><code>poppr_manual.Rmd</code></div>
 
     </div>
 
     
     
-<div class="contents">
 <div id="abstract" class="section level1">
 <h1 class="hasAnchor">
 <a href="#abstract" class="anchor"></a>Abstract</h1>
@@ -146,7 +146,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">citation</span>(<span class="dt">package =</span> <span class="st">"poppr"</span>)</code></pre></div>
 <pre><code>## 
 ## To cite poppr in publications or presentations, please specify
-## poppr version 2.7.1 and with the following citation:
+## poppr version 2.7.1.99-85 and with the following citation:
 ## 
 ##   Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package
 ##   for genetic analysis of populations with clonal, partially
@@ -217,8 +217,11 @@
 ##    &gt; overview: '?adegenet'
 ##    &gt; tutorials/doc/questions: 'adegenetWeb()' 
 ##    &gt; bug reports/feature requests: adegenetIssues()</code></pre>
-<pre><code>## This is poppr version 2.7.1. To get started, type package?poppr
-## OMP parallel support: available</code></pre>
+<pre><code>## This is poppr version 2.7.1.99.85. To get started, type package?poppr
+## OMP parallel support: available
+## 
+## This version of poppr is under development.
+## If you find any bugs, please report them at https://github.com/grunwaldlab/poppr/issues</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getfile.html">getfile</a></span>()</code></pre></div>
 <p>A pop up window will appear like this<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
 <div class="figure" style="text-align: center">
@@ -406,7 +409,7 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <a href="#intro:import:genind2genalex" class="anchor"></a>Function: genind2genalex (exporting data)</h3>
 <p>Of course, being able to export data is just as useful as being able to import it, so we have this handy little function that will write a GenAlEx formatted file to wherever you desire.<br><strong>WARNING: This will overwrite any file that exists with the same name.</strong></p>
 <hr>
-<pre><code><a href="../reference/genind2genalex.html">genind2genalex(gid, filename = "genalex.csv", quiet = FALSE, 
+<pre><code><a href="../reference/genind2genalex.html">genind2genalex(gid, filename = "", overwrite = FALSE, quiet = FALSE, 
     pop = NULL, allstrata = TRUE, geo = FALSE, geodf = "xy", 
     sep = ",", sequence = FALSE)</a></code></pre>
 <ul>
@@ -583,7 +586,7 @@ repeats</code></pre></div>
 Aeut</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
-##  // 187 individuals; 56 loci; 56 alleles; size: 66.5 Kb
+##  // 187 individuals; 56 loci; 56 alleles; size: 68.9 Kb
 ## 
 ##  // Basic content
 ##    @tab:  187 x 56 matrix of allele counts
@@ -600,7 +603,7 @@ Aeut</code></pre></div>
 Aeut</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
-##  // 187 individuals; 56 loci; 56 alleles; size: 70.1 Kb
+##  // 187 individuals; 56 loci; 56 alleles; size: 72.7 Kb
 ## 
 ##  // Basic content
 ##    @tab:  187 x 56 matrix of allele counts
@@ -633,7 +636,7 @@ agc</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/coercion-methods.html">genclone2genind</a></span>(agc)</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
-##  // 187 individuals; 56 loci; 56 alleles; size: 79.6 Kb
+##  // 187 individuals; 56 loci; 56 alleles; size: 83.7 Kb
 ## 
 ##  // Basic content
 ##    @tab:  187 x 56 matrix of allele counts
@@ -859,7 +862,7 @@ Let’s look at the loci names and number of individuals.</p>
 H3N2</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
-##  // 1,903 individuals; 125 loci; 334 alleles; size: 3.9 Mb
+##  // 1,903 individuals; 125 loci; 334 alleles; size: 4.1 Mb
 ## 
 ##  // Basic content
 ##    @tab:  1903 x 334 matrix of allele counts
@@ -941,7 +944,7 @@ vsort</code></pre></div>
 Aeut</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
-##  // 187 individuals; 56 loci; 56 alleles; size: 70.1 Kb
+##  // 187 individuals; 56 loci; 56 alleles; size: 72.7 Kb
 ## 
 ##  // Basic content
 ##    @tab:  187 x 56 matrix of allele counts
@@ -1338,7 +1341,7 @@ bd.test &lt;-<span class="st"> </span><span class="kw">replicate</span>(<span cl
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(bd.test, <span class="dt">xlab =</span> <span class="st">"Bruvo's Distance"</span>, <span class="dt">main =</span> <span class="st">"Average Bruvo's distance over 999 randomizations"</span>)
 <span class="kw">abline</span>(<span class="dt">v =</span> observed, <span class="dt">col =</span> <span class="st">"red"</span>)
 <span class="kw">legend</span>(<span class="st">'topleft'</span>, <span class="dt">legend=</span><span class="st">"observed"</span>, <span class="dt">col=</span><span class="st">"red"</span>, <span class="dt">lty =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="poppr_manual_files/figure-html/bd_histogram-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="poppr_manual_files/figure-html/bd_histogram-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="data-manip:informloci" class="section level2">
@@ -1392,7 +1395,7 @@ naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/i
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2</code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
-##  // 1,903 individuals; 125 loci; 334 alleles; size: 3.9 Mb
+##  // 1,903 individuals; 125 loci; 334 alleles; size: 4.1 Mb
 ## 
 ##  // Basic content
 ##    @tab:  1903 x 334 matrix of allele counts
@@ -1407,8 +1410,8 @@ naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/i
 ##    @pop: population of each individual (group size range: 1-646)
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
 ##    @other: a list containing: x  xy  epid</code></pre>
-<p>If we need to store the number of MLGs as a variable, we can simply run the <code>mlg()</code> command.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg &lt;-<span class="st"> </span><span class="kw">mlg</span>(H3N2)</code></pre></div>
+<p>If we need to store the number of MLGs as a variable, we can simply run the <code><a href="../reference/mlg.html">mlg()</a></code> command.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2_mlg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg</a></span>(H3N2)</code></pre></div>
 <pre><code>## #############################
 ## # Number of Individuals:  1903 
 ## # Number of MLG:  752 
@@ -1520,7 +1523,7 @@ v.tab[<span class="dv">1</span><span class="op">:</span><span class="dv">10</spa
 ## Netherlands     0     0     0     0     0     0     0     0     0      0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">sublist =</span> <span class="st">"Norway"</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="poppr_manual_files/figure-html/mlgbarplot-1.png" alt="An example of a bar-chart produced by `mlg.table`. Note that this data set would produce several such charts but only the chart for Norway is shown here." width="672"><p class="caption">
+<img src="poppr_manual_files/figure-html/mlgbarplot-1.png" alt="An example of a bar-chart produced by `mlg.table`. Note that this data set would produce several such charts but only the chart for Norway is shown here." width="700"><p class="caption">
 An example of a bar-chart produced by <code>mlg.table</code>. Note that this data set would produce several such charts but only the chart for Norway is shown here.
 </p>
 </div>
@@ -1540,7 +1543,7 @@ H.year &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.
 <span class="kw"><a href="http://www.rdocumentation.org/packages/vegan/topics/rarefy">rarecurve</a></span>(H.year, <span class="dt">ylab=</span><span class="st">"Number of expected MLGs"</span>, <span class="dt">sample=</span><span class="kw">min</span>(<span class="kw">rowSums</span>(H.year)),
           <span class="dt">border =</span> <span class="ot">NA</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">font =</span> <span class="dv">2</span>, <span class="dt">cex =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">"blue"</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="poppr_manual_files/figure-html/mlgrareplot-1.png" alt="An example of a rarefaction curve produced using a MLG table." width="672"><p class="caption">
+<img src="poppr_manual_files/figure-html/mlgrareplot-1.png" alt="An example of a rarefaction curve produced using a MLG table." width="700"><p class="caption">
 An example of a rarefaction curve produced using a MLG table.
 </p>
 </div>
@@ -1575,7 +1578,7 @@ UGNN &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.ht
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H3N2 <span class="co"># equal to the first number in this output.</span></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
-##  // 1,903 individuals; 125 loci; 334 alleles; size: 3.9 Mb
+##  // 1,903 individuals; 125 loci; 334 alleles; size: 4.1 Mb
 ## 
 ##  // Basic content
 ##    @tab:  1903 x 334 matrix of allele counts
@@ -1626,7 +1629,7 @@ H3N2.id[<span class="kw">as.character</span>(UGNN)]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">mlgsub =</span> UGNN)</code></pre></div>
 <p>That showed us exactly which populations these three MLGs came from in our data set.</p>
 <div class="figure" style="text-align: center">
-<img src="poppr_manual_files/figure-html/mlgsub_flagshow-1.png" alt="All populations that contain these MLGs" width="672"><p class="caption">
+<img src="poppr_manual_files/figure-html/mlgsub_flagshow-1.png" alt="All populations that contain these MLGs" width="700"><p class="caption">
 All populations that contain these MLGs
 </p>
 </div>
@@ -1833,7 +1836,6 @@ poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span clas
 <li id="fn2"><p>*.CSV files are comma separated files that are easily machine readable.<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -1905,6 +1907,8 @@ poppairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span clas
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

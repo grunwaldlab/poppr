@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Predict cutoff thresholds for use with mlg.filter — cutoff_predictor" />
 
 <meta property="og:description" content="Given a series of thresholds for a data set that collapse it into one giant 
@@ -58,7 +61,7 @@ difference is the cutoff threshold defining the clonal lineage threshold." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +104,7 @@ difference is the cutoff threshold defining the clonal lineage threshold." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,19 +112,22 @@ difference is the cutoff threshold defining the clonal lineage threshold." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Predict cutoff thresholds for use with mlg.filter</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/filter_stats.R'><code>R/filter_stats.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/filter_stats.R'><code>R/filter_stats.R</code></a></small>
+    <div class="hidden name"><code>cutoff_predictor.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Given a series of thresholds for a data set that collapse it into one giant 
 cluster, this will search the top fraction of threshold differences to find 
 the largest difference. The average between the thresholds spanning that 
 difference is the cutoff threshold defining the clonal lineage threshold.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>cutoff_predictor</span>(<span class='no'>thresholds</span>, <span class='kw'>fraction</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</pre>
     
@@ -162,7 +169,7 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='filter_stats.html'>filter_stats</a></code> <code><a href='mlg.filter.html'>mlg.filter</a></code></p>
+    <div class='dont-index'><p><code><a href='filter_stats.html'>filter_stats</a></code> <code><a href='mlg.filter.html'>mlg.filter</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -170,8 +177,7 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
 <span class='fu'>data</span>(<span class='no'>Pinf</span>)
 <span class='no'>pinfreps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='no'>Pinf</span>, <span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>))
 <span class='no'>pthresh</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='filter_stats.html'>filter_stats</a></span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>,
-                         <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"THRESHOLD"</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>)
-
+                         <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"THRESHOLD"</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='cutoff_predictor-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># prediction for farthest neighbor</span>
 <span class='fu'>cutoff_predictor</span>(<span class='no'>pthresh</span>$<span class='no'>farthest</span>)</div><div class='output co'>#&gt; [1] 0.1132221</div><div class='input'>
 <span class='co'># prediction for all algorithms</span>
@@ -213,6 +219,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

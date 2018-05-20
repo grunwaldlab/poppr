@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Calculate random samples of the index of association for genlight objects. — samp.ia" />
 
 <meta property="og:description" content="Genlight objects can contain millions of loci. Since it does not make much 
@@ -57,7 +60,7 @@ function will randomly sample sites to calculate the index of association." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -100,6 +103,7 @@ function will randomly sample sites to calculate the index of association." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,18 +111,21 @@ function will randomly sample sites to calculate the index of association." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate random samples of the index of association for genlight objects.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <div class="hidden name"><code>samp.ia.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Genlight objects can contain millions of loci. Since it does not make much 
 sense to calculate the index of association over that many loci, this
 function will randomly sample sites to calculate the index of association.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>samp.ia</span>(<span class='no'>x</span>, <span class='kw'>n.snp</span> <span class='kw'>=</span> <span class='fl'>100L</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>100L</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
@@ -127,7 +134,7 @@ function will randomly sample sites to calculate the index of association.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code>genlight</code> or <code><a href='genclone-class.html'>snpclone</a></code> object.</p></td>
+      <td><p>a [genlight][genlight-class] or [snpclone][snpclone-class] object.</p></td>
     </tr>
     <tr>
       <th>n.snp</th>
@@ -149,7 +156,7 @@ caution.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
-      <td><p>if <code>FALSE</code>, a progress bar will be printed to the screen.</p></td>
+      <td><p>if `FALSE`, a progress bar will be printed to the screen.</p></td>
     </tr>
     </table>
     
@@ -162,15 +169,15 @@ caution.</p></td>
 
     <p>The index of association is a summary of linkage disequilibrium 
   among many loci. More information on the index of association can be found 
-  associated with the funciton <code><a href='ia.html'>ia</a></code>. A value near or at zero
+  associated with the funciton [ia()]. A value near or at zero
   indicator of linkage equilibrium, whereas values significantly greater than
   zero indicate linkage disequilibrium. However, if the observed variance in 
   distance among individuals is less than the expected, mildly negative 
   values may be observed (as the range of this index is negative one to one).
-  This function will call the function <code><a href='bitwise.ia.html'>bitwise.ia</a></code> for
-  <code>reps</code> times to calculate the index of association over <code>n.snp</code>
+  This function will call the function [bitwise.ia()] for
+  `reps` times to calculate the index of association over `n.snp`
   loci. The standardized index of association ('rbarD') will be calculated
-  <code>reps</code> times. These esitmates of linkage disequilibrium from random
+  `reps` times. These esitmates of linkage disequilibrium from random
   genomic fractions can then be summarized (e.g., using a histogram) as an
   estimate of genome-wide linkage disequilibrium.</p>
     <p>This function currently only works for objects of class genlight or snpclone
@@ -180,16 +187,16 @@ diploid.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>this will calculate the standardized index of association from Agapow
-2001. See <code><a href='ia.html'>ia</a></code> for details.</p>
+2001. See [ia()] for details.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/adegenet/topics/genlight'>genlight</a></code>,
-   <code><a href='genclone-class.html'>snpclone</a></code>,
-   <code><a href='win.ia.html'>win.ia</a></code>,
-   <code><a href='ia.html'>ia</a></code>,
-   <code><a href='bitwise.dist.html'>bitwise.dist</a></code>
-   <code><a href='bitwise.ia.html'>bitwise.ia</a></code></p>
+    <div class='dont-index'><p>[genlight][genlight-class],
+   [snpclone][snpclone-class],
+   [win.ia()],
+   [ia()],
+   [bitwise.dist()]
+   [bitwise.ia()]</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -240,6 +247,8 @@ Zhian N. Kamvar, Jonah C. Brooks
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -25,12 +25,14 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Importing data from genalex formatted *.csv files. — read.genalex" />
 
-<meta property="og:description" content="read.genalex will read in a genalex-formatted file that has been exported in 
-a comma separated format and will parse most types of genalex data. The 
-output is a genclone or genind 
-object." />
+<meta property="og:description" content="read.genalex will read in a genalex-formatted file that has been exported in
+a comma separated format and will parse most types of genalex data. The
+output is a genclone-class or genind-class object." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -58,7 +60,7 @@ object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +103,7 @@ object." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,19 +111,21 @@ object." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Importing data from genalex formatted *.csv files.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/file_handling.r'><code>R/file_handling.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/file_handling.r'><code>R/file_handling.r</code></a></small>
+    <div class="hidden name"><code>read.genalex.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>read.genalex will read in a genalex-formatted file that has been exported in 
-a comma separated format and will parse most types of genalex data. The 
-output is a <code><a href='genclone-class.html'>genclone</a></code> or <code>genind</code> 
-object.</p>
+    <p>read.genalex will read in a genalex-formatted file that has been exported in
+a comma separated format and will parse most types of genalex data. The
+output is a <a href='genclone-class.html'>genclone-class</a> or genind-class object.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>read.genalex</span>(<span class='no'>genalex</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>geo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>genclone</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>","</span>, <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
@@ -134,13 +139,13 @@ object.</p>
     </tr>
     <tr>
       <th>ploidy</th>
-      <td><p>indicate the ploidy of the dataset</p></td>
+      <td><p>an integer to indicate the ploidy of the dataset</p></td>
     </tr>
     <tr>
       <th>geo</th>
-      <td><p>indicates the presence of geographic data in the file. This data 
+      <td><p>indicates the presence of geographic data in the file. This data
 will be included in a data frame labeled <code>xy</code> in the
-<code>other</code> slot.</p></td>
+<code>other()</code> slot.</p></td>
     </tr>
     <tr>
       <th>region</th>
@@ -148,13 +153,12 @@ will be included in a data frame labeled <code>xy</code> in the
     </tr>
     <tr>
       <th>genclone</th>
-      <td><p>when <code>TRUE</code> (default), the output will be a
-<code><a href='genclone-class.html'>genclone</a></code> object. When <code>FALSE</code>, the output will be
-a <code>genind</code> object</p></td>
+      <td><p>when <code>TRUE</code> (default), the output will be a <a href='genclone-class.html'>genclone</a>
+object. When <code>FALSE</code>, the output will be a genind object</p></td>
     </tr>
     <tr>
       <th>sep</th>
-      <td><p>A character specifying the column separator of the data. Defaults 
+      <td><p>A character specifying the column separator of the data. Defaults
 to ",".</p></td>
     </tr>
     <tr>
@@ -162,7 +166,7 @@ to ",".</p></td>
       <td><p><strong>For polyploid data</strong>: Do you want to recode your data to
 have varying ploidy? Default is <code>FALSE</code>, and the data will be returned
 with even ploidy where missing alleles are coded as "0". When <code>TRUE</code>,
-the data is run through the function <code><a href='recode_polyploids.html'>recode_polyploids</a></code> before
+the data is run through the function <code><a href='recode_polyploids.html'>recode_polyploids()</a></code> before
 being returned. Note that this will prevent conversion to genpop objects in
 the future. See details.</p></td>
     </tr>
@@ -170,54 +174,47 @@ the future. See details.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='genclone-class.html'>genclone</a></code> or <code>genind</code> 
-  object.</p>
+    <p>A <a href='genclone-class.html'>genclone</a> or genind bject.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <h3>if <code>genclone = FALSE</code></h3>
- The resulting genind object
-  will have a data frame in the <code>other</code> slot called 
-  <code>population_hierarchy</code>. This will contain a column for your population
-  data and a column for your Regional data if you have set the flag.
-    <p></p><h3>if <code>genclone = TRUE</code></h3>
- The resulting genclone object will 
-  have a single strata defined in the strata slot. This will 
-  be called "Pop" and will reflect the population factor defined in the 
-  genalex input. If <code>region = TRUE</code>, a second column will be inserted 
-  and labeled "Region". If you have more than two strata within 
-  your data set, you should run the command <code>splitStrata</code> on 
-  your data set to define the unique stratifications.
-    <p></p><h3>FOR POLYPLOID (&gt; 2n) DATA SETS</h3>
- The genind object has 
-  an all-or-none approach to missing data. If a sample has missing data at a 
-  particular locus, then the entire locus is considered missing. This works 
-  for diploids and haploids where allelic dosage is unambiguous. For 
-  polyploids this poses a problem as much of the data set would be 
-  transformed into missing data. With this function, I have created a 
-  workaround.
-    When importing polyploid data sets, missing data is scored as "0" and kept 
-  within the genind object as an extra allele. This will break most analyses 
-  relying on allele frequencies*. All of the functions in poppr will work 
-  properly with these data sets as multilocus genotype analysis is agnostic 
-  of ploidy and we have written both Bruvo's distance and the index of 
-  association in such a way as to be able to handle polyploids presented in 
-  this manner.
+    <p>The resulting <a href='genclone-class.html'>genclone-class</a> or genind-class
+object will have a single strata defined in the strata slot. This will be
+called "Pop" and will reflect the population factor defined in the genalex
+input. If <code>region = TRUE</code>, a second column will be inserted and labeled
+"Region". If you have more than two strata within your data set, you should
+run the command <code><a href='http://www.rdocumentation.org/packages/adegenet/topics/strata-methods'>adegenet::splitStrata()</a></code> on your data set to define the
+unique stratifications.</p>
+<h3>FOR POLYPLOID (&gt; 2n) DATA SETS</h3>
+ The genind object has
+an all-or-none approach to missing data. If a sample has missing data at a
+particular locus, then the entire locus is considered missing. This works
+for diploids and haploids where allelic dosage is unambiguous. For
+polyploids this poses a problem as much of the data set would be
+transformed into missing data. With this function, I have created a
+workaround.
+    When importing polyploid data sets, missing data is scored as "0" and kept
+within the genind object as an extra allele. This will break most analyses
+relying on allele frequencies*. All of the functions in poppr will work
+properly with these data sets as multilocus genotype analysis is agnostic
+of ploidy and we have written both Bruvo's distance and the index of
+association in such a way as to be able to handle polyploids presented in
+this manner.
     * To restore functionality of analyses relying on allele frequencies, use
-  the <code><a href='recode_polyploids.html'>recode_polyploids</a></code> function.
+the <code><a href='recode_polyploids.html'>recode_polyploids()</a></code> function.
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>This function cannot handle raw allele frequency data.</p>  
-<p>In the case that there are duplicated names within the file, this function 
-  will assume separate individuals and rename each one to a sequence of 
-  integers from 1 to the number of individuals. A vector of the original 
-  names will be saved in the <code>other</code> slot under <code>original_names</code>.</p>
+    <p>This function cannot handle raw allele frequency data.</p>
+<p>In the case that there are duplicated names within the file, this function
+will assume separate individuals and rename each one to a sequence of
+integers from 1 to the number of individuals. A vector of the original
+names will be saved in the <code>other</code> slot under <code>original_names</code>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='clonecorrect.html'>clonecorrect</a></code>, <code><a href='genclone-class.html'>genclone</a></code>, 
-  <code>genind</code>, <code><a href='recode_polyploids.html'>recode_polyploids</a></code></p>
+    <div class='dont-index'><p><code><a href='genind2genalex.html'>genind2genalex()</a></code>, <code><a href='clonecorrect.html'>clonecorrect()</a></code>, <a href='genclone-class.html'>genclone</a>,
+genind, <code><a href='recode_polyploids.html'>recode_polyploids()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -269,6 +266,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

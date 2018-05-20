@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Split samples from a genind object into pseudo-haplotypes — make_haplotypes" />
 
 <meta property="og:description" content="Split samples from a genind object into pseudo-haplotypes" />
@@ -55,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -98,6 +101,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -105,16 +109,19 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Split samples from a genind object into pseudo-haplotypes</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/data_subset.r'><code>R/data_subset.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/methods.r'><code>R/methods.r</code></a></small>
+    <div class="hidden name"><code>make_haplotypes-method.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Split samples from a genind object into pseudo-haplotypes</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>make_haplotypes</span>(<span class='no'>gid</span>)</pre>
     
@@ -123,7 +130,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>gid</th>
-      <td><p>a <a href='http://www.rdocumentation.org/packages/adegenet/topics/new.genind'>genind</a> object.</p></td>
+      <td><p>a <a href='http://www.rdocumentation.org/packages/adegenet/topics/new.genind'>genind</a> or <a href='http://www.rdocumentation.org/packages/adegenet/topics/genlight'>genlight</a> object.</p></td>
     </tr>
     </table>
     
@@ -150,7 +157,7 @@ genind object.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='poppr.amova.html'>poppr.amova()</a></code> <code><a href='http://www.rdocumentation.org/packages/pegas/topics/amova'>pegas::amova()</a></code> <code><a href='coercion-methods.html'>as.genambig()</a></code></p>
+    <div class='dont-index'><p><code><a href='poppr.amova.html'>poppr.amova()</a></code> <code><a href='http://www.rdocumentation.org/packages/pegas/topics/amova'>pegas::amova()</a></code> <code><a href='coercion-methods.html'>as.genambig()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -160,7 +167,7 @@ genind object.</p>
 <span class='no'>nan9</span> <span class='kw'>&lt;-</span> <span class='no'>nancycats</span>[<span class='kw'>pop</span> <span class='kw'>=</span> <span class='fl'>9</span>]
 <span class='no'>nan9hap</span> <span class='kw'>&lt;-</span> <span class='fu'>make_haplotypes</span>(<span class='no'>nan9</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: No strata found... creating one from the population.</span></div><div class='input'><span class='no'>nan9</span>              <span class='co'># 9 individuals from population 9</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
-#&gt;  // 9 individuals; 9 loci; 108 alleles; size: 26.2 Kb
+#&gt;  // 9 individuals; 9 loci; 108 alleles; size: 28.6 Kb
 #&gt; 
 #&gt;  // Basic content
 #&gt;    @tab:  9 x 108 matrix of allele counts
@@ -176,7 +183,7 @@ genind object.</p>
 #&gt;    @other: a list containing: xy 
 #&gt; </div><div class='input'><span class='no'>nan9hap</span>           <span class='co'># 18 haplotypes</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
-#&gt;  // 18 individuals; 9 loci; 43 alleles; size: 19.6 Kb
+#&gt;  // 18 individuals; 9 loci; 43 alleles; size: 21.3 Kb
 #&gt; 
 #&gt;  // Basic content
 #&gt;    @tab:  18 x 43 matrix of allele counts
@@ -228,13 +235,13 @@ genind object.</p>
 #&gt; Population information:
 #&gt; 
 #&gt;     2 strata - Continent, Country
-#&gt;     2 populations defined - South America, North America</div><div class='input'><span class='no'>pmiss</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='info_table.html'>info_table</a></span>(<span class='no'>Pinf</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"ploidy"</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='make_haplotypes-1.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt;     2 populations defined - South America, North America</div><div class='input'><span class='no'>pmiss</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='info_table.html'>info_table</a></span>(<span class='no'>Pinf</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"ploidy"</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='make_haplotypes-method-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># No samples appear to be triploid across all loci. This will cause</span>
 <span class='co'># several haplotypes to have a lot of missing data.</span>
 <span class='no'>p_haps</span> <span class='kw'>&lt;-</span> <span class='fu'>make_haplotypes</span>(<span class='no'>Pinf</span>)
 <span class='no'>p_haps</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
-#&gt;  // 203 individuals; 11 loci; 95 alleles; size: 131.1 Kb
+#&gt;  // 203 individuals; 11 loci; 95 alleles; size: 137.9 Kb
 #&gt; 
 #&gt;  // Basic content
 #&gt;    @tab:  203 x 95 matrix of allele counts
@@ -299,6 +306,8 @@ genind object.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

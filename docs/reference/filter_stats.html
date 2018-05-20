@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Utilize all algorithms of mlg.filter — filter_stats" />
 
 <meta property="og:description" content="This function is a wrapper to mlg.filter. It will calculate all of the stats 
@@ -56,7 +59,7 @@ for mlg.filter utilizing all of the algorithms." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -99,6 +102,7 @@ for mlg.filter utilizing all of the algorithms." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -106,17 +110,20 @@ for mlg.filter utilizing all of the algorithms." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Utilize all algorithms of mlg.filter</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/filter_stats.R'><code>R/filter_stats.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/filter_stats.R'><code>R/filter_stats.R</code></a></small>
+    <div class="hidden name"><code>filter_stats.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function is a wrapper to mlg.filter. It will calculate all of the stats 
 for mlg.filter utilizing all of the algorithms.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>filter_stats</span>(<span class='no'>x</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bitwise.dist</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>1e+06</span> +
   <span class='no'>.Machine</span>$<span class='no'>double.eps</span>^<span class='fl'>0.5</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"All"</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"ignore"</span>,
@@ -206,14 +213,141 @@ poppr version 2.4.1, this is by default set to 1.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='mlg.filter.html'>mlg.filter</a></code> <code><a href='cutoff_predictor.html'>cutoff_predictor</a></code> 
-  <code><a href='bitwise.dist.html'>bitwise.dist</a></code> <code><a href='diss.dist.html'>diss.dist</a></code></p>
+    <div class='dont-index'><p><code><a href='mlg.filter.html'>mlg.filter</a></code> <code><a href='cutoff_predictor.html'>cutoff_predictor</a></code> 
+  <code><a href='bitwise.dist.html'>bitwise.dist</a></code> <code><a href='diss.dist.html'>diss.dist</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>Pinf</span>)
+    <pre class="examples"><div class='input'>
+<span class='co'># Basic usage example: Bruvo's Distance --------------------------------</span>
+<span class='fu'>data</span>(<span class='no'>Pinf</span>)
 <span class='no'>pinfreps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='no'>Pinf</span>, <span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>))
-<span class='fu'>filter_stats</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='filter_stats-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='no'>bres</span> <span class='kw'>&lt;-</span> <span class='fu'>filter_stats</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='filter_stats-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>print</span>(<span class='no'>bres</span>) <span class='co'># shows all of the statistics</span></div><div class='output co'>#&gt; $farthest
+#&gt; $farthest$MLGS
+#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+#&gt; [39] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+#&gt; [77] 1 1 1 1 1 1 1 1 1 1
+#&gt; 
+#&gt; $farthest$THRESHOLDS
+#&gt;  [1] 0.01262626 0.02189867 0.02272727 0.02272727 0.03535354 0.04166667
+#&gt;  [7] 0.04261364 0.04545454 0.04699337 0.04758520 0.05681818 0.05681818
+#&gt; [13] 0.05835701 0.06451231 0.06534091 0.06818182 0.07871686 0.07954545
+#&gt; [19] 0.08772748 0.08877841 0.09375000 0.09469697 0.09722222 0.10144413
+#&gt; [25] 0.12500000 0.13099747 0.13593750 0.13740234 0.14488636 0.15000000
+#&gt; [31] 0.15656566 0.16688366 0.18115234 0.19317072 0.21022726 0.21590909
+#&gt; [37] 0.21874983 0.22561553 0.23115234 0.23295450 0.23437499 0.23532197
+#&gt; [43] 0.24147723 0.25850032 0.27201702 0.27500000 0.28338066 0.29208984
+#&gt; [49] 0.30000000 0.30042336 0.30326990 0.30549961 0.30632250 0.31325684
+#&gt; [55] 0.33639034 0.33709162 0.34089797 0.35170815 0.35619658 0.36079233
+#&gt; [61] 0.36487924 0.39646464 0.40280346 0.40332030 0.42325106 0.43731965
+#&gt; [67] 0.45436164 0.47047212 0.50827603 0.51496688 0.57474140
+#&gt; 
+#&gt; $farthest$DISTANCES
+#&gt; [1] 0
+#&gt; 
+#&gt; $farthest$SIZES
+#&gt;   [1] 86  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [26]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [51]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [76]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt; [101]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt; 
+#&gt; 
+#&gt; $average
+#&gt; $average$MLGS
+#&gt;  [1] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+#&gt; [39] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+#&gt; [77] 5 5 5 5 5 5 5 5 5 5
+#&gt; 
+#&gt; $average$THRESHOLDS
+#&gt;  [1] 0.01262626 0.02189867 0.02272727 0.02272727 0.02588384 0.04166667
+#&gt;  [7] 0.04261364 0.04545454 0.04551373 0.04666785 0.04758520 0.05116596
+#&gt; [13] 0.05455269 0.05681818 0.05681818 0.06534091 0.06818182 0.07469704
+#&gt; [19] 0.07765152 0.07954545 0.08386600 0.08664773 0.09154040 0.09375000
+#&gt; [25] 0.09904513 0.11783635 0.12500000 0.13593750 0.13740234 0.14488636
+#&gt; [31] 0.15000000 0.16688366 0.16922082 0.18115234 0.18281241 0.18983100
+#&gt; [37] 0.19317072 0.20648526 0.21022726 0.21098306 0.21590909 0.22248151
+#&gt; [43] 0.22604322 0.23175203 0.23294795 0.23437497 0.23998000 0.25621032
+#&gt; [49] 0.25625000 0.25680394 0.26530388 0.27031250 0.27487891 0.28437722
+#&gt; [55] 0.28752245 0.28876394 0.28902416 0.28944244 0.30326990 0.30955902
+#&gt; [61] 0.32030666 0.32450982 0.32465378 0.32678465 0.33795507 0.34365982
+#&gt; [67] 0.35371480 0.35817752 0.36059225 0.38745409 0.41290311
+#&gt; 
+#&gt; $average$DISTANCES
+#&gt; [1] 0
+#&gt; 
+#&gt; $average$SIZES
+#&gt;   [1]  0  0  0  0 86  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [26]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [51]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [76]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt; [101]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt; 
+#&gt; 
+#&gt; $nearest
+#&gt; $nearest$MLGS
+#&gt;  [1] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+#&gt; [39] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+#&gt; [77] 4 4 4 4 4 4 4 4 4 4
+#&gt; 
+#&gt; $nearest$THRESHOLDS
+#&gt;  [1] 0.01262626 0.02189867 0.02272727 0.02272727 0.02272727 0.03409091
+#&gt;  [7] 0.03977273 0.04166667 0.04261364 0.04403409 0.04403409 0.04545454
+#&gt; [13] 0.04758520 0.05681818 0.05681818 0.05681818 0.06534091 0.06818182
+#&gt; [19] 0.06818182 0.06818182 0.07196970 0.07954545 0.08238636 0.08585859
+#&gt; [25] 0.08838384 0.09375000 0.12480469 0.12500000 0.13470642 0.13593750
+#&gt; [31] 0.13740234 0.14488636 0.14687500 0.15000000 0.15190972 0.15625000
+#&gt; [37] 0.15625000 0.15932617 0.16102431 0.16688366 0.16879735 0.17274306
+#&gt; [43] 0.17329545 0.17768012 0.18115234 0.18181817 0.18181818 0.18417969
+#&gt; [49] 0.18437500 0.18661804 0.19062500 0.19317072 0.19375000 0.20625000
+#&gt; [55] 0.21022726 0.21240234 0.21484375 0.21527778 0.21590284 0.21874717
+#&gt; [61] 0.22348731 0.22490234 0.22490234 0.24062500 0.24105025 0.24113755
+#&gt; [67] 0.24667968 0.24912939 0.25923295 0.27812500 0.28737792
+#&gt; 
+#&gt; $nearest$DISTANCES
+#&gt; [1] 0
+#&gt; 
+#&gt; $nearest$SIZES
+#&gt;   [1]  0  0  0 86  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [26]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [51]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt;  [76]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt; [101]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+#&gt; 
+#&gt; </div><div class='input'>
+<span class='co'># Use these results with cutoff_filter()</span>
+<span class='fu'>print</span>(<span class='no'>thresh</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cutoff_predictor.html'>cutoff_predictor</a></span>(<span class='no'>bres</span>$<span class='no'>farthest</span>$<span class='no'>THRESHOLDS</span>))</div><div class='output co'>#&gt; [1] 0.1132221</div><div class='input'><span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>bruvo.dist</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='no'>pinfreps</span>) <span class='kw'>&lt;-</span> <span class='no'>thresh</span>
+<span class='no'>Pinf</span></div><div class='output co'>#&gt; 
+#&gt; This is a genclone object
+#&gt; -------------------------
+#&gt; Genotype information:
+#&gt; 
+#&gt;    48 contracted multilocus genotypes
+#&gt;       (0.113) [t], (bruvo.dist) [d], (farthest) [a] 
+#&gt;    86 tetraploid individuals
+#&gt;    11 codominant loci
+#&gt; 
+#&gt; Population information:
+#&gt; 
+#&gt;     2 strata - Continent, Country
+#&gt;     2 populations defined - South America, North America</div><div class='input'>
+<span class='co'># Different distances will give different results -----------------------</span>
+<span class='no'>nres</span> <span class='kw'>&lt;-</span> <span class='fu'>filter_stats</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>nei.dist</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"mean"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'> Replaced 167 missing values.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: @tab does not contain integers; as of adegenet_2.0-0, numeric values are no longer used</span></div><div class='output co'>#&gt; <span class='warning'>Warning: @tab does not contain integers; as of adegenet_2.0-0, numeric values are no longer used</span></div><div class='img'><img src='filter_stats-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>print</span>(<span class='no'>thresh</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cutoff_predictor.html'>cutoff_predictor</a></span>(<span class='no'>nres</span>$<span class='no'>farthest</span>$<span class='no'>THRESHOLDS</span>))</div><div class='output co'>#&gt; [1] 0.01949039</div><div class='input'><span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='no'>nei.dist</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"mean"</span>) <span class='kw'>&lt;-</span> <span class='no'>thresh</span>
+<span class='no'>Pinf</span></div><div class='output co'>#&gt; 
+#&gt; This is a genclone object
+#&gt; -------------------------
+#&gt; Genotype information:
+#&gt; 
+#&gt;    66 contracted multilocus genotypes
+#&gt;       (0.019) [t], (nei.dist) [d], (farthest) [a] 
+#&gt;    86 tetraploid individuals
+#&gt;    11 codominant loci
+#&gt; 
+#&gt; Population information:
+#&gt; 
+#&gt;     2 strata - Continent, Country
+#&gt;     2 populations defined - South America, North America</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -249,6 +383,8 @@ Zhian N. Kamvar, Jonah C. Brooks
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

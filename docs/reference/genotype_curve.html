@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Produce a genotype accumulation curve — genotype_curve" />
 
 <meta property="og:description" content="Genotype accumulation curves are useful for determining the minimum number of
@@ -58,7 +61,7 @@ of multilocus genotypes observed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +104,7 @@ of multilocus genotypes observed." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,19 +112,22 @@ of multilocus genotypes observed." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Produce a genotype accumulation curve</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/visualizations.r'><code>R/visualizations.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/visualizations.r'><code>R/visualizations.r</code></a></small>
+    <div class="hidden name"><code>genotype_curve.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Genotype accumulation curves are useful for determining the minimum number of
 loci necessary to discriminate between individuals in a population. This 
 function will randomly sample loci without replacement and count the number 
 of multilocus genotypes observed.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>genotype_curve</span>(<span class='no'>gen</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>maxloci</span> <span class='kw'>=</span> <span class='fl'>0L</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>dropna</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
@@ -259,6 +266,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Index of Association — ia" />
 
 <meta property="og:description" content="Calculate the Index of Association and Standardized Index of Association.
@@ -64,7 +67,7 @@ resample.ia() calculates the index of association on a
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -107,6 +110,7 @@ resample.ia() calculates the index of association on a
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -114,13 +118,15 @@ resample.ia() calculates the index of association on a
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Index of Association</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/Index_calculations.r'><code>R/Index_calculations.r</code></a>, <a href='https://github.com/grunwaldlab/poppr/blob/master/R/ia_jackknife.R'><code>R/ia_jackknife.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/Index_calculations.r'><code>R/Index_calculations.r</code></a>, <a href='https://github.com/grunwaldlab/poppr/blob/master/R/ia_jackknife.R'><code>R/ia_jackknife.R</code></a></small>
+    <div class="hidden name"><code>ia.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Calculate the Index of Association and Standardized Index of Association.</p><ul>
 <li><p><code>ia()</code> calculates the index of association over all loci in
@@ -133,12 +139,13 @@ resample.ia() calculates the index of association on a
   <code>jack.ia</code>).</p></li>
 </ul>
     
+    </div>
 
     <pre class="usage"><span class='fu'>ia</span>(<span class='no'>gid</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"ignore"</span>,
   <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>, <span class='kw'>valuereturn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>pair.ia</span>(<span class='no'>gid</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"red"</span>,
-  <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>)
+<span class='fu'>pair.ia</span>(<span class='no'>gid</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>0L</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"blue"</span>,
+  <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1L</span>)
 
 <span class='fu'>resample.ia</span>(<span class='no'>gid</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>use_psex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='no'>...</span>)
@@ -176,8 +183,10 @@ performing calculations?</p>
     <tr>
       <th>plot</th>
       <td><p>When <code>TRUE</code> (default), a heatmap of the values per locus
-pair will be plotted (for pair.ia). For `ia()`, if <code>sampling &gt; 0</code>, a
-histogram will be produced for each population.</p></td>
+pair will be plotted (for <code>pair.ia()</code>). When <code>sampling &gt; 0</code>, 
+different things happen with <code>ia()</code> and <code>pair.ia()</code>. For 
+<code>ia()</code>, a histogram for the data set is plotted. For <code>pair.ia()</code>,
+p-values are added as text on the heatmap.</p></td>
     </tr>
     <tr>
       <th>hist</th>
@@ -350,9 +359,9 @@ association in columns. Number of rows represents the number of reps.
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='poppr.html'>poppr</a></code>, <code><a href='missingno.html'>missingno</a></code>, 
+    <div class='dont-index'><p><code><a href='poppr.html'>poppr</a></code>, <code><a href='missingno.html'>missingno</a></code>, 
   <code>import2genind</code>, <code><a href='read.genalex.html'>read.genalex</a></code>, 
-  <code><a href='clonecorrect.html'>clonecorrect</a></code>, <code><a href='win.ia.html'>win.ia</a></code>, <code><a href='samp.ia.html'>samp.ia</a></code></p>
+  <code><a href='clonecorrect.html'>clonecorrect</a></code>, <code><a href='win.ia.html'>win.ia</a></code>, <code><a href='samp.ia.html'>samp.ia</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -364,7 +373,7 @@ association in columns. Number of rows represents the number of reps.
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>partial_clone</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   2%  |                                                                              |===                                                                   |   4%  |                                                                              |=====                                                                 |   7%  |                                                                              |======                                                                |   9%  |                                                                              |========                                                              |  11%  |                                                                              |=========                                                             |  13%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  18%  |                                                                              |==============                                                        |  20%  |                                                                              |================                                                      |  22%  |                                                                              |=================                                                     |  24%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  29%  |                                                                              |======================                                                |  31%  |                                                                              |=======================                                               |  33%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  38%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  42%  |                                                                              |===============================                                       |  44%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  49%  |                                                                              |====================================                                  |  51%  |                                                                              |=====================================                                 |  53%  |                                                                              |=======================================                               |  56%  |                                                                              |========================================                              |  58%  |                                                                              |==========================================                            |  60%  |                                                                              |============================================                          |  62%  |                                                                              |=============================================                         |  64%  |                                                                              |===============================================                       |  67%  |                                                                              |================================================                      |  69%  |                                                                              |==================================================                    |  71%  |                                                                              |===================================================                   |  73%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  78%  |                                                                              |========================================================              |  80%  |                                                                              |==========================================================            |  82%  |                                                                              |===========================================================           |  84%  |                                                                              |=============================================================         |  87%  |                                                                              |==============================================================        |  89%  |                                                                              |================================================================      |  91%  |                                                                              |=================================================================     |  93%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  98%  |                                                                              |======================================================================| 100%</div><div class='img'><img src='ia-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>res</span>, <span class='kw'>low</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>high</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Ia"</span>)</div><div class='img'><img src='ia-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Resampling</span>
 <span class='fu'>data</span>(<span class='no'>Pinf</span>)
-<span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |===========================                           | 52% ~0 s remaining     |===================================================   | 96% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
+<span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>99</span>)</div><div class='output co'>#&gt; |=============                                         | 24% ~1 s remaining     |=====================================                 | 69% ~0 s remaining     </div><div class='output co'>#&gt;           Ia      rbarD
 #&gt; 1  0.6191763 0.06783205
 #&gt; 2  0.6798527 0.07473909
 #&gt; 3  0.5200972 0.05695292
@@ -465,6 +474,10 @@ association in columns. Number of rows represents the number of reps.
 #&gt; 98 0.6656730 0.07289827
 #&gt; 99 0.5124503 0.05625787</div><div class='input'>
 </div><span class='co'># NOT RUN {</span>
+<span class='co'># Pairwise IA with p-values (this will take about a minute)</span>
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>pair.ia</span>(<span class='no'>partial_clone</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>999</span>)
+<span class='fu'>head</span>(<span class='no'>res</span>)
+
 <span class='co'># Plot the results of resampling rbarD. </span>
 <span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
 <span class='no'>Pinf.resamp</span> <span class='kw'>&lt;-</span> <span class='fu'>resample.ia</span>(<span class='no'>Pinf</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>999</span>)
@@ -553,6 +566,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

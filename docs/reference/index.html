@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Function reference" />
 
 
@@ -52,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -95,6 +98,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -102,470 +106,468 @@
       
       </header>
 
-      <div class="row">
-  <div class="col-md-9">
+<div class="row">
+  <div class="contents col-md-9">
     <div class="page-header">
       <h1>Reference</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    <table class="ref-index">
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <colgroup>
+      <col class="alias" />
+      <col class="title" />
+    </colgroup>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-data-import-export-" class="hasAnchor"><a href="#section-data-import-export-" class="anchor"></a>Data import/export:</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="read.genalex.html">read.genalex()</a></code> </p>
-          </td>
-          <td><p>Importing data from genalex formatted *.csv files.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="genind2genalex.html">genind2genalex()</a></code> </p>
-          </td>
-          <td><p>Exporting data from genind objects to genalex formatted *.csv files.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="coercion-methods.html">bootgen2genind()</a></code> <code><a href="coercion-methods.html">as.genclone()</a></code> <code><a href="coercion-methods.html">genclone2genind()</a></code> <code><a href="coercion-methods.html">as.genambig()</a></code> </p>
-          </td>
-          <td><p>Switch between genind and genclone objects.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="getfile.html">getfile()</a></code> </p>
-          </td>
-          <td><p>Get a file name and path and store them in a list.</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-data-structures-" class="hasAnchor"><a href="#section-data-structures-" class="anchor"></a>Data Structures:</h2>
-            <p class="section-desc"><p>Data structures “genclone” (based off of adegenet’s genind) and “snpclone” (based off of adegenet’s genlight for large SNP data sets). Both of these data structures are defined by the presence of an extra MLG slot.</p></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="genclone-class.html">genclone-class</a></code> </p>
-          </td>
-          <td><p>GENclone and SNPclone classes</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-data-manipulation-" class="hasAnchor"><a href="#section-data-manipulation-" class="anchor"></a>Data manipulation:</h2>
-            <p class="section-desc"><p>These functions will manipulate your data by either removing or shuffling components.</p></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="coercion-methods.html">bootgen2genind()</a></code> <code><a href="coercion-methods.html">as.genclone()</a></code> <code><a href="coercion-methods.html">genclone2genind()</a></code> <code><a href="coercion-methods.html">as.genambig()</a></code> </p>
-          </td>
-          <td><p>Switch between genind and genclone objects.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snpclone-coercion-methods.html">as.snpclone()</a></code> </p>
-          </td>
-          <td><p>Create a snpclone object from a genlight object.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="missingno.html">missingno()</a></code> </p>
-          </td>
-          <td><p>Treat missing data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="clonecorrect.html">clonecorrect()</a></code> </p>
-          </td>
-          <td><p>Remove potential bias caused by cloned genotypes in genind or genclone 
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-import-export-" class="hasAnchor"><a href="#section-data-import-export-" class="anchor"></a>Data import/export:</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="read.genalex.html">read.genalex()</a></code> </p>
+        </td>
+        <td><p>Importing data from genalex formatted *.csv files.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="genind2genalex.html">genind2genalex()</a></code> </p>
+        </td>
+        <td><p>Export data from genind objects to genalex formatted *.csv files.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="coercion-methods.html">bootgen2genind()</a></code> <code><a href="coercion-methods.html">as.genclone()</a></code> <code><a href="coercion-methods.html">genclone2genind()</a></code> <code><a href="coercion-methods.html">as.genambig()</a></code> </p>
+        </td>
+        <td><p>Switch between genind and genclone objects.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="getfile.html">getfile()</a></code> </p>
+        </td>
+        <td><p>Get a file name and path and store them in a list.</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-structures-" class="hasAnchor"><a href="#section-data-structures-" class="anchor"></a>Data Structures:</h2>
+          <p class="section-desc"><p>Data structures “genclone” (based off of adegenet’s genind) and “snpclone” (based off of adegenet’s genlight for large SNP data sets). Both of these data structures are defined by the presence of an extra MLG slot.</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="genclone-class.html">genclone-class</a></code> </p>
+        </td>
+        <td><p>GENclone and SNPclone classes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-manipulation-" class="hasAnchor"><a href="#section-data-manipulation-" class="anchor"></a>Data manipulation:</h2>
+          <p class="section-desc"><p>These functions will manipulate your data by either removing or shuffling components.</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="coercion-methods.html">bootgen2genind()</a></code> <code><a href="coercion-methods.html">as.genclone()</a></code> <code><a href="coercion-methods.html">genclone2genind()</a></code> <code><a href="coercion-methods.html">as.genambig()</a></code> </p>
+        </td>
+        <td><p>Switch between genind and genclone objects.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snpclone-coercion-methods.html">as.snpclone()</a></code> </p>
+        </td>
+        <td><p>Create a snpclone object from a genlight object.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="missingno.html">missingno()</a></code> </p>
+        </td>
+        <td><p>Treat missing data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="clonecorrect.html">clonecorrect()</a></code> </p>
+        </td>
+        <td><p>Remove potential bias caused by cloned genotypes in genind or genclone 
 object.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="informloci.html">informloci()</a></code> </p>
-          </td>
-          <td><p>Remove all non-phylogentically informative loci</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="popsub.html">popsub()</a></code> </p>
-          </td>
-          <td><p>Subset data by population</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="shufflepop.html">shufflepop()</a></code> </p>
-          </td>
-          <td><p>Shuffle individuals in a <code>genclone</code> or
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="informloci.html">informloci()</a></code> </p>
+        </td>
+        <td><p>Remove all non-phylogentically informative loci</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="popsub.html">popsub()</a></code> </p>
+        </td>
+        <td><p>Subset data by population</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="shufflepop.html">shufflepop()</a></code> </p>
+        </td>
+        <td><p>Shuffle individuals in a <code>genclone</code> or
 <code>genind</code> object independently over each locus.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="recode_polyploids.html">recode_polyploids()</a></code> </p>
-          </td>
-          <td><p>Recode polyploid microsatellite data for use in frequency based statistics.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="make_haplotypes.html">make_haplotypes()</a></code> </p>
-          </td>
-          <td><p>Split samples from a genind object into pseudo-haplotypes</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="fix_replen.html">fix_replen()</a></code> </p>
-          </td>
-          <td><p>Find and fix inconsistent repeat lengths</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="test_replen.html">test_replen()</a></code> </p>
-          </td>
-          <td><p>Test repeat length consistency.</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-genetic-distances-" class="hasAnchor"><a href="#section-genetic-distances-" class="anchor"></a>Genetic distances:</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="bruvo.dist.html">bruvo.dist()</a></code> </p>
-          </td>
-          <td><p>Bruvo's distance for microsatellites</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="diss.dist.html">diss.dist()</a></code> </p>
-          </td>
-          <td><p>Calculate a distance matrix based on relative dissimilarity</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="bitwise.dist.html">bitwise.dist()</a></code> </p>
-          </td>
-          <td><p>Calculate a dissimilarity distance matrix for SNP data.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="genetic_distance.html">nei.dist()</a></code> <code><a href="genetic_distance.html">edwards.dist()</a></code> <code><a href="genetic_distance.html">rogers.dist()</a></code> <code><a href="genetic_distance.html">reynolds.dist()</a></code> <code><a href="genetic_distance.html">provesti.dist()</a></code> <code><a href="genetic_distance.html">prevosti.dist()</a></code> </p>
-          </td>
-          <td><p>Calculate Genetic Distance for a genind or genclone object.</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-bootstrapping-" class="hasAnchor"><a href="#section-bootstrapping-" class="anchor"></a>Bootstrapping:</h2>
-            <p class="section-desc"><p>These bootstrapping functions perform bootstrap/resampling analyses on either loci or individuals.</p></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="aboot.html">aboot()</a></code> </p>
-          </td>
-          <td><p>Calculate a dendrogram with bootstrap support using any distance applicable 
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="recode_polyploids.html">recode_polyploids()</a></code> </p>
+        </td>
+        <td><p>Recode polyploid microsatellite data for use in frequency based statistics.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="make_haplotypes-method.html">make_haplotypes()</a></code> </p>
+        </td>
+        <td><p>Split samples from a genind object into pseudo-haplotypes</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="fix_replen.html">fix_replen()</a></code> </p>
+        </td>
+        <td><p>Find and fix inconsistent repeat lengths</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="test_replen.html">test_replen()</a></code> </p>
+        </td>
+        <td><p>Test repeat length consistency.</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-genetic-distances-" class="hasAnchor"><a href="#section-genetic-distances-" class="anchor"></a>Genetic distances:</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="bruvo.dist.html">bruvo.dist()</a></code> </p>
+        </td>
+        <td><p>Bruvo's distance for microsatellites</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="diss.dist.html">diss.dist()</a></code> </p>
+        </td>
+        <td><p>Calculate a distance matrix based on relative dissimilarity</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="bitwise.dist.html">bitwise.dist()</a></code> </p>
+        </td>
+        <td><p>Calculate dissimilarity or Euclidean distance for genlight objects</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="genetic_distance.html">nei.dist()</a></code> <code><a href="genetic_distance.html">edwards.dist()</a></code> <code><a href="genetic_distance.html">rogers.dist()</a></code> <code><a href="genetic_distance.html">reynolds.dist()</a></code> <code><a href="genetic_distance.html">provesti.dist()</a></code> <code><a href="genetic_distance.html">prevosti.dist()</a></code> </p>
+        </td>
+        <td><p>Calculate Genetic Distance for a genind or genclone object.</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-bootstrapping-" class="hasAnchor"><a href="#section-bootstrapping-" class="anchor"></a>Bootstrapping:</h2>
+          <p class="section-desc"><p>These bootstrapping functions perform bootstrap/resampling analyses on either loci or individuals.</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="aboot.html">aboot()</a></code> </p>
+        </td>
+        <td><p>Calculate a dendrogram with bootstrap support using any distance applicable 
 to genind or genclone objects.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="bruvo.boot.html">bruvo.boot()</a></code> </p>
-          </td>
-          <td><p>Create a tree using Bruvo's Distance with non-parametric bootstrapping.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="diversity_boot.html">diversity_boot()</a></code> </p>
-          </td>
-          <td><p>Perform a bootstrap analysis on diversity statistics</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="diversity_ci.html">diversity_ci()</a></code> </p>
-          </td>
-          <td><p>Perform bootstrap statistics, calculate, and plot confidence intervals.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="boot.ia.html">boot.ia()</a></code> </p>
-          </td>
-          <td><p>Bootstrap the index of association</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="ia.html">ia()</a></code> <code><a href="ia.html">pair.ia()</a></code> <code><a href="ia.html">resample.ia()</a></code> <code><a href="ia.html">jack.ia()</a></code> </p>
-          </td>
-          <td><p>Index of Association</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-multilocus-genotype-analysis-" class="hasAnchor"><a href="#section-multilocus-genotype-analysis-" class="anchor"></a>Multilocus Genotype Analysis:</h2>
-            <p class="section-desc"><p>Identify, count, manipulate, and tabulate repeated genotypes in your data</p></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mlg.html">mlg()</a></code> <code><a href="mlg.html">mlg.table()</a></code> <code><a href="mlg.html">mlg.vector()</a></code> <code><a href="mlg.html">mlg.crosspop()</a></code> <code><a href="mlg.html">mlg.id()</a></code> </p>
-          </td>
-          <td><p>Create counts, vectors, and matrices of multilocus genotypes.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mll-method.html">mll()</a></code> <code><a href="mll-method.html">nmll()</a></code> <code><a href="mll-method.html">`mll<-`()</a></code> </p>
-          </td>
-          <td><p>Access and manipulate multilocus lineages.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mlg.filter.html">mlg.filter()</a></code> <code><a href="mlg.filter.html">`mlg.filter<-`()</a></code> </p>
-          </td>
-          <td><p>MLG definitions based on genetic distance</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="filter_stats.html">filter_stats()</a></code> </p>
-          </td>
-          <td><p>Utilize all algorithms of mlg.filter</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="cutoff_predictor.html">cutoff_predictor()</a></code> </p>
-          </td>
-          <td><p>Predict cutoff thresholds for use with mlg.filter</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mll.custom.html">mll.custom()</a></code> <code><a href="mll.custom.html">`mll.custom<-`()</a></code> <code><a href="mll.custom.html">mll.levels()</a></code> <code><a href="mll.custom.html">`mll.levels<-`()</a></code> </p>
-          </td>
-          <td><p>Define custom multilocus lineages</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mll.reset-method.html">mll.reset()</a></code> </p>
-          </td>
-          <td><p>Reset multilocus lineages</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="diversity_stats.html">diversity_stats()</a></code> </p>
-          </td>
-          <td><p>Produce a table of diversity statistics</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-index-of-association-analysis" class="hasAnchor"><a href="#section-index-of-association-analysis" class="anchor"></a>Index of Association Analysis</h2>
-            <p class="section-desc"><p>Analysis of multilocus linkage disequilibrium.</p></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="boot.ia.html">boot.ia()</a></code> </p>
-          </td>
-          <td><p>Bootstrap the index of association</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="ia.html">ia()</a></code> <code><a href="ia.html">pair.ia()</a></code> <code><a href="ia.html">resample.ia()</a></code> <code><a href="ia.html">jack.ia()</a></code> </p>
-          </td>
-          <td><p>Index of Association</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="samp.ia.html">samp.ia()</a></code> </p>
-          </td>
-          <td><p>Calculate random samples of the index of association for genlight objects.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="win.ia.html">win.ia()</a></code> </p>
-          </td>
-          <td><p>Calculate windows of the index of association for genlight objects.</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-population-genetic-analysis" class="hasAnchor"><a href="#section-population-genetic-analysis" class="anchor"></a>Population Genetic Analysis</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="poppr.html">poppr()</a></code> </p>
-          </td>
-          <td><p>Produce a basic summary table for population genetic analyses.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="poppr.all.html">poppr.all()</a></code> </p>
-          </td>
-          <td><p>Process a list of files with poppr</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="poppr.amova.html">poppr.amova()</a></code> </p>
-          </td>
-          <td><p>Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="private_alleles.html">private_alleles()</a></code> </p>
-          </td>
-          <td><p>Tabulate alleles the occur in only one population.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="locus_table.html">locus_table()</a></code> </p>
-          </td>
-          <td><p>Create a table of summary statistics per locus.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="rrmlg.html">rrmlg()</a></code> </p>
-          </td>
-          <td><p>Round Robin Multilocus Genotypes</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="rraf.html">rraf()</a></code> </p>
-          </td>
-          <td><p>Round Robin Allele Frequencies</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="pgen.html">pgen()</a></code> </p>
-          </td>
-          <td><p>Genotype Probability</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="psex.html">psex()</a></code> </p>
-          </td>
-          <td><p>Probability of encountering a genotype more than once by chance</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="incomp.html">incomp()</a></code> </p>
-          </td>
-          <td><p>Check for samples that are incomparable due to missing data</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-visualization-" class="hasAnchor"><a href="#section-visualization-" class="anchor"></a>Visualization:</h2>
-            <p class="section-desc"><p>Functions that help you visualize your data</p></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="imsn.html">imsn()</a></code> </p>
-          </td>
-          <td><p>Create minimum spanning networks interactively</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="plot_poppr_msn.html">plot_poppr_msn()</a></code> </p>
-          </td>
-          <td><p>Plot minimum spanning networks produced in poppr.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="greycurve.html">greycurve()</a></code> </p>
-          </td>
-          <td><p>Display a greyscale gradient adjusted to specific parameters</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="bruvo.msn.html">bruvo.msn()</a></code> </p>
-          </td>
-          <td><p>Create minimum spanning network of selected populations using Bruvo's 
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="bruvo.boot.html">bruvo.boot()</a></code> </p>
+        </td>
+        <td><p>Create a tree using Bruvo's Distance with non-parametric bootstrapping.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="diversity_boot.html">diversity_boot()</a></code> </p>
+        </td>
+        <td><p>Perform a bootstrap analysis on diversity statistics</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="diversity_ci.html">diversity_ci()</a></code> </p>
+        </td>
+        <td><p>Perform bootstrap statistics, calculate, and plot confidence intervals.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="boot.ia.html">boot.ia()</a></code> </p>
+        </td>
+        <td><p>Bootstrap the index of association</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="ia.html">ia()</a></code> <code><a href="ia.html">pair.ia()</a></code> <code><a href="ia.html">resample.ia()</a></code> <code><a href="ia.html">jack.ia()</a></code> </p>
+        </td>
+        <td><p>Index of Association</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-multilocus-genotype-analysis-" class="hasAnchor"><a href="#section-multilocus-genotype-analysis-" class="anchor"></a>Multilocus Genotype Analysis:</h2>
+          <p class="section-desc"><p>Identify, count, manipulate, and tabulate repeated genotypes in your data</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="mlg.html">mlg()</a></code> <code><a href="mlg.html">mlg.table()</a></code> <code><a href="mlg.html">mlg.vector()</a></code> <code><a href="mlg.html">mlg.crosspop()</a></code> <code><a href="mlg.html">mlg.id()</a></code> </p>
+        </td>
+        <td><p>Create counts, vectors, and matrices of multilocus genotypes.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="mll-method.html">mll()</a></code> <code><a href="mll-method.html">nmll()</a></code> <code><a href="mll-method.html">`mll<-`()</a></code> </p>
+        </td>
+        <td><p>Access and manipulate multilocus lineages.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="mlg.filter.html">mlg.filter()</a></code> <code><a href="mlg.filter.html">`mlg.filter<-`()</a></code> </p>
+        </td>
+        <td><p>MLG definitions based on genetic distance</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="filter_stats.html">filter_stats()</a></code> </p>
+        </td>
+        <td><p>Utilize all algorithms of mlg.filter</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="cutoff_predictor.html">cutoff_predictor()</a></code> </p>
+        </td>
+        <td><p>Predict cutoff thresholds for use with mlg.filter</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="mll.custom.html">mll.custom()</a></code> <code><a href="mll.custom.html">`mll.custom<-`()</a></code> <code><a href="mll.custom.html">mll.levels()</a></code> <code><a href="mll.custom.html">`mll.levels<-`()</a></code> </p>
+        </td>
+        <td><p>Define custom multilocus lineages</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="mll.reset-method.html">mll.reset()</a></code> </p>
+        </td>
+        <td><p>Reset multilocus lineages</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="diversity_stats.html">diversity_stats()</a></code> </p>
+        </td>
+        <td><p>Produce a table of diversity statistics</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-index-of-association-analysis" class="hasAnchor"><a href="#section-index-of-association-analysis" class="anchor"></a>Index of Association Analysis</h2>
+          <p class="section-desc"><p>Analysis of multilocus linkage disequilibrium.</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="boot.ia.html">boot.ia()</a></code> </p>
+        </td>
+        <td><p>Bootstrap the index of association</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="ia.html">ia()</a></code> <code><a href="ia.html">pair.ia()</a></code> <code><a href="ia.html">resample.ia()</a></code> <code><a href="ia.html">jack.ia()</a></code> </p>
+        </td>
+        <td><p>Index of Association</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="samp.ia.html">samp.ia()</a></code> </p>
+        </td>
+        <td><p>Calculate random samples of the index of association for genlight objects.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="win.ia.html">win.ia()</a></code> </p>
+        </td>
+        <td><p>Calculate windows of the index of association for genlight objects.</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-population-genetic-analysis" class="hasAnchor"><a href="#section-population-genetic-analysis" class="anchor"></a>Population Genetic Analysis</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="poppr.html">poppr()</a></code> </p>
+        </td>
+        <td><p>Produce a basic summary table for population genetic analyses.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="poppr.all.html">poppr.all()</a></code> </p>
+        </td>
+        <td><p>Process a list of files with poppr</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="poppr.amova.html">poppr.amova()</a></code> </p>
+        </td>
+        <td><p>Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="private_alleles.html">private_alleles()</a></code> </p>
+        </td>
+        <td><p>Tabulate alleles the occur in only one population.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="locus_table.html">locus_table()</a></code> </p>
+        </td>
+        <td><p>Create a table of summary statistics per locus.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="rrmlg.html">rrmlg()</a></code> </p>
+        </td>
+        <td><p>Round Robin Multilocus Genotypes</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="rraf.html">rraf()</a></code> </p>
+        </td>
+        <td><p>Round Robin Allele Frequencies</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="pgen.html">pgen()</a></code> </p>
+        </td>
+        <td><p>Genotype Probability</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="psex.html">psex()</a></code> </p>
+        </td>
+        <td><p>Probability of encountering a genotype more than once by chance</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="incomp.html">incomp()</a></code> </p>
+        </td>
+        <td><p>Check for samples that are incomparable due to missing data</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-visualization-" class="hasAnchor"><a href="#section-visualization-" class="anchor"></a>Visualization:</h2>
+          <p class="section-desc"><p>Functions that help you visualize your data</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="imsn.html">imsn()</a></code> </p>
+        </td>
+        <td><p>Create minimum spanning networks interactively</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="plot_poppr_msn.html">plot_poppr_msn()</a></code> </p>
+        </td>
+        <td><p>Plot minimum spanning networks produced in poppr.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="greycurve.html">greycurve()</a></code> </p>
+        </td>
+        <td><p>Display a greyscale gradient adjusted to specific parameters</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="bruvo.msn.html">bruvo.msn()</a></code> </p>
+        </td>
+        <td><p>Create minimum spanning network of selected populations using Bruvo's 
 distance.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="poppr.msn.html">poppr.msn()</a></code> </p>
-          </td>
-          <td><p>Create a minimum spanning network of selected populations using a distance 
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="poppr.msn.html">poppr.msn()</a></code> </p>
+        </td>
+        <td><p>Create a minimum spanning network of selected populations using a distance 
 matrix.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="info_table.html">info_table()</a></code> </p>
-          </td>
-          <td><p>Create a table summarizing missing data or ploidy information of a genind or
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="info_table.html">info_table()</a></code> </p>
+        </td>
+        <td><p>Create a table summarizing missing data or ploidy information of a genind or
 genclone object</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="genotype_curve.html">genotype_curve()</a></code> </p>
-          </td>
-          <td><p>Produce a genotype accumulation curve</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-datasets-" class="hasAnchor"><a href="#section-datasets-" class="anchor"></a>Datasets:</h2>
-            <p class="section-desc"><p>Fungal and Oomycete data sets that are included in the poppr package.</p></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="Aeut.html">Aeut</a></code> </p>
-          </td>
-          <td><p>Oomycete root rot pathogen <em>Aphanomyces euteiches</em> AFLP data</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="monpop.html">monpop</a></code> </p>
-          </td>
-          <td><p>Peach brown rot pathogen <em>Monilinia fructicola</em></p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="partial_clone.html">partial_clone</a></code> </p>
-          </td>
-          <td><p>Simulated data illustrating a Minimum Spanning Network based on Bruvo's
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="genotype_curve.html">genotype_curve()</a></code> </p>
+        </td>
+        <td><p>Produce a genotype accumulation curve</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-datasets-" class="hasAnchor"><a href="#section-datasets-" class="anchor"></a>Datasets:</h2>
+          <p class="section-desc"><p>Fungal and Oomycete data sets that are included in the poppr package.</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="Aeut.html">Aeut</a></code> </p>
+        </td>
+        <td><p>Oomycete root rot pathogen <em>Aphanomyces euteiches</em> AFLP data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="monpop.html">monpop</a></code> </p>
+        </td>
+        <td><p>Peach brown rot pathogen <em>Monilinia fructicola</em></p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="partial_clone.html">partial_clone</a></code> </p>
+        </td>
+        <td><p>Simulated data illustrating a Minimum Spanning Network based on Bruvo's
 Distance</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="Pinf.html">Pinf</a></code> </p>
-          </td>
-          <td><p>Phytophthora infestans data from Mexico and South America.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="Pram.html">Pram</a></code> </p>
-          </td>
-          <td><p>Phytophthora ramorum data from OR Forests and Nurseries (OR and CA)</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="Pinf.html">Pinf</a></code> </p>
+        </td>
+        <td><p>Phytophthora infestans data from Mexico and South America.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="Pram.html">Pram</a></code> </p>
+        </td>
+        <td><p>Phytophthora ramorum data from OR Forests and Nurseries (OR and CA)</p></td>
+      </tr>
+    </tbody>
+    </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -596,6 +598,8 @@ Distance</p></td>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Calculate a distance matrix based on relative dissimilarity — diss.dist" />
 
 <meta property="og:description" content="diss.dist uses the same discrete dissimilarity matrix utilized by the index 
@@ -61,7 +64,7 @@ This function can analyze distances for any marker system." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -104,6 +107,7 @@ This function can analyze distances for any marker system." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -111,13 +115,15 @@ This function can analyze distances for any marker system." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate a distance matrix based on relative dissimilarity</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/distances.r'><code>R/distances.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/distances.r'><code>R/distances.r</code></a></small>
+    <div class="hidden name"><code>diss.dist.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>diss.dist uses the same discrete dissimilarity matrix utilized by the index 
 of association (see <code><a href='ia.html'>ia</a></code> for details). By default, it returns a
@@ -127,6 +133,7 @@ observed differences by the number of possible differences. Eg. two
 individuals who share half of the same alleles will have a distance of 0.5.
 This function can analyze distances for any marker system.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>diss.dist</span>(<span class='no'>x</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>mat</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
@@ -170,8 +177,8 @@ of loci.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='genetic_distance.html'>prevosti.dist</a></code>,
-   <code><a href='bitwise.dist.html'>bitwise.dist</a></code> (for SNP data)</p>
+    <div class='dont-index'><p><code><a href='genetic_distance.html'>prevosti.dist</a></code>,
+   <code><a href='bitwise.dist.html'>bitwise.dist</a></code> (for SNP data)</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -219,6 +226,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

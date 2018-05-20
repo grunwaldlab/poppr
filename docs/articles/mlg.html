@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analysis of Multilocus Genotypes and Lineages in poppr 2.7.1 • poppr</title>
+<title>Analysis of Multilocus Genotypes and Lineages in poppr 2.7.1.99.85 • poppr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Analysis of Multilocus Genotypes and Lineages in poppr 2.7.1">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Analysis of Multilocus Genotypes and Lineages in poppr 2.7.1.99.85">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -80,20 +80,20 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Analysis of Multilocus Genotypes and Lineages in poppr 2.7.1</h1>
+      <h1>Analysis of Multilocus Genotypes and Lineages in poppr 2.7.1.99.85</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2018-03-25</h4>
+            <h4 class="date">2018-05-19</h4>
       
-      <small>Source: <a href="https://github.com/grunwaldlab/poppr/blob/master/vignettes/mlg.Rmd"><code>vignettes/mlg.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/grunwaldlab/poppr/blob/master/vignettes/mlg.Rmd"><code>vignettes/mlg.Rmd</code></a></small>
+      <div class="hidden name"><code>mlg.Rmd</code></div>
 
     </div>
 
     
     
-<div class="contents">
 <hr>
 <div id="abstract" class="section level1">
 <h1 class="hasAnchor">
@@ -412,7 +412,7 @@ x <span class="co"># Now we have 5 MLGs</span></code></pre></div>
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(x) <span class="co"># Before: 7 MLGs</span></code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-17-1.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##       MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7
 ## Total     1     1     1     1     1     1     1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(x, <span class="dt">distance =</span> xdis) &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>e
@@ -432,7 +432,7 @@ x</code></pre></div>
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(x) <span class="co"># After: 5 MLGs</span></code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-17-2.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-17-2.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##       MLG.1 MLG.2 MLG.4 MLG.6 MLG.7
 ## Total     1     1     3     1     1</code></pre>
 <p>Notice how the information you see has changed. You can see that it’s printed out that you have 5 <strong>contracted</strong> multilocus genotypes, but you have some cryptic code underneath:</p>
@@ -475,7 +475,7 @@ x</code></pre></div>
 ##    0 strata. 
 ##    0 populations defined.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(x)</code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-18-1.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##       MLG.1 MLG.4 MLG.6
 ## Total     2     3     2</code></pre>
 <blockquote>
@@ -548,7 +548,7 @@ x</code></pre></div>
 <li>average neighbor (UPGMA)</li>
 </ul>
 <p>You can specify which algorithm you want to use in clustering with the <code>algorithm</code> argument. Each of these algorithms have different behaviors when it comes to collapsing multilocus genotypes. In short, farthest neighbor is the most conservative, nearest neighbor can have a chaining effect, and average neighbor is somewhere in between. Your choice of algorithm really depends on the biology of your organism.</p>
-<p>To help visualize this, there is the function <code><a href="../reference/filter_stats.html">filter_stats()</a></code>, which will plot the output of the filtering algorithm. For simplicity, we will use the <code>Pinf</code> data set.</p>
+<p>To help visualize this, there is the function <code><a href="../reference/filter_stats.html">filter_stats()</a></code>, which will plot the output of the filtering algorithm. For simplicity, we will use the <code>Pinf</code> data set representing <em>Phytophthora infestans</em> samples from Mexico and South America <span class="citation">(Goss et al. 2009)</span>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(Pinf)
 Pinf</code></pre></div>
 <pre><code>## 
@@ -566,8 +566,59 @@ Pinf</code></pre></div>
 ##     2 populations defined - South America, North America</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pinfreps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fix_replen.html">fix_replen</a></span>(Pinf, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>))
 pinf_filtered &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter_stats.html">filter_stats</a></span>(Pinf, <span class="dt">distance =</span> bruvo.dist, <span class="dt">replen =</span> pinfreps, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>We can see that the different algorithms behave quite differently.</p>
+<p><img src="mlg_files/figure-html/plot_replen-1.png" width="700" style="display: block; margin: auto;"></p>
+<p>We can see that the different algorithms behave similarly for small thresholds, but begin to differ over larger thresholds.</p>
+<p>This function is useful for finding all thresholds at which MLLs are collapsed, which can help with choosing a threshold that collapses putative clones in our sample into lineages.</p>
+</div>
+<div id="choosing-a-threshold" class="section level3">
+<h3 class="hasAnchor">
+<a href="#choosing-a-threshold" class="anchor"></a>Choosing a threshold</h3>
+<p>After you have chosen a genetic distance and a filtering algorithm, you must then decide on the threshold to represent the <strong>minimum genetic distance at which two individuals would be considered from different clonal lineages</strong>.</p>
+<p>One method described in the literature of choosing a threshold is to look for an initial, small peak in the histogram of pairwise genetic distances and set the threshold to be between that peak and the larger peak <span class="citation">(Arnaud-Haond et al. 2007; Bailleul, Stoeckel, and Arnaud-Haond 2016)</span>. This initial peak likely represents clones differentiated by a small set of random mutations. You can see this in the figure above at a threshold of ~0.11 for the “farthest neighbor” algorithm.</p>
+<p>However, if this peak is not obvious, then another method is to look for the largest gap between all putative thresholds. For this, you can use the <code><a href="../reference/cutoff_predictor.html">cutoff_predictor()</a></code> function with the output of <code><a href="../reference/filter_stats.html">filter_stats()</a></code>. It should be noted that this method is not a perfect solution. If we take the results from above, we can find the threshold for each algorithm:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(farthest_thresh &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(pinf_filtered<span class="op">$</span>farthest<span class="op">$</span>THRESHOLDS))</code></pre></div>
+<pre><code>## [1] 0.1132221</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(average_thresh  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(pinf_filtered<span class="op">$</span>average<span class="op">$</span>THRESHOLDS))</code></pre></div>
+<pre><code>## [1] 0.1084407</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(nearest_thresh  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cutoff_predictor.html">cutoff_predictor</a></span>(pinf_filtered<span class="op">$</span>nearest<span class="op">$</span>THRESHOLDS))</code></pre></div>
+<pre><code>## [1] 0.1092773</code></pre>
+<p>Now we can define multilocus lineages for <em>P. infestans</em> with the following criteria:</p>
+<table class="table"><tbody>
+<tr class="odd">
+<td align="center"><strong>[t]</strong></td>
+<td align="left">threshold</td>
+<td align="left">0.113</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>[d]</strong></td>
+<td align="left">distance</td>
+<td align="left">Bruvo’s Distance</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>[a]</strong></td>
+<td align="left">algorithm</td>
+<td align="left">Farthest neighbor</td>
+</tr>
+</tbody></table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(Pinf, <span class="dt">distance =</span> bruvo.dist, <span class="dt">replen =</span> pinfreps, <span class="dt">algorithm =</span> <span class="st">"f"</span>) &lt;-<span class="st"> </span>farthest_thresh
+Pinf</code></pre></div>
+<pre><code>## 
+## This is a genclone object
+## -------------------------
+## Genotype information:
+## 
+##    48 contracted multilocus genotypes
+##       (0.113) [t], (bruvo.dist) [d], (farthest) [a] 
+##    86 tetraploid individuals
+##    11 codominant loci
+## 
+## Population information:
+## 
+##     2 strata - Continent, Country
+##     2 populations defined - South America, North America</code></pre>
+<blockquote>
+<p>Note: Please take care to critically evaluate the results and make sure it applies to your data. This function WILL give you an answer whether or not one truely exists. Additionally, For diploid organisms, another method of choosing a threshold is available in the <strong>RClone</strong> package that involves simulating outcrossing and inbreeding events <span class="citation">(Bailleul, Stoeckel, and Arnaud-Haond 2016)</span>.</p>
+</blockquote>
 </div>
 </div>
 <div id="custom-custom" class="section level2">
@@ -587,7 +638,7 @@ pc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion
 ## [35] "M" "U" "O" "M" "M" "M" "B" "S" "R" "M" "W" "P" "A" "K" "Y" "D"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mll.custom.html">mll.custom</a></span>(pc) &lt;-<span class="st"> </span>LETTERS[<span class="kw"><a href="../reference/mll-method.html">mll</a></span>(pc)]
 <span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(pc)</code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-25-1.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 ## 1 0 1 0 0 1 1 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 2 2 0 2 0
 ## 2 1 0 1 2 0 0 0 0 1 0 1 0 1 0 0 1 0 0 1 1 1 0 0 0 1 1
@@ -599,7 +650,7 @@ pc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion
 pcmsn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bruvo.msn.html">bruvo.msn</a></span>(pc, <span class="dt">replen =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nLoc</span>(pc)), <span class="dt">palette =</span> pcpal,
                    <span class="dt">vertex.label.color =</span> <span class="st">"firebrick"</span>, <span class="dt">vertex.label.font =</span> <span class="dv">2</span>,
                    <span class="dt">vertex.label.cex =</span> <span class="fl">1.5</span>)</code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-26-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>Let’s say that we realized that we have strong evidence for MLG “Q” being the same as MLG “M”. If we wanted to change those, we could simply change the factor levels:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mll.custom.html">mll.levels</a></span>(pc)[<span class="kw"><a href="../reference/mll.custom.html">mll.levels</a></span>(pc) <span class="op">==</span><span class="st"> "Q"</span>] &lt;-<span class="st"> "M"</span></code></pre></div>
 <p>And we can plot again</p>
@@ -607,7 +658,7 @@ pcmsn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bruvo
 pcmsn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bruvo.msn.html">bruvo.msn</a></span>(pc, <span class="dt">replen =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nLoc</span>(pc)), <span class="dt">palette =</span> pcpal,
                    <span class="dt">vertex.label.color =</span> <span class="st">"firebrick"</span>, <span class="dt">vertex.label.font =</span> <span class="dv">2</span>,
                    <span class="dt">vertex.label.cex =</span> <span class="fl">1.5</span>)</code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-28-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>Notice how the minimum spanning network architecture stayed the same, but the labels had changed.</p>
 </div>
 </div>
@@ -618,7 +669,7 @@ pcmsn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bruvo
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(monpop)
 <span class="kw">splitStrata</span>(monpop) &lt;-<span class="st"> </span><span class="er">~</span>Tree<span class="op">/</span>Year<span class="op">/</span>Symptom
 montab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(monpop, <span class="dt">strata =</span> <span class="op">~</span>Symptom<span class="op">/</span>Year)</code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-29-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>We can see from these plots that the Fruit Rot (FR) have a lot more clones in the canopies than Blossom Blight (BB). This makes biological sense since Fruit Rot infections are clonally propagated, whereas Blossom Blight infections are from sexual propagules <span class="citation">(Everhart and Scherm 2015)</span>. Let’s look at the diversity metrics.</p>
 <div id="basic-statistics" class="section level2">
 <h2 class="hasAnchor">
@@ -642,7 +693,7 @@ montab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.
 <pre><code>## 
 ## Confidence Intervals have been centered around observed statistic.
 ## Please see ?diversity_ci for details.</code></pre>
-<p><img src="mlg_files/figure-html/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-31-1.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##          H H.est           H.ci    G G.est             G.ci lambda
 ## BB_9  3.58  3.19 (3.341, 3.819) 25.9 19.26  (19.298, 32.55)  0.961
 ## FR_9  3.10  2.97 (2.912, 3.296) 12.4 11.98  (9.918, 14.956)  0.920
@@ -698,7 +749,7 @@ e &lt;-<span class="st"> </span>.Machine<span class="op">$</span>double.eps<span
 <span class="co"># Using the default farthest neighbor algorithm to collapse genotypes</span>
 <span class="kw"><a href="../reference/mlg.filter.html">mlg.filter</a></span>(monpop, <span class="dt">distance =</span> bruvo.dist, <span class="dt">replen =</span> reps) &lt;-<span class="st"> </span>(<span class="fl">0.5</span><span class="op">/</span><span class="dv">13</span>) <span class="op">+</span><span class="st"> </span>e
 montabf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(monpop, <span class="dt">strata =</span> <span class="op">~</span>Symptom<span class="op">/</span>Year)</code></pre></div>
-<p><img src="mlg_files/figure-html/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-34-1.png" width="700" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(monstatf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diversity_stats.html">diversity_stats</a></span>(montabf, <span class="dt">CF =</span> myCF))</code></pre></div>
 <pre><code>##        Index
 ## Pop            H        G    lambda       E.5        CF
@@ -727,7 +778,7 @@ montabf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(monrare &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diversity_ci.html">diversity_ci</a></span>(montab, <span class="dt">n =</span> 100L, <span class="dt">rarefy =</span> <span class="ot">TRUE</span>, <span class="dt">raw =</span> <span class="ot">FALSE</span>))</code></pre></div>
 <pre><code>## 
 ## Samples for rarefaction: 19</code></pre>
-<p><img src="mlg_files/figure-html/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="mlg_files/figure-html/unnamed-chunk-37-1.png" width="700" style="display: block; margin: auto;"></p>
 <pre><code>##          H H.est           H.ci    G G.est            G.ci lambda
 ## BB_9  3.58  2.70 (2.465, 2.871) 25.9 13.70  (9.757, 17.19)  0.961
 ## FR_9  3.10  2.27 (1.934, 2.625) 12.4  8.35 (5.819, 12.448)  0.920
@@ -784,15 +835,23 @@ monpop[<span class="kw">sample</span>(<span class="kw">nInd</span>(monpop))] <sp
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
 <div id="refs" class="references">
+<div id="ref-arnaud2007standardizing">
+<p>Arnaud-Haond, Sophie, Carlos M Duarte, Filipe Alberto, and Ester A Serrão. 2007. “Standardizing Methods to Address Clonality in Population Studies.” <em>Molecular Ecology</em> 16 (24). Wiley Online Library: 5115–39. doi:<a href="https://doi.org/10.1111/j.1365-294X.2007.03535.x">10.1111/j.1365-294X.2007.03535.x</a>.</p>
+</div>
+<div id="ref-bailleul2016rclone">
+<p>Bailleul, Diane, Solenn Stoeckel, and Sophie Arnaud-Haond. 2016. “RClone: A Package to Identify MultiLocus Clonal Lineages and Handle Clonal Data Sets in R.” Edited by Timothée Poisot. <em>Methods in Ecology and Evolution</em> 7 (8). Wiley-Blackwell: 966–70. doi:<a href="https://doi.org/10.1111/2041-210x.12550">10.1111/2041-210x.12550</a>.</p>
+</div>
 <div id="ref-Bruvo:2004">
 <p>Bruvo, Ruzica, Nicolaas K. Michiels, Thomas G. D’Souza, and Hinrich Schulenburg. 2004. “A Simple Method for the Calculation of Microsatellite Genotype Distances Irrespective of Ploidy Level.” <em>Molecular Ecology</em> 13 (7). Blackwell Science Ltd: 2101–6. doi:<a href="https://doi.org/10.1111/j.1365-294X.2004.02209.x">10.1111/j.1365-294X.2004.02209.x</a>.</p>
 </div>
 <div id="ref-everhart2014finescale">
 <p>Everhart, Sydney, and Harald Scherm. 2015. “Fine-Scale Genetic Structure of <em>Monilinia Fructicola</em> During Brown Rot Epidemics Within Individual Peach Tree Canopies.” <em>Phytopathology</em> 105 (4): 542–49. doi:<a href="https://doi.org/10.1094/PHYTO-03-14-0088-R">10.1094/PHYTO-03-14-0088-R</a>.</p>
 </div>
+<div id="ref-goss2009population">
+<p>Goss, Erica M, Meg Larsen, Gary A Chastagner, Donald R Givens, and Niklaus J Grünwald. 2009. “Population Genetic Analysis Infers Migration Pathways of Phytophthora Ramorum in Us Nurseries.” <em>PLoS Pathog</em> 5 (9): e1000583.</p>
+</div>
 <div id="ref-kamvar2015novel">
 <p>Kamvar, Zhian N, Jonah C Brooks, and Niklaus J Grünwald. 2015. “Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality.” <em>Frontiers in Genetics</em> 6: 208. doi:<a href="https://doi.org/10.3389/fgene.2015.00208">10.3389/fgene.2015.00208</a>.</p>
-</div>
 </div>
 </div>
 </div>
@@ -840,6 +899,8 @@ monpop[<span class="kw">sample</span>(<span class="kw">nInd</span>(monpop))] <sp
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

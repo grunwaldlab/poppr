@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Check for validity of a genclone or snpclone object — is.snpclone" />
 
 <meta property="og:description" content="Check for validity of a genclone or snpclone object" />
@@ -55,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -98,6 +101,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -105,16 +109,19 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Check for validity of a genclone or snpclone object</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/methods.r'><code>R/methods.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/methods.r'><code>R/methods.r</code></a></small>
+    <div class="hidden name"><code>is.clone.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Check for validity of a genclone or snpclone object</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>is.snpclone</span>(<span class='no'>x</span>)
 
@@ -142,7 +149,7 @@ be a valid genlight object.</p>
     <pre class="examples"><div class='input'>(<span class='no'>sc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>1e3</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
                    <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>n.cores</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
 #&gt; 
-#&gt;  || 100 genotypes,  1,000 binary SNPs, size: 173.5 Kb
+#&gt;  || 100 genotypes,  1,000 binary SNPs, size: 182.4 Kb
 #&gt;  0 (0 %) missing data
 #&gt; 
 #&gt;  || Basic content
@@ -185,6 +192,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

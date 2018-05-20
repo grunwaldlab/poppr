@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Calculate the index of association between samples in a genlight object. — bitwise.ia" />
 
 <meta property="og:description" content="This function parses over a genlight object to calculate and return the index
@@ -56,7 +59,7 @@ of association for those samples." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -99,6 +102,7 @@ of association for those samples." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -106,17 +110,20 @@ of association for those samples." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate the index of association between samples in a genlight object.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <div class="hidden name"><code>bitwise.ia.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function parses over a genlight object to calculate and return the index
 of association for those samples.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>bitwise.ia</span>(<span class='no'>x</span>, <span class='kw'>missing_match</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
     
@@ -125,12 +132,12 @@ of association for those samples.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code>genlight</code> or <code><a href='genclone-class.html'>snpclone</a></code> object.</p></td>
+      <td><p>a genlight or <a href='genclone-class.html'>snpclone</a> object.</p></td>
     </tr>
     <tr>
       <th>missing_match</th>
-      <td><p>a boolean determining whether missing data should be 
-considered a match. If TRUE (default) missing data at a locus will match 
+      <td><p>a boolean determining whether missing data should be
+considered a match. If TRUE (default) missing data at a locus will match
 with any data at that locus in each comparison. If FALSE, missing data at a
 locus will cause all comparisons to return the maximum possible distance at
 that locus (ie, if sample 1 has missing data at locus 1, and sample 2 is
@@ -139,7 +146,7 @@ was heterozygous or missing at locus 1, the distance would be 2.</p></td>
     </tr>
     <tr>
       <th>differences_only</th>
-      <td><p>a boolean determining how distance should be counted 
+      <td><p>a boolean determining how distance should be counted
 for diploids. Whether TRUE or FALSE the distance between a heterozygous
 locus and a homozygous locus is 1. If FALSE (default) the distance between
 opposite homozygous loci is 2. If TRUE that distance counts as 1,
@@ -147,7 +154,7 @@ indicating only that the two samples differ at that locus.</p></td>
     </tr>
     <tr>
       <th>threads</th>
-      <td><p>The maximum number of parallel threads to be used within this 
+      <td><p>The maximum number of parallel threads to be used within this
 function. A value of 0 (default) will attempt to use as many threads as
 there are available cores/CPUs. In most cases this is ideal. A value of 1
 will force the function to run serially, which may increase stability on
@@ -159,11 +166,11 @@ caution.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Index of association representing the samples in this genlight
-  object.</p>
+object.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='win.ia.html'>win.ia</a></code>, <code><a href='samp.ia.html'>samp.ia</a></code></p>
+    <div class='dont-index'><p><code><a href='win.ia.html'>win.ia()</a></code>, <code><a href='samp.ia.html'>samp.ia()</a></code></p></div>
     
 
   </div>
@@ -195,6 +202,8 @@ Zhian N. Kamvar, Jonah C. Brooks
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

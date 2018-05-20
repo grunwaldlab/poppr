@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Produce a basic summary table for population genetic analyses. — poppr" />
 
 <meta property="og:description" content="For the poppr package description, please see
@@ -63,7 +66,7 @@ details)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -106,6 +109,7 @@ details)." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,13 +117,15 @@ details)." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Produce a basic summary table for population genetic analyses.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/Index_calculations.r'><code>R/Index_calculations.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/Index_calculations.r'><code>R/Index_calculations.r</code></a></small>
+    <div class="hidden name"><code>poppr.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>For the <span class="pkg">poppr</span> package description, please see
 <code><a href='poppr-package.html'>package?poppr</a></code></p>
@@ -131,6 +137,7 @@ that adegenet can take (fstat, structure, genetix, and genpop) as well as
 genalex files exported into a csv format (see <code><a href='read.genalex.html'>read.genalex</a></code> for 
 details).</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>poppr</span>(<span class='no'>dat</span>, <span class='kw'>total</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>sublist</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>, <span class='kw'>blacklist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"ignore"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -253,7 +260,7 @@ describing the resulting table columns will be printed. Defaults to
   <dt>N</dt><dd><p>An integer vector indicating the number of individuals/isolates in
   the specified population.</p></dd>
   <dt>MLG</dt><dd><p>An integer vector indicating the number of multilocus genotypes 
-  found in the specified population, (see: <code>mlg</code>)</p></dd>
+  found in the specified population, (see: <code><a href='mlg.html'>mlg</a></code>)</p></dd>
   <dt>eMLG</dt><dd><p>The expected number of MLG at the lowest common sample size
   (set by the parameter <code>minsamp</code>).</p></dd>
   <dt>SE</dt><dd><p>The standard error for the rarefaction analysis</p></dd>
@@ -358,13 +365,13 @@ This function outputs a <span class="pkg">ggplot2</span> graphic of
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='clonecorrect.html'>clonecorrect</a></code>, 
+    <div class='dont-index'><p><code><a href='clonecorrect.html'>clonecorrect</a></code>, 
   <code><a href='poppr.all.html'>poppr.all</a></code>, 
   <code><a href='ia.html'>ia</a></code>, 
   <code><a href='missingno.html'>missingno</a></code>, 
-  <code>mlg</code>, 
+  <code><a href='mlg.html'>mlg</a></code>, 
   <code><a href='diversity_stats.html'>diversity_stats</a></code>,
-  <code><a href='diversity_ci.html'>diversity_ci</a></code></p>
+  <code><a href='diversity_ci.html'>diversity_ci</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -503,6 +510,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

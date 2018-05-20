@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Round Robin Allele Frequencies — rraf" />
 
 <meta property="og:description" content="This function utilizes rrmlg to calculate multilocus genotypes 
@@ -57,7 +60,7 @@ round-robin allele frequencies used for pgen and psex." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -100,6 +103,7 @@ round-robin allele frequencies used for pgen and psex." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,18 +111,21 @@ round-robin allele frequencies used for pgen and psex." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Round Robin Allele Frequencies</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/round_robin.R'><code>R/round_robin.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/round_robin.R'><code>R/round_robin.R</code></a></small>
+    <div class="hidden name"><code>rraf.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function utilizes <code><a href='rrmlg.html'>rrmlg</a></code> to calculate multilocus genotypes 
 and then subsets each locus by the resulting MLGs to calculate the 
 round-robin allele frequencies used for pgen and psex.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>rraf</span>(<span class='no'>gid</span>, <span class='kw'>pop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>res</span> <span class='kw'>=</span> <span class='st'>"list"</span>, <span class='kw'>by_pop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>correction</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='no'>...</span>)</pre>
@@ -199,8 +206,8 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='rrmlg.html'>rrmlg</a></code>, <code><a href='pgen.html'>pgen</a></code>, <code><a href='psex.html'>psex</a></code>,
- <code><a href='rare_allele_correction.html'>rare_allele_correction</a></code></p>
+    <div class='dont-index'><p><code><a href='rrmlg.html'>rrmlg</a></code>, <code><a href='pgen.html'>pgen</a></code>, <code><a href='psex.html'>psex</a></code>,
+ <code><a href='rare_allele_correction.html'>rare_allele_correction</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -313,6 +320,8 @@ Zhian N. Kamvar, Jonah Brooks, Stacy A. Krueger-Hadfield, Erik Sotka
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Check for samples that are incomparable due to missing data — incomp" />
 
 <meta property="og:description" content="If two samples share no loci typed in common, they are incomparable and will
@@ -58,7 +61,7 @@ how many other samples these are incomparable with." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +104,7 @@ how many other samples these are incomparable with." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,19 +112,22 @@ how many other samples these are incomparable with." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Check for samples that are incomparable due to missing data</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/check_data.R'><code>R/check_data.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/check_data.R'><code>R/check_data.R</code></a></small>
+    <div class="hidden name"><code>incomp.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>If two samples share no loci typed in common, they are incomparable and will
 produce missing data in a distance matrix, which could lead to problems with
 further analyses. This function finds these samples and returns a matrix of
 how many other samples these are incomparable with.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>incomp</span>(<span class='no'>gid</span>)</pre>
     
@@ -186,6 +193,8 @@ how many other samples these are incomparable with.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

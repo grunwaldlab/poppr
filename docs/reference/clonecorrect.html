@@ -26,6 +26,9 @@ object. — clonecorrect • poppr</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Remove potential bias caused by cloned genotypes in genind or genclone 
 object. — clonecorrect" />
 
@@ -58,7 +61,7 @@ population strata." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +104,7 @@ population strata." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,18 +112,21 @@ population strata." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Remove potential bias caused by cloned genotypes in genind or genclone 
 object.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/data_subset.r'><code>R/data_subset.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/data_subset.r'><code>R/data_subset.r</code></a></small>
+    <div class="hidden name"><code>clonecorrect.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function removes any duplicated multilocus genotypes from any specified 
 population strata.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>clonecorrect</span>(<span class='no'>pop</span>, <span class='kw'>strata</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>combine</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
@@ -173,13 +180,13 @@ can set <code>keep = c(1,3)</code>.</p></td>
 <span class='fu'>strata</span>(<span class='no'>Aeut</span>) <span class='kw'>&lt;-</span> <span class='fu'>other</span>(<span class='no'>Aeut</span>)$<span class='no'>population_hierarchy</span>[-<span class='fl'>1</span>]
 
 <span class='co'># Check the number of multilocus genotypes</span>
-<span class='fu'>mlg</span>(<span class='no'>Aeut</span>)</div><div class='output co'>#&gt; #############################
+<span class='fu'><a href='mlg.html'>mlg</a></span>(<span class='no'>Aeut</span>)</div><div class='output co'>#&gt; #############################
 #&gt; # Number of Individuals:  187 
 #&gt; # Number of MLG:  119 
 #&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span>(<span class='no'>Aeut</span>)</div><div class='output co'>#&gt; [1] "Athena"     "Mt. Vernon"</div><div class='input'>
 <span class='co'># Clone correct at the population level.</span>
 <span class='no'>Aeut.pop</span> <span class='kw'>&lt;-</span> <span class='fu'>clonecorrect</span>(<span class='no'>Aeut</span>, <span class='kw'>strata</span> <span class='kw'>=</span>  ~<span class='no'>Pop</span>)
-<span class='fu'>mlg</span>(<span class='no'>Aeut.pop</span>)</div><div class='output co'>#&gt; #############################
+<span class='fu'><a href='mlg.html'>mlg</a></span>(<span class='no'>Aeut.pop</span>)</div><div class='output co'>#&gt; #############################
 #&gt; # Number of Individuals:  120 
 #&gt; # Number of MLG:  119 
 #&gt; #############################</div><div class='output co'>#&gt; [1] 119</div><div class='input'><span class='fu'>popNames</span>(<span class='no'>Aeut.pop</span>)</div><div class='output co'>#&gt; [1] "Athena"     "Mt. Vernon"</div><div class='input'>
@@ -187,12 +194,12 @@ can set <code>keep = c(1,3)</code>.</p></td>
 <span class='co'># Clone correct at the subpopulation level with respect to population and</span>
 <span class='co'># combine.</span>
 <span class='no'>Aeut.subpop</span> <span class='kw'>&lt;-</span> <span class='fu'>clonecorrect</span>(<span class='no'>Aeut</span>, <span class='kw'>strata</span> <span class='kw'>=</span> ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>, <span class='kw'>combine</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='fu'>mlg</span>(<span class='no'>Aeut.subpop</span>)
+<span class='fu'><a href='mlg.html'>mlg</a></span>(<span class='no'>Aeut.subpop</span>)
 <span class='fu'>popNames</span>(<span class='no'>Aeut.subpop</span>)
 
 <span class='co'># Do the same, but set to the population level.</span>
 <span class='no'>Aeut.subpop2</span> <span class='kw'>&lt;-</span> <span class='fu'>clonecorrect</span>(<span class='no'>Aeut</span>, <span class='kw'>strata</span> <span class='kw'>=</span> ~<span class='no'>Pop</span>/<span class='no'>Subpop</span>, <span class='kw'>keep</span><span class='kw'>=</span><span class='fl'>1</span>)
-<span class='fu'>mlg</span>(<span class='no'>Aeut.subpop2</span>)
+<span class='fu'><a href='mlg.html'>mlg</a></span>(<span class='no'>Aeut.subpop2</span>)
 <span class='fu'>popNames</span>(<span class='no'>Aeut.subpop2</span>)
 
 <span class='co'># LOAD H3N2 dataset</span>
@@ -252,6 +259,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

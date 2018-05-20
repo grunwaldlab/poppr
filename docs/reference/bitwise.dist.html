@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate a dissimilarity distance matrix for SNP data. — bitwise.dist • poppr</title>
+<title>Calculate dissimilarity or Euclidean distance for genlight objects — bitwise.dist • poppr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,11 +25,13 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Calculate a dissimilarity distance matrix for SNP data. — bitwise.dist" />
 
-<meta property="og:description" content="This function performs the same task as diss.dist, calculating 
-the fraction or number of different alleles between two genlight or snpclone
-objects." />
+
+
+<meta property="og:title" content="Calculate dissimilarity or Euclidean distance for genlight objects — bitwise.dist" />
+
+<meta property="og:description" content="This function calculates both dissimilarity and Euclidean distances for
+genlight or snpclone objects." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -57,7 +59,7 @@ objects." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -100,6 +102,7 @@ objects." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,63 +110,81 @@ objects." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate a dissimilarity distance matrix for SNP data.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <h1>Calculate dissimilarity or Euclidean distance for genlight objects</h1>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <div class="hidden name"><code>bitwise.dist.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>This function performs the same task as <code><a href='diss.dist.html'>diss.dist</a></code>, calculating 
-the fraction or number of different alleles between two genlight or snpclone
-objects.</p>
+    <p>This function calculates both dissimilarity and Euclidean distances for
+genlight or <a href='genclone-class.html'>snpclone</a> objects.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>mat</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>missing_match</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
+  <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>0L</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code>genlight</code>, <code>genind</code>,
-<code><a href='genclone-class.html'>genclone</a></code>, or <code><a href='genclone-class.html'>snpclone</a></code> object.</p></td>
+      <td><p>a genlight or <a href='genclone-class.html'>snpclone</a> object.</p></td>
     </tr>
     <tr>
       <th>percent</th>
-      <td><p><code>logical</code>. Should the distance be represented from 0 to 
-1? Default set to <code>TRUE</code>. <code>FALSE</code> will return the distance 
-represented as integers from 1 to n where n is the number of loci.</p></td>
+      <td><p><code>logical</code>. Should the distance be represented from 0 to
+1? Default set to <code>TRUE</code>. <code>FALSE</code> will return the distance
+represented as integers from 1 to n where n is the number of loci.
+This option has no effect if <code>euclidean = TRUE</code></p></td>
     </tr>
     <tr>
       <th>mat</th>
-      <td><p><code>logical</code>. Return a matrix object. Default set to 
+      <td><p><code>logical</code>. Return a matrix object. Default set to
 <code>FALSE</code>, returning a dist object. <code>TRUE</code> returns a matrix object.</p></td>
     </tr>
     <tr>
       <th>missing_match</th>
       <td><p><code>logical</code>. Determines whether two samples differing
-by missing data in a location should be counted as matching at that 
-location. Default set to <code>TRUE</code>, which forces missing data to match 
+by missing data in a location should be counted as matching at that
+location. Default set to <code>TRUE</code>, which forces missing data to match
 with anything. <code>FALSE</code> forces missing data to not match with any other
 information, <strong>including other missing data</strong>.</p></td>
+    </tr>
+    <tr>
+      <th>scale_missing</th>
+      <td><p>A logical. If <code>TRUE</code>, comparisons with missing
+data is scaled up proportionally to the number of columns used by
+multiplying the value by <code>m / (m - x)</code> where m is the number of
+loci and x is the number of missing sites. This option matches the behavior
+of base R's <code>dist()</code> function.
+Defaults to <code>FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>euclidean</th>
+      <td><p><code>logical</code>. if <code>TRUE</code>, the Euclidean distance will
+be calculated.</p></td>
     </tr>
     <tr>
       <th>differences_only</th>
       <td><p><code>logical</code>. When <code>differences_only = TRUE</code>,
 the output will reflect the number of different loci. The default setting,
 <code>differences_only = FALSE</code>, reflects the number of different alleles.
-Note: this has no effect on haploid organisms since 1 locus = 1 allele.</p></td>
+Note: this has no effect on haploid organisms since 1 locus = 1 allele.
+This option is NOT recommended.</p></td>
     </tr>
     <tr>
       <th>threads</th>
-      <td><p>The maximum number of parallel threads to be used within this 
-function. A value of 0 (default) will attempt to use as many threads as 
-there are available cores/CPUs. In most cases this is ideal. A value of 1 
-will force the function to run serially, which may increase stability on 
-some systems. Other values may be specified, but should be used with 
+      <td><p>The maximum number of parallel threads to be used within this
+function. A value of 0 (default) will attempt to use as many threads as
+there are available cores/CPUs. In most cases this is ideal. A value of 1
+will force the function to run serially, which may increase stability on
+some systems. Other values may be specified, but should be used with
 caution.</p></td>
     </tr>
     </table>
@@ -174,22 +195,31 @@ caution.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The distance calculated here is quite simple and goes by many names,
-  depending on its application. The most familiar name might be the Hamming 
-  distance, or the number of differences between two strings.</p>
+    <p>The default distance calculated here is quite simple and goes by
+many names depending on its application. The most familiar name might be
+the Hamming distance, or the number of differences between two strings.</p>
+<p>As of poppr version 2.8.0, this function now also calculates Euclidean
+distance and is considerably faster and more memory-efficient than the
+standard <code>dist()</code> function.</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>If the user supplies a <code>genind</code> or <code>genclone</code> object,
-  <code><a href='genetic_distance.html'>prevosti.dist</a></code> will be used for calculation.</p>
+    <p>This function is optimized for genlight and
+<a href='genclone-class.html'>snpclone</a> objects. This does not mean that it is a
+catch-all optimization for SNP data. Three assumptions must be met for this
+function to work:</p><ol>
+<li><p>SNPs are bi-allelic</p></li>
+<li><p>Samples are haploid or diploid</p></li>
+<li><p>All samples have the same ploidy</p></li>
+</ol>
+    <p>If the user supplies a genind or
+<a href='genclone-class.html'>genclone</a> object, <code><a href='genetic_distance.html'>prevosti.dist()</a></code> will be used for
+calculation.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='diss.dist.html'>diss.dist</a></code>,
-   <code><a href='genclone-class.html'>snpclone</a></code>,
-   <code><a href='http://www.rdocumentation.org/packages/adegenet/topics/genlight'>genlight</a></code>,
-   <code><a href='win.ia.html'>win.ia</a></code>, 
-   <code><a href='samp.ia.html'>samp.ia</a></code></p>
+    <div class='dont-index'><p><code><a href='diss.dist.html'>diss.dist()</a></code>, <a href='genclone-class.html'>snpclone</a>,
+genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.ia.html'>samp.ia()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -197,7 +227,7 @@ caution.</p></td>
 <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>glSim</span>(<span class='kw'>n.ind</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>n.snp.nonstruc</span> <span class='kw'>=</span> <span class='fl'>5e2</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>5e2</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 <span class='no'>x</span></div><div class='output co'>#&gt;  /// GENLIGHT OBJECT /////////
 #&gt; 
-#&gt;  // 10 genotypes,  1,000 binary SNPs, size: 19.6 Kb
+#&gt;  // 10 genotypes,  1,000 binary SNPs, size: 20.6 Kb
 #&gt;  0 (0 %) missing data
 #&gt; 
 #&gt;  // Basic content
@@ -207,9 +237,9 @@ caution.</p></td>
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 3-7)
 #&gt;    @other: a list containing: ancestral.pops 
-#&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles (finer measure, usually the most sensible)</span>
-<span class='fu'>system.time</span>(<span class='no'>xd</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.003   0.001   0.049 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
+#&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles</span>
+<span class='fu'>system.time</span>(<span class='no'>xd</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   0.001   0.000   0.001 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
 #&gt; 2  0.2105                                                        
 #&gt; 3  0.2195 0.2180                                                 
 #&gt; 4  0.3950 0.3825 0.3855                                          
@@ -219,18 +249,49 @@ caution.</p></td>
 #&gt; 8  0.3955 0.3830 0.3970 0.2245 0.1980 0.2255 0.2190              
 #&gt; 9  0.3770 0.3805 0.3945 0.2200 0.2105 0.2210 0.2215 0.2155       
 #&gt; 10 0.3980 0.3925 0.4005 0.2180 0.2035 0.2220 0.2185 0.2125 0.2140</div><div class='input'>
-<span class='co'># Assess fraction of different loci (coarse measure)</span>
-<span class='fu'>system.time</span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>differences_only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.044   0.001   0.043 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;        1     2     3     4     5     6     7     8     9
-#&gt; 2  0.375                                                
-#&gt; 3  0.394 0.385                                          
-#&gt; 4  0.564 0.546 0.547                                    
-#&gt; 5  0.575 0.551 0.544 0.378                              
-#&gt; 6  0.564 0.539 0.562 0.384 0.374                        
-#&gt; 7  0.563 0.563 0.551 0.391 0.366 0.413                  
-#&gt; 8  0.572 0.555 0.559 0.395 0.346 0.399 0.381            
-#&gt; 9  0.542 0.539 0.563 0.381 0.371 0.388 0.387 0.376      
-#&gt; 10 0.564 0.570 0.557 0.373 0.347 0.388 0.379 0.368 0.375</div></pre>
+<span class='co'># Calculate Euclidean distance</span>
+<span class='fu'>system.time</span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   0.001   0.000   0.000 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
+#&gt; 2  22.64950                                                               
+#&gt; 3  23.00000 23.19483                                                      
+#&gt; 4  35.24202 34.68429 34.91418                                             
+#&gt; 5  35.98611 35.27038 35.88872 23.43075                                    
+#&gt; 6  34.98571 35.14257 35.59494 23.87467 23.72762                           
+#&gt; 7  35.31289 35.01428 35.27038 24.02082 23.49468 24.59675                  
+#&gt; 8  35.05710 34.46738 35.55278 23.60085 22.27106 23.55844 23.49468         
+#&gt; 9  34.32200 34.71311 35.22783 23.62202 22.82542 23.45208 23.55844 23.25941
+#&gt; 10 35.49648 34.85685 35.90265 23.70654 22.95648 23.57965 23.51595 23.21637
+#&gt;           9
+#&gt; 2          
+#&gt; 3          
+#&gt; 4          
+#&gt; 5          
+#&gt; 6          
+#&gt; 7          
+#&gt; 8          
+#&gt; 9          
+#&gt; 10 23.10844</div><div class='input'>
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># This function is more efficient in both memory and speed than [dist()] for</span>
+<span class='co'># calculating Euclidean distance on genlight objects. For example, we can</span>
+<span class='co'># observe a clear speed increase when we attempt a calculation on 100k SNPs</span>
+<span class='co'># with 10% missing data:</span>
+
+<span class='fu'>set.seed</span>(<span class='fl'>999</span>)
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fu'>sample</span>(<span class='fu'>c</span>(<span class='fl'>0</span>:<span class='fl'>2</span>, <span class='fl'>NA</span>),
+                     <span class='fl'>100000</span> * <span class='fl'>50</span>,
+                     <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                     <span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.3</span>, <span class='fl'>0.3</span>, <span class='fl'>0.3</span>, <span class='fl'>0.1</span>)),
+              <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>50</span>)
+<span class='no'>glite</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"genlight"</span>, <span class='no'>mat</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+
+<span class='co'># Default Euclidean distance </span>
+<span class='fu'>system.time</span>(<span class='fu'>dist</span>(<span class='no'>glite</span>))
+
+<span class='co'># Bitwise dist</span>
+<span class='fu'>system.time</span>(<span class='fu'>bitwise.dist</span>(<span class='no'>glite</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -266,6 +327,8 @@ Zhian N. Kamvar, Jonah C. Brooks
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Calculate Genetic Distance for a genind or genclone object. — nei.dist" />
 
 <meta property="og:description" content="These functions are modified from the function dist.genpop to
@@ -56,7 +59,7 @@ be applicable for distances between individuals." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -99,6 +102,7 @@ be applicable for distances between individuals." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -106,17 +110,20 @@ be applicable for distances between individuals." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate Genetic Distance for a genind or genclone object.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/distances.r'><code>R/distances.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/distances.r'><code>R/distances.r</code></a></small>
+    <div class="hidden name"><code>genetic_distance.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>These functions are modified from the function <a href='http://www.rdocumentation.org/packages/adegenet/topics/dist.genpop'>dist.genpop</a> to
 be applicable for distances between individuals.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>nei.dist</span>(<span class='no'>x</span>, <span class='kw'>warning</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
@@ -206,7 +213,7 @@ Elsevier Science B.V. 20, pp274-288.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='aboot.html'>aboot</a></code> <code><a href='diss.dist.html'>diss.dist</a></code> <code><a href='poppr.amova.html'>poppr.amova</a></code></p>
+    <div class='dont-index'><p><code><a href='aboot.html'>aboot</a></code> <code><a href='diss.dist.html'>diss.dist</a></code> <code><a href='poppr.amova.html'>poppr.amova</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -214,7 +221,7 @@ Elsevier Science B.V. 20, pp274-288.</p>
 <span class='fu'>data</span>(<span class='no'>nancycats</span>)
 (<span class='no'>nan9</span>   <span class='kw'>&lt;-</span> <span class='fu'><a href='popsub.html'>popsub</a></span>(<span class='no'>nancycats</span>, <span class='fl'>9</span>))</div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
-#&gt;  // 9 individuals; 9 loci; 43 alleles; size: 15.3 Kb
+#&gt;  // 9 individuals; 9 loci; 43 alleles; size: 16.8 Kb
 #&gt; 
 #&gt;  // Basic content
 #&gt;    @tab:  9 x 43 matrix of allele counts
@@ -354,6 +361,8 @@ Daniel Chessel (ade4)
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

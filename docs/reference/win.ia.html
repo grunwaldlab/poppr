@@ -25,9 +25,12 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Calculate windows of the index of association for genlight objects. — win.ia" />
 
-<meta property="og:description" content="Genlight objects can contain millions of loci. Since it does not make much 
+<meta property="og:description" content="Genlight objects can contain millions of loci. Since it does not make much
 sense to calculate the index of association over that many loci, this
 function will scan windows across the loci positions and calculate the index
 of association." />
@@ -58,7 +61,7 @@ of association." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +104,7 @@ of association." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,29 +112,32 @@ of association." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate windows of the index of association for genlight objects.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bitwise.r'><code>R/bitwise.r</code></a></small>
+    <div class="hidden name"><code>win.ia.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>Genlight objects can contain millions of loci. Since it does not make much 
+    <p>Genlight objects can contain millions of loci. Since it does not make much
 sense to calculate the index of association over that many loci, this
 function will scan windows across the loci positions and calculate the index
 of association.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>win.ia</span>(<span class='no'>x</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='fl'>100L</span>, <span class='kw'>min.snps</span> <span class='kw'>=</span> <span class='fl'>3L</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>chromosome_buffer</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>name_window</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>chromosome_buffer</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a <code>genlight</code> or <code><a href='genclone-class.html'>snpclone</a></code> object.</p></td>
+      <td><p>a genlight or <a href='genclone-class.html'>snpclone</a> object.</p></td>
     </tr>
     <tr>
       <th>window</th>
@@ -138,26 +145,31 @@ of association.</p>
     </tr>
     <tr>
       <th>min.snps</th>
-      <td><p>an integer specifying the minimum number of snps allowed per 
+      <td><p>an integer specifying the minimum number of snps allowed per
 window. If a window does not meet this criteria, the value will return as
-NA.</p></td>
+<code>NA</code>.</p></td>
     </tr>
     <tr>
       <th>threads</th>
-      <td><p>The maximum number of parallel threads to be used within this 
-function. A value of 0 (default) will attempt to use as many threads as
-there are available cores/CPUs. In most cases this is ideal. A value of 1
-will force the function to run serially, which may increase stability on
-some systems. Other values may be specified, but should be used with
-caution.</p></td>
+      <td><p>The maximum number of parallel threads to be used within this
+function. Defaults to 1 thread, in which the function will run serially. A
+value of 0 will attempt to use as many threads as there are available
+cores/CPUs. In most cases this is ideal for speed. Note: this option is
+passed to <code><a href='bitwise.ia.html'>bitwise.ia()</a></code> and does not parallelize the windowization process.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
-      <td><p>if <code>FALSE</code>, a progress bar will be printed to the screen.</p></td>
+      <td><p>if <code>FALSE</code> (default), a progress bar will be printed to the screen.</p></td>
+    </tr>
+    <tr>
+      <th>name_window</th>
+      <td><p>if <code>TRUE</code> (default), the result vector will be named with
+the terminal position of the window. In the case where several chromosomes
+are represented, the position will be appended using a period/full stop.</p></td>
     </tr>
     <tr>
       <th>chromosome_buffer</th>
-      <td><p>if <code>TRUE</code> (default), buffers will be placed 
+      <td><p><em>DEPRECATED</em> if <code>TRUE</code> (default), buffers will be placed
 between adjacent chromosomal positions to prevent windows from spanning two
 chromosomes.</p></td>
     </tr>
@@ -165,21 +177,17 @@ chromosomes.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Index of association representing the samples in this genlight
-  object.</p>
+    <p>A value of the standardized index of association for all windows in
+each chromosome.</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>this will calculate the standardized index of association from Agapow
-2001. See <code><a href='ia.html'>ia</a></code> for details.</p>
+and Burt, 2001. See <code><a href='ia.html'>ia()</a></code> for details.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/adegenet/topics/genlight'>genlight</a></code>,
-   <code><a href='genclone-class.html'>snpclone</a></code>,
-   <code><a href='samp.ia.html'>samp.ia</a></code>,
-   <code><a href='ia.html'>ia</a></code>,
-   <code><a href='bitwise.dist.html'>bitwise.dist</a></code></p>
+    <div class='dont-index'><p>genlight, <a href='genclone-class.html'>snpclone</a>, <code><a href='ia.html'>ia()</a></code>, <code><a href='samp.ia.html'>samp.ia()</a></code>, <code><a href='bitwise.dist.html'>bitwise.dist()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -207,23 +215,24 @@ chromosomes.</p></td>
 
 <span class='co'># Converting chromosomal coordinates to tidy data</span>
 <span class='fu'>library</span>(<span class='st'>"dplyr"</span>)
+<span class='fu'>library</span>(<span class='st'>"tidyr"</span>)
 <span class='no'>res_tidy</span> <span class='kw'>&lt;-</span> <span class='no'>res</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(<span class='kw'>rd</span> <span class='kw'>=</span> <span class='no'>.</span>, <span class='kw'>chromosome</span> <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>.</span>)) <span class='kw'>%&gt;%</span> <span class='co'># create two column data frame</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>chromosome</span> <span class='kw'>!=</span> <span class='st'>""</span>) <span class='kw'>%&gt;%</span>                  <span class='co'># filter out null chromosomes</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>chromosome</span>) <span class='kw'>%&gt;%</span>                      <span class='co'># group data by chromosome</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/ranking.html'>row_number</a></span>()) <span class='kw'>%&gt;%</span>             <span class='co'># windows by chromosome</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>ungroup</a></span>(<span class='no'>chromosome</span>) <span class='kw'>%&gt;%</span>                       <span class='co'># ungroup and reorder</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>chromosome</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='no'>chromosome</span>, <span class='fu'>unique</span>(<span class='no'>chromosome</span>)))
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/tidyr/topics/separate'>separate</a></span>(<span class='no'>chromosome</span>, <span class='kw'>into</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"chromosome"</span>, <span class='st'>"position"</span>)) <span class='kw'>%&gt;%</span> <span class='co'># get the position info</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>position</span> <span class='kw'>=</span> <span class='fu'>as.integer</span>(<span class='no'>position</span>)) <span class='kw'>%&gt;%</span> <span class='co'># force position as integers</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>chromosome</span> <span class='kw'>=</span> <span class='fu'>factor</span>(<span class='no'>chromosome</span>, <span class='fu'>unique</span>(<span class='no'>chromosome</span>))) <span class='co'># force order chromosomes</span>
 <span class='no'>res_tidy</span>
 
 <span class='co'># Plotting with ggplot2</span>
 <span class='fu'>library</span>(<span class='st'>"ggplot2"</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>res_tidy</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>rd</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>chromosome</span>)) +
+<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>res_tidy</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>position</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>rd</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>chromosome</span>)) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>() +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>chromosome</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1</span>) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>ylab</a></span>(<span class='fu'>expression</span>(<span class='fu'>bar</span>(<span class='no'>r</span>)[<span class='no'>d</span>])) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>xlab</a></span>(<span class='st'>"window (100bp)"</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>)
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>xlab</a></span>(<span class='st'>"terminal position of sliding window"</span>) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>labs</a></span>(<span class='kw'>caption</span> <span class='kw'>=</span> <span class='st'>"window size: 100bp"</span>) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>axis.text.x</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/element'>element_text</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> <span class='fl'>90</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>vjust</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"top"</span>)
 
 <span class='co'># }</span><div class='input'>
 </div></pre>
@@ -260,6 +269,8 @@ Zhian N. Kamvar, Jonah C. Brooks
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

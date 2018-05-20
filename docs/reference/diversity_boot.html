@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Perform a bootstrap analysis on diversity statistics — diversity_boot" />
 
 <meta property="og:description" content="This function is intended to perform bootstrap statistics on a matrix of
@@ -58,7 +61,7 @@ to have a downward bias. See the details for more information." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +104,7 @@ to have a downward bias. See the details for more information." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,19 +112,22 @@ to have a downward bias. See the details for more information." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform a bootstrap analysis on diversity statistics</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bootstraping.R'><code>R/bootstraping.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/bootstraping.R'><code>R/bootstraping.R</code></a></small>
+    <div class="hidden name"><code>diversity_boot.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function is intended to perform bootstrap statistics on a matrix of
 multilocus genotype counts in different populations. Results from this 
 function should be interpreted carefully as the default statistics are known
 to have a downward bias. See the details for more information.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='no'>n</span>, <span class='kw'>n.boot</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>n.rare</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>H</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>E5</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
@@ -209,10 +216,10 @@ inverse Simpson's index).</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='diversity_stats.html'>diversity_stats</a></code> for basic statistic calculation, 
+    <div class='dont-index'><p><code><a href='diversity_stats.html'>diversity_stats</a></code> for basic statistic calculation, 
    <code><a href='diversity_ci.html'>diversity_ci</a></code> for confidence intervals and plotting, and 
    <code><a href='poppr.html'>poppr</a></code>. For bootstrap sampling:
-   <code><a href='http://www.rdocumentation.org/packages/stats/topics/Multinom'>rmultinom</a></code> <code><a href='http://www.rdocumentation.org/packages/boot/topics/boot'>boot</a></code></p>
+   <code><a href='http://www.rdocumentation.org/packages/stats/topics/Multinom'>rmultinom</a></code> <code><a href='http://www.rdocumentation.org/packages/boot/topics/boot'>boot</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -290,6 +297,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

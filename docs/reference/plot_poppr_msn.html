@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Plot minimum spanning networks produced in poppr. — plot_poppr_msn" />
 
 <meta property="og:description" content="This function allows you to take the output of poppr.msn and bruvo.msn and 
@@ -57,7 +60,7 @@ adjusting the palette and scale bar." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -100,6 +103,7 @@ adjusting the palette and scale bar." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,18 +111,21 @@ adjusting the palette and scale bar." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot minimum spanning networks produced in poppr.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/visualizations.r'><code>R/visualizations.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/visualizations.r'><code>R/visualizations.r</code></a></small>
+    <div class="hidden name"><code>plot_poppr_msn.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function allows you to take the output of poppr.msn and bruvo.msn and 
 customize the plot by labeling groups of individuals, size of nodes, and 
 adjusting the palette and scale bar.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>plot_poppr_msn</span>(<span class='no'>x</span>, <span class='no'>poppr_msn</span>, <span class='kw'>gscale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>mlg.compute</span> <span class='kw'>=</span> <span class='st'>"original"</span>, <span class='kw'>glim</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0.8</span>), <span class='kw'>gweight</span> <span class='kw'>=</span> <span class='fl'>1</span>,
@@ -321,9 +328,9 @@ bar. See details.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/igraph/topics/layout_nicely'>layout.auto</a></code> <code><a href='http://www.rdocumentation.org/packages/igraph/topics/plot.igraph'>plot.igraph</a></code>
+    <div class='dont-index'><p><code><a href='http://www.rdocumentation.org/packages/igraph/topics/layout_nicely'>layout.auto</a></code> <code><a href='http://www.rdocumentation.org/packages/igraph/topics/plot.igraph'>plot.igraph</a></code>
 <code><a href='poppr.msn.html'>poppr.msn</a></code> <code><a href='bruvo.msn.html'>bruvo.msn</a></code> <code><a href='greycurve.html'>greycurve</a></code>
-<code><a href='http://www.rdocumentation.org/packages/igraph/topics/delete_edges'>delete.edges</a></code> <code>palette</code></p>
+<code><a href='http://www.rdocumentation.org/packages/igraph/topics/delete_edges'>delete.edges</a></code> <code>palette</code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -333,16 +340,8 @@ bar. See details.</p></td>
 <span class='no'>amsn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='poppr.msn.html'>poppr.msn</a></span>(<span class='no'>Aeut</span>, <span class='no'>adist</span>, <span class='kw'>showplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># Default</span>
-<span class='fu'>library</span>(<span class='st'>"igraph"</span>) <span class='co'># To get all the layouts.</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘igraph’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:poppr’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    diversity</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    compare</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    decompose, spectrum</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    union</span></div><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>500</span>)
+<span class='fu'>library</span>(<span class='st'>"igraph"</span>) <span class='co'># To get all the layouts.</span>
+<span class='fu'>set.seed</span>(<span class='fl'>500</span>)
 <span class='fu'>plot_poppr_msn</span>(<span class='no'>Aeut</span>, <span class='no'>amsn</span>, <span class='kw'>gadj</span> <span class='kw'>=</span> <span class='fl'>15</span>)</div><div class='img'><img src='plot_poppr_msn-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div><span class='co'># NOT RUN {</span>
 <span class='co'># Different layouts (from igraph) can be used by supplying the function name.</span>
@@ -467,6 +466,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

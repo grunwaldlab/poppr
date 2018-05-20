@@ -1,3 +1,7 @@
+poppr 2.8.0.99
+===========
+
+
 poppr 2.8.0
 ===========
 
@@ -53,6 +57,9 @@ NEW FEATURES
 * `win.ia()` has a new argument `name_window`, which will give each element in 
   the result the designation of the terminal position of that window. Thanks to
   @MarisaMiller for the suggestion!
+
+* `pair.ia()` can now calculate p-values via permutations.
+   (See https://github.com/grunwaldlab/poppr/issues/180 for details)
 
 DOCUMENTATION
 -------------

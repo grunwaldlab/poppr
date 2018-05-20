@@ -25,11 +25,14 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Get a file name and path and store them in a list. — getfile" />
 
 <meta property="og:description" content="getfile is a convenience function that serves as a wrapper for the functions
-file.choose, file.path, and list.files. 
-If the user is working in a GUI environment, a window will pop up, allowing 
+file.choose(), file.path(), and list.files().
+If the user is working in a GUI environment, a window will pop up, allowing
 the user to choose a specified file regardless of path." />
 <meta name="twitter:card" content="summary" />
 
@@ -58,7 +61,7 @@ the user to choose a specified file regardless of path." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -101,6 +104,7 @@ the user to choose a specified file regardless of path." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -108,19 +112,22 @@ the user to choose a specified file regardless of path." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get a file name and path and store them in a list.</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/file_handling.r'><code>R/file_handling.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/file_handling.r'><code>R/file_handling.r</code></a></small>
+    <div class="hidden name"><code>getfile.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>getfile is a convenience function that serves as a wrapper for the functions
-<code>file.choose, file.path,</code> and <code>list.files</code>. 
-If the user is working in a GUI environment, a window will pop up, allowing 
+<code>file.choose()</code>, <code>file.path()</code>, and <code>list.files()</code>.
+If the user is working in a GUI environment, a window will pop up, allowing
 the user to choose a specified file regardless of path.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>getfile</span>(<span class='kw'>multi</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>combine</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
@@ -131,11 +138,11 @@ the user to choose a specified file regardless of path.</p>
       <th>multi</th>
       <td><p>this is an indicator to allow the user to store the names of
 multiple files found in the directory. This is useful in conjunction with
-<code><a href='poppr.all.html'>poppr.all</a></code>.</p></td>
+<code><a href='poppr.all.html'>poppr.all()</a></code>.</p></td>
     </tr>
     <tr>
       <th>pattern</th>
-      <td><p>a <code>regex</code> pattern for use while 
+      <td><p>a <code>regex()</code> pattern for use while
 <code>multi == TRUE</code>. This will grab all files matching this pattern.</p></td>
     </tr>
     <tr>
@@ -200,6 +207,8 @@ Zhian N. Kamvar
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="MLG definitions based on genetic distance — mlg.filter" />
 
 <meta property="og:description" content="Multilocus genotypes are initially defined by naive string matching, but this
@@ -59,7 +62,7 @@ genotyping error into their parent clusters." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
       </span>
     </div>
 
@@ -102,6 +105,7 @@ genotyping error into their parent clusters." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -109,13 +113,15 @@ genotyping error into their parent clusters." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>MLG definitions based on genetic distance</h1>
-    <small>Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/methods.r'><code>R/methods.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/grunwaldlab/poppr/blob/master/R/methods.r'><code>R/methods.r</code></a></small>
+    <div class="hidden name"><code>mlg.filter.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Multilocus genotypes are initially defined by naive string matching, but this
 definition does not take into account missing data or genotyping error,
@@ -123,6 +129,7 @@ casting these as unique genotypes. Defining multilocus genotypes by genetic
 distance allows you to incorporate genotypes that have missing data o
 genotyping error into their parent clusters.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>mlg.filter</span>(<span class='no'>pop</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"asis"</span>, <span class='kw'>memory</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>algorithm</span> <span class='kw'>=</span> <span class='st'>"farthest_neighbor"</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='st'>"diss.dist"</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
@@ -246,13 +253,13 @@ it in memory to further utilize mlg.filter.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='filter_stats.html'>filter_stats</a></code>, 
+    <div class='dont-index'><p><code><a href='filter_stats.html'>filter_stats</a></code>, 
   <code><a href='cutoff_predictor.html'>cutoff_predictor</a></code>, 
   <code><a href='mll-method.html'>mll</a></code>, 
   <code><a href='genclone-class.html'>genclone</a></code>, 
   <code><a href='genclone-class.html'>snpclone</a></code>, 
   <code><a href='diss.dist.html'>diss.dist</a></code>, 
-  <code><a href='bruvo.dist.html'>bruvo.dist</a></code></p>
+  <code><a href='bruvo.dist.html'>bruvo.dist</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -404,6 +411,8 @@ it in memory to further utilize mlg.filter.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>
