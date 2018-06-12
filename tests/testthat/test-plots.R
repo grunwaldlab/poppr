@@ -47,6 +47,12 @@ test_that("info_table plots ploidy for diploids", {
 	expect_equal(unique(np$data$Observed_Ploidy), c(NA, 2))
 })
 
+test_that("info_table also works on non-SSR data", {
+  skip_on_cran()
+  data("H3N2", package = "adegenet")
+  expect_failure(expect_error(info_table(H3N2[50:60, loc = 1:10], type = "ploidy")))
+})
+
 context("mlg.table plots")
 
 # mlg.table plots ---------------------------------------------------------

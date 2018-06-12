@@ -1548,7 +1548,12 @@ update_colors <- function(colorvec, lookup){
 # # none
 #==============================================================================#
 get_local_ploidy <- function(x){
-  if (any(as.numeric(unlist(x@all.names, use.names = FALSE)) == 0)){
+  # Microsatellite markers should have zero alleles filtered out. If there are
+  # missing alleles, then this indicates non-microsatellite alleles.
+  suppressWarnings({
+    microsat_test <- as.numeric(unlist(alleles(x), use.names = FALSE))
+  })
+  if (!anyNA(microsat_test) && any(microsat_test == 0)) {
     x <- recode_polyploids(x, newploidy = TRUE)    
   }
   tabx   <- tab(x)

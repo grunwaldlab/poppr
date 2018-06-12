@@ -1,6 +1,12 @@
 poppr 2.8.0.99
 ===========
 
+BUG FIX
+-------
+
+* An error that appeared in some AMOVA calls with genind objects with character-
+  based alleles was fixed 
+  (see https://github.com/grunwaldlab/poppr/issues/190 for details)
 
 poppr 2.8.0
 ===========
