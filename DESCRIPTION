@@ -56,10 +56,9 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    knitcitations,
     poweRlaw,
     cowplot,
     RClone
 License: GPL-2 | GPL-3
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.0
