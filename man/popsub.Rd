@@ -4,7 +4,8 @@
 \alias{popsub}
 \title{Subset data by population}
 \usage{
-popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
+popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL,
+  drop = TRUE)
 }
 \arguments{
 \item{gid}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},

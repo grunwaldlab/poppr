@@ -15,12 +15,12 @@
 \title{MLG definitions based on genetic distance}
 \usage{
 mlg.filter(pop, threshold = 0, missing = "asis", memory = FALSE,
-  algorithm = "farthest_neighbor", distance = "diss.dist", threads = 1L,
-  stats = "MLGs", ...)
+  algorithm = "farthest_neighbor", distance = "diss.dist",
+  threads = 1L, stats = "MLGs", ...)
 
 mlg.filter(pop, missing = "asis", memory = FALSE,
-  algorithm = "farthest_neighbor", distance = "diss.dist", threads = 1L,
-  ...) <- value
+  algorithm = "farthest_neighbor", distance = "diss.dist",
+  threads = 1L, ...) <- value
 }
 \arguments{
 \item{pop}{a \code{\linkS4class{genclone}}, \code{\linkS4class{snpclone}}, or

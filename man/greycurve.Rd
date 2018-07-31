@@ -4,8 +4,8 @@
 \alias{greycurve}
 \title{Display a greyscale gradient adjusted to specific parameters}
 \usage{
-greycurve(data = seq(0, 1, length = 1000), glim = c(0, 0.8), gadj = 3,
-  gweight = 1, scalebar = FALSE)
+greycurve(data = seq(0, 1, length = 1000), glim = c(0, 0.8),
+  gadj = 3, gweight = 1, scalebar = FALSE)
 }
 \arguments{
 \item{data}{a sequence of numbers to be converted to greyscale.}

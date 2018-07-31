@@ -4,7 +4,8 @@
 \alias{bitwise.ia}
 \title{Calculate the index of association between samples in a genlight object.}
 \usage{
-bitwise.ia(x, missing_match = TRUE, differences_only = FALSE, threads = 0)
+bitwise.ia(x, missing_match = TRUE, differences_only = FALSE,
+  threads = 0)
 }
 \arguments{
 \item{x}{a \link[=genlight-class]{genlight} or \link[=snpclone-class]{snpclone} object.}

@@ -13,8 +13,8 @@ ia(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
 pair.ia(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   high = "red", limits = NULL, index = "rbarD", method = 1L)
 
-resample.ia(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FALSE,
-  ...)
+resample.ia(gid, n = NULL, reps = 999, quiet = FALSE,
+  use_psex = FALSE, ...)
 
 jack.ia(gid, n = NULL, reps = 999, quiet = FALSE)
 }

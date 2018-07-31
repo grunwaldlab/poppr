@@ -5,8 +5,8 @@
 \title{Perform bootstrap statistics, calculate, and plot confidence intervals.}
 \usage{
 diversity_ci(tab, n = 1000, n.boot = 1L, ci = 95, total = TRUE,
-  rarefy = FALSE, n.rare = 10, plot = TRUE, raw = TRUE, center = TRUE,
-  ...)
+  rarefy = FALSE, n.rare = 10, plot = TRUE, raw = TRUE,
+  center = TRUE, ...)
 }
 \arguments{
 \item{tab}{a \code{\link{genind}}, \code{\link{genclone}},

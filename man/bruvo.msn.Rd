@@ -8,10 +8,10 @@ distance.}
 \usage{
 bruvo.msn(gid, replen = 1, add = TRUE, loss = TRUE,
   mlg.compute = "original", palette = topo.colors, sublist = "All",
-  blacklist = NULL, vertex.label = "MLG", gscale = TRUE, glim = c(0,
-  0.8), gadj = 3, gweight = 1, wscale = TRUE, showplot = TRUE,
-  include.ties = FALSE, threshold = NULL, clustering.algorithm = NULL,
-  ...)
+  blacklist = NULL, vertex.label = "MLG", gscale = TRUE,
+  glim = c(0, 0.8), gadj = 3, gweight = 1, wscale = TRUE,
+  showplot = TRUE, include.ties = FALSE, threshold = NULL,
+  clustering.algorithm = NULL, ...)
 }
 \arguments{
 \item{gid}{a \code{\link{genind}} or \code{\link{genclone}} object}

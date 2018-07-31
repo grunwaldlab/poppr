@@ -4,7 +4,8 @@
 \alias{diversity_stats}
 \title{Produce a table of diversity statistics}
 \usage{
-diversity_stats(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...)
+diversity_stats(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE,
+  ...)
 }
 \arguments{
 \item{z}{a table of integers representing counts of MLGs (columns) per 

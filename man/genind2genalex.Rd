@@ -5,8 +5,8 @@
 \title{Export data from genind objects to genalex formatted *.csv files.}
 \usage{
 genind2genalex(gid, filename = "", overwrite = FALSE, quiet = FALSE,
-  pop = NULL, allstrata = TRUE, geo = FALSE, geodf = "xy", sep = ",",
-  sequence = FALSE)
+  pop = NULL, allstrata = TRUE, geo = FALSE, geodf = "xy",
+  sep = ",", sequence = FALSE)
 }
 \arguments{
 \item{gid}{a \linkS4class{genclone} or \linkS4class{genind}

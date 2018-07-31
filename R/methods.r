@@ -597,7 +597,6 @@ setMethod(
 #' @return a string containing ploidy levels with counts for all samples
 #' @noRd
 #'
-#' @examples
 multiploid_string <- function(x, ploid) {
   ploid  <- paste(ploid, paste0("(", table(x@ploidy), ")"))
   ploid1 <- paste0(ploid[-length(ploid)], collapse = ", ")
