@@ -77,9 +77,6 @@ test_that("mlg.table produces barplots", {
 	expect_identical(ptb$data, ptc$data)
 	expect_false(identical(ptb$data, pt$data))
 	
-	expect_identical(pt$mapping$x, ptb$mapping$x)
-	expect_false(identical(ptc$mapping$x, ptb$mapping$x))
-	
 	expect_output(print(pt$layers), "geom_bar")
 })
 
@@ -167,7 +164,7 @@ test_that("ia produces histograms", {
 	expect_is(pres, "popprtable")
 	expect_output(print(pres), "nancy")
 
-	if (ggversion <= oldgg){
+	if (ggversion <= oldgg) {
 	  expect_output(print(iaplot$layers[[1]]), "geom_histogram")
 	} else {
 	  expect_output(print(iaplot$layers[[1]]), "geom_bar")
