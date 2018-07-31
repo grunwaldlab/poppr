@@ -20,10 +20,6 @@ vignette: >
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, tidy = FALSE)
 knitr::opts_chunk$set(fig.align = "center", fig.show = 'asis')
 knitr::opts_knit$set(eval.after = 'fig.cap')
-library("knitcitations")
-cite_options(citation_format = "pandoc", max.names = 3, style = "html", 
-             hyperlink = "to.doc")
-bib <- read.bibtex("the_bibliography.bib")
 ```
 
 ```{r poppr_funk, eval = TRUE, echo = FALSE}

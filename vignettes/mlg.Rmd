@@ -18,10 +18,6 @@ vignette: >
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, tidy = FALSE)
 knitr::opts_chunk$set(fig.align = "center", fig.show = 'asis')
-library("knitcitations")
-cite_options(citation_format = "pandoc", max.names = 3, style = "html",
-             hyperlink = "to.doc")
-bib <- read.bibtex("the_bibliography.bib")
 ```
 
 ----
@@ -107,7 +103,7 @@ multilocus genotype definitions in different data sets.
 
 This is the default way *poppr* calculates multilocus genotypes. You see it
 immediately when you load a genclone object. Let's use the example `monpop` from
-`r citep(bib["everhart2014finescale"])`. First, we need to reset the data to
+[@everhart2014finescale]. First, we need to reset the data to
 our original MLGs.
 
 ```{r}
@@ -122,7 +118,7 @@ are constructed.
 The naïve definition simply takes strings of alleles and compares them for
 equality. This method is quick and easily interpretable, but means that things
 like genotyping error, hyper-variable loci, and missing data all contribute to a
-unique genotype that might not be truly unique `r citep(bib["kamvar2015novel"])`.
+unique genotype that might not be truly unique [@kamvar2015novel].
 
 To give an example, let's imagine that we have five samples with alleles typed
 at two loci.
@@ -347,7 +343,7 @@ x
 
 The safest way, perhaps, is to use a function defined in *poppr*. For example,
 we'll use Bruvo's distance since it takes into account the real value of the
-alleles `r citep(bib["Bruvo:2004"])`.
+alleles [@Bruvo:2004].
 
 > The arguments to your distance function will be stored in the object as well!
 
@@ -371,7 +367,7 @@ mll(x) # original
 ### Tie breakers (algorithms)
 
 Underlying `mlg.filter` are three algorithms that decide what genotypes go
-together `r citep(bib["kamvar2015novel"])`:
+together [@kamvar2015novel]:
 
  - nearest neighbor
  - farthest neighbor (default)
@@ -386,7 +382,7 @@ the biology of your organism.
 
 To help visualize this, there is the function `filter_stats()`, which will plot
 the output of the filtering algorithm. For simplicity, we will use the `Pinf`
-data set representing *Phytophthora infestans* samples from Mexico and South America `r citep(bib["goss2009population"])`.
+data set representing *Phytophthora infestans* samples from Mexico and South America [@goss2009population].
 
 ```{r plot_replen}
 data(Pinf)
@@ -410,7 +406,7 @@ which two individuals would be considered from different clonal lineages**.
 
 One method described in the literature of choosing a threshold is to look for an
 initial, small peak in the histogram of pairwise genetic distances and set the
-threshold to be between that peak and the larger peak `r citep(bib[c("arnaud2007standardizing", "bailleul2016rclone")])`. 
+threshold to be between that peak and the larger peak `[@arnaud2007standardizing, @bailleul2016rclone]. 
 This initial peak likely represents clones differentiated by a small set of
 random mutations. You can see this in the figure above at a threshold of ~0.11
 for the "farthest neighbor" algorithm.
@@ -440,7 +436,7 @@ Pinf
 > applies to your data. This function WILL give you an answer whether or not one
 > truely exists. Additionally, For diploid organisms, another method of choosing a
 > threshold is available in the **RClone** package that involves simulating
-> outcrossing and inbreeding events `r citep(bib["bailleul2016rclone"])`.
+> outcrossing and inbreeding events [@bailleul2016rclone].
 
 ## Custom ("custom")
 
@@ -504,7 +500,7 @@ be replicated by using the function `diversity_stats()`. This function
 calculates diversity statistics based off of a table of multilocus genotypes.
 Let's analyze the diversity of the peach brown rot pathogen, *Monilinia
 fructicola*, structured by Symptom (Fruit Rot:FR and Blossom Blight:BB) and Year
-`r citep(bib["everhart2014finescale"])`. Let's first look at the distribution of
+[@everhart2014finescale]. Let's first look at the distribution of
 multilocus genotypes:
 
 ```{r}
@@ -516,7 +512,7 @@ montab <- mlg.table(monpop, strata = ~Symptom/Year)
 We can see from these plots that the Fruit Rot (FR) have a lot more clones in
 the canopies than Blossom Blight (BB). This makes biological sense since Fruit
 Rot infections are clonally propagated, whereas Blossom Blight infections are
-from sexual propagules `r citep(bib["everhart2014finescale"])`. Let's look at
+from sexual propagules [@everhart2014finescale]. Let's look at
 the diversity metrics.
 
 ## Basic Statistics
@@ -567,7 +563,7 @@ myCF <- function(x){
 
 You can use filtered or custom MLGs to compare diversity. Here, I'm filtering
 genotypes in `monpop` that are different by only a single mutational step
-`r citep(bib["Bruvo:2004"])`.
+[@Bruvo:2004].
 
 > One mutational step for a single allele in Bruvo's distance is equivalent to
 > 0.5, so a single mutational step for a haploid organism with 13 loci is 0.5/13.
