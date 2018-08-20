@@ -8,7 +8,7 @@ diversity_stats(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE,
   ...)
 }
 \arguments{
-\item{z}{a table of integers representing counts of MLGs (columns) per 
+\item{z}{a table of integers representing counts of MLGs (columns) per
 population (rows)}
 
 \item{H}{logical whether or not to calculate Shannon's index}
@@ -20,22 +20,22 @@ inverse Simpson's index).}
 
 \item{E5}{logical whether or not to calculate Evenness}
 
-\item{...}{any functions that can be calculated on a vector or matrix of 
+\item{...}{any functions that can be calculated on a vector or matrix of
 genotype counts.}
 }
 \value{
-a numeric matrix giving statistics (columns) for each population 
-  (rows).
+a numeric matrix giving statistics (columns) for each population
+(rows).
 }
 \description{
 Calculate diversity statistics on a matrix containing counts of multilocus
 genotypes per population.
 }
 \details{
-This function will calculate any diversity statistic for counts of 
-  multilocus genotypes per population. This does not count allelic diversity.
-  The calculations of H, G, and lambda are all performed by 
-  \code{\link[vegan]{diversity}}. E5 is calculated as \deqn{E_{5} = 
+This function will calculate any diversity statistic for counts of
+multilocus genotypes per population. This does not count allelic diversity.
+The calculations of H, G, and lambda are all performed by
+\code{\link[vegan:diversity]{vegan::diversity()}}. E5 is calculated as \deqn{E_{5} = 
   \frac{(1/\lambda) - 1}{e^{H} - 1}}{(G - 1)/(exp(H) - 1)}.
 }
 \examples{
@@ -70,8 +70,8 @@ diversity_stats(tab, B = Beta)
 }
 }
 \seealso{
-\code{\link{diversity_boot}} \code{\link{diversity_ci}}
-  \code{\link{poppr}}
+\code{\link[=diversity_boot]{diversity_boot()}} \code{\link[=diversity_ci]{diversity_ci()}}
+\code{\link[=poppr]{poppr()}}
 }
 \author{
 Zhian N. Kamvar

@@ -45,19 +45,19 @@
 #' Calculate a dendrogram with bootstrap support using any distance applicable 
 #' to genind or genclone objects.
 #' 
-#' @param x a \linkS4class{genind}, \linkS4class{genpop},
-#'   \linkS4class{genclone}, \linkS4class{genlight}, \linkS4class{snpclone} or
-#'   \link{matrix}, object.
+#' @param x a [genind-class][genind], [genpop-class][genpop],
+#'   [genclone-class][genclone], [genlight-class], [snpclone-class] or
+#'   \link{matrix} object.
 #'   
 #' @param strata a formula specifying the strata to be used to convert x to a
-#'   genclone object if x is a genind object. Defaults to NULL. See details.
+#'   genclone object if x is a genind object. Defaults to `NULL`. See details.
 #' 
 #' @param tree a text string or function that can calculate a tree from a 
 #'   distance matrix. Defaults to "upgma". Note that you must load the package 
 #'   with the function for it to work.
 #'   
 #' @param distance a character or function defining the distance to be applied 
-#'   to x. Defaults to \code{\link{nei.dist}}.
+#'   to x. Defaults to [nei.dist()].
 #'   
 #' @param sample An integer representing the number of bootstrap replicates 
 #'   Default is 100.
@@ -65,66 +65,74 @@
 #' @param cutoff An integer from 0 to 100 setting the cutoff value to return the
 #'   bootstrap values on the nodes. Default is 0.
 #'   
-#' @param showtree If \code{TRUE} (Default), a dendrogram will be plotted. If 
-#'   \code{FALSE}, nothing will be plotted.
+#' @param showtree If `TRUE` (Default), a dendrogram will be plotted. If 
+#'   `FALSE`, nothing will be plotted.
 #'   
-#' @param missing any method to be used by \code{\link{missingno}}: "mean" 
+#' @param missing any method to be used by [missingno()]: "mean" 
 #'   (default), "zero", "loci", "genotype", or "ignore".
 #'   
 #' @param mcutoff a value between 0 (default) and 1 defining the percentage of 
-#'   tolerable missing data if the \code{missing} parameter is set to "loci" or 
+#'   tolerable missing data if the `missing` parameter is set to "loci" or 
 #'   "genotype". This should only be set if the distance metric can handle 
 #'   missing data.
 #'   
-#' @param quiet if \code{FALSE} (default), a progress bar will be printed to 
+#' @param quiet if `FALSE` (default), a progress bar will be printed to 
 #'   screen.
 #'   
 #' @param root is the tree rooted? This is a parameter passed off to 
-#'   \code{\link[ape]{boot.phylo}}. If the \code{tree} parameter returns a 
-#'   rooted tree (like UPGMA), this should be \code{TRUE}, otherwise (like 
-#'   neighbor-joining), it should be false. When set to \code{NULL} (default), 
-#'   the tree is considered rooted if \code{\link[ape]{is.ultrametric}} is true.
+#'   [ape::boot.phylo()]. If the `tree` parameter returns a 
+#'   rooted tree (like UPGMA), this should be `TRUE`, otherwise (like 
+#'   neighbor-joining), it should be false. When set to `NULL` (default), 
+#'   the tree is considered rooted if [ape::is.ultrametric()] is true.
 #'   
 #' @param ... any parameters to be passed off to the distance method.
 #'   
-#' @return an object of class \code{\link[ape]{phylo}}.
+#' @return an object of class [ape::phylo()].
 #'   
-#' @details This function utilizes an internal class called 
-#'   \code{\linkS4class{bootgen}} that allows bootstrapping of objects that 
-#'   inherit the genind class. This is necessary due to the fact that columns in
+#' @details This function automates the process of bootstrapping genetic data to
+#'   create a dendrogram with bootstrap support on the nodes. It will randomly
+#'   sample with replacement the loci of a `gen` object or the columns of a 
+#'   numeric matrix, **assuming that all loci/columns are independent**. The 
+#'   process of randomly sampling `gen` objects with replacement is carried out
+#'   through the use of an internal class called 
+#'   [bootgen-class]. This is necessary due to the fact that columns in
 #'   the genind matrix are defined as alleles and are thus interrelated. This 
 #'   function will specifically bootstrap loci so that results are biologically 
 #'   relevant. With this function, the user can also define a custom distance to
 #'   be performed on the genind or genclone object.
 #'   
 #'   \subsection{the strata argument}{
-#'   There is an argument called \code{strata}. This argument is useful for when
-#'   you want to bootstrap by populations from a \code{\link[adegenet]{genind}}
+#'   There is an argument called `strata`. This argument is useful for when
+#'   you want to bootstrap by populations from a [adegenet::genind()]
 #'   object. When you specify strata, the genind object will be converted to
-#'   \code{\link[adegenet]{genpop}} with the specified strata.
+#'   [adegenet::genpop()] with the specified strata.
 #'   }
 #'   
-#' @note \code{\link{prevosti.dist}} and \code{\link{diss.dist}} are exactly the
-#'   same, but \code{\link{diss.dist}} scales better for large numbers of 
-#'   individuals (n > 125) at the cost of required memory. \subsection{missing 
-#'   data}{Missing data is not allowed by many of the distances. Thus, one of 
+#' @note [prevosti.dist()] and [diss.dist()] are exactly the
+#'   same, but [diss.dist()] scales better for large numbers of 
+#'   individuals (n > 125) at the cost of required memory. 
+#'   \subsection{missing data}{
+#'   Missing data is not allowed by many of the distances. Thus, one of 
 #'   the first steps of this function is to treat missing data by setting it to 
 #'   the average allele frequency in the data set. If you are using a distance 
 #'   that can handle missing data (Prevosti's distance), you can set 
-#'   \code{missing = "ignore"} to allow the distance function to handle any 
-#'   missing data. See \code{\link{missingno}} for details on missing 
-#'   data.}\subsection{Bruvo's Distance}{While calculation of Bruvo's distance 
+#'   `missing = "ignore"` to allow the distance function to handle any 
+#'   missing data. See [missingno()] for details on missing 
+#'   data.}
+#'   \subsection{Bruvo's Distance}{
+#'   While calculation of Bruvo's distance 
 #'   is possible with this function, it is optimized in the function 
-#'   \code{\link{bruvo.boot}}.}
+#'   [bruvo.boot()].}
 #'   
-#' @seealso \code{\link{nei.dist}} \code{\link{edwards.dist}} 
-#'   \code{\link{rogers.dist}} \code{\link{reynolds.dist}} 
-#'   \code{\link{prevosti.dist}} \code{\link{diss.dist}} 
-#'   \code{\link{bruvo.boot}} \code{\link[ape]{boot.phylo}} 
-#'   \code{\link[adegenet]{dist.genpop}} \code{\link{dist}}
-#'   \code{\link{bootgen2genind}} \code{\linkS4class{bootgen}}
+#' @seealso [nei.dist()] [edwards.dist()] 
+#'   [rogers.dist()] [reynolds.dist()] 
+#'   [prevosti.dist()] [diss.dist()] 
+#'   [bruvo.boot()] [ape::boot.phylo()] 
+#'   [adegenet::dist.genpop()] [dist()]
+#'   [bootgen2genind()] [bootgen-class]
 #'   
 #' @export
+#' @md
 #' @keywords bootstrap
 #' @aliases bootstrap
 #' @examples
@@ -303,12 +311,13 @@ aboot <- function(x, strata = NULL, tree = "upgma", distance = "nei.dist",
 #' @details This function will calculate any diversity statistic for counts of 
 #'   multilocus genotypes per population. This does not count allelic diversity.
 #'   The calculations of H, G, and lambda are all performed by 
-#'   \code{\link[vegan]{diversity}}. E5 is calculated as \deqn{E_{5} = 
+#'   [vegan::diversity()]. E5 is calculated as \deqn{E_{5} = 
 #'   \frac{(1/\lambda) - 1}{e^{H} - 1}}{(G - 1)/(exp(H) - 1)}.
 #'   
 #' @export
-#' @seealso \code{\link{diversity_boot}} \code{\link{diversity_ci}}
-#'   \code{\link{poppr}}
+#' @md
+#' @seealso [diversity_boot()] [diversity_ci()]
+#'   [poppr()]
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
@@ -386,39 +395,39 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #' 
 #' 
 #' @param tab a table produced from the \pkg{poppr} function 
-#'   \code{\link[poppr]{mlg.table}}. MLGs in columns and populations in rows
+#'   [poppr::mlg.table()]. MLGs in columns and populations in rows
 #' @param n an integer > 0 specifying the number of bootstrap replicates to 
-#'   perform (corresponds to \code{R} in the function \code{\link[boot]{boot}}.
+#'   perform (corresponds to `R` in the function [boot::boot()].
 #' @param n.boot an integer specifying the number of samples to be drawn in each
-#'   bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples 
+#'   bootstrap replicate. If `n.boot` < 2 (default), the number of samples 
 #'   drawn for each bootstrap replicate will be equal to the number of samples in
 #'   the data set. 
 #' @param n.rare a sample size at which all resamplings should be performed. 
 #'   This should be no larger than the smallest sample size. Defaults to 
-#'   \code{NULL}, indicating that each population will be sampled at its own 
+#'   `NULL`, indicating that each population will be sampled at its own 
 #'   size.
 #' @inheritParams diversity_stats
-#' @param ... other parameters passed on to \code{\link[boot]{boot}} and 
-#'   \code{\link{diversity_stats}}.
+#' @param ... other parameters passed on to [boot::boot()] and 
+#'   [diversity_stats()].
 #'   
 #' @return a list of objects of class "boot".
-#' @seealso \code{\link{diversity_stats}} for basic statistic calculation, 
-#'    \code{\link{diversity_ci}} for confidence intervals and plotting, and 
-#'    \code{\link{poppr}}. For bootstrap sampling:
-#'    \code{\link[stats]{rmultinom}} \code{\link[boot]{boot}}
+#' @seealso [diversity_stats()] for basic statistic calculation, 
+#'    [diversity_ci()] for confidence intervals and plotting, and 
+#'    [poppr()]. For bootstrap sampling:
+#'    [stats::rmultinom()] [boot::boot()]
 #'    
 #' @details 
 #'   Bootstrapping is performed in three ways:
 #'   \itemize{
-#'     \item if \code{n.rare} is a number greater than zero, then bootstrapping
-#'     is performed by randomly sampling without replacement \emph{n.rare}
+#'     \item if `n.rare` is a number greater than zero, then bootstrapping
+#'     is performed by randomly sampling without replacement *n.rare*
 #'     samples from the data.
 #'     
-#'     \item if \code{n.boot} is greater than 1, bootstrapping is performed by
+#'     \item if `n.boot` is greater than 1, bootstrapping is performed by
 #'     sampling n.boot samples from a multinomial distribution weighted by the
 #'     proportion of each MLG in the data.
 #'     
-#'     \item if \code{n.boot} is less than 2, bootstrapping is performed by 
+#'     \item if `n.boot` is less than 2, bootstrapping is performed by 
 #'     sampling N samples from a multinomial distribution weighted by the
 #'     proportion of each MLG in the data.
 #'   }
@@ -428,7 +437,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #'     downward bias partially due to the small number of samples in the data. 
 #'     The result is that the mean of the bootstrapped samples will often be 
 #'     much lower than the observed value. Alternatively, you can increase the
-#'     sample size of the bootstrap by increasing the size of \code{n.boot}. Both
+#'     sample size of the bootstrap by increasing the size of `n.boot`. Both
 #'     of these methods should be taken with caution in interpretation. There
 #'     are several R packages freely available that will calculate and perform
 #'     bootstrap estimates of Shannon and Simpson diversity metrics (eg.
@@ -438,6 +447,7 @@ diversity_stats <- function(z, H = TRUE, G = TRUE, lambda = TRUE, E5 = TRUE, ...
 #'     interpret the results of this function.
 #'   }
 #' @export
+#' @md
 #' @author Zhian N. Kamvar
 #' @examples
 #' library(poppr)
@@ -473,49 +483,49 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #' intervals is not perfect (See Details). Please be cautious when interpreting 
 #' the results.
 #' 
-#' @param tab a \code{\link{genind}}, \code{\link{genclone}},
-#'   \code{\link{snpclone}}, OR a matrix produced from 
-#'   \code{\link[poppr]{mlg.table}}.
+#' @param tab a [genind()], [genclone()],
+#'   [snpclone()], OR a matrix produced from 
+#'   [poppr::mlg.table()].
 #' @param n an integer defining the number of bootstrap replicates (defaults to 
 #'   1000).
 #' @param n.boot an integer specifying the number of samples to be drawn in each
-#'   bootstrap replicate. If \code{n.boot} < 2 (default), the number of samples 
+#'   bootstrap replicate. If `n.boot` < 2 (default), the number of samples 
 #'   drawn for each bootstrap replicate will be equal to the number of samples
 #'   in the data set. See Details.
 #' @param ci the percent for confidence interval.
-#' @param total argument to be passed on to \code{\link[poppr]{mlg.table}} if 
-#'   \code{tab} is a genind object.
-#' @param rarefy if \code{TRUE}, bootstrapping will be performed on the smallest
-#'   population size or the value of \code{n.rare}, whichever is larger. 
-#'   Defaults to \code{FALSE}, indicating that bootstrapping will be performed 
+#' @param total argument to be passed on to [poppr::mlg.table()] if 
+#'   `tab` is a genind object.
+#' @param rarefy if `TRUE`, bootstrapping will be performed on the smallest
+#'   population size or the value of `n.rare`, whichever is larger. 
+#'   Defaults to `FALSE`, indicating that bootstrapping will be performed 
 #'   respective to each population size.
 #' @param n.rare an integer specifying the smallest size at which to resample 
-#'   data. This is only used if \code{rarefy = TRUE}.
-#' @param plot If \code{TRUE} (default), boxplots will be produced for each 
+#'   data. This is only used if `rarefy = TRUE`.
+#' @param plot If `TRUE` (default), boxplots will be produced for each 
 #'   population, grouped by statistic. Colored dots will indicate the observed 
-#'   value.This plot can be retrieved by using \code{p <- last_plot()} from the 
+#'   value.This plot can be retrieved by using `p <- last_plot()` from the 
 #'   \pkg{ggplot2} package.
-#' @param raw if \code{TRUE} (default) a list containing three elements will be 
+#' @param raw if `TRUE` (default) a list containing three elements will be 
 #'   returned
-#' @param center if \code{TRUE} (default), the confidence interval will be 
-#'   centered around the observed statistic. Otherwise, if \code{FALSE}, the 
+#' @param center if `TRUE` (default), the confidence interval will be 
+#'   centered around the observed statistic. Otherwise, if `FALSE`, the 
 #'   confidence interval will be bias-corrected normal CI as reported from 
-#'   \code{\link[boot]{boot.ci}}
-#' @param ... parameters to be passed on to \code{\link[boot]{boot}} and 
-#'   \code{\link{diversity_stats}}
+#'   [boot::boot.ci()]
+#' @param ... parameters to be passed on to [boot::boot()] and 
+#'   [diversity_stats()]
 #'   
 #' @return \subsection{raw = TRUE}{
-#' \itemize{
-#'   \item \strong{obs} - a matrix with observed statistics in columns,
+#' 
+#'    - **obs** a matrix with observed statistics in columns,
 #'   populations in rows
-#'   \item \strong{est} - a matrix with estimated statistics in columns,
+#'    - **est** a matrix with estimated statistics in columns,
 #'   populations in rows
-#'   \item \strong{CI} - an array of 3 dimensions giving the lower and upper
+#'    - **CI** an array of 3 dimensions giving the lower and upper
 #'   bound, the index measured, and the population.
-#'   \item \strong{boot} - a list containing the output of
-#'   \code{\link[boot]{boot}} for each population.
+#'    - **boot** a list containing the output of
+#'   [boot::boot()] for each population.
 #'   }
-#'  }
+#' 
 #' \subsection{raw = FALSE}{ a data frame with the statistic observations,
 #' estimates, and confidence intervals in columns, and populations in rows. Note
 #' that the confidence intervals are converted to characters and rounded to
@@ -524,32 +534,32 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #' @details 
 #'   \subsection{Bootstrapping}{
 #'   For details on the bootstrapping procedures, see 
-#'   \code{\link{diversity_boot}}. Default bootstrapping is performed by 
+#'   [diversity_boot()]. Default bootstrapping is performed by 
 #'   sampling \strong{N} samples from a multinomial distribution weighted by the
 #'   relative multilocus genotype abundance per population where \strong{N} is
 #'   equal to the number of samples in the data set. If \strong{n.boot} > 2,
 #'   then \strong{n.boot} samples are taken at each bootstrap replicate. When
-#'   \code{rarefy = TRUE}, then samples are taken at the smallest population
+#'   `rarefy = TRUE`, then samples are taken at the smallest population
 #'   size without replacement. This will provide confidence intervals for all
 #'   but the smallest population.
 #'   }
 #'   \subsection{Confidence intervals}{
 #'   Confidence intervals are derived from the function 
-#'   \code{\link[boot]{norm.ci}}. This function will attempt to correct for bias
-#'   between the observed value and the bootstrapped estimate. When \code{center
-#'   = TRUE} (default), the confidence interval is calculated from the
+#'   [boot::norm.ci()]. This function will attempt to correct for bias
+#'   between the observed value and the bootstrapped estimate. When `center
+#'   = TRUE` (default), the confidence interval is calculated from the
 #'   bootstrapped distribution and centered around the bias-corrected estimate
 #'   as prescribed in Marcon (2012). This method can lead to undesirable
 #'   properties, such as the confidence interval lying outside of the maximum
 #'   possible value. For rarefaction, the confidence interval is simply
 #'   determined by calculating the percentiles from the bootstrapped
 #'   distribution. If you want to calculate your own confidence intervals, you
-#'   can use the results of the permutations stored in the \code{$boot} element
+#'   can use the results of the permutations stored in the `$boot` element
 #'   of the output.
 #'   }
 #'   \subsection{Rarefaction}{
 #'   Rarefaction in the sense of this function is simply sampling a subset of 
-#'   the data at size \strong{n.rare}. The estimates derived from this method
+#'   the data at size **n.rare**. The estimates derived from this method
 #'   have straightforward interpretations and allow you to compare diversity
 #'   across populations since you are controlling for sample size.
 #'   }
@@ -571,30 +581,30 @@ diversity_boot <- function(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
 #'   one clear method for calculating confidence intervals. A suggestion for
 #'   correction in Shannon's index is to center the CI around the observed
 #'   statistic (Marcon, 2012), but there are theoretical limitations to this.
-#'   For details, see \url{http://stats.stackexchange.com/q/156235/49413}.
+#'   For details, see <http://stats.stackexchange.com/q/156235/49413>.
 #'   }
 #' 
 #'   \subsection{User-defined functions}{ 
 #'   While it is possible to use custom functions with this, there are three
 #'   important things to remember when using these functions:
-#'   \enumerate{
-#'     \item The function must return a single value. 
-#'     \item The function must allow for both matrix and vector inputs 
-#'     \item The function name cannot match or partially match any arguments 
-#'     from \code{\link[boot]{boot}}
-#'   } 
-#'   Anonymous functions are okay \cr(e.g. \code{function(x)
-#'   vegan::rarefy(t(as.matrix(x)), 10)}).
+#'   
+#'     1. The function must return a single value. 
+#'     2. The function must allow for both matrix and vector inputs 
+#'     3. The function name cannot match or partially match any arguments 
+#'     from [boot::boot()]
+#'    
+#'   Anonymous functions are okay \cr(e.g. `function(x)
+#'   vegan::rarefy(t(as.matrix(x)), 10)`).
 #'   }
 #' @export
-#' @seealso \code{\link{diversity_boot}} \code{\link{diversity_stats}}
-#'   \code{\link{poppr}} \code{\link[boot]{boot}} \code{\link[boot]{norm.ci}}
-#'   \code{\link[boot]{boot.ci}}
+#' @seealso [diversity_boot()] [diversity_stats()]
+#'   [poppr()] [boot::boot()] [boot::norm.ci()]
+#'   [boot::boot.ci()]
 #' @author Zhian N. Kamvar
 #' @references
 #' Marcon, E., Herault, B., Baraloto, C. and Lang, G. (2012). The Decomposition 
 #' of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
-#' \emph{Oikos} 121(4): 516-522.
+#' *Oikos* 121(4): 516-522.
 #' 
 #' @examples
 #' library(poppr)
