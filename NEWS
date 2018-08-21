@@ -8,6 +8,17 @@ BUG FIX
   based alleles was fixed 
   (see https://github.com/grunwaldlab/poppr/issues/190 for details)
 
+DOCUMENTATION
+-------------
+
+* `aboot()` documentation was updated to add the citation and make clear its
+  purpose and limitations.
+
+MISC
+----
+
+* DOIs have been hyperlinked to doi.org instead of dx.doi.org (#188, @katrinleinweber)
+
 poppr 2.8.0
 ===========
 
