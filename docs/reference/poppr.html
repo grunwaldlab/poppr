@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -40,6 +42,7 @@ that adegenet can take (fstat, structure, genetix, and genpop) as well as
 genalex files exported into a csv format (see read.genalex for 
 details)." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -66,7 +69,7 @@ details)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0.99.12</span>
       </span>
     </div>
 
@@ -139,10 +142,11 @@ details).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>poppr</span>(<span class='no'>dat</span>, <span class='kw'>total</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>sublist</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>, <span class='kw'>blacklist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"ignore"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>clonecorrect</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>strata</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>keep</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>, <span class='kw'>minsamp</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>poppr</span>(<span class='no'>dat</span>, <span class='kw'>total</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>sublist</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>, <span class='kw'>blacklist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>sample</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"ignore"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>clonecorrect</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>strata</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>keep</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"rbarD"</span>, <span class='kw'>minsamp</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+  <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -376,24 +380,7 @@ This function outputs a <span class="pkg">ggplot2</span> graphic of
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>nancycats</span>)
-<span class='fu'>poppr</span>(<span class='no'>nancycats</span>)</div><div class='output co'>#&gt; | P01 
-#&gt; | P02 
-#&gt; | P03 
-#&gt; | P04 
-#&gt; | P05 
-#&gt; | P06 
-#&gt; | P07 
-#&gt; | P08 
-#&gt; | P09 
-#&gt; | P10 
-#&gt; | P11 
-#&gt; | P12 
-#&gt; | P13 
-#&gt; | P14 
-#&gt; | P15 
-#&gt; | P16 
-#&gt; | P17 
-#&gt; | Total </div><div class='output co'>#&gt;      Pop   N MLG eMLG       SE    H   G lambda E.5  Hexp      Ia   rbarD
+<span class='fu'>poppr</span>(<span class='no'>nancycats</span>)</div><div class='output co'>#&gt;      Pop   N MLG eMLG       SE    H   G lambda E.5  Hexp      Ia   rbarD
 #&gt; 1    P01  10  10   10 0.00e+00 2.30  10  0.900   1 0.649  0.1656  0.0211
 #&gt; 2    P02  22  22   10 0.00e+00 3.09  22  0.955   1 0.701  0.1818  0.0230
 #&gt; 3    P03  12  12   10 0.00e+00 2.48  12  0.917   1 0.719  0.3546  0.0452

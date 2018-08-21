@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -31,7 +33,7 @@
 <meta property="og:title" content="Recode polyploid microsatellite data for use in frequency based statistics. — recode_polyploids" />
 
 <meta property="og:description" content="As the genind object requires ploidy to be consistent across loci, a 
-workaround to importing polyploid data was to code missing alleles as "0" 
+workaround to importing polyploid data was to code missing alleles as &quot;0&quot; 
 (for microsatellite data sets). The advantage of this is that users would be 
 able to calculate Bruvo's distance, the index of association, and genotypic 
 diversity statistics. The tradeoff was the fact that this broke all other 
@@ -41,6 +43,7 @@ genclone or genind object where
 allele frequencies are coded based on the number of alleles observed at a 
 single locus per individual. See the examples for more details." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -67,7 +70,7 @@ single locus per individual. See the examples for more details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0.99.12</span>
       </span>
     </div>
 
@@ -187,19 +190,23 @@ loci to allow conversion to genpop objects. Defaults to <code>FALSE</code>.</p><
   import two genotypes of:</p>
 <table class='table'>
 <tr><td>NA</td><td>20</td><td>23</td><td>24</td></tr>
+<tr><td>20</td><td>24</td><td>26</td><td>43</td></tr>
 </table>
 <p>they should be coded as:</p><table class='table'>
 <tr><td>0</td><td>20</td><td>23</td><td>24</td></tr>
+<tr><td>20</td><td>24</td><td>26</td><td>43</td></tr>
 </table>
 <p>This zero is treated as an extra allele and is represented in the genind object as so:</p><table class='table'>
 <tr><td><strong>0</strong></td><td><strong>20</strong></td><td><strong>23</strong></td><td><strong>24</strong></td><td><strong>26</strong></td><td><strong>43</strong></td></tr>
 <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
 </table>
     <p>This function remedies this problem by removing the zero column.
   The above table would become:</p>
 <table class='table'>
 <tr><td><strong>20</strong></td><td><strong>23</strong></td><td><strong>24</strong></td><td><strong>26</strong></td><td><strong>43</strong></td></tr>
 <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
 </table>
     <p>With this, the user is able to calculate frequency based statistics on the
 data set.</p>

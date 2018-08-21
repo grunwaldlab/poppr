@@ -21,14 +21,17 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script>
 <script src="pkgdown.js"></script>
 
 
 
 <meta property="og:title" content="Contributing to poppr" />
+
 
 
 <!-- mathjax -->
@@ -55,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0.99.12</span>
       </span>
     </div>
 
@@ -114,7 +117,7 @@
 
 <div id="contributing-to-poppr" class="section level1">
 
-<p>Thank you for taking interest in contributing to <em>poppr</em>. All are welcome to participate in any way they feel is appropriate as long as the <a href="CONDUCT.html">community code of conduct</a> is respected 👌.</p>
+<p>Thank you for taking interest in contributing to <em>poppr</em>. All are welcome to participate in any way they feel is appropriate as long as the <a href="CONDUCT.html">community code of conduct</a> is respected <span class="emoji" data-emoji="ok_hand">👌</span>.</p>
 <p>There are four ways you can contribute to the development of poppr: reporting a bug, fixing documentation errors, contributing new code, or commenting on issues/pull requests. Note that the majority of these activities do not require you to be proficient in R.</p>
 <p>All new code or documentation must be approved by @zkamvar.</p>
 <div id="commenting-on-issues-pull-requests" class="section level2">
@@ -131,13 +134,13 @@
 <h4 class="hasAnchor">
 <a href="#ensure-your-r-version-and-poppr-version-are-up-to-date-" class="anchor"></a>Ensure your R version and poppr version are up-to-date.</h4>
 <p>To check your versions of R and poppr, you can run the following code</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R.version.string
-<span class="kw">packageVersion</span>(<span class="st">"poppr"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">R.version.string</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">packageVersion</span>(<span class="st">"poppr"</span>)</a></code></pre></div>
 <p>Your output will look something like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R.version.string
-<span class="co">#&gt; [1] "R version 3.4.1 (2017-06-30)"</span>
-<span class="kw">packageVersion</span>(<span class="st">"poppr"</span>)
-<span class="co">#&gt; [1] '2.5.0'</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">R.version.string</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; [1] "R version 3.4.1 (2017-06-30)"</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">packageVersion</span>(<span class="st">"poppr"</span>)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; [1] '2.5.0'</span></a></code></pre></div>
 <p>You can check this against the versions reported at <a href="https://r-project.org" class="uri">https://r-project.org</a> and <a href="https://cran.r-project.org/package=poppr" class="uri">https://cran.r-project.org/package=poppr</a>.</p>
 </div>
 <div id="make-sure-your-problem-is-reproducible-and-minimal" class="section level4">
@@ -146,27 +149,27 @@
 <p>A minimal reproducible example (reprex) ensures that the maintainers will be able to address the issue in a timely manner.</p>
 <p>The easiest way of doing this is to use the <a href="https://cran.r-project.org/package=reprex">reprex package</a>, which has excellent documentation on how to create a reprex: <a href="https://github.com/jennybc/reprex#what-is-a-reprex" class="uri">https://github.com/jennybc/reprex#what-is-a-reprex</a>.</p>
 <p>Here’s an example of how to do this for a poppr-specific example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"reprex"</span>)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/reprex/topics/reprex">reprex</a></span>({
-  <span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"poppr"</span>))
-  <span class="kw">data</span>(Pinf)
-  Pinf.bd &lt;-<span class="st"> </span><span class="kw"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(Pinf)
-})</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(<span class="st">"reprex"</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="http://www.rdocumentation.org/packages/reprex/topics/reprex">reprex</a></span>({</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  <span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"poppr"</span>))</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="kw">data</span>(Pinf)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">  Pinf.bd &lt;-<span class="st"> </span><span class="kw"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(Pinf)</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">})</a></code></pre></div>
 <p>This will copy the rendered code to your clipboard so you can paste it directly to the github issue like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"poppr"</span>))
-<span class="kw">data</span>(Pinf)
-Pinf.bd &lt;-<span class="st"> </span><span class="kw"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(Pinf)
-<span class="co">#&gt; Warning in bruvo.dist(Pinf): </span>
-<span class="co">#&gt;  -------------------------------------------------------------- </span>
-<span class="co">#&gt;                         !!! </span><span class="al">ALERT</span><span class="co"> !!! </span>
-<span class="co">#&gt;  </span>
-<span class="co">#&gt;  This warning will become an ERROR in future versions of poppr. </span>
-<span class="co">#&gt;  Please define your repeat lengths to avoid this error. </span>
-<span class="co">#&gt;  -------------------------------------------------------------- </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Repeat length vector for loci is not equal to the number of loci represented.</span>
-<span class="co">#&gt; Estimating repeat lengths from data:</span>
-<span class="co">#&gt;  c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"poppr"</span>))</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">data</span>(Pinf)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">Pinf.bd &lt;-<span class="st"> </span><span class="kw"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(Pinf)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; Warning in bruvo.dist(Pinf): </span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt;  -------------------------------------------------------------- </span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt;                         !!! </span><span class="al">ALERT</span><span class="co"> !!! </span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt;  </span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt;  This warning will become an ERROR in future versions of poppr. </span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt;  Please define your repeat lengths to avoid this error. </span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt;  -------------------------------------------------------------- </span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; Repeat length vector for loci is not equal to the number of loci represented.</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; Estimating repeat lengths from data:</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;  c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)</span></a></code></pre></div>
 <p>Please make sure that your examples run in a reasonable amount of time. Usually maintainers will have to run these examples several times in order to fix the issue. If an example takes more than 1 minute to run, please find a way to reduce the size of the example.</p>
 </div>
 </div>

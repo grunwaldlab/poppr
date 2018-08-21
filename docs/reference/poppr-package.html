@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -34,10 +36,11 @@
 include genotypic diversity measures, genetic distances with bootstrap
 support, native organization and handling of population hierarchies, and
 clone correction.
-To cite poppr, please use citation("poppr"). When referring to
+To cite poppr, please use citation(&quot;poppr&quot;). When referring to
 poppr in your manuscript, please use lower case unless it occurs at the
 beginning of a sentence." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -64,7 +67,7 @@ beginning of a sentence." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0.99.12</span>
       </span>
     </div>
 
@@ -156,6 +159,7 @@ beginning of a sentence.</p>
 <tr><td><strong>Vignette</strong></td><td><strong>command</strong></td></tr>
 <tr><td>Data import and manipulation</td><td><code><a href='../articles/poppr_manual.html'>vignette("poppr_manual", "poppr")</a></code></td></tr>
 <tr><td>Algorithms and Equations</td><td><code>vignette("algo", "poppr")</code></td></tr>
+<tr><td>Multilocus Genotype Analysis</td><td><code><a href='../articles/mlg.html'>vignette("mlg", "poppr")</a></code></td></tr>
 </table>
     Essential functions for importing and manipulating data are detailed within
   the <em>Data import and manipulation</em> vignette, details on algorithms
@@ -183,6 +187,7 @@ beginning of a sentence.</p>
 </ul><p>Where &#8216;data type&#8217; refers to the type of data that can be used:</p><table class='table'>
 <tr><td><strong>m</strong></td><td>a genclone or genind object</td></tr>
 <tr><td><strong>s</strong></td><td>a snpclone or genlight object</td></tr>
+<tr><td><strong>x</strong></td><td>a different data type (e.g. a matrix from <code><a href='mlg.html'>mlg.table</a></code>)</td></tr>
 </table>
     
     <h2 class="hasAnchor" id="data-import-export"><a class="anchor" href="#data-import-export"></a>Data import/export</h2>
