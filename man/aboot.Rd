@@ -63,7 +63,7 @@ to genind or genclone objects.
 \details{
 This function automates the process of bootstrapping genetic data to
 create a dendrogram with bootstrap support on the nodes. It will randomly
-sample with replacement the loci of a \code{gen} object or the columns of a
+sample with replacement the loci of a \code{gen} (genind/genpop) object or the columns of a
 numeric matrix, \strong{assuming that all loci/columns are independent}. The
 process of randomly sampling \code{gen} objects with replacement is carried out
 through the use of an internal class called
@@ -71,7 +71,10 @@ through the use of an internal class called
 the genind matrix are defined as alleles and are thus interrelated. This
 function will specifically bootstrap loci so that results are biologically
 relevant. With this function, the user can also define a custom distance to
-be performed on the genind or genclone object.
+be performed on the genind or genclone object. If you have a data frame-like
+object where all of the columns are independent or pairs of columns are
+independent, then it may be simpler to use \code{\link[ape:boot.phylo]{ape::boot.phylo()}} to calculate
+your bootstrap support values.
 
 \subsection{the strata argument}{
 There is an argument called \code{strata}. This argument is useful for when
@@ -171,6 +174,11 @@ myFastME <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
 aboot(Aeut.pop, tree = myFastME, sample = 1000)
 
 }
+}
+\references{
+Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
+genome-wide population genetic data with emphasis on clonality.
+Frontiers in Genetics 6:208. \url{http://dx.doi.org/10.3389/fgene.2015.00208}
 }
 \seealso{
 \code{\link[=nei.dist]{nei.dist()}} \code{\link[=edwards.dist]{edwards.dist()}}
