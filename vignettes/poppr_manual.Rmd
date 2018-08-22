@@ -1980,14 +1980,14 @@ price) that you can use to edit your graphics.
 -   Bitmap based editors (for jpeg, bmp, png, etc...)
 
     -   **The GIMP**
-        Free, cross-platform. <http://www.gimp.org>
+        Free, cross-platform. <https://www.gimp.org>
     -   **Paint.net** Free,
-        Windows only. <http://www.getpaint.net>
+        Windows only. <https://www.getpaint.net>
     -   **Adobe Photoshop**
         Pricey, Windows and Mac.
         <http://www.adobe.com/products/photoshop.html>
 -   Scalable Vector Graphics based editors (for svg, pdf)
-    -   **Inkscape**  Free, cross-platform <http://inkscape.org>
+    -   **Inkscape**  Free, cross-platform <https://inkscape.org>
     -   **Adobe Illustrator** Pricey, Windows and Mac.
         <http://www.adobe.com/products/illustrator.html>
     
