@@ -62,7 +62,7 @@ genlight or snpclone objects." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0.99.12</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.1</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@ genlight or snpclone objects." />
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/poppr-package.html#functions-in-poppr">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -242,7 +242,7 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 #&gt;    @other: a list containing: ancestral.pops 
 #&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles</span>
 <span class='fu'>system.time</span>(<span class='no'>xd</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.001   0.000   0.002 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
+#&gt;   0.001   0.000   0.001 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
 #&gt; 2  0.2105                                                        
 #&gt; 3  0.2195 0.2180                                                 
 #&gt; 4  0.3950 0.3825 0.3855                                          
@@ -254,7 +254,7 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 #&gt; 10 0.3980 0.3925 0.4005 0.2180 0.2035 0.2220 0.2185 0.2125 0.2140</div><div class='input'>
 <span class='co'># Calculate Euclidean distance</span>
 <span class='fu'>system.time</span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.028   0.000   0.028 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
+#&gt;   0.029   0.000   0.029 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
 #&gt; 2  22.64950                                                               
 #&gt; 3  23.00000 23.19483                                                      
 #&gt; 4  35.24202 34.68429 34.91418                                             

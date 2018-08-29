@@ -62,7 +62,7 @@ genotypes per population." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.0.99.12</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.8.1</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@ genotypes per population." />
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/poppr-package.html#functions-in-poppr">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -195,8 +195,8 @@ The calculations of H, G, and lambda are all performed by
 
 <span class='fu'>library</span>(<span class='st'>"poweRlaw"</span>)
 <span class='no'>power_law_beta</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-  <span class='no'>xpow</span> <span class='kw'>&lt;-</span> <span class='fu'>displ</span>(<span class='no'>x</span>[<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>])                 <span class='co'># Generate the distribution</span>
-  <span class='no'>xpow</span>$<span class='fu'>setPars</span>(<span class='fu'>estimate_pars</span>(<span class='no'>xpow</span>))       <span class='co'># Estimate the parameters</span>
+  <span class='no'>xpow</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/poweRlaw/topics/displ'>displ</a></span>(<span class='no'>x</span>[<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>])                 <span class='co'># Generate the distribution</span>
+  <span class='no'>xpow</span>$<span class='fu'>setPars</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/poweRlaw/topics/estimate_pars'>estimate_pars</a></span>(<span class='no'>xpow</span>))       <span class='co'># Estimate the parameters</span>
   <span class='no'>xdat</span> <span class='kw'>&lt;-</span> <span class='fu'>plot</span>(<span class='no'>xpow</span>, <span class='kw'>draw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)        <span class='co'># Extract the data</span>
   <span class='no'>xlm</span> <span class='kw'>&lt;-</span> <span class='fu'>lm</span>(<span class='fu'>log</span>(<span class='no'>y</span>) ~ <span class='fu'>log</span>(<span class='no'>x</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>xdat</span>) <span class='co'># Run log-log linear model for slope</span>
   <span class='fu'>return</span>(-<span class='fu'>coef</span>(<span class='no'>xlm</span>)[<span class='fl'>2</span>])
