@@ -4,7 +4,7 @@
 \name{Pram}
 \alias{Pram}
 \title{Phytophthora ramorum data from OR Forests and Nurseries (OR and CA)}
-\format{a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
+\format{a [genclone-class] object with 3 hierarchical levels 
   called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a 
   named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy 
   coordinates for the forest samples called \strong{"xy"}, and a palette to 
@@ -14,9 +14,9 @@ data(Pram)
 }
 \description{
 This is the data set from 
-  \url{https://doi.org/10.5281/zenodo.13007}. It has been converted to the 
+  <https://doi.org/10.5281/zenodo.13007>. It has been converted to the 
   genclone object as of poppr version 2.0. It contains 729 samples of the 
-  Sudden Oak Death pathogen \emph{Phytophthora ramorum} genotyped over five 
+  Sudden Oak Death pathogen *Phytophthora ramorum* genotyped over five 
   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from
   forests in Curry County, OR from 2001 to mid-2014 (labeled by watershed
   region). The other 216 samples represents genotypes collected from
@@ -47,6 +47,6 @@ Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., &
   
   Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
   J. 2009. Population genetic analysis infers migration pathways of 
-  \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
+  *Phytophthora ramorum* in US nurseries. PLoS Pathog. 5:e1000583. doi:
   \href{https://doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
 }

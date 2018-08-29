@@ -3,7 +3,7 @@
 \docType{package}
 \name{poppr-package}
 \alias{poppr-package}
-\title{The \pkg{poppr} R package.}
+\title{The \pkg{poppr} R package}
 \description{
 \pkg{Poppr} provides tools for population genetic analysis that
 include genotypic diversity measures, genetic distances with bootstrap
@@ -15,179 +15,197 @@ To cite \pkg{poppr}, please use \code{citation("poppr")}. When referring to
 beginning of a sentence.
 }
 \details{
-This package relies on the \pkg{\link[adegenet]{adegenet}} package. 
-  It is built around the \code{\linkS4class{genind}} and 
-  \code{\linkS4class{genlight}} object. Genind objects store genetic
-  information in a table of allele frequencies while genlight objects store
-  SNP data efficiently by packing binary allele calls into single bits.
-  \pkg{Poppr} has extended these object into new objects called 
-  \code{\linkS4class{genclone}} and \code{\linkS4class{snpclone}},
-  respectively. These objects are designed for analysis of clonal organisms
-  as they add the \strong{@mlg} slot for keeping track of multilocus
-  genotypes and multilocus lineages.
-  
-  \subsection{Documentation}{ Documentation is available for any function by 
-  typing \code{?function_name} in the R console. Detailed topic explanations
-  live in the package vignettes:
-  
-  \tabular{ll}{
-    \strong{Vignette}              \tab \strong{command}\cr
-    Data import and manipulation   \tab \code{vignette("poppr_manual", "poppr")}\cr
-    Algorithms and Equations      \tab \code{vignette("algo", "poppr")}\cr
-    Multilocus Genotype Analysis   \tab \code{vignette("mlg", "poppr")}  
-  }
-  
-  Essential functions for importing and manipulating data are detailed within
-  the \emph{Data import and manipulation} vignette, details on algorithms
-  used in \pkg{poppr} are within the \emph{Algorithms and equations}
-  vignette, and details for working with multilocus genotypes are in
-  \emph{Multilocus Genotype Analysis}. Examples of analyses are available in
-  a primer written by Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E.
-  Everhart at \url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
-  
-  \subsection{Getting help}{ If you have a specific question or issue with 
-  \pkg{poppr}, feel free to contribute to the google group at 
-  \url{https://groups.google.com/group/poppr}. If you find a bug and 
-  are a github user, you can submit bug reports at 
-  \url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a
-  message on the groups. Personal emails are highly discouraged as they do 
-  not allow others to learn.}
+This package relies on the \pkg{\link[adegenet]{adegenet}} package.
+It is built around the \linkS4class{genind} and
+\linkS4class{genlight} object. Genind objects store genetic
+information in a table of allele frequencies while genlight objects store
+SNP data efficiently by packing binary allele calls into single bits.
+\pkg{Poppr} has extended these object into new objects called
+\linkS4class{genclone} and \linkS4class{snpclone},
+respectively. These objects are designed for analysis of clonal organisms
+as they add the \strong{@mlg} slot for keeping track of multilocus
+genotypes and multilocus lineages.
+
+\subsection{Documentation}{ Documentation is available for any function by
+typing \code{?function_name} in the R console. Detailed topic explanations
+live in the package vignettes:
+
+\tabular{ll}{
+\strong{Vignette}              \tab \strong{command}\cr
+Data import and manipulation   \tab \code{vignette("poppr_manual", "poppr")}\cr
+Algorithms and Equations       \tab \code{vignette("algo", "poppr")}\cr
+Multilocus Genotype Analysis   \tab \code{vignette("mlg", "poppr")}
+}
+
+Essential functions for importing and manipulating data are detailed within
+the \emph{Data import and manipulation} vignette, details on algorithms
+used in \pkg{poppr} are within the \emph{Algorithms and equations}
+vignette, and details for working with multilocus genotypes are in
+\emph{Multilocus Genotype Analysis}. Examples of analyses are available in
+a primer written by Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E.
+Everhart at \url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
+
+\subsection{Getting help}{ If you have a specific question or issue with
+\pkg{poppr}, feel free to contribute to the google group at
+\url{https://groups.google.com/group/poppr}. If you find a bug and
+are a github user, you can submit bug reports at
+\url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a
+message on the groups. Personal emails are highly discouraged as they do
+not allow others to learn.}
 }
 \section{Functions in \pkg{poppr}}{
 
 
-  Below are descriptions and links to functions found in \pkg{poppr}. Be
-  aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
-  available. The functions are documented as:
-  \itemize{
-  \item \code{function} (data type) - Description
-  }
-  Where \sQuote{data type} refers to the type of data that can be used:
-  \tabular{ll}{
-    \strong{m} \tab a genclone or genind object \cr
-    \strong{s} \tab a snpclone or genlight object \cr
-    \strong{x} \tab a different data type (e.g. a matrix from \code{\link{mlg.table}})
-  }
+Below are descriptions and links to functions found in \pkg{poppr}. Be
+aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
+available. The functions are documented as:
+
+\code{function} (data type) - Description
+
+Where \sQuote{data type} refers to the type of data that can be used:
+\tabular{ll}{
+\strong{m} \tab a genclone or genind object \cr
+\strong{s} \tab a snpclone or genlight object \cr
+\strong{x} \tab a different data type (e.g. a matrix from \code{\link[=mlg.table]{mlg.table()}})
+}
 }
 
 \section{Data import/export}{
 
 \itemize{
-\item \code{\link{getfile}} (x) - Provides a quick GUI to grab files for import
-\item \code{\link{read.genalex}} (x) - Reads GenAlEx formatted csv files to a genind object
-\item \code{\link{genind2genalex}} (m) - Converts genind objects to GenAlEx formatted csv files
-\item \code{\link{genclone2genind}} (m) - Removes the @mlg slot from genclone objects
-\item \code{\link{as.genambig}} (m) - Converts genind data to \pkg{polysat}'s \code{\linkS4class{genambig}} data structure.
-\item \code{\link{bootgen2genind}} (x) - see \code{\link{aboot}} for details)
+\item \code{\link[=getfile]{getfile()}} (x) - Provides a quick GUI to grab files for import
+\item \code{\link[=read.genalex]{read.genalex()}} (x) - Reads GenAlEx formatted csv files to a genind object
+\item \code{\link[=genind2genalex]{genind2genalex()}} (m) - Converts genind objects to GenAlEx formatted csv files
+\item \code{\link[=genclone2genind]{genclone2genind()}} (m) - Removes the @mlg slot from genclone objects
+\item \code{\link[=as.genambig]{as.genambig()}} (m) - Converts genind data to \pkg{polysat}'s \link[polysat:genambig-class]{genambig} data structure.
+\item \code{\link[=bootgen2genind]{bootgen2genind()}} (x) - see \code{\link[=aboot]{aboot()}} for details)
+}
+}
+
+\section{Data Structures}{
+
+
+Data structures "genclone" (based off of adegenet's \link[adegenet:genind-class]{genind}) and
+"snpclone" (based off of adegenet's \link[adegenet:genlight-class]{genlight} for large SNP data sets).
+Both of these data structures are defined by the presence of an extra
+MLG slot.
+\itemize{
+\item \linkS4class{genclone} - Handles microsatellite, presence/absence, and small SNP data sets
+\item \linkS4class{snpclone} - Designed to handle larger binary SNP data sets.
 }
 }
 
 \section{Data manipulation}{
 
 \itemize{
-\item \code{\link{as.genclone}} (m) - Converts genind objects to genclone objects
-\item \code{\link{missingno}} (m) - Handles missing data
-\item \code{\link{clonecorrect}} (m | s) - Clone-censors at a specified population hierarchy
-\item \code{\link{informloci}} (m) - Detects and removes phylogenetically uninformative loci
-\item \code{\link{popsub}} (m | s) - Subsets genind objects by population
-\item \code{\link{shufflepop}} (m) - Shuffles genotypes at each locus using four different shuffling algorithms
-\item \code{\link{recode_polyploids}} (m | x) - Recodes polyploid data sets with missing alleles imported as "0"
-\item \code{\link{make_haplotypes}} (m | s) - Splits data into pseudo-haplotypes. This is mainly used in AMOVA.
+\item \code{\link[=as.genclone]{as.genclone()}} (m) - Converts genind objects to genclone objects
+\item \code{\link[=missingno]{missingno()}} (m) - Handles missing data
+\item \code{\link[=clonecorrect]{clonecorrect()}} (m | s) - Clone-censors at a specified population hierarchy
+\item \code{\link[=informloci]{informloci()}} (m) - Detects and removes phylogenetically uninformative loci
+\item \code{\link[=popsub]{popsub()}} (m | s) - Subsets genind objects by population
+\item \code{\link[=shufflepop]{shufflepop()}} (m) - Shuffles genotypes at each locus using four different shuffling algorithms
+\item \code{\link[=recode_polyploids]{recode_polyploids()}} (m | x) - Recodes polyploid data sets with missing alleles imported as "0"
+\item \code{\link[=make_haplotypes]{make_haplotypes()}} (m | s) - Splits data into pseudo-haplotypes. This is mainly used in AMOVA.
+\item \code{\link[=test_replen]{test_replen()}} (m) - Tests for inconsistent repeat lengths in microsatellite data. For use in \code{\link[=bruvo.dist]{bruvo.dist()}} functions.
+\item \code{\link[=fix_replen]{fix_replen()}} (m) - Fixes inconsistent repeat lengths. For use in \code{\link[=bruvo.dist]{bruvo.dist()}} functions.
 }
 }
 
 \section{Genetic distances}{
 
 \itemize{
-\item \code{\link{bruvo.dist}} (m) - Bruvo's distance (see also: \code{\link{fix_replen}})
-\item \code{\link{diss.dist}} (m) - Absolute genetic distance (see \code{\link{prevosti.dist}})
-\item \code{\link{nei.dist}} (m | x) - Nei's 1978 genetic distance
-\item \code{\link{rogers.dist}} (m | x) - Rogers' euclidean distance
-\item \code{\link{reynolds.dist}} (m | x) - Reynolds' coancestry distance
-\item \code{\link{edwards.dist}} (m | x) - Edwards' angular distance
-\item \code{\link{prevosti.dist}} (m | x) - Prevosti's absolute genetic distance
-\item \code{\link{bitwise.dist}} (s) - Calculates fast pairwise distances for genlight objects. 
+\item \code{\link[=bruvo.dist]{bruvo.dist()}} (m) - Bruvo's distance (see also: \code{\link[=fix_replen]{fix_replen()}})
+\item \code{\link[=diss.dist]{diss.dist()}} (m) - Absolute genetic distance (see \code{\link[=prevosti.dist]{prevosti.dist()}})
+\item \code{\link[=nei.dist]{nei.dist()}} (m | x) - Nei's 1978 genetic distance
+\item \code{\link[=rogers.dist]{rogers.dist()}} (m | x) - Rogers' euclidean distance
+\item \code{\link[=reynolds.dist]{reynolds.dist()}} (m | x) - Reynolds' coancestry distance
+\item \code{\link[=edwards.dist]{edwards.dist()}} (m | x) - Edwards' angular distance
+\item \code{\link[=prevosti.dist]{prevosti.dist()}} (m | x) - Prevosti's absolute genetic distance
+\item \code{\link[=bitwise.dist]{bitwise.dist()}} (s) - Calculates fast pairwise distances for genlight objects.
 }
 }
 
 \section{Bootstrapping}{
 
 \itemize{
-\item \code{\link{aboot}} (m | s | x) - Creates a bootstrapped dendrogram for any distance measure
-\item \code{\link{bruvo.boot}} (m) - Produces dendrograms with bootstrap support based on Bruvo's distance
-\item \code{\link{diversity_boot}} (x) - Generates boostrap distributions of diversity statistics for multilocus genotypes
-\item \code{\link{diversity_ci}} (m | s | x) - Generates confidence intervals for multilocus genotype diversity.
+\item \code{\link[=aboot]{aboot()}} (m | s | x) - Creates a bootstrapped dendrogram for any distance measure
+\item \code{\link[=bruvo.boot]{bruvo.boot()}} (m) - Produces dendrograms with bootstrap support based on Bruvo's distance
+\item \code{\link[=diversity_boot]{diversity_boot()}} (x) - Generates boostrap distributions of diversity statistics for multilocus genotypes
+\item \code{\link[=diversity_ci]{diversity_ci()}} (m | s | x) - Generates confidence intervals for multilocus genotype diversity.
+\item \code{\link[=resample.ia]{resample.ia()}} (m) - Calculates the index of association over subsets of data.
 }
 }
 
-\section{Analysis}{
+\section{Multilocus Genotypes}{
 
-\subsection{Multilocus Genotypes}{
 \itemize{
-\item \code{\link{mlg}} (m | s) - Calculates the number of multilocus genotypes
-\item \code{\link{mll}} (m | s) - Displays the current multilocus lineages (genotypes) defined.
-\item \code{\link{nmll}} (m | s) - Same as \code{\link{mlg}}.
-\item \code{\link{mlg.crosspop}} (m | s) - Finds all multilocus genotypes that cross populations
-\item \code{\link{mlg.table}} (m | s) - Returns a table of populations by multilocus genotypes
-\item \code{\link{mlg.vector}} (m | s) - Returns a vector of a numeric multilocus genotype assignment for each individual
-\item \code{\link{mlg.id}} (m | s) - Finds all individuals associated with a single multilocus genotype
-\item \code{\link{mlg.filter}} (m | s) - Collapses MLGs by genetic distance
-\item \code{\link{filter_stats}} (m | s) - Calculates mlg.filter for all algorithms and plots
-\item \code{\link{cutoff_predictor}} (x) - Predicts cutoff threshold from mlg.filter. 
-\item \code{\link{mll.custom}} (m | s) - Allows for the custom definition of multilocus lineages
-\item \code{\link{mll.levels}} (m | s) - Allows the user to change levels of custom MLLs. 
-\item \code{\link{mll.reset}} (m | s) - Reset multilocus lineages. 
-\item \code{\link{diversity_stats}} (x) - Creates a table of diversity indices for multilocus genotypes. 
+\item \code{\link[=mlg]{mlg()}} (m | s) - Calculates the number of multilocus genotypes
+\item \code{\link[=mll]{mll()}} (m | s) - Displays the current multilocus lineages (genotypes) defined.
+\item \code{\link[=nmll]{nmll()}} (m | s) - Same as \code{\link[=mlg]{mlg()}}.
+\item \code{\link[=mlg.crosspop]{mlg.crosspop()}} (m | s) - Finds all multilocus genotypes that cross populations
+\item \code{\link[=mlg.table]{mlg.table()}} (m | s) - Returns a table of populations by multilocus genotypes
+\item \code{\link[=mlg.vector]{mlg.vector()}} (m | s) - Returns a vector of a numeric multilocus genotype assignment for each individual
+\item \code{\link[=mlg.id]{mlg.id()}} (m | s) - Finds all individuals associated with a single multilocus genotype
+\item \code{\link[=mlg.filter]{mlg.filter()}} (m | s) - Collapses MLGs by genetic distance
+\item \code{\link[=filter_stats]{filter_stats()}} (m | s) - Calculates mlg.filter for all algorithms and plots
+\item \code{\link[=cutoff_predictor]{cutoff_predictor()}} (x) - Predicts cutoff threshold from mlg.filter.
+\item \code{\link[=mll.custom]{mll.custom()}} (m | s) - Allows for the custom definition of multilocus lineages
+\item \code{\link[=mll.levels]{mll.levels()}} (m | s) - Allows the user to change levels of custom MLLs.
+\item \code{\link[=mll.reset]{mll.reset()}} (m | s) - Reset multilocus lineages.
+\item \code{\link[=diversity_stats]{diversity_stats()}} (x) - Creates a table of diversity indices for multilocus genotypes.
 }
 }
-\subsection{Other}{
-\itemize{
 
-\item \code{\link{poppr.amova}} (m | s) - Analysis of Molecular Variance (as implemented in ade4)
-\item \code{\link{ia}} (m) - Calculates the index of association
-\item \code{\link{pair.ia}} (m) - Calculates the index of association for all loci pairs.
-\item \code{\link{jack.ia}} (m) - Calculates the index of association over subsets of data.
-\item \code{\link{win.ia}} (s) - Index of association windows for genlight objects.
-\item \code{\link{samp.ia}} (s) - Index of association on random subsets of loci for genlight objects.
-\item \code{\link{poppr}} (m | x) - Returns a diversity table by population
-\item \code{\link{poppr.all}} (m | x) - Returns a diversity table by population for all compatible files specified
-\item \code{\link{private_alleles}} (m) - Tabulates the occurrences of alleles that only occur in one population.
-\item \code{\link{locus_table}} (m) - Creates a table of summary statistics per locus.
-\item \code{\link{rrmlg}} (m | x) - Round-robin multilocus genotype estimates.
-\item \code{\link{rraf}} (m) - Round-robin allele frequency estimates.
-\item \code{\link{pgen}} (m) - Probability of genotypes.
-\item \code{\link{psex}} (m) - Probability of observing a genotype more than once.
-\item \code{\link{incomp}} (m) - Check data for incomparable samples.
+\section{Index of Association Analysis}{
+
+
+Analysis of multilocus linkage disequilibrium.
+\itemize{
+\item \code{\link[=ia]{ia()}} (m) - Calculates the index of association
+\item \code{\link[=pair.ia]{pair.ia()}} (m) - Calculates the index of association for all loci pairs.
+\item \code{\link[=win.ia]{win.ia()}} (s) - Index of association windows for genlight objects.
+\item \code{\link[=samp.ia]{samp.ia()}} (s) - Index of association on random subsets of loci for genlight objects.
 }
+}
+
+\section{Population Genetic Analysis}{
+
+\itemize{
+\item \code{\link[=poppr.amova]{poppr.amova()}} (m | s) - Analysis of Molecular Variance (as implemented in ade4)
+\item \code{\link[=poppr]{poppr()}} (m | x) - Returns a diversity table by population
+\item \code{\link[=poppr.all]{poppr.all()}} (m | x) - Returns a diversity table by population for all compatible files specified
+\item \code{\link[=private_alleles]{private_alleles()}} (m) - Tabulates the occurrences of alleles that only occur in one population.
+\item \code{\link[=locus_table]{locus_table()}} (m) - Creates a table of summary statistics per locus.
+\item \code{\link[=rrmlg]{rrmlg()}} (m | x) - Round-robin multilocus genotype estimates.
+\item \code{\link[=rraf]{rraf()}} (m) - Round-robin allele frequency estimates.
+\item \code{\link[=pgen]{pgen()}} (m) - Probability of genotypes.
+\item \code{\link[=psex]{psex()}} (m) - Probability of observing a genotype more than once.
+\item \link[poppr:rare_allele_correction]{rare_allele_correction} (m) - rules for correcting rare alleles for round-robin estimates.
+\item \code{\link[=incomp]{incomp()}} (m) - Check data for incomparable samples.
 }
 }
 
 \section{Visualization}{
 
 \itemize{
-\item \code{\link{imsn}} (m | s) - Interactive construction and visualization of minimum spanning networks
-\item \code{\link{plot_poppr_msn}} (m | s | x) - Plots minimum spanning networks produced in poppr with scale bar and legend
-\item \code{\link{greycurve}} (x) - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
-\item \code{\link{bruvo.msn}} (m) - Produces minimum spanning networks based off Bruvo's distance colored by population
-\item \code{\link{poppr.msn}} (m | s | x) - Produces a minimum spanning network for any pairwise distance matrix related to the data
-\item \code{\link{info_table}} (m) - Creates a heatmap representing missing data or observed ploidy
-\item \code{\link{genotype_curve}} (m | x) - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 
+\item \code{\link[=imsn]{imsn()}} (m | s) - Interactive construction and visualization of minimum spanning networks
+\item \code{\link[=plot_poppr_msn]{plot_poppr_msn()}} (m | s | x) - Plots minimum spanning networks produced in poppr with scale bar and legend
+\item \code{\link[=greycurve]{greycurve()}} (x) - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
+\item \code{\link[=bruvo.msn]{bruvo.msn()}} (m) - Produces minimum spanning networks based off Bruvo's distance colored by population
+\item \code{\link[=poppr.msn]{poppr.msn()}} (m | s | x) - Produces a minimum spanning network for any pairwise distance matrix related to the data
+\item \code{\link[=info_table]{info_table()}} (m) - Creates a heatmap representing missing data or observed ploidy
+\item \code{\link[=genotype_curve]{genotype_curve()}} (m | x) - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data.
 }
 }
 
 \section{Datasets}{
 
 \itemize{
-\item \code{\link{Aeut}} - (AFLP) Oomycete root rot pathogen
-\emph{Aphanomyces euteiches} (Grünwald and Hoheisel, 2006)
-\item \code{\link{monpop}} - (SSR) Peach brown rot pathogen \emph{Monilinia
-fructicola} (Everhart and Scherm, 2015)
-\item \code{\link{partial_clone}} - (SSR) partially-clonal data simulated via
-simuPOP (Peng and Amos, 2008)
-\item \code{\link{Pinf}} - (SSR) Potato late blight pathogen
-\emph{Phytophthora infestans} (Goss et. al., 2014)
-\item \code{\link{Pram}} - (SSR) Sudden Oak Death pathogen \emph{Phytophthora
-ramorum} (Kamvar et. al., 2015; Goss et. al., 2009)
+\item \code{\link[=Aeut]{Aeut()}} - (AFLP) Oomycete root rot pathogen \emph{Aphanomyces euteiches} (Grünwald and Hoheisel, 2006)
+\item \code{\link[=monpop]{monpop()}} - (SSR) Peach brown rot pathogen \emph{Monilinia fructicola} (Everhart and Scherm, 2015)
+\item \code{\link[=partial_clone]{partial_clone()}} - (SSR) partially-clonal data simulated via simuPOP (Peng and Amos, 2008)
+\item \code{\link[=Pinf]{Pinf()}} - (SSR) Potato late blight pathogen \emph{Phytophthora infestans} (Goss et. al., 2014)
+\item \code{\link[=Pram]{Pram()}} - (SSR) Sudden Oak Death pathogen \emph{Phytophthora ramorum} (Kamvar et. al., 2015; Goss et. al., 2009)
 }
 }
 
@@ -198,47 +216,46 @@ Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
 analysis of populations with clonal, partially clonal, and/or sexual
 reproduction. PeerJ 2:e281 \url{https://doi.org/10.7717/peerj.281}
 
-Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
+Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of
 genome-wide population genetic data with emphasis on clonality. Front. Genet.
-6:208. doi: 10.3389/fgene.2015.00208 
+6:208. doi: 10.3389/fgene.2015.00208
 \url{https://doi.org/10.3389/fgene.2015.00208}
 
 --------- Papers referencing data sets ---------
 
-Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity, 
-Selfing, and Genetic Differentiation in Populations of the Oomycete 
-\emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141 doi: 
+Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity,
+Selfing, and Genetic Differentiation in Populations of the Oomycete
+\emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141 doi:
 \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
 
 SE Everhart, H Scherm, (2015) Fine-scale genetic structure of \emph{Monilinia
 fructicola} during brown rot epidemics within individual peach tree canopies.
-Phytopathology 105:542-549 doi: 
+Phytopathology 105:542-549 doi:
 \href{https://doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
 
-Bo Peng and Christopher Amos (2008) Forward-time simulations of nonrandom 
+Bo Peng and Christopher Amos (2008) Forward-time simulations of nonrandom
 mating populations using simuPOP. \emph{bioinformatics}, 24 (11): 1408-1409.
 
 Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia Restrepo, William E.
 Fry, Gregory A. Forbes, Valerie J. Fieland, Martha Cardenas, and Niklaus J.
-Grünwald. (2014) "The Irish potato famine pathogen \emph{Phytophthora 
-infestans} originated in central Mexico rather than the Andes." Proceedings 
-of the National Academy of Sciences 111:8791-8796. doi: 
+Grünwald. (2014) "The Irish potato famine pathogen \emph{Phytophthora
+infestans} originated in central Mexico rather than the Andes." Proceedings
+of the National Academy of Sciences 111:8791-8796. doi:
 \href{https://doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
 
 Kamvar, Z. N., Larsen, M. M., Kanaskie, A. M., Hansen, E. M., & Grünwald, N.
 J. (2015). Spatial and temporal analysis of populations of the sudden oak
-death pathogen in Oregon forests. Phytopathology 105:982-989. doi: 
+death pathogen in Oregon forests. Phytopathology 105:982-989. doi:
 \href{https://doi.org/10.1094/PHYTO-12-14-0350-FI}{10.1094/PHYTO-12-14-0350-FI}
 
-
-Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N. 
-J. 2009. Population genetic analysis infers migration pathways of 
-\emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi: 
+Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
+J. 2009. Population genetic analysis infers migration pathways of
+\emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
 \href{https://doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
 }
 \author{
-Zhian N. Kamvar, Jonah C. Brooks, Sydney E. Everhart, Javier F. 
-  Tabima, Stacy Krueger-Hadfield, Erik Sotka, Niklaus J. Grünwald
+Zhian N. Kamvar, Jonah C. Brooks, Sydney E. Everhart, Javier F.
+Tabima, Stacy Krueger-Hadfield, Erik Sotka, Niklaus J. Grünwald
 
 Maintainer: Zhian N. Kamvar
 }

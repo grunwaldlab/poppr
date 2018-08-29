@@ -6,7 +6,7 @@
 \alias{old_partial_clone}
 \title{Simulated data illustrating a Minimum Spanning Network based on Bruvo's
 Distance}
-\format{a \code{\link{genind}} object with 50 individuals, 10 loci, and four 
+\format{a [genind()] object with 50 individuals, 10 loci, and four 
   populations.}
 \usage{
 data(partial_clone)
@@ -19,6 +19,6 @@ These data were simulated using SimuPOP version 1.0.8 with
 }
 \references{
 Bo Peng and Christopher Amos (2008) Forward-time simulations of 
-  nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11):
+  nonrandom mating populations using simuPOP. *bioinformatics*, 24 (11):
   1408-1409.
 }

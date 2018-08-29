@@ -1,4 +1,4 @@
-# Poppr version 2 <img src="vignettes/small_logo.png" align="right"/>
+# Poppr version 2 <img src="man/figures/small_logo.png" align="right"/>
 
 In Development:
 [![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)

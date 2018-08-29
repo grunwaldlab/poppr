@@ -42,171 +42,181 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 #==============================================================================#
-#' The \pkg{poppr} R package.
+#' The \pkg{poppr} R package
 #' 
+#' @md
 #' @description \pkg{Poppr} provides tools for population genetic analysis that
 #' include genotypic diversity measures, genetic distances with bootstrap
 #' support, native organization and handling of population hierarchies, and
 #' clone correction.
 #' 
-#' To cite \pkg{poppr}, please use \code{citation("poppr")}. When referring to
+#' To cite \pkg{poppr}, please use `citation("poppr")`. When referring to
 #' \pkg{poppr} in your manuscript, please use lower case unless it occurs at the
 #' beginning of a sentence.
 #' 
 #' @details This package relies on the \pkg{\link[adegenet]{adegenet}} package. 
-#'   It is built around the \code{\linkS4class{genind}} and 
-#'   \code{\linkS4class{genlight}} object. Genind objects store genetic
+#'   It is built around the [genind-class] and 
+#'   [genlight-class] object. Genind objects store genetic
 #'   information in a table of allele frequencies while genlight objects store
 #'   SNP data efficiently by packing binary allele calls into single bits.
 #'   \pkg{Poppr} has extended these object into new objects called 
-#'   \code{\linkS4class{genclone}} and \code{\linkS4class{snpclone}},
+#'   [genclone-class] and [snpclone-class],
 #'   respectively. These objects are designed for analysis of clonal organisms
-#'   as they add the \strong{@@mlg} slot for keeping track of multilocus
+#'   as they add the **@@mlg** slot for keeping track of multilocus
 #'   genotypes and multilocus lineages.
 #'   
 #'   \subsection{Documentation}{ Documentation is available for any function by 
-#'   typing \code{?function_name} in the R console. Detailed topic explanations
+#'   typing `?function_name` in the R console. Detailed topic explanations
 #'   live in the package vignettes:
 #'   
 #'   \tabular{ll}{
 #'     \strong{Vignette}              \tab \strong{command}\cr
-#'     Data import and manipulation   \tab \code{vignette("poppr_manual", "poppr")}\cr
-#'     Algorithms and Equations      \tab \code{vignette("algo", "poppr")}\cr
-#'     Multilocus Genotype Analysis   \tab \code{vignette("mlg", "poppr")}  
+#'     Data import and manipulation   \tab `vignette("poppr_manual", "poppr")`\cr
+#'     Algorithms and Equations       \tab `vignette("algo", "poppr")`\cr
+#'     Multilocus Genotype Analysis   \tab `vignette("mlg", "poppr")`  
 #'   }
 #'   
 #'   Essential functions for importing and manipulating data are detailed within
-#'   the \emph{Data import and manipulation} vignette, details on algorithms
-#'   used in \pkg{poppr} are within the \emph{Algorithms and equations}
+#'   the *Data import and manipulation* vignette, details on algorithms
+#'   used in \pkg{poppr} are within the *Algorithms and equations*
 #'   vignette, and details for working with multilocus genotypes are in
-#'   \emph{Multilocus Genotype Analysis}. Examples of analyses are available in
+#'   *Multilocus Genotype Analysis*. Examples of analyses are available in
 #'   a primer written by Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E.
-#'   Everhart at \url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
+#'   Everhart at <http://grunwaldlab.github.io/Population_Genetics_in_R>.}
 #'   
 #'   \subsection{Getting help}{ If you have a specific question or issue with 
 #'   \pkg{poppr}, feel free to contribute to the google group at 
-#'   \url{https://groups.google.com/group/poppr}. If you find a bug and 
+#'   <https://groups.google.com/group/poppr>. If you find a bug and 
 #'   are a github user, you can submit bug reports at 
-#'   \url{https://github.com/grunwaldlab/poppr/issues}. Otherwise, leave a
+#'   <https://github.com/grunwaldlab/poppr/issues>. Otherwise, leave a
 #'   message on the groups. Personal emails are highly discouraged as they do 
 #'   not allow others to learn.}
 #'   
 #' @section Functions in \pkg{poppr}:
 #' 
-#'   Below are descriptions and links to functions found in \pkg{poppr}. Be
-#'   aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
-#'   available. The functions are documented as:
-#'   \itemize{
-#'   \item \code{function} (data type) - Description
-#'   }
-#'   Where \sQuote{data type} refers to the type of data that can be used:
-#'   \tabular{ll}{
-#'     \strong{m} \tab a genclone or genind object \cr
-#'     \strong{s} \tab a snpclone or genlight object \cr
-#'     \strong{x} \tab a different data type (e.g. a matrix from \code{\link{mlg.table}})
-#'   }
-#'   
-#' @section Data import/export:
-#' \itemize{
-#' \item \code{\link{getfile}} (x) - Provides a quick GUI to grab files for import
-#' \item \code{\link{read.genalex}} (x) - Reads GenAlEx formatted csv files to a genind object
-#' \item \code{\link{genind2genalex}} (m) - Converts genind objects to GenAlEx formatted csv files
-#' \item \code{\link{genclone2genind}} (m) - Removes the @@mlg slot from genclone objects
-#' \item \code{\link{as.genambig}} (m) - Converts genind data to \pkg{polysat}'s \code{\linkS4class{genambig}} data structure.
-#' \item \code{\link{bootgen2genind}} (x) - see \code{\link{aboot}} for details)
-#' }
-#' @section Data manipulation:
-#' \itemize{
-#' \item \code{\link{as.genclone}} (m) - Converts genind objects to genclone objects
-#' \item \code{\link{missingno}} (m) - Handles missing data
-#' \item \code{\link{clonecorrect}} (m | s) - Clone-censors at a specified population hierarchy
-#' \item \code{\link{informloci}} (m) - Detects and removes phylogenetically uninformative loci
-#' \item \code{\link{popsub}} (m | s) - Subsets genind objects by population
-#' \item \code{\link{shufflepop}} (m) - Shuffles genotypes at each locus using four different shuffling algorithms
-#' \item \code{\link{recode_polyploids}} (m | x) - Recodes polyploid data sets with missing alleles imported as "0"
-#' \item \code{\link{make_haplotypes}} (m | s) - Splits data into pseudo-haplotypes. This is mainly used in AMOVA.
-#' }
-#' @section Genetic distances:
-#' \itemize{
-#' \item \code{\link{bruvo.dist}} (m) - Bruvo's distance (see also: \code{\link{fix_replen}})
-#' \item \code{\link{diss.dist}} (m) - Absolute genetic distance (see \code{\link{prevosti.dist}})
-#' \item \code{\link{nei.dist}} (m | x) - Nei's 1978 genetic distance
-#' \item \code{\link{rogers.dist}} (m | x) - Rogers' euclidean distance
-#' \item \code{\link{reynolds.dist}} (m | x) - Reynolds' coancestry distance
-#' \item \code{\link{edwards.dist}} (m | x) - Edwards' angular distance
-#' \item \code{\link{prevosti.dist}} (m | x) - Prevosti's absolute genetic distance
-#' \item \code{\link{bitwise.dist}} (s) - Calculates fast pairwise distances for genlight objects. 
-#' }
-#' @section Bootstrapping:
-#' \itemize{
-#' \item \code{\link{aboot}} (m | s | x) - Creates a bootstrapped dendrogram for any distance measure
-#' \item \code{\link{bruvo.boot}} (m) - Produces dendrograms with bootstrap support based on Bruvo's distance
-#' \item \code{\link{diversity_boot}} (x) - Generates boostrap distributions of diversity statistics for multilocus genotypes
-#' \item \code{\link{diversity_ci}} (m | s | x) - Generates confidence intervals for multilocus genotype diversity.
-#' }
-#' @section Analysis:
-#' \subsection{Multilocus Genotypes}{
-#' \itemize{
-#' \item \code{\link{mlg}} (m | s) - Calculates the number of multilocus genotypes
-#' \item \code{\link{mll}} (m | s) - Displays the current multilocus lineages (genotypes) defined.
-#' \item \code{\link{nmll}} (m | s) - Same as \code{\link{mlg}}.
-#' \item \code{\link{mlg.crosspop}} (m | s) - Finds all multilocus genotypes that cross populations
-#' \item \code{\link{mlg.table}} (m | s) - Returns a table of populations by multilocus genotypes
-#' \item \code{\link{mlg.vector}} (m | s) - Returns a vector of a numeric multilocus genotype assignment for each individual
-#' \item \code{\link{mlg.id}} (m | s) - Finds all individuals associated with a single multilocus genotype
-#' \item \code{\link{mlg.filter}} (m | s) - Collapses MLGs by genetic distance
-#' \item \code{\link{filter_stats}} (m | s) - Calculates mlg.filter for all algorithms and plots
-#' \item \code{\link{cutoff_predictor}} (x) - Predicts cutoff threshold from mlg.filter. 
-#' \item \code{\link{mll.custom}} (m | s) - Allows for the custom definition of multilocus lineages
-#' \item \code{\link{mll.levels}} (m | s) - Allows the user to change levels of custom MLLs. 
-#' \item \code{\link{mll.reset}} (m | s) - Reset multilocus lineages. 
-#' \item \code{\link{diversity_stats}} (x) - Creates a table of diversity indices for multilocus genotypes. 
-#' }
-#' }
-#' \subsection{Other}{
-#' \itemize{
+#' Below are descriptions and links to functions found in \pkg{poppr}. Be
+#' aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
+#' available. The functions are documented as:
 #' 
-#' \item \code{\link{poppr.amova}} (m | s) - Analysis of Molecular Variance (as implemented in ade4)
-#' \item \code{\link{ia}} (m) - Calculates the index of association
-#' \item \code{\link{pair.ia}} (m) - Calculates the index of association for all loci pairs.
-#' \item \code{\link{jack.ia}} (m) - Calculates the index of association over subsets of data.
-#' \item \code{\link{win.ia}} (s) - Index of association windows for genlight objects.
-#' \item \code{\link{samp.ia}} (s) - Index of association on random subsets of loci for genlight objects.
-#' \item \code{\link{poppr}} (m | x) - Returns a diversity table by population
-#' \item \code{\link{poppr.all}} (m | x) - Returns a diversity table by population for all compatible files specified
-#' \item \code{\link{private_alleles}} (m) - Tabulates the occurrences of alleles that only occur in one population.
-#' \item \code{\link{locus_table}} (m) - Creates a table of summary statistics per locus.
-#' \item \code{\link{rrmlg}} (m | x) - Round-robin multilocus genotype estimates.
-#' \item \code{\link{rraf}} (m) - Round-robin allele frequency estimates.
-#' \item \code{\link{pgen}} (m) - Probability of genotypes.
-#' \item \code{\link{psex}} (m) - Probability of observing a genotype more than once.
-#' \item \code{\link{incomp}} (m) - Check data for incomparable samples.
+#' > `function` (data type) - Description
+#' 
+#' Where \sQuote{data type} refers to the type of data that can be used:
+#' \tabular{ll}{
+#'   \strong{m} \tab a genclone or genind object \cr
+#'   \strong{s} \tab a snpclone or genlight object \cr
+#'   \strong{x} \tab a different data type (e.g. a matrix from [mlg.table()])
 #' }
-#' }
+#'
+#' @section Data import/export:
+#' 
+#' - [getfile()] (x) - Provides a quick GUI to grab files for import
+#' - [read.genalex()] (x) - Reads GenAlEx formatted csv files to a genind object
+#' - [genind2genalex()] (m) - Converts genind objects to GenAlEx formatted csv files
+#' - [genclone2genind()] (m) - Removes the @@mlg slot from genclone objects
+#' - [as.genambig()] (m) - Converts genind data to \pkg{polysat}'s [genambig][polysat::genambig-class] data structure.
+#' - [bootgen2genind()] (x) - see [aboot()] for details)
+#'
+#' @section Data Structures:
+#' 
+#' Data structures "genclone" (based off of adegenet's [genind][adegenet::genind-class]) and 
+#' "snpclone" (based off of adegenet's [genlight][adegenet::genlight-class] for large SNP data sets).
+#' Both of these data structures are defined by the presence of an extra
+#' MLG slot.
+#' 
+#' - [genclone-class] - Handles microsatellite, presence/absence, and small SNP data sets
+#' - [snpclone-class] - Designed to handle larger binary SNP data sets. 
+#' 
+#' @section Data manipulation:
+#' 
+#' - [as.genclone()] (m) - Converts genind objects to genclone objects
+#' - [missingno()] (m) - Handles missing data
+#' - [clonecorrect()] (m | s) - Clone-censors at a specified population hierarchy
+#' - [informloci()] (m) - Detects and removes phylogenetically uninformative loci
+#' - [popsub()] (m | s) - Subsets genind objects by population
+#' - [shufflepop()] (m) - Shuffles genotypes at each locus using four different shuffling algorithms
+#' - [recode_polyploids()] (m | x) - Recodes polyploid data sets with missing alleles imported as "0"
+#' - [make_haplotypes()] (m | s) - Splits data into pseudo-haplotypes. This is mainly used in AMOVA.
+#' - [test_replen()] (m) - Tests for inconsistent repeat lengths in microsatellite data. For use in [bruvo.dist()] functions.
+#' - [fix_replen()] (m) - Fixes inconsistent repeat lengths. For use in [bruvo.dist()] functions.
+#' 
+#' @section Genetic distances:
+#' 
+#' - [bruvo.dist()] (m) - Bruvo's distance (see also: [fix_replen()])
+#' - [diss.dist()] (m) - Absolute genetic distance (see [prevosti.dist()])
+#' - [nei.dist()] (m | x) - Nei's 1978 genetic distance
+#' - [rogers.dist()] (m | x) - Rogers' euclidean distance
+#' - [reynolds.dist()] (m | x) - Reynolds' coancestry distance
+#' - [edwards.dist()] (m | x) - Edwards' angular distance
+#' - [prevosti.dist()] (m | x) - Prevosti's absolute genetic distance
+#' - [bitwise.dist()] (s) - Calculates fast pairwise distances for genlight objects. 
+#'  
+#' @section Bootstrapping:
+#' 
+#' - [aboot()] (m | s | x) - Creates a bootstrapped dendrogram for any distance measure
+#' - [bruvo.boot()] (m) - Produces dendrograms with bootstrap support based on Bruvo's distance
+#' - [diversity_boot()] (x) - Generates boostrap distributions of diversity statistics for multilocus genotypes
+#' - [diversity_ci()] (m | s | x) - Generates confidence intervals for multilocus genotype diversity.
+#' - [resample.ia()] (m) - Calculates the index of association over subsets of data.
+#'  
+#' @section Multilocus Genotypes:
+#' 
+#' - [mlg()] (m | s) - Calculates the number of multilocus genotypes
+#' - [mll()] (m | s) - Displays the current multilocus lineages (genotypes) defined.
+#' - [nmll()] (m | s) - Same as [mlg()].
+#' - [mlg.crosspop()] (m | s) - Finds all multilocus genotypes that cross populations
+#' - [mlg.table()] (m | s) - Returns a table of populations by multilocus genotypes
+#' - [mlg.vector()] (m | s) - Returns a vector of a numeric multilocus genotype assignment for each individual
+#' - [mlg.id()] (m | s) - Finds all individuals associated with a single multilocus genotype
+#' - [mlg.filter()] (m | s) - Collapses MLGs by genetic distance
+#' - [filter_stats()] (m | s) - Calculates mlg.filter for all algorithms and plots
+#' - [cutoff_predictor()] (x) - Predicts cutoff threshold from mlg.filter. 
+#' - [mll.custom()] (m | s) - Allows for the custom definition of multilocus lineages
+#' - [mll.levels()] (m | s) - Allows the user to change levels of custom MLLs. 
+#' - [mll.reset()] (m | s) - Reset multilocus lineages. 
+#' - [diversity_stats()] (x) - Creates a table of diversity indices for multilocus genotypes. 
+#'    
+#' 
+#' @section Index of Association Analysis:
+#'
+#' Analysis of multilocus linkage disequilibrium.
+#' 
+#' - [ia()] (m) - Calculates the index of association
+#' - [pair.ia()] (m) - Calculates the index of association for all loci pairs.
+#' - [win.ia()] (s) - Index of association windows for genlight objects.
+#' - [samp.ia()] (s) - Index of association on random subsets of loci for genlight objects.
+#' 
+#' @section Population Genetic Analysis:
+#'
+#' - [poppr.amova()] (m | s) - Analysis of Molecular Variance (as implemented in ade4)
+#' - [poppr()] (m | x) - Returns a diversity table by population
+#' - [poppr.all()] (m | x) - Returns a diversity table by population for all compatible files specified
+#' - [private_alleles()] (m) - Tabulates the occurrences of alleles that only occur in one population.
+#' - [locus_table()] (m) - Creates a table of summary statistics per locus.
+#' - [rrmlg()] (m | x) - Round-robin multilocus genotype estimates.
+#' - [rraf()] (m) - Round-robin allele frequency estimates.
+#' - [pgen()] (m) - Probability of genotypes.
+#' - [psex()] (m) - Probability of observing a genotype more than once.
+#' - [rare_allele_correction][poppr::rare_allele_correction] (m) - rules for correcting rare alleles for round-robin estimates.
+#' - [incomp()] (m) - Check data for incomparable samples.
+#' 
+#'
 #' @section Visualization:
-#' \itemize{
-#' \item \code{\link{imsn}} (m | s) - Interactive construction and visualization of minimum spanning networks
-#' \item \code{\link{plot_poppr_msn}} (m | s | x) - Plots minimum spanning networks produced in poppr with scale bar and legend
-#' \item \code{\link{greycurve}} (x) - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
-#' \item \code{\link{bruvo.msn}} (m) - Produces minimum spanning networks based off Bruvo's distance colored by population
-#' \item \code{\link{poppr.msn}} (m | s | x) - Produces a minimum spanning network for any pairwise distance matrix related to the data
-#' \item \code{\link{info_table}} (m) - Creates a heatmap representing missing data or observed ploidy
-#' \item \code{\link{genotype_curve}} (m | x) - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 
-#' }
+#' 
+#' - [imsn()] (m | s) - Interactive construction and visualization of minimum spanning networks
+#' - [plot_poppr_msn()] (m | s | x) - Plots minimum spanning networks produced in poppr with scale bar and legend
+#' - [greycurve()] (x) - Helper to determine the appropriate parameters for adjusting the grey level for msn functions
+#' - [bruvo.msn()] (m) - Produces minimum spanning networks based off Bruvo's distance colored by population
+#' - [poppr.msn()] (m | s | x) - Produces a minimum spanning network for any pairwise distance matrix related to the data
+#' - [info_table()] (m) - Creates a heatmap representing missing data or observed ploidy
+#' - [genotype_curve()] (m | x) - Creates a series of boxplots to demonstrate how many markers are needed to represent the diversity of your data. 
 #' 
 #' @section Datasets:
-#' \itemize{
-#' \item \code{\link{Aeut}} - (AFLP) Oomycete root rot pathogen
-#' \emph{Aphanomyces euteiches} (Grünwald and Hoheisel, 2006)
-#' \item \code{\link{monpop}} - (SSR) Peach brown rot pathogen \emph{Monilinia
-#' fructicola} (Everhart and Scherm, 2015)
-#' \item \code{\link{partial_clone}} - (SSR) partially-clonal data simulated via
-#' simuPOP (Peng and Amos, 2008)
-#' \item \code{\link{Pinf}} - (SSR) Potato late blight pathogen
-#' \emph{Phytophthora infestans} (Goss et. al., 2014)
-#' \item \code{\link{Pram}} - (SSR) Sudden Oak Death pathogen \emph{Phytophthora
-#' ramorum} (Kamvar et. al., 2015; Goss et. al., 2009)
-#' }
+#' 
+#' - [Aeut()] - (AFLP) Oomycete root rot pathogen *Aphanomyces euteiches* (Grünwald and Hoheisel, 2006)
+#' - [monpop()] - (SSR) Peach brown rot pathogen *Monilinia fructicola* (Everhart and Scherm, 2015)
+#' - [partial_clone()] - (SSR) partially-clonal data simulated via simuPOP (Peng and Amos, 2008)
+#' - [Pinf()] - (SSR) Potato late blight pathogen *Phytophthora infestans* (Goss et. al., 2014)
+#' - [Pram()] - (SSR) Sudden Oak Death pathogen *Phytophthora ramorum* (Kamvar et. al., 2015; Goss et. al., 2009)
 #' 
 #' @author Zhian N. Kamvar, Jonah C. Brooks, Sydney E. Everhart, Javier F. 
 #'   Tabima, Stacy Krueger-Hadfield, Erik Sotka, Niklaus J. Grünwald
@@ -217,32 +227,32 @@
 #' 
 #' Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package for genetic
 #' analysis of populations with clonal, partially clonal, and/or sexual
-#' reproduction. PeerJ 2:e281 \url{https://doi.org/10.7717/peerj.281}
+#' reproduction. PeerJ 2:e281 <https://doi.org/10.7717/peerj.281>
 #' 
 #' Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of 
 #' genome-wide population genetic data with emphasis on clonality. Front. Genet.
 #' 6:208. doi: 10.3389/fgene.2015.00208 
-#' \url{https://doi.org/10.3389/fgene.2015.00208}
+#' <https://doi.org/10.3389/fgene.2015.00208>
 #' 
 #' --------- Papers referencing data sets ---------
 #' 
 #' Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity, 
 #' Selfing, and Genetic Differentiation in Populations of the Oomycete 
-#' \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141 doi: 
+#' *Aphanomyces euteiches*. Phytopathology 96:1134-1141 doi: 
 #' \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
 #' 
-#' SE Everhart, H Scherm, (2015) Fine-scale genetic structure of \emph{Monilinia
-#' fructicola} during brown rot epidemics within individual peach tree canopies.
+#' SE Everhart, H Scherm, (2015) Fine-scale genetic structure of *Monilinia
+#' fructicola* during brown rot epidemics within individual peach tree canopies.
 #' Phytopathology 105:542-549 doi: 
 #' \href{https://doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
 #' 
 #' Bo Peng and Christopher Amos (2008) Forward-time simulations of nonrandom 
-#' mating populations using simuPOP. \emph{bioinformatics}, 24 (11): 1408-1409.
+#' mating populations using simuPOP. *bioinformatics*, 24 (11): 1408-1409.
 #' 
 #' Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia Restrepo, William E.
 #' Fry, Gregory A. Forbes, Valerie J. Fieland, Martha Cardenas, and Niklaus J.
-#' Grünwald. (2014) "The Irish potato famine pathogen \emph{Phytophthora 
-#' infestans} originated in central Mexico rather than the Andes." Proceedings 
+#' Grünwald. (2014) "The Irish potato famine pathogen *Phytophthora 
+#' infestans* originated in central Mexico rather than the Andes." Proceedings 
 #' of the National Academy of Sciences 111:8791-8796. doi: 
 #' \href{https://doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
 #' 
@@ -254,7 +264,7 @@
 #' 
 #' Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N. 
 #' J. 2009. Population genetic analysis infers migration pathways of 
-#' \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi: 
+#' *Phytophthora ramorum* in US nurseries. PLoS Pathog. 5:e1000583. doi: 
 #' \href{https://doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
 #'   
 #' 
@@ -263,21 +273,21 @@
 #==============================================================================#
 NULL
 #==============================================================================#
-#' Oomycete root rot pathogen \emph{Aphanomyces euteiches} AFLP data
+#' Oomycete root rot pathogen *Aphanomyces euteiches* AFLP data
 #' 
 #' @name Aeut
 #' @docType data
 #' @usage data(Aeut)
 #' @description The Aeut dataset consists of 187 isolates of the Oomycete root 
-#'   rot pathogen, \emph{Aphanomyces euteiches} collected from two different 
+#'   rot pathogen, *Aphanomyces euteiches* collected from two different 
 #'   fields in NW Oregon and W Washington, USA.
-#' @format a \code{\link{genind}} object with two populations containing a data
-#'   frame in the \code{other} slot called \code{population_hierarchy}. This
+#' @format a [genind()] object with two populations containing a data
+#'   frame in the `other` slot called `population_hierarchy`. This
 #'   data frame gives indices of the populations and subpopulations for the data
 #'   set.
 #' @references Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of
 #'   Diversity, Selfing, and Genetic Differentiation in Populations of the 
-#'   Oomycete \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141
+#'   Oomycete *Aphanomyces euteiches*. Phytopathology 96:1134-1141
 #'   doi: \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
 #==============================================================================#
 NULL
@@ -293,10 +303,10 @@ NULL
 #'   99.9\% clonal reproduction over 10,000 generations. Populations were
 #'   assigned post-hoc and are simply present for the purposes of demonstrating
 #'   a minimum spanning network with Bruvo's distance.
-#' @format a \code{\link{genind}} object with 50 individuals, 10 loci, and four 
+#' @format a [genind()] object with 50 individuals, 10 loci, and four 
 #'   populations.
 #' @references Bo Peng and Christopher Amos (2008) Forward-time simulations of 
-#'   nonrandom mating populations using simuPOP. \emph{bioinformatics}, 24 (11):
+#'   nonrandom mating populations using simuPOP. *bioinformatics*, 24 (11):
 #'   1408-1409.
 #==============================================================================#
 NULL
@@ -315,13 +325,13 @@ NULL
 #' @description The Pinf data set contains 86 isolates genotyped over 11 
 #'   microsatellite loci collected from Mexico, Peru, Columbia, and Ecuador. 
 #'   This is a subset of the data used for the reference below.
-#' @format a \code{\linkS4class{genclone}} object with 2 hierarchical levels 
+#' @format a [genclone-class] object with 2 hierarchical levels 
 #'   called "Continent" and "Country" that contain 2 and 4 populations, 
 #'   respectively.
 #' @references Goss, Erica M., Javier F. Tabima, David EL Cooke, Silvia 
 #'   Restrepo, William E. Fry, Gregory A. Forbes, Valerie J. Fieland, Martha 
 #'   Cardenas, and Niklaus J. Grünwald. "The Irish potato famine pathogen 
-#'   \emph{Phytophthora infestans} originated in central Mexico rather than the 
+#'   *Phytophthora infestans* originated in central Mexico rather than the 
 #'   Andes." Proceedings of the National Academy of Sciences 111:8791-8796. doi:
 #'   \href{https://doi.org/10.1073/pnas.1401884111}{10.1073/pnas.1401884111}
 #==============================================================================#
@@ -339,15 +349,15 @@ NULL
 #' @docType data
 #' @usage data(Pram)
 #' @description This is the data set from 
-#'   \url{https://doi.org/10.5281/zenodo.13007}. It has been converted to the 
+#'   <https://doi.org/10.5281/zenodo.13007>. It has been converted to the 
 #'   genclone object as of poppr version 2.0. It contains 729 samples of the 
-#'   Sudden Oak Death pathogen \emph{Phytophthora ramorum} genotyped over five 
+#'   Sudden Oak Death pathogen *Phytophthora ramorum* genotyped over five 
 #'   microsatellite loci (Kamvar et. al., 2015). 513 samples were collected from
 #'   forests in Curry County, OR from 2001 to mid-2014 (labeled by watershed
 #'   region). The other 216 samples represents genotypes collected from
 #'   Nurseries in OR and CA from Goss et. al. (2009).
 #'   
-#' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
+#' @format a [genclone-class] object with 3 hierarchical levels 
 #'   called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a 
 #'   named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy 
 #'   coordinates for the forest samples called \strong{"xy"}, and a palette to 
@@ -368,7 +378,7 @@ NULL
 #'   
 #'   Goss, E. M., Larsen, M., Chastagner, G. A., Givens, D. R., and Grünwald, N.
 #'   J. 2009. Population genetic analysis infers migration pathways of 
-#'   \emph{Phytophthora ramorum} in US nurseries. PLoS Pathog. 5:e1000583. doi:
+#'   *Phytophthora ramorum* in US nurseries. PLoS Pathog. 5:e1000583. doi:
 #'   \href{https://doi.org/10.1371/journal.ppat.1000583}{10.1371/journal.ppat.1000583}
 #'   
 #' @examples
@@ -382,13 +392,13 @@ NULL
 #==============================================================================#
 NULL
 #==============================================================================#
-#' Peach brown rot pathogen \emph{Monilinia fructicola}
+#' Peach brown rot pathogen *Monilinia fructicola*
 #' 
 #' @name monpop
 #' @docType data
 #' @usage data(monpop)
 #' @description This is microsatellite data for a population of the haploid 
-#'   plant pathogen \emph{Monilinia fructicola} that causes disease within peach
+#'   plant pathogen *Monilinia fructicola* that causes disease within peach
 #'   tree canopies (Everhart & Scherm, 2014). Entire populations within trees
 #'   were sampled across 3 years (2009, 2010, and 2011) in a total of four
 #'   trees, where one tree was sampled in all three years, for a total of 6
@@ -397,11 +407,11 @@ NULL
 #'   from affected fruits (termed "FR" for fruit rot). There are a total of 694 
 #'   isolates with 65 to 173 isolates within each canopy population that were 
 #'   characterized using a set of 13 microsatellite markers.
-#' @format a \code{\linkS4class{genclone}} object with 3 hierarchical levels 
+#' @format a [genclone-class] object with 3 hierarchical levels 
 #'   coded into one population factor. These are named "Tree", "Year", and 
 #'   "Symptom"
 #' @references SE Everhart, H Scherm, (2015) Fine-scale genetic structure of 
-#'   \emph{Monilinia fructicola} during brown rot epidemics within individual
+#'   *Monilinia fructicola* during brown rot epidemics within individual
 #'   peach tree canopies. Phytopathology 105:542-549 doi:
 #'   \href{https://doi.org/10.1094/PHYTO-03-14-0088-R}{10.1094/PHYTO-03-14-0088-R}
 #'   
