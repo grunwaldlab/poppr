@@ -121,10 +121,19 @@
 #' Data structures "genclone" (based off of adegenet's [genind][adegenet::genind-class]) and 
 #' "snpclone" (based off of adegenet's [genlight][adegenet::genlight-class] for large SNP data sets).
 #' Both of these data structures are defined by the presence of an extra
-#' MLG slot.
+#' MLG slot representing multilocus genotype assignments, which can be a numeric
+#' vector or a MLG class object.
 #' 
 #' - [genclone-class] - Handles microsatellite, presence/absence, and small SNP data sets
 #' - [snpclone-class] - Designed to handle larger binary SNP data sets. 
+#' - [MLG-class] - An internal class holding a data frame of multilocus genotype
+#'   assignments that acts like a vector, allowing the user to easily switch
+#'   between different MLG definitions.
+#' - [bootgen-class] - An internal class used explicitly for [aboot()] that
+#'   inherits the [gen-class][adegenet::gen-class] virtual object. It is
+#'   designed to allow for sampling loci with replacement.
+#' - [bruvomat-class] - An internal class designed to handle bootstrapping for
+#'   Bruvo's distance where blocks of integer loci can be shuffled.
 #' 
 #' @section Data manipulation:
 #' 

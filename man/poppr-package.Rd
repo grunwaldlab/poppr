@@ -88,10 +88,19 @@ Where \sQuote{data type} refers to the type of data that can be used:
 Data structures "genclone" (based off of adegenet's \link[adegenet:genind-class]{genind}) and
 "snpclone" (based off of adegenet's \link[adegenet:genlight-class]{genlight} for large SNP data sets).
 Both of these data structures are defined by the presence of an extra
-MLG slot.
+MLG slot representing multilocus genotype assignments, which can be a numeric
+vector or a MLG class object.
 \itemize{
 \item \linkS4class{genclone} - Handles microsatellite, presence/absence, and small SNP data sets
 \item \linkS4class{snpclone} - Designed to handle larger binary SNP data sets.
+\item \linkS4class{MLG} - An internal class holding a data frame of multilocus genotype
+assignments that acts like a vector, allowing the user to easily switch
+between different MLG definitions.
+\item \linkS4class{bootgen} - An internal class used explicitly for \code{\link[=aboot]{aboot()}} that
+inherits the \link[adegenet:gen-class]{gen-class} virtual object. It is
+designed to allow for sampling loci with replacement.
+\item \linkS4class{bruvomat} - An internal class designed to handle bootstrapping for
+Bruvo's distance where blocks of integer loci can be shuffled.
 }
 }
 

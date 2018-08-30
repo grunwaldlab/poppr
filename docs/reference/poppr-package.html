@@ -208,9 +208,18 @@ available. The functions are documented as:</p>
     <p>Data structures "genclone" (based off of adegenet's <a href='http://www.rdocumentation.org/packages/adegenet/topics/genind'>genind</a>) and
 "snpclone" (based off of adegenet's <a href='http://www.rdocumentation.org/packages/adegenet/topics/genlight'>genlight</a> for large SNP data sets).
 Both of these data structures are defined by the presence of an extra
-MLG slot.</p><ul>
+MLG slot representing multilocus genotype assignments, which can be a numeric
+vector or a MLG class object.</p><ul>
 <li><p><a href='genclone-class.html'>genclone</a> - Handles microsatellite, presence/absence, and small SNP data sets</p></li>
 <li><p><a href='genclone-class.html'>snpclone</a> - Designed to handle larger binary SNP data sets.</p></li>
+<li><p><a href='MLG-class.html'>MLG</a> - An internal class holding a data frame of multilocus genotype
+assignments that acts like a vector, allowing the user to easily switch
+between different MLG definitions.</p></li>
+<li><p><a href='bootgen-class.html'>bootgen</a> - An internal class used explicitly for <code><a href='aboot.html'>aboot()</a></code> that
+inherits the <a href='http://www.rdocumentation.org/packages/adegenet/topics/virClasses'>gen-class</a> virtual object. It is
+designed to allow for sampling loci with replacement.</p></li>
+<li><p><a href='bruvomat-class.html'>bruvomat</a> - An internal class designed to handle bootstrapping for
+Bruvo's distance where blocks of integer loci can be shuffled.</p></li>
 </ul>
     
     <h2 class="hasAnchor" id="data-manipulation"><a class="anchor" href="#data-manipulation"></a>Data manipulation</h2>
