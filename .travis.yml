@@ -12,7 +12,7 @@ cache: packages
 addons:
   apt:
     packages:
-      - libudunits2
+      - libudunits2-dev
 
 r_packages:
   - RClone
