@@ -326,9 +326,8 @@ mlg.matrix <- function(x){
   if(np < 2){
     return(as.numeric(c(NaN, NaN)))
   }  
-  #''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''#
   # Starting the actual calculations. 
-  #,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#
+  
 	V <- .PA.pairwise.differences(pop, numLoci, np, missing=missing)
 	# First, set the variance of D	
 	varD <- ((sum(V$D.vector^2)-((sum(V$D.vector))^2)/np))/np
