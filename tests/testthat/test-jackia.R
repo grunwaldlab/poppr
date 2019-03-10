@@ -34,7 +34,7 @@ test_that("the mean of the distribution is near the observed value of ia", {
   rdsa  <- ia(Pinf[pop = 1])[[2]]
   set.seed(999)
   jrdsa <- resample.ia(Pinf[pop = 1])[["rbarD"]]
-  testthat::expect_equal(rdsa, mean(jrdsa), tol = 1e-3)
+  testthat::expect_equal(rdsa, mean(jrdsa), tol = 1e-2)
 })
 
 test_that("jack.ia is deprecated", {

@@ -58,7 +58,7 @@ test_that("a single instance of missing data won't induce a new genotype", {
 test_that("mlg.filter will reduce the number of multilocus lineages", {
   skip_on_cran()
   mlg.filter(sc) <- 0.4
-  expect_equal(nmll(sc), 24)
+  expect_lt(nmll(sc), nmll(sc, "original"))
 })
 
 test_that("mlg.filter<- can't be used for genlight objects", {
