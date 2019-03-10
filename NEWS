@@ -1,3 +1,13 @@
+poppr 2.8.2
+===========
+
+MISC
+----
+
+* Tests relying on randomization were updated before R 3.6.0, which fixes a
+  biased randomization. This has no visible impact on users.
+  See https://github.com/grunwaldlab/poppr/pull/198 for details.
+
 poppr 2.8.1
 ===========
 
