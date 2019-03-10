@@ -14,7 +14,7 @@
 ^CODE_OF_CONDUCT\.md$
 ^NEWS\.md$
 ^cran-comments\.md$
-^docs$
+^docs/$
 ^ISSUE_TEMPLATE\.md$
 ^CONTRIBUTING.md$
 ^_pkgdown\.yml$
