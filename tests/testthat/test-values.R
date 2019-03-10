@@ -306,6 +306,7 @@ test_that("bitwise.ia can handle large samples", {
 
 test_that("win.ia produces expected results", {
   skip_on_cran()
+  RNGversion("3.5.0")
   set.seed(999)
   x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
   position(x) <- sort(sample(1e4, 1e3))
@@ -340,6 +341,7 @@ test_that("win.ia produces expected results", {
                     loc.names = .genlab("", 300L))
   gid.res <- ia(xgid)["rbarD"]
   expect_equivalent(gid.res, nopos.res[1])
+  RNGversion(paste(R.version[c('major', 'minor')], collapse = "."))
 })
 
 test_that("win.ia can handle missing data for haploids", {
@@ -384,6 +386,7 @@ test_that("win.ia knows the batman theme", {
 
 test_that("samp.ia works",{
   skip_on_cran()
+  RNGversion("3.5.0")
   set.seed(999)
   x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2)
   position(x) <- sort(sample(1e4, 1e3))
@@ -396,6 +399,7 @@ test_that("samp.ia works",{
   set.seed(900)
   nopos.res <- samp.ia(x, n.snp = 20, reps = 2, quiet = TRUE)
   expect_equivalent(nopos.res, pos.res)
+  RNGversion(paste(R.version[c('major', 'minor')], collapse = "."))
 })
 
 test_that("poppr_has_parallel returns something logical", {

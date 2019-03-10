@@ -1,7 +1,7 @@
 context("Round Robin Tests")
 
-set.seed(69)
-x <- matrix(sample(LETTERS[1:3], 15, replace = TRUE), nrow = 5, ncol = 3)
+x <- structure(c("B", "C", "B", "C", "B", "C", "A", "C", "A", "A", 
+"C", "B", "C", "A", "A"), .Dim = c(5L, 3L))
 suppressWarnings(x <- df2genind(x, ploidy = 1))
 rrx_m <- rrmlg(x)
 mlg_truth <- structure(c(3L, 2L, 3L, 1L, 1L, 2L, 4L, 2L, 3L, 1L, 2L, 3L, 2L, 

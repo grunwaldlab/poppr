@@ -9,6 +9,12 @@ warnings_are_errors: true
 
 cache: packages
 
+addons:
+  apt:
+    packages:
+      - libudunits2-dev
+      - libgdal-dev
+
 r_packages:
   - RClone
 
