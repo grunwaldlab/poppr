@@ -61,4 +61,4 @@ Suggests:
     RClone
 License: GPL-2 | GPL-3
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
