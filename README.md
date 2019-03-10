@@ -1,11 +1,11 @@
 # Poppr version 2 <img src="man/figures/small_logo.png" align="right"/>
 
 In Development:
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=cran-2.8.2-rc)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=cran-2.8.2-rc)](https://coveralls.io/r/grunwaldlab/poppr?branch=cran-2.8.2-rc)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
 
 CRAN Status:
-[![CRAN version](http://www.r-pkg.org/badges/version/poppr)](https://cran.r-project.org/package=poppr)
+[![CRAN version](http://www.r-pkg.org/badges/version-ago/poppr)](https://cran.r-project.org/package=poppr)
 [![CRAN check status](https://cranchecks.info/badges/worst/poppr)](https://cran.r-project.org/web/checks/check_results_poppr.html)
 <!-- 
 [![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
