@@ -8,11 +8,9 @@ CRAN Status:
 [![CRAN version](http://www.r-pkg.org/badges/version-ago/poppr)](https://cran.r-project.org/package=poppr)
 [![CRAN check status](https://cranchecks.info/badges/worst/poppr)](https://cran.r-project.org/web/checks/check_results_poppr.html)
 <!-- 
-[![Downloads from Rstudio mirror per month](https://cranlogs.r-pkg.org/badges/poppr)](http://www.r-pkg.org/pkg/poppr)
 -->
 Usage:
 [![Downloads from Rstudio mirror](https://cranlogs.r-pkg.org/badges/grand-total/poppr)](http://www.r-pkg.org/pkg/poppr)
-[![Research software impact](http://depsy.org/api/package/cran/poppr/badge.svg)](http://depsy.org/package/r/poppr)
 
 ## What is *poppr*?
 
