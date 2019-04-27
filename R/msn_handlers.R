@@ -230,6 +230,13 @@ msn_constructor <-
     V(mst)$shape     <- "pie"
     V(mst)$pie       <- mlg.cp
     V(mst)$pie.color <- mlg.color    
+    # Transform pie made of single population into circle
+    pie.single <- sapply(V(mst)$pie, length) == 1
+    if (any(pie.single)) {
+      V(mst)$shape[pie.single] <- "circle"
+      V(mst)$color             <- rep(NA, length(V(mst)$name))
+      V(mst)$color[pie.single] <- unlist(V(mst)$pie.color[pie.single])
+    }
   } else {
     V(mst)$color     <- color
   }
