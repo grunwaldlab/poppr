@@ -426,13 +426,14 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   res.gid@call <- gencall
   # Checking for individual name duplications or removals -------------------
   
-  same_names <- any(indNames(res.gid) %in% ind.vec)
-  if (same_names){ # no duplications, only removals
+  same_names <- intersect(indNames(res.gid), ind.vec)
+  if (setequal(same_names, indNames(res.gid))) { # no duplications, only removals
     names(ind.vec) <- ind.vec
     ind.vec        <- ind.vec[indNames(res.gid)]
   } else {         # removals and/or duplciations
     ind.vec <- ind.vec[as.integer(indNames(res.gid))]
     other(res.gid)$original_names <- ind.vec
+    ind.vec <- as.integer(indNames(res.gid))
   }
   pop.vec <- pop.vec %null% pop.vec[ind.vec]
   reg.vec <- reg.vec %null% reg.vec[ind.vec]
