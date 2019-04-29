@@ -14,6 +14,16 @@ A009	7_09_BB	224	97	159	160	133	156	126	119	147	227	261	134	149
 A006	7_09_BB	224	97	159	160	133	156	126	119	147	235	261	134	149
 A013	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134	149"
 
+yd <- "13	6	1	6											
+			7_09_BB											
+Ind	Pop	CHMFc4	CHMFc5	CHMFc12	SEA	SED	SEE	SEG	SEI	SEL	SEN	SEP	SEQ	SER
+4	7_09_BB	224	85	163	132	133	156	144	116	143	227	257	142	145
+2	7_09_BB	224	97	159	156	129	156	144	113	143	231	261	136	153
+2	7_09_BB	224	97	159	160	133	156	126	119	147	227	257	134	149
+9	7_09_BB	224	97	159	160	133	156	126	119	147	227	261	134	149
+6	7_09_BB	224	97	159	160	133	156	126	119	147	235	261	134	149
+3	7_09_BB	224	97	163	160	133	156	126	119	147	235	257	134	149"
+
 zz <- "1	6	1	6
 7_09_BB			
 Ind	Pop	CHMFc4	CHMFc5
@@ -23,6 +33,7 @@ A011	7_09_BB	224	97
 A009	7_09_BB	224	97
 A006	7_09_BB	224	97
 A013	7_09_BB	224	97"
+
 
 zzna <- "13	6	1	6											
 			7_09_BB											
@@ -83,6 +94,16 @@ A013	7_09_BB_A013	224	97	163	160	133	156	126	119	147	235	257	134	149"
 
 test_that("basic text connections work", {
 	gen <- read.genalex(textConnection(y), sep = "\t")
+	expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
+})
+
+test_that("names are corrected properly", {
+	expect_warning(gen <- read.genalex(textConnection(yd), sep = "\t"),
+                 "duplicate labels detected")
+  expect_false(anyNA(strata(gen)))
+  expect_named(other(gen), "original_names")
+  expect_identical(indNames(gen), as.character(1:6))
+  indNames(gen) <- sprintf("A%03d", c(4, 2, 11, 9, 6, 13))
 	expect_equivalent(tab(gen), tab(monpop[1:6, drop = TRUE]))
 })
 
