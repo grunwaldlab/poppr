@@ -1,8 +1,8 @@
 # Poppr version 2 <img src="man/figures/small_logo.png" align="right"/>
 
 In Development:
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=master)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master)](https://coveralls.io/r/grunwaldlab/poppr?branch=master)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=fix-readgenalex-numeric-inds)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=fix-readgenalex-numeric-inds)](https://coveralls.io/r/grunwaldlab/poppr?branch=fix-readgenalex-numeric-inds)
 
 CRAN Status:
 [![CRAN version](http://www.r-pkg.org/badges/version-ago/poppr)](https://cran.r-project.org/package=poppr)
