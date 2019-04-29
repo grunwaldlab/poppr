@@ -6,7 +6,8 @@ BUG FIX
 
 * `read.genalex()` now correctly parses strata when the user imports data that
   contains duplicated data AND has some individuals named as integers less than
-  the number of samples in the data (prepended by zeroes).
+  the number of samples in the data (prepended by zeroes) 
+  (See https://github.com/grunwaldlab/poppr/pull/202).
 
 poppr 2.8.2
 ===========
