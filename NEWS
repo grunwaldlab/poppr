@@ -9,6 +9,12 @@ BUG FIX
   the number of samples in the data (prepended by zeroes) 
   (See https://github.com/grunwaldlab/poppr/pull/202).
 
+MISC
+====
+
+* MSN functions: nodes with single populations displayed as circles instead of 
+  pies. (@fdchevalier, https://github.com/grunwaldlab/poppr/pull/203)
+
 poppr 2.8.2
 ===========
 
