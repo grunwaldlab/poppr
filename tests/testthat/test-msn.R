@@ -127,7 +127,7 @@ sbruv_no_ties <- bruvo.msn(gend_single, replen = c(1,1), showplot = FALSE)
 sbruv_ties    <- bruvo.msn(gend_single, replen = c(1,1), showplot = FALSE, include.ties = TRUE)
 spmsn_no_ties <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE)
 spmsn_ties    <- poppr.msn(gend_single, distmat = gend_bruvo, showplot = FALSE, include.ties = TRUE)
-pienames      <- c("name", "size", "shape", "pie", "pie.color", "label")
+pienames      <- c("name", "size", "shape", "pie", "pie.color", "color", "label")
 nopienames    <- c("name", "size", "color", "label")
 
 context("Input parameter tests")
