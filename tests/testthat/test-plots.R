@@ -93,8 +93,8 @@ test_that("mlg.table will plot color plot without total", {
 test_that("mlg.table will utilize old versions of dplyr", {
   skip_on_cran()
   options(poppr.old.dplyr = TRUE)
-  expect_silent(x <- mlg.table(Pinf, background = TRUE))
-  expect_silent(x <- mlg.table(Pinf))
+  expect_error(x <- mlg.table(Pinf, background = TRUE), NA)
+  expect_error(x <- mlg.table(Pinf), NA)
   options(poppr.old.dplyr = FALSE)
 })
 
