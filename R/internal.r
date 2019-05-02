@@ -1489,6 +1489,13 @@ update_poppr_graph <- function(graphlist, PALETTE){
   if (nrow(lookup) > 1){
     colorlist                    <- V(graphlist$graph)$pie.color
     V(graphlist$graph)$pie.color <- lapply(colorlist, update_colors, lookup)
+    # Update color vector for circles if present
+    pie.single <- lengths(V(graphlist$graph)$pie) == 1
+    if (any(pie.single)) {
+      the_circles <- unlist(V(graphlist$graph)$pie.color[pie.single])
+      V(graphlist$graph)$color[pie.single]        <- the_circles        # set the color palette
+      names(V(graphlist$graph)$color)[pie.single] <- names(the_circles) # set the population names
+    }
   } else {
     colorlist <- V(graphlist$graph)$color
     V(graphlist$graph)$color <- rep(PALETTE(1), length(colorlist))

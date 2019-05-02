@@ -151,6 +151,17 @@ msn_constructor <-
     mlg.cp <- mlg.cp[rank(cmlg)]  
     # This creates a list of colors corresponding to populations.
     mlg.color <- lapply(mlg.cp, function(x) color[pnames %in% names(x)])
+    # Set shape and circle color vectors
+    mlg.sp        <- rep("pie", length(mlg.cp)) # set shape
+    names(mlg.sp) <- names(mlg.cp)
+    mlg.cc        <- rep(NA, length(mlg.cp)) # set circle color
+    names(mlg.cc) <- names(mlg.cp)
+    # Transform pie made of single population into circle
+    pie.single    <- lengths(mlg.cp) == 1
+    if (any(pie.single)) {
+      mlg.sp[pie.single] <- "circle"
+      mlg.cc[pie.single] <- unlist(mlg.color[pie.single])
+    }
   }
 
 
@@ -194,9 +205,10 @@ msn_constructor <-
         edge.width = E(mst)$width,
         edge.color = E(mst)$color,
         vertex.size = sqrt(mlg.number) * 5,
-        vertex.shape = "pie",
+        vertex.shape = mlg.sp,
         vertex.pie = mlg.cp,
         vertex.pie.color = mlg.color,
+        vertex.color = mlg.cc,
         vertex.label = vlab,
         ...
       )      
@@ -227,16 +239,10 @@ msn_constructor <-
   
   V(mst)$size  <- sqrt(mlg.number)
   if (piece_of_pie){
-    V(mst)$shape     <- "pie"
+    V(mst)$shape     <- mlg.sp
     V(mst)$pie       <- mlg.cp
     V(mst)$pie.color <- mlg.color    
-    # Transform pie made of single population into circle
-    pie.single <- sapply(V(mst)$pie, length) == 1
-    if (any(pie.single)) {
-      V(mst)$shape[pie.single] <- "circle"
-      V(mst)$color             <- rep(NA, length(V(mst)$name))
-      V(mst)$color[pie.single] <- unlist(V(mst)$pie.color[pie.single])
-    }
+    V(mst)$color     <- mlg.cc
   } else {
     V(mst)$color     <- color
   }
