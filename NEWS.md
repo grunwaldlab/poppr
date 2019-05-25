@@ -24,6 +24,10 @@ MISC
 * Tests relying on randomization were updated before R 3.6.0, which fixes a
   biased randomization. This has no visible impact on users.
   See https://github.com/grunwaldlab/poppr/pull/198 for details.
+* The initialize method for the bootgen class now calculates the number of loci
+  by taking the lengths of the all.names due to upcoming changes in adegenet's
+  handling of how number of alleles are stored in adegenet.
+  (See https://github.com/thibautjombart/adegenet/issues/234)
 
 poppr 2.8.1
 ===========
