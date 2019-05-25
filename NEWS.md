@@ -28,6 +28,8 @@ MISC
   by taking the lengths of the all.names due to upcoming changes in adegenet's
   handling of how number of alleles are stored in adegenet.
   (See https://github.com/thibautjombart/adegenet/issues/234)
+* `recode_polyploids()` now assigns the recoded alleles through the slot
+  directly and not via accessors.
 
 poppr 2.8.1
 ===========
