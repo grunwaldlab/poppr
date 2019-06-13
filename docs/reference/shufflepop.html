@@ -66,7 +66,7 @@ genind object independently over each locus." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -203,16 +203,16 @@ object</p></td>
 #&gt; // Number of alleles per locus: 7 6 8 5 7 6 5 5 9 6 10 9 10 9 9 5 5 10 9 9 11 8 10 8 6 8 8 8 13 6
 #&gt; // Number of alleles per group: 235
 #&gt; // Percentage of missing data: 0.87 %
-#&gt; // Observed heterozygosity: 0.76 0.64 0.7 0.74 0.77 0.64 0.54 0.78 0.62 0.8 0.8 0.94 0.76 0.72 0.86 0.8 0.52 0.8 0.82 0.68 0.82 0.43 0.83 0.8 0.74 0.58 0.76 0.58 0.84 0.46
+#&gt; // Observed heterozygosity: 0.66 0.66 0.76 0.76 0.69 0.58 0.64 0.7 0.75 0.8 0.76 0.82 0.73 0.7 0.7 0.78 0.66 0.8 0.8 0.66 0.9 0.41 0.79 0.84 0.72 0.62 0.6 0.64 0.84 0.42
 #&gt; // Expected heterozygosity: 0.71 0.61 0.74 0.73 0.75 0.64 0.58 0.6 0.66 0.76 0.81 0.83 0.75 0.78 0.82 0.76 0.59 0.78 0.83 0.63 0.82 0.42 0.8 0.8 0.73 0.61 0.74 0.65 0.83 0.44</div><div class='input'><span class='co'># Parametric Bootstrap: do not maintain allelic state or heterozygosity</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>2</span>))</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 50
 #&gt; // Group sizes: 50
-#&gt; // Number of alleles per locus: 7 6 8 5 7 6 5 5 9 6 10 9 10 9 9 5 5 10 9 9 11 8 10 8 6 8 8 8 13 6
-#&gt; // Number of alleles per group: 218
+#&gt; // Number of alleles per locus: 7 6 8 5 7 6 4 5 8 6 10 9 8 9 8 5 5 8 9 9 11 6 8 8 6 8 6 7 12 5
+#&gt; // Number of alleles per group: 219
 #&gt; // Percentage of missing data: 0 %
-#&gt; // Observed heterozygosity: 0.82 0.6 0.66 0.66 0.78 0.56 0.6 0.58 0.78 0.7 0.86 0.8 0.82 0.78 0.76 0.78 0.5 0.78 0.9 0.62 0.84 0.24 0.82 0.84 0.7 0.62 0.68 0.7 0.76 0.42
-#&gt; // Expected heterozygosity: 0.74 0.61 0.72 0.71 0.73 0.67 0.61 0.59 0.72 0.75 0.83 0.81 0.79 0.73 0.81 0.76 0.58 0.79 0.85 0.6 0.8 0.3 0.78 0.79 0.72 0.61 0.66 0.7 0.84 0.44</div><div class='input'>
+#&gt; // Observed heterozygosity: 0.68 0.64 0.62 0.74 0.76 0.62 0.58 0.6 0.58 0.68 0.82 0.92 0.74 0.78 0.84 0.76 0.6 0.74 0.74 0.62 0.84 0.44 0.7 0.9 0.66 0.68 0.84 0.66 0.78 0.4
+#&gt; // Expected heterozygosity: 0.76 0.64 0.67 0.74 0.76 0.59 0.61 0.57 0.7 0.74 0.81 0.84 0.74 0.75 0.81 0.77 0.55 0.78 0.79 0.64 0.8 0.38 0.77 0.79 0.69 0.62 0.73 0.66 0.83 0.45</div><div class='input'>
 <span class='co'># Non-Parametric Bootstrap: do not maintain allelic state or heterozygosity.</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>3</span>))</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 50
@@ -220,8 +220,8 @@ object</p></td>
 #&gt; // Number of alleles per locus: 7 6 8 5 7 6 5 5 9 6 10 9 10 9 9 5 5 10 9 9 11 8 10 8 6 8 8 8 13 6
 #&gt; // Number of alleles per group: 235
 #&gt; // Percentage of missing data: 0 %
-#&gt; // Observed heterozygosity: 0.9 0.8 0.82 0.74 0.82 0.82 0.8 0.82 0.86 0.86 0.9 0.84 0.82 0.9 0.84 0.64 0.86 0.98 0.88 0.92 0.94 0.82 0.94 0.94 0.8 0.88 0.9 0.92 1 0.76
-#&gt; // Expected heterozygosity: 0.85 0.82 0.87 0.79 0.83 0.82 0.79 0.8 0.88 0.83 0.89 0.88 0.89 0.89 0.88 0.8 0.79 0.89 0.88 0.87 0.9 0.86 0.9 0.87 0.83 0.87 0.86 0.87 0.91 0.82</div><div class='input'>
+#&gt; // Observed heterozygosity: 0.9 0.9 0.84 0.78 0.76 0.76 0.84 0.84 0.86 0.92 0.92 0.9 0.96 0.96 0.82 0.72 0.86 0.86 0.92 0.88 0.9 0.86 0.84 0.92 0.82 0.84 0.84 0.84 0.86 0.84
+#&gt; // Expected heterozygosity: 0.86 0.83 0.86 0.8 0.85 0.82 0.79 0.79 0.88 0.82 0.89 0.88 0.89 0.88 0.88 0.79 0.8 0.89 0.88 0.88 0.9 0.87 0.89 0.87 0.82 0.87 0.86 0.87 0.9 0.82</div><div class='input'>
 <span class='co'># Multilocus Style: maintain allelic state and heterozygosity.</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='fu'>shufflepop</span>(<span class='no'>Zebu</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='fl'>4</span>))</div><div class='output co'>#&gt; 
 #&gt; // Number of individuals: 50

@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data import and manipulation in poppr version 2.8.2 • poppr</title>
+<title>Data import and manipulation in poppr version 2.8.2.99.13 • poppr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Data import and manipulation in poppr version 2.8.2">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Data import and manipulation in poppr version 2.8.2.99.13">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -83,10 +83,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Data import and manipulation in poppr version 2.8.2</h1>
+      <h1>Data import and manipulation in poppr version 2.8.2.99.13</h1>
                         <h4 class="author">Zhian N. Kamvar and Niklaus J. Grünwald</h4>
             
-            <h4 class="date">2019-03-11</h4>
+            <h4 class="date">2019-06-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/grunwaldlab/poppr/blob/master/vignettes/poppr_manual.Rmd"><code>vignettes/poppr_manual.Rmd</code></a></small>
       <div class="hidden name"><code>poppr_manual.Rmd</code></div>
@@ -147,7 +147,7 @@
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/citation">citation</a></span>(<span class="dt">package =</span> <span class="st">"poppr"</span>)</a></code></pre></div>
 <pre><code>## 
 ## To cite poppr in publications or presentations, please specify
-## poppr version 2.8.2 and with the following citation:
+## poppr version 2.8.2.99-13 and with the following citation:
 ## 
 ##   Kamvar ZN, Tabima JF, Grünwald NJ. (2014) Poppr: an R package
 ##   for genetic analysis of populations with clonal, partially
@@ -212,15 +212,29 @@
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a></code></pre></div>
 <pre><code>## Loading required package: adegenet</code></pre>
 <pre><code>## Loading required package: ade4</code></pre>
+<pre><code>## Registered S3 methods overwritten by 'ggplot2':
+##   method         from 
+##   [.quosures     rlang
+##   c.quosures     rlang
+##   print.quosures rlang</code></pre>
+<pre><code>## Registered S3 method overwritten by 'spdep':
+##   method   from
+##   plot.mst ape</code></pre>
 <pre><code>## 
 ##    /// adegenet 2.1.2 is loaded ////////////
 ## 
 ##    &gt; overview: '?adegenet'
 ##    &gt; tutorials/doc/questions: 'adegenetWeb()' 
 ##    &gt; bug reports/feature requests: adegenetIssues()</code></pre>
-<pre><code>## This is poppr version 2.8.2. To get started, type package?poppr
-## OMP parallel support: available</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getfile.html">getfile</a></span>()</a></code></pre></div>
+<pre><code>## Registered S3 method overwritten by 'pegas':
+##   method      from
+##   print.amova ade4</code></pre>
+<pre><code>## This is poppr version 2.8.2.99.13. To get started, type package?poppr
+## OMP parallel support: available
+## 
+## This version of poppr is under development.
+## If you find any bugs, please report them at https://github.com/grunwaldlab/poppr/issues</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getfile.html">getfile</a></span>()</a></code></pre></div>
 <p>A pop up window will appear like this<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>:</p>
 <div class="figure" style="text-align: center">
 <img src="getfile.png" alt="A popup window as it appears in OSX (Mountain Lion)" width="500px"><p class="caption">
@@ -228,7 +242,7 @@ A popup window as it appears in OSX (Mountain Lion)
 </p>
 </div>
 <p>You should navigate to your R library and select the file called “rootrot.csv”. If you don“t know where your the poppr package lives, you can find it by typing <code><a href="https://www.rdocumentation.org/packages/base/topics/find.package">find.package("poppr")</a></code> into the R command line. Once we select a file, the file name and its path will be stored in the variable, <code>x</code>. We can confirm that by typing <code>x</code> into R”s command line.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">x</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">x</a></code></pre></div>
 <pre><code>## $files
 ## [1] "/path/to/R/poppr/files/rootrot.csv"
 ## 
@@ -236,11 +250,11 @@ A popup window as it appears in OSX (Mountain Lion)
 ## [1] "/path/to/R/poppr/files"</code></pre>
 <p>Here we can see that <code>x</code> is a list with two entries: <code>$files</code> shows the files you selected and <code>$path</code> shows the path to those files.</p>
 <p>We will use <code>x$files</code> to access the file. The file is in the GenAlEx format, so we will import it using <code><a href="../reference/read.genalex.html">read.genalex()</a></code> and then analyze it with the function <code><a href="../reference/poppr.html">poppr()</a></code> to get a table of diversity indices per population.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">myData  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.genalex.html">read.genalex</a></span>(x<span class="op">$</span>files)</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">myData</a></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">popdata &lt;-<span class="st"> </span><span class="kw"><a href="../reference/poppr.html">poppr</a></span>(myData)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">myData  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.genalex.html">read.genalex</a></span>(x<span class="op">$</span>files)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">myData</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">popdata &lt;-<span class="st"> </span><span class="kw"><a href="../reference/poppr.html">poppr</a></span>(myData)</a></code></pre></div>
 <p>The output of <code><a href="../reference/poppr.html">poppr()</a></code> was assigned to the variable <code>popdata</code>, so let"s look at the data.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">popdata</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">popdata</a></code></pre></div>
 <pre><code>##             Pop   N MLG  eMLG    SE     H     G lambda   E.5   Hexp    Ia rbarD   File
 ## 1      Athena_1   9   7  7.00 0.000 1.889  6.23  0.840 0.932 0.1081  2.92 0.210 myData
 ## 2      Athena_2  12  12 10.00 0.000 2.485 12.00  0.917 1.000 0.1999  4.16 0.128 myData
@@ -305,11 +319,11 @@ A popup window as it appears in OSX (Mountain Lion)
 <a href="#intro:import:read-genalex" class="anchor"></a>Function: read.genalex</h3>
 <p>A very popular program for population genetics is GenAlEx (<a href="http://biology.anu.edu.au/GenAlEx/Welcome.html" class="uri">http://biology.anu.edu.au/GenAlEx/Welcome.html</a>) <span class="citation">(Peakall and Smouse 2012, 2006)</span>. GenAlEx runs within the Excel environment and can be very powerful in its analyses. <em>Poppr</em> has added the ability to read *.CSV files<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> produced in the GenAlEx format. It can handle data types containing regions and geographic coordinates, but currently cannot import allelic frequency data from GenAlEx. Using the <em>poppr</em> function <code><a href="../reference/read.genalex.html">read.genalex()</a></code> will import your data into <em>adegenet</em>“s <code>genind</code> object or <em>poppr</em>”s <code>genclone</code> object (more information on that below). For ways of formatting a GenAlEx file, see the manual here: <a href="http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx%206.5%20Guide.pdf" class="uri">http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx%206.5%20Guide.pdf</a></p>
 <p>Below is an example of the GenAlEx format. We will use the data set called <code>microbov</code> from the <em>adegenet</em> package to generate it. The data contains three demographic factors: Country, Species and Breed contained within the <code>@other</code> slot (detailed in <a href="#intro:genind:other">the ‘other’ slot</a>). We will first set these as the population strata, define the population as the combination of the strata, and then save a file to the desktop.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(microbov)</a>
-<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="kw">strata</span>(microbov) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="kw">other</span>(microbov)) <span class="co"># set the strata</span></a>
-<a class="sourceLine" id="cb18-4" data-line-number="4">microbov</a>
-<a class="sourceLine" id="cb18-5" data-line-number="5"><span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(microbov, <span class="dt">file =</span> <span class="st">"~/Desktop/microbov.csv"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(microbov)</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="kw">strata</span>(microbov) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="kw">other</span>(microbov)) <span class="co"># set the strata</span></a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">microbov</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(microbov, <span class="dt">file =</span> <span class="st">"~/Desktop/microbov.csv"</span>)</a></code></pre></div>
 <pre><code>## Extracting the table ... Writing the table to ~/Desktop/microbov.csv ... Done.</code></pre>
 <div class="figure" style="text-align: center">
 <img src="unmod_dat.png" alt="The first 15 individuals and 4 loci of the microbov data set. The first column contains the individual names, the second column contains the population names, and each subsequent column represents microsatellite genetic data. Highlighted in red is a list of populations and their relative sizes." width="700px"><p class="caption">
@@ -376,12 +390,12 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <hr>
 <p>Note that regional data and geographic data are not mutually exclusive. You can have both in one file, just make sure that they are on the same sheet and that the geographic data is always placed after all genetic and demographic data.</p>
 <p>We have a short example of GenAlEx formatted data with no geographic or regional formatting. We will first see where the data is using the command <code><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file()</a></code></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"files/rootrot.csv"</span>, <span class="dt">package=</span><span class="st">"poppr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"files/rootrot.csv"</span>, <span class="dt">package=</span><span class="st">"poppr"</span>)</a></code></pre></div>
 <pre><code>## [1] "/path/to/R/library/poppr/files/rootrot.csv"</code></pre>
 <p>Now import the data into <em>poppr</em> like so:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">rootrot &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.genalex.html">read.genalex</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"files/rootrot.csv"</span>, <span class="dt">package=</span><span class="st">"poppr"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">rootrot &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.genalex.html">read.genalex</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"files/rootrot.csv"</span>, <span class="dt">package=</span><span class="st">"poppr"</span>))</a></code></pre></div>
 <p>Executing rootrot shows that this file is now in <code>genclone</code> format and can be used with any function in <em>poppr</em> and <em>adegenet</em></p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">rootrot</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">rootrot</a></code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -422,11 +436,11 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 </ul>
 <hr>
 <p>First, a simple example for the rootrot data we demonstrated in an earlier section:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(rootrot, <span class="st">"~/Desktop/rootrot.csv"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(rootrot, <span class="st">"~/Desktop/rootrot.csv"</span>)</a></code></pre></div>
 <pre><code>## Extracting the table ... Writing the table to ~/Desktop/rootrot.csv ... Done.</code></pre>
 <p>Here’s an example of exporting the nancycats data set into GenAlEx format with geographic information. If we look at the nancycats geographic information, we can see it"s coordinates for each population, but not each individual:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="kw">other</span>(nancycats)<span class="op">$</span>xy</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="kw">other</span>(nancycats)<span class="op">$</span>xy</a></code></pre></div>
 <pre><code>##            x         y
 ## P01 263.3498 171.10939
 ## P02 183.5028 122.40790
@@ -446,12 +460,12 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## P16 407.8003  99.87438
 ## P17 345.3745 251.79393</code></pre>
 <p>To export it:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(nancycats, <span class="st">"~/Desktop/nancycats_pop_xy.csv"</span>, <span class="dt">geo =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(nancycats, <span class="st">"~/Desktop/nancycats_pop_xy.csv"</span>, <span class="dt">geo =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## Extracting the table ... Writing the table to ~/Desktop/nancycats_pop_xy.csv ... Done.</code></pre>
 <p>If we wanted to assign a geographic coordinate to each individual, we can use this trick knowing that there are 17 populations in the data set:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">nan2           &lt;-<span class="st"> </span>nancycats</a>
-<a class="sourceLine" id="cb33-2" data-line-number="2"><span class="kw">other</span>(nan2)<span class="op">$</span>xy &lt;-<span class="st"> </span><span class="kw">other</span>(nan2)<span class="op">$</span>xy[<span class="kw">pop</span>(nan2), ]</a>
-<a class="sourceLine" id="cb33-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>(<span class="kw">other</span>(nan2)<span class="op">$</span>xy)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">nan2           &lt;-<span class="st"> </span>nancycats</a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="kw">other</span>(nan2)<span class="op">$</span>xy &lt;-<span class="st"> </span><span class="kw">other</span>(nan2)<span class="op">$</span>xy[<span class="kw">pop</span>(nan2), ]</a>
+<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>(<span class="kw">other</span>(nan2)<span class="op">$</span>xy)</a></code></pre></div>
 <pre><code>##            x        y
 ## P17 345.3745 251.7939
 ## P17 345.3745 251.7939
@@ -460,7 +474,7 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## P17 345.3745 251.7939
 ## P17 345.3745 251.7939</code></pre>
 <p>Now we can export it to a different file.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(nan2, <span class="st">"~/Desktop/nancycats_inds_xy.csv"</span>, <span class="dt">geo =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw"><a href="../reference/genind2genalex.html">genind2genalex</a></span>(nan2, <span class="st">"~/Desktop/nancycats_inds_xy.csv"</span>, <span class="dt">geo =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## Extracting the table ... Writing the table to ~/Desktop/nancycats_inds_xy.csv ... Done.</code></pre>
 </div>
 </div>
@@ -513,8 +527,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <h3 class="hasAnchor">
 <a href="#intro:genind:other" class="anchor"></a>The other slot</h3>
 <p>The other slot is a place in the <code>genind</code> object that can be used to store useful information about the data. We saw earlier that it could store demographic information, now let’s explore a different example. Bruvo’s distance is based off of a stepwise mutation model for microsatellites. This requires us to know the length of the repeat of each locus. We could store the repeat lengths in a separate variable in our R environment, but we are at risk of losing that. One way to prevent it from being lost would be to place it in the “other” slot. For the purpose of this example, we will use the “nancycats” data set from the <em>adegenet</em> package and assume that it has di-nucleotide repeats at all of its loci.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats) <span class="co"># Load the data</span></a>
-<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="kw">other</span>(nancycats) <span class="co"># geographical coordinates</span></a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats) <span class="co"># Load the data</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="kw">other</span>(nancycats) <span class="co"># geographical coordinates</span></a></code></pre></div>
 <pre><code>## $xy
 ##            x         y
 ## P01 263.3498 171.10939
@@ -534,11 +548,11 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## P15 531.2003 115.13903
 ## P16 407.8003  99.87438
 ## P17 345.3745 251.79393</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1">repeats &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">2</span>, <span class="kw">nLoc</span>(nancycats)) <span class="co">#nLoc = number of loci</span></a>
-<a class="sourceLine" id="cb40-2" data-line-number="2">repeats</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1">repeats &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">2</span>, <span class="kw">nLoc</span>(nancycats)) <span class="co">#nLoc = number of loci</span></a>
+<a class="sourceLine" id="cb43-2" data-line-number="2">repeats</a></code></pre></div>
 <pre><code>## [1] 2 2 2 2 2 2 2 2 2</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">other</span>(nancycats)<span class="op">$</span>repeat_lengths &lt;-<span class="st"> </span>repeats</a>
-<a class="sourceLine" id="cb42-2" data-line-number="2"><span class="kw">other</span>(nancycats) <span class="co"># two items named xy and repeat_lengths</span></a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">other</span>(nancycats)<span class="op">$</span>repeat_lengths &lt;-<span class="st"> </span>repeats</a>
+<a class="sourceLine" id="cb45-2" data-line-number="2"><span class="kw">other</span>(nancycats) <span class="co"># two items named xy and repeat_lengths</span></a></code></pre></div>
 <pre><code>## $xy
 ##            x         y
 ## P01 263.3498 171.10939
@@ -582,9 +596,9 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 </ul>
 <hr>
 <p>Let“s show an example of a <code>genclone</code> object. First, we will take an existing <code>genind</code> object and convert it using the function <code>as.genclone</code> (We can also use the function <a href="#intro:import:read.genalex">read.genalex()</a>to import as <code>genclone</code> or <code>genind</code> objects). We will use the <code>Aeut</code> data set because it is a clonal data set that has a simple population strata <span class="citation">(Grünwald and Hoheisel 2006)</span>. The data set is here: <a href="https://doi.org/10.6084/m9.figshare.877104" class="uri">https://doi.org/10.6084/m9.figshare.877104</a> and it is AFLP data of the root rot pathogen <em>Aphanomyces euteiches</em> collected from two different fields in NW Oregon and W Washington, USA. These fields were divided up into subplots from which samples were collected. The fields represent the population and the subplots represent the subpopulation. Let”s take a look at what the <code>genind</code> object looks like:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a>
-<a class="sourceLine" id="cb45-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(Aeut)</a>
-<a class="sourceLine" id="cb45-3" data-line-number="3">Aeut</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a>
+<a class="sourceLine" id="cb48-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(Aeut)</a>
+<a class="sourceLine" id="cb48-3" data-line-number="3">Aeut</a></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
 ##  // 187 individuals; 56 loci; 56 alleles; size: 68.9 Kb
@@ -600,8 +614,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ##    @pop: population of each individual (group size range: 90-97)
 ##    @other: a list containing: population_hierarchy</code></pre>
 <p>We can see that there is a data frame in the <code>@other</code> slot called “population_hierarchy”. This is left over from <em>poppr</em> version 1.x behavior. Since the <code>genind</code> object now has a <code>@strata</code> slot, we can use it to set the stratification (previously called “hierarchy”).</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw">other</span>(Aeut)<span class="op">$</span>population_hierarchy[<span class="op">-</span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb47-2" data-line-number="2">Aeut</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw">other</span>(Aeut)<span class="op">$</span>population_hierarchy[<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb50-2" data-line-number="2">Aeut</a></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
 ##  // 187 individuals; 56 loci; 56 alleles; size: 72.7 Kb
@@ -618,8 +632,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ##    @strata: a data frame with 2 columns ( Pop, Subpop )
 ##    @other: a list containing: population_hierarchy</code></pre>
 <p>Now we can convert this to a <code>genclone</code> object, which will store information about our multilocus genotypes for us.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1">agc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-methods.html">as.genclone</a></span>(Aeut)</a>
-<a class="sourceLine" id="cb49-2" data-line-number="2">agc</a></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1">agc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-methods.html">as.genclone</a></span>(Aeut)</a>
+<a class="sourceLine" id="cb52-2" data-line-number="2">agc</a></code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -634,7 +648,7 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ##      2 strata - Pop, Subpop
 ##      2 populations defined - Athena, Mt. Vernon</code></pre>
 <p>If we wanted to, we could also convert it back to a <code>genind</code> object.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw"><a href="../reference/coercion-methods.html">genclone2genind</a></span>(agc)</a></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw"><a href="../reference/coercion-methods.html">genclone2genind</a></span>(agc)</a></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
 ##  // 187 individuals; 56 loci; 56 alleles; size: 83.7 Kb
@@ -661,8 +675,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 </blockquote>
 <p>With diploid or haploid data, genotypes are unambiguous. It is often clear when it is homozygous or heterozygous. With polyploid data, genotypes can be ambiguous. For example, a tetraploid individual with the apparent genotype of <strong>A/B</strong> could actually have one of three genotypes: <strong>A/A/A/B</strong>, <strong>A/A/B/B</strong>, or <strong>A/B/B/B</strong>. This ambiguity prevents a researcher from accurately calling all alleles present. In <em>adegenet</em>, it was previously difficult to import polyploid data because of this ambiguity as data was required to be unambiguous or missing.</p>
 <p>A solution to this problem is to code missing alleles as “0”. An example of this is found within the <code>Pinf</code> data set in <em>poppr</em> <span class="citation">(Goss et al. 2014)</span>. First, we will look at where we have polyploid allele calls.</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(Pinf)</a>
-<a class="sourceLine" id="cb53-2" data-line-number="2">Pinf</a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(Pinf)</a>
+<a class="sourceLine" id="cb56-2" data-line-number="2">Pinf</a></code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -676,10 +690,10 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## 
 ##     2 strata - Continent, Country
 ##     2 populations defined - South America, North America</code></pre>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1">ptab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/info_table.html">info_table</a></span>(Pinf, <span class="dt">type =</span> <span class="st">"ploidy"</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">ptab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/info_table.html">info_table</a></span>(Pinf, <span class="dt">type =</span> <span class="st">"ploidy"</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/pinf_table-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>We look at the last six samples over two loci, Pi63 (3 alleles, triploid) and Pi70 (3 alleles, diploid) to examine how the data is represented.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">Pinf[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tab</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1">Pinf[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tab</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>()</a></code></pre></div>
 <pre><code>##        Pi63.000 Pi63.148 Pi63.151 Pi63.157 Pi70.000 Pi70.189 Pi70.192 Pi70.195
 ## PiPE22        1        1        1        1        2        1        1        0
 ## PiPE23        1        1        1        1        2        1        1        0
@@ -688,8 +702,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## PiPE26        2        0        0        2        2        0        1        1
 ## PiPE27        1        1        1        1        2        1        1        0</code></pre>
 <p>Each column in this data represents a different allele at a particular locus. <code>Pi63.148</code> is the allele <code>148</code> at locus <code>Pi63</code>. Each row is an individual. The numbers represent the fraction of a given allele that makes up the individual genotype at a particular locus. What we can see here is that the number of columns is 8 when we expect only 6 (2 loci x 3 alleles). The first allele at each locus is <code>000</code>. Let’s take a look at the data in a human-readable format.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">Pinfdf &lt;-<span class="st"> </span><span class="kw">genind2df</span>(Pinf, <span class="dt">sep =</span> <span class="st">"/"</span>)</a>
-<a class="sourceLine" id="cb58-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>(Pinfdf[<span class="dv">10</span><span class="op">:</span><span class="dv">11</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1">Pinfdf &lt;-<span class="st"> </span><span class="kw">genind2df</span>(Pinf, <span class="dt">sep =</span> <span class="st">"/"</span>)</a>
+<a class="sourceLine" id="cb61-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>(Pinfdf[<span class="dv">10</span><span class="op">:</span><span class="dv">11</span>])</a></code></pre></div>
 <pre><code>##                   Pi63            Pi70
 ## PiPE22 000/148/151/157 000/000/189/192
 ## PiPE23 000/148/151/157 000/000/189/192
@@ -699,8 +713,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## PiPE27 000/148/151/157 000/000/189/192</code></pre>
 <p>It"s more clear now that we have a data set of tetraploid individuals where some genotypes appear diploid (<code>000/000/157/157</code>) and some appear triploid (<code>000/148/151/157</code>). The tetraploid genotype is padded with zeroes to make up the difference in ploidy.</p>
 <p>This method allows Bruvo’s Distance <span class="citation">(Bruvo et al. 2004)</span> and the Index of Association <span class="citation">(Brown, Feldman, and Nevo 1980; Smith et al. 1993; Agapow and Burt 2001)</span> to work with polyploids as they specifically recognize the zeroes as being missing data. A side effect, unfortunately is that the extra zeroes appear as extra alleles. As this affects all frequency-based statistics (except for the ones noted above), the user should reformat their data set with the function <code>recode_polyploids</code>, which will remove the zeroes.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1">Pinf_rc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/recode_polyploids.html">recode_polyploids</a></span>(Pinf, <span class="dt">newploidy =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb60-2" data-line-number="2">Pinf_rc <span class="co"># Notice that the new ploidy is accounted for.</span></a></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">Pinf_rc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/recode_polyploids.html">recode_polyploids</a></span>(Pinf, <span class="dt">newploidy =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb63-2" data-line-number="2">Pinf_rc <span class="co"># Notice that the new ploidy is accounted for.</span></a></code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -714,7 +728,7 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## 
 ##     2 strata - Continent, Country
 ##     2 populations defined - South America, North America</code></pre>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tab</span>() <span class="op">%&gt;%</span><span class="st"> </span>tail</a></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tab</span>() <span class="op">%&gt;%</span><span class="st"> </span>tail</a></code></pre></div>
 <pre><code>##        Pi63.148 Pi63.151 Pi63.157 Pi70.189 Pi70.192 Pi70.195
 ## PiPE22        1        1        1        1        1        0
 ## PiPE23        1        1        1        1        1        0
@@ -723,8 +737,8 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## PiPE26        0        0        2        0        1        1
 ## PiPE27        1        1        1        1        1        0</code></pre>
 <p>Below, we show the observed genotypes:</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1">Pinfrcdf &lt;-<span class="st"> </span><span class="kw">genind2df</span>(Pinf_rc, <span class="dt">sep =</span> <span class="st">"/"</span>)</a>
-<a class="sourceLine" id="cb64-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>(Pinfrcdf[<span class="dv">10</span><span class="op">:</span><span class="dv">11</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">Pinfrcdf &lt;-<span class="st"> </span><span class="kw">genind2df</span>(Pinf_rc, <span class="dt">sep =</span> <span class="st">"/"</span>)</a>
+<a class="sourceLine" id="cb67-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>(Pinfrcdf[<span class="dv">10</span><span class="op">:</span><span class="dv">11</span>])</a></code></pre></div>
 <pre><code>##               Pi63    Pi70
 ## PiPE22 148/151/157 189/192
 ## PiPE23 148/151/157 189/192
@@ -733,10 +747,10 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## PiPE26     157/157 192/195
 ## PiPE27 148/151/157 189/192</code></pre>
 <p>If you have imported your data as recoded polyploid data, you can use the argument “addzero” to fill out the ploidy:</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb66-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/recode_polyploids.html">recode_polyploids</a></span>(<span class="dt">addzero =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb66-3" data-line-number="3"><span class="st">  </span><span class="kw">tab</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb66-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">Pinf_rc[loc =<span class="st"> </span><span class="kw">locNames</span>(Pinf_rc)[<span class="dv">9</span><span class="op">:</span><span class="dv">10</span>]] <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb69-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/recode_polyploids.html">recode_polyploids</a></span>(<span class="dt">addzero =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb69-3" data-line-number="3"><span class="st">  </span><span class="kw">tab</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb69-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">tail</a></span>()</a></code></pre></div>
 <pre><code>##        Pi63.0 Pi63.157 Pi63.148 Pi63.151 Pi70.0 Pi70.192 Pi70.189 Pi70.195
 ## PiPE22      0        1        1        1      1        1        1        0
 ## PiPE23      0        1        1        1      1        1        1        0
@@ -777,9 +791,9 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 <p><code>freq -</code> This is used for compatibility with the <code>tab()</code> method for <code>genind</code> object. It will convert counts of alleles to frequencies of alleles, rendering an object that will return warnings.</p>
 <hr>
 <p>Let’s take a look at what this does by focusing in on areas with missing data. We"ll use the data set <code>nancycats</code> as an example. Using the <em>poppr</em> function <code>info_table</code>, we can assess missing data within populations.</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a>
-<a class="sourceLine" id="cb69-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
-<a class="sourceLine" id="cb69-3" data-line-number="3"><span class="kw"><a href="../reference/info_table.html">info_table</a></span>(nancycats, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a>
+<a class="sourceLine" id="cb72-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
+<a class="sourceLine" id="cb72-3" data-line-number="3"><span class="kw"><a href="../reference/info_table.html">info_table</a></span>(nancycats, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/initializing_poppr-1.png" width="700px" style="display: block; margin: auto;"></p>
 <pre><code>##           Locus
 ## Population  fca8 fca23 fca43 fca45 fca77 fca78 fca90 fca96 fca37  Mean
@@ -802,7 +816,7 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ##      P17       .     .     . 1.000     .     .     . 0.615     . 0.179
 ##      Total 0.084     .     . 0.089     .     .     . 0.038     . 0.023</code></pre>
 <p>We can see that locus fca8 has a lot of missing data. To demonstrate the function <code><a href="../reference/missingno.html">missingno()</a></code>, we will zoom into the first five individuals at the first locus.</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1"><span class="kw">tab</span>(nancycats)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1"><span class="kw">tab</span>(nancycats)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</a></code></pre></div>
 <pre><code>##      fca8.133 fca8.135 fca8.137 fca8.139 fca8.141 fca8.143
 ## N215       NA       NA       NA       NA       NA       NA
 ## N216       NA       NA       NA       NA       NA       NA
@@ -810,9 +824,9 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## N218        1        1        0        0        0        0
 ## N219        1        1        0        0        0        0</code></pre>
 <p>When looking at this data set, recall how a <code>genind</code> object is formatted. You have a matrix representing counts of alleles. For diploids, if you see 1, that means it is heterozygous at that allele, and a 2 means it“s homozygous. Here we see three heterozygotes and two individuals with missing data (indicated by NA). Let”s look at what happens when we exclude loci and genotypes with &gt;5% missing data).</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1">nanloci &lt;-<span class="st">  </span><span class="kw"><a href="../reference/missingno.html">missingno</a></span>(nancycats, <span class="st">"loci"</span>)</a>
-<a class="sourceLine" id="cb73-2" data-line-number="2">nangeno &lt;-<span class="st">  </span><span class="kw"><a href="../reference/missingno.html">missingno</a></span>(nancycats, <span class="st">"geno"</span>)</a>
-<a class="sourceLine" id="cb73-3" data-line-number="3"><span class="kw">tab</span>(nanloci)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1">nanloci &lt;-<span class="st">  </span><span class="kw"><a href="../reference/missingno.html">missingno</a></span>(nancycats, <span class="st">"loci"</span>)</a>
+<a class="sourceLine" id="cb76-2" data-line-number="2">nangeno &lt;-<span class="st">  </span><span class="kw"><a href="../reference/missingno.html">missingno</a></span>(nancycats, <span class="st">"geno"</span>)</a>
+<a class="sourceLine" id="cb76-3" data-line-number="3"><span class="kw">tab</span>(nanloci)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</a></code></pre></div>
 <pre><code>##      fca23.144 fca23.146 fca23.148 fca23.150 fca43.133 fca43.135
 ## N215         0         1         0         0         0         0
 ## N216         0         2         0         0         0         0
@@ -821,21 +835,21 @@ The first 15 individuals and 4 loci of the microbov data set. This is the same f
 ## N219         0         1         0         0         0         0</code></pre>
 <p>Notice how we now see columns named fca23.128 and fca23.130. This is showing us another locus because we have removed the first. Recall from the summary table that the first locus had 16 alleles, and the second had 11. Now that we’ve removed loci containing missing data, all others have shifted over.<br>
 Let’s look at the loci names and number of individuals.</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" data-line-number="1"><span class="kw">nInd</span>(nanloci)     <span class="co"># Individuals</span></a></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1"><span class="kw">nInd</span>(nanloci)     <span class="co"># Individuals</span></a></code></pre></div>
 <pre><code>## [1] 237</code></pre>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" data-line-number="1"><span class="kw">locNames</span>(nanloci) <span class="co"># Names of the loci</span></a></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">locNames</span>(nanloci) <span class="co"># Names of the loci</span></a></code></pre></div>
 <pre><code>## [1] "fca23" "fca43" "fca77" "fca78" "fca90" "fca96" "fca37"</code></pre>
 <p>You can see that the number of individuals stayed the same but the loci “fca8”, “fca45”, and “fca96” were removed. Let’s look at what happened when we removed individuals.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" data-line-number="1"><span class="kw">tab</span>(nangeno)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1"><span class="kw">tab</span>(nangeno)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dv">8</span><span class="op">:</span><span class="dv">13</span>]</a></code></pre></div>
 <pre><code>##      fca8.133 fca8.135 fca8.137 fca8.139 fca8.141 fca8.143
 ## N217        0        1        0        0        0        1
 ## N218        1        1        0        0        0        0
 ## N219        1        1        0        0        0        0
 ## N220        0        1        0        0        0        1
 ## N221        0        2        0        0        0        0</code></pre>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">nInd</span>(nangeno)     <span class="co"># Individuals</span></a></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1"><span class="kw">nInd</span>(nangeno)     <span class="co"># Individuals</span></a></code></pre></div>
 <pre><code>## [1] 199</code></pre>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1"><span class="kw">locNames</span>(nangeno) <span class="co"># Names of the loci</span></a></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" data-line-number="1"><span class="kw">locNames</span>(nangeno) <span class="co"># Names of the loci</span></a></code></pre></div>
 <pre><code>## [1] "fca8"  "fca23" "fca43" "fca45" "fca77" "fca78" "fca90" "fca96" "fca37"</code></pre>
 <p>We can see here that the number of individuals decreased, yet we have the same number of loci. Notice how the frequency matrix changes in both scenarios? In the scenario with “loci”, we removed several columns of the data set, and so with our sub-setting, we see alleles from the second locus. In the scenario with “geno”, we removed several rows of the data set so we see other individuals in our sub-setting.</p>
 </div>
@@ -858,9 +872,9 @@ Let’s look at the loci names and number of individuals.</p>
 </ul>
 <hr>
 <p>To demonstrate this tool, we’ll use the H3N2 virus data set provided in <em>adegenet</em>. It contains a data frame in the “other” slot called “x” that contains information about the year of epidemic, country, etc.</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"H3N2"</span>, <span class="dt">package =</span> <span class="st">"adegenet"</span>)</a>
-<a class="sourceLine" id="cb86-2" data-line-number="2"><span class="kw">strata</span>(H3N2) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="kw">other</span>(H3N2)<span class="op">$</span>x)</a>
-<a class="sourceLine" id="cb86-3" data-line-number="3">H3N2</a></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"H3N2"</span>, <span class="dt">package =</span> <span class="st">"adegenet"</span>)</a>
+<a class="sourceLine" id="cb89-2" data-line-number="2"><span class="kw">strata</span>(H3N2) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="kw">other</span>(H3N2)<span class="op">$</span>x)</a>
+<a class="sourceLine" id="cb89-3" data-line-number="3">H3N2</a></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
 ##  // 1,903 individuals; 125 loci; 334 alleles; size: 4.1 Mb
@@ -878,8 +892,8 @@ Let’s look at the loci names and number of individuals.</p>
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
 ##    @other: a list containing: x  xy  epid</code></pre>
 <p>We will demonstrate the <code>popsub</code> functionality by setting the population factor to “country”. Note, in this section, I am naming the variables staring with “v” indicating “virus”.</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>country</a>
-<a class="sourceLine" id="cb88-2" data-line-number="2"><span class="kw">popNames</span>(H3N2) <span class="co"># Only two countries from North America.</span></a></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>country</a>
+<a class="sourceLine" id="cb91-2" data-line-number="2"><span class="kw">popNames</span>(H3N2) <span class="co"># Only two countries from North America.</span></a></code></pre></div>
 <pre><code>##  [1] "Japan"          "USA"            "Finland"        "China"          "South Korea"   
 ##  [6] "Norway"         "Taiwan"         "France"         "Latvia"         "Netherlands"   
 ## [11] "Bulgaria"       "Turkey"         "United Kingdom" "Denmark"        "Austria"       
@@ -888,16 +902,16 @@ Let’s look at the loci names and number of individuals.</p>
 ## [26] "Iceland"        "Ireland"        "Sweden"         "Nepal"          "Saudi Arabia"  
 ## [31] "Switzerland"    "Iran"           "Mongolia"       "Spain"          "Slovenia"      
 ## [36] "Croatia"        "Algeria"</code></pre>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1">v_na &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">sublist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))</a>
-<a class="sourceLine" id="cb90-2" data-line-number="2"><span class="kw">popNames</span>(v_na)</a></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1">v_na &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">sublist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))</a>
+<a class="sourceLine" id="cb93-2" data-line-number="2"><span class="kw">popNames</span>(v_na)</a></code></pre></div>
 <pre><code>## [1] "USA"    "Canada"</code></pre>
 <p>If we want to see the population size, we can use the <em>adegenet</em> function <code>nInd()</code>:</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">NorthAmerica =</span> <span class="kw">nInd</span>(v_na), <span class="dt">Total =</span> <span class="kw">nInd</span>(H3N2))</a></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">NorthAmerica =</span> <span class="kw">nInd</span>(v_na), <span class="dt">Total =</span> <span class="kw">nInd</span>(H3N2))</a></code></pre></div>
 <pre><code>## NorthAmerica        Total 
 ##          665         1903</code></pre>
 <p>You can see that the population factors are correct and that the size of the data set is considerably smaller. Let’s see the data set without the North American countries.</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1">v_na_minus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">blacklist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))</a>
-<a class="sourceLine" id="cb94-2" data-line-number="2"><span class="kw">popNames</span>(v_na_minus)</a></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1">v_na_minus &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">blacklist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))</a>
+<a class="sourceLine" id="cb97-2" data-line-number="2"><span class="kw">popNames</span>(v_na_minus)</a></code></pre></div>
 <pre><code>##  [1] "Japan"          "Finland"        "China"          "South Korea"    "Norway"        
 ##  [6] "Taiwan"         "France"         "Latvia"         "Netherlands"    "Bulgaria"      
 ## [11] "Turkey"         "United Kingdom" "Denmark"        "Austria"        "Italy"         
@@ -906,15 +920,15 @@ Let’s look at the loci names and number of individuals.</p>
 ## [26] "Sweden"         "Nepal"          "Saudi Arabia"   "Switzerland"    "Iran"          
 ## [31] "Mongolia"       "Spain"          "Slovenia"       "Croatia"        "Algeria"</code></pre>
 <p>Let"s make sure that the number of individuals in both data sets is equal to the number of individuals in our original data set:</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1">(<span class="kw">nInd</span>(v_na_minus) <span class="op">+</span><span class="st"> </span><span class="kw">nInd</span>(v_na)) <span class="op">==</span><span class="st"> </span><span class="kw">nInd</span>(H3N2)</a></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1">(<span class="kw">nInd</span>(v_na_minus) <span class="op">+</span><span class="st"> </span><span class="kw">nInd</span>(v_na)) <span class="op">==</span><span class="st"> </span><span class="kw">nInd</span>(H3N2)</a></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>Now we have data sets with and without North America. Let’s try something a bit more challenging. Let’s say that we want the first 10 populations in alphabetical order, but we know that we still don"t want any countries in North America. We can easily do this by using the <em>base</em> function <code>sort</code>.</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">vsort &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sort">sort</a></span>(<span class="kw">popNames</span>(H3N2))[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a>
-<a class="sourceLine" id="cb98-2" data-line-number="2">vsort</a></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1">vsort &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sort">sort</a></span>(<span class="kw">popNames</span>(H3N2))[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a>
+<a class="sourceLine" id="cb101-2" data-line-number="2">vsort</a></code></pre></div>
 <pre><code>##  [1] "Algeria"        "Austria"        "Bangladesh"     "Bulgaria"       "Canada"        
 ##  [6] "China"          "Croatia"        "Czech Republic" "Denmark"        "Egypt"</code></pre>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1">valph &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">sublist =</span> vsort, <span class="dt">blacklist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))</a>
-<a class="sourceLine" id="cb100-2" data-line-number="2"><span class="kw">popNames</span>(valph)</a></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1">valph &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(H3N2, <span class="dt">sublist =</span> vsort, <span class="dt">blacklist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"USA"</span>, <span class="st">"Canada"</span>))</a>
+<a class="sourceLine" id="cb103-2" data-line-number="2"><span class="kw">popNames</span>(valph)</a></code></pre></div>
 <pre><code>## [1] "China"          "Bulgaria"       "Denmark"        "Austria"        "Bangladesh"    
 ## [6] "Egypt"          "Czech Republic" "Croatia"        "Algeria"</code></pre>
 <p>And that, is how you subset your data with <em>poppr</em>!</p>
@@ -940,9 +954,9 @@ Let’s look at the loci names and number of individuals.</p>
 <hr>
 <p>Let“s look at ways to clone-correct our data. We”ll look at our <em>A. euteichies</em> data that we used in an earlier section since that data set is known to include clonal populations <span class="citation">(Grünwald and Hoheisel 2006)</span>. Try playing around with the data and see what different combinations of the <code>strata</code>, and <code>keep</code> flags produce. Below, I will give three examples of clone corrections at the sample level with respect to field, at the field level, and finally, at the level of the entire data set.</p>
 <p>First, we will examine the original data set.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(Aeut)</a>
-<a class="sourceLine" id="cb103-2" data-line-number="2"><span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="kw">other</span>(Aeut)<span class="op">$</span>population_hierarchy[<span class="op">-</span><span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb103-3" data-line-number="3">Aeut</a></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(Aeut)</a>
+<a class="sourceLine" id="cb106-2" data-line-number="2"><span class="kw">strata</span>(Aeut) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="kw">other</span>(Aeut)<span class="op">$</span>population_hierarchy[<span class="op">-</span><span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb106-3" data-line-number="3">Aeut</a></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
 ##  // 187 individuals; 56 loci; 56 alleles; size: 72.7 Kb
@@ -959,10 +973,10 @@ Let’s look at the loci names and number of individuals.</p>
 ##    @strata: a data frame with 2 columns ( Pop, Subpop )
 ##    @other: a list containing: population_hierarchy</code></pre>
 <p>When you read in data with <code><a href="../reference/read.genalex.html">read.genalex()</a></code>, the default is to represent it in a <code>genclone</code> object. Since the <code><a href="../reference/clonecorrect.html">clonecorrect()</a></code> function works on multilocus genotype definitions, It’s more efficient to convert it to a <code>genclone</code> object first. We will also rename the strata to “field” and “sample” to make the biological relevance of the data clearer.</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1">aphan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-methods.html">as.genclone</a></span>(Aeut)</a>
-<a class="sourceLine" id="cb105-2" data-line-number="2"><span class="kw">nameStrata</span>(Aeut) &lt;-<span class="st"> </span><span class="er">~</span>field<span class="op">/</span>sample</a></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1">aphan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coercion-methods.html">as.genclone</a></span>(Aeut)</a>
+<a class="sourceLine" id="cb108-2" data-line-number="2"><span class="kw">nameStrata</span>(Aeut) &lt;-<span class="st"> </span><span class="er">~</span>field<span class="op">/</span>sample</a></code></pre></div>
 <p>Now we correct by sample with respect to field and keep the field as the population.</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan,  <span class="dt">strata =</span> <span class="op">~</span>Pop<span class="op">/</span>Subpop)</a></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan,  <span class="dt">strata =</span> <span class="op">~</span>Pop<span class="op">/</span>Subpop)</a></code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -976,10 +990,10 @@ Let’s look at the loci names and number of individuals.</p>
 ## 
 ##      2 strata - Pop, Subpop
 ##      2 populations defined - Athena, Mt. Vernon</code></pre>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1"><span class="co"># Your turn: Use the same stratification and use combine = TRUE and then</span></a>
-<a class="sourceLine" id="cb108-2" data-line-number="2"><span class="co"># keep = 1:2. Is there any difference?</span></a></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1"><span class="co"># Your turn: Use the same stratification and use combine = TRUE and then</span></a>
+<a class="sourceLine" id="cb111-2" data-line-number="2"><span class="co"># keep = 1:2. Is there any difference?</span></a></code></pre></div>
 <p>Correcting by field. Notice how the number of MLG is much closer to our census.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan, <span class="dt">strata =</span> <span class="op">~</span>Pop)</a></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan, <span class="dt">strata =</span> <span class="op">~</span>Pop)</a></code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -994,7 +1008,7 @@ Let’s look at the loci names and number of individuals.</p>
 ##      2 strata - Pop, Subpop
 ##      2 populations defined - Athena, Mt. Vernon</code></pre>
 <p>Correcting over whole data set. Our MLG is equal to our census.</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan, <span class="dt">strata =</span> <span class="ot">NA</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1"><span class="kw"><a href="../reference/clonecorrect.html">clonecorrect</a></span>(aphan, <span class="dt">strata =</span> <span class="ot">NA</span>)</a></code></pre></div>
 <pre><code>## 
 ## This is a genclone object
 ## -------------------------
@@ -1330,18 +1344,18 @@ Let’s look at the loci names and number of individuals.</p>
 </ul>
 <hr>
 <p>These shuffling schemes have been implemented for the index of association, but there may be other summary statistics you can use <code>shufflepop</code> for. All you have to do is use the function <code>replicate</code>. Let“s use average Bruvo”s distance with the first population of the data set <code>nancycats</code> as an example:</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
-<a class="sourceLine" id="cb114-2" data-line-number="2">nan1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(nancycats, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb114-3" data-line-number="3">reps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">2</span>, <span class="dv">9</span>) <span class="co"># Assuming dinucleotide repeats.</span></a>
-<a class="sourceLine" id="cb114-4" data-line-number="4">observed &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="kw"><a href="../reference/bruvo.dist.html">bruvo.dist</a></span>(nan1, <span class="dt">replen =</span> reps))</a>
-<a class="sourceLine" id="cb114-5" data-line-number="5">observed</a></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
+<a class="sourceLine" id="cb117-2" data-line-number="2">nan1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/popsub.html">popsub</a></span>(nancycats, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb117-3" data-line-number="3">reps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">2</span>, <span class="dv">9</span>) <span class="co"># Assuming dinucleotide repeats.</span></a>
+<a class="sourceLine" id="cb117-4" data-line-number="4">observed &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="kw"><a href="../reference/bruvo.dist.html">bruvo.dist</a></span>(nan1, <span class="dt">replen =</span> reps))</a>
+<a class="sourceLine" id="cb117-5" data-line-number="5">observed</a></code></pre></div>
 <pre><code>## [1] 0.4180619</code></pre>
 <p>You could use this method to replicate the resampling 999 times and then create a histogram to visualize a distribution of what would happen under different assumptions of panmixia.</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">9999</span>)</a>
-<a class="sourceLine" id="cb116-2" data-line-number="2">bd.test &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">replicate</a></span>(<span class="dv">999</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="kw"><a href="../reference/bruvo.dist.html">bruvo.dist</a></span>(<span class="kw"><a href="../reference/shufflepop.html">shufflepop</a></span>(nan1, <span class="dt">method =</span> <span class="dv">2</span>), <span class="dt">replen =</span> reps)))</a></code></pre></div>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/hist">hist</a></span>(bd.test, <span class="dt">xlab =</span> <span class="st">"Bruvo's Distance"</span>, <span class="dt">main =</span> <span class="st">"Average Bruvo's distance over 999 randomizations"</span>)</a>
-<a class="sourceLine" id="cb117-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> observed, <span class="dt">col =</span> <span class="st">"red"</span>)</a>
-<a class="sourceLine" id="cb117-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">'topleft'</span>, <span class="dt">legend=</span><span class="st">"observed"</span>, <span class="dt">col=</span><span class="st">"red"</span>, <span class="dt">lty =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">9999</span>)</a>
+<a class="sourceLine" id="cb119-2" data-line-number="2">bd.test &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">replicate</a></span>(<span class="dv">999</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="kw"><a href="../reference/bruvo.dist.html">bruvo.dist</a></span>(<span class="kw"><a href="../reference/shufflepop.html">shufflepop</a></span>(nan1, <span class="dt">method =</span> <span class="dv">2</span>), <span class="dt">replen =</span> reps)))</a></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/hist">hist</a></span>(bd.test, <span class="dt">xlab =</span> <span class="st">"Bruvo's Distance"</span>, <span class="dt">main =</span> <span class="st">"Average Bruvo's distance over 999 randomizations"</span>)</a>
+<a class="sourceLine" id="cb120-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> observed, <span class="dt">col =</span> <span class="st">"red"</span>)</a>
+<a class="sourceLine" id="cb120-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">'topleft'</span>, <span class="dt">legend=</span><span class="st">"observed"</span>, <span class="dt">col=</span><span class="st">"red"</span>, <span class="dt">lty =</span> <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/bd_histogram-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -1362,7 +1376,7 @@ Let’s look at the loci names and number of individuals.</p>
 </ul>
 <hr>
 <p>Here’s a quick example using the H3N2 virus SNP data set from an earlier section. We will only retain loci that have a minor allele frequency of <span class="math inline">\(\geq 5\%\)</span></p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1">H.five &lt;-<span class="st"> </span><span class="kw"><a href="../reference/informloci.html">informloci</a></span>(H3N2, <span class="dt">cutoff =</span> <span class="fl">0.05</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1">H.five &lt;-<span class="st"> </span><span class="kw"><a href="../reference/informloci.html">informloci</a></span>(H3N2, <span class="dt">cutoff =</span> <span class="fl">0.05</span>)</a></code></pre></div>
 <pre><code>## cutoff value: 5 % ( 95 samples ).
 ## MAF         : 0.01
 ## 
@@ -1375,8 +1389,8 @@ Let’s look at the loci names and number of individuals.</p>
 ##  5 loci found with MAF &lt; 0.01 :
 ##  42, 313, 433, 597, 915</code></pre>
 <p>Now what happens when you have all informative loci. We"ll use the nancycats data set, which has microsatellite loci. It is important to note that this is searching for loci with a specified genotype frequency as fixed heterozygous sites are also uninformative:</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
-<a class="sourceLine" id="cb121-2" data-line-number="2">naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/informloci.html">informloci</a></span>(nancycats, <span class="dt">cutoff =</span> <span class="fl">0.05</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
+<a class="sourceLine" id="cb124-2" data-line-number="2">naninform &lt;-<span class="st"> </span><span class="kw"><a href="../reference/informloci.html">informloci</a></span>(nancycats, <span class="dt">cutoff =</span> <span class="fl">0.05</span>)</a></code></pre></div>
 <pre><code>## cutoff value: 5 % ( 12 samples ).</code></pre>
 <pre><code>## MAF         : 0.01</code></pre>
 <pre><code>## 
@@ -1388,12 +1402,12 @@ Let’s look at the loci names and number of individuals.</p>
 <h1 class="hasAnchor">
 <a href="#mlg" class="anchor"></a>Multilocus Genotype Analysis</h1>
 <p>In populations with mixed sexual and clonal reproduction, it common to have multiple samples from the same population that have the same set of alleles at all loci. Here, we introduce tools for tracking MLGs within and across populations in <code>genind</code>, and <code>genlight</code> objects from the <em>adegenet</em> package. We will be using the H3N2 data set containing SNP data from isolates of the H3N2 virus from 2002 to 2006. Note that <code>genclone</code> and <code>snpclone</code> objects are optimal for these analyses. For a more in-depth document on methods for multilocus genotypes in <em>poppr</em>, see the “Multilocus Genotype Analysis” vignette by typing</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/vignette">vignette</a></span>(<span class="st">"mlg"</span>, <span class="dt">package =</span> <span class="st">"poppr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/vignette">vignette</a></span>(<span class="st">"mlg"</span>, <span class="dt">package =</span> <span class="st">"poppr"</span>)</a></code></pre></div>
 <div id="mlg:mlg" class="section level2">
 <h2 class="hasAnchor">
 <a href="#mlg:mlg" class="anchor"></a>How many multilocus genotypes are in our data set? {Just a peek}</h2>
 <p>Counting the number of MLGs in a population is the first step for these analyses as they allow us to see how many clones exist. With the <code>genclone</code> object, This information is already displayed when we view the object.</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1">H3N2</a></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1">H3N2</a></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
 ##  // 1,903 individuals; 125 loci; 334 alleles; size: 4.1 Mb
@@ -1412,12 +1426,12 @@ Let’s look at the loci names and number of individuals.</p>
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
 ##    @other: a list containing: x  xy  epid</code></pre>
 <p>If we need to store the number of MLGs as a variable, we can simply run the <code><a href="../reference/mlg.html">mlg()</a></code> command.</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1">H3N2_mlg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg</a></span>(H3N2)</a></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb131-1" data-line-number="1">H3N2_mlg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg</a></span>(H3N2)</a></code></pre></div>
 <pre><code>## #############################
 ## # Number of Individuals:  1903 
 ## # Number of MLG:  752 
 ## #############################</code></pre>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1">H3N2_mlg</a></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1">H3N2_mlg</a></code></pre></div>
 <pre><code>## [1] 752</code></pre>
 <p>Since the number of individuals exceeds the number of multilocus genotypes, we conclude that this data set contains clones. Let"s examine what populations these clones belong to.</p>
 </div>
@@ -1443,8 +1457,8 @@ Let’s look at the loci names and number of individuals.</p>
 </ul>
 <hr>
 <p>We can see what MLGs cross different populations and then give a vector that shows how many populations each one of those MLGs crosses.</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>country</a>
-<a class="sourceLine" id="cb133-2" data-line-number="2">v.dup &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.crosspop</a></span>(H3N2, <span class="dt">quiet=</span><span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>country</a>
+<a class="sourceLine" id="cb136-2" data-line-number="2">v.dup &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.crosspop</a></span>(H3N2, <span class="dt">quiet=</span><span class="ot">TRUE</span>)</a></code></pre></div>
 <p>Here is a snippet of what the output looks like when <code>quiet</code> is <code>FALSE</code>. It will print out the MLG name, the total number of individuals that make up that MLG, and the populations where that MLG can be found.</p>
 <pre><code>## MLG.3: (12 inds) USA Denmark 
 ## MLG.9: (16 inds) Japan USA Finland Denmark 
@@ -1457,7 +1471,7 @@ Let’s look at the loci names and number of individuals.</p>
 ## MLG.104: (3 inds) USA France 
 ## MLG.110: (16 inds) Japan USA China</code></pre>
 <p>The output of this function is a list of MLGs, each containing a vector indicating the number of copies in each population. We"ll count the number of populations each MLG crosses using the function <code>sapply</code> to loop over the data with the function <code>length</code>.</p>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(v.dup)</a></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(v.dup)</a></code></pre></div>
 <pre><code>## $MLG.3
 ##     USA Denmark 
 ##       4       8 
@@ -1481,8 +1495,8 @@ Let’s look at the loci names and number of individuals.</p>
 ## $MLG.86
 ## Denmark Austria 
 ##       3       4</code></pre>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" data-line-number="1">v.num &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">sapply</a></span>(v.dup, length) <span class="co"># count the number of populations each MLG crosses.</span></a>
-<a class="sourceLine" id="cb137-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(v.num)</a></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1">v.num &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">sapply</a></span>(v.dup, length) <span class="co"># count the number of populations each MLG crosses.</span></a>
+<a class="sourceLine" id="cb140-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(v.num)</a></code></pre></div>
 <pre><code>##  MLG.3  MLG.9 MLG.31 MLG.75 MLG.80 MLG.86 
 ##      2      4      2      8      2      2</code></pre>
 </div>
@@ -1509,8 +1523,8 @@ Let’s look at the loci names and number of individuals.</p>
 <li><p><code>quiet -</code> Defaults to <code>FALSE</code>: population names will be printed to the console as they are processed.</p></li>
 </ul>
 <hr>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1">v.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb140-2" data-line-number="2">v.tab[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>] <span class="co"># Showing the first 10 columns and rows of the table.</span></a></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1">v.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb143-2" data-line-number="2">v.tab[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>] <span class="co"># Showing the first 10 columns and rows of the table.</span></a></code></pre></div>
 <pre><code>##             MLG.1 MLG.2 MLG.3 MLG.4 MLG.5 MLG.6 MLG.7 MLG.8 MLG.9 MLG.10
 ## Japan           0     0     0     0     0     0     1     2     1      0
 ## USA             0     2     4     1     1     0     0     0    13      0
@@ -1522,7 +1536,7 @@ Let’s look at the loci names and number of individuals.</p>
 ## France          0     0     0     0     0     0     0     0     0      0
 ## Latvia          0     0     0     0     0     0     0     0     0      0
 ## Netherlands     0     0     0     0     0     0     0     0     0      0</code></pre>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" data-line-number="1"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">sublist =</span> <span class="st">"Norway"</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">sublist =</span> <span class="st">"Norway"</span>, <span class="dt">plot =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="poppr_manual_files/figure-html/mlgbarplot-1.png" alt="An example of a bar-chart produced by `mlg.table`. Note that this data set would produce several such charts but only the chart for Norway is shown here." width="700"><p class="caption">
 An example of a bar-chart produced by <code>mlg.table</code>. Note that this data set would produce several such charts but only the chart for Norway is shown here.
@@ -1530,8 +1544,8 @@ An example of a bar-chart produced by <code>mlg.table</code>. Note that this dat
 </div>
 <p>The MLG table is not limited to use with <em>poppr</em>. In fact, one of the main advantages of <code><a href="../reference/mlg.html">mlg.table()</a></code> is that it allows easy access to diversity functions present in the package <em>vegan</em> <span class="citation">(Oksanen et al. 2012)</span>. One example is to create a rarefaction curve for each population in your data set giving the number of expected MLGs for a given sample size. For more information, type <code><a href="https://www.rdocumentation.org/packages/utils/topics/help">help(diversity, package=vegan)</a></code> in your R console.</p>
 <p>For the sake of this example, instead of drawing a curve for each of the 37 countries represented in this sample, let"s set the hierarchical level to year.</p>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>year</a>
-<a class="sourceLine" id="cb143-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(H3N2) <span class="co"># Check the data to make sure it's correct.</span></a></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>year</a>
+<a class="sourceLine" id="cb146-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(H3N2) <span class="co"># Check the data to make sure it's correct.</span></a></code></pre></div>
 <pre><code>## 
 ## // Number of individuals: 1903
 ## // Group sizes: 158 415 399 469 462
@@ -1539,10 +1553,10 @@ An example of a bar-chart produced by <code>mlg.table</code>. Note that this dat
 ## // Number of alleles per group: 203 255 232 262 240
 ## // Percentage of missing data: 2.36 %
 ## // Observed heterozygosity: 0</code></pre>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"vegan"</span>)</a>
-<a class="sourceLine" id="cb145-2" data-line-number="2">H.year &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">plot =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb145-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/vegan/topics/rarefy">rarecurve</a></span>(H.year, <span class="dt">ylab=</span><span class="st">"Number of expected MLGs"</span>, <span class="dt">sample=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">rowSums</a></span>(H.year)),</a>
-<a class="sourceLine" id="cb145-4" data-line-number="4">          <span class="dt">border =</span> <span class="ot">NA</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">font =</span> <span class="dv">2</span>, <span class="dt">cex =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">"blue"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"vegan"</span>)</a>
+<a class="sourceLine" id="cb148-2" data-line-number="2">H.year &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">plot =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb148-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/vegan/topics/rarefy">rarecurve</a></span>(H.year, <span class="dt">ylab=</span><span class="st">"Number of expected MLGs"</span>, <span class="dt">sample=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">rowSums</a></span>(H.year)),</a>
+<a class="sourceLine" id="cb148-4" data-line-number="4">          <span class="dt">border =</span> <span class="ot">NA</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">font =</span> <span class="dv">2</span>, <span class="dt">cex =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">"blue"</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="poppr_manual_files/figure-html/mlgrareplot-1.png" alt="An example of a rarefaction curve produced using a MLG table." width="700"><p class="caption">
 An example of a rarefaction curve produced using a MLG table.
@@ -1555,28 +1569,28 @@ An example of a rarefaction curve produced using a MLG table.
 <h2 class="hasAnchor">
 <a href="#mlg:mix" class="anchor"></a>Combining MLG functions {getting into the mix}</h2>
 <p>Alone, the different functionalities are neat. Combined, we can create interesting data sets. Let"s say we wanted to know which MLGs were duplicated across the regions of the United Kingdom, Germany, Netherlands, and Norway. All we have to do is use the <code>sublist</code> flag in the function:</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>country</a>
-<a class="sourceLine" id="cb146-2" data-line-number="2">UGNN.list &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"United Kingdom"</span>, <span class="st">"Germany"</span>, <span class="st">"Netherlands"</span>, <span class="st">"Norway"</span>)</a>
-<a class="sourceLine" id="cb146-3" data-line-number="3">UGNN &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.crosspop</a></span>(H3N2, <span class="dt">sublist=</span>UGNN.list, <span class="dt">indexreturn=</span><span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" data-line-number="1"><span class="kw">setPop</span>(H3N2) &lt;-<span class="st"> </span><span class="er">~</span>country</a>
+<a class="sourceLine" id="cb149-2" data-line-number="2">UGNN.list &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"United Kingdom"</span>, <span class="st">"Germany"</span>, <span class="st">"Netherlands"</span>, <span class="st">"Norway"</span>)</a>
+<a class="sourceLine" id="cb149-3" data-line-number="3">UGNN &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.crosspop</a></span>(H3N2, <span class="dt">sublist=</span>UGNN.list, <span class="dt">indexreturn=</span><span class="ot">TRUE</span>)</a></code></pre></div>
 <p>OK, the output tells us that there are three MLGs that are crossing between these populations, but we do not know how many are in each. We can easily find that out if we subset our original table, <code>v.tab</code>.</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1">UGNN <span class="co"># Note that we have three numbers here. This will index the columns for us.</span></a></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" data-line-number="1">UGNN <span class="co"># Note that we have three numbers here. This will index the columns for us.</span></a></code></pre></div>
 <pre><code>## [1] 315 317 620</code></pre>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" data-line-number="1">UGNN.list <span class="co"># And let's not forget that we have the population names.</span></a></code></pre></div>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1">UGNN.list <span class="co"># And let's not forget that we have the population names.</span></a></code></pre></div>
 <pre><code>## [1] "United Kingdom" "Germany"        "Netherlands"    "Norway"</code></pre>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1">v.tab[UGNN.list, UGNN]</a></code></pre></div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" data-line-number="1">v.tab[UGNN.list, UGNN]</a></code></pre></div>
 <pre><code>##                MLG.315 MLG.317 MLG.620
 ## United Kingdom       1       0       0
 ## Germany              0       1       1
 ## Netherlands          0       0       0
 ## Norway               2       3       1</code></pre>
 <p>Now we can see that Norway has a higher incidence of nearly all of these MLGs. We can investigate the incidence of these MLGs throughout our data set. One thing that the <code>genclone</code> object keeps track of is a single vector defining the unique multilocus genotypes within the data. These are represented as integers and can be accessed with <code>mlg.vector</code>. This is useful for finding MLGs that correspond to certain individuals or populations. Let“s use <code>mlg.vector</code> to find individuals corresponding to the MLGs. First we”ll investigate what the output of this function looks like.</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" data-line-number="1">v.vec &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.vector</a></span>(H3N2)</a>
-<a class="sourceLine" id="cb153-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(v.vec) <span class="co"># Analyze the structure.</span></a></code></pre></div>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" data-line-number="1">v.vec &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.vector</a></span>(H3N2)</a>
+<a class="sourceLine" id="cb156-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(v.vec) <span class="co"># Analyze the structure.</span></a></code></pre></div>
 <pre><code>##  int [1:1903] 605 605 672 675 674 673 670 671 670 678 ...</code></pre>
 <p>The integers produced are the MLG assignment of each individual in the same order as the data set. This means that the first two individuals have the exact same set of alleles at each locus, so they have the same MLG: 605. If we look at the number of unique integers in the vector, it corresponds to the number of observed multilocus genotypes:</p>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(v.vec)) <span class="co"># count the number of MLGs</span></a></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(v.vec)) <span class="co"># count the number of MLGs</span></a></code></pre></div>
 <pre><code>## [1] 752</code></pre>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1">H3N2 <span class="co"># equal to the first number in this output.</span></a></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1">H3N2 <span class="co"># equal to the first number in this output.</span></a></code></pre></div>
 <pre><code>## /// GENIND OBJECT /////////
 ## 
 ##  // 1,903 individuals; 125 loci; 334 alleles; size: 4.1 Mb
@@ -1595,15 +1609,15 @@ An example of a rarefaction curve produced using a MLG table.
 ##    @strata: a data frame with 17 columns ( accession, length, host, segment, subtype, country, ... )
 ##    @other: a list containing: x  xy  epid</code></pre>
 <p>We will take <code>UGNN</code> (MLGs crossing UK, Germany, Netherlands, and Norway) and compare its elements to the MLG vector (<code>v.vec</code>) to see where else they occur.</p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1">UGNN <span class="co"># Show what we are looking for</span></a></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb162-1" data-line-number="1">UGNN <span class="co"># Show what we are looking for</span></a></code></pre></div>
 <pre><code>## [1] 315 317 620</code></pre>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1">UGNN_match &lt;-<span class="st"> </span>v.vec <span class="op">%in%</span><span class="st"> </span>UGNN</a>
-<a class="sourceLine" id="cb161-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(UGNN_match) <span class="co"># How many individuals matched to those three MLGs?</span></a></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" data-line-number="1">UGNN_match &lt;-<span class="st"> </span>v.vec <span class="op">%in%</span><span class="st"> </span>UGNN</a>
+<a class="sourceLine" id="cb164-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(UGNN_match) <span class="co"># How many individuals matched to those three MLGs?</span></a></code></pre></div>
 <pre><code>## UGNN_match
 ## FALSE  TRUE 
 ##  1881    22</code></pre>
 <p>22 individuals matched to those three MLGs. We can use this vector to show us the 22 individuals.</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" data-line-number="1"><span class="kw">indNames</span>(H3N2)[UGNN_match]</a></code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" data-line-number="1"><span class="kw">indNames</span>(H3N2)[UGNN_match]</a></code></pre></div>
 <pre><code>##       0329       0330       0331       0332       0341       0342       0345       0556 
 ## "CY026119" "CY026120" "CY026121" "CY026122" "CY026131" "CY026132" "CY026135" "EU502462" 
 ##       0557       0558       0870       0974       1112       1113       1114       1122 
@@ -1611,8 +1625,8 @@ An example of a rarefaction curve produced using a MLG table.
 ##       1193       1209       1210       1281       1288       1426 
 ## "EU501609" "EU501642" "EU501643" "EU501735" "EU501742" "EU502513"</code></pre>
 <p>Note that there is an alternative way to list individuals matching specific MLGs using the function <code>mlg.id</code>. This function will return a list where each element represents a unique MLG. You can use this data to find out which individuals correspond to specific MLGs. Each element in the list is named with the MLG, but the index does not necessarily match up, so it is important to convert your query MLGs to strings:</p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" data-line-number="1">H3N2.id &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.id</a></span>(H3N2)</a>
-<a class="sourceLine" id="cb165-2" data-line-number="2">H3N2.id[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/character">as.character</a></span>(UGNN)]</a></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" data-line-number="1">H3N2.id &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.id</a></span>(H3N2)</a>
+<a class="sourceLine" id="cb168-2" data-line-number="2">H3N2.id[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/character">as.character</a></span>(UGNN)]</a></code></pre></div>
 <pre><code>## $`315`
 ##       0974       1112       1122       1209       1210       1281       1288 
 ## "AB243868" "DQ883618" "DQ883628" "EU501642" "EU501643" "EU501735" "EU501742" 
@@ -1627,7 +1641,7 @@ An example of a rarefaction curve produced using a MLG table.
 ##       0557       0558 
 ## "EU502463" "EU502464"</code></pre>
 <p>We can also use the vector of MLGs to subset <code><a href="../reference/mlg.html">mlg.table()</a></code> with the <code>mlgsub</code> flag.</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" data-line-number="1"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">mlgsub =</span> UGNN)</a></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb170-1" data-line-number="1"><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(H3N2, <span class="dt">mlgsub =</span> UGNN)</a></code></pre></div>
 <p>That showed us exactly which populations these three MLGs came from in our data set.</p>
 <div class="figure" style="text-align: center">
 <img src="poppr_manual_files/figure-html/mlgsub_flagshow-1.png" alt="All populations that contain these MLGs" width="700"><p class="caption">
@@ -1643,32 +1657,32 @@ All populations that contain these MLGs
 <h2 class="hasAnchor">
 <a href="#manipulating-graphics" class="anchor"></a>Manipulating Graphics</h2>
 <p><em>Poppr</em> utilizes <em>ggplot2</em> to produce many of its graphs. One advantage it gives the user is the ability to manipulate these graphs. With base R graphs, the only manipulation that can be performed is by adding elements to the graph. It is a static image. The ggplot graphs are actually represented as objects in your R environment. We can use the function <code><a href="https://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot()</a></code> from <em>ggplot2</em> to be able to grab the plot that was plotted last in our window. Let’s illustrate this using a MLG bar graph from the Aeut data set.</p>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a>
-<a class="sourceLine" id="cb168-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"ggplot2"</span>)</a>
-<a class="sourceLine" id="cb168-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(Aeut)</a>
-<a class="sourceLine" id="cb168-4" data-line-number="4">Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(Aeut)</a></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a>
+<a class="sourceLine" id="cb171-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"ggplot2"</span>)</a>
+<a class="sourceLine" id="cb171-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(Aeut)</a>
+<a class="sourceLine" id="cb171-4" data-line-number="4">Aeut.tab &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mlg.html">mlg.table</a></span>(Aeut)</a></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_Aeut-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb169-1" data-line-number="1">p &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb172-1" data-line-number="1">p &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot</a></span>()</a></code></pre></div>
 <p>We’ve captured our plot using <code><a href="https://www.rdocumentation.org/packages/ggplot2/topics/last_plot">last_plot()</a></code> and now we can manipulate it. One common need is to change the title. We can easily do that with the function <code><a href="https://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle()</a></code>. Let“s say we wanted to label it”<em>Aphanomyces euteiches</em> multilocus genotype distribution". We would use <code>ggtitle(Aphanomyces euteiches multilocus genotype distribution)</code>. Unfortunately, we need italics for a latin binomial. One way to acheive this is by using the <code><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression()</a></code> function and declaring which text needs to be italicized.</p>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb170-1" data-line-number="1">myTitle &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/plotmath">italic</a></span>(<span class="st">"Aphanomyces euteiches"</span>), </a>
-<a class="sourceLine" id="cb170-2" data-line-number="2">                      <span class="st">" multilocus genotype distribution"</span>))</a>
-<a class="sourceLine" id="cb170-3" data-line-number="3">(pt &lt;-<span class="st"> </span>p <span class="op">+</span></a>
-<a class="sourceLine" id="cb170-4" data-line-number="4"><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(myTitle) <span class="op">+</span></a>
-<a class="sourceLine" id="cb170-5" data-line-number="5"><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Multilocus genotype"</span>)) <span class="co"># We can label the x axis, too</span></a></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb173-1" data-line-number="1">myTitle &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/plotmath">italic</a></span>(<span class="st">"Aphanomyces euteiches"</span>), </a>
+<a class="sourceLine" id="cb173-2" data-line-number="2">                      <span class="st">" multilocus genotype distribution"</span>))</a>
+<a class="sourceLine" id="cb173-3" data-line-number="3">(pt &lt;-<span class="st"> </span>p <span class="op">+</span></a>
+<a class="sourceLine" id="cb173-4" data-line-number="4"><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(myTitle) <span class="op">+</span></a>
+<a class="sourceLine" id="cb173-5" data-line-number="5"><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Multilocus genotype"</span>)) <span class="co"># We can label the x axis, too</span></a></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_title-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Let"s say we wanted to remove the grey background. We could use the <code><a href="https://www.rdocumentation.org/packages/ggplot2/topics/theme">theme()</a></code> function to do this, or we could use a theme already implemented in ggplot2 called <code><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw()</a></code>.</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1">(ptt &lt;-<span class="st"> </span>pt <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>())</a></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb174-1" data-line-number="1">(ptt &lt;-<span class="st"> </span>pt <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>())</a></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_theme-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Uh-oh. The x axis labels are now horizontal when they should be vertical. Since it"s the overall distribution we’re interested in, we don’t really need them anyways. We can remove them with <code>axis.text.x</code> and <code>axis.ticks.x</code> (we’ll also remove the x axis gridlines because they’re ugly).</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb172-1" data-line-number="1">(ptta &lt;-<span class="st"> </span>ptt <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">axis.text.x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb172-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">axis.ticks.x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb172-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">panel.grid.major.x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()))</a></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb175-1" data-line-number="1">(ptta &lt;-<span class="st"> </span>ptt <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">axis.text.x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb175-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">axis.ticks.x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb175-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">panel.grid.major.x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/element">element_blank</a></span>()))</a></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_MLG_theme_axis-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>And, if for some bizarre reason, you liked the color gradient in <em>poppr</em> version 1, you can get that back by adding the <em>fill</em> aesthetic:</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb173-1" data-line-number="1">(ptttaf &lt;-<span class="st"> </span>ptta <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">fill =</span> count))</a></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb176-1" data-line-number="1">(ptttaf &lt;-<span class="st"> </span>ptta <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">fill =</span> count))</a></code></pre></div>
 <p><img src="poppr_manual_files/figure-html/Aeut_silly-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>This allows you to produce publication quality graphs directly in R. Please see Hadley Wickham“s <em>ggplot2</em> package for more details <span class="citation">(Wickham 2009)</span>. Note that if you don”t like using <em>ggplot2</em>, you can access the data in the ggplot2 object and plot the data yourself:</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb174-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(p<span class="op">$</span>data)</a></code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb177-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(p<span class="op">$</span>data)</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##   Population MLG    count order
 ##   &lt;fct&gt;      &lt;chr&gt;  &lt;int&gt; &lt;fct&gt;
@@ -1729,9 +1743,9 @@ All populations that contain these MLGs
 <h3 class="hasAnchor">
 <a href="#appendix:graphics:ggplot2" class="anchor"></a>Exporting ggplot2 graphics</h3>
 <p><em>ggplot2</em> is a fantastic package that <em>poppr</em> uses to produce graphs for the <code><a href="../reference/mlg.html">mlg.table()</a></code>, <code><a href="../reference/poppr.html">poppr()</a></code>, and <code><a href="../reference/ia.html">ia()</a></code> functions. Saving a plot with <em>ggplot2</em> is performed with one command after your plot has rendered:</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb176-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats) <span class="co"># Load the data set.</span></a>
-<a class="sourceLine" id="cb176-2" data-line-number="2"><span class="kw"><a href="../reference/poppr.html">poppr</a></span>(nancycats, <span class="dt">sample =</span> <span class="dv">999</span>) <span class="co"># Produce a single plot.</span></a>
-<a class="sourceLine" id="cb176-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggsave">ggsave</a></span>(<span class="st">"nancycats.pdf"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats) <span class="co"># Load the data set.</span></a>
+<a class="sourceLine" id="cb179-2" data-line-number="2"><span class="kw"><a href="../reference/poppr.html">poppr</a></span>(nancycats, <span class="dt">sample =</span> <span class="dv">999</span>) <span class="co"># Produce a single plot.</span></a>
+<a class="sourceLine" id="cb179-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggsave">ggsave</a></span>(<span class="st">"nancycats.pdf"</span>)</a></code></pre></div>
 <p>Note that you can name the file anything, and <code>ggsave</code> will save it in that format for you. The details are in the documentation and you can access it by typing <code><a href="https://www.rdocumentation.org/packages/utils/topics/help">help(ggsave)</a></code> in your R console. The important things to note are that you can set a <code>width</code>, <code>height</code>, and <code>unit</code>. The only downside to this function is that you can only save one plot at a time. If you want to be able to save multiple plots, read on to the next section.</p>
 </div>
 <div id="appendix:graphics:export" class="section level3">
@@ -1739,15 +1753,15 @@ All populations that contain these MLGs
 <a href="#appendix:graphics:export" class="anchor"></a>Exporting any graphics</h3>
 <p>Some of the functions that <em>poppr</em> offers will give you multiple plots, and if you want to save them all, using <code>ggsave</code> will require a lot of tedious typing and clicking. Luckily, R has Functions that will save any plot you generate in nearly any image format you want. You can save in raster images such as png, bpm, and jpeg. You can also save in vector based images such as svg, pdf, and postscript. The important thing to remember is that when you are saving in a raster format, the default units of measurement are “pixels”, but you can change that by specifying your unit of choice and a resolution.</p>
 <p>For raster images and svg files, you can only save your plots in multiple files, but pdf and postscript plots can be saved in one file as multiple pages. All of these functions have the same basic form. You call the function to specify the file type you want (eg. <code><a href="https://www.rdocumentation.org/packages/grDevices/topics/pdf">pdf(myfile.pdf)</a></code>), create any graphs that you want to create, and then make sure to close the session with the function <code><a href="https://www.rdocumentation.org/packages/grDevices/topics/dev">dev.off()</a></code>. Let"s give an example saving to pdf and png files.</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb177-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
-<a class="sourceLine" id="cb177-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb177-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/png">png</a></span>(<span class="st">"nancy_pair%02d.png"</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">height =</span> <span class="dv">14</span>, <span class="dt">units =</span> <span class="st">"in"</span>, <span class="dt">res =</span> <span class="dv">300</span>)</a>
-<a class="sourceLine" id="cb177-4" data-line-number="4">poppairs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw">seppop</span>(nancycats), pair.ia, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.25</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb177-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/dev">dev.off</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(nancycats)</a>
+<a class="sourceLine" id="cb180-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb180-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/png">png</a></span>(<span class="st">"nancy_pair%02d.png"</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">height =</span> <span class="dv">14</span>, <span class="dt">units =</span> <span class="st">"in"</span>, <span class="dt">res =</span> <span class="dv">300</span>)</a>
+<a class="sourceLine" id="cb180-4" data-line-number="4">poppairs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw">seppop</span>(nancycats), pair.ia, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.25</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb180-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/dev">dev.off</a></span>()</a></code></pre></div>
 <p>Since this data set is made up of 30 populations with more than 1 individual, this will save 30 files to your working directory named “nancy_pair_barchart01.png…nancy_pair_barchart30.png”. The way R knows how to number these files is because of the <code>%02d</code> part of the command. That“s telling R to use a number that is two digits long in place of that expression. All of these files will be 14x14” and will have a resolution of 300 dots per inch. If you wanted to do the same thing, but place them all in one file, you should use the pdf option.</p>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb178-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/pdf">pdf</a></span>(<span class="st">"nancy_pair.png"</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">height =</span> <span class="dv">14</span>, <span class="dt">compress =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb178-2" data-line-number="2">poppairs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw">seppop</span>(nancycats), pair.ia, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.25</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb178-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/dev">dev.off</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/pdf">pdf</a></span>(<span class="st">"nancy_pair.png"</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">height =</span> <span class="dv">14</span>, <span class="dt">compress =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb181-2" data-line-number="2">poppairs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw">seppop</span>(nancycats), pair.ia, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.25</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb181-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/grDevices/topics/dev">dev.off</a></span>()</a></code></pre></div>
 <p>Remember, it is important not to forget to type <code><a href="https://www.rdocumentation.org/packages/grDevices/topics/dev">dev.off()</a></code> when you are done making graphs. Note that I did not have to specify a resolution for this image since it is based off of vector graphics.</p>
 </div>
 </div>

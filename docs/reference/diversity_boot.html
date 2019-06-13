@@ -66,7 +66,7 @@ to have a downward bias. See the details for more information." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -242,11 +242,11 @@ interpret the results of this function.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;       original      bias    std. error
-#&gt; t1*  3.2679442 -0.47472345 0.093251115
-#&gt; t2* 23.2903226 -9.18769728 1.486968436
-#&gt; t3*  0.9570637 -0.02867036 0.007388331
-#&gt; t4*  0.8825297 -0.03141383 0.048187814
+#&gt;       original       bias    std. error
+#&gt; t1*  3.2679442 -0.408150065 0.105434202
+#&gt; t2* 23.2903226 -7.827538789 1.622159350
+#&gt; t3*  0.9570637 -0.022437673 0.007467245
+#&gt; t4*  0.8825297 -0.007866368 0.040895129
 #&gt; 
 #&gt; $`North America`
 #&gt; 
@@ -259,15 +259,15 @@ interpret the results of this function.
 #&gt; 
 #&gt; 
 #&gt; Bootstrap Statistics :
-#&gt;       original       bias    std. error
-#&gt; t1*  3.6870132  -0.51083800 0.091870654
-#&gt; t2* 34.9090909 -14.58788801 2.024298047
-#&gt; t3*  0.9713542  -0.02100694 0.004957975
-#&gt; t4*  0.8711297  -0.03152984 0.057987648
+#&gt;       original        bias    std. error
+#&gt; t1*  3.6870132 -5.005028e-01  0.11329447
+#&gt; t2* 34.9090909 -1.351801e+01  2.93476936
+#&gt; t3*  0.9713542 -1.909722e-02  0.00816362
+#&gt; t4*  0.8711297 -4.199509e-04  0.04615188
 #&gt; </div><div class='input'><span class='co'># This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.046   0.055   2.751 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   3.644   0.066   3.719 </div></pre>
+#&gt;   0.021   0.104   2.199 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   2.384   0.012   2.404 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

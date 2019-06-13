@@ -64,7 +64,7 @@ for internal use only." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -157,22 +157,22 @@ collapsing MLGs.</p></dd>
     <pre class="examples"><div class='input'>
 <span class='co'># These examples will simply show you what you can do with these</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>5000</span>)
-(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;  [1]  5  5  2 10  1  7  8  1  4  5  4 10  9  7  2  7  5  3  9  3</div><div class='input'>(<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"MLG"</span>, <span class='no'>x</span>))</div><div class='output co'>#&gt; 20 original mlgs.
-#&gt;  [1]  5  5  2 10  1  7  8  1  4  5  4 10  9  7  2  7  5  3  9  3</div><div class='input'>
+(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>(<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"MLG"</span>, <span class='no'>x</span>))</div><div class='output co'>#&gt; 20 original mlgs.
+#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>
  <span class='fu'><a href='MLG-accessors.html'>visible</a></span>(<span class='no'>m</span>) <span class='co'># original is always default</span></div><div class='output co'>#&gt; [1] "original"</div><div class='input'>
- <span class='no'>m</span>[]       <span class='co'># adding braces after the object will always return a vector of </span></div><div class='output co'>#&gt;  [1]  5  5  2 10  1  7  8  1  4  5  4 10  9  7  2  7  5  3  9  3</div><div class='input'>           <span class='co'># the same type as defined in "visible"</span>
+ <span class='no'>m</span>[]       <span class='co'># adding braces after the object will always return a vector of </span></div><div class='output co'>#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>           <span class='co'># the same type as defined in "visible"</span>
 
- <span class='no'>m</span> + <span class='fl'>1</span>     <span class='co'># You can do math on the numeric ones</span></div><div class='output co'>#&gt;  [1]  6  6  3 11  2  8  9  2  5  6  5 11 10  8  3  8  6  4 10  4</div><div class='input'>
+ <span class='no'>m</span> + <span class='fl'>1</span>     <span class='co'># You can do math on the numeric ones</span></div><div class='output co'>#&gt;  [1]  9  6  6  3  4  2  5 10  7  5  6 10  8 11  3  5  3  5 11  3</div><div class='input'>
  <span class='fu'><a href='MLG-accessors.html'>visible</a></span>(<span class='no'>m</span>) <span class='kw'>&lt;-</span> <span class='st'>"custom"</span>
  <span class='no'>m</span> + <span class='fl'>2</span>     <span class='co'># This should throw a warning</span></div><div class='output co'>#&gt; <span class='warning'>Warning: ‘+’ not meaningful for factors</span></div><div class='output co'>#&gt;  [1] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA</div><div class='input'> <span class='co'># The types are stored in a data frame. You can retrieve them easily:</span>
  <span class='fu'><a href='MLG-accessors.html'>visible</a></span>(<span class='no'>m</span>) <span class='kw'>&lt;-</span> <span class='st'>"original"</span>
  <span class='no'>m</span></div><div class='output co'>#&gt; 20 original mlgs.
-#&gt;  [1]  5  5  2 10  1  7  8  1  4  5  4 10  9  7  2  7  5  3  9  3</div><div class='input'> <span class='no'>m</span>[, <span class='st'>"custom"</span>]</div><div class='output co'>#&gt;  [1] 5  5  2  10 1  7  8  1  4  5  4  10 9  7  2  7  5  3  9  3 
-#&gt; Levels: 1 2 3 4 5 7 8 9 10</div><div class='input'>
+#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'> <span class='no'>m</span>[, <span class='st'>"custom"</span>]</div><div class='output co'>#&gt;  [1] 8  5  5  2  3  1  4  9  6  4  5  9  7  10 2  4  2  4  10 2 
+#&gt; Levels: 1 2 3 4 5 6 7 8 9 10</div><div class='input'>
  <span class='co'># Important for subsetting, if you subset the object, normally, it will </span>
  <span class='co'># return a vector unless you specify all = TRUE</span>
- <span class='no'>m</span>[<span class='fl'>1</span>:<span class='fl'>10</span>]             <span class='co'># original vector</span></div><div class='output co'>#&gt;  [1]  5  5  2 10  1  7  8  1  4  5</div><div class='input'> <span class='no'>m</span>[<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>] <span class='co'># still class MLG</span></div><div class='output co'>#&gt; 10 original mlgs.
-#&gt;  [1]  5  5  2 10  1  7  8  1  4  5</div><div class='input'>
+ <span class='no'>m</span>[<span class='fl'>1</span>:<span class='fl'>10</span>]             <span class='co'># original vector</span></div><div class='output co'>#&gt;  [1] 8 5 5 2 3 1 4 9 6 4</div><div class='input'> <span class='no'>m</span>[<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>] <span class='co'># still class MLG</span></div><div class='output co'>#&gt; 10 original mlgs.
+#&gt;  [1] 8 5 5 2 3 1 4 9 6 4</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

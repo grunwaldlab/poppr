@@ -66,7 +66,7 @@ of association." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -238,29 +238,29 @@ and Burt, 2001. See <code><a href='ia.html'>ia()</a></code> for details.</p>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>position</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/integer'>as.integer</a></span>(<span class='no'>position</span>)) <span class='kw'>%&gt;%</span> <span class='co'># force position as integers</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>chromosome</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/factor'>factor</a></span>(<span class='no'>chromosome</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/unique'>unique</a></span>(<span class='no'>chromosome</span>))) <span class='co'># force order chromosomes</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `data_frame()` is deprecated, use `tibble()`.</span>
 #&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once per session.</span><span></span></div><div class='input'><span class='no'>res_tidy</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 100 x 3</span><span>
-#&gt;           rd chromosome position
-#&gt;        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>    0      1               100
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>   -</span><span style='color: #BB0000;'>0.111</span><span>  1               200
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>  </span><span style='color: #BB0000;'>NaN</span><span>      1               300
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>   -</span><span style='color: #BB0000;'>0.111</span><span>  1               400
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>   -</span><span style='color: #BB0000;'>0.131</span><span>  1               500
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>  </span><span style='color: #BB0000;'>NaN</span><span>      1               600
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>   -</span><span style='color: #BB0000;'>0.131</span><span>  1               700
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>    0.123  1               800
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>   -</span><span style='color: #BB0000;'>0.017</span><span style='color: #BB0000;text-decoration: underline;'>9</span><span> 1               900
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>    0.013</span><span style='text-decoration: underline;'>7</span><span> 1              </span><span style='text-decoration: underline;'>1</span><span>000
+#&gt;          rd chromosome position
+#&gt;       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> -</span><span style='color: #BB0000;'>0.058</span><span style='color: #BB0000;text-decoration: underline;'>2</span><span>  1               100
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> -</span><span style='color: #BB0000;'>0.111</span><span>   1               200
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> -</span><span style='color: #BB0000;'>0.111</span><span>   1               300
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> -</span><span style='color: #BB0000;'>0.111</span><span>   1               400
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> -</span><span style='color: #BB0000;'>0.131</span><span>   1               500
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> -</span><span style='color: #BB0000;'>0.111</span><span>   1               600
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>  0.031</span><span style='text-decoration: underline;'>9</span><span>  1               700
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>  0.009</span><span style='text-decoration: underline;'>76</span><span> 1               800
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> -</span><span style='color: #BB0000;'>0.095</span><span style='color: #BB0000;text-decoration: underline;'>7</span><span>  1               900
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>  0.196   1              </span><span style='text-decoration: underline;'>1</span><span>000
 #&gt; </span><span style='color: #949494;'># … with 90 more rows</span><span></div><div class='input'>
 <span class='co'># Plotting with ggplot2</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"ggplot2"</span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>res_tidy</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>position</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>rd</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>chromosome</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>chromosome</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ylab</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/expression'>expression</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/plotmath'>bar</a></span>(<span class='no'>r</span>)[<span class='no'>d</span>])) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>xlab</a></span>(<span class='st'>"terminal position of sliding window"</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span>(<span class='kw'>caption</span> <span class='kw'>=</span> <span class='st'>"window size: 100bp"</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>axis.text.x</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> <span class='fl'>90</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>vjust</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"top"</span>)</div><div class='img'><img src='win.ia-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>res_tidy</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>position</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>rd</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>chromosome</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>() +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>chromosome</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1</span>) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/labs'>ylab</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/expression'>expression</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/plotmath'>bar</a></span>(<span class='no'>r</span>)[<span class='no'>d</span>])) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/labs'>xlab</a></span>(<span class='st'>"terminal position of sliding window"</span>) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/labs'>labs</a></span>(<span class='kw'>caption</span> <span class='kw'>=</span> <span class='st'>"window size: 100bp"</span>) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>axis.text.x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/element'>element_text</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> <span class='fl'>90</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>vjust</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"top"</span>)</div><div class='img'><img src='win.ia-4.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></span><div class='input'>
 </div></pre>
   </div>

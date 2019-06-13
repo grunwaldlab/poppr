@@ -66,7 +66,7 @@ of multilocus genotypes observed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -218,22 +218,22 @@ no effect when <code>drop = FALSE</code></p></td>
 
 <span class='co'># Trendlines: you can add a smoothed trendline with geom_smooth()</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"ggplot2"</span>)
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/last_plot.html'>last_plot</a></span>()
-<span class='no'>p</span> + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span>()</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'</span></div><div class='img'><img src='genotype_curve-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/last_plot'>last_plot</a></span>()
+<span class='no'>p</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_smooth'>geom_smooth</a></span>()</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'</span></div><div class='img'><img src='genotype_curve-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Producing Figures for Publication ---------------------------------------</span>
 
 <span class='co'># This data set has been pre filtered</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>monpop</span>)
 <span class='no'>mongeno</span> <span class='kw'>&lt;-</span> <span class='fu'>genotype_curve</span>(<span class='no'>monpop</span>)</div><div class='img'><img src='genotype_curve-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Here, we add a curve and a title for publication</span>
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/last_plot.html'>last_plot</a></span>()
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/last_plot'>last_plot</a></span>()
 <span class='no'>mytitle</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/expression'>expression</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Genotype Accumulation Curve for "</span>,
                             <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/plotmath'>italic</a></span>(<span class='st'>"M. fructicola"</span>)))
-<span class='no'>p</span> + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='st'>"serif"</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>14</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>ggtitle</a></span>(<span class='no'>mytitle</span>)</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'</span></div><div class='img'><img src='genotype_curve-5.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>p</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_smooth'>geom_smooth</a></span>() +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_bw</a></span>() +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/element'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='st'>"serif"</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/theme'>theme</a></span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/element'>element_text</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>14</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/labs'>ggtitle</a></span>(<span class='no'>mytitle</span>)</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'</span></div><div class='img'><img src='genotype_curve-5.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

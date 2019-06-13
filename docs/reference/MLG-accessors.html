@@ -65,7 +65,7 @@ in your code when accessing MLG objects." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -191,34 +191,34 @@ in your code when accessing MLG objects.</p>
     <pre class="examples"><div class='input'>
 </div><div class='input'><span class='co'># These examples will simply show you what you can do with these</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>5000</span>)
-(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;  [1]  5  5  2 10  1  7  8  1  4  5  4 10  9  7  2  7  5  3  9  3</div><div class='input'>(<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"MLG"</span>, <span class='no'>x</span>))</div><div class='output co'>#&gt; 20 original mlgs.
-#&gt;  [1]  5  5  2 10  1  7  8  1  4  5  4 10  9  7  2  7  5  3  9  3</div><div class='input'>
+(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>(<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"MLG"</span>, <span class='no'>x</span>))</div><div class='output co'>#&gt; 20 original mlgs.
+#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>
 <span class='co'># Visibility ------------------------------</span>
 <span class='fu'>visible</span>(<span class='no'>m</span>) <span class='co'># original</span></div><div class='output co'>#&gt; [1] "original"</div><div class='input'><span class='fu'>visible</span>(<span class='no'>m</span>) <span class='kw'>&lt;-</span> <span class='st'>"contracted"</span>
 <span class='no'>m</span>          <span class='co'># shows contracted MLGS</span></div><div class='output co'>#&gt; 20 contracted mlgs with a cutoff of 0 based on the function diss.dist
-#&gt;  [1]  5  5  2 10  1  7  8  1  4  5  4 10  9  7  2  7  5  3  9  3</div><div class='input'>
+#&gt;  [1]  8  5  5  2  3  1  4  9  6  4  5  9  7 10  2  4  2  4 10  2</div><div class='input'>
 <span class='co'># Conversion to data frame ----------------</span>
 <span class='fu'>MLG2df</span>(<span class='no'>m</span>)  <span class='co'># Grab the internal data frame</span></div><div class='output co'>#&gt;    expanded original contracted custom
-#&gt; 1         5        5          5      5
+#&gt; 1         8        8          8      8
 #&gt; 2         5        5          5      5
-#&gt; 3         2        2          2      2
-#&gt; 4        10       10         10     10
-#&gt; 5         1        1          1      1
-#&gt; 6         7        7          7      7
-#&gt; 7         8        8          8      8
-#&gt; 8         1        1          1      1
-#&gt; 9         4        4          4      4
-#&gt; 10        5        5          5      5
-#&gt; 11        4        4          4      4
-#&gt; 12       10       10         10     10
-#&gt; 13        9        9          9      9
-#&gt; 14        7        7          7      7
+#&gt; 3         5        5          5      5
+#&gt; 4         2        2          2      2
+#&gt; 5         3        3          3      3
+#&gt; 6         1        1          1      1
+#&gt; 7         4        4          4      4
+#&gt; 8         9        9          9      9
+#&gt; 9         6        6          6      6
+#&gt; 10        4        4          4      4
+#&gt; 11        5        5          5      5
+#&gt; 12        9        9          9      9
+#&gt; 13        7        7          7      7
+#&gt; 14       10       10         10     10
 #&gt; 15        2        2          2      2
-#&gt; 16        7        7          7      7
-#&gt; 17        5        5          5      5
-#&gt; 18        3        3          3      3
-#&gt; 19        9        9          9      9
-#&gt; 20        3        3          3      3</div><div class='input'>
+#&gt; 16        4        4          4      4
+#&gt; 17        2        2          2      2
+#&gt; 18        4        4          4      4
+#&gt; 19       10       10         10     10
+#&gt; 20        2        2          2      2</div><div class='input'>
 <span class='co'># Distance function handling --------------</span>
 <span class='fu'>distname</span>(<span class='no'>m</span>) <span class='co'># nei.dist</span></div><div class='output co'>#&gt; [1] "diss.dist"</div><div class='input'><span class='fu'>distargs</span>(<span class='no'>m</span>) <span class='co'># list()</span></div><div class='output co'>#&gt; list()</div><div class='input'><span class='fu'>distalgo</span>(<span class='no'>m</span>) <span class='co'># farthest</span></div><div class='output co'>#&gt; [1] "farthest_neighbor"</div><div class='input'><span class='fu'>cutoff</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;   expanded contracted 
 #&gt;          0          0 </div><div class='input'>

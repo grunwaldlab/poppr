@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#poppr-version-2" class="anchor"></a>Poppr version 2 <img src="reference/figures/small_logo.png" align="right">
 </h1></div>
-<p>In Development: <a href="https://travis-ci.org/grunwaldlab/poppr"><img src="https://travis-ci.org/grunwaldlab/poppr.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/r/grunwaldlab/poppr?branch=master"><img src="https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=master" alt="Coverage Status"></a></p>
+<p>In Development: <a href="https://travis-ci.org/grunwaldlab/poppr"><img src="https://travis-ci.org/grunwaldlab/poppr.svg?branch=fix-readgenalex-numeric-inds" alt="Build Status"></a> <a href="https://coveralls.io/r/grunwaldlab/poppr?branch=fix-readgenalex-numeric-inds"><img src="https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=fix-readgenalex-numeric-inds" alt="Coverage Status"></a></p>
 <p>CRAN Status: <a href="https://cran.r-project.org/package=poppr"><img src="http://www.r-pkg.org/badges/version-ago/poppr" alt="CRAN version"></a> <a href="https://cran.r-project.org/web/checks/check_results_poppr.html"><img src="https://cranchecks.info/badges/worst/poppr" alt="CRAN check status"></a> <!-- 
 --> Usage: <a href="http://www.r-pkg.org/pkg/poppr"><img src="https://cranlogs.r-pkg.org/badges/grand-total/poppr" alt="Downloads from Rstudio mirror"></a></p>
 <div id="what-is-poppr" class="section level2">
@@ -102,7 +102,7 @@
 <li>drawing of dendrograms with bootstrap support for genetic distances</li>
 <li>drawing of minimum spanning networks for genetic distances</li>
 <li>calculation of the index of association (<img src="http://latex.codecogs.com/gif.latex?I_A" alt="Index of association">) or (<img src="http://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt="Standardized index of association">)</li>
-<li>batch processing on any server that has R ( ≥ 2.15.1) installed</li>
+<li>batch processing on any server that has R (≥ 2.15.1) installed</li>
 <li>calculation of Bruvo’s distance for microsatellite (SSR) markers (implemented in C for speed)</li>
 <li>import of data from and export to <a href="http://biology.anu.edu.au/GenAlEx/Welcome.html" title="GenAlEx Homepage">GenAlEx</a>
 </li>
@@ -185,7 +185,7 @@
 <div id="unstabledevelopment-versions" class="section level4">
 <h4 class="hasAnchor">
 <a href="#unstabledevelopment-versions" class="anchor"></a>Unstable/Development versions</h4>
-<p>All new features in testing will be released on different branches. These features will be in various stages of development and may or may not be documented. Install with caution. The below command would install features on the the branch called “devel”. Note that these branches might be out of date from the master branch.</p>
+<p>All new features in testing will be released on different branches. These features will be in various stages of development and may or may not be documented. Install with caution. The below command would install features on the branch called “devel”. Note that these branches might be out of date from the master branch.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr@devel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a></code></pre></div>
 </div>
