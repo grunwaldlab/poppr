@@ -2,7 +2,7 @@ poppr 2.8.3
 ===========
 
 BUG FIX
-=======
+-------
 
 * `read.genalex()` now correctly parses strata when the user imports data that
   contains duplicated data AND has some individuals named as integers less than
@@ -10,7 +10,7 @@ BUG FIX
   (See https://github.com/grunwaldlab/poppr/pull/202).
 
 MISC
-====
+----
 
 * MSN functions: nodes with single populations displayed as circles instead of 
   pies. (@fdchevalier, https://github.com/grunwaldlab/poppr/pull/203)
