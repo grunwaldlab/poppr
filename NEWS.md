@@ -14,8 +14,11 @@ MISC
 
 * MSN functions: nodes with single populations displayed as circles instead of 
   pies. (@fdchevalier, https://github.com/grunwaldlab/poppr/pull/203)
-* `mlg.vector()` is now safer as it no longer uses a for loop instead of a
+* `mlg.vector()` is now safer as it now uses a for loop instead of a
   function with the out-of-scope operator (`<<-`) (see #205)
+* `shufflepop()` is now safer as it now uses a for loop instead of a
+  function with the out-of-scope operator (`<<-`) (see #205)
+
 
 poppr 2.8.2
 ===========
