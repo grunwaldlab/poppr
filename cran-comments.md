@@ -1,6 +1,6 @@
 # Poppr version 2.8.3
 
-This is a resubmission after fixing an invalid URI
+This is a resubmission of a resubmission after fixing an invalid URI
 
 ## Test environments
 

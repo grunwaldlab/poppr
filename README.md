@@ -172,7 +172,7 @@ https://grunwaldlab.github.io/Population_Genetics_in_R.
 ## Contributing
 
 Please note that this project is released with a [Contributor Code of
-Conduct](https://github.com/grunwaldlab/poppr/tree/master/CONDUCT.md). By 
+Conduct](https://github.com/grunwaldlab/poppr/tree/master/CODE_OF_CONDUCT.md). By 
 participating in this project you agree to abide by its
 terms. If you wish to contribute code to *poppr*, please fork the repository and
 create a pull request with your added feature.
