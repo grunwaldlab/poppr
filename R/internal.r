@@ -222,7 +222,6 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
   } else{
     sublist <- popNames(pop)[popNames(pop) %in% sublist]
   }
-  # sublist <- (1:length(pop@pop))[pop@pop %in% sublist]
   sublist <- pop(pop) %in% sublist
   if (sum(sublist) == 0){
     warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
@@ -270,35 +269,6 @@ mlg.matrix <- function(x){
   colnames(mlg.mat) <- paste("MLG", colnames(mlg.mat), sep=".")
   return(unclass(mlg.mat))
 }
-# #==============================================================================#
-# # DEPRECATED
-# #==============================================================================#
-# old.mlg.matrix <- function(x){
-#   mlgvec <- mlg.vector(x)
-#   mlgs   <- length(unique(mlgvec))
-#   
-#   if (!is.null(x@pop)){
-#     # creating a new population matrix. Rows are the population indicator and 
-#     # columns are the genotype indicator.
-#     mlg.mat <- matrix(ncol=mlgs, nrow=length(levels(x@pop)), data=0L)
-#     # populating (no, pun intended.) the matrix with genotype counts.
-#     lapply(levels(x@pop), function(z){
-#                            # This first part gets the index for the row names. 
-#                            count <- as.numeric(substr(z, 2, nchar(z)))
-#                            sapply(mlgvec[which(x@pop==z)], 
-#                                   function(a) mlg.mat[count, a] <<-
-#                                               mlg.mat[count, a] + 1L)
-#                          })
-#     rownames(mlg.mat) <-popNames(x)
-#   } else {
-#     # if there are no populations to speak of.
-#     mlg.mat <- t(as.matrix(vector(length=mlgs, mode="numeric")))
-#     sapply(mlgvec, function(a) mlg.mat[a] <<- mlg.mat[a] + 1)
-#     rownames(mlg.mat) <- "Total"
-#   }
-#   colnames(mlg.mat) <- paste("MLG", 1:mlgs, sep=".")
-#   return(mlg.mat)
-# }
 #==============================================================================#
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
 # 
@@ -498,85 +468,6 @@ final <- function(Iout, result){
 #=====================Index of Association Calculations========================#
 #==============================================================================#
 #==============================================================================#
-# .pairwise.differences will calculate three vectors that will be used for the
-# calculation of the Index of Association and standardized Index of Association
-# Later. Note that all NA's must be treated or removed before this step.
-# pop = genind object 
-# numLoci = should read numLoci. This will be fixed later.
-# temp.d.vector = temporary vector to store the differences
-# d.vector = a vector of the sum of the differences at each locus. The length
-# 			 of this vector will be the same as the number of loci.
-# d2.vector = the same as d.vector, except it's the sum of the squares
-# D.vector = a vector of the the pairwise distances over all loci. The length
-#			 of this vector will be the same as n(n-1)/2, where n is number of
-# 			isolates.
-#
-#
-# # DEPRECATED
-# #==============================================================================#
-# .pairwise.differences <- function(pop, numLoci, np, missing){  
-#   temp.d.vector <- matrix(nrow=np, ncol=numLoci, data=as.numeric(NA))
-#   if( missing == "MEAN" )
-#     temp.d.vector <- matrix(nrow=np, ncol=numLoci,
-#                             data=vapply(vapply(pop, pairwisematrix, 
-#                                         temp.d.vector[, 1], np), round.poppr, 1))  
-#   else    
-#     temp.d.vector <- vapply(pop, pairwisematrix, temp.d.vector[, 1], np)
-#   d.vector  <- as.vector(colSums(temp.d.vector))
-#   d2.vector <- as.vector(colSums(temp.d.vector^2))
-#   D.vector  <- as.vector(rowSums(temp.d.vector))
-#   vectors   <- list(d.vector=d.vector, d2.vector=d2.vector, D.vector=D.vector)
-#   return(vectors)
-# }
-#==============================================================================#
-# pairwisematrix performs a pairwise comparison over all individuals per locus
-# and returns a vector that will make its way into the final matrix for d.
-# the conditional for this is that each locus must not be completely fixed for
-# one allele. In that case, the resulting pairwise differences will all be zero.
-#
-#
-# DEPRECATED 
-#==============================================================================#
-# pairwisematrix <- function(pop, np){
-#   temp.d.vector <- vector(mode="numeric", length=np)
-#   if ( ncol(pop@tab) != 1 )
-#     temp.d.vector <- as.numeric(colSums(.pairwise.diffs(t(pop@tab)), na.rm=TRUE))
-#   return(temp.d.vector)
-# }
-#==============================================================================#
-# The original function pairwise.diffs can be found here
-# https://stat.ethz.ch/pipermail/r-help/2004-August/055324.html
-#
-#
-# DEPRECATED
-#==============================================================================#
-# .pairwise.diffs <- function(x){
-#   stopifnot(is.matrix(x))
-# 
-#   # create column combination pairs
-#   prs <- cbind(rep(1:ncol(x), each = ncol(x)), 1:ncol(x))
-#   col.diffs <- prs[prs[, 1] < prs[, 2], , drop = FALSE]
-# 
-#   # do pairwise differences 
-#   result <- abs(x[, col.diffs[, 1]] - x[, col.diffs[, 2], drop = FALSE])
-# 
-#   return(result)
-# }
-#==============================================================================#
-# To calculate rbarD, the pairwise variances for each locus needs to be
-# calculated. 
-#
-#
-# DEPRECATED
-#==============================================================================#
-# .pairwise.variances <- function(vard.vector, pair.alleles){  
-#   # Here the roots of the products of the variances are being produced and
-#   # the sum of those values is taken. 
-#   vardpair.vector <- vector(length=pair.alleles)
-#   vardpair.vector <- sqrt(combn(vard.vector, 2, prod))
-#   return(vardpair.vector)
-# }
-#==============================================================================#
 # The actual calculation of Ia and rbarD. This allows for multiple populations
 # to be calculated.
 # pop: A list of genind objects consisting of one locus each over a population.
@@ -647,53 +538,6 @@ pair_matrix <- function(pop, numLoci, np)
   temp.d.vector <- ceiling(temp.d.vector)
   return(temp.d.vector)
 }
-#==============================================================================#
-# Internal counter...probably DEPRECATED.
-#==============================================================================#
-# .new_counter <- function() {
-#   i <- 0
-#   function() {
-#     i <<- i + 1
-#     i
-#   }
-# }
-
-#==============================================================================#
-# Bruvo's distance calculation that takes in an SSR matrix. Note the conditions
-# below.
-#
-# Public functions utilizing this function:
-# # bruvo.boot
-#
-# Internal functions utilizing this function:
-# # none
-#
-# DEPRECATED
-#==============================================================================#
-# phylo.bruvo.dist <- function(ssr.matrix, replen=c(2), ploid=2, add = TRUE, loss = TRUE){
-#   # Preceeding functions should take care of this:
-#   # ssr.matrix <- genind2df(pop, sep="/", usepop=FALSE)
-#   # ssr.matrix[is.na(ssr.matrix)] <- paste(rep(0, ploid), collapse="/")
-#   # Bruvo's distance needs a matrix with the number of columns equal to the
-#   # number of loci multiplied by the polidy. 
-#   indnames <- rownames(ssr.matrix)
-#   ssr.matrix <- apply(ssr.matrix, 1, strsplit, "/")
-#   # Getting the values into numeric form.
-#   ssr.matrix <- apply(as.matrix(t(sapply(ssr.matrix, unlist))), 2, as.numeric)
-#   # Dividing each column by the repeat length and changing the values to integers.
-#   ssr.matrix <- apply(ssr.matrix / rep(replen, each=ploid*nrow(ssr.matrix)), 2, round)
-#   ssr.matrix <- apply(ssr.matrix, 2, as.integer)
-#   perms <- .Call("permuto", ploid, PACKAGE = "poppr")
-#   distmat <- .Call("bruvo_distance", ssr.matrix, perms, ploid, add, loss, PACKAGE = "poppr")
-#   distmat[distmat == 100] <- NA
-#   avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
-#   # presenting the information in a lower triangle distance matrix.
-#   dist.mat <- matrix(ncol=nrow(ssr.matrix), nrow=nrow(ssr.matrix))
-#   dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
-#   dist.mat <- as.dist(dist.mat)
-#   attr(dist.mat, "labels") <- indnames
-#   return(dist.mat)
-# }
 
 #==============================================================================#
 # This will transform the data to be in the range of [0, 1]
@@ -1038,45 +882,6 @@ match_replen_to_loci <- function(gid_loci, replen){
 }
 
 #==============================================================================#
-# A function for creating a population hierarchy using a formula and data frame
-# 
-# hier = a nested formula such as ~ A/B/C where C is nested within B, which is
-# nested within A.
-#
-# df = a data frame containing columns corresponding to the variables in hier.
-#
-# example:
-# df <- data.frame(list(a = letters, b = LETTERS, c = 1:26))
-# newdf <- make_hierarchy(~ a/b/c, df)
-# df[names(newdf)] <- newdf # Add new columns.
-#
-# Public functions utilizing this function:
-#
-# ## none
-#
-# Internal functions utilizing this function:
-# ## none
-# 
-# DEPRECATED
-#==============================================================================#
-# make_hierarchy <- function(hier, df, expand_label = FALSE){
-#   newlevs <- attr(terms(hier), "term.labels")
-#   levs <- all.vars(hier)
-#   if (length(levs) > 1){
-#     newlevs <- gsub(":", "_", newlevs)
-#   }
-#   if (!all(levs %in% names(df))){
-#     stop(hier_incompatible_warning(levs, df))
-#   }
-#   newdf <- df[levs[1]]
-#   if (!expand_label){
-#     newlevs <- levs
-#   }
-#   lapply(1:length(levs), function(x) newdf[[newlevs[x]]] <<- as.factor(pop_combiner(df, levs[1:x])))
-#   return(newdf)
-# }
-
-#==============================================================================#
 # Function for creating the structure data frame needed for ade4's AMOVA
 # implementation.
 #
@@ -1095,7 +900,6 @@ make_ade_df <- function(hier, df, expanded = FALSE){
     levs <- all.vars(hier)
   }
   if(length(levs) <= 1){
-    # stop("Only one level present")
     return(NULL)
   }
   levs <- gsub(":", "_", levs)
@@ -1361,14 +1165,11 @@ tree_generator <- function(tree, distance, quiet = TRUE, ...){
   DISTFUNK <- match.fun(distance)
   distargs <- as.list(formals(distance))
   otherargs <- list(...)
-  #print(otherargs)
   matchargs <- names(distargs)[names(distargs) %in% names(otherargs)]
   distargs[matchargs] <- otherargs[matchargs]
-  #print(distargs)
   if (!quiet) cat("\nTREE....... ", tree,"\nDISTANCE... ", distance)
   treedist <- function(x){
     distargs[[1]] <- x
-    #print(distargs)
     TREEFUNK(do.call(DISTFUNK, distargs))
   }
   return(treedist)
@@ -1523,23 +1324,6 @@ update_colors <- function(colorvec, lookup){
   matching <- match(names(colorvec), pops)
   return(update[matching[!is.na(matching)]])
 }
-#==============================================================================#
-# Function used to update colors in poppr msn 
-#
-# Public functions utilizing this function:
-# ## none
-#
-# Private functions utilizing this function:
-# ## none
-# 
-# DEPRECATED
-#==============================================================================#
-# update_single_color <- function(x, lookup, colorvec){
-#   update   <- lookup[[2]]
-#   original <- lookup[[1]]
-#   return(update[original %in% colorvec[x]])
-# }
-
 #==============================================================================#
 # Function used to obtain information about local ploidy in a genind data set
 # for polyploids. When polyploids are imported, the entire data set is coded in
