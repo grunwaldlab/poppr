@@ -80,9 +80,6 @@
 #'
 #' yfiles <- poppr.all(y$files)
 #' 
-#' # Write results to a file in that directory.
-#' setwd(y$path)
-#' write.csv(yfiles)
 #' }  
 #' @export
 #==============================================================================#
