@@ -14,6 +14,13 @@ set.seed(999)
 gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, n.cores = 1L, parallel = FALSE))
 
 
+testx <- function(i, d, th) {
+  mlg.filter(i, distance = d) <- 0
+  mlg.filter(i) <- th
+  i
+}
+
+
 test_that("multilocus genotype filtering algorithms work", {
   skip_on_cran()
   expect_equal(nmll(x), nInd(x))
@@ -108,8 +115,8 @@ test_that("mlg.filter can remember things", {
   
   
   # supplied distance matrices work
-  assign("x20150702210257_distance", xd, envir = .GlobalEnv)
-  assign("x20150703173505_distance", bitwise.dist(gc, differences_only = TRUE), envir = .GlobalEnv)
+  assign("x20150702210257_distance", xd)
+  assign("x20150703173505_distance", bitwise.dist(gc, differences_only = TRUE))
   mlg.filter(x, distance = x20150702210257_distance) <- 0
   mlg.filter(gc, distance = x20150703173505_distance) <- 0
   expect_output(show(x), "x20150702210257_distance")
@@ -157,8 +164,8 @@ test_that("mlg.filter can remember things", {
   expect_lt(nmll(gc), 100)
   
   # An error is thrown if the distance is removed
-  rm("x20150702210257_distance", envir = .GlobalEnv)
-  rm("x20150703173505_distance", envir = .GlobalEnv)
+  rm("x20150702210257_distance")
+  rm("x20150703173505_distance")
   expect_error(mlg.filter(x) <- 0)
   expect_error(mlg.filter(gc) <- 0)
   
@@ -180,9 +187,9 @@ test_that("filtering algorithms imply diss.dist by default", {
 context("mlg.filter error messages")
 
 data("monpop", package = "poppr")
-assign("x20160810_mon20", monpop[1:20], envir = .GlobalEnv)
-assign("x20160810_let", matrix(letters[1:9], 3, 3), envir = .GlobalEnv)
-assign("x20160810_neifun", function(x) nei.dist(genind2genpop(x, quiet = TRUE)), envir = .GlobalEnv)
+assign("x20160810_mon20", monpop[1:20])
+assign("x20160810_let", matrix(letters[1:9], 3, 3))
+assign("x20160810_neifun", function(x) nei.dist(genind2genpop(x, quiet = TRUE)))
 
 
 test_that("internal filtering will throw an error for negative distances", {
@@ -240,6 +247,6 @@ test_that("mlg.filter throws an error if the distance is not numeric", {
   expect_error(mlg.filter(x, distance = xdm > 4) <- 1, "Distance matrix must be")
 })
 
-rm("x20160810_mon20", envir = .GlobalEnv)
-rm("x20160810_let", envir = .GlobalEnv)
-rm("x20160810_neifun", envir = .GlobalEnv)
+rm("x20160810_mon20")
+rm("x20160810_let")
+rm("x20160810_neifun")
