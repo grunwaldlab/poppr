@@ -1683,9 +1683,10 @@ setMethod(
     # the object itself. 
     if (!"distance" %in% callnames){
       distance <- distname(pop@mlg)
+      d_env    <- distenv(pop@mlg)
       # Here, we are trying to evaluate the distance function. If the user has
       # specified a custom function, we want to ensure that it still exists. 
-      distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
+      distfun  <- try(eval(distance, envir = d_env), silent = TRUE)
       if ("try-error" %in% class(distfun)){
         stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
       }
@@ -1705,6 +1706,10 @@ setMethod(
         the_dots <- distargs(pop@mlg)
         the_call <- c(the_call, the_dots)
       }
+    } else {
+      # If the user supplied a distance, then we should store the environment
+      # from the call
+      d_env <- parent.frame()
     }
     # Storing the specified algorithm.
     if (!"algorithm" %in% callnames){
@@ -1725,6 +1730,7 @@ setMethod(
     pop@mlg[] <- fmlgs
     cutoff(pop@mlg)["contracted"] <- value
     distname(pop@mlg) <- substitute(distance)
+    distenv(pop@mlg)  <- d_env
     distargs(pop@mlg) <- the_dots
     distalgo(pop@mlg) <- match.arg(algorithm, algos)
     return(pop)
@@ -1760,9 +1766,10 @@ setMethod(
     # the object itself. 
     if (!"distance" %in% callnames){
       distance <- distname(pop@mlg)
+      d_env    <- distenv(pop@mlg)
       # Here, we are trying to evaluate the distance function. If the user has
       # specified a custom function, we want to ensure that it still exists. 
-      distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
+      distfun  <- try(eval(distance, envir = d_env), silent = TRUE)
       if ("try-error" %in% class(distfun)){
         stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
       }
@@ -1782,6 +1789,10 @@ setMethod(
         the_dots <- distargs(pop@mlg)
         the_call <- c(the_call, the_dots)
       }
+    } else {
+      # If the user supplied a distance, then we should store the environment
+      # from the call
+      d_env <- parent.frame()
     }
     # Storing the specified algorithm.
     if (!"algorithm" %in% callnames){
@@ -1802,6 +1813,7 @@ setMethod(
     pop@mlg[] <- fmlgs
     cutoff(pop@mlg)["contracted"] <- value
     distname(pop@mlg) <- substitute(distance)
+    distenv(pop@mlg)  <- d_env
     distargs(pop@mlg) <- the_dots
     distalgo(pop@mlg) <- match.arg(algorithm, algos)
     return(pop)

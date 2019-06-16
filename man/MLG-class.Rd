@@ -21,6 +21,8 @@ accessed.}
 \item{\code{distname}}{the name of the distance function or matrix used to collapse 
 mlgs.}
 
+\item{\code{distenv}}{the environment that contains the distance function or matrix}
+
 \item{\code{distargs}}{the arguments provided to compute the distance function.}
 
 \item{\code{distalgo}}{the algorithm used to contract multilocus genotypes.}
