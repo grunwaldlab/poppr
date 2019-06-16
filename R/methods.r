@@ -1665,6 +1665,8 @@ setMethod(
     the_call  <- match.call()
     callnames <- names(the_call)
     the_dots  <- list(...)
+    parsed_distance <- distance
+
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
@@ -1705,7 +1707,10 @@ setMethod(
         # When the distance stored is a function, the arguments should be used.
         the_dots <- distargs(pop@mlg)
         the_call <- c(the_call, the_dots)
+      } else {
+        parsed_distance <- distfun
       }
+     
     } else {
       # If the user supplied a distance, then we should store the environment
       # from the call
@@ -1718,11 +1723,11 @@ setMethod(
       # </simpsonsreference>
       the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
-    distfun <- is.function(distance) || is.character(distance)
+    distance_is_fun <- is.function(distance) || is.character(distance)
     # The arguments are built up in a list here and then passed using do.call.
     the_args <- list(gid = pop, threshold = value, missing = missing, 
                      memory = memory, algorithm = algorithm, 
-                     distance = if (distfun) substitute(distance) else distance,
+                     distance = if (distance_is_fun) substitute(distance) else parsed_distance,
                      threads = threads, stats = "MLGs")
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
@@ -1748,6 +1753,8 @@ setMethod(
     the_call  <- match.call()
     callnames <- names(the_call)
     the_dots  <- list(...)
+    parsed_distance <- distance
+
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
@@ -1788,6 +1795,8 @@ setMethod(
         # When the distance stored is a function, the arguments should be used.
         the_dots <- distargs(pop@mlg)
         the_call <- c(the_call, the_dots)
+      } else {
+        parsed_distance <- distfun
       }
     } else {
       # If the user supplied a distance, then we should store the environment
@@ -1801,11 +1810,11 @@ setMethod(
       # </simpsonsreference>
       the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
-    distfun <- is.function(distance) || is.character(distance)
+    distance_is_fun <- is.function(distance) || is.character(distance)
     # The arguments are built up in a list here and then passed using do.call.
     the_args <- list(gid = pop, threshold = value, missing = missing, 
                      memory = memory, algorithm = algorithm, 
-                     distance = if (distfun) substitute(distance) else distance, 
+                     distance = if (distance_is_fun) substitute(distance) else parsed_distance,
                      threads = threads, stats = "MLGs")
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
