@@ -14,8 +14,6 @@ set.seed(999)
 gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, n.cores = 1L, parallel = FALSE))
 
 
-
-
 test_that("multilocus genotype filtering algorithms work", {
   skip_on_cran()
   expect_equal(nmll(x), nInd(x))

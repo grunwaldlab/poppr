@@ -1559,7 +1559,7 @@ setMethod(
                         threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ... ) 
+                        denv = parent.frame(), threads, stats, the_call, ... ) 
   }
 )
 
@@ -1571,7 +1571,7 @@ setMethod(
                         threads=1, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ...) 
+                        denv = parent.frame(), threads, stats, the_call, ...) 
   }
 )
 
@@ -1583,7 +1583,8 @@ setMethod(
                         threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ...)   }
+                        denv = parent.frame(), threads, stats, the_call, ...) 
+  }
 )  
   
 setMethod(
@@ -1594,7 +1595,7 @@ setMethod(
                         threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ...) 
+                        denv = parent.frame(), threads, stats, the_call, ...)   
   }
 )
   
@@ -1746,6 +1747,7 @@ setMethod(
                      memory = memory, 
                      algorithm = algorithm, 
                      distance = parsed_distance,
+                     denv = d_env,
                      threads = threads, 
                      stats = "MLGs")
     
@@ -1857,6 +1859,7 @@ setMethod(
                      memory = memory, 
                      algorithm = algorithm, 
                      distance = parsed_distance,
+                     denv = d_env,
                      threads = threads, 
                      stats = "MLGs")
     

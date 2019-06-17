@@ -220,7 +220,8 @@ mll.levels.internal <- function(x, set = TRUE, value){
 #==============================================================================#
 mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis", 
                                 memory = FALSE, algorithm = "farthest_neighbor", 
-                                distance = "diss.dist", threads = 1L, 
+                                distance = "diss.dist", denv = .GlobalEnv,
+                                threads = 1L, 
                                 stats = "MLGs", the_call = match.call(), ...){
 
   if (threads != 1L){
@@ -258,7 +259,8 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
       } else {
         mpop <- gid
       }
-      DISTFUN <- match.fun(distance)
+      # browser()
+      DISTFUN <- if (!is.function(distance)) get(distance, env = denv) else distance
       dis <- DISTFUN(mpop, ...)
       dis <- as.matrix(dis)
       if (memory == TRUE)
@@ -325,6 +327,7 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
     stop("Threshold must be a numeric or integer value", .call = FALSE)
   } 
     # Stats must be logical
+  # browser()
   STATARGS <- c("MLGS", "THRESHOLDS", "DISTANCES", "SIZES", "ALL")
   stats <- match.arg(toupper(stats), STATARGS, several.ok = TRUE)
 
