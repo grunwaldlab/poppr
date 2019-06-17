@@ -1559,7 +1559,7 @@ setMethod(
                         threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ... ) 
+                        denv = parent.frame(), threads, stats, the_call, ... ) 
   }
 )
 
@@ -1571,7 +1571,7 @@ setMethod(
                         threads=1, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ...) 
+                        denv = parent.frame(), threads, stats, the_call, ...) 
   }
 )
 
@@ -1583,7 +1583,8 @@ setMethod(
                         threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ...)   }
+                        denv = parent.frame(), threads, stats, the_call, ...) 
+  }
 )  
   
 setMethod(
@@ -1594,7 +1595,7 @@ setMethod(
                         threads=1L, stats="MLGs", ...){
     the_call <- match.call()
     mlg.filter.internal(pop, threshold, missing, memory, algorithm, distance,
-                        threads, stats, the_call, ...) 
+                        denv = parent.frame(), threads, stats, the_call, ...)   
   }
 )
   
@@ -1665,6 +1666,8 @@ setMethod(
     the_call  <- match.call()
     callnames <- names(the_call)
     the_dots  <- list(...)
+    parsed_distance <- distance
+
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
@@ -1678,34 +1681,58 @@ setMethod(
     #  2. The distance is specified as text
     #  3. The distance is specified as an actual function. 
     #  
-    # This is dealing with the situation where the user does not specify a 
-    # distance function. In this case, we use the function that was defined in
-    # the object itself. 
     if (!"distance" %in% callnames){
+
+      # This is dealing with the situation where the user does not specify a 
+      # distance function. In this case, we use the function that was defined in
+      # the object itself. 
+      #
+      # If the user supplied dots, then we append them to the current parameters
+      # and take the newer ones.
+
       distance <- distname(pop@mlg)
-      # Here, we are trying to evaluate the distance function. If the user has
-      # specified a custom function, we want to ensure that it still exists. 
-      distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
-      if ("try-error" %in% class(distfun)){
-        stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
+      d_env    <- distenv(pop@mlg)
+      the_dots <- c(the_dots, distargs(pop@mlg))
+      the_dots <- the_dots[unique(names(the_dots))]
+
+    } else {
+
+      # If the user supplied a distance, then we should store the environment
+      # from the call and test that the function is defined in the environment
+      # or is a oneliner
+
+      d_env     <- parent.frame()
+      the_dist  <- substitute(distance)
+      the_distc <- as.character(the_dist)
+
+      if (length(the_distc) > 1) { # this succeeds if the function is a oneliner
+        parsed_distance <- the_dist  # this will be a function
+      } else {
+        parsed_distance <- the_distc # this will be a character
       }
-      if (is.character(distfun)){
-        distfun <- match.fun(distfun)
-      }
-      # This part may be unnecessary, but I believe I was having issues with 
-      # passing the call to the main function. The reason for this is that 
-      # dealing with missing data is done in different ways depending on the 
-      # distance function used. If it's diss.dist, nothing is done, if it's
-      # Nei's etc. dist, then the correction is done by converting it to a 
-      # bootgen object since that will quietly convert missing data; otherwise
-      # the function missingno is used.
-      the_call[["distance"]] <- distance
-      if (is.function(distfun)){
-        # When the distance stored is a function, the arguments should be used.
-        the_dots <- distargs(pop@mlg)
-        the_call <- c(the_call, the_dots)
-      }
+
     }
+
+    # Trying to evaluate the function/matrix in its environment
+    distfun  <- try(eval(distance, envir = d_env), silent = TRUE)
+    if ("try-error" %in% class(distfun)){
+      stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
+    }
+
+    # This part may be unnecessary, but I believe I was having issues with 
+    # passing the call to the main function. The reason for this is that 
+    # dealing with missing data is done in different ways depending on the 
+    # distance function used. If it's diss.dist, nothing is done, if it's
+    # Nei's etc. dist, then the correction is done by converting it to a 
+    # bootgen object since that will quietly convert missing data; otherwise
+    # the function missingno is used.
+    the_call[["distance"]] <- distance
+
+    # The distance isn't a function, so it should be a distance matrix/character.
+    if (!is.function(distfun)){
+      parsed_distance <- distfun
+    }
+     
     # Storing the specified algorithm.
     if (!"algorithm" %in% callnames){
       # <simpsonsreference>
@@ -1713,18 +1740,27 @@ setMethod(
       # </simpsonsreference>
       the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
-    distfun <- is.function(distance) || is.character(distance)
     # The arguments are built up in a list here and then passed using do.call.
-    the_args <- list(gid = pop, threshold = value, missing = missing, 
-                     memory = memory, algorithm = algorithm, 
-                     distance = if (distfun) substitute(distance) else distance,
-                     threads = threads, stats = "MLGs")
+    the_args <- list(gid = pop, 
+                     threshold = value, 
+                     missing = missing, 
+                     memory = memory, 
+                     algorithm = algorithm, 
+                     distance = parsed_distance,
+                     denv = d_env,
+                     threads = threads, 
+                     stats = "MLGs")
+    
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
+
+    # here we are resetting the values in the MLG object including the
+    # algorithm used and the parameters to the distance
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
     cutoff(pop@mlg)["contracted"] <- value
     distname(pop@mlg) <- substitute(distance)
+    distenv(pop@mlg)  <- d_env
     distargs(pop@mlg) <- the_dots
     distalgo(pop@mlg) <- match.arg(algorithm, algos)
     return(pop)
@@ -1742,6 +1778,8 @@ setMethod(
     the_call  <- match.call()
     callnames <- names(the_call)
     the_dots  <- list(...)
+    parsed_distance <- distance
+
     if (!is(pop@mlg, "MLG")){
       pop@mlg <- new("MLG", pop@mlg)
     }
@@ -1755,34 +1793,58 @@ setMethod(
     #  2. The distance is specified as text
     #  3. The distance is specified as an actual function. 
     #  
-    # This is dealing with the situation where the user does not specify a 
-    # distance function. In this case, we use the function that was defined in
-    # the object itself. 
     if (!"distance" %in% callnames){
+
+      # This is dealing with the situation where the user does not specify a 
+      # distance function. In this case, we use the function that was defined in
+      # the object itself. 
+      #
+      # If the user supplied dots, then we append them to the current parameters
+      # and take the newer ones.
+
       distance <- distname(pop@mlg)
-      # Here, we are trying to evaluate the distance function. If the user has
-      # specified a custom function, we want to ensure that it still exists. 
-      distfun  <- try(eval(distance, envir = .GlobalEnv), silent = TRUE)
-      if ("try-error" %in% class(distfun)){
-        stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
+      d_env    <- distenv(pop@mlg)
+      the_dots <- c(the_dots, distargs(pop@mlg))
+      the_dots <- the_dots[unique(names(the_dots))]
+
+    } else {
+
+      # If the user supplied a distance, then we should store the environment
+      # from the call and test that the function is defined in the environment
+      # or is a oneliner
+
+      d_env     <- parent.frame()
+      the_dist  <- substitute(distance)
+      the_distc <- as.character(the_dist)
+
+      if (length(the_distc) > 1) { # this succeeds if the function is a oneliner
+        parsed_distance <- the_dist  # this will be a function
+      } else {
+        parsed_distance <- the_distc # this will be a character
       }
-      if (is.character(distfun)){
-        distfun <- match.fun(distfun)
-      }
-      # This part may be unnecessary, but I believe I was having issues with 
-      # passing the call to the main function. The reason for this is that 
-      # dealing with missing data is done in different ways depending on the 
-      # distance function used. If it's diss.dist, nothing is done, if it's
-      # Nei's etc. dist, then the correction is done by converting it to a 
-      # bootgen object since that will quietly convert missing data; otherwise
-      # the function missingno is used.
-      the_call[["distance"]] <- distance
-      if (is.function(distfun)){
-        # When the distance stored is a function, the arguments should be used.
-        the_dots <- distargs(pop@mlg)
-        the_call <- c(the_call, the_dots)
-      }
+
     }
+
+    # Trying to evaluate the function/matrix in its environment
+    distfun  <- try(eval(distance, envir = d_env), silent = TRUE)
+    if ("try-error" %in% class(distfun)){
+      stop("cannot evaluate distance function, it might be missing.", call. = FALSE)
+    }
+
+    # This part may be unnecessary, but I believe I was having issues with 
+    # passing the call to the main function. The reason for this is that 
+    # dealing with missing data is done in different ways depending on the 
+    # distance function used. If it's diss.dist, nothing is done, if it's
+    # Nei's etc. dist, then the correction is done by converting it to a 
+    # bootgen object since that will quietly convert missing data; otherwise
+    # the function missingno is used.
+    the_call[["distance"]] <- distance
+
+    # The distance isn't a function, so it should be a distance matrix/character.
+    if (!is.function(distfun)){
+      parsed_distance <- distfun
+    }
+     
     # Storing the specified algorithm.
     if (!"algorithm" %in% callnames){
       # <simpsonsreference>
@@ -1790,18 +1852,27 @@ setMethod(
       # </simpsonsreference>
       the_call[["algorithm"]] <- distalgo(pop@mlg) -> algorithm
     }
-    distfun <- is.function(distance) || is.character(distance)
     # The arguments are built up in a list here and then passed using do.call.
-    the_args <- list(gid = pop, threshold = value, missing = missing, 
-                     memory = memory, algorithm = algorithm, 
-                     distance = if (distfun) substitute(distance) else distance, 
-                     threads = threads, stats = "MLGs")
+    the_args <- list(gid = pop, 
+                     threshold = value, 
+                     missing = missing, 
+                     memory = memory, 
+                     algorithm = algorithm, 
+                     distance = parsed_distance,
+                     denv = d_env,
+                     threads = threads, 
+                     stats = "MLGs")
+    
     fmlgs <- do.call("mlg.filter.internal", c(the_args, the_dots))
+
+    # here we are resetting the values in the MLG object including the
+    # algorithm used and the parameters to the distance
     algos <- c("nearest_neighbor", "average_neighbor", "farthest_neighbor")
     mll(pop) <- "contracted"
     pop@mlg[] <- fmlgs
     cutoff(pop@mlg)["contracted"] <- value
     distname(pop@mlg) <- substitute(distance)
+    distenv(pop@mlg)  <- d_env
     distargs(pop@mlg) <- the_dots
     distalgo(pop@mlg) <- match.arg(algorithm, algos)
     return(pop)

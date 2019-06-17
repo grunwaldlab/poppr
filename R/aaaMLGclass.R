@@ -58,6 +58,7 @@ setClassUnion("charORLang", c("character", "language"))
 #'   accessed.
 #' @slot distname the name of the distance function or matrix used to collapse 
 #'   mlgs.
+#' @slot distenv the environment that contains the distance function or matrix
 #' @slot distargs the arguments provided to compute the distance function.
 #' @slot distalgo the algorithm used to contract multilocus genotypes.
 #' @slot cutoff Two numbers specifying the cutoff value for expanding and 
@@ -97,12 +98,14 @@ setClass("MLG",
          representation(visible = "character",
                         cutoff = "numeric",
                         distname = "charORLang",
+                        distenv  = "environment",
                         distargs = "list",
                         distalgo = "character",
                         mlg = "data.frame"),
          prototype(visible = character(0), 
                    cutoff = numeric(0), 
                    distname = character(0), 
+                   distenv = as.environment(.GlobalEnv),
                    distargs = list(),
                    distalgo = "farthest_neighbor", 
                    mlg = data.frame(expanded = numeric(0), 

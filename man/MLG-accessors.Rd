@@ -9,8 +9,12 @@
 \alias{MLG2df,MLG-method}
 \alias{distname}
 \alias{distname,MLG-method}
+\alias{distenv}
+\alias{distenv,MLG-method}
 \alias{distname<-}
 \alias{distname<-,MLG-method}
+\alias{distenv<-}
+\alias{distenv<-,MLG-method}
 \alias{distargs}
 \alias{distargs,MLG-method}
 \alias{distargs<-}
@@ -33,7 +37,11 @@ MLG2df(x)
 
 distname(x)
 
+distenv(x)
+
 distname(x) <- value
+
+distenv(x) <- value
 
 distargs(x)
 
