@@ -9,11 +9,15 @@ BUG FIX
   the number of samples in the data (prepended by zeroes) 
   (See https://github.com/grunwaldlab/poppr/pull/202).
 
-MISC
-----
+NEW FEATURES
+------------
 
 * MSN functions: nodes with single populations displayed as circles instead of 
   pies. (@fdchevalier, https://github.com/grunwaldlab/poppr/pull/203)
+
+MISC
+----
+
 * `mlg.vector()` is now safer as it now uses a for loop instead of a
   function with the out-of-scope operator (`<<-`) (see #205)
 * `shufflepop()` is now safer as it now uses a for loop instead of a
@@ -24,7 +28,7 @@ MISC
 * `"mlg.filter<-"()` replacement methods will no longer search the global
   environment when evaluating the distance function or matrix (see #206).
 * Tests for `mlg.filter()` no longer assign objects to the global environment
-
+* DOIs for the publications have been added to the DESCRIPTION
 
 poppr 2.8.2
 ===========
