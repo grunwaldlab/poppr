@@ -260,7 +260,7 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
         mpop <- gid
       }
       # browser()
-      DISTFUN <- if (!is.function(distance)) get(distance, env = denv) else distance
+      DISTFUN <- if (!is.function(distance)) get(distance, envir = denv) else distance
       dis <- DISTFUN(mpop, ...)
       dis <- as.matrix(dis)
       if (memory == TRUE)
