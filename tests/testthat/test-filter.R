@@ -14,11 +14,6 @@ set.seed(999)
 gc <- as.snpclone(glSim(100, 0, n.snp.struc = 1e3, ploidy = 2, n.cores = 1L, parallel = FALSE))
 
 
-testx <- function(i, d, th) {
-  mlg.filter(i, distance = d) <- 0
-  mlg.filter(i) <- th
-  i
-}
 
 
 test_that("multilocus genotype filtering algorithms work", {
@@ -112,9 +107,10 @@ test_that("mlg.filter can remember things", {
   expect_output(print(x), original_vals)
   expect_output(show(gc), gc_original_vals)
   expect_output(print(gc), gc_original_vals)
+})
   
   
-  # supplied distance matrices work
+test_that("supplied distance matrices work", {
   assign("x20150702210257_distance", xd)
   assign("x20150703173505_distance", bitwise.dist(gc, differences_only = TRUE))
   mlg.filter(x, distance = x20150702210257_distance) <- 0
@@ -169,6 +165,23 @@ test_that("mlg.filter can remember things", {
   expect_error(mlg.filter(x) <- 0)
   expect_error(mlg.filter(gc) <- 0)
   
+})
+
+
+test_that("users can change parameter arguments", {
+
+  skip_on_cran()
+  mlg.filter(gc, distance = bitwise.dist, percent = TRUE) <- 0.25
+  nmlg_gc_perc <- nmll(gc)
+  expect_lt(nmlg_gc_perc, 100)
+  expect_identical(distargs(gc@mlg), list(percent = TRUE))
+
+  mlg.filter(gc, distance = bitwise.dist, percent = FALSE, euclidean = TRUE) <- 25
+  nmlg_gc_eucl <- nmll(gc)
+  # The number of mlg is less with euclidean than percentage
+  expect_lt(nmlg_gc_eucl, nmlg_gc_perc)
+  expect_identical(distargs(gc@mlg), list(percent = FALSE, euclidean = TRUE))
+
 })
 
 test_that("filtering algorithms imply diss.dist by default", {

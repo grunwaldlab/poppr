@@ -18,6 +18,12 @@ MISC
   function with the out-of-scope operator (`<<-`) (see #205)
 * `shufflepop()` is now safer as it now uses a for loop instead of a
   function with the out-of-scope operator (`<<-`) (see #205)
+* The MLG class gains a new `distenv` slot, which will store the environment
+  where the distance function or matrix exists. This is accompanied by an 
+  accessor of the same name (see #206).
+* `"mlg.filter<-"()` replacement methods will no longer search the global
+  environment when evaluating the distance function or matrix (see #206).
+* Tests for `mlg.filter()` no longer assign objects to the global environment
 
 
 poppr 2.8.2

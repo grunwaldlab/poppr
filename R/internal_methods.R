@@ -229,17 +229,20 @@ mlg.filter.internal <- function(gid, threshold = 0.0, missing = "asis",
   }
   # This will return a vector indicating the multilocus genotypes after applying
   # a minimum required distance threshold between multilocus genotypes.
-  if (is.character(distance) || is.function(distance)) {
+  dist_is_fun <- is.function(distance)
+  if (is.character(distance) || dist_is_fun) {
     if (memory==TRUE && identical(c(gid, distance, ...), .last.value.param$get())){
       dis <- .last.value.dist$get()
     } else {
       if (is.genind(gid)) {
-        the_dist <- as.character(the_call[["distance"]])
+        the_dist <- if (!dist_is_fun) as.character(the_call[["distance"]])
         call_len <- length(the_dist)
         is_diss_dist <- the_dist %in% "diss.dist"
-        any_dist <- the_dist %in% c("diss.dist", "nei.dist", "prevosti.dist",
-                                    "edwards.dist", "reynolds.dist", 
-                                    "rogers.dist", "provesti.dist")
+
+        dists <- c("diss.dist", "nei.dist", "prevosti.dist", "edwards.dist",
+                   "reynolds.dist", "rogers.dist", "provesti.dist")
+        any_dist <- the_dist %in% dists
+
         if (missing == "mean" && call_len == 1 && is_diss_dist){
           disswarn <- paste("Cannot use function diss.dist and correct for", 
                             "mean values.", "diss.dist will automatically",
