@@ -41,9 +41,11 @@ Essential functions for importing and manipulating data are detailed within
 the \emph{Data import and manipulation} vignette, details on algorithms
 used in \pkg{poppr} are within the \emph{Algorithms and equations}
 vignette, and details for working with multilocus genotypes are in
-\emph{Multilocus Genotype Analysis}. Examples of analyses are available in
-a primer written by Niklaus J. Grünwald, Zhian N. Kamvar, and Sydney E.
-Everhart at \url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
+\emph{Multilocus Genotype Analysis}.
+
+Examples of analyses are available in a primer written by Niklaus J.
+Grünwald, Zhian N. Kamvar, and Sydney E.  Everhart at
+\url{http://grunwaldlab.github.io/Population_Genetics_in_R}.}
 
 \subsection{Getting help}{ If you have a specific question or issue with
 \pkg{poppr}, feel free to contribute to the google group at
