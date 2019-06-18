@@ -1,5 +1,10 @@
 # Poppr version 2.8.3
 
+This is an attempt at fixing a LaTeX issue with a straddling link [0]
+
+[0]: https://hypatia.math.ethz.ch/pipermail/r-package-devel/2019q2/004093.html
+
+
 Thank you for implementing the extra checks for poppr. I really
 appreciate the hard work that goes into maintenance of CRAN. Because
 of the extra checks, I was able to find old code that was poorly
