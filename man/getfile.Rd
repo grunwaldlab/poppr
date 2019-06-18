@@ -41,9 +41,6 @@ y <- getfile(multi=TRUE, pattern="^.+?dat$")
 
 yfiles <- poppr.all(y$files)
 
-# Write results to a file in that directory.
-setwd(y$path)
-write.csv(yfiles)
 }  
 }
 \author{

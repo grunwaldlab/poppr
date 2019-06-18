@@ -126,10 +126,10 @@ shufflepop <- function(pop, method=1){
                         function(x) sample(tab(pop)[, x], replace=TRUE), pop@tab[, 1])
     }
   } else {
-    addpop <- function(locus = "L1", pop, method=method){
-      pop@tab[, locFac(pop) %in% locus] <<- .locus.shuffler(pop[, loc = locus], method=method)@tab
+    LF <- locFac(pop)
+    for (locus in locNames(pop)) {
+      pop@tab[, LF %in% locus] <- .locus.shuffler(pop[, loc = locus], method = method)@tab 
     }
-    invisible(lapply(locNames(pop), addpop, pop, method))
   }
   return(pop)
 }

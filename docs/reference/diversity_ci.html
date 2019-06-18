@@ -66,7 +66,7 @@ the results." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -319,31 +319,31 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; $est
 #&gt;                Index
 #&gt; Pop                    H        G    lambda       E.5
-#&gt;   South America 2.833824 14.79798 0.9311496 0.8544553
-#&gt;   North America 3.171712 20.77268 0.9509115 0.8575978
-#&gt;   Total         3.737709 36.14695 0.9721228 0.8545293
+#&gt;   South America 2.810714 14.50911 0.9293629 0.8545902
+#&gt;   North America 3.197910 21.22096 0.9521007 0.8553062
+#&gt;   Total         3.723559 35.49926 0.9715603 0.8504923
 #&gt; 
 #&gt; $CI
 #&gt; , , Pop = South America
 #&gt; 
 #&gt;         Index
 #&gt; CI              H        G    lambda       E.5
-#&gt;   2.5 %  3.062549 19.39068 0.9380503 0.7874810
-#&gt;   97.5 % 3.473339 27.18996 0.9760771 0.9775784
+#&gt;   2.5 %  3.015398 18.99547 0.9339777 0.7946645
+#&gt;   97.5 % 3.520490 27.58517 0.9801498 0.9703949
 #&gt; 
 #&gt; , , Pop = North America
 #&gt; 
 #&gt;         Index
 #&gt; CI              H        G    lambda       E.5
-#&gt;   2.5 %  3.477771 29.28776 0.9574745 0.7856077
-#&gt;   97.5 % 3.896256 40.53043 0.9852338 0.9566518
+#&gt;   2.5 %  3.508988 29.77002 0.9587624 0.7726727
+#&gt;   97.5 % 3.865038 40.04816 0.9839460 0.9695868
 #&gt; 
 #&gt; , , Pop = Total
 #&gt; 
 #&gt;         Index
 #&gt; CI              H        G    lambda       E.5
-#&gt;   2.5 %  4.064085 51.70041 0.9777506 0.8083156
-#&gt;   97.5 % 4.312344 63.86209 0.9876361 0.9413564
+#&gt;   2.5 %  4.053701 51.09567 0.9770752 0.7956329
+#&gt;   97.5 % 4.322728 64.46683 0.9883115 0.9540391
 #&gt; 
 #&gt; 
 #&gt; $boot
@@ -359,10 +359,10 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original      bias    std. error
-#&gt; t1*  3.2679442 -0.43412046 0.104795360
-#&gt; t2* 23.2903226 -8.49234657 1.989649686
-#&gt; t3*  0.9570637 -0.02591413 0.009700875
-#&gt; t4*  0.8825297 -0.02807440 0.048495128
+#&gt; t1*  3.2679442 -0.45723059  0.12885234
+#&gt; t2* 23.2903226 -8.78121073  2.19128951
+#&gt; t3*  0.9570637 -0.02770083  0.01177882
+#&gt; t4*  0.8825297 -0.02793955  0.04483001
 #&gt; 
 #&gt; $boot$`North America`
 #&gt; 
@@ -376,10 +376,10 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original       bias    std. error
-#&gt; t1*  3.6870132  -0.51530116 0.106758256
-#&gt; t2* 34.9090909 -14.13640867 2.868080775
-#&gt; t3*  0.9713542  -0.02044271 0.007081601
-#&gt; t4*  0.8711297  -0.01353197 0.043634495
+#&gt; t1*  3.6870132  -0.48910283 0.090830659
+#&gt; t2* 34.9090909 -13.68813373 2.622024383
+#&gt; t3*  0.9713542  -0.01925347 0.006424512
+#&gt; t4*  0.8711297  -0.01582350 0.050234108
 #&gt; 
 #&gt; $boot$Total
 #&gt; 
@@ -393,30 +393,30 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 #&gt; 
 #&gt; Bootstrap Statistics :
 #&gt;       original       bias    std. error
-#&gt; t1*  4.1882146  -0.45050546 0.063332702
-#&gt; t2* 57.7812500 -21.63430353 3.102524528
-#&gt; t3*  0.9826933  -0.01057058 0.002521865
-#&gt; t4*  0.8748360  -0.02030672 0.033939592
+#&gt; t1*  4.1882146  -0.46465576 0.068630576
+#&gt; t2* 57.7812500 -22.28198749 3.411071183
+#&gt; t3*  0.9826933  -0.01113304 0.002866475
+#&gt; t4*  0.8748360  -0.02434370 0.040410486
 #&gt; 
 #&gt; </div><div class='input'><span class='co'># With pretty results</span>
 <span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100L</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;                  H H.est           H.ci    G G.est             G.ci lambda
-#&gt; South America 3.27  2.85 (3.044, 3.492) 23.3  15.0  (18.91, 27.671)  0.957
-#&gt; North America 3.69  3.18 (3.506, 3.868) 34.9  20.8 (29.862, 39.956)  0.971
-#&gt; Total         4.19  3.71  (4.057, 4.32) 57.8  34.7 (52.075, 63.488)  0.983
+#&gt; South America 3.27  2.84 (3.065, 3.471) 23.3  14.8 (19.394, 27.186)  0.957
+#&gt; North America 3.69  3.18 (3.492, 3.882) 34.9  20.9  (29.778, 40.04)  0.971
+#&gt; Total         4.19  3.71 (4.024, 4.353) 57.8  35.0 (49.827, 65.736)  0.983
 #&gt;               lambda.est      lambda.ci   E.5 E.5.est         E.5.ci
-#&gt; South America      0.932 (0.935, 0.979) 0.883   0.851 (0.782, 0.983)
-#&gt; North America      0.951 (0.958, 0.985) 0.871   0.852 (0.778, 0.964)
-#&gt; Total              0.971 (0.978, 0.987) 0.875   0.847 (0.816, 0.933)</div><div class='input'>
+#&gt; South America      0.931 (0.938, 0.976) 0.883   0.851 (0.787, 0.978)
+#&gt; North America      0.951 (0.956, 0.986) 0.871   0.857 (0.781, 0.961)
+#&gt; Total              0.971 (0.976, 0.989) 0.875   0.849 (0.794, 0.955)</div><div class='input'>
 <span class='co'># This can be done in a parallel fasion (OSX uses "multicore", Windows uses "snow")</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   1.129   0.238   5.437 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt;   0.981   0.204   4.478 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-4.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   6.423   0.132   6.595 </div><div class='input'>
+#&gt;   6.239   0.008   6.296 </div><div class='input'>
 <span class='co'># We often get many requests for a clonal fraction statistic. As this is </span>
 <span class='co'># simply the number of observed MLGs over the number of samples, we </span>
 <span class='co'># recommended that people calculate it themselves. With this function, you</span>
@@ -436,29 +436,29 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 <span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>1000L</span>, <span class='kw'>CF</span> <span class='kw'>=</span> <span class='no'>CF</span>, <span class='kw'>center</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-5.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;                  H H.est           H.ci    G G.est             G.ci lambda
-#&gt; South America 3.27  2.84  (3.05, 3.486) 23.3  14.9 (19.332, 27.249)  0.957
-#&gt; North America 3.69  3.18 (3.487, 3.887) 34.9  20.9 (29.365, 40.453)  0.971
-#&gt; Total         4.19  3.71 (4.038, 4.338) 57.8  35.2 (50.826, 64.736)  0.983
+#&gt; South America 3.27  2.84 (3.043, 3.493) 23.3  15.0 (19.182, 27.399)  0.957
+#&gt; North America 3.69  3.18  (3.49, 3.884) 34.9  20.9  (29.449, 40.37)  0.971
+#&gt; Total         4.19  3.71 (4.039, 4.337) 57.8  35.2 (50.814, 64.748)  0.983
 #&gt;               lambda.est      lambda.ci   E.5 E.5.est         E.5.ci    CF
-#&gt; South America      0.932 (0.938, 0.977) 0.883   0.854 (0.793, 0.973) 0.763
-#&gt; North America      0.951 (0.957, 0.985) 0.871   0.852 (0.775, 0.967) 0.896
-#&gt; Total              0.971 (0.977, 0.989) 0.875   0.851 (0.807, 0.943) 0.837
+#&gt; South America      0.932 (0.937, 0.977) 0.883   0.856 (0.792, 0.973) 0.763
+#&gt; North America      0.951 (0.958, 0.985) 0.871   0.852 (0.777, 0.965) 0.896
+#&gt; Total              0.971 (0.977, 0.989) 0.875   0.850 (0.804, 0.945) 0.837
 #&gt;               CF.est          CF.ci
-#&gt; South America  0.530 (0.667, 0.859)
-#&gt; North America  0.583 (0.806, 0.986)
-#&gt; Total          0.557 (0.771, 0.904)</div><div class='input'><span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>1000L</span>, <span class='kw'>CF</span> <span class='kw'>=</span> <span class='no'>CF</span>, <span class='kw'>rarefy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; South America  0.528 (0.665, 0.862)
+#&gt; North America  0.583 (0.808, 0.984)
+#&gt; Total          0.558 (0.771, 0.903)</div><div class='input'><span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>1000L</span>, <span class='kw'>CF</span> <span class='kw'>=</span> <span class='no'>CF</span>, <span class='kw'>rarefy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Samples for rarefaction: 38</span></div><div class='img'><img src='diversity_ci-6.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;                  H H.est           H.ci    G G.est             G.ci lambda
 #&gt; South America 3.27  3.27           &lt;NA&gt; 23.3  23.3             &lt;NA&gt;  0.957
 #&gt; North America 3.69  3.48 (3.405, 3.565) 34.9  29.5 (25.786, 34.381)  0.971
-#&gt; Total         4.19  3.50 (3.368, 3.601) 57.8  31.6   (25.786, 36.1)  0.983
+#&gt; Total         4.19  3.50 (3.355, 3.601) 57.8  31.5   (25.786, 36.1)  0.983
 #&gt;               lambda.est      lambda.ci   E.5 E.5.est         E.5.ci    CF
 #&gt; South America      0.957           &lt;NA&gt; 0.883   0.883           &lt;NA&gt; 0.763
-#&gt; North America      0.966 (0.961, 0.971) 0.871   0.903 (0.851, 0.972) 0.896
+#&gt; North America      0.966 (0.961, 0.971) 0.871   0.904 (0.851, 0.972) 0.896
 #&gt; Total              0.968 (0.961, 0.972) 0.875   0.944 (0.873, 0.985) 0.837
 #&gt;               CF.est          CF.ci
 #&gt; South America  0.763           &lt;NA&gt;
 #&gt; North America  0.906 (0.868, 0.947)
-#&gt; Total          0.910 (0.816, 0.974)</div><div class='input'>
+#&gt; Total          0.909 (0.816, 0.974)</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

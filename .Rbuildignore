@@ -13,7 +13,6 @@
 ^vignettes/figure
 ^tests/testthat/Rplots.pdf
 ^CODE_OF_CONDUCT\.md$
-^NEWS\.md$
 ^cran-comments\.md$
 ^docs/*$
 ^ISSUE_TEMPLATE\.md$

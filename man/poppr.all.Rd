@@ -24,11 +24,8 @@ output into one data frame.
 # Obtain a list of fstat files from a directory.
 x <- getfile(multi=TRUE, pattern="^.+?dat$")
 
-# set the working directory to that directory.
-setwd(x$path)
-
 # run the analysis on each file.
-poppr.all(x$files)
+poppr.all(file.path(x$path, x$files))
 }
 }
 \seealso{

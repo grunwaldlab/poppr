@@ -105,11 +105,12 @@ test_that("mlg.filter can remember things", {
   expect_output(print(x), original_vals)
   expect_output(show(gc), gc_original_vals)
   expect_output(print(gc), gc_original_vals)
+})
   
   
-  # supplied distance matrices work
-  assign("x20150702210257_distance", xd, envir = .GlobalEnv)
-  assign("x20150703173505_distance", bitwise.dist(gc, differences_only = TRUE), envir = .GlobalEnv)
+test_that("supplied distance matrices work", {
+  assign("x20150702210257_distance", xd)
+  assign("x20150703173505_distance", bitwise.dist(gc, differences_only = TRUE))
   mlg.filter(x, distance = x20150702210257_distance) <- 0
   mlg.filter(gc, distance = x20150703173505_distance) <- 0
   expect_output(show(x), "x20150702210257_distance")
@@ -157,11 +158,28 @@ test_that("mlg.filter can remember things", {
   expect_lt(nmll(gc), 100)
   
   # An error is thrown if the distance is removed
-  rm("x20150702210257_distance", envir = .GlobalEnv)
-  rm("x20150703173505_distance", envir = .GlobalEnv)
+  rm("x20150702210257_distance")
+  rm("x20150703173505_distance")
   expect_error(mlg.filter(x) <- 0)
   expect_error(mlg.filter(gc) <- 0)
   
+})
+
+
+test_that("users can change parameter arguments", {
+
+  skip_on_cran()
+  mlg.filter(gc, distance = bitwise.dist, percent = TRUE) <- 0.25
+  nmlg_gc_perc <- nmll(gc)
+  expect_lt(nmlg_gc_perc, 100)
+  expect_identical(distargs(gc@mlg), list(percent = TRUE))
+
+  mlg.filter(gc, distance = bitwise.dist, percent = FALSE, euclidean = TRUE) <- 25
+  nmlg_gc_eucl <- nmll(gc)
+  # The number of mlg is less with euclidean than percentage
+  expect_lt(nmlg_gc_eucl, nmlg_gc_perc)
+  expect_identical(distargs(gc@mlg), list(percent = FALSE, euclidean = TRUE))
+
 })
 
 test_that("filtering algorithms imply diss.dist by default", {
@@ -180,9 +198,9 @@ test_that("filtering algorithms imply diss.dist by default", {
 context("mlg.filter error messages")
 
 data("monpop", package = "poppr")
-assign("x20160810_mon20", monpop[1:20], envir = .GlobalEnv)
-assign("x20160810_let", matrix(letters[1:9], 3, 3), envir = .GlobalEnv)
-assign("x20160810_neifun", function(x) nei.dist(genind2genpop(x, quiet = TRUE)), envir = .GlobalEnv)
+assign("x20160810_mon20", monpop[1:20])
+assign("x20160810_let", matrix(letters[1:9], 3, 3))
+assign("x20160810_neifun", function(x) nei.dist(genind2genpop(x, quiet = TRUE)))
 
 
 test_that("internal filtering will throw an error for negative distances", {
@@ -240,6 +258,6 @@ test_that("mlg.filter throws an error if the distance is not numeric", {
   expect_error(mlg.filter(x, distance = xdm > 4) <- 1, "Distance matrix must be")
 })
 
-rm("x20160810_mon20", envir = .GlobalEnv)
-rm("x20160810_let", envir = .GlobalEnv)
-rm("x20160810_neifun", envir = .GlobalEnv)
+rm("x20160810_mon20")
+rm("x20160810_let")
+rm("x20160810_neifun")

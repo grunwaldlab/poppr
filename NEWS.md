@@ -1,19 +1,34 @@
-poppr 2.8.2.99
+poppr 2.8.3
 ===========
 
 BUG FIX
-=======
+-------
 
 * `read.genalex()` now correctly parses strata when the user imports data that
   contains duplicated data AND has some individuals named as integers less than
   the number of samples in the data (prepended by zeroes) 
   (See https://github.com/grunwaldlab/poppr/pull/202).
 
-MISC
-====
+NEW FEATURES
+------------
 
 * MSN functions: nodes with single populations displayed as circles instead of 
   pies. (@fdchevalier, https://github.com/grunwaldlab/poppr/pull/203)
+
+MISC
+----
+
+* `mlg.vector()` is now safer as it now uses a for loop instead of a
+  function with the out-of-scope operator (`<<-`) (see #205)
+* `shufflepop()` is now safer as it now uses a for loop instead of a
+  function with the out-of-scope operator (`<<-`) (see #205)
+* The MLG class gains a new `distenv` slot, which will store the environment
+  where the distance function or matrix exists. This is accompanied by an 
+  accessor of the same name (see #206).
+* `"mlg.filter<-"()` replacement methods will no longer search the global
+  environment when evaluating the distance function or matrix (see #206).
+* Tests for `mlg.filter()` no longer assign objects to the global environment
+* DOIs for the publications have been added to the DESCRIPTION
 
 poppr 2.8.2
 ===========

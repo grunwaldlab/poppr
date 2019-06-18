@@ -64,7 +64,7 @@ genlight or snpclone objects." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -240,32 +240,32 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 #&gt;    @ploidy: ploidy of each individual  (range: 2-2)
 #&gt; 
 #&gt;  // Optional content
-#&gt;    @pop: population of each individual (group size range: 3-7)
+#&gt;    @pop: population of each individual (group size range: 4-6)
 #&gt;    @other: a list containing: ancestral.pops 
 #&gt; </div><div class='input'><span class='co'># Assess fraction of different alleles</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='no'>xd</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
 #&gt;   0.002   0.000   0.002 </div><div class='input'><span class='no'>xd</span></div><div class='output co'>#&gt;         1      2      3      4      5      6      7      8      9
-#&gt; 2  0.2105                                                        
-#&gt; 3  0.2195 0.2180                                                 
-#&gt; 4  0.3950 0.3825 0.3855                                          
-#&gt; 5  0.4075 0.3910 0.3960 0.2175                                   
-#&gt; 6  0.3920 0.3855 0.3985 0.2230 0.2185                            
-#&gt; 7  0.3955 0.3920 0.3910 0.2265 0.2140 0.2385                     
-#&gt; 8  0.3955 0.3830 0.3970 0.2245 0.1980 0.2255 0.2190              
-#&gt; 9  0.3770 0.3805 0.3945 0.2200 0.2105 0.2210 0.2215 0.2155       
-#&gt; 10 0.3980 0.3925 0.4005 0.2180 0.2035 0.2220 0.2185 0.2125 0.2140</div><div class='input'>
+#&gt; 2  0.2230                                                        
+#&gt; 3  0.2260 0.2280                                                 
+#&gt; 4  0.2250 0.2170 0.2040                                          
+#&gt; 5  0.3795 0.3835 0.3795 0.3805                                   
+#&gt; 6  0.4035 0.3985 0.4055 0.3975 0.2100                            
+#&gt; 7  0.4005 0.3955 0.3935 0.3885 0.2000 0.2200                     
+#&gt; 8  0.3880 0.3860 0.3870 0.3960 0.2035 0.2205 0.2135              
+#&gt; 9  0.3920 0.4030 0.4080 0.3970 0.2135 0.2125 0.2005 0.2150       
+#&gt; 10 0.3935 0.3905 0.4015 0.3885 0.2230 0.2160 0.2120 0.2265 0.2195</div><div class='input'>
 <span class='co'># Calculate Euclidean distance</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.001   0.000   0.002 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
-#&gt; 2  22.64950                                                               
-#&gt; 3  23.00000 23.19483                                                      
-#&gt; 4  35.24202 34.68429 34.91418                                             
-#&gt; 5  35.98611 35.27038 35.88872 23.43075                                    
-#&gt; 6  34.98571 35.14257 35.59494 23.87467 23.72762                           
-#&gt; 7  35.31289 35.01428 35.27038 24.02082 23.49468 24.59675                  
-#&gt; 8  35.05710 34.46738 35.55278 23.60085 22.27106 23.55844 23.49468         
-#&gt; 9  34.32200 34.71311 35.22783 23.62202 22.82542 23.45208 23.55844 23.25941
-#&gt; 10 35.49648 34.85685 35.90265 23.70654 22.95648 23.57965 23.51595 23.21637
+#&gt;       0       0       0 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
+#&gt; 2  23.40940                                                               
+#&gt; 3  23.74868 24.04163                                                      
+#&gt; 4  23.36664 23.10844 22.31591                                             
+#&gt; 5  34.36568 34.82815 34.71311 34.56877                                    
+#&gt; 6  35.59494 35.45420 36.09709 35.76311 22.93469                           
+#&gt; 7  35.53871 35.17101 35.79106 35.00000 22.31591 23.57965                  
+#&gt; 8  34.75629 34.98571 35.12834 35.49648 22.24860 23.08679 23.13007         
+#&gt; 9  35.49648 35.88872 36.19392 35.41186 23.04344 23.13007 22.24860 22.93469
+#&gt; 10 34.71311 34.68429 35.81899 35.05710 23.57965 23.10844 22.80351 23.81176
 #&gt;           9
 #&gt; 2          
 #&gt; 3          
@@ -275,7 +275,7 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 #&gt; 7          
 #&gt; 8          
 #&gt; 9          
-#&gt; 10 23.10844</div><div class='input'>
+#&gt; 10 23.51595</div><div class='input'>
 </div><div class='input'>
 <span class='co'># This function is more efficient in both memory and speed than [dist()] for</span>
 <span class='co'># calculating Euclidean distance on genlight objects. For example, we can</span>
@@ -292,10 +292,10 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 
 <span class='co'># Default Euclidean distance </span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/dist'>dist</a></span>(<span class='no'>glite</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   2.426   0.080   2.551 </div><div class='input'>
+#&gt;   2.472   0.008   2.482 </div><div class='input'>
 <span class='co'># Bitwise dist</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='fu'>bitwise.dist</span>(<span class='no'>glite</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.904   0.004   0.966 </div><div class='input'>
+#&gt;   0.947   0.000   0.949 </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

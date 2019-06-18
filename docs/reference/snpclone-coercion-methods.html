@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -182,11 +182,11 @@ represented as an <code><a href='MLG-class.html'>MLG</a></code> object.</p></td>
 #&gt; 
 #&gt; NULL</div><div class='input'><span class='co'># Without parallel processing</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>as.snpclone</span>(<span class='fu'>glSim</span>(<span class='fl'>1000</span>, <span class='fl'>1e5</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>)))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 179.339  21.331 204.316 </div><div class='input'>
+#&gt; 209.636  10.618 220.689 </div><div class='input'>
 <span class='co'># With parallel processing... doesn't really save you much time.</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>as.snpclone</span>(<span class='fu'>glSim</span>(<span class='fl'>1000</span>, <span class='fl'>1e5</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
                              <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; <span class='message'>Loading required package: parallel</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 173.752  21.596 198.439 </div><div class='input'>
+#&gt; 200.248  11.902 212.472 </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

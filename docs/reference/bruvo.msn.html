@@ -66,7 +66,7 @@ distance." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -337,10 +337,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='co'># View populations 8 and 9 with default colors. </span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
           <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>, <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>)</div><div class='img'><img src='bruvo.msn-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH ce35ba7 UNW- 19 18 -- 
+#&gt; IGRAPH 114e8d2 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
-#&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from ce35ba7 (vertex names):
+#&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
+#&gt; | (e/n)
+#&gt; + edges from 114e8d2 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -354,10 +355,11 @@ override the algorithm in the data set. See Details.</p></td>
 #&gt; </div><div class='input'><span class='co'># View heat colors.</span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span><span class='kw'>=</span><span class='no'>heat.colors</span>, <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>, <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>)</div><div class='img'><img src='bruvo.msn-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 8c31003 UNW- 19 18 -- 
+#&gt; IGRAPH 377ecc6 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
-#&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from 8c31003 (vertex names):
+#&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
+#&gt; | (e/n)
+#&gt; + edges from 377ecc6 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -373,10 +375,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>)</div><div class='img'><img src='bruvo.msn-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 5363333 UNW- 19 18 -- 
+#&gt; IGRAPH bb2cd53 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
-#&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from 5363333 (vertex names):
+#&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
+#&gt; | (e/n)
+#&gt; + edges from bb2cd53 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -392,10 +395,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>, <span class='kw'>glim</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.5</span>))</div><div class='img'><img src='bruvo.msn-4.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH c88a334 UNW- 19 18 -- 
+#&gt; IGRAPH 8b6d33b UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
-#&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from c88a334 (vertex names):
+#&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
+#&gt; | (e/n)
+#&gt; + edges from 8b6d33b (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -411,10 +415,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>, <span class='kw'>gscale</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='img'><img src='bruvo.msn-5.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH f1c5055 UNW- 19 18 -- 
+#&gt; IGRAPH 81b0468 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
-#&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from f1c5055 (vertex names):
+#&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
+#&gt; | (e/n)
+#&gt; + edges from 81b0468 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -430,10 +435,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>, <span class='kw'>wscale</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='img'><img src='bruvo.msn-6.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH c14d872 UNW- 19 18 -- 
+#&gt; IGRAPH 7aa696d UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
-#&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from c14d872 (vertex names):
+#&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
+#&gt; | (e/n)
+#&gt; + edges from 7aa696d (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -449,10 +455,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>, <span class='kw'>gscale</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='img'><img src='bruvo.msn-7.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH daae689 UNW- 19 18 -- 
+#&gt; IGRAPH d8a4b37 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
-#&gt; | (v/x), label (v/c), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from daae689 (vertex names):
+#&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
+#&gt; | (e/n)
+#&gt; + edges from d8a4b37 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -466,17 +473,17 @@ override the algorithm in the data set. See Details.</p></td>
 #&gt; </div><div class='input'>
 <span class='co'># View the whole population, but without labels.</span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='fl'>NA</span>)</div><div class='img'><img src='bruvo.msn-8.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 39da4c5 UNW- 237 236 -- 
+#&gt; IGRAPH 5156f74 UNW- 237 236 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
-#&gt; | (v/x), label (v/l), weight (e/n), color (e/c), width (e/n)
-#&gt; + edges from 39da4c5 (vertex names):
+#&gt; | (v/x), color (v/c), label (v/l), weight (e/n), color (e/c), width
+#&gt; | (e/n)
+#&gt; + edges from 5156f74 (vertex names):
 #&gt;  [1] N215--N216 N215--N113 N215--N130 N215--N246 N215--N296 N216--N83 
 #&gt;  [7] N216--N165 N216--N182 N217--N223 N218--N293 N219--N221 N219--N79 
 #&gt; [13] N219--N84  N219--N189 N219--N182 N219--N270 N220--N222 N220--N57 
 #&gt; [19] N220--N67  N220--N171 N220--N254 N221--N87  N221--N123 N221--N230
 #&gt; [25] N222--N212 N223--N294 N224--N239 N7  --N148 N7  --N234 N141--N151
 #&gt; [31] N141--N159 N141--N138 N142--N154 N142--N162 N142--N295 N143--N192
-#&gt; [37] N143--N122 N144--N160 N144--N161 N145--N146 N145--N155 N145--N192
 #&gt; + ... omitted several edges
 #&gt; 
 #&gt; $populations

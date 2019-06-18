@@ -91,6 +91,7 @@ setMethod(
     slot(.Object, "mlg")      <- mlg
     slot(.Object, "visible")  <- "original"
     slot(.Object, "distname") <- "diss.dist"
+    slot(.Object, "distenv")  <- .GlobalEnv
     slot(.Object, "distargs") <- list()
     slot(.Object, "distalgo") <- "farthest_neighbor"
     return(.Object)
@@ -446,6 +447,22 @@ setMethod(
 
 #==============================================================================#
 #' @rdname MLG-accessors
+#' @aliases distenv,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("distenv", function(x) {
+  standardGeneric("distenv")
+})
+
+setMethod(
+  f = "distenv", 
+  signature(x = "MLG"), 
+  definition = function(x) {
+    x@distenv
+  })
+
+#==============================================================================#
+#' @rdname MLG-accessors
 #' @aliases distname<-,MLG-method
 #' @export
 #==============================================================================#
@@ -458,6 +475,23 @@ setMethod(
   signature(x = "MLG"), 
   definition = function(x, value) {
     x@distname <- value
+    return(x)
+  })
+
+#==============================================================================#
+#' @rdname MLG-accessors
+#' @aliases distenv<-,MLG-method
+#' @export
+#==============================================================================#
+setGeneric("distenv<-", function(x, value) {
+  standardGeneric("distenv<-")
+})
+
+setMethod(
+  f = "distenv<-", 
+  signature(x = "MLG"), 
+  definition = function(x, value) {
+    x@distenv <- value
     return(x)
   })
 

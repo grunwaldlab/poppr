@@ -65,7 +65,7 @@ round-robin allele frequencies used for pgen and psex." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
       </span>
     </div>
 
@@ -370,9 +370,9 @@ population of bracken fern, <em>Pteridium aquilinum</em> (Dennstaedtiaceae).
 #&gt; PrMS43A1.493 0.001371742 PrMS43A1 PrMS43A1.493
 #&gt; PrMS43A1.497 0.001371742 PrMS43A1 PrMS43A1.497
 #&gt; PrMS43A1.505 0.001371742 PrMS43A1 PrMS43A1.505</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"ggplot2"</span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>Prdf</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>allele</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>frequency</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span>(<span class='no'>locus</span> ~ <span class='no'>.</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"free_y"</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"free"</span>)</div><div class='img'><img src='rraf-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>Prdf</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>allele</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>frequency</span>)) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>() +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_grid'>facet_grid</a></span>(<span class='no'>locus</span> ~ <span class='no'>.</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"free_y"</span>, <span class='kw'>space</span> <span class='kw'>=</span> <span class='st'>"free"</span>)</div><div class='img'><img src='rraf-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Round Robin allele frequencies by population (matrix only)</span>
 
 <span class='co'># By default, allele frequencies will be corrected by 1/n per population</span>

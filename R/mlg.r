@@ -293,9 +293,9 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
       ggmlg <- mlg_barplot(mlgtab, color = color, background = background)
     }
     print(ggmlg + 
-            myTheme + 
-            labs(title = paste("Data:", the_data, "\nN =",
-                               sum(mlgtab), "MLG =", ncol(mlgtab))))
+          myTheme + 
+          labs(title = paste("Data:", the_data, "\nN =",
+                             sum(mlgtab), "MLG =", ncol(mlgtab))))
   }
   mlgtab <- mlgtab[, which(colSums(mlgtab) > 0), drop = FALSE]
   return(mlgtab)
@@ -339,7 +339,9 @@ mlg.vector <- function(gid, reset = FALSE){
                       distance = bitwise.dist,
                       missing_match = TRUE))
   } 
+
   xtab <- gid@tab
+
   # concatenating each genotype into one long string.
   xsort <- vapply(seq(nrow(xtab)),function(x) paste(xtab[x, ], collapse = ""), "string")
 
@@ -350,36 +352,29 @@ mlg.vector <- function(gid, reset = FALSE){
   # return(rank(xsort, ties.method = "min"))
 
   # creating a new vector to store the counts of unique genotypes.
-  countvec <- vector(length = length(xsort), mode = "integer")
+  countvec <- countvec2 <- vector(length = length(xsort), mode = "integer")
+
   # sorting the genotypes ($x) and preserving the index ($xi). 
   xsorted <- sort(xsort, index.return=TRUE)
   
-  # simple function to count number of genotypes. Num is the index number, comp
+  # for loop to count number of genotypes. Num is the index number, comp
   # is the vector of genotypes.
-  # This works by the "<<-" assignment operator, which is a global assignment.
-  # This will search in higher environments until it finds a corresponding
-  # object to modify. In this case it is countvec, which was declared above.
-  
-  f1 <- function(num, comp){
+  sorted_genos <- xsorted$x
+
+  for (num in seq_along(sorted_genos)) {
     if (num - 1 == 0){
-      countvec[num] <<- 1L
+      countvec[num] <- 1L
     }
     # These have the exact same strings, thus they are the same MLG. Perpetuate
     # The MLG index.
-    else if (comp[num] == comp[num - 1]){
-      countvec[num] <<- countvec[num - 1]
+    else if (sorted_genos[num] == sorted_genos[num - 1]){
+      countvec[num] <- countvec[num - 1]
     } else {
     # These have differnt strings, increment the MLG index by one.
-      countvec[num] <<- countvec[num - 1] + 1L
+      countvec[num] <- countvec[num - 1] + 1L
     }
   }
 
-  # applying this over all genotypes.
-  lapply(1:length(xsorted$x), f1, xsorted$x)
-  
-  # a new vector to take in the genotype indicators
-  countvec2 <- 1:length(xsort)
-  
   # replacing the numbers in the vector with the genotype indicators.
   countvec2[xsorted$ix] <- countvec
   return(countvec2)
