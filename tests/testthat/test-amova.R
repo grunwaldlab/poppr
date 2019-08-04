@@ -264,6 +264,48 @@ test_that("AMOVA will give an extra warning for polyploids with zeroes", {
   expect_warning(res <- poppr.amova(recode_polyploids(pg, addzero = TRUE), ~group/population, within = TRUE), wrn)
 })
 
+context("AMOVA for vcfR-exported snp genind data")
+
+m <- matrix(nrow = 10, ncol = 20)
+set.seed(99)
+strat     <- data.frame(POP = rep(c("A", "B"), 5))
+m[1:5, ]  <- sample(c("00", "01", "11"), 5*20, replace = TRUE, prob = c(0.6, 0.3, 0.1))
+m[6:10, ] <- sample(c("00", "01", "11"), 5*20, replace = TRUE, prob = c(0.2, 0.1, 0.7))
+mm[mm == "00"] <- "AA"
+mm[mm == "01"] <- "AC"
+mm[mm == "11"] <- "CC"
+x <- df2genind(m, strata = strat, ncode = 1)
+y <- df2genind(mm, strata = strat, ncode = 1)
+
+test_that("AMOVA will interpret the SNP data as having ambiguous allele dosage by default", {
+
+  expect_warning({
+    ax <- poppr.amova(x, ~POP, quiet = TRUE)
+  }, "Data with mixed ploidy or ambiguous allele dosage")
+
+  # We expect this to be equivalent to the true snps without asessing
+  # within-sample differences
+  ay <- poppr.amova(y, ~POP, quiet = TRUE, within = FALSE)
+  expect_identical(ax, ay)
+})
+
+
+test_that("AMOVA will account for numeric SNP data if the user specifies so", {
+
+  skip('2019-08-04: Still writing the functionality')
+  
+  op <- getOption('poppr.numeric.snp')
+  options(poppr.numeric.snp = TRUE)
+
+  ax <- poppr.amova(x, ~POP, quiet = TRUE)
+  ay <- poppr.amova(y, ~POP, quiet = TRUE)
+  expect_identical(ax, ay)
+
+  options(poppr.numeric.snp = op)
+
+})
+
+
 context("AMOVA on genlight objects")
 
 set.seed(99)

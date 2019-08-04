@@ -335,8 +335,16 @@ poppr.amova <- function(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
   }
 
   # Splitting haplotypes ----------------------------------------------------
+
+  # Assess if a data set has even (unmixed) ploidy. To do this, get the local
+  # ploidy for each locus by individual, and run tabulate. If all genotypes are
+  # accounted for (i.e. there are no "0" alleles present), then there will be
+  # only one non-zero number in tabulate. 
   #
-  full_ploidy <- if (is_genind) codominant && sum(tabulate(get_local_ploidy(x)) > 0) == 1 else TRUE
+  # NOTE: This is the point where numeric snp data will be rejected for being
+  # split into haplotypes. 
+  even_ploidy <- function(x) sum(tabulate(get_local_ploidy(x)) > 0) == 1
+  full_ploidy <- if (is_genind) codominant && even_ploidy(x) else TRUE
   if (within && heterozygous && codominant && !haploid && full_ploidy) {
     hier <- update(hier, ~./Individual)
     x    <- make_haplotypes(x)
