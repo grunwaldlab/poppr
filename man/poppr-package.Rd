@@ -235,7 +235,7 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
 
 --------- Papers referencing data sets ---------
 
-Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity,
+Grünwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity,
 Selfing, and Genetic Differentiation in Populations of the Oomycete
 \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141 doi:
 \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}
