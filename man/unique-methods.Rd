@@ -3,6 +3,7 @@
 \docType{methods}
 \name{unique,MLG-method}
 \alias{unique,MLG-method}
+\alias{unique,MLG,ANY-method}
 \alias{duplicated,MLG-method}
 \title{Unique and Duplicated implementations for MLG objects}
 \usage{
