@@ -10,14 +10,32 @@
 \usage{
 mlg(gid, quiet = FALSE)
 
-mlg.table(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
-  mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE,
-  color = FALSE, background = FALSE, quiet = FALSE)
+mlg.table(
+  gid,
+  strata = NULL,
+  sublist = "ALL",
+  blacklist = NULL,
+  mlgsub = NULL,
+  bar = TRUE,
+  plot = TRUE,
+  total = FALSE,
+  color = FALSE,
+  background = FALSE,
+  quiet = FALSE
+)
 
 mlg.vector(gid, reset = FALSE)
 
-mlg.crosspop(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
-  mlgsub = NULL, indexreturn = FALSE, df = FALSE, quiet = FALSE)
+mlg.crosspop(
+  gid,
+  strata = NULL,
+  sublist = "ALL",
+  blacklist = NULL,
+  mlgsub = NULL,
+  indexreturn = FALSE,
+  df = FALSE,
+  quiet = FALSE
+)
 
 mlg.id(gid)
 }

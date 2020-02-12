@@ -6,9 +6,20 @@
 \title{Calculate a dendrogram with bootstrap support using any distance applicable
 to genind or genclone objects.}
 \usage{
-aboot(x, strata = NULL, tree = "upgma", distance = "nei.dist",
-  sample = 100, cutoff = 0, showtree = TRUE, missing = "mean",
-  mcutoff = 0, quiet = FALSE, root = NULL, ...)
+aboot(
+  x,
+  strata = NULL,
+  tree = "upgma",
+  distance = "nei.dist",
+  sample = 100,
+  cutoff = 0,
+  showtree = TRUE,
+  missing = "mean",
+  mcutoff = 0,
+  quiet = FALSE,
+  root = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{a \link[=genind]{genind-class}, \link[=genpop]{genpop-class},

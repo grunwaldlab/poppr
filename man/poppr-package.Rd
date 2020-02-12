@@ -61,8 +61,9 @@ not allow others to learn.}
 Below are descriptions and links to functions found in \pkg{poppr}. Be
 aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
 available. The functions are documented as:
-
-\code{function} (data type) - Description
+\itemize{
+\item \code{function_name()} (data type) - Description
+}
 
 Where \sQuote{data type} refers to the type of data that can be used:
 \tabular{ll}{

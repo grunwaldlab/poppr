@@ -4,8 +4,17 @@
 \alias{diversity_boot}
 \title{Perform a bootstrap analysis on diversity statistics}
 \usage{
-diversity_boot(tab, n, n.boot = 1L, n.rare = NULL, H = TRUE,
-  G = TRUE, lambda = TRUE, E5 = TRUE, ...)
+diversity_boot(
+  tab,
+  n,
+  n.boot = 1L,
+  n.rare = NULL,
+  H = TRUE,
+  G = TRUE,
+  lambda = TRUE,
+  E5 = TRUE,
+  ...
+)
 }
 \arguments{
 \item{tab}{a table produced from the \pkg{poppr} function
@@ -50,11 +59,11 @@ Bootstrapping is performed in three ways:
 \itemize{
 \item if \code{n.rare} is a number greater than zero, then bootstrapping
 is performed by randomly sampling without replacement \emph{n.rare}
-samples from the data.\preformatted{\item if `n.boot` is greater than 1, bootstrapping is performed by
+samples from the data.\preformatted{\\item if `n.boot` is greater than 1, bootstrapping is performed by
 sampling n.boot samples from a multinomial distribution weighted by the
 proportion of each MLG in the data.
 
-\item if `n.boot` is less than 2, bootstrapping is performed by 
+\\item if `n.boot` is less than 2, bootstrapping is performed by 
 sampling N samples from a multinomial distribution weighted by the
 proportion of each MLG in the data.
 }

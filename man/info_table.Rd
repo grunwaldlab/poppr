@@ -5,9 +5,18 @@
 \title{Create a table summarizing missing data or ploidy information of a genind or
 genclone object}
 \usage{
-info_table(gen, type = c("missing", "ploidy"), percent = TRUE,
-  plot = FALSE, df = FALSE, returnplot = FALSE, low = "blue",
-  high = "red", plotlab = TRUE, scaled = TRUE)
+info_table(
+  gen,
+  type = c("missing", "ploidy"),
+  percent = TRUE,
+  plot = FALSE,
+  df = FALSE,
+  returnplot = FALSE,
+  low = "blue",
+  high = "red",
+  plotlab = TRUE,
+  scaled = TRUE
+)
 }
 \arguments{
 \item{gen}{a \linkS4class{genind} or \linkS4class{genclone} object.}

@@ -4,8 +4,15 @@
 \alias{win.ia}
 \title{Calculate windows of the index of association for genlight objects.}
 \usage{
-win.ia(x, window = 100L, min.snps = 3L, threads = 1L,
-  quiet = FALSE, name_window = TRUE, chromosome_buffer = TRUE)
+win.ia(
+  x,
+  window = 100L,
+  min.snps = 3L,
+  threads = 1L,
+  quiet = FALSE,
+  name_window = TRUE,
+  chromosome_buffer = TRUE
+)
 }
 \arguments{
 \item{x}{a \link[=genlight-class]{genlight} or \link[=snpclone-class]{snpclone} object.}

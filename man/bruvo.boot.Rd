@@ -4,9 +4,19 @@
 \alias{bruvo.boot}
 \title{Create a tree using Bruvo's Distance with non-parametric bootstrapping.}
 \usage{
-bruvo.boot(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
-  tree = "upgma", showtree = TRUE, cutoff = NULL, quiet = FALSE,
-  root = NULL, ...)
+bruvo.boot(
+  pop,
+  replen = 1,
+  add = TRUE,
+  loss = TRUE,
+  sample = 100,
+  tree = "upgma",
+  showtree = TRUE,
+  cutoff = NULL,
+  quiet = FALSE,
+  root = NULL,
+  ...
+)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} or \code{\link{genclone}} object}

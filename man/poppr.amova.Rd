@@ -5,12 +5,26 @@
 \alias{amova}
 \title{Perform Analysis of Molecular Variance (AMOVA) on genind or genclone objects.}
 \usage{
-poppr.amova(x, hier = NULL, clonecorrect = FALSE, within = TRUE,
-  dist = NULL, squared = TRUE, freq = TRUE,
-  correction = "quasieuclid", sep = "_", filter = FALSE,
-  threshold = 0, algorithm = "farthest_neighbor", threads = 1L,
-  missing = "loci", cutoff = 0.05, quiet = FALSE,
-  method = c("ade4", "pegas"), nperm = 0)
+poppr.amova(
+  x,
+  hier = NULL,
+  clonecorrect = FALSE,
+  within = TRUE,
+  dist = NULL,
+  squared = TRUE,
+  freq = TRUE,
+  correction = "quasieuclid",
+  sep = "_",
+  filter = FALSE,
+  threshold = 0,
+  algorithm = "farthest_neighbor",
+  threads = 1L,
+  missing = "loci",
+  cutoff = 0.05,
+  quiet = FALSE,
+  method = c("ade4", "pegas"),
+  nperm = 0
+)
 }
 \arguments{
 \item{x}{a \link[=genind-class]{genind}, \link[=genclone-class]{genclone}, \link[=genlight-class]{genlight}, or \link[=snpclone-class]{snpclone} object}

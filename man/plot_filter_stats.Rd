@@ -4,8 +4,14 @@
 \alias{plot_filter_stats}
 \title{Plot the results of filter_stats}
 \usage{
-plot_filter_stats(x, fstats, distmat, cols = NULL, nclone = NULL,
-  breaks = NULL)
+plot_filter_stats(
+  x,
+  fstats,
+  distmat,
+  cols = NULL,
+  nclone = NULL,
+  breaks = NULL
+)
 }
 \arguments{
 \item{x}{a genlight of genind object}

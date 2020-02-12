@@ -8,21 +8,32 @@
 
 <title>MLG definitions based on genetic distance — mlg.filter • poppr</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,14 +41,16 @@
 
 
 
-<meta property="og:title" content="MLG definitions based on genetic distance — mlg.filter" />
 
+<meta property="og:title" content="MLG definitions based on genetic distance — mlg.filter" />
 <meta property="og:description" content="Multilocus genotypes are initially defined by naive string matching, but this
 definition does not take into account missing data or genotyping error,
 casting these as unique genotypes. Defining multilocus genotypes by genetic
 distance allows you to incorporate genotypes that have missing data o
 genotyping error into their parent clusters." />
+<meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -49,6 +62,7 @@ genotyping error into their parent clusters." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -101,7 +115,6 @@ genotyping error into their parent clusters." />
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
@@ -116,6 +129,7 @@ genotyping error into their parent clusters." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -127,23 +141,35 @@ genotyping error into their parent clusters." />
     </div>
 
     <div class="ref-description">
-    
     <p>Multilocus genotypes are initially defined by naive string matching, but this
 definition does not take into account missing data or genotyping error,
 casting these as unique genotypes. Defining multilocus genotypes by genetic
 distance allows you to incorporate genotypes that have missing data o
 genotyping error into their parent clusters.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>mlg.filter</span>(<span class='no'>pop</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"asis"</span>, <span class='kw'>memory</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>algorithm</span> <span class='kw'>=</span> <span class='st'>"farthest_neighbor"</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='st'>"diss.dist"</span>,
-  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"MLGs"</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>mlg.filter</span>(
+  <span class='no'>pop</span>,
+  <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"asis"</span>,
+  <span class='kw'>memory</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>algorithm</span> <span class='kw'>=</span> <span class='st'>"farthest_neighbor"</span>,
+  <span class='kw'>distance</span> <span class='kw'>=</span> <span class='st'>"diss.dist"</span>,
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
+  <span class='kw'>stats</span> <span class='kw'>=</span> <span class='st'>"MLGs"</span>,
+  <span class='no'>...</span>
+)
 
-<span class='fu'>mlg.filter</span>(<span class='no'>pop</span>, <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"asis"</span>, <span class='kw'>memory</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>algorithm</span> <span class='kw'>=</span> <span class='st'>"farthest_neighbor"</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='st'>"diss.dist"</span>,
-  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='no'>...</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
-    
+<span class='fu'>mlg.filter</span>(
+  <span class='no'>pop</span>,
+  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='st'>"asis"</span>,
+  <span class='kw'>memory</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>algorithm</span> <span class='kw'>=</span> <span class='st'>"farthest_neighbor"</span>,
+  <span class='kw'>distance</span> <span class='kw'>=</span> <span class='st'>"diss.dist"</span>,
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
+  <span class='no'>...</span>
+) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -180,6 +206,7 @@ matrices and not store any it generates.</p></td>
   between points in either cluster. This is the loosest of the three.</p></dd>
   <dt>"average_neighbor"</dt><dd><p>merges clusters based on the average distance
   between every pair of points between clusters.</p></dd>
+
 </dl></td>
     </tr>
     <tr>
@@ -212,32 +239,23 @@ returned.</p></td>
       <td><p>the threshold at which genotypes should be collapsed.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Default, a vector of collapsed multilocus genotypes. Otherwise, any
   combination of the following:</p><h3>MLGs</h3>
-
-  a numeric vector defining the multilocus genotype cluster of each
+<p>a numeric vector defining the multilocus genotype cluster of each
   individual in the dataset. Each genotype cluster is separated from every
   other genotype cluster by at least the defined threshold value, as 
-  calculated by the selected algorithm.
-
+  calculated by the selected algorithm.</p>
 <h3>THRESHOLDS</h3>
-
-  A numeric vector representing the thresholds <strong>beyond</strong> which clusters
-  of multilocus genotypes were collapsed. 
-
+<p>A numeric vector representing the thresholds <strong>beyond</strong> which clusters
+  of multilocus genotypes were collapsed.</p>
 <h3>DISTANCES</h3>
-
-  A square matrix representing the distances between each cluster.
-
+<p>A square matrix representing the distances between each cluster.</p>
 <h3>SIZES</h3>
+<p>The sizes of the multilocus genotype clusters in order.</p>
 
- The sizes of the multilocus genotype clusters in order. 
-
-
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function will take in any distance matrix or function and
@@ -246,7 +264,6 @@ function as the assignment method (mlg.filter(myData, distance = myDist) &lt;-
 0.5), the distance function or matrix will be remembered by the object. This
 means that if you define your own distance matrix or function, you must keep
 it in memory to further utilize mlg.filter.</p>
-    
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p><code>mlg.vector</code> makes use of <code>mlg.vector</code> grouping prior to 
@@ -255,7 +272,6 @@ it in memory to further utilize mlg.filter.</p>
   <code>mlg.vector</code>) in in each new multilocus genotype. Therefore
   <strong><code>mlg.filter</code> and <code>mlg.vector</code> return the same vector when
   threshold is set to 0 or less</strong>.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='filter_stats.html'>filter_stats</a></code>, 
@@ -265,11 +281,10 @@ it in memory to further utilize mlg.filter.</p>
   <code><a href='genclone-class.html'>snpclone</a></code>, 
   <code><a href='diss.dist.html'>diss.dist</a></code>, 
   <code><a href='bruvo.dist.html'>bruvo.dist</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>partial_clone</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>partial_clone</span>)
 <span class='no'>pc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='coercion-methods.html'>as.genclone</a></span>(<span class='no'>partial_clone</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>) <span class='co'># convert to genclone object</span>
 
 <span class='co'># Basic Use ---------------------------------------------------------------</span>
@@ -306,7 +321,8 @@ it in memory to further utilize mlg.filter.</p>
 #&gt; 
 #&gt;     0 strata. 
 #&gt;     4 populations defined - 1, 2, 3, 4</div><div class='input'>
-</div><div class='input'>
+<span class='co'># \dontrun{</span>
+
 <span class='co'># The distance definition is persistant</span>
 <span class='fu'>mlg.filter</span>(<span class='no'>pc</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.1</span>
 <span class='no'>pc</span> <span class='co'># 24 mlgs</span></div><div class='output co'>#&gt; 
@@ -351,7 +367,7 @@ it in memory to further utilize mlg.filter.</p>
 <span class='co'># For this example, we'll use Bruvo's distance to predict the cutoff for</span>
 <span class='co'># P. infestans.</span>
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Pinf</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
 <span class='no'>Pinf</span></div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
@@ -365,7 +381,7 @@ it in memory to further utilize mlg.filter.</p>
 #&gt; 
 #&gt;     2 strata - Continent, Country
 #&gt;     2 populations defined - South America, North America</div><div class='input'><span class='co'># Repeat lengths are necessary for Bruvo's distance</span>
-(<span class='no'>pinfreps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='no'>Pinf</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>)))</div><div class='output co'>#&gt;    Pi02     D13    Pi33    Pi04    Pi4B    Pi16     G11    Pi56    Pi63    Pi70 
+(<span class='no'>pinfreps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fix_replen.html'>fix_replen</a></span>(<span class='no'>Pinf</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span>)))</div><div class='output co'>#&gt;    Pi02     D13    Pi33    Pi04    Pi4B    Pi16     G11    Pi56    Pi63    Pi70 
 #&gt; 2.00000 2.00000 6.00000 2.00000 1.99999 2.00000 2.00000 2.00000 3.00000 3.00000 
 #&gt;    Pi89 
 #&gt; 1.99999 </div><div class='input'>
@@ -409,7 +425,7 @@ it in memory to further utilize mlg.filter.</p>
 <span class='co'># with missing data that share all alleles with other genotypes except for </span>
 <span class='co'># the missing one.</span>
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>monpop</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>monpop</span>)
 <span class='no'>monpop</span> <span class='co'># 264 mlg</span></div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
@@ -436,7 +452,7 @@ it in memory to further utilize mlg.filter.</p>
 <span class='co'># Custom genetic distances can be used either in functions from other</span>
 <span class='co'># packages or user-defined functions</span>
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Pinf</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Pinf</span>)
 <span class='no'>Pinf</span></div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
@@ -450,7 +466,7 @@ it in memory to further utilize mlg.filter.</p>
 #&gt; Population information:
 #&gt; 
 #&gt;     2 strata - Continent, Country
-#&gt;     2 populations defined - South America, North America</div><div class='input'><span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/dist'>dist</a></span>(<span class='fu'>tab</span>(<span class='no'>x</span>))) <span class='kw'>&lt;-</span> <span class='fl'>3</span>
+#&gt;     2 populations defined - South America, North America</div><div class='input'><span class='fu'>mlg.filter</span>(<span class='no'>Pinf</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>dist</a></span>(<span class='fu'>tab</span>(<span class='no'>x</span>))) <span class='kw'>&lt;-</span> <span class='fl'>3</span>
 <span class='no'>Pinf</span></div><div class='output co'>#&gt; 
 #&gt; This is a genclone object
 #&gt; -------------------------
@@ -470,7 +486,7 @@ it in memory to further utilize mlg.filter.</p>
 #&gt; -------------------------
 #&gt; Genotype information:
 #&gt; 
-#&gt;    33 contracted multilocus genotypes
+#&gt;    51 contracted multilocus genotypes
 #&gt;       (4) [t], (function(x) dist(tab(x))) [d], (farthest) [a] 
 #&gt;    86 tetraploid individuals
 #&gt;    11 codominant loci
@@ -482,11 +498,11 @@ it in memory to further utilize mlg.filter.</p>
 <span class='co'># genlight / snpclone objects ---------------------------------------------</span>
 
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>999</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
 <span class='no'>gc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>1e3</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>))
 <span class='no'>gc</span> <span class='co'># 100 mlgs</span></div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
 #&gt; 
-#&gt;  || 100 genotypes,  1,000 binary SNPs, size: 183.3 Kb
+#&gt;  || 100 genotypes,  1,000 binary SNPs, size: 183.5 Kb
 #&gt;  0 (0 %) missing data
 #&gt; 
 #&gt;  || Basic content
@@ -501,7 +517,7 @@ it in memory to further utilize mlg.filter.</p>
 #&gt; NULL</div><div class='input'><span class='fu'>mlg.filter</span>(<span class='no'>gc</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.25</span>
 <span class='no'>gc</span> <span class='co'># 82 mlgs</span></div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
 #&gt; 
-#&gt;  || 100 genotypes,  1,000 binary SNPs, size: 183.3 Kb
+#&gt;  || 100 genotypes,  1,000 binary SNPs, size: 183.5 Kb
 #&gt;  0 (0 %) missing data
 #&gt; 
 #&gt;  || Basic content
@@ -515,26 +531,23 @@ it in memory to further utilize mlg.filter.</p>
 #&gt;    @other: a list containing: ancestral.pops 
 #&gt; 
 #&gt; NULL</div><div class='input'>
+# }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#note">Note</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -542,13 +555,16 @@ it in memory to further utilize mlg.filter.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

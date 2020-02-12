@@ -4,11 +4,26 @@
 \alias{poppr}
 \title{Produce a basic summary table for population genetic analyses.}
 \usage{
-poppr(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
-  sample = 0, method = 1, missing = "ignore", cutoff = 0.05,
-  quiet = FALSE, clonecorrect = FALSE, strata = 1, keep = 1,
-  plot = TRUE, hist = TRUE, index = "rbarD", minsamp = 10,
-  legend = FALSE, ...)
+poppr(
+  dat,
+  total = TRUE,
+  sublist = "ALL",
+  blacklist = NULL,
+  sample = 0,
+  method = 1,
+  missing = "ignore",
+  cutoff = 0.05,
+  quiet = FALSE,
+  clonecorrect = FALSE,
+  strata = 1,
+  keep = 1,
+  plot = TRUE,
+  hist = TRUE,
+  index = "rbarD",
+  minsamp = 10,
+  legend = FALSE,
+  ...
+)
 }
 \arguments{
 \item{dat}{a \code{\linkS4class{genind}} object OR a 

@@ -157,7 +157,6 @@ bias.ia <- function(theta_hat, theta_star){
 }
 
 #' @rdname ia
-#' @inheritParams resample.ia
 #' @export
 jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
   msg <- paste0("jack.ia() is deprecated and will be removed in future versions.\n",

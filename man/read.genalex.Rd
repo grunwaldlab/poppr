@@ -2,13 +2,20 @@
 % Please edit documentation in R/file_handling.r
 \name{read.genalex}
 \alias{read.genalex}
-\title{Importing data from genalex formatted *.csv files.}
+\title{Importing data from genalex formatted \*.csv files.}
 \usage{
-read.genalex(genalex, ploidy = 2, geo = FALSE, region = FALSE,
-  genclone = TRUE, sep = ",", recode = FALSE)
+read.genalex(
+  genalex,
+  ploidy = 2,
+  geo = FALSE,
+  region = FALSE,
+  genclone = TRUE,
+  sep = ",",
+  recode = FALSE
+)
 }
 \arguments{
-\item{genalex}{a *.csv file exported from genalex}
+\item{genalex}{a \*.csv file exported from genalex}
 
 \item{ploidy}{an integer to indicate the ploidy of the dataset}
 
@@ -64,7 +71,7 @@ of ploidy and we have written both Bruvo's distance and the index of
 association in such a way as to be able to handle polyploids presented in
 this manner.
 
-* To restore functionality of analyses relying on allele frequencies, use
+\* To restore functionality of analyses relying on allele frequencies, use
 the \code{\link[=recode_polyploids]{recode_polyploids()}} function.}
 }
 \note{

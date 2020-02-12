@@ -4,8 +4,16 @@
 \alias{genotype_curve}
 \title{Produce a genotype accumulation curve}
 \usage{
-genotype_curve(gen, sample = 100, maxloci = 0L, quiet = FALSE,
-  thresh = 1, plot = TRUE, drop = TRUE, dropna = TRUE)
+genotype_curve(
+  gen,
+  sample = 100,
+  maxloci = 0L,
+  quiet = FALSE,
+  thresh = 1,
+  plot = TRUE,
+  drop = TRUE,
+  dropna = TRUE
+)
 }
 \arguments{
 \item{gen}{a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or

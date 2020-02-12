@@ -4,10 +4,19 @@
 \alias{filter_stats}
 \title{Utilize all algorithms of mlg.filter}
 \usage{
-filter_stats(x, distance = bitwise.dist, threshold = 1e+06 +
-  .Machine$double.eps^0.5, stats = "All", missing = "ignore",
-  plot = FALSE, cols = NULL, nclone = NULL, hist = "Scott",
-  threads = 1L, ...)
+filter_stats(
+  x,
+  distance = bitwise.dist,
+  threshold = 1e+06 + .Machine$double.eps^0.5,
+  stats = "All",
+  missing = "ignore",
+  plot = FALSE,
+  cols = NULL,
+  nclone = NULL,
+  hist = "Scott",
+  threads = 1L,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{\link{genind}}, \code{\link{genclone}},

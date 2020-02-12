@@ -4,8 +4,14 @@
 \alias{private_alleles}
 \title{Tabulate alleles the occur in only one population.}
 \usage{
-private_alleles(gid, form = alleles ~ ., report = "table",
-  level = "population", count.alleles = TRUE, drop = FALSE)
+private_alleles(
+  gid,
+  form = alleles ~ .,
+  report = "table",
+  level = "population",
+  count.alleles = TRUE,
+  drop = FALSE
+)
 }
 \arguments{
 \item{gid}{a \linkS4class{genind} or \linkS4class{genclone}
@@ -14,7 +20,7 @@ object.}
 \item{form}{a \code{\link[=formula]{formula()}} giving the levels of markers and
 hierarchy to analyze. See Details.}
 
-\item{report}{one of \code{"table", "vector",} or \code{"data.frame"}. Tables
+\item{report}{one of \verb{"table", "vector",} or \code{"data.frame"}. Tables
 (Default) and data frame will report counts along with populations or
 individuals. Vectors will simply report which populations or individuals
 contain private alleles. Tables are matrices with populations or
