@@ -27,7 +27,7 @@ genind and genlight objects and offers the following implementations:
 or (<img src="https://latex.codecogs.com/gif.latex?%5Cbar%7Br%7D_d" alt = "Standardized index of association">)
 - batch processing on any server that has R (&ge; 2.15.1) installed
 - calculation of Bruvo's distance for microsatellite (SSR) markers (implemented in C for speed)
-- import of data from and export to [GenAlEx](https://biology.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
+- import of data from and export to [GenAlEx](https://biology-assets.anu.edu.au/GenAlEx/Welcome.html "GenAlEx Homepage")
 
 ### New in version 2.0:
 
