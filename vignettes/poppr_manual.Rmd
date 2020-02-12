@@ -395,7 +395,7 @@ object from a GenAlEx formatted file.
 ### Function: read.genalex {#intro:import:read.genalex}
 
 A very popular program for population genetics is GenAlEx
-(<http://biology.anu.edu.au/GenAlEx/Welcome.html>) [@Peakall:2012;
+(<https://biology-assets.anu.edu.au/GenAlEx/Welcome.html>) [@Peakall:2012;
 @Peakall:2006]. GenAlEx runs within the Excel environment and can be very
 powerful in its analyses. *Poppr* has added the ability to read \*.CSV files[^2]
 produced in the GenAlEx format. It can handle data types containing regions and
@@ -403,7 +403,7 @@ geographic coordinates, but currently cannot import allelic frequency data from
 GenAlEx. Using the *poppr* function `read.genalex()` will import your data into
 *adegenet*"s `genind` object or *poppr*"s `genclone` object (more information on
 that below). For ways of formatting a GenAlEx file, see the manual here:
-<http://biology.anu.edu.au/GenAlEx/Download_files/GenAlEx%206.5%20Guide.pdf>
+<https://biology-assets.anu.edu.au/GenAlEx/Download_files/GenAlEx%206.5%20Guide.pdf>
 
 Below is an example of the GenAlEx format. We will use the data set
 called `microbov` from the *adegenet* package to generate
