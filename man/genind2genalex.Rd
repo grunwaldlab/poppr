@@ -2,11 +2,20 @@
 % Please edit documentation in R/file_handling.r
 \name{genind2genalex}
 \alias{genind2genalex}
-\title{Export data from genind objects to genalex formatted *.csv files.}
+\title{Export data from genind objects to genalex formatted \*.csv files.}
 \usage{
-genind2genalex(gid, filename = "", overwrite = FALSE, quiet = FALSE,
-  pop = NULL, allstrata = TRUE, geo = FALSE, geodf = "xy",
-  sep = ",", sequence = FALSE)
+genind2genalex(
+  gid,
+  filename = "",
+  overwrite = FALSE,
+  quiet = FALSE,
+  pop = NULL,
+  allstrata = TRUE,
+  geo = FALSE,
+  geodf = "xy",
+  sep = ",",
+  sequence = FALSE
+)
 }
 \arguments{
 \item{gid}{a \linkS4class{genclone} or \linkS4class{genind}
@@ -53,7 +62,7 @@ as per the GenAlEx specifications.}
 The the file path or connection where the data were written.
 }
 \description{
-genind2genalex will export a genclone or genind object to a *.csv file
+genind2genalex will export a genclone or genind object to a \*.csv file
 formatted for use in genalex.
 }
 \note{

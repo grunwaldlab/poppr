@@ -4,8 +4,7 @@
 \alias{bruvo.dist}
 \title{Bruvo's distance for microsatellites}
 \usage{
-bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE,
-  by_locus = FALSE)
+bruvo.dist(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALSE)
 }
 \arguments{
 \item{pop}{a \code{\link{genind}} or \code{\link{genclone}} object}

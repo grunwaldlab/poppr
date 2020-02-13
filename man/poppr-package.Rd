@@ -61,8 +61,9 @@ not allow others to learn.}
 Below are descriptions and links to functions found in \pkg{poppr}. Be
 aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
 available. The functions are documented as:
-
-\code{function} (data type) - Description
+\itemize{
+\item \code{function_name()} (data type) - Description
+}
 
 Where \sQuote{data type} refers to the type of data that can be used:
 \tabular{ll}{
@@ -234,7 +235,7 @@ genome-wide population genetic data with emphasis on clonality. Front. Genet.
 
 --------- Papers referencing data sets ---------
 
-Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity,
+Grünwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity,
 Selfing, and Genetic Differentiation in Populations of the Oomycete
 \emph{Aphanomyces euteiches}. Phytopathology 96:1134-1141 doi:
 \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}

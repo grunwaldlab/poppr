@@ -6,12 +6,25 @@
 \title{Create a minimum spanning network of selected populations using a distance 
 matrix.}
 \usage{
-poppr.msn(gid, distmat, palette = topo.colors,
-  mlg.compute = "original", sublist = "All", blacklist = NULL,
-  vertex.label = "MLG", gscale = TRUE, glim = c(0, 0.8), gadj = 3,
-  gweight = 1, wscale = TRUE, showplot = TRUE,
-  include.ties = FALSE, threshold = NULL,
-  clustering.algorithm = NULL, ...)
+poppr.msn(
+  gid,
+  distmat,
+  palette = topo.colors,
+  mlg.compute = "original",
+  sublist = "All",
+  blacklist = NULL,
+  vertex.label = "MLG",
+  gscale = TRUE,
+  glim = c(0, 0.8),
+  gadj = 3,
+  gweight = 1,
+  wscale = TRUE,
+  showplot = TRUE,
+  include.ties = FALSE,
+  threshold = NULL,
+  clustering.algorithm = NULL,
+  ...
+)
 }
 \arguments{
 \item{gid}{a \code{\link{genind}}, \code{\link{genclone}},

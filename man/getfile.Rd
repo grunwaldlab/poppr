@@ -15,7 +15,7 @@ multiple files found in the directory. This is useful in conjunction with
 \code{multi == TRUE}. This will grab all files matching this pattern.}
 
 \item{combine}{\code{logical}. When this is set to \code{TRUE} (default), the
-\code{$files} vector will have the path appended to them. When it is set to
+\verb{$files} vector will have the path appended to them. When it is set to
 \code{FALSE}, it will have the basename.}
 }
 \value{

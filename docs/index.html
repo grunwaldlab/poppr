@@ -6,12 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genetic Analysis of Populations with Mixed Reproduction • poppr</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Genetic Analysis of Populations with Mixed Reproduction">
 <meta property="og:description" content="Population genetic analyses for hierarchical analysis of partially
-    clonal populations built upon the architecture of the 'adegenet' package. 
+    clonal populations built upon the architecture of the adegenet package. 
     Originally described in Kamvar, Tabima, and Grünwald (2014) 
     &lt;doi:10.7717/peerj.281&gt; with version 2.0 described in Kamvar, Brooks, and 
     Grünwald (2015) &lt;doi:10.3389/fgene.2015.00208&gt;.">
@@ -35,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.4</span>
       </span>
     </div>
 
@@ -85,11 +92,12 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="poppr-version-2" class="section level1">
+<div id="poppr-version-2-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#poppr-version-2" class="anchor"></a>Poppr version 2 <img src="reference/figures/small_logo.png" align="right" height="98">
+<a href="#poppr-version-2-" class="anchor"></a>Poppr version 2 <img src="reference/figures/small_logo.png" align="right" height="98">
 </h1></div>
 <!-- badges: start -->
 
@@ -111,9 +119,9 @@
 <li>import of data from and export to <a href="https://biology.anu.edu.au/GenAlEx/Welcome.html" title="GenAlEx Homepage">GenAlEx</a>
 </li>
 </ul>
-<div id="new-in-version-2-0" class="section level3">
+<div id="new-in-version-20" class="section level3">
 <h3 class="hasAnchor">
-<a href="#new-in-version-2-0" class="anchor"></a>New in version 2.0:</h3>
+<a href="#new-in-version-20" class="anchor"></a>New in version 2.0:</h3>
 <ul>
 <li>handling of genomic SNP data</li>
 <li>custom multilocus genotype definitions</li>
@@ -125,7 +133,7 @@
 <li>and more!</li>
 </ul>
 <p>For full details, see the NEWS file or type in your R console:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/news">news</a></span>(Version <span class="op">&gt;=</span><span class="st"> "2.0.0"</span>, <span class="dt">package =</span> <span class="st">"poppr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/news.html">news</a></span>(Version <span class="op">&gt;=</span><span class="st"> "2.0.0"</span>, <span class="dt">package =</span> <span class="st">"poppr"</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="citation" class="section level2">
@@ -153,7 +161,7 @@
 <p>Kamvar ZN, Brooks JC and Grünwald NJ (2015) Novel R tools for analysis of genome-wide population genetic data with emphasis on clonality. Front. Genet. 6:208. doi: <a href="https://journal.frontiersin.org/article/10.3389/fgene.2015.00208/abstract">10.3389/fgene.2015.00208</a></p>
 </blockquote>
 <p>You can obtain citation information in R by typing:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/citation">citation</a></span>(<span class="dt">package =</span> <span class="st">"poppr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span>(<span class="dt">package =</span> <span class="st">"poppr"</span>)</span></code></pre></div>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -163,7 +171,7 @@
 <a href="#from-cran" class="anchor"></a>From CRAN</h3>
 <p><a href="https://cran.r-project.org/package=poppr">Binary versions for mac and windows are available for R ≥ 2.15.1 <strong>here</strong></a>.</p>
 <p>To install, make sure R is at least version 2.15.1 (the authors recommend ≥ 3.0), and in your console, type:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"poppr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"poppr"</span>)</span></code></pre></div>
 <p>If you want the absolute latest version of <em>poppr</em>, see about installing from github below.</p>
 <hr>
 </div>
@@ -175,34 +183,34 @@
 <li>
 <a href="https://developer.apple.com/xcode">Xcode</a> (OSX) OR <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> (Windows)</li>
 <li>
-<a href="https://github.com/hadley/devtools">devtools</a> (to install, use: <code><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages("devtools")</a></code>)</li>
+<a href="https://github.com/hadley/devtools">devtools</a> (to install, use: <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("devtools")</a></code>)</li>
 </ul>
-<p>For Linux users, make sure that the function <code><a href="https://www.rdocumentation.org/packages/base/topics/options">getOption("unzip")</a></code> returns <code>"unzip"</code> or <code>"internal"</code>. If it doesn’t, then run <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(unzip = "internal")</a></code>.</p>
+<p>For Linux users, make sure that the function <code><a href="https://rdrr.io/r/base/options.html">getOption("unzip")</a></code> returns <code>"unzip"</code> or <code>"internal"</code>. If it doesn’t, then run <code><a href="https://rdrr.io/r/base/options.html">options(unzip = "internal")</a></code>.</p>
 <p>Once you have devtools and a C compiler installed, you can use the <code>install_github()</code> function to install the current version from github.</p>
 <div id="stable-version" class="section level4">
 <h4 class="hasAnchor">
 <a href="#stable-version" class="anchor"></a>Stable version</h4>
 <p>This release will contain bug fixes and new, documented, and stable features that will be included in future releases. Note: if you don’t have LaTeX installed, you should set <code>build_vignettes = FALSE</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>)</span></code></pre></div>
 </div>
 <div id="unstabledevelopment-versions" class="section level4">
 <h4 class="hasAnchor">
 <a href="#unstabledevelopment-versions" class="anchor"></a>Unstable/Development versions</h4>
 <p>All new features in testing will be released on different branches. These features will be in various stages of development and may or may not be documented. Install with caution. The below command would install features on the branch called “devel”. Note that these branches might be out of date from the master branch.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr@devel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"poppr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"grunwaldlab/poppr@devel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>)</span></code></pre></div>
 </div>
 </div>
 </div>
-<div id="help-documentation" class="section level2">
+<div id="help--documentation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#help-documentation" class="anchor"></a>Help / Documentation</h2>
+<a href="#help--documentation" class="anchor"></a>Help / Documentation</h2>
 <div id="r-documentation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#r-documentation" class="anchor"></a>R documentation</h3>
 <p>To access a descriptive index of help files in <em>poppr</em>, type in your console:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">package?poppr</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>package?poppr</span></code></pre></div>
 </div>
 <div id="vignettes" class="section level3">
 <h3 class="hasAnchor">
@@ -268,6 +276,13 @@
 </li>
 </ul>
 </div>
+<div class="community">
+<h2>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+<li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
+</ul>
+</div>
 <div class="citation">
 <h2>Citation</h2>
 <ul class="list-unstyled">
@@ -277,8 +292,8 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Zhian N. Kamvar <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0003-1458-7108" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
-<li>Javier F. Tabima <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3603-2691" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<li>Zhian N. Kamvar <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0003-1458-7108" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
+<li>Javier F. Tabima <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3603-2691" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
 <li>Jonah C. Brooks <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
@@ -297,17 +312,20 @@
 </div>
 </div>
 
+
       <footer><div class="copyright">
   <p>Developed by Zhian N. Kamvar, Javier F. Tabima, Jonah C. Brooks.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

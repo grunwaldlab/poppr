@@ -19,3 +19,4 @@
 ^CONTRIBUTING.md$
 ^_pkgdown\.yml$
 ^appveyor\.yml$
+^pkgdown$

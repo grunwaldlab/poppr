@@ -4,9 +4,16 @@
 \alias{bitwise.dist}
 \title{Calculate dissimilarity or Euclidean distance for genlight objects}
 \usage{
-bitwise.dist(x, percent = TRUE, mat = FALSE, missing_match = TRUE,
-  scale_missing = FALSE, euclidean = FALSE, differences_only = FALSE,
-  threads = 0L)
+bitwise.dist(
+  x,
+  percent = TRUE,
+  mat = FALSE,
+  missing_match = TRUE,
+  scale_missing = FALSE,
+  euclidean = FALSE,
+  differences_only = FALSE,
+  threads = 0L
+)
 }
 \arguments{
 \item{x}{a \link[=genlight-class]{genlight} or \link[=snpclone-class]{snpclone} object.}

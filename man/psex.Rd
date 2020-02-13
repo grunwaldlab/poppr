@@ -4,8 +4,15 @@
 \alias{psex}
 \title{Probability of encountering a genotype more than once by chance}
 \usage{
-psex(gid, pop = NULL, by_pop = TRUE, freq = NULL, G = NULL,
-  method = c("single", "multiple"), ...)
+psex(
+  gid,
+  pop = NULL,
+  by_pop = TRUE,
+  freq = NULL,
+  G = NULL,
+  method = c("single", "multiple"),
+  ...
+)
 }
 \arguments{
 \item{gid}{a genind or genclone object.}
@@ -133,7 +140,7 @@ title("Probability of second encounter")
 Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple")
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
-title("Probability of multiple encounters\\nwith pop structure")
+title("Probability of multiple encounters\nwith pop structure")
 
 # The above, but correcting zero-value alleles by 1/(2*rrmlg) with no 
 # population structure assumed
@@ -141,21 +148,21 @@ title("Probability of multiple encounters\\nwith pop structure")
 Pram_psex2 <- psex(Pram, by_pop = FALSE, d = "rrmlg", mul = 1/2, method = "multiple")
 plot(Pram_psex2, log = "y", col = ifelse(Pram_psex2 > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
-title("Probability of multiple encounters\\nwith pop structure (1/(2*rrmlg))")
+title("Probability of multiple encounters\nwith pop structure (1/(2*rrmlg))")
 
 # We can also set G to the total population size
 (G <- nInd(Pram))
 Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple", G = G)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
-title("Probability of multiple encounters\\nwith pop structure G = 729")
+title("Probability of multiple encounters\nwith pop structure G = 729")
 
 # Or we can set G to the number of unique MLGs
 (G <- rowSums(mlg.table(Pram, plot = FALSE) > 0))
 Pram_psex <- psex(Pram, by_pop = TRUE, method = "multiple", G = G)
 plot(Pram_psex, log = "y", col = ifelse(Pram_psex > 0.05, "red", "blue"))
 abline(h = 0.05, lty = 2)
-title("Probability of multiple encounters\\nwith pop structure G = nmll")
+title("Probability of multiple encounters\nwith pop structure G = nmll")
 
 ## An example of supplying previously calculated frequencies and G
 # From Parks and Werth, 1993, using the first three genotypes.

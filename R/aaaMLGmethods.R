@@ -243,6 +243,7 @@ setGeneric("unique")
 #' 
 #' @rdname unique-methods
 #' @aliases unique,MLG-method
+#' @aliases unique,MLG,ANY-method
 #' @param incomparables vector of values that cannot be compared
 #' @param ... options passed on to the base function \link{unique} or \link{duplicated}.
 #' @export

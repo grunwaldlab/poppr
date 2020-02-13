@@ -4,8 +4,7 @@
 \alias{missingno}
 \title{Treat missing data}
 \usage{
-missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE,
-  freq = FALSE)
+missingno(pop, type = "loci", cutoff = 0.05, quiet = FALSE, freq = FALSE)
 }
 \arguments{
 \item{pop}{a \code{\linkS4class{genclone}} or \code{\linkS4class{genind}} 

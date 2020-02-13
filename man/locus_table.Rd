@@ -4,8 +4,13 @@
 \alias{locus_table}
 \title{Create a table of summary statistics per locus.}
 \usage{
-locus_table(x, index = "simpson", lev = "allele", population = "ALL",
-  information = TRUE)
+locus_table(
+  x,
+  index = "simpson",
+  lev = "allele",
+  population = "ALL",
+  information = TRUE
+)
 }
 \arguments{
 \item{x}{a \linkS4class{genind} or \linkS4class{genclone}
@@ -66,7 +71,7 @@ R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H.
 Stevens, and Helene Wagner. vegan: Community Ecology Package, 2012. R
 package version 2.0-5.
 
-Niklaus J. Gr"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
+Niklaus J. Gr\"unwald, Stephen B. Goodwin, Michael G. Milgroom, and William
 E. Fry. Analysis of genotypic diversity data for populations of
 microorganisms. Phytopathology, 93(6):738-46, 2003
 

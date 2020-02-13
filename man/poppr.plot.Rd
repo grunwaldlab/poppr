@@ -4,9 +4,17 @@
 \alias{poppr.plot}
 \title{Internal function to plot the results from ia() and poppr()}
 \usage{
-poppr.plot(sample, pval = c(Ia = 0.05, rbarD = 0.05), pop = NULL,
-  file = NULL, N = NULL, observed = c(Ia = 0, rbarD = 0),
-  index = c("rbarD", "Ia"), labsize = rel(3), linesize = rel(1))
+poppr.plot(
+  sample,
+  pval = c(Ia = 0.05, rbarD = 0.05),
+  pop = NULL,
+  file = NULL,
+  N = NULL,
+  observed = c(Ia = 0, rbarD = 0),
+  index = c("rbarD", "Ia"),
+  labsize = rel(3),
+  linesize = rel(1)
+)
 }
 \arguments{
 \item{sample}{either an object of class "ialist" or a list of ialists}

@@ -8,21 +8,32 @@
 
 <title>GENclone and SNPclone classes — genclone-class • poppr</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,14 +41,16 @@
 
 
 
-<meta property="og:title" content="GENclone and SNPclone classes — genclone-class" />
 
+<meta property="og:title" content="GENclone and SNPclone classes — genclone-class" />
 <meta property="og:description" content="GENclone is an S4 class that extends the 
   genind object. SNPclone is an S4 class
   that extends the genlight object. They will have
   all of the same attributes as their parent classes, but they will contain
   one extra slot to store extra information about multilocus genotypes." />
+<meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -49,6 +62,7 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -67,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.4</span>
       </span>
     </div>
 
@@ -101,7 +115,6 @@
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/grunwaldlab/poppr">
@@ -116,6 +129,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -127,16 +141,15 @@
     </div>
 
     <div class="ref-description">
-    
     <p><strong>GENclone</strong> is an S4 class that extends the 
   <code>genind</code> object.<br /> <strong>SNPclone</strong> is an S4 class
   that extends the <code>genlight</code> object.<br /><br /> They will have
   all of the same attributes as their parent classes, but they will contain
   one extra slot to store extra information about multilocus genotypes.</p>
-    
     </div>
 
-        
+
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The genclone and snpclone classes will allow for more optimized 
@@ -149,15 +162,15 @@
   multilocus genotypes OR it can contain a special internal 
   <code><a href='MLG-class.html'>MLG</a></code> class that allows for custom multilocus genotype 
   definitions and filtering.</p>
-    
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 
     
-    <dl class='dl-horizontal'>
+
+<dl class='dl-horizontal'>
 <dt><code>mlg</code></dt><dd><p>a vector representing multilocus genotypes for the data set OR an 
 object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
+
 </dl>
-    
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>When calculating multilocus genotypes for genclone objects, a rank 
@@ -165,26 +178,24 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
   objects is distance-based (via <code><a href='bitwise.dist.html'>bitwise.dist</a></code> and 
   <code><a href='mlg.filter.html'>mlg.filter</a></code>). This means that genclone objects are sensitive
   to missing data, whereas snpclone objects are insensitive.</p>
-    
     <h2 class="hasAnchor" id="extends"><a class="anchor" href="#extends"></a>Extends</h2>
 
     <p>The <code>genclone</code> class extends class 
   <code>"genind"</code>, directly. <br /> The <code>snpclone</code> class 
   extends class <code>"genlight"</code>, directly.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='coercion-methods.html'>as.genclone</a></code> <code><a href='snpclone-coercion-methods.html'>as.snpclone</a></code> 
   <code>genind</code> <code>genlight</code> 
-  <code><a href='https://www.rdocumentation.org/packages/adegenet/topics/strata-methods'>strata</a></code> <code><a href='https://www.rdocumentation.org/packages/adegenet/topics/population-methods'>setPop</a></code> 
+  <code><a href='https://rdrr.io/pkg/adegenet/man/strata-methods.html'>strata</a></code> <code><a href='https://rdrr.io/pkg/adegenet/man/population-methods.html'>setPop</a></code> 
   <code><a href='MLG-class.html'>MLG</a></code> <code><a href='mll-method.html'>mll</a></code> <code><a href='mlg.filter.html'>mlg.filter</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
+    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
+
 <span class='co'># genclone objects can be created from genind objects</span>
 <span class='co'>#</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>partial_clone</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>partial_clone</span>)
 <span class='no'>partial_clone</span></div><div class='output co'>#&gt; /// GENIND OBJECT /////////
 #&gt; 
 #&gt;  // 50 individuals; 10 loci; 35 alleles; size: 22.6 Kb
@@ -214,7 +225,7 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 #&gt;     4 populations defined - 1, 2, 3, 4</div><div class='input'>
 <span class='co'># snpclone objects can be created from genlight objects</span>
 <span class='co'>#</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>999</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>999</span>)
 (<span class='no'>gl</span> <span class='kw'>&lt;-</span> <span class='fu'>glSim</span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='kw'>n.snp.struc</span> <span class='kw'>=</span> <span class='fl'>1e3</span>, <span class='kw'>ploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;  /// GENLIGHT OBJECT /////////
 #&gt; 
 #&gt;  // 100 genotypes,  1,000 binary SNPs, size: 172 Kb
@@ -227,9 +238,9 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 #&gt;  // Optional content
 #&gt;    @pop: population of each individual (group size range: 50-50)
 #&gt;    @other: a list containing: ancestral.pops 
-#&gt; </div><div class='input'>(<span class='no'>sc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='no'>gl</span>, <span class='no'>gl</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
+#&gt; </div><div class='input'>(<span class='no'>sc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snpclone-coercion-methods.html'>as.snpclone</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='no'>gl</span>, <span class='no'>gl</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
 #&gt; 
-#&gt;  || 200 genotypes,  1,000 binary SNPs, size: 353.5 Kb
+#&gt;  || 200 genotypes,  1,000 binary SNPs, size: 353.7 Kb
 #&gt;  0 (0 %) missing data
 #&gt; 
 #&gt;  || Basic content
@@ -246,7 +257,7 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 <span class='fu'><a href='mlg.filter.html'>mlg.filter</a></span>(<span class='no'>sc</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>) <span class='kw'>&lt;-</span> <span class='fl'>0.25</span>
 <span class='no'>sc</span> <span class='co'># 82 mlgs</span></div><div class='output co'>#&gt;  ||| SNPCLONE OBJECT |||||||||
 #&gt; 
-#&gt;  || 200 genotypes,  1,000 binary SNPs, size: 353.5 Kb
+#&gt;  || 200 genotypes,  1,000 binary SNPs, size: 353.7 Kb
 #&gt;  0 (0 %) missing data
 #&gt; 
 #&gt;  || Basic content
@@ -260,22 +271,17 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
 #&gt;    @other: a list containing: elements without names 
 #&gt; 
 #&gt; NULL</div><div class='input'>
+# }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
       <li><a href="#details">Details</a></li>
-
       <li><a href="#slots">Slots</a></li>
-
       <li><a href="#note">Note</a></li>
-
       <li><a href="#extends">Extends</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -284,19 +290,23 @@ object of class <code><a href='MLG-class.html'>MLG</a></code>.</p></dd>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Zhian N. Kamvar, Javier F. Tabima, Jonah C. Brooks.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

@@ -6,8 +6,7 @@
 \alias{as.snpclone,genlight-method}
 \title{Create a snpclone object from a genlight object.}
 \usage{
-as.snpclone(x, ..., parallel = FALSE, n.cores = NULL, mlg,
-  mlgclass = TRUE)
+as.snpclone(x, ..., parallel = FALSE, n.cores = NULL, mlg, mlgclass = TRUE)
 }
 \arguments{
 \item{x}{a \code{\linkS4class{genlight}} or \code{\linkS4class{snpclone}} 

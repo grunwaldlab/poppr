@@ -4,9 +4,19 @@
 \alias{diversity_ci}
 \title{Perform bootstrap statistics, calculate, and plot confidence intervals.}
 \usage{
-diversity_ci(tab, n = 1000, n.boot = 1L, ci = 95, total = TRUE,
-  rarefy = FALSE, n.rare = 10, plot = TRUE, raw = TRUE,
-  center = TRUE, ...)
+diversity_ci(
+  tab,
+  n = 1000,
+  n.boot = 1L,
+  ci = 95,
+  total = TRUE,
+  rarefy = FALSE,
+  n.rare = 10,
+  plot = TRUE,
+  raw = TRUE,
+  center = TRUE,
+  ...
+)
 }
 \arguments{
 \item{tab}{a [genind()], [genclone()],

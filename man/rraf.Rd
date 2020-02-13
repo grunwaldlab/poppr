@@ -4,8 +4,7 @@
 \alias{rraf}
 \title{Round Robin Allele Frequencies}
 \usage{
-rraf(gid, pop = NULL, res = "list", by_pop = FALSE,
-  correction = TRUE, ...)
+rraf(gid, pop = NULL, res = "list", by_pop = FALSE, correction = TRUE, ...)
 }
 \arguments{
 \item{gid}{a genind or genclone object}

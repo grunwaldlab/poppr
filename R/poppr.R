@@ -98,9 +98,9 @@
 #' 
 #' Below are descriptions and links to functions found in \pkg{poppr}. Be
 #' aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
-#' available. The functions are documented as:
+#' available. The functions are documented as: 
 #' 
-#' > `function` (data type) - Description
+#' - `function_name()` (data type) - Description
 #' 
 #' Where \sQuote{data type} refers to the type of data that can be used:
 #' \tabular{ll}{
@@ -247,7 +247,7 @@
 #' 
 #' --------- Papers referencing data sets ---------
 #' 
-#' Grunwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity, 
+#' Grünwald, NJ and Hoheisel, G.A. 2006. Hierarchical Analysis of Diversity, 
 #' Selfing, and Genetic Differentiation in Populations of the Oomycete 
 #' *Aphanomyces euteiches*. Phytopathology 96:1134-1141 doi: 
 #' \href{https://doi.org/10.1094/PHYTO-96-1134}{10.1094/PHYTO-96-1134}

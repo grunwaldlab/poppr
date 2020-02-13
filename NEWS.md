@@ -1,3 +1,11 @@
+poppr 2.8.4
+===========
+
+CRAN MAINTENANCE
+----------------
+
+* Update documentation for S4 method
+
 poppr 2.8.3
 ===========
 
