@@ -422,7 +422,8 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
         Hexp,
         IaList,
         File = namelist$File
-      )
+      ),
+      stringsAsFactors = FALSE
     ) 
     rownames(Iout) <- NULL
   } else { 
@@ -451,7 +452,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
       Hexp,
       as.data.frame(t(IaList)),
       File = namelist$File
-    )) 
+    ), stringsAsFactors = FALSE) 
     rownames(Iout) <- NULL
   }
   class(Iout) <- c("popprtable", "data.frame")
