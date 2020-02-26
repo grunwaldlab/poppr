@@ -1,17 +1,6 @@
-# Poppr version 2.8.4
+# Poppr version 2.8.5
 
-This is a fix for a warning on CRAN:
-
-On Wed, Feb 12, 2020 at 6:20 AM Kurt Hornik <Kurt.Hornik@r-project.org> wrote:
-Dear maintainer,
-
-Please see the problems shown on
-<https://cran.r-project.org/web/checks/check_results_poppr.html>.
-
-Please correct before 2020-02-26 to safely retain your package on CRAN.
-
-Best,
--k
+This fixes an error on r-devel-linux-x86_64-debian-clang
 
 ## Test environments
 

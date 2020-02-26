@@ -7,9 +7,7 @@ A.tab <- poppr(Aeut, quiet = TRUE)
 afile <- system.file("files/rootrot.csv", package = "poppr")
 sims <- system.file("files/simulated.dat", package = "poppr")
 
-Aeut_comparison <- structure(list(Pop = structure(1:3, 
-    .Label = c("Athena", "Mt. Vernon", "Total"), 
-    class = "factor"), 
+Aeut_comparison <- structure(list(Pop = c("Athena", "Mt. Vernon", "Total"), 
     N = c(97, 90, 187), 
     MLG = c(70, 50, 119), 
     eMLG = c(65.9808393377379, 50, 68.4525682280634), 
@@ -21,13 +19,12 @@ Aeut_comparison <- structure(list(Pop = structure(1:3,
     Hexp = c(0.169711892488954, 0.158016764758338, 0.365053352719387), #c(0.408951651286696, 0.33656220322887, 0.726202391505946),
     Ia = c(2.90602921191748, 13.3024309367662, 14.3707995986407), 
     rbarD = c(0.0723700801886747, 0.281642324983496, 0.270617053778004), 
-    File = structure(c(1L, 1L, 1L), class = "factor", .Label = "rootrot.csv")), 
+    File = rep("rootrot.csv", 3)), 
     .Names = c("Pop", "N", "MLG", "eMLG", "SE", "H", "G", "lambda", "E.5", "Hexp", "Ia", "rbarD", "File"), 
     row.names = c(NA, -3L), 
     class = c("popprtable", "data.frame"))
 
-pc_comparison <- structure(list(Pop = structure(1:5, .Label = c("1", "2", "3", 
-"4", "Total"), class = "factor"),
+pc_comparison <- structure(list(Pop = c("1", "2", "3", "4", "Total"),
     N = c(13, 13, 12, 12, 50), 
     MLG = c(10, 12, 11, 9, 26),
     eMLG = c(9.46153846153846, 11.1538461538462, 11, 9, 9.93701353621932), 
@@ -41,7 +38,7 @@ pc_comparison <- structure(list(Pop = structure(1:5, .Label = c("1", "2", "3",
              0.559212121212121), #c(0.849679487179487, 0.83629191321499, 0.714756944444444, 0.750347222222222, 0.78384),
     Ia = c(2.1580763424628, 1.87492360969648, 1.15572679509632, 1.157153633392, 1.93513179817012),
     rbarD = c(0.243225877705591, 0.212786561587854, 0.132460530412697, 0.13328661732193, 0.217470007471919),
-    File = structure(c(1L, 1L, 1L, 1L, 1L), class = "factor", .Label = "partial_clone.dat")), 
+    File = rep("partial_clone.dat", 5)), 
     .Names = c("Pop", "N", "MLG", "eMLG", "SE", "H", "G", "lambda", "E.5", "Hexp", "Ia", "rbarD", "File"),
     row.names = c(NA, -5L),
     class = c("popprtable", "data.frame"))
