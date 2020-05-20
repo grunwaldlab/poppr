@@ -157,7 +157,8 @@ Ind,Pop,RM127, ,RM22, ,RM22, ,RM127,
 
 test_that("missing samples do not shift strata", {
   skip_on_cran()
-  expect_warning(ms <- read.genalex(textConnection(missing_single), sep = "\t"), "entirely non-type individual\\(s\\) deleted")
+  expect_warning(ms <- read.genalex(textConnection(missing_single), sep = "\t"), 
+    "[Ii]ndividual[s(][ s][)]?(deleted|with no scored loci have been removed)")
   expect_equal(as.character(strata(ms)$Pop), as.character(pop(ms)))
   expect_equal(rownames(strata(ms)), indNames(ms))
 })

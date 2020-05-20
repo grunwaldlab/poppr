@@ -248,7 +248,7 @@ test_that("pair.ia can plot p-values", {
   expect_is(p1, "ggplot")
   expect_is(p2, "ggplot")
   # The previous plot is not the same as the current plot
-  expect_failure(expect_identical(p1, p2))
+  expect_failure(expect_identical(p1$data, p2$data))
 })
 
 context("diversity_ci plots")
