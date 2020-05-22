@@ -200,6 +200,18 @@ scissors,7_09_BB,224,97"
   expect_equal(indNames(res), c("phaser", "rock", "bat'leth", "paper", "scissors"))
 })
 
+test_that("loci with entirely T loci are not converted to TRUE", {
+  # https://github.com/grunwaldlab/poppr/issues/214
+  tea <- read.genalex(test_path("genalex", "test.txt"))
+  expected <- list(
+    `605-4471` = c("T", "C"), 
+    `681-4471` = c("G", "T", "T"), 
+    `682-4471` = c("G", "T", "T")
+  )
+  expect_setequal(alleles(tea), expected)
+
+})
+
 context("Data export tests")
 
 test_that("not specifying a file for genind2genalex will generate a tempfile", {
