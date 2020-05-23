@@ -1,3 +1,13 @@
+poppr 2.8.6
+===========
+
+BUG FIX
+-------
+
+* `read.genalex()` now can import columns with entirely "T" alleles as "T" 
+  instead of "TRUE". (See https://github.com/grunwaldlab/poppr/issues/214
+  for details).
+
 poppr 2.8.5
 ===========
 
@@ -6,8 +16,8 @@ CRAN MAINTENANCE
 
 * The output from the `poppr()` function will no longer contain factor columns
   for the population names or the file names. This is due to R 4.0.0 changing
-  behavior with the `stringsAsFactors` default in `data.frame()`. See 
-  (https://github.com/grunwaldlab/poppr/issue/212 for details).
+  behavior with the `stringsAsFactors` default in `data.frame()`. (See 
+  https://github.com/grunwaldlab/poppr/issue/212 for details).
 
 poppr 2.8.4
 ===========

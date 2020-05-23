@@ -205,10 +205,10 @@ test_that("loci with entirely T loci are not converted to TRUE", {
   tea <- read.genalex(test_path("genalex", "test.txt"))
   expected <- list(
     `605-4471` = c("T", "C"), 
-    `681-4471` = c("G", "T", "T"), 
-    `682-4471` = c("G", "T", "T")
+    `681-4471` = c("G", "T"), 
+    `682-4471` = c("G", "T")
   )
-  expect_setequal(alleles(tea), expected)
+  expect_equal(alleles(tea), expected)
 
 })
 
