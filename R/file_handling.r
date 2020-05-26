@@ -212,9 +212,21 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
 
   all.info <- strsplit(readLines(genalex, n = 2), sep)
   cskip    <- ifelse(inherits(genalex, "connection"), 0, 2)
-  gena     <- utils::read.table(genalex, sep = sep, header = TRUE, skip = cskip, 
-                                stringsAsFactors = FALSE, check.names = FALSE,
-                                quote = "\"")
+  gena     <- utils::read.table(
+    genalex, 
+    sep = sep,
+    header = TRUE,
+    skip = cskip,
+    colClasses = "character",
+    stringsAsFactors = FALSE,
+    check.names = FALSE,
+    quote = "\""
+  )
+  for (i in seq_along(gena)) {
+    the_col <- trimws(gena[[i]])
+    the_col[the_col == ""] <- NA_character_
+    gena[[i]] <- the_col
+  }
   num.info <- as.numeric(all.info[[1]])
   pop.info <- all.info[[2]][-c(1:3)]
   num.info <- num.info[!is.na(num.info)]
@@ -330,6 +342,11 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
   
   `%null%` <- function(a, b) if (is.null(a)) NULL else b
   
+  if (!is.null(xy)) {
+    mode(xy[[1]]) <- "numeric"
+    mode(xy[[2]]) <- "numeric"
+  }
+
   xy_trail_na <- xy %null% (rev(cumsum(rev(rowSums(!is.na(xy))))) > 0)
   
   if (any(xy_trail_na)) {
@@ -403,21 +420,22 @@ read.genalex <- function(genalex, ploidy = 2, geo = FALSE, region = FALSE,
     res.gid <- df2genind(gena, ind.names = ind.vec, pop = pop.vec,
                          ploidy = 1, type = type)
   } else {
-    weirdomsg <- paste("Something went wrong. Please ensure that your data is", 
-                       "formatted correctly:\n\n",
-                       "Is the ploidy flag set to the maximum ploidy of your data?\n",
-                       ifelse(geo, 
-                        "You set geo = TRUE. Do you have geographic coordinates in the right place?\n",
-                        "If you have geographic coordinates: did you set the flag?\n"),
-                       ifelse(region,  
-                       "You set region = TRUE. Do you have regional data in the right place?\n\n",
-                       "If you have regional data: did you set the flag?\n\n"),
-                       "Otherwise, the problem may lie within the data structure itself.\n",
-                       " - Inspect your data; if it looks fine then\n",
-                       " - search the poppr forum for the error message; if you still can't find a solution:\n",
-                       "   1. Make a minimum working example of your error (see http://stackoverflow.com/a/5963610)\n",
-                       "   2. Use the 'reprex' package to reproduce the error (see https://github.com/jennybc/reprex#readme)\n",
-                       "   3. Create a new issue on https://github.com/grunwaldlab/poppr/issues")
+    weirdomsg <- paste(
+      "Something went wrong. Please ensure that your data is", 
+      "formatted correctly:\n\n",
+      "Is the ploidy flag set to the maximum ploidy of your data?\n",
+      ifelse(geo, 
+       "You set geo = TRUE. Do you have geographic coordinates in the right place?\n",
+       "If you have geographic coordinates: did you set the flag?\n"),
+      ifelse(region,  
+      "You set region = TRUE. Do you have regional data in the right place?\n\n",
+      "If you have regional data: did you set the flag?\n\n"),
+      "Otherwise, the problem may lie within the data structure itself.\n",
+      " - Inspect your data; if it looks fine then\n",
+      " - search the poppr forum for the error message; if you still can't find a solution:\n",
+      "   1. Make a minimum working example of your error (see http://stackoverflow.com/a/5963610)\n",
+      "   2. Use the 'reprex' package to reproduce the error (see https://github.com/jennybc/reprex#readme)\n",
+      "   3. Create a new issue on https://github.com/grunwaldlab/poppr/issues")
     stop(weirdomsg)
   }
   res.gid@call <- gencall

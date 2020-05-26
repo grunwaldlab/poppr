@@ -157,7 +157,8 @@ Ind,Pop,RM127, ,RM22, ,RM22, ,RM127,
 
 test_that("missing samples do not shift strata", {
   skip_on_cran()
-  expect_warning(ms <- read.genalex(textConnection(missing_single), sep = "\t"), "entirely non-type individual\\(s\\) deleted")
+  expect_warning(ms <- read.genalex(textConnection(missing_single), sep = "\t"), 
+    "[Ii]ndividual[s(][ s][)]?(deleted|with no scored loci have been removed)")
   expect_equal(as.character(strata(ms)$Pop), as.character(pop(ms)))
   expect_equal(rownames(strata(ms)), indNames(ms))
 })
@@ -197,6 +198,18 @@ scissors,7_09_BB,224,97"
   expect_equal(nInd(res), 5L)
   expect_equal(nLoc(res), 1L)
   expect_equal(indNames(res), c("phaser", "rock", "bat'leth", "paper", "scissors"))
+})
+
+test_that("loci with entirely T loci are not converted to TRUE", {
+  # https://github.com/grunwaldlab/poppr/issues/214
+  tea <- read.genalex(test_path("genalex", "test.txt"))
+  expected <- list(
+    `605-4471` = c("T", "C"), 
+    `681-4471` = c("G", "T"), 
+    `682-4471` = c("G", "T")
+  )
+  expect_equal(alleles(tea), expected)
+
 })
 
 context("Data export tests")
