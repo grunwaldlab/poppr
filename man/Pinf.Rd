@@ -5,9 +5,11 @@
 \alias{Pinf}
 \alias{old_Pinf}
 \title{Phytophthora infestans data from Mexico and South America.}
-\format{a [genclone-class] object with 2 hierarchical levels 
+\format{
+a [genclone-class] object with 2 hierarchical levels 
   called "Continent" and "Country" that contain 2 and 4 populations, 
-  respectively.}
+  respectively.
+}
 \usage{
 data(Pinf)
 }

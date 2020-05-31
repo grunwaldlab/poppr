@@ -479,38 +479,45 @@ win.ia <- function(x, window = 100L, min.snps = 3L, threads = 1L, quiet = FALSE,
   res_mat <- vector(mode = "numeric", length = nwin)
   res_counter <- 1L
   if (name_window || chromos) res_names <- vector(mode = "character", length = nwin)
-  if (!quiet) progbar <- txtProgressBar(style = 3)
-  while (chromosomes_left > 0L) {
-    chrom_counter   <- if (chromos) nchrom - chromosomes_left + 1L else 1L
-    current_windows <- if (chromos) win_per_chrom[chrom_counter] else nwin 
-    for (i in seq(current_windows)) {
-      # Define the window
-      the_window <- winmat[i, 1]:winmat[i, 2]
-      the_chrom  <- if (chromos) chrom_names[chrom_counter] else TRUE
-      posns      <- xpos %in% the_window
-      # If there is chromosome structure, then add the current chromosome as an
-      # additional constraint to the snps analyzed
-      j <- if (chromos) posns & CHROM == the_chrom else posns
-      
-      # Check to make sure the SNP threshold is met. If not, set to NA
-      if (sum(j) < min.snps) {
-        res_mat[res_counter] <- NA_real_
-      } else {
-        res_mat[res_counter] <- bitwise.ia(x[, j], threads = threads)
-      }
-      if (name_window || chromos) {
-        the_name <- if (chromos) paste(the_chrom, winmat[i, 2], sep = ".") else as.character(winmat[i, 2])
-        res_names[res_counter] <- the_name
-      }
-      if (!quiet) {
-        setTxtProgressBar(progbar, res_counter/nwin)
-      }
-      res_counter <- res_counter + 1L
-    }
-    # Decrement the number of chromosomes left to ensure the while loop can exit.
-    chromosomes_left <- chromosomes_left - 1L
+  if (quiet) {
+    oh <- progressr::handlers()
+    on.exit(progressr::handlers(oh))
+    progressr::handlers("void")
   }
-  if (!quiet) cat("\n")
+  progressr::with_progress({
+    p <- make_progress(nwin, 50)
+    while (chromosomes_left > 0L) {
+      chrom_counter   <- if (chromos) nchrom - chromosomes_left + 1L else 1L
+      current_windows <- if (chromos) win_per_chrom[chrom_counter] else nwin 
+      for (i in seq(current_windows)) {
+        if ((i + (res_counter * chrom_counter)) %% p$step == 0) {
+          if (chromos) p$rog(sprintf("Chromosome: %g", chrom_counter), amount = 0) 
+          p$rog()
+        }
+        # Define the window
+        the_window <- winmat[i, 1]:winmat[i, 2]
+        the_chrom  <- if (chromos) chrom_names[chrom_counter] else TRUE
+        posns      <- xpos %in% the_window
+        # If there is chromosome structure, then add the current chromosome as an
+        # additional constraint to the snps analyzed
+        j <- if (chromos) posns & CHROM == the_chrom else posns
+
+        # Check to make sure the SNP threshold is met. If not, set to NA
+        if (sum(j) < min.snps) {
+          res_mat[res_counter] <- NA_real_
+        } else {
+          res_mat[res_counter] <- bitwise.ia(x[, j], threads = threads)
+        }
+        if (name_window || chromos) {
+          the_name <- if (chromos) paste(the_chrom, winmat[i, 2], sep = ".") else as.character(winmat[i, 2])
+          res_names[res_counter] <- the_name
+        }
+        res_counter <- res_counter + 1L
+      }
+      # Decrement the number of chromosomes left to ensure the while loop can exit.
+      chromosomes_left <- chromosomes_left - 1L
+    }
+  })
   if (name_window || chromos) names(res_mat) <- res_names
   return(res_mat)
 }
@@ -594,15 +601,19 @@ samp.ia <- function(x, n.snp = 100L, reps = 100L, threads = 1L, quiet = FALSE){
   nloc <- nLoc(x)
   quiet <- should_poppr_be_quiet(quiet)
   res_mat <- vector(mode = "numeric", length = reps)
-  if (!quiet) progbar <- txtProgressBar(style = 3)
-  for (i in seq(reps)){
-    posns <- sample(nloc, n.snp)
-    res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
-    if (!quiet){
-      setTxtProgressBar(progbar, i/reps)
-    }
+  if (quiet) {
+    oh <- progressr::handlers()
+    on.exit(progressr::handlers(oh))
+    progressr::handlers("void")
   }
-  if (!quiet) cat("\n")
+  progressr::with_progress({
+    p <- make_progress(reps, 50)
+    for (i in seq(reps)){
+      if (i %% p$step == 0) p$rog()
+      posns <- sample(nloc, n.snp)
+      res_mat[i] <- bitwise.ia(x[, posns], threads = threads)
+    }
+  })
   return(res_mat)
 }
 # Sat Aug 15 20:02:40 2015 ------------------------------

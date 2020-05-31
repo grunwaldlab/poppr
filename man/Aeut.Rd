@@ -4,10 +4,12 @@
 \name{Aeut}
 \alias{Aeut}
 \title{Oomycete root rot pathogen *Aphanomyces euteiches* AFLP data}
-\format{a [genind()] object with two populations containing a data
+\format{
+a [genind()] object with two populations containing a data
   frame in the `other` slot called `population_hierarchy`. This
   data frame gives indices of the populations and subpopulations for the data
-  set.}
+  set.
+}
 \usage{
 data(Aeut)
 }

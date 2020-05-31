@@ -446,7 +446,14 @@ final <- function(Iout, result){
   else{
     Iout     <- NULL 
     idx      <- as.data.frame(list(Index=names(IarD)))
-    samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
+    if (quiet) {
+      oh <- progressr::handlers()
+      on.exit(progressr::handlers(oh))
+      progressr::handlers("void")
+    }
+    progressr::with_progress({
+      samp <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
+    })
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
@@ -2415,7 +2422,7 @@ get_minor_allele_replacement <- function(rrmlg, d, m, mlg = NULL){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-ia_pair_loc <- function(pair, V, np, progbar, iterations){
+ia_pair_loc <- function(pair, V, np, progbar = NULL, iterations){
   if (!is.null(progbar)){
     setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
   }
@@ -2774,4 +2781,15 @@ make_circle_legend <-
                  labels = labs, 
                  adj    = c(0, 0.5),
                  cex    = cex)
+}
+
+# Get the size of a step when you split x into n pieces (rounded to the nearest
+# power of 10)
+step_size <- function(x, n = 10) (10 ^ ceiling(log(x, 10) - 1)) / (n/10)
+
+make_progress <- function(reps, steps = 50) {
+  step <- step_size(reps, steps)
+  p    <- progressr::progressor(steps, scale = if (step < 1) step else 1)
+  step <- ceiling(step)
+  list(rog = p, step = step)
 }

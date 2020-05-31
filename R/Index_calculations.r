@@ -786,15 +786,23 @@ ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   # histogram.
     Iout     <- NULL 
     # idx      <- data.frame(Index = names(IarD))
-    samp     <- .sampling(popx, sample, missing, quiet = quiet, type = type, 
-                          method = method)
+    if (quiet) {
+      oh <- progressr::handlers()
+      on.exit(progressr::handlers(oh))
+      progressr::handlers("void")
+    }
+    progressr::with_progress({
+      samp <- .sampling(
+        popx, sample, missing, quiet = quiet, type = type, method = method
+      )
+    })
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)
     p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)
 
     if (hist == TRUE){
-      the_plot <- poppr.plot(samp, observed = IarD, pop = namelist$population, 
-                             index = index, file = namelist$File, pval = p.val, 
-                             N = nrow(gid@tab))
+      the_plot <- poppr.plot(samp, observed = IarD, pop = namelist$population,
+        index = index, file = namelist$File, pval = p.val, N = nrow(gid@tab)
+      )
       print(the_plot)
     }
     result <- stats::setNames(vector(mode = "numeric", length = 4), 
@@ -858,6 +866,7 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   res
 }
 
+
 pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, quiet, sample) {
   if (gid@type == "codom") {
     V <- pair_matrix(seploc(gid), numLoci, np)
@@ -872,7 +881,7 @@ pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, quiet, sample)
   
   loci_pairs       <- matrix(NA, nrow = 3, ncol = nploci)
   loci_pairs[-3, ] <- combn(lnames, 2)
-  loci_pairs[3, ]  <- as.character(1:nploci)
+  loci_pairs[3, ]  <- as.character(seq(nploci))
   prog             <- NULL
   if (!quiet) prog <- txtProgressBar(style = 3)
   pair_ia_vector   <- apply(loci_pairs, 2, ia_pair_loc, V, np, prog, nploci)

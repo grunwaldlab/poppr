@@ -8,6 +8,13 @@ BUG FIX
   instead of "TRUE". (See https://github.com/grunwaldlab/poppr/issues/214
   for details).
 
+MISC
+----
+
+* Progress bars have been replaced with those from the `{progressr}` package,
+  which gives the user control over what should be displayed (or not). This
+  allows blind users to have access to progress reports.
+
 poppr 2.8.5
 ===========
 
