@@ -446,7 +446,14 @@ final <- function(Iout, result){
   else{
     Iout     <- NULL 
     idx      <- as.data.frame(list(Index=names(IarD)))
-    samp     <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
+    if (quiet) {
+      oh <- progressr::handlers()
+      on.exit(progressr::handlers(oh))
+      progressr::handlers("void")
+    }
+    progressr::with_progress({
+      samp <- .sampling(popx, sample, missing, quiet=quiet, type=type, method=method)
+    })
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)#ia.pval(index="Ia", samp2, IarD[1])
     p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)#ia.pval(index="rbarD", samp2, IarD[2])
     if(hist == TRUE){
@@ -2399,34 +2406,6 @@ get_minor_allele_replacement <- function(rrmlg, d, m, mlg = NULL){
 }
 
 #==============================================================================#
-# Pairwise index of association calculation
-# 
-# Arguments
-# - pair a character vector of length 3 containing the pair of loci and the 
-#   iteration.
-# - V a choose(n, 2) x m matrix containing the distances at all loci. 
-# - np choose(n, 2)
-# - progbar either NULL or a progressbar object.
-# - iterations the number of loci combinations.
-#
-# Public functions utilizing this function:
-# ## pair.ia
-#
-# Internal functions utilizing this function:
-# ## none
-#==============================================================================#
-ia_pair_loc <- function(pair, V, np, progbar, iterations){
-  if (!is.null(progbar)){
-    setTxtProgressBar(progbar, as.numeric(pair[3])/iterations)
-  }
-  newV <- V[, pair[-3]]
-  V    <- list(d.vector  = colSums(newV), 
-               d2.vector = colSums(newV * newV), 
-               D.vector  = rowSums(newV)
-  )
-  return(ia_from_d_and_D(V, np))
-}
-#==============================================================================#
 # Get the index of association from sums of distances over loci and samples
 # 
 # This will take in a list called that contains 3 vectors:
@@ -2774,4 +2753,12 @@ make_circle_legend <-
                  labels = labs, 
                  adj    = c(0, 0.5),
                  cex    = cex)
+}
+
+
+make_progress <- function(reps, steps = 50) {
+  step  <- reps/steps
+  scale <- if (step < 1) step else 1
+  p     <- progressr::progressor(steps, scale = scale)
+  list(rog = p, step = if (step < 1) step else round(step))
 }

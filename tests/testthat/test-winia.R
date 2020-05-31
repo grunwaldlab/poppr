@@ -10,13 +10,14 @@ x <- glSim(n.ind = 10, n.snp.nonstruc = 5e2, n.snp.struc = 5e2, ploidy = 2,
 
 test_that("win.ia will throw an error if duplicate positions are found", {
   options(poppr.debug = TRUE)
-  expect_output(x.naive     <- win.ia(x, name_window = TRUE), "[|=]{2,}")
+  on.exit(options(poppr.debug = FALSE))
+  x.naive     <- win.ia(x, name_window = TRUE)
   expect_equal(length(x.naive), 10L)
   expect_named(x.naive, as.character(100 * (1:10)))
   expect_null(names(win.ia(x, quiet = TRUE, name_window = FALSE)))
   position(x) <- chrom_pos
   expect_error(win.ia(x), "chromosome")
-  options(poppr.debug = FALSE)
+  
 })  
 
 test_that("win.ia will throw a warning if chromosome_buffer is specified", {

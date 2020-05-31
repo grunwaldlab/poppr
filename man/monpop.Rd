@@ -4,9 +4,11 @@
 \name{monpop}
 \alias{monpop}
 \title{Peach brown rot pathogen *Monilinia fructicola*}
-\format{a [genclone-class] object with 3 hierarchical levels 
+\format{
+a [genclone-class] object with 3 hierarchical levels 
   coded into one population factor. These are named "Tree", "Year", and 
-  "Symptom"}
+  "Symptom"
+}
 \usage{
 data(monpop)
 }

@@ -9,7 +9,9 @@
 \alias{provesti.dist}
 \alias{prevosti.dist}
 \title{Calculate Genetic Distance for a genind or genclone object.}
-\format{An object of class \code{function} of length 1.}
+\format{
+An object of class \code{function} of length 1.
+}
 \usage{
 nei.dist(x, warning = TRUE)
 

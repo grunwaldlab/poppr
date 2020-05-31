@@ -59,17 +59,16 @@ resample.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE, use_psex = FAL
   V   <- pair_matrix(gid, numLoci, np)
   np  <- choose(n, 2)
   
-  sample.data        <- matrix(numeric(reps*2), ncol = 2, nrow = reps)
-  if(!quiet) progbar <- dplyr::progress_estimated(reps)
-  for (i in seq(reps)){
-    sample.data[i, ] <- run.jack(V, mat, N, n, np, replace = FALSE, weights = weights)
-    if (!quiet) print(progbar$tick())
+  if (quiet) {
+    oh <- progressr::handlers()
+    on.exit(progressr::handlers(oh))
+    progressr::handlers("void")
   }
-  if(!quiet){
-    print(progbar$stop())
-    cat("\n")
-  }
-  colnames(sample.data) <- c("Ia", "rbarD")
+  progressr::with_progress({
+    sample.data <- run.jack(reps, V, mat, N, n, np, 
+      replace = FALSE, method = 'partial', weights = weights
+    )
+  })
   return(data.frame(sample.data))
 }
 #' Bootstrap the index of association
@@ -136,18 +135,16 @@ boot.ia <- function(gid, how = "partial", reps = 999, quiet = FALSE, ...){
   V   <- pair_matrix(gid, numLoci, np)
   np  <- choose(N, 2)
   
-  sample.data         <- matrix(numeric(reps*2), ncol = 2, nrow = reps)
-  if (!quiet) progbar <- dplyr::progress_estimated(reps)
-  for (i in seq(reps)) {
-    sample.data[i, ] <- run.jack(V, mat, N, n, np, replace = TRUE, 
-                                 method = METHOD, weights = weights)
-    if (!quiet) progbar$tick()$print()
+  if (quiet) {
+    oh <- progressr::handlers()
+    on.exit(progressr::handlers(oh))
+    progressr::handlers("void")
   }
-  if (!quiet) {
-    cat("\n")
-    progbar$stop()
-  }
-  colnames(sample.data) <- c("Ia", "rbarD")
+  progressr::with_progress({
+    sample.data <- run.jack(reps, V, mat, N, n, np, 
+      replace = TRUE, method = METHOD, weights = weights
+    )
+  })
   return(data.frame(sample.data))
 }
 
@@ -181,6 +178,8 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
 #' indices must be supplemented with rows of zeroes to indicate no distance. 
 #' This implementation does not sample with replacement.
 #'
+#' @param res the allocated result matrix
+#' @param reps the number of repetitions
 #' @param V a matrix of distances for each locus in columns and observations in
 #'   rows
 #' @param mat a square matrix with the lower triangle filled with indices of the
@@ -198,25 +197,33 @@ jack.ia <- function(gid, n = NULL, reps = 999, quiet = FALSE){
 #'
 #' @examples
 #' # No examples here
-run.jack <- function(V, mat, N, n, np, replace = FALSE, method = "partial", weights = NULL){
+run.jack <- function(reps, V, mat, N, n, np, replace = FALSE, method = "partial", weights = NULL){
+  res  <- matrix(numeric(reps*2), ncol = 2, nrow = reps)
+  p <- make_progress(reps, 50)
+  for (i in seq(reps)) {
+    if (i %% p$step == 0) p$rog()
+    if (replace && method == "partial") {
+      # For the partial boot method. In this case, the incoming data is clone
+      # censored, so N is the desired number of individuals and n is the observed
+      # number of individuals. Since we want to keep the number of MLG steady, we
+      # are only resampling N - n individuals here.
+      inds <- c(seq.int(n), sample(n, N - n, replace = TRUE))
+    } else {
+      inds <- sample(N, n, replace = replace, prob = weights)
+    }
+    newmat  <- mat[inds, inds]
+    newInds <- newmat[lower.tri(newmat)]
 
-  if (replace & method == "partial") {
-    # For the partial boot method. In this case, the incoming data is clone
-    # censored, so N is the desired number of individuals and n is the observed
-    # number of individuals. Since we want to keep the number of MLG steady, we
-    # are only resampling N - n individuals here.
-    inds <- c(seq.int(n), sample(n, N - n, replace = TRUE))
-  } else {
-    inds <- sample(N, n, replace = replace, prob = weights)
+    newV <- V[newInds, ]
+    VL   <- list(
+      d.vector  = colSums(newV), 
+      d2.vector = colSums(newV * newV), 
+      D.vector  = rowSums(newV)
+    )
+    res[i, ] <- ia_from_d_and_D(VL, np)
   }
-  newmat  <- mat[inds, inds]
-  newInds <- newmat[lower.tri(newmat)]
-
-  newV <- V[newInds, ]
-  V    <- list(d.vector  = colSums(newV), 
-               d2.vector = colSums(newV * newV), 
-               D.vector  = rowSums(newV)
-              )
-  return(ia_from_d_and_D(V, np))
+  colnames(res) <- c("Ia", "rbarD")
+  p$rog()
+  res
 }
 
