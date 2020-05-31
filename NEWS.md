@@ -8,12 +8,16 @@ BUG FIX
   instead of "TRUE". (See https://github.com/grunwaldlab/poppr/issues/214
   for details).
 
-MISC
-----
+NEW IMPORTS
+-----------
 
-* Progress bars have been replaced with those from the `{progressr}` package,
-  which gives the user control over what should be displayed (or not). This
-  allows blind users to have access to progress reports.
+* Progress bars are now implemented via the `{progressr}` package,
+  which gives the user control over what should be displayed (or not). For
+  example, to get auditory updates instead of a progress bar, you can use the
+  "beepr" package and set `progressr::handlers("beepr")`. This will play an alert
+  for each step (~50) and a final sound. To suppress all progress bars entirely,
+  you can use `progressr::handlers("void")`. These progress bars have replaced
+  the `utils::txtProgressBar()` and `dplyr::progress_estimated()` bars.
 
 poppr 2.8.5
 ===========

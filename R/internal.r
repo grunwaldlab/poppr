@@ -2755,13 +2755,10 @@ make_circle_legend <-
                  cex    = cex)
 }
 
-# Get the size of a step when you split x into n pieces (rounded to the nearest
-# power of 10)
-step_size <- function(x, n = 10) (10 ^ ceiling(log(x, 10) - 1)) / (n/10)
 
 make_progress <- function(reps, steps = 50) {
-  step <- step_size(reps, steps)
-  p    <- progressr::progressor(steps, scale = if (step < 1) step else 1)
-  step <- ceiling(step)
-  list(rog = p, step = step)
+  step  <- reps/steps
+  scale <- if (step < 1) step else 1
+  p     <- progressr::progressor(steps, scale = scale)
+  list(rog = p, step = if (step < 1) step else round(step))
 }

@@ -850,7 +850,6 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   if (shuffle) {
     # Initialize with 1 to account for the observed data.
     counts <- matrix(1L, nrow = nrow(res), ncol = ncol(res))
-    if (!quiet) prog <- dplyr::progress_estimated(sample)
     for (i in seq_len(sample)) {
       tmp    <- shufflepop(gid, method = method)
       tmpres <- pair_ia_internal(tmp, N, numLoci, lnames, np, nploci, p, i)
@@ -890,7 +889,7 @@ pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, p, sample = NU
   loci_pairs  <- combn(lnames, 2)
   ia_pairs    <- matrix(NA_real_, nrow = 2, ncol = nploci)
   for (i in seq(nploci)) {
-    if ((nploci * sample + i) %% p$step == 0) p$rog(sprintf("%g", i)) 
+    if ((nploci * sample + i) %% p$step == 0) p$rog() 
     the_pair <- loci_pairs[, i, drop = TRUE]
     newV <- V[, the_pair, drop = FALSE]
     ia_pairs[, i] <- ia_from_d_and_D(
