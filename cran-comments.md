@@ -1,7 +1,5 @@
 # Poppr version 2.8.6
 
-this is a maintenance update
-
 ## Test environments
 
 * local macOS install, R 4.0.0
