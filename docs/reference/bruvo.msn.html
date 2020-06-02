@@ -18,23 +18,27 @@ distance. — bruvo.msn • poppr</title>
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -48,7 +52,6 @@ distance. — bruvo.msn" />
 <meta property="og:description" content="Create minimum spanning network of selected populations using Bruvo's 
 distance." />
 <meta property="og:image" content="/logo.png" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -66,7 +69,7 @@ distance." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -80,7 +83,7 @@ distance." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6</span>
       </span>
     </div>
 
@@ -362,11 +365,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='co'># View populations 8 and 9 with default colors. </span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
           <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>, <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>)</div><div class='img'><img src='bruvo.msn-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 6845cc8 UNW- 19 18 -- 
+#&gt; IGRAPH c2ac03e UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from 6845cc8 (vertex names):
+#&gt; + edges from c2ac03e (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -375,17 +378,17 @@ override the algorithm in the data set. See Details.</p></td>
 #&gt; [1] "P08" "P09"
 #&gt; 
 #&gt; $colors
-#&gt;         P08         P09 
-#&gt; "#4C00FFFF" "#00E5FFFF" 
+#&gt;       P08       P09 
+#&gt; "#4C00FF" "#00E5FF" 
 #&gt; </div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># View heat colors.</span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span><span class='kw'>=</span><span class='no'>heat.colors</span>, <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>, <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>)</div><div class='img'><img src='bruvo.msn-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH a2969c6 UNW- 19 18 -- 
+#&gt; IGRAPH ed9cb90 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from a2969c6 (vertex names):
+#&gt; + edges from ed9cb90 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -394,18 +397,18 @@ override the algorithm in the data set. See Details.</p></td>
 #&gt; [1] "P08" "P09"
 #&gt; 
 #&gt; $colors
-#&gt;         P08         P09 
-#&gt; "#FF0000FF" "#FFFF00FF" 
+#&gt;       P08       P09 
+#&gt; "#FF0000" "#FFFF00" 
 #&gt; </div><div class='input'>
 <span class='co'># View custom colors. Here, we use black and orange.</span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>)</div><div class='img'><img src='bruvo.msn-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 518f583 UNW- 19 18 -- 
+#&gt; IGRAPH 3bbd264 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from 518f583 (vertex names):
+#&gt; + edges from 3bbd264 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -421,11 +424,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>, <span class='kw'>glim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.5</span>))</div><div class='img'><img src='bruvo.msn-4.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 0a7524b UNW- 19 18 -- 
+#&gt; IGRAPH ae3a786 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from 0a7524b (vertex names):
+#&gt; + edges from ae3a786 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -441,11 +444,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>, <span class='kw'>gscale</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='img'><img src='bruvo.msn-5.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH 10b0391 UNW- 19 18 -- 
+#&gt; IGRAPH 7e0a599 UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from 10b0391 (vertex names):
+#&gt; + edges from 7e0a599 (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -461,11 +464,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>, <span class='kw'>wscale</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='img'><img src='bruvo.msn-6.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH aa0cd4d UNW- 19 18 -- 
+#&gt; IGRAPH 08a0bfc UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from aa0cd4d (vertex names):
+#&gt; + edges from 08a0bfc (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -481,11 +484,11 @@ override the algorithm in the data set. See Details.</p></td>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>sublist</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>9</span>, <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='st'>"inds"</span>,
 <span class='kw'>palette</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/colorRamp.html'>colorRampPalette</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"orange"</span>, <span class='st'>"black"</span>)), <span class='kw'>vertex.label.cex</span><span class='kw'>=</span><span class='fl'>0.7</span>,
 <span class='kw'>vertex.label.dist</span><span class='kw'>=</span><span class='fl'>0.4</span>, <span class='kw'>gscale</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='img'><img src='bruvo.msn-7.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH e1bbf62 UNW- 19 18 -- 
+#&gt; IGRAPH b890dcf UNW- 19 18 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/c), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from e1bbf62 (vertex names):
+#&gt; + edges from b890dcf (vertex names):
 #&gt;  [1] N43 --N93  N92 --N112 N94 --N98  N95 --N96  N95 --N97  N98 --N99 
 #&gt;  [7] N98 --N100 N98 --N97  N98 --N111 N100--N108 N93 --N97  N104--N107
 #&gt; [13] N105--N109 N106--N107 N106--N109 N107--N108 N107--N112 N111--N113
@@ -499,11 +502,11 @@ override the algorithm in the data set. See Details.</p></td>
 #&gt; </div><div class='input'>
 <span class='co'># View the whole population, but without labels.</span>
 <span class='fu'>bruvo.msn</span>(<span class='no'>nancycats</span>, <span class='kw'>replen</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>9</span>), <span class='kw'>vertex.label</span><span class='kw'>=</span><span class='fl'>NA</span>)</div><div class='img'><img src='bruvo.msn-8.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; $graph
-#&gt; IGRAPH c9ca99d UNW- 237 236 -- 
+#&gt; IGRAPH 370bf39 UNW- 237 236 -- 
 #&gt; + attr: name (v/c), size (v/n), shape (v/c), pie (v/x), pie.color
 #&gt; | (v/x), color (v/c), label (v/l), weight (e/n), color (e/c), width
 #&gt; | (e/n)
-#&gt; + edges from c9ca99d (vertex names):
+#&gt; + edges from 370bf39 (vertex names):
 #&gt;  [1] N215--N216 N215--N113 N215--N130 N215--N246 N215--N296 N216--N83 
 #&gt;  [7] N216--N165 N216--N182 N217--N223 N218--N293 N219--N221 N219--N79 
 #&gt; [13] N219--N84  N219--N189 N219--N182 N219--N270 N220--N222 N220--N57 
@@ -517,29 +520,19 @@ override the algorithm in the data set. See Details.</p></td>
 #&gt; [13] "P13" "P14" "P15" "P16" "P17"
 #&gt; 
 #&gt; $colors
-#&gt;         P01         P02         P03         P04         P05         P06 
-#&gt; "#4C00FFFF" "#1900FFFF" "#0019FFFF" "#004CFFFF" "#0080FFFF" "#00B2FFFF" 
-#&gt;         P07         P08         P09         P10         P11         P12 
-#&gt; "#00E5FFFF" "#00FF4DFF" "#00FF00FF" "#4DFF00FF" "#99FF00FF" "#E6FF00FF" 
-#&gt;         P13         P14         P15         P16         P17 
-#&gt; "#FFFF00FF" "#FFEA2DFF" "#FFDE59FF" "#FFDB86FF" "#FFE0B3FF" 
+#&gt;       P01       P02       P03       P04       P05       P06       P07       P08 
+#&gt; "#4C00FF" "#1900FF" "#0019FF" "#004CFF" "#0080FF" "#00B2FF" "#00E5FF" "#00FF4D" 
+#&gt;       P09       P10       P11       P12       P13       P14       P15       P16 
+#&gt; "#00FF00" "#4DFF00" "#99FF00" "#E6FF00" "#FFFF00" "#FFEA2D" "#FFDE59" "#FFDB86" 
+#&gt;       P17 
+#&gt; "#FFE0B3" 
 #&gt; </div><div class='input'># }
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#note">Note</a></li>
-      <li><a href="#references">References</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Zhian N. Kamvar, Javier F. Tabima</p>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -550,7 +543,7 @@ override the algorithm in the data set. See Details.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
