@@ -6,8 +6,10 @@
 \alias{old_partial_clone}
 \title{Simulated data illustrating a Minimum Spanning Network based on Bruvo's
 Distance}
-\format{a [genind()] object with 50 individuals, 10 loci, and four 
-  populations.}
+\format{
+a [genind()] object with 50 individuals, 10 loci, and four 
+  populations.
+}
 \usage{
 data(partial_clone)
 }

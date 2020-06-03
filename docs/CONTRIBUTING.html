@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="pkgdown.css" rel="stylesheet">
@@ -44,7 +48,6 @@
 
 <meta property="og:title" content="Contributing to poppr" />
 <meta property="og:image" content="/logo.png" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -62,7 +65,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -76,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6</span>
       </span>
     </div>
 
@@ -152,13 +155,13 @@
 <h4 class="hasAnchor">
 <a href="#ensure-your-r-version-and-poppr-version-are-up-to-date" class="anchor"></a>Ensure your R version and poppr version are up-to-date.</h4>
 <p>To check your versions of R and poppr, you can run the following code</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>R.version.string</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"poppr"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><html><pre class="r"><span class="no">R.version.string</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"poppr"</span>)</pre></html></div>
 <p>Your output will look something like this:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>R.version.string</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="co">#&gt; [1] "R version 3.4.1 (2017-06-30)"</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="kw"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"poppr"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt; [1] '2.5.0'</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><html><pre class="r"><span class="no">R.version.string</span>
+<span class="co">#&gt; [1] "R version 3.4.1 (2017-06-30)"</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"poppr"</span>)
+<span class="co">#&gt; [1] '2.5.0'</span></pre></html></div>
 <p>You can check this against the versions reported at <a href="https://r-project.org" class="uri">https://r-project.org</a> and <a href="https://cran.r-project.org/package=poppr" class="uri">https://cran.r-project.org/package=poppr</a>.</p>
 </div>
 <div id="make-sure-your-problem-is-reproducible-and-minimal" class="section level4">
@@ -167,27 +170,27 @@
 <p>A minimal reproducible example (reprex) ensures that the maintainers will be able to address the issue in a timely manner.</p>
 <p>The easiest way of doing this is to use the <a href="https://cran.r-project.org/package=reprex">reprex package</a>, which has excellent documentation on how to create a reprex: <a href="https://github.com/jennybc/reprex#what-is-a-reprex" class="uri">https://github.com/jennybc/reprex#what-is-a-reprex</a>.</p>
 <p>Here’s an example of how to do this for a poppr-specific example:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"reprex"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="kw"><a href="https://reprex.tidyverse.org/reference/reprex.html">reprex</a></span>({</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="kw"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>))</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(Pinf)</span>
-<span id="cb3-5"><a href="#cb3-5"></a>  Pinf.bd &lt;-<span class="st"> </span><span class="kw"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(Pinf)</span>
-<span id="cb3-6"><a href="#cb3-6"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb3"><html><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"reprex"</span>)
+<span class="fu"><a href="https://reprex.tidyverse.org/reference/reprex.html">reprex</a></span>({
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>))
+  <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">Pinf</span>)
+  <span class="no">Pinf.bd</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(<span class="no">Pinf</span>)
+})</pre></html></div>
 <p>This will copy the rendered code to your clipboard so you can paste it directly to the github issue like this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>))</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(Pinf)</span>
-<span id="cb4-3"><a href="#cb4-3"></a>Pinf.bd &lt;-<span class="st"> </span><span class="kw"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(Pinf)</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; Warning in bruvo.dist(Pinf): </span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt;  -------------------------------------------------------------- </span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt;                         !!! </span><span class="al">ALERT</span><span class="co"> !!! </span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt;  </span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt;  This warning will become an ERROR in future versions of poppr. </span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt;  Please define your repeat lengths to avoid this error. </span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#&gt;  -------------------------------------------------------------- </span></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="co">#&gt; </span></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; Repeat length vector for loci is not equal to the number of loci represented.</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; Estimating repeat lengths from data:</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt;  c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><html><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"poppr"</span>))
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">Pinf</span>)
+<span class="no">Pinf.bd</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/bruvo.dist.html">bruvo.dist</a></span>(<span class="no">Pinf</span>)
+<span class="co">#&gt; Warning in bruvo.dist(Pinf): </span>
+<span class="co">#&gt;  -------------------------------------------------------------- </span>
+<span class="co">#&gt;                         !!! ALERT !!! </span>
+<span class="co">#&gt;  </span>
+<span class="co">#&gt;  This warning will become an ERROR in future versions of poppr. </span>
+<span class="co">#&gt;  Please define your repeat lengths to avoid this error. </span>
+<span class="co">#&gt;  -------------------------------------------------------------- </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Repeat length vector for loci is not equal to the number of loci represented.</span>
+<span class="co">#&gt; Estimating repeat lengths from data:</span>
+<span class="co">#&gt;  c(2, 2, 6, 2, 2, 2, 2, 2, 3, 3, 2)</span></pre></html></div>
 <p>Please make sure that your examples run in a reasonable amount of time. Usually maintainers will have to run these examples several times in order to fix the issue. If an example takes more than 1 minute to run, please find a way to reduce the size of the example.</p>
 </div>
 </div>
@@ -218,7 +221,7 @@
 <a href="#contributing-new-code" class="anchor"></a>Contributing New Code</h2>
 <p>If you want to contribute code, you must ensure that it is accurate and follows the tidyverse style guidelines <a href="http://style.tidyverse.org/" class="uri">http://style.tidyverse.org/</a>.</p>
 <p>You can use the following checklist for your contributions:</p>
-<ul>
+<ul class="task-list">
 <li>
 <input type="checkbox" disabled>
 I have <a href="http://r-pkgs.had.co.nz/tests.html">written tests</a> to ensure my code works (here’s an <a href="https://github.com/grunwaldlab/poppr/commit/43be276">example of a code change with a test</a>)</li>
@@ -240,6 +243,12 @@ All the checks on <a href="https://travis-ci.org/grunwaldlab/poppr" class="uri">
 
   </div>
 
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
+  </div>
+
 </div>
 
 
@@ -250,7 +259,7 @@ All the checks on <a href="https://travis-ci.org/grunwaldlab/poppr" class="uri">
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

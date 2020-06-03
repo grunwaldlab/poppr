@@ -4,11 +4,13 @@
 \name{Pram}
 \alias{Pram}
 \title{Phytophthora ramorum data from OR Forests and Nurseries (OR and CA)}
-\format{a [genclone-class] object with 3 hierarchical levels 
+\format{
+a [genclone-class] object with 3 hierarchical levels 
   called "SOURCE", "YEAR", and, "STATE". The \strong{other} slot contains a 
   named vector of repeat lengths called \strong{"REPLEN"}, a matrix of xy 
   coordinates for the forest samples called \strong{"xy"}, and a palette to 
-  color the ~SOURCE/STATE stratification called \strong{"comparePal"}.}
+  color the ~SOURCE/STATE stratification called \strong{"comparePal"}.
+}
 \usage{
 data(Pram)
 }

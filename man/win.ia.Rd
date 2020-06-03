@@ -83,7 +83,7 @@ plot(res, type = "l")
 library("dplyr")
 library("tidyr")
 res_tidy <- res \%>\% 
-  data_frame(rd = ., chromosome = names(.)) \%>\% # create two column data frame
+  tibble(rd = ., chromosome = names(.)) \%>\% # create two column data frame
   separate(chromosome, into = c("chromosome", "position")) \%>\% # get the position info
   mutate(position = as.integer(position)) \%>\% # force position as integers
   mutate(chromosome = factor(chromosome, unique(chromosome))) # force order chromosomes

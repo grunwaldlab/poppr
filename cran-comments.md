@@ -1,12 +1,10 @@
-# Poppr version 2.8.5
-
-This fixes an error on r-devel-linux-x86_64-debian-clang
+# Poppr version 2.8.6
 
 ## Test environments
 
-* local macOS install, R 3.6.2
-* local ubuntu 16.04 install, R 3.6.2
-* ubuntu 14.04 (on travis-ci), devel (2019-06-17 r76705) and R 3.6.2
+* local macOS install, R 4.0.0
+* local ubuntu 16.04 install, R 4.0.0
+* ubuntu 14.04 (on travis-ci), devel (2019-06-17 r76705) and R 4.0.0
 * windows R Under development (unstable) 
 
 ## R CMD check results

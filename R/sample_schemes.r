@@ -155,18 +155,14 @@ shufflepop <- function(pop, method=1){
                                                 length = iterations)
                                  )
                             )
-  if(!quiet) progbar <- dplyr::progress_estimated(iterations)
-  for (c in seq(iterations)){
+  p <- make_progress(iterations, 50)
+  for (c in seq(iterations)) {
+    if (c %% p$step == 0) p$rog()
     IarD <- .Ia.Rd(.all.shuffler(pop, type, method=method), missing=missing)   
     sample.data$Ia[c]    <- IarD[1]
     sample.data$rbarD[c] <- IarD[2]
-    if (!quiet) print(progbar$tick())
   }
-
-  if(!quiet){
-    print(progbar$stop())
-    cat("\n")
-  }
+  p$rog()
 	return(sample.data)
 }
 

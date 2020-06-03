@@ -786,15 +786,23 @@ ia <- function(gid, sample = 0, method = 1, quiet = FALSE, missing = "ignore",
   # histogram.
     Iout     <- NULL 
     # idx      <- data.frame(Index = names(IarD))
-    samp     <- .sampling(popx, sample, missing, quiet = quiet, type = type, 
-                          method = method)
+    if (quiet) {
+      oh <- progressr::handlers()
+      on.exit(progressr::handlers(oh))
+      progressr::handlers("void")
+    }
+    progressr::with_progress({
+      samp <- .sampling(
+        popx, sample, missing, quiet = quiet, type = type, method = method
+      )
+    })
     p.val    <- sum(IarD[1] <= c(samp$Ia, IarD[1]))/(sample + 1)
     p.val[2] <- sum(IarD[2] <= c(samp$rbarD, IarD[2]))/(sample + 1)
 
     if (hist == TRUE){
-      the_plot <- poppr.plot(samp, observed = IarD, pop = namelist$population, 
-                             index = index, file = namelist$File, pval = p.val, 
-                             N = nrow(gid@tab))
+      the_plot <- poppr.plot(samp, observed = IarD, pop = namelist$population,
+        index = index, file = namelist$File, pval = p.val, N = nrow(gid@tab)
+      )
       print(the_plot)
     }
     result <- stats::setNames(vector(mode = "numeric", length = 4), 
@@ -829,27 +837,31 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   np      <- choose(N, 2)
   nploci  <- choose(numLoci, 2)
   shuffle <- sample > 0L
-  quiet   <- should_poppr_be_quiet(quiet)
-  QUIET   <- if (shuffle) TRUE else quiet
-  res     <- pair_ia_internal(gid, N, numLoci, lnames, np, nploci, QUIET, sample)
+  # quiet   <- should_poppr_be_quiet(quiet)
+  # QUIET   <- if (shuffle) TRUE else quiet
+  if (quiet) {
+    oh <- progressr::handlers()
+    on.exit(progressr::handlers(oh))
+    progressr::handlers("void")
+  }
+  progressr::with_progress({
+    p <- make_progress((1 + sample) * nploci, 50)
+  res <- pair_ia_internal(gid, N, numLoci, lnames, np, nploci, p, sample = 0)
   if (shuffle) {
     # Initialize with 1 to account for the observed data.
     counts <- matrix(1L, nrow = nrow(res), ncol = ncol(res))
-    if (!quiet) prog <- dplyr::progress_estimated(sample)
     for (i in seq_len(sample)) {
       tmp    <- shufflepop(gid, method = method)
-      tmpres <- pair_ia_internal(tmp, N, numLoci, lnames, np, nploci, QUIET, sample)
+      tmpres <- pair_ia_internal(tmp, N, numLoci, lnames, np, nploci, p, i)
       counts <- counts + as.integer(tmpres >= res)
-      if (!quiet) print(prog$tick())
     }
-    if (!quiet) print(prog$stop())
-    if (!quiet) cat("\n")
     p   <- counts/(sample + 1)
     res <- cbind(Ia = res[, 1], 
                  p.Ia = p[, 1], 
                  rbarD = res[, 2], 
                  p.rD = p[, 2])
   }
+  })
   class(res) <- c("pairia", "matrix")
   if (plot) {
     tryCatch(plot(res, index = index, low = low, high = high, limits = limits),
@@ -858,7 +870,10 @@ pair.ia <- function(gid, sample = 0L, quiet = FALSE, plot = TRUE, low = "blue",
   res
 }
 
-pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, quiet, sample) {
+
+pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, p, sample = NULL) {
+  # Calculate pairwise distances for each locus. This will be a matrix of 
+  # np rows and numLoci columns.
   if (gid@type == "codom") {
     V <- pair_matrix(seploc(gid), numLoci, np)
   } else { # P/A case
@@ -869,18 +884,27 @@ pair_ia_internal <- function(gid, N, numLoci, lnames, np, nploci, quiet, sample)
     }
   }
   colnames(V) <- lnames
-  
-  loci_pairs       <- matrix(NA, nrow = 3, ncol = nploci)
-  loci_pairs[-3, ] <- combn(lnames, 2)
-  loci_pairs[3, ]  <- as.character(1:nploci)
-  prog             <- NULL
-  if (!quiet) prog <- txtProgressBar(style = 3)
-  pair_ia_vector   <- apply(loci_pairs, 2, ia_pair_loc, V, np, prog, nploci)
-  if (!quiet) cat("\n")
-  colnames(pair_ia_vector) <- apply(loci_pairs[-3, ], 2, paste, collapse = ":")
-  rownames(pair_ia_vector) <- c("Ia", "rbarD")
-  pair_ia_vector           <- t(pair_ia_vector)
-  pair_ia_vector
+
+  # calculate I_A and \bar{r}_d for each combination of loci
+  loci_pairs  <- combn(lnames, 2)
+  ia_pairs    <- matrix(NA_real_, nrow = 2, ncol = nploci)
+  for (i in seq(nploci)) {
+    if ((nploci * sample + i) %% p$step == 0) p$rog() 
+    the_pair <- loci_pairs[, i, drop = TRUE]
+    newV <- V[, the_pair, drop = FALSE]
+    ia_pairs[, i] <- ia_from_d_and_D(
+      V = list(
+        d.vector  = colSums(newV), 
+        d2.vector = colSums(newV * newV), 
+        D.vector  = rowSums(newV)
+      ),
+      np = np
+    )
+  }
+  colnames(ia_pairs) <- apply(loci_pairs, 2, paste, collapse = ":")
+  rownames(ia_pairs) <- c("Ia", "rbarD")
+  ia_pairs           <- t(ia_pairs)
+  ia_pairs
 }
 #==============================================================================#
 #' Create a table of summary statistics per locus. 
