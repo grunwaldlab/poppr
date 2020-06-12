@@ -1,3 +1,20 @@
+poppr 2.8.7
+==========
+
+DEPRECATION
+-----------
+
+* The argument `blacklist` has been deprecated in favor of `exclude` for the
+  following functions: `bruvo.msn()`, `poppr.msn()`, `clonecorrect()`, `poppr()`, 
+  `mlg.table()`, `mlg.crosspop()`, and `popsub()`. It will be removed in the
+  poppr version 2.9
+
+GITHUB
+------
+
+* The default branch for the repository is now "main", so development versions
+  will install `remotes::install_github("grunwaldlab/poppr@main")`
+
 poppr 2.8.6
 ===========
 

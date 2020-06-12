@@ -14,6 +14,7 @@ bruvo.msn(
   mlg.compute = "original",
   palette = topo.colors,
   sublist = "All",
+  exclude = NULL,
   blacklist = NULL,
   vertex.label = "MLG",
   gscale = TRUE,
@@ -51,8 +52,10 @@ to be used to color the populations on the graph. It defaults to
 \item{sublist}{a \code{vector} of population names or indexes that the user 
 wishes to keep. Default to "ALL".}
 
-\item{blacklist}{a \code{vector} of population names or indexes that the user
-wishes to discard. Default to \code{NULL}}
+\item{exclude}{a \code{vector} of population names or indexes that the user
+wishes to discard. Default to \code{NULL}.}
+
+\item{blacklist}{DEPRECATED, use exclude.}
 
 \item{vertex.label}{a \code{vector} of characters to label each vertex. There
 are two defaults: \code{"MLG"} will label the nodes with the multilocus 

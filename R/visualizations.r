@@ -202,9 +202,11 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' @param sublist a \code{vector} of population names or indexes that the user 
 #'   wishes to keep. Default to "ALL".
 #'   
-#' @param blacklist a \code{vector} of population names or indexes that the user
-#'   wishes to discard. Default to \code{NULL}
-#'   
+#' @param exclude a \code{vector} of population names or indexes that the user
+#' wishes to discard. Default to \code{NULL}.
+#'
+#' @param blacklist DEPRECATED, use exclude.
+#'
 #' @param vertex.label a \code{vector} of characters to label each vertex. There
 #'   are two defaults: \code{"MLG"} will label the nodes with the multilocus 
 #'   genotype from the original data set and \code{"inds"} will label the nodes 
@@ -354,7 +356,7 @@ poppr.plot <- function(sample, pval = c(Ia = 0.05, rbarD = 0.05),
 #' 
 #==============================================================================#
 poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "original",
-                       sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+                       sublist = "All", exclude = NULL, blacklist = NULL, vertex.label = "MLG", 
                        gscale=TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale=TRUE, showplot = TRUE, 
                        include.ties = FALSE, threshold = NULL, 
@@ -372,6 +374,19 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   }
   if (!inherits(gid@mlg, "MLG")){
     gid@mlg <- new("MLG", gid@mlg)
+  }
+  if (!is.null(blacklist)) {
+    warning(
+      option_deprecated(
+        match.call(), 
+        "blacklist", 
+        "exclude", 
+        "2.8.7.", 
+        "Please use `exclude` in the future"
+       ), 
+      immediate. = TRUE
+    )
+    exclude <- blacklist
   }
   
   
@@ -408,10 +423,10 @@ poppr.msn <- function (gid, distmat, palette = topo.colors, mlg.compute = "origi
   
   # Subsetting the population -----------------------------------------------
   # This will subset both the population and the matrix. 
-  if (toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
-    sublist_blacklist <- sub_index(gid, sublist, blacklist)
-    distmat <- distmat[sublist_blacklist, sublist_blacklist, drop = FALSE]
-    gid    <- popsub(gid, sublist, blacklist)
+  if (toupper(sublist[1]) != "ALL" | !is.null(exclude)){
+    sublist_exclude <- sub_index(gid, sublist, exclude)
+    distmat <- distmat[sublist_exclude, sublist_exclude, drop = FALSE]
+    gid    <- popsub(gid, sublist, exclude)
   }
 
   # Clone correcting the matrix ---------------------------------------------
@@ -912,7 +927,7 @@ greycurve <- function(data = seq(0, 1, length = 1000), glim = c(0,0.8),
 #' ### Utilizing vectors for palettes
 #' 
 #' data(Pram)
-#' Pram_sub <- popsub(Pram, blacklist = c("Nursery_CA", "Nursery_OR"))
+#' Pram_sub <- popsub(Pram, exclude = c("Nursery_CA", "Nursery_OR"))
 #' 
 #' # Creating the network for the forest
 #' min_span_net_sub <- bruvo.msn(Pram_sub, replen = other(Pram)$REPLEN, 

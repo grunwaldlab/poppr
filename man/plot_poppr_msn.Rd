@@ -242,7 +242,7 @@ plot_poppr_msn(microbov, micmsn, palette = "terrain.colors", inds = "n",
 ### Utilizing vectors for palettes
 
 data(Pram)
-Pram_sub <- popsub(Pram, blacklist = c("Nursery_CA", "Nursery_OR"))
+Pram_sub <- popsub(Pram, exclude = c("Nursery_CA", "Nursery_OR"))
 
 # Creating the network for the forest
 min_span_net_sub <- bruvo.msn(Pram_sub, replen = other(Pram)$REPLEN, 

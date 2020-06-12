@@ -413,12 +413,12 @@ shinyServer(function(input, output, session) {
     match_pops <- the_pops %in% input$sublist
 
     # If the number of population selected is greater than half the total
-    # populations, place the unselected populations in the blacklist argument.
+    # populations, place the unselected populations in the exclude argument.
     half <- ceiling(length(the_pops)/2)
     if (sum(match_pops) < half){
       first_dat <- paste0(dat, "_sub <- popsub(", dat, ", sublist = ", make_dput(input$sublist), ")\n")
     } else {
-      first_dat <- paste0(dat, "_sub <- popsub(", dat, ", blacklist = ", make_dput(the_pops[!match_pops]), ")\n")
+      first_dat <- paste0(dat, "_sub <- popsub(", dat, ", exclude = ", make_dput(the_pops[!match_pops]), ")\n")
     }
     closer   <- paste0("showplot = FALSE, include.ties = ", reticulation(), ")")
     has_no_args <- length(args) == 1 && args == ""

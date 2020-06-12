@@ -211,8 +211,10 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 #' @param sublist a \code{vector} of population names or indexes that the user
 #' wishes to keep. Default to \code{"ALL"}.
 #'
-#' @param blacklist a \code{vector} of population names or indexes that the user
+#' @param exclude a \code{vector} of population names or indexes that the user
 #' wishes to discard. Default to \code{NULL}.
+#'
+#' @param blacklist DEPRECATED, use exclude.
 #'
 #' @param mat a \code{matrix} object produced by \code{\link{mlg.table}} to be
 #' subsetted. If this is present, the subsetted matrix will be returned instead
@@ -231,14 +233,14 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 #' popNames(microbov)
 #' 
 #' # Analyze only the populations with exactly 50 individuals
-#' mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), blacklist=c(3,4,13,14))
+#' mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), exclude=c(3,4,13,14))
 #'
 #' \dontrun{
 #' # Analyze the first 10 populations, except for "Bazadais"
-#' mic.10 <- popsub(microbov, sublist=1:10, blacklist="Bazadais")
+#' mic.10 <- popsub(microbov, sublist=1:10, exclude="Bazadais")
 #' 
 #' # Take out the two smallest populations
-#' micbig <- popsub(microbov, blacklist=c("NDama", "Montbeliard"))
+#' micbig <- popsub(microbov, exclude=c("NDama", "Montbeliard"))
 #' 
 #' # Analyze the two largest populations
 #' miclrg <- popsub(microbov, sublist=c("BlondeAquitaine", "Charolais"))
@@ -246,10 +248,23 @@ clonecorrect <- function(pop, strata = 1, combine = FALSE, keep = 1){
 #' @export
 #==============================================================================#
 
-popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
+popsub <- function(gid, sublist="ALL", exclude=NULL, blacklist=NULL, mat=NULL, drop=TRUE){
 
   if (!is.genind(gid) & !is(gid, "genlight")){
     stop("popsub requires a genind or genlight object\n")
+  }
+  if (!is.null(blacklist)) {
+    warning(
+      option_deprecated(
+        match.call(), 
+        "blacklist", 
+        "exclude", 
+        "2.8.7.", 
+        "Please use `exclude` in the future"
+       ), 
+      immediate. = TRUE
+    )
+    exclude <- blacklist
   }
   if (is.null(pop(gid))){
     if (!is.na(sublist[1]) && sublist[1] != "ALL")
@@ -259,7 +274,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
   orig_list <- sublist 
   popnames  <- popNames(gid)
   if (toupper(sublist[1]) == "ALL"){
-    if (is.null(blacklist)){
+    if (is.null(exclude)){
       return(gid)
     } else {
       # filling the sublist with all of the population names.
@@ -277,25 +292,25 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
     }
   }
 
-  # Treating anything present in blacklist.
-  if (!is.null(blacklist)){
+  # Treating anything present in exclude.
+  if (!is.null(exclude)){
 
-    # If both the sublist and blacklist are numeric or character.
-    if (is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
-      sublist <- sublist[!sublist %in% blacklist]
-    } else if (is.numeric(sublist) & class(blacklist) == "character"){
-      # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-      sublist <- sublist[sublist %in% which(!popnames %in% blacklist)]
+    # If both the sublist and exclude are numeric or character.
+    if (is.numeric(sublist) & is.numeric(exclude) | class(sublist) == class(exclude)){
+      sublist <- sublist[!sublist %in% exclude]
+    } else if (is.numeric(sublist) & class(exclude) == "character"){
+      # if the sublist is numeric and exclude is a character. eg s=1:10, b="USA"
+      sublist <- sublist[sublist %in% which(!popnames %in% exclude)]
     } else {
       # no sublist specified. Ideal situation
       if(all(popnames %in% sublist)){
-        sublist <- sublist[-blacklist]
+        sublist <- sublist[-exclude]
       } else {
         # weird situation where the user will specify a certain sublist, yet
-        # index the blacklist numerically. Interpreted as an index of
+        # index the exclude numerically. Interpreted as an index of
         # populations in the whole data set as opposed to the sublist.
-        warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
-        sublist <- sublist[!sublist %in% popnames[blacklist]]
+        warning("exclude is numeric. Interpreting exclude as the index of the population in the total data set.")
+        sublist <- sublist[!sublist %in% popnames[exclude]]
       }
     }
   }
@@ -315,7 +330,7 @@ popsub <- function(gid, sublist="ALL", blacklist=NULL, mat=NULL, drop=TRUE){
         stop(unmatched_pops_warning(popNames(gid), orig_list))
       } else {
         nothing_warn <- paste("Nothing present in the sublist.\n",
-                            "Perhaps the sublist and blacklist arguments have",
+                            "Perhaps the sublist and exclude arguments have",
                             "duplicate entries?\n",
                             "Subset not taking place.")
         warning(nothing_warn)

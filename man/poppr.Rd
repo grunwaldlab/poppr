@@ -8,6 +8,7 @@ poppr(
   dat,
   total = TRUE,
   sublist = "ALL",
+  exclude = NULL,
   blacklist = NULL,
   sample = 0,
   method = 1,
@@ -37,8 +38,10 @@ pooled populations.}
 population names (accessed via \code{\link[adegenet]{popNames}}). 
 Defaults to "ALL".}
 
-\item{blacklist}{a list of character strings or integers to indicate specific
-populations to be removed from analysis. Defaults to NULL.}
+\item{exclude}{a \code{vector} of population names or indexes that the user
+wishes to discard. Default to \code{NULL}.}
+
+\item{blacklist}{DEPRECATED, use exclude.}
 
 \item{sample}{an integer indicating the number of permutations desired to 
 obtain p-values. Sampling will shuffle genotypes at each locus to simulate 
