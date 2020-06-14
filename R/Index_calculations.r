@@ -69,9 +69,11 @@
 #'   population names (accessed via \code{\link[adegenet]{popNames}}). 
 #'   Defaults to "ALL".
 #'   
-#' @param blacklist a list of character strings or integers to indicate specific
-#'   populations to be removed from analysis. Defaults to NULL.
-#'   
+#' @param exclude a \code{vector} of population names or indexes that the user
+#' wishes to discard. Default to \code{NULL}.
+#'
+#' @param blacklist DEPRECATED, use exclude.
+#'
 #' @param sample an integer indicating the number of permutations desired to 
 #'   obtain p-values. Sampling will shuffle genotypes at each locus to simulate 
 #'   a panmictic population using the observed genotypes. Calculating the 
@@ -301,7 +303,7 @@
 #' }
 #==============================================================================#
 #' @import adegenet ggplot2 vegan
-poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL, 
+poppr <- function(dat, total = TRUE, sublist = "ALL", exclude = NULL, blacklist = NULL, 
                   sample = 0, method = 1, missing = "ignore", cutoff = 0.05, 
                   quiet = FALSE, clonecorrect = FALSE, strata = 1, keep = 1, 
                   plot = TRUE, hist = TRUE, index = "rbarD", minsamp = 10, 
@@ -322,6 +324,19 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
   namelist <- NULL
   hist <- plot
   callpop  <- match.call()
+  if (!is.null(blacklist)) {
+    warning(
+      option_deprecated(
+        callpop, 
+        "blacklist", 
+        "exclude", 
+        "2.8.7.", 
+        "Please use `exclude` in the future"
+       ), 
+      immediate. = TRUE
+    )
+    exclude <- blacklist
+  }
   if (!is.na(grep("system.file", callpop)[1])){
     popsplt <- unlist(strsplit(dat, "/"))
     namelist$File <- popsplt[length(popsplt)]
@@ -336,7 +351,7 @@ poppr <- function(dat, total = TRUE, sublist = "ALL", blacklist = NULL,
     poplist       <- NULL
     poplist$Total <- dat
   } else {
-    dat <- popsub(x$GENIND, sublist = sublist, blacklist = blacklist)
+    dat <- popsub(x$GENIND, sublist = sublist, exclude = exclude)
     if (any(levels(pop(dat)) == "")) {
       levels(pop(dat))[levels(pop(dat)) == ""] <- "?"
       warning("missing population factor replaced with '?'")

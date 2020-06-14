@@ -4,7 +4,7 @@ library("ape")
 data("nancycats", package = "adegenet")
 data("Aeut", package = "poppr")
 
-myFastME     <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE, tbr = TRUE)
+myFastME     <- function(x) fastme.bal(x, nni = TRUE, spr = FALSE)
 
 nan9         <- popsub(nancycats, 9)
 nanreps      <- fix_replen(nancycats, rep(2, 9))

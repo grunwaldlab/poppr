@@ -181,37 +181,37 @@ round.poppr <- Vectorize(function(x){
 # Internal functions utilizing this function:
 # ## none
 #==============================================================================#
-sub_index <- function(pop, sublist="ALL", blacklist=NULL){
+sub_index <- function(pop, sublist="ALL", exclude=NULL){
   numList <- seq(nInd(pop))
   if (is.null(pop(pop))){
     return(numList)
   }
   if(toupper(sublist[1]) == "ALL"){
-    if (is.null(blacklist)){
+    if (is.null(exclude)){
       return(numList)
     } else {
       # filling the sublist with all of the population names.
       sublist <- popNames(pop) 
     }
   }
-  # Treating anything present in blacklist.
-  if (!is.null(blacklist)){
-    # If both the sublist and blacklist are numeric or character.
-    if (is.numeric(sublist) & is.numeric(blacklist) | class(sublist) == class(blacklist)){
-      sublist <- sublist[!sublist %in% blacklist]
-    } else if (is.numeric(sublist) & class(blacklist) == "character"){
-    # if the sublist is numeric and blacklist is a character. eg s=1:10, b="USA"
-      sublist <- sublist[sublist %in% which(!popNames(pop) %in% blacklist)]
+  # Treating anything present in exclude.
+  if (!is.null(exclude)){
+    # If both the sublist and exclude are numeric or character.
+    if (is.numeric(sublist) & is.numeric(exclude) | class(sublist) == class(exclude)){
+      sublist <- sublist[!sublist %in% exclude]
+    } else if (is.numeric(sublist) & class(exclude) == "character"){
+    # if the sublist is numeric and exclude is a character. eg s=1:10, b="USA"
+      sublist <- sublist[sublist %in% which(!popNames(pop) %in% exclude)]
     } else {
       # no sublist specified. Ideal situation
       if(all(popNames(pop) %in% sublist)){
-        sublist <- sublist[-blacklist]
+        sublist <- sublist[-exclude]
       } else {
       # weird situation where the user will specify a certain sublist, yet index
-      # the blacklist numerically. Interpreted as an index of populations in the
+      # the exclude numerically. Interpreted as an index of populations in the
       # whole data set as opposed to the sublist.
-        warning("Blacklist is numeric. Interpreting blacklist as the index of the population in the total data set.")
-        sublist <- sublist[!sublist %in% popNames(pop)[blacklist]]
+        warning("Blacklist is numeric. Interpreting exclude as the index of the population in the total data set.")
+        sublist <- sublist[!sublist %in% popNames(pop)[exclude]]
       }
     }
   }
@@ -224,7 +224,7 @@ sub_index <- function(pop, sublist="ALL", blacklist=NULL){
   }
   sublist <- pop(pop) %in% sublist
   if (sum(sublist) == 0){
-    warning("All items present in Sublist are also present in the Blacklist.\nSubsetting not taking place.")
+    warning("All items present in sublist are also present in exclude.\nSubsetting not taking place.")
     return(seq(nInd(pop)))
   } 
   #cat("Sublist:\n", sublist,"\n")

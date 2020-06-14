@@ -1,7 +1,7 @@
 Contributing to *poppr*
 =======================
 
-Thank you for taking interest in contributing to *poppr*. All are welcome to participate in any way they feel is appropriate as long as the [community code of conduct](CONDUCT.md) is respected :ok_hand:.
+Thank you for taking interest in contributing to *poppr*. All are welcome to participate in any way they feel is appropriate as long as the [community code of conduct](CONDUCT.md) is respected :+1:.
 
 There are four ways you can contribute to the development of poppr: reporting a bug, fixing documentation errors, contributing new code, or commenting on issues/pull requests. Note that the majority of these activities do not require you to be proficient in R.
 
@@ -94,7 +94,7 @@ You can make changes directly on github by clicking the little pencil icon in th
 
 1. fork poppr to your github account
 2. clone poppr to your desktop 
-3. create a new branch from master and push/sync to your repository
+3. create a new branch from main and push/sync to your repository
 4. make and commit your changes
 5. update the documentation with roxygen
 

@@ -54,9 +54,11 @@
 #' @param sublist a \code{vector} of population names or indices that the user 
 #'   wishes to keep. Default to "ALL".
 #'   
-#' @param blacklist a \code{vector} of population names or indices that the user
-#'   wishes to discard. Default to \code{NULL}.
-#'   
+#' @param exclude a \code{vector} of population names or indexes that the user
+#' wishes to discard. Default to \code{NULL}.
+#'
+#' @param blacklist DEPRECATED, use exclude.
+#'
 #' @param mlgsub a \code{vector} of multilocus genotype indices with which to 
 #'   subset \code{mlg.table} and \code{mlg.crosspop}. NOTE: The resulting table 
 #'   from \code{mlg.table} will only contain countries with those MLGs
@@ -243,7 +245,7 @@ mlg <- function(gid, quiet=FALSE){
 #' 
 #' @export
 #==============================================================================#
-mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, 
+mlg.table <- function(gid, strata = NULL, sublist = "ALL", exclude = NULL, blacklist = NULL, 
                       mlgsub = NULL, bar = TRUE, plot = TRUE, total = FALSE, 
                       color = FALSE, background = FALSE, quiet = FALSE){  
   if (!is.genind(gid) & !is(gid, "snpclone")){
@@ -253,6 +255,19 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
   if ("bar" %in% names(the_call)){
     plot <- bar
     warning("In poppr version 2.0, bar is deprecated. Please use plot.")
+  }
+  if (!is.null(blacklist)) {
+    warning(
+      option_deprecated(
+        the_call, 
+        "blacklist", 
+        "exclude", 
+        "2.8.7.", 
+        "Please use `exclude` in the future"
+       ), 
+      immediate. = TRUE
+    )
+    exclude <- blacklist
   }
   the_data <- utils::capture.output(the_call[["gid"]])
   if (!is.null(strata)){
@@ -267,8 +282,8 @@ mlg.table <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
     mlgtab <- mlgtab[which(rowSums(mlgtab) > 0L), , drop = FALSE]
     gid <- popsub(gid, sublist = rownames(mlgtab))
   }
-  if (sublist[1] != "ALL" | !is.null(blacklist)){
-    gid <- popsub(gid, sublist, blacklist)
+  if (sublist[1] != "ALL" | !is.null(exclude)){
+    gid <- popsub(gid, sublist, exclude)
     mlgtab <- mlgtab[popNames(gid), , drop=FALSE]
     rows <- rownames(mlgtab)
   }
@@ -399,10 +414,23 @@ mlg.vector <- function(gid, reset = FALSE){
 #' @export
 #==============================================================================#
 
-mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL, 
+mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", exclude = NULL, blacklist = NULL, 
                          mlgsub = NULL,
                          indexreturn = FALSE, df = FALSE, quiet = FALSE){
 
+  if (!is.null(blacklist)) {
+    warning(
+      option_deprecated(
+        match.call(), 
+        "blacklist", 
+        "exclude", 
+        "2.8.7.", 
+        "Please use `exclude` in the future"
+       ), 
+      immediate. = TRUE
+    )
+    exclude <- blacklist
+  }
   insufficient_subset <- length(sublist) == 1 && sublist[1] != "ALL"
   insufficient_pop    <- is.null(pop(gid)) || nPop(gid) == 1
   if (insufficient_subset | insufficient_pop){
@@ -420,7 +448,7 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
   if (!is.null(strata)){
     setPop(gid) <- strata
   }
-  subind <- sub_index(gid, sublist, blacklist)
+  subind <- sub_index(gid, sublist, exclude)
   vec    <- vec[subind]
   mlgtab <- mlg.matrix(gid)
 
@@ -442,8 +470,8 @@ mlg.crosspop <- function(gid, strata = NULL, sublist = "ALL", blacklist = NULL,
     mlgs   <- stats::setNames(1:ncol(mlgtab), colnames(mlgtab))
   
   } else {
-    if (sublist[1] != "ALL" | !is.null(blacklist)){
-      gid    <- popsub(gid, sublist, blacklist)
+    if (sublist[1] != "ALL" | !is.null(exclude)){
+      gid    <- popsub(gid, sublist, exclude)
       mlgtab <- mlgtab[popNames(gid), , drop = FALSE]
     }
 

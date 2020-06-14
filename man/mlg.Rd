@@ -14,6 +14,7 @@ mlg.table(
   gid,
   strata = NULL,
   sublist = "ALL",
+  exclude = NULL,
   blacklist = NULL,
   mlgsub = NULL,
   bar = TRUE,
@@ -30,6 +31,7 @@ mlg.crosspop(
   gid,
   strata = NULL,
   sublist = "ALL",
+  exclude = NULL,
   blacklist = NULL,
   mlgsub = NULL,
   indexreturn = FALSE,
@@ -52,8 +54,10 @@ performed.}
 \item{sublist}{a \code{vector} of population names or indices that the user 
 wishes to keep. Default to "ALL".}
 
-\item{blacklist}{a \code{vector} of population names or indices that the user
+\item{exclude}{a \code{vector} of population names or indexes that the user
 wishes to discard. Default to \code{NULL}.}
+
+\item{blacklist}{DEPRECATED, use exclude.}
 
 \item{mlgsub}{a \code{vector} of multilocus genotype indices with which to 
 subset \code{mlg.table} and \code{mlg.crosspop}. NOTE: The resulting table 

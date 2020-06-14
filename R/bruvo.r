@@ -536,7 +536,7 @@ bruvo.boot <- function(pop, replen = 1, add = TRUE, loss = TRUE, sample = 100,
 bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE, 
                        mlg.compute = "original", 
                        palette = topo.colors,
-                       sublist = "All", blacklist = NULL, vertex.label = "MLG", 
+                       sublist = "All", exclude = NULL, blacklist = NULL, vertex.label = "MLG", 
                        gscale = TRUE, glim = c(0,0.8), gadj = 3, gweight = 1, 
                        wscale = TRUE, showplot = TRUE, 
                        include.ties = FALSE, threshold = NULL, 
@@ -550,6 +550,19 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   }
   if (!inherits(gid@mlg, "MLG")){
     gid@mlg <- new("MLG", gid@mlg)
+  }
+  if (!is.null(blacklist)) {
+    warning(
+      option_deprecated(
+        match.call(), 
+        "blacklist", 
+        "exclude", 
+        "2.8.7.", 
+        "Please use `exclude` in the future"
+       ), 
+      immediate. = TRUE
+    )
+    exclude <- blacklist
   }
   
   
@@ -572,8 +585,8 @@ bruvo.msn <- function (gid, replen = 1, add = TRUE, loss = TRUE,
   
   gadj <- ifelse(gweight == 1, gadj, -gadj)
 
-  if (toupper(sublist[1]) != "ALL" | !is.null(blacklist)){
-    gid <- popsub(gid, sublist, blacklist)
+  if (toupper(sublist[1]) != "ALL" | !is.null(exclude)){
+    gid <- popsub(gid, sublist, exclude)
   }
 
   # Updating the MLG with filtered data

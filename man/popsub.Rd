@@ -4,7 +4,14 @@
 \alias{popsub}
 \title{Subset data by population}
 \usage{
-popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
+popsub(
+  gid,
+  sublist = "ALL",
+  exclude = NULL,
+  blacklist = NULL,
+  mat = NULL,
+  drop = TRUE
+)
 }
 \arguments{
 \item{gid}{a \code{\linkS4class{genind}}, \code{\linkS4class{genclone}},
@@ -13,8 +20,10 @@ popsub(gid, sublist = "ALL", blacklist = NULL, mat = NULL, drop = TRUE)
 \item{sublist}{a \code{vector} of population names or indexes that the user
 wishes to keep. Default to \code{"ALL"}.}
 
-\item{blacklist}{a \code{vector} of population names or indexes that the user
+\item{exclude}{a \code{vector} of population names or indexes that the user
 wishes to discard. Default to \code{NULL}.}
+
+\item{blacklist}{DEPRECATED, use exclude.}
 
 \item{mat}{a \code{matrix} object produced by \code{\link{mlg.table}} to be
 subsetted. If this is present, the subsetted matrix will be returned instead
@@ -38,14 +47,14 @@ data(microbov)
 popNames(microbov)
 
 # Analyze only the populations with exactly 50 individuals
-mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), blacklist=c(3,4,13,14))
+mic.50 <- popsub(microbov, sublist=c(1:6, 11:15), exclude=c(3,4,13,14))
 
 \dontrun{
 # Analyze the first 10 populations, except for "Bazadais"
-mic.10 <- popsub(microbov, sublist=1:10, blacklist="Bazadais")
+mic.10 <- popsub(microbov, sublist=1:10, exclude="Bazadais")
 
 # Take out the two smallest populations
-micbig <- popsub(microbov, blacklist=c("NDama", "Montbeliard"))
+micbig <- popsub(microbov, exclude=c("NDama", "Montbeliard"))
 
 # Analyze the two largest populations
 miclrg <- popsub(microbov, sublist=c("BlondeAquitaine", "Charolais"))

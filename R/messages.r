@@ -273,3 +273,12 @@ uninformative_loci_message <- function(pop, glocivals, alocivals, locivals,
   msg <- paste("\n", fmsg, "\n", gmsg, "\n", amsg)
   return(msg)
 }
+
+option_deprecated <- function(the_call, option, replacement, version, extra) {
+  names(the_call)[names(the_call) == option] <- replacement
+  CALL <- as.character(deparse(the_call))
+  msg <- paste("the option", option, "is deprecated as of poppr version")
+  msg <- paste(msg, version, extra)
+  msg <- paste(msg, "\n\nPlease use this as a replacement:\n ", CALL, "\n")
+  msg
+}
