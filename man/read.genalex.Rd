@@ -52,7 +52,7 @@ object will have a single strata defined in the strata slot. This will be
 called "Pop" and will reflect the population factor defined in the genalex
 input. If \code{region = TRUE}, a second column will be inserted and labeled
 "Region". If you have more than two strata within your data set, you should
-run the command \code{\link[adegenet:splitStrata]{adegenet::splitStrata()}} on your data set to define the
+run the command \code{\link[adegenet:strata-methods]{adegenet::splitStrata()}} on your data set to define the
 unique stratifications.
 
 \subsection{FOR POLYPLOID (> 2n) DATA SETS}{ The genind object has

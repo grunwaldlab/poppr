@@ -65,7 +65,7 @@ the tree is considered rooted if \code{\link[ape:is.ultrametric]{ape::is.ultrame
 \item{...}{any parameters to be passed off to the distance method.}
 }
 \value{
-an object of class \code{\link[ape:phylo]{ape::phylo()}}.
+an object of class \code{\link[ape:read.tree]{ape::phylo()}}.
 }
 \description{
 Calculate a dendrogram with bootstrap support using any distance applicable
@@ -89,9 +89,9 @@ your bootstrap support values.
 
 \subsection{the strata argument}{
 There is an argument called \code{strata}. This argument is useful for when
-you want to bootstrap by populations from a \code{\link[adegenet:genind]{adegenet::genind()}}
+you want to bootstrap by populations from a \code{\link[adegenet:new.genind]{adegenet::genind()}}
 object. When you specify strata, the genind object will be converted to
-\code{\link[adegenet:genpop]{adegenet::genpop()}} with the specified strata.
+\code{\link[adegenet:new.genpop]{adegenet::genpop()}} with the specified strata.
 }
 }
 \note{

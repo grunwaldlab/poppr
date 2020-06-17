@@ -100,7 +100,7 @@ system.time(diversity_boot(tab, 10000L))
 \code{\link[=diversity_stats]{diversity_stats()}} for basic statistic calculation,
 \code{\link[=diversity_ci]{diversity_ci()}} for confidence intervals and plotting, and
 \code{\link[=poppr]{poppr()}}. For bootstrap sampling:
-\code{\link[stats:rmultinom]{stats::rmultinom()}} \code{\link[boot:boot]{boot::boot()}}
+\code{\link[stats:Multinom]{stats::rmultinom()}} \code{\link[boot:boot]{boot::boot()}}
 }
 \author{
 Zhian N. Kamvar
