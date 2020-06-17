@@ -213,7 +213,7 @@ Ruzica Bruvo, Nicolaas K. Michiels, Thomas G. D'Souza, and
 }
 \seealso{
 \code{\link{bruvo.dist}}, \code{\link{nancycats}}, 
-  \code{\link{plot_poppr_msn}}, \code{\link[igraph]{minimum.spanning.tree}} 
+  \code{\link{plot_poppr_msn}}, \code{\link[igraph]{mst}} 
   \code{\link{bruvo.boot}}, \code{\link{greycurve}} \code{\link{poppr.msn}}
 }
 \author{

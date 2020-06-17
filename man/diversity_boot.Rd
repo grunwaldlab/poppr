@@ -18,7 +18,7 @@ diversity_boot(
 }
 \arguments{
 \item{tab}{a table produced from the \pkg{poppr} function
-\code{\link[poppr:mlg.table]{poppr::mlg.table()}}. MLGs in columns and populations in rows}
+\code{\link[=mlg.table]{mlg.table()}}. MLGs in columns and populations in rows}
 
 \item{n}{an integer > 0 specifying the number of bootstrap replicates to
 perform (corresponds to \code{R} in the function \code{\link[boot:boot]{boot::boot()}}.}

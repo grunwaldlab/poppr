@@ -17,7 +17,7 @@ genotype_curve(
 }
 \arguments{
 \item{gen}{a \code{\linkS4class{genclone}}, \code{\linkS4class{genind}}, or
-\code{\link[pegas]{loci}} object.}
+\code{\link[pegas:read.loci]{loci}} object.}
 
 \item{sample}{an \code{integer} defining the number of times loci will be 
 resampled without replacement.}

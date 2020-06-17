@@ -93,7 +93,7 @@ you want to use to delimit your populations. The default is whatever
 palette was used to produce the original graph.}
 
 \item{layfun}{a function specifying the layout of nodes in your graph. It 
-defaults to \code{\link[igraph]{layout.auto}}.}
+defaults to \code{\link[igraph:layout_nicely]{layout.auto}}.}
 
 \item{beforecut}{if \code{TRUE}, the layout of the graph will be computed 
 before any edges are removed with \code{cutoff}. If \code{FALSE} (Default),
@@ -282,9 +282,9 @@ plot_poppr_msn(Pram,
 }
 }
 \seealso{
-\code{\link[igraph]{layout.auto}} \code{\link[igraph]{plot.igraph}}
+\code{\link[igraph:layout_nicely]{layout.auto}} \code{\link[igraph]{plot.igraph}}
 \code{\link{poppr.msn}} \code{\link{bruvo.msn}} \code{\link{greycurve}}
-\code{\link[igraph]{delete.edges}} \code{\link{palette}}
+\code{\link[igraph]{delete_edges}} \code{\link{palette}}
 }
 \author{
 Zhian N. Kamvar

@@ -86,7 +86,7 @@ setClassUnion("mlgORnumeric", c("MLG", "numeric"))
 #' @author Zhian N. Kamvar
 #' @seealso \code{\link{as.genclone}} \code{\link{as.snpclone}} 
 #'   \code{\linkS4class{genind}} \code{\linkS4class{genlight}} 
-#'   \code{\link[adegenet]{strata}} \code{\link[adegenet]{setPop}} 
+#'   \code{\link[adegenet:Accessors]{strata}} \code{\link[adegenet:Accessors]{setPop}} 
 #'   \code{\link{MLG}} \code{\link{mll}} \code{\link{mlg.filter}}
 #' @import methods
 #' @examples
