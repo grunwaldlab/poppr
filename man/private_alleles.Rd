@@ -49,7 +49,7 @@ the argument \code{form} allows for control over the strata at which
 private alleles should be computed. It takes a form where the left hand
 side of the formula can be either "allele", "locus", or "loci". The right
 hand of the equation, by default is ".". If you change it, it must
-correspond to strata located in the \code{\link[adegenet:strata]{adegenet::strata()}} slot.
+correspond to strata located in the \code{\link[adegenet:strata-methods]{adegenet::strata()}} slot.
 Note, that the right hand side is disabled for genpop objects.
 }
 \examples{

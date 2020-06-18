@@ -13,10 +13,10 @@
 make_haplotypes(gid)
 }
 \arguments{
-\item{gid}{a \link[adegenet:genind]{genind} or \link[adegenet:genlight]{genlight} object.}
+\item{gid}{a \link[adegenet:new.genind]{genind} or \link[adegenet:genlight]{genlight} object.}
 }
 \value{
-a haploid genind object with an extra \link[adegenet:strata]{strata}
+a haploid genind object with an extra \link[adegenet:strata-methods]{strata}
 column called "Individual".
 }
 \description{
@@ -34,7 +34,7 @@ haplotypes.
 Haploid data will be returned un-touched.
 }
 \note{
-The \link[adegenet:other]{other slot} will not be copied over to the new
+The \link[adegenet:accessors]{other slot} will not be copied over to the new
 genind object.
 }
 \examples{

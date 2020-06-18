@@ -66,7 +66,7 @@
 #'   pooled populations.
 #'   
 #' @param sublist a list of character strings or integers to indicate specific 
-#'   population names (accessed via \code{\link[adegenet]{popNames}}). 
+#'   population names (accessed via \code{popNames()}). 
 #'   Defaults to "ALL".
 #'   
 #' @param exclude a \code{vector} of population names or indexes that the user
@@ -1067,7 +1067,7 @@ locus_table <- function(x, index = "simpson", lev = "allele",
 #'   private alleles should be computed. It takes a form where the left hand
 #'   side of the formula can be either "allele", "locus", or "loci". The right
 #'   hand of the equation, by default is ".". If you change it, it must
-#'   correspond to strata located in the [adegenet::strata()] slot.
+#'   correspond to strata located in the [adegenet::strata()] slot.  
 #'   Note, that the right hand side is disabled for genpop objects.
 #' 
 #' @export

@@ -54,7 +54,7 @@
 #' \pkg{poppr} in your manuscript, please use lower case unless it occurs at the
 #' beginning of a sentence.
 #' 
-#' @details This package relies on the \pkg{\link[adegenet]{adegenet}} package. 
+#' @details This package relies on the \pkg{\link[adegenet:adegenet.package]{adegenet}} package. 
 #'   It is built around the [genind-class] and 
 #'   [genlight-class] object. Genind objects store genetic
 #'   information in a table of allele frequencies while genlight objects store
@@ -97,7 +97,7 @@
 #' @section Functions in \pkg{poppr}:
 #' 
 #' Below are descriptions and links to functions found in \pkg{poppr}. Be
-#' aware that all functions in \pkg{\link[adegenet]{adegenet}} are also
+#' aware that all functions in \pkg{\link[adegenet:adegenet.package]{adegenet}} are also
 #' available. The functions are documented as: 
 #' 
 #' - `function_name()` (data type) - Description
