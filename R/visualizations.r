@@ -1254,7 +1254,7 @@ plot_poppr_msn <- function(x,
 #'   represent an independent sample.
 #'   
 #' @details Internally, this function works by converting the data into a 
-#'   \code{\link[pegas]{loci}} object, which represents genotypes as a data 
+#'   \code{\link[pegas:read.loci]{loci}} object, which represents genotypes as a data 
 #'   frame of factors. Random samples are taken of 1 to n-1 columns of the 
 #'   matrix and the number of unique rows are counted to determine the number of
 #'   multilocus genotypes in that random sample. This function does not take 

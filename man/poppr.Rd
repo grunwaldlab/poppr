@@ -35,7 +35,7 @@ genpop, or genalex formatted file.}
 pooled populations.}
 
 \item{sublist}{a list of character strings or integers to indicate specific 
-population names (accessed via \code{\link[adegenet:Accessors]{popNames}}). 
+population names (accessed via \code{popNames()}). 
 Defaults to "ALL".}
 
 \item{exclude}{a \code{vector} of population names or indexes that the user

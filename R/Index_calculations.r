@@ -66,7 +66,7 @@
 #'   pooled populations.
 #'   
 #' @param sublist a list of character strings or integers to indicate specific 
-#'   population names (accessed via \code{\link[adegenet:Accessors]{popNames}}). 
+#'   population names (accessed via \code{popNames()}). 
 #'   Defaults to "ALL".
 #'   
 #' @param exclude a \code{vector} of population names or indexes that the user
