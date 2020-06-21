@@ -21,3 +21,4 @@ vignettes/*.log
 # plots from tests
 tests/testthat/Rplots.pdf
 inst/doc
+docs
