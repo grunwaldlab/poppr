@@ -52,6 +52,30 @@ snps <- c(1587L, 1451L, 910L, 1899L, 1474L, 986L, 539L, 44L, 1035L, 1054L,
 1364L, 1069L, 624L, 1329L, 1125L, 1363L, 1264L, 514L, 1187L, 
 1766L, 1023L, 916L)
 
+test_that("Bruvo between creates a subset of bruvo's distance", {
+  refdf <- data.frame(test = c("00/20/23/24", "20/24/26/43"))
+  refgid <- df2genind(refdf, ploidy = 4, sep="/")
+  querydf <- data.frame(test = c("00/20/23/24"))
+  querygid <- df2genind(querydf, ploidy = 4, sep="/")
+  addloss <- bruvo.between(querygid, refgid, add = FALSE, loss = FALSE)
+  ADDloss <- bruvo.between(querygid, refgid, add = TRUE, loss = FALSE)
+  addLOSS <- bruvo.between(querygid, refgid, add = FALSE, loss = TRUE)
+  ADDLOSS <- bruvo.between(querygid, refgid, add = TRUE, loss = TRUE)
+  # Values from Bruvo et. al. (2004)
+  expected_addloss <- as.dist(matrix(c(0, 0, 0.46875000000000, NaN, NaN, NaN), ncol=3, nrow=3))
+  expected_ADDloss <- as.dist(matrix(c(0, 0, 0.458333164453506, NaN, NaN, NaN), ncol=3, nrow=3))
+  expected_addLOSS <- as.dist(matrix(c(0, 0, 0.34374987334013, NaN, NaN, NaN), ncol=3, nrow=3))
+  expected_ADDLOSS <- as.dist(matrix(c(0, 0, 0.401041518896818, NaN, NaN, NaN), ncol=3, nrow=3))
+  expect_equal(addloss[1:2], expected_addloss[1:2])
+  expect_equal(is.nan(addloss[3]), TRUE)
+  expect_equal(ADDloss[1:2], expected_ADDloss[1:2])
+  expect_equal(is.nan(ADDloss[3]), TRUE)
+  expect_equal(addLOSS[1:2], expected_addLOSS[1:2])
+  expect_equal(is.nan(addLOSS[3]), TRUE)
+  expect_equal(ADDLOSS[1:2], expected_ADDLOSS[1:2])
+  expect_equal(is.nan(ADDLOSS[3]), TRUE)
+})
+
 test_that("Bruvo's distance works as expected.", {
   testdf  <- data.frame(test = c("00/20/23/24", "20/24/26/43"))
   testgid <- df2genind(testdf, ploidy = 4, sep = "/")

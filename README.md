@@ -2,8 +2,8 @@
 
 <!-- badges: start -->
 
-[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=main)](https://travis-ci.org/grunwaldlab/poppr)
-[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=main)](https://coveralls.io/r/grunwaldlab/poppr?branch=main)
+[![Build Status](https://travis-ci.org/grunwaldlab/poppr.svg?branch=220-add-bruvos-between)](https://travis-ci.org/grunwaldlab/poppr)
+[![Coverage Status](https://coveralls.io/repos/grunwaldlab/poppr/badge.svg?branch=220-add-bruvos-between)](https://coveralls.io/r/grunwaldlab/poppr?branch=220-add-bruvos-between)
 [![CRAN version](https://www.r-pkg.org/badges/version-ago/poppr)](https://cran.r-project.org/package=poppr)
 [![CRAN check status](https://cranchecks.info/badges/worst/poppr)](https://cran.r-project.org/web/checks/check_results_poppr.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/poppr)](https://www.r-pkg.org/pkg/poppr)

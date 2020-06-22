@@ -385,6 +385,111 @@ SEXP bruvo_distance(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add,
 	UNPROTECT(3); // bruvo_mat; Rval; pair_matrix
 	return Rval;
 }
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Calculates the bruvo's distance over a matrix segmented into a query and a reference
+at index reference set. 
+
+Parameters:
+bruvo_mat - a matrix of individuals by loci, one column per allele.
+permutations - a vector of indeces for permuting the number of alleles. 
+alleles - the ploidy of the population. 
+m_loss - an indicator for the genome loss model
+m_add - an indicator for the genome addition model
+
+Returns:
+
+A matrix of n*(n-1)/2 rows and the same number of columns as bruvo_mat
+
+Notes: 
+
+Calculates bruvo's distance over a matrix of individuals by loci, returning 100 (NaN)
+for rows whose index is greater than or equal to query_length and for comparisons
+where both rows indices are less than query_length. 
+
+When a query bruvo matrix and a reference bruvo matrix are bound together, 
+and the query_length is set to the number of individuals of the query matrix, 
+this functions returns only the distances between rows of the query set and the reference set, 
+filling the rest of the matrix with 100.
+
+This function is mostly copy-pasted from bruvo_distance and could be a
+target for refactoring. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+SEXP bruvo_between(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, SEXP m_loss, SEXP old_model, SEXP query_length)
+{
+	int rows;   // number of rows
+	int cols;   // number of columns
+	int ploidy; // maximum ploidy
+	int P;      // The number of factorial combinations of alleles.
+	int loss;   // indicator for genome loss model.
+	int add;    // indicator for genome addition model.
+	int* perm;  // pointer to permutation vector.
+	int* pmat;  // pointer to pair of samples.
+	int query_len; // Length of query set
+	int numel; // Number of elements in returned matrix
+	
+	// indices ------------------------------
+	int allele; // allele index
+	int i;      // sample one
+	int j;      // sample two
+	int locus;  // index for the first column of a locus
+	int clm;    // index for the column shift in the incoming matrix
+	int count;  // counter for the output
+	
+	// R objects ------------------------------
+	SEXP Rdim;        // dimensions of the bruvo_mat
+	SEXP Rval;        // output vector
+	SEXP pair_matrix; // temporary array to store two samples at a single locus
+	
+	// Initialization ------------------------------
+	count = 0;
+	P = length(permutations);
+	Rdim = getAttrib(bruvo_mat, R_DimSymbol);
+	rows = INTEGER(Rdim)[0];
+	cols = INTEGER(Rdim)[1];
+	ploidy = INTEGER(coerceVector(alleles, INTSXP))[0];
+	loss = asLogical(m_loss);
+	add = asLogical(m_add);
+	PROTECT(bruvo_mat = coerceVector(bruvo_mat, INTSXP));
+	perm = INTEGER(coerceVector(permutations, INTSXP));
+	PROTECT(Rval = allocMatrix(REALSXP, rows*(rows-1)/2, cols/ploidy));
+	PROTECT(pair_matrix = allocVector(INTSXP, 2*ploidy));
+	pmat = INTEGER(pair_matrix);
+	query_len = INTEGER(query_length)[0];
+	numel = (rows*(rows-1)/2) * (cols/ploidy);
+	
+	for(locus = 0; locus < cols; locus += ploidy)
+	{
+		for(i = 0; i < query_len; i++) // Only get distances for individuals in query set
+		{
+			R_CheckUserInterrupt(); // in case the user wants to quit
+			for(allele = 0; allele < ploidy; allele++) 
+			{
+				clm = (allele + locus)*rows;
+				pmat[allele] = INTEGER(bruvo_mat)[i + clm];
+			}
+			for(j = i + 1; j < rows; j++)
+			{
+				if (i < query_len && j < query_len)
+				{
+					REAL(Rval)[count++] = 100;
+					continue;	
+				}
+				for(allele = 0; allele < ploidy ; allele++)
+				{
+					clm = (allele + locus)*rows;
+					pmat[allele + ploidy] = INTEGER(bruvo_mat)[j + clm];
+				}
+				REAL(Rval)[count++] = bruvo_dist(pmat, &ploidy, perm, &P, &loss, &add, asInteger(old_model));
+			}
+		}
+	}
+	// Fill the rest of the matrix with 100 (NaN)
+	for (i = count; i < numel; i++) {
+		REAL(Rval)[i] = 100;
+	}
+	UNPROTECT(3); // bruvo_mat; Rval; pair_matrix
+	return Rval;
+}
 
 /*==============================================================================
 ================================================================================

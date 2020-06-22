@@ -1,6 +1,12 @@
 poppr 2.8.7
 ==========
 
+NEW FEATURES
+------------
+
+* `bruvo.between()` will calculate bruvo's distances between a query dataset
+  and a reference dataset.
+
 DEPRECATION
 -----------
 

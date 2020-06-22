@@ -863,6 +863,78 @@ bruvos_distance <- function(bruvomat, funk_call = match.call(), add = TRUE,
 
 }
 
+#==============================================================================#
+# Calculate a subset Bruvo's distances from a bruvomat object, segmented into a
+# query and a reference.
+#
+# Public functions utilizing this function:
+# # bruvo.between
+#==============================================================================#
+
+bruvos_between <- function(bruvomat, query_length, funk_call = match.call(), add = TRUE, 
+                            loss = TRUE, by_locus = FALSE){
+  
+  
+  x      <- bruvomat@mat
+  ploid  <- bruvomat@ploidy
+  if (getOption("old.bruvo.model") && ploid > 2 && (add | loss)){
+    msg <- paste("The option old.bruvo.model has been set to TRUE, which does",
+                 "not represent every ordered combinations of alleles in the",
+                 "genome addition or loss models. This could result in",
+                 "potentially incorrect results.",
+                 "\n\n To use every ordered combination of alleles for",
+                 "estimating short genotypes, enter the following command in",
+                 "your R console:",
+                 "\n\n\toptions(old.bruvo.model = FALSE)\n")
+    warning(msg, call. = FALSE, immediate. = TRUE)
+  }
+  replen <- bruvomat@replen
+  x[is.na(x)] <- 0
+
+  # Dividing the data by the repeat length of each locus.
+  x <- x / rep(replen, each = ploid * nrow(x))
+  x <- matrix(as.integer(round(x)), ncol = ncol(x))
+
+  # Getting the permutation vector.
+  perms <- .Call("permuto", ploid, PACKAGE = "poppr")
+
+  # Calculating bruvo's distance over each locus. 
+  distmat <- .Call("bruvo_between", 
+                   x,     # data matrix
+                   perms, # permutation vector (0-indexed)
+                   ploid, # maximum ploidy
+                   add,   # Genome addition model switch
+                   loss,  # Genome loss model switch
+                   getOption("old.bruvo.model"), # switch to use unordered genotypes
+		   query_length, # length of the original query
+                   PACKAGE = "poppr")
+
+  # If there are missing values, the distance returns 100, which means that the
+  # comparison is not made. These are changed to NA.
+  distmat[distmat == 100] <- NA
+
+  if (!by_locus){
+    # Obtaining the average distance over all loci.
+    avg.dist.vec <- apply(distmat, 1, mean, na.rm=TRUE)
+  
+    # presenting the information in a lower triangle distance matrix.
+    dist.mat <- matrix(ncol=nrow(x), nrow=nrow(x))
+    dist.mat[which(lower.tri(dist.mat)==TRUE)] <- avg.dist.vec
+    dist.mat <- as.dist(dist.mat)
+  
+    attr(dist.mat, "Labels") <- bruvomat@ind.names
+    attr(dist.mat, "method") <- "Bruvo"
+    attr(dist.mat, "call")   <- funk_call
+    return(dist.mat)    
+  } else {
+    n    <- nrow(x)
+    cols <- seq(ncol(distmat))
+    labs <- bruvomat@ind.names
+    meth <- "Bruvo"
+    return(lapply(cols, function(i) make_attributes(distmat[, i], n, labs, meth, funk_call)))
+  }
+
+}
 
 #==============================================================================#
 # match repeat lengths to loci present in data
