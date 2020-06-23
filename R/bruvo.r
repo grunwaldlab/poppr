@@ -247,6 +247,7 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALS
 #' 
 #' @param ref a \code{\link{genind}} or \code{\link{genclone}} object
 #' 
+#' @export
 #' @author David Folarin
 #==============================================================================#
 bruvo.between <- function(query, ref, replen = 1, add = TRUE, loss = TRUE, by_locus = FALSE){

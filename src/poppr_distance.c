@@ -459,7 +459,7 @@ SEXP bruvo_between(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, 
 	
 	for(locus = 0; locus < cols; locus += ploidy)
 	{
-		for(i = 0; i < query_len; i++) // Only get distances for individuals in query set
+		for(i = 0; i < rows - 1; i++) // Only get distances for individuals in query set
 		{
 			R_CheckUserInterrupt(); // in case the user wants to quit
 			for(allele = 0; allele < ploidy; allele++) 
@@ -469,7 +469,7 @@ SEXP bruvo_between(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, 
 			}
 			for(j = i + 1; j < rows; j++)
 			{
-				if (i < query_len && j < query_len)
+				if ((i < query_len && j < query_len) || (i >= query_len))
 				{
 					REAL(Rval)[count++] = 100;
 					continue;	
@@ -482,10 +482,6 @@ SEXP bruvo_between(SEXP bruvo_mat, SEXP permutations, SEXP alleles, SEXP m_add, 
 				REAL(Rval)[count++] = bruvo_dist(pmat, &ploidy, perm, &P, &loss, &add, asInteger(old_model));
 			}
 		}
-	}
-	// Fill the rest of the matrix with 100 (NaN)
-	for (i = count; i < numel; i++) {
-		REAL(Rval)[i] = 100;
 	}
 	UNPROTECT(3); // bruvo_mat; Rval; pair_matrix
 	return Rval;

@@ -76,6 +76,24 @@ test_that("Bruvo between creates a subset of bruvo's distance", {
   expect_equal(is.nan(ADDLOSS[3]), TRUE)
 })
 
+test_that("Bruvo between places distances in the same location has bruvo distance", {
+	data(nancycats)
+	n3 <- nancycats[pop = 3]
+	n4 <- nancycats[pop = 4]
+	btwn <- poppr:::bruvo.between(n3[1:3], n4[1:5], replen = rep(2, 9), by_locus = TRUE)
+	dist <- poppr:::bruvo.dist(repool(n3[1:3], n4[1:5]), replen = rep(2, 9), by_locus = TRUE)
+	comparisons <- c(NA, NA, TRUE, TRUE, TRUE, TRUE, TRUE, NA, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+	expect_equal(btwn$fca8 == dist$fca8, comparisons)
+	expect_equal(btwn$fca23 == dist$fca23, comparisons)
+	expect_equal(btwn$fca43 == dist$fca43, comparisons)
+	expect_equal(btwn$fca45 == dist$fca45, comparisons)
+	expect_equal(btwn$fca77 == dist$fca77, comparisons)
+	expect_equal(btwn$fca78 == dist$fca78, comparisons)
+	expect_equal(btwn$fca90 == dist$fca90, comparisons)
+	expect_equal(btwn$fca96 == dist$fca96, comparisons)
+	expect_equal(btwn$fca37 == dist$fca37, comparisons)
+})
+
 test_that("Bruvo's distance works as expected.", {
   testdf  <- data.frame(test = c("00/20/23/24", "20/24/26/43"))
   testgid <- df2genind(testdf, ploidy = 4, sep = "/")

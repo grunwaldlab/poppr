@@ -20,7 +20,7 @@ Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "p.g.meirmans@uva.nl", comment = c(ORCID = "0000-0002-6395-8107")),
     person(c("Frédéric", "D."), "Chevalier", role = "ctb",
     email = "fcheval@txbiomed.org", comment = c(ORCID = "0000-0003-2611-8106")),
-    person("David", "Folarin", role = "ctb",
+    person("David", "Folarin", role = "aut",
     email = "dof5@cornell.edu"),
     person(c("Niklaus", "J."), "Grünwald", role = "ths",
     email = "grunwaln@science.oregonstate.edu", comment = c(ORCID = "0000-0003-1656-7602")))
