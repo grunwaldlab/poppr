@@ -81,7 +81,7 @@ genlight or snpclone objects." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
       </span>
     </div>
 
@@ -275,7 +275,7 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 #&gt; 10 0.3935 0.3905 0.4015 0.3885 0.2230 0.2160 0.2120 0.2265 0.2195</div><div class='input'>
 <span class='co'># Calculate Euclidean distance</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>xdt</span> <span class='kw'>&lt;-</span> <span class='fu'>bitwise.dist</span>(<span class='no'>x</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.000   0.000   0.001 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
+#&gt;       0       0       0 </div><div class='input'><span class='no'>xdt</span></div><div class='output co'>#&gt;           1        2        3        4        5        6        7        8
 #&gt; 2  23.40940                                                               
 #&gt; 3  23.74868 24.04163                                                      
 #&gt; 4  23.36664 23.10844 22.31591                                             
@@ -312,10 +312,10 @@ genlight, <code><a href='win.ia.html'>win.ia()</a></code>,  <code><a href='samp.
 
 <span class='co'># Default Euclidean distance </span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>dist</a></span>(<span class='no'>glite</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   2.496   0.054   2.555 </div><div class='input'>
+#&gt;   2.837   0.076   2.935 </div><div class='input'>
 <span class='co'># Bitwise dist</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>bitwise.dist</span>(<span class='no'>glite</span>, <span class='kw'>euclidean</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scale_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.838   0.001   0.839 </div><div class='input'>
+#&gt;   0.946   0.004   0.953 </div><div class='input'>
 # }
 </div></pre>
   </div>

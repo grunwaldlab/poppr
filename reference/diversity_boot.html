@@ -83,7 +83,7 @@ to have a downward bias. See the details for more information." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
       </span>
     </div>
 
@@ -291,8 +291,8 @@ interpret the results of this function.</p>
 #&gt; </div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># This can be done in a parallel fashion (OSX uses "multicore", Windows uses "snow")</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   5.227   1.750   2.163 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   4.294   0.120   4.420 </div><div class='input'># }
+#&gt;   5.907   2.042   2.226 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_boot</span>(<span class='no'>tab</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   4.585   0.110   4.718 </div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

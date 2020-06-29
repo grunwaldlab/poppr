@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-18</span>
       </span>
     </div>
 
@@ -197,11 +197,11 @@ represented as an <code><a href='MLG-class.html'>MLG</a></code> object.</p></td>
 #&gt; NULL</div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># Without parallel processing</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>as.snpclone</span>(<span class='fu'>glSim</span>(<span class='fl'>1000</span>, <span class='fl'>1e5</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>)))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 171.019  15.975 187.171 </div><div class='input'>
+#&gt; 172.124  17.088 189.527 </div><div class='input'>
 <span class='co'># With parallel processing... doesn't really save you much time.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>as.snpclone</span>(<span class='fu'>glSim</span>(<span class='fl'>1000</span>, <span class='fl'>1e5</span>, <span class='kw'>ploid</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
                              <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; <span class='message'>Loading required package: parallel</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 165.869  16.968 183.018 </div><div class='input'># }
+#&gt; 168.245  17.055 185.544 </div><div class='input'># }
 
 </div></pre>
   </div>
