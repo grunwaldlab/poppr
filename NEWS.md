@@ -5,7 +5,7 @@ NEW FEATURES
 ------------
 
 * `bruvo.between()` will calculate bruvo's distances between a query dataset
-  and a reference dataset.
+  and a reference dataset (@davefol, #223)
 
 DEPRECATION
 -----------
