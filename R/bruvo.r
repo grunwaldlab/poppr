@@ -238,6 +238,45 @@ bruvo.dist <- function(pop, replen = 1, add = TRUE, loss = TRUE, by_locus = FALS
   return(dist.mat)
 }
 
+#==============================================================================#
+#' @describeIn bruvo.dist Bruvo's distance between a query and a reference
+#' Only diferences between query individuals and reference individuals will be reported
+#' All other values are NaN
+#' 
+#' @param query a \code{\link{genind}} or \code{\link{genclone}} object
+#' 
+#' @param ref a \code{\link{genind}} or \code{\link{genclone}} object
+#' 
+#' @export
+#' @author David Folarin
+#==============================================================================#
+bruvo.between <- function(query, ref, replen = 1, add = TRUE, loss = TRUE, by_locus = FALSE){
+  pop <- repool(query, ref)
+  query_length <- dim(query@tab)[1]
+  # This attempts to make sure the data is true microsatellite data. It will
+  # reject snp and aflp data. 
+  if (pop@type != "codom" || all(is.na(unlist(lapply(alleles(pop), as.numeric))))){
+    stop(non_ssr_data_warning())
+  }
+  # Bruvo's distance depends on the knowledge of the repeat length. If the user
+  # does not provide the repeat length, it can be estimated by the smallest
+  # repeat difference greater than 1. This is not a preferred method. 
+  if (length(replen) < nLoc(pop)){
+    replen <- vapply(alleles(pop), function(x) guesslengths(as.numeric(x)), 1)
+    warning(repeat_length_warning(replen), immediate. = TRUE)
+    if (interactive()) Sys.sleep(2L)
+  }
+  bruvomat  <- new('bruvomat', pop, replen)
+  funk_call <- match.call()
+  if (length(add) != 1 || !is.logical(add) || length(loss) != 1 || !is.logical(loss)){
+    stop("add and loss flags must be either TRUE or FALSE. Please check your input.")
+  }
+  dist.mat <- bruvos_between(bruvomat, query_length, funk_call = funk_call, add, loss, by_locus)
+  if (by_locus){
+    names(dist.mat) <- locNames(pop)
+  }
+  return(dist.mat)
+}
 
 #==============================================================================#
 #

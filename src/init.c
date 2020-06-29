@@ -14,6 +14,7 @@ extern SEXP association_index_haploid(SEXP, SEXP, SEXP);
 extern SEXP bitwise_distance_diploid(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP bitwise_distance_haploid(SEXP, SEXP, SEXP);
 extern SEXP bruvo_distance(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP bruvo_between(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP expand_indices(SEXP, SEXP);
 extern SEXP genotype_curve_internal(SEXP, SEXP, SEXP, SEXP);
 extern SEXP get_pgen_matrix_genind(SEXP, SEXP, SEXP, SEXP);
@@ -33,6 +34,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"bitwise_distance_diploid",  (DL_FUNC) &bitwise_distance_diploid,  5},
     {"bitwise_distance_haploid",  (DL_FUNC) &bitwise_distance_haploid,  3},
     {"bruvo_distance",            (DL_FUNC) &bruvo_distance,            6},
+    {"bruvo_between",             (DL_FUNC) &bruvo_between,             7},
     {"expand_indices",            (DL_FUNC) &expand_indices,            2},
     {"genotype_curve_internal",   (DL_FUNC) &genotype_curve_internal,   4},
     {"get_pgen_matrix_genind",    (DL_FUNC) &get_pgen_matrix_genind,    4},
