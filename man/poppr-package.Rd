@@ -192,7 +192,7 @@ Analysis of multilocus linkage disequilibrium.
 \item \code{\link[=rraf]{rraf()}} (m) - Round-robin allele frequency estimates.
 \item \code{\link[=pgen]{pgen()}} (m) - Probability of genotypes.
 \item \code{\link[=psex]{psex()}} (m) - Probability of observing a genotype more than once.
-\item \link[poppr:rare_allele_correction]{rare_allele_correction} (m) - rules for correcting rare alleles for round-robin estimates.
+\item \link[=rare_allele_correction]{rare_allele_correction} (m) - rules for correcting rare alleles for round-robin estimates.
 \item \code{\link[=incomp]{incomp()}} (m) - Check data for incomparable samples.
 }
 }
