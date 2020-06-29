@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-8</span>
       </span>
     </div>
 
@@ -141,6 +141,14 @@
 <h1 class="page-header" data-toc-text="2.8.7">
 <a href="#poppr-287" class="anchor"></a>poppr 2.8.7<small> Unreleased </small>
 </h1>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>NEW FEATURES</h2>
+<ul>
+<li>
+<code><a href="../reference/bruvo.dist.html">bruvo.between()</a></code> will calculate bruvo’s distances between a query dataset and a reference dataset.</li>
+</ul>
+</div>
 <div id="deprecation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#deprecation" class="anchor"></a>DEPRECATION</h2>
@@ -213,9 +221,9 @@
 <code><a href="../reference/read.genalex.html">read.genalex()</a></code> now correctly parses strata when the user imports data that contains duplicated data AND has some individuals named as integers less than the number of samples in the data (prepended by zeroes) (See <a href="https://github.com/grunwaldlab/poppr/pull/202" class="uri">https://github.com/grunwaldlab/poppr/pull/202</a>).</li>
 </ul>
 </div>
-<div id="new-features" class="section level2">
+<div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-1" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>MSN functions: nodes with single populations displayed as circles instead of pies. (<a href='https://github.com/fdchevalier'>@fdchevalier</a>, <a href="https://github.com/grunwaldlab/poppr/pull/203" class="uri">https://github.com/grunwaldlab/poppr/pull/203</a>)</li>
 </ul>
@@ -309,9 +317,9 @@
 <li>The <code>chromosome_buffer</code> argument for <code><a href="../reference/win.ia.html">win.ia()</a></code> has been permanently set to <code>TRUE</code> and deprecated as it is no longer used.</li>
 </ul>
 </div>
-<div id="new-features-1" class="section level2">
+<div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-2" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li><p><code><a href="../reference/poppr.amova.html">poppr.amova()</a></code> will now handle genlight/snpclone objects. See <a href="https://github.com/grunwaldlab/poppr/pull/185" class="uri">https://github.com/grunwaldlab/poppr/pull/185</a> for details.</p></li>
 <li><p><code><a href="../reference/bitwise.dist.html">bitwise.dist()</a></code> now has two new options: <code>euclidean</code> and <code>scale_missing</code>. When both of these are set to <code>TRUE</code>, the distance measured will be Euclidean scaled for the amount of missing data in each comparison. This matches the output of base R’s <code><a href="https://rdrr.io/r/stats/dist.html">dist()</a></code> function at a fraction of time and memory. See <a href="https://github.com/grunwaldlab/poppr/pull/176" class="uri">https://github.com/grunwaldlab/poppr/pull/176</a> for details.</p></li>
@@ -370,9 +378,9 @@
 <li>AMOVA will now default to using euclidean distance. This affects all calculations made with <code>within = FALSE</code> or <code>filter = TRUE</code> without a user-supplied distance. This will not have affect those with haploid or diploid data using <code>within = TRUE</code>. The dissimilarity distance is equivalent to a squared euclidean distance for haploid genotypes, but not for any higher ploidy. Those using <code>filter = TRUE</code> without specifying a distance should use a euclidean threshold. This should not be an issue for those who simply want to group isolates with missing data, however as a zero distance is the same for euclidean and dissimilarity. Thanks goes to Patrick Meirmans for alerting me to this error.</li>
 </ul>
 </div>
-<div id="new-features-2" class="section level2">
+<div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-3" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>AMOVA will now calculate within-individual variance for polyploid data.</li>
 </ul>
@@ -408,9 +416,9 @@
 <li>The new function <code><a href="../reference/boot.ia.html">boot.ia()</a></code> is conceptually similar to <code><a href="../reference/ia.html">resample.ia()</a></code>, except it resamples with replacement.</li>
 </ul>
 </div>
-<div id="new-features-3" class="section level2">
+<div id="new-features-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-3" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-4" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>The function <code><a href="../reference/ia.html">resample.ia()</a></code> now can resample individuals weighted by their Psex value.</li>
 <li>The minimum spanning networks will now scale nodes by area instead of radius. This gives a more accurate picture of the differences between MLGs. See <a href="https://github.com/grunwaldlab/poppr/issues/154" class="uri">https://github.com/grunwaldlab/poppr/issues/154</a> for details.</li>
@@ -515,9 +523,9 @@
 <code><a href="../reference/ia.html">jack.ia()</a></code> will randomly jackknife your sample to a specified n (default is the number of MLG), and calculate the index of association over multiple iterations, giving a distribution of possible values at a given sample size.</li>
 </ul>
 </div>
-<div id="new-features-4" class="section level2">
+<div id="new-features-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-4" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-5" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>The function <code><a href="../reference/mlg.html">mlg.table()</a></code> gains new parameters, “color” and “background”. The “color” parameter will create a single barplot with colors representing populations while the “background” parameter will create a background plot showing the abundance of MLGs across populations within the facets.</li>
 <li>The function <code><a href="../reference/win.ia.html">win.ia()</a></code> will now take into consideration chromosomal coordinates when constructing windows. It has additionally acquired a new parameter <code>chromosome_buffer</code>, which allows the user to specify whether or not the window should be limited to within chromosomes.</li>
@@ -573,9 +581,9 @@
 </li>
 </ul>
 </div>
-<div id="new-features-5" class="section level2">
+<div id="new-features-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-5" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-6" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>There is now a <code>plot</code> parameter for the genotype curve to enable or suppress plotting.</li>
 <li>Progress bars are now automatically suppressed when running non-interactively. to turn them on when running non-interactively, use <code><a href="https://rdrr.io/r/base/options.html">options(poppr.debug = TRUE)</a></code>.</li>
@@ -616,9 +624,9 @@
 </li>
 </ul>
 </div>
-<div id="new-features-6" class="section level2">
+<div id="new-features-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-6" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-7" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>You can now specify layout parameters in <code><a href="../reference/imsn.html">imsn()</a></code>
 </li>
@@ -646,9 +654,9 @@
 <code><a href="../reference/incomp.html">incomp()</a></code> will check your data to see if there are any incomparable samples.</li>
 </ul>
 </div>
-<div id="new-features-7" class="section level2">
+<div id="new-features-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-7" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-8" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Threshold argument added to <code><a href="../reference/filter_stats.html">filter_stats()</a></code> (see <a href="https://github.com/grunwaldlab/poppr/issues/94" class="uri">https://github.com/grunwaldlab/poppr/issues/94</a>)</li>
 <li>The pipe operator (<code><a href="../reference/grapes-greater-than-grapes.html">%&gt;%</a></code>) is now exported from magrittr to make chaining commands easier.</li>
@@ -687,9 +695,9 @@
 <h1 class="page-header" data-toc-text="2.1.1">
 <a href="#poppr-211" class="anchor"></a>poppr 2.1.1<small> 2016-03-15 </small>
 </h1>
-<div id="new-features-8" class="section level2">
+<div id="new-features-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-8" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-9" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code><a href="../reference/imsn.html">imsn()</a></code> now has collapsible side panels</li>
@@ -743,9 +751,9 @@
 <li>The internal code for the <code>genotype_curve</code> has been implemented in C for a 10x increase in speed.</li>
 </ul>
 </div>
-<div id="new-features-9" class="section level2">
+<div id="new-features-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-9" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-10" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code>poppr.msn</code>, <code>bruvo.msn</code>, and <code>plot_poppr_msn</code> gain the ability to take character vectors for color palettes. See issue <a href='https://github.com/grunwaldlab/poppr/issues/55'>#55</a> (<a href="https://github.com/grunwaldlab/poppr/issues/55" class="uri">https://github.com/grunwaldlab/poppr/issues/55</a>) for details.</li>
@@ -844,9 +852,9 @@
 <code>read.genealex</code> can now correctly import missing data for diploids (issue <a href='https://github.com/grunwaldlab/poppr/issues/42'>#42</a>)</li>
 </ul>
 </div>
-<div id="new-features-10" class="section level2">
+<div id="new-features-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-10" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-11" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Startup message now tells you if poppr was compiled with OMP support.</li>
 </ul>
@@ -892,9 +900,9 @@
 <li>refreshing!</li>
 </ul>
 </div>
-<div id="new-features-11" class="section level2">
+<div id="new-features-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-11" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-12" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>The default plot for the index of association will now be a single histogram. The user has the option to visualize the standardized index of association (<code>index = "rbarD"</code>, default) or the classic index of association (<code>index = "Ia"</code>). If the user uses the function <code>ia</code> with the argument <code>valuereturn = TRUE</code>, then the resulting object can be plotted with the plot function.</li>
 <li>The function <code>poppr</code> will now plot all populations in a single faceted plot instead of one plot per population.</li>
@@ -1012,9 +1020,9 @@
 <h1 class="page-header" data-toc-text="1.1.3">
 <a href="#poppr-113" class="anchor"></a>poppr 1.1.3<small> 2015-02-03 </small>
 </h1>
-<div id="new-features-12" class="section level2">
+<div id="new-features-13" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-12" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-13" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>new arguments to <code>plot_poppr_msn</code> to allow for easier manipulation of node sizes and of labeling</li>
 <li>read.genalex can now take read text connections as input. Addresses issue <a href='https://github.com/grunwaldlab/poppr/issues/8'>#8</a></li>
@@ -1080,9 +1088,9 @@
 <h1 class="page-header" data-toc-text="1.1.0">
 <a href="#poppr-110" class="anchor"></a>poppr 1.1.0<small> 2014-07-24 </small>
 </h1>
-<div id="new-features-13" class="section level2">
+<div id="new-features-14" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-13" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-14" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Polyploids with ambiguous genotypes are now supported in poppr. See documentation for <code>recode_polyploids</code> for details.</li>
 <li>Calculations of Bruvo’s distance now features correction for partial missing data utilizing genome addition and genome loss models as presented in Bruvo et al. 2004.</li>
@@ -1290,9 +1298,9 @@
 <li>Utilized rmultinom function to increase speed of bootstrap sampling methods for shufflepop and ia.</li>
 </ul>
 </div>
-<div id="new-features-14" class="section level2">
+<div id="new-features-15" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-14" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-15" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Function <code>informloci</code> will remove phylogenetically uninformative loci.</li>
 </ul>
@@ -1394,9 +1402,9 @@
 <h1 class="page-header" data-toc-text="0.4.1">
 <a href="#poppr-041" class="anchor"></a>poppr 0.4.1<small> Unreleased </small>
 </h1>
-<div id="new-features-15" class="section level2">
+<div id="new-features-16" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-15" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-16" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code>getfile</code> has a new argument, “combine”, which will automatically add the path to the list of files, so they can be read without switching working directory.</li>
@@ -1428,9 +1436,9 @@
 <code>read.genalex</code> can now correctly recognize regional formatting without an extra column.</li>
 </ul>
 </div>
-<div id="new-features-16" class="section level2">
+<div id="new-features-17" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-16" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-17" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code>read.genalex</code> will now be able to take in a file that is formatted with both regional and geographic data.</li>
@@ -1483,9 +1491,9 @@
 <code>poppr.msn</code> will draw a minimum spanning network for any distance matrix derived from your data set.</li>
 </ul>
 </div>
-<div id="new-features-17" class="section level2">
+<div id="new-features-18" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-17" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-18" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>vignette now has sections describing <code>poppr.msn</code>, <code>diss.dist</code>, <code>greycurve</code>, and a section discussing how to export graphics.</li>
 </ul>
@@ -1504,9 +1512,9 @@
 <h1 class="page-header" data-toc-text="0.2.2">
 <a href="#poppr-022" class="anchor"></a>poppr 0.2.2<small> Unreleased </small>
 </h1>
-<div id="new-features-18" class="section level2">
+<div id="new-features-19" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-18" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-19" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>index of association distributions will now feature a rug plot at the bottom as a better way to visualize the distribution of the index of association from the shuffled data sets.</li>
 </ul>
@@ -1526,9 +1534,9 @@
 <code>greycurve</code> will produce a grey scale adjusted to user-supplied parameters. This will be useful for future minimum spanning network functions.</li>
 </ul>
 </div>
-<div id="new-features-19" class="section level2">
+<div id="new-features-20" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-19" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-20" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code>bruvo.msn</code> can now adjust the edge grey level to be weighted toward either closely or distantly weighted individuals.</li>
@@ -1549,9 +1557,9 @@
 <h1 class="page-header" data-toc-text="0.2">
 <a href="#poppr-02" class="anchor"></a>poppr 0.2<small> Unreleased </small>
 </h1>
-<div id="new-features-20" class="section level2">
+<div id="new-features-21" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-20" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-21" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Added NEWS file and will now be incrementing version number (3/15/2013)</li>
 </ul>
@@ -1578,7 +1586,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Zhian N. Kamvar, Javier F. Tabima, Jonah C. Brooks.</p>
+  <p>Developed by Zhian N. Kamvar, Javier F. Tabima, Jonah C. Brooks, David Folarin.</p>
 </div>
 
 <div class="pkgdown">

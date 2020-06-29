@@ -83,7 +83,7 @@ the results." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-8</span>
       </span>
     </div>
 
@@ -435,10 +435,10 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='st'>"multicore"</span>, <span class='kw'>ncpus</span> <span class='kw'>=</span> <span class='fl'>4L</span>))</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   8.449   2.755   3.424 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt;  11.193   3.729   4.567 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='fu'>diversity_ci</span>(<span class='no'>Pinf</span>, <span class='fl'>10000L</span>))</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Confidence Intervals have been centered around observed statistic.</span>
 #&gt; <span class='message'>Please see ?diversity_ci for details.</span></div><div class='img'><img src='diversity_ci-4.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   6.313   0.124   6.443 </div><div class='input'>
+#&gt;   6.923   0.131   7.067 </div><div class='input'>
 <span class='co'># We often get many requests for a clonal fraction statistic. As this is </span>
 <span class='co'># simply the number of observed MLGs over the number of samples, we </span>
 <span class='co'># recommended that people calculate it themselves. With this function, you</span>
@@ -494,7 +494,7 @@ of Shannon’s Entropy and a Confidence Interval for Beta Diversity.
 
       <footer>
       <div class="copyright">
-  <p>Developed by Zhian N. Kamvar, Javier F. Tabima, Jonah C. Brooks.</p>
+  <p>Developed by Zhian N. Kamvar, Javier F. Tabima, Jonah C. Brooks, David Folarin.</p>
 </div>
 
 <div class="pkgdown">

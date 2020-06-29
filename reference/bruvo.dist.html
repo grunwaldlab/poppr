@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">poppr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.8.6.99-8</span>
       </span>
     </div>
 
@@ -143,7 +143,16 @@
     <p>Calculate the average Bruvo's distance over all loci in a population.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bruvo.dist</span>(<span class='no'>pop</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>by_locus</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>bruvo.dist</span>(<span class='no'>pop</span>, <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>by_locus</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>bruvo.between</span>(
+  <span class='no'>query</span>,
+  <span class='no'>ref</span>,
+  <span class='kw'>replen</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>loss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>by_locus</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,6 +185,14 @@ the genome loss model presented in Bruvo et al. 2004. See the
 is <code>by_locus = FALSE</code>, indicating that Bruvo's distance is to be
 averaged over all loci. When <code>by_locus = TRUE</code>, a list of distance
 matrices will be returned.</p></td>
+    </tr>
+    <tr>
+      <th>query</th>
+      <td><p>a <code>genind</code> or <code><a href='genclone-class.html'>genclone</a></code> object</p></td>
+    </tr>
+    <tr>
+      <th>ref</th>
+      <td><p>a <code>genind</code> or <code><a href='genclone-class.html'>genclone</a></code> object</p></td>
     </tr>
     </table>
 
@@ -235,6 +252,14 @@ matrices will be returned.</p></td>
   comparisons. This means that when comparing [69,70,71,0] and [59,60,0,0], 
   they will be treated as triploids.</p>
 
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
+    
+<ul>
+<li><p><code>bruvo.between</code>: Bruvo's distance between a query and a reference
+Only diferences between query individuals and reference individuals will be reported
+All other values are NaN</p></li>
+</ul>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>Do not use missingno with this function.</p><h3>Missing alleles and Bruvo's distance in <span class="pkg">poppr</span> versions &lt; 2.5</h3>
@@ -537,7 +562,7 @@ matrices will be returned.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Zhian N. Kamvar, Javier F. Tabima, Jonah C. Brooks.</p>
+  <p>Developed by Zhian N. Kamvar, Javier F. Tabima, Jonah C. Brooks, David Folarin.</p>
 </div>
 
 <div class="pkgdown">
