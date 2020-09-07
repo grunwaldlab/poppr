@@ -8,6 +8,7 @@
 [![CRAN check status](https://cranchecks.info/badges/worst/poppr)](https://cran.r-project.org/web/checks/check_results_poppr.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/poppr)](https://www.r-pkg.org/pkg/poppr)
 
+[![R build status](https://github.com/grunwaldlab/poppr/workflows/R-CMD-check/badge.svg)](https://github.com/grunwaldlab/poppr/actions)
 <!-- badges: end -->
 
 ## What is *poppr*?
